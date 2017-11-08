@@ -39,7 +39,7 @@
 
                         <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 ">
                             <div class="tvspace-box">
-                                <img src="dist/img/nta-logo.jpg" width="100%">
+                                <img src="{{ asset('asset/dist/img/nta-logo.jpg') }}" width="100%">
                                 <div class="tv-space">
                                     <p align="center">12 Available</p>
 
@@ -49,7 +49,7 @@
                         <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
 
                             <div class="tvspace-box">
-                                <img src="dist/img/ait-logo.jpg" width="100%">
+                                <img src="{{ asset('asset/dist/img/ait-logo.jpg') }}" width="100%">
                                 <div class="tv-space">
                                     <p align="center">12 Available</p>
                                 </div>
@@ -57,7 +57,7 @@
                         </div>
                         <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                             <div class="tvspace-box">
-                                <img src="dist/img/silvebird-logo.jpg" width="100%">
+                                <img src="{{ asset('asset/dist/img/silvebird-logo.jpg') }}" width="100%">
                                 <div class="tv-space">
                                     <p align="center">12 Available</p>
                                 </div>
@@ -65,7 +65,7 @@
                         </div>
                         <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                             <div class="tvspace-box">
-                                <img src="dist/img/tvc-logo.jpg" width="100%">
+                                <img src="{{ asset('asset/dist/img/tvc-logo.jpg') }}" width="100%">
                                 <div class="tv-space">
                                     <p align="center">12 Available</p>
                                 </div>
@@ -79,7 +79,7 @@
                         <div class="row">
 
                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <img src="dist/img/nta-logo.jpg" width="65%">
+                                <img src="{{ asset('asset/dist/img/nta-logo.jpg') }}" width="65%">
                             </div>
 
                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
@@ -191,7 +191,7 @@
                         <div class="row">
 
                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <img src="dist/img/nta-logo.jpg" width="65%">
+                                <img src="{{ asset('asset/dist/img/nta-logo.jpg') }}" width="65%">
                             </div>
 
                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">

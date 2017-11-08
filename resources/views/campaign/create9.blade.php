@@ -68,7 +68,7 @@
                                             </tr>
                                             <tr>
                                                 <td>1</td>
-                                                <td> <img src="dist/img/nta-logo.jpg" width="5%"> NTA  </td>
+                                                <td> <img src="{{ asset('asset/dist/img/nta-logo.jpg') }}" width="5%"> NTA  </td>
                                                 <td>9:30 - 9:33 am</td>
                                                 <td>15 seconds</td>
                                                 <td>11,000</td>
@@ -78,7 +78,7 @@
 
                                             <tr>
                                                 <td>2</td>
-                                                <td> <img src="dist/img/nta-logo.jpg" width="5%"> NTA  </td>
+                                                <td> <img src="{{ asset('asset/dist/img/nta-logo.jpg') }}" width="5%"> NTA  </td>
                                                 <td>10:20 - 10:24 am</td>
                                                 <td>15 seconds</td>
                                                 <td>11,000</td>
