@@ -63,16 +63,13 @@ Route::get('auth/{provider}/callback', 'Auth\SocialAuthController@handleProvider
 Route::get('auth/twitter/email', 'Auth\SocialAuthController@getTwitterEmail');
 Route::post('auth/twitter/email', 'Auth\SocialAuthController@postTwitterEmail');
 
+Route::get('/dashboard', function() {
+    return view('dashboard.default');
+});
+
+
+
 Route::group(['middleware' => 'auth'], function () {
-
-    /**
-     * Dashboard
-     */
-
-    Route::get('/', [
-        'as' => 'dashboard',
-        'uses' => 'DashboardController@index'
-    ]);
 
     /**
      * User Profile

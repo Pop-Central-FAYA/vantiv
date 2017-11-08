@@ -1,96 +1,111 @@
 @extends('layouts.app')
 
-@section('page-title', trans('app.dashboard'))
-
 @section('content')
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                Dashboard
 
-<div class="row">
-    <div class="col-lg-12">
-        <h1 class="page-header">
-            @lang('app.welcome') <?= Auth::user()->username ?: Auth::user()->first_name ?>!
-            <div class="pull-right">
-                <ol class="breadcrumb">
-                    <li><a href="{{ route('dashboard') }}">@lang('app.home')</a></li>
-                    <li class="active">@lang('app.dashboard')</li>
-                </ol>
-            </div>
-        </h1>
-    </div>
-</div>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i> Dashboard</a></li>
 
-<div class="row">
-    <div class="col-md-3">
-        <a href="{{ route('profile') }}" class="panel-link">
-            <div class="panel panel-default dashboard-panel">
-                <div class="panel-body">
-                    <div class="icon">
-                        <i class="fa fa-user"></i>
-                    </div>
-                    <p class="lead">@lang('app.update_profile')</p>
-                </div>
-            </div>
-        </a>
-    </div>
-    @if (config('session.driver') == 'database')
-        <div class="col-md-3">
-            <a href="{{ route('profile.sessions') }}" class="panel-link">
-                <div class="panel panel-default dashboard-panel">
-                    <div class="panel-body">
-                        <div class="icon">
-                            <i class="fa fa-list"></i>
+            </ol>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="row">
+                <div class="col-md-6">
+                    <!-- AREA CHART -->
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Area Chart</h3>
+
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                            </div>
                         </div>
-                        <p class="lead">@lang('app.my_sessions')</p>
+                        <div class="box-body">
+                            <div class="chart">
+                                <canvas id="areaChart" style="height:250px"></canvas>
+                            </div>
+                        </div>
+                        <!-- /.box-body -->
                     </div>
-                </div>
-            </a>
-        </div>
-    @endif
-    <div class="col-md-3">
-        <a href="{{ route('profile.activity') }}" class="panel-link">
-            <div class="panel panel-default dashboard-panel">
-                <div class="panel-body">
-                    <div class="icon">
-                        <i class="fa fa-list-alt"></i>
+                    <!-- /.box -->
+
+                    <!-- DONUT CHART -->
+                    <div class="box box-danger">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Donut Chart</h3>
+
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                            </div>
+                        </div>
+                        <div class="box-body">
+                            <canvas id="pieChart" style="height:250px"></canvas>
+                        </div>
+                        <!-- /.box-body -->
                     </div>
-                    <p class="lead">@lang('app.activity_log')</p>
+                    <!-- /.box -->
+
                 </div>
-            </div>
-        </a>
-    </div>
-    <div class="col-md-3">
-        <a href="{{ route('auth.logout') }}" class="panel-link">
-            <div class="panel panel-default dashboard-panel">
-                <div class="panel-body">
-                    <div class="icon">
-                        <i class="fa fa-sign-out"></i>
+                <!-- /.col (LEFT) -->
+                <div class="col-md-6">
+                    <!-- LINE CHART -->
+                    <div class="box box-info">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Line Chart</h3>
+
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                            </div>
+                        </div>
+                        <div class="box-body">
+                            <div class="chart">
+                                <canvas id="lineChart" style="height:250px"></canvas>
+                            </div>
+                        </div>
+                        <!-- /.box-body -->
                     </div>
-                    <p class="lead">@lang('app.logout')</p>
+                    <!-- /.box -->
+
+                    <!-- BAR CHART -->
+                    <div class="box box-success">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Bar Chart</h3>
+
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                            </div>
+                        </div>
+                        <div class="box-body">
+                            <div class="chart">
+                                <canvas id="barChart" style="height:230px"></canvas>
+                            </div>
+                        </div>
+                        <!-- /.box-body -->
+                    </div>
+                    <!-- /.box -->
+
                 </div>
+                <!-- /.col (RIGHT) -->
             </div>
-        </a>
+            <!-- /.row -->
+
+        </section>
+        <!-- /.content -->
     </div>
-</div>
-
-<div class="row">
-    <div class="col-md-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">@lang('app.activity') (@lang('app.last_two_weeks')</div>
-            <div class="panel-body">
-                <div>
-                    <canvas id="myChart" height="400"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-@stop
-
-@section('scripts')
-    <script>
-        var labels = {!! json_encode(array_keys($activities)) !!};
-        var activities = {!! json_encode(array_values($activities)) !!};
-    </script>
-    {!! HTML::script('assets/js/chart.min.js') !!}
-    {!! HTML::script('assets/js/as/dashboard-default.js') !!}
 @stop
