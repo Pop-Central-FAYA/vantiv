@@ -67,6 +67,10 @@ Route::get('/dashboard', function() {
     return view('dashboard.default');
 });
 
+Route::get('/create-campaign', function() {
+   return view('')
+});
+
 
 
 Route::group(['middleware' => 'auth'], function () {
