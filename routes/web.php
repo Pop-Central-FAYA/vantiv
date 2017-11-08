@@ -68,9 +68,43 @@ Route::get('/dashboard', function() {
 });
 
 Route::group(['prefix' => 'create-campaign'], function() {
-   Route::get('/1', function() {
-       return view('campaign.create1');
-   })
+
+    Route::get('/1', function() {
+        return view('campaign.create1');
+    });
+
+    Route::get('/2', function() {
+        return view('campaign.create2');
+    });
+
+    Route::get('/3', function() {
+        return view('campaign.create3');
+    });
+
+    Route::get('/4', function() {
+        return view('campaign.create4');
+    });
+
+    Route::get('/5', function() {
+        return view('campaign.create5');
+    });
+
+    Route::get('/6', function() {
+        return view('campaign.create6');
+    });
+
+    Route::get('/7', function() {
+        return view('campaign.create7');
+    });
+
+    Route::get('/8', function() {
+        return view('campaign.create8');
+    });
+
+    Route::get('/9', function() {
+        return view('campaign.create9');
+    });
+
 });
 
 
