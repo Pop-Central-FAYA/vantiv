@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1e8113f4-19bb-4f32-9638-4f84f1acbc99" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/views/campaign/create4.blade.php" afterPath="$PROJECT_DIR$/resources/views/campaign/create4.blade.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/views/campaign/create5.blade.php" afterPath="$PROJECT_DIR$/resources/views/campaign/create5.blade.php" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -27,17 +26,29 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="create4.blade.php" pinned="false" current-in-tab="true">
+      <file leaf-file-name="create4.blade.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/resources/views/campaign/create4.blade.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="292">
-              <caret line="103" column="61" lean-forward="false" selection-start-line="103" selection-start-column="61" selection-end-line="103" selection-end-column="61" />
+            <state relative-caret-position="256">
+              <caret line="101" column="95" lean-forward="true" selection-start-line="101" selection-start-column="95" selection-end-line="101" selection-end-column="95" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="create5.blade.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/resources/views/campaign/create5.blade.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="492">
+              <caret line="145" column="95" lean-forward="false" selection-start-line="145" selection-start-column="95" selection-end-line="145" selection-end-column="95" />
               <folding>
-                <element signature="e#215#238#0#HTML" expanded="true" />
-                <element signature="e#578#596#0#HTML" expanded="true" />
-                <element signature="e#1238#1259#0#HTML" expanded="true" />
-                <element signature="e#1675#1693#0#HTML" expanded="true" />
-                <element signature="e#2621#2645#0#HTML" expanded="true" />
+                <element signature="e#334#357#0#HTML" expanded="true" />
+                <element signature="e#724#742#0#HTML" expanded="true" />
+                <element signature="e#1786#1808#0#HTML" expanded="true" />
+                <element signature="e#2418#2441#0#HTML" expanded="true" />
+                <element signature="e#2814#2835#0#HTML" expanded="true" />
+                <element signature="e#3251#3269#0#HTML" expanded="true" />
+                <element signature="e#4193#4217#0#HTML" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -79,6 +90,7 @@
         <option value="$PROJECT_DIR$/resources/views/campaign/create1.blade.php" />
         <option value="&lt;376ddb86-f004-4047-a5f5-9daa093a64ed&gt;/applications/rvpnywxcyr/public_html/resources/views/attendees/index.blade.php" />
         <option value="$PROJECT_DIR$/resources/views/campaign/create4.blade.php" />
+        <option value="$PROJECT_DIR$/resources/views/campaign/create5.blade.php" />
       </list>
     </option>
   </component>
@@ -192,12 +204,12 @@
       <workItem from="1506103129550" duration="773000" />
       <workItem from="1509888059928" duration="119000" />
       <workItem from="1510154716769" duration="164000" />
-      <workItem from="1510154882661" duration="7468000" />
+      <workItem from="1510154882661" duration="8256000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="8524000" />
+    <option name="totallyTimeSpent" value="9312000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="71" y="-4" width="1873" height="1084" extended-state="6" />
@@ -331,14 +343,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/resources/views/layouts/app.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="468">
-          <caret line="38" column="14" lean-forward="false" selection-start-line="38" selection-start-column="14" selection-end-line="38" selection-end-column="14" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/resources/views/partials/_javascript.blade.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="306">
@@ -347,16 +351,34 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/layouts/app.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="468">
+          <caret line="38" column="14" lean-forward="false" selection-start-line="38" selection-start-column="14" selection-end-line="38" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/resources/views/campaign/create4.blade.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="292">
-          <caret line="103" column="61" lean-forward="false" selection-start-line="103" selection-start-column="61" selection-end-line="103" selection-end-column="61" />
+        <state relative-caret-position="256">
+          <caret line="101" column="95" lean-forward="true" selection-start-line="101" selection-start-column="95" selection-end-line="101" selection-end-column="95" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/campaign/create5.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="492">
+          <caret line="145" column="95" lean-forward="false" selection-start-line="145" selection-start-column="95" selection-end-line="145" selection-end-column="95" />
           <folding>
-            <element signature="e#215#238#0#HTML" expanded="true" />
-            <element signature="e#578#596#0#HTML" expanded="true" />
-            <element signature="e#1238#1259#0#HTML" expanded="true" />
-            <element signature="e#1675#1693#0#HTML" expanded="true" />
-            <element signature="e#2621#2645#0#HTML" expanded="true" />
+            <element signature="e#334#357#0#HTML" expanded="true" />
+            <element signature="e#724#742#0#HTML" expanded="true" />
+            <element signature="e#1786#1808#0#HTML" expanded="true" />
+            <element signature="e#2418#2441#0#HTML" expanded="true" />
+            <element signature="e#2814#2835#0#HTML" expanded="true" />
+            <element signature="e#3251#3269#0#HTML" expanded="true" />
+            <element signature="e#4193#4217#0#HTML" expanded="true" />
           </folding>
         </state>
       </provider>
