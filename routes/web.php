@@ -67,8 +67,10 @@ Route::get('/dashboard', function() {
     return view('dashboard.default');
 });
 
-Route::get('/create-campaign', function() {
-   return view('')
+Route::group(['prefix' => 'create-campaign'], function() {
+   Route::get('/1', function() {
+       return view('campaign.create1');
+   })
 });
 
 
