@@ -15,6 +15,8 @@
                     <!-- Content Header (Page header) -->
                     <!-- Content Header (Page header) -->
 
+                    @include('partials.messages')
+
                     <!-- Content Wrapper. Contains page content -->
                     @yield('content')
 
