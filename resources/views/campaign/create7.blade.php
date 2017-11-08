@@ -319,6 +319,7 @@
                 <a href="create-campaign-page8.html"><button class="btn campaign-button" style="margin-right:15%">Next <i class="fa fa-play" aria-hidden="true"></i></button></a>
 
             </p>
+        </div>
     </section>
 
     <!-- /.content -->
