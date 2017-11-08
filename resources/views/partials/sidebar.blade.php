@@ -1,95 +1,71 @@
-<div class="navbar-default sidebar" role="navigation">
-    <div class="sidebar-nav navbar-collapse">
-        <ul class="nav" id="side-menu">
-            <li class="sidebar-avatar">
-                <div class="dropdown">
-                    <div>
-                        <img alt="image" class="img-circle avatar" width="100" src="{{ Auth::user()->present()->avatar }}">
-                    </div>
-                    <div class="name"><strong>{{ Auth::user()->present()->nameOrEmail }}</strong></div>
-                </div>
-            </li>
-            <li class="{{ Request::is('/') ? 'active open' : ''  }}">
-                <a href="{{ route('dashboard') }}" class="{{ Request::is('/') ? 'active' : ''  }}">
-                    <i class="fa fa-dashboard fa-fw"></i> @lang('app.dashboard')
+<aside class="main-sidebar">
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+        <!-- Sidebar user panel -->
+        <div class="user-panel">
+            <div class="pull-left image">
+                <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+            </div>
+            <div class="pull-left info">
+                <p>Alexander Pierce</p>
+                <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+            </div>
+        </div>
+        <!-- search form -->
+        <form action="#" method="get" class="sidebar-form">
+            <div class="input-group">
+                <input type="text" name="q" class="form-control" placeholder="Search...">
+                <span class="input-group-btn">
+                <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
+                </button>
+              </span>
+            </div>
+        </form>
+        <!-- /.search form -->
+        <!-- sidebar menu: : style can be found in sidebar.less -->
+        <ul class="sidebar-menu">
+            <li class="header">MAIN NAVIGATION</li>
+            <li class="active treeview">
+                <a href="index.html">
+                    <i class="fa fa-dashboard"></i> <span>Dashboard</span>
+
                 </a>
+
             </li>
-            @permission('users.manage')
-                <li class="{{ Request::is('user*') ? 'active open' : ''  }}">
-                    <a href="{{ route('user.list') }}" class="{{ Request::is('user*') ? 'active' : ''  }}">
-                        <i class="fa fa-users fa-fw"></i> @lang('app.users')
-                    </a>
-                </li>
-            @endpermission
 
-            @permission('users.activity')
-                <li class="{{ Request::is('activity*') ? 'active open' : ''  }}">
-                    <a href="{{ route('activity.index') }}" class="{{ Request::is('activity*') ? 'active' : ''  }}">
-                        <i class="fa fa-list-alt fa-fw"></i> @lang('app.activity_log')
-                    </a>
-                </li>
-            @endpermission
 
-            @permission(['roles.manage', 'permissions.manage'])
-                <li class="{{ Request::is('role*') || Request::is('permission*') ? 'active open' : ''  }}">
-                    <a href="#">
-                        <i class="fa fa-user fa-fw"></i>
-                        @lang('app.roles_and_permissions')
-                        <span class="fa arrow"></span>
-                    </a>
-                    <ul class="nav nav-second-level collapse">
-                        @permission('roles.manage')
-                            <li>
-                                <a href="{{ route('role.index') }}" class="{{ Request::is('role*') ? 'active' : ''  }}">
-                                    @lang('app.roles')
-                                </a>
-                            </li>
-                        @endpermission
-                        @permission('permissions.manage')
-                            <li>
-                                <a href="{{ route('permission.index') }}"
-                                   class="{{ Request::is('permission*') ? 'active' : ''  }}">@lang('app.permissions')</a>
-                            </li>
-                        @endpermission
-                    </ul>
-                </li>
-            @endpermission
+            <li class="treeview">
+                <a href="create-campaign.html">
+                    <i class="fa fa-th"></i>
+                    <span>Create Campaign</span>
 
-            @permission(['settings.general', 'settings.auth', 'settings.notifications'])
-            <li class="{{ Request::is('settings*') ? 'active open' : ''  }}">
+                </a>
+
+            </li>
+            <li class="treeview">
                 <a href="#">
-                    <i class="fa fa-gear fa-fw"></i> @lang('app.settings')
-                    <span class="fa arrow"></span>
+                    <i class="fa fa-laptop"></i>
+                    <span>MPOs</span>
                 </a>
-                <ul class="nav nav-second-level collapse">
-                    @permission('settings.general')
-                        <li>
-                            <a href="{{ route('settings.general') }}"
-                               class="{{ Request::is('settings') ? 'active' : ''  }}">
-                                @lang('app.general')
-                            </a>
-                        </li>
-                    @endpermission
-                    @permission('settings.auth')
-                        <li>
-                            <a href="{{ route('settings.auth') }}"
-                               class="{{ Request::is('settings/auth*') ? 'active' : ''  }}">
-                                @lang('app.auth_and_registration')
-                            </a>
-                        </li>
-                    @endpermission
-                    @permission('settings.notifications')
-                        <li>
-                            <a href="{{ route('settings.notifications') }}"
-                               class="{{ Request::is('settings/notifications*') ? 'active' : ''  }}">
-                                @lang('app.notifications')
-                            </a>
-                        </li>
-                    @endpermission
-                </ul>
             </li>
-            @endpermission
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-edit"></i> <span>Ad Management</span>
+
+                </a>
+
+            </li>
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-table"></i> <span>Report</span>
+
+                </a>
+
+            </li>
+
+
+
         </ul>
-    </div>
-    <!-- /.sidebar-collapse -->
-</div>
+    </section>
+    <!-- /.sidebar -->
+</aside>

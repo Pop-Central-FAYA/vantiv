@@ -54,6 +54,10 @@ Route::get('auth/{provider}/login', [
     'middleware' => 'social.login'
 ]);
 
+Route::get('/test', function() {
+    return view('layouts/app');
+});
+
 Route::get('auth/{provider}/callback', 'Auth\SocialAuthController@handleProviderCallback');
 
 Route::get('auth/twitter/email', 'Auth\SocialAuthController@getTwitterEmail');
