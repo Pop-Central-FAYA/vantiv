@@ -26,7 +26,7 @@
         <ul class="sidebar-menu">
             <li class="header">MAIN NAVIGATION</li>
             <li class="active treeview">
-                <a href="index.html">
+                <a href="{{ asset('dashboard') }}">
                     <i class="fa fa-dashboard"></i> <span>Dashboard</span>
 
                 </a>
@@ -35,9 +35,9 @@
 
 
             <li class="treeview">
-                <a href="create-campaign.html">
+                <a href="{{ route('user.list') }}">
                     <i class="fa fa-th"></i>
-                    <span>Create Campaign</span>
+                    <span>Users</span>
 
                 </a>
 
@@ -45,19 +45,19 @@
             <li class="treeview">
                 <a href="#">
                     <i class="fa fa-laptop"></i>
-                    <span>MPOs</span>
+                    <span>Activity Log</span>
                 </a>
             </li>
             <li class="treeview">
                 <a href="#">
-                    <i class="fa fa-edit"></i> <span>Ad Management</span>
+                    <i class="fa fa-edit"></i> <span>Roles and Permission</span>
 
                 </a>
 
             </li>
             <li class="treeview">
-                <a href="#">
-                    <i class="fa fa-table"></i> <span>Report</span>
+                <a href="{{ route('settings.general') }}">
+                    <i class="fa fa-table"></i> <span>Settings</span>
 
                 </a>
 

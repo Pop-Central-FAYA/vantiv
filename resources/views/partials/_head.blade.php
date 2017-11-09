@@ -27,6 +27,15 @@
 <!-- bootstrap wysihtml5 - text editor -->
 <link rel="stylesheet" href="{{ asset('asset/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css') }}">
 
+
+<link media="all" type="text/css" rel="stylesheet" href="https://demo.vanguardapp.io/assets/css/metisMenu.css">
+
+<link media="all" type="text/css" rel="stylesheet" href="https://demo.vanguardapp.io/assets/css/sweetalert.css">
+
+<link media="all" type="text/css" rel="stylesheet" href="https://demo.vanguardapp.io/assets/css/bootstrap-social.css">
+
+
+
 @yield('stylesheets')
 
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->

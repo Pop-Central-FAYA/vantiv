@@ -14,4 +14,21 @@
 <script src="{{ asset('asset/dist/js/app.min.js') }}"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="{{ asset('asset/dist/js/demo.js') }}"></script>
+
+<script src="{{ asset('assets/js/metisMenu.min.js') }}"></script>
+
+<script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>
+
+<script src="{{ asset('assets/js/delete.handler.js') }}"></script>
+
+<script src="{{ asset('assets/plugins/js-cookie/js.cookie.js') }}"></script>
+
+<script type="text/javascript">
+    $.ajaxSetup({
+        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
+    });
+</script>
+<script src="{{ asset('vendor/jsvalidation/js/jsvalidation.js') }}"></script>
+
+<script src="{{ asset('assets/js/as/app.js') }}"></script>
 <!-- page script -->

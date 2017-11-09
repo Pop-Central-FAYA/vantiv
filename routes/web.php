@@ -109,7 +109,16 @@ Route::group(['prefix' => 'create-campaign'], function() {
 
 
 
-Route::group(['middleware' => 'auth'], function () {
+Route::group(['middleware' => 'auth'], function (){
+
+    /*
+     * User Dashboard
+     */
+
+    Route::get('/', [
+        'as' => 'dashboard',
+        'uses' => 'DashboardController@index',
+    ]);
 
     /**
      * User Profile
