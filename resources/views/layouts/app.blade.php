@@ -12,14 +12,17 @@
             @include('partials/sidebar')
 
                 <div class="content-wrapper">
-                    <!-- Content Header (Page header) -->
-                    <!-- Content Header (Page header) -->
 
-                    @include('partials.messages')
+                    <div class="container-fluid">
 
-                    <!-- Content Wrapper. Contains page content -->
-                    @yield('content')
+                        <div class="panel panel-default">
+                            <div class="container-fluid">
+                                @yield('content')
+                            </div>
 
+                        </div>
+
+                    </div>
 
                 </div>
                 <!-- /.content-wrapper -->

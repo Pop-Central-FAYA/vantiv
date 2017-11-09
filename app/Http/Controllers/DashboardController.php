@@ -64,6 +64,7 @@ class DashboardController extends Controller
 //        $stats = [
 //            'total' => $this->users->count(),
 //            'new' => $this->users->newUsersCount(),
+
 //            'banned' => $this->users->countByStatus(UserStatus::BANNED),
 //            'unconfirmed' => $this->users->countByStatus(UserStatus::UNCONFIRMED)
 //        ];

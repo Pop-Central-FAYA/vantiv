@@ -43,13 +43,13 @@
 
             </li>
             <li class="treeview">
-                <a href="#">
+                <a href="{{ route('activity.index') }}">
                     <i class="fa fa-laptop"></i>
                     <span>Activity Log</span>
                 </a>
             </li>
             <li class="treeview">
-                <a href="#">
+                <a href="{{ route('role.index') }}">
                     <i class="fa fa-edit"></i> <span>Roles and Permission</span>
 
                 </a>
