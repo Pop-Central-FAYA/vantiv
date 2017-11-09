@@ -19,7 +19,7 @@ class BroadcastEvent implements ShouldQueue
      *
      * @var mixed
      */
-    protected $event;
+    public $event;
 
     /**
      * Create a new job handler instance.
@@ -68,6 +68,8 @@ class BroadcastEvent implements ShouldQueue
         foreach ((new ReflectionClass($event))->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
             $payload[$property->getName()] = $this->formatProperty($property->getValue($event));
         }
+
+        unset($payload['broadcastQueue']);
 
         return $payload;
     }

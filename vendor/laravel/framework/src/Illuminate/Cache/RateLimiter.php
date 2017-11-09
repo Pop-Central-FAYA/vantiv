@@ -39,7 +39,7 @@ class RateLimiter
             return true;
         }
 
-        if ($this->attempts($key) > $maxAttempts) {
+        if ($this->attempts($key) >= $maxAttempts) {
             $this->lockout($key, $decayMinutes);
 
             $this->resetAttempts($key);
@@ -73,9 +73,15 @@ class RateLimiter
      */
     public function hit($key, $decayMinutes = 1)
     {
-        $this->cache->add($key, 1, $decayMinutes);
+        $added = $this->cache->add($key, 0, $decayMinutes);
 
-        return (int) $this->cache->increment($key);
+        $hits = (int) $this->cache->increment($key);
+
+        if (! $added && $hits == 1) {
+            $this->cache->put($key, 1, $decayMinutes);
+        }
+
+        return $hits;
     }
 
     /**
@@ -111,7 +117,7 @@ class RateLimiter
     {
         $attempts = $this->attempts($key);
 
-        return $attempts === 0 ? $maxAttempts : $maxAttempts - $attempts + 1;
+        return $maxAttempts - $attempts;
     }
 
     /**
