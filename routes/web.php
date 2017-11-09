@@ -54,21 +54,62 @@ Route::get('auth/{provider}/login', [
     'middleware' => 'social.login'
 ]);
 
+Route::get('/test', function() {
+    return view('layouts/app');
+});
+
 Route::get('auth/{provider}/callback', 'Auth\SocialAuthController@handleProviderCallback');
 
 Route::get('auth/twitter/email', 'Auth\SocialAuthController@getTwitterEmail');
 Route::post('auth/twitter/email', 'Auth\SocialAuthController@postTwitterEmail');
 
+Route::get('/dashboard', function() {
+    return view('dashboard.default');
+});
+
+Route::group(['prefix' => 'create-campaign'], function() {
+
+    Route::get('/1', function() {
+        return view('campaign.create1');
+    });
+
+    Route::get('/2', function() {
+        return view('campaign.create2');
+    });
+
+    Route::get('/3', function() {
+        return view('campaign.create3');
+    });
+
+    Route::get('/4', function() {
+        return view('campaign.create4');
+    });
+
+    Route::get('/5', function() {
+        return view('campaign.create5');
+    });
+
+    Route::get('/6', function() {
+        return view('campaign.create6');
+    });
+
+    Route::get('/7', function() {
+        return view('campaign.create7');
+    });
+
+    Route::get('/8', function() {
+        return view('campaign.create8');
+    });
+
+    Route::get('/9', function() {
+        return view('campaign.create9');
+    });
+
+});
+
+
+
 Route::group(['middleware' => 'auth'], function () {
-
-    /**
-     * Dashboard
-     */
-
-    Route::get('/', [
-        'as' => 'dashboard',
-        'uses' => 'DashboardController@index'
-    ]);
 
     /**
      * User Profile
