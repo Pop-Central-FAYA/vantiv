@@ -7,6 +7,7 @@ use Vanguard\Events\User\LoggedOut;
 use Vanguard\Events\User\Registered;
 use Vanguard\Http\Requests\Auth\LoginRequest;
 use Vanguard\Http\Requests\Auth\RegisterRequest;
+use Vanguard\Libraries\Api;
 use Vanguard\Mailers\UserMailer;
 use Vanguard\Repositories\Role\RoleRepository;
 use Vanguard\Repositories\User\UserRepository;
@@ -99,6 +100,8 @@ class AuthController extends Controller
                 ->withErrors(trans('app.your_account_is_banned'));
         }
 
+        $api_login = Api::auth_user($request);
+        dd($api_login);
         Auth::login($user, settings('remember_me') && $request->get('remember'));
 
         return $this->handleUserWasAuthenticated($request, $throttles, $user);
