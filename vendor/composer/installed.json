@@ -3267,6 +3267,7 @@
         "version_normalized": "2.4.0.0",
         "source": {
             "type": "git",
+<<<<<<< HEAD
             "url": "https://github.com/anhskohbo/no-captcha.git",
             "reference": "cc0bacff1bb59f518af135ee3beae39bed079724"
         },
@@ -3274,6 +3275,15 @@
             "type": "zip",
             "url": "https://api.github.com/repos/anhskohbo/no-captcha/zipball/cc0bacff1bb59f518af135ee3beae39bed079724",
             "reference": "cc0bacff1bb59f518af135ee3beae39bed079724",
+=======
+            "url": "https://github.com/mockery/mockery.git",
+            "reference": "1e5e2ffdc4d71d7358ed58a6fdd30a4a0c506855"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/mockery/mockery/zipball/1e5e2ffdc4d71d7358ed58a6fdd30a4a0c506855",
+            "reference": "1e5e2ffdc4d71d7358ed58a6fdd30a4a0c506855",
+>>>>>>> ef8ac5ba2bbd6a95341c96a6a858d396632d2835
             "shasum": ""
         },
         "require": {
@@ -4446,5 +4456,126 @@
             "curl",
             "laravel"
         ]
+<<<<<<< HEAD
+=======
+    },
+    {
+        "name": "proengsoft/laravel-jsvalidation",
+        "version": "v1.6.0",
+        "version_normalized": "1.6.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/reganjohnson/laravel-jsvalidation.git",
+            "reference": "e93419ce53132f8d3d8ffaf32600a68a25e54ae8"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/reganjohnson/laravel-jsvalidation/zipball/e93419ce53132f8d3d8ffaf32600a68a25e54ae8",
+            "reference": "e93419ce53132f8d3d8ffaf32600a68a25e54ae8",
+            "shasum": ""
+        },
+        "require": {
+            "illuminate/config": "~5.4",
+            "illuminate/contracts": "~5.4",
+            "illuminate/http": "~5.4",
+            "illuminate/support": "~5.4",
+            "illuminate/translation": "~5.4",
+            "illuminate/validation": "~5.4",
+            "illuminate/view": "~5.4",
+            "php": ">=5.4.0"
+        },
+        "require-dev": {
+            "mockery/mockery": "~0.9",
+            "phpunit/phpunit": "~4.0"
+        },
+        "time": "2017-01-31T13:50:57+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Proengsoft\\JsValidation\\": "src",
+                "Proengsoft\\JsValidation\\Tests\\": "tests"
+            }
+        },
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Albert Moreno",
+                "email": "albert@memorylimit.net",
+                "homepage": "https://github.com/torrentalle"
+            }
+        ],
+        "description": "Validate forms transparently with Javascript reusing your Laravel Validation Rules, Messages, and FormRequest",
+        "homepage": "https://github.com/proengsoft/laravel-jsvalidation",
+        "keywords": [
+            "form",
+            "javascript",
+            "jquery",
+            "laravel",
+            "proengsoft",
+            "validation",
+            "validator"
+        ],
+        "support": {
+            "source": "https://github.com/reganjohnson/laravel-jsvalidation/tree/v1.6.0"
+        }
+    },
+    {
+        "name": "ixudra/curl",
+        "version": "6.15.1",
+        "version_normalized": "6.15.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/ixudra/curl.git",
+            "reference": "9aba4d3341cb972e3379c6083df375f27a5b9616"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/ixudra/curl/zipball/9aba4d3341cb972e3379c6083df375f27a5b9616",
+            "reference": "9aba4d3341cb972e3379c6083df375f27a5b9616",
+            "shasum": ""
+        },
+        "require": {
+            "illuminate/support": ">=4.0",
+            "php": ">=5.4.0"
+        },
+        "time": "2017-11-07T13:28:52+00:00",
+        "type": "library",
+        "extra": {
+            "laravel": {
+                "providers": [
+                    "Ixudra\\Curl\\CurlServiceProvider"
+                ],
+                "aliases": {
+                    "Curl": "Ixudra\\Curl\\Facades\\Curl"
+                }
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Ixudra\\Curl\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Jan Oris",
+                "email": "jan.oris@ixudra.be"
+            }
+        ],
+        "description": "Custom PHP Curl library for the Laravel 5 framework - developed by Ixudra",
+        "homepage": "http://ixudra.be",
+        "keywords": [
+            "Ixudra",
+            "curl",
+            "laravel"
+        ]
+>>>>>>> ef8ac5ba2bbd6a95341c96a6a858d396632d2835
     }
 ]

@@ -65,7 +65,7 @@ Route::post('auth/twitter/email', 'Auth\SocialAuthController@postTwitterEmail');
 
 Route::get('/dashboard', function() {
     return view('dashboard.default');
-});
+})->name('dashboard');
 
 Route::group(['prefix' => 'create-campaign'], function() {
 
