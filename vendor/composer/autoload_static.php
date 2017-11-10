@@ -90,6 +90,7 @@ class ComposerStaticInitf21065eee33d83e8b687549e5f2385ef
         ),
         'I' => 
         array (
+            'Ixudra\\Curl\\' => 12,
             'Intervention\\Image\\' => 19,
             'Illuminate\\' => 11,
         ),
@@ -257,6 +258,10 @@ class ComposerStaticInitf21065eee33d83e8b687549e5f2385ef
         'Laravel\\BrowserKitTesting\\' => 
         array (
             0 => __DIR__ . '/..' . '/laravel/browser-kit-testing/src',
+        ),
+        'Ixudra\\Curl\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/ixudra/curl/src',
         ),
         'Intervention\\Image\\' => 
         array (
@@ -1911,6 +1916,10 @@ class ComposerStaticInitf21065eee33d83e8b687549e5f2385ef
         'Intervention\\Image\\Point' => __DIR__ . '/..' . '/intervention/image/src/Intervention/Image/Point.php',
         'Intervention\\Image\\Response' => __DIR__ . '/..' . '/intervention/image/src/Intervention/Image/Response.php',
         'Intervention\\Image\\Size' => __DIR__ . '/..' . '/intervention/image/src/Intervention/Image/Size.php',
+        'Ixudra\\Curl\\Builder' => __DIR__ . '/..' . '/ixudra/curl/src/Builder.php',
+        'Ixudra\\Curl\\CurlService' => __DIR__ . '/..' . '/ixudra/curl/src/CurlService.php',
+        'Ixudra\\Curl\\CurlServiceProvider' => __DIR__ . '/..' . '/ixudra/curl/src/CurlServiceProvider.php',
+        'Ixudra\\Curl\\Facades\\Curl' => __DIR__ . '/..' . '/ixudra/curl/src/Facades/Curl.php',
         'Laracasts\\Presenter\\Contracts\\PresentableInterface' => __DIR__ . '/..' . '/laracasts/presenter/src/Laracasts/Presenter/Contracts/PresentableInterface.php',
         'Laracasts\\Presenter\\Exceptions\\PresenterException' => __DIR__ . '/..' . '/laracasts/presenter/src/Laracasts/Presenter/Exceptions/PresenterException.php',
         'Laracasts\\Presenter\\PresentableTrait' => __DIR__ . '/..' . '/laracasts/presenter/src/Laracasts/Presenter/PresentableTrait.php',
@@ -3441,6 +3450,9 @@ class ComposerStaticInitf21065eee33d83e8b687549e5f2385ef
         'Vanguard\\Http\\Requests\\User\\UpdateProfileLoginDetailsRequest' => __DIR__ . '/../..' . '/app/Http/Requests/User/UpdateProfileLoginDetailsRequest.php',
         'Vanguard\\Http\\Requests\\User\\UploadAvatarRequest' => __DIR__ . '/../..' . '/app/Http/Requests/User/UploadAvatarRequest.php',
         'Vanguard\\Jobs\\Job' => __DIR__ . '/../..' . '/app/Jobs/Job.php',
+        'Vanguard\\Libraries\\Aes' => __DIR__ . '/../..' . '/app/Libraries/Aes.php',
+        'Vanguard\\Libraries\\Api' => __DIR__ . '/../..' . '/app/Libraries/Api.php',
+        'Vanguard\\Libraries\\Encrypt' => __DIR__ . '/../..' . '/app/Libraries/Encrypt.php',
         'Vanguard\\Listeners\\PermissionEventsSubscriber' => __DIR__ . '/../..' . '/app/Listeners/PermissionEventsSubscriber.php',
         'Vanguard\\Listeners\\RoleEventsSubscriber' => __DIR__ . '/../..' . '/app/Listeners/RoleEventsSubscriber.php',
         'Vanguard\\Listeners\\UserEventsSubscriber' => __DIR__ . '/../..' . '/app/Listeners/UserEventsSubscriber.php',

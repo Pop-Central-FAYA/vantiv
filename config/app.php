@@ -184,6 +184,7 @@ return [
         Intervention\Image\ImageServiceProvider::class,
         Vanguard\Providers\EntrustServiceProvider::class,
         anlutro\LaravelSettings\ServiceProvider::class,
+        Ixudra\Curl\CurlServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -254,6 +255,7 @@ return [
         'Entrust' => Zizaco\Entrust\EntrustFacade::class,
         'Settings' => anlutro\LaravelSettings\Facade::class,
         'Authy' => Vanguard\Services\Auth\TwoFactor\Facade::class,
+        'Curl' => Ixudra\Curl\Facades\Curl::class,
 
 
     ],

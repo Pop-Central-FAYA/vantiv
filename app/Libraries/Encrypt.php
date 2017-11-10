@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Libraries\AesLibrary;
+namespace Vanguard\Libraries;
 
-use App\Libraries\AesLibrary\Aes;
+use Vanguard\Libraries\Aes;
 
 Class Encrypt extends Aes
 {
