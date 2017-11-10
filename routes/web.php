@@ -63,10 +63,6 @@ Route::get('auth/{provider}/callback', 'Auth\SocialAuthController@handleProvider
 Route::get('auth/twitter/email', 'Auth\SocialAuthController@getTwitterEmail');
 Route::post('auth/twitter/email', 'Auth\SocialAuthController@postTwitterEmail');
 
-Route::get('/dashboard', function() {
-    return view('dashboard.default');
-});
-
 Route::group(['prefix' => 'create-campaign'], function() {
 
     Route::get('/1', function() {
@@ -114,6 +110,10 @@ Route::group(['middleware' => 'auth'], function () {
     /**
      * User Profile
      */
+
+    Route::get('/dashboard', function() {
+        return view('dashboard.default');
+    })->name('dashboard');
 
     Route::get('profile', [
         'as' => 'profile',
