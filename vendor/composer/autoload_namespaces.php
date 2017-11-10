@@ -11,6 +11,5 @@ return array(
     'Parsedown' => array($vendorDir . '/erusev/parsedown'),
     'Mockery' => array($vendorDir . '/mockery/mockery/library'),
     'Laracasts\\Presenter' => array($vendorDir . '/laracasts/presenter/src'),
-    'Doctrine\\Common\\Inflector\\' => array($vendorDir . '/doctrine/inflector/lib'),
     'Barryvdh' => array($vendorDir . '/barryvdh/reflection-docblock/src'),
 );

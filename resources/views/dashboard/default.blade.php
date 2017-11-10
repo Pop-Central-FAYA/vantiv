@@ -1,14 +1,13 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard')
-
 @section('content')
 
+    @section('title', 'Faya | Dashboard')
     <!-- Content Header (Page header) -->
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            Dashboard
+            Welcome {{ Auth::user()->username }}!
 
         </h1>
         <ol class="breadcrumb">
@@ -19,7 +18,78 @@
     <!-- Main content -->
     <section class="content">
         <div class="row">
+            <div class="col-lg-3 col-md-6">
+                <div class="panel panel-widget panel-primary">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-7">
+                                <div class="title">Total Users</div>
+                                <div class="text-huge">26</div>
+                            </div>
+                            <div class="icon">
+                                <i class="fa fa-user-plus fa-5x"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#">
+                        <div class="panel-footer">
+                            <span class="pull-left">View All Users</span>
+                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <div class="panel panel-widget panel-success">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-7">
+                                <div class="title">Total Broadcaster</div>
+                                <div class="text-huge">262</div>
+                            </div>
+                            <div class="icon">
+                                <i class="fa fa-users fa-5x"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#">
+                        <div class="panel-footer">
+                            <span class="pull-left">View All Broadcaster</span>
+                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <div class="panel panel-widget panel-default">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-7">
+                                <div class="title">Total Agency</div>
+                                <div class="text-huge">12</div>
+                            </div>
+                            <div class="icon">
+                                <i class="fa fa-user-times fa-5x"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#">
+                        <div class="panel-footer">
+                            <span class="pull-left">View All Agency</span>
+                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+
             <div class="col-md-6">
+
                 <!-- AREA CHART -->
                 <div class="box box-primary">
                     <div class="box-header with-border">
@@ -107,8 +177,8 @@
         <!-- /.row -->
 
     </section>
-    <!-- /.content -->
-
+        <!-- /.content -->
+    <
 @stop
 
 @section('scripts')

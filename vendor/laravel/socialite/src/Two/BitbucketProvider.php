@@ -15,6 +15,13 @@ class BitbucketProvider extends AbstractProvider implements ProviderInterface
     protected $scopes = ['email'];
 
     /**
+     * The separating character for the requested scopes.
+     *
+     * @var string
+     */
+    protected $scopeSeparator = ' ';
+
+    /**
      * {@inheritdoc}
      */
     protected function getAuthUrl($state)
@@ -112,8 +119,6 @@ class BitbucketProvider extends AbstractProvider implements ProviderInterface
      */
     protected function getTokenFields($code)
     {
-        return [
-            'code' => $code, 'redirect_uri' => $this->redirectUrl, 'grant_type' => 'authorization_code',
-        ];
+        return parent::getTokenFields($code) + ['grant_type' => 'authorization_code'];
     }
 }

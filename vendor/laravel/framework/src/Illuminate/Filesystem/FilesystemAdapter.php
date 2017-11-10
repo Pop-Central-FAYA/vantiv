@@ -9,6 +9,7 @@ use InvalidArgumentException;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
 use League\Flysystem\AdapterInterface;
+use PHPUnit\Framework\Assert as PHPUnit;
 use League\Flysystem\FilesystemInterface;
 use League\Flysystem\AwsS3v3\AwsS3Adapter;
 use League\Flysystem\FileNotFoundException;
@@ -17,6 +18,9 @@ use Illuminate\Contracts\Filesystem\Cloud as CloudFilesystemContract;
 use Illuminate\Contracts\Filesystem\Filesystem as FilesystemContract;
 use Illuminate\Contracts\Filesystem\FileNotFoundException as ContractFileNotFoundException;
 
+/**
+ * @mixin \League\Flysystem\FilesystemInterface
+ */
 class FilesystemAdapter implements FilesystemContract, CloudFilesystemContract
 {
     /**
@@ -38,6 +42,32 @@ class FilesystemAdapter implements FilesystemContract, CloudFilesystemContract
     }
 
     /**
+     * Assert that the given file exists.
+     *
+     * @param  string  $path
+     * @return void
+     */
+    public function assertExists($path)
+    {
+        PHPUnit::assertTrue(
+            $this->exists($path), "Unable to find a file at path [{$path}]."
+        );
+    }
+
+    /**
+     * Assert that the given file does not exist.
+     *
+     * @param  string  $path
+     * @return void
+     */
+    public function assertMissing($path)
+    {
+        PHPUnit::assertFalse(
+            $this->exists($path), "Found unexpected file at path [{$path}]."
+        );
+    }
+
+    /**
      * Determine if a file exists.
      *
      * @param  string  $path
@@ -46,6 +76,17 @@ class FilesystemAdapter implements FilesystemContract, CloudFilesystemContract
     public function exists($path)
     {
         return $this->driver->has($path);
+    }
+
+    /**
+     * Get the full path for the file at the given "short" path.
+     *
+     * @param  string  $path
+     * @return string
+     */
+    public function path($path)
+    {
+        return $this->driver->getAdapter()->getPathPrefix().$path;
     }
 
     /**
@@ -96,7 +137,7 @@ class FilesystemAdapter implements FilesystemContract, CloudFilesystemContract
      * Store the uploaded file on the disk.
      *
      * @param  string  $path
-     * @param  \Illuminate\Http\UploadedFile  $file
+     * @param  \Illuminate\Http\File|\Illuminate\Http\UploadedFile  $file
      * @param  array  $options
      * @return string|false
      */
@@ -324,7 +365,7 @@ class FilesystemAdapter implements FilesystemContract, CloudFilesystemContract
         // it as the base URL instead of the default path. This allows the developer to
         // have full control over the base path for this filesystem's generated URLs.
         if ($config->has('url')) {
-            return trim($config->get('url'), '/').'/'.ltrim($path, '/');
+            return rtrim($config->get('url'), '/').'/'.ltrim($path, '/');
         }
 
         $path = '/storage/'.$path;
@@ -337,6 +378,36 @@ class FilesystemAdapter implements FilesystemContract, CloudFilesystemContract
         } else {
             return $path;
         }
+    }
+
+    /**
+     * Get a temporary URL for the file at the given path.
+     *
+     * @param  string  $path
+     * @param  \DateTimeInterface  $expiration
+     * @param  array  $options
+     * @return string
+     */
+    public function temporaryUrl($path, $expiration, array $options = [])
+    {
+        $adapter = $this->driver->getAdapter();
+
+        if (method_exists($adapter, 'getTemporaryUrl')) {
+            return $adapter->getTemporaryUrl($path, $expiration, $options);
+        } elseif (! $adapter instanceof AwsS3Adapter) {
+            throw new RuntimeException('This driver does not support creating temporary URLs.');
+        }
+
+        $client = $adapter->getClient();
+
+        $command = $client->getCommand('GetObject', array_merge([
+            'Bucket' => $adapter->getBucket(),
+            'Key' => $adapter->getPathPrefix().$path,
+        ], $options));
+
+        return (string) $client->createPresignedRequest(
+            $command, $expiration
+        )->getUri();
     }
 
     /**

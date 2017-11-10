@@ -228,7 +228,7 @@ class Command extends SymfonyCommand
     /**
      * Get the value of a command argument.
      *
-     * @param  string  $key
+     * @param  string|null  $key
      * @return string|array
      */
     public function argument($key = null)
@@ -473,6 +473,21 @@ class Command extends SymfonyCommand
         }
 
         $this->line($string, 'warning', $verbosity);
+    }
+
+    /**
+     * Write a string in an alert box.
+     *
+     * @param  string  $string
+     * @return void
+     */
+    public function alert($string)
+    {
+        $this->comment(str_repeat('*', strlen($string) + 12));
+        $this->comment('*     '.$string.'     *');
+        $this->comment(str_repeat('*', strlen($string) + 12));
+
+        $this->output->writeln('');
     }
 
     /**
