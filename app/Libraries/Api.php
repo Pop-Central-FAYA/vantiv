@@ -43,7 +43,13 @@ Class Api
             'password' => $password
         ];
 
-        ApiLog::save_activity_log($req, $response, $auth_url);
-        return $response;
+        //ApiLog::save_activity_log($req, $response, $auth_url);
+
+        $data = json_decode($response, true);
+
+        session(['token' => $data['data']['token']]);
+
+        dd(session('token'));
+
     }
 }
