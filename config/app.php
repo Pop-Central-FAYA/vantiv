@@ -255,12 +255,7 @@ return [
         'Entrust' => Zizaco\Entrust\EntrustFacade::class,
         'Settings' => anlutro\LaravelSettings\Facade::class,
         'Authy' => Vanguard\Services\Auth\TwoFactor\Facade::class,
-<<<<<<< HEAD
-        'Curl'          => Ixudra\Curl\Facades\Curl::class,
-=======
-        'Curl' => Ixudra\Curl\Facades\Curl::class,
->>>>>>> ef8ac5ba2bbd6a95341c96a6a858d396632d2835
-
+        'Curl' => Ixudra\Curl\Facades\Curl::class
 
     ],
 

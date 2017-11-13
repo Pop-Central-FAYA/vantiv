@@ -3083,6 +3083,7 @@ return array(
     'TijsVerkoyen\\CssToInlineStyles\\Css\\Rule\\Processor' => $vendorDir . '/tijsverkoyen/css-to-inline-styles/src/Css/Rule/Processor.php',
     'TijsVerkoyen\\CssToInlineStyles\\Css\\Rule\\Rule' => $vendorDir . '/tijsverkoyen/css-to-inline-styles/src/Css/Rule/Rule.php',
     'UserSeeder' => $baseDir . '/database/seeds/UserSeeder.php',
+    'Vanguard\\ApiLog' => $baseDir . '/app/ApiLog.php',
     'Vanguard\\Console\\Kernel' => $baseDir . '/app/Console/Kernel.php',
     'Vanguard\\Country' => $baseDir . '/app/Country.php',
     'Vanguard\\Events\\Event' => $baseDir . '/app/Events/Event.php',

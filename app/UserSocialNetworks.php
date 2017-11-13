@@ -26,4 +26,25 @@ class UserSocialNetworks extends Model
     public $timestamps = false;
 
     protected $fillable = ['facebook', 'twitter', 'google_plus', 'dribbble', 'linked_in', 'skype'];
+
+    /**
+     * Get the connection of the entity.
+     *
+     * @return string|null
+     */
+    public function getQueueableConnection()
+    {
+        // TODO: Implement getQueueableConnection() method.
+    }
+
+    /**
+     * Retrieve the model for a bound value.
+     *
+     * @param  mixed $value
+     * @return \Illuminate\Database\Eloquent\Model|null
+     */
+    public function resolveRouteBinding($value)
+    {
+        // TODO: Implement resolveRouteBinding() method.
+    }
 }

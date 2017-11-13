@@ -3455,6 +3455,7 @@ class ComposerStaticInitf21065eee33d83e8b687549e5f2385ef
         'TijsVerkoyen\\CssToInlineStyles\\Css\\Rule\\Processor' => __DIR__ . '/..' . '/tijsverkoyen/css-to-inline-styles/src/Css/Rule/Processor.php',
         'TijsVerkoyen\\CssToInlineStyles\\Css\\Rule\\Rule' => __DIR__ . '/..' . '/tijsverkoyen/css-to-inline-styles/src/Css/Rule/Rule.php',
         'UserSeeder' => __DIR__ . '/../..' . '/database/seeds/UserSeeder.php',
+        'Vanguard\\ApiLog' => __DIR__ . '/../..' . '/app/ApiLog.php',
         'Vanguard\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'Vanguard\\Country' => __DIR__ . '/../..' . '/app/Country.php',
         'Vanguard\\Events\\Event' => __DIR__ . '/../..' . '/app/Events/Event.php',

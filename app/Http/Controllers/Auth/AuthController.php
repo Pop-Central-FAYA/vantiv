@@ -30,6 +30,10 @@ class AuthController extends Controller
      */
     private $users;
 
+    private $api_private_key = "nzrm64jtj9srsjab";
+    private $url = "https://faya-staging.herokuapp.com/api/v1/";
+
+
     /**
      * Create a new authentication controller instance.
      * @param UserRepository $users
@@ -62,6 +66,8 @@ class AuthController extends Controller
      */
     public function postLogin(LoginRequest $request)
     {
+
+        $api_login = Api::auth_user($request);
         // In case that request throttling is enabled, we have to check if user can perform this request.
         // We'll key this by the username and the IP address of the client making these requests into this application.
         $throttles = settings('throttle_enabled');
@@ -74,6 +80,7 @@ class AuthController extends Controller
         }
 
         $credentials = $this->getCredentials($request);
+
 
         if (! Auth::validate($credentials)) {
 
@@ -100,8 +107,6 @@ class AuthController extends Controller
                 ->withErrors(trans('app.your_account_is_banned'));
         }
 
-        $api_login = Api::auth_user($request);
-        dd($api_login);
         Auth::login($user, settings('remember_me') && $request->get('remember'));
 
         return $this->handleUserWasAuthenticated($request, $throttles, $user);
@@ -222,7 +227,7 @@ class AuthController extends Controller
      */
     public function loginUsername()
     {
-        return 'username';
+        return 'email';
     }
 
     /**
@@ -419,8 +424,8 @@ class AuthController extends Controller
     private function isEmail($param)
     {
         return ! Validator::make(
-            ['username' => $param],
-            ['username' => 'email']
+            ['email' => $param],
+            ['email' => 'email']
         )->fails();
     }
 
