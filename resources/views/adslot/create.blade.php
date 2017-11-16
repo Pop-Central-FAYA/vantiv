@@ -74,7 +74,7 @@
                                     <input type="hidden" name="time_id[]" value="{{ $second->id }}">
                                 </div>
                                 <div class="col-md-6">
-                                    <input type="number" name="price[]" placeholder="Enter price for {{ $second->time_in_seconds }}s" class="form-control">
+                                    <input type="number" name="price[]" required placeholder="Enter price for {{ $second->time_in_seconds }}s" class="form-control">
                                 </div>
                                 </br>
                             </div>

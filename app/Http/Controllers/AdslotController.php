@@ -24,9 +24,8 @@ class AdslotController extends Controller
         $api_seconds = Api::get_time();
         $api_get = json_decode($api_seconds);
         $api = $api_get->data;
-//        dd($b);
-        return view('adslot.index')->with('adslot', $b)->with('seconds', $api);
 
+        return view('adslot.index')->with('adslot', $b)->with('seconds', $api);
 
     }
 

@@ -81,16 +81,16 @@
                                             </thead>
                                             <tbody>
                                             @foreach($adslot as $adslots)
-                                            <tr id="{{ $adslots->id }}">
-                                                <td>Monday</td>
+                                            <tr class="adslot_tr{{ $adslots->id }}" tr_id="{{ $adslots->id }}">
+                                                <td class="day{{ $adslots->id }}">{{ $adslots->day }}</td>
 
-                                                <td>{{ $adslots->hourly_range[0]->time_range }}</td>
+                                                <td class="time_slot{{ $adslots->id }}"></td>
                                                 @foreach($adslots->rate_card as $rating)
-                                                    <td>{{ ((object)($rating))->price }}</td>
+                                                    <td><input type="text" id="price" class="form-control price{{ $adslots->id }}" readonly name="price" value="{{ ((object)($rating))->price }}"></td>
                                                 @endforeach
-                                                <td>
-                                                    <a href="#" id="edit" edit_adslot_id = "{{ $adslots->id }}" style="font-size: 16px"><span class="label label-warning" data-toggle="modal" data-target=".bs-example1-modal-md" style="cursor: pointer;">  Edit</span></a>
-
+                                                <td class="adslot_td{{ $adslots->id }}">
+                                                    <a href="#" id="edit" edit_adslot_id = "{{ $adslots->id }}" style="font-size: 16px"><span class="label label-warning" data-toggle="modal" data-target=".bs-example1-modal-md{{ $adslots->id }}" style="cursor: pointer;">Edit</span></a>
+                                                </td>
                                                     {{--<a href="#" style="font-size: 16px"><span class="label label-danger">  <i class="fa fa-trash"></i></span></a></td>--}}
                                             </tr>
                                             @endforeach
@@ -130,18 +130,25 @@
                     <!-- /.col -->
                 </div>
 
-                <div class="modal fade bs-example1-modal-md" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+                @foreach($adslot as $adslots)
+                <div class="modal fade bs-example1-modal-md{{ $adslots->id }}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
                     <div class="modal-dialog modal-md" role="document">
                         <div class="modal-content" style="padding: 7%">
-                            <h3 align="center">All / Monday / 09:00 - 10:00 am</h3>
+                            <h3 align="center">All / {{ $adslots->day }} / </h3>
 
                             <form class="selsec" style="margin-left:">
-                                {{--@foreach($adslot as $adslots)--}}
-                                    @foreach($adslots->rate_card as $rating)
-                                        <p align="center"><input type="radio" name="duration" value="sec"> <span style="margin-left: 10px;"></span> <span class="sec-amount">{{ ((object)($rating))->price }}</span></p>
-                                    @endforeach
-
-                                {{--@endforeach--}}
+                                @foreach($adslots->rate_card as $rating)
+                                <p align="center">
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            {{ ((object)($rating))->price }}
+                                        </div>
+                                        <div class="col-md-5">
+                                            <input name="price" id="price" class="form-control" value="{{ ((object)($rating))->price }}" />
+                                        </div>
+                                    </div>
+                                </p>
+                                @endforeach
                             </form>
 
                             <p align="center">
@@ -152,6 +159,7 @@
                         </div>
                     </div>
                 </div>
+                @endforeach
 
 
             {{--</div>--}}
@@ -162,14 +170,26 @@
     {!! HTML::script('assets/js/moment.min.js') !!}
     {!! HTML::script('assets/js/bootstrap-datetimepicker.min.js') !!}
 
-    <script>
-        $(document).ready(function() {
-            $("body").delegate("#edit", "click", function() {
-               var id = $(this).attr("edit_adslot_id");
+    {{--<script>--}}
+        {{--$(document).ready(function() {--}}
+            {{--$("body").delegate("#edit", "click", function() {--}}
+                {{--var id = $(this).attr("edit_adslot_id");--}}
+                {{--var id_tr = $(".adslot_tr"+id+"").attr("tr_id")--}}
+                {{--if(id === id_tr){--}}
+                    {{--$(".adslot_tr"+id+"").each(function(){--}}
+                        {{--var day = $(".day"+id+"").text();--}}
+                        {{--var time_slot = $(".time_slot"+id+"").text();--}}
+                        {{--$("#price").each(function(){--}}
+                            {{--var price = $(".price"+id+"").val();--}}
+                            {{--$("#price").val(price);--}}
+                            {{--console.log(price);--}}
+                        {{--});--}}
 
-            });
-        })
-    </script>
+                    {{--});--}}
+                {{--}--}}
+            {{--});--}}
+        {{--})--}}
+    {{--</script>--}}
     <script>
         $(function () {
             $("#example1").DataTable();

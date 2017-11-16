@@ -50,13 +50,14 @@ Class Api
         ApiLog::save_activity_log($req, $response, $auth_url);
 
         $data = json_decode($response, true);
-        //dd($data);
+//        dd($response);
 
-        session(['token' => $data['data']['token']]);
+        session(['encrypted_token' => $data['data']['token']]);
         session(['broadcaster_id' => $data['data']['info']['id']]);
 
-        //return $data;
-
+        $tok = Encrypt::decrypt(Session::get('encrypted_token'), Api::$api_private_key, 256);
+        session(['token' => $tok]);
+//        $token = Session::get('token');
 
     }
 
@@ -64,9 +65,10 @@ Class Api
     {
         $url = Api::$url.'adslot/hourly/range?key='.Api::$public;
         $token = Session::get('token');
+        $enc_token = Session::get('encrypted_token');
 
         $response = Curl::to($url)
-            ->withHeader("token: $token")
+            ->withHeader("token: $enc_token")
             ->get();
 
         $req = json_encode([
@@ -86,9 +88,10 @@ Class Api
     {
         $url = Api::$url.'adslot/time?key='.Api::$public;
         $token = Session::get('token');
+        $enc_token = Session::get('encrypted_token');
 
         $response = Curl::to($url)
-            ->withHeader("token: $token")
+            ->withHeader("token: $enc_token")
             ->get();
 
         $req = json_encode([
@@ -107,8 +110,9 @@ Class Api
     {
         $url = Api::$url.'adslot/discount?key='.Api::$public;
         $token = Session::get('token');
+        $enc_token = Session::get('encrypted_token');
         $response = Curl::to($url)
-                    ->withHeader("token: $token")
+                    ->withHeader("token: $enc_token")
                     ->get();
 
         $req = json_encode([
@@ -131,10 +135,12 @@ Class Api
         $start_date = strtotime($request->start_date);
         $end_date = strtotime($request->end_date);
         $hourly_range = $request->hourly_range;
+        $day = $request->days;
         $time = $request->time;
         $price = $request->price;
         $time_id = $request->time_id;
         $url = Api::$url.'adslot/create?key='.Api::$public;
+        $enc_token = Session::get('encrypted_token');
         $token = Session::get('token');
         $time_data = [];
         $i = 0;
@@ -157,12 +163,13 @@ Class Api
         ];
 
         $response = Curl::to($url)
-                    ->withHeader("token: $token")
+                    ->withHeader("token: $enc_token")
                     ->withData([
                         'user_id' => self::explode_token($token, 'id'),
                         'broadcaster_id' => Session::get('broadcaster_id'),
                         'overall_price' => $overall_price,
                         'hourly_range_id' => $hourly_range,
+                        'day' => $day,
                         'is_premium' => $premium,
                         'premium_start_date' => $start_date,
                         'premium_end_date' => $end_date,
@@ -186,7 +193,7 @@ Class Api
         session(['adslot_data' => $response]);
 
         //return $response;
-        return $response;
+        dd($response);
 
     }
 
@@ -195,16 +202,16 @@ Class Api
         $exploded_token = explode(",", $token);
         switch ($type){
             case 'id':
-                $id = explode("=", $exploded_token[1]);
+                $id = $exploded_token;
                 return $id[1];
                 break;
             case 'name':
-                $name = explode("=", $exploded_token[3]);
-                return $name[1];
+                $name = $exploded_token;
+                return $name[3];
                 break;
             case 'row':
-                $row = explode("=", $exploded_token[2]);
-                return $row[1];
+                $row = $exploded_token;
+                return $row[2];
                 break;
             default:
                 return $exploded_token;
@@ -216,8 +223,9 @@ Class Api
     {
         $url = Api::$url.'adslot/all/'.Session::get('broadcaster_id').'?key='.Api::$public;
         $token = Session::get('token');
+        $enc_token = Session::get('encrypted_token');
         $response = Curl::to($url)
-            ->withHeader("token: $token")
+            ->withHeader("token: $enc_token")
             ->get();
 
         $req = json_encode([
