@@ -103,7 +103,9 @@ Route::group(['prefix' => 'create-campaign'], function() {
 
 });
 
-
+//Route::get('/addslot', function() {
+//    return view('adslot.create');
+//});
 
 Route::group(['middleware' => 'auth'], function (){
 
@@ -115,6 +117,31 @@ Route::group(['middleware' => 'auth'], function (){
         'as' => 'dashboard',
         'uses' => 'DashboardController@index',
     ]);
+
+    /**
+     * Adslot
+     */
+    Route::group(['prefix' => '/adslot'], function() {
+        Route::get('/', 'AdslotController@index')->name('adslot.all');
+        Route::get('/create', 'AdslotController@create')->name('adslot.create');
+        Route::post('/store', 'AdslotController@store')->name('adslot.store');
+    });
+
+    /**
+     * Hourly Ranges
+     */
+
+    Route::group(['prefix' => 'hourly-ranges'], function() {
+        Route::get('/', 'HourlyController@index')->name('hourly.all');
+    });
+
+    Route::group(['prefix' => 'time'], function() {
+        Route::get('/', 'SecondsController@index')->name('seconds.all');
+    });
+
+    Route::group(['prefix' => 'discount'], function() {
+        Route::get('/', 'SecondsController@discount')->name('discount.all');
+    });
 
     /**
      * User Profile

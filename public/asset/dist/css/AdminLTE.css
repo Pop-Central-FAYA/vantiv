@@ -95,7 +95,7 @@ body {
 .content-wrapper,
 .right-side {
   min-height: 100%;
-  background-color: #ecf0f5;
+  background-color: #fff;
   z-index: 800;
 }
 .main-footer {
@@ -5035,4 +5035,62 @@ margin-top: 20px;
   border:2px solid #9f005d;
   background: white;
   border-radius: 10px
+}
+
+.search-btn{
+  float: left;width: 100%;background: #ad2d7a;color: white;padding: 8px 49px;border-radius: 7px;margin-top: 13%;
+}
+
+.selsec {
+  font-size: 18px;
+  margin-top:4%;
+}
+
+.sec-amount{
+  padding:0.4% 5%;
+  background: #eee;
+  border-radius: 10px;
+  margin-left: 15%;
+  margin-top:5%;
+}
+
+.selsec  br{
+  font-size: 18px;
+  margin-top:3% !important;
+}
+
+.add-disc{
+  float: left;
+  width: 100%;
+  height: auto;
+  background: #b7b7b7;
+  padding: 2%;
+  margin-bottom: 2%;
+}
+
+.add-disc select{
+  width: 100%;
+  padding: 6%;
+  background: #5a5a5a;
+  color:#ccc;
+  border:none;
+  border-radius: 5px;
+}
+
+.add-disc input[type="text"]{
+  width: 100%;
+  padding: 6%;
+  background: #5a5a5a;
+  color:#ccc;
+  border:none;
+    border-radius: 5px;
+}
+
+.add-disc input[type="submit"]{
+  width: 100%;
+  padding: 6%;
+  background: #283d52;
+  color:#fff;
+  border:none;
+    border-radius: 5px;
 }

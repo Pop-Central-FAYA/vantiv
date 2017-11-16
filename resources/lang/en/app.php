@@ -338,4 +338,9 @@ return [
     ],
 
     'avatar_not_changed' => 'Avatar image cannot be updated. Please try again.',
+
+    //hourly ranges
+    'create_new_hourlyrange' => 'Add New Hourly Range',
+    'hourly_details' => 'Hourly Range Details',
+    'adslot_created'=> 'Hurray!!!, Adslot created successfully',
 ];

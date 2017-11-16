@@ -28,43 +28,56 @@
             <li class="active treeview">
                 <a href="{{ asset('dashboard') }}">
                     <i class="fa fa-dashboard"></i> <span>Dashboard</span>
-
-                </a>
-
-            </li>
-
-
-            <li class="treeview">
-                <a href="{{ route('user.list') }}">
-                    <i class="fa fa-th"></i>
-                    <span>Users</span>
-
-                </a>
-
-            </li>
-            <li class="treeview">
-                <a href="{{ route('activity.index') }}">
-                    <i class="fa fa-laptop"></i>
-                    <span>Activity Log</span>
                 </a>
             </li>
-            <li class="treeview">
-                <a href="{{ route('role.index') }}">
-                    <i class="fa fa-edit"></i> <span>Roles and Permission</span>
+            @role('Broadcaster')
+                <li class="active treeview">
+                    <a href="{{ asset('dashboard') }}">
+                        <i class="fa fa-dashboard"></i> <span>Campaigns</span>
+                    </a>
+                </li>
+                <li class="active treeview">
+                    <a href="{{ asset('dashboard') }}">
+                        <i class="fa fa-dashboard"></i> <span>MPOs</span>
+                    </a>
+                </li>
+                <li class="active treeview">
+                    <a href="{{ asset('dashboard') }}">
+                        <i class="fa fa-dashboard"></i> <span>Ads Management</span>
+                    </a>
+                </li>
+                <li class="active treeview">
+                    <a href="{{ asset('dashboard') }}">
+                        <i class="fa fa-dashboard"></i> <span>Reports</span>
+                    </a>
+                </li>
+            @endrole
 
-                </a>
+            @role('Admin')
+                <li class="treeview">
+                    <a href="{{ route('user.list') }}">
+                        <i class="fa fa-th"></i> <span>Users</span>
+                    </a>
 
-            </li>
-            <li class="treeview">
-                <a href="{{ route('settings.general') }}">
-                    <i class="fa fa-table"></i> <span>Settings</span>
+                </li>
+                <li class="treeview">
+                    <a href="{{ route('activity.index') }}">
+                        <i class="fa fa-laptop"></i> <span>Activity Log</span>
+                    </a>
+                </li>
+                <li class="treeview">
+                    <a href="{{ route('role.index') }}">
+                        <i class="fa fa-edit"></i> <span>Roles and Permission</span>
 
-                </a>
+                    </a>
 
-            </li>
-
-
-
+                </li>
+                <li class="treeview">
+                    <a href="{{ route('settings.general') }}">
+                        <i class="fa fa-table"></i> <span>Settings</span>
+                    </a>
+                </li>
+            @endrole
         </ul>
     </section>
     <!-- /.sidebar -->

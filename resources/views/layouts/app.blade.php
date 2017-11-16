@@ -2,6 +2,7 @@
 <html>
     <head>
         @include('partials._head')
+        @yield('styles')
     </head>
     <body class="hold-transition skin-blue sidebar-mini">
 
@@ -14,7 +15,7 @@
                 <div class="content-wrapper">
 
                     <div class="container-fluid">
-
+                        @include('partials.messages')
                         <div class="panel panel-default">
                             <div class="container-fluid">
                                 @yield('content')
