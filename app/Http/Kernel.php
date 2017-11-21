@@ -30,6 +30,7 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \Vanguard\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+
         ],
         'api' => [
             'throttle:60,1',
@@ -54,5 +55,6 @@ class Kernel extends HttpKernel
         'session.database' => \Vanguard\Http\Middleware\DatabaseSession::class,
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        'token' => \Vanguard\Http\Middleware\TokenMiddleware::class,
     ];
 }

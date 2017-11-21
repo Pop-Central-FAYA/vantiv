@@ -37,6 +37,11 @@
                     </a>
                 </li>
                 <li class="active treeview">
+                    <a href="{{ route('walkins.all') }}">
+                        <i class="fa fa-dashboard"></i> <span>Walkins</span>
+                    </a>
+                </li>
+                <li class="active treeview">
                     <a href="{{ asset('dashboard') }}">
                         <i class="fa fa-dashboard"></i> <span>MPOs</span>
                     </a>

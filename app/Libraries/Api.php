@@ -12,7 +12,7 @@ Class Api
     public static $key;
 
     public static $api_private_key = "nzrm64jtj9srsjab";
-    public static $url = "https://faya-staging.herokuapp.com/api/v1/";
+    public static $url = "http://ec2-34-239-105-98.compute-1.amazonaws.com:8000/api/v1/";
     public static $public = "FayaGB3DOTDBEFCUE7KEOVCS42LEMFIXQ6Z6FY2USRL3G4UTM5K3";
 
     public function __construct()
@@ -31,7 +31,6 @@ Class Api
 
         $username = Encrypt::encrypt($request->email, Api::$api_private_key, 256);
         $password = Encrypt::encrypt($request->password, Api::$api_private_key, 256);
-//https://faya-staging.herokuapp.com/api/v1/user/login?key=FayaGB3DOTDBEFCUE7KEOVCS42LEMFIXQ6Z6FY2USRL3G4UTM5K3
         $auth_url = Api::$url.'user/login?key='.Api::$public;
 
         $response = Curl::to($auth_url)
@@ -48,16 +47,14 @@ Class Api
         ];
 
         ApiLog::save_activity_log($req, $response, $auth_url);
-
         $data = json_decode($response, true);
-//        dd($response);
-
         session(['encrypted_token' => $data['data']['token']]);
         session(['broadcaster_id' => $data['data']['info']['id']]);
-
         $tok = Encrypt::decrypt(Session::get('encrypted_token'), Api::$api_private_key, 256);
         session(['token' => $tok]);
-//        $token = Session::get('token');
+        $token = Session::get('token');
+        session(['expired_at' => $token, 'expiry_date']);
+        session(['url' => Api::$url]);
 
     }
 
@@ -75,34 +72,25 @@ Class Api
             'key' => Api::$public,
             'token' => $token
         ]);
-
         $data = json_encode($response, true);
-
         ApiLog::save_activity_log($req, $response, $url);
-
          return $response;
     }
-
 
     public static function get_time()
     {
         $url = Api::$url.'adslot/time?key='.Api::$public;
         $token = Session::get('token');
         $enc_token = Session::get('encrypted_token');
-
         $response = Curl::to($url)
             ->withHeader("token: $enc_token")
             ->get();
-
         $req = json_encode([
             'key' => Api::$public,
             'token' => $token
         ]);
-
         $data = json_encode($response, true);
-
         ApiLog::save_activity_log($req, $response, $url);
-
         return $response;
     }
 
@@ -114,16 +102,12 @@ Class Api
         $response = Curl::to($url)
                     ->withHeader("token: $enc_token")
                     ->get();
-
         $req = json_encode([
             'key' => Api::$public,
             'token' => $token
         ]);
-
         $data = json_encode($response, true);
-
         ApiLog::save_activity_log($req, $response, $url);
-
         return $response;
     }
 
@@ -161,7 +145,6 @@ Class Api
             'premium_end_date' => $end_date,
             'rates' => $time_data,
         ];
-
         $response = Curl::to($url)
                     ->withHeader("token: $enc_token")
                     ->withData([
@@ -176,7 +159,6 @@ Class Api
                         'rates' =>  $time_data,
                     ])->asJson()
                     ->post();
-
         $req = [
             'day' => $request->days,
             'overall_price' => $request->overall_price,
@@ -188,12 +170,9 @@ Class Api
             'premium_end_date' => $request->end_date,
             'rate' => $time_data
         ];
-
         ApiLog::save_activity_log($req, json_encode($response), $url);
         session(['adslot_data' => $response]);
-
-        //return $response;
-        dd($response);
+        return $response;
 
     }
 
@@ -213,6 +192,10 @@ Class Api
                 $row = $exploded_token;
                 return $row[2];
                 break;
+            case 'expiry_date':
+                $row = $exploded_token;
+                return $row[5];
+                break;
             default:
                 return $exploded_token;
         }
@@ -227,14 +210,126 @@ Class Api
         $response = Curl::to($url)
             ->withHeader("token: $enc_token")
             ->get();
-
         $req = json_encode([
             'key' => Api::$public,
             'token' => $token
         ]);
+        ApiLog::save_activity_log($req, $response, $url);
+        return $response;
+    }
+
+    public static function update_adslot($request)
+    {
+        $adslot_id = $request->adslot_id;
+        $url = Api::$url.'adslot/'.$adslot_id.'?key='.Api::$public;
+        $token = Session::get('token');
+        $enc_token = Session::get('encrypted_token');
+        $user_id = self::explode_token($token, 'id');
+        $overall_price = (int) $request->overall_price;
+        $day = $request->day;
+        $hourly_range = $request->hourly_range;
+        $is_premium = (int) $request->is_premium;
+        $premium_start_date = (int) $request->premium_start_date;
+        $premium_stop_date = (int) $request->premium_stop_date;
+        $time_data = [];
+        $i = 0;
+        foreach ($request->time as $times) {
+            $time_data[] = [
+                'time' => $times,
+                'price' => (int) $request->price[$i++],
+                'premium_price' => 0
+            ];
+        }
+        $json_data = [
+            'user_id' => self::explode_token($token, 'id'),
+            'broadcaster_id' => Session::get('broadcaster_id'),
+            'overall_price' => $overall_price,
+            'hourly_range_id' => $hourly_range,
+            'is_premium' => $is_premium,
+            'premium_start_date' => $premium_start_date,
+            'premium_end_date' => $premium_stop_date,
+            'day' => $day,
+            'rates' => $time_data,
+        ];
+        $response = Curl::to($url)
+            ->withHeader("token: $enc_token")
+            ->withData([
+                'user_id' => self::explode_token($token, 'id'),
+                'broadcaster_id' => Session::get('broadcaster_id'),
+                'overall_price' => $overall_price,
+                'hourly_range_id' => $hourly_range,
+                'day' => $day,
+                'is_premium' => $is_premium,
+                'premium_start_date' => $premium_start_date,
+                'premium_end_date' => $premium_stop_date,
+                'rates' =>  $time_data,
+            ])->asJson()
+            ->put();
+
+        ApiLog::save_activity_log($json_data, json_encode($response), $url);
+        return $response;
+    }
+
+    public static function add_walkins($request)
+    {
+        $email = $request->email;
+        $first_name = $request->first_name;
+        $last_name = $request->last_name;
+        $phone_number = $request->phone_number;
+        $url = Api::$url.'walkins/create?key='.Api::$public;
+        $enc_token = Session::get('encrypted_token');
+        $response = Curl::to($url)
+                    ->withHeader("token: $enc_token")
+                    ->withData([
+                        'broadcaster_id' => Session::get('broadcaster_id'),
+                        'email' => $email,
+                        'firstname' => $first_name,
+                        'lastname' => $last_name,
+                        'phone' => $phone_number,
+                    ])->post();
+
+        $req = [
+            'email' => $email,
+            'firstname' => $first_name,
+            'lastname' => $last_name,
+            'email' => $email,
+            'token' => $enc_token,
+            'broadcaster_id' => Session::get('broadcaster_id'),
+        ];
 
         ApiLog::save_activity_log($req, $response, $url);
+        return $response;
+    }
 
+    public static function get_walkins()
+    {
+        $url = Api::$url.'walkIns/'.Session::get('broadcaster_id').'?key='.Api::$public;
+        $token = Session::get('token');
+        $enc_token = Session::get('encrypted_token');
+        $response = Curl::to($url)
+            ->withHeader("token: $enc_token")
+            ->get();
+        $req = json_encode([
+            'key' => Api::$public,
+            'token' => $token
+        ]);
+        ApiLog::save_activity_log($req, $response, $url);
+        return $response;
+    }
+
+    public static function delete_walkins($id)
+    {
+        $url = Api::$url.'walkIns/'.Session::get('broadcaster_id').'/'.$id.'?key='.Api::$public;
+        $enc_token = Session::get('encrypted_token');
+        $token = Session::get('token');
+        $response = Curl::to($url)
+            ->withHeader("token: $enc_token")
+            ->delete();
+        $req = json_encode([
+            'key' => Api::$public,
+            'token' => $token
+        ]);
+        ApiLog::save_activity_log($req, $response, $url);
         return $response;
     }
 }

@@ -229,4 +229,9 @@ class InstallController extends Controller
             "database.connections.{$default}.prefix"   => $credentials['prefix']
         ]);
     }
+
+    public function apiError()
+    {
+        return view('errors.oops');
+    }
 }

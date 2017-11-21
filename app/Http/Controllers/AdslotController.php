@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Vanguard\Libraries\Api;
 
+
 class AdslotController extends Controller
 {
     /**
@@ -19,12 +20,10 @@ class AdslotController extends Controller
         $adslot = Api::get_adslot();
         $a = json_decode($adslot);
         $b = (object)($a->data);
-
 //        api for time in seconds
         $api_seconds = Api::get_time();
         $api_get = json_decode($api_seconds);
         $api = $api_get->data;
-
         return view('adslot.index')->with('adslot', $b)->with('seconds', $api);
 
     }
@@ -55,6 +54,7 @@ class AdslotController extends Controller
      */
     public function store(Request $request)
     {
+//        dd($request);
         $adslot = Api::store_ad_slot($request);
         if($adslot->status === false)
         {
@@ -66,37 +66,21 @@ class AdslotController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $adslot_id)
     {
-        //
+        $adslot_update = Api::update_adslot($request, $adslot_id);
+        if($adslot_update->status === false)
+        {
+            return redirect()->back()->with('error', $adslot_update->message);
+        }else{
+            return redirect()->back()->with('success', trans('app.adslot_updated'));
+        }
     }
 
     /**
@@ -107,6 +91,6 @@ class AdslotController extends Controller
      */
     public function destroy($id)
     {
-        //
+
     }
 }

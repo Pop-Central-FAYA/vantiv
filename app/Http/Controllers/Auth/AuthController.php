@@ -68,6 +68,7 @@ class AuthController extends Controller
     {
 
         $api_login = Api::auth_user($request);
+//        dd($api_login);
         // In case that request throttling is enabled, we have to check if user can perform this request.
         // We'll key this by the username and the IP address of the client making these requests into this application.
         $throttles = settings('throttle_enabled');

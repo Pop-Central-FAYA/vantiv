@@ -3,6 +3,7 @@
 @section('content')
 
 @section('title', 'Faya | Dashboard')
+
     <!-- Content Header (Page header) -->
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -74,7 +75,7 @@
                                                 <th>Day</th>
                                                 <th>Time Slot</th>
                                                 @foreach($seconds as $second)
-                                                    <th>{{ $second->time_in_seconds }}</th>
+                                                    <th>{{ $second->time_in_seconds }} Seconds</th>
                                                 @endforeach
                                                 <th>Action</th>
                                             </tr>
@@ -84,7 +85,7 @@
                                             <tr class="adslot_tr{{ $adslots->id }}" tr_id="{{ $adslots->id }}">
                                                 <td class="day{{ $adslots->id }}">{{ $adslots->day }}</td>
 
-                                                <td class="time_slot{{ $adslots->id }}"></td>
+                                                <td class="time_slot{{ $adslots->id }}"> {{ $adslots->hourly_range->time_range }}</td>
                                                 @foreach($adslots->rate_card as $rating)
                                                     <td><input type="text" id="price" class="form-control price{{ $adslots->id }}" readonly name="price" value="{{ ((object)($rating))->price }}"></td>
                                                 @endforeach
@@ -98,6 +99,7 @@
                                             <tfoot>
                                             </tfoot>
                                         </table>
+                                        {{--{!! with(new Vanguard\Pagination\HDPresenter($adslot))->render() !!}--}}
                                     </div>
                                 </div>
                                 <!-- /.tab-pane -->
@@ -134,27 +136,40 @@
                 <div class="modal fade bs-example1-modal-md{{ $adslots->id }}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
                     <div class="modal-dialog modal-md" role="document">
                         <div class="modal-content" style="padding: 7%">
-                            <h3 align="center">All / {{ $adslots->day }} / </h3>
-
-                            <form class="selsec" style="margin-left:">
+                            <h3 align="center">All / {{ $adslots->day }} / {{ $adslots->hourly_range->time_range }}</h3>
+                            <h3 align="center">Overall Price = &#8358;{{ $adslots->price }}</h3>
+                            <form method="POST" action="{{ route('adslot.update', ['adslot_id' => $adslots->id]) }}" class="selsec" style="margin-left:">
+                                {{ csrf_field() }}
                                 @foreach($adslots->rate_card as $rating)
                                 <p align="center">
                                     <div class="row">
                                         <div class="col-md-5">
-                                            {{ ((object)($rating))->price }}
+                                            {{ ((object)($rating))->time_in_seconds_id->time_in_seconds }} Seconds
+                                            <input type="hidden" name="time[]" value="{{ ((object)($rating))->time_in_seconds_id->id }}">
                                         </div>
                                         <div class="col-md-5">
-                                            <input name="price" id="price" class="form-control" value="{{ ((object)($rating))->price }}" />
+
+                                            <input type="hidden" name="adslot_id" value="{{ $adslots->id }}">
+                                            <input type="hidden" name="overall_price" value="{{ $adslots->price }}">
+                                            <input type="hidden" name="hourly_range" value="{{ $adslots->hourly_range->id }}">
+                                            <input type="hidden" name="day" value="{{ $adslots->day }}">
+                                            <input type="hidden" name="is_premium" value="{{ $adslots->is_premium }}">
+                                            <input type="hidden" name="rate_id" id="rate_id" value="{{ $rating->id }}">
+                                            <input type="hidden" name="overall_price" value="{{ $adslots->price }}">
+                                            <input type="hidden" name="premium_start_date" value="{{ $adslots->premium_start_date }}">
+                                            <input type="hidden" name="premium_stop_date" value="{{ $adslots->premium_stop_date }}">
+                                            <input type="hidden" name="premium_price" value="{{ $rating->premium_price }}">
+                                            <input type="text" name="price[]" class="form-control" value="{{ ((object)($rating))->price }}" />
                                         </div>
                                     </div>
                                 </p>
                                 @endforeach
-                            </form>
 
-                            <p align="center">
-                                <a href="#" style="color:white"><button  class="btn btn-large btn-danger" style="color:white; font-size: 20px; padding: 0.5% 3%; margin-top:4%; border-radius: 10px;">Cancel</button></a>
-                                <a href="#" style="color:white"><button  class="btn btn-large btn-success" style="color:white; font-size: 20px; padding: 0.5% 3%; margin-top:4%; border-radius: 10px;">Save</button></a>
-                            </p>
+                                <p align="center">
+                                    <button  class="btn btn-large btn-danger" style="color:white; font-size: 20px; padding: 0.5% 3%; margin-top:4%; border-radius: 10px;">Cancel</button>
+                                    <button id="update_adslot" type="submit" class="btn btn-large btn-success" style="color:white; font-size: 20px; padding: 0.5% 3%; margin-top:4%; border-radius: 10px;">Save</button>
+                                </p>
+                            </form>
 
                         </div>
                     </div>
@@ -170,26 +185,6 @@
     {!! HTML::script('assets/js/moment.min.js') !!}
     {!! HTML::script('assets/js/bootstrap-datetimepicker.min.js') !!}
 
-    {{--<script>--}}
-        {{--$(document).ready(function() {--}}
-            {{--$("body").delegate("#edit", "click", function() {--}}
-                {{--var id = $(this).attr("edit_adslot_id");--}}
-                {{--var id_tr = $(".adslot_tr"+id+"").attr("tr_id")--}}
-                {{--if(id === id_tr){--}}
-                    {{--$(".adslot_tr"+id+"").each(function(){--}}
-                        {{--var day = $(".day"+id+"").text();--}}
-                        {{--var time_slot = $(".time_slot"+id+"").text();--}}
-                        {{--$("#price").each(function(){--}}
-                            {{--var price = $(".price"+id+"").val();--}}
-                            {{--$("#price").val(price);--}}
-                            {{--console.log(price);--}}
-                        {{--});--}}
-
-                    {{--});--}}
-                {{--}--}}
-            {{--});--}}
-        {{--})--}}
-    {{--</script>--}}
     <script>
         $(function () {
             $("#example1").DataTable();

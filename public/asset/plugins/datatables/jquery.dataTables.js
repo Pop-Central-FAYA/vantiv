@@ -2243,7 +2243,7 @@
 			}
 			else if ( cOption == 'p' && features.bPaginate )
 			{
-				/* Pagination */
+				/* HDPresenter */
 				featureNode = _fnFeatureHtmlPaginate( oSettings );
 			}
 			else if ( DataTable.ext.feature.length !== 0 )
@@ -3431,7 +3431,7 @@
 	/**
 	 * Generate the node required for default pagination
 	 *  @param {object} oSettings dataTables settings object
-	 *  @returns {node} Pagination feature node
+	 *  @returns {node} HDPresenter feature node
 	 *  @memberof DataTable#oApi
 	 */
 	function _fnFeatureHtmlPaginate ( settings )
@@ -11002,7 +11002,7 @@
 			},
 	
 			/**
-			 * Pagination string used by DataTables for the built-in pagination
+			 * HDPresenter string used by DataTables for the built-in pagination
 			 * control types.
 			 *  @namespace
 			 *  @name DataTable.defaults.language.paginate
@@ -11532,7 +11532,7 @@
 		 *         <li>'f' - Filtering input</li>
 		 *         <li>'t' - The table!</li>
 		 *         <li>'i' - Information</li>
-		 *         <li>'p' - Pagination</li>
+		 *         <li>'p' - HDPresenter</li>
 		 *         <li>'r' - pRocessing</li>
 		 *       </ul>
 		 *     </li>
@@ -12676,7 +12676,7 @@
 			"bLengthChange": null,
 	
 			/**
-			 * Pagination enabled or not. Note that if this is disabled then length
+			 * HDPresenter enabled or not. Note that if this is disabled then length
 			 * changing must also be disabled.
 			 * Note that this parameter will be set by the initialisation routine. To
 			 * set a default use {@link DataTable.defaults}.
@@ -12840,7 +12840,7 @@
 		 *     <li>'f' - Filtering input</li>
 		 *     <li>'t' - The table!</li>
 		 *     <li>'i' - Information</li>
-		 *     <li>'p' - Pagination</li>
+		 *     <li>'p' - HDPresenter</li>
 		 *     <li>'r' - pRocessing</li>
 		 *   </ul>
 		 *  @type array
@@ -13703,7 +13703,7 @@
 	
 	
 		/**
-		 * Pagination plug-in methods.
+		 * HDPresenter plug-in methods.
 		 * 
 		 * Each entry in this object is a function and defines which buttons should
 		 * be shown by the pagination rendering method that is used for the table:
@@ -13712,7 +13712,7 @@
 		 * what buttons to display. This is done by returning an array of button
 		 * descriptions (what each button will do).
 		 *
-		 * Pagination types (the four built in options and any additional plug-in
+		 * HDPresenter types (the four built in options and any additional plug-in
 		 * options defined here) can be used through the `paginationType`
 		 * initialisation parameter.
 		 *

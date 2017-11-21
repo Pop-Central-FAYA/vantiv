@@ -431,7 +431,7 @@ Scroller.prototype = /** @lends Scroller.prototype */{
 
 		/* Sanity check */
 		if ( !this.s.dt.oFeatures.bPaginate ) {
-			this.s.dt.oApi._fnLog( this.s.dt, 0, 'Pagination must be enabled for Scroller' );
+			this.s.dt.oApi._fnLog( this.s.dt, 0, 'HDPresenter must be enabled for Scroller' );
 			return;
 		}
 

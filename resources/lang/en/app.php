@@ -343,4 +343,7 @@ return [
     'create_new_hourlyrange' => 'Add New Hourly Range',
     'hourly_details' => 'Hourly Range Details',
     'adslot_created'=> 'Hurray!!!, Adslot created successfully',
+    'adslot_updated'=> 'Hurray!!!, Adslot updated successfully',
+    'walkins'=> 'Hurray!!!, Walkins Added successfully',
+    'walkins_delete' => 'Success!!!, Walkins deleted successfully',
 ];
