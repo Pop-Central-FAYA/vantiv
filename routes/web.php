@@ -63,6 +63,45 @@ Route::get('auth/{provider}/callback', 'Auth\SocialAuthController@handleProvider
 Route::get('auth/twitter/email', 'Auth\SocialAuthController@getTwitterEmail');
 Route::post('auth/twitter/email', 'Auth\SocialAuthController@postTwitterEmail');
 
+Route::group(['prefix' => 'agency'], function(){
+   Route::get('/dashboard', function(){
+       return view('agency.dashboard.dashboard');
+   });
+   Route::get('/campaign-list', function() {
+       return view('agency.template.campaign_list');
+   });
+   Route::get('/client-portfolio', function(){
+      return view('agency.template.client_portfolio');
+   });
+   Route::get('/client-portfolio-details', function(){
+      return view('agency.template.client_portfolio_details');
+   });
+   Route::get('/client-portfolio-details-more', function(){
+       return view('agency.template.client_portfolio_details_more');
+   });
+   Route::get('/company', function(){
+      return view('agency.template.company');
+   });
+   Route::get('/company-search', function(){
+      return view('agency.template.company_search');
+   });
+   Route::get('/campaign-lists', function(){
+      return view('agency.template.campaign_details');
+   });
+   Route::get('/campaign-form', function(){
+      return view('agency.template.create_campaign');
+   });
+   Route::get('/wallet-credit', function(){
+      return view('agency.template.credit_wallet');
+   });
+   Route::get('/payment-form', function(){
+      return view('agency.template.payment_form');
+   });
+   Route::get('/wallet-statement', function(){
+       return view('agency.template.wallet_statement');
+   });
+});
+
 Route::group(['prefix' => 'create-campaign'], function() {
 
     Route::get('/1', function() {

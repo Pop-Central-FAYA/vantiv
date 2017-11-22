@@ -43,6 +43,7 @@
                                             <th>Last Name</th>
                                             <th>Email</th>
                                             <th>Phone Number</th>
+                                            <th>Campaign</th>
                                             <th>Delete</th>
                                         </tr>
                                         </thead>
@@ -61,6 +62,9 @@
                                                 </td>
                                                 <td>
                                                     {{ $walkins->user->phone_number }}
+                                                </td>
+                                                <td>
+                                                    <a href="" class="btn btn-primary btn-xs">Create Campaign</a>
                                                 </td>
                                                 <td>
                                                     <a href="#" data-toggle="modal" data-target=".bs-example1-modal-md" style="font-size: 16px"><span class="label label-danger"> <i class="fa fa-trash"></i></span></a></td>

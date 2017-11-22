@@ -4,7 +4,7 @@
         <!-- Sidebar user panel -->
         <div class="user-panel">
             <div class="pull-left image">
-                <img src="{{ asset('asset/dist/img/user2-160x160.jpg') }}" class="img-circle" alt="User Image">
+                <img src="../dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
             </div>
             <div class="pull-left info">
                 <p>Alexander Pierce</p>
@@ -37,9 +37,19 @@
                     </a>
                 </li>
                 <li class="active treeview">
-                    <a href="{{ route('walkins.all') }}">
-                        <i class="fa fa-dashboard"></i> <span>Walkins</span>
+                    <a href="#">
+                        <i class="fa fa-dashboard"></i> <span>User Management</span>
+                        <span class="pull-right-container">
+                              <i class="fa fa-angle-left pull-right"></i>
+                            </span>
                     </a>
+
+                    <ul class="treeview-menu">
+                        <li><a href="{{ route('walkins.create') }}"><i class="fa fa-circle-o"></i> Add Walkins</a></li>
+                        <li><a href="{{ route('walkins.all') }}"><i class="fa fa-circle-o"></i> Walkins List</a></li>
+
+                    </ul>
+
                 </li>
                 <li class="active treeview">
                     <a href="{{ asset('dashboard') }}">
@@ -47,9 +57,20 @@
                     </a>
                 </li>
                 <li class="active treeview">
-                    <a href="{{ asset('dashboard') }}">
+                    <a href="#">
                         <i class="fa fa-dashboard"></i> <span>Ads Management</span>
+                        <span class="pull-right-container">
+                                  <i class="fa fa-angle-left pull-right"></i>
+                                </span>
                     </a>
+
+                    <ul class="treeview-menu">
+                        <li><a href="{{ route('adslot.all') }}"><i class="fa fa-circle-o"></i> Rate Card List</a></li>
+                        <li><a href="{{ route('adslot.create') }}"><i class="fa fa-circle-o"></i> Add Rate Card</a></li>
+                        <li><a href="#"><i class="fa fa-circle-o"></i> Discount</a></li>
+
+                    </ul>
+
                 </li>
                 <li class="active treeview">
                     <a href="{{ asset('dashboard') }}">
