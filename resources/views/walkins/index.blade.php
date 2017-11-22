@@ -63,7 +63,7 @@
                                                     {{ $walkins->user->phone_number }}
                                                 </td>
                                                 <td>
-                                                    <a href="{{ route('walkins.delete', ['id' => $walkins->id]) }}" style="font-size: 16px"><span class="label label-danger"> <i class="fa fa-trash"></i></span></a></td>
+                                                    <a href="#" data-toggle="modal" data-target=".bs-example1-modal-md" style="font-size: 16px"><span class="label label-danger"> <i class="fa fa-trash"></i></span></a></td>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -101,6 +101,20 @@
                     <!-- /.nav-tabs-custom -->
                 </div>
                 <!-- /.col -->
+            </div>
+
+            <div class="modal fade bs-example1-modal-md" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+                <div class="modal-dialog modal-md" role="document">
+                    <div class="modal-content" style="padding: 7%">
+                        <h2 class="text-center">Are you sure you want to delete?</h2><br>
+                        <h5><b style="color: red">Warning!!!</b> Deleting this means you might not be able to fully undo this oeration</h5>
+
+                        <p align="center">
+                            <button  class="btn btn-large btn-danger" data-dismiss="modal" style="color:white; font-size: 20px; padding: 0.5% 3%; margin-top:4%; border-radius: 10px;">Cancel</button>
+                            <a href="{{ route('walkins.delete', ['id' => $walkins->id]) }}" type="submit" class="btn btn-large btn-success" style="color:white; font-size: 20px; padding: 0.5% 3%; margin-top:4%; border-radius: 10px;">Delete</a>
+                        </p>
+                    </div>
+                </div>
             </div>
 
         {{--</div>--}}
