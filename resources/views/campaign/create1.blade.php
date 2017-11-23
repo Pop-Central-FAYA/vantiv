@@ -65,9 +65,10 @@
             <div class="container">
 
                 <p align="right">
-                    <a href="create-campaign-page2.html"><button class="btn campaign-button" style="margin-right:15%">Next <i class="fa fa-play" aria-hidden="true"></i></button></a>
+                    <a href="{{ route('campaign.create2') }}"><button class="btn campaign-button" style="margin-right:15%">Next <i class="fa fa-play" aria-hidden="true"></i></button></a>
 
                 </p>
+            </div>
         </section>
 
         <!-- /.content -->

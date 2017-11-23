@@ -23,7 +23,8 @@
         <div class="row">
             <div class="col-md-1 hidden-sm hidden-xs"></div>
             <div class="col-md-9 " style="padding:2%">
-                <form class="campform">
+                <form class="campform" method="POST" action="{{ route('campaign.store5', ['id' => 1]) }}">
+                    {{ csrf_field() }}
                     <div class="row">
                         <div class="col-md-12 ">
 
@@ -47,18 +48,19 @@
                             <div class="box-body table-responsive no-padding">
                                 <table class="table table-hover" style="font-size:16px">
                                     <tr>
-                                        <th>ID</th>
+                                        <th>S/N</th>
                                         <th>File Name</th>
                                         <th>Duration</th>
                                         <th>Action</th>
 
                                     </tr>
                                     <tr>
-                                        <td>1</td>
-                                        <td>Media File <i class="fa fa-video-camera"></td>
-                                        <td>15 seconds</td>
-                                        <td><a href="#" style="font-size: 16px"><span class="label label-danger"> <i class="fa fa-trash-o" aria-hidden="true"></i> Remove</span></a></td>
-
+                                        @foreach($campaign as $campaigns)
+                                            <td>{{ $loop->iteration }}</td>
+                                            <td>{{ $campaigns->file[0]->file_name }} <i class="fa fa-video-camera"></i></td>
+                                            <td>15 seconds</td>
+                                            <td><a href="#" style="font-size: 16px"><span class="label label-danger"> <i class="fa fa-trash-o" aria-hidden="true"></i> Remove</span></a></td>
+                                        @endforeach
                                     </tr>
 
                                 </table>
@@ -80,9 +82,9 @@
                             <div class="form-group">
                                 <label>Duration </label> <br />
                                 <select style="width: 60%">
-                                    <option>15 seconds</option>
-                                    <option>20 seconds</option>
-                                    <option>30 seconds</option>
+                                    @foreach($time as $times)
+                                        <option value="{{ $times->id }}">{{ $times->time_in_seconds }} Seconds</option>
+                                    @endforeach
                                 </select>
                             </div>
 
@@ -91,6 +93,14 @@
                         <div class="col-md-6">
 
                         </div>
+
+                    </div>
+                    <div class="container">
+
+                        <p align="right">
+                            <button type="button" id="step4" class="btn campaign-button" >Back <i class="fa fa-backward" aria-hidden="true"></i></button>
+                            <button type="submit" class="btn campaign-button" style="margin-right:15%">Next <i class="fa fa-play" aria-hidden="true"></i></button>
+                        </p>
 
                     </div>
 
@@ -107,14 +117,6 @@
         </div>
         <!-- /.row -->
 
-        <div class="container">
-
-            <p align="right">
-                <a href="create-campaign-page4.html"><button class="btn campaign-button" >Back <i class="fa fa-backward" aria-hidden="true"></i></button></a>
-                <a href="create-campaign-page6.html"><button class="btn campaign-button" style="margin-right:15%">Next <i class="fa fa-play" aria-hidden="true"></i></button></a>
-            </p>
-
-        </div>
     </section>
 
     <!-- /.content -->
@@ -144,6 +146,14 @@
 
     <!-- bootstrap time picker -->
     <script src="{{ asset('asset/plugins/timepicker/bootstrap-timepicker.min.js') }}"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('#step4').click(function(){
+                window.location.href = "/campaign/create/1/step4";
+            });
+        });
+    </script>
 
     <script>
 

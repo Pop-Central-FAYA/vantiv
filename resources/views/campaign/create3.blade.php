@@ -20,57 +20,42 @@
         <div class="row">
             <div class="col-md-1 hidden-sm hidden-xs"></div>
             <div class="col-md-9 " style="padding:2%">
-                <form class="campform">
+                <form class="campform" method="POST" action="{{ route('campaign.store3', ['id' => 1]) }}">
+                    {{ csrf_field() }}
                     <div class="row">
                         <div class="col-md-6">
-
                             <label>Target Audience</label>
-                            <select>
-                                <option>Business People</option>
-                                <option>Civil Servant</option>
-                                <option>Urban People</option>
-                                <option>Rural People</option>
-
+                            <select name="target_audience">
+                                @foreach($target_audience as $target)
+                                    <option value="{{ $target->id }}">{{ $target->audience }}</option>
+                                @endforeach
                             </select>
-
                         </div>
-
                         <div class="col-lg-6 col-md-6 hidden-sm hidden-xs"></div>
                     </div>
                     <div class="row" style="margin-top:3%">
-
                         <div class="col-md-2">
-
                             <label style="margin-left:10%">Min Age:</label>
-                            <select style="width: 100%">
-                                <option>17</option>
-                                <option>26</option>
-                                <option>30</option>
-                                <option>40</option>
-                                <option>50</option>
-
+                            <select style="width: 100%" name="min_age">
+                                <option value="17">17</option>
+                                <option value="26">26</option>
+                                <option value="30">30</option>
+                                <option value="40">40</option>
+                                <option value="50">50</option>
                             </select>
                         </div>
-
                         <div class="col-md-2">
-
                             <label style="margin-left:10%">Max Age:</label>
-                            <select style="width: 100%">
-                                <option>21</option>
-                                <option>29</option>
-                                <option>39</option>
-                                <option>49</option>
-                                <option>70</option>
+                            <select style="width: 100%" name="max_age">
+                                <option value="21">21</option>
+                                <option value="29">29</option>
+                                <option value="39">39</option>
+                                <option value="49">49</option>
+                                <option value="70">70</option>
 
                             </select>
                         </div>
-
-
-
                     </div>
-
-
-
                     <div class="row" style="margin-top:10%">
                         <h3> Region </h3>
                         <div class="col-md-2">
@@ -78,19 +63,19 @@
 
                                 <p>
                                     <label>
-                                        <input type="checkbox" class="minimal-red">
+                                        <input type="checkbox" name="region[]" value="NC" class="minimal-red">
                                         NC
                                     </label>
                                 </p>
                                 <p>
                                     <label>
-                                        <input type="checkbox" class="minimal-red">
+                                        <input type="checkbox" name="region[]" value="NE" class="minimal-red">
                                         NE
                                     </label>
                                 </p>
                                 <p>
                                     <label>
-                                        <input type="checkbox" class="minimal-red">
+                                        <input type="checkbox" name="region[]" value="NW" class="minimal-red">
                                         NW
                                     </label>
                                 </p>
@@ -102,25 +87,35 @@
                             <div class="form-group">
                                 <p>
                                     <label>
-                                        <input type="checkbox" class="minimal-red">
+                                        <input type="checkbox" name="region[]" value="SE" class="minimal-red">
                                         SE
                                     </label>
                                 </p>
                                 <p>
                                     <label>
-                                        <input type="checkbox" class="minimal-red">
+                                        <input type="checkbox" name="region[]" value="SS" class="minimal-red">
                                         SS
                                     </label>
                                 </p>
                                 <p>
                                     <label>
-                                        <input type="checkbox" class="minimal-red">
-                                        Overnight
+                                        <input type="checkbox" name="region[]" value="SW" class="minimal-red">
+                                        SW
                                     </label>
                                 </p>
 
                             </div>
                         </div>
+                    </div>
+
+                    <div class="container">
+
+                        <p align="right">
+                            <button type="button" id="step2" class="btn campaign-button" >Back <i class="fa fa-backward" aria-hidden="true"></i></button>
+
+                            <button type="submit" class="btn campaign-button" style="margin-right:15%">Next <i class="fa fa-play" aria-hidden="true"></i></button>
+
+                        </p>
                     </div>
 
                 </form>
@@ -136,13 +131,7 @@
         </div>
         <!-- /.row -->
 
-        <div class="container">
 
-            <p align="right">
-                <a href="create-campaign-page2.html"><button class="btn campaign-button" >Back <i class="fa fa-backward" aria-hidden="true"></i></button></a>
-                <a href="create-campaign-page4.html"><button class="btn campaign-button" style="margin-right:15%">Next <i class="fa fa-play" aria-hidden="true"></i></button></a>
-
-            </p>
     </section>
 
 @stop
@@ -162,6 +151,13 @@
     <!-- bootstrap time picker -->
     <script src="{{ asset('asset/plugins/timepicker/bootstrap-timepicker.min.js') }}"></script>
 
+    <script>
+        $(document).ready(function() {
+           $('#step2').click(function(){
+               window.location.href = "/campaign/create/1/step2";
+           });
+        });
+    </script>
 
     <script>
         $(function () {

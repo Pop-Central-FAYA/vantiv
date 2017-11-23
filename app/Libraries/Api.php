@@ -332,4 +332,42 @@ Class Api
         ApiLog::save_activity_log($req, $response, $url);
         return $response;
     }
+
+    public static function getPreloaded(){
+        $url = Api::$url.'campaign/preload?key='.Api::$public;
+        $enc_token = Session::get('encrypted_token');
+        $token = Session::get('token');
+        $response = Curl::to($url)
+                    ->withHeader("token: $enc_token")
+                    ->get();
+
+        $req = ([
+            'url' => $url,
+            'key' => Api::$public,
+            'token' => $token
+        ]);
+
+        ApiLog::save_activity_log($req, $response, $url);
+        return $response;
+    }
+
+    public static function getCampaignByBroadcaster()
+    {
+        $url = Api::$url.'campaign/broadcaster/'.Session::get('broadcaster_id').'?key='.Api::$public;
+        $enc_token = Session::get('encrypted_token');
+        $token = Session::get('token');
+        $response = Curl::to($url)
+                    ->withHeader("token: $enc_token")
+                    ->get();
+        $req = ([
+            'url' => $url,
+            'key' => Api::$public,
+            'token' => $token
+        ]);
+
+        ApiLog::save_activity_log($req, $response, $url);
+        return (json_decode($response));
+    }
+
+
 }

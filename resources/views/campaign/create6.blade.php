@@ -29,51 +29,31 @@
 
                         </div>
 
-
                     </div>
 
                     <div class="row" style="margin-bottom: 5%">
 
                         <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 ">
-                            <a href="create-campaign-page7.html">
+                            <a href="">
                                 <div class="tvspace-box">
                                     <img src="{{ asset('asset/dist/img/nta-logo.jpg') }}" width="100%">
                                     <div class="tv-space">
-                                        <p align="center">12 Available</p>
+                                        <p align="center">{{ $counting }} Available</p>
 
                                     </div>
                                 </div>
                             </a>
                         </div>
-                        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                            <div class="tvspace-box">
-                                <img src="{{ asset('asset/dist/img/ait-logo.jpg') }}" width="100%">
-                                <div class="tv-space">
-                                    <p align="center">12 Available</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                            <div class="tvspace-box">
-                                <img src="{{ asset('asset/dist/img/silvebird-logo.jpg') }}" width="100%">
-                                <div class="tv-space">
-                                    <p align="center">12 Available</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                            <div class="tvspace-box">
-                                <img src="{{ asset('asset/dist/img/tvc-logo.jpg') }}" width="100%">
-                                <div class="tv-space">
-                                    <p align="center">12 Available</p>
-                                </div>
-                            </div>
-                        </div>
-
                     </div>
 
+                    <div class="container">
 
+                        <p align="right">
+                            <button id="step4" type="button" class="btn campaign-button" >Back <i class="fa fa-backward" aria-hidden="true"></i></button>
+                            <button type="submit" class="btn campaign-button" style="margin-right:15%">Next <i class="fa fa-play" aria-hidden="true"></i></button>
 
+                        </p>
+                    </div>
 
                 </form>
 
@@ -82,19 +62,7 @@
             <div class="col-md-2 hidden-sm hidden-xs"></div>
             <!-- /.col -->
 
-
-
-
         </div>
-        <!-- /.row -->
-
-        <div class="container">
-
-            <p align="right">
-                <a href="create-campaign-page5.html"><button class="btn campaign-button" >Back <i class="fa fa-backward" aria-hidden="true"></i></button></a>
-                <a href="create-campaign-page7.html"><button class="btn campaign-button" style="margin-right:15%">Next <i class="fa fa-play" aria-hidden="true"></i></button></a>
-
-            </p>
     </section>
 
 @stop
@@ -118,7 +86,13 @@
     <script src="{{ asset('asset/plugins/daterangepicker/daterangepicker.js') }}"></script>
 
     <script src="{{ asset('asset/plugins/iCheck/icheck.min.js') }}"></script>
-
+    <script>
+        $(document).ready(function() {
+            $('#step4').click(function(){
+                window.location.href = "/campaign/create/1/step4";
+            });
+        });
+    </script>
     <script>
         $(function () {
             //Initialize Select2 Elements

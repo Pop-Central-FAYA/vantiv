@@ -102,51 +102,7 @@ Route::group(['prefix' => 'agency'], function(){
    });
 });
 
-Route::group(['prefix' => 'create-campaign'], function() {
-
-    Route::get('/1', function() {
-        return view('campaign.create1');
-    });
-
-    Route::get('/2', function() {
-        return view('campaign.create2');
-    });
-
-    Route::get('/3', function() {
-        return view('campaign.create3');
-    });
-
-    Route::get('/4', function() {
-        return view('campaign.create4');
-    });
-
-    Route::get('/5', function() {
-        return view('campaign.create5');
-    });
-
-    Route::get('/6', function() {
-        return view('campaign.create6');
-    });
-
-    Route::get('/7', function() {
-        return view('campaign.create7');
-    });
-
-    Route::get('/8', function() {
-        return view('campaign.create8');
-    });
-
-    Route::get('/9', function() {
-        return view('campaign.create9');
-    });
-
-});
-
 Route::get('/error', 'InstallController@apiError')->name('errors');
-
-//Route::get('/addslot', function() {
-//    return view('adslot.create');
-//});
 
 Route::group(['middleware' => 'auth'], function (){
 
@@ -157,11 +113,24 @@ Route::group(['middleware' => 'auth'], function (){
          */
 
 
-//    Route::group(['prefix' => 'campaign'], function(){
-//        Route::get('/', 'CampaignsController@index')->name('campaign.all');
-//        Route::get('/create', 'CampaignsController@create')->name('campaign.create');
-//        Route::post('/store', 'CampaignsController@store')->name('campaign.store');
-//    });
+    Route::group(['prefix' => 'campaign'], function(){
+        Route::get('/', 'CampaignsController@index')->name('campaign.all');
+        Route::get('/create', 'CampaignsController@create')->name('campaign.create');
+        Route::get('/create/{id}/step2', 'CampaignsController@createStep2')->name('campaign.create2');
+        Route::get('/create/{id}/step3', 'CampaignsController@createStep3')->name('campaign.create3');
+        Route::get('/create/{id}/step4', 'CampaignsController@createStep4')->name('campaign.create4');
+        Route::get('/create/{id}/step5', 'CampaignsController@createStep5')->name('campaign.create5');
+        Route::get('/create/{id}/step6', 'CampaignsController@createStep6')->name('campaign.create6');
+        Route::get('/create/{id}/step7', 'CampaignsController@createStep7')->name('campaign.create7');
+        Route::get('/create/{id}/step8', 'CampaignsController@createStep8')->name('campaign.create8');
+        Route::get('/create/{id}/step9', 'CampaignsController@createStep9')->name('campaign.create9');
+
+        Route::post('/create/{id}/step2/store', 'CampaignsController@postStep2')->name('campaign.store2');
+        Route::post('/create/{id}/step3/store', 'CampaignsController@postStep3')->name('campaign.store3');
+        Route::post('/create/{id}/step4/store', 'CampaignsController@postStep4')->name('campaign.store4');
+        Route::post('/create/{id}/step5/store', 'CampaignsController@postStep5')->name('campaign.store5');
+        Route::post('/store', 'CampaignsController@store')->name('campaign.store');
+    });
 
         /*
          * WalkIns Management

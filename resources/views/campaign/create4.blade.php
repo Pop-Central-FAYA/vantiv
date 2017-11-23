@@ -21,7 +21,8 @@
         <div class="row">
             <div class="col-md-1 hidden-sm hidden-xs"></div>
             <div class="col-md-9 " style="padding:2%">
-                <form class="campform">
+                <form class="campform" method="POST" action="{{ route('campaign.store4', ['id' => 1]) }}">
+                    {{ csrf_field() }}
                     <div class="row">
                         <div class="col-md-12 ">
 
@@ -32,34 +33,42 @@
 
 
                     </div>
-                    <div class="row" style="margin-top:3%">
-
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Upload Media</label>
-                                <input type="file" name="">
+                    <div class="row" style="margin-top:3%" id="dynamic">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Upload Media</label>
+                                    <input type="file" name="media">
+                                </div>
                             </div>
-
-                            <div class="form-group">
-                                <label>Duration </label> <br />
-                                <select style="width: 60%">
-                                    <option>15 seconds</option>
-                                    <option>20 seconds</option>
-                                    <option>30 seconds</option>
-                                </select>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Duration </label> <br />
+                                    <select style="width: 60%" name="time">
+                                        @foreach($time_in_sec as $time)
+                                            <option value="{{ $time->id }}">{{ $time->time_in_seconds }} Seconds</option>
+                                        @endforeach
+                                    </select>
+                                    <button type="button" id="add_more" class="btn btn-info btn-xs add_more">+ Add More</button>
+                                </div>
                             </div>
-
                         </div>
-
-                        <div class="col-md-6">
-
-                        </div>
-
-
-
                     </div>
 
 
+                        <div class="col-md-6">
+
+                        </div>
+
+                    </div>
+
+                    <div class="container">
+
+                        <p align="right">
+                            <button id="step3" type="button" class="btn campaign-button" >Back <i class="fa fa-backward" aria-hidden="true"></i></button>
+                            <button type="submit" class="btn campaign-button" style="margin-right:15%">Next <i class="fa fa-play" aria-hidden="true"></i></button>
+                        </p>
+                    </div>
 
                 </form>
 
@@ -74,13 +83,7 @@
         </div>
         <!-- /.row -->
 
-        <div class="container">
 
-            <p align="right">
-                <a href="create-campaign-page3.html"><button class="btn campaign-button" >Back <i class="fa fa-backward" aria-hidden="true"></i></button></a>
-                <a href="create-campaign-page5.html"><button class="btn campaign-button" style="margin-right:15%">Next <i class="fa fa-play" aria-hidden="true"></i></button></a>
-            </p>
-        </div>
     </section>
 
 @endsection
@@ -103,6 +106,20 @@
     <!-- iCheck 1.0.1 -->
     <script src="{{ asset('asset/plugins/iCheck/icheck.min.js') }}"></script>
 
+    <script>
+        $(document).ready(function() {
+            $('#step3').click(function(){
+                window.location.href = "/campaign/create/1/step3";
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function(){
+            $(".add_more").click(function(){
+                $("#dynamic").append('<div class="row"><div class="col-md-4"><div class="form-group"><label>Upload Media</label><input type="file" name="media"></div></div><div class="col-md-4"><div class="form-group"><label>Duration </label> <br /><select style="width: 60%" name="time"><option value="">15 Seconds</option></select></div></div></div>')
+            });
+        });
+    </script>
     <script>
         $(function () {
             //Initialize Select2 Elements
