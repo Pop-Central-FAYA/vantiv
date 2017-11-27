@@ -2,8 +2,6 @@
 
 @section('content')
 
-    <!-- Content Header (Page header) -->
-    <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
             Create Campaign
@@ -26,276 +24,65 @@
                 <form class="campform">
                     <div class="row">
                         <div class="col-md-12 ">
-
                             <h2></h2>
                             <p align="center">The history of advertising can be traced to ancient civilizations. It became a major force in capitalist economies in the mid-19th century, based primarily on newspapers and magazines. In the 20th century, advertising grew rapidly with new technologies such as direct mail, radio, television, the internet and mobile devices.</p>
 
                         </div>
-
-
                     </div>
-
                     <div class="row" style="margin-bottom: 5%">
-
                         <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 ">
                             <div class="tvspace-box">
                                 <img src="{{ asset('asset/dist/img/nta-logo.jpg') }}" width="100%">
                                 <div class="tv-space">
-                                    <p align="center">12 Available</p>
-
+                                    <p align="center">{{ $counting }} Available</p>
+                                    <p>{{ Session::get('broadcaster_brand') }}</p>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-
-                            <div class="tvspace-box">
-                                <img src="{{ asset('asset/dist/img/ait-logo.jpg') }}" width="100%">
-                                <div class="tv-space">
-                                    <p align="center">12 Available</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                            <div class="tvspace-box">
-                                <img src="{{ asset('asset/dist/img/silvebird-logo.jpg') }}" width="100%">
-                                <div class="tv-space">
-                                    <p align="center">12 Available</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                            <div class="tvspace-box">
-                                <img src="{{ asset('asset/dist/img/tvc-logo.jpg') }}" width="100%">
-                                <div class="tv-space">
-                                    <p align="center">12 Available</p>
-                                </div>
-                            </div>
-                        </div>
-
                     </div>
-
-
                     <div id="tv-time-box" style="border:1px solid #ccc">
-                        <div class="row">
-
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <img src="{{ asset('asset/dist/img/nta-logo.jpg') }}" width="65%">
-                            </div>
-
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <h3 align="center">9:00 - 10:00 </h3>
-                            </div>
-
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <p align="center">9:00 - 9:03</p> <br/>
-                                <span type="button"  data-toggle="modal" data-target=".bs-example-modal-lg" class="avail-box" style="background:#ffde01; cursor: pointer; "></span>
-
-
-
-                                <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-                                    <div class="modal-dialog modal-lg" role="document">
-                                        <div class="modal-content" style="padding: 5%">
-                                            <h2 align="center">90 Seconds Available</h2>
-
-                                            <ul style="font-size: 21px; margin:0 auto; width: 50%">
-                                                <h3 align="" style="color:#9f005d">Choose a media file</h3>
-                                                <hr />
-                                                <li><i class="fa fa-video-camera"></i> Fazzy.mpeg     <span style="margin-left:15%">60 seconds</span> </li>
-                                                <hr />
-                                                <li><i class="fa fa-video-camera"></i> Fazzy1.mpeg   <span style="margin-left:15%">30 second</span> </li>
-
-                                            </ul>
-                                            <p align="center">
-                                                <a href="#" style="color:white"><button  class="btn btn-large" style="background: #9f005d; color:white; font-size: 20px; padding: 1% 5%; margin-top:4%; border-radius: 10px;">Save</button></a></p>
-                                        </div>
-                                    </div>
+                        @foreach($adslot as $adslots)
+                            <div class="row">
+                                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                                    <img src="{{ asset('asset/dist/img/nta-logo.jpg') }}" width="65%">
                                 </div>
-
-                            </div>
-
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <p align="center">9:15 - 9:18</p> <br/>
-                                <span type="button"  data-toggle="modal" data-target=".bs-example2-modal-lg" class="avail-box" style="cursor: pointer; "></span>
-
-
-                                <div class="modal fade bs-example2-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-                                    <div class="modal-dialog modal-lg" role="document">
-                                        <div class="modal-content" style="padding: 5%">
-                                            <h2 align="center">90 Seconds Available</h2>
-
-                                            <ul style="font-size: 21px; margin:0 auto; width: 50%">
-                                                <h3 align="" style="color:#9f005d">Choose a media file</h3>
-                                                <hr />
-                                                <li><i class="fa fa-video-camera"></i> Fazzy.mpeg     <span style="margin-left:15%">60 seconds</span> </li>
-                                                <hr />
-                                                <li><i class="fa fa-video-camera"></i> Fazzy1.mpeg   <span style="margin-left:15%">30 second</span> </li>
-
-                                            </ul>
-                                            <p align="center">
-                                                <a href="#" style="color:white"><button  class="btn btn-large" style="background: #9f005d; color:white; font-size: 20px; padding: 1% 5%; margin-top:4%; border-radius: 10px;">Save</button></a></p>
-                                        </div>
-                                    </div>
+                                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                                    <h3 align="center">{{ $adslots->hourly_range->time_range }}</h3>
                                 </div>
-
-                            </div>
-
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4 ">
-                                <p align="center">9:30 - 9:33</p> <br/>
-                                <span type="button"  data-toggle="modal" data-target=".bs-example3-modal-lg" class="avail-box" style="cursor: pointer; "></span>
-
-
-                                <div class="modal fade bs-example3-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+                                @foreach($adslots->rate_card as $rating)
+                                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                                <p align="center">{{ ((object)($rating))->time_in_seconds_id->time_in_seconds }} Seconds</p> <br/>
+                                <span type="button"  data-toggle="modal" data-target=".bs-example-modal-lg{{ ((object)($rating))->id }}" class="avail-box" style="background:green; cursor: pointer; "></span>
+                                        <div class="modal fade bs-example-modal-lg{{ ((object)($rating))->id }}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
                                     <div class="modal-dialog modal-lg" role="document">
                                         <div class="modal-content" style="padding: 5%">
-                                            <h2 align="center">90 Seconds Available</h2>
-
-                                            <ul style="font-size: 21px; margin:0 auto; width: 50%">
-                                                <h3 align="" style="color:#9f005d">Choose a media file</h3>
-                                                <hr />
-                                                <li><i class="fa fa-video-camera"></i> Fazzy.mpeg     <span style="margin-left:15%">60 seconds</span> </li>
-                                                <hr />
-                                                <li><i class="fa fa-video-camera"></i> Fazzy1.mpeg   <span style="margin-left:15%">30 second</span> </li>
-
-                                            </ul>
-                                            <p align="center">
-                                                <a href="#" style="color:white"><button  class="btn btn-large" style="background: #9f005d; color:white; font-size: 20px; padding: 1% 5%; margin-top:4%; border-radius: 10px;">Save</button></a></p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <p align="center">9:45 - 9:48</p> <br/>
-
-
-                                <span type="button"  data-toggle="modal" data-target=".bs-example4-modal-lg" class="avail-box" style="background:#f4290d; cursor: pointer; "></span>
-
-
-                                <div class="modal fade bs-example4-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-                                    <div class="modal-dialog modal-lg" role="document">
-                                        <div class="modal-content" style="padding: 5%">
-                                            <h2 align="center">Unavailable</h2>
-
-
-                                            <p align="center">
-                                                <a href="#" style="color:white"><button  class="btn btn-large" style="background: #9f005d; color:white; font-size: 20px; padding: 1% 5%; margin-top:4%; border-radius: 10px;" disabled="">Save</button></a></p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                        <div class="row">
-
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <img src="{{ asset('asset/dist/img/nta-logo.jpg') }}" width="65%">
-                            </div>
-
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <h3 align="center">10:00 - 11:00 </h3>
-                            </div>
-
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <p align="center">10:00 - 9:03</p> <br/>
-                                <span type="button"  data-toggle="modal" data-target=".bs-example5-modal-lg" class="avail-box" style="background:#ffde01; cursor: pointer; "></span>
-
-
-
-                                <div class="modal fade bs-example5-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-                                    <div class="modal-dialog modal-lg" role="document">
-                                        <div class="modal-content" style="padding: 5%">
-                                            <h2 align="center">90 Seconds Available</h2>
-
-                                            <ul style="font-size: 21px; margin:0 auto; width: 50%">
-                                                <h3 align="" style="color:#9f005d">Choose a media file</h3>
-                                                <hr />
-                                                <li><i class="fa fa-video-camera"></i> Fazzy.mpeg     <span style="margin-left:15%">60 seconds</span> </li>
-                                                <hr />
-                                                <li><i class="fa fa-video-camera"></i> Fazzy1.mpeg   <span style="margin-left:15%">30 second</span> </li>
-
-                                            </ul>
-                                            <p align="center">
-                                                <a href="#" style="color:white"><button  class="btn btn-large" style="background: #9f005d; color:white; font-size: 20px; padding: 1% 5%; margin-top:4%; border-radius: 10px;">Save</button></a></p>
-                                        </div>
-                                    </div>
-                                </div>
-
-
-
-                            </div>
-
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <p align="center">10:15 - 10:18</p> <br/>
-                                <span type="button"  data-toggle="modal" data-target=".bs-example6-modal-lg" class="avail-box" style="cursor: pointer; "></span>
-
-
-                                <div class="modal fade bs-example6-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-                                    <div class="modal-dialog modal-lg" role="document">
-                                        <div class="modal-content" style="padding: 5%">
-                                            <h2 align="center">90 Seconds Available</h2>
-
-                                            <ul style="font-size: 21px; margin:0 auto; width: 50%">
-                                                <h3 align="" style="color:#9f005d">Choose a media file</h3>
-                                                <hr />
-                                                <li><i class="fa fa-video-camera"></i> Fazzy.mpeg     <span style="margin-left:15%">60 seconds</span> </li>
-                                                <hr />
-                                                <li><i class="fa fa-video-camera"></i> Fazzy1.mpeg   <span style="margin-left:15%">30 second</span> </li>
-
-                                            </ul>
-                                            <p align="center">
-                                                <a href="#" style="color:white"><button  class="btn btn-large" style="background: #9f005d; color:white; font-size: 20px; padding: 1% 5%; margin-top:4%; border-radius: 10px;">Save</button></a></p>
+                                            <form action="" method="POST">
+                                                <h2 align="center">{{ ((object)($rating))->time_in_seconds_id->time_in_seconds }} Seconds Available</h2>
+                                                <ul style="font-size: 21px; margin:0 auto; width: 80%">
+                                                    <h3 align="" style="color:#9f005d">Choose a media file</h3>
+                                                    <hr />
+                                                    @foreach($data as $datas)
+                                                        @if($datas['time'] === ((object)($rating))->time_in_seconds_id->id)
+                                                            <div class="row">
+                                                                <div class="col-md-6"><i class="fa fa-video-camera"></i> {{ $datas['file'] }}</div>
+                                                                <input type="hidden" name="file[]" value="{{ $datas['file'] }}">
+                                                                <div class="col-md-3"><span style="margin-left:15%"></span>{{ ((object)($rating))->time_in_seconds_id->time_in_seconds }} Seconds</div>
+                                                                <input type="hidden" name="time_id[]" value="{{ ((object)($rating))->time_in_seconds_id->id }}">
+                                                                <div class="col-md-3"><input name="hourly_range[]" type="checkbox"></div>
+                                                            </div>
+                                                            <hr />
+                                                        @endif
+                                                    @endforeach
+                                                </ul>
+                                                <button type="submit"  class="btn btn-large" style="background: #9f005d; color:white; font-size: 20px; padding: 1% 5%; margin-top:4%; border-radius: 10px;">Save</button></a></p>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <p align="center">10:30 - 10:33</p> <br/>
-                                <span type="button"  data-toggle="modal" data-target=".bs-example7-modal-lg" class="avail-box" style="cursor: pointer; "></span>
-
-
-                                <div class="modal fade bs-example7-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-                                    <div class="modal-dialog modal-lg" role="document">
-                                        <div class="modal-content" style="padding: 5%">
-                                            <h2 align="center">90 Seconds Available</h2>
-
-                                            <ul style="font-size: 21px; margin:0 auto; width: 50%">
-                                                <h3 align="" style="color:#9f005d">Choose a media file</h3>
-                                                <hr />
-                                                <li><i class="fa fa-video-camera"></i> Fazzy.mpeg     <span style="margin-left:15%">60 seconds</span> </li>
-                                                <hr />
-                                                <li><i class="fa fa-video-camera"></i> Fazzy1.mpeg   <span style="margin-left:15%">30 second</span> </li>
-
-                                            </ul>
-                                            <p align="center">
-                                                <a href="#" style="color:white"><button  class="btn btn-large" style="background: #9f005d; color:white; font-size: 20px; padding: 1% 5%; margin-top:4%; border-radius: 10px;">Save</button></a></p>
-                                        </div>
-                                    </div>
-                                </div>
+                                @endforeach
                             </div>
-
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <p align="center">10:45 - 10:48</p> <br/>
-                                <span type="button"  data-toggle="modal" data-target=".bs-example8-modal-lg" class="avail-box" style="background:#f4290d; cursor: pointer; "></span>
-
-
-                                <div class="modal fade bs-example8-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-                                    <div class="modal-dialog modal-lg" role="document">
-                                        <div class="modal-content" style="padding: 5%">
-                                            <h2 align="center">Unavailable</h2>
-
-
-                                            <p align="center">
-                                                <a href="#" style="color:white"><button  class="btn btn-large" style="background: #9f005d; color:white; font-size: 20px; padding: 1% 5%; margin-top:4%; border-radius: 10px;" disabled="">Save</button></a></p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
+                        @endforeach
                     </div>
 
 
@@ -315,7 +102,7 @@
         <div class="container">
 
             <p align="right">
-                <a href="create-campaign-page7.html"><button class="btn campaign-button" >Back <i class="fa fa-backward" aria-hidden="true"></i></button></a>
+                <button id="step6" class="btn campaign-button" >Back <i class="fa fa-backward" aria-hidden="true"></i></button>
                 <a href="create-campaign-page8.html"><button class="btn campaign-button" style="margin-right:15%">Next <i class="fa fa-play" aria-hidden="true"></i></button></a>
 
             </p>
@@ -349,6 +136,14 @@
 
     <!-- bootstrap time picker -->
     <script src="{{ asset('asset/plugins/timepicker/bootstrap-timepicker.min.js') }}"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('#step6').click(function(){
+                window.location.href = "/campaign/create/1/step";
+            });
+        });
+    </script>
 
     <script>
         $(function () {

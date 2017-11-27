@@ -28,34 +28,30 @@ Class Api
      */
     public static function auth_user(Request $request)
     {
-
         $username = Encrypt::encrypt($request->email, Api::$api_private_key, 256);
         $password = Encrypt::encrypt($request->password, Api::$api_private_key, 256);
         $auth_url = Api::$url.'user/login?key='.Api::$public;
-
         $response = Curl::to($auth_url)
             ->withData([
                 'email' => $username,
                 'password' => $password
             ])
             ->post();
-
         $req = [
 
             'email' => $username,
             'password' => $password
         ];
-
         ApiLog::save_activity_log($req, $response, $auth_url);
         $data = json_decode($response, true);
         session(['encrypted_token' => $data['data']['token']]);
         session(['broadcaster_id' => $data['data']['info']['id']]);
+        session(['broadcaster_brand' => $data['data']['info']['brand']]);
         $tok = Encrypt::decrypt(Session::get('encrypted_token'), Api::$api_private_key, 256);
         session(['token' => $tok]);
         $token = Session::get('token');
         session(['expired_at' => $token, 'expiry_date']);
         session(['url' => Api::$url]);
-
     }
 
     public static function get_hourly_range()

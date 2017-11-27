@@ -54,7 +54,7 @@ Route::get('auth/{provider}/login', [
     'middleware' => 'social.login'
 ]);
 
-Route::get('/test', function() {
+Route::get('/test', function () {
     return view('layouts/app');
 });
 
@@ -63,85 +63,114 @@ Route::get('auth/{provider}/callback', 'Auth\SocialAuthController@handleProvider
 Route::get('auth/twitter/email', 'Auth\SocialAuthController@getTwitterEmail');
 Route::post('auth/twitter/email', 'Auth\SocialAuthController@postTwitterEmail');
 
-Route::group(['prefix' => 'agency'], function(){
-   Route::get('/dashboard', function(){
-       return view('agency.dashboard.dashboard');
-   });
-   Route::get('/campaign-list', function() {
-       return view('agency.template.campaign_list');
-   });
-   Route::get('/client-portfolio', function(){
-      return view('agency.template.client_portfolio');
-   });
-   Route::get('/client-portfolio-details', function(){
-      return view('agency.template.client_portfolio_details');
-   });
-   Route::get('/client-portfolio-details-more', function(){
-       return view('agency.template.client_portfolio_details_more');
-   });
-   Route::get('/company', function(){
-      return view('agency.template.company');
-   });
-   Route::get('/company-search', function(){
-      return view('agency.template.company_search');
-   });
-   Route::get('/campaign-lists', function(){
-      return view('agency.template.campaign_details');
-   });
-   Route::get('/campaign-form', function(){
-      return view('agency.template.create_campaign');
-   });
-   Route::get('/wallet-credit', function(){
-      return view('agency.template.credit_wallet');
-   });
-   Route::get('/payment-form', function(){
-      return view('agency.template.payment_form');
-   });
-   Route::get('/wallet-statement', function(){
-       return view('agency.template.wallet_statement');
-   });
+Route::group(['prefix' => 'agency'], function () {
+    Route::get('/dashboard', function () {
+        return view('agency.dashboard.dashboard');
+    });
+    Route::get('/campaign-list', function () {
+        return view('agency.template.campaign_list');
+    });
+    Route::get('/client-portfolio', function () {
+        return view('agency.template.client_portfolio');
+    });
+    Route::get('/client-portfolio-details', function () {
+        return view('agency.template.client_portfolio_details');
+    });
+    Route::get('/client-portfolio-details-more', function () {
+        return view('agency.template.client_portfolio_details_more');
+    });
+    Route::get('/company', function () {
+        return view('agency.template.company');
+    });
+    Route::get('/company-search', function () {
+        return view('agency.template.company_search');
+    });
+    Route::get('/campaign-lists', function () {
+        return view('agency.template.campaign_details');
+    });
+    Route::get('/campaign-form', function () {
+        return view('agency.template.create_campaign');
+    });
+    Route::get('/wallet-credit', function () {
+        return view('agency.template.credit_wallet');
+    });
+    Route::get('/payment-form', function () {
+        return view('agency.template.payment_form');
+    });
+    Route::get('/wallet-statement', function () {
+        return view('agency.template.wallet_statement');
+    });
 });
 
 Route::get('/error', 'InstallController@apiError')->name('errors');
 
-Route::group(['middleware' => 'auth'], function (){
+Route::group(['middleware' => 'auth'], function () {
 
-    Route::group(['middleware' => 'token'], function() {
+    Route::group(['middleware' => 'token'], function () {
 
         /*
-         * Campaign
-         */
-
-
-    Route::group(['prefix' => 'campaign'], function(){
-        Route::get('/', 'CampaignsController@index')->name('campaign.all');
-        Route::get('/create', 'CampaignsController@create')->name('campaign.create');
-        Route::get('/create/{id}/step2', 'CampaignsController@createStep2')->name('campaign.create2');
-        Route::get('/create/{id}/step3', 'CampaignsController@createStep3')->name('campaign.create3');
-        Route::get('/create/{id}/step4', 'CampaignsController@createStep4')->name('campaign.create4');
-        Route::get('/create/{id}/step5', 'CampaignsController@createStep5')->name('campaign.create5');
-        Route::get('/create/{id}/step6', 'CampaignsController@createStep6')->name('campaign.create6');
-        Route::get('/create/{id}/step7', 'CampaignsController@createStep7')->name('campaign.create7');
-        Route::get('/create/{id}/step8', 'CampaignsController@createStep8')->name('campaign.create8');
-        Route::get('/create/{id}/step9', 'CampaignsController@createStep9')->name('campaign.create9');
-
-        Route::post('/create/{id}/step2/store', 'CampaignsController@postStep2')->name('campaign.store2');
-        Route::post('/create/{id}/step3/store', 'CampaignsController@postStep3')->name('campaign.store3');
-        Route::post('/create/{id}/step4/store', 'CampaignsController@postStep4')->name('campaign.store4');
-        Route::post('/create/{id}/step5/store', 'CampaignsController@postStep5')->name('campaign.store5');
-        Route::post('/store', 'CampaignsController@store')->name('campaign.store');
-    });
+        * Campaign
+        */
+        Route::group(['prefix' => 'campaign'], function () {
+            Route::get('/', 'CampaignsController@index')->name('campaign.all');
+            Route::get('/create', 'CampaignsController@create')->name('campaign.create');
+            Route::get('/create/{id}/step2', 'CampaignsController@createStep2')->name('campaign.create2');
+            Route::get('/create/{id}/step3', 'CampaignsController@createStep3')->name('campaign.create3');
+            Route::get('/create/{id}/step4', 'CampaignsController@createStep4')->name('campaign.create4');
+            Route::get('/create/{id}/step5', 'CampaignsController@createStep5')->name('campaign.create5');
+            Route::get('/create/{id}/step6', 'CampaignsController@createStep6')->name('campaign.create6');
+            Route::get('/create/{id}/step7', 'CampaignsController@createStep7')->name('campaign.create7');
+            Route::get('/create/{id}/step8', 'CampaignsController@createStep8')->name('campaign.create8');
+            Route::get('/create/{id}/step9', 'CampaignsController@createStep9')->name('campaign.create9');
+            Route::post('/create/{id}/step2/store', 'CampaignsController@postStep2')->name('campaign.store2');
+            Route::post('/create/{id}/step3/store', 'CampaignsController@postStep3')->name('campaign.store3');
+            Route::post('/create/{id}/step4/store', 'CampaignsController@postStep4')->name('campaign.store4');
+            Route::post('/create/{id}/step5/store', 'CampaignsController@postStep5')->name('campaign.store5');
+            Route::post('/create/{id}/step6/store', 'CampaignsController@postStep6')->name('campaign.store6');
+            Route::get('/create/{id}/step7/get', 'CampaignsController@getStep7')->name('campaign.store7');
+            Route::post('/store', 'CampaignsController@store')->name('campaign.store');
+        });
 
         /*
          * WalkIns Management
          */
 
-        Route::group(['prefix' => 'walkins'], function() {
+        Route::group(['prefix' => 'walkins'], function () {
             Route::get('/', 'WalkinsController@index')->name('walkins.all');
             Route::get('/create', 'WalkinsController@create')->name('walkins.create');
             Route::post('/store', 'WalkinsController@store')->name('walkins.store');
             Route::get('/delete/{id}', 'WalkinsController@delete')->name('walkins.delete');
         });
+
+        /**
+         * Sectors
+         */
+
+        Route::get('sectors', [
+            'as' => 'sector.index',
+            'uses' => 'SectorController@index'
+        ]);
+
+        Route::get('sector/create', [
+            'as' => 'sector.create',
+            'uses' => 'SectorController@create'
+        ]);
+
+        Route::post('sector/store', [
+            'as' => 'sector.store',
+            'uses' => 'SectorController@store'
+        ]);
+
+        Route::delete('sector/{sector}', [
+            'as' => 'sector.delete',
+            'uses' => 'SectorController@delete'
+        ]);
+
+        /**
+         * DayParts
+         */
+
+        Route::resource('dayparts', 'DayPartController');
 
         /*
          * User Dashboard
@@ -155,7 +184,7 @@ Route::group(['middleware' => 'auth'], function (){
         /**
          * Adslot
          */
-        Route::group(['prefix' => '/adslot'], function() {
+        Route::group(['prefix' => '/adslot'], function () {
             Route::get('/', 'AdslotController@index')->name('adslot.all');
             Route::get('/create', 'AdslotController@create')->name('adslot.create');
             Route::post('/store', 'AdslotController@store')->name('adslot.store');
@@ -166,18 +195,30 @@ Route::group(['middleware' => 'auth'], function (){
          * Hourly Ranges
          */
 
-        Route::group(['prefix' => 'hourly-ranges'], function() {
+        Route::group(['prefix' => 'hourly-ranges'], function () {
             Route::get('/', 'HourlyController@index')->name('hourly.all');
         });
 
-        Route::group(['prefix' => 'time'], function() {
+        Route::group(['prefix' => 'time'], function () {
             Route::get('/', 'SecondsController@index')->name('seconds.all');
         });
 
-        Route::group(['prefix' => 'discount'], function() {
+        Route::group(['prefix' => 'discount'], function () {
             Route::get('/', 'SecondsController@discount')->name('discount.all');
         });
 
+        /**
+         * MPOs
+         */
+
+        Route::group(['prefix' => 'mpos'], function () {
+            Route::get('all', 'MpoController@index')->name('all-mpos');
+            Route::get('pending', 'MpoController@pending_mpos')->name('pending-mpos');
+        });
+
+        Route::group(['prefix' => 'reports'], function () {
+            Route::get('', 'ReportController@index')->name('reports');
+        });
 
     });
 
@@ -185,7 +226,7 @@ Route::group(['middleware' => 'auth'], function (){
      * User Profile
      */
 
-    Route::get('/dashboard', function() {
+    Route::get('/dashboard', function () {
         return view('dashboard.default');
     })->name('dashboard');
 

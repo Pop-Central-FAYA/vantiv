@@ -31,78 +31,85 @@
                 </a>
             </li>
             @role('Broadcaster')
-                <li class="active treeview">
-                    <a href="{{ asset('dashboard') }}">
-                        <i class="fa fa-dashboard"></i> <span>Campaigns</span>
-                    </a>
-                </li>
-                <li class="active treeview">
-                    <a href="#">
-                        <i class="fa fa-dashboard"></i> <span>User Management</span>
-                        <span class="pull-right-container">
+            <li class="active treeview">
+                <a href="{{ asset('dashboard') }}">
+                    <i class="fa fa-dashboard"></i> <span>Campaigns</span>
+                </a>
+            </li>
+            <li class=" treeview">
+                <a href="#">
+                    <i class="fa fa-laptop"></i>
+                    <span>MPOs</span>
+                    <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li><a href="{{ route('all-mpos') }}"><i class="fa fa-circle-o"></i> All MPOs</a></li>
+                    <li><a href="{{ route('pending-mpos') }}"><i class="fa fa-circle-o"></i> Pending MPOs </a></li>
+                </ul>
+            </li>
+            <li class="active treeview">
+                <a href="#">
+                    <i class="fa fa-dashboard"></i> <span>Walkins</span>
+                    <span class="pull-right-container">
                               <i class="fa fa-angle-left pull-right"></i>
-                            </span>
-                    </a>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li><a href="{{ route('walkins.create') }}"><i class="fa fa-circle-o"></i> Add Walkins</a></li>
+                    <li><a href="{{ route('walkins.all') }}"><i class="fa fa-circle-o"></i> Walkins List</a></li>
 
-                    <ul class="treeview-menu">
-                        <li><a href="{{ route('walkins.create') }}"><i class="fa fa-circle-o"></i> Add Walkins</a></li>
-                        <li><a href="{{ route('walkins.all') }}"><i class="fa fa-circle-o"></i> Walkins List</a></li>
+                </ul>
 
-                    </ul>
-
-                </li>
-                <li class="active treeview">
-                    <a href="{{ asset('dashboard') }}">
-                        <i class="fa fa-dashboard"></i> <span>MPOs</span>
-                    </a>
-                </li>
-                <li class="active treeview">
-                    <a href="#">
-                        <i class="fa fa-dashboard"></i> <span>Ads Management</span>
-                        <span class="pull-right-container">
+            </li>
+            <li class="active treeview">
+                <a href="#">
+                    <i class="fa fa-dashboard"></i> <span>Ads Management</span>
+                    <span class="pull-right-container">
                                   <i class="fa fa-angle-left pull-right"></i>
                                 </span>
-                    </a>
+                </a>
 
-                    <ul class="treeview-menu">
-                        <li><a href="{{ route('adslot.all') }}"><i class="fa fa-circle-o"></i> Rate Card List</a></li>
-                        <li><a href="{{ route('adslot.create') }}"><i class="fa fa-circle-o"></i> Add Rate Card</a></li>
-                        <li><a href="#"><i class="fa fa-circle-o"></i> Discount</a></li>
+                <ul class="treeview-menu">
+                    <li><a href="{{ route('adslot.all') }}"><i class="fa fa-circle-o"></i> Rate Card List</a></li>
+                    <li><a href="{{ route('adslot.create') }}"><i class="fa fa-circle-o"></i> Add Rate Card</a></li>
+                    <li><a href="{{ url('discounts') }}"><i class="fa fa-circle-o"></i> Discounts</a></li>
 
-                    </ul>
+                </ul>
 
-                </li>
-                <li class="active treeview">
-                    <a href="{{ asset('dashboard') }}">
-                        <i class="fa fa-dashboard"></i> <span>Reports</span>
-                    </a>
-                </li>
+            </li>
+            <li class="active treeview">
+                <a href="{{ url('reports') }}">
+                    <i class="fa fa-dashboard"></i> <span>Reports</span>
+                </a>
+            </li>
             @endrole
 
             @role('Admin')
-                <li class="treeview">
-                    <a href="{{ route('user.list') }}">
-                        <i class="fa fa-th"></i> <span>Users</span>
-                    </a>
+            <li class="treeview">
+                <a href="{{ route('user.list') }}">
+                    <i class="fa fa-th"></i> <span>Users</span>
+                </a>
 
-                </li>
-                <li class="treeview">
-                    <a href="{{ route('activity.index') }}">
-                        <i class="fa fa-laptop"></i> <span>Activity Log</span>
-                    </a>
-                </li>
-                <li class="treeview">
-                    <a href="{{ route('role.index') }}">
-                        <i class="fa fa-edit"></i> <span>Roles and Permission</span>
+            </li>
+            <li class="treeview">
+                <a href="{{ route('activity.index') }}">
+                    <i class="fa fa-laptop"></i> <span>Activity Log</span>
+                </a>
+            </li>
+            <li class="treeview">
+                <a href="{{ route('role.index') }}">
+                    <i class="fa fa-edit"></i> <span>Roles and Permission</span>
 
-                    </a>
+                </a>
 
-                </li>
-                <li class="treeview">
-                    <a href="{{ route('settings.general') }}">
-                        <i class="fa fa-table"></i> <span>Settings</span>
-                    </a>
-                </li>
+            </li>
+            <li class="treeview">
+                <a href="{{ route('settings.general') }}">
+                    <i class="fa fa-table"></i> <span>Settings</span>
+                </a>
+            </li>
             @endrole
         </ul>
     </section>

@@ -38,13 +38,21 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Upload Media</label>
-                                    <input type="file" name="media">
+                                    <input type="file" name="file[]">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
+                                  <script type='text/javascript'>
+                                        <?php
+                                            if(is_array($time_in_sec)  and count($time_in_sec) > 0  )
+                                            {
+                                                echo "var time_in_sec = ". json_encode($time_in_sec) . ";\n";
+                                            }
+                                        ?>
+                                  </script>
                                     <label>Duration </label> <br />
-                                    <select style="width: 60%" name="time">
+                                    <select style="width: 60%" name="time[]">
                                         @foreach($time_in_sec as $time)
                                             <option value="{{ $time->id }}">{{ $time->time_in_seconds }} Seconds</option>
                                         @endforeach
@@ -116,7 +124,18 @@
     <script>
         $(document).ready(function(){
             $(".add_more").click(function(){
-                $("#dynamic").append('<div class="row"><div class="col-md-4"><div class="form-group"><label>Upload Media</label><input type="file" name="media"></div></div><div class="col-md-4"><div class="form-group"><label>Duration </label> <br /><select style="width: 60%" name="time"><option value="">15 Seconds</option></select></div></div></div>')
+                var big_html = '';
+                big_html +=  '<div class="row"><div class="col-md-4"><div class="form-group"><label>Upload Media</label><input type="file" name="file[]"></div></div><div class="col-md-4"><div class="form-group"><label>Duration </label> <br /><select style="width: 60%" name="time[]"><option value="">15 Seconds</option>';
+                $.each(time_in_sec, function (index,value)
+                {
+                    if( index != 0)
+                    {
+                        big_html += '<option value ="'+ value.id + '"> ' + value.time_in_seconds + ' Seconds </option>';
+                    }
+
+                });
+                big_html += '</select></div></div></div>';
+                $("#dynamic").append(big_html)
             });
         });
     </script>

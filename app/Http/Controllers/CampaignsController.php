@@ -134,27 +134,46 @@ class CampaignsController extends Controller
     {
         $getCampaign = Api::getCampaignByBroadcaster();
         $campaign = $getCampaign->data;
-
         $all_adslot = Api::get_adslot();
         $adslot = json_decode($all_adslot);
         $count = count(($adslot->data));
-
         $this->validate($request, [
-            'media' => 'required',
+            'file' => 'required',
             'time' => 'required'
         ]);
-
         session(['step4' => ((object) $request->all())]);
-
         return redirect()->route('campaign.create6', ['id' => $id])->with('counting', $count);
     }
 
-    public function postStep6(Request $request)
+    public function getStep7($id)
     {
-        $first = Session::get('step2');
-        $second = Session::get('step3');
-        $third = Session::get('step4');
-        dd($first, $second, $third);
+        $adslot = Api::get_adslot();
+        $a = json_decode($adslot);
+        $b = (object)($a->data);
+        $count = count(($a->data));
+
+        $file = Session::get('step4');
+        $file_obj = (object)($file->file);
+        $time_obj = (object)($file->time);
+        $time_data = [];
+        $i = 0;
+        foreach ($file_obj as $file_id) {
+            $time_data[] = [
+                'file' => $file_id,
+                'time' => $file->time[$i++]
+            ];
+        }
+        return view('campaign.create7')->with('adslot', $b)
+                                       ->with('counting', $count)
+                                        ->with('data', ((object) $time_data));
+//        $first = Session::get('step2');
+//        $second = Session::get('step3');
+//        $third = Session::get('step4');
+//        dd($third);
+
+//
+//
+//        dd((object) $time_data);
 
     }
 }
