@@ -136,7 +136,7 @@
 
 @stop
 
-@section('style')
+@section('styles')
     <link rel="stylesheet" href="{{ asset('assets/css/jquery-ui.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/theme.css') }}">
 @stop
