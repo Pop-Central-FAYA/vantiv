@@ -39,7 +39,7 @@
                                 <div class="tvspace-box">
                                     <img src="{{ asset('asset/dist/img/nta-logo.jpg') }}" width="100%">
                                     <div class="tv-space">
-                                        <p align="center">{{ $counting }} Available</p>
+                                        <p align="center"> Available</p>
                                         <p>{{ Session::get('broadcaster_brand') }}</p>
                                     </div>
                                 </div>
@@ -50,7 +50,7 @@
                     <div class="container">
 
                         <p align="right">
-                            <button id="step4" type="button" class="btn campaign-button" >Back <i class="fa fa-backward" aria-hidden="true"></i></button>
+                            {{--<button id="step4" type="button" class="btn campaign-button" >Back <i class="fa fa-backward" aria-hidden="true"></i></button>--}}
                             {{--<button type="submit" class="btn campaign-button" style="margin-right:15%">Next <i class="fa fa-play" aria-hidden="true"></i></button>--}}
 
                         </p>

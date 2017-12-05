@@ -111,7 +111,7 @@ Route::group(['middleware' => 'auth'], function () {
         /*
         * Campaign
         */
-        Route::group(['prefix' => 'campaign'], function () {
+        Route::group(['prefix' => 'campaign'], function(){
             Route::get('/', 'CampaignsController@index')->name('campaign.all');
             Route::get('/create', 'CampaignsController@create')->name('campaign.create');
             Route::get('/create/{id}/step2', 'CampaignsController@createStep2')->name('campaign.create2');
@@ -122,6 +122,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/create/{id}/step7', 'CampaignsController@createStep7')->name('campaign.create7');
             Route::get('/create/{id}/step8', 'CampaignsController@createStep8')->name('campaign.create8');
             Route::get('/create/{id}/step9', 'CampaignsController@createStep9')->name('campaign.create9');
+
             Route::post('/create/{id}/step2/store', 'CampaignsController@postStep2')->name('campaign.store2');
             Route::post('/create/{id}/step3/store', 'CampaignsController@postStep3')->name('campaign.store3');
             Route::post('/create/{id}/step4/store', 'CampaignsController@postStep4')->name('campaign.store4');
@@ -129,6 +130,10 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/create/{id}/step6/store', 'CampaignsController@postStep6')->name('campaign.store6');
             Route::get('/create/{id}/step7/get', 'CampaignsController@getStep7')->name('campaign.store7');
             Route::post('/store', 'CampaignsController@store')->name('campaign.store');
+            Route::post('/add-to-cart', 'CampaignsController@postCart')->name('store.cart');
+            Route::get('/checkout', 'CampaignsController@getCheckout')->name('checkout');
+            Route::post('/submit-campaign', 'CampaignsController@postCampaign')->name('submit.campaign');
+            Route::get('/remove-campaings/{id}', 'CampaignsController@removeCart')->name('cart.remove');
         });
 
         /*

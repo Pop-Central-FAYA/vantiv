@@ -60,25 +60,25 @@
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            @foreach($campaign as $campaigns)
-                                                <tr>
-                                                    <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ $campaigns->name }}</td>
-                                                    <td></td>
-                                                    <td>{{ $campaigns->product }}</td>
-                                                    <td>{{ date('d-m-Y', $campaigns->start_date) }}</td>
-                                                    <td>{{ date('d-m-Y', $campaigns->stop_date) }}</td>
-                                                    <td>{{ count($campaigns->file) }}</td>
-                                                    <td></td>
-                                                    <td>
-                                                        @if($campaigns->stop_date > $campaigns->start_date)
-                                                            Running
-                                                        @else
-                                                            Complete
-                                                        @endif
-                                                    </td>
-                                                </tr>
-                                            @endforeach
+                                                @foreach($campaign as $campaigns)
+                                                    <tr>
+                                                        <td>{{ $loop->iteration }}</td>
+                                                        <td>{{ $campaigns->name }}</td>
+                                                        <td></td>
+                                                        <td>{{ $campaigns->product }}</td>
+                                                        <td>{{ date('d-m-Y', $campaigns->start_date) }}</td>
+                                                        <td>{{ date('d-m-Y', $campaigns->stop_date) }}</td>
+                                                        <td>{{ count($campaigns->file) }}</td>
+                                                        <td></td>
+                                                        <td>
+                                                            @if($campaigns->stop_date > $campaigns->start_date)
+                                                                Running
+                                                            @else
+                                                                Complete
+                                                            @endif
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
                                             </tbody>
                                             <tfoot>
                                             </tfoot>
@@ -115,7 +115,7 @@
                     </div>
                     <!-- /.col -->
                 </div>
-            </div>
+        </div>
     </section>
 
 @endsection

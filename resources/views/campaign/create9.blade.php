@@ -31,21 +31,25 @@
                             <hr / style="border-bottom: 1px solid #333">
 
                             <div class="col-md-6">
-                                <p><b>Campaign Name:</b> TV Ad  </p>
-                                <p><b>Brand Name:</b> Coca Cola  </p>
-                                <p><b>Product Name:</b> Eva Water  </p>
-                                <p><b>Date:</b> 20/11/2017  </p>
+                                <p><b>Campaign Name:</b> {{ $first_session->name }}  </p>
+                                <p><b>Brand Name:</b> {{ $first_session->brand }} </p>
+                                <p><b>Product Name:</b> {{ $first_session->product }}  </p>
+                                <p><b>Date:</b> {{ $first_session->start_date }} - {{ $first_session->end_date }}  </p>
                             </div>
                             <div class="col-md-6">
 
-                                <p><b><i class="fa fa-date"></i> Date Part: </b> Prime Time (7:00 PM - 7:03 PM) </p>
-                                <p> <b><i class="fa fa-users"></i> Audience: </b> Business People</p>
-                                <p><b><i class="fa fa-user"></i> Viewers age:  </b> 20 - 29yrs </p>
-                                <p><b><i class="fa fa-map-marker" aria-hidden="true"></i> Region:   </b> SW </p>
+                                    @foreach($target as $targets)
+                                        @if($targets->id === $second_session->target_audience)
+                                            <p> <b><i class="fa fa-users"></i> Audience: </b> {{ $targets->audience }}</p>
+                                        @endif
+                                    @endforeach
+
+                                <p><b><i class="fa fa-user"></i> Viewers age:  </b>{{ $second_session->min_age }} - {{ $second_session->max_age }} years</p>
+
+                                <p><b><i class="fa fa-map-marker" aria-hidden="true"></i> Region:   @foreach($second_session->region as $region)</b> {{ $region }} @endforeach</p>
+
 
                             </div>
-
-
 
                             <div class="row" style="clear: both">
                                 <div class="box">
@@ -66,30 +70,19 @@
                                                 <th>Action</th>
 
                                             </tr>
+                                            @foreach($query as $queries)
                                             <tr>
-                                                <td>1</td>
-                                                <td> <img src="{{ asset('asset/dist/img/nta-logo.jpg') }}" width="5%"> NTA  </td>
-                                                <td>9:30 - 9:33 am</td>
-                                                <td>15 seconds</td>
-                                                <td>11,000</td>
-                                                <td><a href="#" style="font-size: 16px"><span class="label label-danger"> <i class="fa fa-trash-o" aria-hidden="true"></i> Remove</span></a></td>
+                                                <td>{{ $loop->iteration }}</td>
+                                                <td> <img src="{{ asset('asset/dist/img/nta-logo.jpg') }}" width="5%"> {{ Session::get('broadcaster_brand') }}  </td>
+                                                <td>{{ $queries->from_to_time }}</td>
+                                                <td>{{ $queries->time }} seconds</td>
+                                                <td>{{ $queries->price }}</td>
+                                                <td><a href="{{ route('cart.remove', ['id' => $queries->rate_id]) }}" style="font-size: 16px"><span class="label label-danger"> <i class="fa fa-trash-o" aria-hidden="true"></i> Remove</span></a></td>
 
                                             </tr>
-
-                                            <tr>
-                                                <td>2</td>
-                                                <td> <img src="{{ asset('asset/dist/img/nta-logo.jpg') }}" width="5%"> NTA  </td>
-                                                <td>10:20 - 10:24 am</td>
-                                                <td>15 seconds</td>
-                                                <td>11,000</td>
-                                                <td><a href="#" style="font-size: 16px"><span class="label label-danger"> <i class="fa fa-trash-o" aria-hidden="true"></i> Remove</span></a></td>
-
-                                            </tr>
-
-
-
+                                            @endforeach
                                         </table>
-                                        <h2 align="" style="padding:2%">TOTAL: N22,000</h2>
+                                        <h2 align="" style="padding:2%">&#8358;{{ number_format($calc[0]->total_price, 2) }}</h2>
                                     </div>
                                     <!-- /.box-body -->
                                 </div>
@@ -115,27 +108,30 @@
         <div class="container">
 
             <p align="right">
-                <a href="create-campaign-page8.html"><button class="btn campaign-button" >Back <i class="fa fa-backward" aria-hidden="true"></i></button></a>
-                <button class="btn campaign-button" style="margin-right:15%" data-toggle="modal" data-target=".bs-example2-modal-lg" >Next <i class="fa fa-play" aria-hidden="true"></i></button>
+                <button id="step7" class="btn campaign-button" >Back <i class="fa fa-backward" aria-hidden="true"></i></button>
+                <button class="btn campaign-button" style="margin-right:15%" data-toggle="modal" data-target=".bs-example2-modal-lg" >Create Campaign <i class="fa fa-play" aria-hidden="true"></i></button>
 
             </p>
             <div class="modal fade bs-example2-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content" style="padding: 5%">
                         <h2>Payment</h2>
-                        <hr / style="border-bottom: 1px solid #eee">
+                        <hr  style="border-bottom: 1px solid #eee">
 
                         for the time-slot bought for your adverts, the price is: <br />
-                        <h3> Total: N 22,000 </h3>
+                        <h3> Total: &#8358;{{ number_format($calc[0]->total_price, 2) }} </h3>
 
                         Choose payment plab:
-                        <form>
+                        <form method="POST" action="{{ route('submit.campaign') }}">
+                            {{ csrf_field() }}
                             <input type="radio" name="payment" value="Cash" checked> Cash<br>
                             <input type="radio" name="payment" value="Payment"> Cash<br>
                             <input type="radio" name="payment" value="other"> Transfer
-                        </form>
+                            <input type="hidden" value="{{ $calc[0]->total_price }}" name="total" />
+
                         <p align="center">
-                            <a href="#" style="color:white"><button  class="btn btn-large" style="background: #34495e; color:white; font-size: 20px; padding: 1% 5%; margin-top:4%; border-radius: 10px;">Confirm payment</button></a></p>
+                            <button type="submit" class="btn btn-large" style="background: #34495e; color:white; font-size: 20px; padding: 1% 5%; margin-top:4%; border-radius: 10px;">Confirm payment</button></p>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -170,6 +166,13 @@
     <!-- bootstrap time picker -->
     <script src="{{ asset('asset/plugins/timepicker/bootstrap-timepicker.min.js') }}"></script>
 
+    <script>
+        $(document).ready(function(){
+            $("#step7").click(function() {
+                window.location.href = "/campaign/create/1/step7";
+            });
+        });
+    </script>
 
     <script>
         $(function () {

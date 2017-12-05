@@ -85,7 +85,7 @@
                                 <p>
                                     @foreach($day_parts as $day_part)
                                     <label>
-                                        <input type="checkbox" name="dayparts[]" value="{{ $day_part->id }}" class="minimal-red" />
+                                        <input type="checkbox" name="dayparts[]" value="{{ $day_part->day_parts }}" class="minimal-red" />
                                         {{ $day_part->day_parts }}
                                     </label>
                                     @endforeach

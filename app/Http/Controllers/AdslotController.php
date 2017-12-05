@@ -18,13 +18,14 @@ class AdslotController extends Controller
     {
 //        api for adslot
         $adslot = Api::get_adslot();
-        $a = json_decode($adslot);
-        $b = (object)($a->data);
-//        api for time in seconds
+        $a = (json_decode($adslot)->data);
+
+//        dd($a);
+//          api for time in seconds
         $api_seconds = Api::get_time();
         $api_get = json_decode($api_seconds);
         $api = $api_get->data;
-        return view('adslot.index')->with('adslot', $b)->with('seconds', $api);
+        return view('adslot.index')->with('adslot', $a)->with('seconds', $api);
 
     }
 
@@ -54,7 +55,8 @@ class AdslotController extends Controller
      */
     public function store(Request $request)
     {
-//        dd($request);
+//        dd($request->all());
+
         $adslot = Api::store_ad_slot($request);
         if($adslot->status === false)
         {
@@ -74,6 +76,11 @@ class AdslotController extends Controller
      */
     public function update(Request $request, $adslot_id)
     {
+//        dd($request->all());
+
+
+//        dd((object) $price_array);
+
         $adslot_update = Api::update_adslot($request, $adslot_id);
         if($adslot_update->status === false)
         {

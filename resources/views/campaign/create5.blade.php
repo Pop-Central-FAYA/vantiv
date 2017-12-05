@@ -55,12 +55,7 @@
 
                                     </tr>
                                     <tr>
-                                        @foreach($campaign as $campaigns)
-                                            <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $campaigns->file[0]->file_name }} <i class="fa fa-video-camera"></i></td>
-                                            <td>15 seconds</td>
-                                            <td><a href="#" style="font-size: 16px"><span class="label label-danger"> <i class="fa fa-trash-o" aria-hidden="true"></i> Remove</span></a></td>
-                                        @endforeach
+                                        {{----}}
                                     </tr>
 
                                 </table>

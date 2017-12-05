@@ -21,7 +21,7 @@
         <div class="row">
             <div class="col-md-1 hidden-sm hidden-xs"></div>
             <div class="col-md-9 " style="padding:2%">
-                <form class="campform" method="POST" action="{{ route('campaign.store4', ['id' => 1]) }}">
+                <form class="campform" method="POST" action="{{ route('campaign.store4', ['id' => 1]) }}" enctype="multipart/form-data">
                     {{ csrf_field() }}
                     <div class="row">
                         <div class="col-md-12 ">
@@ -38,7 +38,7 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Upload Media</label>
-                                    <input type="file" name="file[]">
+                                    <input type="file" name="uploads[]" multiple>
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -54,7 +54,7 @@
                                     <label>Duration </label> <br />
                                     <select style="width: 60%" name="time[]">
                                         @foreach($time_in_sec as $time)
-                                            <option value="{{ $time->id }}">{{ $time->time_in_seconds }} Seconds</option>
+                                            <option value="{{ $time->time_in_seconds }}">{{ $time->time_in_seconds }} Seconds</option>
                                         @endforeach
                                     </select>
                                     <button type="button" id="add_more" class="btn btn-info btn-xs add_more">+ Add More</button>
@@ -125,12 +125,12 @@
         $(document).ready(function(){
             $(".add_more").click(function(){
                 var big_html = '';
-                big_html +=  '<div class="row"><div class="col-md-4"><div class="form-group"><label>Upload Media</label><input type="file" name="file[]"></div></div><div class="col-md-4"><div class="form-group"><label>Duration </label> <br /><select style="width: 60%" name="time[]"><option value="">15 Seconds</option>';
+                big_html +=  '<div class="row"><div class="col-md-4"><div class="form-group"><label>Upload Media</label><input type="file" name="uploads[]"></div></div><div class="col-md-4"><div class="form-group"><label>Duration </label> <br /><select style="width: 60%" name="time[]"><option value="">15 Seconds</option>';
                 $.each(time_in_sec, function (index,value)
                 {
                     if( index != 0)
                     {
-                        big_html += '<option value ="'+ value.id + '"> ' + value.time_in_seconds + ' Seconds </option>';
+                        big_html += '<option value ="'+ value.time_in_seconds + '"> ' + value.time_in_seconds + ' Seconds </option>';
                     }
 
                 });
