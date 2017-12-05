@@ -17,6 +17,12 @@ class CampaignsController extends Controller
     {
         $preloaded = Api::getPreloaded();
         $obj_preloaded = json_decode($preloaded);
+        $campaign_all = Api::getCampaignByBroadcaster();
+        if($campaign_all->status === true)
+        {
+            $campaign = $campaign_all->data;
+            return view('campaign.index')->with('campaign', $campaign);
+        }
 
     }
 

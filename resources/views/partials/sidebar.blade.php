@@ -34,6 +34,12 @@
             <li class="active treeview">
                 <a href="{{ asset('dashboard') }}">
                     <i class="fa fa-dashboard"></i> <span>Campaigns</span>
+                    <span class="pull-right-container">
+                              <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                    <ul class="treeview-menu">
+                        <li><a href="{{ route('campaign.all') }}"><i class="fa fa-circle-o"></i> All Campaigns</a></li>
+                    </ul>
                 </a>
             </li>
             <li class=" treeview">
@@ -72,8 +78,8 @@
                 </a>
 
                 <ul class="treeview-menu">
-                    <li><a href="{{ route('adslot.all') }}"><i class="fa fa-circle-o"></i> Rate Card List</a></li>
-                    <li><a href="{{ route('adslot.create') }}"><i class="fa fa-circle-o"></i> Add Rate Card</a></li>
+                    <li><a href="{{ route('adslot.all') }}"><i class="fa fa-circle-o"></i> Adslot List</a></li>
+                    <li><a href="{{ route('adslot.create') }}"><i class="fa fa-circle-o"></i> Add Adslot</a></li>
                     <li><a href="{{ url('discounts') }}"><i class="fa fa-circle-o"></i> Discounts</a></li>
 
                 </ul>
