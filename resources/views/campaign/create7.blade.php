@@ -69,7 +69,6 @@
                                                 <div class="modal-content" style="padding: 5%">
                                                     <form id="form_cart" action="{{ route('store.cart') }}" method="POST">
                                                         {{ csrf_field() }}
-
                                                         <h2 align="center">{{ $rating[0]->from_to_time }} Seconds Available</h2>
                                                         <ul style="font-size: 21px; margin:0 auto; width: 80%">
                                                             <h3 align="" style="color:#9f005d">Choose a media file</h3>

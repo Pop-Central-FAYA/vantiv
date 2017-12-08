@@ -40,58 +40,70 @@
         <!-- /.col -->
         <div class="col-md-2 hidden-sm hidden-xs"></div>
         <!-- /.col -->
-
+        {{--@if(count($ratecard) === 0)--}}
+           {{--<p>o</p>--}}
+        {{--@else--}}
+        {{--@foreach($ratecard as $ratecards)--}}
+        {{--@endforeach--}}
+        {{--@endif--}}
         <div class="row" style="padding: 5%">
             <div class="col-xs-12">
                 <div class="col-md-11">
                     <div class="nav-tabs-custom">
                         <ul class="nav nav-tabs" style="background:#eee">
-                            <li class="active"><a href="#all" data-toggle="tab">All</a></li>
-                            <li ><a href="#nc" data-toggle="tab">NC</a></li>
-                            <li><a href="#ne" data-toggle="tab">NE</a></li>
-                            <li><a href="#nw" data-toggle="tab">NW</a></li>
-                            <li><a href="#se" data-toggle="tab">SE</a></li>
-                            <li><a href="#ss" data-toggle="tab">SS</a></li>
-                            <li><a href="#sw" data-toggle="tab">SW</a></li>
+                            <li class="active"><a href="{{ route('adslot.all') }}" >All ADslots</a></li>
+                            @foreach($preload->regions as $region)
+                                <li><a href="{{ route('adslot.region', ['region_id' => $region->id]) }}" >{{ $region->region }}</a></li>
+                            @endforeach
+
                         </ul>
                         <div class="tab-content">
                             <div class="active tab-pane" id="all">
                                 <!-- Post -->
                                 <!-- /.post -->
                                 <div class="box-body">
+                                    @if(count($ratecard) === 0)
+                                        <p class="text-center">No Adslot created for this region</p>
+                                    @else
                                     <table id="example1" class="table table-bordered table-striped">
                                         <thead>
                                         <tr>
                                             <th>Day</th>
                                             <th>Time Slot</th>
                                             <?php $s = []; ?>
-                                            @foreach($seconds as $second)
-                                                <th>{{ $second->time_in_seconds }} Seconds</th>
-                                            @endforeach
+                                            <?php
+                                            $count_sec = count($seconds);
+                                            for($i = 0; $i < $count_sec; $i++)
+                                            {
+                                                echo "<th>". $seconds[$i] ." Seconds </th>";
+                                            }
+                                            ?>
                                             <th>Action</th>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        @foreach($adslot as $adslots)
-                                            @foreach($adslots->rate_card as $rating)
-                                                {{--{{ dd($rating) }}--}}
-                                                <tr class="adslot_tr{{ $adslots->id }}" tr_id="{{ $adslots->id }}">
-                                                    <td>{{ $adslots->day }}</td>
+                                        <?php $j = 0; ?>
+                                        @foreach($ratecard as $ratecards)
+                                            @foreach($ratecards->adslots as $rating)
+                                                <tr class="adslot_tr{{ $ratecards->id }}" tr_id="{{ $ratecards->id }}">
+                                                    <td>{{ $ratecards->day->day }}</td>
                                                     <td>{{ $rating[0]->from_to_time }}</td>
                                                     <td>{{ $rating[0]->price }}</td>
                                                     <td>{{ $rating[1]->price }}</td>
                                                     <td>{{ $rating[2]->price }}</td>
                                                     <td>{{ $rating[3]->price }}</td>
-                                                    <td class="adslot_td{{ $adslots->id }}">
-                                                        <a href="#" id="edit" edit_adslot_id = "{{ $adslots->id.$rating[0]->id }}" style="font-size: 16px"><span class="label label-warning" data-toggle="modal" data-target=".bs-example1-modal-md{{ $adslots->id.$rating[0]->id }}" style="cursor: pointer;">Edit</span></a>
+                                                    <td class="adslot_td{{ $ratecards->id }}">
+                                                        <a href="#" id="edit" edit_adslot_id = "{{ $ratecards->id.$rating[0]->id }}" style="font-size: 16px"><span class="label label-warning" data-toggle="modal" data-target=".bs-example1-modal-md{{ $ratecards->id.$rating[0]->id.$j }}" style="cursor: pointer;">Edit</span></a>
                                                     </td>
                                                 </tr>
+                                                <?php $j++; ?>
                                             @endforeach
                                         @endforeach
                                         </tbody>
                                         <tfoot>
                                         </tfoot>
                                     </table>
+                                    @endif
                                     {{--{!! with(new Vanguard\Pagination\HDPresenter($adslot))->render() !!}--}}
                                 </div>
                             </div>
@@ -124,16 +136,23 @@
                 </div>
                 <!-- /.col -->
             </div>
-
-            @foreach($adslot as $adslots)
-                {{--{{ dd($adslots) }}--}}
-                @foreach($adslots->rate_card as $rating)
-                    <div class="modal fade bs-example1-modal-md{{ $adslots->id.$rating[0]->id }}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+            <?php $i=0; ?>
+            @foreach($ratecard as $ratecards)
+                @foreach($ratecards->adslots as $rating)
+                    <div class="modal fade bs-example1-modal-md{{ $ratecards->id.$rating[0]->id.$i }}" tabindex="-1" role="dialog"  aria-labelledby="myLargeModalLabel">
                         <div class="modal-dialog modal-md" role="document">
                             <div class="modal-content" style="padding: 7%">
-                                <h3 align="center">All / {{ $adslots->day }}</h3>
-                                <form method="POST" action="{{ route('adslot.update', ['adslot_id' => $adslots->id]) }}" class="selsec" style="margin-left:">
+                                <h3 align="center">All / {{ $ratecards->day->day }}</h3>
+                                <form method="POST" action="{{ route('adslot.update', ['ratecard_id' => $ratecards->id]) }}" class="selsec" style="margin-left:">
                                     {{ csrf_field() }}
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label for="discount">Percentage Premium %</label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="text" name="premium_percent" class="form-control">
+                                        </div>
+                                    </div>
                                     @foreach($rating as $r)
                                         {{--{{ dd($r) }}--}}
                                         <p align="center">
@@ -143,18 +162,24 @@
                                                 <input type="hidden" name="time[]" value="{{ $r->time_in_seconds }}">
                                             </div>
                                             <div class="col-md-5">
-                                                <input type="hidden" name="hourly_range_id" value="{{ $adslots->hourly_range_id->id }}">
-                                                <input type="hidden" name="adslot_id" value="{{ $adslots->id }}">
+                                                <input type="hidden" name="hourly_range_id" value="{{ $ratecards->hourly_range_id->id }}">
+                                                <input type="hidden" name="ratecard_id" value="{{ $ratecards->id }}">
                                                 <input type="hidden" name="is_premium" value="{{ $r->is_premium }}">
-                                                <input type="hidden" name="premium_price" value="{{ $r->premium_price }}">
-                                                <input type="hidden" name="day" value="{{ $adslots->day }}">
-                                                <input type="hidden" name="rate_id" id="rate_id" value="{{ $r->id }}">
+                                                <input type="hidden" name="day" value="{{ $ratecards->day->id }}">
+                                                <input type="hidden" name="region_id" value="{{ $r->region->id }}">
+                                                <input type="hidden" name="target_audience_id" value="{{ $r->target_audience->id }}">
+                                                <input type="hidden" name="day_part_id" value="{{ $r->day_parts->id }}">
+                                                <input type="hidden" name="from_to_time" value="{{ $r->from_to_time }}">
+                                                <input type="hidden" name="adslot_id[]" id="adslot_id" value="{{ $r->id }}">
+                                                <input type="hidden" name="min_age" value="{{ $r->min_age }}">
+                                                <input type="hidden" name="max_age" value="{{ $r->max_age }}">
                                                 <input type="text" name="price[]" class="form-control" value="{{ $r->price }}" />
                                                 <input type="hidden" name="from_to_time" value="{{ $r->from_to_time }}">
                                             </div>
                                         </div>
                                         </p>
                                     @endforeach
+                                    <?php $i++; ?>
                                     <p align="center">
                                         <button  class="btn btn-large btn-danger" style="color:white; font-size: 20px; padding: 0.5% 3%; margin-top:4%; border-radius: 10px;">Cancel</button>
                                         <button id="update_adslot" type="submit" class="btn btn-large btn-success" style="color:white; font-size: 20px; padding: 0.5% 3%; margin-top:4%; border-radius: 10px;">Save</button>
@@ -176,6 +201,13 @@
                 {!! HTML::script('assets/js/bootstrap-datetimepicker.min.js') !!}
 
                 <script>
+                    $(document).ready(function(){
+                        $("body").delegate(".by_region", "click", function(){
+                            var id = $(".by_region").attr("region_id");
+                            console.log(id);
+                        });
+                    });
+
                     $(function () {
                         $("#example1").DataTable();
                         $('#example2').DataTable({
@@ -191,6 +223,7 @@
 
                 <script>
                     $(function () {
+
                         //Initialize Select2 Elements
                         $(".select2").select2();
 
@@ -258,6 +291,7 @@
                         $(".timepicker").timepicker({
                             showInputs: false
                         });
+
                     });
                 </script>
             @stop

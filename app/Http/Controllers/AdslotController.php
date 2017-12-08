@@ -17,15 +17,16 @@ class AdslotController extends Controller
     public function index()
     {
 //        api for adslot
-        $adslot = Api::get_adslot();
-        $a = (json_decode($adslot)->data);
-
+        $ratecard = Api::get_adslot();
+        $a = (json_decode($ratecard)->data);
 //        dd($a);
-//          api for time in seconds
-        $api_seconds = Api::get_time();
-        $api_get = json_decode($api_seconds);
-        $api = $api_get->data;
-        return view('adslot.index')->with('adslot', $a)->with('seconds', $api);
+        $preload_ratecard = Api::get_ratecard_preloaded();
+        $load = $preload_ratecard->data;
+
+        $seconds = [60, 45, 39, 15];
+        $preload_ratecard = Api::get_ratecard_preloaded();
+        $load = $preload_ratecard->data;
+        return view('adslot.index')->with('ratecard', $a)->with('seconds', $seconds)->with('preload', $load);
 
     }
 
@@ -36,6 +37,11 @@ class AdslotController extends Controller
      */
     public function create()
     {
+        $preload_ratecard = Api::get_ratecard_preloaded();
+        $load = $preload_ratecard->data;
+        $target_audience = Api::getTargetAudience();
+        $tar = (json_decode($target_audience)->data);
+
         $api_get_hourly_range = Api::get_hourly_range();
         $api_get_hour = json_decode($api_get_hourly_range);
         $api_hour = $api_get_hour->data;
@@ -44,7 +50,7 @@ class AdslotController extends Controller
         $api_get_sec = json_decode($api_seconds);
         $api_sec = $api_get_sec->data;
 
-        return view('adslot.create')->with('hour', $api_hour)->with('seconds', $api_sec);
+        return view('adslot.create')->with('hour', $api_hour)->with('seconds', $api_sec)->with('target_audience', $tar)->with('preload', $load);
     }
 
     /**
@@ -55,8 +61,6 @@ class AdslotController extends Controller
      */
     public function store(Request $request)
     {
-//        dd($request->all());
-
         $adslot = Api::store_ad_slot($request);
         if($adslot->status === false)
         {
@@ -64,7 +68,6 @@ class AdslotController extends Controller
         }else{
             return redirect()->back()->with('success', trans('app.adslot_created'));
         }
-
     }
 
     /**
@@ -74,20 +77,31 @@ class AdslotController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $adslot_id)
+    public function update(Request $request, $ratecard_id)
     {
 //        dd($request->all());
-
-
-//        dd((object) $price_array);
-
-        $adslot_update = Api::update_adslot($request, $adslot_id);
+        $adslot_update = Api::update_adslot($request, $ratecard_id);
         if($adslot_update->status === false)
         {
             return redirect()->back()->with('error', $adslot_update->message);
         }else{
             return redirect()->back()->with('success', trans('app.adslot_updated'));
         }
+    }
+    public function getAdslotByRegion($region_d)
+    {
+        //        api for adslot
+        $ratecard = Api::get_adslot_by_region($region_d);
+        $a = (json_decode($ratecard)->data);
+//        dd($a);
+
+        $preload_ratecard = Api::get_ratecard_preloaded();
+        $load = $preload_ratecard->data;
+
+        $seconds = [60, 45, 39, 15];
+        $preload_ratecard = Api::get_ratecard_preloaded();
+        $load = $preload_ratecard->data;
+        return view('adslot.index')->with('ratecard', $a)->with('seconds', $seconds)->with('preload', $load);
     }
 
     /**

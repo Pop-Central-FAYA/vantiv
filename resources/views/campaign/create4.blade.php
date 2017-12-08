@@ -30,8 +30,6 @@
                             <p align="center">The history of advertising can be traced to ancient civilizations. It became a major force in capitalist economies in the mid-19th century, based primarily on newspapers and magazines. In the 20th century, advertising grew rapidly with new technologies such as direct mail, radio, television, the internet and mobile devices.</p>
 
                         </div>
-
-
                     </div>
                     <div class="row" style="margin-top:3%" id="dynamic">
                         <div class="row">
@@ -62,13 +60,10 @@
                             </div>
                         </div>
                     </div>
-
-
                         <div class="col-md-6">
 
                         </div>
 
-                    </div>
 
                     <div class="container">
 

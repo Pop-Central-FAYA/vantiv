@@ -35,6 +35,9 @@
                                 <!-- Post -->
                                 <!-- /.post -->
                                 <div class="box-body">
+                                    @if(count($walkin) === 0)
+                                        <p class="text-center">No walkins, please create one</p>
+                                    @else
                                     <table id="example1" class="table table-bordered table-striped">
                                         <thead>
                                         <tr>
@@ -67,14 +70,16 @@
                                                     <a href="{{ route('campaign.create2', ['id' => 1]) }}" class="btn btn-primary btn-xs">Create Campaign</a>
                                                 </td>
                                                 <td>
-                                                    <a href="#" data-toggle="modal" data-target=".bs-example1-modal-md" style="font-size: 16px"><span class="label label-danger"> <i class="fa fa-trash"></i></span></a></td>
+                                                    <a href="#" data-toggle="modal" data-target=".bs-example1-modal-md{{ $walkins->id }}" style="font-size: 16px"><span class="label label-danger"> <i class="fa fa-trash"></i></span></a></td>
                                                 </td>
                                             </tr>
                                         @endforeach
+
                                         </tbody>
                                         <tfoot>
                                         </tfoot>
                                     </table>
+                                    @endif
                                 </div>
                             </div>
                             <!-- /.tab-pane -->
@@ -107,7 +112,8 @@
                 <!-- /.col -->
             </div>
 
-            <div class="modal fade bs-example1-modal-md" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+            @foreach($walkin as $walkins)
+            <div class="modal fade bs-example1-modal-md{{ $walkins->id }}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
                 <div class="modal-dialog modal-md" role="document">
                     <div class="modal-content" style="padding: 7%">
                         <h2 class="text-center">Are you sure you want to delete?</h2><br>
@@ -120,6 +126,7 @@
                     </div>
                 </div>
             </div>
+            @endforeach
 
         {{--</div>--}}
         <!-- /.content -->

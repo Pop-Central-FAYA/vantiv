@@ -47,7 +47,9 @@ class CampaignsController extends Controller
         $obj_preloaded = json_decode($preloaded);
         $day_parts = $obj_preloaded->data->day_parts;
         $campaign_type = $obj_preloaded->data->campaign_types;
-        return view('campaign.create2')->with('day_parts', $day_parts)->with('step2', Session::get('step2'));
+        $preload_ratecard = Api::get_ratecard_preloaded();
+        $load = $preload_ratecard->data;
+        return view('campaign.create2')->with('day_parts', $day_parts)->with('step2', Session::get('step2'))->with('preload', $load);
     }
 
     public function createStep3($id)
@@ -55,7 +57,10 @@ class CampaignsController extends Controller
         $preloaded = Api::getPreloaded();
         $obj_preloaded = json_decode($preloaded);
         $target_audience = $obj_preloaded->data->target_audience;
-        return view('campaign.create3')->with('target_audience', $target_audience)->with('step3', Session::get('step3'));
+
+        $ratecard = Api::get_adslot();
+        $a = (json_decode($ratecard)->data);
+        return view('campaign.create3')->with('target_audience', $target_audience)->with('step3', Session::get('step3'))->with('ratecard', $a);
     }
 
     public function createStep4($id)
@@ -82,9 +87,10 @@ class CampaignsController extends Controller
 //        $getCampaign = Api::getCampaignByBroadcaster();
 //        $campaign = $getCampaign->data;
 //
-//        $all_adslot = Api::get_adslot();
-//        $adslot = json_decode($all_adslot);
-//        $count = count(($adslot->data));
+        $all_adslot = Api::get_adslot();
+        $adslot = json_decode($all_adslot);
+        $count = count(($adslot->data));
+//        dd($count);
         return view('campaign.create6');
     }
 
@@ -127,9 +133,11 @@ class CampaignsController extends Controller
             'name' => 'required',
             'brand' => 'required',
             'product' => 'required',
+            'channel' => 'required',
             'start_date' => 'required|date',
             'end_date' => 'required|date',
             'dayparts' => 'required_without_all',
+            'region' => 'required',
         ]);
         $step2_req = ((object) $request->all());
         session(['step2' => $step2_req]);

@@ -193,7 +193,8 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/', 'AdslotController@index')->name('adslot.all');
             Route::get('/create', 'AdslotController@create')->name('adslot.create');
             Route::post('/store', 'AdslotController@store')->name('adslot.store');
-            Route::post('/update/{adslot_id}', 'AdslotController@update')->name('adslot.update');
+            Route::post('/update/{ratecard_id}', 'AdslotController@update')->name('adslot.update');
+            Route::get('/{region_id}', 'AdslotController@getAdslotByRegion')->name('adslot.region');
         });
 
         /**

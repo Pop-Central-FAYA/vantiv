@@ -58,7 +58,7 @@ Class Api
     }
     public static function get_hourly_range()
     {
-        $url = Api::$url.'adslot/hourly/range?key='.Api::$public;
+        $url = Api::$url.'ratecard/hourly/range?key='.Api::$public;
         $token = Session::get('token');
         $enc_token = Session::get('encrypted_token');
 
@@ -76,7 +76,7 @@ Class Api
     }
     public static function get_time()
     {
-        $url = Api::$url.'adslot/time?key='.Api::$public;
+        $url = Api::$url.'ratecard/time?key='.Api::$public;
         $token = Session::get('token');
         $enc_token = Session::get('encrypted_token');
         $response = Curl::to($url)
@@ -92,7 +92,7 @@ Class Api
     }
     public static function get_discount_type()
     {
-        $url = Api::$url.'adslot/discount?key='.Api::$public;
+        $url = Api::$url.'ratecard/discount?key='.Api::$public;
         $token = Session::get('token');
         $enc_token = Session::get('encrypted_token');
         $response = Curl::to($url)
@@ -106,6 +106,17 @@ Class Api
         ApiLog::save_activity_log($req, $response, $url);
         return $response;
     }
+    public static function get_ratecard_preloaded()
+    {
+        $url = Api::$url.'ratecard/preload/data?key='.Api::$public;
+        $token = Session::get('token');
+        $enc_token = Session::get('encrypted_token');
+        $response = Curl::to($url)
+            ->withHeader("token: $enc_token")
+            ->get();
+        return json_decode($response);
+
+    }
     public static function store_ad_slot($request)
     {
         $day = $request->days;
@@ -117,59 +128,74 @@ Class Api
         $time = $request->time;
         $price = $request->price;
         $time_id = $request->time_id;
-        $url = Api::$url.'adslot/create?key='.Api::$public;
+        $url = Api::$url.'ratecard/create?key='.Api::$public;
         $enc_token = Session::get('encrypted_token');
         $token = Session::get('token');
         $time_data = [];
         $i = 0;
         $price_array = [];
-        $i = 0;
-        $j = 0;
-        $k = 0;
-        $l = 0;
-        $m = 0;
-        $n = 0;
-        $o = 0;
-        $q = 0;
+        $a = 0; $aa = 0; $bb = 0; $cc = 0; $b = 0; $c = 0; $d = 0; $e = 0; $f = 0; $g = 0;
+        $h = 0; $i = 0; $j = 0; $k = 0; $l = 0; $m = 0; $n = 0; $o = 0; $p = 0; $q = 0;
+        $r = 0; $s = 0; $t = 0; $u = 0; $v = 0; $w = 0; $x = 0; $y = 0; $z = 0;
         foreach($request->price_60 as $p60){
             $price = $p60;
-            $price_array[] = [
-                'from_time' => $request->from[$i++],
+            $price_array[] = (object) [
+                'from_time' => $request->from_time[$i++],
                 'price' => (integer) $price,
-                'to_time' => $request->to[$j++],
-                'time' => "60",
+                'to_time' => $request->to_time[$j++],
+                'time_in_seconds' => 60,
+                'day_part_id' => $request->dayparts[$k++],
+                'target_audience_id' => $request->target_audience[$l++],
+                'region_id' => $request->region[$m++],
+                'min_age' => (integer) $request->min_age[$o++],
+                'max_age' => (integer) $request->max_age[$p++],
                 'is_premium' => 0,
-                'premium_price' => (integer) $price
+                'premium_percent' => 0,
             ];
         }
         foreach($request->price_45 as $p45){
-            $price_array[] = [
-                'from_time' => $request->from[$k++],
+            $price_array[] = (object) [
+                'from_time' => $request->from_time[$q++],
                 'price' => (integer) $p45,
-                'to_time' => $request->to[$l++],
-                'time' => "45",
+                'to_time' => $request->to_time[$r++],
+                'time_in_seconds' => 45,
+                'day_part_id' => $request->dayparts[$s++],
+                'target_audience_id' => $request->target_audience[$t++],
+                'region_id' => $request->region[$u++],
+                'min_age' => (integer) $request->min_age[$v++],
+                'max_age' => (integer) $request->max_age[$w++],
                 'is_premium' => 0,
-                'premium_price' => (integer) $p45
+                'premium_percent' => 0,
             ];
         }
         foreach($request->price_30 as $p30){
-            $price_array[] = [
-                'from_time' => $request->from[$m++],
+            $price_array[] = (object) [
+                'from_time' => $request->from_time[$x++],
                 'price' => (integer) $p30,
-                'to_time' => $request->to[$n++],
-                'time' => "30",
+                'to_time' => $request->to_time[$y++],
+                'time_in_seconds' => 30,
+                'day_part_id' => $request->dayparts[$z++],
+                'target_audience_id' => $request->target_audience[$a++],
+                'region_id' => $request->region[$b++],
+                'min_age' => (integer) $request->min_age[$c++],
+                'max_age' => (integer) $request->max_age[$d++],
                 'is_premium' => 0,
-                'premium_price' => (integer) $p30
+                'premium_percent' => 0,
             ];
         }
         foreach($request->price_15 as $p15){
-            $price_array[] = [
-                'from_time' => $request->from[$o++],
+            $price_array[] = (object) [
+                'from_time' => $request->from_time[$e++],
                 'price' => (integer) $p15,
-                'to_time' => $request->to[$q++],
-                'time' => "15",
+                'to_time' => $request->to_time[$f++],
+                'time_in_seconds' => 15,
+                'day_part_id' => $request->dayparts[$g++],
+                'target_audience_id' => $request->target_audience[$h++],
+                'region_id' => $request->region[$aa++],
+                'min_age' => (integer) $request->min_age[$bb++],
+                'max_age' => (integer) $request->max_age[$cc++],
                 'is_premium' => 0,
-                'premium_price' => (integer) $p15
+                'premium_percent' => 0,
             ];
         }
         $data = [
@@ -177,10 +203,8 @@ Class Api
             'broadcaster_id' => Session::get('broadcaster_id'),
             'hourly_range_id' => $hourly_range,
             'day' => $day,
-            'overall_price' => $request->overall_price,
-            'rates' => json_encode($price_array),
+            'adslots' => $price_array,
         ];
-
         $response = Curl::to($url)
             ->withHeader("token: $enc_token")
             ->withData([
@@ -188,7 +212,7 @@ Class Api
                 'broadcaster_id' => Session::get('broadcaster_id'),
                 'hourly_range_id' => $hourly_range,
                 'day' => $day,
-                'rates' =>  $price_array,
+                'adslots' =>  $price_array,
             ])->asJson()
             ->post();
         $req = [
@@ -205,7 +229,7 @@ Class Api
     }
     public static function get_adslot()
     {
-        $url = Api::$url.'adslot/all/'.Session::get('broadcaster_id').'?key='.Api::$public;
+        $url = Api::$url.'ratecard/all/'.Session::get('broadcaster_id').'?key='.Api::$public;
         $token = Session::get('token');
         $enc_token = Session::get('encrypted_token');
         $response = Curl::to($url)
@@ -218,10 +242,26 @@ Class Api
         ApiLog::save_activity_log($req, $response, $url);
         return $response;
     }
+    public static function get_adslot_by_region($region_id)
+    {
+        $url = Api::$url.'ratecard/by/'.$region_id.'/'.Session::get('broadcaster_id').'?key='.Api::$public;
+        $token = Session::get('token');
+        $enc_token = Session::get('encrypted_token');
+        $response = Curl::to($url)
+            ->withHeader("token: $enc_token")
+            ->get();
+        $req = json_encode([
+            'key' => Api::$public,
+            'token' => $token
+        ]);
+        ApiLog::save_activity_log($req, $response, $url);
+        return $response;
+
+    }
     public static function update_adslot($request)
     {
-        $adslot_id = $request->adslot_id;
-        $url = Api::$url.'adslot/'.$adslot_id.'?key='.Api::$public;
+        $ratecard_id = $request->ratecard_id;
+        $url = Api::$url.'ratecard/'.$ratecard_id.'?key='.Api::$public;
         $token = Session::get('token');
         $enc_token = Session::get('encrypted_token');
         $user_id = self::explode_token($token, 'id');
@@ -229,11 +269,26 @@ Class Api
         $hourly_range = $request->hourly_range_id;
         $price_array = [];
         $j = 0;
+        $i = 0;
+        if(!empty((integer) $request->premium_percent))
+        {
+            $is_pre = 1;
+        }else{
+            $is_pre = 0;
+        }
         foreach ($request->time as $t) {
 
-            $price_array[] = [
-                'time' => (integer) $t,
+            $price_array[] = (object) [
+                'time_in_seconds' => (integer) $t,
                 'price' => (integer) $request->price[$j++],
+                'region_id' => $request->region_id,
+                'min_age' => (integer) $request->min_age,
+                'max_age' => (integer) $request->max_age,
+                'adslot_id' => $request->adslot_id[$i++],
+                'premium_percent' => (integer) $request->premium_percent,
+                'is_premium' => $is_pre,
+                'day_part_id' => $request->day_part_id,
+                'target_audience_id' => $request->target_audience_id,
                 'from_time' => (explode(" - ", $request->from_to_time))[0],
                 'to_time' => (explode(" - ", $request->from_to_time))[1],
             ];
@@ -244,8 +299,9 @@ Class Api
             'broadcaster_id' => Session::get('broadcaster_id'),
             'hourly_range_id' => $hourly_range,
             'day' => $day,
-            'rates' => $price_array,
+            'adslots' => $price_array,
         ];
+//        dd($json_data);
         $response = Curl::to($url)
             ->withHeader("token: $enc_token")
             ->withData([
@@ -253,10 +309,10 @@ Class Api
                 'broadcaster_id' => Session::get('broadcaster_id'),
                 'hourly_range_id' => $hourly_range,
                 'day' => $day,
-                'rates' => $price_array,
+                'adslots' => $price_array,
             ])->asJson()
             ->put();
-
+//        dd($response);
         ApiLog::save_activity_log($json_data, json_encode($response), $url);
         return $response;
     }
@@ -350,9 +406,8 @@ Class Api
             'key' => Api::$public,
             'token' => $token
         ]);
-//        dd(Session::get('broadcaster_id'));
 
-//        ApiLog::save_activity_log($req, $response, $url);
+        ApiLog::save_activity_log($req, $response, $url);
         return (json_decode($response));
     }
 
@@ -446,6 +501,18 @@ Class Api
         ApiLog::save_activity_log($req, $response, $url);
         return $response;
 
+    }
+
+    public static function getTargetAudience()
+    {
+        $url = Api::$url.'campaign/target-audience?key='.Api::$public;
+        $token = Session::get('token');
+        $enc_token = Session::get('encrypted_token');
+        $response = Curl::to($url)
+            ->withHeader("token: $enc_token")
+            ->get();
+        return $response;
+//        dd($response);
     }
 
     //Exploding the content of the token

@@ -28,13 +28,9 @@
                     <div class="form-group">
                         <label for="days">Select Days</label>
                         <select name="days" class="form-control" id="">
-                            <option value="Monday">Monday</option>
-                            <option value="Tuesday">Tuesday</option>
-                            <option value="Wednesday">Wednesday</option>
-                            <option value="Thursday">Thursday</option>
-                            <option value="Friday">Friday</option>
-                            <option value="Saturday">Saturday</option>
-                            <option value="Sunday">Sunday</option>
+                            @foreach($preload->days as $day)
+                                <option value="{{ $day->id }}">{{ $day->day }}</option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="form-group">
@@ -54,7 +50,11 @@
                                 <th> 45 Seconds</th>
                                 <th> 30 Seconds</th>
                                 <th> 15 Seconds</th>
-                                <th>Premium</th>
+                                <th> Target Audience</th>
+                                <th> Region </th>
+                                <th> Day Parts</th>
+                                <th> Min Age</th>
+                                <th> Max Age</th>
                                 <th></th>
                                 </thead>
                                 <tbody>
@@ -62,10 +62,14 @@
                                     <td>
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <input type="text" class="form-control timepicker" name="from[]" placeholder="FROM" >
+                                                <div class="input-group time timepicker" id="timepicker">
+                                                    <input name="from_time[]" class="form-control "/><span class="input-group-addon"><span class="fa fa-clock-o"></span></span>
+                                                </div>
                                             </div>
                                             <div class="col-md-6">
-                                                <input type="text" class="form-control timepicker" name="to[]" placeholder="TO" >
+                                                <div class="input-group time timepicker" id="timepicker">
+                                                    <input name="to_time[]" class="form-control"/><span class="input-group-addon"><span class="fa fa-clock-o"></span></span>
+                                                </div>
                                             </div>
                                         </div>
                                     </td>
@@ -82,7 +86,55 @@
                                         <input type="text" name="price_15[]" price="price_151" class="form-control">
                                     </td>
                                     <td>
-                                        <input type="checkbox" name="premium[]">
+                                        <script type='text/javascript'>
+                                            <?php
+                                            if(is_array($target_audience)  and count($target_audience) > 0  )
+                                            {
+                                                echo "var tar_audience = ". json_encode($target_audience) . ";\n";
+                                            }
+                                            ?>
+                                        </script>
+                                        <select name="target_audience[]" class="form-control" id="">
+                                            @foreach($target_audience as $target_audiences)
+                                                <option value="{{ $target_audiences->id }}">{{ $target_audiences->audience }}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <script type='text/javascript'>
+                                            <?php
+                                            if(is_array($preload->regions)  and count($preload->regions) > 0  )
+                                            {
+                                                echo "var region = ". json_encode($preload->regions) . ";\n";
+                                            }
+                                            ?>
+                                        </script>
+                                        <select name="region[]" class="form-control" id="">
+                                            @foreach($preload->regions as $region)
+                                                <option value="{{ $region->id }}">{{ $region->region }}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <script type='text/javascript'>
+                                            <?php
+                                            if(is_array($preload->day_parts)  and count($preload->day_parts) > 0  )
+                                            {
+                                                echo "var day_parts = ". json_encode($preload->day_parts) . ";\n";
+                                            }
+                                            ?>
+                                        </script>
+                                        <select name="dayparts[]" class="form-control" id="">
+                                            @foreach($preload->day_parts as $daypart)
+                                                <option value="{{ $daypart->id }}">{{ $daypart->day_parts }}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="number" name="min_age[]" placeholder="Min Age" class="form-control">
+                                    </td>
+                                    <td>
+                                        <input type="number" name="max_age[]" placeholder="Max Age" class="form-control">
                                     </td>
                                     <td>
                                         <button id="add_more" type="button" class="btn btn-primary btn-xs">Add More +</button>
@@ -110,25 +162,15 @@
 @section('scripts')
     {!! HTML::script('assets/js/moment.min.js') !!}
     {!! HTML::script('assets/js/bootstrap-datetimepicker.min.js') !!}
-    {!! HTML::script('assets/js/jquery.timepicker.min.js') !!}
+    <script src="{{ asset("assets/js/jquery.timepicker.min.js") }}"></script>
     <script>
-
-
         $(document).ready(function(){
+
             $("#txtFromDate").datepicker({
                 numberOfMonths: 2,
                 onSelect: function (selected) {
                     $("#txtToDate").datepicker("option", "minDate", selected)
                 }
-            });
-
-            $('input.timepicker').timepicker({
-                timeFormat: 'HH:mm:ss',
-                minTime: '11:45:00', // 11:45:00 AM,
-                maxHour: 20,
-                maxMinutes: 30,
-                startTime: new Date(0,0,0,15,0,0), // 3:00:00 PM - noon
-                interval: 15 // 15 minutes
             });
 
             $("#txtToDate").datepicker({
@@ -147,14 +189,39 @@
                 }
             });
 
-            var i = 0;
             $("#add_more").click(function(){
                 var n = $(".b").length + 1;
                 if(n > 4){
                     return false;
                 }
-                $("#dynamic_field").append('<tr class="b"><td><div class="row"><div class="col-md-6"><input type="text" class="form-control timepicker" name="from[]" placeholder="FROM"></div><div class="col-md-6"><input type="text" class="form-control timepicker" name="to[]" placeholder="TO"></div></div></td><td><input type="text" name="price_60[]" class="form-control"></td><td><input type="text" name="price_45[]" class="form-control"></td><td><input type="text" name="price_30[]" class="form-control"></td><td><input type="text" name="price_15[]" class="form-control"></td><td><input type="checkbox" name="premium[]'+n+'"></td></tr>')
+                var big_html = '';
+                big_html += '<tr class="b"><td><div class="row"><div class="col-md-6"><div class="input-group time timepicker" id="timepicker"><input name="from_time[]" class="form-control"/><span class="input-group-addon"><span class="fa fa-clock-o"></span></span></div></div><div class="col-md-6"><div class="input-group time timepicker" id="timepicker"><input name="to_time[]" class="form-control"/><span class="input-group-addon"><span class="fa fa-clock-o"></span></span></div></div></div></td><td><input type="text" name="price_60[]" class="form-control"></td><td><input type="text" name="price_45[]" class="form-control"></td><td><input type="text" name="price_30[]" class="form-control"></td><td><input type="text" name="price_15[]" class="form-control"></td><td><select name="target_audience[]" class="form-control" id="">';
+                $.each(tar_audience, function (index,value)
+                {
+                    big_html += '<option value ="'+ value.id + '"> ' + value.audience + '</option>';
+                });
+                big_html += '</select></td><td><select name="region[]" class="form-control" id="">';
+                $.each(region, function (index,value)
+                {
+                    big_html += '<option value ="'+ value.id + '"> ' + value.region + '</option>';
+                });
+                big_html += '</select></td><td><select name="dayparts[]" class="form-control">';
+                $.each(day_parts, function (index,value)
+                {
+                    big_html += '<option value="'+ value.id +'">'+ value.day_parts +'</option>'
+                });
+                big_html += '</select></td><td><input type="number" name="min_age[]" placeholder="Min Age" class="form-control"></td><td><input type="number" name="max_age[]" placeholder="Max Age" class="form-control"></td></tr>';
+                $("#dynamic_field").append(big_html);
+            });
 
+            $("body").delegate(".timepicker", "click", function() {
+                $(".timepicker").datetimepicker({
+                    format: "LT",
+                    icons: {
+                        up: "fa fa-chevron-up",
+                        down: "fa fa-chevron-down"
+                    }
+                });
             });
 
         });

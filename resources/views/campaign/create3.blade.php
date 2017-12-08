@@ -25,90 +25,47 @@
                     <div class="row">
                         <div class="col-md-6">
                             <label>Target Audience</label>
-                            <select name="target_audience">
-                                @foreach($target_audience as $target)
-                                    <option value="{{ $target->id }}">{{ $target->audience }}</option>
+                            </br>
+                            <?php $arr = []; ?>
+                            <?php $male = []; $female = []; $both = [];?>
+                        @foreach($ratecard as $ratecards)
+                            <?php $adslots = (array) $ratecards->adslots ?>
+                                @foreach($ratecards->adslots as $rating)
+                                    {{ dd($rating) }}
+                                    @foreach($rating as $r)
+                                        <?php if($r->target_audience->audience = 'Male'){
+                                            $male[] = $r->target_audience->audience;
+                                        }elseif($r->target_audience->audience = 'Female'){
+                                            $female[] = $r->target_audience->audience;
+                                        }else{
+                                            $both[] = $r->target_audience->audience;
+                                        }
+                                        ?>
+                                    @endforeach
                                 @endforeach
-                            </select>
+                            @endforeach
+                            <?php $no_male = count($male); $no_female = count($female); $no_both = count($both)?>
+                            <?php $male = array_unique($male); $female = array_unique($female); $both = array_unique($both); ?>
+                            <?php $male[1] = $no_male; $female[1] = $no_female; $both[1] = $no_both; ?>
+                            <?php $final_array = [$male,$female,$both] ?>
+                            @foreach($final_array as $final)
+                                @if($final[1] !== 0)
+                                    <ul class="nav nav-stacked">
+                                        <li role="presentation"><a href="#">{{ $final[0] }}</a></li>
+                                        <li role="presentation"><a href="#">{{ $final[1] }}</a></li>
+                                    </ul>
+                                @endif
+                            @endforeach
+                            {{--<select name="target_audience">--}}
+                                {{--@foreach($target_audience as $target)--}}
+                                    {{--<option value="{{ $target->id }}">{{ $target->audience }}</option>--}}
+                                {{--@endforeach--}}
+                            {{--</select>--}}
                         </div>
                         <div class="col-lg-6 col-md-6 hidden-sm hidden-xs"></div>
                     </div>
-                    <div class="row" style="margin-top:3%">
-                        <div class="col-md-2">
-                            <label style="margin-left:10%">Min Age:</label>
-                            <select style="width: 100%" name="min_age">
-                                <option value="17">17</option>
-                                <option value="26">26</option>
-                                <option value="30">30</option>
-                                <option value="40">40</option>
-                                <option value="50">50</option>
-                            </select>
-                        </div>
-                        <div class="col-md-2">
-                            <label style="margin-left:10%">Max Age:</label>
-                            <select style="width: 100%" name="max_age">
-                                <option value="21">21</option>
-                                <option value="29">29</option>
-                                <option value="39">39</option>
-                                <option value="49">49</option>
-                                <option value="70">70</option>
 
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row" style="margin-top:10%">
-                        <h3> Region </h3>
-                        <div class="col-md-2">
-                            <div class="form-group">
 
-                                <p>
-                                    <label>
-                                        <input type="checkbox" name="region[]" value="NC" class="minimal-red">
-                                        NC
-                                    </label>
-                                </p>
-                                <p>
-                                    <label>
-                                        <input type="checkbox" name="region[]" value="NE" class="minimal-red">
-                                        NE
-                                    </label>
-                                </p>
-                                <p>
-                                    <label>
-                                        <input type="checkbox" name="region[]" value="NW" class="minimal-red">
-                                        NW
-                                    </label>
-                                </p>
-
-                            </div>
-                        </div>
-
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <p>
-                                    <label>
-                                        <input type="checkbox" name="region[]" value="SE" class="minimal-red">
-                                        SE
-                                    </label>
-                                </p>
-                                <p>
-                                    <label>
-                                        <input type="checkbox" name="region[]" value="SS" class="minimal-red">
-                                        SS
-                                    </label>
-                                </p>
-                                <p>
-                                    <label>
-                                        <input type="checkbox" name="region[]" value="SW" class="minimal-red">
-                                        SW
-                                    </label>
-                                </p>
-
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="container">
 
                         <p align="right">
                             <button type="button" id="step2" class="btn campaign-button" >Back <i class="fa fa-backward" aria-hidden="true"></i></button>

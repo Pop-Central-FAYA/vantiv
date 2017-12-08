@@ -18,7 +18,6 @@
     </section>
 
     <!-- Main content -->
-
     <section class="content">
         <div class="row">
             <div class="col-md-1 hidden-sm hidden-xs"></div>
@@ -45,7 +44,7 @@
                     <div class="row">
                         <dvi class="col-md-3">
                             <label style="margin-left:10%">Channel:</label>
-                            <select style="width: 100%" name="channel">
+                            <select style="width: 100%" class="form-control" name="channel">
                                 <option value="TV"
                                         @if(isset(((object) $step2)->channel) === "TV")
                                         selected
@@ -93,7 +92,23 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row" style="margin-top:10%">
+                        <h3> Region </h3>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <p>
+                                    @foreach($preload->regions as $region)
+                                    <label>
+                                        <input type="checkbox" name="region[]" value="{{ $region->id }}" class="minimal-red">
+                                        {{ $region->region }}
+                                    </label>
+                                    @endforeach
+                                </p>
+                            </div>
+                        </div>
+                    </div>
 
+                    <div class="container">
                     <div class="container">
                         <p align="right">
                             <button class="btn campaign-button" style="margin-right:15%">Next <i class="fa fa-play" aria-hidden="true"></i></button>
