@@ -20,14 +20,20 @@ class CampaignsController extends Controller
      */
     public function index()
     {
+
         $preloaded = Api::getPreloaded();
         $obj_preloaded = json_decode($preloaded);
         $campaign_all = Api::getCampaignByBroadcaster();
-        if($campaign_all->status === true)
-        {
-            $campaign = $campaign_all->data;
-            return view('campaign.index')->with('campaign', $campaign);
+        if(count($campaign_all) === 0){
+            return back()->with('error','No result found!');
+        }else{
+            if($campaign_all->status === true)
+            {
+                $campaign = $campaign_all->data;
+                return view('campaign.index')->with('campaign', $campaign);
+            }
         }
+
 
     }
 
@@ -49,7 +55,11 @@ class CampaignsController extends Controller
 //        $campaign_type = $obj_preloaded->data->campaign_types;
         $preload_ratecard = Api::get_ratecard_preloaded();
         $load = $preload_ratecard->data;
-        return view('campaign.create2')->with('day_parts', $day_parts)->with('step2', Session::get('step2'))->with('preload', $load);
+        if(count($preload_ratecard) === 0){
+            return back()->with('error','No result found!');
+        }else{
+            return view('campaign.create2')->with('day_parts', $day_parts)->with('step2', Session::get('step2'))->with('preload', $load);
+        }
     }
 
     public function createStep3($id)

@@ -71,7 +71,7 @@ Class Api
             'token' => $token
         ]);
         $data = json_encode($response, true);
-        ApiLog::save_activity_log($req, $response, $url);
+//        ApiLog::save_activity_log($req, $response, $url);
         return $response;
     }
     public static function get_time()
@@ -87,7 +87,7 @@ Class Api
             'token' => $token
         ]);
         $data = json_encode($response, true);
-        ApiLog::save_activity_log($req, $response, $url);
+//        ApiLog::save_activity_log($req, $response, $url);
         return $response;
     }
     public static function get_discount_type()
@@ -103,7 +103,7 @@ Class Api
             'token' => $token
         ]);
         $data = json_encode($response, true);
-        ApiLog::save_activity_log($req, $response, $url);
+//        ApiLog::save_activity_log($req, $response, $url);
         return $response;
     }
     public static function get_ratecard_preloaded()
@@ -239,7 +239,7 @@ Class Api
             'key' => Api::$public,
             'token' => $token
         ]);
-        ApiLog::save_activity_log($req, $response, $url);
+//        ApiLog::save_activity_log($req, $response, $url);
         return $response;
     }
     public static function get_adslot_by_region($region_id)
@@ -254,7 +254,7 @@ Class Api
             'key' => Api::$public,
             'token' => $token
         ]);
-        ApiLog::save_activity_log($req, $response, $url);
+//        ApiLog::save_activity_log($req, $response, $url);
         return $response;
 
     }
@@ -358,7 +358,7 @@ Class Api
             'key' => Api::$public,
             'token' => $token
         ]);
-        ApiLog::save_activity_log($req, $response, $url);
+//        ApiLog::save_activity_log($req, $response, $url);
         return $response;
     }
     public static function delete_walkins($id)
@@ -390,7 +390,7 @@ Class Api
             'token' => $token
         ]);
 
-        ApiLog::save_activity_log($req, $response, $url);
+//        ApiLog::save_activity_log($req, $response, $url);
         return $response;
     }
     public static function getCampaignByBroadcaster()
@@ -407,7 +407,7 @@ Class Api
             'token' => $token
         ]);
 
-        ApiLog::save_activity_log($req, $response, $url);
+//        ApiLog::save_activity_log($req, $response, $url);
         return (json_decode($response));
     }
 
