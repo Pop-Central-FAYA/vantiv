@@ -26,41 +26,23 @@
                         <div class="col-md-6">
                             <label>Target Audience</label>
                             </br>
-                            <?php $arr = []; ?>
-                            <?php $male = []; $female = []; $both = [];?>
-                        @foreach($ratecard as $ratecards)
-                            <?php $adslots = (array) $ratecards->adslots ?>
-                                @foreach($ratecards->adslots as $rating)
-                                    {{ dd($rating) }}
-                                    @foreach($rating as $r)
-                                        <?php if($r->target_audience->audience = 'Male'){
-                                            $male[] = $r->target_audience->audience;
-                                        }elseif($r->target_audience->audience = 'Female'){
-                                            $female[] = $r->target_audience->audience;
-                                        }else{
-                                            $both[] = $r->target_audience->audience;
-                                        }
-                                        ?>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <?php $num = []; ?>
+                                    {{--{{ dd($result) }}--}}
+                                    @foreach($target_audience as $target)
+                                            <a href="{{ route('campaign.create4', ['id' => 1, 'audience' => $target->id]) }}"><h4>
+                                            {{ $target->audience }}
+                                            @foreach($result as $res)
+                                                @if($res->target_audience->id === $target->id)
+                                                    <?php $num[] = $res ?>
+                                                @endif
+                                            @endforeach  {{ count($num) }}
+                                                </h4></a>
                                     @endforeach
-                                @endforeach
-                            @endforeach
-                            <?php $no_male = count($male); $no_female = count($female); $no_both = count($both)?>
-                            <?php $male = array_unique($male); $female = array_unique($female); $both = array_unique($both); ?>
-                            <?php $male[1] = $no_male; $female[1] = $no_female; $both[1] = $no_both; ?>
-                            <?php $final_array = [$male,$female,$both] ?>
-                            @foreach($final_array as $final)
-                                @if($final[1] !== 0)
-                                    <ul class="nav nav-stacked">
-                                        <li role="presentation"><a href="#">{{ $final[0] }}</a></li>
-                                        <li role="presentation"><a href="#">{{ $final[1] }}</a></li>
-                                    </ul>
-                                @endif
-                            @endforeach
-                            {{--<select name="target_audience">--}}
-                                {{--@foreach($target_audience as $target)--}}
-                                    {{--<option value="{{ $target->id }}">{{ $target->audience }}</option>--}}
-                                {{--@endforeach--}}
-                            {{--</select>--}}
+                                </div>
+                                <div class="col-lg-6 col-md-6 hidden-sm hidden-xs"></div>
+                            </div>
                         </div>
                         <div class="col-lg-6 col-md-6 hidden-sm hidden-xs"></div>
                     </div>
@@ -70,7 +52,7 @@
                         <p align="right">
                             <button type="button" id="step2" class="btn campaign-button" >Back <i class="fa fa-backward" aria-hidden="true"></i></button>
 
-                            <button type="submit" class="btn campaign-button" style="margin-right:15%">Next <i class="fa fa-play" aria-hidden="true"></i></button>
+                            {{--<button type="submit" class="btn campaign-button" style="margin-right:15%">Next <i class="fa fa-play" aria-hidden="true"></i></button>--}}
 
                         </p>
                     </div>

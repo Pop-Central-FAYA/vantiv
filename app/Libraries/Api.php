@@ -420,9 +420,6 @@ Class Api
         $data = \DB::select("SELECT * from uploads WHERE user_id = '$user_id'");
         $preloaded = Api::getPreloaded();
         $obj_preloaded = json_decode($preloaded);
-        $dayparts = implode(',', $first->dayparts);
-        $region = implode(',', $second->region);
-        $campaign_type_id = $obj_preloaded->data->campaign_types[1]->id;
         $request->all();
         $url = Api::$url.'campaign/create/walkins?key='.Api::$public;
         $enc_token = Session::get('encrypted_token');
@@ -438,17 +435,11 @@ Class Api
             ];
         }
         $thisss = [
-            'campaign_type_id' => $campaign_type_id,
             'user_id' => $user_id,
             'channel' => 'TV',
-            'target_audience_id' => $second->target_audience,
             'brand' => $first->brand,
-            'day_parts' => $dayparts,
-            'regions' => $region,
             'start_date' => strtotime($first->start_date),
             'stop_date' => strtotime($first->end_date),
-            'maximum_age' => (integer) $second->max_age,
-            'minimum_age' => (integer) $second->min_age,
             'name' => $first->name,
             'product' => $first->product,
             'payment_method' => $request->payment,
@@ -459,17 +450,11 @@ Class Api
         $response = Curl::to($url)
             ->withHeader("token: $enc_token")
             ->withData([
-                'campaign_type_id' => $campaign_type_id,
                 'user_id' => $user_id,
                 'channel' => 'TV',
-                'target_audience_id' => $second->target_audience,
                 'brand' => $first->brand,
-                'day_parts' => $dayparts,
-                'regions' => $region,
                 'start_date' => strtotime($first->start_date),
                 'stop_date' => strtotime($first->end_date),
-                'maximum_age' => (integer) $second->max_age,
-                'minimum_age' => (integer) $second->min_age,
                 'name' => $first->name,
                 'product' => $first->product,
                 'payment_method' => $request->payment,
@@ -479,17 +464,11 @@ Class Api
             ])
             ->post();
         $req = [
-            'campaign_type_id' => $campaign_type_id,
             'user_id' => $user_id,
             'channel' => 'TV',
-            'target_audience_id' => $second->target_audience,
             'brand' => $first->brand,
-            'day_parts' => $dayparts,
-            'regions' => $region,
             'start_date' => strtotime($first->start_date),
             'stop_date' => strtotime($first->end_date),
-            'maximum_age' => (integer) $second->max_age,
-            'minimum_age' => (integer) $second->min_age,
             'name' => $first->name,
             'product' => $first->product,
             'payment_method' => $request->payment,

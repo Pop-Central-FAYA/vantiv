@@ -46,7 +46,7 @@ class CampaignsController extends Controller
         $preloaded = Api::getPreloaded();
         $obj_preloaded = json_decode($preloaded);
         $day_parts = $obj_preloaded->data->day_parts;
-        $campaign_type = $obj_preloaded->data->campaign_types;
+//        $campaign_type = $obj_preloaded->data->campaign_types;
         $preload_ratecard = Api::get_ratecard_preloaded();
         $load = $preload_ratecard->data;
         return view('campaign.create2')->with('day_parts', $day_parts)->with('step2', Session::get('step2'))->with('preload', $load);
@@ -60,38 +60,86 @@ class CampaignsController extends Controller
 
         $ratecard = Api::get_adslot();
         $a = (json_decode($ratecard)->data);
-        return view('campaign.create3')->with('target_audience', $target_audience)->with('step3', Session::get('step3'))->with('ratecard', $a);
+        $first_form = Session::get('step2');
+        $day_parts = $first_form->dayparts;
+        $region = $first_form->region;
+        $result = [];
+        $count_a = count($a);
+        if ($count_a !== 0){
+            foreach ($a as $b){
+                foreach ($b->adslots as $c){
+                    foreach ($c as $d){
+                        $c_region = $d->region;
+                        $c_day = $d->day_parts;
+//                        dd($c_day);
+                        if (in_array($c_region->id,$region) || in_array($c_day->id, $day_parts)){
+                            $result[] = $d;
+                        }
+                    }
+                }
+            }
+            return view('campaign.create3')->with('target_audience', $target_audience)
+                                                ->with('step3', Session::get('step3'))
+                                                ->with('ratecard', $a)
+                                                ->with('result', $result);
+
+        }else{
+            return back()->with('error','No result found!');
+        }
+
     }
 
-    public function createStep4($id)
+    public function createStep4($id, $audience)
     {
-        $time = Api::get_time();
-        $obj_time = json_decode($time);
-        $time_sec = $obj_time->data;
-        return view('campaign.create4')->with('time_in_sec', $time_sec);
+        $aud = $audience;
+        $seconds = [60, 45, 39, 15];
+
+        return view('campaign.create4')->with('audience', $aud);
     }
 
-    public function createStep5($id)
+    public function createStep5($id, $audience)
     {
+        $aud = $audience;
         $getCampaign = Api::getCampaignByBroadcaster();
         $campaign = $getCampaign->data;
         $time = Api::get_time();
         $obj_time = json_decode($time);
         $time_sec = $obj_time->data;
         return view('campaign.create5')->with('campaign', $campaign)
-            ->with('time', $time_sec);
+            ->with('time', $time_sec)->with('audience', $aud);
     }
 
-    public function createStep6($id)
+    public function createStep6($id, $audience)
     {
 //        $getCampaign = Api::getCampaignByBroadcaster();
 //        $campaign = $getCampaign->data;
 //
+        $aud = $audience;
         $all_adslot = Api::get_adslot();
         $adslot = json_decode($all_adslot);
         $count = count(($adslot->data));
-//        dd($count);
-        return view('campaign.create6');
+        $ratecard = Api::get_adslot();
+        $a = (json_decode($ratecard)->data);
+        $first_form = Session::get('step2');
+        $day_parts = $first_form->dayparts;
+        $region = $first_form->region;
+        $result = [];
+        $count_a = count($a);
+        if ($count_a !== 0) {
+            foreach ($a as $b) {
+                foreach ($b->adslots as $c) {
+                    foreach ($c as $d) {
+                        $c_region = $d->region;
+                        $c_day = $d->day_parts;
+//                        dd($c_day);
+                        if (in_array($c_region->id, $region) || in_array($c_day->id, $day_parts)) {
+                            $result[] = $d;
+                        }
+                    }
+                }
+            }
+        }
+        return view('campaign.create6')->with('result', $result)->with('audience', $aud);
     }
 
     public function createStep7($id)
@@ -166,12 +214,12 @@ class CampaignsController extends Controller
         return redirect()->route('campaign.create4', ['id' => $id])->with('time', $time_sec);
     }
 
-    public function postStep4(Request $request, $id)
+    public function postStep4(Request $request, $id, $audience)
     {
 //        dd($request->all());
 //        $getCampaign = Api::getCampaignByBroadcaster();
 //        $campaign = $getCampaign->data;
-
+        $aud = $audience;
         $adslot = Api::get_adslot();
         $big_array = (json_decode($adslot)->data);
 
@@ -200,28 +248,45 @@ class CampaignsController extends Controller
 
             $first = Session::get('step2');
             $second = Session::get('step3');
-            return redirect()->route('campaign.create6', ['id' => $id]);
+            return redirect()->route('campaign.create6', ['id' => $id, 'audience' => $aud]);
         }
     }
 
-    public function getStep7($id)
+    public function getStep7($id, $audience)
     {
         $first = Session::get('step2');
         $second = Session::get('step3');
-        $adslot = Api::get_adslot();
-        $a = json_decode($adslot);
-        $b = (object)($a->data);
-        $count = count(($a->data));
+        $ratecard = Api::get_adslot();
+        $a = (json_decode($ratecard)->data);
+        $first_form = Session::get('step2');
+        $day_parts = $first_form->dayparts;
+        $region = $first_form->region;
+        $result = [];
+        $count_a = count($a);
+        if ($count_a !== 0) {
+            foreach ($a as $b) {
+                foreach ($b->adslots as $c) {
+                    foreach ($c as $d) {
+                        $c_region = $d->region;
+                        $c_day = $d->day_parts;
+                        if (in_array($c_region->id, $region) || in_array($c_day->id, $day_parts)) {
+                            $result[] = $d;
+                        }
+                    }
+                }
+            }
+        }
 
         $user_id = Session::get('user_id');
         $data = \DB::select("SELECT * from uploads WHERE user_id = '$user_id'");
 
         $cart = \DB::select("SELECT * from carts WHERE user_id = '$user_id'");
-
-        return view('campaign.create7')->with('adslot', $b)
-            ->with('counting', $count)
+//        dd($result);
+        return view('campaign.create7')->with('ratecard', $a)
             ->with('data', $data)
-            ->with('cart', $cart);
+            ->with('cart', $cart)
+            ->with('result', $result)
+            ->with('aud', $audience);
 
     }
 
@@ -268,7 +333,7 @@ class CampaignsController extends Controller
         $day_parts = $obj_preloaded->data->day_parts;
         $targets = $obj_preloaded->data->target_audience;
         $user_id = Session::get('user_id');
-
+        $first = Session::get('step2');
         $calc = \DB::select("SELECT SUM(price) as total_price FROM carts WHERE user_id = '$user_id'");
         $query = \DB::select("SELECT * FROM carts WHERE user_id = '$user_id'");
 
@@ -276,7 +341,7 @@ class CampaignsController extends Controller
             ->with('second_session', $second)
             ->with('calc', $calc)
             ->with('day_part', $day_parts)
-            ->with('target', $targets)->with('query', $query);
+            ->with('target', $targets)->with('query', $query)->with('first', $first);
     }
 
     Public function postCampaign(Request $request)
@@ -289,12 +354,6 @@ class CampaignsController extends Controller
             $user_id = Session::get('user_id');
             $del_cart = \DB::select("DELETE FROM carts WHERE user_id = '$user_id'");
             $del_uplaods = \DB::select("DELETE FROM uploads WHERE user_id = '$user_id'");
-//            $first = Session::get('step2');
-//            $second = Session::get('step3');
-//            $third = Session::get('step4');
-//            $request->session()->forget("step2");
-//            $request->session()->forget("step3");
-//            $request->session()->forget("step4");
             return redirect()->route('dashboard')->with('success', trans('app.campaign_created'));
         }
     }

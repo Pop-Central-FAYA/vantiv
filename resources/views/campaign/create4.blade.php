@@ -21,7 +21,7 @@
         <div class="row">
             <div class="col-md-1 hidden-sm hidden-xs"></div>
             <div class="col-md-9 " style="padding:2%">
-                <form class="campform" method="POST" action="{{ route('campaign.store4', ['id' => 1]) }}" enctype="multipart/form-data">
+                <form class="campform" method="POST" action="{{ route('campaign.store4', ['id' => 1, 'audience' => $audience]) }}" enctype="multipart/form-data">
                     {{ csrf_field() }}
                     <div class="row">
                         <div class="col-md-12 ">
@@ -31,8 +31,9 @@
 
                         </div>
                     </div>
+                    {{--{{ dd($time_in_sec) }}--}}
                     <div class="row" style="margin-top:3%" id="dynamic">
-                        <div class="row">
+                        <div class="row b">
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Upload Media</label>
@@ -41,19 +42,12 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                  <script type='text/javascript'>
-                                        <?php
-                                            if(is_array($time_in_sec)  and count($time_in_sec) > 0  )
-                                            {
-                                                echo "var time_in_sec = ". json_encode($time_in_sec) . ";\n";
-                                            }
-                                        ?>
-                                  </script>
                                     <label>Duration </label> <br />
                                     <select style="width: 60%" name="time[]">
-                                        @foreach($time_in_sec as $time)
-                                            <option value="{{ $time->time_in_seconds }}">{{ $time->time_in_seconds }} Seconds</option>
-                                        @endforeach
+                                        <option value="15">15 Seconds</option>
+                                        <option value="30">30 Seconds</option>
+                                        <option value="45">45 Seconds</option>
+                                        <option value="60">60 Seconds</option>
                                     </select>
                                     <button type="button" id="add_more" class="btn btn-info btn-xs add_more">+ Add More</button>
                                 </div>
@@ -119,16 +113,12 @@
     <script>
         $(document).ready(function(){
             $(".add_more").click(function(){
+                var n = $(".b").length + 1;
+                if(n > 4){
+                    return false;
+                }
                 var big_html = '';
-                big_html +=  '<div class="row"><div class="col-md-4"><div class="form-group"><label>Upload Media</label><input type="file" name="uploads[]"></div></div><div class="col-md-4"><div class="form-group"><label>Duration </label> <br /><select style="width: 60%" name="time[]"><option value="">15 Seconds</option>';
-                $.each(time_in_sec, function (index,value)
-                {
-                    if( index != 0)
-                    {
-                        big_html += '<option value ="'+ value.time_in_seconds + '"> ' + value.time_in_seconds + ' Seconds </option>';
-                    }
-
-                });
+                big_html +=  '<div class="row b"><div class="col-md-4"><div class="form-group"><label>Upload Media</label><input type="file" name="uploads[]"></div></div><div class="col-md-4"><div class="form-group"><label>Duration </label> <br /><select style="width: 60%" name="time[]"><option value="15">15 Seconds</option><option value="30">30 Seconds</option><option value="45">45 Seconds</option><option value="60">60 Seconds</option>';
                 big_html += '</select></div></div></div>';
                 $("#dynamic").append(big_html)
             });

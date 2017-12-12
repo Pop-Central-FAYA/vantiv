@@ -20,8 +20,6 @@
         <div class="row">
             <div class="col-md-1 hidden-sm hidden-xs"></div>
             <div class="col-md-9 " style="padding:2%">
-                {{--<form class="campform" method="POST" action="{{ route('campaign.store6', ['id' => 1]) }}">--}}
-                    {{--{{ csrf_field() }}--}}
                     <div class="row">
                         <div class="col-md-12 ">
 
@@ -35,11 +33,17 @@
                     <div class="row" style="margin-bottom: 5%">
 
                         <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 ">
-                            <a href="{{ route('campaign.store7', ['id' => 1]) }}">
+                            <a href="{{ route('campaign.store7', ['id' => 1, 'audience' => $audience]) }}">
                                 <div class="tvspace-box">
                                     <img src="{{ asset('asset/dist/img/nta-logo.jpg') }}" width="100%">
                                     <div class="tv-space">
-                                        <p align="center"> Available</p>
+                                        <p align="center">
+                                            @foreach($result as $res)
+                                                @if($res->target_audience->id === $audience)
+                                                    <?php $num[] = $res ?>
+                                                @endif
+                                            @endforeach  {{ count($num) }}
+                                            Available</p>
                                         <p>{{ Session::get('broadcaster_brand') }}</p>
                                     </div>
                                 </div>

@@ -20,7 +20,7 @@
         <div class="row cart" id="cart">
             <div class="col-md-1 hidden-sm hidden-xs"></div>
             <div class="col-md-9 " style="padding:2%">
-                <form class="campform">
+                {{--<form class="campform">--}}
                     {{ csrf_field() }}
                     <div class="row">
                         <div class="col-md-12 ">
@@ -40,34 +40,38 @@
                         </div>
                     </div>
                     <div id="tv-time-box" style="border:1px solid #ccc" >
-                        @foreach($adslot as $adslots)
+                        <?php for($i = 0; $i <= count($result); $i++){ ?>
+                            <?php if(array_key_exists($i,$result) && array_key_exists($i,$ratecard)){?>
+                        <?php if($result[$i]->rate_card == $ratecard[$i]->id){?>
                             <div class="row">
                                 <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
                                     <img src="{{ asset('asset/dist/img/nta-logo.jpg') }}" width="65%">
                                 </div>
                                 <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                    <h3 lign="center">{{ $adslots->hourly_range_id->time_range }}</h3>
+                                    <h3 lign="center">{{ $ratecard[$i]->hourly_range_id->time_range }}</h3>
                                 </div>
-                                @foreach($adslots->rate_card as $rating)
+                                @foreach($ratecard[$i]->adslots as $rating)
                                     <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4
                                         @foreach($cart as $carts)
-                                            @if($carts->rate_id === $rating[0]->id)
-                                                choosen
+                                    @if($carts->rate_id === $rating[0]->id)
+                                            choosen
+                                    @endif
+                                    @endforeach
+                                            " id="rate_this">
+                                        <p align="center">{{ $rating[0]->from_to_time }}
+                                            <br>180 Seconds Available</p> <br/>
+                                        <span type="button"  data-toggle="modal" data-target=".bs-example-modal-lg{{ $rating[0]->id }}" class="avail-box
+                                        @foreach($cart as $carts)
+                                        @if($carts->rate_id === $rating[0]->id)
+                                                disabled
                                             @endif
                                         @endforeach
-                                        " id="rate_this">
-                                        <p align="center">{{ $rating[0]->from_to_time }} Seconds</p> <br/>
-                                        <span type="button"  data-toggle="modal" data-target=".bs-example-modal-lg{{ $rating[0]->id }}" class="avail-box
-                                            @foreach($cart as $carts)
-                                                @if($carts->rate_id === $rating[0]->id)
-                                                    disabled
-                                                @endif
-                                            @endforeach
-                                        " style="background:green; cursor: pointer; "></span>
+                                                " style="background:green; cursor: pointer; "></span>
                                         <div class="modal fade bs-example-modal-lg{{ $rating[0]->id }}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
                                             <div class="modal-dialog modal-lg" role="document">
                                                 <div class="modal-content" style="padding: 5%">
-                                                    <form id="form_cart" action="{{ route('store.cart') }}" method="POST">
+
+                                                    <form id="form_cart" action="{{ route('store.cart', ['audience' => $aud]) }}" method="POST">
                                                         {{ csrf_field() }}
                                                         <h2 align="center">{{ $rating[0]->from_to_time }} Seconds Available</h2>
                                                         <ul style="font-size: 21px; margin:0 auto; width: 80%">
@@ -95,15 +99,18 @@
                                                         </ul>
                                                         <button type="button" id="save_cart"  class="btn btn-large save_cart" style="background: #9f005d; color:white; font-size: 20px; padding: 1% 5%; margin-top:4%; border-radius: 10px;">Save</button></a></p>
                                                     </form>
+
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 @endforeach
                             </div>
-                        @endforeach
+                        <?php } ?>
+                                <?php } ?>
+                        <?php } ?>
                     </div>
-                </form>
+                {{--</form>--}}
             </div>
             <!-- /.col -->
             <div class="col-md-2 hidden-sm hidden-xs"></div>
@@ -113,6 +120,8 @@
     </section>
 
     <!-- /.content -->
+
+
 
 @endsection
 
@@ -141,6 +150,7 @@
     <script src="{{ asset('asset/plugins/timepicker/bootstrap-timepicker.min.js') }}"></script>
 
     <script>
+
         $(document).ready(function() {
             $('#step6').click(function(){
                 window.location.href = "/campaign/create/1/step";
@@ -156,13 +166,13 @@
                var time = $(".time"+pick+"").val();
                var range = $(".hourly_break"+pick+"").val();
                var rate_id = $(".rate_id"+pick+"").val();
+               console.log(url1);
                if(pick){
                    $.ajax({
                        url: url1,
                        method: "POST",
                        data: {rate_id: rate_id, price: price, file: file, range: range, time: time, '_token':$('input[name=_token]').val()},
                        success: function(data){
-//                           console.log(data);
                            if(data === "success"){
                                location.reload();
                                $("#rate_this").addClass('choosen');

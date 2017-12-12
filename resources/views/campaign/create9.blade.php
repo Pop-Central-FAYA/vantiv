@@ -37,16 +37,14 @@
                                 <p><b>Date:</b> {{ $first_session->start_date }} - {{ $first_session->end_date }}  </p>
                             </div>
                             <div class="col-md-6">
-
-                                    @foreach($target as $targets)
-                                        @if($targets->id === $second_session->target_audience)
-                                            <p> <b><i class="fa fa-users"></i> Audience: </b> {{ $targets->audience }}</p>
-                                        @endif
+                                <p> <b><i class="fa fa-users"></i> Day Parts: </b>
+                                    @foreach($first->dayparts as $daypart)
+                                        {{ $daypart."," }}
                                     @endforeach
+                                </p>
+                                {{--<p><b><i class="fa fa-user"></i> Viewers age:  </b>{{ $second_session->min_age }} - {{ $second_session->max_age }} years</p>--}}
 
-                                <p><b><i class="fa fa-user"></i> Viewers age:  </b>{{ $second_session->min_age }} - {{ $second_session->max_age }} years</p>
-
-                                <p><b><i class="fa fa-map-marker" aria-hidden="true"></i> Region:   @foreach($second_session->region as $region)</b> {{ $region }} @endforeach</p>
+                                {{--<p><b><i class="fa fa-map-marker" aria-hidden="true"></i> Region:   @foreach($second_session->region as $region)</b> {{ $region }} @endforeach</p>--}}
 
 
                             </div>

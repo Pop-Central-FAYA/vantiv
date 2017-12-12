@@ -19,6 +19,7 @@ class AdslotController extends Controller
 //        api for adslot
         $ratecard = Api::get_adslot();
         $a = (json_decode($ratecard)->data);
+
 //        dd($a);
         $preload_ratecard = Api::get_ratecard_preloaded();
         $load = $preload_ratecard->data;
