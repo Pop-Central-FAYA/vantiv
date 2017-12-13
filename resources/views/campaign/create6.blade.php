@@ -33,16 +33,12 @@
                     <div class="row" style="margin-bottom: 5%">
 
                         <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 ">
-                            <a href="{{ route('campaign.store7', ['id' => 1, 'audience' => $audience]) }}">
+                            <a href="{{ route('campaign.store7', ['id' => 1]) }}">
                                 <div class="tvspace-box">
                                     <img src="{{ asset('asset/dist/img/nta-logo.jpg') }}" width="100%">
                                     <div class="tv-space">
                                         <p align="center">
-                                            @foreach($result as $res)
-                                                @if($res->target_audience->id === $audience)
-                                                    <?php $num[] = $res ?>
-                                                @endif
-                                            @endforeach  {{ count($num) }}
+                                            {{ count($result) }} Adslots
                                             Available</p>
                                         <p>{{ Session::get('broadcaster_brand') }}</p>
                                     </div>

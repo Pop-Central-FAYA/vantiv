@@ -21,7 +21,7 @@
         <div class="row">
             <div class="col-md-1 hidden-sm hidden-xs"></div>
             <div class="col-md-9 " style="padding:2%">
-                <form class="campform" method="POST" action="{{ route('campaign.store4', ['id' => 1, 'audience' => $audience]) }}" enctype="multipart/form-data">
+                <form class="campform" method="POST" action="{{ route('campaign.store4', ['id' => 1]) }}" enctype="multipart/form-data">
                     {{ csrf_field() }}
                     <div class="row">
                         <div class="col-md-12 ">

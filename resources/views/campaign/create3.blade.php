@@ -22,37 +22,15 @@
             <div class="col-md-9 " style="padding:2%">
                 <form class="campform" method="POST" action="{{ route('campaign.store3', ['id' => 1]) }}">
                     {{ csrf_field() }}
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label>Target Audience</label>
-                            </br>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <?php $num = []; ?>
-                                    {{--{{ dd($result) }}--}}
-                                    @foreach($target_audience as $target)
-                                            <a href="{{ route('campaign.create4', ['id' => 1, 'audience' => $target->id]) }}"><h4>
-                                            {{ $target->audience }}
-                                            @foreach($result as $res)
-                                                @if($res->target_audience->id === $target->id)
-                                                    <?php $num[] = $res ?>
-                                                @endif
-                                            @endforeach  {{ count($num) }}
-                                                </h4></a>
-                                    @endforeach
-                                </div>
-                                <div class="col-lg-6 col-md-6 hidden-sm hidden-xs"></div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-md-6 hidden-sm hidden-xs"></div>
-                    </div>
 
+                        <p>You have {{ count($result) }} Adslots that matches your selected criteria</p>
+                    <br>
+                    <br>
 
-
-                        <p align="right">
+                        <p align="left">
                             <button type="button" id="step2" class="btn campaign-button" >Back <i class="fa fa-backward" aria-hidden="true"></i></button>
 
-                            {{--<button type="submit" class="btn campaign-button" style="margin-right:15%">Next <i class="fa fa-play" aria-hidden="true"></i></button>--}}
+                            <button type="submit" class="btn campaign-button" style="margin-right:15%">Next <i class="fa fa-play" aria-hidden="true"></i></button>
 
                         </p>
                     </div>

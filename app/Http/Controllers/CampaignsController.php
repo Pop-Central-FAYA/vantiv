@@ -34,7 +34,6 @@ class CampaignsController extends Controller
             }
         }
 
-
     }
 
     /**
@@ -52,13 +51,13 @@ class CampaignsController extends Controller
         $preloaded = Api::getPreloaded();
         $obj_preloaded = json_decode($preloaded);
         $day_parts = $obj_preloaded->data->day_parts;
-//        $campaign_type = $obj_preloaded->data->campaign_types;
+        $target_audience = $obj_preloaded->data->target_audience;
         $preload_ratecard = Api::get_ratecard_preloaded();
         $load = $preload_ratecard->data;
         if(count($preload_ratecard) === 0){
             return back()->with('error','No result found!');
         }else{
-            return view('campaign.create2')->with('day_parts', $day_parts)->with('step2', Session::get('step2'))->with('preload', $load);
+            return view('campaign.create2')->with('day_parts', $day_parts)->with('step2', Session::get('step2'))->with('preload', $load)->with('target_audience', $target_audience);
         }
     }
 
@@ -71,6 +70,9 @@ class CampaignsController extends Controller
         $ratecard = Api::get_adslot();
         $a = (json_decode($ratecard)->data);
         $first_form = Session::get('step2');
+        $target = $first_form->target_audience;
+        $min_age = (integer) $first_form->min_age;
+        $max_age = (integer) $first_form->max_age;
         $day_parts = $first_form->dayparts;
         $region = $first_form->region;
         $result = [];
@@ -81,8 +83,11 @@ class CampaignsController extends Controller
                     foreach ($c as $d){
                         $c_region = $d->region;
                         $c_day = $d->day_parts;
-//                        dd($c_day);
-                        if (in_array($c_region->id,$region) || in_array($c_day->id, $day_parts)){
+                        $c_target = $d->target_audience;
+                        $c_minage = $d->min_age;
+                        $c_maxage = $d->max_age;
+
+                        if (in_array($c_region->id, $region) && in_array($c_day->id, $day_parts) && $c_target->id == $target && $c_minage <= $min_age && $c_maxage >= $max_age){
                             $result[] = $d;
                         }
                     }
@@ -99,38 +104,38 @@ class CampaignsController extends Controller
 
     }
 
-    public function createStep4($id, $audience)
+    public function createStep4($id)
     {
-        $aud = $audience;
         $seconds = [60, 45, 39, 15];
 
-        return view('campaign.create4')->with('audience', $aud);
+        return view('campaign.create4');
     }
 
-    public function createStep5($id, $audience)
+    public function createStep5($id)
     {
-        $aud = $audience;
         $getCampaign = Api::getCampaignByBroadcaster();
         $campaign = $getCampaign->data;
         $time = Api::get_time();
         $obj_time = json_decode($time);
         $time_sec = $obj_time->data;
         return view('campaign.create5')->with('campaign', $campaign)
-            ->with('time', $time_sec)->with('audience', $aud);
+            ->with('time', $time_sec);
     }
 
-    public function createStep6($id, $audience)
+    public function createStep6($id)
     {
 //        $getCampaign = Api::getCampaignByBroadcaster();
 //        $campaign = $getCampaign->data;
 //
-        $aud = $audience;
         $all_adslot = Api::get_adslot();
         $adslot = json_decode($all_adslot);
         $count = count(($adslot->data));
         $ratecard = Api::get_adslot();
         $a = (json_decode($ratecard)->data);
         $first_form = Session::get('step2');
+        $target = $first_form->target_audience;
+        $min_age = (integer) $first_form->min_age;
+        $max_age = (integer) $first_form->max_age;
         $day_parts = $first_form->dayparts;
         $region = $first_form->region;
         $result = [];
@@ -141,15 +146,18 @@ class CampaignsController extends Controller
                     foreach ($c as $d) {
                         $c_region = $d->region;
                         $c_day = $d->day_parts;
-//                        dd($c_day);
-                        if (in_array($c_region->id, $region) || in_array($c_day->id, $day_parts)) {
+                        $c_target = $d->target_audience;
+                        $c_minage = $d->min_age;
+                        $c_maxage = $d->max_age;
+
+                        if (in_array($c_region->id, $region) && in_array($c_day->id, $day_parts) && $c_target->id == $target && $c_minage <= $min_age && $c_maxage >= $max_age) {
                             $result[] = $d;
                         }
                     }
                 }
             }
         }
-        return view('campaign.create6')->with('result', $result)->with('audience', $aud);
+        return view('campaign.create6')->with('result', $result);
     }
 
     public function createStep7($id)
@@ -192,14 +200,18 @@ class CampaignsController extends Controller
             'brand' => 'required',
             'product' => 'required',
             'channel' => 'required',
+            'min_age' => 'required',
+            'max_age' => 'required',
+            'target_audience' => 'required',
             'start_date' => 'required|date',
             'end_date' => 'required|date',
+            'industry' => 'required',
             'dayparts' => 'required_without_all',
             'region' => 'required',
         ]);
         $step2_req = ((object) $request->all());
         session(['step2' => $step2_req]);
-
+//        dd(Session::get('step2'));
         return redirect()->route('campaign.create3', ['id' => $id])->with('target_audience', $target_audience);
 
     }
@@ -210,13 +222,6 @@ class CampaignsController extends Controller
         $obj_time = json_decode($time);
         $time_sec = $obj_time->data;
 
-        $this->validate($request, [
-            'target_audience' => 'required',
-            'min_age' => 'required',
-            'max_age' => 'required',
-            'region' => 'required_without_all'
-        ]);
-
         $step3_req = ((object) $request->all());
 
         session(['step3' => $step3_req]);
@@ -224,12 +229,11 @@ class CampaignsController extends Controller
         return redirect()->route('campaign.create4', ['id' => $id])->with('time', $time_sec);
     }
 
-    public function postStep4(Request $request, $id, $audience)
+    public function postStep4(Request $request, $id)
     {
 //        dd($request->all());
 //        $getCampaign = Api::getCampaignByBroadcaster();
 //        $campaign = $getCampaign->data;
-        $aud = $audience;
         $adslot = Api::get_adslot();
         $big_array = (json_decode($adslot)->data);
 
@@ -258,17 +262,20 @@ class CampaignsController extends Controller
 
             $first = Session::get('step2');
             $second = Session::get('step3');
-            return redirect()->route('campaign.create6', ['id' => $id, 'audience' => $aud]);
+            return redirect()->route('campaign.create6', ['id' => $id]);
         }
     }
 
-    public function getStep7($id, $audience)
+    public function getStep7($id)
     {
         $first = Session::get('step2');
         $second = Session::get('step3');
         $ratecard = Api::get_adslot();
         $a = (json_decode($ratecard)->data);
         $first_form = Session::get('step2');
+        $target = $first_form->target_audience;
+        $min_age = (integer) $first_form->min_age;
+        $max_age = (integer) $first_form->max_age;
         $day_parts = $first_form->dayparts;
         $region = $first_form->region;
         $result = [];
@@ -279,7 +286,11 @@ class CampaignsController extends Controller
                     foreach ($c as $d) {
                         $c_region = $d->region;
                         $c_day = $d->day_parts;
-                        if (in_array($c_region->id, $region) || in_array($c_day->id, $day_parts)) {
+                        $c_target = $d->target_audience;
+                        $c_minage = $d->min_age;
+                        $c_maxage = $d->max_age;
+
+                        if (in_array($c_region->id, $region) && in_array($c_day->id, $day_parts) && $c_target->id == $target && $c_minage <= $min_age && $c_maxage >= $max_age) {
                             $result[] = $d;
                         }
                     }
@@ -295,8 +306,7 @@ class CampaignsController extends Controller
         return view('campaign.create7')->with('ratecard', $a)
             ->with('data', $data)
             ->with('cart', $cart)
-            ->with('result', $result)
-            ->with('aud', $audience);
+            ->with('result', $result);
 
     }
 
@@ -365,6 +375,7 @@ class CampaignsController extends Controller
             $del_cart = \DB::select("DELETE FROM carts WHERE user_id = '$user_id'");
             $del_uplaods = \DB::select("DELETE FROM uploads WHERE user_id = '$user_id'");
             return redirect()->route('dashboard')->with('success', trans('app.campaign_created'));
+            Session::forget('step2');
         }
     }
 

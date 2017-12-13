@@ -42,6 +42,23 @@
                     </div>
 
                     <div class="row">
+                        <div class="col-md-3">
+                            <label style="margin-left:10%">Industry:</label>
+                            <select name="industry" id="" class="form-control">
+                                <option value="1">Cocacola</option>
+                            </select>
+                        </div>
+
+
+                        <div class="col-md-3">
+                            <label style="margin-left:10%">Target Audience:</label>
+                            <select name="target_audience" id="" class="form-control">
+                                @foreach($target_audience as $target_audiences)
+                                    <option value="{{ $target_audiences->id }}">{{ $target_audiences->audience }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
                         <dvi class="col-md-3">
                             <label style="margin-left:10%">Channel:</label>
                             <select style="width: 100%" class="form-control" name="channel">
@@ -59,6 +76,7 @@
                             </select>
                         </dvi>
                     </div>
+                    <br>
 
                     <div class="row">
                         <div class="col-md-6">
@@ -76,37 +94,43 @@
                                 <input type="text" placeholder="stop-date" value="{{ isset(((object) $step2)->end_date) ? ((object) $step2)->end_date : "" }}" required name="end_date" class="form-control" id="txtToDate" />
                             </div>
                         </div>
-                    </div>
-                    <div class="row" style="margin-top:10%">
-                        <h3> Day Parts </h3>
-                        <div class="col-md-8">
-                            <div class="form-group">
-                                <p>
-                                    @foreach($day_parts as $day_part)
-                                    <label>
-                                        <input type="checkbox" name="dayparts[]" value="{{ $day_part->day_parts }}" class="minimal-red" />
-                                        {{ $day_part->day_parts }}
-                                    </label>
-                                    @endforeach
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row" style="margin-top:10%">
-                        <h3> Region </h3>
+
                         <div class="col-md-2">
-                            <div class="form-group">
-                                <p>
-                                    @foreach($preload->regions as $region)
-                                    <label>
-                                        <input type="checkbox" name="region[]" value="{{ $region->id }}" class="minimal-red">
-                                        {{ $region->region }}
-                                    </label>
-                                    @endforeach
-                                </p>
-                            </div>
+                            <label style="margin-left:10%">Min Age:</label>
+                            <input type="number" name="min_age" required class="form-control">
+                        </div>
+                        <div class="col-md-2">
+                            <label style="margin-left:10%">Max Age:</label>
+                            <input type="number" name="max_age" required class="form-control">
                         </div>
                     </div>
+                    <br>
+                        <div class="col-md-6">
+                            <h3> Day Parts </h3>
+                            <div class="form-group">
+                                @foreach($day_parts as $day_part)
+                                    <p>
+                                        <label>
+                                            {{ $day_part->day_parts }}
+                                            <input type="checkbox" name="dayparts[]" value="{{ $day_part->id }}" class="minimal-red" />
+                                        </label>
+                                    </p>
+                                @endforeach
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h3> Region </h3>
+                            <div class="form-group">
+                                @foreach($preload->regions as $region)
+                                    <p>
+                                        <label>
+                                            {{ $region->region }}
+                                            <input type="checkbox" name="region[]" value="{{ $region->id }}" class="minimal-red">
+                                        </label>
+                                    </p>
+                                @endforeach
+                            </div>
+                        </div>
 
                     <div class="container">
                     <div class="container">

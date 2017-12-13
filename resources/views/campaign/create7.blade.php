@@ -33,15 +33,15 @@
                             <div class="tvspace-box">
                                 <img src="{{ asset('asset/dist/img/nta-logo.jpg') }}" width="100%">
                                 <div class="tv-space">
-                                    <p align="center"> Available</p>
-                                    <p>{{ Session::get('broadcaster_brand') }}</p>
+                                    <p align="center">{{ count($result) }} Adslots Available</p>
                                 </div>
                             </div>
                         </div>
                     </div>
+                {{--{{ dd($result) }}--}}
                     <div id="tv-time-box" style="border:1px solid #ccc" >
-                        <?php for($i = 0; $i <= count($result); $i++){ ?>
-                            <?php if(array_key_exists($i,$result) && array_key_exists($i,$ratecard)){?>
+                        <?php for($i = 0; $i <= count($ratecard); $i++){ ?>
+                            <?php if(array_key_exists($i,$ratecard) && array_key_exists($i,$result)){?>
                         <?php if($result[$i]->rate_card == $ratecard[$i]->id){?>
                             <div class="row">
                                 <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
@@ -71,7 +71,7 @@
                                             <div class="modal-dialog modal-lg" role="document">
                                                 <div class="modal-content" style="padding: 5%">
 
-                                                    <form id="form_cart" action="{{ route('store.cart', ['audience' => $aud]) }}" method="POST">
+                                                    <form id="form_cart" action="{{ route('store.cart') }}" method="POST">
                                                         {{ csrf_field() }}
                                                         <h2 align="center">{{ $rating[0]->from_to_time }} Seconds Available</h2>
                                                         <ul style="font-size: 21px; margin:0 auto; width: 80%">
@@ -106,9 +106,9 @@
                                     </div>
                                 @endforeach
                             </div>
-                        <?php } ?>
-                                <?php } ?>
-                        <?php } ?>
+                            <?php } ?>
+                            <?php } ?>
+                            <?php } ?>
                     </div>
                 {{--</form>--}}
             </div>

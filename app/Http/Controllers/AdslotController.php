@@ -5,6 +5,7 @@ namespace Vanguard\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Vanguard\Libraries\Api;
+use League\Flysystem\Exception;
 
 
 class AdslotController extends Controller
@@ -16,7 +17,8 @@ class AdslotController extends Controller
      */
     public function index()
     {
-//        api for adslot
+
+        //        api for adslot
         $ratecard = Api::get_adslot();
         $a = (json_decode($ratecard)->data);
 
