@@ -39,14 +39,22 @@
                             <div class="col-md-6">
                                 <p> <b><i class="fa fa-users"></i> Day Parts: </b>
                                     @foreach($first->dayparts as $daypart)
-                                        {{ $daypart."," }}
+                                        @foreach($day_part as $day)
+                                            @if($day->id === $daypart)
+                                            {{ $day->day_parts."," }}
+                                            @endif
+                                        @endforeach
                                     @endforeach
                                 </p>
-                                {{--<p><b><i class="fa fa-user"></i> Viewers age:  </b>{{ $second_session->min_age }} - {{ $second_session->max_age }} years</p>--}}
+                                <p><b><i class="fa fa-user"></i> Viewers age:  </b>{{ $first->min_age }} - {{ $first->max_age }} years</p>
 
-                                {{--<p><b><i class="fa fa-map-marker" aria-hidden="true"></i> Region:   @foreach($second_session->region as $region)</b> {{ $region }} @endforeach</p>--}}
-
-
+                                <p><b><i class="fa fa-map-marker" aria-hidden="true"></i> Region:   @foreach($first->region as $region)</b>
+                                        @foreach($preload->regions as $reg)
+                                            @if($region === $reg->id)
+                                            {{ $reg->region }}
+                                            @endif
+                                        @endforeach
+                                    @endforeach</p>
                             </div>
 
                             <div class="row" style="clear: both">

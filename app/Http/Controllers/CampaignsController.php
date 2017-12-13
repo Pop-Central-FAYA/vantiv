@@ -352,6 +352,8 @@ class CampaignsController extends Controller
         $obj_preloaded = json_decode($preloaded);
         $day_parts = $obj_preloaded->data->day_parts;
         $targets = $obj_preloaded->data->target_audience;
+        $preload_ratecard = Api::get_ratecard_preloaded();
+        $load = $preload_ratecard->data;
         $user_id = Session::get('user_id');
         $first = Session::get('step2');
         $calc = \DB::select("SELECT SUM(price) as total_price FROM carts WHERE user_id = '$user_id'");
@@ -361,7 +363,8 @@ class CampaignsController extends Controller
             ->with('second_session', $second)
             ->with('calc', $calc)
             ->with('day_part', $day_parts)
-            ->with('target', $targets)->with('query', $query)->with('first', $first);
+            ->with('target', $targets)->with('query', $query)->with('first', $first)
+            ->with('preload', $load);
     }
 
     Public function postCampaign(Request $request)
