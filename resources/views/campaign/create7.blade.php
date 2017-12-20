@@ -33,7 +33,7 @@
                             <div class="tvspace-box">
                                 <img src="{{ asset('asset/dist/img/nta-logo.jpg') }}" width="100%">
                                 <div class="tv-space">
-                                    <p align="center">{{ count($result) }} Adslots Available</p>
+                                    <p align="center">{{ (count($result)) / 4 }} Adslot(s)</p>
                                 </div>
                             </div>
                         </div>
@@ -53,13 +53,25 @@
                                 @foreach($ratecard[$i]->adslots as $rating)
                                     <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4
                                         @foreach($cart as $carts)
-                                    @if($carts->rate_id === $rating[0]->id)
-                                            choosen
-                                    @endif
-                                    @endforeach
+                                            @if($carts->rate_id === $rating[0]->id)
+                                                    choosen
+                                            @endif
+                                        @endforeach
                                             " id="rate_this">
                                         <p align="center">{{ $rating[0]->from_to_time }}
-                                            <br>180 Seconds Available</p> <br/>
+                                            <br>
+                                            @if(count($cart) !== 0)
+                                                @foreach($cart as $carts)
+                                                    @if($carts->rate_id === $rating[0]->id)
+                                                        {{ 180 - ((integer) $carts->time) }} Seconds Available
+                                                    @else
+                                                        180 Seconds Available
+                                                    @endif
+                                                @endforeach
+                                            @else
+                                                180 Seconds Available
+                                            @endif
+                                            </p> <br/>
                                         <span type="button"  data-toggle="modal" data-target=".bs-example-modal-lg{{ $rating[0]->id }}" class="avail-box
                                         @foreach($cart as $carts)
                                         @if($carts->rate_id === $rating[0]->id)

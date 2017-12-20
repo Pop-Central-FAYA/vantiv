@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Session;
 use JD\Cloudder\Facades\Cloudder;
 use Vanguard\Libraries\Api;
 use Vanguard\Cloudinary;
-
+use Vanguard\Libraries\Maths;
 
 
 class CampaignsController extends Controller
@@ -97,7 +97,6 @@ class CampaignsController extends Controller
                                                 ->with('step3', Session::get('step3'))
                                                 ->with('ratecard', $a)
                                                 ->with('result', $result);
-
         }else{
             return back()->with('error','No result found!');
         }
@@ -107,7 +106,6 @@ class CampaignsController extends Controller
     public function createStep4($id)
     {
         $seconds = [60, 45, 39, 15];
-
         return view('campaign.create4');
     }
 
@@ -124,9 +122,6 @@ class CampaignsController extends Controller
 
     public function createStep6($id)
     {
-//        $getCampaign = Api::getCampaignByBroadcaster();
-//        $campaign = $getCampaign->data;
-//
         $all_adslot = Api::get_adslot();
         $adslot = json_decode($all_adslot);
         $count = count(($adslot->data));
@@ -211,9 +206,7 @@ class CampaignsController extends Controller
         ]);
         $step2_req = ((object) $request->all());
         session(['step2' => $step2_req]);
-//        dd(Session::get('step2'));
         return redirect()->route('campaign.create3', ['id' => $id])->with('target_audience', $target_audience);
-
     }
 
     public function postStep3(Request $request, $id)
@@ -221,19 +214,13 @@ class CampaignsController extends Controller
         $time = Api::get_time();
         $obj_time = json_decode($time);
         $time_sec = $obj_time->data;
-
         $step3_req = ((object) $request->all());
-
         session(['step3' => $step3_req]);
-
         return redirect()->route('campaign.create4', ['id' => $id])->with('time', $time_sec);
     }
 
     public function postStep4(Request $request, $id)
     {
-//        dd($request->all());
-//        $getCampaign = Api::getCampaignByBroadcaster();
-//        $campaign = $getCampaign->data;
         $adslot = Api::get_adslot();
         $big_array = (json_decode($adslot)->data);
 
@@ -254,12 +241,9 @@ class CampaignsController extends Controller
 
                 $time = $request->time[$k];
                 \DB::select("INSERT into uploads (user_id,`time`,uploads) VALUES ('$user_id','$time','$file_name')");
-
             }
-
             $preloaded = Api::getPreloaded();
             $obj_preloaded = json_decode($preloaded);
-
             $first = Session::get('step2');
             $second = Session::get('step3');
             return redirect()->route('campaign.create6', ['id' => $id]);
@@ -289,7 +273,6 @@ class CampaignsController extends Controller
                         $c_target = $d->target_audience;
                         $c_minage = $d->min_age;
                         $c_maxage = $d->max_age;
-
                         if (in_array($c_region->id, $region) && in_array($c_day->id, $day_parts) && $c_target->id == $target && $c_minage <= $min_age && $c_maxage >= $max_age) {
                             $result[] = $d;
                         }
@@ -297,17 +280,13 @@ class CampaignsController extends Controller
                 }
             }
         }
-
         $user_id = Session::get('user_id');
         $data = \DB::select("SELECT * from uploads WHERE user_id = '$user_id'");
-
         $cart = \DB::select("SELECT * from carts WHERE user_id = '$user_id'");
-//        dd($result);
         return view('campaign.create7')->with('ratecard', $a)
             ->with('data', $data)
             ->with('cart', $cart)
             ->with('result', $result);
-
     }
 
     /**
@@ -316,13 +295,11 @@ class CampaignsController extends Controller
      */
     public function postCart(Request $request)
     {
-//        return $request->rate_id;
         $this->validate($request, [
             'price' => 'required',
             'file' => 'required',
             'time' => 'required',
             'rate_id' => 'required|unique:carts',
-
         ]);
         $price = $request->price;
         $file = $request->file;
@@ -332,19 +309,16 @@ class CampaignsController extends Controller
         $user = Session::get('user_id');
         $broadcaster = Session::get('broadcaster_id');
         $ip = \Request::ip();
-
         $insert = \DB::insert("INSERT INTO carts (user_id, broadcaster_id, price, ip_address, file, from_to_time, `time`, rate_id) VALUES ('$user','$broadcaster','$price','$ip','$file','$hourly_range','$time','$id')");
         if($insert){
             return "success";
         }else{
             return "failure";
         }
-
     }
 
     public function getCheckout()
     {
-
         $first = Session::get('step2');
         $second = Session::get('step3');
         $third = Session::get('step4');
@@ -358,7 +332,6 @@ class CampaignsController extends Controller
         $first = Session::get('step2');
         $calc = \DB::select("SELECT SUM(price) as total_price FROM carts WHERE user_id = '$user_id'");
         $query = \DB::select("SELECT * FROM carts WHERE user_id = '$user_id'");
-
         return view('campaign.create9')->with('first_session', $first)
             ->with('second_session', $second)
             ->with('calc', $calc)

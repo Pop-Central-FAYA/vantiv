@@ -436,7 +436,7 @@ Class Api
         }
         $thisss = [
             'user_id' => $user_id,
-            'channel' => 'TV',
+            'channel' => $first->channel,
             'brand' => $first->brand,
             'start_date' => strtotime($first->start_date),
             'stop_date' => strtotime($first->end_date),
@@ -447,6 +447,7 @@ Class Api
             'amount_paid' => (integer) $request->total,
             'file_rate_object' => json_encode($new_q),
         ];
+        dd($thisss);
         $response = Curl::to($url)
             ->withHeader("token: $enc_token")
             ->withData([

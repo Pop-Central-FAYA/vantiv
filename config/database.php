@@ -58,6 +58,19 @@ return [
             'strict'    => false
         ],
 
+        'mysql-2' => [
+            'driver'    => 'mysql',
+            'engine'    => 'InnoDB',
+            'host'      => env('DB_EXT_HOST', 'localhost'),
+            'database'  => env('DB_EXT_DATABASE', 'forge'),
+            'username'  => env('DB_EXT_USERNAME', 'forge'),
+            'password'  => env('DB_EXT_PASSWORD', ''),
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => env('DB_PREFIX', ''),
+            'strict'    => false
+        ],
+
         'pgsql' => [
             'driver'   => 'pgsql',
             'host'     => env('DB_HOST', 'localhost'),

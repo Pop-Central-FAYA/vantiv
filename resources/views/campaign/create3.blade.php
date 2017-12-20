@@ -23,7 +23,7 @@
                 <form class="campform" method="POST" action="{{ route('campaign.store3', ['id' => 1]) }}">
                     {{ csrf_field() }}
 
-                        <p>You have {{ count($result) }} Adslots that matches your selected criteria</p>
+                        <p>You have {{ (count($result) / 4) }} Adslots that matches your selected criteria</p>
                     <br>
                     <br>
 
