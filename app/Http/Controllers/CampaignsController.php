@@ -20,7 +20,6 @@ class CampaignsController extends Controller
      */
     public function index()
     {
-
         $preloaded = Api::getPreloaded();
         $obj_preloaded = json_decode($preloaded);
         $campaign_all = Api::getCampaignByBroadcaster();
