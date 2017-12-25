@@ -18,8 +18,6 @@ class AdslotController extends Controller
      */
     public function index()
     {
-//        $excel = Maths::getFile();
-//        dd($excel);
         //        api for adslot
         $ratecard = Api::get_adslot();
         $a = (json_decode($ratecard)->data);

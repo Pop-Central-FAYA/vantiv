@@ -223,18 +223,20 @@ Route::group(['middleware' => 'auth'], function () {
         });
 
         Route::group(['prefix' => 'reports'], function () {
-            Route::get('', 'ReportController@index')->name('reports');
+            Route::get('/', 'ReportController@index')->name('reports');
+            Route::get('total-volume-campaigns/all-data', 'ReportController@HVCdata');
+            Route::get('paid-invoice/all-data', 'ReportController@PIdata');
+            Route::get('/periodic-sales/all', 'ReportController@psData');
+            Route::get('/total-volume-of-campaign/all', 'ReportController@tvcData');
+            Route::get('/high-day-parts/all', 'ReportController@hpdData');
+            Route::get('/high-days/all', 'ReportController@hpdaysData');
         });
-
     });
 
     /**
      * User Profile
      */
 
-    Route::get('/dashboard', function () {
-        return view('dashboard.default');
-    })->name('dashboard');
 
     Route::get('profile', [
         'as' => 'profile',

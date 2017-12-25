@@ -308,7 +308,7 @@
                 }
             },
             series: [{
-                name: 'Brands',
+                name: 'Day Parts',
                 colorByPoint: true,
                 data: day_parts
             }]
@@ -339,30 +339,44 @@
                 }
             },
             series: [{
-                name: 'Brands',
+                name: 'Performing Days',
                 colorByPoint: true,
                 data: day_pie
             }]
         });
 
         //Barchart for Inventory fill rate
-        var chart = Highcharts.chart('containerInventory', {
-
+        //inventory fill rate
+        Highcharts.chart('containerInventory', {
             title: {
-                text: 'Inventory Fill Rate'
+                text: 'Inventory Fill Rate '
             },
-
             xAxis: {
-                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+                categories: ['Apples', 'Oranges', 'Pears', 'Bananas', 'Plums']
             },
-
+            labels: {
+                items: [{
+                    html: 'Inventory Fill Rate',
+                    style: {
+                        left: '50px',
+                        top: '18px',
+                        color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+                    }
+                }]
+            },
             series: [{
                 type: 'column',
-                colorByPoint: true,
-                data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4],
-                showInLegend: false
+                name: 'Jane',
+                data: [3, 2, 1, 3, 4]
+            }, {
+                type: 'column',
+                name: 'John',
+                data: [2, 3, 5, 7, 6]
+            }, {
+                type: 'column',
+                name: 'Joe',
+                data: [4, 3, 3, 9, 0]
             }]
-
         });
 
         //Bar chart for Total Volume of Campaigns
@@ -384,6 +398,7 @@
             }]
 
         });
+
 
     </script>
 @stop

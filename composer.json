@@ -23,7 +23,8 @@
         "anlutro/l4-settings": "^0.4.6",
         "anhskohbo/no-captcha": "2.*",
         "ixudra/curl": "^6.15",
-        "maatwebsite/excel": "~2.1.0"
+        "maatwebsite/excel": "~2.1.0",
+        "yajra/laravel-datatables-oracle": "~8.0"
     },
     "require-dev": {
         "symfony/css-selector": "~3.0",

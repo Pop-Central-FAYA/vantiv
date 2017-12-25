@@ -186,6 +186,7 @@ return [
         anlutro\LaravelSettings\ServiceProvider::class,
         Ixudra\Curl\CurlServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
+        Yajra\DataTables\DataTablesServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -258,6 +259,7 @@ return [
         'Authy' => Vanguard\Services\Auth\TwoFactor\Facade::class,
         'Curl' => Ixudra\Curl\Facades\Curl::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        'DataTables' => Yajra\DataTables\Facades\DataTables::class,
 
     ],
 

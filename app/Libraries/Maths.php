@@ -24,7 +24,7 @@ class Maths {
                 'user_id' => '10zmij9sroa62',
                 'broadcaster' => '10zmij9sroads',
                 'hourly_range_id' => $hourly[$i]->id,
-                'day' => 'nzrm6h098amedb',
+                'day' => 'nzru9ch893abec',
                 'time_created' => $now,
                 'time_modified' => $now,
             ];
