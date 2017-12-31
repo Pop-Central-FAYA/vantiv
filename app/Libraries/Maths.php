@@ -255,6 +255,39 @@ class Maths {
 
     }
 
+    public static function populateIndustry()
+    {
+        $now = strtotime(Carbon::now('Africa/Lagos'));
+        $file = storage_path('excels') . '/industry.xlsx';
+        $data = Excel::load($file, function($reader) {
+        })->get();
+
+        $insert = [];
+
+        foreach ($data as $key => $value)
+        {
+            $insert[] = [
+                'id' => uniqid(),
+                'name' => $value->industry,
+                'sector_code' => uniqid(),
+                'time_created' => $now,
+                'time_modified' => $now,
+                'status' => 1,
+            ];
+        }
+
+        if(!empty($insert)) {
+            $each_save = Utilities::switch_db('api')->table('sectors')->insert($insert);
+            if($each_save)
+            {
+                return "SUCCESS";
+            }else{
+                return "FAILURE";
+            }
+        }
+
+    }
+
     public static function getFilters()
     {
         return [

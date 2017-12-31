@@ -14,114 +14,113 @@
 
         </ol>
     </section>
-
     <!-- Main content -->
     <section class="content">
         <div class="row cart" id="cart">
             <div class="col-md-1 hidden-sm hidden-xs"></div>
             <div class="col-md-9 " style="padding:2%">
                 {{--<form class="campform">--}}
-                    {{ csrf_field() }}
-                    <div class="row">
-                        <div class="col-md-12 ">
-                            <h2></h2>
-                            <p align="center">The history of advertising can be traced to ancient civilizations. It became a major force in capitalist economies in the mid-19th century, based primarily on newspapers and magazines. In the 20th century, advertising grew rapidly with new technologies such as direct mail, radio, television, the internet and mobile devices.</p>
-                        </div>
+                {{ csrf_field() }}
+                <div class="row">
+                    <div class="col-md-12 ">
+                        <h2></h2>
+                        <p align="center">The history of advertising can be traced to ancient civilizations. It became a major force in capitalist economies in the mid-19th century, based primarily on newspapers and magazines. In the 20th century, advertising grew rapidly with new technologies such as direct mail, radio, television, the internet and mobile devices.</p>
                     </div>
-                    <div class="row" style="margin-bottom: 5%">
-                        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 ">
-                            <div class="tvspace-box">
-                                <img src="{{ asset('asset/dist/img/nta-logo.jpg') }}" width="100%">
-                                <div class="tv-space">
-                                    <p align="center">{{ (count($result)) / 4 }} Adslot(s)</p>
-                                </div>
+                </div>
+                <div class="row" style="margin-bottom: 5%">
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 ">
+                        <div class="tvspace-box">
+                            <img src="{{ asset('asset/dist/img/nta-logo.jpg') }}" width="100%">
+                            <div class="tv-space">
+                                <p align="center">{{ (count($result)) / 4 }} Adslot(s)</p>
                             </div>
                         </div>
                     </div>
+                </div>
                 {{--{{ dd($result) }}--}}
-                    <div id="tv-time-box" style="border:1px solid #ccc" >
-                        <?php for($i = 0; $i <= count($ratecard); $i++){ ?>
-                            <?php if(array_key_exists($i,$ratecard) && array_key_exists($i,$result)){?>
-                        <?php if($result[$i]->rate_card == $ratecard[$i]->id){?>
-                            <div class="row">
-                                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                    <img src="{{ asset('asset/dist/img/nta-logo.jpg') }}" width="65%">
-                                </div>
-                                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                    <h3 lign="center">{{ $ratecard[$i]->hourly_range_id->time_range }}</h3>
-                                </div>
-                                @foreach($ratecard[$i]->adslots as $rating)
-                                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4
+                <div id="tv-time-box" style="border:1px solid #ccc" >
+                    <?php for($i = 0; $i <= count($ratecard); $i++){ ?>
+                    <?php if(array_key_exists($i,$ratecard) && array_key_exists($i,$result)){?>
+                    <?php if($result[$i]->rate_card == $ratecard[$i]->id){?>
+                    <div class="row">
+                        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                            <img src="{{ asset('asset/dist/img/nta-logo.jpg') }}" width="65%">
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                            <h3 lign="center">{{ $ratecard[$i]->hourly_range_id->time_range }}</h3>
+                        </div>
+                        @foreach($ratecard[$i]->adslots as $rating)
+                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4
+                                        @foreach($cart as $carts)
+                            @if($carts->rate_id === $rating[0]->id)
+                                    choosen
+@endif
+                            @endforeach
+                                    " id="rate_this">
+                                <p align="center">{{ $rating[0]->from_to_time }}
+                                    <br>
+                                    @if(count($cart) !== 0)
                                         @foreach($cart as $carts)
                                             @if($carts->rate_id === $rating[0]->id)
-                                                    choosen
-                                            @endif
-                                        @endforeach
-                                            " id="rate_this">
-                                        <p align="center">{{ $rating[0]->from_to_time }}
-                                            <br>
-                                            @if(count($cart) !== 0)
-                                                @foreach($cart as $carts)
-                                                    @if($carts->rate_id === $rating[0]->id)
-                                                        {{ 180 - ((integer) $carts->time) }} Seconds Available
-                                                    @else
-                                                        180 Seconds Available
-                                                    @endif
-                                                @endforeach
+                                                {{ 180 - ((integer) $carts->time) }} Seconds Available
                                             @else
                                                 180 Seconds Available
                                             @endif
-                                            </p> <br/>
-                                        <span type="button"  data-toggle="modal" data-target=".bs-example-modal-lg{{ $rating[0]->id }}" class="avail-box
-                                        @foreach($cart as $carts)
-                                        @if($carts->rate_id === $rating[0]->id)
-                                                disabled
-                                            @endif
                                         @endforeach
-                                                " style="background:green; cursor: pointer; "></span>
-                                        <div class="modal fade bs-example-modal-lg{{ $rating[0]->id }}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-                                            <div class="modal-dialog modal-lg" role="document">
-                                                <div class="modal-content" style="padding: 5%">
+                                    @else
+                                        180 Seconds Available
+                                    @endif
+                                </p> <br/>
+                                <span type="button"  data-toggle="modal" data-target=".bs-example-modal-lg{{ $rating[0]->id }}" class="avail-box
+                                        @foreach($cart as $carts)
+                                @if($carts->rate_id === $rating[0]->id)
+                                        disabled
+@endif
+                                @endforeach
+                                        " style="background:green; cursor: pointer; "></span>
+                                <div class="modal fade bs-example-modal-lg{{ $rating[0]->id }}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+                                    <div class="modal-dialog modal-lg" role="document">
+                                        <div class="modal-content" style="padding: 5%">
 
-                                                    <form id="form_cart" action="{{ route('store.cart') }}" method="POST">
-                                                        {{ csrf_field() }}
-                                                        <h2 align="center">{{ $rating[0]->from_to_time }} Seconds Available</h2>
-                                                        <ul style="font-size: 21px; margin:0 auto; width: 80%">
-                                                            <h3 align="" style="color:#9f005d">Choose a media file</h3>
-                                                            <hr />
-                                                            @foreach($data as $datas)
-                                                                <div class="row">
-                                                                    @foreach(((object) $rating) as $d)
-                                                                        @if(((integer) $datas->time) === $d->time_in_seconds)
-                                                                            <input type="hidden" class="hourly_break{{ $d->id }}" name="hourly_break" value="{{ $rating[0]->from_to_time }}">
-                                                                            <div class="col-md-3"><i class="fa fa-video-camera"></i> <img src="{{ asset($datas->uploads) }}" alt="{{ $datas->uploads }}" style="height: 40px; width: 40px;" /> </div>
-                                                                            <input type="hidden" name="file" class="file{{ $d->id }}" value="{{ $datas->uploads }}">
-                                                                            <div class="col-md-3"><span style="margin-left:15%"></span>{{ $datas->time }} Seconds</div>
-                                                                            <input type="hidden" name="time" class="time{{ $d->id }}" value="{{ $datas->time }}">
-                                                                            <div class="col-md-3"><input name="hourly" class="hourly" value="{{ $d->id }}" type="radio"></div>
-                                                                            <input type="hidden" name="rate_id" class="rating_id" value="{{ $d->id }}">
-                                                                            <div class="col-md-3"><td>&#8358;{{ $d->price }}</td></div>
-                                                                            <input type="hidden" name="price" class="price{{ $d->id }}" value="{{ $d->price }}">
-                                                                            <input type="hidden" name="rate_id" class="rate_id{{ $d->id }}" id="rate_id" value="{{ $rating[0]->id }}">
-                                                                        @endif
-                                                                    @endforeach
-                                                                </div>
-                                                                <hr/>
+                                            <form id="form_cart" action="{{ route('store.cart') }}" method="POST">
+                                                {{ csrf_field() }}
+                                                <h2 align="center">{{ $rating[0]->from_to_time }} Seconds Available</h2>
+                                                <ul style="font-size: 21px; margin:0 auto; width: 80%">
+                                                    <h3 align="" style="color:#9f005d">Choose a media file</h3>
+                                                    <hr />
+                                                    @foreach($data as $datas)
+                                                        <div class="row">
+                                                            @foreach(((object) $rating) as $d)
+                                                                @if(((integer) $datas->time) === $d->time_in_seconds)
+                                                                    <input type="hidden" class="hourly_break{{ $d->id }}" name="hourly_break" value="{{ $rating[0]->from_to_time }}">
+                                                                    <div class="col-md-3"><i class="fa fa-video-camera"></i> <img src="{{ asset($datas->uploads) }}" alt="{{ $datas->uploads }}" style="height: 40px; width: 40px;" /> </div>
+                                                                    <input type="hidden" name="file" class="file{{ $d->id }}" value="{{ $datas->uploads }}">
+                                                                    <div class="col-md-3"><span style="margin-left:15%"></span>{{ $datas->time }} Seconds</div>
+                                                                    <input type="hidden" name="time" class="time{{ $d->id }}" value="{{ $datas->time }}">
+                                                                    <div class="col-md-3"><input name="hourly" class="hourly" value="{{ $d->id }}" type="radio"></div>
+                                                                    <input type="hidden" name="rate_id" class="rating_id" value="{{ $d->id }}">
+                                                                    <div class="col-md-3"><td>&#8358;{{ $d->price }}</td></div>
+                                                                    <input type="hidden" name="price" class="price{{ $d->id }}" value="{{ $d->price }}">
+                                                                    <input type="hidden" name="rate_id" class="rate_id{{ $d->id }}" id="rate_id" value="{{ $rating[0]->id }}">
+                                                                @endif
                                                             @endforeach
-                                                        </ul>
-                                                        <button type="button" id="save_cart"  class="btn btn-large save_cart" style="background: #9f005d; color:white; font-size: 20px; padding: 1% 5%; margin-top:4%; border-radius: 10px;">Save</button></a></p>
-                                                    </form>
+                                                        </div>
+                                                        <hr/>
+                                                    @endforeach
+                                                </ul>
+                                                <button type="button" id="save_cart"  class="btn btn-large save_cart" style="background: #9f005d; color:white; font-size: 20px; padding: 1% 5%; margin-top:4%; border-radius: 10px;">Save</button></a></p>
+                                            </form>
 
-                                                </div>
-                                            </div>
                                         </div>
                                     </div>
-                                @endforeach
+                                </div>
                             </div>
-                            <?php } ?>
-                            <?php } ?>
-                            <?php } ?>
+                        @endforeach
                     </div>
+                    <?php } ?>
+                    <?php } ?>
+                    <?php } ?>
+                </div>
                 {{--</form>--}}
             </div>
             <!-- /.col -->
@@ -170,29 +169,29 @@
 
 
             $("body").delegate(".save_cart", "click", function() {
-               var url1 = $("#form_cart").attr("action");
-               var id = $(".rating_id").val();
-               var pick = $("input[name='hourly']:checked").val();
-               var price = $(".price"+pick+"").val();
-               var file = $(".file"+pick+"").val();
-               var time = $(".time"+pick+"").val();
-               var range = $(".hourly_break"+pick+"").val();
-               var rate_id = $(".rate_id"+pick+"").val();
-               console.log(url1);
-               if(pick){
-                   $.ajax({
-                       url: url1,
-                       method: "POST",
-                       data: {rate_id: rate_id, price: price, file: file, range: range, time: time, '_token':$('input[name=_token]').val()},
-                       success: function(data){
-                           if(data === "success"){
-                               location.reload();
-                               $("#rate_this").addClass('choosen');
-                           }
+                var url1 = $("#form_cart").attr("action");
+                var id = $(".rating_id").val();
+                var pick = $("input[name='hourly']:checked").val();
+                var price = $(".price"+pick+"").val();
+                var file = $(".file"+pick+"").val();
+                var time = $(".time"+pick+"").val();
+                var range = $(".hourly_break"+pick+"").val();
+                var rate_id = $(".rate_id"+pick+"").val();
+                console.log(url1);
+                if(pick){
+                    $.ajax({
+                        url: url1,
+                        method: "POST",
+                        data: {rate_id: rate_id, price: price, file: file, range: range, time: time, '_token':$('input[name=_token]').val()},
+                        success: function(data){
+                            if(data === "success"){
+                                location.reload();
+                                $("#rate_this").addClass('choosen');
+                            }
 
-                       }
-                   })
-               }
+                        }
+                    })
+                }
 
             });
         });
@@ -273,9 +272,9 @@
 @endsection
 @section('styles')
     <style>
-    .disabled{
-    cursor: not-allowed;
-    pointer-events: none;
-    }
+        .disabled{
+            cursor: not-allowed;
+            pointer-events: none;
+        }
     </style>
 @stop

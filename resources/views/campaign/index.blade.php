@@ -20,19 +20,6 @@
     <section class="content">
         <div class="row">
             <div class="col-md-2 hidden-sm hidden-xs"></div>
-            <div class="col-md-8 Campaign" style="padding:2%">
-                <div class="row">
-                    <h4 style="margin-left: 17px;font-weight: bold">Search</h4>
-                    <div class="col-md-12" style="margin-top: -2%">
-                        <div class="input-group date styledate" style="width:30% !important">
-                            <input type="text" placeholder="Search here..." class="form-control pull-right"  >
-                        </div>
-                        <div class="input-group" style="">
-                            <input type="submit" class="search-btn" value="search" style="float:left" >
-                        </div>
-                    </div>
-                </div>
-            </div>
 
             <div class="col-md-2 hidden-sm hidden-xs"></div>
 
@@ -45,9 +32,8 @@
                                     <!-- Post -->
                                     <!-- /.post -->
                                     <div class="box-body">
-                                        <table id="example1" class="table table-bordered table-striped">
+                                        <table id="example1" class="table table-bordered table-striped all_campaign">
                                             <thead>
-                                            <tr>
                                                 <th>S/N</th>
                                                 <th>Name</th>
                                                 <th>Brand</th>
@@ -57,31 +43,7 @@
                                                 <th>Adslots</th>
                                                 <th>Compliance</th>
                                                 <th>Status</th>
-                                            </tr>
                                             </thead>
-                                            <tbody>
-                                                @foreach($campaign as $campaigns)
-                                                    <tr>
-                                                        <td>{{ $loop->iteration }}</td>
-                                                        <td>{{ $campaigns->name }}</td>
-                                                        <td></td>
-                                                        <td>{{ $campaigns->product }}</td>
-                                                        <td>{{ date('d-m-Y', $campaigns->start_date) }}</td>
-                                                        <td>{{ date('d-m-Y', $campaigns->stop_date) }}</td>
-                                                        <td>{{ count($campaigns->file) }}</td>
-                                                        <td></td>
-                                                        <td>
-                                                            @if($campaigns->stop_date > $campaigns->start_date)
-                                                                Running
-                                                            @else
-                                                                Complete
-                                                            @endif
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                            </tbody>
-                                            <tfoot>
-                                            </tfoot>
                                         </table>
                                         {{--{!! with(new Vanguard\Pagination\HDPresenter($adslot))->render() !!}--}}
                                     </div>
@@ -120,12 +82,38 @@
 
 @endsection
 @section('scripts')
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>
     {!! HTML::script('assets/js/moment.min.js') !!}
     {!! HTML::script('assets/js/bootstrap-datetimepicker.min.js') !!}
     <script>
 
-
         $(document).ready(function(){
+
+            var Datefilter =  $('.all_campaign').DataTable({
+                paging: true,
+                serverSide: true,
+                processing: true,
+                ajax: {
+                    url: '/campaign/all-campaign/data',
+                    data: function (d) {
+                        d.start_date = $('input[name=txtFromDate_hvc]').val();
+                        d.stop_date = $('input[name=txtToDate_hvc]').val();
+                    }
+                },
+                columns: [
+                    {data: 'id', name: 'id'},
+                    {data: 'name', name: 'name'},
+                    {data: 'brand', name: 'brand'},
+                    {data: 'product', name: 'product'},
+                    {data: 'start_date', name: 'start_date'},
+                    {data: 'end_date', name: 'end_date'},
+                    {data: 'adslots', name: 'adslots'},
+                    {data: 'compliance', name: 'compliance'},
+                    {data: 'status', name: 'status'},
+                ]
+            });
+
             $("#txtFromDate").datepicker({
                 numberOfMonths: 2,
                 onSelect: function (selected) {
@@ -148,4 +136,5 @@
 @section('styles')
     <link rel="stylesheet" href="{{ asset('assets/css/jquery-ui.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/theme.css') }}">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css" type="text/css"/>
 @stop

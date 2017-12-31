@@ -67,7 +67,7 @@
                                                     {{ $walkins->user->phone_number }}
                                                 </td>
                                                 <td>
-                                                    <a href="{{ route('campaign.create2', ['id' => 1]) }}" class="btn btn-primary btn-xs">Create Campaign</a>
+                                                    <a href="{{ route('campaign.create2', ['id' => 1, 'walkins' => $walkins->id]) }}" class="btn btn-primary btn-xs">Create Campaign</a>
                                                 </td>
                                                 <td>
                                                     <a href="#" data-toggle="modal" data-target=".bs-example1-modal-md{{ $walkins->id }}" style="font-size: 16px"><span class="label label-danger"> <i class="fa fa-trash"></i></span></a></td>

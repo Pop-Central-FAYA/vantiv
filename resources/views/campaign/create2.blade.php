@@ -22,7 +22,7 @@
         <div class="row">
             <div class="col-md-1 hidden-sm hidden-xs"></div>
             <div class="col-md-9 " style="padding:2%">
-                <form class="campform" method="POST" action="{{ route('campaign.store2', ['id' => 1]) }}">
+                <form class="campform" method="POST" action="{{ route('campaign.store2', ['id' => 1, 'walkins' => $walkins_id]) }}">
                     {{ csrf_field() }}
                     <div class="row">
                         <div class="col-md-6">
@@ -45,7 +45,9 @@
                         <div class="col-md-3">
                             <label style="margin-left:10%">Industry:</label>
                             <select name="industry" id="" class="form-control">
-                                <option value="1">Cocacola</option>
+                                @foreach($industry as $ind)
+                                <option value="{{ $ind->name }}">{{ $ind->name }}</option>
+                                @endforeach
                             </select>
                         </div>
 
@@ -62,17 +64,13 @@
                         <dvi class="col-md-3">
                             <label style="margin-left:10%">Channel:</label>
                             <select style="width: 100%" class="form-control" name="channel">
-                                <option value="TV"
-                                        @if(isset(((object) $step2)->channel) === "TV")
+                                @foreach($chanel as $chanels)
+                                <option value="{{ $chanels->id }}"
+                                        @if(isset(((object) $step2)->channel) === $chanels->id)
                                         selected
                                         @endif
-                                >TV</option>
-                                <option value="Radio"
-                                        @if(isset(((object) $step2)->channel) === "Radio")
-                                        selected
-                                        @endif
-                                >Radio</option>
-
+                                >{{ $chanels->channel }}</option>
+                                @endforeach
                             </select>
                         </dvi>
                     </div>

@@ -216,7 +216,7 @@
 
             $("body").delegate(".timepicker", "click", function() {
                 $(".timepicker").datetimepicker({
-                    format: "LT",
+                    format: "HH:mm",
                     icons: {
                         up: "fa fa-chevron-up",
                         down: "fa fa-chevron-down"

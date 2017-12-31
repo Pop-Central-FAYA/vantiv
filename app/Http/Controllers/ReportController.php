@@ -16,6 +16,7 @@ class ReportController extends Controller
         return view('reports.index');
     }
 
+    // High value customer report
     public function HVCdata(Datatables $datatables, Request $request)
     {
         //high value customer
@@ -66,6 +67,7 @@ class ReportController extends Controller
 
     }
 
+    //paid Invoice report
     public function PIdata(Datatables $datatables, Request $request)
     {
         $broadcaster = Session::get('broadcaster_id');
@@ -117,6 +119,7 @@ class ReportController extends Controller
 
     }
 
+    //Periodic sales report
     public function psData(Datatables $datatables, Request $request)
     {
         $start = strtotime($request->start_date);
@@ -174,6 +177,7 @@ class ReportController extends Controller
 
     }
 
+    //Total Volume of Campaign
     public function tvcData(Datatables $datatables, Request $request)
     {
         $start = strtotime($request->start_date);
@@ -219,6 +223,7 @@ class ReportController extends Controller
 
     }
 
+    //High performing Dayparts
     public function hpdData(Datatables $datatables, Request $request)
     {
         $start = strtotime($request->start_date);
@@ -282,6 +287,7 @@ class ReportController extends Controller
 
     }
 
+    //High Performing Day
     public function hpdaysData(Datatables $datatables, Request $request)
     {
         $start = strtotime($request->start_date);

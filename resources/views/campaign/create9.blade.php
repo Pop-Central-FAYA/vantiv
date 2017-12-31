@@ -20,15 +20,18 @@
     <!-- Main content -->
 
     <section class="content">
+        @if(count($query) === 0)
+            <p>You have 0 item in your cart</p>
+        @else
         <div class="row">
             <div class="col-md-1 hidden-sm hidden-xs"></div>
             <div class="col-md-9 " style="padding:2%">
                 <form class="campform">
                     <div class="row">
                         <div class="col-md-12 ">
-
                             <h2>Summary</h2>
-                            <hr / style="border-bottom: 1px solid #333">
+                            <hr  style="border-bottom: 1px solid #333">
+
 
                             <div class="col-md-6">
                                 <p><b>Campaign Name:</b> {{ $first_session->name }}  </p>
@@ -93,7 +96,6 @@
                                     <!-- /.box-body -->
                                 </div>
                             </div>
-
                         </div>
 
 
@@ -142,6 +144,7 @@
                 </div>
             </div>
         </div>
+        @endif
     </section>
 
     <!-- /.content -->

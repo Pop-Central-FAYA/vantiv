@@ -23,7 +23,6 @@ class DashboardController extends Controller
             $user = Utilities::switch_db('api')->select("SELECT firstname, lastname from users where id='$c->walkins_id'");
             $payments = Utilities::switch_db('api')->select("SELECT SUM(amount) as total_price from payments WHERE walkins_id = '$c->walkins_id'");
             $camp[] = [
-                'campaign_id' => $c->id,
                 'number_of_campaign' => $c->total_campaign,
                 'user_id' => $c->walkins_id,
                 'total_adslot' => $c->total_adslot,
@@ -68,8 +67,13 @@ class DashboardController extends Controller
         $c_mon = json_encode($c_month);
 
         //High performing Dayparts
-        $dayp = Utilities::switch_db('api')->select("SELECT COUNT(id) as campaigns, time_created, day_parts from campaigns WHERE broadcaster = '$broadcaster' AND day_parts != '' GROUP BY day_parts,broadcaster, time_created");
+        $dayp = Utilities::switch_db('api')->select("SELECT COUNT(id) as campaigns, time_created, day_parts 
+                                                        from campaigns WHERE broadcaster = '$broadcaster' AND day_parts != '' 
+                                                        GROUP BY broadcaster, time_created");
         $dayp_name = [];
+        $day_per = [];
+        $day_na = [];
+        $day_da = [];
         $d = [];
         $date = [];
         for($i = 0; $i < count($dayp); $i++)
@@ -79,10 +83,12 @@ class DashboardController extends Controller
         $s = array_sum($d);
         foreach ($dayp as $day)
         {
-            $query = Utilities::switch_db('api')->select("SELECT day_parts from dayParts WHERE id = '$day->day_parts'");
+            $day_p = $day->day_parts;
+            $query = Utilities::switch_db('api')->select("SELECT day_parts from dayParts WHERE id IN ('$day_p')");
             $day_percent = (($day->campaigns) / $s) * 100;
+            $day_partt = isset($query[0]) ? $query[0]->day_parts : "";
             $dayp_name[] = [
-                'name' => $query[0]->day_parts,
+                'name' => $day_partt,
                 'y' => $day_percent,
                 'date' => $day->time_created
             ];
@@ -115,15 +121,16 @@ class DashboardController extends Controller
         $ads = [];
         $months = [];
         $slot = [];
-        $periodic = Utilities::switch_db('api')->select("SELECT count(id) as tot_camp, SUM(adslots) as adslot, `name`, brand, time_created as days from campaigns WHERE broadcaster = '$broadcaster' GROUP BY time_created ORDER BY time_created desc");
+        $periodic = Utilities::switch_db('api')->select("SELECT count(id) as tot_camp, SUM(adslots) as adslot, time_created as days from campaigns WHERE broadcaster = '$broadcaster' GROUP BY time_created ORDER BY time_created desc");
         foreach ($periodic as $pe)
         {
             $price = Utilities::switch_db('api')->select("SELECT SUM(amount) as total_price, time_created as days from payments WHERE broadcaster = '$broadcaster' AND time_created = '$pe->days' GROUP BY time_created ORDER BY time_created desc");
             $ads[] = [
                 'total' => $price[0]->total_price,
                 'adslot' => $pe->adslot,
-                'date' => date("F", $pe->days)
+                'date' => date("F", $pe->days),
             ];
+
         }
         foreach ($ads as $a)
         {
@@ -142,23 +149,19 @@ class DashboardController extends Controller
         $tot_pri = json_encode($prr);
         $mon = json_encode($months);
 
-        //Inventory fill rate
-//        $today = getDate();
-//        $today_day = $today['weekday'];
-//
-//        $rate_c = [];
-//
-//        $get_day_id = Utilities::switch_db('api')->select("SELECT id as day_id from days WHERE day = '$today_day'");
-//        $t_day = $get_day_id[0]->day_id;
-//        $get_ratecards_for_this_day = Utilities::switch_db('api')->select("SELECT * from rateCards WHERE day = '$t_day' AND broadcaster = '$broadcaster'");
-//        foreach ($get_ratecards_for_this_day as $gr)
-//        {
-//
-//            $adslot = Utilities::switch_db('api')->select("SELECT COUNT(id) as total_slot from adslots WHERE rate_card = '$gr->id'");
-//            $rate_c[] = $adslot;
-//        }
-//
-//        dd($rate_c);
+//        Inventory fill rate
+        $today = getDate();
+        $today_day = $today['weekday'];
+        $rate_c = [];
+        $get_day_id = Utilities::switch_db('api')->select("SELECT id as day_id from days WHERE day = '$today_day'");
+        $t_day = $get_day_id[0]->day_id;
+        $get_ratecards_for_this_day = Utilities::switch_db('api')->select("SELECT * from rateCards WHERE day = '$t_day' AND broadcaster = '$broadcaster'");
+        foreach ($get_ratecards_for_this_day as $gr)
+        {
+            $adslot = Utilities::switch_db('api')->select("SELECT COUNT(id) as total_slot, rate_card from adslots WHERE rate_card = '$gr->id'");
+//            $campaign = Utilities::switch_db('api')->select("SELECT SUM(adslots) as total_sold from campaigns WHERE broadcaster = '$broadcaster' AND  GROUP BY ");
+            $rate_c[] = $adslot;
+        }
 
 
 

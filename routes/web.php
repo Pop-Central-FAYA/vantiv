@@ -114,7 +114,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::group(['prefix' => 'campaign'], function(){
             Route::get('/', 'CampaignsController@index')->name('campaign.all');
             Route::get('/create', 'CampaignsController@create')->name('campaign.create');
-            Route::get('/create/{id}/step2', 'CampaignsController@createStep2')->name('campaign.create2');
+            Route::get('/create/{id}/{walkins}/step2', 'CampaignsController@createStep2')->name('campaign.create2');
             Route::get('/create/{id}/step3', 'CampaignsController@createStep3')->name('campaign.create3');
             Route::get('/create/{id}/step4', 'CampaignsController@createStep4')->name('campaign.create4');
             Route::get('/create/{id}/step5', 'CampaignsController@createStep5')->name('campaign.create5');
@@ -123,7 +123,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/create/{id}/step8', 'CampaignsController@createStep8')->name('campaign.create8');
             Route::get('/create/{id}/step9', 'CampaignsController@createStep9')->name('campaign.create9');
 
-            Route::post('/create/{id}/step2/store', 'CampaignsController@postStep2')->name('campaign.store2');
+            Route::post('/create/{id}/{walkins}/step2/store', 'CampaignsController@postStep2')->name('campaign.store2');
             Route::post('/create/{id}/step3/store', 'CampaignsController@postStep3')->name('campaign.store3');
             Route::post('/create/{id}/step4/store', 'CampaignsController@postStep4')->name('campaign.store4');
             Route::post('/create/{id}/step5/store', 'CampaignsController@postStep5')->name('campaign.store5');
@@ -134,6 +134,8 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/checkout', 'CampaignsController@getCheckout')->name('checkout');
             Route::post('/submit-campaign', 'CampaignsController@postCampaign')->name('submit.campaign');
             Route::get('/remove-campaings/{id}', 'CampaignsController@removeCart')->name('cart.remove');
+
+            Route::get('/all-campaign/data', 'CampaignsController@getAllData');
         });
 
         /*
