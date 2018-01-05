@@ -1,4 +1,6 @@
 .env
-/template
-/vendor
-/.idea
+vendor
+temp
+tmpp
+html/web.config
+.idea

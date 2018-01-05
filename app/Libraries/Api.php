@@ -106,6 +106,7 @@ Class Api
 //        ApiLog::save_activity_log($req, $response, $url);
         return $response;
     }
+    
     public static function get_ratecard_preloaded()
     {
         $url = Api::$url.'ratecard/preload/data?key='.Api::$public;
@@ -117,6 +118,7 @@ Class Api
         return json_decode($response);
 
     }
+    
     public static function store_ad_slot($request)
     {
         $day = $request->days;
@@ -526,5 +528,280 @@ Class Api
         $id = strtotime(date('Y-m-d H:i:s')).mt_rand(1000000000000,999999999999999);
         return $id;
     }
+
+    /**
+     * Discounts
+     */
+
+    public static function get_discounts_by_type($type)
+    {
+        $key = Api::$public;
+        $token = Session::get('token');
+        $broadcaster_id = Session::get('broadcaster_id');
+        $url = Api::$url.'discount/all/type/' . $type . '/' . $broadcaster_id . '?key='.$key;
+        $encrypted_token = Session::get('encrypted_token');
+
+        $response = Curl::to($url)
+            ->withHeader("token: $encrypted_token")
+            ->get();
+
+        $req = json_encode([
+            'key' => $key,
+            'token' => $token
+        ]);
+
+        ApiLog::save_activity_log($req, $response, $url);
+
+        return $response;
+    }
+
+    public static function create_discount($discount_type_value, $percent_value, $percent_start_date,
+                                           $percent_stop_date, $value, $value_start_date, $value_stop_date,
+                                           $discount_class_id, $discount_type_id, $discount_type_sub_value)
+    {
+        $key = Api::$public;
+        $token = Session::get('token');
+        $broadcaster_id = Session::get('broadcaster_id');
+        $url = Api::$url.'discount/create?key='.$key;
+        $encrypted_token = Session::get('encrypted_token');
+
+        $response = Curl::to($url)
+            ->withHeader("token: $encrypted_token")
+            ->withData([
+                'broadcaster_id' => $broadcaster_id,
+                'discount_type_id' => $discount_type_id,
+                'discount_type_value' => $discount_type_value,
+                'discount_class_id' => $discount_class_id,
+                'percent_value' => $percent_value,
+                'percent_start_date' => $percent_start_date,
+                'percent_stop_date' => $percent_stop_date,
+                'value' => $value,
+                'value_start_date' => $value_start_date,
+                'value_stop_date' => $value_stop_date,
+                'discount_type_sub_value' => $discount_type_sub_value
+            ])
+            ->post();
+
+        $req = json_encode([
+            'key' => $key,
+            'token' => $token,
+            'broadcaster_id' => $broadcaster_id,
+            'discount_type_id' => $discount_type_id,
+            'discount_type_value' => $discount_type_value,
+            'discount_class_id' => $discount_class_id,
+            'percent_value' => $percent_value,
+            'percent_start_date' => $percent_start_date,
+            'percent_stop_date' => $percent_stop_date,
+            'value' => $value,
+            'value_start_date' => $value_start_date,
+            'value_stop_date' => $value_stop_date,
+            'discount_type_sub_value' => $discount_type_sub_value
+        ]);
+
+        ApiLog::save_activity_log($req, $response, $url);
+
+        return $response;
+    }
+
+    public static function update_discount($discount, $discount_type_value, $percent_value, $percent_start_date,
+                                           $percent_stop_date, $value, $value_start_date, $value_stop_date,
+                                           $discount_class_id, $discount_type_id, $discount_type_sub_value)
+    {
+        $key = Api::$public;
+        $broadcaster_id = Session::get('broadcaster_id');
+        $url = Api::$url.'discount/' . $broadcaster_id . '/' . $discount . '?key='.$key;
+        $encrypted_token = Session::get('encrypted_token');
+
+        $response = Curl::to($url)
+            ->withHeader("token: $encrypted_token")
+            ->withData([
+                'broadcaster_id' => $broadcaster_id,
+                'discount_type_id' => $discount_type_id,
+                'discount_type_value' => $discount_type_value,
+                'discount_class_id' => $discount_class_id,
+                'percent_value' => $percent_value,
+                'percent_start_date' => $percent_start_date,
+                'percent_stop_date' => $percent_stop_date,
+                'value' => $value,
+                'value_start_date' => $value_start_date,
+                'value_stop_date' => $value_stop_date,
+                'discount_type_sub_value' => $discount_type_sub_value
+
+            ])
+            ->put();
+
+        $req = json_encode([
+            'key' => $key,
+            'broadcaster_id' => $broadcaster_id,
+            'discount_type_id' => $discount_type_id,
+            'discount_type_value' => $discount_type_value,
+            'discount_class_id' => $discount_class_id,
+            'percent_value' => $percent_value,
+            'percent_start_date' => $percent_start_date,
+            'percent_stop_date' => $percent_stop_date,
+            'value' => $value,
+            'value_start_date' => $value_start_date,
+            'value_stop_date' => $value_stop_date,
+        ]);
+
+        ApiLog::save_activity_log($req, $response, $url);
+
+        return $response;
+    }
+
+    public static function delete_discount($discount)
+    {
+        $key = Api::$public;
+        $token = Session::get('token');
+        $url = Api::$url.'discount/delete/' . $discount . '?key='.$key;
+        $encrypted_token = Session::get('encrypted_token');
+
+        $response = Curl::to($url)
+            ->withHeader("token: $encrypted_token")
+            ->delete();
+
+        $req = json_encode([
+            'key' => $key,
+            'token' => $token,
+            'discount_id' => $discount
+        ]);
+
+        ApiLog::save_activity_log($req, $response, $url);
+
+        return $response;
+    }
+
+
+    /**
+     * Campaigns
+     */
+    public static function get_broadcaster_campaign()
+    {
+        $key = Api::$public;
+        $broadcaster_id = Session::get('broadcaster_id');
+        $url = Api::$url.'campaign/broadcaster/' . $broadcaster_id . '?key='.$key;
+        $encrypted_token = Session::get('encrypted_token');
+
+        $response = Curl::to($url)
+            ->withHeader("token: $encrypted_token")
+            ->get();
+
+        $req = json_encode([
+            'key' => $key,
+            'token' => Session::get('token'),
+            'broadcaster_id' => $broadcaster_id
+        ]);
+
+        ApiLog::save_activity_log($req, $response, $url);
+
+        return $response;
+    }
+
+    /**
+     * MPOs
+     */
+    public static function get_broadcaster_mpo()
+    {
+        $key = Api::$public;
+        $broadcaster_id = Session::get('broadcaster_id');
+        $url = Api::$url.'campaign/mpos/' . $broadcaster_id . '?key='.$key;
+        $encrypted_token = Session::get('encrypted_token');
+
+        $response = Curl::to($url)
+            ->withHeader("token: $encrypted_token")
+            ->get();
+
+        $req = json_encode([
+            'key' => $key,
+            'token' => Session::get('token'),
+            'broadcaster_id' => $broadcaster_id
+        ]);
+
+        ApiLog::save_activity_log($req, $response, $url);
+
+        return $response;
+    }
+
+    public static function get_mpo_by_type($status)
+    {
+        $key = Api::$public;
+        $broadcaster_id = Session::get('broadcaster_id');
+        $url = Api::$url.'campaign/mpos/by/' . $status . '/' . $broadcaster_id . '?key='.$key;
+        $encrypted_token = Session::get('encrypted_token');
+
+        $response = Curl::to($url)
+            ->withHeader("token: $encrypted_token")
+            ->get();
+
+        $req = json_encode([
+            'key' => $key,
+            'token' => Session::get('token'),
+            'broadcaster_id' => $broadcaster_id
+        ]);
+
+        ApiLog::save_activity_log($req, $response, $url);
+
+        return $response;
+    }
+
+    public static function update_fileStatus($is_file_accepted, $broadcaster_id, $file_code, $campaign_id)
+    {
+        $key = Api::$public;
+        $url = Api::$url.'campaign/mpos/approve/' . $is_file_accepted . '/' . $broadcaster_id . '/' . $file_code . '/' . $campaign_id . '?key='.$key;
+        $encrypted_token = Session::get('encrypted_token');
+
+        $response = Curl::to($url)
+            ->withHeader("token: $encrypted_token")
+            ->put();
+
+        $req = json_encode([
+            'key' => $key,
+            'token' => Session::get('token'),
+            'broadcaster_id' => $broadcaster_id,
+            'is_file_accepted' => $is_file_accepted,
+            'file_code' => $file_code,
+            'campaign_id' => $campaign_id
+        ]);
+
+        ApiLog::save_activity_log($req, $response, $url);
+
+        return $response;
+    }
+
+    public static function fetchCampaign($campaign_id)
+    {
+        $campaign = Utilities::switch_db('reports')->select("SELECT * FROM campaigns WHERE id = '$campaign_id'");
+
+        return $campaign;
+    }
+
+    public static function fetchPayment($campaign_id)
+    {
+        $payment = Utilities::switch_db('reports')->select("SELECT * FROM payments WHERE campaign_id = '$campaign_id'");
+
+        return $payment;
+    }
+
+    public static function getMpoByType($type)
+    {
+        $mpos = Utilities::switch_db('reports')->select("SELECT * FROM mpos WHERE status = '$type'");
+
+        return $mpos;
+    }
+
+    public static function getChannelName($channel_id)
+    {
+        $channel = Utilities::switch_db('reports')->select("SELECT * FROM campaignChannels WHERE id = '$channel_id'");
+
+        return $channel;
+    }
+
+    public static function getCampaignFiles($campaign_id)
+    {
+        $files = Utilities::switch_db('reports')->select("SELECT * FROM files WHERE campaign_id = '$campaign_id'");
+
+        return $files;
+    }
+
 
 }

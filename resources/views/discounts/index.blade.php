@@ -1,5 +1,12 @@
 @extends('layouts.app')
 
+@section('stylesheets')
+
+    <link rel="stylesheet" href="{{ asset('asset/plugins/datatables/dataTables.bootstrap.css') }}" />
+    <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
+
+@endsection
+
 @section('content')
 
 @section('title', trans('app.discount'))
@@ -44,35 +51,60 @@
                         <div class="tab-content">
                             <div class="active tab-pane" id="agency">
 
-                                <div class="add-disc">
-                                    <div class="col-md-2">
-                                        <h4>Add a Discount </h4>
-                                    </div>
+                                <div class="add-disc" style="margin: auto">
                                     <form action="{{ route('discount.store') }}" method="POST">
                                         {{ csrf_field() }}
-                                        <input type="hidden" name="type" value="1">
-                                        <div class="col-md-2">
-                                            <select name="type_value">
-                                                <option>Select Agency</option>
-                                                <option>XYZ Agency</option>
-                                                <option>Lex Luther Coporation</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <input type="text" name="discount_value_percent" placeholder="Discount Value Percent">
-                                        </div>
-                                        <div class="col-md-2">
-                                            <input type="text" name="discount_value_number" placeholder="Discount Value Number">
-                                        </div>
-                                        <div class="col-md-2">
-                                            <input type="submit" value="Add" name="">
+                                        <input type="hidden" name="discount_type_id" value="{{ $types[0]->id }}">
+                                        <div class="row">
+                                            <div class="row" style="margin-bottom: 20px;">
+                                                <div class="col-md-2">
+                                                    <h4>Add a Discount</h4>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <select name="discount_type_value" id="discount_type_value">
+                                                        @foreach ($agencies as $agency)
+                                                            <option value="{{ $agency->id }}">{{ $agency->brand }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input type="number" name="percent_value" placeholder="Percent Value">
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input type="text" name="percent_start_date" placeholder="Percent Start Date" class="form-control flatpickr">
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input type="text" name="percent_stop_date" placeholder="Percent Stop Date" class="form-control flatpickr">
+                                                </div>
+                                            </div>
+                                            <div class="row" style="margin-bottom: 20px;">
+                                                <div class="col-md-2"></div>
+                                                <div class="col-md-2"></div>
+                                                <div class="col-md-2">
+                                                    <input type="number" name="value" placeholder="Amount Value">
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input type="text" name="value_start_date" placeholder="Value Start Date" class="form-control flatpickr">
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input type="text" name="value_stop_date" placeholder="Value Stop Date" class="form-control flatpickr">
+                                                </div>
+                                            </div>
+                                            <div class="row" style="margin-bottom: 20px;">
+                                                <div class="col-md-2"></div>
+                                                <div class="col-md-2"></div>
+                                                <div class="col-md-2"></div>
+                                                <div class="col-md-2"></div>
+                                                <div class="col-md-2">
+                                                    <input type="submit" value="Add" name="">
+                                                </div>
+                                            </div>
                                         </div>
                                     </form>
                                 </div>
-                                <!-- Post -->
 
-                                <!-- /.post -->
                                 <div class="box-body">
+
                                     @if(count($agency_discounts) === 0)
 
                                         <h4>OOPs!!!, You have agency discounts on your system, please create one</h4>
@@ -81,29 +113,34 @@
 
                                         <table id="example1" class="table table-bordered table-striped">
                                             <thead>
-                                                <tr>
-                                                    <th>Agency</th>
-                                                    <th>Discount %</th>
-                                                    <th>Discount N</th>
-                                                    <th>Action</th>
-                                                </tr>
+                                            <tr>
+                                                <th>Agency</th>
+                                                <th>Discount %</th>
+                                                <th>Discount % Start Date</th>
+                                                <th>Discount % Stop Date</th>
+                                                <th>Discount N</th>
+                                                <th>Discount N Start Date</th>
+                                                <th>Discount N Stop Date</th>
+                                                <th>Action</th>
+                                            </tr>
                                             <tbody>
                                             </thead>
-                                                @foreach($agency_discounts as $agency_discount)
+                                            @foreach($agency_discounts as $agency_discount)
                                                 <tr>
-                                                    <td>{{ $agency_discount->agency }}</td>
-                                                    <td>{{ $agency_discount->discount_value_percent }}%</td>
-                                                    <td>&#8358;{{ $agency_discount->discount_value_number }}</td>
+                                                    <td>{{ $agency_discount->discount_type_sub_value }}</td>
+                                                    <td>{{ $agency_discount->percent_value }}%</td>
+                                                    <td>{{ date('Y-m-d', $agency_discount->percent_start_date) }}</td>
+                                                    <td>{{ date('Y-m-d', $agency_discount->percent_stop_date) }}</td>
+                                                    <td>&#8358;{{ $agency_discount->value }}</td>
+                                                    <td>{{ date('Y-m-d', $agency_discount->value_start_date) }}</td>
+                                                    <td>{{ date('Y-m-d', $agency_discount->value_start_date) }}</td>
                                                     <td>
                                                         <a href="#" style="font-size: 16px"><span class="label label-warning" data-toggle="modal" data-target="#myModal{{ $agency_discount->id }}" style="cursor: pointer;"> Edit</span></a>
                                                         <a href="{{ url('discount/' . $agency_discount->id . '/delete') }}" id="a_del" style="font-size: 16px"><span class="label label-danger"> <i class="fa fa-trash"></i></span></a>
                                                     </td>
                                                 </tr>
                                                 @endforeach
-                                            </tbody>
-                                            <tfoot>
-
-                                            </tfoot>
+                                                </tbody>
                                         </table>
 
                                     @endif
@@ -112,26 +149,67 @@
                                 @foreach ($agency_discounts as $agency_discount)
 
                                     <div class="modal fade" id="myModal{{ $agency_discount->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                                        <div class="modal-dialog" role="document">
+                                        <div class="modal-dialog modal-lg" role="document">
                                             <div class="modal-content">
+
                                                 <div class="modal-header">
                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                                    <h4 class="modal-title" id="myModalLabel">Edit Discount - <strong>{{ $agency_discount->agency }}</strong></h4>
+                                                    <h4 class="modal-title" id="myModalLabel">Edit Discount - <strong>{{ $agency_discount->discount_type_sub_value }}</strong></h4>
                                                 </div>
 
                                                 <form method="POST" class="selsec" action="{{ route('discount.update', ['discount' => $agency_discount->id]) }}">
                                                     {{ csrf_field() }}
-                                                    <input type="hidden" name="type" value="1">
-                                                    <input type="hidden" name="type_value" value="{{ $agency_discount->agency }}">
+                                                    <input type="hidden" name="discount_type_id" value="{{ $types[0]->id }}">
+                                                    <input type="hidden" name="discount_type_value" value="{{ $agency_discount->discount_type_value }}">
+                                                    <input type="hidden" name="discount_type_sub_value" value="{{ $agency_discount->discount_type_sub_value }}">
                                                     <div class="modal-body">
-                                                        <div class="form-group">
-                                                            <label for="discount_value">Discount Value Number</label>
-                                                            <input type="number" name="discount_value_number" value="{{ $agency_discount->discount_value_number }}" class="form-control" />
+
+                                                        <div class="row">
+                                                            <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                    <label for="discount_value">Percent Value</label>
+                                                                    <input type="number" name="percent_value" value="{{ $agency_discount->percent_value }}" class="form-control" />
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                    <label for="discount_value">Discount% Start Date</label>
+                                                                    <input type="number" name="percent_start_date" value="{{ date('Y-m-d', $agency_discount->percent_start_date) }}" class="form-control flatpickr" />
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                    <label for="discount_value">Discount% Stop Date</label>
+                                                                    <input type="number" name="percent_stop_date" value="{{ date('Y-m-d', $agency_discount->percent_stop_date) }}" class="form-control flatpickr" />
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                        <div class="form-group">
-                                                            <label for="discount_value">Discount Value Percent</label>
-                                                            <input type="number" name="discount_value_percent" value="{{ $agency_discount->discount_value_percent }}" class="form-control" />
+
+                                                        <div class="row">
+                                                            <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                    <label for="discount_value">Amount Value</label>
+                                                                    <input type="number" name="value" value="{{ $agency_discount->value }}" class="form-control" />
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                    <label for="discount_value">Value Start Date</label>
+                                                                    <input type="number" name="value_start_date" value="{{ date('Y-m-d', $agency_discount->value_start_date) }}" class="form-control flatpickr" />
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                    <label for="discount_value">Value Stop Date</label>
+                                                                    <input type="number" name="value_stop_date" value="{{ date('Y-m-d', $agency_discount->value_start_date) }}" class="form-control flatpickr" />
+                                                                </div>
+                                                            </div>
                                                         </div>
+
                                                     </div>
 
                                                     <div class="modal-footer">
@@ -144,38 +222,63 @@
                                     </div>
 
                                 @endforeach
-                                <!-- /.post -->
+
                             </div>
 
                             <div class="tab-pane" id="brand">
                                 <div class="add-disc">
-                                    <div class="col-md-2">
-                                        <h4>Add a Discount </h4>
-                                    </div>
                                     <form action="{{ route('discount.store') }}" method="POST">
                                         {{ csrf_field() }}
-                                        <input type="hidden" name="type" value="2">
-                                        <div class="col-md-2">
-                                            <select name="type_value">
-                                                <option>Select Brands</option>
-                                                <option>Milky Wave</option>
-                                                <option>Mouse</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <input type="text" name="discount_value_percent" placeholder="Discount Value Percent">
-                                        </div>
-                                        <div class="col-md-2">
-                                            <input type="text" name="discount_value_number" placeholder="Discount Value Number">
-                                        </div>
-                                        <div class="col-md-2">
-                                            <input type="submit" value="Add" name="">
+                                        <input type="hidden" name="discount_type_id" value="{{ $types[1]->id }}">
+                                        <div class="row">
+                                            <div class="row" style="margin-bottom: 20px;">
+                                                <div class="col-md-2">
+                                                    <h4>Add a Discount</h4>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <select name="discount_type_value">
+                                                        <option>Select Brand</option>
+                                                        <option value="milk">Milk</option>
+                                                        <option value="bread">Bread</option>
+                                                        <option value="car">Car</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input type="number" name="percent_value" placeholder="Percent Value">
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input type="text" name="percent_start_date" placeholder="Percent Start Date" class="form-control flatpickr">
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input type="text" name="percent_stop_date" placeholder="Percent Stop Date" class="form-control flatpickr">
+                                                </div>
+                                            </div>
+                                            <div class="row" style="margin-bottom: 20px;">
+                                                <div class="col-md-2"></div>
+                                                <div class="col-md-2"></div>
+                                                <div class="col-md-2">
+                                                    <input type="number" name="value" placeholder="Amount Value">
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input type="text" name="value_start_date" placeholder="Value Start Date" class="form-control flatpickr">
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input type="text" name="value_stop_date" placeholder="Value Stop Date" class="form-control flatpickr">
+                                                </div>
+                                            </div>
+                                            <div class="row" style="margin-bottom: 20px;">
+                                                <div class="col-md-2"></div>
+                                                <div class="col-md-2"></div>
+                                                <div class="col-md-2"></div>
+                                                <div class="col-md-2"></div>
+                                                <div class="col-md-2">
+                                                    <input type="submit" value="Add" name="">
+                                                </div>
+                                            </div>
                                         </div>
                                     </form>
                                 </div>
-                                <!-- Post -->
 
-                                <!-- /.post -->
                                 <div class="box-body">
                                     @if(count($brand_discounts) === 0)
 
@@ -185,29 +288,34 @@
 
                                         <table id="example1" class="table table-bordered table-striped">
                                             <thead>
-                                                <tr>
-                                                    <th>Brand</th>
-                                                    <th>Discount %</th>
-                                                    <th>Discount N</th>
-                                                    <th>Action</th>
-                                                </tr>
+                                            <tr>
+                                                <th>Brand</th>
+                                                <th>Discount %</th>
+                                                <th>Discount % Start Date</th>
+                                                <th>Discount % Stop Date</th>
+                                                <th>Discount N</th>
+                                                <th>Discount N Start Date</th>
+                                                <th>Discount N Stop Date</th>
+                                                <th>Action</th>
+                                            </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach($brand_discounts as $brand_discount)
-                                                    <tr>
-                                                        <td>{{ $brand_discount->brand }}</td>
-                                                        <td>{{ $brand_discount->discount_value_percent }}%</td>
-                                                        <td>&#8358;{{ $brand_discount->discount_value_number }}</td>
-                                                        <td>
-                                                            <a href="#" style="font-size: 16px"><span class="label label-warning" data-toggle="modal" data-target="#myModal{{ $brand_discount->id }}" style="cursor: pointer;"> Edit</span></a>
-                                                            <a href="{{ url('discount/' . $brand_discount->id . '/delete') }}" id="a_del" style="font-size: 16px"><span class="label label-danger"> <i class="fa fa-trash"></i></span></a>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
+                                            @foreach($brand_discounts as $brand_discount)
+                                                <tr>
+                                                    <td>{{ $brand_discount->discount_type_value }}</td>
+                                                    <td>{{ $brand_discount->percent_value }}%</td>
+                                                    <td>{{ date('Y-m-d', $brand_discount->percent_start_date) }}</td>
+                                                    <td>{{ date('Y-m-d', $brand_discount->percent_stop_date) }}</td>
+                                                    <td>&#8358;{{ $brand_discount->value }}</td>
+                                                    <td>{{ date('Y-m-d', $brand_discount->value_start_date) }}</td>
+                                                    <td>{{ date('Y-m-d', $brand_discount->value_start_date) }}</td>
+                                                    <td>
+                                                        <a href="#" style="font-size: 16px"><span class="label label-warning" data-toggle="modal" data-target="#myModal{{ $brand_discount->id }}" style="cursor: pointer;"> Edit</span></a>
+                                                        <a href="{{ url('discount/' . $brand_discount->id . '/delete') }}" id="a_del" style="font-size: 16px"><span class="label label-danger"> <i class="fa fa-trash"></i></span></a>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
                                             </tbody>
-                                            <tfoot>
-
-                                            </tfoot>
                                         </table>
 
                                     @endif
@@ -216,32 +324,75 @@
                                 @foreach ($brand_discounts as $brand_discount)
 
                                     <div class="modal fade" id="myModal{{ $brand_discount->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                                        <div class="modal-dialog" role="document">
+                                        <div class="modal-dialog modal-lg" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                                    <h4 class="modal-title" id="myModalLabel">Edit Discount - <strong>{{ $brand_discount->brand }}</strong></h4>
+                                                    <h4 class="modal-title" id="myModalLabel">Edit Discount - <strong>{{ $brand_discount->discount_type_value }}</strong></h4>
                                                 </div>
 
                                                 <form method="POST" class="selsec" action="{{ route('discount.update', ['discount' => $brand_discount->id]) }}">
                                                     {{ csrf_field() }}
-                                                    <input type="hidden" name="type" value="2">
-                                                    <input type="hidden" name="type_value" value="{{ $brand_discount->brand }}">
+                                                    <input type="hidden" name="discount_type_id" value="{{ $types[1]->id }}">
+                                                    <input type="hidden" name="discount_type_value" value="{{ $brand_discount->discount_type_value }}">
+                                                    <input type="hidden" name="discount_type_sub_value" value="{{ $brand_discount->discount_type_sub_value }}">
+
                                                     <div class="modal-body">
-                                                        <div class="form-group">
-                                                            <label for="discount_value">Discount Value Percent</label>
-                                                            <input type="number" name="discount_value_percent" value="{{ $brand_discount->discount_value_percent }}" class="form-control" />
+
+                                                        <div class="row">
+                                                            <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                    <label for="discount_value">Percent Value</label>
+                                                                    <input type="number" name="percent_value" value="{{ $brand_discount->percent_value }}" class="form-control" />
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                    <label for="discount_value">Discount% Start Date</label>
+                                                                    <input type="number" name="percent_start_date" value="{{ date('Y-m-d', $brand_discount->percent_start_date) }}" class="form-control flatpickr" />
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                    <label for="discount_value">Discount% Stop Date</label>
+                                                                    <input type="number" name="percent_stop_date" value="{{ date('Y-m-d', $brand_discount->percent_stop_date) }}" class="form-control flatpickr" />
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                        <div class="form-group">
-                                                            <label for="discount_value">Discount Value Number</label>
-                                                            <input type="number" name="discount_value_number" value="{{ $brand_discount->discount_value_number }}" class="form-control" />
+
+                                                        <div class="row">
+                                                            <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                    <label for="discount_value">Amount Value</label>
+                                                                    <input type="number" name="value" value="{{ $brand_discount->value }}" class="form-control" />
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                    <label for="discount_value">Value Start Date</label>
+                                                                    <input type="number" name="value_start_date" value="{{ date('Y-m-d', $brand_discount->value_start_date) }}" class="form-control flatpickr" />
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                    <label for="discount_value">Value Stop Date</label>
+                                                                    <input type="number" name="value_stop_date" value="{{ date('Y-m-d', $brand_discount->value_stop_date) }}" class="form-control flatpickr" />
+                                                                </div>
+                                                            </div>
                                                         </div>
+
                                                     </div>
+
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                                         <input type="submit" value="Update Discount" class="btn btn-primary" />
                                                     </div>
                                                 </form>
+
                                             </div>
                                         </div>
                                     </div>
@@ -252,28 +403,54 @@
                             <div class="tab-pane" id="time">
 
                                 <div class="add-disc">
-                                    <div class="col-md-2">
-                                        <h4>Add a Discount </h4>
-                                    </div>
                                     <form action="{{ route('discount.store') }}" method="POST">
                                         {{ csrf_field() }}
-                                        <input type="hidden" name="type" value="3">
-                                        <div class="col-md-2">
-                                            <select name="type_value">
-                                                <option>Select Time</option>
-                                                @foreach ($hourly_ranges as $hourly_range)
-                                                    <option value="{{ $hourly_range->time_range }}">{{ $hourly_range->time_range }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <input type="text" name="discount_value_percent" placeholder="Discount Value Percent">
-                                        </div>
-                                        <div class="col-md-2">
-                                            <input type="text" name="discount_value_number" placeholder="Discount Value Number">
-                                        </div>
-                                        <div class="col-md-2">
-                                            <input type="submit" value="Add" name="">
+                                        <input type="hidden" name="discount_type_id" value="{{ $types[2]->id }}">
+                                        <div class="row">
+                                            <div class="row" style="margin-bottom: 20px;">
+                                                <div class="col-md-2">
+                                                    <h4>Add a Discount</h4>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <select name="discount_type_value">
+                                                        <option>Select Time</option>
+                                                        @foreach ($hourly_ranges as $hourly_range)
+                                                            <option value="{{ $hourly_range->id }}">{{ $hourly_range->time_range }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input type="number" name="percent_value" placeholder="Percent Value">
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input type="text" name="percent_start_date" placeholder="Percent Start Date" class="form-control flatpickr">
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input type="text" name="percent_stop_date" placeholder="Percent Stop Date" class="form-control flatpickr">
+                                                </div>
+                                            </div>
+                                            <div class="row" style="margin-bottom: 20px;">
+                                                <div class="col-md-2"></div>
+                                                <div class="col-md-2"></div>
+                                                <div class="col-md-2">
+                                                    <input type="number" name="value" placeholder="Amount Value">
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input type="text" name="value_start_date" placeholder="Value Start Date" class="form-control flatpickr">
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input type="text" name="value_stop_date" placeholder="Value Stop Date" class="form-control flatpickr">
+                                                </div>
+                                            </div>
+                                            <div class="row" style="margin-bottom: 20px;">
+                                                <div class="col-md-2"></div>
+                                                <div class="col-md-2"></div>
+                                                <div class="col-md-2"></div>
+                                                <div class="col-md-2"></div>
+                                                <div class="col-md-2">
+                                                    <input type="submit" value="Add" name="">
+                                                </div>
+                                            </div>
                                         </div>
                                     </form>
                                 </div>
@@ -290,60 +467,107 @@
                                             <tr>
                                                 <th>Time</th>
                                                 <th>Discount %</th>
+                                                <th>Discount % Start Date</th>
+                                                <th>Discount % Stop Date</th>
                                                 <th>Discount N</th>
+                                                <th>Value tart Date</th>
+                                                <th>Value Stop Date</th>
                                                 <th>Action</th>
                                             </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach($time_discounts as $time_discount)
+                                            @foreach( $time_discounts as $time_discount)
                                                 <tr>
-                                                    <td>{{ $time_discount->time }}</td>
-                                                    <td>{{ $time_discount->discount_value_percent }}%</td>
-                                                    <td>&#8358;{{ $time_discount->discount_value_number }}</td>
+                                                    <td>{{ $time_discount->discount_type_sub_value }}</td>
+                                                    <td>{{ $time_discount->percent_value }}%</td>
+                                                    <td>{{ date('Y-m-d', $time_discount->percent_start_date) }}</td>
+                                                    <td>{{ date('Y-m-d', $time_discount->percent_stop_date) }}</td>
+                                                    <td>&#8358;{{ $time_discount->value }}</td>
+                                                    <td>{{ date('Y-m-d', $time_discount->value_start_date) }}</td>
+                                                    <td>{{ date('Y-m-d', $time_discount->value_start_date) }}</td>
                                                     <td>
                                                         <a href="#" style="font-size: 16px"><span class="label label-warning" data-toggle="modal" data-target="#myModal{{ $time_discount->id }}" style="cursor: pointer;"> Edit</span></a>
                                                         <a href="{{ url('discount/' . $time_discount->id . '/delete') }}" id="a_del" style="font-size: 16px"><span class="label label-danger"> <i class="fa fa-trash"></i></span></a>
                                                     </td>
                                                 </tr>
-                                                @endforeach
+                                            @endforeach
                                             </tbody>
-                                            <tfoot>
-
-                                            </tfoot>
                                         </table>
-
                                     @endif
                                 </div>
 
                                 @foreach ($time_discounts as $time_discount)
 
                                     <div class="modal fade" id="myModal{{ $time_discount->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                                        <div class="modal-dialog" role="document">
+                                        <div class="modal-dialog modal-lg" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                                    <h4 class="modal-title" id="myModalLabel">Edit Discount - <strong>{{ $time_discount->time }}</strong></h4>
+                                                    <h4 class="modal-title" id="myModalLabel">Edit Discount - <strong>{{ $time_discount->discount_type_sub_value }}</strong></h4>
                                                 </div>
 
                                                 <form method="POST" class="selsec" action="{{ route('discount.update', ['discount' => $time_discount->id]) }}">
                                                     {{ csrf_field() }}
-                                                    <input type="hidden" name="type" value="3">
-                                                    <input type="hidden" name="type_value" value="{{ $time_discount->time }}">
+                                                    <input type="hidden" name="discount_type_id" value="{{ $types[2]->id }}">
+                                                    <input type="hidden" name="discount_type_value" value="{{ $time_discount->discount_type_value }}">
+                                                    <input type="hidden" name="discount_type_sub_value" value="{{ $time_discount->discount_type_sub_value }}">
+
                                                     <div class="modal-body">
-                                                        <div class="form-group">
-                                                            <label for="discount_value">Discount Value Percent</label>
-                                                            <input type="number" name="discount_value_percent" value="{{ $time_discount->discount_value_percent }}" class="form-control" />
+
+                                                        <div class="row">
+                                                            <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                    <label for="discount_value">Percent Value</label>
+                                                                    <input type="number" name="percent_value" value="{{ $time_discount->percent_value }}" class="form-control" />
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                    <label for="discount_value">Discount% Start Date</label>
+                                                                    <input type="number" name="percent_start_date" value="{{ date('Y-m-d', $time_discount->percent_start_date) }}" class="form-control flatpickr" />
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                    <label for="discount_value">Discount% Stop Date</label>
+                                                                    <input type="number" name="percent_stop_date" value="{{ date('Y-m-d', $time_discount->percent_stop_date) }}" class="form-control flatpickr" />
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                        <div class="form-group">
-                                                            <label for="discount_value">Discount Value Number</label>
-                                                            <input type="number" name="discount_value_number" value="{{ $time_discount->discount_value_number }}" class="form-control" />
+
+                                                        <div class="row">
+                                                            <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                    <label for="discount_value">Amount Value</label>
+                                                                    <input type="number" name="value" value="{{ $time_discount->value }}" class="form-control" />
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                    <label for="discount_value">Value Start Date</label>
+                                                                    <input type="number" name="value_start_date" value="{{ date('Y-m-d', $time_discount->value_start_date) }}" class="form-control flatpickr" />
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                    <label for="discount_value">Value Stop Date</label>
+                                                                    <input type="number" name="value_stop_date" value="{{ date('Y-m-d', $time_discount->value_stop_date) }}" class="form-control flatpickr" />
+                                                                </div>
+                                                            </div>
                                                         </div>
+
                                                     </div>
+
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                                         <input type="submit" value="Update Discount" class="btn btn-primary" />
                                                     </div>
                                                 </form>
+
                                             </div>
                                         </div>
                                     </div>
@@ -355,30 +579,58 @@
                             <div class="tab-pane" id="daypart">
 
                                 <div class="add-disc">
-                                    <div class="col-md-2">
-                                        <h4>Add a Discount </h4>
-                                    </div>
+
                                     <form action="{{ route('discount.store') }}" method="POST">
                                         {{ csrf_field() }}
-                                        <input type="hidden" name="type" value="4">
-                                        <div class="col-md-2">
-                                            <select name="type_value">
-                                                <option>Select Time</option>
-                                                @foreach ($day_parts as $day_part)
-                                                    <option value="{{ $day_part->day_parts }}">{{ $day_part->day_parts }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <input type="text" name="discount_value_percent" placeholder="Discount Value Percent">
-                                        </div>
-                                        <div class="col-md-2">
-                                            <input type="text" name="discount_value_number" placeholder="Discount Value Number">
-                                        </div>
-                                        <div class="col-md-2">
-                                            <input type="submit" value="Add" name="">
+                                        <input type="hidden" name="discount_type_id" value="{{ $types[3]->id }}">
+                                        <div class="row">
+                                            <div class="row" style="margin-bottom: 20px;">
+                                                <div class="col-md-2">
+                                                    <h4>Add a Discount</h4>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <select name="discount_type_value">
+                                                        <option>Select Day Part</option>
+                                                        @foreach ($day_parts as $day_part)
+                                                            <option value="{{ $day_part->id }}">{{ $day_part->day_parts }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input type="number" name="percent_value" placeholder="Percent Value">
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input type="text" name="percent_start_date" placeholder="Percent Start Date" class="form-control flatpickr">
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input type="text" name="percent_stop_date" placeholder="Percent Stop Date" class="form-control flatpickr">
+                                                </div>
+                                            </div>
+                                            <div class="row" style="margin-bottom: 20px;">
+                                                <div class="col-md-2"></div>
+                                                <div class="col-md-2"></div>
+                                                <div class="col-md-2">
+                                                    <input type="number" name="value" placeholder="Amount Value">
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input type="text" name="value_start_date" placeholder="Value Start Date" class="form-control flatpickr">
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input type="text" name="value_stop_date" placeholder="Value Stop Date" class="form-control flatpickr">
+                                                </div>
+                                            </div>
+                                            <div class="row" style="margin-bottom: 20px;">
+                                                <div class="col-md-2"></div>
+                                                <div class="col-md-2"></div>
+                                                <div class="col-md-2"></div>
+                                                <div class="col-md-2"></div>
+                                                <div class="col-md-2">
+                                                    <input type="submit" value="Add" name="">
+                                                </div>
+                                            </div>
                                         </div>
                                     </form>
+
                                 </div>
 
                                 <div class="box-body">
@@ -391,29 +643,34 @@
 
                                         <table id="example1" class="table table-bordered table-striped">
                                             <thead>
-                                                <tr>
-                                                    <th>Day Part</th>
-                                                    <th>Discount %</th>
-                                                    <th>Discount N</th>
-                                                    <th>Action</th>
-                                                </tr>
+                                            <tr>
+                                                <th>Day Part</th>
+                                                <th>Discount %</th>
+                                                <th>Discount % Start Date</th>
+                                                <th>Discount % Stop Date</th>
+                                                <th>Discount N</th>
+                                                <th>Value Start Date</th>
+                                                <th>Value Stop Date</th>
+                                                <th>Action</th>
+                                            </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach($daypart_discounts as $daypart_discount)
-                                                    <tr>
-                                                        <td>{{ $daypart_discount->day_part }}</td>
-                                                        <td>{{ $daypart_discount->discount_value_percent }}%</td>
-                                                        <td>&#8358;{{ $daypart_discount->discount_value_number }}</td>
-                                                        <td>
-                                                            <a href="#" style="font-size: 16px"><span class="label label-warning" data-toggle="modal" data-target="#myModal{{ $daypart_discount->id }}" style="cursor: pointer;"> Edit</span></a>
-                                                            <a href="{{ url('discount/' . $daypart_discount->id . '/delete') }}" id="a_del" style="font-size: 16px"><span class="label label-danger"> <i class="fa fa-trash"></i></span></a>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
+                                            @foreach( $daypart_discounts as $daypart_discount)
+                                                <tr>
+                                                    <td>{{ $daypart_discount->discount_type_sub_value }}</td>
+                                                    <td>{{ $daypart_discount->percent_value }}%</td>
+                                                    <td>{{ date('Y-m-d', $daypart_discount->percent_start_date) }}</td>
+                                                    <td>{{ date('Y-m-d', $daypart_discount->percent_stop_date) }}</td>
+                                                    <td>&#8358;{{ $daypart_discount->value }}</td>
+                                                    <td>{{ date('Y-m-d', $daypart_discount->value_start_date) }}</td>
+                                                    <td>{{ date('Y-m-d', $daypart_discount->value_start_date) }}</td>
+                                                    <td>
+                                                        <a href="#" style="font-size: 16px"><span class="label label-warning" data-toggle="modal" data-target="#myModal{{ $daypart_discount->id }}" style="cursor: pointer;"> Edit</span></a>
+                                                        <a href="{{ url('discount/' . $daypart_discount->id . '/delete') }}" id="a_del" style="font-size: 16px"><span class="label label-danger"> <i class="fa fa-trash"></i></span></a>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
                                             </tbody>
-                                            <tfoot>
-
-                                            </tfoot>
                                         </table>
 
                                     @endif
@@ -422,32 +679,75 @@
                                 @foreach ($daypart_discounts as $daypart_discount)
 
                                     <div class="modal fade" id="myModal{{ $daypart_discount->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                                        <div class="modal-dialog" role="document">
+                                        <div class="modal-dialog modal-lg" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                                    <h4 class="modal-title" id="myModalLabel">Edit Discount - <strong>{{ $daypart_discount->day_part }}</strong></h4>
+                                                    <h4 class="modal-title" id="myModalLabel">Edit Discount - <strong>{{ $daypart_discount->discount_type_sub_value }}</strong></h4>
                                                 </div>
 
-                                                <form method="POST" class="selsec" action="{{ route('discount.update', ['discount' => $time_discount->id]) }}">
+                                                <form method="POST" class="selsec" action="{{ route('discount.update', ['discount' => $daypart_discount->id]) }}">
                                                     {{ csrf_field() }}
-                                                    <input type="hidden" name="type" value="3">
-                                                    <input type="hidden" name="type_value" value="{{ $daypart_discount->day_part }}">
+                                                    <input type="hidden" name="discount_type_id" value="{{ $types[3]->id }}">
+                                                    <input type="hidden" name="discount_type_value" value="{{ $daypart_discount->discount_type_value }}">
+                                                    <input type="hidden" name="discount_type_sub_value" value="{{ $daypart_discount->discount_type_sub_value }}">
+
                                                     <div class="modal-body">
-                                                        <div class="form-group">
-                                                            <label for="discount_value">Discount Value Percent</label>
-                                                            <input type="number" name="discount_value_percent" value="{{ $daypart_discount->discount_value_percent }}" class="form-control" />
+
+                                                        <div class="row">
+                                                            <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                    <label for="discount_value">Percent Value</label>
+                                                                    <input type="number" name="percent_value" value="{{ $daypart_discount->percent_value }}" class="form-control" />
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                    <label for="discount_value">Discount% Start Date</label>
+                                                                    <input type="number" name="percent_start_date" value="{{ date('Y-m-d', $daypart_discount->percent_start_date) }}" class="form-control flatpickr" />
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                    <label for="discount_value">Discount% Stop Date</label>
+                                                                    <input type="number" name="percent_stop_date" value="{{ date('Y-m-d', $daypart_discount->percent_stop_date) }}" class="form-control flatpickr" />
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                        <div class="form-group">
-                                                            <label for="discount_value">Discount Value Number</label>
-                                                            <input type="number" name="discount_value_number" value="{{ $daypart_discount->discount_value_number }}" class="form-control" />
+
+                                                        <div class="row">
+                                                            <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                    <label for="discount_value">Amount Value</label>
+                                                                    <input type="number" name="value" value="{{ $daypart_discount->value }}" class="form-control" />
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                    <label for="discount_value">Value Start Date</label>
+                                                                    <input type="number" name="value_start_date" value="{{ date('Y-m-d', $daypart_discount->value_start_date) }}" class="form-control flatpickr" />
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                    <label for="discount_value">Value Stop Date</label>
+                                                                    <input type="number" name="value_stop_date" value="{{ date('Y-m-d', $daypart_discount->value_stop_date) }}" class="form-control flatpickr" />
+                                                                </div>
+                                                            </div>
                                                         </div>
+
                                                     </div>
+
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                                         <input type="submit" value="Update Discount" class="btn btn-primary" />
                                                     </div>
                                                 </form>
+
                                             </div>
                                         </div>
                                     </div>
@@ -457,28 +757,55 @@
 
                             <div class="tab-pane" id="price">
                                 <div class="add-disc">
-                                    <div class="col-md-2">
-                                        <h4>Add a Discount</h4>
-                                    </div>
+
                                     <form action="{{ route('discount.store') }}" method="POST">
                                         {{ csrf_field() }}
-                                        <input type="hidden" name="type" value="5">
-                                        <div class="col-md-2">
-                                            <input type="text" name="price_range_from" placeholder="Start">
-                                        </div>
-                                        <div class="col-md-2">
-                                            <input type="text" name="price_range_to" placeholder="End">
-                                        </div>
-                                        <div class="col-md-2">
-                                            <input type="number" name="discount_value_percent" placeholder="% Discount">
-                                        </div>
-                                        <div class="col-md-2">
-                                            <input type="number" name="discount_value_number" placeholder="Discount N">
-                                        </div>
-                                        <div class="col-md-2">
-                                            <input type="submit" value="Add" name="">
+                                        <input type="hidden" name="discount_type_id" value="{{ $types[4]->id }}">
+                                        <div class="row">
+                                            <div class="row" style="margin-bottom: 20px;">
+                                                <div class="col-md-2">
+                                                    <h4>Add a Discount</h4>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input type="number" name="discount_type_value" placeholder="Min. Value">
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input type="number" name="percent_value" placeholder="Percent Value">
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input type="text" name="percent_start_date" placeholder="Percent Start Date" class="form-control flatpickr">
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input type="text" name="percent_stop_date" placeholder="Percent Stop Date" class="form-control flatpickr">
+                                                </div>
+                                            </div>
+                                            <div class="row" style="margin-bottom: 20px;">
+                                                <div class="col-md-2"></div>
+                                                <div class="col-md-2">
+                                                    <input type="number" name="discount_type_sub_value" placeholder="Max. Value">
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input type="number" name="value" placeholder="Amount Value">
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input type="text" name="value_start_date" placeholder="Value Start Date" class="form-control flatpickr">
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input type="text" name="value_stop_date" placeholder="Value Stop Date" class="form-control flatpickr">
+                                                </div>
+                                            </div>
+                                            <div class="row" style="margin-bottom: 20px;">
+                                                <div class="col-md-2"></div>
+                                                <div class="col-md-2"></div>
+                                                <div class="col-md-2"></div>
+                                                <div class="col-md-2"></div>
+                                                <div class="col-md-2">
+                                                    <input type="submit" value="Add" name="">
+                                                </div>
+                                            </div>
                                         </div>
                                     </form>
+
                                 </div>
 
                                 <div class="box-body">
@@ -487,33 +814,37 @@
                                         <h4>OOPs!!!, You have price discounts on your system, please create one</h4>
 
                                     @else
+
                                         <table id="example1" class="table table-bordered table-striped">
                                             <thead>
-                                                <tr>
-                                                    <th>Min Value</th>
-                                                    <th>Max Value</th>
-                                                    <th>Discount %</th>
-                                                    <th>Discount N</th>
-                                                    <th>Actions</th>
-                                                </tr>
+                                            <tr>
+                                                <th>Price Discount</th>
+                                                <th>Discount %</th>
+                                                <th>Discount % Start Date</th>
+                                                <th>Discount % Stop Date</th>
+                                                <th>Discount N</th>
+                                                <th>Value Start Date</th>
+                                                <th>Value Stop Date</th>
+                                                <th>Action</th>
+                                            </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach($price_discounts as $price_discount)
-                                                    <tr>
-                                                        <td>{{ $price_discount->price_range_from }}</td>
-                                                        <td>{{ $price_discount->price_range_to }}</td>
-                                                        <td>{{ $price_discount->discount_value_percent }}%</td>
-                                                        <td>&#8358;{{ $price_discount->discount_value_number }}</td>
-                                                        <td>
-                                                            <a href="#" style="font-size: 16px"><span class="label label-warning" data-toggle="modal" data-target="#myModal{{ $price_discount->id }}" style="cursor: pointer;"> Edit</span></a>
-                                                            <a href="{{ url('discount/' . $price_discount->id . '/delete') }}" id="a_del" style="font-size: 16px"><span class="label label-danger"> <i class="fa fa-trash"></i></span></a>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
+                                            @foreach ($price_discounts as $price_discount)
+                                                <tr>
+                                                    <td>{{ $price_discount->discount_type_value }} - {{ $price_discount->discount_type_sub_value }}</td>
+                                                    <td>{{ $price_discount->percent_value }}%</td>
+                                                    <td>{{ date('Y-m-d', $price_discount->percent_start_date) }}</td>
+                                                    <td>{{ date('Y-m-d', $price_discount->percent_stop_date) }}</td>
+                                                    <td>&#8358;{{ $price_discount->value }}</td>
+                                                    <td>{{ date('Y-m-d', $price_discount->value_start_date) }}</td>
+                                                    <td>{{ date('Y-m-d', $price_discount->value_start_date) }}</td>
+                                                    <td>
+                                                        <a href="#" style="font-size: 16px"><span class="label label-warning" data-toggle="modal" data-target="#myModal{{ $price_discount->id }}" style="cursor: pointer;"> Edit</span></a>
+                                                        <a href="{{ url('discount/' . $price_discount->id . '/delete') }}" id="a_del" style="font-size: 16px"><span class="label label-danger"> <i class="fa fa-trash"></i></span></a>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
                                             </tbody>
-                                            <tfoot>
-
-                                            </tfoot>
                                         </table>
 
                                     @endif
@@ -522,36 +853,91 @@
                                 @foreach ($price_discounts as $price_discount)
 
                                     <div class="modal fade" id="myModal{{ $price_discount->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                                        <div class="modal-dialog" role="document">
+                                        <div class="modal-dialog modal-lg" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                                     <h4 class="modal-title" id="myModalLabel">
-                                                        Edit Discount - (<strong>{{ $price_discount->price_range_from }} - {{ $price_discount->price_range_to }}</strong>)
+                                                        Edit Discount - (<strong>{{ $price_discount->discount_type_value }} - {{ $price_discount->discount_type_sub_value }}</strong>)
                                                     </h4>
                                                 </div>
 
-                                                <form method="" class="selsec" action="{{ route('discount.update', ['discount' => $price_discount->id]) }}">
+                                                <form method="POST" class="selsec" action="{{ route('discount.update', ['discount' => $price_discount->id]) }}">
                                                     {{ csrf_field() }}
-                                                    <input type="hidden" name="type" value="5">
+                                                    <input type="hidden" name="discount_type_id" value="{{ $types[4]->id }}">
+
                                                     <div class="modal-body">
-                                                        <div class="form-group">
-                                                            <label for="discount_value">Min Value</label>
-                                                            <input type="number" name="price_range_from" value="{{ $price_discount->price_range_from }}" class="form-control" />
+
+                                                        <div class="row">
+
+                                                            <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                    <label for="discount_value">Min. Value</label>
+                                                                    <input type="number" name="discount_type_value" value="{{ $price_discount->discount_type_value }}" class="form-control">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                    <label for="discount_value">Discount% Value</label>
+                                                                    <input type="number" name="percent_value" value="{{ $price_discount->percent_value }}" class="form-control" />
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                    <label for="discount_value">Amount Value</label>
+                                                                    <input type="number" name="value" value="{{ $price_discount->value }}" class="form-control" />
+                                                                </div>
+                                                            </div>
+
                                                         </div>
-                                                        <div class="form-group">
-                                                            <label for="discount_value">Max Value</label>
-                                                            <input type="number" name="price_range_to" value="{{ $price_discount->price_range_to }}" class="form-control" />
+
+                                                        <div class="row">
+                                                            <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                    <label for="discount_value">Max. Value</label>
+                                                                    <input type="number" name="discount_type_sub_value" value="{{ $price_discount->discount_type_sub_value }}" class="form-control">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                    <label for="discount_value">Discount% Start Date</label>
+                                                                    <input type="number" name="percent_start_date" value="{{ date('Y-m-d', $price_discount->percent_start_date) }}" class="form-control flatpickr" />
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                    <label for="discount_value">Value Start Date</label>
+                                                                    <input type="number" name="value_start_date" value="{{ date('Y-m-d', $price_discount->value_start_date) }}" class="form-control flatpickr" />
+                                                                </div>
+                                                            </div>
+
                                                         </div>
-                                                        <div class="form-group">
-                                                            <label for="discount_value">Discount Value Percent</label>
-                                                            <input type="number" name="discount_value_percent" value="{{ $price_discount->discount_value_percent }}" class="form-control" />
+
+                                                        <div class="row">
+
+                                                            <div class="col-md-4"></div>
+
+                                                            <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                    <label for="discount_value">Discount% Stop Date</label>
+                                                                    <input type="number" name="percent_stop_date" value="{{ date('Y-m-d', $price_discount->percent_stop_date) }}" class="form-control flatpickr" />
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                    <label for="discount_value">Value Stop Date</label>
+                                                                    <input type="number" name="value_stop_date" value="{{ date('Y-m-d', $price_discount->value_stop_date) }}" class="form-control flatpickr" />
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                        <div class="form-group">
-                                                            <label for="discount_value">Discount Value Number</label>
-                                                            <input type="number" name="discount_value_number" value="{{ $price_discount->discount_value_number }}" class="form-control" />
-                                                        </div>
+
                                                     </div>
+
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                                         <input type="submit" value="Update Discount" class="btn btn-primary" />
@@ -567,31 +953,59 @@
                             <div class="tab-pane" id="pslot">
 
                                 <div class="add-disc">
-                                    <div class="col-md-2">
-                                        <h4>Add a Discount </h4>
-                                    </div>
+
                                     <form action="{{ route('discount.store') }}" method="POST">
                                         {{ csrf_field() }}
-                                        <input type="hidden" name="type" value="6">
-                                        <div class="col-md-2">
-                                            <input type="text" name="price_slot_from" placeholder="Start">
-                                        </div>
-                                        <div class="col-md-2">
-                                            <input type="text" name="price_slot_to" placeholder="End">
-                                        </div>
-                                        <div class="col-md-2">
-                                            <input type="number" name="discount_value_percent" placeholder="% Discount">
-                                        </div>
-                                        <div class="col-md-2">
-                                            <input type="number" name="discount_value_number" placeholder="Discount N">
-                                        </div>
-                                        <div class="col-md-2">
-                                            <input type="submit" value="Add" name="">
+                                        <input type="hidden" name="discount_type_id" value="{{ $types[5]->id }}">
+                                        <div class="row">
+                                            <div class="row" style="margin-bottom: 20px;">
+                                                <div class="col-md-2">
+                                                    <h4>Add a Discount</h4>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input type="number" name="discount_type_value" placeholder="Min. Value">
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input type="number" name="percent_value" placeholder="Percent Value">
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input type="text" name="percent_start_date" placeholder="Percent Start Date" class="form-control flatpickr">
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input type="text" name="percent_stop_date" placeholder="Percent Stop Date" class="form-control flatpickr">
+                                                </div>
+                                            </div>
+                                            <div class="row" style="margin-bottom: 20px;">
+                                                <div class="col-md-2"></div>
+                                                <div class="col-md-2">
+                                                    <input type="number" name="discount_type_sub_value" placeholder="Max. Value">
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input type="number" name="value" placeholder="Amount Value">
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input type="text" name="value_start_date" placeholder="Value Start Date" class="form-control flatpickr">
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input type="text" name="value_stop_date" placeholder="Value Stop Date" class="form-control flatpickr">
+                                                </div>
+                                            </div>
+                                            <div class="row" style="margin-bottom: 20px;">
+                                                <div class="col-md-2"></div>
+                                                <div class="col-md-2"></div>
+                                                <div class="col-md-2"></div>
+                                                <div class="col-md-2"></div>
+                                                <div class="col-md-2">
+                                                    <input type="submit" value="Add" name="">
+                                                </div>
+                                            </div>
                                         </div>
                                     </form>
+
                                 </div>
 
                                 <div class="box-body">
+
                                     @if(count($pslot_discounts) === 0)
 
                                         <h4>OOPs!!!, You have P. Slots discounts on your system, please create one</h4>
@@ -601,72 +1015,132 @@
                                         <table id="example1" class="table table-bordered table-striped">
                                             <thead>
                                             <tr>
-                                                <th>Min Value</th>
-                                                <th>Max Value</th>
+                                                <th>P. Slot Discount</th>
                                                 <th>Discount %</th>
+                                                <th>Discount % Start Date</th>
+                                                <th>Discount % Stop Date</th>
                                                 <th>Discount N</th>
+                                                <th>Value Start Date</th>
+                                                <th>Value Stop Date</th>
                                                 <th>Action</th>
                                             </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach($pslot_discounts as $pslot_discount)
-                                                    <tr>
-                                                        <td>{{ $pslot_discount->p_slot_from }}</td>
-                                                        <td>{{ $pslot_discount->p_slot_to }}</td>
-                                                        <td>{{ $pslot_discount->discount_value_percent }}%</td>
-                                                        <td>&#8358;{{ $pslot_discount->discount_value_number }}</td>
-                                                        <td>
-                                                            <a href="#" style="font-size: 16px"><span class="label label-warning" data-toggle="modal" data-target="#myModal{{ $pslot_discount->id }}" style="cursor: pointer;"> Edit</span></a>
-                                                            <a href="{{ url('discount/' . $pslot_discount->id . '/delete') }}" id="a_del" style="font-size: 16px"><span class="label label-danger"> <i class="fa fa-trash"></i></span></a>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
+                                            @foreach ($pslot_discounts as $pslot_discount)
+                                                <tr>
+                                                    <td>{{ $pslot_discount->discount_type_value }} - {{ $pslot_discount->discount_type_sub_value }}</td>
+                                                    <td>{{ $pslot_discount->percent_value }}%</td>
+                                                    <td>{{ date('Y-m-d', $pslot_discount->percent_start_date) }}</td>
+                                                    <td>{{ date('Y-m-d', $pslot_discount->percent_stop_date) }}</td>
+                                                    <td>&#8358;{{ $pslot_discount->value }}</td>
+                                                    <td>{{ date('Y-m-d', $pslot_discount->value_start_date) }}</td>
+                                                    <td>{{ date('Y-m-d', $pslot_discount->value_stop_date) }}</td>
+                                                    <td>
+                                                        <a href="#" style="font-size: 16px"><span class="label label-warning" data-toggle="modal" data-target="#myModal{{ $pslot_discount->id }}" style="cursor: pointer;"> Edit</span></a>
+                                                        <a href="{{ url('discount/' . $pslot_discount->id . '/delete') }}" id="a_del" style="font-size: 16px"><span class="label label-danger"> <i class="fa fa-trash"></i></span></a>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
                                             </tbody>
-                                            <tfoot>
-
-                                            </tfoot>
                                         </table>
+
                                     @endif
                                 </div>
 
                                 @foreach ($pslot_discounts as $pslot_discount)
 
                                     <div class="modal fade" id="myModal{{ $pslot_discount->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                                        <div class="modal-dialog" role="document">
+                                        <div class="modal-dialog modal-lg" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                                     <h4 class="modal-title" id="myModalLabel">
-                                                        Edit Discount - (<strong>{{ $pslot_discount->p_slot_from }} - {{ $pslot_discount->p_slot_to }}</strong>)
+                                                        Edit Discount - (<strong>{{ $pslot_discount->discount_type_value }} - {{ $pslot_discount->discount_type_sub_value }}</strong>)
                                                     </h4>
                                                 </div>
 
                                                 <form method="POST" class="selsec" action="{{ route('discount.update', ['discount' => $pslot_discount->id]) }}">
                                                     {{ csrf_field() }}
-                                                    <input type="hidden" name="type" value="6">
+                                                    <input type="hidden" name="discount_type_id" value="{{ $types[5]->id }}">
+
                                                     <div class="modal-body">
-                                                        <div class="form-group">
-                                                            <label for="discount_value">Min Value</label>
-                                                            <input type="number" name="price_slot_from" value="{{ $pslot_discount->p_slot_from }}" class="form-control" />
+
+                                                        <div class="row">
+
+                                                            <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                    <label for="discount_value">Min. Value</label>
+                                                                    <input type="number" name="discount_type_value" value="{{ $pslot_discount->discount_type_value }}" class="form-control">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                    <label for="discount_value">Discount% Value</label>
+                                                                    <input type="number" name="percent_value" value="{{ $pslot_discount->percent_value }}" class="form-control" />
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                    <label for="value">Amount Value</label>
+                                                                    <input type="number" name="value" value="{{ $pslot_discount->value }}" class="form-control" />
+                                                                </div>
+                                                            </div>
+
                                                         </div>
-                                                        <div class="form-group">
-                                                            <label for="discount_value">Max Value</label>
-                                                            <input type="number" name="price_slot_to" value="{{ $pslot_discount->p_slot_to }}" class="form-control" />
+
+                                                        <div class="row">
+                                                            <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                    <label for="discount_type_sub_value">Max. Value</label>
+                                                                    <input type="number" name="discount_type_sub_value" value="{{ $pslot_discount->discount_type_sub_value }}" class="form-control">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                    <label for="percent_start_date">Discount% Start Date</label>
+                                                                    <input type="text" name="percent_start_date" value="{{ date('Y-m-d', $pslot_discount->percent_start_date) }}" class="form-control flatpickr" />
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                    <label for="value_start_date">Value Start Date</label>
+                                                                    <input type="text" name="value_start_date" value="{{ date('Y-m-d', $pslot_discount->value_start_date) }}" class="form-control flatpickr" />
+                                                                </div>
+                                                            </div>
+
                                                         </div>
-                                                        <div class="form-group">
-                                                            <label for="discount_value">Discount Value Percent</label>
-                                                            <input type="number" name="discount_value_percent" value="{{ $pslot_discount->discount_value_percent }}" class="form-control" />
+
+                                                        <div class="row">
+
+                                                            <div class="col-md-4"></div>
+
+                                                            <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                    <label for="percent_stop_date">Discount% Stop Date</label>
+                                                                    <input type="number" name="percent_stop_date" value="{{ date('Y-m-d', $pslot_discount->percent_stop_date) }}" class="form-control flatpickr" />
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                    <label for="value_stop_date">Value Stop Date</label>
+                                                                    <input type="text" name="value_stop_date" value="{{ date('Y-m-d', $pslot_discount->value_stop_date) }}" class="form-control flatpickr" />
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                        <div class="form-group">
-                                                            <label for="discount_value">Discount Value Number</label>
-                                                            <input type="number" name="discount_value_number" value="{{ $pslot_discount->discount_value_number }}" class="form-control" />
-                                                        </div>
+
                                                     </div>
+
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                                         <input type="submit" value="Update Discount" class="btn btn-primary" />
                                                     </div>
                                                 </form>
+
                                             </div>
                                         </div>
                                     </div>
@@ -693,6 +1167,8 @@
 
 @section('scripts')
 
+    <script src="https://unpkg.com/flatpickr"></script>
+
     <script>
         function ConfirmDelete() {
             var x = confirm("Are you sure you want to delete?");
@@ -705,6 +1181,33 @@
         $("a#a_del").click(function(){
             return ConfirmDelete();
         });
+
+        $(document).ready(function () {
+
+            $('#discount_type_value').change(function () {
+                var discount_type_value = $("#discount_type_value option:selected" ).text();
+
+
+                var c = $("#hey").value = discount_type_value;
+                console.log(c+"jj");
+            });
+
+            $("#example1").DataTable();
+            $('#example2').DataTable({
+                "paging": true,
+                "lengthChange": false,
+                "searching": false,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false
+            });
+
+        })
+
+        flatpickr(".flatpickr", {
+            altInput: true
+        });
+
     </script>
 
 @stop

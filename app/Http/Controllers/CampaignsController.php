@@ -463,4 +463,6 @@ class CampaignsController extends Controller
         $del = \DB::select("DELETE FROM carts WHERE rate_id = '$rate_id'");
         return redirect()->back()->with('success', trans('app.campaign'));
     }
+
+
 }

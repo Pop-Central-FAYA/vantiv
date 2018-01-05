@@ -211,17 +211,21 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/', 'SecondsController@index')->name('seconds.all');
         });
 
-        Route::group(['prefix' => 'discount'], function () {
-            Route::get('/', 'SecondsController@discount')->name('discount.all');
-        });
+        /**
+         * Discounts
+         */
+        Route::get('discounts', ['as' => 'discount.index', 'uses' => 'DiscountController@index']);
+        Route::post('discount/store', ['as' => 'discount.store', 'uses' => 'DiscountController@store']);
+        Route::post('discount/{discount}/update', ['as' => 'discount.update', 'uses' => 'DiscountController@update']);
+        Route::get('discount/{discount}/delete', ['as' => 'discount.delete', 'uses' => 'DiscountController@destroy']);
 
         /**
          * MPOs
          */
-
         Route::group(['prefix' => 'mpos'], function () {
             Route::get('all', 'MpoController@index')->name('all-mpos');
             Route::get('pending', 'MpoController@pending_mpos')->name('pending-mpos');
+            Route::post('approve/{is_file_accepted}/{broadcaster_id}/{file_code}/{campaign_id}', ['as' => 'files.update', 'uses' => 'MpoController@update_file']);
         });
 
         Route::group(['prefix' => 'reports'], function () {

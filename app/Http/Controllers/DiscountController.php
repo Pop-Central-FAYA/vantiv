@@ -9,54 +9,89 @@ class DiscountController extends Controller
 {
     public function index()
     {
-        $agency_discounts = json_decode(Api::get_discounts_by_type(1))->data;
-        $brand_discounts = json_decode(Api::get_discounts_by_type(2))->data;
-        $time_discounts = json_decode(Api::get_discounts_by_type(3))->data;
-        $daypart_discounts = json_decode(Api::get_discounts_by_type(4))->data;
-        $price_discounts = json_decode(Api::get_discounts_by_type(5))->data;
-        $pslot_discounts = json_decode(Api::get_discounts_by_type(6))->data;
+        $hourly_ranges = Api::get_ratecard_preloaded()->data->hourly_range;
+        $day_parts = Api::get_ratecard_preloaded()->data->day_parts;
+        $types = Api::get_ratecard_preloaded()->data->discount_types;
+        $agencies = Api::get_ratecard_preloaded()->data->agency;
 
-        $hourly_ranges = json_decode(Api::get_hourly_range())->data;
-        $day_parts = json_decode(Api::get_dayParts())->data;
+        $agency_discounts = json_decode(Api::get_discounts_by_type($types[0]->id))->data;
+        $brand_discounts = json_decode(Api::get_discounts_by_type($types[1]->id))->data;
+        $time_discounts = json_decode(Api::get_discounts_by_type($types[2]->id))->data;
+        $daypart_discounts = json_decode(Api::get_discounts_by_type($types[3]->id))->data;
+        $price_discounts = json_decode(Api::get_discounts_by_type($types[4]->id))->data;
+        $pslot_discounts = json_decode(Api::get_discounts_by_type($types[5]->id))->data;
 
         return view('discounts.index',
             compact(
                 'agency_discounts', 'brand_discounts', 'time_discounts',
                 'daypart_discounts', 'price_discounts', 'pslot_discounts',
-                'hourly_ranges','day_parts'
+                'hourly_ranges','day_parts', 'types', 'agencies'
             )
         );
     }
 
-    public function store(Request $request)
+    public function searchObject($categories, $id, $index)
     {
-        $number_value = (int) $request->discount_value_number;
-        $percent_value = (int) $request->discount_value_percent;
-
-        if ($number_value !== 0 && $percent_value !== 0) {
-            $request->discount_type = 3;
-        } elseif ($percent_value !== 0 && $number_value == 0) {
-            $request->discount_type = 1;
-        } elseif ($number_value !== 0 && $percent_value == 0) {
-            $request->discount_type = 2;
-        } else {
-            $request->discount_type = null;
+        foreach ($categories as $category) {
+            if ($id == $category->id) {
+                return $category->$index;
+            }
         }
 
-        $type = $request->type;
-        $discount_type = $request->discount_type;
-        $discount_value_number = $request->discount_value_number;
-        $discount_value_percent = $request->discount_value_percent;
-        $type_value = $request->type_value;
-        $price_range_from = $request->price_range_from;
-        $price_range_to = $request->price_range_to;
-        $price_slot_from = $request->price_slot_from;
-        $price_slot_to = $request->price_slot_to;
+        return false;
+    }
+
+    public function store(Request $request)
+    {
+        $hourly_ranges = Api::get_ratecard_preloaded()->data->hourly_range;
+        $day_parts = Api::get_ratecard_preloaded()->data->day_parts;
+        $types = Api::get_ratecard_preloaded()->data->discount_types;
+        $agencies = Api::get_ratecard_preloaded()->data->agency;
+
+        $number_value = (int) $request->value;
+        $percent_value = (int) $request->percent_value;
+
+        $classes = Api::get_ratecard_preloaded()->data->discount_classes;
+        $types = Api::get_ratecard_preloaded()->data->discount_types;
+
+        if ($number_value !== 0 && $percent_value !== 0) {
+            $request->discount_class_id = $classes[2]->id;
+        } elseif ($percent_value !== 0 && $number_value == 0) {
+            $request->discount_class_id = $classes[0]->id;
+        } elseif ($number_value !== 0 && $percent_value == 0) {
+            $request->discount_class_id = $classes[1]->id;
+        } else {
+            $request->discount_class_id = null;
+        }
+
+        $discount_type_id = $request->discount_type_id;
+        $discount_class_id = $request->discount_class_id;
+        $discount_type_value = $request->discount_type_value;
+        $percent_value = (int) $request->percent_value;
+        $percent_start_date = strtotime($request->percent_start_date);
+        $percent_stop_date = strtotime($request->percent_stop_date);
+        $value = (int) $request->value;
+        $value_start_date = strtotime($request->value_start_date);
+        $value_stop_date = strtotime($request->value_stop_date);
+
+        if ($discount_type_id == $types[0]->id) {
+            $discount_type_sub_value = $this->searchObject($agencies, $discount_type_value, 'brand');
+        } elseif ($discount_type_id == $types[1]->id) {
+            $discount_type_sub_value = null;
+        } elseif ($discount_type_id == $types[2]->id) {
+            $discount_type_sub_value = $this->searchObject($hourly_ranges, $discount_type_value, 'time_range');
+        } elseif ($discount_type_id == $types[3]->id) {
+            $discount_type_sub_value = $this->searchObject($day_parts, $discount_type_value, 'day_parts');
+        } elseif ($discount_type_id == $types[4]->id || $discount_type_id == $types[5]->id) {
+            $discount_type_sub_value = $request->discount_type_sub_value;
+        } else {
+            $discount_type_sub_value = null;
+        }
 
         $discount = json_decode(Api::create_discount(
-            $type, $discount_type, $discount_value_number,
-            $discount_value_percent, $type_value, $price_range_from,
-            $price_range_to, $price_slot_from, $price_slot_to
+            $discount_type_value, $percent_value, $percent_start_date,
+            $percent_stop_date, $value, $value_start_date, $value_stop_date,
+            $discount_class_id, $discount_type_id, $discount_type_sub_value
         ));
 
         if($discount->status === false) {
@@ -68,34 +103,54 @@ class DiscountController extends Controller
 
     public function update(Request $request, $discount)
     {
-        $number_value = (int) $request->discount_value_number;
-        $percent_value = (int) $request->discount_value_percent;
+        $number_value = (int) $request->value;
+        $percent_value = (int) $request->percent_value;
+
+        $classes = Api::get_ratecard_preloaded()->data->discount_classes;
+        $types = Api::get_ratecard_preloaded()->data->discount_types;
+
+        $hourly_ranges = Api::get_ratecard_preloaded()->data->hourly_range;
+        $day_parts = Api::get_ratecard_preloaded()->data->day_parts;
+        $agencies = Api::get_ratecard_preloaded()->data->agency;
 
         if ($number_value !== 0 && $percent_value !== 0) {
-            $request->discount_type = 3;
+            $request->discount_class_id = $classes[2]->id;
         } elseif ($percent_value !== 0 && $number_value == 0) {
-            $request->discount_type = 1;
+            $request->discount_class_id = $classes[0]->id;
         } elseif ($number_value !== 0 && $percent_value == 0) {
-            $request->discount_type = 2;
+            $request->discount_class_id = $classes[1]->id;
         } else {
-            $request->discount_type = null;
+            $request->discount_class_id = null;
         }
 
-        $type = (int) $request->type;
-        $discount_type = $request->discount_type;
-        $discount_value_number = $number_value;
-        $discount_value_percent = $percent_value;
-        $type_value = $request->type_value;
-        $price_range_from = $request->price_range_from;
-        $price_range_to = $request->price_range_to;
-        $price_slot_from = $request->price_slot_from;
-        $price_slot_to = $request->price_slot_to;
+        $discount_type_id = $request->discount_type_id;
+        $discount_class_id = $request->discount_class_id;
+        $discount_type_value = $request->discount_type_value;
+        $percent_value = (int) $request->percent_value;
+        $percent_start_date = strtotime($request->percent_start_date);
+        $percent_stop_date = strtotime($request->percent_stop_date);
+        $value = (int) $request->value;
+        $value_start_date = strtotime($request->value_start_date);
+        $value_stop_date = strtotime($request->value_stop_date);
+
+        if ($discount_type_id == $types[0]->id) {
+            $discount_type_sub_value = $this->searchObject($agencies, $discount_type_value, 'brand');
+        } elseif ($discount_type_id == $types[1]->id) {
+            $discount_type_sub_value = null;
+        } elseif ($discount_type_id == $types[2]->id) {
+            $discount_type_sub_value = $this->searchObject($hourly_ranges, $discount_type_value, 'time_range');
+        } elseif ($discount_type_id == $types[3]->id) {
+            $discount_type_sub_value = $this->searchObject($day_parts, $discount_type_value, 'day_parts');
+        } elseif ($discount_type_id == $types[4]->id || $discount_type_id == $types[5]->id) {
+            $discount_type_sub_value = $request->discount_type_sub_value;
+        } else {
+            $discount_type_sub_value = null;
+        }
 
         $discount = json_decode(Api::update_discount(
-            $discount, $type, $discount_type,
-            $discount_value_number, $discount_value_percent, $type_value,
-            $price_range_from,
-            $price_range_to, $price_slot_from, $price_slot_to
+            $discount, $discount_type_value, $percent_value, $percent_start_date,
+            $percent_stop_date, $value, $value_start_date, $value_stop_date,
+            $discount_class_id, $discount_type_id, $discount_type_sub_value
         ));
 
         if($discount->status === false) {

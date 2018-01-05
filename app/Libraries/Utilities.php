@@ -15,6 +15,9 @@ class Utilities {
             case 'api':
                 return DB::connection('mysql-2');
                 break;
+            case 'reports':
+                return DB::connection('api_db');
+                break;
             default;
                 return null;
                 break;
