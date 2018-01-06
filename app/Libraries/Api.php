@@ -42,6 +42,10 @@ Class Api
             'email' => $username,
             'password' => $password
         ];
+        $status = json_decode($response);
+        if($status->status == false){
+            return back()->with('error','Invalid username or password');
+        }
         ApiLog::save_activity_log($req, $response, $auth_url);
         $data = json_decode($response, true);
         session(['encrypted_token' => $data['data']['token']]);
