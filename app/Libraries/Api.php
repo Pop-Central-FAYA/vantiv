@@ -123,8 +123,8 @@ Class Api
     {
         $day = $request->days;
         $premium = (boolean)json_decode(strtolower($request->premium));
-        $start_date = strtotime($request->start_date);
-        $end_date = strtotime($request->end_date);
+        $start_date = $request->start_date;
+        $end_date = $request->end_date;
         $hourly_range = $request->hourly_range;
         $day = $request->days;
         $time = $request->time;
@@ -440,8 +440,8 @@ Class Api
             'user_id' => $user_id,
             'channel' => $first->channel,
             'brand' => $first->brand,
-            'start_date' => strtotime($first->start_date),
-            'stop_date' => strtotime($first->end_date),
+            'start_date' => $first->start_date,
+            'stop_date' => $first->end_date,
             'name' => $first->name,
             'product' => $first->product,
             'payment_method' => $request->payment,
@@ -456,8 +456,8 @@ Class Api
                 'user_id' => $user_id,
                 'channel' => 'TV',
                 'brand' => $first->brand,
-                'start_date' => strtotime($first->start_date),
-                'stop_date' => strtotime($first->end_date),
+                'start_date' => $first->start_date,
+                'stop_date' => $first->end_date,
                 'name' => $first->name,
                 'product' => $first->product,
                 'payment_method' => $request->payment,
@@ -470,8 +470,8 @@ Class Api
             'user_id' => $user_id,
             'channel' => 'TV',
             'brand' => $first->brand,
-            'start_date' => strtotime($first->start_date),
-            'stop_date' => strtotime($first->end_date),
+            'start_date' => $first->start_date,
+            'stop_date' => $first->end_date,
             'name' => $first->name,
             'product' => $first->product,
             'payment_method' => $request->payment,
@@ -525,7 +525,7 @@ Class Api
     }
 
     public static function session_id(){
-        $id = strtotime(date('Y-m-d H:i:s')).mt_rand(1000000000000,999999999999999);
+        $id = date('Y-m-d H:i:s').mt_rand(1000000000000,999999999999999);
         return $id;
     }
 
