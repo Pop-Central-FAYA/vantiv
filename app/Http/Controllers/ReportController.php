@@ -28,7 +28,7 @@ class ReportController extends Controller
         {
             $start = strtotime($request->start_date);
             $end = strtotime($request->stop_date);
-            $campaign = Utilities::switch_db('api')->select("SELECT COUNT(id) as total_campaign, time_created as `time`, id, walkins_id, SUM(adslots) as total_adslot from campaigns WHERE broadcaster = '$broadcaster' AND walkins_id != '' AND time_created BETWEEN '$start' AND '$end' GROUP BY walkins_id");
+            $campaign = Utilities::switch_db('api')->select("SELECT COUNT(id) as total_campaign, time_created as `time`, id, walkins_id, SUM(adslots) as total_adslot from campaigns WHERE broadcaster = '$broadcaster' AND walkins_id != '' AND time_created BETWEEN '$start' AND '$end' GROUP BY walkins_id LIMIT 10");
             foreach ($campaign as $c)
             {
                 $user = Utilities::switch_db('api')->select("SELECT firstname, lastname from users where id='$c->walkins_id'");
@@ -39,14 +39,14 @@ class ReportController extends Controller
                     'total_adslot' => $c->total_adslot,
                     'customer_name' => $user[0]->firstname. ' ' .$user[0]->lastname,
                     'payment' => '&#8358;'.number_format($payments[0]->total_price, 2),
-                    'date' => date('d/m/Y', $c->time),
+                    'date' => ($c->time),
                 ];
                 $j++;
             }
             return $datatables->collection($camp)
                 ->make(true);
         }else{
-            $campaign = Utilities::switch_db('api')->select("SELECT COUNT(id) as total_campaign, time_created as `time`, id, walkins_id, SUM(adslots) as total_adslot from campaigns WHERE broadcaster = '$broadcaster' AND walkins_id != '' GROUP BY walkins_id");
+            $campaign = Utilities::switch_db('api')->select("SELECT COUNT(id) as total_campaign, time_created as `time`, id, walkins_id, SUM(adslots) as total_adslot from campaigns WHERE broadcaster = '$broadcaster' AND walkins_id != '' GROUP BY walkins_id LIMIT 10");
             foreach ($campaign as $c)
             {
                 $user = Utilities::switch_db('api')->select("SELECT firstname, lastname from users where id='$c->walkins_id'");
@@ -57,7 +57,7 @@ class ReportController extends Controller
                     'total_adslot' => $c->total_adslot,
                     'customer_name' => $user[0]->firstname. ' ' .$user[0]->lastname,
                     'payment' => '&#8358;'.number_format($payments[0]->total_price, 2),
-                    'date' => date('d/m/Y', $c->time),
+                    'date' => ($c->time),
                 ];
                 $j++;
             }
@@ -74,21 +74,21 @@ class ReportController extends Controller
         $start = strtotime($request->start_date);
         $end = strtotime($request->stop_date);
         $invoice_array = [];
+        $j = 1;
         if($request->has('start_date') && $request->has('stop_date'))
         {
             $inv = Utilities::switch_db('api')->select("SELECT * from invoices WHERE broadcaster_id = '$broadcaster' AND time_created BETWEEN '$start' AND '$end'");
-            $j = 1;
             foreach ($inv as $i)
             {
                 $customer_name = Utilities::switch_db('api')->select("SELECT firstname,lastname from users where id='$i->walkins_id'");
-                $campaign_det = Utilities::switch_db('api')->select("SELECT `name` as campaign_name, stop_date from campaigns where id='$i->campaign_id'");
+                $campaign_det = Utilities::switch_db('api')->select("SELECT `name` as campaign_name, DATE_FORMAT(stop_date, '%Y-%m-%d') as stop_date from campaigns where id='$i->campaign_id'");
 
                 $invoice_array[] = [
                     'id' => $j,
                     'campaign_name' => $campaign_det[0]->campaign_name,
                     'customer' => $customer_name[0]->firstname . ' ' .$customer_name[0]->lastname,
-                    'date' => date('Y-m-d', $i->time_created),
-                    'date_due' => date('Y-m-d', $campaign_det[0]->stop_date)
+                    'date' => date('Y-m-d', strtotime($i->time_created)),
+                    'date_due' => ($campaign_det[0]->stop_date)
                 ];
                 $j++;
             }
@@ -97,18 +97,17 @@ class ReportController extends Controller
                 ->make(true);
         }else{
             $inv = Utilities::switch_db('api')->select("SELECT * from invoices WHERE broadcaster_id = '$broadcaster' ");
-            $j = 1;
             foreach ($inv as $i)
             {
                 $customer_name = Utilities::switch_db('api')->select("SELECT firstname,lastname from users where id='$i->walkins_id'");
-                $campaign_det = Utilities::switch_db('api')->select("SELECT `name` as campaign_name, stop_date from campaigns where id='$i->campaign_id'");
+                $campaign_det = Utilities::switch_db('api')->select("SELECT `name` as campaign_name, DATE_FORMAT(stop_date, '%Y-%m-%d') as stop_date from campaigns where id='$i->campaign_id'");
 
                 $invoice_array[] = [
                     'id' => $j,
                     'campaign_name' => $campaign_det[0]->campaign_name,
                     'customer' => $customer_name[0]->firstname . ' ' .$customer_name[0]->lastname,
-                    'date' => date('Y-m-d', $i->time_created),
-                    'date_due' => date('Y-m-d', $campaign_det[0]->stop_date)
+                    'date' => date('Y-m-d', strtotime($i->time_created)),
+                    'date_due' => ($campaign_det[0]->stop_date)
                 ];
                 $j++;
             }
@@ -139,7 +138,7 @@ class ReportController extends Controller
                     'id' => $j,
                     'total_amount' => '&#8358;'.number_format($price[0]->amount, 2),
                     'adslot' => $pe->adslots,
-                    'date' => date('d-m-Y', $pe->days),
+                    'date' => ($pe->days),
                     'campaign_name' => $pe->name,
                     'brand' => $pe->brand,
                     'buyer' => $customer[0]->firstname.' '.$customer[0]->lastname,
@@ -163,7 +162,7 @@ class ReportController extends Controller
                     'id' => $j,
                     'total_amount' => '&#8358;'.number_format($price[0]->amount, 2),
                     'adslot' => $pe->adslots,
-                    'date' => date('d-m-Y', $pe->days),
+                    'date' => ($pe->days),
                     'campaign_name' => $pe->name,
                     'brand' => $pe->brand,
                     'buyer' => $customer[0]->firstname.' '.$customer[0]->lastname,
@@ -204,7 +203,7 @@ class ReportController extends Controller
         }else{
             //total volume of campaigns
             $broadcaster = Session::get('broadcaster_id');
-            $camp_vol = Utilities::switch_db('api')->select("SELECT COUNT(id) as volume, time_created as month from campaigns where broadcaster = '$broadcaster' GROUP BY time_created ORDER BY time_created desc");
+            $camp_vol = Utilities::switch_db('api')->select("SELECT COUNT(id) as volume, DATE_FORMAT(time_created, '%M, %Y') as `month` from campaigns where broadcaster = '$broadcaster' GROUP BY DATE_FORMAT(time_created, '%Y-%m') ORDER BY time_created desc");
             $c_vol = [];
             $j = 1;
             foreach ($camp_vol as $ca)
@@ -212,7 +211,7 @@ class ReportController extends Controller
                 $c_vol[] = [
                     'id' => $j,
                     'volume' => $ca->volume,
-                    'date' => date("F", $ca->month).', '.date('Y', $ca->month),
+                    'date' => ($ca->month),
                 ];
                 $j++;
             }
@@ -249,7 +248,7 @@ class ReportController extends Controller
                     'id' => $j,
                     'daypart' => $query[0]->day_parts,
                     'percentage' => $day_percent.'%',
-                    'date' => date('d-m-Y',$day->time_created),
+                    'date' => ($day->time_created),
                 ];
                 $j++;
             }
@@ -276,7 +275,7 @@ class ReportController extends Controller
                     'id' => $j,
                     'daypart' => $query[0]->day_parts,
                     'percentage' => $day_percent.'%',
-                    'date' => date('d-m-Y',$day->time_created),
+                    'date' => ($day->time_created),
                 ];
                 $j++;
             }
@@ -295,7 +294,7 @@ class ReportController extends Controller
         if($request->has('start_date') && $request->has('stop_date'))
         {
             $broadcaster = Session::get('broadcaster_id');
-            $days = Utilities::switch_db('api')->select("SELECT COUNT(id) as tot_camp, time_created as days from campaigns where broadcaster = '$broadcaster' AND day_parts != '' AND time_created BETWEEN '$start' AND '$end' GROUP BY WEEK(time_created), broadcaster");
+            $days = Utilities::switch_db('api')->select("SELECT COUNT(id) as tot_camp, time_created as days from campaigns where broadcaster = '$broadcaster' AND day_parts != '' AND time_created BETWEEN '$start' AND '$end' GROUP BY DATE_FORMAT(time_created, '%a'), broadcaster ORDER BY WEEK(time_created) desc LIMIT 1");
             $day_name = [];
             $b = [];
             for($j = 0; $j < count($days); $j++)
@@ -309,9 +308,9 @@ class ReportController extends Controller
                 $perc_days = (($dd->tot_camp) / $s) * 100;
                 $day_name[] = [
                     'id' => $j,
-                    'day' => date('l', $dd->days) .' '. date('F', $dd->days). ',' .date('Y', $dd->days),
+                    'day' => date('l', strtotime($dd->days)) .' '. date('F', strtotime($dd->days)).' '. date('d', strtotime($dd->days)). ',' .date('Y', strtotime($dd->days)),
                     'percentage' => $perc_days.'%',
-                    'week' => date('W', $dd->days),
+                    'week' => date('W', strtotime($dd->days)),
                 ];
             }
 
@@ -319,7 +318,7 @@ class ReportController extends Controller
                 ->make(true);
         }else{
             $broadcaster = Session::get('broadcaster_id');
-            $days = Utilities::switch_db('api')->select("SELECT COUNT(id) as tot_camp, time_created as days from campaigns where broadcaster = '$broadcaster' AND day_parts != '' GROUP BY WEEK(time_created), broadcaster");
+            $days = Utilities::switch_db('api')->select("SELECT COUNT(id) as tot_camp, time_created as days from campaigns where broadcaster = '$broadcaster' AND day_parts != '' GROUP BY DATE_FORMAT(time_created, '%a'), broadcaster ORDER BY WEEK(time_created) desc ");
             $day_name = [];
             $b = [];
             for($j = 0; $j < count($days); $j++)
@@ -333,9 +332,9 @@ class ReportController extends Controller
                 $perc_days = (($dd->tot_camp) / $s) * 100;
                 $day_name[] = [
                     'id' => $j,
-                    'day' => date('l', $dd->days) .' '. date('F', $dd->days). ',' .date('Y', $dd->days),
+                    'day' => date('l', strtotime($dd->days)) .' '. date('F', strtotime($dd->days)).' '. date('d', strtotime($dd->days)). ',' .date('Y', strtotime($dd->days)),
                     'percentage' => $perc_days.'%',
-                    'week' => date('W', $dd->days),
+                    'week' => date('W', strtotime($dd->days)),
                 ];
             }
 
