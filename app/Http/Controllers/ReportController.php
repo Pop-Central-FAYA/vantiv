@@ -227,14 +227,15 @@ class ReportController extends Controller
     {
         $start = strtotime($request->start_date);
         $end = strtotime($request->stop_date);
+        $j = 1;
         if($request->has('start_date') && $request->has('stop_date'))
         {
             $broadcaster = Session::get('broadcaster_id');
-            $dayp = Utilities::switch_db('api')->select("SELECT COUNT(id) as campaigns, time_created, day_parts from campaigns WHERE broadcaster = '$broadcaster' AND day_parts != '' AND time_created BETWEEN '$start' AND '$end' GROUP BY day_parts,broadcaster, time_created");
+            $dayp = Utilities::switch_db('api')->select("SELECT COUNT(id) as campaigns, time_created as time_created, day_parts 
+                                                        from campaigns WHERE broadcaster = '$broadcaster' AND day_parts != '' 
+                                                        GROUP BY broadcaster, time_created");
             $dayp_name = [];
             $d = [];
-            $date = [];
-            $j = 1;
             for($i = 0; $i < count($dayp); $i++)
             {
                 $d[] = $dayp[$i]->campaigns;
@@ -242,13 +243,15 @@ class ReportController extends Controller
             $s = array_sum($d);
             foreach ($dayp as $day)
             {
-                $query = Utilities::switch_db('api')->select("SELECT day_parts from dayParts WHERE id = '$day->day_parts'");
+                $day_p = $day->day_parts;
+                $query = Utilities::switch_db('api')->select("SELECT day_parts from dayParts WHERE id IN ('$day_p')");
                 $day_percent = (($day->campaigns) / $s) * 100;
+                $day_partt = isset($query[0]) ? $query[0]->day_parts : "";
                 $dayp_name[] = [
                     'id' => $j,
-                    'daypart' => $query[0]->day_parts,
+                    'daypart' => $day_partt,
                     'percentage' => $day_percent.'%',
-                    'date' => ($day->time_created),
+                    'date' => date('Y-m-d', strtotime($day->time_created)),
                 ];
                 $j++;
             }
@@ -257,11 +260,11 @@ class ReportController extends Controller
                 ->make(true);
         }else{
             $broadcaster = Session::get('broadcaster_id');
-            $dayp = Utilities::switch_db('api')->select("SELECT COUNT(id) as campaigns, time_created, day_parts from campaigns WHERE broadcaster = '$broadcaster' AND day_parts != '' GROUP BY day_parts,broadcaster, time_created");
+            $dayp = Utilities::switch_db('api')->select("SELECT COUNT(id) as campaigns, time_created as time_created, day_parts 
+                                                        from campaigns WHERE broadcaster = '$broadcaster' AND day_parts != '' 
+                                                        GROUP BY broadcaster, time_created");
             $dayp_name = [];
             $d = [];
-            $date = [];
-            $j = 1;
             for($i = 0; $i < count($dayp); $i++)
             {
                 $d[] = $dayp[$i]->campaigns;
@@ -269,13 +272,15 @@ class ReportController extends Controller
             $s = array_sum($d);
             foreach ($dayp as $day)
             {
-                $query = Utilities::switch_db('api')->select("SELECT day_parts from dayParts WHERE id = '$day->day_parts'");
+                $day_p = $day->day_parts;
+                $query = Utilities::switch_db('api')->select("SELECT day_parts from dayParts WHERE id IN ('$day_p')");
                 $day_percent = (($day->campaigns) / $s) * 100;
+                $day_partt = isset($query[0]) ? $query[0]->day_parts : "";
                 $dayp_name[] = [
                     'id' => $j,
-                    'daypart' => $query[0]->day_parts,
+                    'daypart' => $day_partt,
                     'percentage' => $day_percent.'%',
-                    'date' => ($day->time_created),
+                    'date' => date('Y-m-d', strtotime($day->time_created)),
                 ];
                 $j++;
             }

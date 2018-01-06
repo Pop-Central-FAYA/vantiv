@@ -70,11 +70,7 @@ class DashboardController extends Controller
                                                         from campaigns WHERE broadcaster = '$broadcaster' AND day_parts != '' 
                                                         GROUP BY broadcaster, time_created");
         $dayp_name = [];
-        $day_per = [];
-        $day_na = [];
-        $day_da = [];
         $d = [];
-        $date = [];
         for($i = 0; $i < count($dayp); $i++)
         {
             $d[] = $dayp[$i]->campaigns;
