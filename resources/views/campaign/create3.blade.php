@@ -20,10 +20,10 @@
         <div class="row">
             <div class="col-md-1 hidden-sm hidden-xs"></div>
             <div class="col-md-9 " style="padding:2%">
-                <form class="campform" method="POST" action="{{ route('campaign.store3', ['id' => 1]) }}">
+                <form class="campform" method="POST" action="{{ route('campaign.store3', ['id' => 1, 'walkins' => $walkins]) }}">
                     {{ csrf_field() }}
 
-                        <p>You have {{ (count($result) / 4) }} Adslots that matches your selected criteria</p>
+                        <p>You have {{ (count($result)) }} Adslots that matches your selected criteria</p>
                     <br>
                     <br>
 
@@ -70,8 +70,9 @@
 
     <script>
         $(document).ready(function() {
+            var user_id = "<?php echo $walkins ?>";
            $('#step2').click(function(){
-               window.location.href = "/campaign/create/1/step2";
+               window.location.href = '/campaign/create/1/'+user_id+'/step2';
            });
         });
     </script>

@@ -26,8 +26,8 @@ class ReportController extends Controller
 
         if($request->has('start_date') && $request->has('stop_date'))
         {
-            $start = strtotime($request->start_date);
-            $end = strtotime($request->stop_date);
+            $start = $request->start_date;
+            $end = $request->stop_date;
             $campaign = Utilities::switch_db('api')->select("SELECT COUNT(id) as total_campaign, time_created as `time`, id, walkins_id, SUM(adslots) as total_adslot from campaigns WHERE broadcaster = '$broadcaster' AND walkins_id != '' AND time_created BETWEEN '$start' AND '$end' GROUP BY walkins_id LIMIT 10");
             foreach ($campaign as $c)
             {
@@ -71,8 +71,8 @@ class ReportController extends Controller
     public function PIdata(Datatables $datatables, Request $request)
     {
         $broadcaster = Session::get('broadcaster_id');
-        $start = strtotime($request->start_date);
-        $end = strtotime($request->stop_date);
+        $start = $request->start_date;
+        $end = $request->stop_date;
         $invoice_array = [];
         $j = 1;
         if($request->has('start_date') && $request->has('stop_date'))
@@ -121,8 +121,8 @@ class ReportController extends Controller
     //Periodic sales report
     public function psData(Datatables $datatables, Request $request)
     {
-        $start = strtotime($request->start_date);
-        $end = strtotime($request->stop_date);
+        $start = $request->start_date;
+        $end = $request->stop_date;
         if($request->has('start_date') && $request->has('stop_date'))
         {
             //periodic sales report
@@ -138,7 +138,7 @@ class ReportController extends Controller
                     'id' => $j,
                     'total_amount' => '&#8358;'.number_format($price[0]->amount, 2),
                     'adslot' => $pe->adslots,
-                    'date' => ($pe->days),
+                    'date' => date('Y-m-d', strtotime($pe->days)),
                     'campaign_name' => $pe->name,
                     'brand' => $pe->brand,
                     'buyer' => $customer[0]->firstname.' '.$customer[0]->lastname,
@@ -162,7 +162,7 @@ class ReportController extends Controller
                     'id' => $j,
                     'total_amount' => '&#8358;'.number_format($price[0]->amount, 2),
                     'adslot' => $pe->adslots,
-                    'date' => ($pe->days),
+                    'date' => date('Y-m-d', strtotime($pe->days)),
                     'campaign_name' => $pe->name,
                     'brand' => $pe->brand,
                     'buyer' => $customer[0]->firstname.' '.$customer[0]->lastname,
@@ -179,8 +179,8 @@ class ReportController extends Controller
     //Total Volume of Campaign
     public function tvcData(Datatables $datatables, Request $request)
     {
-        $start = strtotime($request->start_date);
-        $end = strtotime($request->stop_date);
+        $start = $request->start_date;
+        $end = $request->stop_date;
         if($request->has('start_date') && $request->has('stop_date'))
         {
             //total volume of campaigns
@@ -225,8 +225,8 @@ class ReportController extends Controller
     //High performing Dayparts
     public function hpdData(Datatables $datatables, Request $request)
     {
-        $start = strtotime($request->start_date);
-        $end = strtotime($request->stop_date);
+        $start = $request->start_date;
+        $end = $request->stop_date;
         $j = 1;
         if($request->has('start_date') && $request->has('stop_date'))
         {
@@ -294,8 +294,8 @@ class ReportController extends Controller
     //High Performing Day
     public function hpdaysData(Datatables $datatables, Request $request)
     {
-        $start = strtotime($request->start_date);
-        $end = strtotime($request->stop_date);
+        $start = $request->start_date;
+        $end = $request->stop_date;
         if($request->has('start_date') && $request->has('stop_date'))
         {
             $broadcaster = Session::get('broadcaster_id');

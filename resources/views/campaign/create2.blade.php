@@ -34,8 +34,14 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                            <input type="text" name="brand" value="{{ isset(((object) $step2)->brand) ? ((object) $step2)->brand : "" }}" required placeholder="Brand">
+                            <label style="margin-left:10%">Brands:</label>
+                            <select name="brand" class="form-control" id="">
+                                @foreach($brands as $b)
+                                    <option value="{{ $b->id }}">{{ $b->name }}</option>
+                                @endforeach
+                            </select>
                         </div>
+                        <br>
                         <div class="col-md-6">
                             <input type="text" name="product" value="{{ isset(((object) $step2)->product) ? ((object) $step2)->product : "" }}" required placeholder="Product">
                         </div>
@@ -50,7 +56,6 @@
                                 @endforeach
                             </select>
                         </div>
-
 
                         <div class="col-md-3">
                             <label style="margin-left:10%">Target Audience:</label>
