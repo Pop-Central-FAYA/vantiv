@@ -4,14 +4,14 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     @yield('title')
-    @include('agency_partials._head')
+    @include('partials._head')
     @yield('style')
     <![endif]-->
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
 
-    @include('agency_partials.header')
+    @include('partials/header')
     <!-- Left side column. contains the logo and sidebar -->
     @include('agency_partials.sidebar')
 

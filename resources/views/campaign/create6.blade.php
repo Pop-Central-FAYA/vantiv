@@ -38,7 +38,7 @@
                                     <img src="{{ asset('asset/dist/img/nta-logo.jpg') }}" width="100%">
                                     <div class="tv-space">
                                         <p align="center">
-                                            {{ (count($result)) / 4 }} Adslot(s)
+                                            {{ (count($result))  }} Adslot(s)
                                             Available</p>
                                         <p>{{ Session::get('broadcaster_brand') }}</p>
                                     </div>

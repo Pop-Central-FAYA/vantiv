@@ -67,7 +67,6 @@ class AuthController extends Controller
     public function postLogin(LoginRequest $request)
     {
 
-        $api_login = Api::auth_user($request);
         // In case that request throttling is enabled, we have to check if user can perform this request.
         // We'll key this by the username and the IP address of the client making these requests into this application.
         $throttles = settings('throttle_enabled');
@@ -94,6 +93,8 @@ class AuthController extends Controller
             return redirect()->to('login' . $to)
                 ->withErrors(trans('auth.failed'));
         }
+
+        $api_login = Api::auth_user($request);
 
         $user = Auth::getProvider()->retrieveByCredentials($credentials);
 

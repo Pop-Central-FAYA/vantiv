@@ -32,15 +32,14 @@
                         <div class="tvspace-box">
                             <img src="{{ asset('asset/dist/img/nta-logo.jpg') }}" width="100%">
                             <div class="tv-space">
-                                <p align="center">{{ (count($result)) / 4 }} Adslot(s)</p>
+                                <p align="center">{{ (count($result)) }} Adslot(s)</p>
                             </div>
                         </div>
                     </div>
                 </div>
-                {{--{{ dd($result) }}--}}
                 <div id="tv-time-box" style="border:1px solid #ccc" >
-                    <?php for($i = 0; $i <= count($ratecard); $i++){ ?>
-                    <?php if(array_key_exists($i,$ratecard) && array_key_exists($i,$result)){?>
+                    <?php for($i = 0; $i <= count($result); $i++){ ?>
+                    <?php if(array_key_exists($i,$result) && array_key_exists($i,$ratecard)){?>
                     <?php if($result[$i]->rate_card == $ratecard[$i]->id){?>
                     <div class="row">
                         <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
@@ -88,15 +87,15 @@
                                                 <ul style="font-size: 21px; margin:0 auto; width: 80%">
                                                     <h3 align="" style="color:#9f005d">Choose a media file</h3>
                                                     <hr />
-                                                    @foreach($data as $datas)
+                                                    {{--{{ dd($datas) }}--}}
                                                         <div class="row">
                                                             @foreach(((object) $rating) as $d)
-                                                                @if(((integer) $datas->time) === $d->time_in_seconds)
+                                                                @if(((integer) $datas[0]->time) === $d->time_in_seconds)
                                                                     <input type="hidden" class="hourly_break{{ $d->id }}" name="hourly_break" value="{{ $rating[0]->from_to_time }}">
-                                                                    <div class="col-md-3"><i class="fa fa-video-camera"></i> <img src="{{ asset($datas->uploads) }}" alt="{{ $datas->uploads }}" style="height: 40px; width: 40px;" /> </div>
-                                                                    <input type="hidden" name="file" class="file{{ $d->id }}" value="{{ $datas->uploads }}">
-                                                                    <div class="col-md-3"><span style="margin-left:15%"></span>{{ $datas->time }} Seconds</div>
-                                                                    <input type="hidden" name="time" class="time{{ $d->id }}" value="{{ $datas->time }}">
+                                                                    <div class="col-md-3"><i class="fa fa-video-camera"></i> <img src="{{ asset($datas[0]->uploads) }}" alt="{{ $datas[0]->uploads }}" style="height: 40px; width: 40px;" /> </div>
+                                                                    <input type="hidden" name="file" class="file{{ $d->id }}" value="{{ $datas[0]->uploads }}">
+                                                                    <div class="col-md-3"><span style="margin-left:15%"></span>{{ $datas[0]->time }} Seconds</div>
+                                                                    <input type="hidden" name="time" class="time{{ $d->id }}" value="{{ $datas[0]->time }}">
                                                                     <div class="col-md-3"><input name="hourly" class="hourly" value="{{ $d->id }}" type="radio"></div>
                                                                     <input type="hidden" name="rate_id" class="rating_id" value="{{ $d->id }}">
                                                                     <div class="col-md-3"><td>&#8358;{{ $d->price }}</td></div>
@@ -106,7 +105,6 @@
                                                             @endforeach
                                                         </div>
                                                         <hr/>
-                                                    @endforeach
                                                 </ul>
                                                 <button type="button" id="save_cart"  class="btn btn-large save_cart" style="background: #9f005d; color:white; font-size: 20px; padding: 1% 5%; margin-top:4%; border-radius: 10px;">Save</button></a></p>
                                             </form>
