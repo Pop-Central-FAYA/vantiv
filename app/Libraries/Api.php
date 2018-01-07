@@ -44,6 +44,12 @@ Class Api
         ];
         ApiLog::save_activity_log($req, $response, $auth_url);
         $data = json_decode($response, true);
+        dd($data);
+        $status = json_decode($response);
+        if($status->status == false)
+        {
+            return back();
+        }
         session(['encrypted_token' => $data['data']['token']]);
         session(['broadcaster_id' => $data['data']['info']['id']]);
         session(['broadcaster_brand' => $data['data']['info']['brand']]);
