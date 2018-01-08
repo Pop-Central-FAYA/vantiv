@@ -67,8 +67,8 @@
             </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href=""><i class="fa fa-circle-o"></i> All Clients</a></li>
-                    <li><a href="{{ route('agency.campaign.all') }}"><i class="fa fa-circle-o"></i> Add New Client</a></li>
+                    <li><a href="{{ route('all.clients') }}"><i class="fa fa-circle-o"></i> All Clients</a></li>
+                    <li><a href="#"><i class="fa fa-circle-o"></i> Add New Client</a></li>
 
                 </ul>
             </li>

@@ -372,8 +372,9 @@ class CampaignsController extends Controller
         $hourly_range = $request->range;
         $user = Session::get('user_id');
         $broadcaster = Session::get('broadcaster_id');
+        $adslot_id = $request->adslot_id;
         $ip = \Request::ip();
-        $insert = \DB::insert("INSERT INTO carts (user_id, broadcaster_id, price, ip_address, file, from_to_time, `time`, rate_id) VALUES ('$user','$broadcaster','$price','$ip','$file','$hourly_range','$time','$id')");
+        $insert = \DB::insert("INSERT INTO carts (user_id, broadcaster_id, price, ip_address, file, from_to_time, `time`, rate_id, adslot_id) VALUES ('$user','$broadcaster','$price','$ip','$file','$hourly_range','$time','$id', '$adslot_id')");
         if($insert){
             return "success";
         }else{
@@ -442,7 +443,7 @@ class CampaignsController extends Controller
             'max_age' => (integer)$first->max_age,
             'industry' => $first->industry,
             'adslots' => count($query),
-            'walkins_id' => $db_walkin[0]->user_id,
+            'walkins_id' => Session::get('walkins_id'),
             'time_created' => date('Y-m-d H:i:s', $now),
             'time_modified' => date('Y-m-d H:i:s', $now),
         ];
@@ -461,8 +462,8 @@ class CampaignsController extends Controller
                 'user_id' => $user_id,
                 'broadcaster_id' => Session::get('broadcaster_id'),
                 'file_code' => uniqid(),
-                'time_created' => $now,
-                'time_modified' => $now,
+                'time_created' => date('Y-m-d H:i:s', $now),
+                'time_modified' => date('Y-m-d H:i:s', $now),
             ];
         }
 
@@ -475,8 +476,8 @@ class CampaignsController extends Controller
             'time_modified' => $now,
             'broadcaster' => Session::get('broadcaster_id'),
             'walkins_id' => $db_walkin[0]->user_id,
-            'time_created' => $now,
-            'time_modified' => $now,
+            'time_created' => date('Y-m-d H:i:s', $now),
+            'time_modified' => date('Y-m-d H:i:s', $now),
         ];
 
         $save_payment = Utilities::switch_db('api')->table('payments')->insert($pay);
