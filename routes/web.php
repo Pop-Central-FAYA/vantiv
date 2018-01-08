@@ -64,6 +64,7 @@ Route::get('auth/twitter/email', 'Auth\SocialAuthController@getTwitterEmail');
 Route::post('auth/twitter/email', 'Auth\SocialAuthController@postTwitterEmail');
 
 Route::group(['prefix' => 'agency'], function () {
+
     Route::get('/dashboard', function () {
         return view('agency.dashboard.dashboard');
     });
@@ -115,17 +116,16 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/', 'CampaignsController@index')->name('campaign.all');
             Route::get('/create', 'CampaignsController@create')->name('campaign.create');
             Route::get('/create/{id}/{walkins}/step2', 'CampaignsController@createStep2')->name('campaign.create2');
-            Route::get('/create/{id}/step3', 'CampaignsController@createStep3')->name('campaign.create3');
-            Route::get('/create/{id}/step4', 'CampaignsController@createStep4')->name('campaign.create4');
+            Route::get('/create/{id}/{walkins}/step3', 'CampaignsController@createStep3')->name('campaign.create3');
+            Route::get('/create/{id}/{walkins}/step4', 'CampaignsController@createStep4')->name('campaign.create4');
             Route::get('/create/{id}/step5', 'CampaignsController@createStep5')->name('campaign.create5');
             Route::get('/create/{id}/step6', 'CampaignsController@createStep6')->name('campaign.create6');
             Route::get('/create/{id}/step7', 'CampaignsController@createStep7')->name('campaign.create7');
             Route::get('/create/{id}/step8', 'CampaignsController@createStep8')->name('campaign.create8');
             Route::get('/create/{id}/step9', 'CampaignsController@createStep9')->name('campaign.create9');
-
             Route::post('/create/{id}/{walkins}/step2/store', 'CampaignsController@postStep2')->name('campaign.store2');
-            Route::post('/create/{id}/step3/store', 'CampaignsController@postStep3')->name('campaign.store3');
-            Route::post('/create/{id}/step4/store', 'CampaignsController@postStep4')->name('campaign.store4');
+            Route::post('/create/{id}/{walkins}/step3/store', 'CampaignsController@postStep3')->name('campaign.store3');
+            Route::post('/create/{id}/{walkins}/step4/store', 'CampaignsController@postStep4')->name('campaign.store4');
             Route::post('/create/{id}/step5/store', 'CampaignsController@postStep5')->name('campaign.store5');
             Route::post('/create/{id}/step6/store', 'CampaignsController@postStep6')->name('campaign.store6');
             Route::get('/create/{id}/step7/get', 'CampaignsController@getStep7')->name('campaign.store7');
@@ -133,7 +133,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/add-to-cart', 'CampaignsController@postCart')->name('store.cart');
             Route::get('/checkout', 'CampaignsController@getCheckout')->name('checkout');
             Route::post('/submit-campaign', 'CampaignsController@postCampaign')->name('submit.campaign');
-            Route::get('/remove-campaings/{id}', 'CampaignsController@removeCart')->name('cart.remove');
+            Route::get('/remove-campaigns/{id}', 'CampaignsController@removeCart')->name('cart.remove');
 
             Route::get('/all-campaign/data', 'CampaignsController@getAllData');
         });
@@ -141,6 +141,14 @@ Route::group(['middleware' => 'auth'], function () {
         /*
          * WalkIns Management
          */
+
+        Route::group(['prefix' => 'brands'], function () {
+            Route::get('/', 'BrandsController@index')->name('brand.all');
+            Route::get('/create', 'BrandsController@create')->name('brand.create');
+            Route::post('/create/store', 'BrandsController@store')->name('brand.store');
+            Route::post('/brands/edit/{id}', 'BrandsController@update')->name('brands.update');
+            Route::get('/brands/delete/{id}', 'BrandsController@delete')->name('brands.delete');
+        });
 
         Route::group(['prefix' => 'walkins'], function () {
             Route::get('/', 'WalkinsController@index')->name('walkins.all');
@@ -236,6 +244,15 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/total-volume-of-campaign/all', 'ReportController@tvcData');
             Route::get('/high-day-parts/all', 'ReportController@hpdData');
             Route::get('/high-days/all', 'ReportController@hpdaysData');
+        });
+
+        Route::group(['prefix' => 'agency'], function() {
+           Route::group(['prefix' => 'campaigns'], function() {
+              Route::get('/all-campaigns', 'Agency\CampaignsController@index')->name('agency.campaign.all');
+           });
+           Route::group(['prefix' => 'clients'], function() {
+              Route::get('/', 'Agency\ClientController@index')->name('agency.client.all');
+           });
         });
     });
 

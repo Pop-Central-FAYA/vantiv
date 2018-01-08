@@ -197,6 +197,7 @@ return [
         Vanguard\Providers\EventServiceProvider::class,
         Vanguard\Providers\RouteServiceProvider::class,
         Vanguard\Services\Auth\TwoFactor\AuthyServiceProvider::class,
+        JD\Cloudder\CloudderServiceProvider::class
 
     ],
 
@@ -260,6 +261,7 @@ return [
         'Curl' => Ixudra\Curl\Facades\Curl::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
+        'Cloudder' => JD\Cloudder\Facades\Cloudder::class
 
     ],
 
