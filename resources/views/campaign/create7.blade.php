@@ -88,23 +88,24 @@
                                                     <h3 align="" style="color:#9f005d">Choose a media file</h3>
                                                     <hr />
                                                     {{--{{ dd($datas) }}--}}
-                                                        <div class="row">
-                                                            @foreach(((object) $rating) as $d)
-                                                                @if(((integer) $datas[0]->time) === $d->time_in_seconds)
-                                                                    <input type="hidden" class="hourly_break{{ $d->id }}" name="hourly_break" value="{{ $rating[0]->from_to_time }}">
-                                                                    <div class="col-md-3"><i class="fa fa-video-camera"></i> <img src="{{ asset($datas[0]->uploads) }}" alt="{{ $datas[0]->uploads }}" style="height: 40px; width: 40px;" /> </div>
-                                                                    <input type="hidden" name="file" class="file{{ $d->id }}" value="{{ $datas[0]->uploads }}">
-                                                                    <div class="col-md-3"><span style="margin-left:15%"></span>{{ $datas[0]->time }} Seconds</div>
-                                                                    <input type="hidden" name="time" class="time{{ $d->id }}" value="{{ $datas[0]->time }}">
-                                                                    <div class="col-md-3"><input name="hourly" class="hourly" value="{{ $d->id }}" type="radio"></div>
-                                                                    <input type="hidden" name="rate_id" class="rating_id" value="{{ $d->id }}">
-                                                                    <div class="col-md-3"><td>&#8358;{{ $d->price }}</td></div>
-                                                                    <input type="hidden" name="price" class="price{{ $d->id }}" value="{{ $d->price }}">
-                                                                    <input type="hidden" name="rate_id" class="rate_id{{ $d->id }}" id="rate_id" value="{{ $rating[0]->id }}">
-                                                                @endif
-                                                            @endforeach
-                                                        </div>
-                                                        <hr/>
+                                                    <div class="row">
+                                                        @foreach(((object) $rating) as $d)
+                                                            @if(((integer) $datas[0]->time) === $d->time_in_seconds)
+                                                                <input type="hidden" class="hourly_break{{ $d->id }}" name="hourly_break" value="{{ $rating[0]->from_to_time }}">
+                                                                <div class="col-md-3"><i class="fa fa-video-camera"></i> <img src="{{ asset($datas[0]->uploads) }}" alt="{{ $datas[0]->uploads }}" style="height: 40px; width: 40px;" /> </div>
+                                                                <input type="hidden" name="file" class="file{{ $d->id }}" value="{{ $datas[0]->uploads }}">
+                                                                <div class="col-md-3"><span style="margin-left:15%"></span>{{ $datas[0]->time }} Seconds</div>
+                                                                <input type="hidden" name="time" class="time{{ $d->id }}" value="{{ $datas[0]->time }}">
+                                                                <div class="col-md-3"><input name="hourly" class="hourly" value="{{ $d->id }}" type="radio"></div>
+                                                                <input type="hidden" name="rate_id" class="rating_id" value="{{ $d->id }}">
+                                                                <div class="col-md-3"><td>&#8358;{{ $d->price }}</td></div>
+                                                                <input type="hidden" name="price" class="price{{ $d->id }}" value="{{ $d->price }}">
+                                                                <input type="hidden" name="rate_id" class="rate_id{{ $d->id }}" id="rate_id" value="{{ $rating[0]->id }}">
+                                                                <input type="hidden" name="adslot_id" class="adslot_id{{ $d->id }}" value="{{ $d->id }}">
+                                                            @endif
+                                                        @endforeach
+                                                    </div>
+                                                    <hr/>
                                                 </ul>
                                                 <button type="button" id="save_cart"  class="btn btn-large save_cart" style="background: #9f005d; color:white; font-size: 20px; padding: 1% 5%; margin-top:4%; border-radius: 10px;">Save</button></a></p>
                                             </form>
@@ -175,12 +176,13 @@
                 var time = $(".time"+pick+"").val();
                 var range = $(".hourly_break"+pick+"").val();
                 var rate_id = $(".rate_id"+pick+"").val();
+                var adslot_id = $(".adslot_id"+pick+"").val();
                 console.log(url1);
                 if(pick){
                     $.ajax({
                         url: url1,
                         method: "POST",
-                        data: {rate_id: rate_id, price: price, file: file, range: range, time: time, '_token':$('input[name=_token]').val()},
+                        data: {rate_id: rate_id, price: price, adslot_id: adslot_id, file: file, range: range, time: time, '_token':$('input[name=_token]').val()},
                         success: function(data){
                             if(data === "success"){
                                 location.reload();

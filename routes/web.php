@@ -250,6 +250,9 @@ Route::group(['middleware' => 'auth'], function () {
            Route::group(['prefix' => 'campaigns'], function() {
               Route::get('/all-campaigns', 'Agency\CampaignsController@index')->name('agency.campaign.all');
            });
+           Route::group(['prefix' => 'clients'], function() {
+              Route::get('/', 'Agency\ClientController@index')->name('agency.client.all');
+           });
         });
     });
 

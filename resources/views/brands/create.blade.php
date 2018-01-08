@@ -20,7 +20,7 @@
     <div class="row">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3>Create Walkins</h3>
+                <h3>Create Brands</h3>
             </div>
             <div class="panel-body">
                 <form action="{{ route('brand.store') }}" method="post">
