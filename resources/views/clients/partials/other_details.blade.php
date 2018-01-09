@@ -3,7 +3,7 @@
     <div class="panel-body">
         <input type="hidden" name="broadcaster_id" value="{{ null }}">
         <input type="hidden" name="client_type_id" value="2">
-        <input type="hidden" name="agency_id" value="{{ Session::get('agency_id') }}">
+        <input type="hidden" name="agency_id" value="">
         <div class="form-group col-md-6">
             <label for="location">Location</label>
             <input type="text" class="form-control" name="location" placeholder="Location">

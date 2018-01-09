@@ -53,6 +53,7 @@ class ClientController extends Controller
         }
 
         $walkinInsert = Utilities::switbch_db('reports')->table('walklns')->insert([
+            'user_id' => '',
             'broadcaster_id' => $request->broadcaster_id,
             'client_type_id' => $request->client_type_id,
             'location' => $request->location,

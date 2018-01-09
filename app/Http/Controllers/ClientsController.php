@@ -21,7 +21,7 @@ class ClientsController extends Controller
 
     public function create(Request $request)
     {
-        if ($request->isMethod('post')) {
+        if ($request->isMethod('POST')) {
             $userInsert = DB::table('users')->insert([
                 'email' => $request->email,
                 'username' => $request->username,
@@ -35,6 +35,7 @@ class ClientsController extends Controller
             ]);
 
             if ($request->hasFile('image_url')) {
+
                 $image = $request->file('image_url');
 
                 $client_image = time() . $image->getClientOriginalName();
@@ -42,11 +43,16 @@ class ClientsController extends Controller
                 $image->move('clients_uploads', $client_image);
             }
 
-            $walkinInsert = Utilities::switbch_db('reports')->table('walklns')->insert([
+            $user_id = \DB::select("SELECT id from users WHERE email = '$request->email'");
+
+            $walkinInsert = Utilities::switch_db('reports')->table('walkIns')->insert([
+                'id' => uniqid(),
+                'user_id' => $user_id[0]->id,
                 'broadcaster_id' => $request->broadcaster_id,
                 'client_type_id' => $request->client_type_id,
                 'location' => $request->location,
-                'image_url' => 'clients_uploads/' . $client_image
+                'image_url' => 'clients_uploads/' . $client_image,
+                'agency_id' => \Session::get('agency_id')
             ]);
 
             if ($userInsert && $walkinInsert) {

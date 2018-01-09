@@ -43,7 +43,7 @@
                 </a>
 
                 <ul class="treeview-menu">
-                    <li><a href="/clients/create"><i class="fa fa-circle-o"></i> Add Client</a></li>
+                    <li><a href="{{ route('clients.create') }}"><i class="fa fa-circle-o"></i> Add Client</a></li>
                     <li><a href="company-search.html"><i class="fa fa-circle-o"></i> Clients List</a></li>
                     <li><a href="client-portfolio.html"><i class="fa fa-circle-o"></i> Clients Portfolio</a></li>
                 </ul>
