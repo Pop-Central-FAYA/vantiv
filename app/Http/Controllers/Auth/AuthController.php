@@ -8,6 +8,7 @@ use Vanguard\Events\User\Registered;
 use Vanguard\Http\Requests\Auth\LoginRequest;
 use Vanguard\Http\Requests\Auth\RegisterRequest;
 use Vanguard\Libraries\Api;
+use Vanguard\Libraries\Utilities;
 use Vanguard\Mailers\UserMailer;
 use Vanguard\Repositories\Role\RoleRepository;
 use Vanguard\Repositories\User\UserRepository;
@@ -67,7 +68,6 @@ class AuthController extends Controller
     public function postLogin(LoginRequest $request)
     {
 
-        $api_login = Api::auth_user($request);
         // In case that request throttling is enabled, we have to check if user can perform this request.
         // We'll key this by the username and the IP address of the client making these requests into this application.
         $throttles = settings('throttle_enabled');
@@ -108,6 +108,18 @@ class AuthController extends Controller
         }
 
         Auth::login($user, settings('remember_me') && $request->get('remember'));
+
+        $username = Auth::user()->email;
+        $password = bcrypt($request->password);
+        $role = \DB::table('role_user')->where('user_id', Auth::user()->id)->first();
+        if ($role->role_id === 3) {
+            Api::auth_user($request);
+        } elseif ($role->role_id === 4) {
+            $user_details = Utilities::switch_db('reports')->select("SELECT * FROM users WHERE email = '$username' LIMIT 1");
+            $user_id = $user_details[0]->id;
+            $agency_details = Utilities::switch_db('reports')->select("SELECT * FROM agents WHERE user_id = '$user_id'");
+            session(['agency_id' => $agency_details[0]->id]);
+        }
 
         return $this->handleUserWasAuthenticated($request, $throttles, $user);
     }

@@ -150,6 +150,16 @@ Route::group(['middleware' => 'auth'], function () {
         });
 
         /**
+         * Clients
+         */
+
+        Route::group(['prefix' => 'clients'], function () {
+            Route::get('/', 'Agency\ClientController@index')->name('clients.all');
+            Route::get('/create', 'Agency\ClientController@create')->name('clients.create');
+            Route::post('/store', 'Agency\ClientController@store')->name('clients.store');
+        });
+
+        /**
          * Sectors
          */
 

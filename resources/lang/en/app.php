@@ -346,4 +346,6 @@ return [
     'adslot_updated'=> 'Hurray!!!, Adslot updated successfully',
     'walkins'=> 'Hurray!!!, Walkins Added successfully',
     'walkins_delete' => 'Success!!!, Walkins deleted successfully',
+
+    'create-client' => 'Create Client'
 ];

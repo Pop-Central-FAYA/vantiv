@@ -26,8 +26,8 @@ class ReportController extends Controller
 
         if($request->has('start_date') && $request->has('stop_date'))
         {
-            $start = strtotime($request->start_date);
-            $end = strtotime($request->stop_date);
+            $start = $request->start_date;
+            $end = $request->stop_date;
             $campaign = Utilities::switch_db('api')->select("SELECT COUNT(id) as total_campaign, time_created as `time`, id, walkins_id, SUM(adslots) as total_adslot from campaigns WHERE broadcaster = '$broadcaster' AND walkins_id != '' AND time_created BETWEEN '$start' AND '$end' GROUP BY walkins_id LIMIT 10");
             foreach ($campaign as $c)
             {
