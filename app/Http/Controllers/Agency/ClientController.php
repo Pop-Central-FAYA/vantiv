@@ -2,84 +2,68 @@
 
 namespace Vanguard\Http\Controllers\Agency;
 
+use Vanguard\Country;
 use Illuminate\Http\Request;
+use Vanguard\Http\Requests\StoreClient;
 use Vanguard\Http\Controllers\Controller;
+use Vanguard\Libraries\Utilities;
+use Vanguard\Repositories\Permission\PermissionRepository;
+use Vanguard\Role;
+use Vanguard\Support\Enum\UserStatus;
 
 class ClientController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        return view('agency.client.index');
+
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-        //
+        $roles = Role::all();
+        $countries = Country::all();
+        $statuses = UserStatus::lists();
+
+        return view('clients.create')
+            ->with('roles', $roles)
+            ->with('statuses', $statuses)
+            ->with('countries', $countries);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function store(StoreClient $request)
     {
-        //
-    }
+        $userInsert = DB::table('users')->insert([
+            'email' => $request->email,
+            'username' => $request->username,
+            'password' => bcrypt($request->password),
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'phone' => $request->phone,
+            'country_id' => $request->country_id,
+            'birthday' => $request->birthday,
+            'status' => $request->status,
+        ]);
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
+        if ($request->hasFile('image_url')) {
+            $image = $request->file('image_url');
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
+            $client_image = time() . $image->getClientOriginalName();
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
+            $image->move('clients_uploads', $client_image);
+        }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        $walkinInsert = Utilities::switbch_db('reports')->table('walklns')->insert([
+            'broadcaster_id' => $request->broadcaster_id,
+            'client_type_id' => $request->client_type_id,
+            'location' => $request->location,
+            'image_url' => 'clients_uploads/' . $client_image
+        ]);
+
+        if ($userInsert && $walkinInsert) {
+            return redirect()->back()->with('success', 'Client Successfully created');
+        } else {
+            return redirect()->back()->with('error', trans('Client not created, try again'));
+        }
+
     }
 }

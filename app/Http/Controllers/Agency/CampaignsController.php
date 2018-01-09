@@ -14,8 +14,7 @@ class CampaignsController extends Controller
      */
     public function index()
     {
-        $broadcaster = Session::get('broadcaster_id');
-        dd($broadcaster);
+        $broadcaster = \Session::get('agency_id');
         return view('agency.campaigns.all_campaign');
     }
 
