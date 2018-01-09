@@ -31,7 +31,9 @@ class ReportController extends Controller
             $campaign = Utilities::switch_db('api')->select("SELECT COUNT(id) as total_campaign, time_created as `time`, id, walkins_id, SUM(adslots) as total_adslot from campaigns WHERE broadcaster = '$broadcaster' AND walkins_id != '' AND time_created BETWEEN '$start' AND '$end' GROUP BY walkins_id LIMIT 10");
             foreach ($campaign as $c)
             {
-                $user = Utilities::switch_db('api')->select("SELECT firstname, lastname from users where id='$c->walkins_id'");
+                $walk = Utilities::switch_db('api')->select("SELECT user_id from walkIns where id='$c->walkins_id'");
+                $user_id = $walk[0]->user_id;
+                $user = Utilities::switch_db('api')->select("SELECT firstname, lastname from users where id = '$user_id'");
                 $payments = Utilities::switch_db('api')->select("SELECT SUM(amount) as total_price from payments WHERE walkins_id = '$c->walkins_id'");
                 $camp[] = [
                     'id' => $j,
@@ -49,7 +51,9 @@ class ReportController extends Controller
             $campaign = Utilities::switch_db('api')->select("SELECT COUNT(id) as total_campaign, time_created as `time`, id, walkins_id, SUM(adslots) as total_adslot from campaigns WHERE broadcaster = '$broadcaster' AND walkins_id != '' GROUP BY walkins_id LIMIT 10");
             foreach ($campaign as $c)
             {
-                $user = Utilities::switch_db('api')->select("SELECT firstname, lastname from users where id='$c->walkins_id'");
+                $walk = Utilities::switch_db('api')->select("SELECT user_id from walkIns where id='$c->walkins_id'");
+                $user_id = $walk[0]->user_id;
+                $user = Utilities::switch_db('api')->select("SELECT firstname, lastname from users where id = '$user_id'");
                 $payments = Utilities::switch_db('api')->select("SELECT SUM(amount) as total_price from payments WHERE walkins_id = '$c->walkins_id'");
                 $camp[] = [
                     'id' => $j,
@@ -80,7 +84,9 @@ class ReportController extends Controller
             $inv = Utilities::switch_db('api')->select("SELECT * from invoices WHERE broadcaster_id = '$broadcaster' AND time_created BETWEEN '$start' AND '$end'");
             foreach ($inv as $i)
             {
-                $customer_name = Utilities::switch_db('api')->select("SELECT firstname,lastname from users where id='$i->walkins_id'");
+                $walk = Utilities::switch_db('api')->select("SELECT user_id from walkIns where id='$i->walkins_id'");
+                $user_id = $walk[0]->user_id;
+                $customer_name = Utilities::switch_db('api')->select("SELECT firstname,lastname from users where id='$user_id'");
                 $campaign_det = Utilities::switch_db('api')->select("SELECT `name` as campaign_name, DATE_FORMAT(stop_date, '%Y-%m-%d') as stop_date from campaigns where id='$i->campaign_id'");
 
                 $invoice_array[] = [
@@ -99,7 +105,9 @@ class ReportController extends Controller
             $inv = Utilities::switch_db('api')->select("SELECT * from invoices WHERE broadcaster_id = '$broadcaster' ");
             foreach ($inv as $i)
             {
-                $customer_name = Utilities::switch_db('api')->select("SELECT firstname,lastname from users where id='$i->walkins_id'");
+                $walk = Utilities::switch_db('api')->select("SELECT user_id from walkIns where id='$i->walkins_id'");
+                $user_id = $walk[0]->user_id;
+                $customer_name = Utilities::switch_db('api')->select("SELECT firstname,lastname from users where id='$user_id'");
                 $campaign_det = Utilities::switch_db('api')->select("SELECT `name` as campaign_name, DATE_FORMAT(stop_date, '%Y-%m-%d') as stop_date from campaigns where id='$i->campaign_id'");
 
                 $invoice_array[] = [
@@ -157,7 +165,9 @@ class ReportController extends Controller
             foreach ($periodic as $pe)
             {
                 $price = Utilities::switch_db('api')->select("SELECT amount, time_created as days from payments WHERE broadcaster = '$broadcaster' AND campaign_id = '$pe->id' ORDER BY time_created desc");
-                $customer = Utilities::switch_db('api')->select("SELECT firstname, lastname from users WHERE id = '$pe->walkins_id'");
+                $user = Utilities::switch_db('api')->select("SELECT user_id from walkIns where id = '$pe->walkins_id'");
+                $user_id = $user[0]->user_id;
+                $customer = Utilities::switch_db('api')->select("SELECT firstname, lastname from users WHERE id = '$user_id'");
                 $ads[] = [
                     'id' => $j,
                     'total_amount' => '&#8358;'.number_format($price[0]->amount, 2),

@@ -22,11 +22,11 @@ class Maths {
             $rate[] = [
                 'id' => uniqid(),
                 'user_id' => '10zmij9sroa62',
-                'broadcaster' => '10zmij9sroads',
+                'broadcaster' => Session::get('broadcaster_id'),
                 'hourly_range_id' => $hourly[$i]->id,
-                'day' => 'nzru9ch893abec',
-                'time_created' => $now,
-                'time_modified' => $now,
+                'day' => 'nzrm6h098amedb',
+                'time_created' => date('Y-m-d H:i:s', $now),
+                'time_modified' => date('Y-m-d H:i:s', $now),
             ];
         }
         if(!empty($rate)){
@@ -80,8 +80,8 @@ class Maths {
                         'price' => (integer) $p60,
                         'min_age' => (integer) $m_age,
                         'max_age' => (integer) $max_a,
-                        'time_created' => $now,
-                        'time_modified' => $now,
+                        'time_created' => date('Y-m-d H:i:s', $now),
+                        'time_modified' => date('Y-m-d H:i:s', $now),
 
                     ];
                     $insert[] = [
@@ -97,8 +97,8 @@ class Maths {
                         'price' => (integer) $p45,
                         'min_age' => (integer) $m_age,
                         'max_age' => (integer) $max_a,
-                        'time_created' => $now,
-                        'time_modified' => $now,
+                        'time_created' => date('Y-m-d H:i:s', $now),
+                        'time_modified' => date('Y-m-d H:i:s', $now),
 
                     ];
                     $insert[] = [
@@ -114,8 +114,8 @@ class Maths {
                         'price' => (integer) $p30,
                         'min_age' => (integer) $m_age,
                         'max_age' => (integer) $max_a,
-                        'time_created' => $now,
-                        'time_modified' => $now,
+                        'time_created' => date('Y-m-d H:i:s', $now),
+                        'time_modified' => date('Y-m-d H:i:s', $now),
 
                     ];
                     $insert[] = [
@@ -131,8 +131,8 @@ class Maths {
                         'price' => (integer) $p15,
                         'min_age' => (integer) $m_age,
                         'max_age' => (integer) $max_a,
-                        'time_created' => $now,
-                        'time_modified' => $now,
+                        'time_created' => date('Y-m-d H:i:s', $now),
+                        'time_modified' => date('Y-m-d H:i:s', $now),
 
                     ];
 
@@ -168,6 +168,7 @@ class Maths {
         $count = count($data);
         $s=0;
         $f=0;
+        $ads_id = [];
 
         foreach ($data as $key => $value)
         {
@@ -180,15 +181,21 @@ class Maths {
             $targ = Utilities::switch_db('api')->select("SELECT id from targetAudiences where audience = '$value->audience'");
             $chanel = Utilities::switch_db('api')->select("SELECT id from campaignChannels WHERE channel = '$value->channel'");
             $user_id = Utilities::switch_db('api')->select("SELECT id from users WHERE firstname = '$value->first_name' AND lastname = '$value->last_name'");
+            $u_id = $user_id[0]->id;
+            $walkins_id = Utilities::switch_db('api')->select("SELECT id from walkIns WHERE user_id = '$u_id'");
             $region = $reg[0]->id;
             $dayparts = $day_p[0]->id;
             $target = $targ[0]->id;
             $adslots = Utilities::switch_db('api')->select("SELECT * from adslots where target_audience = '$target' AND day_parts = '$dayparts' AND region = '$region' AND time_in_seconds = '$time' AND min_age <= '$min_age' AND max_age >= '$max_age'");
+            foreach ($adslots as $ad)
+            {
+                $ads_id[] = $ad->id;
+            }
             $insert[] = [
                 'id' => uniqid(),
                 'user_id' => Session::get('user_id'),
-                'walkins_id' => $user_id[0]->id,
-                'broadcaster' => '10zmij9sroads',
+                'walkins_id' => $walkins_id[0]->id,
+                'broadcaster' => Session::get('broadcaster_id'),
                 'brand' => $value->brand,
                 'name' => $value->campaign_name,
                 'product' => $value->product_name,
@@ -199,12 +206,13 @@ class Maths {
                 'industry' => $value->industry,
                 'min_age' => $min_age,
                 'max_age' => $max_age,
-                'time_created' => $now,
-                'time_modified' => $now,
+                'time_created' => date('Y-m-d H:i:s', $now),
+                'time_modified' => date('Y-m-d H:i:s', $now),
                 'duration' => $value->duration,
                 'adslots' => count($adslots),
-                'start_date' => strtotime($value->creation_date),
-                'stop_date' => strtotime($value->expiry_date)
+                'adslots_id' => implode(',', $ads_id),
+                'start_date' => $value->creation_date,
+                'stop_date' => $value->expiry_date
             ];
 
         }
@@ -231,8 +239,8 @@ class Maths {
                         'payment_method' => 'cash',
                         'payment_status' => 1,
                         'amount' => $adslots[0]->total_price,
-                        'time_created' => $now,
-                        'time_modified' => $now,
+                        'time_created' => date('Y-m-d H:i:s', $now),
+                        'time_modified' => date('Y-m-d H:i:s', $now),
                         'broadcaster' => Session::get('broadcaster_id'),
                         'walkins_id' => $walkins_id,
                     ];

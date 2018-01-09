@@ -259,8 +259,6 @@ Route::group(['middleware' => 'auth'], function () {
                 Route::get('/create', 'ClientsController@create')->name('clients.create');
                 Route::post('/create', 'ClientsController@create')->name('clients.store');
             });
-
-
         });
     });
 
