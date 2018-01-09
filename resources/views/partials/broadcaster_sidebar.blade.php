@@ -57,6 +57,7 @@
             </li>
             <li class="active treeview">
                 <a href="#">
+<<<<<<< HEAD
                     <i class="fa fa-dashboard"></i> <span>Brands Management</span>
                     <span class="pull-right-container">
                               <i class="fa fa-angle-left pull-right"></i>
@@ -71,6 +72,8 @@
             </li>
             <li class="active treeview">
                 <a href="#">
+=======
+>>>>>>> faya202
                     <i class="fa fa-dashboard"></i> <span>Walkins</span>
                     <span class="pull-right-container">
                               <i class="fa fa-angle-left pull-right"></i>

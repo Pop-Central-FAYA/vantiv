@@ -7,7 +7,7 @@
             <li><a href="{{ $paginator->previousPageUrl() }}" rel="prev">&laquo;</a></li>
         @endif
 
-        {{-- HDPresenter Elements --}}
+        {{-- Pagination Elements --}}
         @foreach ($elements as $element)
             {{-- "Three Dots" Separator --}}
             @if (is_string($element))
