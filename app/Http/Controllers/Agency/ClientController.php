@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Vanguard\Http\Requests\StoreClient;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Libraries\Utilities;
+use Vanguard\Repositories\Permission\PermissionRepository;
 use Vanguard\Role;
 use Vanguard\Support\Enum\UserStatus;
 
@@ -31,7 +32,7 @@ class ClientController extends Controller
 
     public function store(StoreClient $request)
     {
-       $userInsert = DB::table('users')->insert([
+        $userInsert = DB::table('users')->insert([
            'email' => $request->email,
            'username' => $request->username,
            'password' => bcrypt($request->password),

@@ -158,16 +158,6 @@ Route::group(['middleware' => 'auth'], function () {
         });
 
         /**
-         * Clients
-         */
-
-        Route::group(['prefix' => 'clients'], function () {
-            Route::get('/', 'Agency\ClientController@index')->name('clients.all');
-            Route::get('/create', 'Agency\ClientController@create')->name('clients.create');
-            Route::post('/store', 'Agency\ClientController@store')->name('clients.store');
-        });
-
-        /**
          * Sectors
          */
 
@@ -260,6 +250,17 @@ Route::group(['middleware' => 'auth'], function () {
            Route::group(['prefix' => 'campaigns'], function() {
               Route::get('/all-campaigns', 'Agency\CampaignsController@index')->name('agency.campaign.all');
            });
+            /**
+             * Clients
+             */
+
+            Route::group(['prefix' => 'clients'], function () {
+                Route::get('/', 'ClientsController@index')->name('clients.all');
+                Route::get('/create', 'ClientsController@create')->name('clients.create');
+                Route::post('/create', 'ClientsController@create')->name('clients.store');
+            });
+
+
         });
     });
 
@@ -525,53 +526,3 @@ Route::group(['middleware' => 'auth'], function () {
     ]);
 
 });
-
-
-/**
- * Installation
- */
-
-$router->get('install', [
-    'as' => 'install.start',
-    'uses' => 'InstallController@index'
-]);
-
-$router->get('install/requirements', [
-    'as' => 'install.requirements',
-    'uses' => 'InstallController@requirements'
-]);
-
-$router->get('install/permissions', [
-    'as' => 'install.permissions',
-    'uses' => 'InstallController@permissions'
-]);
-
-$router->get('install/database', [
-    'as' => 'install.database',
-    'uses' => 'InstallController@databaseInfo'
-]);
-
-$router->get('install/start-installation', [
-    'as' => 'install.installation',
-    'uses' => 'InstallController@installation'
-]);
-
-$router->post('install/start-installation', [
-    'as' => 'install.installation',
-    'uses' => 'InstallController@installation'
-]);
-
-$router->post('install/install-app', [
-    'as' => 'install.install',
-    'uses' => 'InstallController@install'
-]);
-
-$router->get('install/complete', [
-    'as' => 'install.complete',
-    'uses' => 'InstallController@complete'
-]);
-
-$router->get('install/error', [
-    'as' => 'install.error',
-    'uses' => 'InstallController@error'
-]);

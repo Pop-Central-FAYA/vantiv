@@ -50,7 +50,6 @@ class EntrustAbility
 		if (!is_bool($validateAll)) {
 			$validateAll = filter_var($validateAll, FILTER_VALIDATE_BOOLEAN);
 		}
-
 		if ($this->auth->guest() || !$request->user()->ability($roles, $permissions, [ 'validate_all' => $validateAll ])) {
 			abort(403);
 		}

@@ -95,8 +95,6 @@ class AuthController extends Controller
                 ->withErrors(trans('auth.failed'));
         }
 
-        $api_login = Api::auth_user($request);
-
         $user = Auth::getProvider()->retrieveByCredentials($credentials);
 
         if ($user->isUnconfirmed()) {

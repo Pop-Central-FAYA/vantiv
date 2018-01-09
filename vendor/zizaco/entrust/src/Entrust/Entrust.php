@@ -72,6 +72,7 @@ class Entrust
      */
     public function ability($roles, $permissions, $options = [])
     {
+
         if ($user = $this->user()) {
             return $user->ability($roles, $permissions, $options);
         }
@@ -106,7 +107,6 @@ class Entrust
     {
         $filterName  = is_array($roles) ? implode('_', $roles) : $roles;
         $filterName .= '_'.substr(md5($route), 0, 6);
-
         $closure = function () use ($roles, $result, $requireAll) {
             $hasRole = $this->hasRole($roles, $requireAll);
 

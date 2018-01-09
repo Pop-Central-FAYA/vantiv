@@ -25,7 +25,7 @@
 <!-- Main content -->
 
 <section class="content">
-    <form action="{{ url('/clients/store') }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ url('agency/clients/create') }}" method="POST" enctype="multipart/form-data">
         {{ csrf_field() }}
         <div class="row">
             <div class="col-md-8">

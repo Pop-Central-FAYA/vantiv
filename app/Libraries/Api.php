@@ -44,7 +44,6 @@ Class Api
         ];
 
         $status = json_decode($response);
-
         if ($status->status === false) {
             return back()->withErrors("Invalid Username or Password");
         }
