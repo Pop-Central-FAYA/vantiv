@@ -235,7 +235,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/periodic-sales/all', 'ReportController@psData');
             Route::get('/total-volume-of-campaign/all', 'ReportController@tvcData');
             Route::get('/high-day-parts/all', 'ReportController@hpdData');
-            Route::get('/high-days/all', 'ReportController@hpdaysData');
+            rheedRoute::get('/high-days/all', 'ReportController@hpdaysData');
         });
     });
 
