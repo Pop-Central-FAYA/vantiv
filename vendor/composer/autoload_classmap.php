@@ -1248,10 +1248,7 @@ return array(
     'Illuminate\\Notifications\\RoutesNotifications' => $vendorDir . '/laravel/framework/src/Illuminate/Notifications/RoutesNotifications.php',
     'Illuminate\\Notifications\\SendQueuedNotifications' => $vendorDir . '/laravel/framework/src/Illuminate/Notifications/SendQueuedNotifications.php',
     'Illuminate\\Pagination\\AbstractPaginator' => $vendorDir . '/laravel/framework/src/Illuminate/Pagination/AbstractPaginator.php',
-<<<<<<< HEAD
     'Illuminate\\Pagination\\BootstrapThreePresenter' => $vendorDir . '/laravel/framework/src/Illuminate/Pagination/BootstrapThreePresenter.php',
-=======
->>>>>>> 3a4e96477b21d2b90c6557e371ed1e5573ebe0f1
     'Illuminate\\Pagination\\LengthAwarePaginator' => $vendorDir . '/laravel/framework/src/Illuminate/Pagination/LengthAwarePaginator.php',
     'Illuminate\\Pagination\\PaginationServiceProvider' => $vendorDir . '/laravel/framework/src/Illuminate/Pagination/PaginationServiceProvider.php',
     'Illuminate\\Pagination\\Paginator' => $vendorDir . '/laravel/framework/src/Illuminate/Pagination/Paginator.php',
@@ -3628,14 +3625,12 @@ return array(
     'Vanguard\\Hourlyrange' => $baseDir . '/app/Hourlyrange.php',
     'Vanguard\\Http\\Controllers\\ActivityController' => $baseDir . '/app/Http/Controllers/ActivityController.php',
     'Vanguard\\Http\\Controllers\\AdslotController' => $baseDir . '/app/Http/Controllers/AdslotController.php',
-<<<<<<< HEAD
     'Vanguard\\Http\\Controllers\\Agency\\CampaignsController' => $baseDir . '/app/Http/Controllers/Agency/CampaignsController.php',
     'Vanguard\\Http\\Controllers\\Auth\\AuthController' => $baseDir . '/app/Http/Controllers/Auth/AuthController.php',
     'Vanguard\\Http\\Controllers\\Auth\\PasswordController' => $baseDir . '/app/Http/Controllers/Auth/PasswordController.php',
     'Vanguard\\Http\\Controllers\\Auth\\SocialAuthController' => $baseDir . '/app/Http/Controllers/Auth/SocialAuthController.php',
     'Vanguard\\Http\\Controllers\\BrandsController' => $baseDir . '/app/Http/Controllers/BrandsController.php',
     'Vanguard\\Http\\Controllers\\CampaignsController' => $baseDir . '/app/Http/Controllers/CampaignsController.php',
-=======
     'Vanguard\\Http\\Controllers\\Agency\\AgencyController' => $baseDir . '/app/Http/Controllers/Agency/AgencyController.php',
     'Vanguard\\Http\\Controllers\\Agency\\ClientController' => $baseDir . '/app/Http/Controllers/Agency/ClientController.php',
     'Vanguard\\Http\\Controllers\\Auth\\AuthController' => $baseDir . '/app/Http/Controllers/Auth/AuthController.php',
@@ -3644,7 +3639,6 @@ return array(
     'Vanguard\\Http\\Controllers\\CampaignsController' => $baseDir . '/app/Http/Controllers/CampaignsController.php',
     'Vanguard\\Http\\Controllers\\ClientBrandsController' => $baseDir . '/app/Http/Controllers/ClientBrandsController.php',
     'Vanguard\\Http\\Controllers\\ClientsController' => $baseDir . '/app/Http/Controllers/ClientsController.php',
->>>>>>> 3a4e96477b21d2b90c6557e371ed1e5573ebe0f1
     'Vanguard\\Http\\Controllers\\Controller' => $baseDir . '/app/Http/Controllers/Controller.php',
     'Vanguard\\Http\\Controllers\\DashboardController' => $baseDir . '/app/Http/Controllers/DashboardController.php',
     'Vanguard\\Http\\Controllers\\DayPartController' => $baseDir . '/app/Http/Controllers/DayPartController.php',
@@ -3747,8 +3741,6 @@ return array(
     'Webpatser\\Countries\\CountriesFacade' => $vendorDir . '/webpatser/laravel-countries/src/Webpatser/Countries/CountriesFacade.php',
     'Webpatser\\Countries\\CountriesServiceProvider' => $vendorDir . '/webpatser/laravel-countries/src/Webpatser/Countries/CountriesServiceProvider.php',
     'Webpatser\\Countries\\MigrationCommand' => $vendorDir . '/webpatser/laravel-countries/src/commands/MigrationCommand.php',
-<<<<<<< HEAD
-=======
     'WorldCitiesLocaleTableSeeder' => $baseDir . '/database/seeds/WorldCitiesLocaleTableSeeder.php',
     'WorldCitiesTableSeeder' => $baseDir . '/database/seeds/WorldCitiesTableSeeder.php',
     'WorldContinentsLocaleTableSeeder' => $baseDir . '/database/seeds/WorldContinentsLocaleTableSeeder.php',
@@ -3758,7 +3750,6 @@ return array(
     'WorldDivisionsLocaleTableSeeder' => $baseDir . '/database/seeds/WorldDivisionsLocaleTableSeeder.php',
     'WorldDivisionsTableSeeder' => $baseDir . '/database/seeds/WorldDivisionsTableSeeder.php',
     'WorldTablesSeeder' => $baseDir . '/database/seeds/WorldTablesSeeder.php',
->>>>>>> 3a4e96477b21d2b90c6557e371ed1e5573ebe0f1
     'Yajra\\DataTables\\CollectionDataTable' => $vendorDir . '/yajra/laravel-datatables-oracle/src/CollectionDataTable.php',
     'Yajra\\DataTables\\Contracts\\DataTable' => $vendorDir . '/yajra/laravel-datatables-oracle/src/Contracts/DataTable.php',
     'Yajra\\DataTables\\DataTableAbstract' => $vendorDir . '/yajra/laravel-datatables-oracle/src/DataTableAbstract.php',
