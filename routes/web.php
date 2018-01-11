@@ -103,6 +103,46 @@ Route::group(['prefix' => 'agency'], function () {
     });
 });
 
+//Route::group(['prefix' => 'agency'], function () {
+//
+//    Route::get('/dashboard', function () {
+//        return view('agency.dashboard.dashboard');
+//    });
+//    Route::get('/campaign-list', function () {
+//        return view('agency.template.campaign_list');
+//    });
+//    Route::get('/client-portfolio', function () {
+//        return view('agency.template.client_portfolio');
+//    });
+//    Route::get('/client-portfolio-details', function () {
+//        return view('agency.template.client_portfolio_details');
+//    });
+//    Route::get('/client-portfolio-details-more', function () {
+//        return view('agency.template.client_portfolio_details_more');
+//    });
+//    Route::get('/company', function () {
+//        return view('agency.template.company');
+//    });
+//    Route::get('/company-search', function () {
+//        return view('agency.template.company_search');
+//    });
+//    Route::get('/campaign-lists', function () {
+//        return view('agency.template.campaign_details');
+//    });
+//    Route::get('/campaign-form', function () {
+//        return view('agency.template.create_campaign');
+//    });
+//    Route::get('/wallet-credit', function () {
+//        return view('agency.template.credit_wallet');
+//    });
+//    Route::get('/payment-form', function () {
+//        return view('agency.template.payment_form');
+//    });
+//    Route::get('/wallet-statement', function () {
+//        return view('agency.template.wallet_statement');
+//    });
+//});
+
 Route::get('/error', 'InstallController@apiError')->name('errors');
 
 Route::group(['middleware' => 'auth'], function () {
@@ -249,10 +289,37 @@ Route::group(['middleware' => 'auth'], function () {
         Route::group(['prefix' => 'agency'], function() {
            Route::group(['prefix' => 'campaigns'], function() {
               Route::get('/all-campaigns', 'Agency\CampaignsController@index')->name('agency.campaign.all');
+              Route::get('/all-campaign/data', 'Agency\CampaignsController@getData');
+              Route::get('/all-clients', 'Agency\CampaignsController@allClient')->name('agency.campaign.create');
+              Route::get('/campaign/step1/{id}', 'Agency\CampaignsController@getStep1')->name('agency_campaign.step1');
+              Route::post('/campaign/step1/store/{id}', 'Agency\CampaignsController@postStep1')->name('agency_campaign.store1');
+              Route::get('/campaigns/step2/{id}', 'Agency\CampaignsController@getStep2')->name('agency_campaign.step2');
+              Route::get('/campaign/step3/{id}/{broadcaster}', 'Agency\CampaignsController@getStep3')->name('agency_campaign.step3');
+              Route::post('/campaign/step3/store/{id}/{broadcaster}', 'Agency\CampaignsController@postStep3')->name('agency_campaign.store3');
+              Route::get('/campaign/step4/{id}/{broadcaster}', 'Agency\CampaignsController@getStep4')->name('agency_campaign.step4');
+              Route::post('/campaigns/cart/store/{id}/{broadcaster}', 'Agency\CampaignsController@postCart')->name('agency_campaign.cart');
+              Route::get('/campaign/checkout/{id}/{broadcaster}', 'Agency\CampaignsController@checkout')->name('agency_campaign.checkout');
+              Route::get('/cart/remove/{id}', 'Agency\CampaignsController@removeCart')->name('agency_cart.remove');
+              Route::post('/campaign/submit/{id}/{broadcaster}', 'Agency\CampaignsController@postCampaign')->name('agency_submit.campaign');
            });
-           Route::group(['prefix' => 'clients'], function() {
-              Route::get('/', 'Agency\ClientController@index')->name('agency.client.all');
+
+           Route::group(['prefix' => 'brands'], function () {
+                Route::get('/all-brands', 'ClientBrandsController@index')->name('agency.brand.all');
+                Route::get('/create-brands', 'ClientBrandsController@create')->name('agency.brand.create');
+               Route::post('/create/store', 'ClientBrandsController@store')->name('agency.brand.store');
+               Route::post('/brands/edit/{id}', 'ClientBrandsController@update')->name('agency.brands.update');
+               Route::get('/brands/delete/{id}', 'ClientBrandsController@delete')->name('agency.brands.delete');
            });
+            /**
+             * Clients
+             */
+
+            Route::group(['prefix' => 'clients'], function () {
+                Route::get('/', 'ClientsController@index')->name('clients.all');
+                Route::get('/create', 'ClientsController@create')->name('clients.create');
+                Route::post('/create', 'ClientsController@create')->name('clients.store');
+                Route::post('/store', 'ClientsController@create')->name('clients.store');
+            });
         });
     });
 
@@ -518,53 +585,3 @@ Route::group(['middleware' => 'auth'], function () {
     ]);
 
 });
-
-
-/**
- * Installation
- */
-
-$router->get('install', [
-    'as' => 'install.start',
-    'uses' => 'InstallController@index'
-]);
-
-$router->get('install/requirements', [
-    'as' => 'install.requirements',
-    'uses' => 'InstallController@requirements'
-]);
-
-$router->get('install/permissions', [
-    'as' => 'install.permissions',
-    'uses' => 'InstallController@permissions'
-]);
-
-$router->get('install/database', [
-    'as' => 'install.database',
-    'uses' => 'InstallController@databaseInfo'
-]);
-
-$router->get('install/start-installation', [
-    'as' => 'install.installation',
-    'uses' => 'InstallController@installation'
-]);
-
-$router->post('install/start-installation', [
-    'as' => 'install.installation',
-    'uses' => 'InstallController@installation'
-]);
-
-$router->post('install/install-app', [
-    'as' => 'install.install',
-    'uses' => 'InstallController@install'
-]);
-
-$router->get('install/complete', [
-    'as' => 'install.complete',
-    'uses' => 'InstallController@complete'
-]);
-
-$router->get('install/error', [
-    'as' => 'install.error',
-    'uses' => 'InstallController@error'
-]);

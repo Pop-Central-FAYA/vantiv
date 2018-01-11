@@ -21,12 +21,7 @@
                     <a href="{{ route('checkout') }}" >
                         <i class="fa fa-cart-plus"></i>
                         <span class="label label-success">
-                            <?php
-                            $user_id = Session::get('user_id');
-                            $count = DB::select("SELECT * FROM carts WHERE user_id='$user_id'");
-                            $num = count($count);
-                            echo $num;
-                            ?>
+<!--                            --><?php //?>
                         </span>
                     </a>
                 </li>

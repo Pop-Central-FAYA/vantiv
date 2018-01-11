@@ -13,16 +13,22 @@
 
     @include('partials/header')
     <!-- Left side column. contains the logo and sidebar -->
-    @include('agency_partials.sidebar')
+    @include('partials.agent_sidebar')
 
-    <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper">
-        <!-- Content Header (Page header) -->
-        <!-- Content Header (Page header) -->
-        @yield('content')
+        <div class="content-wrapper">
 
-        <!-- /.content -->
-    </div>
+            <div class="container-fluid">
+                @include('partials.messages')
+                <div class="panel panel-default">
+                    <div class="container-fluid">
+                        @yield('content')
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
     <!-- /.content-wrapper -->
     @include('agency_partials.footer')
 
