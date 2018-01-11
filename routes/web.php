@@ -63,44 +63,45 @@ Route::get('auth/{provider}/callback', 'Auth\SocialAuthController@handleProvider
 Route::get('auth/twitter/email', 'Auth\SocialAuthController@getTwitterEmail');
 Route::post('auth/twitter/email', 'Auth\SocialAuthController@postTwitterEmail');
 
-Route::group(['prefix' => 'agency'], function () {
-    Route::get('/dashboard', function () {
-        return view('agency.dashboard.dashboard');
-    });
-    Route::get('/campaign-list', function () {
-        return view('agency.template.campaign_list');
-    });
-    Route::get('/client-portfolio', function () {
-        return view('agency.template.client_portfolio');
-    });
-    Route::get('/client-portfolio-details', function () {
-        return view('agency.template.client_portfolio_details');
-    });
-    Route::get('/client-portfolio-details-more', function () {
-        return view('agency.template.client_portfolio_details_more');
-    });
-    Route::get('/company', function () {
-        return view('agency.template.company');
-    });
-    Route::get('/company-search', function () {
-        return view('agency.template.company_search');
-    });
-    Route::get('/campaign-lists', function () {
-        return view('agency.template.campaign_details');
-    });
-    Route::get('/campaign-form', function () {
-        return view('agency.template.create_campaign');
-    });
-    Route::get('/wallet-credit', function () {
-        return view('agency.template.credit_wallet');
-    });
-    Route::get('/payment-form', function () {
-        return view('agency.template.payment_form');
-    });
-    Route::get('/wallet-statement', function () {
-        return view('agency.template.wallet_statement');
-    });
-});
+//Route::group(['prefix' => 'agency'], function () {
+//
+//    Route::get('/dashboard', function () {
+//        return view('agency.dashboard.dashboard');
+//    });
+//    Route::get('/campaign-list', function () {
+//        return view('agency.template.campaign_list');
+//    });
+//    Route::get('/client-portfolio', function () {
+//        return view('agency.template.client_portfolio');
+//    });
+//    Route::get('/client-portfolio-details', function () {
+//        return view('agency.template.client_portfolio_details');
+//    });
+//    Route::get('/client-portfolio-details-more', function () {
+//        return view('agency.template.client_portfolio_details_more');
+//    });
+//    Route::get('/company', function () {
+//        return view('agency.template.company');
+//    });
+//    Route::get('/company-search', function () {
+//        return view('agency.template.company_search');
+//    });
+//    Route::get('/campaign-lists', function () {
+//        return view('agency.template.campaign_details');
+//    });
+//    Route::get('/campaign-form', function () {
+//        return view('agency.template.create_campaign');
+//    });
+//    Route::get('/wallet-credit', function () {
+//        return view('agency.template.credit_wallet');
+//    });
+//    Route::get('/payment-form', function () {
+//        return view('agency.template.payment_form');
+//    });
+//    Route::get('/wallet-statement', function () {
+//        return view('agency.template.wallet_statement');
+//    });
+//});
 
 Route::get('/error', 'InstallController@apiError')->name('errors');
 
@@ -115,17 +116,16 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/', 'CampaignsController@index')->name('campaign.all');
             Route::get('/create', 'CampaignsController@create')->name('campaign.create');
             Route::get('/create/{id}/{walkins}/step2', 'CampaignsController@createStep2')->name('campaign.create2');
-            Route::get('/create/{id}/step3', 'CampaignsController@createStep3')->name('campaign.create3');
-            Route::get('/create/{id}/step4', 'CampaignsController@createStep4')->name('campaign.create4');
+            Route::get('/create/{id}/{walkins}/step3', 'CampaignsController@createStep3')->name('campaign.create3');
+            Route::get('/create/{id}/{walkins}/step4', 'CampaignsController@createStep4')->name('campaign.create4');
             Route::get('/create/{id}/step5', 'CampaignsController@createStep5')->name('campaign.create5');
             Route::get('/create/{id}/step6', 'CampaignsController@createStep6')->name('campaign.create6');
             Route::get('/create/{id}/step7', 'CampaignsController@createStep7')->name('campaign.create7');
             Route::get('/create/{id}/step8', 'CampaignsController@createStep8')->name('campaign.create8');
             Route::get('/create/{id}/step9', 'CampaignsController@createStep9')->name('campaign.create9');
-
             Route::post('/create/{id}/{walkins}/step2/store', 'CampaignsController@postStep2')->name('campaign.store2');
-            Route::post('/create/{id}/step3/store', 'CampaignsController@postStep3')->name('campaign.store3');
-            Route::post('/create/{id}/step4/store', 'CampaignsController@postStep4')->name('campaign.store4');
+            Route::post('/create/{id}/{walkins}/step3/store', 'CampaignsController@postStep3')->name('campaign.store3');
+            Route::post('/create/{id}/{walkins}/step4/store', 'CampaignsController@postStep4')->name('campaign.store4');
             Route::post('/create/{id}/step5/store', 'CampaignsController@postStep5')->name('campaign.store5');
             Route::post('/create/{id}/step6/store', 'CampaignsController@postStep6')->name('campaign.store6');
             Route::get('/create/{id}/step7/get', 'CampaignsController@getStep7')->name('campaign.store7');
@@ -133,7 +133,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/add-to-cart', 'CampaignsController@postCart')->name('store.cart');
             Route::get('/checkout', 'CampaignsController@getCheckout')->name('checkout');
             Route::post('/submit-campaign', 'CampaignsController@postCampaign')->name('submit.campaign');
-            Route::get('/remove-campaings/{id}', 'CampaignsController@removeCart')->name('cart.remove');
+            Route::get('/remove-campaigns/{id}', 'CampaignsController@removeCart')->name('cart.remove');
 
             Route::get('/all-campaign/data', 'CampaignsController@getAllData');
         });
@@ -141,6 +141,14 @@ Route::group(['middleware' => 'auth'], function () {
         /*
          * WalkIns Management
          */
+
+        Route::group(['prefix' => 'brands'], function () {
+            Route::get('/', 'BrandsController@index')->name('brand.all');
+            Route::get('/create', 'BrandsController@create')->name('brand.create');
+            Route::post('/create/store', 'BrandsController@store')->name('brand.store');
+            Route::post('/brands/edit/{id}', 'BrandsController@update')->name('brands.update');
+            Route::get('/brands/delete/{id}', 'BrandsController@delete')->name('brands.delete');
+        });
 
         Route::group(['prefix' => 'walkins'], function () {
             Route::get('/', 'WalkinsController@index')->name('walkins.all');
@@ -235,7 +243,42 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/periodic-sales/all', 'ReportController@psData');
             Route::get('/total-volume-of-campaign/all', 'ReportController@tvcData');
             Route::get('/high-day-parts/all', 'ReportController@hpdData');
-            rheedRoute::get('/high-days/all', 'ReportController@hpdaysData');
+            Route::get('/high-days/all', 'ReportController@hpdaysData');
+        });
+
+        Route::group(['prefix' => 'agency'], function() {
+           Route::group(['prefix' => 'campaigns'], function() {
+              Route::get('/all-campaigns', 'Agency\CampaignsController@index')->name('agency.campaign.all');
+              Route::get('/all-campaign/data', 'Agency\CampaignsController@getData');
+              Route::get('/all-clients', 'Agency\CampaignsController@allClient')->name('agency.campaign.create');
+              Route::get('/campaign/step1/{id}', 'Agency\CampaignsController@getStep1')->name('agency_campaign.step1');
+              Route::post('/campaign/step1/store/{id}', 'Agency\CampaignsController@postStep1')->name('agency_campaign.store1');
+              Route::get('/campaigns/step2/{id}', 'Agency\CampaignsController@getStep2')->name('agency_campaign.step2');
+              Route::get('/campaign/step3/{id}/{broadcaster}', 'Agency\CampaignsController@getStep3')->name('agency_campaign.step3');
+              Route::post('/campaign/step3/store/{id}/{broadcaster}', 'Agency\CampaignsController@postStep3')->name('agency_campaign.store3');
+              Route::get('/campaign/step4/{id}/{broadcaster}', 'Agency\CampaignsController@getStep4')->name('agency_campaign.step4');
+              Route::post('/campaigns/cart/store/{id}/{broadcaster}', 'Agency\CampaignsController@postCart')->name('agency_campaign.cart');
+              Route::get('/campaign/checkout/{id}/{broadcaster}', 'Agency\CampaignsController@checkout')->name('agency_campaign.checkout');
+              Route::get('/cart/remove/{id}', 'Agency\CampaignsController@removeCart')->name('agency_cart.remove');
+              Route::post('/campaign/submit/{id}/{broadcaster}', 'Agency\CampaignsController@postCampaign')->name('agency_submit.campaign');
+           });
+
+           Route::group(['prefix' => 'brands'], function () {
+                Route::get('/all-brands', 'ClientBrandsController@index')->name('agency.brand.all');
+                Route::get('/create-brands', 'ClientBrandsController@create')->name('agency.brand.create');
+               Route::post('/create/store', 'ClientBrandsController@store')->name('agency.brand.store');
+               Route::post('/brands/edit/{id}', 'ClientBrandsController@update')->name('agency.brands.update');
+               Route::get('/brands/delete/{id}', 'ClientBrandsController@delete')->name('agency.brands.delete');
+           });
+            /**
+             * Clients
+             */
+
+            Route::group(['prefix' => 'clients'], function () {
+                Route::get('/', 'ClientsController@index')->name('clients.all');
+                Route::any('/create', 'ClientsController@create')->name('clients.create');
+                Route::post('/store', 'ClientsController@create')->name('clients.store');
+            });
         });
     });
 
@@ -501,53 +544,3 @@ Route::group(['middleware' => 'auth'], function () {
     ]);
 
 });
-
-
-/**
- * Installation
- */
-
-$router->get('install', [
-    'as' => 'install.start',
-    'uses' => 'InstallController@index'
-]);
-
-$router->get('install/requirements', [
-    'as' => 'install.requirements',
-    'uses' => 'InstallController@requirements'
-]);
-
-$router->get('install/permissions', [
-    'as' => 'install.permissions',
-    'uses' => 'InstallController@permissions'
-]);
-
-$router->get('install/database', [
-    'as' => 'install.database',
-    'uses' => 'InstallController@databaseInfo'
-]);
-
-$router->get('install/start-installation', [
-    'as' => 'install.installation',
-    'uses' => 'InstallController@installation'
-]);
-
-$router->post('install/start-installation', [
-    'as' => 'install.installation',
-    'uses' => 'InstallController@installation'
-]);
-
-$router->post('install/install-app', [
-    'as' => 'install.install',
-    'uses' => 'InstallController@install'
-]);
-
-$router->get('install/complete', [
-    'as' => 'install.complete',
-    'uses' => 'InstallController@complete'
-]);
-
-$router->get('install/error', [
-    'as' => 'install.error',
-    'uses' => 'InstallController@error'
-]);

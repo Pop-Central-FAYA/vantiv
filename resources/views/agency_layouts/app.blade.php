@@ -4,25 +4,31 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     @yield('title')
-    @include('agency_partials._head')
+    @include('partials._head')
     @yield('style')
     <![endif]-->
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
 
-    @include('agency_partials.header')
+    @include('partials/header')
     <!-- Left side column. contains the logo and sidebar -->
-    @include('agency_partials.sidebar')
+    @include('partials.agent_sidebar')
 
-    <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper">
-        <!-- Content Header (Page header) -->
-        <!-- Content Header (Page header) -->
-        @yield('content')
+        <div class="content-wrapper">
 
-        <!-- /.content -->
-    </div>
+            <div class="container-fluid">
+                @include('partials.messages')
+                <div class="panel panel-default">
+                    <div class="container-fluid">
+                        @yield('content')
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
     <!-- /.content-wrapper -->
     @include('agency_partials.footer')
 

@@ -3,6 +3,7 @@
 namespace Vanguard\Libraries;
 
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class Utilities {
 
@@ -15,7 +16,7 @@ class Utilities {
             case 'api':
                 return DB::connection('mysql-2');
                 break;
-            case 'reports':
+            case 'api':
                 return DB::connection('api_db');
                 break;
             default;
@@ -29,5 +30,14 @@ class Utilities {
         $trim = rtrim($number, '.');
         return $trim;
     }
+
+    public static function formatString($string)
+    {
+        $string = strtolower($string);
+        return str_replace('-', ' ', $string); // Replaces all spaces with hyphens.
+//        return preg_replace('/[^A-Za-z]/', ' ', $string); // Removes special chars.
+    }
+
+
 
 }
