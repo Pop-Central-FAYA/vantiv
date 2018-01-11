@@ -21,7 +21,7 @@
         <div class="row">
             <div class="col-md-1 hidden-sm hidden-xs"></div>
             <div class="col-md-9 " style="padding:2%">
-                <form class="campform" method="POST" action="{{ route('campaign.store4', ['id' => 1]) }}" enctype="multipart/form-data">
+                <form class="campform" method="POST" action="{{ route('campaign.store4', ['id' => 1, 'walkins' => $walkins]) }}" enctype="multipart/form-data">
                     {{ csrf_field() }}
                     <div class="row">
                         <div class="col-md-12 ">
@@ -49,7 +49,7 @@
                                         <option value="45">45 Seconds</option>
                                         <option value="60">60 Seconds</option>
                                     </select>
-                                    <button type="button" id="add_more" class="btn btn-info btn-xs add_more">+ Add More</button>
+                                    {{--<button type="button" id="add_more" class="btn btn-info btn-xs add_more">+ Add More</button>--}}
                                 </div>
                             </div>
                         </div>
@@ -105,8 +105,9 @@
 
     <script>
         $(document).ready(function() {
+            var user_id = "<?php echo $walkins ?>";
             $('#step3').click(function(){
-                window.location.href = "/campaign/create/1/step3";
+                window.location.href = '/campaign/create/1/'+user_id+'/step3';
             });
         });
     </script>

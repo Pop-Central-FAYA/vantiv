@@ -187,6 +187,8 @@ return [
         Ixudra\Curl\CurlServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
+        //JD\Cloudder\CloudderServiceProvider::class,
+
 
         /*
          * Application Service Providers...
@@ -197,6 +199,7 @@ return [
         Vanguard\Providers\EventServiceProvider::class,
         Vanguard\Providers\RouteServiceProvider::class,
         Vanguard\Services\Auth\TwoFactor\AuthyServiceProvider::class,
+        //JD\Cloudder\CloudderServiceProvider::class
 
     ],
 
@@ -260,6 +263,7 @@ return [
         'Curl' => Ixudra\Curl\Facades\Curl::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
+       // 'Cloudder' => JD\Cloudder\Facades\Cloudder::class
 
     ],
 

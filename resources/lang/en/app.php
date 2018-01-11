@@ -346,4 +346,10 @@ return [
     'adslot_updated'=> 'Hurray!!!, Adslot updated successfully',
     'walkins'=> 'Hurray!!!, Walkins Added successfully',
     'walkins_delete' => 'Success!!!, Walkins deleted successfully',
+
+    'create-client' => 'Create Client',
+    'view-clients' => 'View Clients',
+    'view-client' => 'View Client',
+    'view-all-invoices' => 'All Invoices',
+    'view-pending-invoices' => 'Pending Invoices'
 ];

@@ -28,7 +28,7 @@ Class Api
      */
     public static function auth_user(Request $request)
     {
-        $username = Encrypt::encrypt($request->email, Api::$api_private_key, 256);
+        $username = Encrypt::encrypt($request->username, Api::$api_private_key, 256);
         $password = Encrypt::encrypt($request->password, Api::$api_private_key, 256);
         $auth_url = Api::$url.'user/login?key='.Api::$public;
         $response = Curl::to($auth_url)
@@ -43,11 +43,17 @@ Class Api
             'password' => $password
         ];
         $status = json_decode($response);
-        if($status->status == false){
-            return back()->with('error','Invalid username or password');
+        if ($status->status === false) {
+            return back()->withErrors("Invalid Username or Password");
         }
+
         ApiLog::save_activity_log($req, $response, $auth_url);
         $data = json_decode($response, true);
+        $status = json_decode($response);
+        if($status->status == false)
+        {
+            return back();
+        }
         session(['encrypted_token' => $data['data']['token']]);
         session(['broadcaster_id' => $data['data']['info']['id']]);
         session(['broadcaster_brand' => $data['data']['info']['brand']]);
