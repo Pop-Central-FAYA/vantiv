@@ -44,7 +44,7 @@
 
                 <ul class="treeview-menu">
                     <li><a href="{{ route('clients.create') }}"><i class="fa fa-circle-o"></i> Add Client</a></li>
-                    <li><a href="company-search.html"><i class="fa fa-circle-o"></i> Clients List</a></li>
+                    <li><a href="{{ route('clients.list') }}"><i class="fa fa-circle-o"></i> Clients List</a></li>
                     <li><a href="client-portfolio.html"><i class="fa fa-circle-o"></i> Clients Portfolio</a></li>
                 </ul>
             </li>
@@ -72,8 +72,8 @@
             </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="#"><i class="fa fa-circle-o"></i> All Invoices</a></li>
-                    <li><a href="#"><i class="fa fa-circle-o"></i> Pending Invoices </a></li>
+                    <li><a href="{{ route("invoices.all") }}"><i class="fa fa-circle-o"></i> All Invoices</a></li>
+                    <li><a href="{{ route("invoices.pending") }}"><i class="fa fa-circle-o"></i> Pending Invoices </a></li>
 
                 </ul>
             </li>

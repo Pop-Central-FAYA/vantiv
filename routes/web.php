@@ -250,14 +250,20 @@ Route::group(['middleware' => 'auth'], function () {
            Route::group(['prefix' => 'campaigns'], function() {
               Route::get('/all-campaigns', 'Agency\CampaignsController@index')->name('agency.campaign.all');
            });
+
             /**
              * Clients
              */
-
             Route::group(['prefix' => 'clients'], function () {
                 Route::get('/', 'ClientsController@index')->name('clients.all');
                 Route::any('/create', 'ClientsController@create')->name('clients.create');
-                Route::post('/store', 'ClientsController@create')->name('clients.store');
+                Route::get('list', 'ClientsController@clients')->name('clients.list');
+                Route::get('/client/{client_id}', 'ClientsController@clientShow')->name('client.show');
+            });
+
+            Route::group(['prefix' => 'invoices'], function () {
+                Route::get('/all', 'InvoiceController@all')->name('invoices.all');
+                Route::get('/pending', 'InvoiceController@pending')->name('invoices.pending');
             });
         });
     });
