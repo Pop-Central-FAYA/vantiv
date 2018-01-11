@@ -61,15 +61,6 @@
             </div>
         </div>
     </div>
-    <div role="tabpanel" class="tab-pane" id="social-networks">
-        <div class="row">
-            <div class="col-md-12">
-                {!! Form::open(['route' => ['user.update.socials', $user->id]]) !!}
-                    @include('user.partials.social-networks')
-                {!! Form::close() !!}
-            </div>
-        </div>
-    </div>
     <div role="tabpanel" class="tab-pane" id="auth">
         <div class="row">
             <div class="col-md-8">
