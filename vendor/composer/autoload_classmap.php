@@ -3633,6 +3633,8 @@ return array(
     'Vanguard\\Http\\Controllers\\Auth\\SocialAuthController' => $baseDir . '/app/Http/Controllers/Auth/SocialAuthController.php',
     'Vanguard\\Http\\Controllers\\BrandsController' => $baseDir . '/app/Http/Controllers/BrandsController.php',
     'Vanguard\\Http\\Controllers\\CampaignsController' => $baseDir . '/app/Http/Controllers/CampaignsController.php',
+    'Vanguard\\Http\\Controllers\\ClientBrandsController' => $baseDir . '/app/Http/Controllers/ClientBrandsController.php',
+    'Vanguard\\Http\\Controllers\\ClientsController' => $baseDir . '/app/Http/Controllers/ClientsController.php',
     'Vanguard\\Http\\Controllers\\Controller' => $baseDir . '/app/Http/Controllers/Controller.php',
     'Vanguard\\Http\\Controllers\\DashboardController' => $baseDir . '/app/Http/Controllers/DashboardController.php',
     'Vanguard\\Http\\Controllers\\DayPartController' => $baseDir . '/app/Http/Controllers/DayPartController.php',

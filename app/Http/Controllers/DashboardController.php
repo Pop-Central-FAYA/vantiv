@@ -45,6 +45,10 @@ class DashboardController extends Controller
             $user_id = $walk[0]->user_id;
             $customer_name = Utilities::switch_db('api')->select("SELECT firstname,lastname from users where id='$user_id'");
             $campaign_det = Utilities::switch_db('api')->select("SELECT `name` as campaign_name, DATE_FORMAT(stop_date, '%Y-%m-%d') as stop_date from campaigns where id='$i->campaign_id'");
+            $walk = Utilities::switch_db('api')->select("SELECT user_id from walkIns where id='$i->walkins_id'");
+            $user_id = $walk[0]->user_id;
+            $customer_name = Utilities::switch_db('api')->select("SELECT firstname,lastname from users where id='$user_id'");
+            $campaign_det = Utilities::switch_db('api')->select("SELECT `name` as campaign_name, DATE_FORMAT(stop_date, '%Y-%m-%d') as stop_date from campaigns where id='$i->campaign_id'");
             $invoice_array[] = [
                 'campaign_name' => $campaign_det[0]->campaign_name,
                 'customer' => $customer_name[0]->firstname . ' ' .$customer_name[0]->lastname,
@@ -159,14 +163,11 @@ class DashboardController extends Controller
         $get_ratecards_for_this_day = Utilities::switch_db('reports')->select("SELECT * from rateCards WHERE day = '$t_day' AND broadcaster = '$broadcaster'");
         foreach ($get_ratecards_for_this_day as $gr)
         {
-            $adslot = Utilities::switch_db('reports')->select("SELECT COUNT(id) as total_slot, rate_card from adslots WHERE rate_card = '$gr->id'");
+            //$adslot = Utilities::switch_db('reports')->select("SELECT COUNT(id) as total_slot, rate_card from adslots WHERE rate_card = '$gr->id'");
+            $adslot = Utilities::switch_db('api')->select("SELECT COUNT(id) as total_slot, rate_card from adslots WHERE rate_card = '$gr->id'");
 //            $campaign = Utilities::switch_db('reports')->select("SELECT SUM(adslots) as total_sold from campaigns WHERE broadcaster = '$broadcaster' AND  GROUP BY ");
             $rate_c[] = $adslot;
         }
-
-
-
-
         return view('dashboard.default')->with(['campaign' => $c, 'volume' => $c_volume, 'month' => $c_mon, 'high_dayp' => $day_pie, 'days' => $days_data, 'adslot' => $ads_no, 'price' => $tot_pri, 'mon' => $mon, 'invoice' => $invoice]);
     }
 

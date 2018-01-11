@@ -44,6 +44,7 @@
 
                 <ul class="treeview-menu">
                     <li><a href="/clients/create"><i class="fa fa-circle-o"></i> Add Client</a></li>
+                    <li><a href="{{ route('clients.create') }}"><i class="fa fa-circle-o"></i> Add Client</a></li>
                     <li><a href="company-search.html"><i class="fa fa-circle-o"></i> Clients List</a></li>
                     <li><a href="client-portfolio.html"><i class="fa fa-circle-o"></i> Clients Portfolio</a></li>
                 </ul>
@@ -60,6 +61,29 @@
                 <ul class="treeview-menu">
                     <li><a href="create-campaign.html"><i class="fa fa-circle-o"></i> Create Campaign</a></li>
                     <li><a href="campaign-list.html"><i class="fa fa-circle-o"></i> Campaign List</a></li>
+                    <span>Brands Management</span>
+                    <span class="pull-right-container">
+                      <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li><a href="{{ route('agency.brand.create') }}"><i class="fa fa-circle-o"></i> Create Brands</a></li>
+                    <li><a href="{{ route('agency.brand.all') }}"><i class="fa fa-circle-o"></i> Brands List</a></li>
+
+                </ul>
+            </li>
+
+            <li class=" treeview">
+                <a href="#">
+                    <i class="fa fa-th"></i>
+                    <span>Campaign</span>
+                    <span class="pull-right-container">
+                      <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li><a href="{{ route('agency.campaign.create') }}"><i class="fa fa-circle-o"></i> Create Campaign</a></li>
+                    <li><a href="{{ route('agency.campaign.all') }}"><i class="fa fa-circle-o"></i> Campaign List</a></li>
                 </ul>
             </li>
 

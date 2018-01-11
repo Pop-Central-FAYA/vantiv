@@ -22,7 +22,6 @@
         <div class="row">
             <div class="col-md-2 hidden-sm hidden-xs"></div>
             <div class="col-md-8 Campaign" style="padding:2%">
-
                 <div class="row">
                <span><label>Brand</label>
          <select class="add-disc" style="width: 30%; border:none; padding: 1%; float:none">
@@ -54,11 +53,6 @@
                         </div>
                     </div>
                 </div>
-
-
-
-
-
             </div>
             <!-- /.col -->
             <div class="col-md-2 hidden-sm hidden-xs"></div>
@@ -73,6 +67,11 @@
                         <!-- /.box-header -->
                         <div class="box-body">
                             <table id="example1" class="table table-bordered table-striped">
+                            <h3 class="box-title">All Agency Campaigns</h3>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <table id="agency_campaign_all" class="table table-bordered table-striped agency_campaign_all">
                                 <thead>
                                 <tr>
                                     <th>No</th>
@@ -131,12 +130,18 @@
                                 <tfoot>
 
                                 </tfoot>
+                                <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Adslots</th>
+                                    <th>Compliance</th>
+                                    <th>Status</th>
+                                </tr>
+                                </thead>
                             </table>
                         </div>
                         <!-- /.box-body -->
                     </div>
                 </div>
-
 
                 <div class="modal fade bs-example1-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
                     <div class="modal-dialog modal-lg" role="document">
@@ -254,6 +259,31 @@
                 "autoWidth": false
             });
         });
+        $(document).ready(function () {
+            var Datefilter =  $('.agency_campaign_all').DataTable({
+                paging: true,
+                serverSide: true,
+                processing: true,
+                ajax: {
+                    url: '/agency/campaigns/all-campaign/data',
+                    data: function (d) {
+                        d.start_date = $('input[name=txtFromDate_hvc]').val();
+                        d.stop_date = $('input[name=txtToDate_hvc]').val();
+                    }
+                },
+                columns: [
+                    {data: 'id', name: 'id'},
+                    {data: 'name', name: 'name'},
+                    {data: 'brand', name: 'brand'},
+                    {data: 'product', name: 'product'},
+                    {data: 'start_date', name: 'start_date'},
+                    {data: 'end_date', name: 'end_date'},
+                    {data: 'adslots', name: 'adslots'},
+                    {data: 'compliance', name: 'compliance'},
+                    {data: 'status', name: 'status'},
+                ]
+            });
+        })
     </script>
 
     <script>
