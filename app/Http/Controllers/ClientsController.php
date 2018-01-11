@@ -35,6 +35,7 @@ class ClientsController extends Controller
             ]);
 
             if ($request->hasFile('image_url')) {
+
                 $image = $request->file('image_url');
 
                 $client_image = time() . $image->getClientOriginalName();
@@ -42,7 +43,8 @@ class ClientsController extends Controller
                 $image->move('clients_uploads', $client_image);
             }
             $user_id = \DB::select("SELECT id from users WHERE email = '$request->email'");
-            $walkinInsert = Utilities::switch_db('api')->table('walkIns')->insert([
+
+            $walkinInsert = Utilities::switch_db('reports')->table('walkIns')->insert([
                 'id' => uniqid(),
                 'user_id' => $user_id[0]->id,
                 'broadcaster_id' => $request->broadcaster_id,

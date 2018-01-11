@@ -318,7 +318,6 @@ Route::group(['middleware' => 'auth'], function () {
                 Route::get('/', 'ClientsController@index')->name('clients.all');
                 Route::get('/create', 'ClientsController@create')->name('clients.create');
                 Route::post('/create', 'ClientsController@create')->name('clients.store');
-                Route::any('/create', 'ClientsController@create')->name('clients.create');
                 Route::post('/store', 'ClientsController@create')->name('clients.store');
             });
         });
