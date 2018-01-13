@@ -26,7 +26,7 @@
         <ul class="sidebar-menu">
             <li class="header">MAIN NAVIGATION</li>
             <li class="active treeview">
-                <a href="">
+                <a href="{{ route('dashboard') }}">
                     <i class="fa fa-dashboard"></i> <span>Dashboard</span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
@@ -35,7 +35,7 @@
             </li>
 
             <li class="active treeview">
-                <a href="/clients">
+                <a href="#">
                     <i class="fa fa-dashboard"></i> <span>Clients</span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
@@ -102,8 +102,8 @@
             </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="credit-wallet.html"><i class="fa fa-circle-o"></i> Credit Wallet</a></li>
-                    <li><a href="walletstatement.html"><i class="fa fa-circle-o"></i> Wallet Statement </a></li>
+                    <li><a href="{{ route('agency_wallet.create') }}"><i class="fa fa-circle-o"></i> Credit Wallet</a></li>
+                    <li><a href="{{ route('agency_wallet.statement') }}"><i class="fa fa-circle-o"></i> Wallet Statement </a></li>
 
                 </ul>
 

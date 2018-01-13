@@ -103,11 +103,19 @@ Route::post('auth/twitter/email', 'Auth\SocialAuthController@postTwitterEmail');
 //    });
 //});
 
+//    Route::get('/wallet-statement', function () {
+//        return view('agency.template.wallet_statement');
+//    });
+
 Route::get('/error', 'InstallController@apiError')->name('errors');
 
 Route::group(['middleware' => 'auth'], function () {
 
     Route::group(['middleware' => 'token'], function () {
+
+        Route::post('/pay', 'PaymentController@redirectToGateway')->name('pay');
+
+        Route::get('/payment/callback', 'PaymentController@handleGatewayCallback');
 
         /*
         * Campaign
@@ -278,6 +286,13 @@ Route::group(['middleware' => 'auth'], function () {
                 Route::get('/', 'ClientsController@index')->name('clients.all');
                 Route::any('/create', 'ClientsController@create')->name('clients.create');
                 Route::post('/store', 'ClientsController@create')->name('clients.store');
+            });
+
+            Route::group(['prefix' => 'wallets'], function(){
+               Route::get('/wallet/credit', 'Agency\WalletsController@create')->name('agency_wallet.create');
+               Route::get('/wallet-statement', 'Agency\WalletsController@index')->name('agency_wallet.statement');
+               Route::post('/wallet/amount', 'Agency\WalletsController@getAmount')->name('wallet.amount');
+               Route::get('/wallet/amount/pay', 'Agency\WalletsController@getPay')->name('amount.pay');
             });
         });
     });

@@ -12,7 +12,7 @@ class MpoController extends Controller
     {
         // $mpos = json_decode(Api::get_broadcaster_mpo())->data;
 
-        $mpos = Utilities::switch_db('reports')->select("SELECT * FROM mpos");
+        $mpos = Utilities::switch_db('api')->select("SELECT * FROM mpos");
 
         $mpo_data = [];
 

@@ -52,6 +52,10 @@ class ComposerStaticInitf21065eee33d83e8b687549e5f2385ef
         array (
             'Vanguard\\' => 9,
         ),
+        'U' => 
+        array (
+            'Unicodeveloper\\Paystack\\' => 24,
+        ),
         'T' => 
         array (
             'TijsVerkoyen\\CssToInlineStyles\\' => 31,
@@ -169,6 +173,10 @@ class ComposerStaticInitf21065eee33d83e8b687549e5f2385ef
         'Vanguard\\' => 
         array (
             0 => __DIR__ . '/../..' . '/app',
+        ),
+        'Unicodeveloper\\Paystack\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/unicodeveloper/laravel-paystack/src',
         ),
         'TijsVerkoyen\\CssToInlineStyles\\' => 
         array (
@@ -1672,6 +1680,7 @@ class ComposerStaticInitf21065eee33d83e8b687549e5f2385ef
         'Illuminate\\Notifications\\RoutesNotifications' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Notifications/RoutesNotifications.php',
         'Illuminate\\Notifications\\SendQueuedNotifications' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Notifications/SendQueuedNotifications.php',
         'Illuminate\\Pagination\\AbstractPaginator' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Pagination/AbstractPaginator.php',
+        'Illuminate\\Pagination\\BootstrapThreePresenter' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Pagination/BootstrapThreePresenter.php',
         'Illuminate\\Pagination\\LengthAwarePaginator' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Pagination/LengthAwarePaginator.php',
         'Illuminate\\Pagination\\PaginationServiceProvider' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Pagination/PaginationServiceProvider.php',
         'Illuminate\\Pagination\\Paginator' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Pagination/Paginator.php',
@@ -4014,6 +4023,12 @@ class ComposerStaticInitf21065eee33d83e8b687549e5f2385ef
         'TijsVerkoyen\\CssToInlineStyles\\Css\\Rule\\Processor' => __DIR__ . '/..' . '/tijsverkoyen/css-to-inline-styles/src/Css/Rule/Processor.php',
         'TijsVerkoyen\\CssToInlineStyles\\Css\\Rule\\Rule' => __DIR__ . '/..' . '/tijsverkoyen/css-to-inline-styles/src/Css/Rule/Rule.php',
         'TypeError' => __DIR__ . '/..' . '/symfony/polyfill-php70/Resources/stubs/TypeError.php',
+        'Unicodeveloper\\Paystack\\Exceptions\\IsNullException' => __DIR__ . '/..' . '/unicodeveloper/laravel-paystack/src/Exceptions/isNullException.php',
+        'Unicodeveloper\\Paystack\\Exceptions\\PaymentVerificationFailedException' => __DIR__ . '/..' . '/unicodeveloper/laravel-paystack/src/Exceptions/PaymentVerificationFailedException.php',
+        'Unicodeveloper\\Paystack\\Facades\\Paystack' => __DIR__ . '/..' . '/unicodeveloper/laravel-paystack/src/Facades/Paystack.php',
+        'Unicodeveloper\\Paystack\\Paystack' => __DIR__ . '/..' . '/unicodeveloper/laravel-paystack/src/Paystack.php',
+        'Unicodeveloper\\Paystack\\PaystackServiceProvider' => __DIR__ . '/..' . '/unicodeveloper/laravel-paystack/src/PaystackServiceProvider.php',
+        'Unicodeveloper\\Paystack\\TransRef' => __DIR__ . '/..' . '/unicodeveloper/laravel-paystack/src/TransRef.php',
         'UserSeeder' => __DIR__ . '/../..' . '/database/seeds/UserSeeder.php',
         'Vanguard\\ApiLog' => __DIR__ . '/../..' . '/app/ApiLog.php',
         'Vanguard\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
@@ -4048,12 +4063,15 @@ class ComposerStaticInitf21065eee33d83e8b687549e5f2385ef
         'Vanguard\\Hourlyrange' => __DIR__ . '/../..' . '/app/Hourlyrange.php',
         'Vanguard\\Http\\Controllers\\ActivityController' => __DIR__ . '/../..' . '/app/Http/Controllers/ActivityController.php',
         'Vanguard\\Http\\Controllers\\AdslotController' => __DIR__ . '/../..' . '/app/Http/Controllers/AdslotController.php',
-        'Vanguard\\Http\\Controllers\\Agency\\AgencyController' => __DIR__ . '/../..' . '/app/Http/Controllers/Agency/AgencyController.php',
-        'Vanguard\\Http\\Controllers\\Agency\\ClientController' => __DIR__ . '/../..' . '/app/Http/Controllers/Agency/ClientController.php',
+        'Vanguard\\Http\\Controllers\\Agency\\CampaignsController' => __DIR__ . '/../..' . '/app/Http/Controllers/Agency/CampaignsController.php',
+        'Vanguard\\Http\\Controllers\\Agency\\WalletsController' => __DIR__ . '/../..' . '/app/Http/Controllers/Agency/WalletsController.php',
         'Vanguard\\Http\\Controllers\\Auth\\AuthController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/AuthController.php',
         'Vanguard\\Http\\Controllers\\Auth\\PasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/PasswordController.php',
         'Vanguard\\Http\\Controllers\\Auth\\SocialAuthController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/SocialAuthController.php',
+        'Vanguard\\Http\\Controllers\\BrandsController' => __DIR__ . '/../..' . '/app/Http/Controllers/BrandsController.php',
         'Vanguard\\Http\\Controllers\\CampaignsController' => __DIR__ . '/../..' . '/app/Http/Controllers/CampaignsController.php',
+        'Vanguard\\Http\\Controllers\\ClientBrandsController' => __DIR__ . '/../..' . '/app/Http/Controllers/ClientBrandsController.php',
+        'Vanguard\\Http\\Controllers\\ClientsController' => __DIR__ . '/../..' . '/app/Http/Controllers/ClientsController.php',
         'Vanguard\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
         'Vanguard\\Http\\Controllers\\DashboardController' => __DIR__ . '/../..' . '/app/Http/Controllers/DashboardController.php',
         'Vanguard\\Http\\Controllers\\DayPartController' => __DIR__ . '/../..' . '/app/Http/Controllers/DayPartController.php',
@@ -4091,6 +4109,7 @@ class ComposerStaticInitf21065eee33d83e8b687549e5f2385ef
         'Vanguard\\Http\\Requests\\Request' => __DIR__ . '/../..' . '/app/Http/Requests/Request.php',
         'Vanguard\\Http\\Requests\\Role\\CreateRoleRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Role/CreateRoleRequest.php',
         'Vanguard\\Http\\Requests\\Role\\UpdateRoleRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Role/UpdateRoleRequest.php',
+        'Vanguard\\Http\\Requests\\StoreClient' => __DIR__ . '/../..' . '/app/Http/Requests/StoreClient.php',
         'Vanguard\\Http\\Requests\\User\\CreateUserRequest' => __DIR__ . '/../..' . '/app/Http/Requests/User/CreateUserRequest.php',
         'Vanguard\\Http\\Requests\\User\\EnableTwoFactorRequest' => __DIR__ . '/../..' . '/app/Http/Requests/User/EnableTwoFactorRequest.php',
         'Vanguard\\Http\\Requests\\User\\UpdateDetailsRequest' => __DIR__ . '/../..' . '/app/Http/Requests/User/UpdateDetailsRequest.php',

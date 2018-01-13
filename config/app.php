@@ -187,6 +187,7 @@ return [
         Ixudra\Curl\CurlServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
+        Unicodeveloper\Paystack\PaystackServiceProvider::class,
         //JD\Cloudder\CloudderServiceProvider::class,
 
 
@@ -263,6 +264,7 @@ return [
         'Curl' => Ixudra\Curl\Facades\Curl::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
+        'Paystack' => Unicodeveloper\Paystack\Facades\Paystack::class,
        // 'Cloudder' => JD\Cloudder\Facades\Cloudder::class
 
     ],

@@ -20,7 +20,11 @@ class CampaignsController extends Controller
      */
     public function index()
     {
-        return view('agency.campaigns.all_campaign');
+        $agency_id = Session::get('agency_id');
+        $invoice = Utilities::switch_db('api')->select("SELECT * from invoices WHERE agency_id = '$agency_id'");
+        $file = Utilities::switch_db('api')->select("SELECT * from files WHERE agency_id = '$agency_id'");
+        $mpo = Utilities::switch_db('api')->select("SELECT * from mpos where agency_id = '$agency_id'");
+        return view('agency.campaigns.all_campaign')->with('invoice', $invoice)->with('files', $file)->with('mpo', $mpo);
     }
 
     public function getData(DataTables $datatables, Request $request)
@@ -32,20 +36,27 @@ class CampaignsController extends Controller
         foreach ($all_campaign as $cam)
         {
             $brand = Utilities::switch_db('api')->select("SELECT name from brands WHERE id = '$cam->brand'");
+            $pay = Utilities::switch_db('api')->select("SELECT amount from payments WHERE campaign_id = '$cam->id'");
             $campaign[] = [
                 'id' => $j,
+                'camp_id' => $cam->id,
                 'name' => $cam->name,
                 'brand' => $brand[0]->name,
                 'product' => $cam->product,
                 'start_date' => date('Y-m-d', strtotime($cam->start_date)),
                 'end_date' => date('Y-m-d', strtotime($cam->stop_date)),
-                'adslots' => $cam->adslots,
-                'compliance' => '86%',
-                'status' => 'True'
+                'amount' => '&#8358;'.number_format($pay[0]->amount, 2),
             ];
             $j++;
         }
         return $datatables->collection($campaign)
+            ->addColumn('mpo', function ($campaign) {
+                return '<button data-toggle="modal" data-target=".mpoModal' . $campaign['camp_id']. '" class="btn btn-success btn-xs" > View Details </button>';
+            })
+            ->addColumn('invoice', function($campaign){
+                return '<button data-toggle="modal" data-target=".invoiceModal' . $campaign['camp_id']. '" class="btn btn-success btn-xs" > View Details </button>    ';
+            })
+            ->rawColumns(['mpo' => 'mpo', 'invoice' => 'invoice'])->addIndexColumn()
             ->make(true);
     }
 
@@ -297,6 +308,7 @@ class CampaignsController extends Controller
         $pay = [];
         $camp = [];
         $invoice = [];
+        $mpo = [];
         $i = 0;
         $adssss = "'". implode("','" ,$ads) . "'";
         $campaign_id = uniqid();
@@ -340,7 +352,7 @@ class CampaignsController extends Controller
                     'campaign_id' => $camp_id[0]->id,
                     'file_name' => $q->file,
                     'file_url' => $q->file,
-                    'adslot' => $q->rate_id,
+                    'adslot' => $q->adslot_id,
                     'user_id' => $id,
                     'file_code' => uniqid(),
                     'time_created' => date('Y-m-d H:i:s', $now),
@@ -385,9 +397,19 @@ class CampaignsController extends Controller
                     'agency_broadcaster' => $broadcaster,
                 ];
 
+                $mpo[] = [
+                    'id' => uniqid(),
+                    'campaign_id' => $camp_id[0]->id,
+                    'discount' => 0,
+                    'agency_id' => Session::get('agency_id'),
+                    'agency_broadcaster' => $broadcaster
+                ];
+
                 $save_invoice = Utilities::switch_db('api')->table('invoices')->insert($invoice);
 
-                if($save_invoice){
+                $save_mpo = Utilities::switch_db('api')->table('mpos')->insert($mpo);
+
+                if($save_invoice && $save_mpo){
                     $update_adslots = Utilities::switch_db('api')->select("UPDATE adslots SET is_available = 1 WHERE id IN ($adssss)");
                     $del_cart = \DB::select("DELETE FROM carts WHERE user_id = '$id'");
                     $del_uplaods = \DB::select("DELETE FROM uploads WHERE user_id = '$id'");

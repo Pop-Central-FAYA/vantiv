@@ -30,6 +30,7 @@ Class Api
     {
         $username = Encrypt::encrypt($request->username, Api::$api_private_key, 256);
         $password = Encrypt::encrypt($request->password, Api::$api_private_key, 256);
+//        dd($username, $password);
         $auth_url = Api::$url.'user/login?key='.Api::$public;
         $response = Curl::to($auth_url)
             ->withData([
@@ -42,7 +43,6 @@ Class Api
             'email' => $username,
             'password' => $password
         ];
-
         $status = json_decode($response);
         if ($status->status === false) {
             return back()->withErrors("Invalid Username or Password");
