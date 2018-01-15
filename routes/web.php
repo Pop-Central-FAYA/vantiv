@@ -113,9 +113,9 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::group(['middleware' => 'token'], function () {
 
-        Route::post('/pay', 'PaymentController@redirectToGateway')->name('pay');
-
-        Route::get('/payment/callback', 'PaymentController@handleGatewayCallback');
+//        Route::post('/pay', 'PaymentController@redirectToGateway')->name('pay');
+//
+//        Route::get('/payment/callback', 'PaymentController@handleGatewayCallback');
 
         /*
         * Campaign
@@ -293,6 +293,8 @@ Route::group(['middleware' => 'auth'], function () {
                Route::get('/wallet-statement', 'Agency\WalletsController@index')->name('agency_wallet.statement');
                Route::post('/wallet/amount', 'Agency\WalletsController@getAmount')->name('wallet.amount');
                Route::get('/wallet/amount/pay', 'Agency\WalletsController@getPay')->name('amount.pay');
+               Route::post('/pay', 'Agency\WalletsController@pay')->name('pay');
+               Route::get('/get-wallet/data', 'Agency\WalletsController@getData');
             });
         });
     });

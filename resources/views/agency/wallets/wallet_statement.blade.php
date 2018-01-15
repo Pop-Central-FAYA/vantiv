@@ -26,14 +26,14 @@
                 @if(count($history) === 0)
                     <p><h3>Your Wallet history is empty</h3></p>
                 @else
-                    <h3><b> align="left">Last Transaction</b></h3>
+                    <h3><b align="left">Last Transaction</b></h3>
                     <div class="col-md-6" style="font-size: 16px;">
-                        <p><i class="fa fa-calendar" aria-hidden="true"></i> <b>Date:</b> 13/10/2017</p>
-                        <p><i class="fa fa-credit-card-alt" aria-hidden="true"></i> <b>Card Type:</b> Debit Card</p>
+                        <p><i class="fa fa-calendar" aria-hidden="true"></i> <b>Date:</b> {{ date('d/m/Y', strtotime($transaction[0]->time_created)) }}</p>
+                        <p><i class="fa fa-credit-card-alt" aria-hidden="true"></i> <b>Transaction Type:</b> {{ $transaction[0]->type }}</p>
                     </div>
                     <div class="col-md-6" style="font-size: 16px;">
-                        <p><b>Amount:</b> N1,342,000</p>
-                        <p><b>Details:</b> INV/C005</p>
+                        <p><b>Amount:</b> 	&#8358;{{ number_format($transaction[0]->amount, 2) }}</p>
+                        <p><b>Details:</b> {{ $transaction[0]->reference }}</p>
                     </div>
                 @endif
             </div>
@@ -52,51 +52,18 @@
                         <div class="box">
                             <!-- /.box-header -->
                             <div class="box-body">
-                                <table id="example1" class="table table-bordered table-striped">
+                                <table id="wallet_hitory" class="table table-bordered table-striped wallet_hitory">
                                     <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Invoice No</th>
+                                        <th>Reference No</th>
                                         <th>Type</th>
-                                        <th>By</th>
 
                                         <th>Amount</th>
+                                        <th>Date</th>
 
                                     </tr>
                                     </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td>01</td>
-                                        <td>INV/09/3424</td>
-                                        <td>TV</td>
-                                        <td>Fizzy</td>
-                                        <td>100,000</td>
-
-                                    </tr>
-                                    <tr>
-                                        <td>01</td>
-                                        <td>INV/09/3424</td>
-                                        <td>TV</td>
-                                        <td>Fizzy</td>
-                                        <td>100,000</td>
-
-                                    </tr>
-
-
-                                    <tr>
-                                        <td>01</td>
-                                        <td>INV/09/3424</td>
-                                        <td>TV</td>
-                                        <td>Fizzy</td>
-                                        <td>100,000</td>
-
-                                    </tr>
-
-
-                                    </tbody>
-                                    <tfoot>
-
-                                    </tfoot>
                                 </table>
                             </div>
                             <!-- /.box-body -->
@@ -148,17 +115,27 @@
     <script src="{{ asset('agency_asset/plugins/datatables/dataTables.bootstrap.min.js') }}"></script>
 
     <script>
-        $(function () {
-            $("#example1").DataTable();
-            $('#example2').DataTable({
-                "paging": true,
-                "lengthChange": false,
-                "searching": false,
-                "ordering": true,
-                "info": true,
-                "autoWidth": false
+        $(document).ready(function () {
+            var Datefilter =  $('.wallet_hitory').DataTable({
+                paging: true,
+                serverSide: true,
+                processing: true,
+                ajax: {
+                    url: '/agency/wallets/get-wallet/data',
+                    data: function (d) {
+                        d.start_date = $('input[name=txtFromDate_hvc]').val();
+                        d.stop_date = $('input[name=txtToDate_hvc]').val();
+                    }
+                },
+                columns: [
+                    {data: 'id', name: 'id'},
+                    {data: 'reference', name: 'reference'},
+                    {data: 'type', name: 'type'},
+                    {data: 'amount', name: 'amount'},
+                    {data: 'date', name: 'date'},
+                ]
             });
-        });
+        })
     </script>
 
     <script>

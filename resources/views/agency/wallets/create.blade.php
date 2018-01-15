@@ -31,32 +31,15 @@
                     @else
                         <h3 align="right">Current Balance :<b> 	&#8358;{{ number_format($wallet[0]->balance, 2) }}</b></h3>
                     @endif
-
-                        <div class="panel-body">
-                            <form action="{{ route('wallet.amount') }}" method="post">
-                                {{ csrf_field() }}
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="first_name">Amount</label>
-                                            <input type="number" name="amount" placeholder="Enter Amount Here" class="form-control" required>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <button type="submit" class="btn btn-success">Proceed to Pay</button>
-                                </div>
-                            </form>
-                        </div>
                     <div class="col-md-1 hidden-sm hidden-xs"></div>
-                    <h3 align="center">You can pay with the following :</h3>
-                    <a href=""><div class="col-md-2 col-sm-3 col-xs-4" class="btn" data-toggle="tooltip" data-placement="bottom" title="Pay with Visa Card"><img src="{{ asset('agency_asset/dist/img/visa.jpg') }}" width="100%"></div></a>
-                    <a href=""> <div class="col-md-2 col-sm-3 col-xs-4" class="btn " data-toggle="tooltip" data-placement="bottom" title="Pay with Master Card"><img src="{{ asset('agency_asset/dist/img/mastercard.jpg') }}" width="100%"></div></a>
-                    <a href=""><div class="col-md-2 col-sm-3 col-xs-4"><img src="{{ asset('agency_asset/dist/img/verve.jpg') }}" width="100%" class="btn " data-toggle="tooltip" data-placement="bottom" title="Pay with Verve Card"></div></a>
-                    <a href=""><div class="col-md-2 col-sm-3 col-xs-4" class="btn" data-toggle="tooltip" data-placement="bottom" title="Pay with Direct Debit"><img src="{{ asset('agency_asset/dist/img/directdebit.jpg') }}" width="100%"></div></a>
+                    <h3 align="center">Choose Payments Method:</h3>
+                    <a href="" data-toggle="modal" data-target="#myModal"><div class="col-md-2 col-sm-3 col-xs-4" class="btn" data-toggle="tooltip" data-placement="bottom" title="Pay with Visa Card"><img src="{{ asset('agency_asset/dist/img/visa.jpg') }}" width="100%"></div></a>
+                    <a href="" data-toggle="modal" data-target="#myModal"> <div class="col-md-2 col-sm-3 col-xs-4" class="btn " data-toggle="tooltip" data-placement="bottom" title="Pay with Master Card"><img src="{{ asset('agency_asset/dist/img/mastercard.jpg') }}" width="100%"></div></a>
+                    <a href="" data-toggle="modal" data-target="#myModal"><div class="col-md-2 col-sm-3 col-xs-4"><img src="{{ asset('agency_asset/dist/img/verve.jpg') }}" width="100%" class="btn " data-toggle="tooltip" data-placement="bottom" title="Pay with Verve Card"></div></a>
+                    <a href="" data-toggle="modal" data-target="#myModal"><div class="col-md-2 col-sm-3 col-xs-4" class="btn" data-toggle="tooltip" data-placement="bottom" title="Pay with Direct Debit"><img src="{{ asset('agency_asset/dist/img/directdebit.jpg') }}" width="100%"></div></a>
 
 
-                    <a href="#">  <div class="col-md-2 col-sm-3 col-xs-4" class="btn" data-toggle="tooltip" data-placement="bottom" title="Pay with PayPal"><img src="{{ asset('agency_asset/dist/img/paypal.jpg') }}" width="100%"></div></a>
+                    <a href="" data-toggle="modal" data-target="#myModal">  <div class="col-md-2 col-sm-3 col-xs-4" class="btn" data-toggle="tooltip" data-placement="bottom" title="Pay with PayPal"><img src="{{ asset('agency_asset/dist/img/paypal.jpg') }}" width="100%"></div></a>
                     <div class="col-md-1 hidden-sm hidden-xs"></div>
                 </div>
 
@@ -68,6 +51,37 @@
         </div>
 
     </section>
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Fund Wallet</h4>
+                </div>
+                <div class="modal-body">
+
+                    <form id="fund-form" role='form' action="{{ route('pay') }}" method="POST">
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                        <script src="https://js.paystack.co/v1/inline.js"></script>
+                        <h4>Please Enter an Amount</h4>
+                        <input id="amount" type="number" name="amount" class="form-control">
+                        <input type="hidden" name="email" id="email" value="{{ $user_det[0]->email }}">
+                        <input type="hidden" name="name" id="name" value="{{ $user_det[0]->firstname .' '.$user_det[0]->lastname }}">
+                        <input type="hidden" name="phone_number" id="phone_number" value="{{ $user_det[0]->phone_number }}">
+                        <input type="hidden" name="reference" id="reference" value="" />
+                        <input type="hidden" name="user_id" value="{{ $agency_id }}" />
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btmn-default" data-dismiss="modal">Exit</button>
+                    <button type="button" class="btn btn-primary" onclick="payWithPaystack()">Fund</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 @stop
 @section('scripts')
@@ -98,6 +112,32 @@
     <!-- DataTables -->
     <script src="{{ asset('agency_asset/plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('agency_asset/plugins/datatables/dataTables.bootstrap.min.js') }}"></script>
+
+    <script>
+        function payWithPaystack(){
+            var handler = PaystackPop.setup({
+                key: 'pk_test_9945d2a543e97e34d0401f1d926e79dc1716ccc7',
+                email: "<?php echo $user_det[0]->email; ?>",
+                amount: parseFloat(document.getElementById('amount').value * 100),
+                metadata: {
+                    custom_fields: [
+                        {
+                            display_name: "<?php echo $user_det[0]->firstname .' '.$user_det[0]->lastname; ?>",
+                            value: "<?php echo $user_det[0]->phone_number; ?>"
+                        }
+                    ]
+                },
+                callback: function(response){
+                    document.getElementById('reference').value = response.reference;
+                    document.getElementById('fund-form').submit();
+                },
+                onClose: function(){
+                    alert('window closed');
+                }
+            });
+            handler.openIframe();
+        }
+    </script>
 
     <script>
         $(function () {
