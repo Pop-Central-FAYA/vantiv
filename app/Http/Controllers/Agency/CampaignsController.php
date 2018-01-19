@@ -5,10 +5,12 @@ namespace Vanguard\Http\Controllers\Agency;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Pbmedia\LaravelFFMpeg\FFMpeg;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Libraries\Utilities;
 use Yajra\DataTables\DataTables;
 use Session;
+
 
 
 class CampaignsController extends Controller
@@ -172,29 +174,31 @@ class CampaignsController extends Controller
             'time' => 'required'
         ]);
 
-        if ($request->file('uploads')) {
-            $uploaded = 0;
-            $no_of_files = count($request->uploads);
-            foreach ($request->uploads as $k => $filesUploaded) {
-                $extension = $filesUploaded->getClientOriginalExtension();
-                if($extension == 'mp4' || $extension == 'wma' || $extension == 'ogg' || $extension == 'mkv'){
-                    $destinationPath = 'uploads';
-                    $filesUploaded->move($destinationPath,$filesUploaded->getClientOriginalName());
-                    $file_gan_gan = 'uploads/'.$filesUploaded->getClientOriginalName();
+        if(((int)$request->f_du) > ((int)$request->time)){
+            return redirect()->back()->with('error','Your video file duration cannot be more than the time slot you picked');
+        }
 
-                    $time = $request->time[$k];
-                    $inser_upload = \DB::table('uploads')->insert([
-                        'user_id' => $id,
-                        'time' => $time,
-                        'uploads' => $file_gan_gan
-                    ]);
-                    $uploaded++;
+        if ($request->file('uploads')) {
+            $filesUploaded = $request->uploads;
+            $extension = $filesUploaded->getClientOriginalExtension();
+            if($extension == 'mp4' || $extension == 'wma' || $extension == 'ogg' || $extension == 'mkv'){
+
+                $destinationPath = 'uploads';
+                $filesUploaded->move($destinationPath,$filesUploaded->getClientOriginalName());
+                $file_gan_gan = 'uploads/'.$filesUploaded->getClientOriginalName();
+
+                $time = $request->time;
+                $inser_upload = \DB::table('uploads')->insert([
+                    'user_id' => $id,
+                    'time' => $time,
+                    'uploads' => $file_gan_gan
+                ]);
+
+                if($inser_upload){
+                    return redirect()->route('agency_campaign.step4', ['id' => $id, 'broadcaster' => $broadcaster]);
+                }else{
+                    return back()->with('error','Could not complete upload process');
                 }
-            }
-            if ($uploaded == $no_of_files){
-                return redirect()->route('agency_campaign.step4', ['id' => $id, 'broadcaster' => $broadcaster]);
-            }else{
-                return back()->with('error','Could not complete upload process');
             }
 
         }

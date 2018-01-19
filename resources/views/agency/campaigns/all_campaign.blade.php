@@ -15,19 +15,15 @@
 
         </ol>
     </section>
-
     <!-- Main content -->
-
     <section class="content">
         <div class="row">
             <div class="col-md-2 hidden-sm hidden-xs"></div>
             <div class="col-md-8 Campaign" style="padding:2%">
-
             </div>
             <!-- /.col -->
             <div class="col-md-2 hidden-sm hidden-xs"></div>
             <!-- /.col -->
-
             <div class="row" style="padding: 5%">
                 <div class="col-xs-12">
                     <div class="box">
@@ -55,11 +51,9 @@
                         <!-- /.box-body -->
                     </div>
                 </div>
-
             </div>
         </div>
     </section>
-
 
     <!--Mpo Modal -->
     @if(count($mpo) != 0)

@@ -188,6 +188,7 @@ return [
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
         Unicodeveloper\Paystack\PaystackServiceProvider::class,
+        Pbmedia\LaravelFFMpeg\FFMpegServiceProvider::class,
         //JD\Cloudder\CloudderServiceProvider::class,
 
 
@@ -251,6 +252,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View'      => Illuminate\Support\Facades\View::class,
         'Notification' => Illuminate\Support\Facades\Notification::class,
+        'FFMpeg' => Pbmedia\LaravelFFMpeg\FFMpegFacade::class,
 
         'JsValidator' => Proengsoft\JsValidation\Facades\JsValidatorFacade::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
