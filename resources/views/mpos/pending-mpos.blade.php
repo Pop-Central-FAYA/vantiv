@@ -91,9 +91,9 @@
                                             <td>{{ date('Y-m-d', strtotime($mpo['stop_date'])) }}</td>
                                             <td>
                                                 <a href="#" style="font-size: 16px">
-                                                        <span data-toggle="modal" data-target="#myModal{{ $mpo['id'] }}" style="cursor: pointer;">
-                                                            View
-                                                        </span>
+                                                    <span data-toggle="modal" data-target="#myModal{{ $mpo['id'] }}" style="cursor: pointer;">
+                                                        View
+                                                    </span>
                                                 </a>
                                             </td>
                                         </tr>

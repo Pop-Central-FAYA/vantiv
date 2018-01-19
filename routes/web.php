@@ -234,14 +234,30 @@ Route::group(['middleware' => 'auth'], function () {
                Route::post('/brands/edit/{id}', 'ClientBrandsController@update')->name('agency.brands.update');
                Route::get('/brands/delete/{id}', 'ClientBrandsController@delete')->name('agency.brands.delete');
            });
+
             /**
              * Clients
              */
-
             Route::group(['prefix' => 'clients'], function () {
                 Route::get('/', 'ClientsController@index')->name('clients.all');
                 Route::any('/create', 'ClientsController@create')->name('clients.create');
-                Route::post('/store', 'ClientsController@create')->name('clients.store');
+                Route::get('list', 'ClientsController@clients')->name('clients.list');
+                Route::get('/client/{client_id}', 'ClientsController@clientShow')->name('client.show');
+            });
+
+            Route::group(['prefix' => 'invoices'], function () {
+                Route::get('/all', 'InvoiceController@all')->name('invoices.all');
+                Route::get('/pending', 'InvoiceController@pending')->name('invoices.pending');
+                Route::post('/{invoice_id}/update', 'InvoiceController@approveInvoice')->name('invoices.update');
+            });
+
+            Route::group(['prefix' => 'wallets'], function(){
+               Route::get('/wallet/credit', 'Agency\WalletsController@create')->name('agency_wallet.create');
+               Route::get('/wallet-statement', 'Agency\WalletsController@index')->name('agency_wallet.statement');
+               Route::post('/wallet/amount', 'Agency\WalletsController@getAmount')->name('wallet.amount');
+               Route::get('/wallet/amount/pay', 'Agency\WalletsController@getPay')->name('amount.pay');
+               Route::post('/pay', 'Agency\WalletsController@pay')->name('pay');
+               Route::get('/get-wallet/data', 'Agency\WalletsController@getData');
             });
 
             Route::group(['prefix' => 'wallets'], function(){

@@ -3804,6 +3804,7 @@ return array(
     'Vanguard\\Http\\Controllers\\DiscountController' => $baseDir . '/app/Http/Controllers/DiscountController.php',
     'Vanguard\\Http\\Controllers\\HourlyController' => $baseDir . '/app/Http/Controllers/HourlyController.php',
     'Vanguard\\Http\\Controllers\\InstallController' => $baseDir . '/app/Http/Controllers/InstallController.php',
+    'Vanguard\\Http\\Controllers\\InvoiceController' => $baseDir . '/app/Http/Controllers/InvoiceController.php',
     'Vanguard\\Http\\Controllers\\MpoController' => $baseDir . '/app/Http/Controllers/MpoController.php',
     'Vanguard\\Http\\Controllers\\PaymentController' => $baseDir . '/app/Http/Controllers/PaymentController.php',
     'Vanguard\\Http\\Controllers\\PermissionsController' => $baseDir . '/app/Http/Controllers/PermissionsController.php',

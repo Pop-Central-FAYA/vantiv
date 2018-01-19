@@ -98,13 +98,13 @@ class CampaignsController extends Controller
         $region = Utilities::switch_db('api')->select("SELECT * from regions");
         $target = Utilities::switch_db('api')->select("SELECT * from targetAudiences");
         return view('agency.campaigns.create1')->with('industry', $industry)
-                                                    ->with('chanel', $chanel)
-                                                    ->with('brands', $brands)
-                                                    ->with('region', $region)
-                                                    ->with('day_part', $day_parts)
-                                                    ->with('target', $target)
-                                                    ->with('step1', \Session::get('step1'))
-                                                    ->with('id', $id);
+            ->with('chanel', $chanel)
+            ->with('brands', $brands)
+            ->with('region', $region)
+            ->with('day_part', $day_parts)
+            ->with('target', $target)
+            ->with('step1', \Session::get('step1'))
+            ->with('id', $id);
     }
 
     public function postStep1(Request $request, $id)
@@ -131,7 +131,7 @@ class CampaignsController extends Controller
         session(['step1' => $step1_req]);
 
         return redirect()->route('agency_campaign.step2', ['id' => $id])->with('step_1', Session::get('step1'))
-                                                               ->with('id', $id);
+            ->with('id', $id);
 
     }
 
@@ -157,13 +157,13 @@ class CampaignsController extends Controller
         }
 
         return view('agency.campaigns.create2')->with('adslots', $ads_broad)
-                                                    ->with('id', $id);
+            ->with('id', $id);
     }
 
     public function getStep3($id, $broadcaster)
     {
         return view('agency.campaigns.create3')->with('id', $id)
-                                                    ->with('broadcaster', $broadcaster);
+            ->with('broadcaster', $broadcaster);
     }
 
     public function postStep3(Request $request, $id, $broadcaster)
@@ -226,21 +226,21 @@ class CampaignsController extends Controller
                 'hourly_range' => (object)[
                     'id' => $hourly[0]->id,
                     'time_range' => $hourly[0]->time_range
-                    ],
+                ],
                 'day' => (object)[
                     'id' => $day[0]->id,
                     'day' => $day[0]->day,
-                    ],
+                ],
                 'adslots' => $adss
             ];
         }
         $file = \DB::select("SELECT * from uploads where user_id = '$id'");
         $cart = \DB::select("SELECT * from carts WHERE user_id = '$id'");
         return view('agency.campaigns.create4')->with('id', $id)
-                                                    ->with('broadcaster', $broadcaster)
-                                                    ->with('rate', $adslot_array)
-                                                    ->with('file_upload', $file)
-                                                    ->with('cart', $cart);
+            ->with('broadcaster', $broadcaster)
+            ->with('rate', $adslot_array)
+            ->with('file_upload', $file)
+            ->with('cart', $cart);
     }
 
     public function postCart(Request $request, $id, $broadcaster)
@@ -280,14 +280,14 @@ class CampaignsController extends Controller
         $calc = \DB::select("SELECT SUM(price) as total_price FROM carts WHERE user_id = '$id'");
         $query = \DB::select("SELECT * FROM carts WHERE user_id = '$id'");
         return view('agency.campaigns.checkout')->with('first_session', $first)
-                                                    ->with('calc', $calc)
-                                                    ->with('day_part', $day_partss)
-                                                    ->with('region', $regions)
-                                                    ->with('target', $targets)
-                                                    ->with('query', $query)
-                                                    ->with('brand', $brands)
-                                                    ->with('id', $id)
-                                                    ->with('broadcaster', $broadcaster);
+            ->with('calc', $calc)
+            ->with('day_part', $day_partss)
+            ->with('region', $regions)
+            ->with('target', $targets)
+            ->with('query', $query)
+            ->with('brand', $brands)
+            ->with('id', $id)
+            ->with('broadcaster', $broadcaster);
     }
 
     public function removeCart($id)

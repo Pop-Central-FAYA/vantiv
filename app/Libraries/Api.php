@@ -38,6 +38,7 @@ Class Api
                 'password' => $password
             ])
             ->post();
+        dd($username,$password);
         $req = [
 
             'email' => $username,
@@ -55,6 +56,8 @@ Class Api
         {
             return back();
         }
+        dd($data['data']['info']['id']);
+
         session(['encrypted_token' => $data['data']['token']]);
         session(['broadcaster_id' => $data['data']['info']['id']]);
         session(['broadcaster_brand' => $data['data']['info']['brand']]);
@@ -812,6 +815,159 @@ Class Api
         $files = Utilities::switch_db('reports')->select("SELECT * FROM files WHERE campaign_id = '$campaign_id'");
 
         return $files;
+    }
+
+    /**
+     * Sectors
+     */
+
+    public static function create_sector($name, $sector_code, $sector_id)
+    {
+        $key = Api::$public;
+        $token = Session::get('token');
+        $url = Api::$url.'sector/create?key='.$key;
+        $encrypted_token = Session::get('encrypted_token');
+
+        $response = Curl::to($url)
+            ->withHeader(["token => $encrypted_token"])
+            ->withData([
+                'name' => $name,
+                'sector_code' => $sector_code,
+                'sector_id' => $sector_id
+            ])
+            ->post();
+
+        $req = json_encode([
+            'name' => $name,
+            'sector_code' => $sector_code,
+            'token' => $token
+        ]);
+
+        ApiLog::save_activity_log($req, $response, $url);
+
+        return $response;
+    }
+
+    public static function get_sectors()
+    {
+        $key = Api::$public;
+        $token = Session::get('token');
+        $url = Api::$url.'sector?key='.$key;
+        $encrypted_token = Session::get('encrypted_token');
+
+        $response = Curl::to($url)
+            ->withHeader("token: $encrypted_token")
+            ->get();
+
+        $req = json_encode([
+            'key' => $key,
+            'token' => $token
+        ]);
+
+        ApiLog::save_activity_log($req, $response, $url);
+
+        return $response;
+    }
+
+    public static function delete_sector($sector_id)
+    {
+        $key = Api::$public;
+        $token = Session::get('token');
+        $url = Api::$url.'sector/' . $sector_id . '?key='.$key;
+
+        $response = Curl::to($url)
+            ->withData([
+                'sector_id' => $sector_id,
+                'key' => $key,
+                'token' => $token
+            ])
+            ->delete();
+
+        $req = json_encode([
+            'sector_id' => $sector_id,
+            'key' => $key,
+            'token' => $token
+        ]);
+
+        ApiLog::save_activity_log($req, $response, $url);
+
+        return $response;
+    }
+
+    public static function create_subsector($name, $sector_code, $sector_id)
+    {
+        $key = Api::$public;
+        $token = Session::get('token');
+        $url = Api::$url.'sector/sub-sector/create?key='.$key;
+        $encrypted_token = Session::get('encrypted_token');
+
+        $response = Curl::to($url)
+            ->withHeader("token: $encrypted_token")
+            ->withData([
+                'name' => $name,
+                'sector_code' => $sector_code,
+            ])
+            ->post();
+
+        $req = json_encode([
+            'name' => $name,
+            'sector_code' => $sector_code,
+            'sector_id' => $sector_id,
+            'token' => $token
+        ]);
+
+        ApiLog::save_activity_log($req, $response, $url);
+
+        return $response;
+    }
+
+    public static function remove_sub_sector($sector_id, $sub_sector_id)
+    {
+        $key = Api::$public;
+        $token = Session::get('token');
+        $url = Api::$url.'sector/subsector/remove/' . $sector_id . '/' . $sub_sector_id . '?key='.$key;
+        $encrypted_token = Session::get('encrypted_token');
+
+        $response = Curl::to($url)
+            ->withHeader(["token => $encrypted_token"])
+            ->put();
+
+        $req = json_encode([
+            'sector_id' => $sector_id,
+            'sub_sector_id' => $sub_sector_id,
+            'token' => $token
+        ]);
+
+        ApiLog::save_activity_log($req, $response, $url);
+
+        return $response;
+    }
+
+    public static function delete_subsector(Request $request)
+    {
+
+        $sub_sector_id = $request->sector_id;
+        $key = Api::$public;
+        $token = Session::get('token');
+        $url = Api::$url.'sector/sub-sector/' . $sub_sector_id . '?key='.$key;
+
+        $response = Curl::to($url)
+            ->withData([
+                'sub_sector_id' => $sub_sector_id,
+                'key' => $key,
+                'token' => $token
+            ])
+            ->delete();
+
+        $req = json_encode([
+            'sub_sector_id' => $sub_sector_id,
+            'key' => $key,
+            'token' => $token
+        ]);
+
+        ApiLog::save_activity_log($req, $response, $url);
+
+        return $response;
     }
 
 

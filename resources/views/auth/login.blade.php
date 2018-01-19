@@ -6,7 +6,7 @@
 
 <div class="form-wrap col-md-5 auth-form" id="login">
     <div style="text-align: center; margin-bottom: 25px;">
-        <img src="{{ url('assets/img/vanguard-logo.png') }}" alt="{{ settings('app_name') }}">
+        <img src="{{ asset('asset/dist/img/faya-icon.png') }}" alt="{{ settings('app_name') }}">
     </div>
 
     {{-- This will simply include partials/messages.blade.php view here --}}
@@ -28,9 +28,6 @@
             <label for="password" class="sr-only">@lang('app.password')</label>
             <i class="fa fa-lock"></i>
             <input type="password" name="password" id="password" class="form-control" placeholder="@lang('app.password')">
-            @if (settings('forgot_password'))
-                <a href="<?= url('password/remind') ?>" class="forgot">@lang('app.i_forgot_my_password')</a>
-            @endif
         </div>
         <div class="checkbox">
 
@@ -50,8 +47,6 @@
         </div>
        
     </form>
-
-    @include('auth.social.buttons')
 
 </div>
 
