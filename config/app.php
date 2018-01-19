@@ -187,6 +187,8 @@ return [
         Ixudra\Curl\CurlServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
+        Unicodeveloper\Paystack\PaystackServiceProvider::class,
+        Pbmedia\LaravelFFMpeg\FFMpegServiceProvider::class,
         //JD\Cloudder\CloudderServiceProvider::class,
 
 
@@ -250,6 +252,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View'      => Illuminate\Support\Facades\View::class,
         'Notification' => Illuminate\Support\Facades\Notification::class,
+        'FFMpeg' => Pbmedia\LaravelFFMpeg\FFMpegFacade::class,
 
         'JsValidator' => Proengsoft\JsValidation\Facades\JsValidatorFacade::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
@@ -263,6 +266,7 @@ return [
         'Curl' => Ixudra\Curl\Facades\Curl::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
+        'Paystack' => Unicodeveloper\Paystack\Facades\Paystack::class,
        // 'Cloudder' => JD\Cloudder\Facades\Cloudder::class
 
     ],

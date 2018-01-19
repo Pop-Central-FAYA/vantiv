@@ -5,7 +5,7 @@
 @section('content')
     <section class="content-header">
         <h1>
-            All Campaign
+            All Campaigns
 
         </h1>
         <ol class="breadcrumb" style="font-size: 16px">
@@ -15,58 +15,19 @@
 
         </ol>
     </section>
-
     <!-- Main content -->
-
     <section class="content">
         <div class="row">
             <div class="col-md-2 hidden-sm hidden-xs"></div>
             <div class="col-md-8 Campaign" style="padding:2%">
-                <div class="row">
-               <span><label>Brand</label>
-         <select class="add-disc" style="width: 30%; border:none; padding: 1%; float:none">
-          <option>Business</option>
-                    <option>Business</option>
-        </select>
-          </span>
-                </div>
-
-                <div class="row">
-
-                    <h4 style="margin-left: 17px;font-weight: bold">Search by date</h4>
-                    <div class="col-md-10" style="margin-top: -2%">
-                        <div class="input-group date styledate" style="width:30% !important">
-                            <div class="input-group-addon">
-                                <i class="fa fa-calendar"></i>
-                            </div>
-                            <input type="text" placeholder="Start Date" class="form-control pull-right" id="datepicker" >
-                        </div>
-
-                        <div class="input-group date styledate" style="width:30% !important">
-                            <div class="input-group-addon">
-                                <i class="fa fa-calendar"></i>
-                            </div>
-                            <input type="text" placeholder="End Date" class="form-control pull-right" id="datepickerend" >
-                        </div>
-                        <div class="input-group" style="">
-                            <input type="submit" class="search-btn" value="search" style="float:left" >
-                        </div>
-                    </div>
-                </div>
             </div>
             <!-- /.col -->
             <div class="col-md-2 hidden-sm hidden-xs"></div>
             <!-- /.col -->
-
             <div class="row" style="padding: 5%">
                 <div class="col-xs-12">
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title">Hover Data Table</h3>
-                        </div>
-                        <!-- /.box-header -->
-                        <div class="box-body">
-                            <table id="example1" class="table table-bordered table-striped">
                             <h3 class="box-title">All Agency Campaigns</h3>
                         </div>
                         <!-- /.box-header -->
@@ -78,63 +39,11 @@
                                     <th>Name</th>
                                     <th>Brand</th>
                                     <th>Product</th>
-                                    <th>Submitted</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
                                     <th>Amount</th>
-                                    <th>Status</th>
                                     <th>MPO</th>
                                     <th>Invoice</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <td>001</td>
-                                    <td>Building</td>
-                                    <td>ABC</td>
-                                    <td>Fizzy</td>
-                                    <td>02.03.2017</td>
-                                    <td>20,500</td>
-                                    <td>Approve </td>
-                                    <td><a href="#"style="font-size: 16px"><span class="label label-warning" data-toggle="modal" data-target=".bs-example1-modal-lg" style="cursor: pointer; "> Views </span></a></td>
-
-                                    <td><a href="#"style="font-size: 16px"><span class="label label-danger" data-toggle="modal" data-target=".bs-example1-modal-lg" style="cursor: pointer; "> Views </span></a></td>
-                                </tr>
-                                <tr>
-                                    <td>002</td>
-                                    <td>Tech</td>
-                                    <td>ABC</td>
-                                    <td>Fizzy</td>
-                                    <td>02.03.2017</td>
-                                    <td>30,500</td>
-                                    <td>Approve </td>
-                                    <td><a href="#"style="font-size: 16px"><span class="label label-warning" data-toggle="modal" data-target=".bs-example1-modal-lg" style="cursor: pointer; "> Views </span></a></td>
-
-                                    <td><a href="#"style="font-size: 16px"><span class="label label-danger" data-toggle="modal" data-target=".bs-example1-modal-lg" style="cursor: pointer; "> Views </span></a></td>
-                                </tr>
-
-
-                                <tr>
-                                    <td>003</td>
-                                    <td>Grow</td>
-                                    <td>MNO</td>
-                                    <td>Wizzy</td>
-                                    <td>02.03.2017</td>
-                                    <td>31,500</td>
-                                    <td>Approve </td>
-                                    <td><a href="#"style="font-size: 16px"><span class="label label-warning" data-toggle="modal" data-target=".bs-example1-modal-lg" style="cursor: pointer; "> Views </span></a></td>
-
-                                    <td><a href="#"style="font-size: 16px"><span class="label label-danger" data-toggle="modal" data-target=".bs-example1-modal-lg" style="cursor: pointer; "> Views </span></a></td>
-                                </tr>
-
-
-                                </tbody>
-                                <tfoot>
-
-                                </tfoot>
-                                <th>Start Date</th>
-                                    <th>End Date</th>
-                                    <th>Adslots</th>
-                                    <th>Compliance</th>
-                                    <th>Status</th>
                                 </tr>
                                 </thead>
                             </table>
@@ -142,81 +51,148 @@
                         <!-- /.box-body -->
                     </div>
                 </div>
+            </div>
+        </div>
+    </section>
 
-                <div class="modal fade bs-example1-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-                    <div class="modal-dialog modal-lg" role="document">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <div class="modal-content" style="padding: 5%">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                <h2 class="modal-title" id="myModalLabel">MPO - Fun</h2>
-                            </div>
+    <!--Mpo Modal -->
+    @if(count($mpo) != 0)
+        @foreach($mpo as $mpos)
+            <div class="modal fade mpoModal{{ $mpos->campaign_id }}"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">MPO Modal</h4>
+                        </div>
+                        <div class="modal-body">
+                            ...
 
-                            <div class="box-body">
-                                <table id="example1" class="table table-bordered table-striped">
+                            <div class="table-responsive">
+                                <table class="table">
                                     <thead>
                                     <tr>
-
+                                        <th>S/N</th>
                                         <th>Name</th>
                                         <th>Brand</th>
-                                        <th>Ad block</th>
+                                        <th>Ad Blocks</th>
                                         <th>Duration</th>
                                         <th>Media</th>
                                         <th>Price</th>
                                         <th>Approval</th>
-
                                     </tr>
                                     </thead>
-                                    <tbody>
                                     <tr>
-
-                                        <td>Fun</td>
-                                        <td>Fizzy</td>
-                                        <td>09:20 - 09:24</td>
-                                        <td>02.03.2017</td>
-                                        <td>15 Secs</td>
-                                        <td>view </td>
-                                        <td>11,000 </td>
-                                        <td style="color:green"><i class="fa fa-check-circle" aria-hidden="true"></i> Approve </td>
-
-                                    </tr>
-                                    <tr>
-
-                                        <td></td>
-                                        <td>Fizzy</td>
-                                        <td>09:20 - 09:24</td>
-                                        <td>02.03.2017</td>
-                                        <td>15 Secs</td>
-                                        <td>view </td>
-                                        <td>11,000 </td>
-                                        <td style="color:green"><i class="fa fa-check-circle" aria-hidden="true"></i> Approve </td>
-
-                                    </tr>
-
-
+                                        <?php $n = 1; ?>
+                                        @foreach($mpo as $mpoos)
+                                            <?php
+                                            $camp = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT * from campaigns where id='$mpoos->campaign_id'");
+                                            $br = $camp[0]->brand;
+                                            $brand = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT name from brands where id = '$br'");
+                                            $pay_mpo = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT * from payments where campaign_id = '$mpoos->campaign_id'");
+                                            $file_mpo = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT * from files where campaign_id = '$mpoos->campaign_id'");
+                                            ?>
+                                            <tr>
+                                                <td>{{ $n }}</td>
+                                                <td>{{ $camp[0]->name }}</td>
+                                                <td>{{ $brand[0]->name }}</td>
+                                                @foreach($file_mpo as $files_mpo)
+                                                    <?php
+                                                        $adslots = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT * from adslots WHERE id = '$files_mpo->adslot'");
+                                                    ?>
+                                                    <tr>
+                                                        <td>{{ $adslots[0]->from_to_time }}</td>
+                                                        <td>{{ $adslots[0]->time_in_seconds }}</td>
+                                                        <td><video width="200" controls><source src="{{ asset($files_mpo->file_url) }}"></video></td>
+                                                        <td>&#8358;{{ number_format($adslots[0]->price, 2) }}</td>
+                                                        <td>
+                                                            <select class="form-control" name="" id="">
+                                                                <option>Approved</option>
+                                                                <option>Disapproved</option>
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tr>
+                                            <?php $n++; ?>
+                                        @endforeach
                                     </tbody>
-                                    <tfoot>
-
-                                    </tfoot>
                                 </table>
-
-                                <h4>Discount: 10%</h4>
-                                <h2>Total: N33,000</h2>
                             </div>
-
-
-
-
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary">Done</button>
-                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Done</button>
                         </div>
                     </div>
                 </div>
             </div>
+        @endforeach
+    @endif
+
+    <!-- Invoice -->
+    @foreach($invoice as $inv)
+    <div class="modal fade invoiceModal{{ $inv->campaign_id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Campaign Invoice -</h4>
+                </div>
+                <div class="modal-body">
+
+                    ......
+
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>S/N</th>
+                                <th>Media File</th>
+                                <th>Adslot ID</th>
+                                <th>Playtime</th>
+                                <th>Complaince</th>
+                                <th>Cost</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <?php $m = 1; ?>
+                                @foreach($files as $file)
+                                    @if($file->campaign_id === $inv->campaign_id)
+                                        <?php
+                                            $ads = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT * from adslots where id = '$file->adslot'");
+                                            $pay = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT * from payments where campaign_id = '$inv->campaign_id'");
+                                        ?>
+                                        <tr>
+                                            <td>{{ $m }}</td>
+                                            <td><video width="200" controls><source src="{{ asset($file->file_url) }}"></video></td>
+                                            <td>{{ count($file->adslot) }}</td>
+                                            <td>{{ $ads[0]->time_in_seconds }}</td>
+                                            <td>80%</td>
+                                            <td>&#8358;{{ number_format($ads[0]->price, 2) }}</td>
+                                        </tr>
+                                    @endif
+                                    <?php $m++; ?>
+                                @endforeach
+                            <tr>
+                                <td><b><h3>Total:</h3></b></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><h3>&#8358;{{ number_format($pay[0]->amount, 2) }}</h3></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Done</button>
+                </div>
+            </div>
         </div>
-    </section>
+    </div>
+    @endforeach
 @stop
 @section('scripts')
     <!-- Select2 -->
@@ -248,17 +224,6 @@
     <script src="{{ asset('agency_asset/plugins/datatables/dataTables.bootstrap.min.js') }}"></script>
 
     <script>
-        $(function () {
-            $("#example1").DataTable();
-            $('#example2').DataTable({
-                "paging": true,
-                "lengthChange": false,
-                "searching": false,
-                "ordering": true,
-                "info": true,
-                "autoWidth": false
-            });
-        });
         $(document).ready(function () {
             var Datefilter =  $('.agency_campaign_all').DataTable({
                 paging: true,
@@ -278,9 +243,9 @@
                     {data: 'product', name: 'product'},
                     {data: 'start_date', name: 'start_date'},
                     {data: 'end_date', name: 'end_date'},
-                    {data: 'adslots', name: 'adslots'},
-                    {data: 'compliance', name: 'compliance'},
-                    {data: 'status', name: 'status'},
+                    {data: 'amount', name: 'amount'},
+                    {data: 'mpo', name: 'mpo'},
+                    {data: 'invoice', name: 'invoice'}
                 ]
             });
         })

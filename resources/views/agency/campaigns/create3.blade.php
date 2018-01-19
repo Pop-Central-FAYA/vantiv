@@ -37,13 +37,14 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Upload Media</label>
-                                    <input type="file" name="uploads[]" multiple>
+                                    <input type="file" id="fup" name="uploads" multiple>
+                                    <input type="hidden" class="form-control" name="f_du" id="f_du" size="5" />
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Duration </label> <br />
-                                    <select style="width: 60%" name="time[]">
+                                    <select style="width: 60%" name="time">
                                         <option value="15">15 Seconds</option>
                                         <option value="30">30 Seconds</option>
                                         <option value="45">45 Seconds</option>
@@ -58,6 +59,7 @@
 
                     </div>
 
+                    <audio id="audio"></audio>
 
                     <div class="container">
 
@@ -149,21 +151,21 @@
             $('#reservationtime').daterangepicker({timePicker: true, timePickerIncrement: 30, format: 'MM/DD/YYYY h:mm A'});
             //Date range as a button
             $('#daterange-btn').daterangepicker(
-                {
-                    ranges: {
-                        'Today': [moment(), moment()],
-                        'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                        'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                        'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                        'This Month': [moment().startOf('month'), moment().endOf('month')],
-                        'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                    {
+                        ranges: {
+                            'Today': [moment(), moment()],
+                            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                            'This Month': [moment().startOf('month'), moment().endOf('month')],
+                            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                        },
+                        startDate: moment().subtract(29, 'days'),
+                        endDate: moment()
                     },
-                    startDate: moment().subtract(29, 'days'),
-                    endDate: moment()
-                },
-                function (start, end) {
-                    $('#daterange-btn span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-                }
+                    function (start, end) {
+                        $('#daterange-btn span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+                    }
             );
 
             //Date picker
@@ -202,6 +204,28 @@
             });
         });
     </script>
+
+    <script>
+        // Code to get duration of audio /video file before upload - from: http://coursesweb.net/
+
+        //register canplaythrough event to #audio element to can get duration
+        var f_duration =0;  //store duration
+        document.getElementById('audio').addEventListener('canplaythrough', function(e){
+            //add duration in the input field #f_du
+            f_duration = Math.round(e.currentTarget.duration);
+            document.getElementById('f_du').value = f_duration;
+            URL.revokeObjectURL(obUrl);
+        });
+
+        //when select a file, create an ObjectURL with the file and add it in the #audio element
+        var obUrl;
+        document.getElementById('fup').addEventListener('change', function(e){
+            var file = e.currentTarget.files[0];
+            //check file extension for audio/video type
+            if(file.name.match(/\.(avi|mp3|mp4|mpeg|ogg)$/i)){
+                obUrl = URL.createObjectURL(file);
+                document.getElementById('audio').setAttribute('src', obUrl);
+            }
+        });
+    </script>
 @stop
-
-

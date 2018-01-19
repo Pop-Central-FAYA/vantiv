@@ -13,10 +13,13 @@ class Utilities {
             case 'local':
                 return DB::connection('mysql');
                 break;
-            case 'api':
+            case 'api_2':
                 return DB::connection('mysql-2');
                 break;
             case 'api':
+                return DB::connection('api_db');
+                break;
+            case 'reports':
                 return DB::connection('api_db');
                 break;
             default;

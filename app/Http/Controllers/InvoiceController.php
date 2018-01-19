@@ -2,20 +2,16 @@
 
 namespace Vanguard\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Session;
 use Vanguard\Libraries\Utilities;
 
 class InvoiceController extends Controller
 {
     public function all()
     {
-        $user_id = \Auth::user()->id;
+        $agency_id = Session::get('agency_id');
 
-        $user_walkin = Utilities::switch_db('reports')->select("SELECT * FROM walkIns WHERE user_id = '$user_id' LIMIT 1");
-
-        $walkin_id = $user_walkin[0]->id;
-
-        $all_invoices = Utilities::switch_db('reports')->select("SELECT * FROM invoices WHERE walkins_id = '$walkin_id'");
+        $all_invoices = Utilities::switch_db('reports')->select("SELECT * FROM invoices WHERE  agency_id = '$agency_id'");
 
         $invoice_campaign_details = [];
 
@@ -23,14 +19,15 @@ class InvoiceController extends Controller
 
             $campaign_id = $invoice->campaign_id;
 
-            $campaigns = Utilities::switch_db('reports')->select("SELECT * FROM campaigns WHERE walkins_id = '$campaign_id'");
+            $campaign = Utilities::switch_db('reports')->select("SELECT * FROM campaigns WHERE id = '$campaign_id'");
 
             $invoice_campaign_details[] = [
                 'invoice_number' => $invoice->invoice_number,
                 'actual_amount_paid' => $invoice->actual_amount_paid,
                 'refunded_amount' => $invoice->refunded_amount,
-                'campaign_brand' => $campaigns->brand,
-                'campaign_name' => $campaigns->name
+                'status' => $invoice->status,
+                'campaign_brand' => $campaign[0]->brand,
+                'campaign_name' => $campaign[0]->name
             ];
         }
 
@@ -41,13 +38,9 @@ class InvoiceController extends Controller
 
     public function pending()
     {
-        $user_id = \Auth::user()->id;
+        $agency_id = Session::get('agency_id');
 
-        $user_walkin = Utilities::switch_db('reports')->select("SELECT * FROM walkIns WHERE user_id = '$user_id' LIMIT 1");
-
-        $walkin_id = $user_walkin[0]->id;
-
-        $all_invoices = Utilities::switch_db('reports')->select("SELECT * FROM invoices WHERE walkins_id = '$walkin_id' AND status = 0");
+        $all_invoices = Utilities::switch_db('reports')->select("SELECT * FROM invoices WHERE  agency_id = '$agency_id' AND status = 0");
 
         $invoice_campaign_details = [];
 
@@ -55,19 +48,71 @@ class InvoiceController extends Controller
 
             $campaign_id = $invoice->campaign_id;
 
-            $campaigns = Utilities::switch_db('reports')->select("SELECT * FROM campaigns WHERE walkins_id = '$campaign_id'");
+            $campaign = Utilities::switch_db('reports')->select("SELECT * FROM campaigns WHERE id = '$campaign_id'");
 
             $invoice_campaign_details[] = [
+                'id' => $invoice->id,
                 'invoice_number' => $invoice->invoice_number,
                 'actual_amount_paid' => $invoice->actual_amount_paid,
                 'refunded_amount' => $invoice->refunded_amount,
-                'campaign_brand' => $campaigns->brand,
-                'campaign_name' => $campaigns->name
+                'status' => $invoice->status,
+                'campaign_brand' => $campaign[0]->brand,
+                'campaign_name' => $campaign[0]->name
             ];
         }
 
-        return view('invoices.all-invoices')
+        return view('invoices.pending-invoices')
             ->with('pending_invoices', $invoice_campaign_details);
+    }
+
+    public function approveInvoice($invoice_id)
+    {
+        $invoice = Utilities::switch_db('reports')->select("SELECT * FROM invoices WHERE id = '$invoice_id' LIMIT 1");
+        $amount = $invoice[0]->actual_amount_paid;
+        $agency_id = Session::get('agency_id');
+
+        $wallet = Utilities::switch_db('reports')->select("SELECT * FROM wallets WHERE user_id = '$agency_id'");
+        $current_balance = $wallet[0]->current_balance;
+        $new_balance = $current_balance - $amount;
+
+        if ($current_balance < $amount) {
+            return redirect()->back()->with('error', 'Insufficient Balance in Wallet');
+        }
+
+        $transaction = Utilities::switch_db('reports')->table('transactions')->insert([
+            'id' => uniqid(),
+            'amount' => $amount,
+            'user_id' => $agency_id,
+            'reference' => $invoice[0]->id,
+            'ip_address' => request()->ip(),
+            'type' => 'DEBIT_WALLET',
+            'message' => 'Debit successful'
+        ]);
+
+        $walletHistory = Utilities::switch_db('reports')->table('walletHistories')->insert([
+            'id' => uniqid(),
+            'user_id' => $agency_id,
+            'amount' => $amount,
+            'prev_balance' => $current_balance,
+            'status' => 1,
+            'current_balance' => $new_balance
+        ]);
+
+        $updateWallet = Utilities::switch_db('reports')->select("UPDATE wallets SET current_balance = '$new_balance', prev_balance = '$current_balance' WHERE user_id = '$agency_id'");
+
+        if ($transaction && $walletHistory && empty($updateWallet)) {
+
+            $update_invoice = Utilities::switch_db('reports')->select("UPDATE invoices SET status = 1 WHERE id = '$invoice_id'");
+
+            if (empty($update_invoice)) {
+                return redirect()->back()->with('success', 'Invoice Approved Successfully');
+            } else {
+                return redirect()->back()->with('error', 'Invoice not Approved Successfully');
+            }
+        } else {
+            return redirect()->back()->with('error', 'Error Approving Invoice');
+        }
+
     }
 
 

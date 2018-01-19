@@ -115,9 +115,9 @@ class AuthController extends Controller
         if ($role->role_id === 3) {
             Api::auth_user($request);
         } elseif ($role->role_id === 4) {
-            $user_details = Utilities::switch_db('reports')->select("SELECT * FROM users WHERE email = '$username' LIMIT 1");
+            $user_details = Utilities::switch_db('api')->select("SELECT * FROM users WHERE email = '$username' LIMIT 1");
             $user_id = $user_details[0]->id;
-            $agency_details = Utilities::switch_db('reports')->select("SELECT * FROM agents WHERE user_id = '$user_id'");
+            $agency_details = Utilities::switch_db('api')->select("SELECT * FROM agents WHERE user_id = '$user_id'");
             session(['agency_id' => $agency_details[0]->id]);
         }
 

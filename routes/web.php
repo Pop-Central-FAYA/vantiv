@@ -63,91 +63,15 @@ Route::get('auth/{provider}/callback', 'Auth\SocialAuthController@handleProvider
 Route::get('auth/twitter/email', 'Auth\SocialAuthController@getTwitterEmail');
 Route::post('auth/twitter/email', 'Auth\SocialAuthController@postTwitterEmail');
 
-Route::group(['prefix' => 'agency'], function () {
-
-    Route::get('/dashboard', function () {
-        return view('agency.dashboard.dashboard');
-    });
-    Route::get('/campaign-list', function () {
-        return view('agency.template.campaign_list');
-    });
-    Route::get('/client-portfolio', function () {
-        return view('agency.template.client_portfolio');
-    });
-    Route::get('/client-portfolio-details', function () {
-        return view('agency.template.client_portfolio_details');
-    });
-    Route::get('/client-portfolio-details-more', function () {
-        return view('agency.template.client_portfolio_details_more');
-    });
-    Route::get('/company', function () {
-        return view('agency.template.company');
-    });
-    Route::get('/company-search', function () {
-        return view('agency.template.company_search');
-    });
-    Route::get('/campaign-lists', function () {
-        return view('agency.template.campaign_details');
-    });
-    Route::get('/campaign-form', function () {
-        return view('agency.template.create_campaign');
-    });
-    Route::get('/wallet-credit', function () {
-        return view('agency.template.credit_wallet');
-    });
-    Route::get('/payment-form', function () {
-        return view('agency.template.payment_form');
-    });
-    Route::get('/wallet-statement', function () {
-        return view('agency.template.wallet_statement');
-    });
-});
-
-//Route::group(['prefix' => 'agency'], function () {
-//
-//    Route::get('/dashboard', function () {
-//        return view('agency.dashboard.dashboard');
-//    });
-//    Route::get('/campaign-list', function () {
-//        return view('agency.template.campaign_list');
-//    });
-//    Route::get('/client-portfolio', function () {
-//        return view('agency.template.client_portfolio');
-//    });
-//    Route::get('/client-portfolio-details', function () {
-//        return view('agency.template.client_portfolio_details');
-//    });
-//    Route::get('/client-portfolio-details-more', function () {
-//        return view('agency.template.client_portfolio_details_more');
-//    });
-//    Route::get('/company', function () {
-//        return view('agency.template.company');
-//    });
-//    Route::get('/company-search', function () {
-//        return view('agency.template.company_search');
-//    });
-//    Route::get('/campaign-lists', function () {
-//        return view('agency.template.campaign_details');
-//    });
-//    Route::get('/campaign-form', function () {
-//        return view('agency.template.create_campaign');
-//    });
-//    Route::get('/wallet-credit', function () {
-//        return view('agency.template.credit_wallet');
-//    });
-//    Route::get('/payment-form', function () {
-//        return view('agency.template.payment_form');
-//    });
-//    Route::get('/wallet-statement', function () {
-//        return view('agency.template.wallet_statement');
-//    });
-//});
-
 Route::get('/error', 'InstallController@apiError')->name('errors');
 
 Route::group(['middleware' => 'auth'], function () {
 
     Route::group(['middleware' => 'token'], function () {
+
+//        Route::post('/pay', 'PaymentController@redirectToGateway')->name('pay');
+//
+//        Route::get('/payment/callback', 'PaymentController@handleGatewayCallback');
 
         /*
         * Campaign
@@ -316,9 +240,6 @@ Route::group(['middleware' => 'auth'], function () {
              */
             Route::group(['prefix' => 'clients'], function () {
                 Route::get('/', 'ClientsController@index')->name('clients.all');
-                Route::get('/create', 'ClientsController@create')->name('clients.create');
-                Route::post('/create', 'ClientsController@create')->name('clients.store');
-                Route::post('/store', 'ClientsController@create')->name('clients.store');
                 Route::any('/create', 'ClientsController@create')->name('clients.create');
                 Route::get('list', 'ClientsController@clients')->name('clients.list');
                 Route::get('/client/{client_id}', 'ClientsController@clientShow')->name('client.show');
@@ -327,6 +248,16 @@ Route::group(['middleware' => 'auth'], function () {
             Route::group(['prefix' => 'invoices'], function () {
                 Route::get('/all', 'InvoiceController@all')->name('invoices.all');
                 Route::get('/pending', 'InvoiceController@pending')->name('invoices.pending');
+                Route::post('/{invoice_id}/update', 'InvoiceController@approveInvoice')->name('invoices.update');
+            });
+
+            Route::group(['prefix' => 'wallets'], function(){
+               Route::get('/wallet/credit', 'Agency\WalletsController@create')->name('agency_wallet.create');
+               Route::get('/wallet-statement', 'Agency\WalletsController@index')->name('agency_wallet.statement');
+               Route::post('/wallet/amount', 'Agency\WalletsController@getAmount')->name('wallet.amount');
+               Route::get('/wallet/amount/pay', 'Agency\WalletsController@getPay')->name('amount.pay');
+               Route::post('/pay', 'Agency\WalletsController@pay')->name('pay');
+               Route::get('/get-wallet/data', 'Agency\WalletsController@getData');
             });
         });
     });

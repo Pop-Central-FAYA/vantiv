@@ -10,9 +10,13 @@ return array(
     'Prophecy\\' => array($vendorDir . '/phpspec/prophecy/src'),
     'Parsedown' => array($vendorDir . '/erusev/parsedown'),
     'PHPExcel' => array($vendorDir . '/phpoffice/phpexcel/Classes'),
+    'Neutron' => array($vendorDir . '/neutron/temporary-filesystem/src'),
     'Mockery' => array($vendorDir . '/mockery/mockery/library'),
     'Maatwebsite\\Excel\\' => array($vendorDir . '/maatwebsite/excel/src'),
     'Laracasts\\Presenter' => array($vendorDir . '/laracasts/presenter/src'),
     'JD\\Cloudder' => array($vendorDir . '/jrm2k6/cloudder/src'),
+    'FFMpeg' => array($vendorDir . '/php-ffmpeg/php-ffmpeg/src'),
+    'Evenement' => array($vendorDir . '/evenement/evenement/src'),
     'Barryvdh' => array($vendorDir . '/barryvdh/reflection-docblock/src'),
+    'Alchemy' => array($vendorDir . '/alchemy/binary-driver/src'),
 );

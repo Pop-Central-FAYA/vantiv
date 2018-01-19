@@ -26,7 +26,7 @@ class CampaignsController extends Controller
         return view('campaign.index');
     }
 
-    public function getAllData(DataTables $datatables, Request $request)
+    public function getAllData(Datatables $datatables, Request $request)
     {
         $campaign = [];
         $j = 1;
