@@ -24,23 +24,22 @@
         <div class="row">
             <div class="col-md-6">
                 <!-- AREA CHART -->
-                <div class="box box-primary">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">Area Chart</h3>
-
-                        <div class="box-tools pull-right">
-                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                            </button>
-                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                <div id="load_broad" class="load_broad" style="display: none;"></div>
+                <form action="{{ route('agency.dashboard.broad')  }}" id="search_by_broad" method="GET">
+                    {{ csrf_field() }}
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="channel">Channels:</label>
+                            <select class="form-control" name="broadcaster" id="broadcaster">
+                                @foreach($broadcaster as $broadcasters)
+                                    <option value="{{ $broadcasters->id }}">{{ $broadcasters->brand }}</option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
-                    <div class="box-body">
-                        <div class="chart">
-                            <canvas id="barChart" style="height:250px"></canvas>
-                        </div>
-                    </div>
-                    <!-- /.box-body -->
-                </div>
+                    <p><br></p>
+                    <div id="containerPeriodic_total_per_chanel" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                </form>
                 <!-- /.box -->
 
                 <!-- DONUT CHART -->
@@ -50,43 +49,21 @@
             </div>
             <!-- /.col (LEFT) -->
             <div class="col-md-6">
-                <!-- LINE CHART -->
-                <div class="box box-info">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">Line Chart</h3>
-
-                        <div class="box-tools pull-right">
-                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                            </button>
-                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-                        </div>
-                    </div>
-                    <div class="box-body">
-                        <div class="chart">
-                            <canvas id="pieChart" style="height:250px"></canvas>
-                        </div>
-                    </div>
-                    <!-- /.box-body -->
-                </div>
-                <!-- /.box -->
-
-                <!-- BAR CHART -->
-                <div class="box box-success" style="display: none">
-
-                    <div class="box-body">
-                        <div class="chart">
-                            <canvas id="areaChart" style="height:230px"></canvas>
-                        </div>
-                    </div>
-                    <!-- /.box-body -->
-                </div>
+                <!-- LINE CHART --><p><br></p>
+                <p><br></p>
+                <p><br></p>
+                <div id="containerPerProduct" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
                 <!-- /.box -->
 
             </div>
             <!-- /.col (RIGHT) -->
         </div>
         <!-- /.row -->
-
+        <hr>
+        <div class="row">
+            <div id="containerBudgetPacing" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+        </div>
+        <hr>
         <div class="row">
 
             <div class="client-box">
@@ -191,8 +168,76 @@
     <script src="{{ asset('agency_asset/plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('agency_asset/plugins/datatables/dataTables.bootstrap.min.js') }}"></script>
 
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/data.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+
     <script>
+        <?php echo "var date = ".$date . ";\n"; ?>
+        <?php echo "var amount = ".$amount . ";\n"; ?>
+        <?php echo "var name = ".$name .";\n"; ?>
+        <?php echo "var periodic_product = ".$periodic .";\n"; ?>
+        <?php echo "var amount_bud =".$amount_bud ."\n"; ?>
+        <?php echo "var date_bud =".$date_bud ."\n"; ?>
+
         $(document).ready(function () {
+
+            $("#broadcaster").change(function () {
+                $("#load_broad").show();
+                $(".content").css({
+                    opacity: 0.5
+                });
+                $('#load_broad').html('<img src="{{ asset('loader.gif') }}" align="absmiddle"> Please wait while we process your request...');
+                var br_id = $("#broadcaster").val();
+                var url = $("#search_by_broad").attr('action');
+                $.get(url, {'br_id': br_id, '_token':$('input[name=_token]').val()}, function(data) {
+                    $("#load_broad").hide();
+                    $(".content").css({
+                        opacity: 1
+                    });
+                    Highcharts.chart('containerPeriodic_total_per_chanel', {
+                        chart: {
+                            type: 'column'
+                        },
+                        title: {
+                            text: 'Periodic Spend Report'
+                        },
+                        subtitle: {
+                            text: 'Total against Channels'
+                        },
+                        xAxis: {
+                            categories: data.date,
+                            crosshair: true
+                        },
+                        yAxis: {
+                            min: 0,
+                            title: {
+                                text: 'Total (Naira)'
+                            }
+                        },
+                        tooltip: {
+                            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                            '<td style="padding:0"><b>{point.y:.1f} Naira</b></td></tr>',
+                            footerFormat: '</table>',
+                            shared: true,
+                            useHTML: true
+                        },
+                        plotOptions: {
+                            column: {
+                                pointPadding: 0.2,
+                                borderWidth: 0
+                            }
+                        },
+                        series: [{
+//                            name: data.name,
+                            data: data.amount_price
+
+                        }]
+                    });
+                });
+            })
+
             var Datefilter =  $('.agency_campaign_all').DataTable({
                 paging: true,
                 serverSide: true,
@@ -289,5 +334,130 @@
             });
         });
     </script>
+
+    <script>
+
+        Highcharts.chart('containerPeriodic_total_per_chanel', {
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Periodic Spend Report'
+            },
+            subtitle: {
+                text: 'Total against Channels'
+            },
+            xAxis: {
+                categories: date,
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Total (Naira)'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<td style="padding:0"><b>{point.y:.1f} Naira</b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+            series: [{
+//                name: name,
+                data: amount
+            }]
+        });
+        // Build the chart
+        Highcharts.chart('containerPerProduct', {
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
+            },
+            title: {
+                text: 'Periodic Spend Report on Products for <?php echo date('F, Y')?>',
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: false
+                    },
+                    showInLegend: true
+                }
+            },
+            series: [{
+                name: 'Total',
+                colorByPoint: true,
+                data: periodic_product
+            }]
+        });
+
+        Highcharts.chart('containerBudgetPacing', {
+            chart: {
+                type: 'spline'
+            },
+            title: {
+                text: 'Budget Pacing Report'
+            },
+            xAxis: {
+                categories: date_bud
+            },
+            yAxis: {
+                title: {
+                    text: 'Amount(Naira)'
+                },
+            },
+            tooltip: {
+                crosshairs: true,
+                shared: true
+            },
+            plotOptions: {
+                spline: {
+                    marker: {
+                        radius: 4,
+                        lineColor: '#666666',
+                        lineWidth: 1
+                    }
+                }
+            },
+            series: [{
+                name: '',
+                data: amount_bud
+
+            }]
+        });
+    </script>
+
+@stop
+
+@section('style')
+    <style>
+        .load_broad {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            margin-left: -50px; /* half width of the spinner gif */
+            margin-top: -50px; /* half height of the spinner gif */
+            text-align:center;
+            z-index:1234;
+            overflow: auto;
+            width: 500px; /* width of the spinner gif */
+            height: 500px; /*hight of the spinner gif +2px to fix IE8 issue */
+        }
+    </style>
 @stop
 

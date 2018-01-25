@@ -2,6 +2,8 @@
 
 namespace Vanguard\Http\Controllers;
 
+use Hamcrest\Util;
+use Vanguard\Http\Requests\Request;
 use Vanguard\Libraries\Utilities;
 use Vanguard\Repositories\Activity\ActivityRepository;
 use Vanguard\Repositories\User\UserRepository;
@@ -156,11 +158,204 @@ class DashboardController extends Controller
 
 
 
-        }else{
-            return view('agency.dashboard.dashboard');
+        }
+        else{
+            $agency_id = Session::get('agency_id');
+            $allBroadcaster = Utilities::switch_db('api')->select("SELECT * from broadcasters");
+
+            #Periodic spend report of total * chanel
+            $broadAgency = Utilities::switch_db('api')->select("SELECT agency_broadcaster as broad_ag from campaigns where agency = '$agency_id' LIMIT 1");
+            $age_broad_id = $broadAgency[0]->broad_ag;
+            $broadcaster_brand = Utilities::switch_db('api')->select("SELECT brand from broadcasters where id='$age_broad_id'");
+            $camp_prod = Utilities::switch_db('api')->select("SELECT id,product from campaigns where agency = '$agency_id'");
+            $pe = [];
+            $tot = [];
+            $broad = Utilities::switch_db('api')->select("SELECT SUM(amount) as total, time_created from payments WHERE agency_broadcaster = '$age_broad_id' GROUP BY DATE_FORMAT(time_created, '%Y-%m')");
+            foreach ($broad as $broads)
+            {
+                $pe[] = [
+                    'total' => (integer)$broads->total,
+                    'date' => date('M', strtotime($broads->time_created)),
+                    'name' => $broadcaster_brand[0]->brand,
+                ];
+            }
+            foreach ($pe as $p)
+            {
+                $tot[] = $p['total'];
+            }
+            foreach ($pe as $p)
+            {
+                $date[] = $p['date'];
+            }
+            foreach ($pe as $p)
+            {
+                $bra[] = $p['name'];
+            }
+
+            $d = json_encode($date);
+            $am = json_encode($tot);
+            $na = json_encode($bra);
+
+            #Periodic spend report of total * product
+            $pro_period = [];
+            $date = date('Y-m', time());
+            $pro_cam = Utilities::switch_db('api')->select("SELECT * from campaigns where agency = '$agency_id' AND DATE_FORMAT(time_created, '%Y-%m') = '$date' ");
+            foreach ($pro_cam as $pr){
+                $campaign_p = Utilities::switch_db('api')->select("SELECT * from payments where campaign_id = '$pr->id'");
+                $paym = Utilities::switch_db('api')->select("SELECT SUM(amount) as total from payments where agency_id = '$agency_id' AND DATE_FORMAT(time_created, '%Y-%m') = '$date'");
+                $pro_period[] = [
+                    'name' => $pr->product,
+                    'y' => (($campaign_p[0]->amount) / $paym[0]->total) * 100,
+                ];
+            }
+
+            $periodic_to_product = (json_encode($pro_period));
+
+            $regions = Utilities::switch_db('api')->select("SELECT * from regions");
+
+            #Budget pacing report
+            $amm = [];
+            $dat = [];
+            $trans = Utilities::switch_db('api')->select("SELECT current_balance as bal, time_created as `date` from walletHistories where user_id='$agency_id'");
+            $b = [];
+            foreach ($trans as $t){
+                $b[] = [
+                    'date' => date('D d,Y', strtotime($t->date)),
+                    'total' => (integer)$t->bal,
+                ];
+            }
+            foreach($b as $bud){
+                $amm[] = $bud['total'];
+            }
+            foreach ($b as $bud){
+                $dat[] = $bud['date'];
+            }
+
+            $amm_bud = json_encode($amm);
+            $date_bud = json_encode($dat);
+
+            return view('agency.dashboard.dashboard')->with(['broadcaster' => $allBroadcaster, 'region'=>$regions, 'date' => $d, 'amount' => $am, 'name' => $na, 'camp_prod' => $camp_prod, 'periodic' => $periodic_to_product, 'amount_bud' => $amm_bud, 'date_bud' => $date_bud]);
         }
     }
 
+    public function filterByBroad()
+    {
+        $b_id = request()->br_id;
+
+        $broadcaster_brand = Utilities::switch_db('api')->select("SELECT brand from broadcasters where id='$b_id'");
+        $pe = [];
+        $tot = [];
+        $date = [];
+        $bra = [];
+        $broad = Utilities::switch_db('api')->select("SELECT SUM(amount) as total, time_created from payments WHERE agency_broadcaster = '$b_id' GROUP BY DATE_FORMAT(time_created, '%Y-%m')");
+        foreach ($broad as $broads)
+        {
+            $pe[] = [
+                'total' => (integer)$broads->total,
+                'date' => date('M', strtotime($broads->time_created)),
+                'name' => $broadcaster_brand[0]->brand,
+            ];
+        }
+        foreach ($pe as $p)
+        {
+            $tot[] = $p['total'];
+        }
+        foreach ($pe as $p)
+        {
+            $date[] = $p['date'];
+        }
+        foreach ($pe as $p)
+        {
+            $bra[] = $p['name'];
+        }
+
+        return response()->json(['date' => $date, 'amount_price' => $tot, 'name' => $bra]);
+
+    }
+
+    public function clientDashboard()
+    {
+        $agency_id = Session::get('agency_id');
+        $brand = [];
+        $tot = [];
+        $dates = [];
+        $braa = [];
+        $bra = Utilities::switch_db('api')->select("SELECT * from brands where walkin_id IN (SELECT id from walkIns where agency_id = '$agency_id')");
+
+        $br = Utilities::switch_db('api')->select("SELECT * from brands where walkin_id IN (SELECT id from walkIns where agency_id = '$agency_id') LIMIT 1");
+        foreach ($br as $b){
+                $camp_pay = Utilities::switch_db('api')->select("SELECT SUM(amount) as total, time_created FROM payments WHERE campaign_id IN (SELECT id from campaigns WHERE brand = '$b->id' AND agency = '$agency_id') GROUP BY DATE_FORMAT(time_created, '%Y-%m')");
+                if(!$camp_pay){
+                    $total = 0;
+                    $date = 0;
+                }else{
+                    $total = $camp_pay[0]->total;
+                    $date = $camp_pay[0]->time_created;
+                }
+                $brand[] = [
+                    'brand_id' => $b->id,
+                    'brand' => $b->name,
+                    'total' => $total,
+                    'date' => date('M', strtotime($date)),
+                ];
+        }
+        foreach ($brand as $b){
+            $tot[] = $b['total'];
+        }
+        foreach ($brand as $b){
+            $braa[] = $b['brand'];
+        }
+        foreach ($brand as $b){
+            $dates[] = $b['date'];
+        }
+
+
+        $d = json_encode($dates);
+        $am = json_encode($tot);
+        $na = json_encode($braa);
+
+        return view('clients.dashboard.dashboard')->with(['brand' => $bra, 'date' => $d, 'amount' => $am, 'name' => $na]);
+    }
+
+    public function filterByBrand()
+    {
+        $b_id = request()->br_id;
+        $agency_id = Session::get('agency_id');
+        $brand = [];
+        $tot = [];
+        $dates = [];
+        $braa = [];
+        $br = Utilities::switch_db('api')->select("SELECT * from brands where id = '$b_id'");
+        foreach ($br as $b){
+            $camp_pay = Utilities::switch_db('api')->select("SELECT SUM(amount) as total, time_created FROM payments WHERE campaign_id IN (SELECT id from campaigns WHERE brand = '$b->id' AND agency = '$agency_id') GROUP BY DATE_FORMAT(time_created, '%Y-%m')");
+            if(!$camp_pay){
+                $total = 0;
+                $date = 0;
+            }else{
+                $total = $camp_pay[0]->total;
+                $date = $camp_pay[0]->time_created;
+            }
+            $brand[] = [
+                'brand_id' => $b->id,
+                'brand' => $b->name,
+                'total' => $total,
+                'date' => date('M', strtotime($date)),
+            ];
+        }
+        foreach ($brand as $b){
+            $tot[] = $b['total'];
+        }
+        foreach ($brand as $b){
+            $braa[] = $b['brand'];
+        }
+        foreach ($brand as $b){
+            $dates[] = $b['date'];
+        }
+
+
+        return response()->json(['date' => $dates, 'amount_price' => $tot, 'name' => $braa]);
+
+    }
 
 
 

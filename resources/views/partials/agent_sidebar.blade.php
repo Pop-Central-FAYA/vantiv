@@ -15,10 +15,20 @@
         <ul class="sidebar-menu">
             <li class="header">MAIN NAVIGATION</li>
             <li class="active treeview">
-                <a href="{{ route('dashboard') }}">
+                <a href="#">
                     <i class="fa fa-dashboard"></i> <span>Dashboard</span>
-
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
                 </a>
+
+                <ul class="treeview-menu">
+                    <li><a href="{{ route('dashboard') }}"><i class="fa fa-circle-o"></i> Agency Dashboard</a></li>
+                    <li><a href="{{ route('agency.dashboard') }}"><i class="fa fa-circle-o"></i> Clients Dashboard</a></li>
+                    {{--
+                                        <li><a href="client-portfolio.html"><i class="fa fa-circle-o"></i> Clients Portfolio</a></li>
+                    --}}
+                </ul>
             </li>
 
             <li class="active treeview">
@@ -77,8 +87,8 @@
             </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="#"><i class="fa fa-circle-o"></i> All Invoices</a></li>
-                    <li><a href="#"><i class="fa fa-circle-o"></i> Pending Invoices </a></li>
+                    <li><a href="{{ route('invoices.all') }}"><i class="fa fa-circle-o"></i> All Invoices</a></li>
+                    <li><a href="{{ route('invoices.pending') }}"><i class="fa fa-circle-o"></i> Pending Invoices </a></li>
 
                 </ul>
             </li>

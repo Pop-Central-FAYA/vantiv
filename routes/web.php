@@ -160,6 +160,11 @@ Route::group(['middleware' => 'auth'], function () {
             'uses' => 'DashboardController@index',
         ]);
 
+        Route::get('/clients-dashboard', [
+            'as' => 'agency.dashboard',
+            'uses' => 'DashboardController@clientDashboard',
+        ]);
+
         /**
          * Adslot
          */
@@ -234,6 +239,9 @@ Route::group(['middleware' => 'auth'], function () {
                Route::post('/brands/edit/{id}', 'ClientBrandsController@update')->name('agency.brands.update');
                Route::get('/brands/delete/{id}', 'ClientBrandsController@delete')->name('agency.brands.delete');
            });
+
+           Route::get('/agency-dashboard/periodic-sales', 'DashboardController@filterByBroad')->name('agency.dashboard.broad');
+            Route::get('/agency-dashboard/periodic-brand', 'DashboardController@filterByBrand')->name('agency.dashboard.data');
 
             /**
              * Clients
