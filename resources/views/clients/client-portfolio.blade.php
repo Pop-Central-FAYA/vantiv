@@ -45,26 +45,20 @@
                                 <thead>
                                     <tr>
                                         <th>Product</th>
-                                        <th>No. of Campaigns</th>
+                                        <th>No. of Adslots</th>
                                         <th>Total Expense</th>
                                         <th>Date Created</th>
-                                        <th>Last Campaign</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($brands as $brand)
+                                    @foreach ($campaign as $campaigns)
                                         <tr>
                                             <td>
-                                                <a href="client-portfolio-details-more.html">
-                                                    <p>
-                                                        <img src="../dist/img/googleplus.png" width="20%">
-                                                    </p>
-                                                </a>
+                                                {{ $campaigns['product'] }}
                                             </td>
-                                            <td>14</td>
-                                            <td>1,900,000</td>
-                                            <td>27 September, 2015</td>
-                                            <td>25 March, 2017</td>
+                                            <td>{{ $campaigns['num_of_slot'] }}</td>
+                                            <td>&#8358;{{ number_format($campaigns['payment'], 2) }}</td>
+                                            <td>{{ date('M j, Y', strtotime($campaigns['date'])) }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>

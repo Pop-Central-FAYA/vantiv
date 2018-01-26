@@ -59,10 +59,10 @@
                                                     </p>
                                                 </a>
                                             </td>
-                                            <td>14</td>
-                                            <td>1,900,000</td>
+                                            <td>{{ $client['num_campaign'] }}</td>
+                                            <td>&#8358;{{ number_format($client['total'],2) }}</td>
                                             <td>{{ date('M j, Y h:ia', strtotime($client['created_at'])) }}</td>
-                                            <td>25 March, 2017</td>
+                                            <td>{{ date('M j, Y', strtotime($client['last_camp'])) }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>

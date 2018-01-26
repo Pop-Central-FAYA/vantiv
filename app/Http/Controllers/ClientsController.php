@@ -87,12 +87,21 @@ class ClientsController extends Controller
 
             $user_details = \DB::select("SELECT * FROM users WHERE id = '$user_id'");
 
+            $campaigns = Utilities::switch_db('api')->select("SELECT COUNT(id) as number from campaigns where user_id = '$user_id'");
+
+            $last_camp_date = Utilities::switch_db('api')->select("SELECT time_created from campaigns where user_id = '$user_id' ORDER BY time_created DESC LIMIT 1");
+
+            $payments = Utilities::switch_db('api')->select("SELECT SUM(amount) as total from payments WHERE campaign_id IN(SELECT id from campaigns WHERE user_id = '$user_id')");
+
             $agency_data[] = [
                 'client_id' => $agency->id,
                 'user_id' => $agency->user_id,
                 'image_url' => $agency->image_url,
+                'num_campaign' => $campaigns[0]->number,
+                'total' => $payments[0]->total,
                 'name' => $user_details[0]->last_name . ' ' . $user_details[0]->first_name,
-                'created_at' => $agency->time_created
+                'created_at' => $agency->time_created,
+                'last_camp' => $last_camp_date[0]->time_created
             ];
         }
 
@@ -104,16 +113,29 @@ class ClientsController extends Controller
         $client = Utilities::switch_db('reports')->select("SELECT * FROM walkIns WHERE id = '$client_id'");
 
         $user_id = (int) $client[0]->user_id;
+
         $walknin_id = $client[0]->id;
 
-        $brands = Utilities::switch_db('reports')->select("SELECT * FROM brands WHERE walkin_id = '$walknin_id'");
+        $user_camp = [];
+
+//        $brands = Utilities::switch_db('reports')->select("SELECT * FROM brands WHERE walkin_id = '$walknin_id'");
+        $campaigns = Utilities::switch_db('api')->select("SELECT * from campaigns where user_id = '$user_id'");
+        foreach ($campaigns as $campaign){
+            $pay = Utilities::switch_db('api')->select("SELECT amount from payments where campaign_id = '$campaign->id'");
+            $user_camp[] = [
+                'product' => $campaign->product,
+                'num_of_slot' => $campaign->adslots,
+                'payment' => $pay[0]->amount,
+                'date' => $campaign->time_created
+            ];
+        }
 
         $user_details = \DB::select("SELECT * FROM users WHERE id = '$user_id'");
 
         return view('clients.client-portfolio')->with('clients')
             ->with('client', $client)
             ->with('user_details', $user_details)
-            ->with('brands', $brands);
+            ->with('campaign', $user_camp);
 
     }
 }
