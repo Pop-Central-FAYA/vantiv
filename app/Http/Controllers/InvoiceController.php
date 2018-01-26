@@ -20,13 +20,15 @@ class InvoiceController extends Controller
             $campaign_id = $invoice->campaign_id;
 
             $campaign = Utilities::switch_db('reports')->select("SELECT * FROM campaigns WHERE id = '$campaign_id'");
+            $brand_id = $campaign[0]->brand;
+            $brand_name = Utilities::switch_db('api')->select("SELECT name from brands where id = '$brand_id'");
 
             $invoice_campaign_details[] = [
                 'invoice_number' => $invoice->invoice_number,
                 'actual_amount_paid' => $invoice->actual_amount_paid,
                 'refunded_amount' => $invoice->refunded_amount,
                 'status' => $invoice->status,
-                'campaign_brand' => $campaign[0]->brand,
+                'campaign_brand' => $brand_name[0]->name,
                 'campaign_name' => $campaign[0]->name
             ];
         }
@@ -49,6 +51,8 @@ class InvoiceController extends Controller
             $campaign_id = $invoice->campaign_id;
 
             $campaign = Utilities::switch_db('reports')->select("SELECT * FROM campaigns WHERE id = '$campaign_id'");
+            $brand_id = $campaign[0]->brand;
+            $brand_name = Utilities::switch_db('api')->select("SELECT name from brands where id = '$brand_id'");
 
             $invoice_campaign_details[] = [
                 'id' => $invoice->id,
@@ -56,7 +60,7 @@ class InvoiceController extends Controller
                 'actual_amount_paid' => $invoice->actual_amount_paid,
                 'refunded_amount' => $invoice->refunded_amount,
                 'status' => $invoice->status,
-                'campaign_brand' => $campaign[0]->brand,
+                'campaign_brand' => $brand_name[0]->name,
                 'campaign_name' => $campaign[0]->name
             ];
         }
