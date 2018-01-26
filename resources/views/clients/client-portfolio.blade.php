@@ -34,7 +34,7 @@
 
             <div class="col-md-12">
 
-                <h3 align="right">Current Balance: N200,000</h3>
+                {{--<h3 align="right">Current Balance: N200,000</h3>--}}
 
                 <h2>{{ $user_details[0]->first_name . ' ' . $user_details[0]->last_name }}</h2>
 
