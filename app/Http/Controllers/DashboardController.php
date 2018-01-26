@@ -211,8 +211,6 @@ class DashboardController extends Controller
 
             $periodic_to_product = (json_encode($pro_period));
 
-            $regions = Utilities::switch_db('api')->select("SELECT * from regions");
-
             #Budget pacing report
             $amm = [];
             $dat = [];
@@ -234,7 +232,10 @@ class DashboardController extends Controller
             $amm_bud = json_encode($amm);
             $date_bud = json_encode($dat);
 
-            return view('agency.dashboard.dashboard')->with(['broadcaster' => $allBroadcaster, 'region'=>$regions, 'date' => $d, 'amount' => $am, 'name' => $na, 'camp_prod' => $camp_prod, 'periodic' => $periodic_to_product, 'amount_bud' => $amm_bud, 'date_bud' => $date_bud]);
+            #region
+//            $payments = Utilities::switch_db('api')->select("SELECT SUM(amount) as total from payments WHERE campaign_id IN(SELECT id from campaigns where adslots_id IN(SELECT * from ))");
+
+            return view('agency.dashboard.dashboard')->with(['broadcaster' => $allBroadcaster, 'date' => $d, 'amount' => $am, 'name' => $na, 'camp_prod' => $camp_prod, 'periodic' => $periodic_to_product, 'amount_bud' => $amm_bud, 'date_bud' => $date_bud]);
         }
     }
 

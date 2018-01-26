@@ -108,7 +108,7 @@
 
             </li>
             <li class="treeview">
-                <a href="#">
+                <a href="{{ route('reports.index') }}">
                     <i class="fa fa-table"></i> <span>Report</span>
                 </a>
             </li>

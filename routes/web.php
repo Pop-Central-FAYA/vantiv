@@ -276,6 +276,13 @@ Route::group(['middleware' => 'auth'], function () {
                Route::post('/pay', 'Agency\WalletsController@pay')->name('pay');
                Route::get('/get-wallet/data', 'Agency\WalletsController@getData');
             });
+
+            Route::group(['prefix' => 'reports'], function(){
+                Route::get('/', 'Agency\ReportsController@index')->name('reports.index');
+                Route::get('/campaign/all-data', 'Agency\ReportsController@getCampaign');
+                Route::get('/revenue/all-data', 'Agency\ReportsController@getRevenue');
+//                Route::get('/client-filter/campaign', 'Agency\ReportsController@filterCampaignClient')->name('filter.client');
+            });
         });
     });
 

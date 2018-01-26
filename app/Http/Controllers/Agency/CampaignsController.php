@@ -11,8 +11,6 @@ use Vanguard\Libraries\Utilities;
 use Yajra\DataTables\DataTables;
 use Session;
 
-
-
 class CampaignsController extends Controller
 {
     /**
