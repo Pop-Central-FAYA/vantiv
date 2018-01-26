@@ -28,8 +28,8 @@ Class Api
      */
     public static function auth_user(Request $request)
     {
-        $username = Encrypt::encrypt($request->username, Api::$api_private_key, 256);
-        $password = Encrypt::encrypt($request->password, Api::$api_private_key, 256);
+        $username = $request->username;
+        $password = $request->password;
 //        dd($username, $password);
         $auth_url = Api::$url.'user/login?key='.Api::$public;
         $response = Curl::to($auth_url)
@@ -38,7 +38,6 @@ Class Api
                 'password' => $password
             ])
             ->post();
-        dd($username,$password);
         $req = [
 
             'email' => $username,
