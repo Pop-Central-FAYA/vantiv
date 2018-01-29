@@ -4,8 +4,11 @@
  * Authentication
  */
 
-Route::get('login', 'Auth\AuthController@getLogin');
+Route::get('login', 'Auth\AuthController@getLogin')->name('login');
 Route::post('login', 'Auth\AuthController@postLogin');
+
+Route::get('/auth-agent/signup', 'Agency\AgencyAuthController@getRegister')->name('agency.register.form');
+Route::post('/auth-agent/signup/process', 'Agency\AgencyAuthController@postRegister')->name('agency.signup');
 
 Route::get('logout', [
     'as' => 'auth.logout',

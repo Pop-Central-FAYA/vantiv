@@ -107,7 +107,7 @@
 
                                     @if(count($agency_discounts) === 0)
 
-                                        <h4>OOPs!!!, You have agency discounts on your system, please create one</h4>
+                                        <h4>OOPs!!!, You have no agency discounts on your system, please create one</h4>
 
                                     @else
 
@@ -129,11 +129,11 @@
                                                 <tr>
                                                     <td>{{ $agency_discount->discount_type_sub_value }}</td>
                                                     <td>{{ $agency_discount->percent_value }}%</td>
-                                                    <td>{{ date('Y-m-d', $agency_discount->percent_start_date) }}</td>
-                                                    <td>{{ date('Y-m-d', $agency_discount->percent_stop_date) }}</td>
+                                                    <td>{{ date('Y-m-d', strtotime($agency_discount->percent_start_date)) }}</td>
+                                                    <td>{{ date('Y-m-d', strtotime($agency_discount->percent_stop_date)) }}</td>
                                                     <td>&#8358;{{ $agency_discount->value }}</td>
-                                                    <td>{{ date('Y-m-d', $agency_discount->value_start_date) }}</td>
-                                                    <td>{{ date('Y-m-d', $agency_discount->value_start_date) }}</td>
+                                                    <td>{{ date('Y-m-d', strtotime($agency_discount->value_start_date)) }}</td>
+                                                    <td>{{ date('Y-m-d', strtotime($agency_discount->value_start_date)) }}</td>
                                                     <td>
                                                         <a href="#" style="font-size: 16px"><span class="label label-warning" data-toggle="modal" data-target="#myModal{{ $agency_discount->id }}" style="cursor: pointer;"> Edit</span></a>
                                                         <a href="{{ url('discount/' . $agency_discount->id . '/delete') }}" id="a_del" style="font-size: 16px"><span class="label label-danger"> <i class="fa fa-trash"></i></span></a>
@@ -175,14 +175,14 @@
                                                             <div class="col-md-4">
                                                                 <div class="form-group">
                                                                     <label for="discount_value">Discount% Start Date</label>
-                                                                    <input type="number" name="percent_start_date" value="{{ date('Y-m-d', $agency_discount->percent_start_date) }}" class="form-control flatpickr" />
+                                                                    <input type="number" name="percent_start_date" value="{{ date('Y-m-d', strtotime($agency_discount->percent_start_date)) }}" class="form-control flatpickr" />
                                                                 </div>
                                                             </div>
 
                                                             <div class="col-md-4">
                                                                 <div class="form-group">
                                                                     <label for="discount_value">Discount% Stop Date</label>
-                                                                    <input type="number" name="percent_stop_date" value="{{ date('Y-m-d', $agency_discount->percent_stop_date) }}" class="form-control flatpickr" />
+                                                                    <input type="number" name="percent_stop_date" value="{{ date('Y-m-d', strtotime($agency_discount->percent_stop_date)) }}" class="form-control flatpickr" />
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -198,14 +198,14 @@
                                                             <div class="col-md-4">
                                                                 <div class="form-group">
                                                                     <label for="discount_value">Value Start Date</label>
-                                                                    <input type="number" name="value_start_date" value="{{ date('Y-m-d', $agency_discount->value_start_date) }}" class="form-control flatpickr" />
+                                                                    <input type="number" name="value_start_date" value="{{ date('Y-m-d', strtotime($agency_discount->value_start_date)) }}" class="form-control flatpickr" />
                                                                 </div>
                                                             </div>
 
                                                             <div class="col-md-4">
                                                                 <div class="form-group">
                                                                     <label for="discount_value">Value Stop Date</label>
-                                                                    <input type="number" name="value_stop_date" value="{{ date('Y-m-d', $agency_discount->value_start_date) }}" class="form-control flatpickr" />
+                                                                    <input type="number" name="value_stop_date" value="{{ date('Y-m-d', strtotime($agency_discount->value_start_date)) }}" class="form-control flatpickr" />
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -304,11 +304,11 @@
                                                 <tr>
                                                     <td>{{ $brand_discount->discount_type_value }}</td>
                                                     <td>{{ $brand_discount->percent_value }}%</td>
-                                                    <td>{{ date('Y-m-d', $brand_discount->percent_start_date) }}</td>
-                                                    <td>{{ date('Y-m-d', $brand_discount->percent_stop_date) }}</td>
+                                                    <td>{{ date('Y-m-d', strtotime($brand_discount->percent_start_date)) }}</td>
+                                                    <td>{{ date('Y-m-d', strtotime($brand_discount->percent_stop_date)) }}</td>
                                                     <td>&#8358;{{ $brand_discount->value }}</td>
-                                                    <td>{{ date('Y-m-d', $brand_discount->value_start_date) }}</td>
-                                                    <td>{{ date('Y-m-d', $brand_discount->value_start_date) }}</td>
+                                                    <td>{{ date('Y-m-d', strtotime($brand_discount->value_start_date)) }}</td>
+                                                    <td>{{ date('Y-m-d', strtotime($brand_discount->value_start_date)) }}</td>
                                                     <td>
                                                         <a href="#" style="font-size: 16px"><span class="label label-warning" data-toggle="modal" data-target="#myModal{{ $brand_discount->id }}" style="cursor: pointer;"> Edit</span></a>
                                                         <a href="{{ url('discount/' . $brand_discount->id . '/delete') }}" id="a_del" style="font-size: 16px"><span class="label label-danger"> <i class="fa fa-trash"></i></span></a>
@@ -350,14 +350,14 @@
                                                             <div class="col-md-4">
                                                                 <div class="form-group">
                                                                     <label for="discount_value">Discount% Start Date</label>
-                                                                    <input type="number" name="percent_start_date" value="{{ date('Y-m-d', $brand_discount->percent_start_date) }}" class="form-control flatpickr" />
+                                                                    <input type="number" name="percent_start_date" value="{{ date('Y-m-d', strtotime($brand_discount->percent_start_date)) }}" class="form-control flatpickr" />
                                                                 </div>
                                                             </div>
 
                                                             <div class="col-md-4">
                                                                 <div class="form-group">
                                                                     <label for="discount_value">Discount% Stop Date</label>
-                                                                    <input type="number" name="percent_stop_date" value="{{ date('Y-m-d', $brand_discount->percent_stop_date) }}" class="form-control flatpickr" />
+                                                                    <input type="number" name="percent_stop_date" value="{{ date('Y-m-d', strtotime($brand_discount->percent_stop_date)) }}" class="form-control flatpickr" />
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -373,14 +373,14 @@
                                                             <div class="col-md-4">
                                                                 <div class="form-group">
                                                                     <label for="discount_value">Value Start Date</label>
-                                                                    <input type="number" name="value_start_date" value="{{ date('Y-m-d', $brand_discount->value_start_date) }}" class="form-control flatpickr" />
+                                                                    <input type="number" name="value_start_date" value="{{ date('Y-m-d', strtotime($brand_discount->value_start_date)) }}" class="form-control flatpickr" />
                                                                 </div>
                                                             </div>
 
                                                             <div class="col-md-4">
                                                                 <div class="form-group">
                                                                     <label for="discount_value">Value Stop Date</label>
-                                                                    <input type="number" name="value_stop_date" value="{{ date('Y-m-d', $brand_discount->value_stop_date) }}" class="form-control flatpickr" />
+                                                                    <input type="number" name="value_stop_date" value="{{ date('Y-m-d', strtotime($brand_discount->value_stop_date)) }}" class="form-control flatpickr" />
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -480,11 +480,11 @@
                                                 <tr>
                                                     <td>{{ $time_discount->discount_type_sub_value }}</td>
                                                     <td>{{ $time_discount->percent_value }}%</td>
-                                                    <td>{{ date('Y-m-d', $time_discount->percent_start_date) }}</td>
-                                                    <td>{{ date('Y-m-d', $time_discount->percent_stop_date) }}</td>
+                                                    <td>{{ date('Y-m-d', strtotime($time_discount->percent_start_date)) }}</td>
+                                                    <td>{{ date('Y-m-d', strtotime($time_discount->percent_stop_date)) }}</td>
                                                     <td>&#8358;{{ $time_discount->value }}</td>
-                                                    <td>{{ date('Y-m-d', $time_discount->value_start_date) }}</td>
-                                                    <td>{{ date('Y-m-d', $time_discount->value_start_date) }}</td>
+                                                    <td>{{ date('Y-m-d', strtotime($time_discount->value_start_date)) }}</td>
+                                                    <td>{{ date('Y-m-d', strtotime($time_discount->value_start_date)) }}</td>
                                                     <td>
                                                         <a href="#" style="font-size: 16px"><span class="label label-warning" data-toggle="modal" data-target="#myModal{{ $time_discount->id }}" style="cursor: pointer;"> Edit</span></a>
                                                         <a href="{{ url('discount/' . $time_discount->id . '/delete') }}" id="a_del" style="font-size: 16px"><span class="label label-danger"> <i class="fa fa-trash"></i></span></a>
@@ -525,14 +525,14 @@
                                                             <div class="col-md-4">
                                                                 <div class="form-group">
                                                                     <label for="discount_value">Discount% Start Date</label>
-                                                                    <input type="number" name="percent_start_date" value="{{ date('Y-m-d', $time_discount->percent_start_date) }}" class="form-control flatpickr" />
+                                                                    <input type="number" name="percent_start_date" value="{{ date('Y-m-d', strtotime($time_discount->percent_start_date)) }}" class="form-control flatpickr" />
                                                                 </div>
                                                             </div>
 
                                                             <div class="col-md-4">
                                                                 <div class="form-group">
                                                                     <label for="discount_value">Discount% Stop Date</label>
-                                                                    <input type="number" name="percent_stop_date" value="{{ date('Y-m-d', $time_discount->percent_stop_date) }}" class="form-control flatpickr" />
+                                                                    <input type="number" name="percent_stop_date" value="{{ date('Y-m-d', strtotime($time_discount->percent_stop_date)) }}" class="form-control flatpickr" />
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -548,14 +548,14 @@
                                                             <div class="col-md-4">
                                                                 <div class="form-group">
                                                                     <label for="discount_value">Value Start Date</label>
-                                                                    <input type="number" name="value_start_date" value="{{ date('Y-m-d', $time_discount->value_start_date) }}" class="form-control flatpickr" />
+                                                                    <input type="number" name="value_start_date" value="{{ date('Y-m-d', strtotime($time_discount->value_start_date)) }}" class="form-control flatpickr" />
                                                                 </div>
                                                             </div>
 
                                                             <div class="col-md-4">
                                                                 <div class="form-group">
                                                                     <label for="discount_value">Value Stop Date</label>
-                                                                    <input type="number" name="value_stop_date" value="{{ date('Y-m-d', $time_discount->value_stop_date) }}" class="form-control flatpickr" />
+                                                                    <input type="number" name="value_stop_date" value="{{ date('Y-m-d', strtotime($time_discount->value_stop_date)) }}" class="form-control flatpickr" />
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -659,11 +659,11 @@
                                                 <tr>
                                                     <td>{{ $daypart_discount->discount_type_sub_value }}</td>
                                                     <td>{{ $daypart_discount->percent_value }}%</td>
-                                                    <td>{{ date('Y-m-d', $daypart_discount->percent_start_date) }}</td>
-                                                    <td>{{ date('Y-m-d', $daypart_discount->percent_stop_date) }}</td>
+                                                    <td>{{ date('Y-m-d', strtotime($daypart_discount->percent_start_date)) }}</td>
+                                                    <td>{{ date('Y-m-d', strtotime($daypart_discount->percent_stop_date)) }}</td>
                                                     <td>&#8358;{{ $daypart_discount->value }}</td>
-                                                    <td>{{ date('Y-m-d', $daypart_discount->value_start_date) }}</td>
-                                                    <td>{{ date('Y-m-d', $daypart_discount->value_start_date) }}</td>
+                                                    <td>{{ date('Y-m-d', strtotime($daypart_discount->value_start_date)) }}</td>
+                                                    <td>{{ date('Y-m-d', strtotime($daypart_discount->value_start_date)) }}</td>
                                                     <td>
                                                         <a href="#" style="font-size: 16px"><span class="label label-warning" data-toggle="modal" data-target="#myModal{{ $daypart_discount->id }}" style="cursor: pointer;"> Edit</span></a>
                                                         <a href="{{ url('discount/' . $daypart_discount->id . '/delete') }}" id="a_del" style="font-size: 16px"><span class="label label-danger"> <i class="fa fa-trash"></i></span></a>
@@ -705,14 +705,14 @@
                                                             <div class="col-md-4">
                                                                 <div class="form-group">
                                                                     <label for="discount_value">Discount% Start Date</label>
-                                                                    <input type="number" name="percent_start_date" value="{{ date('Y-m-d', $daypart_discount->percent_start_date) }}" class="form-control flatpickr" />
+                                                                    <input type="number" name="percent_start_date" value="{{ date('Y-m-d', strtotime($daypart_discount->percent_start_date)) }}" class="form-control flatpickr" />
                                                                 </div>
                                                             </div>
 
                                                             <div class="col-md-4">
                                                                 <div class="form-group">
                                                                     <label for="discount_value">Discount% Stop Date</label>
-                                                                    <input type="number" name="percent_stop_date" value="{{ date('Y-m-d', $daypart_discount->percent_stop_date) }}" class="form-control flatpickr" />
+                                                                    <input type="number" name="percent_stop_date" value="{{ date('Y-m-d', strtotime($daypart_discount->percent_stop_date)) }}" class="form-control flatpickr" />
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -728,14 +728,14 @@
                                                             <div class="col-md-4">
                                                                 <div class="form-group">
                                                                     <label for="discount_value">Value Start Date</label>
-                                                                    <input type="number" name="value_start_date" value="{{ date('Y-m-d', $daypart_discount->value_start_date) }}" class="form-control flatpickr" />
+                                                                    <input type="number" name="value_start_date" value="{{ date('Y-m-d', strtotime($daypart_discount->value_start_date)) }}" class="form-control flatpickr" />
                                                                 </div>
                                                             </div>
 
                                                             <div class="col-md-4">
                                                                 <div class="form-group">
                                                                     <label for="discount_value">Value Stop Date</label>
-                                                                    <input type="number" name="value_stop_date" value="{{ date('Y-m-d', $daypart_discount->value_stop_date) }}" class="form-control flatpickr" />
+                                                                    <input type="number" name="value_stop_date" value="{{ date('Y-m-d', strtotime($daypart_discount->value_stop_date)) }}" class="form-control flatpickr" />
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -833,11 +833,11 @@
                                                 <tr>
                                                     <td>{{ $price_discount->discount_type_value }} - {{ $price_discount->discount_type_sub_value }}</td>
                                                     <td>{{ $price_discount->percent_value }}%</td>
-                                                    <td>{{ date('Y-m-d', $price_discount->percent_start_date) }}</td>
-                                                    <td>{{ date('Y-m-d', $price_discount->percent_stop_date) }}</td>
+                                                    <td>{{ date('Y-m-d', strtotime($price_discount->percent_start_date)) }}</td>
+                                                    <td>{{ date('Y-m-d', strtotime($price_discount->percent_stop_date)) }}</td>
                                                     <td>&#8358;{{ $price_discount->value }}</td>
-                                                    <td>{{ date('Y-m-d', $price_discount->value_start_date) }}</td>
-                                                    <td>{{ date('Y-m-d', $price_discount->value_start_date) }}</td>
+                                                    <td>{{ date('Y-m-d', strtotime($price_discount->value_start_date)) }}</td>
+                                                    <td>{{ date('Y-m-d', strtotime($price_discount->value_start_date)) }}</td>
                                                     <td>
                                                         <a href="#" style="font-size: 16px"><span class="label label-warning" data-toggle="modal" data-target="#myModal{{ $price_discount->id }}" style="cursor: pointer;"> Edit</span></a>
                                                         <a href="{{ url('discount/' . $price_discount->id . '/delete') }}" id="a_del" style="font-size: 16px"><span class="label label-danger"> <i class="fa fa-trash"></i></span></a>
@@ -904,14 +904,14 @@
                                                             <div class="col-md-4">
                                                                 <div class="form-group">
                                                                     <label for="discount_value">Discount% Start Date</label>
-                                                                    <input type="number" name="percent_start_date" value="{{ date('Y-m-d', $price_discount->percent_start_date) }}" class="form-control flatpickr" />
+                                                                    <input type="number" name="percent_start_date" value="{{ date('Y-m-d', strtotime($price_discount->percent_start_date)) }}" class="form-control flatpickr" />
                                                                 </div>
                                                             </div>
 
                                                             <div class="col-md-4">
                                                                 <div class="form-group">
                                                                     <label for="discount_value">Value Start Date</label>
-                                                                    <input type="number" name="value_start_date" value="{{ date('Y-m-d', $price_discount->value_start_date) }}" class="form-control flatpickr" />
+                                                                    <input type="number" name="value_start_date" value="{{ date('Y-m-d', strtotime($price_discount->value_start_date)) }}" class="form-control flatpickr" />
                                                                 </div>
                                                             </div>
 
@@ -924,14 +924,14 @@
                                                             <div class="col-md-4">
                                                                 <div class="form-group">
                                                                     <label for="discount_value">Discount% Stop Date</label>
-                                                                    <input type="number" name="percent_stop_date" value="{{ date('Y-m-d', $price_discount->percent_stop_date) }}" class="form-control flatpickr" />
+                                                                    <input type="number" name="percent_stop_date" value="{{ date('Y-m-d', strtotime($price_discount->percent_stop_date)) }}" class="form-control flatpickr" />
                                                                 </div>
                                                             </div>
 
                                                             <div class="col-md-4">
                                                                 <div class="form-group">
                                                                     <label for="discount_value">Value Stop Date</label>
-                                                                    <input type="number" name="value_stop_date" value="{{ date('Y-m-d', $price_discount->value_stop_date) }}" class="form-control flatpickr" />
+                                                                    <input type="number" name="value_stop_date" value="{{ date('Y-m-d', strtotime($price_discount->value_stop_date)) }}" class="form-control flatpickr" />
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1030,11 +1030,11 @@
                                                 <tr>
                                                     <td>{{ $pslot_discount->discount_type_value }} - {{ $pslot_discount->discount_type_sub_value }}</td>
                                                     <td>{{ $pslot_discount->percent_value }}%</td>
-                                                    <td>{{ date('Y-m-d', $pslot_discount->percent_start_date) }}</td>
-                                                    <td>{{ date('Y-m-d', $pslot_discount->percent_stop_date) }}</td>
+                                                    <td>{{ date('Y-m-d', strtotime($pslot_discount->percent_start_date)) }}</td>
+                                                    <td>{{ date('Y-m-d', strtotime($pslot_discount->percent_stop_date)) }}</td>
                                                     <td>&#8358;{{ $pslot_discount->value }}</td>
-                                                    <td>{{ date('Y-m-d', $pslot_discount->value_start_date) }}</td>
-                                                    <td>{{ date('Y-m-d', $pslot_discount->value_stop_date) }}</td>
+                                                    <td>{{ date('Y-m-d', strtotime($pslot_discount->value_start_date)) }}</td>
+                                                    <td>{{ date('Y-m-d', strtotime($pslot_discount->value_stop_date)) }}</td>
                                                     <td>
                                                         <a href="#" style="font-size: 16px"><span class="label label-warning" data-toggle="modal" data-target="#myModal{{ $pslot_discount->id }}" style="cursor: pointer;"> Edit</span></a>
                                                         <a href="{{ url('discount/' . $pslot_discount->id . '/delete') }}" id="a_del" style="font-size: 16px"><span class="label label-danger"> <i class="fa fa-trash"></i></span></a>
@@ -1101,14 +1101,14 @@
                                                             <div class="col-md-4">
                                                                 <div class="form-group">
                                                                     <label for="percent_start_date">Discount% Start Date</label>
-                                                                    <input type="text" name="percent_start_date" value="{{ date('Y-m-d', $pslot_discount->percent_start_date) }}" class="form-control flatpickr" />
+                                                                    <input type="text" name="percent_start_date" value="{{ date('Y-m-d', strtotime($pslot_discount->percent_start_date)) }}" class="form-control flatpickr" />
                                                                 </div>
                                                             </div>
 
                                                             <div class="col-md-4">
                                                                 <div class="form-group">
                                                                     <label for="value_start_date">Value Start Date</label>
-                                                                    <input type="text" name="value_start_date" value="{{ date('Y-m-d', $pslot_discount->value_start_date) }}" class="form-control flatpickr" />
+                                                                    <input type="text" name="value_start_date" value="{{ date('Y-m-d', strtotime($pslot_discount->value_start_date)) }}" class="form-control flatpickr" />
                                                                 </div>
                                                             </div>
 
@@ -1121,14 +1121,14 @@
                                                             <div class="col-md-4">
                                                                 <div class="form-group">
                                                                     <label for="percent_stop_date">Discount% Stop Date</label>
-                                                                    <input type="number" name="percent_stop_date" value="{{ date('Y-m-d', $pslot_discount->percent_stop_date) }}" class="form-control flatpickr" />
+                                                                    <input type="number" name="percent_stop_date" value="{{ date('Y-m-d', strtotime($pslot_discount->percent_stop_date)) }}" class="form-control flatpickr" />
                                                                 </div>
                                                             </div>
 
                                                             <div class="col-md-4">
                                                                 <div class="form-group">
                                                                     <label for="value_stop_date">Value Stop Date</label>
-                                                                    <input type="text" name="value_stop_date" value="{{ date('Y-m-d', $pslot_discount->value_stop_date) }}" class="form-control flatpickr" />
+                                                                    <input type="text" name="value_stop_date" value="{{ date('Y-m-d', strtotime($pslot_discount->value_stop_date)) }}" class="form-control flatpickr" />
                                                                 </div>
                                                             </div>
                                                         </div>

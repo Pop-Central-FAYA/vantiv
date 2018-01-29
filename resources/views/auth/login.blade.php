@@ -45,6 +45,9 @@
                 @lang('app.log_in')
             </button>
         </div>
+        <div class="form-group">
+            <a href="{{ route('agency.register.form') }}">Agency Registration</a>
+        </div>
        
     </form>
 

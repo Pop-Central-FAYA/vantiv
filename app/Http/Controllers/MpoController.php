@@ -2,6 +2,7 @@
 
 namespace Vanguard\Http\Controllers;
 
+use Session;
 use Illuminate\Http\Request;
 use Vanguard\Libraries\Api;
 use Vanguard\Libraries\Utilities;
@@ -11,8 +12,8 @@ class MpoController extends Controller
     public function index()
     {
         // $mpos = json_decode(Api::get_broadcaster_mpo())->data;
-
-        $mpos = Utilities::switch_db('api')->select("SELECT * FROM mpos");
+        $broadcaster = Session::get('broadcaster_id');
+        $mpos = Utilities::switch_db('api')->select("SELECT * FROM mpos WHERE agency_broadcaster = '$broadcaster' OR broadcaster_id = '$broadcaster'");
 
         $mpo_data = [];
 
@@ -21,13 +22,28 @@ class MpoController extends Controller
             $campaign_details = Api::fetchCampaign($mpo->campaign_id);
             $payment_details = Api::fetchPayment($mpo->campaign_id);
 
+            if(count($campaign_details) === 0){
+                $product = 0;
+                $name = 0;
+                $time = 0;
+            }else{
+                $product = $campaign_details[0]->product;
+                $name = $campaign_details[0]->name;
+                $time = date('Y-m-d', strtotime($campaign_details[0]->time_created));
+            }
+
+            if(count($payment_details) === 0){
+                $amount = 0;
+            }else{
+                $amount = $payment_details[0]->amount;
+            }
+
             $mpo_data[] = [
                 'is_mpo_accepted' => $mpo->is_mpo_accepted,
-                'product' => $campaign_details[0]->product,
-                'amount' => $payment_details,
-                'amount' => $payment_details[0]->amount,
-                'name' => $campaign_details[0]->name,
-                'time_created' => $campaign_details[0]->time_created,
+                'product' => $product,
+                'amount' => $amount,
+                'name' => $name,
+                'time_created' => $time,
             ];
         }
 
@@ -36,7 +52,6 @@ class MpoController extends Controller
 
     public function pending_mpos()
     {
-        // $pending_mpos = json_decode(Api::get_mpo_by_type(2))->data;
 
         $pending_mpos = Api::getMpoByType(2);
 
