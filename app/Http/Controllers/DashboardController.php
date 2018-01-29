@@ -17,8 +17,10 @@ class DashboardController extends Controller
 
     public function index()
     {
+        //Broadcaster Dashboard module
         $role = \DB::table('role_user')->where('user_id', Auth::user()->id)->first();
-        if ($role->role_id === 3) {        // high value customer
+        if ($role->role_id === 3) {
+            // high value customer
             $broadcaster = Session::get('broadcaster_id');
             $camp = [];
             $campaign = Utilities::switch_db('api')->select("SELECT COUNT(id) as total_campaign, time_created as `time`, id, walkins_id, SUM(adslots) as total_adslot from campaigns WHERE broadcaster = '$broadcaster' AND walkins_id != '' GROUP BY walkins_id LIMIT 10");

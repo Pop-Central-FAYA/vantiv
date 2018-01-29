@@ -186,13 +186,13 @@ class CampaignsController extends Controller
                 $file_gan_gan = 'uploads/'.$filesUploaded->getClientOriginalName();
 
                 $time = $request->time;
-                $inser_upload = \DB::table('uploads')->insert([
+                $insert_upload = \DB::table('uploads')->insert([
                     'user_id' => $id,
                     'time' => $time,
                     'uploads' => $file_gan_gan
                 ]);
 
-                if($inser_upload){
+                if($insert_upload){
                     return redirect()->route('agency_campaign.step4', ['id' => $id, 'broadcaster' => $broadcaster]);
                 }else{
                     return back()->with('error','Could not complete upload process');

@@ -28,9 +28,8 @@ Class Api
      */
     public static function auth_user(Request $request)
     {
-        $username = $request->username;
+        $username = $request->email;
         $password = $request->password;
-//        dd($username, $password);
         $auth_url = Api::$url.'user/login?key='.Api::$public;
         $response = Curl::to($auth_url)
             ->withData([
@@ -55,7 +54,6 @@ Class Api
         {
             return back();
         }
-        dd($data['data']['info']['id']);
 
         session(['encrypted_token' => $data['data']['token']]);
         session(['broadcaster_id' => $data['data']['info']['id']]);

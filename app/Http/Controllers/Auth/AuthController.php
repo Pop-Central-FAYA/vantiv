@@ -113,6 +113,10 @@ class AuthController extends Controller
         $password = bcrypt($request->password);
         $role = \DB::table('role_user')->where('user_id', Auth::user()->id)->first();
         if ($role->role_id === 3) {
+//            $user_details = Utilities::switch_db('api')->select("SELECT * FROM users WHERE email = '$username' LIMIT 1");
+//            $user_id = $user_details[0]->id;
+//            $broadcaster_details = Utilities::switch_db('api')->select("SELECT * FROM agents WHERE user_id = '$user_id'");
+//            session(['broadcaster_id' => $broadcaster_details[0]->id]);
             Api::auth_user($request);
         } elseif ($role->role_id === 4) {
             $user_details = Utilities::switch_db('api')->select("SELECT * FROM users WHERE email = '$username' LIMIT 1");
