@@ -1,15 +1,16 @@
 @extends('layouts.app')
 
 @section('content')
+
     <section class="content-header">
         <h1>
             Create Campaign
-            <small><i class="fa fa-file-video-o"></i> Adslot </small>
+            <small><i class="fa fa-upload"></i> Upload Media Step 4</small>
         </h1>
         <ol class="breadcrumb" style="font-size: 16px">
 
             <li><a href="#"><i class="fa fa-th"></i> Create Campaign</a> </li>
-            <li><i class="fa fa-file-video-o"></i> Adslot </li>
+            <li><i class="fa fa-upload"></i> Upload Media Step 4</li>
 
         </ol>
     </section>
@@ -20,6 +21,8 @@
         <div class="row">
             <div class="col-md-1 hidden-sm hidden-xs"></div>
             <div class="col-md-9 " style="padding:2%">
+                <form class="campform" method="POST" action="{{ route('campaign.store4_3', ['walkins' => $walkins]) }}" enctype="multipart/form-data">
+                    {{ csrf_field() }}
                     <div class="row">
                         <div class="col-md-12 ">
 
@@ -27,46 +30,59 @@
                             <p align="center">The history of advertising can be traced to ancient civilizations. It became a major force in capitalist economies in the mid-19th century, based primarily on newspapers and magazines. In the 20th century, advertising grew rapidly with new technologies such as direct mail, radio, television, the internet and mobile devices.</p>
 
                         </div>
-
                     </div>
-
-                    <div class="row" style="margin-bottom: 5%">
-
-                        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 ">
-                            <a href="{{ route('campaign.store7', ['walkins' => $walkins]) }}">
-                                <div class="tvspace-box">
-                                    <img src="{{ asset('asset/dist/img/nta-logo.jpg') }}" width="100%">
-                                    <div class="tv-space">
-                                        <p align="center">
-                                            {{ $results  }} Adslot(s)
-                                            Available</p>
-                                        <p>{{ Session::get('broadcaster_brand') }}</p>
-                                    </div>
+                    {{--{{ dd($time_in_sec) }}--}}
+                    <div class="row" style="margin-top:3%" id="dynamic">
+                        <div class="row b">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Upload Media Step 3</label>
+                                    <input type="file" id="fup" name="uploads">
+                                    <input type="hidden" class="form-control" name="f_du" id="f_du" size="5" />
                                 </div>
-                            </a>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Duration: </label> <br />
+                                    <select style="width: 60%" name="time">
+                                        <option value="60">60 Seconds</option>
+                                    </select>
+                                    {{--<button type="button" id="add_more" class="btn btn-info btn-xs add_more">+ Add More</button>--}}
+                                </div>
+                            </div>
                         </div>
                     </div>
+                    <div class="col-md-6">
+
+                    </div>
+
+                    <audio id="audio"></audio>
 
                     <div class="container">
 
                         <p align="right">
-                            {{--<button id="step4" type="button" class="btn campaign-button" >Back <i class="fa fa-backward" aria-hidden="true"></i></button>--}}
-                            {{--<button type="submit" class="btn campaign-button" style="margin-right:15%">Next <i class="fa fa-play" aria-hidden="true"></i></button>--}}
-
+                            <button id="step3" type="button" class="btn campaign-button" >Back <i class="fa fa-backward" aria-hidden="true"></i></button>
+                            <button type="submit" class="btn campaign-button" style="margin-right:15%">Next <i class="fa fa-play" aria-hidden="true"></i></button>
                         </p>
                     </div>
 
-                {{--</form>--}}
+                </form>
 
             </div>
             <!-- /.col -->
             <div class="col-md-2 hidden-sm hidden-xs"></div>
             <!-- /.col -->
 
+
+
+
         </div>
+        <!-- /.row -->
+
+
     </section>
 
-@stop
+@endsection
 
 @section('scripts')
     <script src="{{ asset('asset/plugins/select2/select2.full.min.js') }}"></script>
@@ -74,23 +90,23 @@
     <script src="{{ asset('asset/plugins/input-mask/jquery.inputmask.js') }}"></script>
     <script src="{{ asset('asset/plugins/input-mask/jquery.inputmask.date.extensions.js') }}"></script>
     <script src="{{ asset('asset/plugins/input-mask/jquery.inputmask.extensions.js') }}"></script>
-
-    <script src="{{ asset('asset/plugins/colorpicker/bootstrap-colorpicker.min.js') }}"></script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
-
-    <script src="{{ asset('asset/plugins/timepicker/bootstrap-timepicker.min.js') }}"></script>
-
+    <!-- date-range-picker -->
+    <script src="{{ 'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js' }}"></script>
     <script src="{{ asset('asset/plugins/daterangepicker/daterangepicker.js') }}"></script>
+    <!-- bootstrap datepicker -->
     <script src="{{ asset('asset/plugins/datepicker/bootstrap-datepicker.js') }}"></script>
-
-    <script src="{{ asset('asset/plugins/daterangepicker/daterangepicker.js') }}"></script>
-
+    <!-- bootstrap color picker -->
+    <script src="{{ asset('asset/plugins/colorpicker/bootstrap-colorpicker.min.js') }}"></script>
+    <!-- bootstrap time picker -->
+    <script src="{{ asset('asset/plugins/timepicker/bootstrap-timepicker.min.js') }}"></script>
+    <!-- iCheck 1.0.1 -->
     <script src="{{ asset('asset/plugins/iCheck/icheck.min.js') }}"></script>
+
     <script>
         $(document).ready(function() {
-            $('#step4').click(function(){
-                window.location.href = "/campaign/create/1/step4";
+            var user_id = "<?php echo $walkins ?>";
+            $('#step3').click(function(){
+                window.location.href = '/campaign/create/1/'+user_id+'/step3';
             });
         });
     </script>
@@ -165,4 +181,29 @@
             });
         });
     </script>
-@stop
+
+    <script>
+        // Code to get duration of audio /video file before upload - from: http://coursesweb.net/
+
+        //register canplaythrough event to #audio element to can get duration
+        var f_duration =0;  //store duration
+        document.getElementById('audio').addEventListener('canplaythrough', function(e){
+            //add duration in the input field #f_du
+            f_duration = Math.round(e.currentTarget.duration);
+            document.getElementById('f_du').value = f_duration;
+            URL.revokeObjectURL(obUrl);
+        });
+
+        //when select a file, create an ObjectURL with the file and add it in the #audio element
+        var obUrl;
+        document.getElementById('fup').addEventListener('change', function(e){
+            var file = e.currentTarget.files[0];
+            //check file extension for audio/video type
+            if(file.name.match(/\.(avi|mp3|mp4|mpeg|ogg)$/i)){
+                obUrl = URL.createObjectURL(file);
+                document.getElementById('audio').setAttribute('src', obUrl);
+            }
+        });
+    </script>
+
+@endsection

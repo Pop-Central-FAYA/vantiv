@@ -83,7 +83,7 @@ class DashboardController extends Controller
             $s = array_sum($d);
             foreach ($dayp as $day) {
                 $day_p = $day->day_parts;
-                $query = Utilities::switch_db('api')->select("SELECT day_parts from dayParts WHERE id IN ('$day_p')");
+                $query = Utilities::switch_db('api')->select("SELECT day_parts from dayParts WHERE id IN ($day_p)");
                 $day_percent = (($day->campaigns) / $s) * 100;
                 $day_partt = isset($query[0]) ? $query[0]->day_parts : "";
                 $dayp_name[] = [
@@ -119,8 +119,9 @@ class DashboardController extends Controller
             $months = [];
             $slot = [];
             $periodic = Utilities::switch_db('api')->select("SELECT count(id) as tot_camp, SUM(adslots) as adslot, time_created as days from campaigns WHERE broadcaster = '$broadcaster' GROUP BY DATE_FORMAT(time_created, '%Y-%m') ORDER BY time_created desc");
+
             foreach ($periodic as $pe) {
-                $price = Utilities::switch_db('api')->select("SELECT SUM(amount) as total_price, time_created as days from payments WHERE broadcaster = '$broadcaster' AND time_created = '$pe->days' GROUP BY DATE_FORMAT(time_created, '%Y-%m') ORDER BY time_created desc");
+                $price = Utilities::switch_db('api')->select("SELECT SUM(amount) as total_price, time_created as days from payments WHERE broadcaster = '$broadcaster' GROUP BY DATE_FORMAT(time_created, '%Y-%m') ORDER BY time_created desc");
                 if(count($price) === 0){
                     $price = 0;
                 }else{

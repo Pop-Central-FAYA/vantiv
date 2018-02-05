@@ -218,7 +218,7 @@
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                                <h4 class="modal-title" id="myModalLabel">{{ $file->file_name }}</h4>
+                                                <h4 class="modal-title" id="myModalLabel">{{ decrypt($file->file_url) }}</h4>
                                             </div>
                                             <div class="modal-body">
                                                 <div style="text-align: center;">
@@ -226,7 +226,7 @@
                                                     {{--<video width="320" height="240" controls>--}}
                                                     {{--<source src="https://youtu.be/6ZfuNTqbHE8" type="video/mp4">--}}
                                                     {{--</video>--}}
-                                                    <video src="{{ $file->file_url }}" width="170" height="90" controls>
+                                                    <video src="{{ decrypt($file->file_url) }}" width="170" height="90" controls>
                                                         <p>If you are reading this, it is because your browser does not support the HTML5 video element.</p>
                                                     </video>
                                                 </div>

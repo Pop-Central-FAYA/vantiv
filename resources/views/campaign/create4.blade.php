@@ -5,12 +5,12 @@
 <section class="content-header">
     <h1>
         Create Campaign
-        <small><i class="fa fa-upload"></i> Upload Media </small>
+        <small><i class="fa fa-upload"></i> Upload Media Step 1</small>
     </h1>
     <ol class="breadcrumb" style="font-size: 16px">
 
         <li><a href="#"><i class="fa fa-th"></i> Create Campaign</a> </li>
-        <li><i class="fa fa-upload"></i> Upload Media </li>
+        <li><i class="fa fa-upload"></i> Upload Media Step 1</li>
 
     </ol>
 </section>
@@ -21,7 +21,7 @@
         <div class="row">
             <div class="col-md-1 hidden-sm hidden-xs"></div>
             <div class="col-md-9 " style="padding:2%">
-                <form class="campform" method="POST" action="{{ route('campaign.store4', ['id' => 1, 'walkins' => $walkins]) }}" enctype="multipart/form-data">
+                <form class="campform" method="POST" action="{{ route('campaign.store4', ['walkins' => $walkins]) }}" enctype="multipart/form-data">
                     {{ csrf_field() }}
                     <div class="row">
                         <div class="col-md-12 ">
@@ -36,18 +36,16 @@
                         <div class="row b">
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label>Upload Media</label>
-                                    <input type="file" name="uploads[]" multiple>
+                                    <label>Upload Media Step 1</label>
+                                    <input type="file" id="fup" name="uploads">
+                                    <input type="hidden" class="form-control" name="f_du" id="f_du" size="5" />
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label>Duration </label> <br />
-                                    <select style="width: 60%" name="time[]">
+                                    <label>Duration: </label> <br />
+                                    <select style="width: 60%" name="time">
                                         <option value="15">15 Seconds</option>
-                                        <option value="30">30 Seconds</option>
-                                        <option value="45">45 Seconds</option>
-                                        <option value="60">60 Seconds</option>
                                     </select>
                                     {{--<button type="button" id="add_more" class="btn btn-info btn-xs add_more">+ Add More</button>--}}
                                 </div>
@@ -58,6 +56,7 @@
 
                         </div>
 
+                    <audio id="audio"></audio>
 
                     <div class="container">
 
@@ -73,9 +72,6 @@
             <!-- /.col -->
             <div class="col-md-2 hidden-sm hidden-xs"></div>
             <!-- /.col -->
-
-
-
 
         </div>
         <!-- /.row -->
@@ -108,20 +104,6 @@
             var user_id = "<?php echo $walkins ?>";
             $('#step3').click(function(){
                 window.location.href = '/campaign/create/1/'+user_id+'/step3';
-            });
-        });
-    </script>
-    <script>
-        $(document).ready(function(){
-            $(".add_more").click(function(){
-                var n = $(".b").length + 1;
-                if(n > 4){
-                    return false;
-                }
-                var big_html = '';
-                big_html +=  '<div class="row b"><div class="col-md-4"><div class="form-group"><label>Upload Media</label><input type="file" name="uploads[]"></div></div><div class="col-md-4"><div class="form-group"><label>Duration </label> <br /><select style="width: 60%" name="time[]"><option value="15">15 Seconds</option><option value="30">30 Seconds</option><option value="45">45 Seconds</option><option value="60">60 Seconds</option>';
-                big_html += '</select></div></div></div>';
-                $("#dynamic").append(big_html)
             });
         });
     </script>
@@ -194,6 +176,29 @@
             $(".timepicker").timepicker({
                 showInputs: false
             });
+        });
+    </script>
+
+    <script>
+
+        //register canplaythrough event to #audio element to can get duration
+        var f_duration =0;  //store duration
+        document.getElementById('audio').addEventListener('canplaythrough', function(e){
+            //add duration in the input field #f_du
+            f_duration = Math.round(e.currentTarget.duration);
+            document.getElementById('f_du').value = f_duration;
+            URL.revokeObjectURL(obUrl);
+        });
+
+        //when select a file, create an ObjectURL with the file and add it in the #audio element
+        var obUrl;
+        document.getElementById('fup').addEventListener('change', function(e){
+            var file = e.currentTarget.files[0];
+            //check file extension for audio/video type
+            if(file.name.match(/\.(avi|mp3|mp4|mpeg|ogg)$/i)){
+                obUrl = URL.createObjectURL(file);
+                document.getElementById('audio').setAttribute('src', obUrl);
+            }
         });
     </script>
 

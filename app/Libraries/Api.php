@@ -67,23 +67,9 @@ Class Api
         session(['user_id' => self::explode_token($token, 'id')]);
 
     }
-    public static function get_hourly_range()
+    public static function get_hourly_ranges()
     {
-        $url = Api::$url.'ratecard/hourly/range?key='.Api::$public;
-        $token = Session::get('token');
-        $enc_token = Session::get('encrypted_token');
-
-        $response = Curl::to($url)
-            ->withHeader("token: $enc_token")
-            ->get();
-
-        $req = json_encode([
-            'key' => Api::$public,
-            'token' => $token
-        ]);
-        $data = json_encode($response, true);
-//        ApiLog::save_activity_log($req, $response, $url);
-        return $response;
+        return Utilities::switch_db('reports')->select("SELECT * FROM hourlyRanges");
     }
     public static function get_time()
     {
@@ -101,21 +87,25 @@ Class Api
 //        ApiLog::save_activity_log($req, $response, $url);
         return $response;
     }
-    public static function get_discount_type()
+
+    public static function get_dayParts()
     {
-        $url = Api::$url.'ratecard/discount?key='.Api::$public;
-        $token = Session::get('token');
-        $enc_token = Session::get('encrypted_token');
-        $response = Curl::to($url)
-            ->withHeader("token: $enc_token")
-            ->get();
-        $req = json_encode([
-            'key' => Api::$public,
-            'token' => $token
-        ]);
-        $data = json_encode($response, true);
-//        ApiLog::save_activity_log($req, $response, $url);
-        return $response;
+        return Utilities::switch_db('reports')->select("SELECT * FROM dayParts");
+    }
+
+    public function get_all_region()
+    {
+        Utilities::switch_db('api')->select("SELECT * from regions");
+    }
+
+    public static function get_discountTypes()
+    {
+        return Utilities::switch_db('reports')->select("SELECT * FROM discount_types");
+    }
+
+    public static function get_agencies()
+    {
+        return Utilities::switch_db('reports')->select("SELECT * FROM agents");
     }
     
     public static function get_ratecard_preloaded()
@@ -128,6 +118,18 @@ Class Api
             ->get();
         return json_decode($response);
 
+    }
+
+    public static function get_agent_user($user_id)
+    {
+        $data = Utilities::switch_db('reports')->select("SELECT id, firstname, lastname FROM users WHERE id = '$user_id'");
+
+        return $data;
+    }
+
+    public static function get_discount_classes()
+    {
+        return Utilities::switch_db('reports')->select("SELECT * FROM discount_classes");
     }
     
     public static function store_ad_slot($request)
@@ -546,24 +548,9 @@ Class Api
 
     public static function get_discounts_by_type($type)
     {
-        $key = Api::$public;
-        $token = Session::get('token');
-        $broadcaster_id = Session::get('broadcaster_id');
-        $url = Api::$url.'discount/all/type/' . $type . '/' . $broadcaster_id . '?key='.$key;
-        $encrypted_token = Session::get('encrypted_token');
+        $broadcaster_id = \Session::get('broadcaster_id');
 
-        $response = Curl::to($url)
-            ->withHeader("token: $encrypted_token")
-            ->get();
-
-        $req = json_encode([
-            'key' => $key,
-            'token' => $token
-        ]);
-
-        ApiLog::save_activity_log($req, $response, $url);
-
-        return $response;
+        return Utilities::switch_db('reports')->select("SELECT * FROM discounts WHERE broadcaster = '$broadcaster_id' AND discount_type = '$type' AND status = '1'");
     }
 
     public static function create_discount($discount_type_value, $percent_value, $percent_start_date,
@@ -784,6 +771,7 @@ Class Api
         $campaign = Utilities::switch_db('reports')->select("SELECT * FROM campaigns WHERE id = '$campaign_id'");
 
         return $campaign;
+
     }
 
     public static function fetchPayment($campaign_id)

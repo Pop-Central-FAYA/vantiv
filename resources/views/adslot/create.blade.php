@@ -28,7 +28,7 @@
                     <div class="form-group">
                         <label for="days">Select Days</label>
                         <select name="days" class="form-control" id="">
-                            @foreach($preload->days as $day)
+                            @foreach($days as $day)
                                 <option value="{{ $day->id }}">{{ $day->day }}</option>
                             @endforeach
                         </select>
@@ -36,8 +36,8 @@
                     <div class="form-group">
                         <label for="hourly_range">Hourly Range</label>
                         <select name="hourly_range" class="form-control" id="hourly_range">
-                            @foreach($hour as $hours)
-                                <option value="{{ $hours->id }}">{{ $hours->time_range }}</option>
+                            @foreach($hours as $hour)
+                                <option value="{{ $hour->id }}">{{ $hour->time_range }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -63,54 +63,54 @@
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="input-group time timepicker" id="timepicker">
-                                                    <input name="from_time[]" class="form-control "/><span class="input-group-addon"><span class="fa fa-clock-o"></span></span>
+                                                    <input name="from_time[]" required class="form-control "/><span class="input-group-addon"><span class="fa fa-clock-o"></span></span>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="input-group time timepicker" id="timepicker">
-                                                    <input name="to_time[]" class="form-control"/><span class="input-group-addon"><span class="fa fa-clock-o"></span></span>
+                                                    <input name="to_time[]" required class="form-control"/><span class="input-group-addon"><span class="fa fa-clock-o"></span></span>
                                                 </div>
                                             </div>
                                         </div>
                                     </td>
                                     <td>
-                                        <input type="text" name="price_60[]" id="price_601" class="form-control">
+                                        <input type="text" name="price_60[]" required id="price_601" class="form-control">
                                     </td>
                                     <td>
-                                        <input type="text" name="price_45[]" id="price_451" class="form-control">
+                                        <input type="text" name="price_45[]" required id="price_451" class="form-control">
                                     </td>
                                     <td>
-                                        <input type="text" name="price_30[]" price="price_301" class="form-control">
+                                        <input type="text" name="price_30[]" required price="price_301" class="form-control">
                                     </td>
                                     <td>
-                                        <input type="text" name="price_15[]" price="price_151" class="form-control">
+                                        <input type="text" name="price_15[]" required price="price_151" class="form-control">
                                     </td>
                                     <td>
                                         <script type='text/javascript'>
                                             <?php
-                                            if(is_array($target_audience)  and count($target_audience) > 0  )
+                                            if(is_array($targets)  and count($targets) > 0  )
                                             {
-                                                echo "var tar_audience = ". json_encode($target_audience) . ";\n";
+                                                echo "var tar_audience = ". json_encode($targets) . ";\n";
                                             }
                                             ?>
                                         </script>
                                         <select name="target_audience[]" class="form-control" id="">
-                                            @foreach($target_audience as $target_audiences)
-                                                <option value="{{ $target_audiences->id }}">{{ $target_audiences->audience }}</option>
+                                            @foreach($targets as $target)
+                                                <option value="{{ $target->id }}">{{ $target->audience }}</option>
                                             @endforeach
                                         </select>
                                     </td>
                                     <td>
                                         <script type='text/javascript'>
                                             <?php
-                                            if(is_array($preload->regions)  and count($preload->regions) > 0  )
+                                            if(is_array($regions)  and count($regions) > 0  )
                                             {
-                                                echo "var region = ". json_encode($preload->regions) . ";\n";
+                                                echo "var region = ". json_encode($regions) . ";\n";
                                             }
                                             ?>
                                         </script>
                                         <select name="region[]" class="form-control" id="">
-                                            @foreach($preload->regions as $region)
+                                            @foreach($regions as $region)
                                                 <option value="{{ $region->id }}">{{ $region->region }}</option>
                                             @endforeach
                                         </select>
@@ -118,23 +118,23 @@
                                     <td>
                                         <script type='text/javascript'>
                                             <?php
-                                            if(is_array($preload->day_parts)  and count($preload->day_parts) > 0  )
+                                            if(is_array($day_parts)  and count($day_parts) > 0  )
                                             {
-                                                echo "var day_parts = ". json_encode($preload->day_parts) . ";\n";
+                                                echo "var day_parts = ". json_encode($day_parts) . ";\n";
                                             }
                                             ?>
                                         </script>
                                         <select name="dayparts[]" class="form-control" id="">
-                                            @foreach($preload->day_parts as $daypart)
+                                            @foreach($day_parts as $daypart)
                                                 <option value="{{ $daypart->id }}">{{ $daypart->day_parts }}</option>
                                             @endforeach
                                         </select>
                                     </td>
                                     <td>
-                                        <input type="number" name="min_age[]" placeholder="Min Age" class="form-control">
+                                        <input type="number" required name="min_age[]" placeholder="Min Age" class="form-control">
                                     </td>
                                     <td>
-                                        <input type="number" name="max_age[]" placeholder="Max Age" class="form-control">
+                                        <input type="number" required name="max_age[]" placeholder="Max Age" class="form-control">
                                     </td>
                                     <td>
                                         <button id="add_more" type="button" class="btn btn-primary btn-xs">Add More +</button>
@@ -195,7 +195,7 @@
                     return false;
                 }
                 var big_html = '';
-                big_html += '<tr class="b"><td><div class="row"><div class="col-md-6"><div class="input-group time timepicker" id="timepicker"><input name="from_time[]" class="form-control"/><span class="input-group-addon"><span class="fa fa-clock-o"></span></span></div></div><div class="col-md-6"><div class="input-group time timepicker" id="timepicker"><input name="to_time[]" class="form-control"/><span class="input-group-addon"><span class="fa fa-clock-o"></span></span></div></div></div></td><td><input type="text" name="price_60[]" class="form-control"></td><td><input type="text" name="price_45[]" class="form-control"></td><td><input type="text" name="price_30[]" class="form-control"></td><td><input type="text" name="price_15[]" class="form-control"></td><td><select name="target_audience[]" class="form-control" id="">';
+                big_html += '<tr class="b"><td><div class="row"><div class="col-md-6"><div class="input-group time timepicker" id="timepicker"><input name="from_time[]" required class="form-control"/><span class="input-group-addon"><span class="fa fa-clock-o"></span></span></div></div><div class="col-md-6"><div class="input-group time timepicker" id="timepicker"><input name="to_time[]" required class="form-control"/><span class="input-group-addon"><span class="fa fa-clock-o"></span></span></div></div></div></td><td><input type="text" name="price_60[]" required class="form-control"></td><td><input type="text" name="price_45[]" required class="form-control"></td><td><input type="text" required name="price_30[]" class="form-control"></td><td><input type="text" required name="price_15[]" class="form-control"></td><td><select name="target_audience[]" class="form-control" id="">';
                 $.each(tar_audience, function (index,value)
                 {
                     big_html += '<option value ="'+ value.id + '"> ' + value.audience + '</option>';
@@ -210,7 +210,7 @@
                 {
                     big_html += '<option value="'+ value.id +'">'+ value.day_parts +'</option>'
                 });
-                big_html += '</select></td><td><input type="number" name="min_age[]" placeholder="Min Age" class="form-control"></td><td><input type="number" name="max_age[]" placeholder="Max Age" class="form-control"></td></tr>';
+                big_html += '</select></td><td><input type="number" required name="min_age[]" placeholder="Min Age" class="form-control"></td><td><input type="number" required name="max_age[]" placeholder="Max Age" class="form-control"></td></tr>';
                 $("#dynamic_field").append(big_html);
             });
 

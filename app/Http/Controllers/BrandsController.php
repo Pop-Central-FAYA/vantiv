@@ -5,6 +5,7 @@ namespace Vanguard\Http\Controllers;
 use Illuminate\Http\Request;
 use Vanguard\Libraries\Utilities;
 use Carbon\Carbon;
+use Session;
 
 class BrandsController extends Controller
 {
@@ -26,8 +27,9 @@ class BrandsController extends Controller
      */
     public function create()
     {
+        $broadcaster = Session::get('broadcaster_id');
         $client = [];
-        $walkins = Utilities::switch_db('api')->select("SELECT user_id from walkIns");
+        $walkins = Utilities::switch_db('api')->select("SELECT user_id from walkIns where broadcaster_id = '$broadcaster'");
         foreach ($walkins as $walk)
         {
             $user_id = $walk->user_id;

@@ -87,14 +87,14 @@
                                     <div class="input-group-addon">
                                         <i class="fa fa-calendar"></i>
                                     </div>
-                                    <input type="text" placeholder="start-date" value="{{ isset(((object) $step1)->start_date) ?((object) $step1)->start_date : "" }}" required name="start_date" class="form-control" id="txtFromDate" />
+                                    <input type="text" readonly placeholder="start-date" value="{{ isset(((object) $step1)->start_date) ?((object) $step1)->start_date : "" }}" required name="start_date" class="form-control" id="txtFromDate" />
                                 </div>
 
                                 <div class="input-group date styledate">
                                     <div class="input-group-addon">
                                         <i class="fa fa-calendar"></i>
                                     </div>
-                                    <input type="text" placeholder="stop-date" value="{{ isset(((object) $step1)->end_date) ? ((object) $step1)->end_date : "" }}" required name="end_date" class="form-control" id="txtToDate" />
+                                    <input type="text" readonly placeholder="stop-date" value="{{ isset(((object) $step1)->end_date) ? ((object) $step1)->end_date : "" }}" required name="end_date" class="form-control" id="txtToDate" />
                                 </div>
                             </div>
 
@@ -124,14 +124,12 @@
                         <div class="col-md-6">
                             <h3> Region </h3>
                             <div class="form-group">
-                                @foreach($region as $regions)
                                     <p>
                                         <label>
-                                            {{ $regions->region }}
-                                            <input type="checkbox" name="region[]" value="{{ $regions->id }}">
+                                            {{ $region[0]->region }}
+                                            <input type="checkbox" name="region[]" value="{{ $region[0]->id }}">
                                         </label>
                                     </p>
-                                @endforeach
                             </div>
                         </div>
 

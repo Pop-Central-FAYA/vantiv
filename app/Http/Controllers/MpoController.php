@@ -2,7 +2,6 @@
 
 namespace Vanguard\Http\Controllers;
 
-use Session;
 use Illuminate\Http\Request;
 use Vanguard\Libraries\Api;
 use Vanguard\Libraries\Utilities;
@@ -11,9 +10,9 @@ class MpoController extends Controller
 {
     public function index()
     {
-        // $mpos = json_decode(Api::get_broadcaster_mpo())->data;
-        $broadcaster = Session::get('broadcaster_id');
-        $mpos = Utilities::switch_db('api')->select("SELECT * FROM mpos WHERE agency_broadcaster = '$broadcaster' OR broadcaster_id = '$broadcaster'");
+        $broadcaster_id = \Session::get('broadcaster_id');
+
+        $mpos = Utilities::switch_db('reports')->select("SELECT * FROM mpos WHERE broadcaster_id = '$broadcaster_id' OR agency_broadcaster = '$broadcaster_id'");
 
         $mpo_data = [];
 
@@ -22,19 +21,19 @@ class MpoController extends Controller
             $campaign_details = Api::fetchCampaign($mpo->campaign_id);
             $payment_details = Api::fetchPayment($mpo->campaign_id);
 
-            if(count($campaign_details) === 0){
+            if (count($campaign_details) === 0) {
                 $product = 0;
                 $name = 0;
                 $time = 0;
-            }else{
+            } else {
                 $product = $campaign_details[0]->product;
                 $name = $campaign_details[0]->name;
                 $time = date('Y-m-d', strtotime($campaign_details[0]->time_created));
             }
 
-            if(count($payment_details) === 0){
+            if (count($payment_details) === 0) {
                 $amount = 0;
-            }else{
+            } else {
                 $amount = $payment_details[0]->amount;
             }
 
@@ -52,8 +51,9 @@ class MpoController extends Controller
 
     public function pending_mpos()
     {
+        $broadcaster_id = \Session::get('broadcaster_id');
 
-        $pending_mpos = Api::getMpoByType(2);
+        $pending_mpos = $mpos = Utilities::switch_db('reports')->select("SELECT * FROM mpos WHERE is_mpo_accepted = 0 AND (broadcaster_id = '$broadcaster_id' OR agency_broadcaster = '$broadcaster_id')");
 
         $mpo_data = [];
 
@@ -62,18 +62,51 @@ class MpoController extends Controller
             $campaign_details = Api::fetchCampaign($mpo->campaign_id);
             $payment_details = Api::fetchPayment($mpo->campaign_id);
 
+            $brand_id = $campaign_details[0]->brand;
+            $brand_name = Utilities::switch_db('api')->select("SELECT name from brands where id = '$brand_id'");
+
+            if (count($campaign_details) === 0) {
+                $product = 0;
+                $brand = 0;
+                $name = 0;
+                $time = 0;
+                $start_date = 0;
+                $start_end = 0;
+                $channel = 0;
+            } else {
+                $product = $campaign_details[0]->product;
+                $brand = $campaign_details[0]->brand;
+                $name = $campaign_details[0]->name;
+                $time = date('Y-m-d', strtotime($campaign_details[0]->time_created));
+                $start_date = $campaign_details[0]->start_date;
+                $start_end = $campaign_details[0]->stop_date;
+                $channel = Api::getChannelName($campaign_details[0]->channel)[0]->channel;
+            }
+
+            if (count($payment_details) === 0) {
+                $amount = 0;
+            } else {
+                $amount = $payment_details[0]->amount;
+            }
+
+            if (Api::getCampaignFiles($mpo->campaign_id) === 0) {
+                $files = 0;
+            } else {
+                $files = Api::getCampaignFiles($mpo->campaign_id);
+            }
+
             $mpo_data[] = [
                 'id' => $mpo->id,
                 'is_mpo_accepted' => $mpo->is_mpo_accepted,
-                'product' => $campaign_details[0]->product,
-                'brand' => $campaign_details[0]->brand,
-                'campaign_name' => $campaign_details[0]->name,
-                'channel' => Api::getChannelName($campaign_details[0]->channel)[0]->channel,
-                'time_created' => $campaign_details[0]->time_created,
-                'start_date' => $campaign_details[0]->start_date,
-                'stop_date' => $campaign_details[0]->stop_date,
-                'files' => Api::getCampaignFiles($mpo->campaign_id),
-                'amount' => $payment_details[0]->amount
+                'product' => $product,
+                'brand' => $brand_name[0]->name,
+                'campaign_name' => $name,
+                'channel' => $channel,
+                'time_created' => $time,
+                'start_date' => $start_date,
+                'stop_date' => $start_end,
+                'files' => $files,
+                'amount' => $amount
             ];
         }
 

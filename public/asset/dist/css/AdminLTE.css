@@ -5083,7 +5083,25 @@ margin-top: 20px;
   background: #5a5a5a;
   color:#ccc;
   border:none;
-    border-radius: 5px;
+  border-radius: 5px;
+}
+
+.add-disc input[type="number"]{
+  width: 100%;
+  padding: 6%;
+  background: #5a5a5a;
+  color:#ccc;
+  border:none;
+  border-radius: 5px;
+}
+
+.add-disc input[type="date"]{
+  width: 100%;
+  padding: 6%;
+  background: #5a5a5a;
+  color:#ccc;
+  border:none;
+  border-radius: 5px;
 }
 
 .add-disc input[type="submit"]{

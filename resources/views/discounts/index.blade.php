@@ -2,8 +2,8 @@
 
 @section('stylesheets')
 
-    <link rel="stylesheet" href="{{ asset('asset/plugins/datatables/dataTables.bootstrap.css') }}" />
     <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css" type="text/css"/>
 
 @endsection
 
@@ -63,7 +63,7 @@
                                                 <div class="col-md-2">
                                                     <select name="discount_type_value" id="discount_type_value">
                                                         @foreach ($agencies as $agency)
-                                                            <option value="{{ $agency->id }}">{{ $agency->brand }}</option>
+                                                            <option value="{{ $agency['id'] }}">{{ $agency['fullname'] }}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -107,11 +107,11 @@
 
                                     @if(count($agency_discounts) === 0)
 
-                                        <h4>OOPs!!!, You have no agency discounts on your system, please create one</h4>
+                                        <h4>OOPs!!!, You have agency discounts on your system, please create one</h4>
 
                                     @else
 
-                                        <table id="example1" class="table table-bordered table-striped">
+                                        <table id="example1" class="table table-bordered table-striped agency">
                                             <thead>
                                             <tr>
                                                 <th>Agency</th>
@@ -123,8 +123,8 @@
                                                 <th>Discount N Stop Date</th>
                                                 <th>Action</th>
                                             </tr>
-                                            <tbody>
                                             </thead>
+                                            <tbody>
                                             @foreach($agency_discounts as $agency_discount)
                                                 <tr>
                                                     <td>{{ $agency_discount->discount_type_sub_value }}</td>
@@ -139,8 +139,8 @@
                                                         <a href="{{ url('discount/' . $agency_discount->id . '/delete') }}" id="a_del" style="font-size: 16px"><span class="label label-danger"> <i class="fa fa-trash"></i></span></a>
                                                     </td>
                                                 </tr>
-                                                @endforeach
-                                                </tbody>
+                                            @endforeach
+                                            </tbody>
                                         </table>
 
                                     @endif
@@ -237,10 +237,9 @@
                                                 </div>
                                                 <div class="col-md-2">
                                                     <select name="discount_type_value">
-                                                        <option>Select Brand</option>
-                                                        <option value="milk">Milk</option>
-                                                        <option value="bread">Bread</option>
-                                                        <option value="car">Car</option>
+                                                        @foreach ($brands as $brand)
+                                                            <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                                                        @endforeach
                                                     </select>
                                                 </div>
                                                 <div class="col-md-2">
@@ -1168,6 +1167,8 @@
 @section('scripts')
 
     <script src="https://unpkg.com/flatpickr"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>
 
     <script>
         function ConfirmDelete() {
@@ -1186,26 +1187,37 @@
 
             $('#discount_type_value').change(function () {
                 var discount_type_value = $("#discount_type_value option:selected" ).text();
-
-
                 var c = $("#hey").value = discount_type_value;
                 console.log(c+"jj");
             });
 
-            $("#example1").DataTable();
-            $('#example2').DataTable({
-                "paging": true,
-                "lengthChange": false,
-                "searching": false,
-                "ordering": true,
-                "info": true,
-                "autoWidth": false
+
+
+            flatpickr(".flatpickr", {
+                altInput: true
             });
 
-        })
+        });
 
-        flatpickr(".flatpickr", {
-            altInput: true
+        var DataCampaign = $('.agency').DataTable({
+            paging: true,
+            serverSide: true,
+            processing: true,
+            ajax: {
+                url: '/walkins/all-walkins/data',
+                data: function (d) {
+                    d.start_date = $('input[name=txtFromDate_tvc]').val();
+                    d.stop_date = $('input[name=txtToDate_tvc]').val();
+                }
+            },
+            columns: [
+                {data: 'id', name: 'id'},
+                {data: 'full_name', name: 'full_name'},
+                {data: 'email', name: 'email'},
+                {data: 'phone', name: 'phone'},
+                {data: 'campaign', name: 'campaign'},
+                {data: 'delete', name: 'name'}
+            ]
         });
 
     </script>

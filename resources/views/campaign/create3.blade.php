@@ -20,10 +20,13 @@
         <div class="row">
             <div class="col-md-1 hidden-sm hidden-xs"></div>
             <div class="col-md-9 " style="padding:2%">
-                <form class="campform" method="POST" action="{{ route('campaign.store3', ['id' => 1, 'walkins' => $walkins]) }}">
+                <form class="campform" method="POST" action="{{ route('campaign.store3', ['walkins' => $walkins]) }}">
                     {{ csrf_field() }}
+                    @foreach($adslots as $adslot)
 
-                        <p>You have {{ (count($result)) }} Adslots that matches your selected criteria</p>
+                            <p>{{ $adslot['count_adslot'] }} Adslots that matches your selected criteria </p>
+
+                    @endforeach
                     <br>
                     <br>
 

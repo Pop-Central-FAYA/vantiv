@@ -19,8 +19,6 @@
         <div class="row cart" id="cart">
             <div class="col-md-1 hidden-sm hidden-xs"></div>
             <div class="col-md-9 " style="padding:2%">
-                {{--<form class="campform">--}}
-                {{ csrf_field() }}
                 <div class="row">
                     <div class="col-md-12 ">
                         <h2></h2>
@@ -32,65 +30,112 @@
                         <div class="tvspace-box">
                             <img src="{{ asset('asset/dist/img/nta-logo.jpg') }}" width="100%">
                             <div class="tv-space">
-                                <p align="center">You have adslots form {{ (count($rate)) }} Time range</p>
+                                <p align="center">{{ $result }} Adslot(s)</p>
                             </div>
                         </div>
                     </div>
                 </div>
-                @foreach($rate as $rates)
-                    {{--{{ dd($rates) }}--}}
-                    <div id="tv-time-box" style="border:1px solid #ccc" >
+                <div id="tv-time-box" style="border:1px solid #ccc" >
+                    @foreach($ratecards as $ratecard)
                         <div class="row">
                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
                                 <img src="{{ asset('asset/dist/img/nta-logo.jpg') }}" width="65%">
                             </div>
                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <h3 lign="center">{{ $rates['hourly_range']->time_range }}</h3>
+                                <h3 lign="center">{{ $ratecard['hourly_range'] }}</h3>
                             </div>
-                            @foreach($rates['adslots'] as $ads)
-                                @if($ads->time_in_seconds === ((integer)$file_upload[0]->time))
-
+                            @foreach($ratecard['adslot'] as $rating)
                                 <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4
                                 @foreach($cart as $carts)
-                                    @if($carts->adslot_id == $ads->id)
+                                    @if($carts->adslot_id === $rating->id)
                                             choosen
                                     @endif
                                 @endforeach
-                                    " id="rate_this">
-                                    <p align="center">{{ $ads->from_to_time }}
+                                        " id="rate_this">
+                                    <p align="center">{{ $rating->from_to_time }}
                                         <br>
-                                        {{ $ads->time_in_seconds }} Seconds
+                                        {{ $rating->time_difference - $rating->time_used }} Seconds Available
+
+                                        <?php
+                                        $percentage_used = (($rating->time_difference - $rating->time_used) / $rating->time_difference) * 100;
+                                        ?>
                                     </p> <br/>
-                                    <span type="button"  data-toggle="modal" data-target=".bs-example-modal-lg{{ $ads->id }}" class="avail-box
-                                            @foreach($cart as $carts)
-                                                @if($carts->adslot_id == $ads->id)
-                                                   disabled
-                                                @endif
-                                            @endforeach
-                                            " style="background:green; cursor: pointer; "></span>
-                                    <div class="modal fade bs-example-modal-lg{{ $ads->id }}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+
+                                    <div class="progress">
+                                        <div class="progress-bar bg-success
+                                    @foreach($cart as $carts)
+                                        @if($carts->adslot_id === $rating->id)
+                                                disabled
+                                        @endif
+                                    @endforeach
+                                                " data-toggle="modal" data-target=".bs-example-modal-lg{{ $rating->id }}" role="progressbar" style="width: {{ $percentage_used }}%" aria-valuenow="{{ $percentage_used }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    {{--{{ dd(count($times)) }}--}}
+                                    <div class="modal fade bs-example-modal-lg{{ $rating->id }}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
                                         <div class="modal-dialog modal-lg" role="document">
                                             <div class="modal-content" style="padding: 5%">
 
-                                                <form id="form_cart" action="{{ route('agency_campaign.cart',['id' => $id, 'broadcaster' => $broadcaster]) }}" method="POST">
+                                                <form id="form_cart" action="{{ route('store.cart') }}" method="GET">
                                                     {{ csrf_field() }}
-                                                    <h2 align="center"> Seconds Available</h2>
+                                                    <h2 align="center">{{ $rating->from_to_time }} | {{ $rating->time_difference }} Seconds Available</h2>
                                                     <ul style="font-size: 21px; margin:0 auto; width: 80%">
                                                         <h3 align="" style="color:#9f005d">Choose a media file</h3>
                                                         <hr />
                                                         <div class="row">
-                                                            <input type="hidden" class="hourly_break{{ $ads->id }}" name="hourly_break" value="{{ $ads->from_to_time }}">
-                                                            <div class="col-md-3"><i class="fa fa-video-camera"></i> <video width="200" controls><source src="{{ asset($file_upload[0]->uploads) }}"></video> </div>
-                                                            <input type="hidden" name="file" class="file{{ $ads->id }}" value="{{ $file_upload[0]->uploads }}">
-                                                            <div class="col-md-3"><span style="margin-left:15%"></span> {{ $ads->time_in_seconds }}Seconds</div>
-                                                            <input type="hidden" name="time" class="time{{ $ads->id }}" value="{{ $file_upload[0]->time }}">
-                                                            <div class="col-md-3"><input name="hourly" class="hourly" value="{{ $ads->id }}" type="radio"></div>
-                                                            <input type="hidden" name="rate_id" class="rating_id" value="{{ $ads->id }}">
-                                                            <div class="col-md-3"><td>&#8358;{{ number_format($ads->price, 2) }}</td></div>
-                                                            <input type="hidden" name="price" class="price{{ $ads->id }}" value="{{ $ads->price }}">
-                                                            <input type="hidden" name="rate_id" class="rate_id{{ $ads->id }}" id="rate_id" value="{{ $ads->rate_card }}">
-                                                            <input type="hidden" name="adslot_id", class="adslot_id{{ $ads->id }}" value="{{ $ads->id }}">
+                                                            <?php
+                                                            $select_price = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT * from adslotPercentages where adslot_id = '$rating->id'");
+                                                            if(!$select_price){
+                                                                $select_price = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT * from adslotPrices where adslot_id = '$rating->id'");
+                                                            }
+                                                            ?>
+
+
+                                                            <table class="table table-bordered table-striped">
+                                                                <thead>
+                                                                <tr>
+                                                                    <th>S/N</th>
+                                                                    <th>Name</th>
+                                                                    <th>duration</th>
+                                                                    <th>price</th>
+                                                                    <th>Select</th>
+                                                                </tr>
+                                                                </thead>
+                                                                {{--{{ dd($datas) }}--}}
+                                                                <tbody>
+                                                                <?php $j = 1; $i = 0; for($i = 0; $i < count($datas); $i++){ ?>
+
+                                                                @if(((integer) $datas[$i]->time) === $times[$i] && ($rating->time_difference - $rating->time_used) >= $times[$i])
+                                                                    <tr>
+                                                                        <td>{{ $j }}</td>
+                                                                        <td><div class="col-md-3"> <video width="150" controls><source src="{{ asset($datas[$i]->uploads) }}"></video> </div></td>
+                                                                        <input type="hidden" name="file" class="file{{ $rating->id.$datas[$i]->id }}" value="{{ $datas[$i]->uploads }}">
+                                                                        <td><div class="col-md-3"><span style="margin-left:15%"></span>{{ $datas[$i]->time }} Seconds</div></td>
+                                                                        <input type="hidden" name="time" class="time{{ $rating->id.$datas[$i]->id }}" value="{{ $datas[$i]->time }}">
+                                                                        <input type="hidden" name="from_to_time" class="from_to_time{{ $rating->id.$datas[$i]->id }}" value="{{ $rating->from_to_time }}">
+                                                                        <input type="hidden" name="adslot_id" class="adslot_id{{ $rating->id.$datas[$i]->id }}" value="{{ $rating->id }}">
+                                                                        <input type="hidden" name="walkins" class="walkins" value="{{ $id }}">
+                                                                        @if($datas[$i]->time === 15)
+                                                                            <td><div class="col-md-3">&#8358;{{ $select_price[0]->price_15 }}</div></td>
+                                                                            <input type="hidden" name="price" class="price{{ $rating->id.$datas[$i]->id }}" value="{{ $select_price[0]->price_15 }}">
+                                                                        @elseif($datas[$i]->time === 30)
+                                                                            <td><div class="col-md-3">&#8358;{{ $select_price[0]->price_30 }}</div></td>
+                                                                            <input type="hidden" name="price" class="price{{ $rating->id.$datas[$i]->id }}" value="{{ $select_price[0]->price_30 }}">
+                                                                        @elseif($datas[$i]->time === 45)
+                                                                            <td><div class="col-md-3">&#8358;{{ $select_price[0]->price_45 }}</div></td>
+                                                                            <input type="hidden" name="price" class="price{{ $rating->id.$datas[$i]->id }}" value="{{ $select_price[0]->price_45 }}">
+                                                                        @elseif($datas[$i]->time === 60)
+                                                                            <td><div class="col-md-3">&#8358;{{ $select_price[0]->price_60 }}</div></td>
+                                                                            <input type="hidden" name="price" class="price{{ $rating->id.$datas[$i]->id }}" value="{{ $select_price[0]->price_60 }}">
+                                                                        @endif
+                                                                        <td><div class="col-md-3"><input name="hourly" class="hourly" value="{{ $rating->id.$datas[$i]->id }}" type="radio"></div></td>
+                                                                    </tr>
+                                                                @endif
+                                                                <?php $j++; } ?>
+                                                                </tbody>
+                                                            </table>
+
                                                         </div>
+
                                                         <hr/>
                                                     </ul>
                                                     <button type="button" id="save_cart"  class="btn btn-large save_cart" style="background: #9f005d; color:white; font-size: 20px; padding: 1% 5%; margin-top:4%; border-radius: 10px;">Save</button></a></p>
@@ -100,12 +145,10 @@
                                         </div>
                                     </div>
                                 </div>
-                                @endif
                             @endforeach
                         </div>
-                    </div>
-                @endforeach
-                {{--</form>--}}
+                    @endforeach
+                </div>
             </div>
             <!-- /.col -->
             <div class="col-md-2 hidden-sm hidden-xs"></div>
@@ -154,20 +197,19 @@
 
             $("body").delegate(".save_cart", "click", function() {
                 var url1 = $("#form_cart").attr("action");
-                var id = $(".rating_id").val();
                 var pick = $("input[name='hourly']:checked").val();
                 var price = $(".price"+pick+"").val();
                 var file = $(".file"+pick+"").val();
                 var time = $(".time"+pick+"").val();
-                var range = $(".hourly_break"+pick+"").val();
-                var rate_id = $(".rate_id"+pick+"").val();
+                var range = $(".from_to_time"+pick+"").val();
                 var adslot_id = $(".adslot_id"+pick+"").val();
-                console.log(url1);
+                var walkins = $(".walkins").val();
+//                console.log(url1,pick,price,file,time,range,adslot_id, walkins);
                 if(pick){
                     $.ajax({
                         url: url1,
-                        method: "POST",
-                        data: {rate_id: rate_id, price: price, adslot_id: adslot_id, file: file, range: range, time: time, '_token':$('input[name=_token]').val()},
+                        method: "GET",
+                        data: {price: price, adslot_id: adslot_id, file: file, range: range, time: time, walkins: walkins, '_token':$('input[name=_token]').val()},
                         success: function(data){
                             if(data === "success"){
                                 location.reload();
@@ -177,7 +219,8 @@
                         }
                     })
                 }
-                })
+
+            });
 
             $("#txtToDate").datepicker({
                 numberOfMonths: 2,

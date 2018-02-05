@@ -148,9 +148,6 @@ class WalletsController extends Controller
 
     }
 
-
-
-
     protected function query_api_transaction_verify($reference)
     {
         $result = array();

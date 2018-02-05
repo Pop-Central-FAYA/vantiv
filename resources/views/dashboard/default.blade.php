@@ -126,10 +126,7 @@
         </div>
         <hr>
         <div class="row">
-            <div class="col-md-6">
-                <div id="containerInventory"></div>
-            </div>
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <div id="containerTotal"></div>
             </div>
         </div>

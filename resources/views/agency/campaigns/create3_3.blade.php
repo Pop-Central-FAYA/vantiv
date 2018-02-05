@@ -5,12 +5,12 @@
 @section('content')
     <section class="content-header">
         <h1>
-            Create Campaigns | Uploads Step 1
+            Create Campaigns | Uploads Step 4
         </h1>
         <ol class="breadcrumb" style="font-size: 16px">
 
             <li><a href="#"><i class="fa fa-th"></i> Agency</a> </li>
-            <li><a href="index.html"><i class="fa fa-address-card"></i> Create Clients Campaign</a> | Uploads Step1 </li>
+            <li><a href="index.html"><i class="fa fa-address-card"></i> Create Clients Campaign</a> | Uploads Step4 </li>
 
         </ol>
     </section>
@@ -21,7 +21,7 @@
         <div class="row">
             <div class="col-md-1 hidden-sm hidden-xs"></div>
             <div class="col-md-9 " style="padding:2%">
-                <form class="campform" method="POST" action="{{ route('agency_campaign.store3', ['id' => $id, 'broadcaster' => $broadcaster]) }}" enctype="multipart/form-data">
+                <form class="campform" method="POST" action="{{ route('agency_campaign.store3_3', ['id' => $id, 'broadcaster' => $broadcaster]) }}" enctype="multipart/form-data">
                     {{ csrf_field() }}
                     <div class="row">
                         <div class="col-md-12 ">
@@ -45,7 +45,7 @@
                                 <div class="form-group">
                                     <label>Duration </label> <br />
                                     <select style="width: 60%" name="time">
-                                        <option value="15">15 Seconds</option>
+                                        <option value="60">60 Seconds</option>
                                     </select>
                                     {{--<button type="button" id="add_more" class="btn btn-info btn-xs add_more">+ Add More</button>--}}
                                 </div>
@@ -148,21 +148,21 @@
             $('#reservationtime').daterangepicker({timePicker: true, timePickerIncrement: 30, format: 'MM/DD/YYYY h:mm A'});
             //Date range as a button
             $('#daterange-btn').daterangepicker(
-                    {
-                        ranges: {
-                            'Today': [moment(), moment()],
-                            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                            'This Month': [moment().startOf('month'), moment().endOf('month')],
-                            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-                        },
-                        startDate: moment().subtract(29, 'days'),
-                        endDate: moment()
+                {
+                    ranges: {
+                        'Today': [moment(), moment()],
+                        'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                        'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                        'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                        'This Month': [moment().startOf('month'), moment().endOf('month')],
+                        'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
                     },
-                    function (start, end) {
-                        $('#daterange-btn span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-                    }
+                    startDate: moment().subtract(29, 'days'),
+                    endDate: moment()
+                },
+                function (start, end) {
+                    $('#daterange-btn span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+                }
             );
 
             //Date picker

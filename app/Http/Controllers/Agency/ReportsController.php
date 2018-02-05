@@ -35,7 +35,7 @@ class ReportsController extends Controller
                 $stop = date('Y-m-d', strtotime($request->stop_date));
                 $campaign_report = [];
                 $j = 1;
-                $camp = Utilities::switch_db('api')->select("SELECT * from campaigns where user_id = '$request->client' AND agency = '$agency_id' AND time_created BETWEEN '$start' AND '$stop'");
+                $camp = Utilities::switch_db('api')->select("SELECT * from campaigns where user_id = '$request->client' AND agency = '$agency_id' AND time_created BETWEEN '$start' AND '$stop' ORDER BY time_created desc");
                 foreach ($camp as $campaign){
                     $pay = Utilities::switch_db('api')->select("SELECT amount from payments where campaign_id = '$campaign->id'");
                     $campaign_report[] = [
@@ -73,7 +73,7 @@ class ReportsController extends Controller
                 $stop = date('Y-m-d', strtotime($request->stop_date));
                 $campaign_report = [];
                 $j = 1;
-                $camp = Utilities::switch_db('api')->select("SELECT * from campaigns where user_id = '$request->client' AND agency = '$agency_id' AND time_created BETWEEN '$start' AND '$stop'");
+                $camp = Utilities::switch_db('api')->select("SELECT * from campaigns where user_id = '$request->client' AND agency = '$agency_id' AND time_created BETWEEN '$start' AND '$stop' ORDER BY time_created desc");
                 foreach ($camp as $campaign){
                     $pay = Utilities::switch_db('api')->select("SELECT amount from payments where campaign_id = '$campaign->id'");
                     $campaign_report[] = [
@@ -107,7 +107,7 @@ class ReportsController extends Controller
         $agency_id = Session::get('agency_id');
         $campaign_report = [];
         $j = 1;
-        $camp = Utilities::switch_db('api')->select("SELECT * from campaigns where user_id = '$user_id' AND agency = '$agency_id'");
+        $camp = Utilities::switch_db('api')->select("SELECT * from campaigns where user_id = '$user_id' AND agency = '$agency_id' ORDER BY time_created desc");
         foreach ($camp as $campaign){
             $pay = Utilities::switch_db('api')->select("SELECT amount from payments where campaign_id = '$campaign->id'");
             $campaign_report[] = [

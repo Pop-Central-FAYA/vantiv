@@ -4,28 +4,46 @@ namespace Vanguard\Http\Controllers;
 
 use Vanguard\Libraries\Api;
 use Illuminate\Http\Request;
+use Vanguard\Libraries\Utilities;
 
 class DiscountController extends Controller
 {
     public function index()
     {
-        $hourly_ranges = Api::get_ratecard_preloaded()->data->hourly_range;
-        $day_parts = Api::get_ratecard_preloaded()->data->day_parts;
-        $types = Api::get_ratecard_preloaded()->data->discount_types;
-        $agencies = Api::get_ratecard_preloaded()->data->agency;
+        $hourly_ranges = Api::get_hourly_ranges();
+        $day_parts = Api::get_dayParts();
+        $types = Api::get_discountTypes();
 
-        $agency_discounts = json_decode(Api::get_discounts_by_type($types[0]->id))->data;
-        $brand_discounts = json_decode(Api::get_discounts_by_type($types[1]->id))->data;
-        $time_discounts = json_decode(Api::get_discounts_by_type($types[2]->id))->data;
-        $daypart_discounts = json_decode(Api::get_discounts_by_type($types[3]->id))->data;
-        $price_discounts = json_decode(Api::get_discounts_by_type($types[4]->id))->data;
-        $pslot_discounts = json_decode(Api::get_discounts_by_type($types[5]->id))->data;
+        $agencies_user_ids = Utilities::switch_db('reports')->select("SELECT user_id FROM agents");
+
+        $agencies = [];
+
+        foreach ($agencies_user_ids as $agency) {
+
+            $user_id = $agency->user_id;
+
+            $fullname = Api::get_agent_user($user_id);
+
+            $agencies[] = [
+                'id' => $fullname[0]->id,
+                'fullname' => $fullname[0]->firstname . ' ' . $fullname[0]->lastname
+            ];
+        }
+
+        $brands = Utilities::switch_db('reports')->select("SELECT id, name FROM brands");
+
+        $agency_discounts = Api::get_discounts_by_type($types[0]->id);
+        $brand_discounts = Api::get_discounts_by_type($types[1]->id);
+        $time_discounts = Api::get_discounts_by_type($types[2]->id);
+        $daypart_discounts = Api::get_discounts_by_type($types[3]->id);
+        $price_discounts = Api::get_discounts_by_type($types[4]->id);
+        $pslot_discounts = Api::get_discounts_by_type($types[5]->id);
 
         return view('discounts.index',
             compact(
                 'agency_discounts', 'brand_discounts', 'time_discounts',
                 'daypart_discounts', 'price_discounts', 'pslot_discounts',
-                'hourly_ranges','day_parts', 'types', 'agencies'
+                'hourly_ranges','day_parts', 'types', 'agencies', 'brands'
             )
         );
     }
@@ -43,16 +61,16 @@ class DiscountController extends Controller
 
     public function store(Request $request)
     {
-        $hourly_ranges = Api::get_ratecard_preloaded()->data->hourly_range;
-        $day_parts = Api::get_ratecard_preloaded()->data->day_parts;
-        $types = Api::get_ratecard_preloaded()->data->discount_types;
-        $agencies = Api::get_ratecard_preloaded()->data->agency;
+        $hourly_ranges = Api::get_hourly_ranges();
+        $day_parts = Api::get_dayParts();
+        $types = Api::get_discountTypes();
+        $agencies = Api::get_agencies();
+        $classes = Api::get_discount_classes();
 
         $number_value = (int) $request->value;
         $percent_value = (int) $request->percent_value;
 
-        $classes = Api::get_ratecard_preloaded()->data->discount_classes;
-        $types = Api::get_ratecard_preloaded()->data->discount_types;
+        $broadcaster_id = \Session::get('broadcaster_id');
 
         if ($number_value !== 0 && $percent_value !== 0) {
             $request->discount_class_id = $classes[2]->id;
@@ -65,14 +83,7 @@ class DiscountController extends Controller
         }
 
         $discount_type_id = $request->discount_type_id;
-        $discount_class_id = $request->discount_class_id;
         $discount_type_value = $request->discount_type_value;
-        $percent_value = (int) $request->percent_value;
-        $percent_start_date = strtotime($request->percent_start_date);
-        $percent_stop_date = strtotime($request->percent_stop_date);
-        $value = (int) $request->value;
-        $value_start_date = strtotime($request->value_start_date);
-        $value_stop_date = strtotime($request->value_stop_date);
 
         if ($discount_type_id == $types[0]->id) {
             $discount_type_sub_value = $this->searchObject($agencies, $discount_type_value, 'brand');
@@ -88,16 +99,25 @@ class DiscountController extends Controller
             $discount_type_sub_value = null;
         }
 
-        $discount = json_decode(Api::create_discount(
-            $discount_type_value, $percent_value, $percent_start_date,
-            $percent_stop_date, $value, $value_start_date, $value_stop_date,
-            $discount_class_id, $discount_type_id, $discount_type_sub_value
-        ));
+        $discountInsert = Utilities::switch_db('reports')->table('discounts')->insert([
+            'id' => uniqid(),
+            'broadcaster' => $broadcaster_id,
+            'discount_type' => $request->discount_type_id,
+            'discount_class' => $request->discount_class_id,
+            'discount_type_value' => $request->discount_type_value,
+            'percent_value' => (int) $request->percent_value,
+            'percent_start_date' => $request->percent_start_date,
+            'percent_stop_date' => $request->percent_stop_date,
+            'value' => (int) $request->value,
+            'value_start_date' => $request->value_start_date,
+            'value_stop_date' => $request->value_stop_date,
+            'discount_type_sub_value' => $discount_type_sub_value
+        ]);
 
-        if($discount->status === false) {
-            return redirect()->back()->with('error', $discount->message);
+        if($discountInsert) {
+            return redirect()->back()->with('success', 'Discount created successfully');
         } else {
-            return redirect()->back()->with('success', trans('app.discount_created'));
+            return redirect()->back()->with('error', 'Discount not created');
         }
     }
 
@@ -106,12 +126,13 @@ class DiscountController extends Controller
         $number_value = (int) $request->value;
         $percent_value = (int) $request->percent_value;
 
-        $classes = Api::get_ratecard_preloaded()->data->discount_classes;
-        $types = Api::get_ratecard_preloaded()->data->discount_types;
+        $hourly_ranges = Api::get_hourly_ranges();
+        $day_parts = Api::get_dayParts();
+        $types = Api::get_discountTypes();
+        $agencies = Api::get_agencies();
+        $classes = Api::get_discount_classes();
 
-        $hourly_ranges = Api::get_ratecard_preloaded()->data->hourly_range;
-        $day_parts = Api::get_ratecard_preloaded()->data->day_parts;
-        $agencies = Api::get_ratecard_preloaded()->data->agency;
+        $broadcaster_id = \Session::get('broadcaster_id');
 
         if ($number_value !== 0 && $percent_value !== 0) {
             $request->discount_class_id = $classes[2]->id;
@@ -124,14 +145,7 @@ class DiscountController extends Controller
         }
 
         $discount_type_id = $request->discount_type_id;
-        $discount_class_id = $request->discount_class_id;
         $discount_type_value = $request->discount_type_value;
-        $percent_value = (int) $request->percent_value;
-        $percent_start_date = strtotime($request->percent_start_date);
-        $percent_stop_date = strtotime($request->percent_stop_date);
-        $value = (int) $request->value;
-        $value_start_date = strtotime($request->value_start_date);
-        $value_stop_date = strtotime($request->value_stop_date);
 
         if ($discount_type_id == $types[0]->id) {
             $discount_type_sub_value = $this->searchObject($agencies, $discount_type_value, 'brand');
@@ -147,28 +161,43 @@ class DiscountController extends Controller
             $discount_type_sub_value = null;
         }
 
-        $discount = json_decode(Api::update_discount(
-            $discount, $discount_type_value, $percent_value, $percent_start_date,
-            $percent_stop_date, $value, $value_start_date, $value_stop_date,
-            $discount_class_id, $discount_type_id, $discount_type_sub_value
-        ));
+        $discountUpdate = Utilities::switch_db('reports')
+            ->select(
+                "UPDATE discounts 
+                  SET
+                  broadcaster = '$broadcaster_id',
+                  discount_type = '$request->discount_type_id',
+                  discount_class = '$request->discount_class_id',
+                  discount_type_value = '$request->discount_type_value',
+                  percent_value = '$request->percent_value',
+                  percent_start_date = '$request->percent_start_date',
+                  percent_stop_date = '$request->percent_stop_date',
+                  value =  '$request->value',
+                  value_start_date = '$request->value_start_date',
+                  value_stop_date = '$request->value_stop_date',
+                  discount_type_sub_value = '$discount_type_sub_value'
+                  WHERE id = '$discount'"
+            );
 
-        if($discount->status === false) {
-            return redirect()->back()->with('error', $discount->message);
+        if(empty($discountUpdate)) {
+            return redirect()->back()->with('success', 'Discount updated successfully');
         } else {
-            return redirect()->back()->with('success', trans('app.discount_updated'));
+            return redirect()->back()->with('error', 'Discount not updated, try again');
         }
     }
 
     public function destroy($discount)
     {
-        $delete_discount = json_decode(Api::delete_discount($discount));
+        $delete_discount = Utilities::switch_db('reports')->select("UPDATE discounts SET status = '0' WHERE id = '$discount' AND status = '0'");
 
-        if($delete_discount->status === false) {
-            return redirect()->back()->with('error', $delete_discount->message);
+        dd($delete_discount);
+
+        if(empty($delete_discount)) {
+            return redirect()->back()->with('success', 'Discount deleted successfully');
         } else {
-            return redirect()->back()->with('success', trans('app.discount_deleted'));
+            return redirect()->back()->with('error', 'Discount not deleted, try again');
         }
+
     }
 
 }

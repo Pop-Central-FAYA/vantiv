@@ -90,6 +90,11 @@ class ClientsController extends Controller
             $campaigns = Utilities::switch_db('api')->select("SELECT COUNT(id) as number from campaigns where user_id = '$user_id'");
 
             $last_camp_date = Utilities::switch_db('api')->select("SELECT time_created from campaigns where user_id = '$user_id' ORDER BY time_created DESC LIMIT 1");
+            if($last_camp_date){
+                $date = $last_camp_date[0]->time_created;
+            }else{
+                $date = 0;
+            }
 
             $payments = Utilities::switch_db('api')->select("SELECT SUM(amount) as total from payments WHERE campaign_id IN(SELECT id from campaigns WHERE user_id = '$user_id')");
 
@@ -101,7 +106,7 @@ class ClientsController extends Controller
                 'total' => $payments[0]->total,
                 'name' => $user_details[0]->last_name . ' ' . $user_details[0]->first_name,
                 'created_at' => $agency->time_created,
-                'last_camp' => $last_camp_date[0]->time_created
+                'last_camp' => $date,
             ];
         }
 

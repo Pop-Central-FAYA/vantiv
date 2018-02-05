@@ -35,51 +35,18 @@
                                 <!-- Post -->
                                 <!-- /.post -->
                                 <div class="box-body">
-                                    @if(count($walkin) === 0)
-                                        <p class="text-center">No walkins, please create one</p>
-                                    @else
-                                    <table id="example1" class="table table-bordered table-striped">
+                                    <table class="table table-bordered table-striped campaign">
                                         <thead>
                                         <tr>
                                             <th>S/N</th>
-                                            <th>First Name</th>
-                                            <th>Last Name</th>
+                                            <th>Full Name</th>
                                             <th>Email</th>
                                             <th>Phone Number</th>
                                             <th>Campaign</th>
                                             <th>Delete</th>
                                         </tr>
                                         </thead>
-                                        <tbody>
-                                        @foreach($walkin as $walkins)
-                                            <tr>
-                                                <td>{{ $loop->iteration }}</td>
-                                                <td>
-                                                    {{ $walkins->user->firstname }}
-                                                </td>
-                                                <td>
-                                                    {{ $walkins->user->lastname }}
-                                                </td>
-                                                <td>
-                                                    {{ $walkins->user->email }}
-                                                </td>
-                                                <td>
-                                                    {{ $walkins->user->phone_number }}
-                                                </td>
-                                                <td>
-                                                    <a href="{{ route('campaign.create2', ['id' => 1, 'walkins' => $walkins->id]) }}" class="btn btn-primary btn-xs">Create Campaign</a>
-                                                </td>
-                                                <td>
-                                                    <a href="#" data-toggle="modal" data-target=".bs-example1-modal-md{{ $walkins->id }}" style="font-size: 16px"><span class="label label-danger"> <i class="fa fa-trash"></i></span></a></td>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-
-                                        </tbody>
-                                        <tfoot>
-                                        </tfoot>
                                     </table>
-                                    @endif
                                 </div>
                             </div>
                             <!-- /.tab-pane -->
@@ -111,9 +78,12 @@
                 </div>
                 <!-- /.col -->
             </div>
+        </div>
+    </div>
+</section>
 
-            @foreach($walkin as $walkins)
-            <div class="modal fade bs-example1-modal-md{{ $walkins->id }}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+            @foreach($walkins as $walkin)
+            <div class="modal fade deleteModal{{ $walkin->id }}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
                 <div class="modal-dialog modal-md" role="document">
                     <div class="modal-content" style="padding: 7%">
                         <h2 class="text-center">Are you sure you want to delete?</h2><br>
@@ -121,18 +91,20 @@
 
                         <p align="center">
                             <button  class="btn btn-large btn-danger" data-dismiss="modal" style="color:white; font-size: 20px; padding: 0.5% 3%; margin-top:4%; border-radius: 10px;">Cancel</button>
-                            <a href="{{ route('walkins.delete', ['id' => $walkins->id]) }}" type="submit" class="btn btn-large btn-success" style="color:white; font-size: 20px; padding: 0.5% 3%; margin-top:4%; border-radius: 10px;">Delete</a>
+                            <a href="{{ route('walkins.delete', ['id' => $walkin->id]) }}" type="submit" class="btn btn-large btn-success" style="color:white; font-size: 20px; padding: 0.5% 3%; margin-top:4%; border-radius: 10px;">Delete</a>
                         </p>
                     </div>
                 </div>
             </div>
             @endforeach
 
-        {{--</div>--}}
+        </div>
         <!-- /.content -->
             @stop
 
             @section('scripts')
+                <script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+                <script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>
                 {!! HTML::script('assets/js/moment.min.js') !!}
                 {!! HTML::script('assets/js/bootstrap-datetimepicker.min.js') !!}
 
@@ -147,6 +119,27 @@
                             "info": true,
                             "autoWidth": false
                         });
+                    });
+
+                    var DataCampaign = $('.campaign').DataTable({
+                        paging: true,
+                        serverSide: true,
+                        processing: true,
+                        ajax: {
+                            url: '/walkins/all-walkins/data',
+                            data: function (d) {
+                                d.start_date = $('input[name=txtFromDate_tvc]').val();
+                                d.stop_date = $('input[name=txtToDate_tvc]').val();
+                            }
+                        },
+                        columns: [
+                            {data: 'id', name: 'id'},
+                            {data: 'full_name', name: 'full_name'},
+                            {data: 'email', name: 'email'},
+                            {data: 'phone', name: 'phone'},
+                            {data: 'campaign', name: 'campaign'},
+                            {data: 'delete', name: 'name'}
+                        ]
                     });
                 </script>
 
@@ -223,7 +216,8 @@
                 </script>
             @stop
 
-            @section('style')
-                <link rel="stylesheet" href="{{ asset('assets/css/jquery-ui.css') }}">
-                <link rel="stylesheet" href="{{ asset('assets/css/theme.css') }}">
+@section('styles')
+    <link rel="stylesheet" href="{{ asset('assets/css/jquery-ui.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/theme.css') }}">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css" type="text/css"/>
 @stop

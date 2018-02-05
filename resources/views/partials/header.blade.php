@@ -16,18 +16,7 @@
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
                 <!-- Messages: style can be found in dropdown.less-->
-                <li class="dropdown messages-menu">
-                    <?php
-                    $role = \DB::table('role_user')->where('user_id', Auth::user()->id)->first();
-                    if ($role->role_id === 3) { ?>
 
-                    <a href="{{ route('checkout') }}" >
-                        <i class="fa fa-cart-plus"></i>
-                        <span class="label label-success">
-                        </span>
-                    </a>
-                    <?php } ?>
-                </li>
                 <!-- Notifications: style can be found in dropdown.less -->
 
                 <!-- Tasks: style can be found in dropdown.less -->

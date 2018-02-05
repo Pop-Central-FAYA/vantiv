@@ -3,7 +3,10 @@
 namespace Vanguard\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Vanguard\Libraries\Api;
+use Vanguard\Http\Requests\StoreWalkins;
+use Yajra\DataTables\DataTables;
+use Vanguard\Libraries\Utilities;
+use Session;
 
 class WalkinsController extends Controller
 {
@@ -14,9 +17,38 @@ class WalkinsController extends Controller
      */
     public function index()
     {
-        $walkins_all = json_decode(Api::get_walkins());
-        $b = (object)($walkins_all->data);
-        return view('walkins.index')->with('walkin', $b);
+        $broadcaster_id = Session::get('broadcaster_id');
+        $walkins = Utilities::switch_db('api')->select("SELECT * from users WHERE id IN (SELECT user_id from walkIns WHERE broadcaster_id = '$broadcaster_id')");
+        return view('walkins.index')->with('walkins', $walkins);
+    }
+
+    public function walkinsData(DataTables $dataTables)
+    {
+        $j = 1;
+        $broad_walkins = [];
+        $broadcaster_id = Session::get('broadcaster_id');
+        $walkins = Utilities::switch_db('api')->select("SELECT * from users WHERE id IN (SELECT user_id from walkIns WHERE broadcaster_id = '$broadcaster_id')");
+        foreach ($walkins as $walkin){
+            $broad_walkins[] = [
+                'id' => $j,
+                'full_name' => $walkin->firstname.' '.$walkin->lastname,
+                'email' => $walkin->email,
+                'phone' => $walkin->phone_number,
+                'user_id' => $walkin->id,
+            ];
+            $j++;
+        }
+
+        return $dataTables->collection($broad_walkins)
+            ->addColumn('campaign', function ($broad_walkins) {
+                return '<a href="' . route('campaign.create2', $broad_walkins['user_id']) .'" class="btn btn-success btn-xs"> Create Campaign </a>';
+            })
+            ->addColumn('delete', function($broad_walkins){
+                return '<button data-toggle="modal" data-target=".deleteModal' . $broad_walkins['user_id']. '" class="btn btn-danger btn-xs" > Delete </button>    ';
+            })
+            ->rawColumns(['campaign' => 'campaign', 'delete' => 'delete'])->addIndexColumn()
+            ->make(true);
+
     }
 
     /**
@@ -35,16 +67,41 @@ class WalkinsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreWalkins $request)
     {
-        $walkins_add = Api::add_walkins($request);
-        $walkins = json_decode($walkins_add);
-        if($walkins->status === false)
-        {
-            return redirect()->back()->with('error', $walkins->message);
-        }else{
-            return redirect()->back()->with('success', trans('app.walkins'));
+        $user_id = uniqid();
+        $broadcaster_id = Session::get('broadcaster_id');
+        $role_id = Utilities::switch_db('api')->select("SELECT role_id from users WHERE id IN ( SELECT user_id from broadcasters WHERE id = '$broadcaster_id')");
+        $insert_user = [
+            'id' => $user_id,
+            'role_id' => $role_id[0]->role_id,
+            'email' => $request->email,
+            'password' => bcrypt('password'),
+            'firstname' => $request->first_name,
+            'lastname' => $request->last_name,
+            'phone_number' => $request->phone_number,
+            'user_type' => 5
+        ];
+
+        $insert_walkin = [
+            'id' => uniqid(),
+            'broadcaster_id' => $broadcaster_id,
+            'user_id' => $user_id,
+            'client_type_id' => 1,
+        ];
+        $check_user = Utilities::switch_db('api')->select("SELECT * from users where email = '$request->email'");
+        if(count($check_user) === 1){
+            return redirect()->back()->with('error', 'Email address already exist');
         }
+        $saveUser = Utilities::switch_db('api')->table('users')->insert($insert_user);
+        $saveWalkins = Utilities::switch_db('api')->table('walkIns')->insert($insert_walkin);
+
+        if($saveUser && $saveWalkins){
+            return redirect()->back()->with('success', 'Walkins created successfully');
+        }
+
+//        dd($insert_user, $insert_walkin);
+//
     }
 
     /**
@@ -55,16 +112,14 @@ class WalkinsController extends Controller
      */
     public function delete($id)
     {
-        $id = $id;
-        $walkins = Api::delete_walkins($id);
-        $wal = json_decode($walkins);
-        if($wal->status === false)
-        {
-            return redirect()->back()->with('error', $wal->message);
+        $deleteUser = Utilities::switch_db('api')->delete("DELETE from users WHERE id = '$id'");
+        $deleteWalkins = Utilities::switch_db('api')->delete("DELETE from walkIns where user_id = '$id'");
+        if($deleteUser && $deleteWalkins){
+            return redirect()->back()->with('success', 'Walkins deleted successfully...');
         }else{
-            return redirect()->back()->with('success', trans('app.walkins_delete'));
-            return redirect()->back();
+            return redirect()->back()->with('error', 'Error deleting walkins...');
         }
+
 
     }
 }

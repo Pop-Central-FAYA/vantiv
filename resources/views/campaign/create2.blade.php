@@ -36,8 +36,8 @@
                         <div class="col-md-6">
                             <label style="margin-left:10%">Brands:</label>
                             <select name="brand" class="form-control" id="">
-                                @foreach($brands as $b)
-                                    <option value="{{ $b->id }}">{{ $b->name }}</option>
+                                @foreach($brands as $brand)
+                                    <option value="{{ $brand->id }}">{{ $brand->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -124,14 +124,14 @@
                         <div class="col-md-6">
                             <h3> Region </h3>
                             <div class="form-group">
-                                @foreach($preload->regions as $region)
+                                {{--@foreach($regions as $region)--}}
                                     <p>
                                         <label>
-                                            {{ $region->region }}
-                                            <input type="checkbox" name="region[]" value="{{ $region->id }}" class="minimal-red">
+                                            {{ $regions[0]->region }}
+                                            <input type="checkbox" name="region[]" value="{{ $regions[0]->id }}" class="minimal-red">
                                         </label>
                                     </p>
-                                @endforeach
+                                {{--@endforeach--}}
                             </div>
                         </div>
 

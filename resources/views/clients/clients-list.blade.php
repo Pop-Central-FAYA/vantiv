@@ -62,7 +62,11 @@
                                             <td>{{ $client['num_campaign'] }}</td>
                                             <td>&#8358;{{ number_format($client['total'],2) }}</td>
                                             <td>{{ date('M j, Y h:ia', strtotime($client['created_at'])) }}</td>
-                                            <td>{{ date('M j, Y', strtotime($client['last_camp'])) }}</td>
+                                            @if($client['last_camp'] === 0)
+                                            <td></td>
+                                            @else
+                                                <td>{{ date('M j, Y', strtotime($client['last_camp'])) }}</td>
+                                            @endif
                                         </tr>
                                     @endforeach
                                 </tbody>

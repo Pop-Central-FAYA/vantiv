@@ -2,6 +2,7 @@
 
 namespace Vanguard\Http\Controllers\Auth;
 
+use Illuminate\Contracts\Session\Session;
 use Vanguard\Events\User\LoggedIn;
 use Vanguard\Events\User\LoggedOut;
 use Vanguard\Events\User\Registered;
@@ -24,15 +25,16 @@ use Lang;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Validator;
 
+
 class AuthController extends Controller
 {
     /**
      * @var UserRepository
      */
-    private $users;
-
-    private $api_private_key = "nzrm64jtj9srsjab";
-    private $url = "https://faya-staging.herokuapp.com/api/v1/";
+//    private $users;
+//
+//    private $api_private_key = "nzrm64jtj9srsjab";
+//    private $url = "https://faya-staging.herokuapp.com/api/v1/";
 
 
     /**
@@ -113,11 +115,10 @@ class AuthController extends Controller
         $password = bcrypt($request->password);
         $role = \DB::table('role_user')->where('user_id', Auth::user()->id)->first();
         if ($role->role_id === 3) {
-//            $user_details = Utilities::switch_db('api')->select("SELECT * FROM users WHERE email = '$username' LIMIT 1");
-//            $user_id = $user_details[0]->id;
-//            $broadcaster_details = Utilities::switch_db('api')->select("SELECT * FROM agents WHERE user_id = '$user_id'");
-//            session(['broadcaster_id' => $broadcaster_details[0]->id]);
-            Api::auth_user($request);
+            $user_details = Utilities::switch_db('api')->select("SELECT * FROM users WHERE email = '$username' LIMIT 1");
+            $user_id = $user_details[0]->id;
+            $broadcaster_details = Utilities::switch_db('api')->select("SELECT * FROM broadcasters WHERE user_id = '$user_id'");
+            session(['broadcaster_id' => $broadcaster_details[0]->id]);
         } elseif ($role->role_id === 4) {
             $user_details = Utilities::switch_db('api')->select("SELECT * FROM users WHERE email = '$username' LIMIT 1");
             $user_id = $user_details[0]->id;

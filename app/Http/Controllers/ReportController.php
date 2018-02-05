@@ -254,7 +254,7 @@ class ReportController extends Controller
             foreach ($dayp as $day)
             {
                 $day_p = $day->day_parts;
-                $query = Utilities::switch_db('api')->select("SELECT day_parts from dayParts WHERE id IN ('$day_p')");
+                $query = Utilities::switch_db('api')->select("SELECT day_parts from dayParts WHERE id IN ($day_p)");
                 $day_percent = (($day->campaigns) / $s) * 100;
                 $day_partt = isset($query[0]) ? $query[0]->day_parts : "";
                 $dayp_name[] = [
@@ -283,7 +283,7 @@ class ReportController extends Controller
             foreach ($dayp as $day)
             {
                 $day_p = $day->day_parts;
-                $query = Utilities::switch_db('api')->select("SELECT day_parts from dayParts WHERE id IN ('$day_p')");
+                $query = Utilities::switch_db('api')->select("SELECT day_parts from dayParts WHERE id IN ($day_p)");
                 $day_percent = (($day->campaigns) / $s) * 100;
                 $day_partt = isset($query[0]) ? $query[0]->day_parts : "";
                 $dayp_name[] = [

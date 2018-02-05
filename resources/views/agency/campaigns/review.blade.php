@@ -5,12 +5,13 @@
 @section('content')
     <section class="content-header">
         <h1>
-            Create Campaigns | Uploads Step 1
+            Create Campaign
+            <small><i class="fa fa-file-video-o"></i> Uploaded Media List </small>
         </h1>
         <ol class="breadcrumb" style="font-size: 16px">
 
-            <li><a href="#"><i class="fa fa-th"></i> Agency</a> </li>
-            <li><a href="index.html"><i class="fa fa-address-card"></i> Create Clients Campaign</a> | Uploads Step1 </li>
+            <li><a href="#"><i class="fa fa-th"></i> Create Campaign</a> </li>
+            <li><i class="fa fa-file-video-o"></i> Uploaded Media List </li>
 
         </ol>
     </section>
@@ -21,51 +22,60 @@
         <div class="row">
             <div class="col-md-1 hidden-sm hidden-xs"></div>
             <div class="col-md-9 " style="padding:2%">
-                <form class="campform" method="POST" action="{{ route('agency_campaign.store3', ['id' => $id, 'broadcaster' => $broadcaster]) }}" enctype="multipart/form-data">
-                    {{ csrf_field() }}
-                    <div class="row">
-                        <div class="col-md-12 ">
 
-                            <h2></h2>
-                            <p align="center">The history of advertising can be traced to ancient civilizations. It became a major force in capitalist economies in the mid-19th century, based primarily on newspapers and magazines. In the 20th century, advertising grew rapidly with new technologies such as direct mail, radio, television, the internet and mobile devices.</p>
+                <div class="row">
+                    <div class="col-md-12 ">
+
+                        <h2></h2>
+                        <p align="center">The history of advertising can be traced to ancient civilizations. It became a major force in capitalist economies in the mid-19th century, based primarily on newspapers and magazines. In the 20th century, advertising grew rapidly with new technologies such as direct mail, radio, television, the internet and mobile devices.</p>
+
+                    </div>
+
+
+                </div>
+
+                <div class="row">
+
+                    <div class="box">
+                        <div class="box-header">
+                            <h3 class="box-title">Uploaded list</h3>
+
 
                         </div>
-                    </div>
-                    {{--{{ dd($time_in_sec) }}--}}
-                    <div class="row" style="margin-top:3%" id="dynamic">
-                        <div class="row b">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label>Upload Media</label>
-                                    <input type="file" id="fup" name="uploads">
-                                    <input type="hidden" class="form-control" name="f_du" id="f_du" size="5" />
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label>Duration </label> <br />
-                                    <select style="width: 60%" name="time">
-                                        <option value="15">15 Seconds</option>
-                                    </select>
-                                    {{--<button type="button" id="add_more" class="btn btn-info btn-xs add_more">+ Add More</button>--}}
-                                </div>
-                            </div>
+                        <!-- /.box-header -->
+                        <div class="box-body table-responsive no-padding">
+                            <table class="table table-hover" style="font-size:16px">
+                                <tr>
+                                    <th>S/N</th>
+                                    <th>File Name</th>
+                                    <th>Duration</th>
+                                    {{--<th>Action</th>--}}
+
+                                </tr>
+                                @foreach($uploads as $upload)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $upload->uploads }}</td>
+                                        <td>{{ $upload->time }}</td>
+                                        {{--<td><button type="button" data-toggle="modal" data-target=".deleteModal{{ $upload->id }}" class="btn btn-danger btn-xs">Delete</button></td>--}}
+                                    </tr>
+                                @endforeach
+                            </table>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-
+                        <!-- /.box-body -->
                     </div>
 
-                    <audio id="audio"></audio>
+                </div>
 
+                <form action="{{ route('agency_campaign.step4', ['id' => $id, 'broadcaster' => $broadcaster]) }}" method="GET">
                     <div class="container">
 
                         <p align="right">
-                            {{--<button id="step3" type="button" class="btn campaign-button" >Back <i class="fa fa-backward" aria-hidden="true"></i></button>--}}
+                            {{--<button type="button" id="step4" class="btn campaign-button" >Back <i class="fa fa-backward" aria-hidden="true"></i></button>--}}
                             <button type="submit" class="btn campaign-button" style="margin-right:15%">Next <i class="fa fa-play" aria-hidden="true"></i></button>
                         </p>
-                    </div>
 
+                    </div>
                 </form>
 
             </div>
@@ -79,8 +89,25 @@
         </div>
         <!-- /.row -->
 
-
     </section>
+
+    <!-- /.content -->
+
+    @foreach($uploads as $upload)
+        <div class="modal fade deleteModal{{ $upload->id }}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+            <div class="modal-dialog modal-md" role="document">
+                <div class="modal-content" style="padding: 7%">
+                    <h2 class="text-center">Are you sure you want to delete?</h2><br>
+                    <h5><b style="color: red">Warning!!!</b> Deleting this means you might not be able to fully undo this operation</h5>
+
+                    <p align="center">
+                        <button  class="btn btn-large btn-danger" data-dismiss="modal" style="color:white; font-size: 20px; padding: 0.5% 3%; margin-top:4%; border-radius: 10px;">Cancel</button>
+                        <a href="{{ route('agency.uploads.delete', ['upload_id' => $upload->id, 'id' => $id]) }}" type="submit" class="btn btn-large btn-success" style="color:white; font-size: 20px; padding: 0.5% 3%; margin-top:4%; border-radius: 10px;">Delete</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    @endforeach
 @stop
 @section('scripts')
     <!-- Select2 -->
@@ -148,21 +175,21 @@
             $('#reservationtime').daterangepicker({timePicker: true, timePickerIncrement: 30, format: 'MM/DD/YYYY h:mm A'});
             //Date range as a button
             $('#daterange-btn').daterangepicker(
-                    {
-                        ranges: {
-                            'Today': [moment(), moment()],
-                            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                            'This Month': [moment().startOf('month'), moment().endOf('month')],
-                            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-                        },
-                        startDate: moment().subtract(29, 'days'),
-                        endDate: moment()
+                {
+                    ranges: {
+                        'Today': [moment(), moment()],
+                        'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                        'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                        'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                        'This Month': [moment().startOf('month'), moment().endOf('month')],
+                        'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
                     },
-                    function (start, end) {
-                        $('#daterange-btn span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-                    }
+                    startDate: moment().subtract(29, 'days'),
+                    endDate: moment()
+                },
+                function (start, end) {
+                    $('#daterange-btn span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+                }
             );
 
             //Date picker

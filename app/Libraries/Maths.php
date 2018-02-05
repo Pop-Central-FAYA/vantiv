@@ -14,6 +14,10 @@ class Maths {
     {
         $now = strtotime(Carbon::now('Africa/Lagos'));
 
+        $broadcaster = Session::get('broadcaster_id');
+
+        $user_id = Utilities::switch_db('api')->select("SELECT user_id from broadcasters where id = '$broadcaster' LIMIT 1");
+
         $hourly = Utilities::switch_db('api')
             ->select("SELECT * from hourlyRanges ");
 
@@ -21,7 +25,7 @@ class Maths {
         {
             $rate[] = [
                 'id' => uniqid(),
-                'user_id' => '10zmij9sroa62',
+                'user_id' => $user_id[0]->user_id,
                 'broadcaster' => Session::get('broadcaster_id'),
                 'hourly_range_id' => $hourly[$i]->id,
                 'day' => 'nzrm6h098amedb',
@@ -29,6 +33,7 @@ class Maths {
                 'time_modified' => date('Y-m-d H:i:s', $now),
             ];
         }
+
         if(!empty($rate)){
             $each_save = Utilities::switch_db('api')->table('rateCards')->insert($rate);
             if($each_save)
@@ -42,6 +47,7 @@ class Maths {
                 $count = count($data);
                 $s=0;
                 $f=0;
+                $price = [];
                 DB::statement('SET FOREIGN_KEY_CHECKS = 0');
 
                 foreach ($data as $key => $value) {
@@ -66,81 +72,43 @@ class Maths {
                         ->select("SELECT * from hourlyRanges WHERE time_range = '$value->hourly_range'");
 
                     $h_id = $gethourly[0]->id;
+                    $adslot_id = uniqid();
+
                     $get_rate = Utilities::switch_db('api')->select("SELECT id from rateCards WHERE hourly_range_id = '$h_id'");
                     $insert[] = [
-                        'id' => uniqid(),
-                        'target_audience' => $target[0]->id,
+                        'id' => $adslot_id,
                         'rate_card' => $get_rate[0]->id,
+                        'target_audience' => $target[0]->id,
                         'day_parts' => $daypart[0]->id,
                         'region' => $region[0]->id,
                         'from_to_time' => $value->start. ' - ' .$value->stop,
-                        'time_in_seconds' => 60,
-                        'is_premium' => (integer) $is_p,
-                        'premium_percent' => (integer) $pp,
-                        'price' => (integer) $p60,
                         'min_age' => (integer) $m_age,
                         'max_age' => (integer) $max_a,
                         'time_created' => date('Y-m-d H:i:s', $now),
                         'time_modified' => date('Y-m-d H:i:s', $now),
-
+                        'broadcaster' => $broadcaster,
+                        'is_available' => 0,
+                        'time_difference' => (strtotime($value->stop)) - (strtotime($value->start)),
+                        'time_used' => 0,
                     ];
-                    $insert[] = [
+
+                    $price[] = [
                         'id' => uniqid(),
-                        'target_audience' => $target[0]->id,
-                        'rate_card' => $get_rate[0]->id,
-                        'day_parts' => $daypart[0]->id,
-                        'region' => $region[0]->id,
-                        'from_to_time' => $value->start. ' - ' .$value->stop,
-                        'time_in_seconds' => 45,
-                        'is_premium' => (integer) $is_p,
-                        'premium_percent' => (integer) $pp,
-                        'price' => (integer) $p45,
-                        'min_age' => (integer) $m_age,
-                        'max_age' => (integer) $max_a,
+                        'adslot_id' => $adslot_id,
+                        'price_60' => $p60,
+                        'price_45' => $p45,
+                        'price_30' => $p30,
+                        'price_15' => $p15,
                         'time_created' => date('Y-m-d H:i:s', $now),
                         'time_modified' => date('Y-m-d H:i:s', $now),
-
-                    ];
-                    $insert[] = [
-                        'id' => uniqid(),
-                        'target_audience' => $target[0]->id,
-                        'rate_card' => $get_rate[0]->id,
-                        'day_parts' => $daypart[0]->id,
-                        'region' => $region[0]->id,
-                        'from_to_time' => $value->start. ' - ' .$value->stop,
-                        'time_in_seconds' => 30,
-                        'is_premium' => (integer) $is_p,
-                        'premium_percent' => (integer) $pp,
-                        'price' => (integer) $p30,
-                        'min_age' => (integer) $m_age,
-                        'max_age' => (integer) $max_a,
-                        'time_created' => date('Y-m-d H:i:s', $now),
-                        'time_modified' => date('Y-m-d H:i:s', $now),
-
-                    ];
-                    $insert[] = [
-                        'id' => uniqid(),
-                        'target_audience' => $target[0]->id,
-                        'rate_card' => $get_rate[0]->id,
-                        'day_parts' => $daypart[0]->id,
-                        'region' => $region[0]->id,
-                        'from_to_time' => $value->start. ' - ' .$value->stop,
-                        'time_in_seconds' => 15,
-                        'is_premium' => (integer) $is_p,
-                        'premium_percent' => (integer) $pp,
-                        'price' => (integer) $p15,
-                        'min_age' => (integer) $m_age,
-                        'max_age' => (integer) $max_a,
-                        'time_created' => date('Y-m-d H:i:s', $now),
-                        'time_modified' => date('Y-m-d H:i:s', $now),
-
                     ];
 
                 }
 
-                if(!empty($insert)){
+                if(!empty($insert) && !empty($price)){
                     $each_save = Utilities::switch_db('api')->table('adslots')->insert($insert);
-                    if($each_save)
+                    $each_save_price = Utilities::switch_db('api')->table('adslotPrices')->insert($price);
+                    if($each_save && $each_save_price)
                     {
                         return "SUCCESS";
                     }else{

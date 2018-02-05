@@ -23,8 +23,7 @@
         <div class="row">
             <div class="col-md-1 hidden-sm hidden-xs"></div>
             <div class="col-md-9 " style="padding:2%">
-                <form class="campform" method="POST" action="{{ route('campaign.store5', ['id' => 1]) }}">
-                    {{ csrf_field() }}
+
                     <div class="row">
                         <div class="col-md-12 ">
 
@@ -51,13 +50,17 @@
                                         <th>S/N</th>
                                         <th>File Name</th>
                                         <th>Duration</th>
-                                        <th>Action</th>
+                                        {{--<th>Action</th>--}}
 
                                     </tr>
+                                    @foreach($uploads as $upload)
                                     <tr>
-                                        {{----}}
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $upload->uploads }}</td>
+                                        <td>{{ $upload->time }}</td>
+                                        {{--<td><button type="button" data-toggle="modal" data-target=".deleteModal{{ $upload->id }}" class="btn btn-danger btn-xs">Delete</button></td>--}}
                                     </tr>
-
+                                    @endforeach
                                 </table>
                             </div>
                             <!-- /.box-body -->
@@ -66,39 +69,48 @@
                     </div>
 
 
-                    <div class="row" style="margin-top:3%">
+                    {{--<div class="row" style="margin-top:3%">--}}
+                    {{--<form class="campform" method="POST" action="{{ route('campaign.store5.uploads', ['walkins' => $walkins]) }}" enctype="multipart/form-data">--}}
+                        {{--{{ csrf_field() }}--}}
+                        {{--<div class="col-md-6">--}}
+                            {{--<div class="form-group">--}}
+                                {{--<label>Upload Media</label>--}}
+                                {{--<input type="file" id="fup" name="uploads">--}}
+                                {{--<input type="hidden" class="form-control" name="f_du" id="f_du" size="5" />--}}
+                            {{--</div>--}}
 
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Upload Media</label>
-                                <input type="file" name="">
-                            </div>
+                            {{--<div class="form-group">--}}
+                                {{--<label>Duration </label> <br />--}}
+                                {{--<select style="width: 60%" name="time">--}}
+                                    {{--<option value="15">15 Seconds</option>--}}
+                                    {{--<option value="30">30 Seconds</option>--}}
+                                    {{--<option value="45">45 Seconds</option>--}}
+                                    {{--<option value="60">60 Seconds</option>--}}
+                                {{--</select>--}}
+                            {{--</div>--}}
+                            {{--<audio id="audio"></audio>--}}
 
-                            <div class="form-group">
-                                <label>Duration </label> <br />
-                                <select style="width: 60%">
-                                    @foreach($time as $times)
-                                        <option value="{{ $times->id }}">{{ $times->time_in_seconds }} Seconds</option>
-                                    @endforeach
-                                </select>
-                            </div>
+                            {{--<button type="submit" class="btn campaign-button btn-xs" style="margin-right:15%">Upload</button>--}}
+                        {{--</div>--}}
 
-                        </div>
 
-                        <div class="col-md-6">
+                    {{--</form>--}}
 
-                        </div>
+                        {{--<div class="col-md-6">--}}
 
-                    </div>
+                        {{--</div>--}}
+
+                    {{--</div>--}}
+
+                <form action="{{ route('campaign.create6', ['walkins' => $walkins]) }}" method="GET">
                     <div class="container">
 
                         <p align="right">
-                            <button type="button" id="step4" class="btn campaign-button" >Back <i class="fa fa-backward" aria-hidden="true"></i></button>
+                            {{--<button type="button" id="step4" class="btn campaign-button" >Back <i class="fa fa-backward" aria-hidden="true"></i></button>--}}
                             <button type="submit" class="btn campaign-button" style="margin-right:15%">Next <i class="fa fa-play" aria-hidden="true"></i></button>
                         </p>
 
                     </div>
-
                 </form>
 
             </div>
@@ -115,6 +127,22 @@
     </section>
 
     <!-- /.content -->
+
+    @foreach($uploads as $upload)
+        <div class="modal fade deleteModal{{ $upload->id }}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+            <div class="modal-dialog modal-md" role="document">
+                <div class="modal-content" style="padding: 7%">
+                    <h2 class="text-center">Are you sure you want to delete?</h2><br>
+                    <h5><b style="color: red">Warning!!!</b> Deleting this means you might not be able to fully undo this operation</h5>
+
+                    <p align="center">
+                        <button  class="btn btn-large btn-danger" data-dismiss="modal" style="color:white; font-size: 20px; padding: 0.5% 3%; margin-top:4%; border-radius: 10px;">Cancel</button>
+                        <a href="{{ route('uploads.delete', ['walkins' => $walkins, 'id' => $upload->id]) }}" type="submit" class="btn btn-large btn-success" style="color:white; font-size: 20px; padding: 0.5% 3%; margin-top:4%; border-radius: 10px;">Delete</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    @endforeach
 
 @endsection
 
@@ -220,6 +248,29 @@
             $(".timepicker").timepicker({
                 showInputs: false
             });
+        });
+    </script>
+    <script>
+        // Code to get duration of audio /video file before upload - from: http://coursesweb.net/
+
+        //register canplaythrough event to #audio element to can get duration
+        var f_duration =0;  //store duration
+        document.getElementById('audio').addEventListener('canplaythrough', function(e){
+            //add duration in the input field #f_du
+            f_duration = Math.round(e.currentTarget.duration);
+            document.getElementById('f_du').value = f_duration;
+            URL.revokeObjectURL(obUrl);
+        });
+
+        //when select a file, create an ObjectURL with the file and add it in the #audio element
+        var obUrl;
+        document.getElementById('fup').addEventListener('change', function(e){
+            var file = e.currentTarget.files[0];
+            //check file extension for audio/video type
+            if(file.name.match(/\.(avi|mp3|mp4|mpeg|ogg)$/i)){
+                obUrl = URL.createObjectURL(file);
+                document.getElementById('audio').setAttribute('src', obUrl);
+            }
         });
     </script>
 

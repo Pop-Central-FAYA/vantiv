@@ -56,69 +56,82 @@
     </section>
 
     <!--Mpo Modal -->
-    @if(count($mpo) != 0)
-        @foreach($mpo as $mpos)
-            <div class="modal fade mpoModal{{ $mpos->campaign_id }}"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    @if(count($mpos) != 0)
+        @foreach($mpos as $mpo)
+            <div class="modal fade mpoModal{{ $mpo['campaign_id'] }}"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="myModalLabel">MPO Modal</h4>
+                            <h4 class="modal-title" id="myModalLabel"></h4>
                         </div>
                         <div class="modal-body">
-                            ...
 
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <thead>
-                                    <tr>
-                                        <th>S/N</th>
-                                        <th>Name</th>
-                                        <th>Brand</th>
-                                        <th>Ad Blocks</th>
-                                        <th>Duration</th>
-                                        <th>Media</th>
-                                        <th>Price</th>
-                                        <th>Approval</th>
-                                    </tr>
-                                    </thead>
-                                    <tr>
-                                        <?php $n = 1; ?>
-                                        @foreach($mpo as $mpoos)
-                                            <?php
-                                            $camp = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT * from campaigns where id='$mpoos->campaign_id'");
-                                            $br = $camp[0]->brand;
-                                            $brand = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT name from brands where id = '$br'");
-                                            $pay_mpo = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT * from payments where campaign_id = '$mpoos->campaign_id'");
-                                            $file_mpo = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT * from files where campaign_id = '$mpoos->campaign_id'");
-                                            ?>
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <p><h3>Name: {{ $mpo['campaign_name'] }}</h3></p><br>
+                                    <p><h3>Brand: {{ $mpo['brand'] }}</h3></p><br>
+
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
                                             <tr>
-                                                <td>{{ $n }}</td>
-                                                <td>{{ $camp[0]->name }}</td>
-                                                <td>{{ $brand[0]->name }}</td>
-                                                @foreach($file_mpo as $files_mpo)
+                                                <th>Ad Blocks</th>
+                                                <th>Duration</th>
+                                                <th>Media</th>
+                                                <th>Price</th>
+                                                <th>Approval</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach($mpo['adslot'] as $adslot)
                                                     <?php
-                                                        $adslots = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT * from adslots WHERE id = '$files_mpo->adslot'");
+                                                        $camp_id = $mpo['campaign_id'];
+                                                        $file = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT * from files where adslot = '$adslot->id' AND campaign_id = '$camp_id'");
+                                                        $adslot_id = $file[0]->adslot;
+                                                        $pay = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT * from adslotPercentages where adslot_id = '$adslot_id'");
+                                                        if(!$pay){
+                                                            $pay = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT * from adslotPrices where adslot_id = '$adslot_id'");
+                                                        }
+                                                        if($file[0]->is_file_accepted === 0){
+                                                            $approval = "Not Approved";
+                                                        }else{
+                                                            $approval = "Approved";
+                                                        }
                                                     ?>
                                                     <tr>
-                                                        <td>{{ $adslots[0]->from_to_time }}</td>
-                                                        <td>{{ $adslots[0]->time_in_seconds }}</td>
-                                                        <td><video width="200" controls><source src="{{ asset($files_mpo->file_url) }}"></video></td>
-                                                        <td>&#8358;{{ number_format($adslots[0]->price, 2) }}</td>
-                                                        <td>
-                                                            <select class="form-control" name="" id="">
-                                                                <option>Approved</option>
-                                                                <option>Disapproved</option>
-                                                            </select>
-                                                        </td>
+                                                        <td>{{ $adslot->from_to_time }}</td>
+                                                        <td>{{ $file[0]->time_picked }}</td>
+                                                        <td><video width="200" controls><source src="{{ asset(decrypt($file[0]->file_url)) }}"></video></td>
+                                                        @if($file[0]->time_picked === "60")
+                                                            <td>&#8358;{{ number_format($pay[0]->price_60, 2) }}</td>
+                                                        @elseif($file[0]->time_picked === "45")
+                                                            <td>&#8358;{{ number_format($pay[0]->price_45, 2) }}</td>
+                                                        @elseif($file[0]->time_picked === "30")
+                                                            <td>&#8358;{{ number_format($pay[0]->price_30, 2) }}</td>
+                                                        @else
+                                                            <td>&#8358;{{ number_format($pay[0]->price_15, 2) }}</td>
+                                                        @endif
+                                                        <td>{{ $approval }}</td>
                                                     </tr>
                                                 @endforeach
+                                            </tbody>
+                                            <tr>
+                                                <td><b><h3>Discount: {{ $mpo['discount'] }}</h3></b></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td><h3>Total : &#8358;{{ number_format($mpo['total'], 2) }}</h3></td>
                                             </tr>
-                                            <?php $n++; ?>
-                                        @endforeach
-                                    </tbody>
-                                </table>
+                                        </table>
+                                    </div>
+                                    <br>
+
+                                </div>
                             </div>
+
+
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Done</button>
@@ -146,7 +159,6 @@
                         <table class="table">
                             <thead>
                             <tr>
-                                <th>S/N</th>
                                 <th>Media File</th>
                                 <th>Adslot ID</th>
                                 <th>Playtime</th>
@@ -159,16 +171,26 @@
                                 @foreach($files as $file)
                                     @if($file->campaign_id === $inv->campaign_id)
                                         <?php
-                                            $ads = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT * from adslots where id = '$file->adslot'");
+                                            $ads_price = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT * from adslotPercentages where adslot_id = '$file->adslot'");
+                                            if(!$ads_price){
+                                                $ads_price = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT * from adslotPrices where adslot_id = '$file->adslot'");
+                                            }
                                             $pay = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT * from payments where campaign_id = '$inv->campaign_id'");
                                         ?>
                                         <tr>
-                                            <td>{{ $m }}</td>
-                                            <td><video width="200" controls><source src="{{ asset($file->file_url) }}"></video></td>
+                                            <td><video width="200" controls><source src="{{ asset(decrypt($file->file_url)) }}"></video></td>
                                             <td>{{ count($file->adslot) }}</td>
-                                            <td>{{ $ads[0]->time_in_seconds }}</td>
+                                            <td>{{ $file->time_picked }} Seconds</td>
                                             <td>80%</td>
-                                            <td>&#8358;{{ number_format($ads[0]->price, 2) }}</td>
+                                            @if($file->time_picked === "60")
+                                                <td>&#8358;{{ number_format($ads_price[0]->price_60, 2) }}</td>
+                                            @elseif($file->time_picked === "45")
+                                                <td>&#8358;{{ number_format($ads_price[0]->price_45, 2) }}</td>
+                                            @elseif($file->time_picked === "30")
+                                                <td>&#8358;{{ number_format($ads_price[0]->price_30, 2) }}</td>
+                                            @else
+                                                <td>&#8358;{{ number_format($ads_price[0]->price_15, 2) }}</td>
+                                            @endif
                                         </tr>
                                     @endif
                                     <?php $m++; ?>
