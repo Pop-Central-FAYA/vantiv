@@ -26,7 +26,7 @@ class WalletsController extends Controller
     public function getData(Datatables $datatables)
     {
         $agency_id = \Session::get('agency_id');
-        $trans = Utilities::switch_db('api')->select("SELECT * from transactions where user_id = '$agency_id'");
+        $trans = Utilities::switch_db('api')->select("SELECT * from transactions where user_id = '$agency_id' ORDER BY time_created desc");
         $j = 1;
         $transaction = [];
 

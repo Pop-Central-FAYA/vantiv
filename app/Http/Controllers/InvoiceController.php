@@ -89,7 +89,7 @@ class InvoiceController extends Controller
             'user_id' => $agency_id,
             'reference' => $invoice[0]->id,
             'ip_address' => request()->ip(),
-            'type' => 'DEBIT_WALLET',
+            'type' => 'DEBIT WALLET',
             'message' => 'Debit successful'
         ]);
 

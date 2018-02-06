@@ -315,7 +315,7 @@
         <div class="container">
 
             <p align="right">
-                <a href="create-campaign-page7.html"><button class="btn campaign-button" >Back <i class="fa fa-backward" aria-hidden="true"></i></button></a>
+                {{--<a href="create-campaign-page7.html"><button class="btn campaign-button" >Back <i class="fa fa-backward" aria-hidden="true"></i></button></a>--}}
                 <a href="create-campaign-page9.html"><button class="btn campaign-button" style="margin-right:15%">Next <i class="fa fa-play" aria-hidden="true"></i></button></a>
 
             </p>

@@ -64,76 +64,7 @@
             <div id="containerBudgetPacing" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
         </div>
         <hr>
-        <div class="row">
 
-            <div class="client-box">
-
-
-                <div class="col-md-2">
-                    <div class="cb-box">
-                        <a href="#"><span data-toggle="modal" data-target=".bs-example1-modal-lg" style="cursor: pointer; ">
-                       <p align="center">
-                          <img src="{{ asset('agency_asset/dist/img/add-icon.png') }}" width="70%"> <br />
-                          <h4 align="center">Add Client</h4>
-                                </p></span>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <a href="#">
-                        <div class="cb-box">
-                            <p align="center">
-                                <img src="{{ asset('agency_asset/dist/img/flickr.png') }}" width="70%"> <br />
-                            <h4 align="center">Flickr</h4>
-                            </p>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-md-2">
-                    <a href="#">
-                        <div class="cb-box">
-                            <p align="center">
-                                <img src="{{ asset('agency_asset/dist/img/coke.png') }}" width="70%"> <br />
-                            <h4 align="center">Coca Cola</h4>
-                            </p>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-md-2">
-                    <a href="#">
-                        <div class="cb-box">
-                            <p align="center">
-                                <img src="{{ asset('agency_asset/dist/img/nike.png') }}" width="70%"> <br />
-                            <h4 align="center">Nike</h4>
-                            </p>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-md-2">
-                    <a href="#">
-                        <div class="cb-box">
-                            <p align="center">
-                                <img src="{{ asset('agency_asset/dist/img/pepsi.png') }}" width="70%"> <br />
-                            <h4 align="center">Pespi</h4>
-                            </p>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="col-md-2">
-                    <a href="#">
-                        <div class="cb-box">
-                            <p align="center">
-                                <img src="{{ asset('agency_asset/dist/img/apple.png') }}" width="70%"> <br />
-                            <h4 align="center">Apple</h4>
-                            </p>
-                        </div>
-                    </a>
-                </div>
-
-            </div>
-
-        </div>
 
 
 

@@ -31,7 +31,7 @@
                     <br>
 
                         <p align="left">
-                            <button type="button" id="step2" class="btn campaign-button" >Back <i class="fa fa-backward" aria-hidden="true"></i></button>
+                            {{--<button type="button" id="step2" class="btn campaign-button" >Back <i class="fa fa-backward" aria-hidden="true"></i></button>--}}
 
                             <button type="submit" class="btn campaign-button" style="margin-right:15%">Next <i class="fa fa-play" aria-hidden="true"></i></button>
 
