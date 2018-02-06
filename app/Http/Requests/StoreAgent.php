@@ -33,7 +33,6 @@ class StoreAgent extends FormRequest
             'country_id' => 'required',
             'image_url' => 'required',
             'address' => 'required',
-            'location' => 'required',
             'sector_id' => 'required'
         ];
     }

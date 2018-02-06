@@ -10,6 +10,9 @@ Route::post('login', 'Auth\AuthController@postLogin');
 Route::get('/auth-agent/signup', 'Agency\AgencyAuthController@getRegister')->name('agency.register.form');
 Route::post('/auth-agent/signup/process', 'Agency\AgencyAuthController@postRegister')->name('agency.signup');
 
+Route::get('/auth-advertiser/signup', 'Advertiser\AdvertiserAuthController@getRegister');
+Route::post('/auth-advertiser/signup/process', 'Advertiser\AdvertiserAuthController@postRegister')->name('advertiser.signup');
+
 Route::get('logout', [
     'as' => 'auth.logout',
     'uses' => 'Auth\AuthController@getLogout'
