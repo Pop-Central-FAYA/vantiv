@@ -62,9 +62,6 @@ class MpoController extends Controller
             $campaign_details = Api::fetchCampaign($mpo->campaign_id);
             $payment_details = Api::fetchPayment($mpo->campaign_id);
 
-            $brand_id = $campaign_details[0]->brand;
-            $brand_name = Utilities::switch_db('api')->select("SELECT name from brands where id = '$brand_id'");
-
             if (count($campaign_details) === 0) {
                 $product = 0;
                 $brand = 0;
@@ -99,7 +96,7 @@ class MpoController extends Controller
                 'id' => $mpo->id,
                 'is_mpo_accepted' => $mpo->is_mpo_accepted,
                 'product' => $product,
-                'brand' => $brand_name[0]->name,
+                'brand' => $brand,
                 'campaign_name' => $name,
                 'channel' => $channel,
                 'time_created' => $time,
@@ -117,7 +114,11 @@ class MpoController extends Controller
     {
         if(request()->ajax()){
 
-            $update_file = json_decode(Api::update_fileStatus($is_file_accepted, $broadcaster_id, $file_code, $campaign_id));
+//            dd($is_file_accepted, $broadcaster_id, $file_code, $campaign_id);
+
+            $update_file = Utilities::switch_db('reports')->select("UPDATE files SET is_file_accepted = '$is_file_accepted' WHERE file_code = '$file_code'");
+
+            //$update_file = json_decode(Api::update_fileStatus($is_file_accepted, $broadcaster_id, $file_code, $campaign_id));
 
             return response()->json(['is_file_accepted' => $update_file]);
 

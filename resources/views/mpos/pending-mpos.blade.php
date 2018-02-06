@@ -16,7 +16,6 @@
     <section class="content-header">
         <h1>
             Pending Media Purchase orders
-
         </h1>
         <ol class="breadcrumb" style="font-size: 16px">
 
@@ -172,12 +171,11 @@
                                                         </td>
                                                         <td>
                                                             <select name="status"
-                                                                    data-broadcaster_id="{{ $file->broadcaster_id }}"
+                                                                    data-broadcaster_id="{{ $file->broadcaster_id || $file->agency_broadcaster }}"
                                                                     data-campaign_id="{{ $file->campaign_id }}"
                                                                     data-file_code="{{ $file->file_code }}"
                                                                     data-token="{{ csrf_token() }}"
-                                                                    id="status"
-                                                                    class="form-control"
+                                                                    class="form-control status"
                                                             >
                                                                 <option>Select Status</option>
                                                                 <option value="1">Approve</option>
@@ -218,7 +216,7 @@
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                                <h4 class="modal-title" id="myModalLabel">{{ decrypt($file->file_url) }}</h4>
+                                                <h4 class="modal-title" id="myModalLabel">{{ $file->file_name }}</h4>
                                             </div>
                                             <div class="modal-body">
                                                 <div style="text-align: center;">
@@ -226,7 +224,7 @@
                                                     {{--<video width="320" height="240" controls>--}}
                                                     {{--<source src="https://youtu.be/6ZfuNTqbHE8" type="video/mp4">--}}
                                                     {{--</video>--}}
-                                                    <video src="{{ decrypt($file->file_url) }}" width="170" height="90" controls>
+                                                    <video src="{{ $file->file_url }}" width="170" height="90" controls>
                                                         <p>If you are reading this, it is because your browser does not support the HTML5 video element.</p>
                                                     </video>
                                                 </div>
@@ -264,7 +262,7 @@
         $(document).ready(function () {
             $('#flash-file-message').hide();
 
-            $("#status").change(function () {
+            $(".status").change(function () {
                 is_file_accepted = $(this).val();
                 broadcaster_id = $(this).data("broadcaster_id");
                 campaign_id = $(this).data("campaign_id");
@@ -282,11 +280,11 @@
                     method: "POST",
                     data: {is_file_accepted: is_file_accepted},
                     success: function(data){
-                        toastr.success(data.is_file_accepted.data, 'File Status Successfully Updated');
+                        toastr.success(data.is_file_accepted, 'File Status Successfully Updated');
                     },
                     error: function () {
-                        toastr.error(data.is_file_accepted.data, 'File Status Successfully Updated');
-                        alert('not send to server');
+                        toastr.error(data.is_file_accepted, 'File Status not Updated');
+                        alert('not sent to server');
                     }
                 });
 

@@ -46,7 +46,7 @@
             </button>
         </div>
         <div class="form-group">
-            <a href="{{ route('agency.register.form') }}">Agency Registration</a>
+            <a href="{{ route('agency.register.form') }}">Agency Registration</a> | <a href="#">Advertiser Registration</a>
         </div>
        
     </form>
