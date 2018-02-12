@@ -116,7 +116,7 @@ class WalletsController extends Controller
             if($transaction) {
                 $this->updateWallet($amount);
                 $msg = 'Your wallet has been funded with NGN'. $amount;
-                return redirect()->back()->with('success', $msg);
+                return redirect()->route('wallet.statement')->with('success', $msg);
             }
 
         }else{

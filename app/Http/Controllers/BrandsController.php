@@ -64,7 +64,7 @@ class BrandsController extends Controller
         }else{
             $insert = Utilities::switch_db('api')->select("INSERT into brands (id, `name`, walkin_id, broadcaster_agency) VALUES ('$unique','$brand','$id', '$broadcaster')");
             if(!$insert) {
-                return redirect()->back()->with('success', 'Brands created successfully');
+                return redirect()->route('brand.all')->with('success', 'Brands created successfully');
             }else{
                 return redirect()->back()->with('error', 'There was a problem creating this brand');
             }
