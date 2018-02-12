@@ -43,7 +43,14 @@ class ClientsController extends Controller
                 $image->move('clients_uploads', $client_image);
             }
 
-            $user_id = \DB::select("SELECT id from users WHERE email = '$request->email'");
+            if ($userInsert) {
+                $user_id = \DB::select("SELECT id from users WHERE email = '$request->email'");
+            }
+
+            $role_user = DB::table('role_user')->insert([
+                'user_id' => $user_id[0]->id,
+                'role_id' => 5
+            ]);
 
             $walkinInsert = Utilities::switch_db('reports')->table('walkIns')->insert([
                 'id' => uniqid(),
@@ -56,7 +63,7 @@ class ClientsController extends Controller
             ]);
 
             if ($userInsert && $walkinInsert) {
-                return redirect()->back()->with('success', 'Client Successfully created');
+                return redirect()->route('clients.list')->with('success', 'Client Successfully created');
             } else {
                 return redirect()->back()->with('error', trans('Client not created, try again'));
             }
@@ -104,7 +111,7 @@ class ClientsController extends Controller
                 'image_url' => $agency->image_url,
                 'num_campaign' => $campaigns[0]->number,
                 'total' => $payments[0]->total,
-                'name' => $user_details[0]->last_name . ' ' . $user_details[0]->first_name,
+//                'name' => $user_details[0]->last_name . ' ' . $user_details[0]->first_name,
                 'created_at' => $agency->time_created,
                 'last_camp' => $date,
             ];

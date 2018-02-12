@@ -81,7 +81,7 @@ Route::group(['middleware' => 'auth'], function () {
         /*
         * Campaign
         */
-        Route::group(['prefix' => 'campaign'], function(){
+        Route::group(['prefix' => 'campaign'], function() {
             Route::get('/', 'CampaignsController@index')->name('campaign.all');
             Route::get('/create', 'CampaignsController@create')->name('campaign.create');
             Route::get('/create/{walkins}/step2', 'CampaignsController@createStep2')->name('campaign.create2');
@@ -305,6 +305,13 @@ Route::group(['middleware' => 'auth'], function () {
                 Route::get('/campaign/all-data', 'Agency\ReportsController@getCampaign');
                 Route::get('/revenue/all-data', 'Agency\ReportsController@getRevenue');
 //                Route::get('/client-filter/campaign', 'Agency\ReportsController@filterCampaignClient')->name('filter.client');
+            });
+        });
+
+        Route::group(['prefix' => 'advertisers'], function(){
+            Route::group(['prefix' => 'invoices'], function () {
+                Route::get('/all', 'Advertiser\InvoiceController@all')->name('advertisers.invoices.all');
+                Route::get('/pending', 'Advertiser\InvoiceController@pending')->name('advertisers.invoices.pending');
             });
         });
     });

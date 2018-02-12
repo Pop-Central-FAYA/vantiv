@@ -53,9 +53,7 @@
                                 <tbody>
                                     @foreach ($campaign as $campaigns)
                                         <tr>
-                                            <td>
-                                                {{ $campaigns['product'] }}
-                                            </td>
+                                            <td>{{ $campaigns['product'] }}</td>
                                             <td>{{ $campaigns['num_of_slot'] }}</td>
                                             <td>&#8358;{{ number_format($campaigns['payment'], 2) }}</td>
                                             <td>{{ date('M j, Y', strtotime($campaigns['date'])) }}</td>
