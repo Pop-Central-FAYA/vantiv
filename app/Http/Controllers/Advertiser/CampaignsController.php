@@ -50,7 +50,7 @@ class CampaignsController extends Controller
             ];
         }
 
-        return view('advertisers.campaigns.all_campaign')->with('invoices', $invoice)->with('files', $file)->with('mpos', $all_mpo);
+        return view('advertisers.campaigns.all_campaign')->with('invoice', $invoice)->with('files', $file)->with('mpos', $all_mpo);
     }
 
     public function getData(DataTables $datatables, Request $request)
