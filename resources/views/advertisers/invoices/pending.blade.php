@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 @extends('layouts.app')
 
 @section('stylesheets')
@@ -6,6 +7,12 @@
     <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
 
 @endsection
+=======
+@extends('advertiser_layouts.app')
+@section('title')
+    <title>Advertiser | Invoice</title>
+@stop
+>>>>>>> fb1e8a37021ee568cba74002a1e18a78e0d2e088
 
 @section('content')
 
@@ -73,9 +80,7 @@
                                                 </label>
                                             @endif
                                         </td>
-                                        {{--<td>--}}
-                                            {{--<a href="#" style="font-size: 16px"><span class="label label-success" data-toggle="modal" data-target="#myModal{{ $invoice['invoice_number'] }}" style="cursor: pointer;"> View</span></a>--}}
-                                        {{--</td>--}}
+
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -84,41 +89,6 @@
                     @endif
 
                 </div>
-
-                {{--@foreach ($pending_invoices as $invoice)--}}
-
-                    {{--<div class="modal fade" id="myModal{{ $invoice['invoice_number'] }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">--}}
-                        {{--<div class="modal-dialog" role="document">--}}
-                            {{--<div class="modal-content">--}}
-
-                                {{--<div class="modal-header">--}}
-                                    {{--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>--}}
-                                    {{--<h4 class="modal-title" id="myModalLabel">--}}
-                                        {{--View/Approve - Invoice <strong>{{ $invoice['invoice_number'] }}</strong> for <strong>{{ $invoice['campaign_name'] }}</strong> campaign--}}
-                                    {{--</h4>--}}
-                                {{--</div>--}}
-
-
-                                {{--<form method="POST" class="selsec" action="{{ route('invoices.update', ['invoice_id' => $invoice['id']]) }}">--}}
-                                    {{--{{ csrf_field() }}--}}
-                                    {{--<div class="modal-body">--}}
-                                        {{--<p class="text-center">--}}
-                                            {{--By approving, you agree that the sum of--}}
-                                            {{--<strong>{{ $invoice['actual_amount_paid'] }}</strong>--}}
-                                            {{--be deducted from your wallet.--}}
-                                        {{--</p>--}}
-                                    {{--</div>--}}
-
-                                    {{--<div class="modal-footer">--}}
-                                        {{--<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>--}}
-                                        {{--<input type="submit" value="Approve Invoice" class="btn btn-primary" />--}}
-                                    {{--</div>--}}
-                                {{--</form>--}}
-
-                            {{--</div>--}}
-                        {{--</div>--}}
-                    {{--</div>--}}
-                {{--@endforeach--}}
             </div>
         </div>
     </div>
@@ -132,6 +102,30 @@
     {!! HTML::script('assets/js/moment.min.js') !!}
     {!! HTML::script('assets/js/bootstrap-datetimepicker.min.js') !!}
     {!! HTML::script('assets/js/as/profile.js') !!}
+    <!-- Select2 -->
+    <script src="{{ asset('agency_asset/plugins/select2/select2.full.min.js') }}"></script>
+    <!-- InputMask -->
+    <script src="{{ asset('agency_asset/plugins/input-mask/jquery.inputmask.js') }}"></script>
+    <script src="{{ asset('agency_asset/plugins/input-mask/jquery.inputmask.date.extensions.js') }}"></script>
+    <script src="{{ asset('agency_asset/plugins/input-mask/jquery.inputmask.extensions.js') }}"></script>
+    <!-- date-range-picker -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
+    <script src="{{ asset('agency_asset/plugins/daterangepicker/daterangepicker.js') }}"></script>
+    <!-- bootstrap datepicker -->
+    <script src="{{ asset('agency_asset/plugins/datepicker/bootstrap-datepicker.js') }}"></script>
+    <!-- bootstrap color picker -->
+    <script src="{{ asset('agency_asset/plugins/colorpicker/bootstrap-colorpicker.min.js') }}"></script>
+    <!-- bootstrap time picker -->
+    <script src="{{ asset('agency_asset/plugins/timepicker/bootstrap-timepicker.min.js') }}"></script>
+    <!-- SlimScroll 1.3.0 -->
+    <script src="{{ asset('agency_asset/plugins/slimScroll/jquery.slimscroll.min.js') }}"></script>
+    <!-- iCheck 1.0.1 -->
+    <script src="{{ asset('agency_asset/plugins/iCheck/icheck.min.js') }}"></script>
+    <!-- FastClick -->
+    <script src="{{ asset('agency_asset/plugins/fastclick/fastclick.js') }}"></script>
+    <!-- AdminLTE App -->
+    <script src="{{ asset('agency_asset/dist/js/app.min.js') }}"></script>
+
     <script src="{{ asset('asset/plugins/datepicker/bootstrap-datepicker.js') }}"></script>
     <script src="{{ asset('asset/plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('asset/plugins/datatables/dataTables.bootstrap.min.js') }}"></script>
@@ -152,5 +146,12 @@
 
     </script>
 
-
 @stop
+
+@section('stylesheets')
+
+    <link rel="stylesheet" href="{{ asset('asset/plugins/datatables/dataTables.bootstrap.css') }}" />
+    <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
+
+@endsection
+

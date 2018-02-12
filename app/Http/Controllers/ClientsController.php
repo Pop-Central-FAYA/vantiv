@@ -64,6 +64,7 @@ class ClientsController extends Controller
 
             if ($userInsert && $walkinInsert) {
                 return redirect()->route('clients.list')->with('success', 'Client Successfully created');
+
             } else {
                 return redirect()->back()->with('error', trans('Client not created, try again'));
             }

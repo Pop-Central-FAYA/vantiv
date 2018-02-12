@@ -1,6 +1,6 @@
-@extends('agency_layouts.app')
+@extends($agency_id ? 'agency_layouts.app' : 'advertiser_layouts.app')
 @section('title')
-    <title>Agency | Credit Wallet</title>
+    <title>{{ $agency_id ? 'Agency' : 'Advertiser'}}  | Credit Wallet</title>
 @stop
 @section('content')
 
@@ -12,7 +12,7 @@
         <hr/>
         <ol class="breadcrumb" style="font-size: 16px">
 
-            <li><a href="#"><i class="fa fa-th"></i> Agency</a> </li>
+            <li><a href="#"><i class="fa fa-th"></i> {{ $agency_id ? 'Agency' : 'Advertiser'}}</a> </li>
             <li><a href="index.html"><i class="fa fa-address-card"></i> Credit Wallet</a> </li>
 
         </ol>
@@ -71,7 +71,7 @@
                         <input type="hidden" name="name" id="name" value="{{ $user_det[0]->firstname .' '.$user_det[0]->lastname }}">
                         <input type="hidden" name="phone_number" id="phone_number" value="{{ $user_det[0]->phone_number }}">
                         <input type="hidden" name="reference" id="reference" value="" />
-                        <input type="hidden" name="user_id" value="{{ $agency_id }}" />
+                        <input type="hidden" name="user_id" value="{{ $user_id }}" />
                     </form>
 
                 </div>

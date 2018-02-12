@@ -1,6 +1,6 @@
-@extends('agency_layouts.app')
+@extends('advertiser_layouts.app')
 @section('title')
-    <title>Agency | Campaign-Lists</title>
+    <title>Advertiser | Campaign-Lists</title>
 @stop
 @section('content')
     <section class="content-header">
@@ -10,7 +10,7 @@
         </h1>
         <ol class="breadcrumb" style="font-size: 16px">
 
-            <li><a href="#"><i class="fa fa-th"></i> Agency</a> </li>
+            <li><a href="#"><i class="fa fa-th"></i> Advertiser</a> </li>
             <li><a href="index.html"><i class="fa fa-address-card"></i> All Campaign</a> </li>
 
         </ol>
@@ -28,7 +28,7 @@
                 <div class="col-xs-12">
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title">All Agency Campaigns</h3>
+                            <h3 class="box-title">All Advertiser Campaigns</h3>
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
@@ -252,7 +252,7 @@
                 serverSide: true,
                 processing: true,
                 ajax: {
-                    url: '/agency/campaigns/all-campaign/data',
+                    url: '/advertiser/campaigns/all-campaign/data',
                     data: function (d) {
                         d.start_date = $('input[name=txtFromDate_hvc]').val();
                         d.stop_date = $('input[name=txtToDate_hvc]').val();

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Libraries\Utilities;
 use Yajra\DataTables\DataTables;
+use Session;
 
 class WalletsController extends Controller
 {
@@ -17,16 +18,26 @@ class WalletsController extends Controller
     public function index()
     {
         $agency_id = \Session::get('agency_id');
-        $wallets = Utilities::switch_db('api')->select("SELECT SUM(current_balance) as balance from wallets where user_id = '$agency_id'");
-        $wallet_history = Utilities::switch_db('api')->select("SELECT * from walletHistories where user_id = '$agency_id'");
-        $transaction = Utilities::switch_db('api')->select("SELECT * from transactions WHERE user_id = '$agency_id' ORDER BY time_created DESC LIMIT 1");
-        return view('agency.wallets.wallet_statement')->with('wallet', $wallets)->with('history', $wallet_history)->with('transaction', $transaction);
+        if($agency_id != null){
+            $user_id = $agency_id;
+        }else{
+            $user_id = Session::get('advertiser_id');
+        }
+        $wallets = Utilities::switch_db('api')->select("SELECT SUM(current_balance) as balance from wallets where user_id = '$user_id'");
+        $wallet_history = Utilities::switch_db('api')->select("SELECT * from walletHistories where user_id = '$user_id'");
+        $transaction = Utilities::switch_db('api')->select("SELECT * from transactions WHERE user_id = '$user_id' ORDER BY time_created DESC LIMIT 1");
+        return view('wallets.wallet_statement')->with('wallet', $wallets)->with('history', $wallet_history)->with('transaction', $transaction)->with(['agency_id' => $agency_id, 'advertiser_id' => Session::get('advertiser_id')]);
     }
 
     public function getData(Datatables $datatables)
     {
         $agency_id = \Session::get('agency_id');
-        $trans = Utilities::switch_db('api')->select("SELECT * from transactions where user_id = '$agency_id'");
+        if($agency_id != null){
+            $user_id = $agency_id;
+        }else{
+            $user_id = Session::get('advertiser_id');
+        }
+        $trans = Utilities::switch_db('api')->select("SELECT * from transactions where user_id = '$user_id' ORDER BY time_created desc");
         $j = 1;
         $transaction = [];
 
@@ -53,19 +64,31 @@ class WalletsController extends Controller
     public function create()
     {
         $agency_id = \Session::get('agency_id');
-        $wallets = Utilities::switch_db('api')->select("SELECT SUM(current_balance) as balance from wallets where user_id = '$agency_id'");
-        $user_id = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT user_id from agents where id = '$agency_id'");
-        $user = $user_id[0]->user_id;
-        $user_det = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT * from users where id = '$user'");
-        return view('agency.wallets.create')->with('wallet', $wallets)->with('user_det', $user_det)->with('agency_id', $agency_id);
+        if($agency_id != null){
+            $user_id = $agency_id;
+            $agent_user_id = Utilities::switch_db('api')->select("SELECT user_id from agents where id = '$user_id'");
+            $user = $agent_user_id[0]->user_id;
+            $user_det = Utilities::switch_db('api')->select("SELECT * from users where id = '$user'");
+        }else{
+            $user_id = Session::get('advertiser_id');
+            $user_det = Utilities::switch_db('api')->select("SELECT * from users where id = (SELECT user_id from advertisers where id = '$user_id')");
+        }
+        $wallets = Utilities::switch_db('api')->select("SELECT SUM(current_balance) as balance from wallets where user_id = '$user_id'");
+
+        return view('wallets.create')->with('wallet', $wallets)->with('user_det', $user_det)->with('agency_id', $agency_id)->with('advertiser_id', Session::get('advertiser_id'))->with('user_id', $user_id);
     }
 
     public function pay(Request $request)
     {
 
-        $user_id = \Session::get('agency_id');
+        $agency_id = \Session::get('agency_id');
+        if($agency_id != null){
+            $user_id = $agency_id;
+        }else{
+            $user_id = Session::get('advertiser_id');
+        }
         $insert = [
-          'id' => uniqid(),
+            'id' => uniqid(),
             'user_id' => $user_id,
             'reference' => $request->reference,
             'amount' => $request->amount,
@@ -93,7 +116,7 @@ class WalletsController extends Controller
             if($transaction) {
                 $this->updateWallet($amount);
                 $msg = 'Your wallet has been funded with NGN'. $amount;
-                return redirect()->back()->with('success', $msg);
+                return redirect()->route('wallet.statement')->with('success', $msg);
             }
 
         }else{
@@ -105,19 +128,24 @@ class WalletsController extends Controller
 
     public function updateWallet($amount = 0)
     {
-        $user_id = \Session::get('agency_id');
+        $agency_id = \Session::get('agency_id');
+        if($agency_id != null){
+            $user_id = $agency_id;
+        }else{
+            $user_id = Session::get('advertiser_id');
+        }
 
         $wallet = Utilities::switch_db('api')->select("SELECT * from wallets where user_id = '$user_id'");
 
         if($wallet){
             $prev_balance = $wallet[0]->current_balance;
             $current_balance = $amount + $prev_balance;
-            $update_wallet = Utilities::switch_db('api')->select("UPDATE wallets set user_id = '$user_id', prev_balance = '$prev_balance', current_balance = '$current_balance'");
+            $update_wallet = Utilities::switch_db('api')->select("UPDATE wallets set prev_balance = '$prev_balance', current_balance = '$current_balance' WHERE user_id = '$user_id'");
 
             $prev_bal = $wallet[0]->current_balance;
             $insert_history = [
                 'id' => uniqid(),
-                'user_id' => \Session::get('agency_id'),
+                'user_id' => $user_id,
                 'amount' => $amount,
                 'prev_balance' => $prev_bal,
                 'current_balance' => $amount + $prev_bal,
@@ -128,7 +156,7 @@ class WalletsController extends Controller
             $wallet =
                 [
                     'id' => uniqid(),
-                    'user_id' => \Session::get('agency_id'),
+                    'user_id' => $user_id,
                     'prev_balance' => 0,
                     'current_balance' => $amount
                 ];
@@ -137,7 +165,7 @@ class WalletsController extends Controller
             $prev_bal = 0;
             $insert_history = [
                 'id' => uniqid(),
-                'user_id' => \Session::get('agency_id'),
+                'user_id' => $user_id,
                 'amount' => $amount,
                 'prev_balance' => $prev_bal,
                 'current_balance' => $amount + $prev_bal,

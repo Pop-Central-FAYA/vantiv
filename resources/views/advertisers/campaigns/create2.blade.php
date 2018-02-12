@@ -1,15 +1,16 @@
-@extends('layouts.app')
-
+@extends('advertiser_layouts.app')
+@section('title')
+    <title>Advertiser | Create Campaigns</title>
+@stop
 @section('content')
     <section class="content-header">
         <h1>
-            Create Campaign
-            <small><i class="fa fa-users"></i> Audience</small>
+            Create Campaigns
         </h1>
         <ol class="breadcrumb" style="font-size: 16px">
 
-            <li><a href="#"><i class="fa fa-th"></i> Create Campaign</a> </li>
-            <li><i class="fa fa-users"></i> Audience </li>
+            <li><a href="#"><i class="fa fa-th"></i> Advertiser</a> </li>
+            <li><a href="index.html"><i class="fa fa-address-card"></i> Create Advertiser Campaign</a> </li>
 
         </ol>
     </section>
@@ -17,69 +18,76 @@
     <!-- Main content -->
 
     <section class="content">
-        <div class="row">
-            <div class="col-md-1 hidden-sm hidden-xs"></div>
-            <div class="col-md-9 " style="padding:2%">
-                <form class="campform" method="POST" action="{{ route('campaign.store3', ['walkins' => $walkins]) }}">
-                    {{ csrf_field() }}
-                    @foreach($adslots as $adslot)
-
-                            <p>{{ $adslot['count_adslot'] }} Adslots that matches your selected criteria </p>
-
-                    @endforeach
-                    <br>
-                    <br>
-
-                        <p align="left">
-                            {{--<button type="button" id="step2" class="btn campaign-button" >Back <i class="fa fa-backward" aria-hidden="true"></i></button>--}}
-
-                            <button type="submit" class="btn campaign-button" style="margin-right:15%">Next <i class="fa fa-play" aria-hidden="true"></i></button>
-
-                        </p>
-                    </div>
-
-                </form>
-
+        <section class="content">
+            <div class="row">
+                <div class="col-md-1 hidden-sm hidden-xs"></div>
+                <div class="col-md-9 " style="padding:2%">
+                    <ul>
+                        @foreach($adslots as $adslot)
+                            <li>
+                                <a href="{{ route('advertiser_campaign.step3', ['id' => $id,'broadcaster' => $adslot['broadcaster']]) }}">{{ $adslot['count_adslot'] }} Adslots available for {{ $adslot['boradcaster_brand'] }}</a>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+                <!-- /.col -->
+                <div class="col-md-2 hidden-sm hidden-xs"></div>
+                <!-- /.col -->
             </div>
-            <!-- /.col -->
-            <div class="col-md-2 hidden-sm hidden-xs"></div>
-            <!-- /.col -->
+            <!-- /.row -->
 
 
-
-
-        </div>
-        <!-- /.row -->
-
-
+        </section>
     </section>
-
 @stop
-
 @section('scripts')
-    <script src="{{ asset('asset/plugins/select2/select2.full.min.js') }}"></script>
+    <!-- Select2 -->
+    <script src="{{ asset('agency_asset/plugins/select2/select2.full.min.js') }}"></script>
+    <!-- InputMask -->
+    <script src="{{ asset('agency_asset/plugins/input-mask/jquery.inputmask.js') }}"></script>
+    <script src="{{ asset('agency_asset/plugins/input-mask/jquery.inputmask.date.extensions.js') }}"></script>
+    <script src="{{ asset('agency_asset/plugins/input-mask/jquery.inputmask.extensions.js') }}"></script>
+    <!-- date-range-picker -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
-    <script src="{{ asset('asset/plugins/input-mask/jquery.inputmask.js') }}"></script>
-    <script src="{{ asset('asset/plugins/input-mask/jquery.inputmask.date.extensions.js') }}"></script>
-    <script src="{{ asset('asset/plugins/input-mask/jquery.inputmask.extensions.js') }}"></script>
-    <script src="{{ asset('asset/plugins/daterangepicker/daterangepicker.js') }}"></script>
-    <script src="{{ asset('asset/plugins/iCheck/icheck.min.js') }}"></script>
+    <script src="{{ asset('agency_asset/plugins/daterangepicker/daterangepicker.js') }}"></script>
     <!-- bootstrap datepicker -->
-    <script src="{{ asset('asset/plugins/datepicker/bootstrap-datepicker.js') }}"></script>
+    <script src="{{ asset('agency_asset/plugins/datepicker/bootstrap-datepicker.js') }}"></script>
     <!-- bootstrap color picker -->
-    <script src="{{ asset('asset/plugins/colorpicker/bootstrap-colorpicker.min.js') }}"></script>
+    <script src="{{ asset('agency_asset/plugins/colorpicker/bootstrap-colorpicker.min.js') }}"></script>
     <!-- bootstrap time picker -->
-    <script src="{{ asset('asset/plugins/timepicker/bootstrap-timepicker.min.js') }}"></script>
+    <script src="{{ asset('agency_asset/plugins/timepicker/bootstrap-timepicker.min.js') }}"></script>
+    <!-- SlimScroll 1.3.0 -->
+    <script src="{{ asset('agency_asset/plugins/slimScroll/jquery.slimscroll.min.js') }}"></script>
+    <!-- iCheck 1.0.1 -->
+    <script src="{{ asset('agency_asset/plugins/iCheck/icheck.min.js') }}"></script>
+    <!-- FastClick -->
+    <script src="{{ asset('agency_asset/plugins/fastclick/fastclick.js') }}"></script>
+    <!-- AdminLTE App -->
+    <script src="{{ asset('agency_asset/dist/js/app.min.js') }}"></script>
 
+    <!-- DataTables -->
+    <script src="{{ asset('agency_asset/plugins/datatables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('agency_asset/plugins/datatables/dataTables.bootstrap.min.js') }}"></script>
     <script>
-        $(document).ready(function() {
-            var user_id = "<?php echo $walkins ?>";
-           $('#step2').click(function(){
-               window.location.href = '/campaign/create/1/'+user_id+'/step2';
-           });
+
+
+        $(document).ready(function(){
+            $("#txtFromDate").datepicker({
+                numberOfMonths: 2,
+                onSelect: function (selected) {
+                    $("#txtToDate").datepicker("option", "minDate", selected)
+                }
+            });
+
+            $("#txtToDate").datepicker({
+                numberOfMonths: 2,
+                onSelect: function(selected) {
+                    $("#txtFromDate").datepicker("option","maxDate", selected)
+                }
+            });
+
         });
     </script>
-
     <script>
         $(function () {
             //Initialize Select2 Elements
@@ -151,15 +159,6 @@
             });
         });
     </script>
-
 @stop
 
-@section('stylesheets')
-    <link rel="stylesheet" href="{{ asset('asset/plugins/iCheck/all.css') }}">
-    <!-- Bootstrap Color Picker -->
-    <link rel="stylesheet" href="{{ asset('asset/plugins/colorpicker/bootstrap-colorpicker.min.css') }}">
-    <!-- Bootstrap time Picker -->
-    <link rel="stylesheet" href="{{ asset('asset/plugins/timepicker/bootstrap-timepicker.min.css') }}">
-    <!-- Select2 -->
-    <link rel="stylesheet" href="{{ asset('asset/plugins/select2/select2.min.css') }}">
-    @stop
+

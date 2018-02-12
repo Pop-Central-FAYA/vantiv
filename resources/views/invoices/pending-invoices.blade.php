@@ -102,7 +102,7 @@
                                     <div class="modal-body">
                                         <p class="text-center">
                                             By approving, you agree that the sum of
-                                            <strong>{{ $invoice['actual_amount_paid'] }}</strong>
+                                            <strong>{{ '&#8358;'.number_format($invoice['actual_amount_paid'], 2) }}</strong>
                                             be deducted from your wallet.
                                         </p>
                                     </div>

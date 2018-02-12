@@ -6,6 +6,10 @@
     <section class="content-header">
         <h1>
             Advertiser Dashboard
+<<<<<<< HEAD
+=======
+
+>>>>>>> fb1e8a37021ee568cba74002a1e18a78e0d2e088
         </h1>
         <ol class="breadcrumb" style="font-size: 16px">
 
@@ -24,7 +28,11 @@
             <div class="col-md-6">
                 <!-- AREA CHART -->
                 <div id="load_broad" class="load_broad" style="display: none;"></div>
+<<<<<<< HEAD
                 <form action="" id="search_by_broad" method="GET">
+=======
+                <form action="{{ route('advertiser.dashboard.broad') }}" id="search_by_broad" method="GET">
+>>>>>>> fb1e8a37021ee568cba74002a1e18a78e0d2e088
                     {{ csrf_field() }}
                     <div class="row">
                         <div class="col-md-4">
@@ -103,6 +111,7 @@
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
 
     <script>
+<<<<<<< HEAD
 
         $(document).ready(function () {
 
@@ -185,6 +194,75 @@
         //                ]
         //            });
         //        })
+=======
+        <?php echo "var date = ".$date . ";\n"; ?>
+        <?php echo "var amount = ".$amount . ";\n"; ?>
+        <?php echo "var name = ".$name .";\n"; ?>
+        <?php echo "var amount_bud =".$amount_bud ."\n"; ?>
+        <?php echo "var date_bud =".$date_bud ."\n"; ?>
+        <?php echo "var periodic_product = ".$periodic .";\n"; ?>
+
+        $(document).ready(function () {
+
+            $("#broadcaster").change(function () {
+                $("#load_broad").show();
+                $(".content").css({
+                    opacity: 0.5
+                });
+                $('#load_broad').html('<img src="{{ asset('loader.gif') }}" align="absmiddle"> Please wait while we process your request...');
+                var br_id = $("#broadcaster").val();
+                var url = $("#search_by_broad").attr('action');
+                $.get(url, {'br_id': br_id, '_token':$('input[name=_token]').val()}, function(data) {
+                    console.log(data);
+                    $("#load_broad").hide();
+                    $(".content").css({
+                        opacity: 1
+                    });
+                    Highcharts.chart('containerPeriodic_total_per_chanel', {
+                        chart: {
+                            type: 'column'
+                        },
+                        title: {
+                            text: 'Periodic Spend Report'
+                        },
+                        subtitle: {
+                            text: 'Total against Channels'
+                        },
+                        xAxis: {
+                            categories: data.date,
+                            crosshair: true
+                        },
+                        yAxis: {
+                            min: 0,
+                            title: {
+                                text: 'Total (Naira)'
+                            }
+                        },
+                        tooltip: {
+                            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                            '<td style="padding:0"><b>{point.y:.1f} Naira</b></td></tr>',
+                            footerFormat: '</table>',
+                            shared: true,
+                            useHTML: true
+                        },
+                        plotOptions: {
+                            column: {
+                                pointPadding: 0.2,
+                                borderWidth: 0
+                            }
+                        },
+                        series: [{
+//                            name: data.name,
+                            data: data.amount_price
+
+                        }]
+                    });
+                });
+            });
+
+        })
+>>>>>>> fb1e8a37021ee568cba74002a1e18a78e0d2e088
     </script>
 
     <script>
@@ -299,6 +377,10 @@
                 data: amount
             }]
         });
+<<<<<<< HEAD
+=======
+
+>>>>>>> fb1e8a37021ee568cba74002a1e18a78e0d2e088
         // Build the chart
         Highcharts.chart('containerPerProduct', {
             chart: {
@@ -384,3 +466,7 @@
         }
     </style>
 @stop
+<<<<<<< HEAD
+=======
+
+>>>>>>> fb1e8a37021ee568cba74002a1e18a78e0d2e088

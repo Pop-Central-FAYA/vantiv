@@ -24,22 +24,63 @@
                         @yield('content')
                     </div>
 
+                    <div class="wrapper">
+
+                    @include('partials/header')
+                    <!-- Left side column. contains the logo and sidebar -->
+                        @include('partials.advertiser_sidebar')
+
+                        <div class="content-wrapper">
+
+                            <div class="container-fluid">
+
+                                @include('partials.messages')
+
+                                <div class="panel panel-default">
+                                    <div class="container-fluid">
+                                        @yield('content')
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            @include('agency_partials.footer')
+
+                            @yield('modal')
+
+                            <div class="control-sidebar-bg"></div>
+
+                        </div>
+
+                        @include('agency_partials._javascript')
+
+                        @yield('scripts')
+                    </div>
                 </div>
-
             </div>
-
         </div>
-
-        @include('agency_partials.footer')
-
-        @yield('modal')
-
-        <div class="control-sidebar-bg"></div>
     </div>
-
-    @include('agency_partials._javascript')
-
-    @yield('scripts')
 
 </body>
 </html>
+
+    </div>
+    <!-- /.content-wrapper -->
+@include('agency_partials.footer')
+
+@yield('modal')
+
+
+<!-- /.control-sidebar -->
+    <!-- Add the sidebar's background. This div must be placed
+         immediately after the control sidebar -->
+    <div class="control-sidebar-bg"></div>
+</div>
+<!-- ./wrapper -->
+@include('agency_partials._javascript')
+<!-- page script -->
+@yield('scripts')
+
+</body>
+</html>
+
