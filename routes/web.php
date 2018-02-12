@@ -10,6 +10,9 @@ Route::post('login', 'Auth\AuthController@postLogin');
 Route::get('/auth-agent/signup', 'Agency\AgencyAuthController@getRegister')->name('agency.register.form');
 Route::post('/auth-agent/signup/process', 'Agency\AgencyAuthController@postRegister')->name('agency.signup');
 
+Route::get('/auth-advertiser/signup', 'Advertiser\AdvertiserAuthController@getRegister')->name('advertiser.register.form');
+Route::post('/auth-advertiser/signup/process', 'Advertiser\AdvertiserAuthController@postRegister')->name('advertiser.signup');
+
 Route::get('logout', [
     'as' => 'auth.logout',
     'uses' => 'Auth\AuthController@getLogout'
@@ -219,7 +222,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::group(['prefix' => 'reports'], function () {
             Route::get('/', 'ReportController@index')->name('reports');
             Route::get('total-volume-campaigns/all-data', 'ReportController@HVCdata');
-            Route::get('paid-invoice/all-data', 'ReportController@PIdata');
+            Route::get('paid-invoices/all-data', 'ReportController@PIdata');
             Route::get('/periodic-sales/all', 'ReportController@psData');
             Route::get('/total-volume-of-campaign/all', 'ReportController@tvcData');
             Route::get('/high-day-parts/all', 'ReportController@hpdData');
@@ -253,15 +256,15 @@ Route::group(['middleware' => 'auth'], function () {
            });
 
            Route::group(['prefix' => 'brands'], function () {
-                Route::get('/all-brands', 'ClientBrandsController@index')->name('agency.brand.all');
-                Route::get('/create-brands', 'ClientBrandsController@create')->name('agency.brand.create');
+               Route::get('/all-brands', 'ClientBrandsController@index')->name('agency.brand.all');
+               Route::get('/create-brands', 'ClientBrandsController@create')->name('agency.brand.create');
                Route::post('/create/store', 'ClientBrandsController@store')->name('agency.brand.store');
                Route::post('/brands/edit/{id}', 'ClientBrandsController@update')->name('agency.brands.update');
                Route::get('/brands/delete/{id}', 'ClientBrandsController@delete')->name('agency.brands.delete');
            });
 
            Route::get('/agency-dashboard/periodic-sales', 'DashboardController@filterByBroad')->name('agency.dashboard.broad');
-            Route::get('/agency-dashboard/periodic-brand', 'DashboardController@filterByBrand')->name('agency.dashboard.data');
+           Route::get('/agency-dashboard/periodic-brand', 'DashboardController@filterByBrand')->name('agency.dashboard.data');
 
             /**
              * Clients
@@ -288,21 +291,70 @@ Route::group(['middleware' => 'auth'], function () {
                Route::get('/get-wallet/data', 'Agency\WalletsController@getData');
             });
 
-            Route::group(['prefix' => 'wallets'], function(){
-               Route::get('/wallet/credit', 'Agency\WalletsController@create')->name('agency_wallet.create');
-               Route::get('/wallet-statement', 'Agency\WalletsController@index')->name('agency_wallet.statement');
-               Route::post('/wallet/amount', 'Agency\WalletsController@getAmount')->name('wallet.amount');
-               Route::get('/wallet/amount/pay', 'Agency\WalletsController@getPay')->name('amount.pay');
-               Route::post('/pay', 'Agency\WalletsController@pay')->name('pay');
-               Route::get('/get-wallet/data', 'Agency\WalletsController@getData');
-            });
-
             Route::group(['prefix' => 'reports'], function(){
                 Route::get('/', 'Agency\ReportsController@index')->name('reports.index');
                 Route::get('/campaign/all-data', 'Agency\ReportsController@getCampaign');
                 Route::get('/revenue/all-data', 'Agency\ReportsController@getRevenue');
 //                Route::get('/client-filter/campaign', 'Agency\ReportsController@filterCampaignClient')->name('filter.client');
             });
+        });
+
+        Route::group(['prefix' => 'wallets'], function(){
+            Route::get('/wallet/credit', 'Agency\WalletsController@create')->name('wallet.create');
+            Route::get('/wallet-statement', 'Agency\WalletsController@index')->name('wallet.statement');
+            Route::post('/wallet/amount', 'Agency\WalletsController@getAmount')->name('wallet.amount');
+            Route::get('/wallet/amount/pay', 'Agency\WalletsController@getPay')->name('amount.pay');
+            Route::post('/pay', 'Agency\WalletsController@pay')->name('pay');
+            Route::get('/get-wallet/data', 'Agency\WalletsController@getData');
+        });
+
+        Route::group(['prefix' => 'client-brands'], function () {
+        Route::get('/all-brands', 'ClientBrandsController@index')->name('agency.brand.all');
+        Route::get('/create-brands', 'ClientBrandsController@create')->name('agency.brand.create');
+        Route::post('/create/store', 'ClientBrandsController@store')->name('agency.brand.store');
+        Route::post('/brands/edit/{id}', 'ClientBrandsController@update')->name('agency.brands.update');
+        Route::get('/brands/delete/{id}', 'ClientBrandsController@delete')->name('agency.brands.delete');
+        });
+
+        Route::group(['prefix' => 'advertiser'], function () {
+            Route::group(['prefix' => 'campaigns'], function() {
+                Route::get('/all-campaigns', 'Advertiser\CampaignsController@index')->name('advertiser.campaign.all');
+                Route::get('/all-campaign/data', 'Advertiser\CampaignsController@getData');
+                Route::get('/all-clients', 'Advertiser\CampaignsController@allClient')->name('advertiser.campaign.create');
+                Route::get('/campaign/step1/{id}', 'Advertiser\CampaignsController@getStep1')->name('advertiser_campaign.step1');
+                Route::post('/campaign/step1/store/{id}', 'Advertiser\CampaignsController@postStep1')->name('advertiser_campaign.store1');
+                Route::get('/campaigns/step2/{id}', 'Advertiser\CampaignsController@getStep2')->name('advertiser_campaign.step2');
+                Route::get('/campaign/step3/{id}/{broadcaster}', 'Advertiser\CampaignsController@getStep3')->name('advertiser_campaign.step3');
+                Route::post('/campaign/step3/store/{id}/{broadcaster}', 'Advertiser\CampaignsController@postStep3')->name('advertiser_campaign.store3');
+                Route::get('/campaign/step3/1/{id}/{broadcaster}', 'Advertiser\CampaignsController@getStep3_1')->name('advertiser_campaign.step3_1');
+                Route::post('/campaign/step3/store/1/{id}/{broadcaster}', 'Advertiser\CampaignsController@postStep3_1')->name('advertiser_campaign.store3_1');
+                Route::get('/campaign/step3/2/{id}/{broadcaster}', 'Advertiser\CampaignsController@getStep3_2')->name('advertiser_campaign.step3_2');
+                Route::post('/campaign/step3/store/2/{id}/{broadcaster}', 'Advertiser\CampaignsController@postStep3_2')->name('advertiser_campaign.store3_2');
+                Route::get('/campaign/step3/3/{id}/{broadcaster}', 'Advertiser\CampaignsController@getStep3_3')->name('advertiser_campaign.step3_3');
+                Route::post('/campaign/step3/store/3/{id}/{broadcaster}', 'Advertiser\CampaignsController@postStep3_3')->name('advertiser_campaign.store3_3');
+                Route::post('/campaign/step3/store/new-uploads/{id}/{broadcaster}', 'Advertiser\CampaignsController@postNewUploads')->name('new.upload');
+                Route::get('/camaigns/uploads/delete/{upload_id}/{id}', 'Advertiser\CampaignsController@deleteUpload')->name('advertiser.uploads.delete');
+                Route::get('/campaigns/review-uploads/{id}/{broadcaster}', 'Advertiser\CampaignsController@reviewUploads')->name('advertiser_campaign.review_uploads');
+                Route::get('/campaign/step4/{id}/{broadcaster}', 'Advertiser\CampaignsController@getStep4')->name('advertiser_campaign.step4');
+                Route::post('/campaigns/cart/store/{id}/{broadcaster}', 'Advertiser\CampaignsController@postCart')->name('advertiser_campaign.cart');
+                Route::get('/campaign/checkout/{id}/{broadcaster}', 'Advertiser\CampaignsController@checkout')->name('advertiser_campaign.checkout');
+                Route::get('/cart/remove/{id}', 'Advertiser\CampaignsController@removeCart')->name('advertiser_cart.remove');
+                Route::post('/campaign/submit/{id}/{broadcaster}', 'Advertiser\CampaignsController@postCampaign')->name('advertiser_submit.campaign');
+            });
+
+            Route::group(['prefix' => 'reports'], function (){
+                Route::get('/', 'Advertiser\ReportsController@index')->name('advertiser.report.index');
+                Route::get('/campaign/all-data', 'Advertiser\ReportsController@getCampaign');
+                Route::get('/revenue/all-data', 'Advertiser\ReportsController@getRevenue');
+            });
+
+            Route::group(['prefix' => 'invoices'], function () {
+                Route::get('/all', 'Advertiser\InvoiceController@all')->name('advertisers.invoices.all');
+                Route::get('/pending', 'Advertiser\InvoiceController@pending')->name('advertisers.invoices.pending');
+            });
+
+            Route::get('/advertiser-dashboard/periodic-sales', 'DashboardController@filterByAgencyBroad')->name('advertiser.dashboard.broad');
+
         });
     });
 

@@ -19,6 +19,7 @@ class MpoController extends Controller
         foreach ($mpos as $mpo) {
 
             $campaign_details = Api::fetchCampaign($mpo->campaign_id);
+            $brand = Api::brand($mpo->campaign_id);
             $payment_details = Api::fetchPayment($mpo->campaign_id);
 
             if (count($campaign_details) === 0) {
@@ -42,6 +43,7 @@ class MpoController extends Controller
                 'product' => $product,
                 'amount' => $amount,
                 'name' => $name,
+                'brand' => $brand[0]->name,
                 'time_created' => $time,
             ];
         }
@@ -72,7 +74,7 @@ class MpoController extends Controller
                 $channel = 0;
             } else {
                 $product = $campaign_details[0]->product;
-                $brand = $campaign_details[0]->brand;
+                $brand = Api::brand($mpo->campaign_id);
                 $name = $campaign_details[0]->name;
                 $time = date('Y-m-d', strtotime($campaign_details[0]->time_created));
                 $start_date = $campaign_details[0]->start_date;
@@ -96,7 +98,7 @@ class MpoController extends Controller
                 'id' => $mpo->id,
                 'is_mpo_accepted' => $mpo->is_mpo_accepted,
                 'product' => $product,
-                'brand' => $brand,
+                'brand' => $brand[0]->name,
                 'campaign_name' => $name,
                 'channel' => $channel,
                 'time_created' => $time,

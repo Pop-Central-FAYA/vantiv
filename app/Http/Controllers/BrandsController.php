@@ -16,7 +16,8 @@ class BrandsController extends Controller
      */
     public function index()
     {
-        $db = Utilities::switch_db('api')->select("SELECT * from brands");
+        $broadcaster = Session::get('broadcaster_id');
+        $db = Utilities::switch_db('api')->select("SELECT * from brands where broadcaster_agency = '$broadcaster' ORDER BY time_created desc");
         return view('brands.index')->with('brand', $db);
     }
 
@@ -48,7 +49,7 @@ class BrandsController extends Controller
      */
     public function store(Request $request)
     {
-
+        $broadcaster = Session::get('broadcaster_id');
         $this->validate($request, [
            'brand_name' => 'required|regex:/^[a-zA-Z- ]+$/',
         ]);
@@ -61,7 +62,7 @@ class BrandsController extends Controller
         if(count($ckeck_brand) > 0) {
             return redirect()->back()->with('error', 'Brands already exists');
         }else{
-            $insert = Utilities::switch_db('api')->select("INSERT into brands (id, `name`, walkin_id) VALUES ('$unique','$brand','$id')");
+            $insert = Utilities::switch_db('api')->select("INSERT into brands (id, `name`, walkin_id, broadcaster_agency) VALUES ('$unique','$brand','$id', '$broadcaster')");
             if(!$insert) {
                 return redirect()->back()->with('success', 'Brands created successfully');
             }else{

@@ -1,16 +1,16 @@
-@extends('agency_layouts.app')
+@extends('advertiser_layouts.app')
 @section('title')
-    <title>Agency | Dashboard</title>
+    <title>Advertiser | Dashboard</title>
 @stop
 @section('content')
     <section class="content-header">
         <h1>
-            Agency Dashboard
+            Advertiser Dashboard
 
         </h1>
         <ol class="breadcrumb" style="font-size: 16px">
 
-            <li><a href="#"><i class="fa fa-th"></i> Agency</a> </li>
+            <li><a href="#"><i class="fa fa-th"></i> Advertiser</a> </li>
             <li><a href="{{ route('dashboard') }}"><i class="fa fa-address-card"></i> Dashboard</a> </li>
 
         </ol>
@@ -25,7 +25,7 @@
             <div class="col-md-6">
                 <!-- AREA CHART -->
                 <div id="load_broad" class="load_broad" style="display: none;"></div>
-                <form action="{{ route('agency.dashboard.broad')  }}" id="search_by_broad" method="GET">
+                <form action="{{ route('advertiser.dashboard.broad') }}" id="search_by_broad" method="GET">
                     {{ csrf_field() }}
                     <div class="row">
                         <div class="col-md-4">
@@ -107,9 +107,9 @@
         <?php echo "var date = ".$date . ";\n"; ?>
         <?php echo "var amount = ".$amount . ";\n"; ?>
         <?php echo "var name = ".$name .";\n"; ?>
-        <?php echo "var periodic_product = ".$periodic .";\n"; ?>
         <?php echo "var amount_bud =".$amount_bud ."\n"; ?>
         <?php echo "var date_bud =".$date_bud ."\n"; ?>
+        <?php echo "var periodic_product = ".$periodic .";\n"; ?>
 
         $(document).ready(function () {
 
@@ -122,6 +122,7 @@
                 var br_id = $("#broadcaster").val();
                 var url = $("#search_by_broad").attr('action');
                 $.get(url, {'br_id': br_id, '_token':$('input[name=_token]').val()}, function(data) {
+                    console.log(data);
                     $("#load_broad").hide();
                     $(".content").css({
                         opacity: 1
@@ -167,30 +168,8 @@
                         }]
                     });
                 });
-            })
-
-            var Datefilter =  $('.agency_campaign_all').DataTable({
-                paging: true,
-                serverSide: true,
-                processing: true,
-                ajax: {
-                    url: '/agency/campaigns/all-campaign/data',
-                    data: function (d) {
-                        d.start_date = $('input[name=txtFromDate_hvc]').val();
-                        d.stop_date = $('input[name=txtToDate_hvc]').val();
-                    }
-                },
-                columns: [
-                    {data: 'id', name: 'id'},
-                    {data: 'name', name: 'name'},
-                    {data: 'brand', name: 'brand'},
-                    {data: 'product', name: 'product'},
-                    {data: 'start_date', name: 'start_date'},
-                    {data: 'end_date', name: 'end_date'},
-                    {data: 'amount', name: 'amount'},
-                    {data: 'mpo', name: 'mpo'}
-                ]
             });
+
         })
     </script>
 

@@ -383,7 +383,7 @@
                     serverSide: true,
                     processing: true,
                     ajax: {
-                        url: '/reports/paid-invoice/all-data',
+                        url: '/reports/paid-invoices/all-data',
                         data: function (d) {
                             d.start_date = $('input[name=txtFromDate_pi]').val();
                             d.stop_date = $('input[name=txtToDate_pi]').val();

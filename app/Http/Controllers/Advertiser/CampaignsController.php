@@ -1,6 +1,6 @@
 <?php
 
-namespace Vanguard\Http\Controllers\Agency;
+namespace Vanguard\Http\Controllers\Advertiser;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -21,10 +21,10 @@ class CampaignsController extends Controller
     public function index()
     {
         $all_mpo = [];
-        $agency_id = Session::get('agency_id');
-        $invoice = Utilities::switch_db('api')->select("SELECT * from invoices WHERE agency_id = '$agency_id'");
-        $file = Utilities::switch_db('api')->select("SELECT * from files WHERE agency_id = '$agency_id'");
-        $mpos = Utilities::switch_db('api')->select("SELECT * from mpos where agency_id = '$agency_id'");
+        $advertiser_id = Session::get('advertiser_id');
+        $invoice = Utilities::switch_db('api')->select("SELECT * from invoices WHERE agency_id = '$advertiser_id'");
+        $file = Utilities::switch_db('api')->select("SELECT * from files WHERE agency_id = '$advertiser_id'");
+        $mpos = Utilities::switch_db('api')->select("SELECT * from mpos where agency_id = '$advertiser_id'");
         foreach ($mpos as $mpo){
             $campaign = Utilities::switch_db('api')->select("SELECT * FROM campaigns where id = '$mpo->campaign_id'");
             $campaign_id = $campaign[0]->id;
@@ -50,14 +50,14 @@ class CampaignsController extends Controller
             ];
         }
 
-        return view('agency.campaigns.all_campaign')->with('invoices', $invoice)->with('files', $file)->with('mpos', $all_mpo);
+        return view('advertisers.campaigns.all_campaign')->with('invoices', $invoice)->with('files', $file)->with('mpos', $all_mpo);
     }
 
     public function getData(DataTables $datatables, Request $request)
     {
         $campaign = [];
         $j = 1;
-        $agency_id = \Session::get('agency_id');
+        $agency_id = \Session::get('advertiser_id');
         $all_campaign = Utilities::switch_db('api')->select("SELECT * from campaigns WHERE agency = '$agency_id' AND adslots > 0 ORDER BY time_created desc");
         foreach ($all_campaign as $cam)
         {
@@ -86,42 +86,15 @@ class CampaignsController extends Controller
             ->make(true);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function allClient()
-    {
-        $cl = [];
-        $agency_id = \Session::get('agency_id');
-        $all_clients = Utilities::switch_db('api')->select("SELECT * from walkIns WHERE agency_id = '$agency_id'");
-        foreach ($all_clients as $all)
-        {
-            $clients = \DB::select("SELECT * from users where id= '$all->user_id'");
-            $cl[] = $clients;
-
-        }
-        $page = \Input::get('page', 1);
-        $perPage = 15;
-        $offSet = ($page * $perPage) - $perPage;
-        $itemsForCurrentPage = array_slice($cl, $offSet, $perPage, true);
-        $data =  new LengthAwarePaginator($itemsForCurrentPage, count($cl), $perPage, $page);
-        $data->setPath('all-clients');
-        return view('agency.campaigns.client.index')->with('client', $data);
-    }
-
     public function getStep1($id)
     {
         $industry = Utilities::switch_db('api')->select("SELECT id, `name` from sectors");
         $chanel = Utilities::switch_db('api')->select("SELECT * from campaignChannels");
-        $walkins = Utilities::switch_db('api')->select("SELECT id from walkIns where user_id='$id'");
-        $walkins_id = $walkins[0]->id;
-        $brands = Utilities::switch_db('api')->select("SELECT * from brands WHERE walkin_id = '$walkins_id'");
+        $brands = Utilities::switch_db('api')->select("SELECT * from brands WHERE broadcaster_agency = '$id'");
         $day_parts = Utilities::switch_db('api')->select("SELECT * from dayParts");
         $region = Utilities::switch_db('api')->select("SELECT * from regions");
         $target = Utilities::switch_db('api')->select("SELECT * from targetAudiences");
-        return view('agency.campaigns.create1')->with('industry', $industry)
+        return view('advertisers.campaigns.create1')->with('industry', $industry)
             ->with('chanel', $chanel)
             ->with('brands', $brands)
             ->with('region', $region)
@@ -157,7 +130,7 @@ class CampaignsController extends Controller
         $step1_req = ((object) $request->all());
         session(['step1' => $step1_req]);
 
-        return redirect()->route('agency_campaign.step2', ['id' => $id])->with('step_1', Session::get('step1'))
+        return redirect()->route('advertiser_campaign.step2', ['id' => $id])->with('step_1', Session::get('step1'))
             ->with('id', $id);
 
     }
@@ -183,13 +156,13 @@ class CampaignsController extends Controller
             ];
         }
 
-        return view('agency.campaigns.create2')->with('adslots', $ads_broad)
+        return view('advertisers.campaigns.create2')->with('adslots', $ads_broad)
             ->with('id', $id);
     }
 
     public function getStep3($id, $broadcaster)
     {
-        return view('agency.campaigns.create3')->with('id', $id)
+        return view('advertisers.campaigns.create3')->with('id', $id)
             ->with('broadcaster', $broadcaster);
     }
 
@@ -226,7 +199,7 @@ class CampaignsController extends Controller
                 ]);
 
                 if($insert_upload){
-                    return redirect()->route('agency_campaign.step3_1', ['id' => $id, 'broadcaster' => $broadcaster]);
+                    return redirect()->route('advertiser_campaign.step3_1', ['id' => $id, 'broadcaster' => $broadcaster]);
                 }else{
                     return back()->with('error','Could not complete upload process');
                 }
@@ -237,7 +210,7 @@ class CampaignsController extends Controller
 
     public function getStep3_1($id, $broadcaster)
     {
-        return view('agency.campaigns.create3_1')->with('id', $id)
+        return view('advertisers.campaigns.create3_1')->with('id', $id)
             ->with('broadcaster', $broadcaster);
     }
 
@@ -274,7 +247,7 @@ class CampaignsController extends Controller
                 ]);
 
                 if($insert_upload){
-                    return redirect()->route('agency_campaign.step3_2', ['id' => $id, 'broadcaster' => $broadcaster]);
+                    return redirect()->route('advertiser_campaign.step3_2', ['id' => $id, 'broadcaster' => $broadcaster]);
                 }else{
                     return back()->with('error','Could not complete upload process');
                 }
@@ -285,7 +258,7 @@ class CampaignsController extends Controller
 
     public function getStep3_2($id, $broadcaster)
     {
-        return view('agency.campaigns.create3_2')->with('id', $id)
+        return view('advertisers.campaigns.create3_2')->with('id', $id)
             ->with('broadcaster', $broadcaster);
     }
 
@@ -322,7 +295,7 @@ class CampaignsController extends Controller
                 ]);
 
                 if($insert_upload){
-                    return redirect()->route('agency_campaign.step3_3', ['id' => $id, 'broadcaster' => $broadcaster]);
+                    return redirect()->route('advertiser_campaign.step3_3', ['id' => $id, 'broadcaster' => $broadcaster]);
                 }else{
                     return back()->with('error','Could not complete upload process');
                 }
@@ -333,7 +306,7 @@ class CampaignsController extends Controller
 
     public function getStep3_3($id, $broadcaster)
     {
-        return view('agency.campaigns.create3_3')->with('id', $id)
+        return view('advertisers.campaigns.create3_3')->with('id', $id)
             ->with('broadcaster', $broadcaster);
     }
 
@@ -370,7 +343,7 @@ class CampaignsController extends Controller
                 ]);
 
                 if($insert_upload){
-                    return redirect()->route('agency_campaign.review_uploads', ['id' => $id, 'broadcaster' => $broadcaster]);
+                    return redirect()->route('advertiser_campaign.review_uploads', ['id' => $id, 'broadcaster' => $broadcaster]);
                 }else{
                     return back()->with('error','Could not complete upload process');
                 }
@@ -382,58 +355,7 @@ class CampaignsController extends Controller
     public function reviewUploads($id, $broadcaster)
     {
         $uploads = \DB::select("SELECT * from uploads where user_id = '$id'");
-        return view('agency.campaigns.review')->with('uploads', $uploads)->with('id', $id)->with('broadcaster', $broadcaster);
-    }
-
-    public function postNewUploads(Request $request, $id, $broadcaster)
-    {
-        $this->validate($request, [
-            'uploads' => 'required|max:20000',
-            'time' => 'required'
-        ]);
-
-        if(((int)$request->f_du) > ((int)$request->time)){
-            return redirect()->back()->with('error','Your video file duration cannot be more than the time slot you picked');
-        }
-
-        if ($request->file('uploads')) {
-            $filesUploaded = $request->uploads;
-            $extension = $filesUploaded->getClientOriginalExtension();
-            if($extension == 'mp4' || $extension == 'wma' || $extension == 'ogg' || $extension == 'mkv'){
-
-                $destinationPath = 'uploads';
-                $filesUploaded->move($destinationPath,$filesUploaded->getClientOriginalName());
-                $file_gan_gan = 'uploads/'.$filesUploaded->getClientOriginalName();
-
-                $time = $request->time;
-                $uploads = \DB::select("SELECT * from uploads where user_id = '$id' AND time = '$time'");
-                if(count($uploads) === 1){
-                    return back()->with('error', 'You cannot upload twice for this time slot');
-                }
-                $insert_upload = \DB::table('uploads')->insert([
-                    'user_id' => $id,
-                    'time' => $time,
-                    'uploads' => $file_gan_gan
-                ]);
-
-                if($insert_upload){
-                    return redirect()->route('agency_campaign.review_uploads', ['id' => $id, 'broadcaster' => $broadcaster]);
-                }else{
-                    return back()->with('error','Could not complete upload process');
-                }
-            }
-
-        }
-    }
-
-    public function deleteUpload($upload_id, $id)
-    {
-        $deleteUploads = \DB::delete("DELETE from uploads WHERE id = '$upload_id' AND user_id = '$id'");
-        if($deleteUploads){
-            return back()->with('success', 'File deleted successfully...');
-        }else{
-            return back()->with('error', 'Error deleting file...');
-        }
+        return view('advertisers.campaigns.review')->with('uploads', $uploads)->with('id', $id)->with('broadcaster', $broadcaster);
     }
 
     public function getStep4($id, $broadcaster)
@@ -471,7 +393,7 @@ class CampaignsController extends Controller
 
         $data = \DB::select("SELECT * from uploads WHERE user_id = '$id'");
         $cart = \DB::select("SELECT * from carts WHERE user_id = '$id'");
-        return view('agency.campaigns.create4')->with('ratecards', $rate_card)->with('result', $result)->with('cart', $cart)->with('datas', $data)->with('times', $time)->with('id', $id)->with('broadcaster', $broadcaster);
+        return view('advertisers.campaigns.create4')->with('ratecards', $rate_card)->with('result', $result)->with('cart', $cart)->with('datas', $data)->with('times', $time)->with('id', $id)->with('broadcaster', $broadcaster);
     }
 
     public function postCart(Request $request, $id, $broadcaster)
@@ -510,7 +432,7 @@ class CampaignsController extends Controller
         $regions = Utilities::switch_db('api')->select("SELECT region from regions where id IN ('$region') ");
         $calc = \DB::select("SELECT SUM(price) as total_price FROM carts WHERE user_id = '$id'");
         $query = \DB::select("SELECT * FROM carts WHERE user_id = '$id'");
-        return view('agency.campaigns.checkout')->with('first_session', $first)
+        return view('advertisers.campaigns.checkout')->with('first_session', $first)
             ->with('calc', $calc)
             ->with('day_part', $day_partss)
             ->with('region', $regions)
@@ -549,10 +471,12 @@ class CampaignsController extends Controller
         $mpo = [];
         $i = 0;
 
+        //NB: The advertiser is assumed to be its own agency so, the agency_id and agency_broadcaster is same as the advertiser_id and the advertiser_broadcaster.
+
         $adssss = implode(',' ,$ads);
         $campaign_id = uniqid();
         $pay_id = uniqid();
-        $walkin_id = Utilities::switch_db('api')->select("SELECT id from walkIns where user_id = '$id'");
+        $advertiser_id = Utilities::switch_db('api')->select("SELECT user_id from advertisers where id = '$id'");
         $now = strtotime(Carbon::now('Africa/Lagos'));
         $camp[] = [
             'id' => $campaign_id,
@@ -570,12 +494,12 @@ class CampaignsController extends Controller
             'max_age' => (integer)$first->max_age,
             'industry' => $first->industry,
             'adslots' => count($query),
-            'walkins_id' => $walkin_id[0]->id,
+            'walkins_id' => $advertiser_id[0]->user_id,
             'time_created' => date('Y-m-d H:i:s', $now),
             'time_modified' => date('Y-m-d H:i:s', $now),
             'adslots_id' => "'". implode("','" ,$ads) . "'",
             'adslots' => count($query),
-            'agency' => Session::get('agency_id'),
+            'agency' => Session::get('advertiser_id'),
             'agency_broadcaster' => $broadcaster,
         ];
 
@@ -597,7 +521,7 @@ class CampaignsController extends Controller
                     'file_code' => mt_rand(100000, 10000000).uniqid(),
                     'time_created' => date('Y-m-d H:i:s', $now),
                     'time_modified' => date('Y-m-d H:i:s', $now),
-                    'agency_id' => Session::get('agency_id'),
+                    'agency_id' => Session::get('advertiser_id'),
                     'agency_broadcaster' => $broadcaster,
                     'time_picked' => $q->time,
                 ];
@@ -610,10 +534,10 @@ class CampaignsController extends Controller
                 'amount' => (integer) $request->total,
                 'time_created' => $now,
                 'time_modified' => $now,
-                'walkins_id' => $walkin_id[0]->id,
+                'walkins_id' => $advertiser_id[0]->user_id,
                 'time_created' => date('Y-m-d H:i:s', $now),
                 'time_modified' => date('Y-m-d H:i:s', $now),
-                'agency_id' => Session::get('agency_id'),
+                'agency_id' => Session::get('advertiser_id'),
                 'agency_broadcaster' => $broadcaster,
             ];
 
@@ -632,8 +556,8 @@ class CampaignsController extends Controller
                     'invoice_number' => rand(10000, 10000000),
                     'actual_amount_paid' => (integer) $request->total,
                     'refunded_amount' => 0,
-                    'walkins_id' => $walkin_id[0]->id,
-                    'agency_id' => Session::get('agency_id'),
+                    'walkins_id' => $advertiser_id[0]->user_id,
+                    'agency_id' => Session::get('advertiser_id'),
                     'agency_broadcaster' => $broadcaster,
 
                 ];
@@ -642,7 +566,7 @@ class CampaignsController extends Controller
                     'id' => uniqid(),
                     'campaign_id' => $camp_id[0]->id,
                     'discount' => 0,
-                    'agency_id' => Session::get('agency_id'),
+                    'agency_id' => Session::get('advertiser_id'),
                     'agency_broadcaster' => $broadcaster
                 ];
 
@@ -670,7 +594,7 @@ class CampaignsController extends Controller
                     $del_uplaods = \DB::delete("DELETE FROM uploads WHERE user_id = '$user_id'");
                     Session::forget('step1');
 
-                    return redirect()->route('agency.campaign.all')->with('success', 'campaign created successfully');
+                    return redirect()->route('advertiser.campaign.all')->with('success', 'campaign created successfully');
 
                 }
             }

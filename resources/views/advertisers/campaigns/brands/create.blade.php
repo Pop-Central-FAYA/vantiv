@@ -1,18 +1,16 @@
-@extends('agency_layouts.app')
+@extends('advertiser_layouts.app')
 @section('title')
-    <title>Agency | Wallet Statement</title>
+    <title>Advertiser | Create Brand</title>
 @stop
 @section('content')
     <section class="content-header">
         <h1>
-            Payment
-
+            Create Clients Brands
         </h1>
-        <hr/>
         <ol class="breadcrumb" style="font-size: 16px">
 
-            <li><a href="#"><i class="fa fa-th"></i> Agency</a> </li>
-            <li><a href="walletstatement.html"><i class="fa fa-address-card"></i> Wallet Statement</a> </li>
+            <li><a href="#"><i class="fa fa-th"></i> Advertiser</a> </li>
+            <li><a href="index.html"><i class="fa fa-address-card"></i> Create Clients Brands</a> </li>
 
         </ol>
     </section>
@@ -22,67 +20,29 @@
     <section class="content">
 
         <div class="row">
-            <div class="col-md-6" style="padding-left: 50px;">
-                @if(count($history) === 0)
-                    <p><h3>Your Wallet history is empty</h3></p>
-                @else
-                    <h3><b align="left">Last Transaction</b></h3>
-                    <div class="col-md-6" style="font-size: 16px;">
-                        <p><i class="fa fa-calendar" aria-hidden="true"></i> <b>Date:</b> {{ date('d/m/Y', strtotime($transaction[0]->time_created)) }}</p>
-                        <p><i class="fa fa-credit-card-alt" aria-hidden="true"></i> <b>Transaction Type:</b> {{ $transaction[0]->type }}</p>
-                    </div>
-                    <div class="col-md-6" style="font-size: 16px;">
-                        <p><b>Amount:</b> 	&#8358;{{ number_format($transaction[0]->amount, 2) }}</p>
-                        <p><b>Details:</b> {{ $transaction[0]->reference }}</p>
-                    </div>
-                @endif
-            </div>
-            <div class="col-md-6" style="padding-right: 50px;">
-                @if(count($wallet) === 0)
-                    <h3 align="right">Current Balance :<b> &#8358;0.00</b></h3>
-                @else
-                    <h3 align="right">Current Balance :<b> &#8358;{{ number_format($wallet[0]->balance, 2) }}</b></h3>
-                @endif
-            </div>
-            <div class="col-xs-12">
-
-                <div class="col-md-12">
-
-                    <div class="col-xs-12">
-                        <div class="box">
-                            <!-- /.box-header -->
-                            <div class="box-body">
-                                <table id="wallet_hitory" class="table table-bordered table-striped wallet_hitory">
-                                    <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Reference No</th>
-                                        <th>Type</th>
-
-                                        <th>Amount</th>
-                                        <th>Date</th>
-
-                                    </tr>
-                                    </thead>
-                                </table>
-                            </div>
-                            <!-- /.box-body -->
-                        </div>
-                    </div>
-
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3>Create Brands</h3>
                 </div>
-                <!-- /.col -->
-
+                <div class="panel-body">
+                    <form action="{{ route('agency.brand.store') }}" method="post">
+                        {{ csrf_field() }}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="first_name">Name</label>
+                                    <input type="text" name="brand_name" placeholder="Brand Name" class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-success">Add Brands</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-
-
-
-
-            <!-- /.row -->
-
-
-
-
+            <!-- /.col (RIGHT) -->
+        </div>
     </section>
 @stop
 @section('scripts')
@@ -113,30 +73,6 @@
     <!-- DataTables -->
     <script src="{{ asset('agency_asset/plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('agency_asset/plugins/datatables/dataTables.bootstrap.min.js') }}"></script>
-
-    <script>
-        $(document).ready(function () {
-            var Datefilter =  $('.wallet_hitory').DataTable({
-                paging: true,
-                serverSide: true,
-                processing: true,
-                ajax: {
-                    url: '/agency/wallets/get-wallet/data',
-                    data: function (d) {
-                        d.start_date = $('input[name=txtFromDate_hvc]').val();
-                        d.stop_date = $('input[name=txtToDate_hvc]').val();
-                    }
-                },
-                columns: [
-                    {data: 'id', name: 'id'},
-                    {data: 'reference', name: 'reference'},
-                    {data: 'type', name: 'type'},
-                    {data: 'amount', name: 'amount'},
-                    {data: 'date', name: 'date'},
-                ]
-            });
-        })
-    </script>
 
     <script>
         $(function () {
@@ -210,3 +146,5 @@
         });
     </script>
 @stop
+
+

@@ -89,7 +89,7 @@
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $mpo['name'] }}</td>
-                                            <td>Brand</td>
+                                            <td>{{ $mpo['brand'] }}</td>
                                             <td>{{ $mpo['product'] }}</td>
                                             <td>{{ date('Y-m-d', strtotime($mpo['time_created'])) }}</td>
                                             <td>&#8358; {{ $mpo['amount'] }}</td>

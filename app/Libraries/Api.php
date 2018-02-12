@@ -774,6 +774,11 @@ Class Api
 
     }
 
+    public static function brand($campaign_id)
+    {
+        return Utilities::switch_db('api')->select("SELECT * from brands where id = (SELECT brand from campaigns where id = '$campaign_id')");
+    }
+
     public static function fetchPayment($campaign_id)
     {
         $payment = Utilities::switch_db('reports')->select("SELECT * FROM payments WHERE campaign_id = '$campaign_id'");
