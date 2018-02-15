@@ -1,95 +1,76 @@
-@extends('agency_layouts.app')
+@extends('layouts.new_app')
 @section('title')
     <title>Agency | Create Campaigns</title>
 @stop
 @section('content')
-    <section class="content-header">
-        <h1>
-            Create Campaign
-            <small><i class="fa fa-file-video-o"></i> Uploaded Media List </small>
-        </h1>
-        <ol class="breadcrumb" style="font-size: 16px">
 
-            <li><a href="#"><i class="fa fa-th"></i> Create Campaign</a> </li>
-            <li><i class="fa fa-file-video-o"></i> Uploaded Media List </li>
-
-        </ol>
-    </section>
-
-    <!-- Main content -->
-
-    <section class="content">
-        <div class="row">
-            <div class="col-md-1 hidden-sm hidden-xs"></div>
-            <div class="col-md-9 " style="padding:2%">
-
-                <div class="row">
-                    <div class="col-md-12 ">
-
-                        <h2></h2>
-                        <p align="center">The history of advertising can be traced to ancient civilizations. It became a major force in capitalist economies in the mid-19th century, based primarily on newspapers and magazines. In the 20th century, advertising grew rapidly with new technologies such as direct mail, radio, television, the internet and mobile devices.</p>
-
-                    </div>
-
-
+    <div class="main-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 heading-main">
+                    <h1>Create Campaigns</h1>
+                    <ul>
+                        <li><a href="{{ route('dashboard') }}"><i class="fa fa-th-large"></i>Agency</a></li>
+                        <li><a href="{{ route('agency.campaign.all') }}">All Campaign</a></li>
+                    </ul>
                 </div>
+                <div class="Create-campaign">
+                    <div class="col-12 ">
+                        <h2>Upload Media Lists</h2>
+                        <hr>
+                        <p><br></p>
+                        <div class="row">
+                            <div class="col-md-12 ">
 
-                <div class="row">
+                                <p align="center">The history of advertising can be traced to ancient civilizations. It became a major force in capitalist economies in the mid-19th century, based primarily on newspapers and magazines. In the 20th century, advertising grew rapidly with new technologies such as direct mail, radio, television, the internet and mobile devices.</p>
 
-                    <div class="box">
-                        <div class="box-header">
-                            <h3 class="box-title">Uploaded list</h3>
-
-
+                            </div>
                         </div>
-                        <!-- /.box-header -->
-                        <div class="box-body table-responsive no-padding">
-                            <table class="table table-hover" style="font-size:16px">
-                                <tr>
-                                    <th>S/N</th>
-                                    <th>File Name</th>
-                                    <th>Duration</th>
-                                    {{--<th>Action</th>--}}
-
-                                </tr>
-                                @foreach($uploads as $upload)
-                                    <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $upload->uploads }}</td>
-                                        <td>{{ $upload->time }}</td>
-                                        {{--<td><button type="button" data-toggle="modal" data-target=".deleteModal{{ $upload->id }}" class="btn btn-danger btn-xs">Delete</button></td>--}}
-                                    </tr>
-                                @endforeach
-                            </table>
+                        {{--{{ dd($time_in_sec) }}--}}
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="box">
+                                    <div class="box-header">
+                                        <h3 class="box-title">Uploaded list</h3>
+                                    </div>
+                                    <!-- /.box-header -->
+                                    <div class="box-body table-responsive no-padding">
+                                        <table class="table table-hover" style="font-size:16px">
+                                            <tr>
+                                                <th>S/N</th>
+                                                <th>File Name</th>
+                                                <th>Duration</th>
+                                            </tr>
+                                            @foreach($uploads as $upload)
+                                                <tr>
+                                                    <td>{{ $loop->iteration }}</td>
+                                                    <td>{{ $upload->uploads }}</td>
+                                                    <td>{{ $upload->time }}</td>
+                                                    {{--<td><button type="button" data-toggle="modal" data-target=".deleteModal{{ $upload->id }}" class="btn btn-danger btn-xs">Delete</button></td>--}}
+                                                </tr>
+                                            @endforeach
+                                        </table>
+                                    </div>
+                                    <!-- /.box-body -->
+                                </div>
+                            </div>
                         </div>
-                        <!-- /.box-body -->
+
+                        <form action="{{ route('agency_campaign.step4', ['id' => $id, 'broadcaster' => $broadcaster]) }}" method="GET">
+                            <div class="container">
+
+                                <p align="right">
+                                    {{--<button type="button" id="step4" class="btn campaign-button" >Back <i class="fa fa-backward" aria-hidden="true"></i></button>--}}
+                                    <button type="submit" class="btn campaign-button btn-danger btn-lg" style="margin-right:15%">Next <i class="fa fa-play" aria-hidden="true"></i></button>
+                                </p>
+
+                            </div>
+                        </form>
                     </div>
-
                 </div>
-
-                <form action="{{ route('agency_campaign.step4', ['id' => $id, 'broadcaster' => $broadcaster]) }}" method="GET">
-                    <div class="container">
-
-                        <p align="right">
-                            {{--<button type="button" id="step4" class="btn campaign-button" >Back <i class="fa fa-backward" aria-hidden="true"></i></button>--}}
-                            <button type="submit" class="btn campaign-button" style="margin-right:15%">Next <i class="fa fa-play" aria-hidden="true"></i></button>
-                        </p>
-
-                    </div>
-                </form>
-
             </div>
-            <!-- /.col -->
-            <div class="col-md-2 hidden-sm hidden-xs"></div>
-            <!-- /.col -->
-
-
-
-
         </div>
-        <!-- /.row -->
-
-    </section>
+    </div>
 
     <!-- /.content -->
 

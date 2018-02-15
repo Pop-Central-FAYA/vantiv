@@ -4,6 +4,7 @@ namespace Vanguard\Http\Controllers;
 
 use Hamcrest\Util;
 use Vanguard\Http\Requests\Request;
+use Vanguard\Libraries\Api;
 use Vanguard\Libraries\Utilities;
 use Vanguard\Repositories\Activity\ActivityRepository;
 use Vanguard\Repositories\User\UserRepository;
@@ -211,10 +212,58 @@ class DashboardController extends Controller
             $amm_bud = json_encode($amm);
             $date_bud = json_encode($dat);
 
+            #all agency clients
+            $count = Api::countClients($agency_id);
+
+            #all campaigns
+            $count_campaigns = Api::countCampaigns($agency_id);
+
+            #invoices
+            $count_invoice =Api::countInvoices($agency_id);
+
+            #count Brands
+            $count_brands = Api::countBrands($agency_id);
+
+            #invoice
+            $all_invoices = Utilities::switch_db('reports')->select("SELECT * FROM invoices WHERE  agency_id = '$agency_id' ORDER BY time_created DESC LIMIT 5");
+
+            $invoice_campaign_details = [];
+
+            foreach ($all_invoices as $invoice) {
+
+                $campaign_id = $invoice->campaign_id;
+
+                $campaign = Utilities::switch_db('reports')->select("SELECT * FROM campaigns WHERE id = '$campaign_id'");
+                $brand_id = $campaign[0]->brand;
+                $brand_name = Utilities::switch_db('api')->select("SELECT name from brands where id = '$brand_id'");
+
+                $invoice_campaign_details[] = [
+                    'invoice_number' => $invoice->invoice_number,
+                    'actual_amount_paid' => $invoice->actual_amount_paid,
+                    'refunded_amount' => $invoice->refunded_amount,
+                    'status' => $invoice->status,
+                    'campaign_brand' => $brand_name[0]->name,
+                    'campaign_name' => $campaign[0]->name
+                ];
+            }
+
+            #approval
+            $invoice_approval = Api::countApproved($agency_id);
+
+            #unapproval
+            $invoice_unapproval = Api::countUnapproved($agency_id);
+
             #region
 //            $payments = Utilities::switch_db('api')->select("SELECT SUM(amount) as total from payments WHERE campaign_id IN(SELECT id from campaigns where adslots_id IN(SELECT * from ))");
 
-            return view('agency.dashboard.dashboard')->with(['broadcaster' => $allBroadcaster, 'date' => $d, 'amount' => $am, 'name' => $na, 'camp_prod' => $camp_prod, 'periodic' => $periodic_to_product, 'amount_bud' => $amm_bud, 'date_bud' => $date_bud]);
+            return view('agency.dashboard.new_dashboard')->with(['broadcaster' => $allBroadcaster,
+                                                                        'invoice_approval' => $invoice_approval,
+                                                                        'all_invoices' => $invoice_campaign_details,
+                                                                        'count_brands' => $count_brands, 'count_invoice' => $count_invoice,
+                                                                        'count_campaigns' => $count_campaigns,  'count_client' => $count,
+                                                                        'date' => $d, 'amount' => $am, 'name' => $na, 'camp_prod' => $camp_prod,
+                                                                        'periodic' => $periodic_to_product, 'amount_bud' => $amm_bud, 'date_bud' => $date_bud,
+                                                                        'invoice_unapproval' => $invoice_unapproval]);
 
         } else if ($role->role_id === 6) {
 
@@ -279,7 +328,6 @@ class DashboardController extends Controller
     public function filterByBroad()
     {
         $b_id = request()->br_id;
-        return $b_id;
         $broadcaster_brand = Utilities::switch_db('api')->select("SELECT brand from broadcasters where id='$b_id'");
         $pe = [];
         $tot = [];

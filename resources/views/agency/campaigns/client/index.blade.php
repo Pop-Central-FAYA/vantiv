@@ -1,72 +1,36 @@
-@extends('agency_layouts.app')
+@extends('layouts.new_app')
 @section('title')
     <title>Agency | Campaign-Lists</title>
 @stop
 @section('content')
-    <section class="content-header">
-        <h1>
-            All Campaign
 
-        </h1>
-        <ol class="breadcrumb" style="font-size: 16px">
-
-            <li><a href="#"><i class="fa fa-th"></i> Agency</a> </li>
-            <li><a href="index.html"><i class="fa fa-address-card"></i>All Clients</a> </li>
-
-        </ol>
-    </section>
-
-    <!-- Main content -->
-
-    <section class="content">
-        <div class="row">
-            <div class="col-md-2 hidden-sm hidden-xs"></div>
-            <div class="col-md-8 Campaign" style="padding:2%">
-
-            </div>
-            <!-- /.col -->
-            <div class="col-md-2 hidden-sm hidden-xs"></div>
-            <!-- /.col -->
-
-            <div class="row" style="padding: 5%">
-                <div class="col-xs-12">
-                    <div class="box">
-                        <div class="box-header">
-                            <h3 class="box-title">All Your Clients</h3>
-                        </div>
-                        <!-- /.box-header -->
-                        <div class="box-body">
-                            <table id="agency_campaign_all" class="table table-bordered table-striped agency_campaign_all">
-                                <thead>
-                                    <tr>
-                                        <th>S/N</th>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Phone Number</th>
-                                        <th>Create Campaign</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($client as $clients)
-                                        <tr>
-                                            <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $clients[0]->first_name.' '.$clients[0]->last_name }}</td>
-                                            <td>{{ $clients[0]->email }}</td>
-                                            <td>{{ $clients[0]->phone }}</td>
-                                            <td><a href="{{ route('agency_campaign.step1', ['id' => $clients[0]->id]) }}" class="btn btn-primary btn-xs">create campaign</a></td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                            {{ $client->links() }}
-                        </div>
-                        <!-- /.box-body -->
-                    </div>
+    <div class="main-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 heading-main">
+                    <h1>All Campaign</h1>
+                    <ul>
+                        <li><a href="#"><i class="fa fa-th-large"></i>Agency</a></li>
+                        <li><a href="#">All Campaign</a></li>
+                    </ul>
                 </div>
-
+                <div class="col-12 campaign-Management">
+                    <table id="client_list" class="table table-bordered table-striped client_list">
+                        <thead>
+                        <tr>
+                            <th>S/N</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone Number</th>
+                            <th>Create Campaign</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
             </div>
         </div>
-    </section>
+    </div>
+
 @stop
 @section('scripts')
     <!-- Select2 -->
@@ -96,6 +60,26 @@
     <!-- DataTables -->
     <script src="{{ asset('agency_asset/plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('agency_asset/plugins/datatables/dataTables.bootstrap.min.js') }}"></script>
+
+    <script>
+        $(document).ready(function () {
+            var Datefilter =  $('.client_list').DataTable({
+                paging: true,
+                serverSide: true,
+                processing: true,
+                ajax: {
+                    url: '/agency/campaigns/all-client/data',
+                },
+                columns: [
+                    {data: 'id', name: 'id'},
+                    {data: 'name', name: 'name'},
+                    {data: 'email', name: 'email'},
+                    {data: 'phone', name: 'phone'},
+                    {data: 'create_campaign', name: 'create_campaign'},
+                ]
+            });
+        })
+    </script>
     <script>
         $(function () {
             //Initialize Select2 Elements

@@ -1,56 +1,30 @@
-@extends($agency_id ? 'agency_layouts.app' : 'advertiser_layouts.app')
+@extends('layouts.new_app')
 @section('title')
     <title>{{ $agency_id ? 'Agency' : 'Advertiser'}}  | Credit Wallet</title>
 @stop
 @section('content')
 
-    <section class="content-header">
-        <h1>
-            Credit Wallet
-
-        </h1>
-        <hr/>
-        <ol class="breadcrumb" style="font-size: 16px">
-
-            <li><a href="#"><i class="fa fa-th"></i> {{ $agency_id ? 'Agency' : 'Advertiser'}}</a> </li>
-            <li><a href="index.html"><i class="fa fa-address-card"></i> Credit Wallet</a> </li>
-
-        </ol>
-    </section>
-
-    <!-- Main content -->
-
-    <section class="content">
-        <div class="row">
-            <div class="col-md-2 hidden-sm hidden-xs"></div>
-            <div class="col-md-8 Campaign" style="padding:2%">
-
-                <div class="row">
-                    @if(count($wallet) === 0)
-                        <h3 align="right">Current Balance :<b> 	&#8358;0.00</b></h3>
-                    @else
-                        <h3 align="right">Current Balance :<b> 	&#8358;{{ number_format($wallet[0]->balance, 2) }}</b></h3>
-                    @endif
-                    <div class="col-md-1 hidden-sm hidden-xs"></div>
-                    <h3 align="center">Choose Payments Method:</h3>
-                    <a href="" data-toggle="modal" data-target="#myModal"><div class="col-md-2 col-sm-3 col-xs-4" class="btn" data-toggle="tooltip" data-placement="bottom" title="Pay with Visa Card"><img src="{{ asset('agency_asset/dist/img/visa.jpg') }}" width="100%"></div></a>
-                    <a href="" data-toggle="modal" data-target="#myModal"> <div class="col-md-2 col-sm-3 col-xs-4" class="btn " data-toggle="tooltip" data-placement="bottom" title="Pay with Master Card"><img src="{{ asset('agency_asset/dist/img/mastercard.jpg') }}" width="100%"></div></a>
-                    <a href="" data-toggle="modal" data-target="#myModal"><div class="col-md-2 col-sm-3 col-xs-4"><img src="{{ asset('agency_asset/dist/img/verve.jpg') }}" width="100%" class="btn " data-toggle="tooltip" data-placement="bottom" title="Pay with Verve Card"></div></a>
-                    <a href="" data-toggle="modal" data-target="#myModal"><div class="col-md-2 col-sm-3 col-xs-4" class="btn" data-toggle="tooltip" data-placement="bottom" title="Pay with Direct Debit"><img src="{{ asset('agency_asset/dist/img/directdebit.jpg') }}" width="100%"></div></a>
-
-
-                    <a href="" data-toggle="modal" data-target="#myModal">  <div class="col-md-2 col-sm-3 col-xs-4" class="btn" data-toggle="tooltip" data-placement="bottom" title="Pay with PayPal"><img src="{{ asset('agency_asset/dist/img/paypal.jpg') }}" width="100%"></div></a>
-                    <div class="col-md-1 hidden-sm hidden-xs"></div>
+    <div class="main-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 heading-main">
+                    <h1>Credit Wallet </h1>
+                    <ul>
+                        <li><a href="{{ route('dashboard') }}"><i class="fa fa-edit"></i>{{ $agency_id ? 'Agency' : 'Advertiser'}}</a></li>
+                        <li><a href="#">Credit Wallet </a></li>
+                    </ul>
                 </div>
-
+                <div class="col-12 Wallet-Credit">
+                    <div class="card-type"><h2>Choose Payments Method</h2><a href="#" data-toggle="modal" data-target="#myModal"><img src="{{ asset('new_assets/images/paypal-logo.png') }}" alt=""></a>
+                        @if(count($wallet) === 0)
+                            <h3>Current Balance : <a href="#">&#8358;0.00</a></h3></div>
+                        @else
+                            <h3>Current Balance : <a href="#">&#8358;{{ number_format($wallet[0]->balance, 2) }}</a></h3></div>
+                        @endif
+                </div>
             </div>
-            <!-- /.col -->
-            <div class="col-md-2 hidden-sm hidden-xs"></div>
-            <!-- /.col -->
-
         </div>
-
-    </section>
+    </div>
 
     <!-- Modal -->
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -82,6 +56,9 @@
             </div>
         </div>
     </div>
+
+    {{--old one--}}
+
 
 @stop
 @section('scripts')

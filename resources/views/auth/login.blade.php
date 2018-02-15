@@ -4,9 +4,9 @@
 
 @section('content')
 
-<div class="form-wrap col-md-5 auth-form" id="login">
+<div class="form-wrap col-md-6 auth-form" id="login">
     <div style="text-align: center; margin-bottom: 25px;">
-        <img src="{{ asset('asset/dist/img/faya-icon.png') }}" alt="{{ settings('app_name') }}">
+        <img src="{{ asset('new_assets/images/logo.png') }}" alt="{{ settings('app_name') }}">
     </div>
 
     {{-- This will simply include partials/messages.blade.php view here --}}
@@ -41,14 +41,14 @@
             @endif
         </div>
         <div class="form-group">
-             <button type="submit" class="btn btn-custom btn-lg btn-block" id="btn-login">
+             <button type="submit" class="btn btn-danger btn-lg btn-block" id="btn-login">
                 @lang('app.log_in')
             </button>
         </div>
         <div class="form-group">
             <a href="{{ route('agency.register.form') }}">Agency Registration</a> | <a href="{{ route('advertiser.register.form') }}">Advertiser Registration</a>
         </div>
-       
+
     </form>
 
 </div>

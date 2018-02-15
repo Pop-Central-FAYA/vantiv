@@ -234,6 +234,7 @@ Route::group(['middleware' => 'auth'], function () {
               Route::get('/all-campaigns', 'Agency\CampaignsController@index')->name('agency.campaign.all');
               Route::get('/all-campaign/data', 'Agency\CampaignsController@getData');
               Route::get('/all-clients', 'Agency\CampaignsController@allClient')->name('agency.campaign.create');
+               Route::get('/all-client/data', 'Agency\CampaignsController@clientData');
               Route::get('/campaign/step1/{id}', 'Agency\CampaignsController@getStep1')->name('agency_campaign.step1');
               Route::post('/campaign/step1/store/{id}', 'Agency\CampaignsController@postStep1')->name('agency_campaign.store1');
               Route::get('/campaigns/step2/{id}', 'Agency\CampaignsController@getStep2')->name('agency_campaign.step2');

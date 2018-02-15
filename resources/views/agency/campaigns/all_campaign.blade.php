@@ -1,59 +1,40 @@
-@extends('agency_layouts.app')
+@extends('layouts.new_app')
+
 @section('title')
     <title>Agency | Campaign-Lists</title>
 @stop
+
 @section('content')
-    <section class="content-header">
-        <h1>
-            All Campaigns
 
-        </h1>
-        <ol class="breadcrumb" style="font-size: 16px">
-
-            <li><a href="#"><i class="fa fa-th"></i> Agency</a> </li>
-            <li><a href="index.html"><i class="fa fa-address-card"></i> All Campaign</a> </li>
-
-        </ol>
-    </section>
-    <!-- Main content -->
-    <section class="content">
-        <div class="row">
-            <div class="col-md-2 hidden-sm hidden-xs"></div>
-            <div class="col-md-8 Campaign" style="padding:2%">
-            </div>
-            <!-- /.col -->
-            <div class="col-md-2 hidden-sm hidden-xs"></div>
-            <!-- /.col -->
-            <div class="row" style="padding: 5%">
-                <div class="col-xs-12">
-                    <div class="box">
-                        <div class="box-header">
-                            <h3 class="box-title">All Agency Campaigns</h3>
-                        </div>
-                        <!-- /.box-header -->
-                        <div class="box-body">
-                            <table id="agency_campaign_all" class="table table-bordered table-striped agency_campaign_all">
-                                <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Name</th>
-                                    <th>Brand</th>
-                                    <th>Product</th>
-                                    <th>Start Date</th>
-                                    <th>End Date</th>
-                                    <th>Amount</th>
-                                    <th>MPO</th>
-                                    <th>Invoice</th>
-                                </tr>
-                                </thead>
-                            </table>
-                        </div>
-                        <!-- /.box-body -->
-                    </div>
+    <div class="main-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 heading-main">
+                    <h1>All Campaign</h1>
+                    <ul>
+                        <li><a href="#"><i class="fa fa-th-large"></i>All Campaign</a></li>
+                        <li><a href="#">Campaign List</a></li>
+                    </ul>
+                </div>
+                <div class="col-12 Campaign-List">
+                    <table class="agency_campaign_all table">
+                        <thead class="thead-dark">
+                            <th>No</th>
+                            <th>Name</th>
+                            <th>Brand</th>
+                            <th>Product</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Amount</th>
+                            <th>MPO</th>
+                            <th>Invoice</th>
+                        </thead>
+                    </table>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+
 
     <!--Mpo Modal -->
     @if(count($mpos) != 0)
@@ -215,6 +196,7 @@
         </div>
     </div>
     @endforeach
+
 @stop
 @section('scripts')
     <!-- Select2 -->

@@ -1,69 +1,34 @@
-@extends('agency_layouts.app')
+@extends('layouts.new_app')
 @section('title')
     <title>Agency | Brand-Lists</title>
 @stop
 @section('content')
-    <section class="content-header">
-        <h1>
-            All Brands
 
-        </h1>
-        <ol class="breadcrumb" style="font-size: 16px">
-
-            <li><a href="#"><i class="fa fa-th"></i> Agency</a> </li>
-            <li><a href="index.html"><i class="fa fa-address-card"></i> All Brands</a> </li>
-
-        </ol>
-    </section>
-
-    <!-- Main content -->
-
-    <section class="content">
-        <div class="row">
-            <div class="col-md-2 hidden-sm hidden-xs"></div>
-            <div class="col-md-8 Campaign" style="padding:2%">
-
-            </div>
-            <!-- /.col -->
-            <div class="col-md-2 hidden-sm hidden-xs"></div>
-            <!-- /.col -->
-
-            <div class="row" style="padding: 5%">
-                <div class="col-xs-12">
-                    <div class="box">
-                        <div class="box-header">
-                            <h3 class="box-title">All Agency Brands</h3>
+    <div class="main-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 heading-main">
+                    <h1>All Brands </h1>
+                    <ul>
+                        <li><a href="#"><i class="fa fa-th-large"></i>Agency</a></li>
+                        <li><a href="#">All Brands </a></li>
+                    </ul>
+                </div>
+                <div class="col-12 all-brands">
+                    @foreach($brand as $brands)
+                        <div class="col-6">
+                            <div class="col-6">
+                                <h2>{{ $brands->name }}</h2>
+                                <a href="#" class="edit" data-toggle="modal" data-target=".{{ $brands->id }}">Edit</a> <a href="#" class="delete" data-toggle="modal" data-target=".{{ $brands->id }}delete">Delete</a> </div>
+                            <div class="col-6"> <img src="{{ asset('new_assets/images/coca.png') }}"> </div>
                         </div>
-                        <!-- /.box-header -->
-                        <div class="box">
-                            <div class="box-body">
-                                <div class="table-responsive">
-                                    <table id="brands" class="table table-bordered brands">
-                                        <thead>
-                                        <th>S/N</th>
-                                        <th>Brands</th>
-                                        <th>Actions</th>
-                                        </thead>
-                                        <tbody>
-                                        @foreach($brand as $brands)
-                                            <tr>
-                                                <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $brands->name }}</td>
-                                                <td><a href="" class="btn btn-primary btn-xs" data-toggle="modal" data-target=".{{ $brands->id }}">Edit</a> | <a href="" class="btn btn-danger btn-xs" data-toggle="modal" data-target=".{{ $brands->id }}delete">Delete</a></td>
-                                            </tr>
-                                        @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- /.box-body -->
-                    </div>
+                    @endforeach
                 </div>
 
             </div>
         </div>
-    </section>
+    </div>
+
     @foreach($brand as $brands)
         <div class="modal fade {{ $brands->id }}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
             <div class="modal-dialog modal-lg" role="document">

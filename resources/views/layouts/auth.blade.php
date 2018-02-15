@@ -15,7 +15,7 @@
 
     @yield('header-scripts')
 </head>
-<body class="auth">
+<body>
 
     <div class="container">
 

@@ -65,9 +65,6 @@
         </div>
         <hr>
 
-
-
-
     </section>
 @stop
 @section('scripts')
@@ -192,6 +189,7 @@
                 ]
             });
         })
+
     </script>
 
     <script>

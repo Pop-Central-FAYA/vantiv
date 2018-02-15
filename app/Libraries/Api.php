@@ -960,5 +960,41 @@ Class Api
         return $response;
     }
 
+    public static function countClients($agency_id)
+    {
+        $client = Utilities::switch_db('api')->select("SELECT * from walkIns where agency_id = '$agency_id'");
+        return count($client);
+    }
+
+    public static function countCampaigns($agency_id)
+    {
+        $client_campaigns = Utilities::switch_db('api')->select("SELECT * from campaigns where agency = '$agency_id'");
+        return count($client_campaigns);
+    }
+
+    public static function countInvoices($agency_id)
+    {
+        $client_invoice = Utilities::switch_db('api')->select("SELECT * from invoices where agency_id = '$agency_id'");
+        return count($client_invoice);
+    }
+
+    public static function countBrands($agency_id)
+    {
+        $brands = Utilities::switch_db('api')->select("SELECT * from brands where broadcaster_agency = '$agency_id'");
+        return count($brands);
+    }
+
+    public static function countApproved($agency_id)
+    {
+        $count_approval = Utilities::switch_db('api')->select("SELECT * from invoices where agency_id = '$agency_id' AND status = 1");
+        return count($count_approval);
+    }
+
+    public static function countUnapproved($agency_id)
+    {
+        $count_unapproval = Utilities::switch_db('api')->select("SELECT * from invoices where agency_id = '$agency_id' AND status = 0");
+        return count($count_unapproval);
+    }
+
 
 }

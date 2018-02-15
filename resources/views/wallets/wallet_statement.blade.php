@@ -1,89 +1,54 @@
-@extends($agency_id ? 'agency_layouts.app' : 'advertiser_layouts.app')
+@extends('layouts.new_app')
 @section('title')
-    <title>{{ $agency_id ? 'Agency' : 'Advertiser'}}  | Credit Wallet</title>
+    <title>{{ $agency_id ? 'Agency' : 'Advertiser'}}  | Wallet Statement</title>
 @stop
 @section('content')
-    <section class="content-header">
-        <h1>
-            Payment
 
-        </h1>
-        <hr/>
-        <ol class="breadcrumb" style="font-size: 16px">
-
-            <li><a href="#"><i class="fa fa-th"></i> {{ $agency_id ? 'Agency' : 'Advertiser'}}</a> </li>
-            <li><a href="walletstatement.html"><i class="fa fa-address-card"></i> Wallet Statement</a> </li>
-
-        </ol>
-    </section>
-
-    <!-- Main content -->
-
-    <section class="content">
-
-        <div class="row">
-            <div class="col-md-6" style="padding-left: 50px;">
-                @if(count($history) === 0)
-                    <p><h3>Your Wallet history is empty</h3></p>
-                @else
-                    <h3><b align="left">Last Transaction</b></h3>
-                    <div class="col-md-6" style="font-size: 16px;">
-                        <p><i class="fa fa-calendar" aria-hidden="true"></i> <b>Date:</b> {{ date('d/m/Y', strtotime($transaction[0]->time_created)) }}</p>
-                        <p><i class="fa fa-credit-card-alt" aria-hidden="true"></i> <b>Transaction Type:</b> {{ $transaction[0]->type }}</p>
-                    </div>
-                    <div class="col-md-6" style="font-size: 16px;">
-                        <p><b>Amount:</b> 	&#8358;{{ number_format($transaction[0]->amount, 2) }}</p>
-                        <p><b>Details:</b> {{ $transaction[0]->reference }}</p>
-                    </div>
-                @endif
-            </div>
-            <div class="col-md-6" style="padding-right: 50px;">
-                @if(count($wallet) === 0)
-                    <h3 align="right">Current Balance :<b> &#8358;0.00</b></h3>
-                @else
-                    <h3 align="right">Current Balance :<b> &#8358;{{ number_format($wallet[0]->balance, 2) }}</b></h3>
-                @endif
-            </div>
-            <div class="col-xs-12">
-
-                <div class="col-md-12">
-
-                    <div class="col-xs-12">
-                        <div class="box">
-                            <!-- /.box-header -->
-                            <div class="box-body">
-                                <table id="wallet_hitory" class="table table-bordered table-striped wallet_hitory">
-                                    <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Reference No</th>
-                                        <th>Type</th>
-
-                                        <th>Amount</th>
-                                        <th>Date</th>
-
-                                    </tr>
-                                    </thead>
-                                </table>
-                            </div>
-                            <!-- /.box-body -->
-                        </div>
-                    </div>
-
+    <div class="main-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 heading-main">
+                    <h1>Payment </h1>
+                    <ul>
+                        <li><a href="#"><i class="fa fa-edit"></i>{{ $agency_id ? 'Agency' : 'Advertiser'}}</a></li>
+                        <li><a href="#">Wallet Statement  </a></li>
+                    </ul>
                 </div>
-                <!-- /.col -->
-
+                <div class="col-12 payments">
+                    <h2>Last transction</h2>
+                    @if(count($wallet) === 0)
+                        <h3>Current Balance : <a href="#">&#8358;0.00</a></h3>
+                    @else
+                        <h3>Current Balance : <a href="#">&#8358;{{ number_format($wallet[0]->balance, 2) }}</a></h3>
+                    @endif
+                    @if(count($history) === 0)
+                        <p><h3>Your Wallet history is empty</h3></p>
+                    @else
+                        <ul>
+                            <li>Date :{{ date('d/m/Y', strtotime($transaction[0]->time_created)) }}</li>
+                            <li>Amount: &#8358;{{ number_format($transaction[0]->amount, 2) }}</li>
+                            <li>Transaction : {{ $transaction[0]->type }}</li>
+                            <li>Details : {{ $transaction[0]->reference }}</li>
+                        </ul>
+                    @endif
+                </div>
+                <div class="col-12 Wallet-statement">
+                    <table class="table wallet_hitory" id="wallet_hitory">
+                        <thead>
+                            <tr>
+                                <th style="width:153px !important">No</th>
+                                <th>Reference No</th>
+                                <th>Type</th>
+                                <th>Amount</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
             </div>
+        </div>
+    </div>
 
-
-
-
-            <!-- /.row -->
-
-
-
-
-    </section>
 @stop
 @section('scripts')
     <!-- Select2 -->

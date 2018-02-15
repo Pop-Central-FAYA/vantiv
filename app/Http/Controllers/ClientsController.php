@@ -56,7 +56,7 @@ class ClientsController extends Controller
             ]);
 
             if ($userInsert && $walkinInsert) {
-                return redirect()->route('clients.all')->with('success', 'Client Successfully created');
+                return redirect()->route('clients.list')->with('success', 'Client Successfully created');
             } else {
                 return redirect()->back()->with('error', trans('Client not created, try again'));
             }
@@ -64,11 +64,15 @@ class ClientsController extends Controller
             $roles = Role::all();
             $countries = Country::all();
             $statuses = UserStatus::lists();
+            $edit = false;
+            $profile = false;
 
             return view('clients.create')
                 ->with('roles', $roles)
                 ->with('statuses', $statuses)
-                ->with('countries', $countries);
+                ->with('countries', $countries)
+                ->with('edit', $edit)
+                ->with('profile', $profile);
         }
 
     }
@@ -77,7 +81,7 @@ class ClientsController extends Controller
     {
         $ageny_id = \Session::get('agency_id');
 
-        $agencies = Utilities::switch_db('reports')->select("SELECT id, user_id, image_url, time_created FROM walkIns WHERE agency_id = '$ageny_id'");
+        $agencies = Utilities::switch_db('reports')->select("SELECT id, user_id, image_url, time_created FROM walkIns WHERE agency_id = '$ageny_id' ORDER BY time_created DESC");
 
         $agency_data = [];
 

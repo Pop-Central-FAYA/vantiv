@@ -1,44 +1,39 @@
-@extends('agency_layouts.app')
+@extends('layouts.new_app')
 @section('title')
     <title>Agency | Create Campaigns</title>
 @stop
 @section('content')
-    <section class="content-header">
-        <h1>
-            Create Campaigns
-        </h1>
-        <ol class="breadcrumb" style="font-size: 16px">
 
-            <li><a href="#"><i class="fa fa-th"></i> Agency</a> </li>
-            <li><a href="index.html"><i class="fa fa-address-card"></i> Create Clients Campaign</a> </li>
-
-        </ol>
-    </section>
-
-    <!-- Main content -->
-
-    <section class="content">
-        <section class="content">
+    <div class="main-section">
+        <div class="container">
             <div class="row">
-                <div class="col-md-1 hidden-sm hidden-xs"></div>
-                <div class="col-md-9 " style="padding:2%">
+                <div class="col-12 heading-main">
+                    <h1>Create Campaigns</h1>
                     <ul>
-                        @foreach($adslots as $adslot)
-                            <li>
-                                <a href="{{ route('agency_campaign.step3', ['id' => $id,'broadcaster' => $adslot['broadcaster']]) }}">{{ $adslot['count_adslot'] }} Adslots available for {{ $adslot['boradcaster_brand'] }}</a>
-                            </li>
-                        @endforeach
+                        <li><a href="{{ route('dashboard') }}"><i class="fa fa-th-large"></i>Agency</a></li>
+                        <li><a href="{{ route('agency.campaign.all') }}">All Campaign</a></li>
                     </ul>
                 </div>
-                <!-- /.col -->
-                <div class="col-md-2 hidden-sm hidden-xs"></div>
-                <!-- /.col -->
+                <div class="Create-campaign">
+                    <form>
+                        <div class="col-12 ">
+                            <h2>Choose Broadcaster</h2>
+                            <hr>
+                            <p><br></p>
+                            @foreach($adslots as $adslot)
+                                <li>
+                                    <a class="btn btn-defaul" href="{{ route('agency_campaign.step3', ['id' => $id,'broadcaster' => $adslot['broadcaster']]) }}">{{ $adslot['count_adslot'] }} Adslots available for {{ $adslot['boradcaster_brand'] }}</a>
+                                </li>
+                            @endforeach
+                        </div>
+
+                    </form>
+                </div>
             </div>
-            <!-- /.row -->
+        </div>
+    </div>
+    <!--Section-->
 
-
-        </section>
-    </section>
 @stop
 @section('scripts')
     <!-- Select2 -->

@@ -1,161 +1,139 @@
-@extends('agency_layouts.app')
+@extends('layouts.new_app')
 @section('title')
     <title>Agency | Report</title>
 @stop
 @section('content')
-    <section class="content-header">
-        <h1>
-            Agency Report
-
-        </h1>
-        <ol class="breadcrumb" style="font-size: 16px">
-
-            <li><a href="{{ route('dashboard') }}"><i class="fa fa-th"></i> Agency</a> </li>
-            <li><a href="#"><i class="fa fa-address-card"></i> Report</a> </li>
-
-        </ol>
-    </section>
-
-    <!-- Main content -->
-    <section class="content">
-        <div class="row">
-            <div class="col-md-2 hidden-sm hidden-xs"></div>
-            <div class="col-md-8 Campaign" style="padding:2%"></div>
-            <!-- /.col -->
-            <div class="col-md-2 hidden-sm hidden-xs"></div>
-            <!-- /.col -->
-
-            <div class="row" style="padding: 5%">
-                <div class="col-xs-12">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div id="load_broad" class="load_broad" style="display: none;"></div>
-                            <form action="" method="GET" id="client_filter">
-                                <label for="clients">Clients</label>
-                                <select name="client" id="client" class="form-control">
-                                    <option value="">Please Select an Agency</option>
-                                    @foreach($user as $users)
-                                        <option value="{{ $users['user_id'] }}">{{ $users['name'] }}</option>
-                                    @endforeach
-                                </select>
-                            </form>
-                        </div>
-                    </div>
-                    <p><br></p>
-                    <div class="col-md-12">
-                        <div class="nav-tabs-custom">
-                            <ul class="nav nav-tabs" style="background:#eee">
-                                <li class="active"><a href="#campaigns" data-toggle="tab">Campaigns</a></li>
-                                <li><a href="#revenue" data-toggle="tab">Revenue</a></li>
-                            </ul>
-                            <div class="tab-content">
-                                <div class="tab-pane active" id="campaigns">
+    <div class="main-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 heading-main">
+                    <h1>Agency | Campaigns - Report</h1>
+                    <ul>
+                        <li><a href="#"><i class="fa fa-edit"></i>Agency</a></li>
+                        <li><a href="#">Report</a></li>
+                    </ul>
+                </div>
+                <div class="col-12 clients-reports">
+                    <form>
+                        <label>Clients</label>
+                        <select name="client" id="client" class="clients">
+                            @foreach($user as $users)
+                                <option value="{{ $users['user_id'] }}">{{ $users['name'] }}</option>
+                            @endforeach
+                        </select>
+                    </form>
+                </div>
+                <div class="col-md-12">
+                    <div class="nav-tabs-custom">
+                        <ul class="nav nav-tabs" style="background:#eee">
+                            <li class="active"><a href="#campaigns" data-toggle="tab">Campaigns</a></li>
+                            <li><a href="#revenue" data-toggle="tab">Revenue</a></li>
+                        </ul>
+                        <p><br></p>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="campaigns">
+                                <div class="row">
                                     <div class="row">
-                                        <div class="row">
-                                            <form action="#" method="GET">
-                                                {{ csrf_field() }}
-                                                <h4 style="margin-left: 17px;font-weight: bold">Search by date</h4>
-                                                <div class="col-md-10" style="margin-top: -2%">
-                                                    <div class="input-group date styledate">
-                                                        <div class="input-group-addon">
-                                                            <i class="fa fa-calendar"></i>
-                                                        </div>
-                                                        <input type="text" placeholder="start-date" value="" required name="txtFromDate_camp" class="form-control txtFromDate" id="txtFromDate" />
-                                                    </div>
+                                        {{--<form action="#" method="GET">--}}
+                                            {{--{{ csrf_field() }}--}}
+                                            {{--<h4 style="margin-left: 17px;font-weight: bold">Search by date</h4>--}}
+                                            {{--<div class="col-md-10" style="margin-top: -2%">--}}
+                                                {{--<div class="input-group date styledate">--}}
+                                                    {{--<div class="input-group-addon">--}}
+                                                        {{--<i class="fa fa-calendar"></i>--}}
+                                                    {{--</div>--}}
+                                                    {{--<input type="text" placeholder="start-date" value="" required name="txtFromDate_camp" class="form-control txtFromDate" id="txtFromDate" />--}}
+                                                {{--</div>--}}
 
-                                                    <div class="input-group date styledate">
-                                                        <div class="input-group-addon">
-                                                            <i class="fa fa-calendar"></i>
-                                                        </div>
-                                                        <input type="text" placeholder="stop-date" value="" required name="txtToDate_camp" class="form-control txtToDate" id="txtToDate" />
-                                                    </div>
+                                                {{--<div class="input-group date styledate">--}}
+                                                    {{--<div class="input-group-addon">--}}
+                                                        {{--<i class="fa fa-calendar"></i>--}}
+                                                    {{--</div>--}}
+                                                    {{--<input type="text" placeholder="stop-date" value="" required name="txtToDate_camp" class="form-control txtToDate" id="txtToDate" />--}}
+                                                {{--</div>--}}
 
-                                                    <div class="input-group" style="">
-                                                        <input type="button" class="search-btn" id="button_campaign" value="Apply" style="float:left" >
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                        <hr>
-                                        <div class="col-xs-12">
-                                            <div class="box"    >
-                                                <div class="box-body c_r">
-                                                    <div class="table-responsive">
-                                                        <table class="table table-bordered campaign_report">
-                                                            <thead>
-                                                                <th>S/N</th>
-                                                                <th>Campaign Name</th>
-                                                                <th>Start</th>
-                                                                <th>Stop</th>
-                                                                <th>Amount(&#8358;)</th>
-                                                            </thead>
-                                                        </table>
-                                                    </div>
+                                                {{--<div class="input-group" style="">--}}
+                                                    {{--<button type="button" class="btn btn-success" id="button_campaign" style="float:left">Apply</button>--}}
+                                                {{--</div>--}}
+                                            {{--</div>--}}
+                                        {{--</form>--}}
+                                    </div>
+                                    <hr>
+                                    <div class="col-xs-12">
+                                        <div class="box"    >
+                                            <div class="box-body c_r">
+                                                <div class="table-responsive">
+                                                    <table class="table table-bordered campaign_report">
+                                                        <thead>
+                                                        <th>S/N</th>
+                                                        <th>Campaign Name</th>
+                                                        <th>Start</th>
+                                                        <th>Stop</th>
+                                                        <th>Amount(&#8358;)</th>
+                                                        </thead>
+                                                    </table>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-
-                                <div class="tab-pane" id="revenue">
-                                    <div class="row">
-                                        <div class="row">
-                                            <form action="#" method="GET">
-                                                {{ csrf_field() }}
-                                                <h4 style="margin-left: 17px;font-weight: bold">Search by date</h4>
-                                                <div class="col-md-10" style="margin-top: -2%">
-                                                    <div class="input-group date styledate">
-                                                        <div class="input-group-addon">
-                                                            <i class="fa fa-calendar"></i>
-                                                        </div>
-                                                        <input type="text" placeholder="start-date" value="" required name="txtFromDate_rev" class="form-control txtFromDate" id="txtFromDate" />
-                                                    </div>
-
-                                                    <div class="input-group date styledate">
-                                                        <div class="input-group-addon">
-                                                            <i class="fa fa-calendar"></i>
-                                                        </div>
-                                                        <input type="text" placeholder="stop-date" value="" required name="txtToDate_rev" class="form-control txtToDate" id="txtToDate" />
-                                                    </div>
-
-                                                    <div class="input-group" style="">
-                                                        <input type="button" class="search-btn" id="button_rev" value="Apply" style="float:left" >
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                        <hr>
-                                        <div class="col-xs-12">
-                                            <div class="box">
-                                                <div class="box-body">
-                                                    <div class="table-responsive">
-                                                        <table class="table table-bordered revenue_report">
-                                                            <thead>
-                                                            <th>S/N</th>
-                                                            <th>Date</th>
-                                                            <th>Campaign Name</th>
-                                                            <th>Total Amount/Revenue (&#8358;)</th>
-                                                            </thead>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- /.tab-pane -->
                             </div>
-                            <!-- /.tab-content -->
-                        </div>
-                        <!-- /.nav-tabs-custom -->
-                    </div>
-                    <!-- /.col -->
 
+                            <div class="tab-pane" id="revenue">
+                                <div class="row">
+                                    <div class="row">
+                                        {{--<form action="#" method="GET">--}}
+                                            {{--{{ csrf_field() }}--}}
+                                            {{--<h4 style="margin-left: 17px;font-weight: bold">Search by date</h4>--}}
+                                            {{--<div class="col-md-10" style="margin-top: -2%">--}}
+                                                {{--<div class="input-group date styledate">--}}
+                                                    {{--<div class="input-group-addon">--}}
+                                                        {{--<i class="fa fa-calendar"></i>--}}
+                                                    {{--</div>--}}
+                                                    {{--<input type="text" placeholder="start-date" value="" required name="txtFromDate_rev" class="form-control txtFromDate" id="txtFromDate" />--}}
+                                                {{--</div>--}}
+
+                                                {{--<div class="input-group date styledate">--}}
+                                                    {{--<div class="input-group-addon">--}}
+                                                        {{--<i class="fa fa-calendar"></i>--}}
+                                                    {{--</div>--}}
+                                                    {{--<input type="text" placeholder="stop-date" value="" required name="txtToDate_rev" class="form-control txtToDate" id="txtToDate" />--}}
+                                                {{--</div>--}}
+
+                                                {{--<div class="input-group" style="">--}}
+                                                    {{--<button type="button" class="btn btn-success" id="button_rev" style="float:left">Apply</button>--}}
+                                                {{--</div>--}}
+                                            {{--</div>--}}
+                                        {{--</form>--}}
+                                    </div>
+                                    <hr>
+                                    <div class="col-xs-12">
+                                        <div class="box">
+                                            <div class="box-body">
+                                                <div class="table-responsive">
+                                                    <table class="table table-bordered revenue_report">
+                                                        <thead>
+                                                        <th>S/N</th>
+                                                        <th>Date</th>
+                                                        <th>Campaign Name</th>
+                                                        <th>Total Amount/Revenue (&#8358;)</th>
+                                                        </thead>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.tab-pane -->
+                        </div>
+                        <!-- /.tab-content -->
+                    </div>
+                    <!-- /.nav-tabs-custom -->
                 </div>
             </div>
         </div>
-
-    </section>
+    </div>
 
 @stop
 @section('scripts')
@@ -338,7 +316,7 @@
 
 @stop
 
-@section('style')
+@section('styles')
     <style>
         .load_broad {
             position: fixed;

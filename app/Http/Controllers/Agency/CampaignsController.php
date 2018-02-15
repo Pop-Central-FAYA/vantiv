@@ -93,22 +93,35 @@ class CampaignsController extends Controller
      */
     public function allClient()
     {
+        return view('agency.campaigns.client.index');
+    }
+
+    public function clientData(DataTables $dataTables)
+    {
+        $j = 1;
         $cl = [];
         $agency_id = \Session::get('agency_id');
         $all_clients = Utilities::switch_db('api')->select("SELECT * from walkIns WHERE agency_id = '$agency_id'");
         foreach ($all_clients as $all)
         {
             $clients = \DB::select("SELECT * from users where id= '$all->user_id'");
-            $cl[] = $clients;
-
+            $cl[] = [
+                'id' => $j,
+                'user_id' => $clients[0]->id,
+                'name' => $clients[0]->first_name. '-' .$clients[0]->last_name,
+                'email' => $clients[0]->email,
+                'phone' => $clients[0]->phone,
+            ];
+            $j++;
         }
-        $page = \Input::get('page', 1);
-        $perPage = 15;
-        $offSet = ($page * $perPage) - $perPage;
-        $itemsForCurrentPage = array_slice($cl, $offSet, $perPage, true);
-        $data =  new LengthAwarePaginator($itemsForCurrentPage, count($cl), $perPage, $page);
-        $data->setPath('all-clients');
-        return view('agency.campaigns.client.index')->with('client', $data);
+
+        return $dataTables->collection($cl)
+            ->addColumn('create_campaign', function ($cl) {
+                return '<a href="' . route('agency_campaign.step1', $cl['user_id']) .'" class="btn btn-success btn-xs" > Create Campaign </a>';
+            })
+            ->rawColumns(['create_campaign' => 'create_campaign'])->addIndexColumn()
+            ->make(true);
+
     }
 
     public function getStep1($id)
