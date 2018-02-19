@@ -996,5 +996,49 @@ Class Api
         return count($count_unapproval);
     }
 
+    public static function allInvoiceAdvertiserorAgency($agency_id)
+    {
+        $all_invoices = Utilities::switch_db('reports')->select("SELECT * FROM invoices WHERE  agency_id = '$agency_id' ORDER BY time_created DESC LIMIT 5");
+
+        $invoice_campaign_details = [];
+
+        foreach ($all_invoices as $invoice) {
+
+            $campaign_id = $invoice->campaign_id;
+
+            $campaign = Utilities::switch_db('reports')->select("SELECT * FROM campaigns WHERE id = '$campaign_id'");
+            $brand_id = $campaign[0]->brand;
+            $brand_name = Utilities::switch_db('api')->select("SELECT name from brands where id = '$brand_id'");
+
+            $invoice_campaign_details[] = [
+                'invoice_number' => $invoice->invoice_number,
+                'actual_amount_paid' => $invoice->actual_amount_paid,
+                'refunded_amount' => $invoice->refunded_amount,
+                'status' => $invoice->status,
+                'campaign_brand' => $brand_name[0]->name,
+                'campaign_name' => $campaign[0]->name
+            ];
+        }
+        return $invoice_campaign_details;
+    }
+
+    public static function saveActivity($user_id, $description, $ip, $user_agent)
+    {
+        $store_activity = [
+            'description' => $description,
+            'user_id' => $user_id,
+            'ip_address' => $ip,
+            'user_agent' => $user_agent
+        ];
+
+        return \DB::table('user_activity')->insert($store_activity);
+    }
+
+    public static function countFiles($advertiser_id)
+    {
+        $files = Utilities::switch_db('api')->select("SELECT * FROM files where agency_id = '$advertiser_id'");
+        return count($files);
+    }
+
 
 }

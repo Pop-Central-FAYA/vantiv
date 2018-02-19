@@ -7,7 +7,11 @@
     <!--Wrapper-->
     <div id="wrapper" class="wrapper">
         <!--Sidebar-->
+        @if(Session::get('agency_id'))
             @include('partials.new_agent_sidebar')
+        @else
+            @include('partials.new_advertiser_sidebar')
+        @endif
         <!--Sidebar-->
         <!--Content-->
         <div id="content">

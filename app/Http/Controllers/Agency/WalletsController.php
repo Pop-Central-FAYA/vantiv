@@ -4,6 +4,7 @@ namespace Vanguard\Http\Controllers\Agency;
 
 use Illuminate\Http\Request;
 use Vanguard\Http\Controllers\Controller;
+use Vanguard\Libraries\Api;
 use Vanguard\Libraries\Utilities;
 use Yajra\DataTables\DataTables;
 use Session;
@@ -114,6 +115,10 @@ class WalletsController extends Controller
             $update_transaction = Utilities::switch_db('api')->select("UPDATE transactions SET card_type = '$card', status = 'SUCCESSFUL', ip_address = '$ip_address', fees = '$fees', `type` = '$type', message = '$message' WHERE reference = '$reference'");
 
             if($transaction) {
+                $user_agent = $_SERVER['HTTP_USER_AGENT'];
+                $description = 'Wallet credited with '.$amount.' by '.$user_id;
+                $ip = request()->ip();
+                $user_activity = Api::saveActivity($user_id, $description, $ip, $user_agent);
                 $this->updateWallet($amount);
                 $msg = 'Your wallet has been funded with NGN'. $amount;
                 return redirect()->route('wallet.statement')->with('success', $msg);

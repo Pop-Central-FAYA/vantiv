@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Pbmedia\LaravelFFMpeg\FFMpeg;
 use Vanguard\Http\Controllers\Controller;
+use Vanguard\Libraries\Api;
 use Vanguard\Libraries\Utilities;
 use Yajra\DataTables\DataTables;
 use Session;
@@ -681,6 +682,10 @@ class CampaignsController extends Controller
 
                     $del_cart = \DB::delete("DELETE FROM carts WHERE user_id = '$user_id'");
                     $del_uplaods = \DB::delete("DELETE FROM uploads WHERE user_id = '$user_id'");
+                    $user_agent = $_SERVER['HTTP_USER_AGENT'];
+                    $description = 'Campaign '.$first->name.' created successfully by '.Session::get('agency_id');
+                    $ip = request()->ip();
+                    $user_activity = Api::saveActivity(Session::get('agency_id'), $description, $ip, $user_agent);
                     Session::forget('step1');
 
                     return redirect()->route('agency.campaign.all')->with('success', 'campaign created successfully');

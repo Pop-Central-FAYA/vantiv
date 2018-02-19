@@ -39,10 +39,7 @@
                 </ul>
             </li>
             <li class="{{ Request::is('agency/reports') ? 'active' : ''  }}"> <a href="{{ route('reports.index') }}"><i class="fa fa-signal"></i><span>Report</span></a>
-                <ul class="sub-menu dropdown">
-                    <li><a href="{{ route('reports.index') }}"><i class="fa fa-address-card-o"></i> <span>Campaigns <br /> Report</span></a></li>
-                    <li><a href="{{ route('reports.index') }}#"><i class="fa fa-address-book-o"></i><span>Revenue <br /> Report</span></a></li>
-                </ul>
+
             </li>
         </ul>
     </div>

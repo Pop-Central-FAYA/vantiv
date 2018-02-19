@@ -3,6 +3,7 @@
 namespace Vanguard\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Vanguard\Libraries\Api;
 use Vanguard\Libraries\Utilities;
 use Carbon\Carbon;
 use Session;
@@ -67,6 +68,9 @@ class ClientBrandsController extends Controller
 
         $brand = Utilities::formatString($request->brand_name);
         $unique = uniqid();
+        $user_agent = $_SERVER['HTTP_USER_AGENT'];
+        $description = Session::get('agency_id') ? 'Brand '.$request->brand_name .' Created by '.Session::get('agency_id') : 'Brand '.$request->brand_name .' Created by '.Session::get('advertiser_id');
+        $ip = request()->ip();
         if(Session::get('agency_id') != null){
             $agency_id = Session::get('agency_id');
             $walkin_id = Utilities::switch_db('api')->select("SELECT id from walkIns WHERE user_id = '$request->clients'");
@@ -76,6 +80,7 @@ class ClientBrandsController extends Controller
                 return redirect()->back()->with('error', 'Brands already exists');
             }else{
                 $insert = Utilities::switch_db('api')->select("INSERT into brands (id, `name`, walkin_id, broadcaster_agency) VALUES ('$unique','$brand','$id', '$agency_id')");
+                $user_activity = Api::saveActivity($agency_id, $description, $ip, $user_agent);
                 if(!$insert) {
                     return redirect()->route('agency.brand.all')->with('success', 'Brands created successfully');
                 }else{
@@ -91,6 +96,7 @@ class ClientBrandsController extends Controller
                 return redirect()->back()->with('error', 'Brands already exists');
             }else{
                 $insert = Utilities::switch_db('api')->select("INSERT into brands (id, `name`, walkin_id, broadcaster_agency) VALUES ('$unique','$brand','$user_id', '$advertiser_id')");
+                $user_activity = Api::saveActivity($advertiser_id, $description, $ip, $user_agent);
                 if(!$insert) {
                     return redirect()->route('agency.brand.all')->with('success', 'Brands created successfully');
                 }else{
@@ -109,12 +115,20 @@ class ClientBrandsController extends Controller
         ]);
 
         $brand = Utilities::formatString($request->brand_name);
+        $user_agent = $_SERVER['HTTP_USER_AGENT'];
+        $description = Session::get('agency_id') ? 'Brand '.$brand .' Updated by '.Session::get('agency_id') : 'Brand '.$brand .' Updated by '.Session::get('advertiser_id');
+        $ip = request()->ip();
         $ckeck_brand = Utilities::switch_db('api')->select("SELECT name from brands WHERE `name` = '$brand'");
         if(count($ckeck_brand) > 0) {
             return redirect()->back()->with('error', 'Brands already exists');
         }else{
             $update_brand = Utilities::switch_db('api')->select("UPDATE brands SET name = '$brand' WHERE id = '$id'");
             if(!$update_brand) {
+                if(Session::get('agency_id')){
+                    $user_activity = Api::saveActivity(Session::get('agency_id'), $description, $ip, $user_agent);
+                }else{
+                    $user_activity = Api::saveActivity(Session::get('advertiser_id'), $description, $ip, $user_agent);
+                }
                 return redirect()->route('agency.brand.all')->with('success', 'Brands updated successfully');
             }else{
                 return redirect()->back()->with('error', 'There was a problem updating this brand');
@@ -131,6 +145,15 @@ class ClientBrandsController extends Controller
      */
     public function delete($id)
     {
+        $brand_name = Utilities::switch_db('api')->select("SELECT name from brands where id = '$id'");
+        $user_agent = $_SERVER['HTTP_USER_AGENT'];
+        $description = Session::get('agency_id') ? 'Brand '.$brand_name[0]->name.' Deleted by '.Session::get('agency_id') : 'Brand '.$brand_name[0]->name.' Deleted by '.Session::get('advertiser_id');
+        $ip = request()->ip();
+        if(Session::get('agency_id')){
+            $user_activity = Api::saveActivity(Session::get('agency_id'), $description, $ip, $user_agent);
+        }else{
+            $user_activity = Api::saveActivity(Session::get('advertiser_id'), $description, $ip, $user_agent);
+        }
         $brand = Utilities::switch_db('api')->select("DELETE FROM brands WHERE id = '$id'");
         if(!$brand)
         {

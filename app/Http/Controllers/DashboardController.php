@@ -225,27 +225,7 @@ class DashboardController extends Controller
             $count_brands = Api::countBrands($agency_id);
 
             #invoice
-            $all_invoices = Utilities::switch_db('reports')->select("SELECT * FROM invoices WHERE  agency_id = '$agency_id' ORDER BY time_created DESC LIMIT 5");
-
-            $invoice_campaign_details = [];
-
-            foreach ($all_invoices as $invoice) {
-
-                $campaign_id = $invoice->campaign_id;
-
-                $campaign = Utilities::switch_db('reports')->select("SELECT * FROM campaigns WHERE id = '$campaign_id'");
-                $brand_id = $campaign[0]->brand;
-                $brand_name = Utilities::switch_db('api')->select("SELECT name from brands where id = '$brand_id'");
-
-                $invoice_campaign_details[] = [
-                    'invoice_number' => $invoice->invoice_number,
-                    'actual_amount_paid' => $invoice->actual_amount_paid,
-                    'refunded_amount' => $invoice->refunded_amount,
-                    'status' => $invoice->status,
-                    'campaign_brand' => $brand_name[0]->name,
-                    'campaign_name' => $campaign[0]->name
-                ];
-            }
+            $invoice_campaign_details = Api::allInvoiceAdvertiserorAgency($agency_id);
 
             #approval
             $invoice_approval = Api::countApproved($agency_id);
@@ -320,7 +300,36 @@ class DashboardController extends Controller
 
             $date_bud = json_encode($dat);
 
-            return view('advertisers.dashboard.dashboard')->with(['broadcaster' => $allBroadcaster, 'date' => $d, 'amount' => $am, 'name' => $na, 'camp_prod' => $camp_prod, 'amount_bud' => $amm_bud, 'date_bud' => $date_bud, 'periodic' => $periodic_to_product]);
+            $invoice_campaign_details = Api::allInvoiceAdvertiserorAgency($advertiser_id);
+
+            #approval
+            $invoice_approval = Api::countApproved($advertiser_id);
+
+            #unapproval
+            $invoice_unapproval = Api::countUnapproved($advertiser_id);
+
+            #all campaigns
+            $count_campaigns = Api::countCampaigns($advertiser_id);
+
+            #invoices
+            $count_invoice =Api::countInvoices($advertiser_id);
+
+            #count Brands
+            $count_brands = Api::countBrands($advertiser_id);
+
+            #count files
+            $count_files = Api::countFiles($advertiser_id);
+
+            return view('advertisers.dashboard.new_dashboard')->with(['broadcaster' => $allBroadcaster, 'date' => $d, 'amount' => $am,
+                                                                            'name' => $na, 'camp_prod' => $camp_prod, 'amount_bud' => $amm_bud,
+                                                                            'date_bud' => $date_bud, 'periodic' => $periodic_to_product,
+                                                                            'all_invoices' => $invoice_campaign_details,
+                                                                            'invoice_approval' => $invoice_approval,
+                                                                            'invoice_unapproval' => $invoice_unapproval,
+                                                                            'count_campaigns' => $count_campaigns,
+                                                                            'count_invoice' => $count_invoice,
+                                                                            'count_brand' => $count_brands,
+                                                                            'count_files' => $count_files]);
 
         }
     }

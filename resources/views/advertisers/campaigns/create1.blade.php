@@ -1,155 +1,183 @@
-@extends('advertiser_layouts.app')
+@extends('layouts.new_app')
 @section('title')
-    <title>Agency | Create Campaigns</title>
+    <title>Advertiser | Create Campaigns</title>
 @stop
 @section('content')
-    <section class="content-header">
-        <h1>
-            Create Campaigns
-        </h1>
-        <ol class="breadcrumb" style="font-size: 16px">
 
-            <li><a href="#"><i class="fa fa-th"></i> Agency</a> </li>
-            <li><a href="index.html"><i class="fa fa-address-card"></i> Create Advertiser Campaign</a> </li>
-
-        </ol>
-    </section>
-
-    <!-- Main content -->
-
-    <section class="content">
-        <section class="content">
+    <div class="main-section">
+        <div class="container">
             <div class="row">
-                <div class="col-md-1 hidden-sm hidden-xs"></div>
-                <div class="col-md-9 " style="padding:2%">
+                <div class="col-12 heading-main">
+                    <h1>Create Campaigns</h1>
+                    <ul>
+                        <li><a href="{{ route('dashboard') }}"><i class="fa fa-th-large"></i>Advertiser</a></li>
+                        <li><a href="{{ route('advertiser.campaign.all') }}">All Campaign</a></li>
+                    </ul>
+                </div>
+                <div class="Create-campaign">
                     <form class="campform" method="POST" action="{{ route('advertiser_campaign.store1', ['id' => $id]) }}">
                         {{ csrf_field() }}
-                        <div class="row">
-                            <div class="col-md-6">
-                                <input type="text" name="name" placeholder="Campaign Name" value="{{ isset(((object) $step1)->name) ? ((object) $step1)->name: "" }}" required placeholder="Name">
-                                <input type="hidden" name="user_id" value="">
-                            </div>
-
-                            <div class="col-lg-6 col-md-6 hidden-sm hidden-xs"></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label style="margin-left:10%">Brands:</label>
-                                <select name="brand" class="form-control" id="">
-                                    @foreach($brands as $b)
-                                        <option value="{{ $b->id }}">{{ $b->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <br>
-                            <div class="col-md-6">
-                                <input type="text" name="product" value="{{ isset(((object) $step1)->product) ? ((object) $step1)->product : "" }}" required placeholder="Product">
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-3">
-                                <label style="margin-left:10%">Industry:</label>
-                                <select name="industry" id="" class="form-control">
-                                    @foreach($industry as $ind)
-                                        <option value="{{ $ind->name }}">{{ $ind->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            <div class="col-md-3">
-                                <label style="margin-left:10%">Target Audience:</label>
-                                <select name="target_audience" id="" class="form-control">
-                                    @foreach($target as $target_audiences)
-                                        <option value="{{ $target_audiences->id }}">{{ $target_audiences->audience }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            <dvi class="col-md-3">
-                                <label style="margin-left:10%">Channel:</label>
-                                <select style="width: 100%" class="form-control" name="channel">
-                                    @foreach($chanel as $chanels)
-                                        <option value="{{ $chanels->id }}"
-                                                @if(isset(((object) $step1)->channel) === $chanels->id)
-                                                selected
-                                                @endif
-                                        >{{ $chanels->channel }}</option>
-                                    @endforeach
-                                </select>
-                            </dvi>
-                        </div>
-                        <br>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="input-group date styledate">
-                                    <div class="input-group-addon">
-                                        <i class="fa fa-calendar"></i>
+                        <div class="col-12 ">
+                            <h2>Campaign Details</h2>
+                            <hr>
+                            <p><br></p>
+                            <p><br></p>
+                            <p><br></p>
+                            <div class="col-12 form-inner">
+                                <div class="form-group">
+                                    <label class="col-md-2">Campaign Name:</label>
+                                    <div class="col-md-6">
+                                        <input type="text" name="name" class="form-control" value="{{ isset(((object) $step1)->name) ? ((object) $step1)->name: "" }}" required  placeholder="Campaign Name">
                                     </div>
-                                    <input type="text" readonly placeholder="start-date" value="{{ isset(((object) $step1)->start_date) ?((object) $step1)->start_date : "" }}" required name="start_date" class="form-control" id="txtFromDate" />
-                                </div>
-
-                                <div class="input-group date styledate">
-                                    <div class="input-group-addon">
-                                        <i class="fa fa-calendar"></i>
-                                    </div>
-                                    <input type="text" readonly placeholder="stop-date" value="{{ isset(((object) $step1)->end_date) ? ((object) $step1)->end_date : "" }}" required name="end_date" class="form-control" id="txtToDate" />
                                 </div>
                             </div>
+                            <hr>
+                            <p><br></p>
+                            <div class="col-12 form-inner">
+                                <div class="form-group">
+                                    <label class="col-md-2">Product:</label>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" name="product" value="{{ isset(((object) $step1)->product) ? ((object) $step1)->product : "" }}" required placeholder="Product">
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <p><br></p>
+                            <div class="col-12 form-inner">
+                                <div class="form-group">
+                                    <label class="col-md-2">Brands:</label>
+                                    <div class="col-md-4">
+                                        <select name="brand" class="Role form-control">
+                                            @foreach($brands as $b)
+                                                <option value="{{ $b->id }}">{{ $b->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <p><br></p>
+                            <div class="col-12 form-inner">
+                                <div class="form-group">
+                                    <label for="brand" class="col-md-2">Industry:</label>
+                                    <div class="col-md-4">
+                                        <select name="industry" class="Role form-control">
+                                            @foreach($industry as $ind)
+                                                <option value="{{ $ind->name }}">{{ $ind->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <p><br></p>
+                            <div class="col-12 form-inner">
+                                <div class="form-group">
+                                    <label for="targer_audience" class="col-md-2">Target Audience:</label>
+                                    <div class="col-md-4">
+                                        <select name="target_audience" class="Role form-control">
+                                            @foreach($target as $target_audiences)
+                                                <option value="{{ $target_audiences->id }}">{{ $target_audiences->audience }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <p><br></p>
+                            <div class="col-12 form-inner">
+                                <div class="form-group">
+                                    <label for="channel" class="col-md-2">Channel:</label>
+                                    <div class="col-md-4">
+                                        <select name="channel" class="Role form-control">
+                                            @foreach($chanel as $chanels)
+                                                <option value="{{ $chanels->id }}"
+                                                        @if(isset(((object) $step1)->channel) === $chanels->id)
+                                                        selected
+                                                        @endif
+                                                >{{ $chanels->channel }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <p><br></p>
+                            <div class="col-12 form-inner">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label for="start_date" class="col-md-2">Start Date:</label>
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control flatpickr" value="{{ isset(((object) $step1)->start_date) ?((object) $step1)->start_date : "" }}" required name="start_date"  id="datepicker" placeholder="Start-Date">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="stop_date" class="col-md-2">Stop Date:</label>
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control flatpickr" value="{{ isset(((object) $step1)->end_date) ? ((object) $step1)->end_date : "" }}" required name="end_date" id="datepicker1" placeholder="Stop-Date">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <p><br></p>
+                            <div class="col-12 form-inner">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label for="min_age" class="col-md-2">Min Age:</label>
+                                            <div class="col-md-6">
+                                                <input type="number" name="min_age" required value="" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="max_age" class="col-md-2">Max Age:</label>
+                                            <div class="col-md-6">
+                                                <input type="number" class="form-control" name="max_age" required value="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <p><br></p>
+                            <div class="col-12 form-inner">
+                                <div class="form-group">
+                                    <label for="day_parts" class="col-md-2">Day Parts:</label>
+                                    <div class="col-md-8">
+                                        @foreach($day_part as $day_parts)
+                                            <input type="checkbox" name="dayparts[]" value="{{ $day_parts->id }}">{{ $day_parts->day_parts }}
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <p><br></p>
+                            <div class="col-12 form-inner">
+                                <div class="form-group">
+                                    <label for="region" class="col-md-2">Region:</label>
+                                    <div class="col-md-8">
+                                        <input type="checkbox" name="region[]" value="{{ $region[0]->id }}">{{ $region[0]->region }}
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <p><br></p>
+                            <div class="input-group">
+                                <input type="Submit" class="btn btn-danger btn-lg" name="Submit" value="Next Campaign">
+                            </div>
 
-                            <div class="col-md-2">
-                                <label style="margin-left:10%">Min Age:</label>
-                                <input type="number" name="min_age" required class="form-control">
-                            </div>
-                            <div class="col-md-2">
-                                <label style="margin-left:10%">Max Age:</label>
-                                <input type="number" name="max_age" required class="form-control">
-                            </div>
-                        </div>
-                        <br>
-                        <div class="col-md-6">
-                            <h3> Day Parts </h3>
-                            <div class="form-group">
-                                @foreach($day_part as $day_parts)
-                                    <p>
-                                        <label>
-                                            {{ $day_parts->day_parts }}
-                                            <input type="checkbox" name="dayparts[]" value="{{ $day_parts->id }}"/>
-                                        </label>
-                                    </p>
-                                @endforeach
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <h3> Region </h3>
-                            <div class="form-group">
-                                    <p>
-                                        <label>
-                                            {{ $region[0]->region }}
-                                            <input type="checkbox" name="region[]" value="{{ $region[0]->id }}">
-                                        </label>
-                                    </p>
-                            </div>
                         </div>
 
-                        <div class="container">
-                            <div class="container">
-                                <p align="right">
-                                    <button class="btn campaign-button" style="margin-right:15%">Next <i class="fa fa-play" aria-hidden="true"></i></button>
-                                </p>
-                            </div>
                     </form>
                 </div>
-                <!-- /.col -->
-                <div class="col-md-2 hidden-sm hidden-xs"></div>
-                <!-- /.col -->
             </div>
-            <!-- /.row -->
+        </div>
+    </div>
 
 
-        </section>
-    </section>
 @stop
 @section('scripts')
     <!-- Select2 -->
@@ -179,6 +207,14 @@
     <!-- DataTables -->
     <script src="{{ asset('agency_asset/plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('agency_asset/plugins/datatables/dataTables.bootstrap.min.js') }}"></script>
+    <script src="https://unpkg.com/flatpickr"></script>
+
+    <script>
+        flatpickr(".flatpickr", {
+            altInput: true,
+        });
+    </script>
+    3
     <script>
 
 
@@ -271,5 +307,9 @@
         });
     </script>
 @stop
+@section('styles')
+    <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
+@stop
+
 
 

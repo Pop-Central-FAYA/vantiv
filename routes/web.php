@@ -256,13 +256,13 @@ Route::group(['middleware' => 'auth'], function () {
               Route::post('/campaign/submit/{id}/{broadcaster}', 'Agency\CampaignsController@postCampaign')->name('agency_submit.campaign');
            });
 
-           Route::group(['prefix' => 'brands'], function () {
-               Route::get('/all-brands', 'ClientBrandsController@index')->name('agency.brand.all');
-               Route::get('/create-brands', 'ClientBrandsController@create')->name('agency.brand.create');
-               Route::post('/create/store', 'ClientBrandsController@store')->name('agency.brand.store');
-               Route::post('/brands/edit/{id}', 'ClientBrandsController@update')->name('agency.brands.update');
-               Route::get('/brands/delete/{id}', 'ClientBrandsController@delete')->name('agency.brands.delete');
-           });
+//           Route::group(['prefix' => 'brands'], function () {
+//               Route::get('/all-brands', 'ClientBrandsController@index')->name('agency.brand.all');
+//               Route::get('/create-brands', 'ClientBrandsController@create')->name('agency.brand.create');
+//               Route::post('/create/store', 'ClientBrandsController@store')->name('agency.brand.store');
+//               Route::post('/brands/edit/{id}', 'ClientBrandsController@update')->name('agency.brands.update');
+//               Route::get('/brands/delete/{id}', 'ClientBrandsController@delete')->name('agency.brands.delete');
+//           });
 
            Route::get('/agency-dashboard/periodic-sales', 'DashboardController@filterByBroad')->name('agency.dashboard.broad');
            Route::get('/agency-dashboard/periodic-brand', 'DashboardController@filterByBrand')->name('agency.dashboard.data');

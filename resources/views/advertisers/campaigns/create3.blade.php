@@ -1,86 +1,78 @@
-@extends('advertiser_layouts.app')
+@extends('layouts.new_app')
 @section('title')
     <title>Advertiser | Create Campaigns</title>
 @stop
 @section('content')
-    <section class="content-header">
-        <h1>
-            Create Campaigns | Uploads Step 1
-        </h1>
-        <ol class="breadcrumb" style="font-size: 16px">
 
-            <li><a href="#"><i class="fa fa-th"></i> Advertiser</a> </li>
-            <li><a href="index.html"><i class="fa fa-address-card"></i> Create Advertiser Campaign</a> | Uploads Step1 </li>
+    <div class="main-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 heading-main">
+                    <h1>Create Campaigns</h1>
+                    <ul>
+                        <li><a href="{{ route('dashboard') }}"><i class="fa fa-th-large"></i>Advertiser</a></li>
+                        <li><a href="{{ route('advertiser.campaign.all') }}">All Campaign</a></li>
+                    </ul>
+                </div>
+                <div class="Create-campaign">
+                    <form class="campform" method="POST" action="{{ route('advertiser_campaign.store3', ['id' => $id, 'broadcaster' => $broadcaster]) }}" enctype="multipart/form-data">
+                        {{ csrf_field() }}
 
-        </ol>
-    </section>
+                        <div class="col-12 ">
+                            <h2>Choose Media: Step 1</h2>
+                            <hr>
+                            <p><br></p>
+                            {{ csrf_field() }}
+                            <div class="row">
+                                <div class="col-md-12 ">
 
-    <!-- Main content -->
+                                    <p align="center">The history of advertising can be traced to ancient civilizations. It became a major force in capitalist economies in the mid-19th century, based primarily on newspapers and magazines. In the 20th century, advertising grew rapidly with new technologies such as direct mail, radio, television, the internet and mobile devices.</p>
 
-    <section class="content">
-        <div class="row">
-            <div class="col-md-1 hidden-sm hidden-xs"></div>
-            <div class="col-md-9 " style="padding:2%">
-                <form class="campform" method="POST" action="{{ route('advertiser_campaign.store3', ['id' => $id, 'broadcaster' => $broadcaster]) }}" enctype="multipart/form-data">
-                    {{ csrf_field() }}
-                    <div class="row">
-                        <div class="col-md-12 ">
-
-                            <h2></h2>
-                            <p align="center">The history of advertising can be traced to ancient civilizations. It became a major force in capitalist economies in the mid-19th century, based primarily on newspapers and magazines. In the 20th century, advertising grew rapidly with new technologies such as direct mail, radio, television, the internet and mobile devices.</p>
-
-                        </div>
-                    </div>
-                    {{--{{ dd($time_in_sec) }}--}}
-                    <div class="row" style="margin-top:3%" id="dynamic">
-                        <div class="row b">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label>Upload Media</label>
-                                    <input type="file" id="fup" name="uploads">
-                                    <input type="hidden" class="form-control" name="f_du" id="f_du" size="5" />
                                 </div>
                             </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label>Duration </label> <br />
-                                    <select style="width: 60%" name="time">
-                                        <option value="15">15 Seconds</option>
-                                    </select>
-                                    {{--<button type="button" id="add_more" class="btn btn-info btn-xs add_more">+ Add More</button>--}}
+                            {{--{{ dd($time_in_sec) }}--}}
+                            <div class="row" style="margin-top:3%" id="dynamic">
+                                <div class="row b">
+                                    <div class="col-md-5">
+                                        <div class="form-group">
+                                            <label>Upload Media</label>
+                                            <input type="file" class="form-control" id="fup" name="uploads">
+                                            <input type="hidden" class="form-control" name="f_du" id="f_du" size="5" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2"></div>
+                                    <div class="col-md-5">
+                                        <div class="form-group">
+                                            <label>Duration </label> <br />
+                                            <select style="width: 60%" name="time" class="form-control">
+                                                <option value="15">15 Seconds</option>
+                                            </select>
+                                            {{--<button type="button" id="add_more" class="btn btn-info btn-xs add_more">+ Add More</button>--}}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+                            <div class="col-md-6">
+
+                            </div>
+
+                            <audio id="audio"></audio>
+
+                            <div class="container">
+
+                                <p align="right">
+                                    {{--<button id="step3" type="button" class="btn campaign-button" >Back <i class="fa fa-backward" aria-hidden="true"></i></button>--}}
+                                    <button type="submit" class="btn campaign-button btn-danger btn-lg" style="margin-right:15%">Next <i class="fa fa-play" aria-hidden="true"></i></button>
+                                </p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-6">
 
-                    </div>
-
-                    <audio id="audio"></audio>
-
-                    <div class="container">
-
-                        <p align="right">
-                            {{--<button id="step3" type="button" class="btn campaign-button" >Back <i class="fa fa-backward" aria-hidden="true"></i></button>--}}
-                            <button type="submit" class="btn campaign-button" style="margin-right:15%">Next <i class="fa fa-play" aria-hidden="true"></i></button>
-                        </p>
-                    </div>
-
-                </form>
-
+                    </form>
+                </div>
             </div>
-            <!-- /.col -->
-            <div class="col-md-2 hidden-sm hidden-xs"></div>
-            <!-- /.col -->
-
-
-
-
         </div>
-        <!-- /.row -->
+    </div>
 
-
-    </section>
 @stop
 @section('scripts')
     <!-- Select2 -->
@@ -148,21 +140,21 @@
             $('#reservationtime').daterangepicker({timePicker: true, timePickerIncrement: 30, format: 'MM/DD/YYYY h:mm A'});
             //Date range as a button
             $('#daterange-btn').daterangepicker(
-                    {
-                        ranges: {
-                            'Today': [moment(), moment()],
-                            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                            'This Month': [moment().startOf('month'), moment().endOf('month')],
-                            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-                        },
-                        startDate: moment().subtract(29, 'days'),
-                        endDate: moment()
+                {
+                    ranges: {
+                        'Today': [moment(), moment()],
+                        'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                        'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                        'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                        'This Month': [moment().startOf('month'), moment().endOf('month')],
+                        'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
                     },
-                    function (start, end) {
-                        $('#daterange-btn span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-                    }
+                    startDate: moment().subtract(29, 'days'),
+                    endDate: moment()
+                },
+                function (start, end) {
+                    $('#daterange-btn span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+                }
             );
 
             //Date picker
