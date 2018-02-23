@@ -14,10 +14,7 @@ Route::post('/auth-agent/signup/process', 'Agency\AgencyAuthController@postRegis
 Route::get('/auth-advertiser/signup', 'Advertiser\AdvertiserAuthController@getRegister')->name('advertiser.register.form');
 Route::post('/auth-advertiser/signup/process', 'Advertiser\AdvertiserAuthController@postRegister')->name('advertiser.signup');
 
-Route::get('logout', [
-    'as' => 'auth.logout',
-    'uses' => 'Auth\AuthController@getLogout'
-]);
+Route::get('logout', ['as' => 'auth.logout', 'uses' => 'Auth\AuthController@getLogout']);
 
 // Allow registration routes only if registration is enabled.
 if (settings('reg_enabled')) {
@@ -182,7 +179,7 @@ Route::group(['middleware' => 'auth'], function () {
     /**
      * Adslot
      */
-    Route::group(['prefix' => '/adslot'], function () {
+    Route::group(['prefix' => 'adslot'], function () {
         Route::get('/', 'AdslotController@index')->name('adslot.all');
         Route::get('/adslot-data', 'AdslotController@adslotData');
         Route::get('/create', 'AdslotController@create')->name('adslot.create');
@@ -206,10 +203,12 @@ Route::group(['middleware' => 'auth'], function () {
     /**
      * Discounts
      */
-    Route::get('discounts', ['as' => 'discount.index', 'uses' => 'DiscountController@index']);
-    Route::post('discount/store', ['as' => 'discount.store', 'uses' => 'DiscountController@store']);
-    Route::post('discount/{discount}/update', ['as' => 'discount.update', 'uses' => 'DiscountController@update']);
-    Route::get('discount/{discount}/delete', ['as' => 'discount.delete', 'uses' => 'DiscountController@destroy']);
+    Route::group(['prefix' => 'discount'], function () {
+        Route::get('/', ['as' => 'discount.index', 'uses' => 'DiscountController@index']);
+        Route::post('/store', ['as' => 'discount.store', 'uses' => 'DiscountController@store']);
+        Route::post('/{discount}/update', ['as' => 'discount.update', 'uses' => 'DiscountController@update']);
+        Route::get('/{discount}/delete', ['as' => 'discount.delete', 'uses' => 'DiscountController@destroy']);
+    });
 
     /**
      * MPOs

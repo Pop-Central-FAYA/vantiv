@@ -1,6 +1,8 @@
-@extends('layouts.app')
+@extends('layouts.new_app')
 
-@section('title', trans('app.pending-mpos'))
+@section('title')
+    <title>Pending MPOs</title>
+@endsection
 
 @section('stylesheets')
 
@@ -10,54 +12,24 @@
 
 @endsection
 
-
 @section('content')
 
-    <section class="content-header">
-        <h1>
-            Pending Media Purchase orders
-        </h1>
-        <ol class="breadcrumb" style="font-size: 16px">
-
-            <li><a href="#"><i class="fa fa-th"></i> MPOs</a> </li>
-            <li><a href="index.html"><i class="fa fa-address-card"></i> Pending MPOs</a> </li>
-
-        </ol>
-    </section>
-
-    <!-- Main content -->
-
-    <section class="content">
-        <div class="row">
-            <div class="col-md-2 hidden-sm hidden-xs"></div>
-            <div class="col-md-8 Campaign" style="padding:2%">
-
-                <div class="row">
-                    <h4 style="margin-left: 17px;font-weight: bold">Search by date</h4>
-                    <div class="col-md-10" style="margin-top: -2%">
-                        <div class="input-group date styledate" style="width:30% !important">
-                            <div class="input-group-addon">
-                                <i class="fa fa-calendar"></i>
-                            </div>
-                            <input type="text" placeholder="Start Date" class="form-control pull-right flatpickr">
-                        </div>
-                        <div class="input-group date styledate" style="width:30% !important">
-                            <div class="input-group-addon">
-                                <i class="fa fa-calendar"></i>
-                            </div>
-                            <input type="text" placeholder="End Date" class="form-control pull-right flatpickr">
-                        </div>
-                        <div class="input-group" style="">
-                            <input type="submit" class="search-btn" value="Apply" style="float:left" >
-                        </div>
-                    </div>
+    <div class="main-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 heading-main">
+                    <h1>Pending Media Purchase orders</h1>
+                    <ul>
+                        <li><a href="#"><i class="fa fa-th-large"></i>MPOs</a></li>
+                        <li><a href="#">Pending MPOs</a></li>
+                    </ul>
                 </div>
             </div>
 
-            <div class="col-md-2 hidden-sm hidden-xs"></div>
+            <div class="row"></div>
 
-            <div class="row" style="padding: 5%">
-                <div class="col-xs-12">
+            <div class="row">
+                <div class="col-12">
                     <div class="box">
 
                         <div class="box-body">
@@ -90,9 +62,9 @@
                                             <td>{{ date('Y-m-d', strtotime($mpo['stop_date'])) }}</td>
                                             <td>
                                                 <a href="#" style="font-size: 16px">
-                                                    <span data-toggle="modal" data-target="#myModal{{ $mpo['id'] }}" style="cursor: pointer;">
-                                                        View
-                                                    </span>
+                                            <span data-toggle="modal" data-target="#myModal{{ $mpo['id'] }}" style="cursor: pointer;">
+                                                View
+                                            </span>
                                                 </a>
                                             </td>
                                         </tr>
@@ -101,150 +73,158 @@
                                 </table>
                             @endif
                         </div>
+                    </div>
+                </div>
+            </div>
 
+        </div>
+    </div>
 
-                        @foreach ($mpo_data as $mpo)
+    @foreach ($mpo_data as $mpo)
 
-                            <div class="modal fade" id="myModal{{ $mpo['id'] }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                                <div class="modal-dialog modal-lg" role="document">
-                                    <div class="modal-content">
+        <div class="modal fade" id="myModal{{ $mpo['id'] }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
 
-                                        <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                            <h4 class="modal-title" id="myModalLabel">
-                                                MPO - <strong>{{ $mpo['campaign_name'] }}</strong>
-                                            </h4>
-                                        </div>
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">
+                            MPO - <strong>{{ $mpo['campaign_name'] }}</strong>
+                        </h4>
+                    </div>
 
-                                        <div class="modal-body">
+                    <div class="modal-body">
 
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <p><b>Campaign Name:</b>  {{ $mpo['campaign_name'] }}</p>
-                                                    <p><b>Brand Name:</b> {{ $mpo['brand'] }}</p>
-                                                    <p><b>Product Name:</b> {{ $mpo['product'] }}</p>
-                                                    <p><b>Channel:</b> {{ $mpo['channel'] }}</p>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    {{--<p><b><i class="fa fa-calendar-o"></i> Date Part:</b> {{ $mpo->campaign_id->day_parts }}</p>--}}
-                                                    {{--<p><b><i class="fa fa-users"></i> Target Audience:</b> {{ $mpo->campaign_id->target_audience_id->audience }}</p>--}}
-                                                    {{--<p><b><i class="fa fa-user"></i> Viewers age range:</b> {{ $mpo->campaign_id->minimum_age }} - {{ $mpo->campaign_id->maximum_age }}</p>--}}
-                                                    {{--<p><b><i class="fa fa-map-marker"></i> Region:</b> {{ $mpo->campaign_id->regions }}</p>--}}
-                                                </div>
-
-                                            </div>
-
-                                            <br/>
-
-                                            <table id="example1" class="table table-bordered table-striped">
-                                                <thead>
-                                                <tr>
-                                                    {{--<th>Ad Blocks</th>--}}
-                                                    {{--<th>Duration</th>--}}
-                                                    <th>Media</th>
-                                                    {{--<th>Price</th>--}}
-                                                    <th>Approval</th>
-                                                    <th>Action</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                @foreach ($mpo['files'] as $file)
-                                                    <tr>
-                                                        {{--<td>{{ $file->rate_id->from_to_time }}</td>--}}
-                                                        {{--<td>{{ $file->rate_id->time_in_seconds }}secs</td>--}}
-                                                        <td>
-                                                            <a href="#" style="font-size: 16px">
-                                                                    <span data-toggle="modal" data-target="#myfileModal{{ $file->file_code }}" style="cursor: pointer;">
-                                                                        View
-                                                                    </span>
-                                                            </a>
-                                                        </td>
-                                                        {{--<td>{{ $file->rate_id->price }}</td>--}}
-                                                        <td>
-                                                            @if ($file->is_file_accepted === 0)
-                                                                <label class="label label-warning">Pending</label>
-                                                            @elseif ($file->is_file_accepted === 1)
-                                                                <label class="label label-success">Approved</label>
-                                                            @elseif ($file->is_file_accepted === 2)
-                                                                <label class="label label-danger">Rejected</label>
-                                                            @endif
-                                                        </td>
-                                                        <td>
-                                                            <select name="status"
-                                                                    data-broadcaster_id="{{ $file->broadcaster_id || $file->agency_broadcaster }}"
-                                                                    data-campaign_id="{{ $file->campaign_id }}"
-                                                                    data-file_code="{{ $file->file_code }}"
-                                                                    data-token="{{ csrf_token() }}"
-                                                                    class="form-control status"
-                                                            >
-                                                                <option>Select Status</option>
-                                                                <option value="1">Approve</option>
-                                                                <option value="2">Reject</option>
-                                                            </select>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                                </tbody>
-                                            </table>
-
-                                            <div class="row">
-                                                <div class="col-md-4">
-                                                    DISCOUNT
-                                                    <input type="text" value="" class="form-control">
-                                                </div>
-                                                <div class="col-md-4"></div>
-                                                <div class="col-md-4">
-                                                    TOTAL
-                                                    <input type="text" value="&#8358;{{ $mpo['amount'] }}" class="form-control" readonly>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-primary" data-dismiss="modal">Done</button>
-                                            {{--<input type="submit" value="Done" class="btn btn-primary" />--}}
-                                        </div>
-
-                                    </div>
-                                </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><b>Campaign Name:</b> {{ $mpo['campaign_name'] }}</p>
+                                <p><b>Brand Name:</b> {{ $mpo['brand'] }}</p>
+                                <p><b>Product Name:</b> {{ $mpo['product'] }}</p>
+                                <p><b>Channel:</b> {{ $mpo['channel'] }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                {{--<p><b><i class="fa fa-calendar-o"></i> Date Part:</b> {{ $mpo->campaign_id->day_parts }}</p>--}}
+                                {{--<p><b><i class="fa fa-users"></i> Target Audience:</b> {{ $mpo->campaign_id->target_audience_id->audience }}</p>--}}
+                                {{--<p><b><i class="fa fa-user"></i> Viewers age range:</b> {{ $mpo->campaign_id->minimum_age }} - {{ $mpo->campaign_id->maximum_age }}</p>--}}
+                                {{--<p><b><i class="fa fa-map-marker"></i> Region:</b> {{ $mpo->campaign_id->regions }}</p>--}}
                             </div>
 
+                        </div>
 
+                        <br/>
+
+                        <table id="example1" class="table table-bordered table-striped">
+                            <thead>
+                            <tr>
+                                {{--<th>Ad Blocks</th>--}}
+                                {{--<th>Duration</th>--}}
+                                <th>Media</th>
+                                {{--<th>Price</th>--}}
+                                <th>Approval</th>
+                                <th>Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
                             @foreach ($mpo['files'] as $file)
-                                <div class="modal fade" id="myfileModal{{ $file->file_code }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                                <h4 class="modal-title" id="myModalLabel">{{ $file->file_name }}</h4>
-                                            </div>
-                                            <div class="modal-body">
-                                                <div style="text-align: center;">
-                                                    {{--<iframe src="https://youtu.be/6ZfuNTqbHE8" width="100%" height="315" frameborder="0" allowfullscreen></iframe>--}}
-                                                    {{--<video width="320" height="240" controls>--}}
-                                                    {{--<source src="https://youtu.be/6ZfuNTqbHE8" type="video/mp4">--}}
-                                                    {{--</video>--}}
-                                                    <video src="{{ $file->file_url }}" width="170" height="90" controls>
-                                                        <p>If you are reading this, it is because your browser does not support the HTML5 video element.</p>
-                                                    </video>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button class="btn btn-default" data-dismiss="modal">Close</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <tr>
+                                    {{--<td>{{ $file->rate_id->from_to_time }}</td>--}}
+                                    {{--<td>{{ $file->rate_id->time_in_seconds }}secs</td>--}}
+                                    <td>
+                                        <a href="#" style="font-size: 16px">
+                                                                    <span data-toggle="modal"
+                                                                          data-target="#myfileModal{{ $file->file_code }}"
+                                                                          style="cursor: pointer;">
+                                                                        View
+                                                                    </span>
+                                        </a>
+                                    </td>
+                                    {{--<td>{{ $file->rate_id->price }}</td>--}}
+                                    <td>
+                                        @if ($file->is_file_accepted === 0)
+                                            <label class="label label-warning">Pending</label>
+                                        @elseif ($file->is_file_accepted === 1)
+                                            <label class="label label-success">Approved</label>
+                                        @elseif ($file->is_file_accepted === 2)
+                                            <label class="label label-danger">Rejected</label>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <select name="status"
+                                                data-broadcaster_id="{{ $file->broadcaster_id || $file->agency_broadcaster }}"
+                                                data-campaign_id="{{ $file->campaign_id }}"
+                                                data-file_code="{{ $file->file_code }}"
+                                                data-token="{{ csrf_token() }}"
+                                                class="form-control status"
+                                        >
+                                            <option>Select Status</option>
+                                            <option value="1">Approve</option>
+                                            <option value="2">Reject</option>
+                                        </select>
+                                    </td>
+                                </tr>
                             @endforeach
+                            </tbody>
+                        </table>
 
-                        @endforeach
-
+                        <div class="row">
+                            <div class="col-md-4">
+                                DISCOUNT
+                                <input type="text" value="" class="form-control">
+                            </div>
+                            <div class="col-md-4"></div>
+                            <div class="col-md-4">
+                                TOTAL
+                                <input type="text" value="&#8358;{{ $mpo['amount'] }}" class="form-control" readonly>
+                            </div>
+                        </div>
                     </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Done</button>
+                        {{--<input type="submit" value="Done" class="btn btn-primary" />--}}
+                    </div>
+
                 </div>
             </div>
         </div>
 
-    </section>
+
+        @foreach ($mpo['files'] as $file)
+            <div class="modal fade" id="myfileModal{{ $file->file_code }}" tabindex="-1" role="dialog"
+                 aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h4 class="modal-title" id="myModalLabel">{{ $file->file_name }}</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div style="text-align: center;">
+                                {{--<iframe src="https://youtu.be/6ZfuNTqbHE8" width="100%" height="315" frameborder="0" allowfullscreen></iframe>--}}
+                                {{--<video width="320" height="240" controls>--}}
+                                {{--<source src="https://youtu.be/6ZfuNTqbHE8" type="video/mp4">--}}
+                                {{--</video>--}}
+                                <video src="{{ $file->file_url }}" width="170" height="90" controls>
+                                    <p>If you are reading this, it is because your browser does not support the HTML5
+                                        video element.</p>
+                                </video>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endforeach
+
+            @endforeach
+
+            </div>
+            </div>
+            </div>
+            </div>
 
 @stop
 

@@ -1,70 +1,77 @@
-@extends('layouts.app')
+@extends('layouts.new_app')
+
+@section('title')
+    <title>Create Walkins</title>
+@endsection
 
 @section('content')
 
-@section('title', 'Faya | Dashboard')
-<!-- Content Header (Page header) -->
-<!-- Content Header (Page header) -->
-<section class="content-header">
-    <h1>
-        Welcome {{ Auth::user()->username }}!
-
-    </h1>
-    <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Create Walkins</a></li>
-    </ol>
-</section>
-
-<!-- Main content -->
-<section class="content">
-    <div class="row">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3>Create Walkins</h3>
+    <div class="main-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 heading-main">
+                    <h1>Walkins {{ Auth::user()->username }}</h1>
+                    <ul>
+                        <li><a href="#"><i class="fa fa-th-large"></i>Walkins</a></li>
+                        <li><a href="#">Create Walkins</a></li>
+                    </ul>
+                </div>
             </div>
-            <div class="panel-body">
-                <form action="{{ route('walkins.store') }}" method="post">
-                    {{ csrf_field() }}
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="first_name">First Name</label>
-                                <input type="text" name="first_name" placeholder="Walkins First Name" class="form-control" required>
+
+            <div class="row">
+                <div class="col-md-12">
+
+                    <div class="Add-brand">
+                        <h2>Create Walkins</h2>
+
+                        <form action="{{ route('walkins.store') }}" method="post">
+                            {{ csrf_field() }}
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <label for="first_name">First Name</label>
+                                        <input type="text" name="first_name" placeholder="Walkins First Name" class="form-control" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <label for="last_name">Last Name</label>
+                                        <input type="text" name="last_name" placeholder="Walkins Last Name" class="form-control" required>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="last_name">Last Name</label>
-                                <input type="text" name="last_name" placeholder="Walkins Last Name" class="form-control" required>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <label for="email"> Email</label>
+                                        <input type="email" name="email" placeholder="Walkins Email" class="form-control" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <label for="phone_number"> Phone Number</label>
+                                        <input type="number" name="phone_number" placeholder="Walkins Phone Number" class="form-control" required>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <input type="Submit" name="Submit" value="Add Walkins">
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
                     </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="email"> Email</label>
-                                <input type="email" name="email" placeholder="Walkins Email" class="form-control" required>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="phone_number"> Phone Number</label>
-                                <input type="number" name="phone_number" placeholder="Walkins Phone Number" class="form-control" required>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-success">Add Walkins</button>
-                    </div>
-                </form>
+
+                </div>
             </div>
         </div>
-        <!-- /.col (RIGHT) -->
     </div>
-    <!-- /.row -->
 
-</section>
-<!-- /.content -->
+
 @stop
 
 @section('scripts')

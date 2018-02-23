@@ -1,0 +1,3462 @@
+@charset "utf-8";
+/* CSS Document */
+body {
+	font-family: "AvantGarde-Book";
+	font-size:16px;
+	color:#202020;
+	line-height:20px;
+	font-weight:400;
+	background:#f3f3f4 !important;
+	cursor:default
+}
+* {
+	margin:0px;
+	padding:0px;
+}
+a {
+	text-decoration:none;
+	font-family:'Roboto', sans-serif;
+}
+img, a img {
+	border:none;
+	outline:none;
+}
+ol, ul {
+	list-style:none;
+}
+h1, h2, h3, h4, h5, h6 {
+	font-family:'Roboto', sans-serif;
+}
+p {
+	font-family:'Roboto', sans-serif;
+}
+#container {
+	width:100%;
+	float:left;
+	margin:0px;
+	padding:0px;
+}
+#wrapper {
+	width:100%;
+	margin:0px;
+	float:left;
+	padding:0px;
+}
+/*----------------------------Header----------------------------*/
+.header {
+	width:100%;
+	float:left;
+	background:#fff;
+	padding: 0px 30px;
+	box-shadow:5px 0px 4px rgba(0, 0, 0, 0.3)
+}
+.header .col-3 a {
+	float:left;
+}
+.header .col-3 a img {
+	float:left;
+}
+.header .navbar {
+	float:left;
+	padding:0px;
+	margin:0px;
+	position:relative;
+	width:100%;
+	background:none;
+	box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.1);
+}
+.header .navbar .navbar-header {
+	float:left;
+	padding:0px 0px;
+	margin:20px 0px 0px 0px;
+	position:relative;
+}
+.header .navbar .navbar-header .navbar-btn {
+	float:left;
+	padding:0px;
+	margin:0px;
+	background:none;
+}
+.header .navbar .navbar-header .navbar-btn i {
+	float:left;
+	padding:0px;
+	margin:0px;
+	background:none !important;
+	color:#000;
+	font-size:30px;
+}
+.header .navbar .navbar-header .navbar-btn .btn-info:focus, .header .navbar .navbar-header .navbar-btn:focus {
+	box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.1) !important;
+	background:none !important;
+}
+.header .content {
+	float:right;
+	display:inline-table
+}
+.header form {
+	float:left;
+	padding:0px;
+	padding:0px;
+	position:relative;
+	display:inline-table;
+	width:auto;
+	margin:15px 0px 0px
+}
+.header form input {
+	border: 2px solid #d3d3d3;
+	border-radius: 20px;
+	height: 40px;
+	width: 165px;
+	float:left;
+	padding:0px 10px;
+}
+.header form input[type="image"] {
+	border: medium none;
+	cursor: pointer;
+	float: left;
+	height: auto !important;
+	right:15px;
+	position: absolute;
+	top: 10px;
+	width: auto;
+	z-index: 999 !important;
+}
+.header .content ul {
+	display: inline-table;
+	float: left;
+	margin: 0;
+	padding: 0;
+}
+.header .content ul li {
+	display: inline-table;
+	float: left;
+	margin: 0;
+	padding: 0;
+	position:relative;
+}
+.header .content ul li:first-child {
+	margin:24px 20px;
+}
+.header .content ul li a {
+	float: left;
+	margin: 0;
+	padding: 0;
+	color:#3d3d3d;
+	font-size:14px;
+	font-family:'Roboto', sans-serif;
+	font-weight:400;
+}
+.header .content ul li a i {
+	color: #aaaaaa;
+	font-size: 24px;
+	padding: 0;
+}
+.header .content ul li:first-child a span.message {
+	width:8px;
+	height:8px;
+	border-radius:100%;
+	background:#ff0000;
+	position:absolute;
+	right:0px;
+	top:0px;
+}
+.header .content ul li.profile {
+	padding:8px 0 0px;
+}
+.header .content ul li.profile span.image {
+	position: relative;
+	margin: 0px 15px;
+}
+.header .content ul li.profile span.image span.green-online {
+	width:10px;
+	height:10px;
+	border-radius:100%;
+	background:#0C0;
+	position:absolute;
+	right:0px;
+	bottom:10px;
+}
+.header .content ul li:last-child {
+	padding:26px 10px 26px 30px;
+	margin:0 0px 0 30px;
+	border-left:2px solid #d3d3d3
+}
+.header .col-2 {
+	padding: 6px 0;
+}
+.header .content ul li.profile span {
+	display: inline-table;
+}
+
+/*----------------------------SideBar----------------------------*/
+.left-area {
+	float:left;
+	width:210px;
+	max-width:210px;
+}
+#sidebar .sidebar-header .logo {
+	background: #ffffff !important;
+	padding: 6px 15px !important;
+	float:left;
+	width:100%
+}
+#sidebar .sidebar-header .logo a {
+	padding: 0;
+	float:left;
+}
+#sidebar .sidebar-header .logo a img {
+	padding: 0;
+	float:left;
+}
+.left-area .sidebar-header ul.components li {
+	border-bottom: 2px solid #4d4d4d;
+	float: left;
+	text-align: center;
+	width: 100%;
+	position:relative;
+	/*background:url(../images/arrow.png) no-repeat right center ;*/
+}
+.left-area .sidebar-header ul.components li:last-child{
+	border-bottom:none;
+}
+.left-area .sidebar-header ul.components li a{
+	float: left;
+	text-align: center;
+	width: 100%;
+	padding:20px 0px;
+	margin:0px;
+	color:#ffffff;
+	font-family:'Roboto', sans-serif;
+	font-weight:300;
+	line-height:30px;
+	font-size:17px;
+}
+.left-area .sidebar-header ul.components li a span{
+	float: left;
+	text-align: center;
+	width: 100%;
+	padding:0px;
+	margin:0px;
+}
+.left-area .sidebar-header ul.components li i{
+	font-size:30px;
+}
+.left-area .sidebar-header ul.components li a:hover, .left-area .sidebar-header ul.components li.active a{
+	text-decoration:none;
+	color:#fff;
+	background:#e1235f;
+}
+.left-area .sidebar-header ul.components li.active::after {
+	border-top: 10px solid rgba(0, 0, 0, 0);
+	border-left: 10px solid #e1235f;
+	border-bottom: 10px solid rgba(0, 0, 0, 0);
+	border-right: 10px solid rgba(0, 0, 0, 0);
+	content: "";
+	right: -20px;
+	position: absolute;
+	top: 43%;
+}
+.left-area .sidebar-header ul.components li:hover::after {
+	border-top: 10px solid rgba(0, 0, 0, 0);
+	border-left: 10px solid #e1235f;
+	border-bottom: 10px solid rgba(0, 0, 0, 0);
+	border-right: 10px solid rgba(0, 0, 0, 0);
+	content: "";
+	right: -20px;
+	position: absolute;
+	top: 43%;
+}
+#sidebar ul.components li ul.sub-menu {
+	background: #3a3a3a !important;
+	left: 100% !important;
+	position: absolute;
+	width: 250px;
+	z-index: 999;
+	display:none;
+}
+#sidebar ul.components li:hover ul.sub-menu{
+	display:block;
+	visibility:visible;
+}
+#sidebar ul.components li ul.sub-menu li {
+	background:none !important;
+	border: none !important;
+	float: left;
+	width: 50%;
+
+}
+#sidebar ul.components li ul.sub-menu li:first-child{
+	border-right:2px solid #4d4d4d !important;
+}
+#sidebar ul.components li ul.sub-menu li a {
+	background:none !important;
+	float: left;
+	font-size: 16px !important;
+	line-height: 24px !important;
+	margin: 0;
+	padding:17px 10px !important;
+}
+.left-area .sidebar-header ul.components li ul.sub-menu li::after{
+	display:none !important;
+}
+#sidebar ul.components li ul.sub-menu li a:hover{
+	text-decoration:none;
+	color:#fff;
+	background:#e1235f !important;
+}
+#sidebar ul.components li ul.sub-menu li a i {
+	font-size: 20px;
+}
+#sidebar.active ul.components li ul.sub-menu li a {
+	padding: 33px 0 !important;
+}
+/*----------------------------Home-Section----------------------------*/
+.main-section {
+	float: left;
+	padding:0px 50px 40px 30px;
+	width: 100%;
+	margin:0px;
+	position:relative;
+}
+.main-section .Home-section {
+	float:left;
+	padding:0px 50px 0px 30px;
+}
+/*----------------------------Heading----------------------------*/
+.heading-main {
+	margin: 25px 0;
+}
+.heading-main h1 {
+	display: inline-block;
+	font-family: "Roboto";
+	font-size: 24px;
+	line-height: 54px;
+	margin: 0 !important;
+}
+.heading-main ul {
+	float: right;
+	margin: 0 !important;
+}
+
+.heading-main ul li {
+	display: inline-block;
+	margin-left: 10px;
+	float:left;
+
+}
+.heading-main ul li:nth-child(2){
+	background:url(../images/sap.png) no-repeat center left;
+	padding:0px 0px 0px 15px
+}
+.heading-main ul li a {
+	color: #212121;
+	font-family: "Roboto",sans-serif;
+	font-size: 20px;
+	font-weight: 300;
+	line-height: 54px;
+	padding: 0 10px;
+}
+.heading-main ul li a:hover{
+	color:#e1235f ;
+	text-decoration:none;
+}
+.heading-main ul li a i {
+	float: left;
+	font-size: 20px;
+	line-height: 52px;
+	padding: 2px 0 0;
+}
+#sidebar.active .sidebar-header .logo a img {
+	padding: 14px 0;
+	width: 100%;
+}
+#sidebar.active .sidebar-header ul.components li a{
+	padding:30px 0px;
+}
+#sidebar.active .sidebar-header ul.components li a span {
+	display: none;
+}
+/*----------------------------Chart----------------------------*/
+.chart-top .col-8 {
+	padding: 0px 15px 0px 0px;
+	border-radius: 3px;
+	margin:0px
+}
+.chart-top .col-4{
+	padding-left:15px;
+}
+.chart-top  .Sales {
+	padding: 15px;
+	border-radius: 3px;
+	margin:0px;
+	background:#fff;float:left;
+	width:100%;
+	position:relative
+}
+.chart-top .Our-Visitors {
+	padding:0px;
+	border-radius: 3px;
+	margin:0px;
+	background:#fff;
+	float:left;
+	width:100%;
+}
+.chart-top h2 {
+	color: #727272;
+	display: inline-block;
+	font-family: "Roboto",sans-serif;
+	font-size: 20px;
+	font-weight: 500;
+	line-height: 30px;
+	margin: 0;width:100%;
+}
+.chart-top  ul.ample{
+	position:absolute;
+	top:30px;
+	right:5px;
+}
+.chart-top  ul.ample li{
+	float:left;
+	margin:0px ;
+	padding:0px 15px;
+	position:relative;
+}
+.chart-top  ul.ample li::before{
+	content:"";
+	position:absolute;
+	border-radius:100%;
+	width:10px;
+	height:10px;
+	left:0px;
+	top:7px;
+	background:#5a0d40
+}
+.chart-top  ul.ample li:last-child::before{
+	background:#e1235f;
+}
+.chart-top  ul.ample li a{
+	float:left;
+	margin:0px ;
+	padding:0px;
+	color:#5a0d40;
+	font-size:16px;
+	font-weight:300;
+}
+.chart-top  ul.ample li:last-child a{
+	color:#e1235f;
+}
+.chart-top p {
+	color: #cdcdcd;
+	display: inline-block;
+	font-family: "Roboto",sans-serif;
+	font-size:14px;
+	font-weight: 400;
+	line-height:24px;
+	margin: 0;
+	padding:0px 0px 10px;
+	width:100%;
+}
+.chart-top .Sales .chart.bar {
+	height: 300px;
+	margin: 30px 0 20px 10%;
+	width: 88% !important;
+}
+.chart-top .Our-Visitors .visitors{
+	float:left;
+	margin:0px ;
+	padding:20px;
+	width:100%;
+	border-top:1px solid #d3d3d3;
+}
+.chart-top .Our-Visitors .visitors ul{
+	float:left;
+	margin:0px ;
+	padding:0px;
+	width:100%;
+}
+.chart-top .Our-Visitors .visitors ul li{
+	float:left;
+	margin:0px ;
+	padding:0px 0px 0px 30px;
+	width:33.3337%;
+	position:relative;
+}
+.chart-top .Our-Visitors .visitors ul li a{
+	margin:0px ;
+	padding:0px;
+	color:#5a0d40;
+	font-size:16px;
+	font-weight:300;
+}
+.chart-top .Our-Visitors .visitors ul li::before{
+	content:"";
+	position:absolute;
+	border-radius:100%;
+	width:10px;
+	height:10px;
+	left:8%;
+	top:9px;
+	background:#5a0d40
+}
+.chart-top .Our-Visitors .visitors ul li:last-child::before{
+	background:#e1235f;
+}
+.chart-top .Our-Visitors .visitors ul li:nth-child(2)::before{
+	background:#c1c1c1;
+}
+.chart-top .Our-Visitors .visitors ul li:first-child a{
+	color:#e1235f;
+}
+.chart-top .Our-Visitors .visitors ul li:nth-child(2) a{
+	color:#c1c1c1;
+}
+.chart-top .Our-Visitors .visitors ul li:last-child a{
+	color:#de243f;
+}
+.chart-top .Our-Visitors h2 {
+	padding: 20px 15px 0;
+}
+.chart-top .Our-Visitors p {
+	padding:0px 15px 10px;
+}
+.chart-top .Our-Visitors .chart.donut {
+	margin: 20px auto 30px;
+}
+.chart-top .Our-Visitors .chart.donut {
+	margin: 20px auto 34px;
+	height: 240px;
+	width: 240px;
+}
+/*----------------------------Revenue----------------------------*/
+.main-section .Total-Revenue{
+	width: 100%;
+	float: left;
+	display: inline-table;
+	padding:0px;
+	margin:30px 0px;
+}
+.main-section .Total-Revenue .col-6{
+	padding: 0px 15px;
+}
+.main-section .Total-Revenue .col-6:first-child{
+	padding-left:0px;
+}
+.main-section .Total-Revenue .col-6:nth-child(2){
+	padding-right:0px;
+}
+.main-section .Total-Revenue .Total-rev{
+	padding: 15px;
+	border-radius: 3px;
+	margin:0px;
+	background:#fff;float:left;
+	width:100%;
+	position:relative
+}
+.main-section .Total-Revenue .Total-rev h2 {
+	color: #565656;
+	display: inline-block;
+	float: left;
+	font-family: "Roboto";
+	font-size: 18px;
+	line-height: 30px;
+	text-transform: uppercase;
+}
+.main-section .Total-Revenue .revenue-right .col-6 {
+	background: #ffffff;
+	border-radius: 3px;
+	margin: 0 0px 30px 0;
+	padding:27px 20px;
+	flex:0 0 47%;
+	max-width:47%
+}
+.main-section .Total-Revenue .revenue-right .col-6:nth-child(2n){
+	float:right
+}
+.main-section .Total-Revenue .revenue-right .col-6:nth-child(3), .main-section .Total-Revenue .revenue-right .col-6:nth-child(4){
+	margin-bottom:0px;
+}
+.main-section .Total-Revenue .text {
+	display: inline-table;
+	float: left;
+	margin-top: 0;
+	width: auto;
+}
+.main-section .Total-Revenue .text h1 {
+	float: left !important;
+	font-family: "Roboto",sans-serif;
+	font-size: 24px;
+	font-weight: 300 !important;
+	line-height: 30px;
+	margin: 0 0 10px;
+	width: 100%;
+}
+.main-section .Total-Revenue .text p {
+	color: #9cb4c2;
+	font-family: "Roboto",sans-serif;
+	font-size: 14px;
+	font-weight: 400;
+	line-height:20px;
+}
+
+.main-section .Total-Revenue .icons {
+	float: right;
+	position: relative;
+}
+.main-section .Total-Revenue .icons i {
+	border: 5px solid #fafafa;
+	border-radius: 50%;
+	color: #a6b7bf;
+	font-size: 30px;
+	height: 75px;
+	line-height: 66px;
+	padding: 0;
+	text-align: center;
+	width: 75px;
+	margin: 0 !important;
+}
+.main-section .Total-Revenue .icons::after {
+	position: absolute;
+	content: "";
+	width: 75px;
+	top: 2px;
+	left: 0px;
+	border-radius: 100%;
+	background: none;
+	height: 75px;
+}
+.main-section .Total-Revenue .icon1::after {
+	border-left: 5px solid transparent;
+	border-top: 5px solid transparent;
+	border-bottom: 5px solid transparent;
+	border-right:  5px solid #705aed;
+}
+.main-section .Total-Revenue  .icon2::after {
+	border-left: 5px solid transparent;
+	border-top: 5px solid transparent;
+	border-bottom: 5px solid transparent;
+	border-right: 5px solid #f52248;
+}
+
+.main-section .Total-Revenue  .icon3::after {
+	border-left: 5px solid transparent;
+	border-top: 5px solid transparent;
+	border-bottom:5px solid transparent;
+	border-right: 5px solid #ffbb32;
+}
+
+.main-section .Total-Revenue  .icon4::after {
+	border-left: 5px solid transparent;
+	border-top: 5px solid transparent;
+	border-bottom: 5px solid transparent;
+	border-right: 5px solid #009cfb;
+}
+.main-section .Total-Revenue  ul.Revenue {
+	float: right;
+	position: relative;
+}
+.main-section .Total-Revenue  ul.Revenue  li{
+	float:left;
+	margin:0px ;
+	padding:0px 15px;
+	position:relative;
+}
+.main-section .Total-Revenue  ul.Revenue  li::before{
+	content:"";
+	position:absolute;
+	border-radius:100%;
+	width:10px;
+	height:10px;
+	left:0px;
+	top:7px;
+	background:#5a0d40
+}
+.main-section .Total-Revenue  ul.Revenue  li:last-child::before{
+	background:#e1235f;
+}
+.main-section .Total-Revenue  ul.Revenue  a{
+	float:left;
+	margin:0px ;
+	padding:0px;
+	color:#575757;
+	font-size:16px;
+	font-weight:400;
+}
+
+.main-section .Total-Revenue .spline-chart {
+	float: left;
+	width: 100%;
+}
+.main-section .Total-Revenue .spline-chart canvas {
+	float: left;
+}
+/*----------------------------Sales----------------------------*/
+.main-section .sales-chart{
+	width: 100%;
+	float: left;
+	display: inline-table;
+	padding:0px;
+	margin:0px;
+}
+.main-section .sales-chart .col-6{
+	padding: 0px 15px;
+}
+.main-section .sales-chart .col-6:first-child{
+	padding-left:0px !important;
+}
+.main-section .sales-chart .col-6:nth-child(2){
+	padding-right:0px !important;
+}
+.main-section .sales-chart .Total-sale {
+	padding: 15px;
+	border-radius: 3px;
+	margin:0px;
+	background:#fff;float:left;
+	width:100%;
+	position:relative
+}
+.main-section .sales-chart .Total-sale h2{
+	float: left !important;
+	font-family: "Roboto",sans-serif;
+	font-size: 24px;
+	font-weight: 300 !important;
+	line-height: 30px;
+	margin: 0 0 10px;
+}
+.main-section .sales-chart .Total-sale form {
+	float:right
+}
+.main-section .sales-chart .Total-sale form select{
+	float:left;
+	width:120px;
+	height:30px;
+	border:1px solid #d3d3d3;
+	padding:0px 5px;
+	font-family: "Roboto",sans-serif;
+	font-size: 15px;
+	font-weight: 300 !important;
+}
+.main-section .sales-chart .bottom-part {
+	float: left;
+	width: 96%;
+	margin:30px 2%;
+	padding: 0px;
+	position:relative
+}
+
+.main-section .sales-chart .cart-content {
+	float: left;
+	width: auto;
+	display: inline-table;
+	margin-top: 20px;
+	margin-left:40px;
+}
+.main-section .sales-chart .cart-content p {
+	font-family: 'Roboto';
+	font-weight: 400;
+	color: #9cb4c2;
+	font-size: 14px;
+}
+.main-section .sales-chart .cart-content h1 {
+	float: left !important;
+	font-family: "Roboto",sans-serif;
+	font-size: 24px;
+	margin-bottom: 10px;
+	width: 100%;
+}
+.main-section .sales-chart .cart-content ul{
+	margin-top:20px;
+	float:left
+}
+.main-section .sales-chart .cart-content li {
+	font-family: 'Roboto';
+	font-weight: 400;
+	color: #95a1ad;
+	font-size: 14px;
+	margin-bottom: 5px;
+}
+
+.main-section .sales-chart .cart-content li::before {
+	content: '';
+	height: 8px;
+	width: 8px;
+	background: #e1235f;
+	display: inline-block;
+	border-radius: 100%;
+	position: relative;
+	margin-right: 8px;
+}
+
+.main-section .sales-chart .cart-content li:nth-child(2)::before {
+	background: #5a0d40;
+}
+.main-section .sales-chart .cart-graph {
+	border: 15px solid #edf1f5;
+	border-radius: 100%;
+	display: inline-block;
+	float: left;
+	height: 240px;
+	padding: 0;
+	position: relative;
+	width: 240px;
+	text-align:center;
+	line-height:225px
+}
+
+.main-section .sales-chart .cart-graph::after {
+	position: absolute;
+	content: "";
+	width: 240px;
+	top: -16px;
+	left: -15px;
+	border-radius: 100%;
+	background: none;
+	height: 240px;
+	border-left: 15px solid transparent;
+	border-top: 15px solid #e1235f;
+	border-bottom: 15px solid transparent;
+	border-right: 15px solid transparent;
+}
+
+.main-section .sales-chart .cart-graph::before {
+	position: absolute;
+	content: "";
+	width:240px;
+	top: -15px;
+	left: -16px;
+	border-radius: 100%;
+	background: none;
+	height: 240px;
+	border-left: 15px solid #5a0d40;
+	border-top: 15px solid transparent;
+	border-bottom: 15px solid transparent;
+	border-right: 15px solid transparent;
+}
+.main-section .sales-chart i {
+	border: 2px solid #fafafa;
+	border-radius:100%;
+	color: #54667a;
+	font-size: 24px;
+	padding: 0px;
+	width:130px;
+	height:130px;
+	text-align:center;
+	line-height:140px;
+}
+.main-section .sales-chart .Sale-chart {
+	padding: 15px;
+	border-radius: 3px;
+	margin:0px;
+	background:#fff;float:left;
+	width:100%;
+	position:relative
+}
+.main-section .sales-chart .Sale-chart h2{
+	float: left !important;
+	font-family: "Roboto",sans-serif;
+	font-size: 24px;
+	font-weight: 300 !important;
+	line-height: 30px;
+	margin: 0 0 10px;
+}
+.main-section .sales-chart .Sale-chart ul.growth {
+	float: right;
+	position: relative;
+}
+.main-section .sales-chart .Sale-chart ul.growth li{
+	float:left;
+	margin:0px ;
+	padding:0px 15px;
+	position:relative;
+}
+.main-section .sales-chart .Sale-chart ul.growth li::before{
+	content:"";
+	position:absolute;
+	border-radius:100%;
+	width:10px;
+	height:10px;
+	left:0px;
+	top:7px;
+	background:#5a0d40
+}
+.main-section .sales-chart .Sale-chart ul.growth li:last-child::before{
+	background:#e1235f;
+}
+.main-section .sales-chart .Sale-chart ul.growth a{
+	float:left;
+	margin:0px ;
+	padding:0px;
+	color:#575757;
+	font-size:16px;
+	font-weight:300;
+}
+.main-section .sales-chart .Sale-chart .chart.bar {
+	float: left;
+	height: 240px;
+	margin: 30px 0 30px 15% !important;
+	width: 80% !important;
+}
+/*----------------------------Recents----------------------------*/
+.main-section .recents{
+	width: 100%;
+	float: left;
+	display: inline-table;
+	padding:0px;
+	margin:30px 0px;
+}
+.main-section .recents .col-8{
+	padding: 0px 15px 0px 0px;
+	border-radius:0px;
+	margin:0px
+}
+.main-section .recents .col-4{
+	padding: 0px 0px 0px 15px;
+}
+.main-section .recents .recents-inner {
+	padding: 15px;
+	border-radius: 3px;
+	margin:0px;
+	background:#fff;float:left;
+	width:100%;
+	position:relative
+}
+.main-section .recents .recents-inner .recent-head {
+	float: left;
+	position: relative;
+	width: 100%;
+	padding:0px 0px 20px
+}
+.main-section .recents .recents-inner .recent-head h1{
+	float: left;
+	color: #565656;
+	display: inline-block;
+	font-family: "Roboto" ;
+	font-size: 18px;
+	text-transform: uppercase;
+	line-height:30px
+}
+.main-section .recent-head .reload {
+	float: right;
+}
+.main-section .recent-head .reload a {
+	float: left; margin:0px 10px;line-height:30px ;color: #565656; font-size:20px
+}
+.main-section .recent-head .reload a:nth-child(2){
+	margin-right:0px;
+}
+.main-section .recents .summary {
+	margin:0px 0px 30px;
+	display: inline-table;
+	float: left;
+	width: 100%;
+}
+
+.main-section .recents  .summary p {
+	font-size: 14px;
+	font-weight: 400;
+	display: inline-block;
+}
+
+.main-section .recents .summary a {
+	float: right;
+	color: #20a1b8;
+	font-size: 14px;
+}
+.main-section .recents table {
+	width: 100%;
+	text-align: left;
+	margin:0px;
+	float:left;
+}
+.main-section .recents table tr{
+	float:left;
+	width:100%;
+	margin:0px;
+	padding:0px;
+}
+.main-section .recents table th {
+	border-top: 2px solid #e0e9f2;
+	border-bottom: 2px solid #e0e9f2;
+	padding: 10px;
+	font-family: 'Roboto';
+	font-size: 14px;
+	font-weight: 500;
+	float:left;
+	width:20%;
+}
+
+.main-section .recents table td {
+	border-bottom: 1px solid #e0e9f2;
+	padding: 10px;
+	font-family: 'Roboto';
+	font-size: 14px;
+	font-weight: 400;
+	float:left;
+	width:20%;
+}
+
+.main-section .recents table td a {
+	background: #16d39a;
+	padding: 3px 8px;
+	border-radius: 4px;
+	color: #ffffff;
+}
+.main-section .recents .summary i {
+	float: right;
+	line-height: 24px;
+	padding: 0 0 0 10px;
+}
+.main-section .recents table tr td.inv-link a {
+	background: none  !important;
+	border-radius: 0;
+	color: #39a3af;
+	padding: 0 !important;
+}
+.main-section .recents table tr td.overdue a{
+	background:#e1235f
+}
+
+#chart #numbers {
+	display: inline-block;
+	float: left;
+	height: 100%;
+	left: 0;
+	margin: 0;
+	padding: 0;
+	position: absolute;
+	top: 0 !important;
+	width: 100%;
+}
+
+#chart #numbers li {
+	float: left;
+	height: 50px;
+	list-style: outside none none;
+	padding-right: 1em;
+	position: relative;
+	text-align: left;
+	width: 100%;
+}
+#chart #numbers li:last-child { height: 30px; }
+
+#chart #bars li span {
+	color: #eee;
+	width: 100%;
+	position: absolute;
+	bottom: 0em;
+	left: 0;
+	text-align: center;
+}
+.main-section .recents .monthly-sales {
+	background: #ffffff !important;
+	border-radius: 3px;
+	margin: 0;
+	padding: 20px !important;
+	width: 100%;
+}
+.main-section .recents .monthly-sales #chart {
+	display: inline-table;
+	float: left;
+	height: 200px;
+	margin: 15px 0px 30px;
+	padding: 0;
+	position: relative;
+	width: 100% !important;
+}
+.main-section .recents .monthly-sales #chart ul#bars {
+	float: left;
+	height: 220px;
+	width: 85%;
+	margin:0px 0px 0px 15%;
+	padding:0px;
+}
+#chart #bars li {
+	display: inline-table;
+	height: 220px;
+	margin: 0 7px;
+	position: relative;
+	text-align: center;
+	width: 8px;
+	float:left
+}
+#chart #bars li:last-child{
+	margin-right:0px;
+}
+#chart #bars li .bar {
+	background: #e1235f;
+	bottom: 0;
+	display: block;
+	margin-left: 0 !important;
+	position: absolute;
+	width: 8px;
+}
+#chart #bars li .bar:hover {
+	background: #5a0d40;
+	cursor: pointer;
+}
+
+#chart #bars li .bar:hover:before {
+	color: #000;
+	content: attr(data-percentage) '%';
+	position: relative;
+	bottom: 25px;
+	font-size:12px;
+	font-family:'Roboto', sans-serif;
+}
+#chart #bars li span {
+	bottom: -25px;
+	color: #000000;
+	font-family: "Roboto",sans-serif;
+	font-size: 14px;
+	left: 0;
+	position: absolute;
+	text-align: center;
+	width: 100%;
+}
+#chart #numbers li::after {
+	border-bottom: 1px dashed #d3d3d3;
+	content: "";
+	height: 1px;
+	position: absolute;
+	right: 0;
+	top: 5px;
+	width: 84%;
+}
+#chart #numbers li span {
+	float: left;
+	font-family: "Roboto",sans-serif;
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 12px;
+}
+#chart #numbers li:last-child span {
+	line-height: 30px;
+}
+#chart #numbers li:last-child::after {
+	bottom: 10px;
+	top: auto;
+}
+#chart #bars li:first-child {
+	margin-left: 6px;
+}
+#chart #numbers li:first-child::after {
+	top: 0 !important;
+}
+#chart #numbers li:first-child span {
+	margin-top: -6px;
+}
+.main-section .recents .monthly-sales .Total-monthly-Sales {
+	border-top: 1px solid #d3d3d3;
+	float: left;
+	margin: 20px 0 0;
+	padding: 20px 0 7px;
+	width: 100%;
+}
+.main-section .recents .monthly-sales .Total-monthly-Sales h2 {
+	float: left;
+	font-family: "Roboto",sans-serif;
+	font-size: 19px;
+	line-height: 30px;
+	margin: 0;
+	text-align: center;
+	width: 100%;
+	color:#838383;
+}
+.main-section .recents .monthly-sales .Total-monthly-Sales p {
+	float: left;
+	font-family: "Roboto",sans-serif;
+	font-size: 16px;
+	line-height: 30px;
+	margin: 0;
+	text-align: center;
+	width: 100%;
+	color:#838383;
+}
+.main-section .recents .monthly-sales .Total-monthly-Sales p a {
+	background: #e1235f;
+	border-radius: 4px;
+	color: #ffffff;
+	margin: 0 10px 0 0;
+	padding: 4px 10px;
+}
+.main-section .recents .monthly-sales .Total-monthly-Sales p a i{
+	margin-left:10px
+}
+.main-section .recents .monthly-sales .Total-monthly-Sales p a:hover{
+	text-decoration:none;
+	background:#000;
+}
+/*----------------------------Clients----------------------------*/
+.Clients-Management {
+	background: #ffffff !important;
+	border-radius: 3px;
+	float: left;
+	width: 100%;
+	margin:0px 0px 30px !important
+}
+.Clients-Management .col-7{
+	padding:0px 15px 0px 0px;
+}
+.Clients-Management .col-5{
+	padding:0px 0px 0px 15px;
+}
+.Clients-Management ul{
+	float:left;
+	margin:0px;
+	padding:0px;
+	width:100%;
+}
+.Clients-Management ul li{
+	float:left;
+	margin:0px;
+	padding:15px 20px;
+	width:100%;
+	border-bottom:1px solid #d3d3d3;
+	color:#343434;
+	font-size:22px;
+	font-family:"Roboto", sans-serif;
+	line-height:44px;
+	font-weight:500;
+}
+.Clients-Management ul li span{
+	font-weight:300; text-align:right; float:right
+}
+.Clients-Management ul li:last-child{
+	border:none;
+}
+.Clients-Management img {
+	float: left;
+	width: 100%;
+	padding:50px;
+}
+
+/*----------------------------Campaign----------------------------*/
+.campaign-Management{
+	background: #ffffff !important;
+	border-radius: 3px;
+	float: left;
+	width: 100%;
+	margin:0px;
+}
+.showing-list{
+	float: left;
+	width: 100%;
+	margin:0px;
+	padding:15px;
+}
+.showing-list .showing-left{
+	float: left;
+	width: 50%;
+	margin:0px;
+	padding:0px;
+}
+.showing-list .showing-left h2 {
+	float: left;
+	font-family: "Roboto",sans-serif;
+	font-size: 20px;
+	font-weight: 300;
+	line-height: 36px;
+	margin: 0;
+	padding: 0 15px 0 0;
+}
+.showing-list .showing-left label {
+	float: left;
+	font-family: "Roboto",sans-serif;
+	font-size: 20px;
+	font-weight: 300;
+	line-height: 36px;
+	margin: 0;
+	padding: 0 15px 0 0;
+}
+.showing-list .showing-left form{
+	float: left;
+	width:200px;
+	margin:0px;
+	padding:0px;
+}
+.showing-list .showing-left form select {
+	background-color: white;
+	border: 1px  solid #e3e3e3;
+	display: inline-block;
+	font-size:18px;
+	font-family:"Roboto", sans-serif;
+	font-weight:300;
+	line-height: 1.5em;
+	padding: 0px 10px;
+
+	/* reset */
+
+	margin: 0;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	width:200px;
+	height:36px;
+}
+
+.showing-list .showing-left form select.minimal {
+	background-image:
+			linear-gradient(45deg, transparent 50%, gray 50%),
+			linear-gradient(135deg, gray 50%, transparent 50%),
+			linear-gradient(to right, #ccc, #ccc);
+	background-position:
+			calc(100% - 18px) calc(0.8em + 2px),
+			calc(100% - 14px) calc(0.8em + 2px),
+			calc(100% - 2em) 0em;
+	background-size:
+			5px 5px,
+			5px 5px,
+			1px 2.5em;
+	background-repeat: no-repeat;
+}
+
+.showing-list .showing-left form select.minimal:focus {
+	background-image:
+			linear-gradient(45deg, #e1235f 50%, transparent 50%),
+			linear-gradient(135deg, transparent 50%, #e1235f 50%),
+			linear-gradient(to right, #ccc, #ccc);
+	background-position:
+			calc(100% - 13px) 0.8em,
+			calc(100% - 17px) 0.8em,
+			calc(100% - 2em) 0em;
+	background-size:
+			5px 5px,
+			5px 5px,
+			1px 2em;
+	background-repeat: no-repeat;
+	border-color: #e1235f;
+	outline: 0;
+}
+
+.showing-list .showing-right{
+	float: left;
+	width:50%;
+	margin:0px;
+	padding:0px;
+}
+
+.showing-list .showing-right form {
+	float:right;
+	padding:0px;
+	padding:0px;
+	position:relative;
+	display:inline-table;
+	width:auto;
+	margin:0px
+}
+.showing-list .showing-right input {
+	border: 2px solid #d3d3d3;
+	height: 36px;
+	width: 240px;
+	float:left;
+	padding:0px 10px;
+	font-family:"Roboto", sans-serif;
+	font-size:20px;
+	font-weight:300;
+}
+.showing-list .showing-right input[type="image"] {
+	border: medium none;
+	cursor: pointer;
+	float: left;
+	height: auto !important;
+	right:0px;
+	position: absolute;
+	top:0px;
+	width: auto;
+	z-index: 999 !important;
+	border-left:2px solid #d3d3d3;
+	padding:9px 10px
+}
+.campaign-Management table {
+	border: none;
+	float: left;
+	width: 100%;
+	border-top:1px solid #d3d3d3;
+}
+.campaign-Management table tr{
+	border-bottom:1px solid #d3d3d3;
+	float:left;
+	width:100%;
+	margin:0px;
+	padding:0px;
+}
+.campaign-Management table tr th, .campaign-Management table tr td{
+	border-right:1px solid #d3d3d3;
+	float:left;
+	margin:0px;
+	padding:10px 15px;
+	font-family:'Roboto', sans-serif;
+	font-size:16px;
+	font-weight:400;
+	line-height:40px;
+}
+.campaign-Management table tr th{
+	font-weight:700;
+	font-size:18px;
+}
+.campaign-Management table tr th:last-child, .campaign-Management table tr td:last-child{
+	border-right:0px;
+}
+.campaign-Management table tr th:first-child, .campaign-Management table tr td:first-child{
+	width:7%
+}
+.campaign-Management table tr th:nth-child(2), .campaign-Management table tr td:nth-child(2){
+	width:20%
+}
+.campaign-Management table tr th:nth-child(3), .campaign-Management table tr td:nth-child(3){
+	width:30%
+}
+.campaign-Management table tr th:nth-child(4), .campaign-Management table tr td:nth-child(4){
+	width:23%
+}
+.campaign-Management table tr th:nth-child(5), .campaign-Management table tr td:nth-child(5){
+	width:20%
+}
+.campaign-Management table tr td a{
+	float:left;
+	color:#fff;
+	text-transform:capitalize;
+	width:100%;
+	text-align:center;
+	background:#e1235f;
+	font-family:'Roboto', sans-serif;
+	font-size:18px;
+	font-weight:500;
+	line-height:40px;
+}
+.campaign-Management table tr td a:hover{
+	text-decoration:none;
+	background:#000;
+}
+/*----------------------------Campaign----------------------------*/
+.Campaign-List{
+	background: #ffffff !important;
+	border-radius: 3px;
+	float: left;
+	width: 100%;
+	margin:0px;
+}
+.Campaign-List table {
+	border: none;
+	float: left;
+	width: 100%;
+	border-top:1px solid #d3d3d3;
+}
+.Campaign-List table tr{
+	border-bottom:1px solid #d3d3d3;
+	float:left;
+	width:100%;
+	margin:0px;
+	padding:0px;
+}
+
+.Campaign-List table tr th, .Campaign-List table tr td{
+	border-right:1px solid #d3d3d3;
+	float:left;
+	margin:0px;
+	padding:10px 15px;
+	font-family:'Roboto', sans-serif;
+	font-size:16px;
+	font-weight:400;
+	line-height:40px;
+	width:14%;
+	color:#101010;
+}
+.Campaign-List table tr th{
+	font-weight:700;
+	font-size:18px;
+	color:#101010;
+}
+.Campaign-List table tr th:first-child, .Campaign-List table tr td:first-child{
+	width:6%
+}
+.Campaign-List table tr th:nth-child(2), .Campaign-List table tr td:nth-child(2){
+	width:12%
+}
+.Campaign-List table tr th:nth-child(3), .Campaign-List table tr td:nth-child(3){
+	width:12%
+}
+.Campaign-List table tr th:last-child, .Campaign-List table tr td:last-child{
+	border-right:0px;
+}
+.Campaign-List table tr td a{
+	float:left;
+	color:#fff;
+	text-transform:capitalize;
+	text-align:center;
+	background:#e1235f;
+	font-family:'Roboto', sans-serif;
+	font-size:15px;
+	font-weight:500;
+	line-height:40px;
+	padding:0px 0px;
+	width:100%;
+}
+.Campaign-List table tr td a:hover{
+	text-decoration:none;
+	background:#000;
+	color:#fff;
+}
+/*----------------------------Invoice----------------------------*/
+.invoice-Management{
+	background: #ffffff !important;
+	border-radius: 3px;
+	float: left;
+	width: 100%;
+	margin:0px;
+}
+.invoice-Management table {
+	border: none;
+	float: left;
+	width: 100%;
+	border-top:1px solid #d3d3d3;
+	border-bottom:1px solid #d3d3d3;
+}
+.invoice-Management table tr{
+	border-bottom:1px solid #d3d3d3;
+	float:left;
+	width:100%;
+	margin:0px;
+	padding:0px;
+}
+.invoice-Management table tbody tr:last-child{
+	border-bottom:none;
+}
+.invoice-Management table tr th, .invoice-Management table tr td{
+	border-right:1px solid #d3d3d3;
+	float:left;
+	margin:0px;
+	padding:10px 15px;
+	font-family:'Roboto', sans-serif;
+	font-size:20px;
+	font-weight:300;
+	line-height:40px;
+	width:20%;
+}
+.invoice-Management table tr th:last-child, .invoice-Management table tr td:last-child{
+	border-right:none;
+}
+.invoice-Management table tr th{
+	font-weight:700;
+	font-size:18px;
+}
+.invoice-Management table tr td a.paid{
+	float:left;
+	color:#fff;
+	text-transform:uppercase;
+	text-align:center;
+	background:#19c714;
+	font-family:'Roboto', sans-serif;
+	font-size:20px;
+	font-weight:300;
+	line-height:40px;
+	padding:0px 20px;
+}
+.invoice-Management table tr td a.paid:hover{
+	text-decoration:none;
+	background:#000;
+	color:#fff;
+}
+.invoice-Management table tr td a.panding{
+	float:left;
+	color:#fff;
+	text-transform:uppercase;
+	text-align:center;
+	background:#e1235f;
+	font-family:'Roboto', sans-serif;
+	font-size:20px;
+	font-weight:300;
+	line-height:40px;
+	padding:0px 20px;
+}
+.invoice-Management table tr td a.panding:hover{
+	text-decoration:none;
+	background:#000;
+	color:#fff;
+}
+.invoice-Management table tr td a.processing{
+	float:left;
+	color:#fff;
+	text-transform:uppercase;
+	text-align:center;
+	background:#5a0f43;
+	font-family:'Roboto', sans-serif;
+	font-size:20px;
+	font-weight:300;
+	line-height:40px;
+	padding:0px 20px;
+}
+.invoice-Management table tr td a.processing:hover{
+	text-decoration:none;
+	background:#000;
+	color:#fff;
+}
+.invoice-Management table tr td a{
+	color:#e1235f;
+}
+.invoice-Management table tr td a:hover{
+	color:#000;
+	text-decoration:none;
+}
+/*----------------------------Client----------------------------*/
+.client-dashboard .col-3{
+	width: 23.5%;
+	float: left;
+	background:#fff;
+	border-radius:3px;
+	padding:15px ;
+	margin: 0px 2% 0px 0px;
+}
+.client-dashboard .col-3:nth-child(4){
+	margin-right:0px;
+}
+.client-dashboard .col-3 .icon {
+	float: left;
+	width: 50%;
+}
+.client-dashboard .col-3 .text {
+	float: right;
+	width: 50%;
+}
+.client-dashboard p {
+	float: left;
+	font-size: 15px;
+	line-height: 30px;
+	margin: 0;
+	padding: 10px 0 0;
+	width: 100%;
+	color:#929292
+}
+.client-dashboard .col-3 .icon {
+	border: 8px solid #d3d3d3;
+	border-radius: 100%;
+	float: left;
+	height: 70px;
+	width: 70px;
+	position:relative
+}
+.client-dashboard .col-3 .icon::before {
+	border-top:8px solid #e1235f;
+	border-left:8px solid rgba(0, 0, 0, 0);
+	border-right:8px solid #e1235f;
+	border-bottom:8px solid #e1235f;
+	border-radius: 100%;
+	content: "";
+	height:70px;
+	left:-8px;
+	position: absolute;
+	top: -8px;
+	width:70px;
+}
+.client-dashboard .col-3:nth-child(2) .icon {
+	border:none;
+	border-radius: 100%;
+	float: left;
+	height: 70px;
+	width: 70px;
+	position:relative;
+	background:#f2f2f2;
+}
+.client-dashboard .col-3:nth-child(2) .icon::before {
+	border-top:8px solid #e1235f;
+	border-left:8px solid rgba(0, 0, 0, 0);
+	border-right:8px solid #e1235f;
+	border-bottom:8px solid #e1235f;
+	border-radius: 100%;
+	content: "";
+	height:70px;
+	left:-8px;
+	position: absolute;
+	top: -8px;
+	width:70px;
+}
+.client-dashboard .text h3 {
+	color: #e1235f;
+	float: left;
+	font-family: "Roboto",sans-serif;
+	font-size: 23px;
+	font-weight: 500;
+	line-height: 30px;
+	margin: 0;
+	padding: 0;
+	text-align: right;
+	width: 100%;
+}
+.client-dashboard .text h6{
+	color: #e1235f;
+	float: left;
+	font-family: "Roboto",sans-serif;
+	font-size: 18px;
+	font-weight: 300;
+	line-height: 30px;
+	margin: 0;
+	padding: 0;
+	text-align: right;
+	width: 100%;
+}
+.client-dashboard .progress {
+	background:none !important;
+	float: left;
+	padding: 0px;
+	position: relative;
+	width:80px;
+	height:80px;
+}
+.client-dashboard .col-3:nth-child(2) .progress .progressinner .cover{
+	background:#5d133e
+}
+.client-dashboard .col-3:nth-child(4) .progress .progressinner .cover{
+	background:#5d133e
+}
+.progress .progressinner .displayprogress {
+	font-family: "Roboto",sans-serif;
+	font-size: 18px;
+	font-weight: 300;
+	line-height: 60px !important;
+}
+/*----------------------------Earnings----------------------------*/
+.Total-Earnings {
+	float: left;
+	margin: 30px 0;
+	width: 100%;
+}
+.Total-Earnings .col-3, .Total-Earnings .col-6{
+	background:#fff;
+	border-radius:5px;
+	padding:15px;
+}
+.Total-Earnings .col-3{
+	width:23.5%;
+	margin-right:2%;
+}
+.Total-Earnings .col-6{
+	margin-right:2%; width:49%
+}
+.Total-Earnings .col-3:nth-child(3){
+	margin-right:0px !important;
+}
+.Total-Earnings h2 {
+	color: #e1235f;
+	float: left;
+	font-family: "Roboto",sans-serif;
+	font-size: 17px !important;
+	font-weight: 400 !important;
+	line-height: 30px !important;
+	margin: 0 !important;
+	padding: 0;
+	width: 100%;
+}
+.Total-Earnings .earning{
+	float: left;
+	margin:10px 0px 0;
+	width: 100%;
+}
+.Total-Earnings .earning .col-6, .Total-Earnings .earning .col-4{
+	margin:0px !important;
+	padding:0px;
+	text-align:center;
+}
+
+.Total-Earnings .earning h3 {
+	color: #e1235f;
+	float: left;
+	font-family: "Roboto",sans-serif;
+	font-size: 18px !important;
+	font-weight:700 !important;
+	line-height: 30px !important;
+	margin: 0 !important;
+	padding: 0;
+	width: 100%;
+}
+.Total-Earnings .earning p {
+	color: #767473;
+	float: left;
+	font-family: "Roboto",sans-serif;
+	font-size: 15px !important;
+	font-weight:400 !important;
+	line-height: 24px !important;
+	margin: 0 !important;
+	padding: 0;
+	width: 100%;
+}
+.Total-Earnings #pie{
+	padding:50px 0px;
+	float:left;
+	width:100%;
+}
+.Total-Earnings #bar-chart {
+	float: left;
+	width: 100%;
+}
+.Total-Earnings #donut_chart {
+	float: left;
+	width: 100%;
+}
+.Total-Earnings  #multiLineChart{
+	float: left;
+	width: 100%;
+	margin:48px 0px;
+}
+/*----------------------------Order----------------------------*/
+.Order-today {
+	background: #ffffff;
+	float: left;
+	width: 100%;
+	border-raidus:5px;
+	margin:0px 0px 30px;
+	padding:0px;
+}
+.Order-today .col-8 {
+	border-right: 1px solid #d3d3d3;
+	float: left;
+	padding:  0 0;
+}
+.Order-today .col-4 {
+	float: left;
+	padding:0px 15px;
+}
+.Order-today .col-6, .Order-today .col-3{
+	padding: 0px 15px;
+}
+.Order-today .col-6 .col-6{
+	padding:0px;
+}
+.Order-today .col-8 .col-center {
+	border-left: 1px solid #d3d3d3;
+	border-right: 1px solid #d3d3d3;
+}
+.Order-today h2 {
+	color: #797979;
+	float: left;
+	font-family: "Roboto",sans-serif;
+	font-size: 15px;
+	font-weight: 400;
+	line-height: 36px;
+	margin: 0;
+	padding: 10px 0 0;
+	text-align: center;
+	text-transform: uppercase;
+	width: 100%;
+}
+.Order-today p {
+	color: #797979;
+	float: left;
+	font-family: "Roboto",sans-serif;
+	font-size: 16px;
+	font-weight: 400;
+	line-height: 36px;
+	margin: 0;
+	padding:15px 0 ;
+	text-align: center;
+	text-transform: uppercase;
+	width: 100%;
+	border-top:1px solid #d3d3d3;
+}
+.Order-today .icon {
+	float: left;
+	margin: 0;
+	padding:15px 0px;
+	width: 100%;
+	text-align:center;
+}
+.Order-today .icon a i{
+	margin: 0;
+	padding: 0;
+	width:80px;
+	height:80px;
+	text-align:center;
+	font-size:24px;
+	color:#666666;
+	line-height:76px;
+	border:2px solid #e1235f;
+	border-radius:100%;
+
+}
+.Order-today h3{
+	color: #797979;
+	float: left;
+	font-family: "Roboto",sans-serif;
+	font-size: 16px;
+	font-weight: 400;
+	line-height: 24px;
+	margin: 0;
+	padding:10px 0px ;
+	text-align: center;
+	text-transform: uppercase;
+	width: 100%;
+}
+.Order-today h3 span{
+	float: left;
+	width: 100%;
+}
+.Order-today .ct-chart {
+	float: left;
+	width: 100%;
+}
+.Order-today #spline{
+	float: left;
+	width: 100% !important;
+}
+.Order-today #spline canvas {
+	float: left;
+	width: 100% !important;
+	height:220px !important
+}
+/*----------------------------Latest Project----------------------------*/
+.latest-project{
+	width: 100%;
+	float: left;
+	padding:0px;
+	margin: 0px;
+	background:#fff;
+	border-radius:5px;
+}
+.latest-project .project {
+	float: left;
+	margin: 0;
+	padding:10px 15px;
+	width: 100%;
+}
+.latest-project .project h2 {
+	float: left;
+	margin: 0;
+	padding: 0;
+	font-size:20px;
+	font-weight:500;
+	line-height:40px;
+	font-family:"Roboto", sans-serif;
+	color:#000;
+}
+.latest-project .project ul{
+	float: right;
+	margin: 0;
+	padding:0px;
+}
+.latest-project .project ul li{
+	float: left;
+	margin: 0;
+	padding:0px;
+}
+.latest-project .project ul li a{
+	float: left;
+	margin: 0;
+	padding:0px;
+}
+.latest-project .project ul li a i{
+	float: left;
+	margin: 0;
+	padding:0px;
+	font-size:16px;
+	font-weight:400;
+	line-height:40px;
+	color:#8a8a8a;
+}
+.latest-project table {
+	border: none;
+	float: left;
+	width: 100%;
+	border-top:1px solid #d3d3d3;
+}
+.latest-project table tr{
+	border-bottom:1px solid #d3d3d3;
+	float:left;
+	width:100%;
+	margin:0px;
+	padding:0px;
+}
+.latest-project table tbody tr:last-child{
+	border-bottom:none;
+}
+.latest-project table tr th, .latest-project table tr td{
+	border-right:1px solid #d3d3d3;
+	float:left;
+	margin:0px;
+	padding:10px 15px;
+	font-family:'Roboto', sans-serif;
+	font-size:20px;
+	font-weight:300;
+	line-height:40px;
+	width:20%;
+}
+.latest-project table tr th:first-child, .latest-project table tr td:first-child{
+	width:5%
+}
+.latest-project table tr th:nth-child(2), .latest-project table tr td:nth-child(2){
+	width:25%
+}
+.latest-project table tr th:nth-child(3), .latest-project table tr td:nth-child(3){
+	width:15%
+}
+.latest-project table tr th:nth-child(4), .latest-project table tr td:nth-child(4){
+	width:15%
+}
+.latest-project table tr th:nth-child(5), .latest-project table tr td:nth-child(5){
+	width:20%
+}
+.latest-project table tr th:last-child, .latest-project table tr td:last-child{
+	border-right:none;
+	width:20%
+}
+.latest-project table tr th{
+	font-weight:700;
+	font-size:18px;
+}
+.latest-project table tr td a.Released{
+	float:left;
+	color:#fff;
+	text-align:center;
+	background:#16c670;
+	font-family:'Roboto', sans-serif;
+	font-size:15px;
+	font-weight:400;
+	line-height:34px;
+	padding:0px 10px;
+	border-radius:5px;
+	margin:3px 0px 0px;
+}
+.latest-project table tr td a.Released:hover{
+	text-decoration:none;
+	background:#000;
+	color:#fff;
+}
+.latest-project table tr td a.Pending{
+	float:left;
+	color:#fff;
+	text-align:center;
+	background:#dc1d3e;
+	font-family:'Roboto', sans-serif;
+	font-size:15px;
+	font-weight:400;
+	line-height:34px;
+	padding:0px 10px;
+	border-radius:5px;
+	margin:3px 0px 0px;
+}
+.latest-project table tr td a.Pending:hover{
+	text-decoration:none;
+	background:#000;
+	color:#fff;
+}
+.latest-project table tr td a.Work-Progress{
+	float:left;
+	color:#fff;
+	text-align:center;
+	background:#ca2e3a;
+	font-family:'Roboto', sans-serif;
+	font-size:15px;
+	font-weight:400;
+	line-height:34px;
+	padding:0px 10px;
+	border-radius:5px;
+	margin:3px 0px 0px;
+}
+.latest-project table tr td a.Work-Progress:hover{
+	text-decoration:none;
+	background:#000;
+	color:#fff;
+}
+.latest-project table tr td a.coming-soon{
+	float:left;
+	color:#fff;
+	text-align:center;
+	background:#751548;
+	font-family:'Roboto', sans-serif;
+	font-size:15px;
+	font-weight:400;
+	line-height:34px;
+	padding:0px 10px;
+	border-radius:5px;
+	margin:3px 0px 0px;
+}
+.latest-project table tr td a.coming-soon:hover{
+	text-decoration:none;
+	background:#000;
+	color:#fff;
+}
+/*----------------------------Showing-Entries----------------------------*/
+.Showing-Entries{
+	width: 100%;
+	float: left;
+	padding:20px 15px !important;
+	margin: 0px;
+	background:#fff;
+}
+.Showing-Entries p{
+	width: 100%;
+	float: left;
+	padding:0px ;
+	margin: 0px;
+	font-family:"Roboto", sans-serif;
+	font-size:21px;
+	color:#121212;
+	line-height:40px;
+	font-weight:300;
+}
+.Showing-Entries ul {
+	float: right;
+	margin: 0;
+	padding: 0;
+}
+.Showing-Entries ul li {
+	float: left;
+	margin: 0 5px 0px 0px;
+	padding: 0;
+}
+.Showing-Entries ul li:last-child{
+	margin-right:0px
+}
+.Showing-Entries ul li a{
+	float: left;
+	margin: 0px;
+	padding:0px 15px;
+	background:#efefef;
+	color:#000;
+	font-size:16px;
+	font-family:"Roboto", sans-serif;
+	line-height:40px;
+}
+.Showing-Entries ul li.active a, .Showing-Entries ul li a:hover{
+	background:#e1235f;
+	color:#fff;
+	text-decoration:none;
+}
+/*----------------------------Alltime----------------------------*/
+.Alltime-Earning{
+	width: 100%;
+	float: left;
+	padding: 0px !important;
+	margin: 0px 0px 30px;
+	background:#fff;
+	border-radius:3px;
+}
+.Alltime-Earning .col-8, .Alltime-Earning .col-4 {
+	padding: 20px 15px;
+}
+.Alltime-Earning .col-8{
+	border-right:1px solid #d3d3d3;
+}
+.Alltime-Earning h2 {
+	float: left;
+	font-size: 30px;
+	font-weight: 300;
+	line-height: 40px;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	font-family:'Roboto', sans-serif;
+}
+.Alltime-Earning p {
+	float: left;
+	font-size:15px;
+	font-weight:400;
+	line-height: 24px;
+	margin: 0;
+	padding: 0 0px 10px;
+	width: 100%;
+	font-family:'Roboto', sans-serif;
+}
+.Alltime-Earning h3{
+	float: left;
+	font-size:23px;
+	font-weight:500;
+	line-height: 36px;
+	margin: 0;
+	padding: 0 0px 10px;
+	width: 100%;
+	font-family:'Roboto', sans-serif;
+	color:#e12864;
+}
+.Alltime-Earning canvas {
+	float: left;
+	margin: 0;
+	padding: 0px;
+	width: 100% !important;
+	height:250px !important;
+}
+.Alltime-Earning .lineProgressbar {
+	float: left;
+	margin: 0;
+	padding: 0px;
+	width: 100%;
+
+}
+.Alltime-Earning .lineProgressbar h4{
+	float: left;
+	font-size:16px;
+	font-weight:400;
+	line-height: 36px;
+	margin: 0 0px 25px;
+	padding: 0 0px 10px;
+	width: 100%;
+	font-family:'Roboto', sans-serif;
+	color:#000;border-bottom:1px solid #d3d3d3;
+}
+.Alltime-Earning .lineProgressbar .proggres{
+	float: left;
+	margin: 0;
+	padding:0px;
+	width: 100%;
+}
+.Alltime-Earning .lineProgressbar h2{
+	float: left;
+	font-size:16px;
+	font-weight:400;
+	line-height:30px;
+	margin: 0;
+	padding:0px;
+	width: 100%;
+	font-family:'Roboto', sans-serif;
+	color:#000;
+}
+.Alltime-Earning .lineProgressbar .program{
+	float: left;
+	margin: 0;
+	padding:0 0px 30px;
+	width: 100%;
+}
+.Alltime-Earning .lineProgressbar .program .progressbar{
+	float: left;
+	margin: 0;
+	padding:0px;
+	width: 100%;border-radius: 0 !important;
+	position:relative;
+}
+.Alltime-Earning .lineProgressbar .program .progressbar .proggress {
+	border-radius: 0 !important;
+	float: left;
+	height: 5px !important;
+
+}
+.Alltime-Earning .lineProgressbar .program .progressbar .percentCount {
+	background: #e12864;
+	border-radius: 3px;
+	color: #ffffff;
+	font-family: "Roboto",sans-serif;
+	font-size: 14px !important;
+	font-weight: 400 !important;
+	padding: 2px 5px;
+	position: absolute;
+	right: 0;
+	top: -40px;
+}
+.Alltime-Earning .lineProgressbar .proggres:nth-child(3) .percentCount{
+	background:#5a193b
+}
+.Alltime-Earning .lineProgressbar .proggres:nth-child(4) .percentCount{
+	background:#d51f3e
+}
+.Alltime-Earning .lineProgressbar .proggres:nth-child(5) .percentCount{
+	background:#5f1640
+}
+.Alltime-Earning  .item-sold{
+	width: 100%;
+	float: left;
+	padding:0px 0px 20px;
+	margin: 0px;
+	text-align:center
+}
+.Alltime-Earning .item-sold ul {
+	display: inline-table;
+	margin: 0;
+	padding: 0;
+}
+.Alltime-Earning .item-sold ul li {
+	display: inline-table;
+	margin: 0;
+	padding: 0 50px 0 0px;
+	float:left;
+}
+.Alltime-Earning .item-sold ul li:nth-child(3){
+	padding-right:0px;
+}
+.Alltime-Earning .item-sold ul li span {
+	border: 3px solid #d3d3d3;
+	border-radius: 100%;
+	display: inline-table;
+	font-family: "Roboto",sans-serif;
+	height: 70px;
+	line-height: 64px;
+	width: 70px;
+	font-size:18px;
+	font-weight:400;
+}
+.Alltime-Earning .item-sold ul li h5 {
+	display: inline-table;
+	font-family: "Roboto",sans-serif;
+	line-height: 40px; width:100%;
+	float:left;font-size:18px;
+}
+.Alltime-Earning .lineProgressbar .proggres:last-child .program {
+	padding: 0 !important;
+}
+/*----------------------------Reports----------------------------*/
+.Report-Management{
+	width: 100%;
+	float: left;
+	padding: 0px !important;
+	margin:0px;
+	background:#fff;
+	border-radius:3px;
+}
+.Report-Management table {
+	border: none;
+	float: left;
+	width: 100%;
+	border-top:1px solid #d3d3d3;
+	border-bottom:1px solid #d3d3d3;
+}
+.Report-Management table tr{
+	border-bottom:1px solid #d3d3d3;
+	float:left;
+	width:100%;
+	margin:0px;
+	padding:0px;
+}
+.Report-Management table tbody tr:last-child{
+	border-bottom:none;
+}
+.Report-Management table tr th, .Report-Management table tr td{
+	border-right:1px solid #d3d3d3;
+	float:left;
+	margin:0px;
+	padding:10px 15px;
+	font-family:'Roboto', sans-serif;
+	font-size:20px;
+	font-weight:300;
+	line-height:40px;
+}
+.Report-Management table tr td span.end-date{
+	float:right;
+}
+.Report-Management table tr th:last-child, .Report-Management table tr td:last-child{
+	border-right:none;
+}
+.Report-Management table tr th{
+	font-weight:700;
+	font-size:18px;
+}
+.Report-Management table tr th:first-child, .Report-Management table tr td:first-child{
+	width:10%;
+}
+.Report-Management table tr th:nth-child(2), .Report-Management table tr td:nth-child(2){
+	width:20%;
+}
+.Report-Management table tr th:nth-child(3), .Report-Management table tr td:nth-child(3){
+	width:20%;
+}
+.Report-Management table tr th:nth-child(4), .Report-Management table tr td:nth-child(4){
+	width:25%;
+}
+.Report-Management table tr th:nth-child(5), .Report-Management table tr td:nth-child(5){
+	width:25%;
+}
+.clients-reports{
+	width: 100%;
+	float: left;
+	padding: 0px !important;
+	margin:0px;
+	background:#fff;
+	border-radius:3px;
+}
+.clients-reports form{
+	float: left;
+	width:100%;
+	margin:0px;
+	padding:20px;
+	border-bottom:1px solid #d3d3d3;
+}
+.clients-reports form label {
+	float: left;
+	font-family: "Roboto",sans-serif;
+	font-size: 20px;
+	font-weight: 300;
+	line-height: 36px;
+	margin: 0;
+	padding: 0 15px 0 0;
+}
+.clients-reports form select {
+	background-color: white;
+	border: 1px  solid #e3e3e3;
+	display: inline-block;
+	font-size:18px;
+	font-family:"Roboto", sans-serif;
+	font-weight:300;
+	line-height: 1.5em;
+	padding: 0px 10px;
+
+	/* reset */
+
+	margin: 0;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	width:33%;
+	height:44px;
+}
+
+.clients-reports form select.clients {
+	background-image:
+			linear-gradient(45deg, transparent 50%, gray 50%),
+			linear-gradient(135deg, gray 50%, transparent 50%),
+			linear-gradient(to right, #ccc, #ccc);
+	background-position:
+			calc(100% - 18px) calc(0.8em + 6px),
+			calc(100% - 14px) calc(0.8em + 6px),
+			calc(100% - 2em) 0em;
+	background-size:
+			5px 5px,
+			5px 5px,
+			1px 2.5em;
+	background-repeat: no-repeat;
+}
+
+.clients-reports form select.clients:focus {
+	background-image:
+			linear-gradient(45deg, #e1235f 50%, transparent 50%),
+			linear-gradient(135deg, transparent 50%, #e1235f 50%),
+			linear-gradient(to right, #ccc, #ccc);
+	background-position:
+			calc(100% - 13px) 1em,
+			calc(100% - 17px) 1em,
+			calc(100% - 2em) 0em;
+	background-size:
+			5px 5px,
+			5px 5px,
+			1px 2.5em;
+	background-repeat: no-repeat;
+	border-color: #e1235f;
+	outline: 0;
+}
+.clients-reports form select.clients option {
+	border: 1px solid #d3d3d3;
+	width: 100%;
+}
+/*----------------------------.Wallet-Credit----------------------------*/
+.Wallet-Credit{
+	width: 100%;
+	float: left;
+	padding:0px !important;
+	margin:0px;
+	background:#fff;
+	border-radius:3px;
+}
+.Wallet-Credit .card-type {
+	border-bottom: 1px solid #d3d3d3;
+	float: left;
+	margin:0px;
+	padding: 20px;
+	width: 100%;
+}
+.Wallet-Credit .card-type img {
+	float: left;
+	height: 100px;
+}
+.Wallet-Credit form {
+	float: left;
+	margin:0px;
+	padding: 20px;
+	width: 100%;
+}
+.Wallet-Credit .card-type h2 {
+	float: left;
+	font-family: "Roboto",sans-serif;
+	font-size: 20px;
+	font-weight: 500;
+	line-height: 100px;
+	margin: 0;
+}
+.Wallet-Credit .card-type h3{
+	float: right;
+	font-family: "Roboto",sans-serif;
+	font-size: 20px;
+	font-weight: 500;
+	line-height: 100px;
+	margin: 0;
+}
+.Wallet-Credit .card-type h3 a{
+	color:#e01a58
+}
+.Wallet-Credit .card-type h3 a:hover{
+	color:#5a0f43;
+	text-decoration:none;
+}
+.Wallet-Credit form .input-group {
+	float: left;
+	width: 48%;
+	padding:0px 0px 10px;
+}
+.Wallet-Credit form .input-group:nth-child(2n) {
+	float:right
+}
+.Wallet-Credit form .input-group label{
+	float: left;
+	width: 100%;
+	font-family: "Roboto",sans-serif;
+	font-size: 18px;
+	font-weight:300;
+	line-height:44px;
+}
+.Wallet-Credit form .input-group input{
+	float: left;
+	width: 100%;
+	font-family: "Roboto",sans-serif;
+	font-size: 18px;
+	font-weight:300;
+	line-height:44px;
+	height:44px;
+	padding:0px 10px;
+	border:1px solid #d3d3d3
+}
+.Wallet-Credit form .input-group  select {
+	background-color: white;
+	border: 1px  solid #e3e3e3;
+	display: inline-block;
+	font-size:18px;
+	font-family:"Roboto", sans-serif;
+	font-weight:300;
+	line-height: 1.5em;
+	padding: 0px 10px;
+
+	/* reset */
+
+	margin: 0;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	width:100%;
+	height:44px;
+}
+
+.Wallet-Credit form .input-group  select.Card {
+	background-image:
+			linear-gradient(45deg, transparent 50%, gray 50%),
+			linear-gradient(135deg, gray 50%, transparent 50%),
+			linear-gradient(to right, #ccc, #ccc);
+	background-position:
+			calc(100% - 18px) calc(0.8em + 6px),
+			calc(100% - 14px) calc(0.8em + 6px),
+			calc(100% - 2em) 0em;
+	background-size:
+			5px 5px,
+			5px 5px,
+			1px 2.5em;
+	background-repeat: no-repeat;
+}
+
+.Wallet-Credit form .input-group  select.Card:focus {
+	background-image:
+			linear-gradient(45deg, #e1235f 50%, transparent 50%),
+			linear-gradient(135deg, transparent 50%, #e1235f 50%),
+			linear-gradient(to right, #ccc, #ccc);
+	background-position:
+			calc(100% - 13px) 1em,
+			calc(100% - 17px) 1em,
+			calc(100% - 2em) 0em;
+	background-size:
+			5px 5px,
+			5px 5px,
+			1px 2.5em;
+	background-repeat: no-repeat;
+	border-color: #e1235f;
+	outline: 0;
+}
+.Wallet-Credit form .input-group .form-inner {
+	float: left;
+	width: 66.6667%;
+}
+.Wallet-Credit form .input-group .form-inner:nth-child(2) {
+	float: left;
+	width: 33.3337%;
+}
+.Wallet-Credit form .input-group .form-inner:first-child input {
+	float: left;
+	width: 40%;
+}
+.Wallet-Credit form .input-group .form-inner:first-child input:nth-child(3) {
+	margin-left:10%
+}
+.Wallet-Credit form .input-group input[type="submit"]{
+	float: left;
+	width:auto;
+	font-family: "Roboto",sans-serif;
+	font-size: 20px;
+	font-weight:700;
+	line-height:40px;
+	height:auto;
+	padding:10px 50px;
+	border:none;
+	margin:30px 0px;
+	background:#e01a58;
+	border-radius:3px;
+	color:#fff;
+	text-transform:uppercase;
+	cursor:pointer
+}
+.Wallet-Credit form .input-group input[type="submit"]:hover{
+	background:#5a0f43;
+}
+
+/*----------------------------Wallet-statement----------------------------*/
+.Wallet-statement{
+	width: 100%;
+	float: left;
+	padding:0px;
+	margin:0px;
+	background:#fff;
+	border-radius:3px;
+}
+.payments{
+	width: 100%;
+	float: left;
+	padding:0px;
+	margin:0px 0px 30px;
+	background:#fff;
+	border-radius:3px;
+}
+.payments h2 {
+	float: left;
+	font-family: "Roboto",sans-serif;
+	font-size: 20px;
+	font-weight: 500;
+	line-height: 60px;
+	margin: 0;
+	padding:0px 0 0px 15px
+}
+.payments h3{
+	float: right;
+	font-family: "Roboto",sans-serif;
+	font-size: 20px;
+	font-weight: 500;
+	line-height: 60px;
+	margin: 0;padding:0px 15px 0 0px
+}
+.payments h3 a{
+	color:#e01a58
+}
+.payments h3 a:hover{
+	color:#5a0f43;
+	text-decoration:none;
+}
+.payments ul{
+	width: 100%;
+	float: left;
+	padding:0px;
+	margin:0px;
+	border-top:1px solid #d3d3d3;
+}
+.payments ul li{
+	float: left;
+	font-family: "Roboto",sans-serif;
+	font-size:18px;
+	font-weight: 500;
+	line-height: 60px;
+	margin: 0;padding:0px 15px;
+	width:25%;border-right:1px solid #d3d3d3;
+}
+.payments ul li:nth-child(4){
+	border-right:none;
+}
+.Wallet-statement table {
+	border: none;
+	float: left;
+	width: 100%;
+	border-top:1px solid #d3d3d3;
+	border-bottom:1px solid #d3d3d3;
+}
+.Wallet-statement table tr{
+	border-bottom:1px solid #d3d3d3;
+	float:left;
+	width:100%;
+	margin:0px;
+	padding:0px;
+}
+.Wallet-statement table tbody tr:last-child{
+	border-bottom:none;
+}
+.Wallet-statement table tr th, .Wallet-statement table tr td{
+	border-right:1px solid #d3d3d3;
+	float:left;
+	margin:0px;
+	padding:10px 15px;
+	font-family:'Roboto', sans-serif;
+	font-size:20px;
+	font-weight:300;
+	line-height:40px;
+}
+.Wallet-statement table tr td span.end-date{
+	float:right;
+}
+.Wallet-statement table tr th:last-child, .Wallet-statement table tr td:last-child{
+	border-right:none;
+}
+.Wallet-statement table tr th{
+	font-weight:700;
+	font-size:18px;
+}
+.Wallet-statement table tr th:first-child, .Wallet-statement table tr td:first-child{
+	width:10%;
+}
+.Wallet-statement table tr th:nth-child(2), .Wallet-statement table tr td:nth-child(2){
+	width:20%;
+}
+.Wallet-statement table tr th:nth-child(3), .Wallet-statement table tr td:nth-child(3){
+	width:20%;
+}
+.Wallet-statement table tr th:nth-child(4), .Wallet-statement table tr td:nth-child(4){
+	width:25%;
+}
+.Wallet-statement table tr th:nth-child(5), .Wallet-statement table tr td:nth-child(5){
+	width:25%;
+}
+
+
+/*----------------------------Brand----------------------------*/
+.all-brands{
+	width: 100%;
+	float: left;
+	padding:0px;
+	margin:0px;
+}
+.all-brands .col-6 {
+	background: #fff;
+	padding: 20px;
+	max-width: 49%;
+	flex: 0 0 49%;
+	margin:0;
+	height:200px;
+	margin-bottom:25px;
+}
+.all-brands .col-6:nth-child(2n){
+	float:right;
+}
+.all-brands .col-6 .col-6 {
+	background:transparent !important;
+	padding: 20px;
+	max-width: 50% !important;
+	flex: 0 0 50% !important;
+	margin:0px !important;
+	height:auto !important;
+}
+.all-brands .col-6 .edit {
+	color: #fff;
+	text-align: center;
+	background: #19c714;
+	font-family: 'Roboto', sans-serif;
+	font-size: 18px;
+	font-weight: 300;
+	line-height: 40px;
+	padding: 5px 20px;
+}
+.all-brands .col-6 .delete {
+	color: #fff;
+	text-align: center;
+	background: #5a0f43;
+	font-family: 'Roboto', sans-serif;
+	font-size: 18px;
+	font-weight: 300;
+	line-height: 40px;
+	padding:5px 20px;
+}
+.all-brands .col-6 h2 {
+	font-family: "Roboto",sans-serif;
+	font-size: 24px;
+	line-height: 40px;
+	margin-bottom: 25px;
+}
+.all-brands .col-6 .col-6:last-child {
+	text-align:center;
+	position:relative;
+	height:100% !important;
+}
+.all-brands .col-6 .col-6:last-child img {
+	position:absolute;
+	top:0px;
+	bottom:0px;
+	right:0px;
+	left:0px;
+	margin:auto;
+	vertical-align:middle;
+}
+.all-brands .col-6 a:hover {
+	text-decoration:none;
+	background:#000;
+}
+/*----------------------------Add Clients----------------------------*/
+.Add-Clients{
+	width: 100%;
+	float: left;
+	padding:0px;
+	margin:0px;
+
+}
+.Add-Clients h2 {
+	float: left;
+	font-family: "Roboto",sans-serif;
+	font-size: 22px;
+	font-weight: 500;
+	line-height: 40px;
+	margin: 0;
+	padding:10px 15px;
+	width:100%;
+	background:#e1235f;
+	color:#fff;border-radius:3px 3px 0px 0px;
+}
+.Add-Clients form{
+	width: 100%;
+	float: left;
+	padding:0px;
+	margin:0px;
+}
+.Add-Clients form .form-inner{
+	width: 100%;
+	float: left;
+	padding:30px 20px;
+	margin:0px 0px 30px;
+	background:#fff;
+	border-radius:3px;
+}
+.Add-Clients form .input-group{
+	width: 48%;
+	float: left;
+	padding:15px 0px;
+	margin:0px;
+}
+.Add-Clients form .input-group:nth-child(2n){
+	float:right;
+}
+.Add-Clients form .input-group input{
+	float: left;
+	width: 100%;
+	font-family: "Roboto",sans-serif;
+	font-size: 18px;
+	font-weight:300;
+	line-height:44px;
+	height:54px;
+	padding:0px 10px;
+	border:1px solid #d3d3d3;
+	border-radius: 0 !important;
+}
+.Add-Clients form .input-group select {
+	background-color: white;
+	border: 1px  solid #e3e3e3;
+	display: inline-block;
+	font-size:18px;
+	font-family:"Roboto", sans-serif;
+	font-weight:300;
+	line-height: 1.5em;
+	padding: 0px 10px;
+
+	/* reset */
+
+	margin: 0;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	width:100%;
+	height:54px;
+}
+
+.Add-Clients  form .input-group select.Role {
+	background-image:
+			linear-gradient(45deg, transparent 50%, gray 50%),
+			linear-gradient(135deg, gray 50%, transparent 50%),
+			linear-gradient(to right, #ccc, #ccc);
+	background-position:
+			calc(100% - 22px) calc(0.8em + 10px),
+			calc(100% - 17px) calc(0.8em + 10px),
+			calc(100% - 2.5em) 0em;
+	background-size:
+			5px 5px,
+			5px 5px,
+			1px 3em;
+	background-repeat: no-repeat;
+}
+
+.Add-Clients  form .input-group select.Role:focus {
+	background-image:
+			linear-gradient(45deg, #e1235f 50%, transparent 50%),
+			linear-gradient(135deg, transparent 50%, #e1235f 50%),
+			linear-gradient(to right, #ccc, #ccc);
+	background-position:
+			calc(100% - 17px) 1.3em,
+			calc(100% - 22px) 1.3em,
+			calc(100% - 2.5em) 0em;
+	background-size:
+			5px 5px,
+			5px 5px,
+			1px 3em;
+	background-repeat: no-repeat;
+	border-color: #e1235f;
+	outline: 0;
+}
+.Add-Clients  form .input-group input[type="submit"]{
+	float: left;
+	width:auto;
+	font-family: "Roboto",sans-serif;
+	font-size: 20px;
+	font-weight:700;
+	line-height:40px;
+	height:auto;
+	padding:10px 50px;
+	border:none;
+	margin: 0px;
+	background:#e01a58;
+	border-radius:3px;
+	color:#fff;
+	text-transform:uppercase;
+	cursor:pointer
+}
+.Add-Clients  form .input-group input[type="submit"]:hover{
+	background:#5a0f43;
+}
+
+.Add-Clients form .input-group .gj-datepicker{
+	width:100%;
+	margin:0px;
+	padding:0px;
+	float:left;
+	position:relative
+}
+.Add-Clients form .input-group .gj-datepicker .input-group-append {
+	margin: 0;
+	padding: 0;
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: 54px;
+	height:100%;
+	border-left: 1px solid #d3d3d3;
+	z-index: 999;
+}
+.Add-Clients form .input-group .gj-datepicker .input-group-text {
+	background: none !important;
+
+	display: inline-table;
+	float: left;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	position: relative;
+	width: 100% !important;
+	border:none;
+}
+.Add-Clients form .input-group .gj-datepicker .input-group-append i {
+	border: medium none !important;
+	float: left;
+	height: 100%;
+	line-height: 54px !important;
+	position: relative !important;
+	right: 0 !important;
+	text-align: center;
+	top: 0 !important;
+	width: 100%;
+}
+.custom-file-upload-hidden {
+	display: none;
+	visibility: hidden;
+	position: absolute;
+	left: -9999px;
+}
+
+.Add-Clients form .input-group .custom-file-upload {
+	display: block;
+	width: 100%;
+	font-size: 16px;
+	margin:0px;
+	float:left;
+}
+.custom-file-upload label {
+	display: block;
+	margin: 0px;
+	float:left;
+	margin:0px;
+	padding:0px;
+	width:100%;
+}
+
+.file-upload-wrapper {
+	position: relative;
+	margin: 0px;
+	float:left;
+	margin:0px;
+	padding:0px;width:100%;
+}
+
+
+.file-upload-button {
+	cursor: pointer;
+	display: inline-block;
+	color: #fff;
+	font-size: 16px;
+	text-transform:capitalize;
+	padding: 11px 20px;
+	border: none;
+	margin-left: -1px;
+	background-color: #e1235f;
+	float: left;
+	/* IE 9 Fix */
+	-moz-transition: all 0.2s ease-in;
+	-o-transition: all 0.2s ease-in;
+	-webkit-transition: all 0.2s ease-in;
+	transition: all 0.2s ease-in;
+	position:absolute;
+	left:0px;
+	top:0px;
+	height:54px;
+	font-family:"Roboto", sans-serif;
+	font-weight:300;
+	font-size:22px;
+}
+.file-upload-button:hover {
+	background-color: #6d2018;
+}
+.Add-Clients form .input-group .custom-file-upload .file-upload-input {
+	border-left: none !important;
+	float: right;
+	width: 69% !important;
+}
+/*----------------------------Footer----------------------------*/
+.Add-brand{
+	width: 100%;
+	float: left;
+	padding:0px;
+	margin:0px;
+	margin:0px 0px 30px;
+	background:#fff;
+	border-radius:3px;
+
+}
+.Add-brand h2 {
+	float: left;
+	font-family: "Roboto",sans-serif;
+	font-size: 22px;
+	font-weight: 500;
+	line-height: 40px;
+	margin: 0;
+	padding:10px 15px;
+	width:100%;
+	background:#e1235f;
+	color:#fff;border-radius:3px 3px 0px 0px;
+}
+.Add-brand form{
+	width: 100%;
+	float: left;
+	margin:0px;
+	padding:30px 20px;
+}
+.Add-brand form .input-group{
+	width: 48%;
+	float: left;
+	padding:15px 0px;
+	margin:0px;
+}
+.Add-brand form .input-group:nth-child(2n){
+	float:right;
+}
+.Add-brand form .input-group input{
+	float: left;
+	width: 100%;
+	font-family: "Roboto",sans-serif;
+	font-size: 18px;
+	font-weight:300;
+	line-height:44px;
+	height:54px;
+	padding:0px 10px;
+	border:1px solid #d3d3d3;
+	border-radius: 0 !important;
+}
+.Add-brand form .input-group select {
+	background-color: white;
+	border: 1px  solid #e3e3e3;
+	display: inline-block;
+	font-size:18px;
+	font-family:"Roboto", sans-serif;
+	font-weight:300;
+	line-height: 1.5em;
+	padding: 0px 10px;
+
+	/* reset */
+
+	margin: 0;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	width:100%;
+	height:54px;
+}
+
+.Add-brand form .input-group select.Role {
+	background-image:
+			linear-gradient(45deg, transparent 50%, gray 50%),
+			linear-gradient(135deg, gray 50%, transparent 50%),
+			linear-gradient(to right, #ccc, #ccc);
+	background-position:
+			calc(100% - 22px) calc(0.8em + 10px),
+			calc(100% - 17px) calc(0.8em + 10px),
+			calc(100% - 2.5em) 0em;
+	background-size:
+			5px 5px,
+			5px 5px,
+			1px 3em;
+	background-repeat: no-repeat;
+}
+
+.Add-brand  form .input-group select.Role:focus {
+	background-image:
+			linear-gradient(45deg, #e1235f 50%, transparent 50%),
+			linear-gradient(135deg, transparent 50%, #e1235f 50%),
+			linear-gradient(to right, #ccc, #ccc);
+	background-position:
+			calc(100% - 17px) 1.3em,
+			calc(100% - 22px) 1.3em,
+			calc(100% - 2.5em) 0em;
+	background-size:
+			5px 5px,
+			5px 5px,
+			1px 3em;
+	background-repeat: no-repeat;
+	border-color: #e1235f;
+	outline: 0;
+}
+.Add-brand  form .input-group input[type="submit"]{
+	float: left;
+	width:auto;
+	font-family: "Roboto",sans-serif;
+	font-size: 20px;
+	font-weight:700;
+	line-height:40px;
+	height:auto;
+	padding:10px 50px;
+	border:none;
+	margin: 0px;
+	background:#e01a58;
+	border-radius:3px;
+	color:#fff;
+	text-transform:uppercase;
+	cursor:pointer
+}
+.Add-brand  form .input-group input[type="submit"]:hover{
+	background:#5a0f43;
+}
+/*----------------------------Footer----------------------------*/
+.footer{
+	width: 100%;
+	float: left;
+	display: inline-table;
+	padding:20px 30px ;
+	margin: 0px;
+	border-top:1px solid #d3d3d3;
+}
+.footer p {
+	color: #1b1b1b;
+	float: left;
+	font-family: "Roboto",sans-serif;
+	font-size: 15px;
+	line-height: 20px;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+}
+
+
+/*----------------------------Create-campaign----------------------------*/
+.Create-campaign{
+	width: 100%;
+	float: left;
+	padding:0px;
+	margin:0px;
+
+}
+.Create-campaign h2 {
+	float: left;
+	font-family: "Roboto",sans-serif;
+	font-size: 22px;
+	font-weight: 500;
+	line-height: 40px;
+	margin: 0;
+	padding:10px 15px;
+	width:100%;
+	background:#e1235f;
+	color:#fff;border-radius:3px 3px 0px 0px;
+}
+.Create-campaign form{
+	width: 100%;
+	float: left;
+	padding:0px;
+	margin:0px;
+}
+.Create-campaign form .form-inner{
+	width: 100%;
+	float: left;
+	padding:30px 20px;
+	margin:0px 0px 30px;
+	background:#fff;
+	border-radius:3px;
+}
+.Create-campaign form .input-group{
+	width: 48%;
+	float: left;
+	padding:15px 0px;
+	margin:0px;
+}
+.Create-campaign form .input-group:nth-child(2n){
+	float:right;
+}
+.Create-campaign form .input-group input{
+	float: left;
+	width: 100%;
+	font-family: "Roboto",sans-serif;
+	font-size: 18px;
+	font-weight:300;
+	line-height:44px;
+	height:54px;
+	padding:0px 10px;
+	border:1px solid #d3d3d3;
+	border-radius: 0 !important;
+}
+.Create-campaign form .input-group select {
+	background-color: white;
+	border: 1px  solid #e3e3e3;
+	display: inline-block;
+	font-size:18px;
+	font-family:"Roboto", sans-serif;
+	font-weight:300;
+	line-height: 1.5em;
+	padding: 0px 10px;
+
+	/* reset */
+
+	margin: 0;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	width:100%;
+	height:54px;
+}
+
+.Create-campaign  form .input-group select.Role {
+	background-image:
+			linear-gradient(45deg, transparent 50%, gray 50%),
+			linear-gradient(135deg, gray 50%, transparent 50%),
+			linear-gradient(to right, #ccc, #ccc);
+	background-position:
+			calc(100% - 22px) calc(0.8em + 10px),
+			calc(100% - 17px) calc(0.8em + 10px),
+			calc(100% - 2.5em) 0em;
+	background-size:
+			5px 5px,
+			5px 5px,
+			1px 3em;
+	background-repeat: no-repeat;
+}
+
+.Create-campaign  form .input-group select.Role:focus {
+	background-image:
+			linear-gradient(45deg, #e1235f 50%, transparent 50%),
+			linear-gradient(135deg, transparent 50%, #e1235f 50%),
+			linear-gradient(to right, #ccc, #ccc);
+	background-position:
+			calc(100% - 17px) 1.3em,
+			calc(100% - 22px) 1.3em,
+			calc(100% - 2.5em) 0em;
+	background-size:
+			5px 5px,
+			5px 5px,
+			1px 3em;
+	background-repeat: no-repeat;
+	border-color: #e1235f;
+	outline: 0;
+}
+.Create-campaign  form .input-group input[type="submit"]{
+	float: left;
+	width:auto;
+	font-family: "Roboto",sans-serif;
+	font-size: 20px;
+	font-weight:700;
+	line-height:40px;
+	height:auto;
+	padding:10px 50px;
+	border:none;
+	margin: 0px;
+	background:#e01a58;
+	border-radius:3px;
+	color:#fff;
+	text-transform:uppercase;
+	cursor:pointer
+}
+.Create-campaign  form .input-group input[type="submit"]:hover{
+	background:#5a0f43;
+}
+
+.Add-Clients form .input-group .gj-datepicker{
+	width:100%;
+	margin:0px;
+	padding:0px;
+	float:left;
+	position:relative
+}
+.Create-campaign form .input-group .gj-datepicker .input-group-append {
+	margin: 0;
+	padding: 0;
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: 54px;
+	height:100%;
+	border-left: 1px solid #d3d3d3;
+	z-index: 999;
+}
+.Create-campaign form .input-group .gj-datepicker .input-group-text {
+	background: none !important;
+
+	display: inline-table;
+	float: left;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	position: relative;
+	width: 100% !important;
+	border:none;
+}
+.Create-campaign form .input-group .gj-datepicker .input-group-append i {
+	border: medium none !important;
+	float: left;
+	height: 100%;
+	line-height: 54px !important;
+	position: relative !important;
+	right: 0 !important;
+	text-align: center;
+	top: 0 !important;
+	width: 100%;
+}
+
+.Create-campaign label {
+	display: block;
+	float: left;
+	margin: 0px;
+	padding: 0px;
+	width: 100%;
+	font-family: "Roboto",sans-serif;
+	font-size: 20px;
+	font-weight: 400;
+	line-height: 32px;
+}
+
+.Create-campaign form .input-group:nth-child(13),.Create-campaign form .input-group:nth-child(12),.Create-campaign form .input-group:nth-child(11){
+	width:100%;
+	font-size: 18px;
+	font-weight: 300;
+	font-family: "Roboto",sans-serif;
+}
+
+.Create-campaign form .input-group:nth-child(11) input ,.Create-campaign form .input-group:nth-child(12) input {
+	display: inline-block;
+	height: 25px;
+	width: 25px;
+	margin-left: 30px;
+	margin-right: 5px;
+}
+
+.Create-campaign form .input-group:nth-child(11) input:nth-child(2) ,.Create-campaign form .input-group:nth-child(12) input:nth-child(2) {
+	margin-left:0px;
+	margin-right: 5px;
+}
+
+.Create-campaign form .input-group:nth-child(11) label ,.Create-campaign form .input-group:nth-child(12) label {
+	margin-bottom:20px;
+}
+
+.Create-campaign form .input-group .gj-datepicker {
+	width: 100%;
+	margin: 0px;
+	padding: 0px;
+	float: left;
+	position: relative;
+}
+
+
+/*----------------------------log-in----------------------------*/
+
+.log-in .col-4{
+	float:none;
+	margin-left:auto;
+	margin-right:auto;
+	padding:30px 30px;
+	border:1px solid #d3d3d3;
+	margin-top: 120px;
+}
+
+
+.log-in .col-4 img{
+	margin-left:auto;
+	margin-right:auto;
+	display:block;
+	margin-bottom: 30px;
+}
+
+.log-in .col-4 button{
+	color: #fff;
+	text-transform: capitalize;
+	text-align: center;
+	background: #e1235f;
+	font-family: 'Roboto', sans-serif;
+	font-size: 15px;
+	font-weight: 500;
+	line-height: 40px;
+	padding: 0px 0px;
+	width: 100%;
+}
+
+.log-in .form-group.input-icon{
+	position:relative;
+}
+
+.log-in .form-group.input-icon i{
+	position:absolute;
+	left:10px;
+	top:15px;
+}
+
+.log-in .form-group.input-icon .form-control{
+	padding:10px 30px;
+	box-shadow: 0px 0px 10px #dfdfdf;
+	margin-bottom:25px;
+	font-size: 16px;
+	font-family: 'Roboto', sans-serif;
+}
+
+.log-in .col-4 button:hover {
+	text-decoration: none;
+	background: #000;
+	color: #fff;
+}
+
+.log-in input[type=checkbox]{
+	width:20px;
+	height:20px;
+	vertical-align: middle;
+}
+
+.log-in .checkbox{
+	font-size: 18px;
+	font-weight: 400;
+	line-height: 30px;
+	margin: 0px !important;
+	vertical-align: middle;
+	font-family: 'Roboto', sans-serif;
+}
+
+.log-in a{
+	font-family: 'Roboto', sans-serif;
+}

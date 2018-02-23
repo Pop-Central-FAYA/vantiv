@@ -1,70 +1,55 @@
-@extends('layouts.app')
+@extends('layouts.new_app')
+
+@section('title')
+    <title>Create Campaign</title>
+@endsection
 
 @section('content')
-    <section class="content-header">
-        <h1>
-            Create Campaign
-            <small><i class="fa fa-file-video-o"></i> Adslot </small>
-        </h1>
-        <ol class="breadcrumb" style="font-size: 16px">
 
-            <li><a href="#"><i class="fa fa-th"></i> Create Campaign</a> </li>
-            <li><i class="fa fa-file-video-o"></i> Adslot </li>
+    <div class="main-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 heading-main">
+                    <h1>Adslots</h1>
+                    <ul>
+                        <li><a href="#"><i class="fa fa-edit"></i>Create Campaign</a></li>
+                        <li><a href="#">Adslots</a></li>
+                    </ul>
+                </div>
 
-        </ol>
-    </section>
-
-    <!-- Main content -->
-
-    <section class="content">
-        <div class="row">
-            <div class="col-md-1 hidden-sm hidden-xs"></div>
-            <div class="col-md-9 " style="padding:2%">
+                <div class="Add-brand">
                     <div class="row">
                         <div class="col-md-12 ">
-
-                            <h2></h2>
-                            <p align="center">The history of advertising can be traced to ancient civilizations. It became a major force in capitalist economies in the mid-19th century, based primarily on newspapers and magazines. In the 20th century, advertising grew rapidly with new technologies such as direct mail, radio, television, the internet and mobile devices.</p>
-
+                            <h2>
+                                <p align="center">
+                                    The history of advertising can be traced to ancient civilizations.
+                                    It became a major force in capitalist economies in the mid-19th century,
+                                    based primarily on newspapers and magazines. In the 20th century,
+                                    advertising grew rapidly with new technologies such as direct mail, radio, television,
+                                    the internet and mobile devices.
+                                </p>
+                            </h2>
                         </div>
-
                     </div>
+                </div>
 
-                    <div class="row" style="margin-bottom: 5%">
-
-                        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 ">
-                            <a href="{{ route('campaign.store7', ['walkins' => $walkins]) }}">
-                                <div class="tvspace-box">
-                                    <img src="{{ asset('asset/dist/img/nta-logo.jpg') }}" width="100%">
-                                    <div class="tv-space">
-                                        <p align="center">
-                                            {{ $results  }} Adslot(s)
-                                            Available</p>
-                                        <p>{{ Session::get('broadcaster_brand') }}</p>
-                                    </div>
+                <div class="row">
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 ">
+                        <a href="{{ route('campaign.store7', ['walkins' => $walkins]) }}">
+                            <div class="tvspace-box">
+                                <img src="{{ asset('asset/dist/img/nta-logo.jpg') }}" width="100%">
+                                <div class="tv-space">
+                                    <p align="center">{{ $results  }} Adslot(s) Available</p>
+                                    <p>{{ Session::get('broadcaster_brand') }}</p>
                                 </div>
-                            </a>
-                        </div>
+                            </div>
+                        </a>
                     </div>
-
-                    <div class="container">
-
-                        <p align="right">
-                            {{--<button id="step4" type="button" class="btn campaign-button" >Back <i class="fa fa-backward" aria-hidden="true"></i></button>--}}
-                            {{--<button type="submit" class="btn campaign-button" style="margin-right:15%">Next <i class="fa fa-play" aria-hidden="true"></i></button>--}}
-
-                        </p>
-                    </div>
-
-                {{--</form>--}}
+                </div>
 
             </div>
-            <!-- /.col -->
-            <div class="col-md-2 hidden-sm hidden-xs"></div>
-            <!-- /.col -->
-
         </div>
-    </section>
+    </div>
 
 @stop
 

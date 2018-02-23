@@ -1,350 +1,340 @@
-@extends('layouts.app')
+@extends('layouts.new_app')
+
+@section('title')
+    <title>Reports</title>
+@endsection
 
 @section('content')
 
-@section('title', trans('Faya | Reports'))
+<div class="main-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 heading-main">
+                <h1>Broadcaster Report</h1>
+                <ul>
+                    <li><a href="#"><i class="fa fa-edit"></i>Broadcaster</a></li>
+                    <li><a href="#">Reports</a></li>
+                </ul>
+            </div>
 
-<section class="content-header">
-    <h1>
-        Reports <small>Reports</small>
+            <div class="row">
+                <div class="row" style="padding: 5%">
+                    <div class="col-md-12">
 
-    </h1>
-    <ol class="breadcrumb" style="font-size: 16px">
+                        <div class="col-md-12">
+                            <div class="nav-tabs-custom">
+                                <ul class="nav nav-tabs" style="background:#eee">
+                                    <li class="active"><a href="#periodic_sales_report" data-toggle="tab">Periodic Sales Report</a></li>
+                                    <li><a href="#inventory_fill_rate" data-toggle="tab">Inventory Fill Rate</a></li>
+                                    <li><a href="#high_performing_dayparts" data-toggle="tab">High Performing Dayparts</a></li>
+                                    <li><a href="#high_performing_days" data-toggle="tab">High Performing Days</a></li>
+                                    <li><a href="#high_value_customer" data-toggle="tab">High Value Customer</a></li>
+                                    <li><a href="#make_good_report" data-toggle="tab">Make Good Report</a></li>
+                                    <li><a href="#total_volume_of_campaigns" data-toggle="tab">Total Volume of Capaigns</a></li>
+                                    <li><a href="#paid_invoices" data-toggle="tab">Paid Invoices</a></li>
+                                </ul>
 
-        <li><a href="#"><i class="fa fa-edit"></i> Reports</a> </li>
-        <li><a href=""><i class="fa fa-address-card"></i> Generate Reports</a> </li>
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="periodic_sales_report">
+                                        <div class="row">
+                                            <div class="row">
+                                                <form action="#" method="GET">
+                                                    {{ csrf_field() }}
+                                                    <h4 style="margin-left: 17px;font-weight: bold">Search by date</h4>
+                                                    <div class="col-md-10" style="margin-top: -2%">
+                                                        <div class="input-group date styledate" style="width:30% !important">
+                                                            <div class="input-group-addon">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </div>
+                                                            <input type="text" name="txtFromDate_ps" placeholder="Start Date" class="form-control pull-right txtFromDate" id="txtFromDate_ps">
+                                                        </div>
 
-    </ol>
-</section>
-
-<!-- Main content -->
-
-<section class="content">
-    <div class="row">
-        <div class="col-md-2 hidden-sm hidden-xs"></div>
-        <div class="col-md-8 Campaign" style="padding:2%"></div>
-        <!-- /.col -->
-        <div class="col-md-2 hidden-sm hidden-xs"></div>
-        <!-- /.col -->
-
-        <div class="row" style="padding: 5%">
-            <div class="col-xs-12">
-
-                <div class="col-md-12">
-                    <div class="nav-tabs-custom">
-                        <ul class="nav nav-tabs" style="background:#eee">
-                            <li class="active"><a href="#periodic_sales_report" data-toggle="tab">Periodic Sales Report</a></li>
-                            <li><a href="#inventory_fill_rate" data-toggle="tab">Inventory Fill Rate</a></li>
-                            <li><a href="#high_performing_dayparts" data-toggle="tab">High Performing Dayparts</a></li>
-                            <li><a href="#high_performing_days" data-toggle="tab">High Performing Days</a></li>
-                            <li><a href="#high_value_customer" data-toggle="tab">High Value Customer</a></li>
-                            <li><a href="#make_good_report" data-toggle="tab">Make Good Report</a></li>
-                            <li><a href="#total_volume_of_campaigns" data-toggle="tab">Total Volume of Capaigns</a></li>
-                            <li><a href="#paid_invoices" data-toggle="tab">Paid Invoices</a></li>
-                        </ul>
-
-                        <div class="tab-content">
-                            <div class="tab-pane active" id="periodic_sales_report">
-                                <div class="row">
-                                    <div class="row">
-                                        <form action="#" method="GET">
-                                            {{ csrf_field() }}
-                                            <h4 style="margin-left: 17px;font-weight: bold">Search by date</h4>
-                                            <div class="col-md-10" style="margin-top: -2%">
-                                                <div class="input-group date styledate" style="width:30% !important">
-                                                    <div class="input-group-addon">
-                                                        <i class="fa fa-calendar"></i>
+                                                        <div class="input-group date styledate" style="width:30% !important">
+                                                            <div class="input-group-addon">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </div>
+                                                            <input type="text" name="txtToDate_ps" placeholder="End Date" class="form-control pull-right txtToDate" id="txtToDate_ps" >
+                                                        </div>
+                                                        <div class="input-group" style="">
+                                                            <input type="button" class="search-btn" id="button_ps" value="Apply" style="float:left" >
+                                                        </div>
                                                     </div>
-                                                    <input type="text" name="txtFromDate_ps" placeholder="Start Date" class="form-control pull-right txtFromDate" id="txtFromDate_ps">
-                                                </div>
-
-                                                <div class="input-group date styledate" style="width:30% !important">
-                                                    <div class="input-group-addon">
-                                                        <i class="fa fa-calendar"></i>
+                                                </form>
+                                            </div>
+                                            <hr>
+                                            <div class="col-xs-12">
+                                                <div class="box">
+                                                    <div class="box-body">
+                                                        <div class="table-responsive">
+                                                            <table id="ps-table" class="table table-bordered ps-table">
+                                                                <thead>
+                                                                <th>Id</th>
+                                                                <th>Buyer</th>
+                                                                <th>Campaign Name</th>
+                                                                <th>Brand</th>
+                                                                <th>Number of Slots</th>
+                                                                <th>Total Amount/Revenue (&#8358;)</th>
+                                                                <th>Date</th>
+                                                                </thead>
+                                                            </table>
+                                                        </div>
                                                     </div>
-                                                    <input type="text" name="txtToDate_ps" placeholder="End Date" class="form-control pull-right txtToDate" id="txtToDate_ps" >
-                                                </div>
-                                                <div class="input-group" style="">
-                                                    <input type="button" class="search-btn" id="button_ps" value="Apply" style="float:left" >
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                    <hr>
-                                    <div class="col-xs-12">
-                                        <div class="box">
-                                            <div class="box-body">
-                                                <div class="table-responsive">
-                                                    <table id="ps-table" class="table table-bordered ps-table">
-                                                        <thead>
-                                                        <th>Id</th>
-                                                        <th>Buyer</th>
-                                                        <th>Campaign Name</th>
-                                                        <th>Brand</th>
-                                                        <th>Number of Slots</th>
-                                                        <th>Total Amount/Revenue (&#8358;)</th>
-                                                        <th>Date</th>
-                                                        </thead>
-                                                    </table>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
 
-                            <div class="tab-pane" id="inventory_fill_rate">
+                                    <div class="tab-pane" id="inventory_fill_rate">
 
-                            </div>
-
-                            <div class="tab-pane" id="high_performing_dayparts">
-                                <div class="row">
-                                    <form action="" method="GET">
-                                        {{ csrf_field() }}
-                                        <h4 style="margin-left: 17px;font-weight: bold">Search by date</h4>
-                                        <div class="col-md-10" style="margin-top: -2%">
-                                            <div class="input-group date styledate" style="width:30% !important">
-                                                <div class="input-group-addon">
-                                                    <i class="fa fa-calendar"></i>
-                                                </div>
-                                                <input type="text" name="txtFromDate_hpd" placeholder="Start Date" class="form-control pull-right txtFromDate" id="txtFromDate_hpd">
-                                            </div>
-
-                                            <div class="input-group date styledate" style="width:30% !important">
-                                                <div class="input-group-addon">
-                                                    <i class="fa fa-calendar"></i>
-                                                </div>
-                                                <input type="text" name="txtToDate_hpd" placeholder="End Date" class="form-control pull-right txtToDate" id="txtToDate_hpd" >
-                                            </div>
-                                            <div class="input-group" style="">
-                                                <input type="button" class="search-btn" id="button_hpd" value="Apply" style="float:left" >
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                                <hr>
-                                <div class="row">
-                                    <div class="col-xs-12">
-                                        <div class="box">
-                                            <div class="box-body">
-                                                <div class="table-responsive">
-                                                    <table id="hpd-table" class="table table-bordered">
-                                                        <thead>
-                                                        <th>Id</th>
-                                                        <th>Dayparts</th>
-                                                        <th>Percentage Fill Rate</th>
-                                                        <th>Date</th>
-                                                        </thead>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </div>
                                     </div>
-                                </div>
-                            </div>
 
-                            <div class="tab-pane" id="high_performing_days">
-                                <div class="row">
-                                    <form action="" method="GET">
-                                        {{ csrf_field() }}
-                                        <h4 style="margin-left: 17px;font-weight: bold">Search by date</h4>
-                                        <div class="col-md-10" style="margin-top: -2%">
-                                            <div class="input-group date styledate" style="width:30% !important">
-                                                <div class="input-group-addon">
-                                                    <i class="fa fa-calendar"></i>
-                                                </div>
-                                                <input type="text" name="txtFromDate_hpdays" placeholder="Start Date" class="form-control pull-right txtFromDate" id="txtFromDate_hpdays">
-                                            </div>
-
-                                            <div class="input-group date styledate" style="width:30% !important">
-                                                <div class="input-group-addon">
-                                                    <i class="fa fa-calendar"></i>
-                                                </div>
-                                                <input type="text" name="txtToDate_hpdays" placeholder="End Date" class="form-control pull-right txtToDate" id="txtToDate_hpdays" >
-                                            </div>
-                                            <div class="input-group" style="">
-                                                <input type="button" class="search-btn" id="button_hpdays" value="Apply" style="float:left" >
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                                <hr>
-                                <div class="row">
-                                    <div class="col-xs-12">
-                                        <div class="box">
-                                            <div class="box-body">
-                                                <div class="table-responsive">
-                                                    <table id="hpdays-table" class="table table-bordered">
-                                                        <thead>
-                                                        <th>Id</th>
-                                                        <th>Days</th>
-                                                        <th>Percentage Fill Rate</th>
-                                                        <th>Week</th>
-                                                        </thead>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="tab-pane" id="high_value_customer">
-                                <div class="row">
-                                    <div class="row">
-                                        <form action="#" id="formHVC" method="GET">
-                                            {{ csrf_field() }}
-                                            <h4 style="margin-left: 17px;font-weight: bold">Search by date</h4>
-                                            <div class="col-md-10" style="margin-top: -2%">
-                                                <div class="input-group date styledate" style="width:30% !important">
-                                                    <div class="input-group-addon">
-                                                        <i class="fa fa-calendar"></i>
+                                    <div class="tab-pane" id="high_performing_dayparts">
+                                        <div class="row">
+                                            <form action="" method="GET">
+                                                {{ csrf_field() }}
+                                                <h4 style="margin-left: 17px;font-weight: bold">Search by date</h4>
+                                                <div class="col-md-10" style="margin-top: -2%">
+                                                    <div class="input-group date styledate" style="width:30% !important">
+                                                        <div class="input-group-addon">
+                                                            <i class="fa fa-calendar"></i>
+                                                        </div>
+                                                        <input type="text" name="txtFromDate_hpd" placeholder="Start Date" class="form-control pull-right txtFromDate" id="txtFromDate_hpd">
                                                     </div>
-                                                    <input type="text" name="txtFromDate_hvc" placeholder="Start Date" class="form-control pull-right txtFromDate" id="txtFromDate_hvc">
-                                                </div>
 
-                                                <div class="input-group date styledate" style="width:30% !important">
-                                                    <div class="input-group-addon">
-                                                        <i class="fa fa-calendar"></i>
+                                                    <div class="input-group date styledate" style="width:30% !important">
+                                                        <div class="input-group-addon">
+                                                            <i class="fa fa-calendar"></i>
+                                                        </div>
+                                                        <input type="text" name="txtToDate_hpd" placeholder="End Date" class="form-control pull-right txtToDate" id="txtToDate_hpd" >
                                                     </div>
-                                                    <input type="text" name="txtToDate_hvc" placeholder="End Date" class="form-control pull-right txtToDate" id="txtToDate_hvc" >
-                                                </div>
-                                                <div class="input-group" style="">
-                                                    <input type="button" class="search-btn" id="button_hvc" value="Apply" style="float:left" >
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                    <hr>
-                                    <div class="col-xs-12">
-                                        <div class="box">
-                                            <div class="box-body">
-                                                <div class="table-responsive">
-                                                    <table id="hvc-table" class="table table-bordered hvc-table">
-                                                        <thead>
-                                                            <th>Id</th>
-                                                            <th>Customer Name</th>
-                                                            <th>Number of Campaigns</th>
-                                                            <th>Number of Adslots</th>
-                                                            <th>Total Amount/Revenue (&#8358;)</th>
-                                                        </thead>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="tab-pane" id="make_good_report">
-
-                            </div>
-
-                            <div class="tab-pane" id="total_volume_of_campaigns">
-                                <div class="row">
-                                    <div class="row">
-                                        <form action="#" method="GET">
-                                            {{ csrf_field() }}
-                                            <h4 style="margin-left: 17px;font-weight: bold">Search by date</h4>
-                                            <div class="col-md-10" style="margin-top: -2%">
-                                                <div class="input-group date styledate" style="width:30% !important">
-                                                    <div class="input-group-addon">
-                                                        <i class="fa fa-calendar"></i>
+                                                    <div class="input-group" style="">
+                                                        <input type="button" class="search-btn" id="button_hpd" value="Apply" style="float:left" >
                                                     </div>
-                                                    <input type="text" name="txtFromDate_tvc" placeholder="Start Date" class="form-control pull-right txtFromDate" id="txtFromDate_tvc">
                                                 </div>
-
-                                                <div class="input-group date styledate" style="width:30% !important">
-                                                    <div class="input-group-addon">
-                                                        <i class="fa fa-calendar"></i>
+                                            </form>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="box">
+                                                    <div class="box-body">
+                                                        <div class="table-responsive">
+                                                            <table id="hpd-table" class="table table-bordered">
+                                                                <thead>
+                                                                <th>Id</th>
+                                                                <th>Dayparts</th>
+                                                                <th>Percentage Fill Rate</th>
+                                                                <th>Date</th>
+                                                                </thead>
+                                                            </table>
+                                                        </div>
                                                     </div>
-                                                    <input type="text" name="txtToDate_tvc" placeholder="End Date" class="form-control pull-right txtToDate" id="txtToDate_tvc" >
-                                                </div>
-                                                <div class="input-group" style="">
-                                                    <input type="button" class="search-btn" id="button_tvc" value="Apply" style="float:left" >
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                    <hr>
-                                    <div class="col-xs-12">
-                                        <div class="box">
-                                            <div class="box-body">
-                                                <div class="table-responsive">
-                                                    <table id="tvc-table" class="table table-bordered tvc-table">
-                                                        <thead>
-                                                        <th>Id</th>
-                                                        <th>Volume of Campaigns</th>
-                                                        <th>Date</th>
-                                                        </thead>
-                                                    </table>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+
+                                    <div class="tab-pane" id="high_performing_days">
+                                        <div class="row">
+                                            <form action="" method="GET">
+                                                {{ csrf_field() }}
+                                                <h4 style="margin-left: 17px;font-weight: bold">Search by date</h4>
+                                                <div class="col-md-10" style="margin-top: -2%">
+                                                    <div class="input-group date styledate" style="width:30% !important">
+                                                        <div class="input-group-addon">
+                                                            <i class="fa fa-calendar"></i>
+                                                        </div>
+                                                        <input type="text" name="txtFromDate_hpdays" placeholder="Start Date" class="form-control pull-right txtFromDate" id="txtFromDate_hpdays">
+                                                    </div>
+
+                                                    <div class="input-group date styledate" style="width:30% !important">
+                                                        <div class="input-group-addon">
+                                                            <i class="fa fa-calendar"></i>
+                                                        </div>
+                                                        <input type="text" name="txtToDate_hpdays" placeholder="End Date" class="form-control pull-right txtToDate" id="txtToDate_hpdays" >
+                                                    </div>
+                                                    <div class="input-group" style="">
+                                                        <input type="button" class="search-btn" id="button_hpdays" value="Apply" style="float:left" >
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="box">
+                                                    <div class="box-body">
+                                                        <div class="table-responsive">
+                                                            <table id="hpdays-table" class="table table-bordered">
+                                                                <thead>
+                                                                <th>Id</th>
+                                                                <th>Days</th>
+                                                                <th>Percentage Fill Rate</th>
+                                                                <th>Week</th>
+                                                                </thead>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-pane" id="high_value_customer">
+                                        <div class="row">
+                                            <div class="row">
+                                                <form action="#" id="formHVC" method="GET">
+                                                    {{ csrf_field() }}
+                                                    <h4 style="margin-left: 17px;font-weight: bold">Search by date</h4>
+                                                    <div class="col-md-10" style="margin-top: -2%">
+                                                        <div class="input-group date styledate" style="width:30% !important">
+                                                            <div class="input-group-addon">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </div>
+                                                            <input type="text" name="txtFromDate_hvc" placeholder="Start Date" class="form-control pull-right txtFromDate" id="txtFromDate_hvc">
+                                                        </div>
+
+                                                        <div class="input-group date styledate" style="width:30% !important">
+                                                            <div class="input-group-addon">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </div>
+                                                            <input type="text" name="txtToDate_hvc" placeholder="End Date" class="form-control pull-right txtToDate" id="txtToDate_hvc" >
+                                                        </div>
+                                                        <div class="input-group" style="">
+                                                            <input type="button" class="search-btn" id="button_hvc" value="Apply" style="float:left" >
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <hr>
+                                            <div class="col-xs-12">
+                                                <div class="box">
+                                                    <div class="box-body">
+                                                        <div class="table-responsive">
+                                                            <table id="hvc-table" class="table table-bordered hvc-table">
+                                                                <thead>
+                                                                <th>Id</th>
+                                                                <th>Customer Name</th>
+                                                                <th>Number of Campaigns</th>
+                                                                <th>Number of Adslots</th>
+                                                                <th>Total Amount/Revenue (&#8358;)</th>
+                                                                </thead>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-pane" id="make_good_report">
+
+                                    </div>
+
+                                    <div class="tab-pane" id="total_volume_of_campaigns">
+                                        <div class="row">
+                                            <div class="row">
+                                                <form action="#" method="GET">
+                                                    {{ csrf_field() }}
+                                                    <h4 style="margin-left: 17px;font-weight: bold">Search by date</h4>
+                                                    <div class="col-md-10" style="margin-top: -2%">
+                                                        <div class="input-group date styledate" style="width:30% !important">
+                                                            <div class="input-group-addon">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </div>
+                                                            <input type="text" name="txtFromDate_tvc" placeholder="Start Date" class="form-control pull-right txtFromDate" id="txtFromDate_tvc">
+                                                        </div>
+
+                                                        <div class="input-group date styledate" style="width:30% !important">
+                                                            <div class="input-group-addon">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </div>
+                                                            <input type="text" name="txtToDate_tvc" placeholder="End Date" class="form-control pull-right txtToDate" id="txtToDate_tvc" >
+                                                        </div>
+                                                        <div class="input-group" style="">
+                                                            <input type="button" class="search-btn" id="button_tvc" value="Apply" style="float:left" >
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <hr>
+                                            <div class="col-md-12">
+                                                <div class="box">
+                                                    <div class="box-body">
+                                                        <div class="table-responsive">
+                                                            <table id="tvc-table" class="table table-bordered tvc-table">
+                                                                <thead>
+                                                                <th>Id</th>
+                                                                <th>Volume of Campaigns</th>
+                                                                <th>Date</th>
+                                                                </thead>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-pane" id="paid_invoices">
+                                        <div class="row">
+                                            <form action="" method="GET">
+                                                {{ csrf_field() }}
+                                                <h4 style="margin-left: 17px;font-weight: bold">Search by date</h4>
+                                                <div class="col-md-10" style="margin-top: -2%">
+                                                    <div class="input-group date styledate" style="width:30% !important">
+                                                        <div class="input-group-addon">
+                                                            <i class="fa fa-calendar"></i>
+                                                        </div>
+                                                        <input type="text" name="txtFromDate_pi" placeholder="Start Date" class="form-control pull-right txtFromDate" id="txtFromDate_pi">
+                                                    </div>
+
+                                                    <div class="input-group date styledate" style="width:30% !important">
+                                                        <div class="input-group-addon">
+                                                            <i class="fa fa-calendar"></i>
+                                                        </div>
+                                                        <input type="text" name="txtToDate_pi" placeholder="End Date" class="form-control pull-right txtToDate" id="txtToDate_pi" >
+                                                    </div>
+                                                    <div class="input-group" style="">
+                                                        <input type="button" class="search-btn" id="button_pi" value="Apply" style="float:left" >
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="box">
+                                                    <div class="box-body">
+                                                        <div class="table-responsive">
+                                                            <table id="pi-table" class="table table-bordered">
+                                                                <thead>
+                                                                <th>Id</th>
+                                                                <th>Campaign Name</th>
+                                                                <th>Customer</th>
+                                                                <th>Date</th>
+                                                                <th>Due Date</th>
+                                                                </thead>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                 </div>
+
                             </div>
 
-                            <div class="tab-pane" id="paid_invoices">
-                                <div class="row">
-                                    <form action="" method="GET">
-                                        {{ csrf_field() }}
-                                        <h4 style="margin-left: 17px;font-weight: bold">Search by date</h4>
-                                        <div class="col-md-10" style="margin-top: -2%">
-                                            <div class="input-group date styledate" style="width:30% !important">
-                                                <div class="input-group-addon">
-                                                    <i class="fa fa-calendar"></i>
-                                                </div>
-                                                <input type="text" name="txtFromDate_pi" placeholder="Start Date" class="form-control pull-right txtFromDate" id="txtFromDate_pi">
-                                            </div>
-
-                                            <div class="input-group date styledate" style="width:30% !important">
-                                                <div class="input-group-addon">
-                                                    <i class="fa fa-calendar"></i>
-                                                </div>
-                                                <input type="text" name="txtToDate_pi" placeholder="End Date" class="form-control pull-right txtToDate" id="txtToDate_pi" >
-                                            </div>
-                                            <div class="input-group" style="">
-                                                <input type="button" class="search-btn" id="button_pi" value="Apply" style="float:left" >
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                                <hr>
-                                <div class="row">
-                                    <div class="col-xs-12">
-                                        <div class="box">
-                                            <div class="box-body">
-                                                <div class="table-responsive">
-                                                    <table id="pi-table" class="table table-bordered">
-                                                        <thead>
-                                                        <th>Id</th>
-                                                        <th>Campaign Name</th>
-                                                        <th>Customer</th>
-                                                        <th>Date</th>
-                                                        <th>Due Date</th>
-                                                        </thead>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- /.tab-pane -->
                         </div>
-                        <!-- /.tab-content -->
-                    </div>
-                    <!-- /.nav-tabs-custom -->
-                </div>
-                <!-- /.col -->
 
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-
-</section>
-
+</div>
 
 @stop
 

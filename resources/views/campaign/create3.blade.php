@@ -1,58 +1,40 @@
-@extends('layouts.app')
+@extends('layouts.new_app')
+
+@section('title')
+    <title>Create Campaign</title>
+@endsection
 
 @section('content')
-    <section class="content-header">
-        <h1>
-            Create Campaign
-            <small><i class="fa fa-users"></i> Audience</small>
-        </h1>
-        <ol class="breadcrumb" style="font-size: 16px">
 
-            <li><a href="#"><i class="fa fa-th"></i> Create Campaign</a> </li>
-            <li><i class="fa fa-users"></i> Audience </li>
+    <div class="main-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 heading-main">
+                    <h1>Audience</h1>
+                    <ul>
+                        <li><a href="#"><i class="fa fa-edit"></i>Create Campaign</a></li>
+                        <li><a href="#">Audience</a></li>
+                    </ul>
+                </div>
 
-        </ol>
-    </section>
-
-    <!-- Main content -->
-
-    <section class="content">
-        <div class="row">
-            <div class="col-md-1 hidden-sm hidden-xs"></div>
-            <div class="col-md-9 " style="padding:2%">
-                <form class="campform" method="POST" action="{{ route('campaign.store3', ['walkins' => $walkins]) }}">
-                    {{ csrf_field() }}
-                    @foreach($adslots as $adslot)
-
+                <div class="Add-brand">
+                    <form class="campform" method="POST" action="{{ route('campaign.store3', ['walkins' => $walkins]) }}">
+                        {{ csrf_field() }}
+                        @foreach($adslots as $adslot)
                             <p>{{ $adslot['count_adslot'] }} Adslots that matches your selected criteria </p>
+                        @endforeach
 
-                    @endforeach
-                    <br>
-                    <br>
+                        <br>
+                        <br>
 
-                        <p align="left">
-                            {{--<button type="button" id="step2" class="btn campaign-button" >Back <i class="fa fa-backward" aria-hidden="true"></i></button>--}}
-
-                            <button type="submit" class="btn campaign-button" style="margin-right:15%">Next <i class="fa fa-play" aria-hidden="true"></i></button>
-
-                        </p>
-                    </div>
-
-                </form>
-
+                        <div class="input-group">
+                            <input type="Submit" name="Submit" value="Next" />
+                        </div>
+                    </form>
+                </div>
             </div>
-            <!-- /.col -->
-            <div class="col-md-2 hidden-sm hidden-xs"></div>
-            <!-- /.col -->
-
-
-
-
         </div>
-        <!-- /.row -->
-
-
-    </section>
+    </div>
 
 @stop
 

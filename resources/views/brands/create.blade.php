@@ -1,62 +1,46 @@
-@extends('layouts.app')
+@extends('layouts.new_app')
+
+@section('title')
+    <title>Create Brand</title>
+@endsection
 
 @section('content')
 
-@section('title', 'Faya | Dashboard')
-<!-- Content Header (Page header) -->
-<!-- Content Header (Page header) -->
-<section class="content-header">
-    <h1>
-        Welcome {{ Auth::user()->username }}!
-
-    </h1>
-    <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Create Brands</a></li>
-    </ol>
-</section>
-
-<!-- Main content -->
-<section class="content">
-    <div class="row">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3>Create Brands</h3>
+<div class="main-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 heading-main">
+                <h1>Create Brands</h1>
+                <ul>
+                    <li><a href="#"><i class="fa fa-edit"></i>Broadcaster</a></li>
+                    <li><a href="#">Create Brands</a></li>
+                </ul>
             </div>
-            <div class="panel-body">
+            <div class="Add-brand">
+                <h2>Create Brands</h2>
                 <form action="{{ route('brand.store') }}" method="post">
                     {{ csrf_field() }}
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="first_name">Name</label>
-                                <input type="text" name="brand_name" placeholder="Brand Name" class="form-control" required>
-                            </div>
-                        </div>
+                    <div class="input-group">
+                        <label for="brand_name">Name</label>
+                        <input type="text" name="brand_name" value=""  placeholder="Brand Name">
                     </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="first_name">Clients</label>
-                                <select name="clients" class="form-control" id="">
-                                    @foreach($client as $clients)
-                                        <option value="{{ $clients[0]->id }}">{{ $clients[0]->firstname.' '.$clients[0]->lastname }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
+                    <div class="input-group">
+                        <label>Clients</label>
+                        <select name="clients" class="Role">
+                            @foreach($client as $clients)
+                                <option value="{{ $clients[0]->id }}">{{ $clients[0]->firstname.' '.$clients[0]->lastname }}</option>
+                            @endforeach
+                        </select>
                     </div>
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-success">Add Brands</button>
+                    <div class="input-group">
+                        <input type="Submit" name="Submit" value="Add Brand" />
                     </div>
                 </form>
             </div>
         </div>
-        <!-- /.col (RIGHT) -->
     </div>
-    <!-- /.row -->
+</div>
 
-</section>
-<!-- /.content -->
 @stop
 
 @section('scripts')

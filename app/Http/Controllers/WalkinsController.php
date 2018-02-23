@@ -97,7 +97,7 @@ class WalkinsController extends Controller
         $saveWalkins = Utilities::switch_db('api')->table('walkIns')->insert($insert_walkin);
 
         if($saveUser && $saveWalkins){
-            return redirect()->back()->with('success', 'Walkins created successfully');
+            return redirect()->route('walkins.all')->with('success', 'Walkins created successfully');
         }
 
 //        dd($insert_user, $insert_walkin);

@@ -1,72 +1,113 @@
-@extends('layouts.app')
+@extends('layouts.new_app')
+
+@section('title')
+    <title>Create Campaign</title>
+@endsection
 
 @section('content')
 
-    <!-- Content Header (Page header) -->
-    <!-- Content Header (Page header) -->
-    <section class="content-header">
-        <h1>
-            Create Campaign
-            <small><i class="fa fa-file-video-o"></i> Upload Media List </small>
-        </h1>
-        <ol class="breadcrumb" style="font-size: 16px">
+    <div class="main-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 heading-main">
+                    <h1>Upload Media List</h1>
+                    <ul>
+                        <li><a href="#"><i class="fa fa-edit"></i>Create Campaign</a></li>
+                        <li><a href="#">Upload Media List</a></li>
+                    </ul>
+                </div>
 
-            <li><a href="#"><i class="fa fa-th"></i> Create Campaign</a> </li>
-            <li><i class="fa fa-file-video-o"></i> Upload Media List </li>
-
-        </ol>
-    </section>
-
-    <!-- Main content -->
-
-    <section class="content">
-        <div class="row">
-            <div class="col-md-1 hidden-sm hidden-xs"></div>
-            <div class="col-md-9 " style="padding:2%">
-
+                <div class="Add-brand">
                     <div class="row">
                         <div class="col-md-12 ">
-
-                            <h2></h2>
-                            <p align="center">The history of advertising can be traced to ancient civilizations. It became a major force in capitalist economies in the mid-19th century, based primarily on newspapers and magazines. In the 20th century, advertising grew rapidly with new technologies such as direct mail, radio, television, the internet and mobile devices.</p>
-
+                            <h2>
+                                <p align="center">
+                                    The history of advertising can be traced to ancient civilizations.
+                                    It became a major force in capitalist economies in the mid-19th century,
+                                    based primarily on newspapers and magazines. In the 20th century,
+                                    advertising grew rapidly with new technologies such as direct mail, radio, television,
+                                    the internet and mobile devices.
+                                </p>
+                            </h2>
                         </div>
-
-
                     </div>
+                </div>
 
-                    <div class="row">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3>Uploaded list</h3>
 
-                        <div class="box">
-                            <div class="box-header">
-                                <h3 class="box-title">Uploaded list</h3>
-
-
-                            </div>
-                            <!-- /.box-header -->
-                            <div class="box-body table-responsive no-padding">
-                                <table class="table table-hover" style="font-size:16px">
-                                    <tr>
-                                        <th>S/N</th>
-                                        <th>File Name</th>
-                                        <th>Duration</th>
-                                        {{--<th>Action</th>--}}
-
-                                    </tr>
-                                    @foreach($uploads as $upload)
+                        <table class="table table-bordered table-striped campaign">
+                            <thead>
+                                <tr>
+                                    <th>S/N</th>
+                                    <th>File Name</th>
+                                    <th>Duration</th>
+                                    {{--<th>Action</th>--}}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($uploads as $upload)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $upload->uploads }}</td>
                                         <td>{{ $upload->time }}</td>
                                         {{--<td><button type="button" data-toggle="modal" data-target=".deleteModal{{ $upload->id }}" class="btn btn-danger btn-xs">Delete</button></td>--}}
                                     </tr>
-                                    @endforeach
-                                </table>
-                            </div>
-                            <!-- /.box-body -->
-                        </div>
-
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
+                </div>
+
+                <div class="Add-brand">
+                    <div class="row">
+                        <div class="col-md-12 ">
+                            <form action="{{ route('campaign.create6', ['walkins' => $walkins]) }}" method="GET">
+                                <div class="input-group">
+                                    <p align="right">
+                                        {{--<button type="button" id="step4" class="btn campaign-button" >Back <i class="fa fa-backward" aria-hidden="true"></i></button>--}}
+                                        {{--<button type="submit" class="btn campaign-button" style="margin-right:15%">Next <i class="fa fa-play" aria-hidden="true"></i></button>--}}
+                                        <input type="Submit" name="Submit" value="Next" />
+                                    </p>
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    @foreach($uploads as $upload)
+        <div class="modal fade deleteModal{{ $upload->id }}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+            <div class="modal-dialog modal-md" role="document">
+                <div class="modal-content" style="padding: 7%">
+
+                    <div class="modal-header">
+                        <h2 class="text-center">Are you sure you want to delete?</h2>
+                    </div>
+                    <div class="modal-body">
+                        <h5>
+                            <b style="color: red">Warning!!!</b>
+                            Deleting this means you might not be able to fully undo this operation
+                        </h5>
+                    </div>
+                    <div class="modal-footer">
+                        <button  class="btn btn-large btn-danger" data-dismiss="modal" style="color:white; font-size: 20px; padding: 0.5% 3%; margin-top:4%; border-radius: 10px;">Cancel</button>
+                        <a href="{{ route('uploads.delete', ['walkins' => $walkins, 'id' => $upload->id]) }}" type="submit" class="btn btn-large btn-success" style="color:white; font-size: 20px; padding: 0.5% 3%; margin-top:4%; border-radius: 10px;">Delete</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    @endforeach
+
+
+
 
 
                     {{--<div class="row" style="margin-top:3%">--}}
@@ -101,48 +142,6 @@
                         {{--</div>--}}
 
                     {{--</div>--}}
-
-                <form action="{{ route('campaign.create6', ['walkins' => $walkins]) }}" method="GET">
-                    <div class="container">
-
-                        <p align="right">
-                            {{--<button type="button" id="step4" class="btn campaign-button" >Back <i class="fa fa-backward" aria-hidden="true"></i></button>--}}
-                            <button type="submit" class="btn campaign-button" style="margin-right:15%">Next <i class="fa fa-play" aria-hidden="true"></i></button>
-                        </p>
-
-                    </div>
-                </form>
-
-            </div>
-            <!-- /.col -->
-            <div class="col-md-2 hidden-sm hidden-xs"></div>
-            <!-- /.col -->
-
-
-
-
-        </div>
-        <!-- /.row -->
-
-    </section>
-
-    <!-- /.content -->
-
-    @foreach($uploads as $upload)
-        <div class="modal fade deleteModal{{ $upload->id }}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-            <div class="modal-dialog modal-md" role="document">
-                <div class="modal-content" style="padding: 7%">
-                    <h2 class="text-center">Are you sure you want to delete?</h2><br>
-                    <h5><b style="color: red">Warning!!!</b> Deleting this means you might not be able to fully undo this operation</h5>
-
-                    <p align="center">
-                        <button  class="btn btn-large btn-danger" data-dismiss="modal" style="color:white; font-size: 20px; padding: 0.5% 3%; margin-top:4%; border-radius: 10px;">Cancel</button>
-                        <a href="{{ route('uploads.delete', ['walkins' => $walkins, 'id' => $upload->id]) }}" type="submit" class="btn btn-large btn-success" style="color:white; font-size: 20px; padding: 0.5% 3%; margin-top:4%; border-radius: 10px;">Delete</a>
-                    </p>
-                </div>
-            </div>
-        </div>
-    @endforeach
 
 @endsection
 

@@ -57,6 +57,7 @@ class AdslotController extends Controller
             ];
             $j++;
         }
+
         return view('adslot.index')->with('adslots', $all_adslot)->with('broadcaster', $broadcaster)->with('regions', $region);
     }
 
