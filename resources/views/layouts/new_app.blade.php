@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-<<<<<<< HEAD
 @include('partials._new_head')
 <body>
 <!--Container-->
