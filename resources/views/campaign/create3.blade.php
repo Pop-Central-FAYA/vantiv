@@ -22,21 +22,22 @@
             <div class="col-md-9 " style="padding:2%">
                 <form class="campform" method="POST" action="{{ route('campaign.store3', ['walkins' => $walkins]) }}">
                     {{ csrf_field() }}
+                    @if(count($adslots) === 0)
+                        <p><h3>No adslots matches your criteria, please go back and adjust.</h3></p>
+                    @endif
                     @foreach($adslots as $adslot)
-
-                            <p>{{ $adslot['count_adslot'] }} Adslots that matches your selected criteria </p>
-
+                        <p>{{ $adslot['count_adslot'] }} Adslots that matches your selected criteria </p>
                     @endforeach
                     <br>
                     <br>
 
                         <p align="left">
-                            {{--<button type="button" id="step2" class="btn campaign-button" >Back <i class="fa fa-backward" aria-hidden="true"></i></button>--}}
-
-                            <button type="submit" class="btn campaign-button" style="margin-right:15%">Next <i class="fa fa-play" aria-hidden="true"></i></button>
-
+                            @if(count($adslots) === 0)
+                                <button type="button" id="step2" class="btn campaign-button" >Back <i class="fa fa-backward" aria-hidden="true"></i></button>
+                            @else
+                                <button type="submit" class="btn campaign-button" style="margin-right:15%">Next <i class="fa fa-play" aria-hidden="true"></i></button>
+                            @endif
                         </p>
-                    </div>
 
                 </form>
 
@@ -44,14 +45,8 @@
             <!-- /.col -->
             <div class="col-md-2 hidden-sm hidden-xs"></div>
             <!-- /.col -->
-
-
-
-
         </div>
         <!-- /.row -->
-
-
     </section>
 
 @stop
@@ -75,7 +70,7 @@
         $(document).ready(function() {
             var user_id = "<?php echo $walkins ?>";
            $('#step2').click(function(){
-               window.location.href = '/campaign/create/1/'+user_id+'/step2';
+               window.location.href = '/campaign/create/'+user_id+'/step2';
            });
         });
     </script>
@@ -162,4 +157,4 @@
     <link rel="stylesheet" href="{{ asset('asset/plugins/timepicker/bootstrap-timepicker.min.css') }}">
     <!-- Select2 -->
     <link rel="stylesheet" href="{{ asset('asset/plugins/select2/select2.min.css') }}">
-    @stop
+@stop

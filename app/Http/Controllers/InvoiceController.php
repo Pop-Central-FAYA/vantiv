@@ -3,6 +3,7 @@
 namespace Vanguard\Http\Controllers;
 
 use Session;
+use Vanguard\Libraries\Api;
 use Vanguard\Libraries\Utilities;
 
 class InvoiceController extends Controller
@@ -75,6 +76,10 @@ class InvoiceController extends Controller
         $amount = $invoice[0]->actual_amount_paid;
         $agency_id = Session::get('agency_id');
 
+        $user_agent = $_SERVER['HTTP_USER_AGENT'];
+        $description = 'Invoice with invoice number '.$invoice[0]->invoice_number.' has been approved by '.$agency_id.'';
+        $ip = request()->ip();
+
         $wallet = Utilities::switch_db('reports')->select("SELECT * FROM wallets WHERE user_id = '$agency_id'");
         $current_balance = $wallet[0]->current_balance;
         $new_balance = $current_balance - $amount;
@@ -109,6 +114,7 @@ class InvoiceController extends Controller
             $update_invoice = Utilities::switch_db('reports')->select("UPDATE invoices SET status = 1 WHERE id = '$invoice_id'");
 
             if (empty($update_invoice)) {
+                $save_activity = Api::saveActivity($agency_id, $description, $ip, $user_agent);
                 return redirect()->back()->with('success', 'Invoice Approved Successfully');
             } else {
                 return redirect()->back()->with('error', 'Invoice not Approved Successfully');

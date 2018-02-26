@@ -45,7 +45,6 @@
                                                 <th>Status</th>
                                             </thead>
                                         </table>
-                                        {{--{!! with(new Vanguard\Pagination\HDPresenter($adslot))->render() !!}--}}
                                     </div>
                                 </div>
                                 <!-- /.tab-pane -->

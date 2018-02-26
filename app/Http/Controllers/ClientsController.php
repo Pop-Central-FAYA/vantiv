@@ -7,10 +7,12 @@ use Vanguard\Country;
 use Illuminate\Http\Request;
 use Vanguard\Http\Requests\StoreClient;
 use Vanguard\Http\Controllers\Controller;
+use Vanguard\Libraries\Api;
 use Vanguard\Libraries\Utilities;
 use Vanguard\Repositories\Permission\PermissionRepository;
 use Vanguard\Role;
 use Vanguard\Support\Enum\UserStatus;
+use Session;
 
 class ClientsController extends Controller
 {
@@ -21,6 +23,10 @@ class ClientsController extends Controller
 
     public function create(Request $request)
     {
+        $user_agent = $_SERVER['HTTP_USER_AGENT'];
+        $description = 'Client '.$request->first_name.' '. $request->last_name.' Created by '.Session::get('agency_id');
+        $ip = request()->ip();
+
         if ($request->isMethod('POST')) {
             $userInsert = DB::table('users')->insert([
                 'email' => $request->email,
@@ -56,6 +62,7 @@ class ClientsController extends Controller
             ]);
 
             if ($userInsert && $walkinInsert) {
+                $save_activity = Api::saveActivity(Session::get('agency_id'), $description, $ip, $user_agent);
                 return redirect()->route('clients.list')->with('success', 'Client Successfully created');
             } else {
                 return redirect()->back()->with('error', trans('Client not created, try again'));
