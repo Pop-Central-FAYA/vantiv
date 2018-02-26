@@ -1,23 +1,87 @@
-@extends('layouts.app')
+@extends('layouts.new_app')
+
+@section('title')
+    <title>Create Campaign</title>
+@endsection
 
 @section('content')
 
-    <!-- Content Header (Page header) -->
-    <!-- Content Header (Page header) -->
-    <section class="content-header">
-        <h1>
-            Create Campaign
-            <small><i class="fa fa-file-video-o"></i> Adslot </small>
-        </h1>
-        <ol class="breadcrumb" style="font-size: 16px">
 
-            <li><a href="#"><i class="fa fa-th"></i> Create Campaign</a> </li>
-            <li><i class="fa fa-file-video-o"></i> Adslot </li>
+    <div class="main-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 heading-main">
+                    <h1>Adslots</h1>
+                    <ul>
+                        <li><a href="#"><i class="fa fa-edit"></i>Create Campaign</a></li>
+                        <li><a href="#">Adslots</a></li>
+                    </ul>
+                </div>
 
-        </ol>
-    </section>
+                <div class="Add-brand">
+                    <div class="row">
+                        <div class="col-md-12 ">
+                            <h2>
+                                <p align="center">
+                                    The history of advertising can be traced to ancient civilizations.
+                                    It became a major force in capitalist economies in the mid-19th century,
+                                    based primarily on newspapers and magazines. In the 20th century,
+                                    advertising grew rapidly with new technologies such as direct mail, radio, television,
+                                    the internet and mobile devices.
+                                </p>
+                            </h2>
+                        </div>
+                    </div>
+                </div>
 
-    <!-- Main content -->
+                <div class="row">
+
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 ">
+                        <div class="tvspace-box">
+                            <img src="{{ asset('asset/dist/img/nta-logo.jpg') }}" width="100%">
+                            <div class="tv-space">
+                                <p align="center">12 Available</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                        <div class="tvspace-box">
+                            <img src="{{ asset('asset/dist/img/ait-logo.jpg') }}" width="100%">
+                            <div class="tv-space">
+                                <p align="center">12 Available</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                        <div class="tvspace-box">
+                            <img src="{{ asset('asset/dist/img/silvebird-logo.jpg') }}" width="100%">
+                            <div class="tv-space">
+                                <p align="center">12 Available</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                        <div class="tvspace-box">
+                            <img src="{{ asset('asset/dist/img/tvc-logo.jpg') }}" width="100%">
+                            <div class="tv-space">
+                                <p align="center">12 Available</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+
+
 
     <section class="content">
         <div class="row">
@@ -35,44 +99,7 @@
 
                     </div>
 
-                    <div class="row" style="margin-bottom: 5%">
 
-                        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 ">
-                            <div class="tvspace-box">
-                                <img src="{{ asset('asset/dist/img/nta-logo.jpg') }}" width="100%">
-                                <div class="tv-space">
-                                    <p align="center">12 Available</p>
-
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-
-                            <div class="tvspace-box">
-                                <img src="{{ asset('asset/dist/img/ait-logo.jpg') }}" width="100%">
-                                <div class="tv-space">
-                                    <p align="center">12 Available</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                            <div class="tvspace-box">
-                                <img src="{{ asset('asset/dist/img/silvebird-logo.jpg') }}" width="100%">
-                                <div class="tv-space">
-                                    <p align="center">12 Available</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                            <div class="tvspace-box">
-                                <img src="{{ asset('asset/dist/img/tvc-logo.jpg') }}" width="100%">
-                                <div class="tv-space">
-                                    <p align="center">12 Available</p>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
 
 
                     <div id="tv-time-box" style="border:1px solid #ccc">
@@ -91,7 +118,6 @@
                                 <span type="button"  data-toggle="modal" data-target=".bs-example-modal-lg" class="avail-box" style="background:#ffde01; cursor: pointer; "></span>
 
 
-
                                 <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
                                     <div class="modal-dialog modal-lg" role="document">
                                         <div class="modal-content" style="padding: 5%">
@@ -106,7 +132,8 @@
 
                                             </ul>
                                             <p align="center">
-                                                <a href="#" style="color:white"><button  class="btn btn-large" style="background: #9f005d; color:white; font-size: 20px; padding: 1% 5%; margin-top:4%; border-radius: 10px;">Save</button></a></p>
+                                                <a href="#" style="color:white"><button  class="btn btn-large" style="background: #9f005d; color:white; font-size: 20px; padding: 1% 5%; margin-top:4%; border-radius: 10px;">Save</button></a>
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -116,7 +143,6 @@
                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4 ">
                                 <p align="center">9:15 - 9:18</p> <br/>
                                 <span type="button"  data-toggle="modal" data-target=".bs-example2-modal-lg" class="avail-box" style="cursor: pointer; "></span>
-
 
                                 <div class="modal fade bs-example2-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
                                     <div class="modal-dialog modal-lg" role="document">
@@ -132,7 +158,8 @@
 
                                             </ul>
                                             <p align="center">
-                                                <a href="#" style="color:white"><button  class="btn btn-large" style="background: #9f005d; color:white; font-size: 20px; padding: 1% 5%; margin-top:4%; border-radius: 10px;">Save</button></a></p>
+                                                <a href="#" style="color:white"><button  class="btn btn-large" style="background: #9f005d; color:white; font-size: 20px; padding: 1% 5%; margin-top:4%; border-radius: 10px;">Save</button></a>
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -143,7 +170,6 @@
                                 <p align="center">9:30 - 9:33</p> <br/>
                                 <span type="button"  data-toggle="modal" data-target=".bs-example3-modal-lg" class="avail-box" style="cursor: pointer; "></span>
 
-
                                 <div class="modal fade bs-example3-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
                                     <div class="modal-dialog modal-lg" role="document">
                                         <div class="modal-content" style="padding: 5%">
@@ -152,13 +178,13 @@
                                             <ul style="font-size: 21px; margin:0 auto; width: 50%">
                                                 <h3 align="" style="color:#9f005d">Choose a media file</h3>
                                                 <hr />
-                                                <li><i class="fa fa-video-camera"></i> Fazzy.mpeg     <span style="margin-left:15%">60 seconds</span> </li>
+                                                <li><i class="fa fa-video-camera"></i> Fazzy.mpeg <span style="margin-left:15%">60 seconds</span> </li>
                                                 <hr />
-                                                <li><i class="fa fa-video-camera"></i> Fazzy1.mpeg   <span style="margin-left:15%">30 second</span> </li>
-
+                                                <li><i class="fa fa-video-camera"></i> Fazzy1.mpeg <span style="margin-left:15%">30 second</span> </li>
                                             </ul>
                                             <p align="center">
-                                                <a href="#" style="color:white"><button  class="btn btn-large" style="background: #9f005d; color:white; font-size: 20px; padding: 1% 5%; margin-top:4%; border-radius: 10px;">Save</button></a></p>
+                                                <a href="#" style="color:white"><button  class="btn btn-large" style="background: #9f005d; color:white; font-size: 20px; padding: 1% 5%; margin-top:4%; border-radius: 10px;">Save</button></a>
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -168,9 +194,7 @@
                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
                                 <p align="center">9:45 - 9:48</p> <br/>
 
-
                                 <span type="button"  data-toggle="modal" data-target=".bs-example4-modal-lg" class="avail-box" style="background:#f4290d; cursor: pointer; "></span>
-
 
                                 <div class="modal fade bs-example4-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
                                     <div class="modal-dialog modal-lg" role="document">
@@ -179,7 +203,8 @@
 
 
                                             <p align="center">
-                                                <a href="#" style="color:white"><button  class="btn btn-large" style="background: #9f005d; color:white; font-size: 20px; padding: 1% 5%; margin-top:4%; border-radius: 10px;" disabled="">Save</button></a></p>
+                                                <a href="#" style="color:white"><button  class="btn btn-large" style="background: #9f005d; color:white; font-size: 20px; padding: 1% 5%; margin-top:4%; border-radius: 10px;" disabled="">Save</button></a>
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -215,15 +240,13 @@
                                                 <li><i class="fa fa-video-camera"></i> Fazzy.mpeg     <span style="margin-left:15%">60 seconds</span> </li>
                                                 <hr />
                                                 <li><i class="fa fa-video-camera"></i> Fazzy1.mpeg   <span style="margin-left:15%">30 second</span> </li>
-
                                             </ul>
                                             <p align="center">
-                                                <a href="#" style="color:white"><button  class="btn btn-large" style="background: #9f005d; color:white; font-size: 20px; padding: 1% 5%; margin-top:4%; border-radius: 10px;">Save</button></a></p>
+                                                <a href="#" style="color:white"><button  class="btn btn-large" style="background: #9f005d; color:white; font-size: 20px; padding: 1% 5%; margin-top:4%; border-radius: 10px;">Save</button></a>
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
-
-
 
                             </div>
 
@@ -246,7 +269,8 @@
 
                                             </ul>
                                             <p align="center">
-                                                <a href="#" style="color:white"><button  class="btn btn-large" style="background: #9f005d; color:white; font-size: 20px; padding: 1% 5%; margin-top:4%; border-radius: 10px;">Save</button></a></p>
+                                                <a href="#" style="color:white"><button  class="btn btn-large" style="background: #9f005d; color:white; font-size: 20px; padding: 1% 5%; margin-top:4%; border-radius: 10px;">Save</button></a>
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -287,9 +311,49 @@
                                         <div class="modal-content" style="padding: 5%">
                                             <h2 align="center">Unavailable</h2>
 
-
                                             <p align="center">
-                                                <a href="#" style="color:white"><button  class="btn btn-large" style="background: #9f005d; color:white; font-size: 20px; padding: 1% 5%; margin-top:4%; border-radius: 10px;" disabled="">Save</button></a></p>
+                                                <a href="#" style="color:white"><button  class="btn btn-large" style="background: #9f005d; color:white; font-size: 20px; padding: 1% 5%; margin-top:4%; border-radius: 10px;" disabled="">Save</button></a>
+                                            </p>
+                                        </div>
+
+                                        <div class="row">
+
+                                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 ">
+                                                <div class="tvspace-box">
+                                                    <img src="{{ asset('asset/dist/img/nta-logo.jpg') }}" width="100%">
+                                                    <div class="tv-space">
+                                                        <p align="center">12 Available</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                                <div class="tvspace-box">
+                                                    <img src="{{ asset('asset/dist/img/ait-logo.jpg') }}" width="100%">
+                                                    <div class="tv-space">
+                                                        <p align="center">12 Available</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                                <div class="tvspace-box">
+                                                    <img src="{{ asset('asset/dist/img/silvebird-logo.jpg') }}" width="100%">
+                                                    <div class="tv-space">
+                                                        <p align="center">12 Available</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                                <div class="tvspace-box">
+                                                    <img src="{{ asset('asset/dist/img/tvc-logo.jpg') }}" width="100%">
+                                                    <div class="tv-space">
+                                                        <p align="center">12 Available</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -298,19 +362,11 @@
                         </div>
                     </div>
 
-
                 </form>
 
             </div>
-            <!-- /.col -->
-            <div class="col-md-2 hidden-sm hidden-xs"></div>
-            <!-- /.col -->
-
-
-
 
         </div>
-        <!-- /.row -->
 
         <div class="container">
 

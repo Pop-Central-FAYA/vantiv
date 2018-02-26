@@ -165,6 +165,10 @@ class DashboardController extends Controller
             return view('dashboard.default')->with(['campaign' => $c, 'volume' => $c_volume, 'month' => $c_mon, 'high_dayp' => $day_pie, 'days' => $days_data, 'adslot' => $ads_no, 'price' => $tot_pri, 'mon' => $mon, 'invoice' => $invoice]);
 
 
+        }
+        else if($role->role_id === 4){
+            $agency_id = Session::get('agency_id');
+
         } else if ($role->role_id === 4) {
             $allBroadcaster = Utilities::switch_db('api')->select("SELECT * from broadcasters");
             $agency_id = Session::get('agency_id');
@@ -379,32 +383,41 @@ class DashboardController extends Controller
                 $total = 0;
                 $date = 0;
             } else {
-                $total = $camp_pay[0]->total;
-                $date = $camp_pay[0]->time_created;
+
+                foreach ($br as $b) {
+                    $camp_pay = Utilities::switch_db('api')->select("SELECT SUM(amount) as total, time_created FROM payments WHERE campaign_id IN (SELECT id from campaigns WHERE brand = '$b->id' AND agency = '$agency_id') GROUP BY DATE_FORMAT(time_created, '%Y-%m')");
+                    if (!$camp_pay) {
+                        $total = 0;
+                        $date = 0;
+                    } else {
+                        $total = $camp_pay[0]->total;
+                        $date = $camp_pay[0]->time_created;
+                    }
+                    $brand[] = [
+                        'brand_id' => $b->id,
+                        'brand' => $b->name,
+                        'total' => $total,
+                        'date' => date('M', strtotime($date)),
+                    ];
+                }
+                foreach ($brand as $b) {
+                    $tot[] = $b['total'];
+                }
+                foreach ($brand as $b) {
+                    $braa[] = $b['brand'];
+                }
+                foreach ($brand as $b) {
+                    $dates[] = $b['date'];
+                }
+
+
+                $d = json_encode($dates);
+                $am = json_encode($tot);
+                $na = json_encode($braa);
+
+                return view('clients.dashboard.dashboard')->with(['brand' => $bra, 'date' => $d, 'amount' => $am, 'name' => $na]);
             }
-            $brand[] = [
-                'brand_id' => $b->id,
-                'brand' => $b->name,
-                'total' => $total,
-                'date' => date('M', strtotime($date)),
-            ];
         }
-        foreach ($brand as $b) {
-            $tot[] = $b['total'];
-        }
-        foreach ($brand as $b) {
-            $braa[] = $b['brand'];
-        }
-        foreach ($brand as $b) {
-            $dates[] = $b['date'];
-        }
-
-
-        $d = json_encode($dates);
-        $am = json_encode($tot);
-        $na = json_encode($braa);
-
-        return view('clients.dashboard.dashboard')->with(['brand' => $bra, 'date' => $d, 'amount' => $am, 'name' => $na]);
     }
 
     public function filterByBrand()

@@ -347,5 +347,7 @@ return [
     'walkins'=> 'Hurray!!!, Walkins Added successfully',
     'walkins_delete' => 'Success!!!, Walkins deleted successfully',
 
-    'create-client' => 'Create Client'
+    'create-client' => 'Create Client',
+    'agency.signup' => 'Signup - Agency',
+    'advertiser-signup' => 'Signup - Advertiser'
 ];

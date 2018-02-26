@@ -48,7 +48,6 @@
             </div>
         </div>
     </div>
-
 @stop
 @section('scripts')
     <!-- Select2 -->

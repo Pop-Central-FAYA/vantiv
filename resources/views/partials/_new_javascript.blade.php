@@ -1,6 +1,7 @@
 <!--Container-End-->
 <script src="https://code.jquery.com/jquery-3.2.1.min.js" type="text/javascript"></script>
 <script src="{{ asset('asset/bootstrap/js/bootstrap.min.js') }}"></script>
+
 <!--chart-->
 <script src="{{ asset('new_assets/js/jquery.chart.js') }}" type="text/javascript"></script>
 <!--Spline chart-->

@@ -90,4 +90,6 @@ class AdvertiserAuthController extends Controller
             }
         }
     }
+
 }
+

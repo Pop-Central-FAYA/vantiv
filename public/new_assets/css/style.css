@@ -355,6 +355,7 @@ p {
     font-weight: 300;
     line-height: 54px;
     padding: 0 10px;
+
 }
 .heading-main ul li a:hover{
 	color:#e1235f ;
@@ -478,7 +479,7 @@ p {
 	float:left;
 	margin:0px ;
 	padding:0px 0px 0px 30px;
-	width:33.3337%; 
+	width:33.3337%;
 	position:relative;
 }
 .chart-top .Our-Visitors .visitors ul li a{
@@ -1443,8 +1444,7 @@ p {
     float: left;
     padding: 0px;
     position: relative;
-    width:80px;
-	height:80px;
+    width:80px;	height:80px;
 }
 .client-dashboard .col-3:nth-child(2) .progress .progressinner .cover{
 	background:#5d133e
@@ -1614,7 +1614,7 @@ p {
 	line-height:76px;
 	border:2px solid #e1235f;
 	border-radius:100%;
-	
+
 }
 .Order-today h3{
     color: #797979;
@@ -2357,13 +2357,12 @@ p {
     font-size:18px;
     font-weight: 500;
     line-height: 60px;
-    margin: 0;padding:0px 15px; 
+    margin: 0;padding:0px 15px;
 	width:25%;border-right:1px solid #d3d3d3;
 }
 .payments ul li:nth-child(4){
 	border-right:none;
 }
-
 
 
 /*----------------------------Brand----------------------------*/
@@ -2682,7 +2681,7 @@ p {
 	margin:0px 0px 30px;
 	background:#fff;
 	border-radius:3px;
-	
+
 }
 .Add-brand h2 {
     float: left;
@@ -2817,4 +2816,3 @@ p {
     padding: 0;
     width: 100%;
 }
-

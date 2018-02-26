@@ -61,7 +61,7 @@
                                         @endif
                                     </td>
                                     {{--<td>--}}
-                                        {{--<button type="button" class="btn btn-success btn-xs" data-toggle="modal" data-target="#myModal{{ $invoice['invoice_number'] }}" > View</button>--}}
+                                    {{--<button type="button" class="btn btn-success btn-xs" data-toggle="modal" data-target="#myModal{{ $invoice['invoice_number'] }}" > View</button>--}}
                                     {{--</td>--}}
                                 </tr>
                             @endforeach

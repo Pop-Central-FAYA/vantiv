@@ -1,86 +1,70 @@
-@extends('layouts.app')
+@extends('layouts.new_app')
+
+@section('title')
+    <title>Create Campaign</title>
+@endsection
 
 @section('content')
 
-    <section class="content-header">
-        <h1>
-            Create Campaign
-            <small><i class="fa fa-upload"></i> Upload Media Step 3</small>
-        </h1>
-        <ol class="breadcrumb" style="font-size: 16px">
+    <div class="main-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 heading-main">
+                    <h1>Upload Media Step 3</h1>
+                    <ul>
+                        <li><a href="#"><i class="fa fa-edit"></i>Create Campaign</a></li>
+                        <li><a href="#">Upload Media Step 3</a></li>
+                    </ul>
+                </div>
 
-            <li><a href="#"><i class="fa fa-th"></i> Create Campaign</a> </li>
-            <li><i class="fa fa-upload"></i> Upload Media Step 3</li>
+                <div class="Add-brand">
+                    <form class="campform" method="POST" action="{{ route('campaign.store4_2', ['walkins' => $walkins]) }}" enctype="multipart/form-data">
+                        {{ csrf_field() }}
 
-        </ol>
-    </section>
-
-    <!-- Main content -->
-
-    <section class="content">
-        <div class="row">
-            <div class="col-md-1 hidden-sm hidden-xs"></div>
-            <div class="col-md-9 " style="padding:2%">
-                <form class="campform" method="POST" action="{{ route('campaign.store4_2', ['walkins' => $walkins]) }}" enctype="multipart/form-data">
-                    {{ csrf_field() }}
-                    <div class="row">
-                        <div class="col-md-12 ">
-
-                            <h2></h2>
-                            <p align="center">The history of advertising can be traced to ancient civilizations. It became a major force in capitalist economies in the mid-19th century, based primarily on newspapers and magazines. In the 20th century, advertising grew rapidly with new technologies such as direct mail, radio, television, the internet and mobile devices.</p>
-
-                        </div>
-                    </div>
-                    {{--{{ dd($time_in_sec) }}--}}
-                    <div class="row" style="margin-top:3%" id="dynamic">
-                        <div class="row b">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label>Upload Media Step 3</label>
-                                    <input type="file" id="fup" name="uploads">
-                                    <input type="hidden" class="form-control" name="f_du" id="f_du" size="5" />
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label>Duration: </label> <br />
-                                    <select style="width: 60%" name="time">
-                                        <option value="45">45 Seconds</option>
-                                    </select>
-                                    {{--<button type="button" id="add_more" class="btn btn-info btn-xs add_more">+ Add More</button>--}}
-                                </div>
+                        <div class="row">
+                            <div class="col-md-12 ">
+                                <h2>
+                                    <p align="center">
+                                        The history of advertising can be traced to ancient civilizations.
+                                        It became a major force in capitalist economies in the mid-19th century,
+                                        based primarily on newspapers and magazines. In the 20th century,
+                                        advertising grew rapidly with new technologies such as direct mail, radio, television,
+                                        the internet and mobile devices.
+                                    </p>
+                                </h2>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-6">
 
-                    </div>
+                        <div id="dynamic">
+                            <div class="input-group">
+                                <label>Upload Media Step 3</label>
+                                <input type="file" id="fup" name="uploads">
+                                <input type="hidden" class="form-control" name="f_du" id="f_du" size="5" />
+                            </div>
+                            <div class="input-group">
+                                <label>Duration</label> <br />
+                                <select name="time">
+                                    <option value="45">45 Seconds</option>
+                                </select>
+                                {{--<button type="button" id="add_more" class="btn btn-info btn-xs add_more">+ Add More</button>--}}
+                            </div>
+                        </div>
 
-                    <audio id="audio"></audio>
+                        {{--{{ dd($time_in_sec) }}--}}
+                        <audio id="audio"></audio>
 
-                    <div class="container">
+                        <div class="input-group">
+                            <p align="right">
+                                {{--<button id="step3" type="button" class="btn campaign-button" >Back <i class="fa fa-backward" aria-hidden="true"></i></button>--}}
+                                <input type="Submit" name="Submit" value="Next" />
+                            </p>
+                        </div>
 
-                        <p align="right">
-                            {{--<button id="step3" type="button" class="btn campaign-button" >Back <i class="fa fa-backward" aria-hidden="true"></i></button>--}}
-                            <button type="submit" class="btn campaign-button" style="margin-right:15%">Next <i class="fa fa-play" aria-hidden="true"></i></button>
-                        </p>
-                    </div>
-
-                </form>
-
+                    </form>
+                </div>
             </div>
-            <!-- /.col -->
-            <div class="col-md-2 hidden-sm hidden-xs"></div>
-            <!-- /.col -->
-
-
-
-
         </div>
-        <!-- /.row -->
-
-
-    </section>
+    </div>
 
 @endsection
 

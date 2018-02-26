@@ -9,24 +9,60 @@
     <![endif]-->
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
-<div class="wrapper">
+    <div class="wrapper">
 
-@include('partials/header')
-<!-- Left side column. contains the logo and sidebar -->
-    @include('partials.advertiser_sidebar')
+    @include('partials/header')
 
-    <div class="content-wrapper">
+        @include('partials.advertiser_sidebar')
 
-        <div class="container-fluid">
-            @include('partials.messages')
-            <div class="panel panel-default">
-                <div class="container-fluid">
-                    @yield('content')
+        <div class="content-wrapper">
+
+            <div class="container-fluid">
+                @include('partials.messages')
+                <div class="panel panel-default">
+                    <div class="container-fluid">
+                        @yield('content')
+                    </div>
+
+                    <div class="wrapper">
+
+                    @include('partials/header')
+                    <!-- Left side column. contains the logo and sidebar -->
+                        @include('partials.advertiser_sidebar')
+
+                        <div class="content-wrapper">
+
+                            <div class="container-fluid">
+
+                                @include('partials.messages')
+
+                                <div class="panel panel-default">
+                                    <div class="container-fluid">
+                                        @yield('content')
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            @include('agency_partials.footer')
+
+                            @yield('modal')
+
+                            <div class="control-sidebar-bg"></div>
+
+                        </div>
+
+                        @include('agency_partials._javascript')
+
+                        @yield('scripts')
+                    </div>
                 </div>
-
             </div>
-
         </div>
+    </div>
+
+</body>
+</html>
 
     </div>
     <!-- /.content-wrapper -->
@@ -47,3 +83,4 @@
 
 </body>
 </html>
+

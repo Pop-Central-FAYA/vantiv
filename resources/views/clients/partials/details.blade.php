@@ -4,12 +4,16 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="first_name">@lang('app.role')</label>
-                    <select name="role" class="form-control">
-                        @foreach ($roles as $role)
-                            <option value="{{ $role->id }}">{{ $role->display_name }}</option>
-                        @endforeach
-                    </select>
+                    <label for="birthday">@lang('app.date_of_birth')</label>
+                    <div class="form-group">
+                        <div class='input-group date'>
+                            <input type='text' name="birthday" id='birthday' value="{{ $edit ? $user->birthday : '' }}" class="form-control" />
+                            <span class="input-group-addon" style="cursor: default;">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="status">@lang('app.status')</label>
@@ -30,25 +34,9 @@
 
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="birthday">@lang('app.date_of_birth')</label>
-                    <div class="form-group">
-                        <div class='input-group date'>
-                            <input type='text' name="birthday" id='birthday' value="{{ $edit ? $user->birthday : '' }}" class="form-control" />
-                            <span class="input-group-addon" style="cursor: default;">
-                                <span class="glyphicon glyphicon-calendar"></span>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
                     <label for="phone">@lang('app.phone')</label>
                     <input type="text" class="form-control" id="phone"
                            name="phone" placeholder="@lang('app.phone')" value="{{ $edit ? $user->phone : '' }}">
-                </div>
-                <div class="form-group">
-                    <label for="address">@lang('app.address')</label>
-                    <input type="text" class="form-control" id="address"
-                           name="address" placeholder="@lang('app.address')" value="{{ $edit ? $user->address : '' }}">
                 </div>
                 <div class="form-group">
                     <label for="address">@lang('app.country')</label>
@@ -57,6 +45,12 @@
                             <option value="{{ $country->country_code }}">{{ $country->name }}</option>
                         @endforeach
                     </select>
+                </div>
+                <div class="form-group">
+                    <label for="address">@lang('app.address')</label>
+                    <textarea class="form-control" id="address"
+                              name="address" rows="5" placeholder="@lang('app.address')" value="{{ $edit ? $user->address : '' }}">
+                    </textarea>
                 </div>
             </div>
 

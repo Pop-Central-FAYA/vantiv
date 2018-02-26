@@ -1,32 +1,44 @@
-@extends('layouts.app')
+@extends('layouts.new_app')
+
+@section('title')
+    <title>Create Campaign</title>
+@endsection
 
 @section('content')
 
-    <section class="content-header">
-        <h1>
-            Create Campaign
-            <small><i class="fa fa-file-video-o"></i> Adslot </small>
-        </h1>
+    <div class="main-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 heading-main">
+                    <h1>Adslots</h1>
+                    <ul>
+                        <li><a href="#"><i class="fa fa-edit"></i>Create Campaign</a></li>
+                        <li><a href="#">Adslots</a></li>
+                    </ul>
+                    <ol class="breadcrumb" style="font-size: 16px">
+                        @if(count($cart) != 0)
+                            <li><a href="{{ route('checkout', ['walkins' => $walkins]) }}"><i class="fa fa-shopping-cart"></i>{{ count($cart) }} Cart</a> </li>
+                        @endif
+                    </ol>
+                </div>
 
-        <ol class="breadcrumb" style="font-size: 16px">
-            @if(count($cart) != 0)
-                <li><a href="{{ route('checkout', ['walkins' => $walkins]) }}"><i class="fa fa-shopping-cart"></i>{{ count($cart) }} Cart</a> </li>
-            @endif
-        </ol>
-
-    </section>
-    <!-- Main content -->
-    <section class="content">
-        <div class="row cart" id="cart">
-            <div class="col-md-1 hidden-sm hidden-xs"></div>
-            <div class="col-md-9 " style="padding:2%">
-                <div class="row">
-                    <div class="col-md-12 ">
-                        <h2></h2>
-                        <p align="center">The history of advertising can be traced to ancient civilizations. It became a major force in capitalist economies in the mid-19th century, based primarily on newspapers and magazines. In the 20th century, advertising grew rapidly with new technologies such as direct mail, radio, television, the internet and mobile devices.</p>
+                <div class="Add-brand">
+                    <div class="row">
+                        <div class="col-md-12 ">
+                            <h2>
+                                <p align="center">
+                                    The history of advertising can be traced to ancient civilizations.
+                                    It became a major force in capitalist economies in the mid-19th century,
+                                    based primarily on newspapers and magazines. In the 20th century,
+                                    advertising grew rapidly with new technologies such as direct mail, radio, television,
+                                    the internet and mobile devices.
+                                </p>
+                            </h2>
+                        </div>
                     </div>
                 </div>
-                <div class="row" style="margin-bottom: 5%">
+
+                <div class="row">
                     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 ">
                         <div class="tvspace-box">
                             <img src="{{ asset('asset/dist/img/nta-logo.jpg') }}" width="100%">
@@ -36,129 +48,124 @@
                         </div>
                     </div>
                 </div>
+
                 <div id="tv-time-box" style="border:1px solid #ccc" >
                     @foreach($ratecards as $ratecard)
-                    <div class="row">
-                        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                            <img src="{{ asset('asset/dist/img/nta-logo.jpg') }}" width="65%">
-                        </div>
-                        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                            <h3 lign="center">{{ $ratecard['hourly_range'] }}</h3>
-                        </div>
-                        @foreach($ratecard['adslot'] as $rating)
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4
-                        @foreach($cart as $carts)
-                            @if($carts->adslot_id === $rating->id)
-                                    choosen
-                            @endif
-                            @endforeach
-                                    " id="rate_this">
-                                <p align="center">{{ $rating->from_to_time }}
-                                    <br>
-                                    {{ $rating->time_difference - $rating->time_used }} Seconds Available
-
-                                    <?php
-                                        $percentage_used = (($rating->time_difference - $rating->time_used) / $rating->time_difference) * 100;
-                                    ?>
-                                </p> <br/>
-
-                                <div class="progress">
-                                    <div class="progress-bar bg-success
+                        <div class="row">
+                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                                <img src="{{ asset('asset/dist/img/nta-logo.jpg') }}" width="65%">
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                                <h3 lign="center">{{ $ratecard['hourly_range'] }}</h3>
+                            </div>
+                            @foreach($ratecard['adslot'] as $rating)
+                                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4
                                     @foreach($cart as $carts)
-                                    @if($carts->adslot_id === $rating->id)
-                                            disabled
-                                    @endif
-                                    @endforeach
-                                    " data-toggle="modal" data-target=".bs-example-modal-lg{{ $rating->id }}" role="progressbar" style="width: {{ $percentage_used }}%" aria-valuenow="{{ $percentage_used }}" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
+                                        @if($carts->adslot_id === $rating->id)
+                                            choosen
+                                        @endif
+                                        @endforeach
+                                        " id="rate_this">
+                                    <p align="center">{{ $rating->from_to_time }}
+                                        <br>
+                                        {{ $rating->time_difference - $rating->time_used }} Seconds Available
 
-                                <div class="modal fade bs-example-modal-lg{{ $rating->id }}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-                                    <div class="modal-dialog modal-lg" role="document">
-                                        <div class="modal-content" style="padding: 5%">
+                                        <?php
+                                        $percentage_used = (($rating->time_difference - $rating->time_used) / $rating->time_difference) * 100;
+                                        ?>
+                                    </p> <br/>
 
-                                            <form id="form_cart" action="{{ route('store.cart') }}" method="GET">
-                                                {{ csrf_field() }}
-                                                <h2 align="center">{{ $rating->from_to_time }} | {{ $rating->time_difference }} Seconds Available</h2>
-                                                <ul style="font-size: 21px; margin:0 auto; width: 80%">
-                                                    <h3 align="" style="color:#9f005d">Choose a media file</h3>
-                                                    <hr />
-                                                    <div class="row">
-                                                        <?php
+                                    <div class="progress" style="cursor: pointer;">
+                                        <div class="progress-bar bg-success
+                                            @foreach($cart as $carts)
+                                                @if($carts->adslot_id === $rating->id)
+                                                    disabled
+                                                @endif
+                                            @endforeach
+                                                " data-toggle="modal" data-target=".bs-example-modal-lg{{ $rating->id }}" role="progressbar" style="width: {{ $percentage_used }}%" aria-valuenow="{{ $percentage_used }}" aria-valuemin="0" aria-valuemax="100">
+                                        </div>
+                                    </div>
+
+                                    <div class="modal fade bs-example-modal-lg{{ $rating->id }}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+                                        <div class="modal-dialog modal-lg" role="document">
+                                            <div class="modal-content" style="padding: 5%">
+
+                                                <form id="form_cart" action="{{ route('store.cart') }}" method="GET">
+                                                    {{ csrf_field() }}
+                                                    <h2 align="center">{{ $rating->from_to_time }} | {{ $rating->time_difference }} Seconds Available</h2>
+                                                    <ul style="font-size: 21px; margin:0 auto; width: 80%">
+                                                        <h3 align="" style="color:#9f005d">Choose a media file</h3>
+                                                        <hr />
+                                                        <div class="row">
+                                                            <?php
                                                             $select_price = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT * from adslotPercentages where adslot_id = '$rating->id'");
                                                             if(!$select_price){
                                                                 $select_price = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT * from adslotPrices where adslot_id = '$rating->id'");
                                                             }
-                                                        ?>
+                                                            ?>
 
 
-                                                        <table class="table table-bordered table-striped">
-                                                            <thead>
-                                                            <tr>
-                                                                <th>S/N</th>
-                                                                <th>Name</th>
-                                                                <th>duration</th>
-                                                                <th>price</th>
-                                                                <th>Select</th>
-                                                            </tr>
-                                                            </thead>
-                                                            <tbody>
+                                                            <table class="table table-bordered table-striped">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>S/N</th>
+                                                                        <th>Name</th>
+                                                                        <th>duration</th>
+                                                                        <th>price</th>
+                                                                        <th>Select</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
                                                                 <?php $j = 1; $i = 0; for($i = 0; $i < count($times); $i++){ ?>
-                                                                    @if(((integer) $datas[$i]->time) === $times[$i] && ($rating->time_difference - $rating->time_used) >= $times[$i])
-                                                                        <tr>
-                                                                            <td>{{ $j }}</td>
-                                                                            <td><div class="col-md-3"> <video width="150" controls><source src="{{ asset($datas[$i]->uploads) }}"></video> </div></td>
-                                                                            <input type="hidden" name="file" class="file{{ $rating->id.$datas[$i]->id }}" value="{{ $datas[$i]->uploads }}">
-                                                                            <td><div class="col-md-3"><span style="margin-left:15%"></span>{{ $datas[$i]->time }} Seconds</div></td>
-                                                                            <input type="hidden" name="time" class="time{{ $rating->id.$datas[$i]->id }}" value="{{ $datas[$i]->time }}">
-                                                                            <input type="hidden" name="from_to_time" class="from_to_time{{ $rating->id.$datas[$i]->id }}" value="{{ $rating->from_to_time }}">
-                                                                            <input type="hidden" name="adslot_id" class="adslot_id{{ $rating->id.$datas[$i]->id }}" value="{{ $rating->id }}">
-                                                                            <input type="hidden" name="walkins" class="walkins" value="{{ $walkins }}">
-                                                                            @if($datas[$i]->time === 15)
-                                                                                <td><div class="col-md-3">&#8358;{{ $select_price[0]->price_15 }}</div></td>
-                                                                                <input type="hidden" name="price" class="price{{ $rating->id.$datas[$i]->id }}" value="{{ $select_price[0]->price_15 }}">
-                                                                            @elseif($datas[$i]->time === 30)
-                                                                                <td><div class="col-md-3">&#8358;{{ $select_price[0]->price_30 }}</div></td>
-                                                                                <input type="hidden" name="price" class="price{{ $rating->id.$datas[$i]->id }}" value="{{ $select_price[0]->price_30 }}">
-                                                                            @elseif($datas[$i]->time === 45)
-                                                                                <td><div class="col-md-3">&#8358;{{ $select_price[0]->price_45 }}</div></td>
-                                                                                <input type="hidden" name="price" class="price{{ $rating->id.$datas[$i]->id }}" value="{{ $select_price[0]->price_45 }}">
-                                                                            @elseif($datas[$i]->time === 60)
-                                                                                <td><div class="col-md-3">&#8358;{{ $select_price[0]->price_60 }}</div></td>
-                                                                                <input type="hidden" name="price" class="price{{ $rating->id.$datas[$i]->id }}" value="{{ $select_price[0]->price_60 }}">
-                                                                            @endif
-                                                                            <td><div class="col-md-3"><input name="hourly" class="hourly" value="{{ $rating->id.$datas[$i]->id }}" type="radio"></div></td>
-                                                                        </tr>
-                                                                    @endif
+                                                                @if(((integer) $datas[$i]->time) === $times[$i] && ($rating->time_difference - $rating->time_used) >= $times[$i])
+                                                                    <tr>
+                                                                        <td>{{ $j }}</td>
+                                                                        <td><div class="col-md-3"> <video width="150" controls><source src="{{ asset($datas[$i]->uploads) }}"></video> </div></td>
+                                                                        <input type="hidden" name="file" class="file{{ $rating->id.$datas[$i]->id }}" value="{{ $datas[$i]->uploads }}">
+                                                                        <td><div class="col-md-3"><span style="margin-left:15%"></span>{{ $datas[$i]->time }} Seconds</div></td>
+                                                                        <input type="hidden" name="time" class="time{{ $rating->id.$datas[$i]->id }}" value="{{ $datas[$i]->time }}">
+                                                                        <input type="hidden" name="from_to_time" class="from_to_time{{ $rating->id.$datas[$i]->id }}" value="{{ $rating->from_to_time }}">
+                                                                        <input type="hidden" name="adslot_id" class="adslot_id{{ $rating->id.$datas[$i]->id }}" value="{{ $rating->id }}">
+                                                                        <input type="hidden" name="walkins" class="walkins" value="{{ $walkins }}">
+                                                                        @if($datas[$i]->time === 15)
+                                                                            <td><div class="col-md-3">&#8358;{{ $select_price[0]->price_15 }}</div></td>
+                                                                            <input type="hidden" name="price" class="price{{ $rating->id.$datas[$i]->id }}" value="{{ $select_price[0]->price_15 }}">
+                                                                        @elseif($datas[$i]->time === 30)
+                                                                            <td><div class="col-md-3">&#8358;{{ $select_price[0]->price_30 }}</div></td>
+                                                                            <input type="hidden" name="price" class="price{{ $rating->id.$datas[$i]->id }}" value="{{ $select_price[0]->price_30 }}">
+                                                                        @elseif($datas[$i]->time === 45)
+                                                                            <td><div class="col-md-3">&#8358;{{ $select_price[0]->price_45 }}</div></td>
+                                                                            <input type="hidden" name="price" class="price{{ $rating->id.$datas[$i]->id }}" value="{{ $select_price[0]->price_45 }}">
+                                                                        @elseif($datas[$i]->time === 60)
+                                                                            <td><div class="col-md-3">&#8358;{{ $select_price[0]->price_60 }}</div></td>
+                                                                            <input type="hidden" name="price" class="price{{ $rating->id.$datas[$i]->id }}" value="{{ $select_price[0]->price_60 }}">
+                                                                        @endif
+                                                                        <td><div class="col-md-3"><input name="hourly" class="hourly" value="{{ $rating->id.$datas[$i]->id }}" type="radio"></div></td>
+                                                                    </tr>
+                                                                @endif
                                                                 <?php $j++; } ?>
-                                                            </tbody>
-                                                        </table>
+                                                                </tbody>
+                                                            </table>
 
-                                                    </div>
+                                                        </div>
 
-                                                    <hr/>
-                                                </ul>
-                                                <button type="button" id="save_cart"  class="btn btn-large save_cart" style="background: #9f005d; color:white; font-size: 20px; padding: 1% 5%; margin-top:4%; border-radius: 10px;">Save</button></a></p>
-                                            </form>
+                                                        <hr/>
+                                                    </ul>
+                                                    <button type="button" id="save_cart"  class="btn btn-large save_cart" style="background: #9f005d; color:white; font-size: 20px; padding: 1% 5%; margin-top:4%; border-radius: 10px;">Save</button></a></p>
+                                                </form>
 
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        @endforeach
-                    </div>
+                            @endforeach
+                        </div>
                     @endforeach
                 </div>
+
             </div>
-            <!-- /.col -->
-            <div class="col-md-2 hidden-sm hidden-xs"></div>
-            <!-- /.col -->
         </div>
-        <!-- /.row -->
-    </section>
-
-    <!-- /.content -->
-
-
+    </div>
 
 @endsection
 
@@ -192,7 +199,6 @@
             $('#step6').click(function(){
                 window.location.href = "/campaign/create/1/step";
             });
-
 
             $("body").delegate(".save_cart", "click", function() {
                 var url1 = $("#form_cart").attr("action");
@@ -298,6 +304,11 @@
 @endsection
 @section('styles')
     <style>
+        .choosen{
+            border:2px solid #9f005d;
+            background: white;
+            border-radius: 10px
+        }
         .disabled{
             cursor: not-allowed;
             pointer-events: none;

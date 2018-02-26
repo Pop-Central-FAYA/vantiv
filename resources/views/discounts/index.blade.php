@@ -1,4 +1,8 @@
-@extends('layouts.app')
+@extends('layouts.new_app')
+
+@section('title')
+    <title>Create Discounts</title>
+@endsection
 
 @section('stylesheets')
 
@@ -9,37 +13,23 @@
 
 @section('content')
 
-@section('title', trans('app.discount'))
+    <div class="main-section">
+        <div class="container">
 
-<section class="content-header">
-    <h1>
-        Ad Management <small>Discount</small>
+            <div class="row">
+                <div class="col-12 heading-main">
+                    <h1>Discounts</h1>
+                    <ul>
+                        <li><a href="#"><i class="fa fa-th-large"></i>Ad Management</a></li>
+                        <li><a href="#">Discounts</a></li>
+                    </ul>
+                </div>
+            </div>
 
-    </h1>
-    <ol class="breadcrumb" style="font-size: 16px">
-
-        <li><a href="#"><i class="fa fa-edit"></i> Ad Management</a> </li>
-        <li><a href="index.html"><i class="fa fa-address-card"></i> Discount</a> </li>
-
-    </ol>
-</section>
-
-<!-- Main content -->
-
-<section class="content">
-    <div class="row">
-        <div class="col-md-2 hidden-sm hidden-xs"></div>
-        <div class="col-md-8 Campaign" style="padding:2%"></div>
-        <!-- /.col -->
-        <div class="col-md-2 hidden-sm hidden-xs"></div>
-        <!-- /.col -->
-
-        <div class="row" style="padding: 5%">
-            <div class="col-xs-12">
-
-                <div class="col-md-11">
+            <div class="row">
+                <div class="col-md-12">
                     <div class="nav-tabs-custom">
-                        <ul class="nav nav-tabs" style="background:#eee">
+                        <ul class="nav nav-tabs" style="background:#EEE; margin-bottom: 15px;">
                             <li class="active"><a href="#agency" data-toggle="tab">Agency</a></li>
                             <li ><a href="#brand" data-toggle="tab">Brand</a></li>
                             <li><a href="#time" data-toggle="tab">Time</a></li>
@@ -51,56 +41,44 @@
                         <div class="tab-content">
                             <div class="active tab-pane" id="agency">
 
-                                <div class="add-disc" style="margin: auto">
-                                    <form action="{{ route('discount.store') }}" method="POST">
-                                        {{ csrf_field() }}
-                                        <input type="hidden" name="discount_type_id" value="{{ $types[0]->id }}">
-                                        <div class="row">
-                                            <div class="row" style="margin-bottom: 20px;">
-                                                <div class="col-md-2">
-                                                    <h4>Add a Discount</h4>
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <select name="discount_type_value" id="discount_type_value">
-                                                        @foreach ($agencies as $agency)
-                                                            <option value="{{ $agency['id'] }}">{{ $agency['fullname'] }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <input type="number" name="percent_value" placeholder="Percent Value">
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <input type="text" name="percent_start_date" placeholder="Percent Start Date" class="form-control flatpickr">
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <input type="text" name="percent_stop_date" placeholder="Percent Stop Date" class="form-control flatpickr">
-                                                </div>
+                                <div class="row">
+                                    <div class="Add-brand">
+                                        <form action="{{ route('discount.store') }}" method="POST">
+                                            {{ csrf_field() }}
+                                            <input type="hidden" name="discount_type_id" value="{{ $types[0]->id }}">
+
+                                            <div class="input-group">
+                                                <select name="discount_type_value" id="discount_type_value">
+                                                    @foreach ($agencies as $agency)
+                                                        <option value="{{ $agency['id'] }}">{{ $agency['fullname'] }}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
-                                            <div class="row" style="margin-bottom: 20px;">
-                                                <div class="col-md-2"></div>
-                                                <div class="col-md-2"></div>
-                                                <div class="col-md-2">
-                                                    <input type="number" name="value" placeholder="Amount Value">
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <input type="text" name="value_start_date" placeholder="Value Start Date" class="form-control flatpickr">
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <input type="text" name="value_stop_date" placeholder="Value Stop Date" class="form-control flatpickr">
-                                                </div>
+                                            <div class="input-group">
+                                                <input type="number" name="percent_value" placeholder="Percent Value">
                                             </div>
-                                            <div class="row" style="margin-bottom: 20px;">
-                                                <div class="col-md-2"></div>
-                                                <div class="col-md-2"></div>
-                                                <div class="col-md-2"></div>
-                                                <div class="col-md-2"></div>
-                                                <div class="col-md-2">
-                                                    <input type="submit" value="Add" name="">
-                                                </div>
+                                            <div class="input-group">
+                                                <input type="number" name="value" placeholder="Amount Value">
                                             </div>
-                                        </div>
-                                    </form>
+                                            <div class="input-group">
+                                                <input type="text" name="percent_start_date" placeholder="Percent Start Date" class="form-control flatpickr">
+                                            </div>
+                                            <div class="input-group">
+                                                <input type="text" name="value_start_date" placeholder="Value Start Date" class="form-control flatpickr">
+                                            </div>
+                                            <div class="input-group">
+                                                <input type="text" name="percent_stop_date" placeholder="Percent Stop Date" class="form-control flatpickr">
+                                            </div>
+                                            <div class="input-group">
+                                                <input type="text" name="value_stop_date" placeholder="Value Stop Date"
+                                                       class="form-control flatpickr">
+                                            </div>
+
+                                            <div class="input-group">
+                                                <input type="submit" value="Add" name="">
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
 
                                 <div class="box-body">
@@ -142,7 +120,6 @@
                                             @endforeach
                                             </tbody>
                                         </table>
-
                                     @endif
                                 </div>
 
@@ -226,56 +203,45 @@
                             </div>
 
                             <div class="tab-pane" id="brand">
-                                <div class="add-disc">
-                                    <form action="{{ route('discount.store') }}" method="POST">
-                                        {{ csrf_field() }}
-                                        <input type="hidden" name="discount_type_id" value="{{ $types[1]->id }}">
-                                        <div class="row">
-                                            <div class="row" style="margin-bottom: 20px;">
-                                                <div class="col-md-2">
-                                                    <h4>Add a Discount</h4>
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <select name="discount_type_value">
-                                                        @foreach ($brands as $brand)
-                                                            <option value="{{ $brand->id }}">{{ $brand->name }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <input type="number" name="percent_value" placeholder="Percent Value">
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <input type="text" name="percent_start_date" placeholder="Percent Start Date" class="form-control flatpickr">
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <input type="text" name="percent_stop_date" placeholder="Percent Stop Date" class="form-control flatpickr">
-                                                </div>
+
+                                <div class="row">
+                                    <div class="Add-brand">
+                                        <form action="{{ route('discount.store') }}" method="POST">
+                                            {{ csrf_field() }}
+                                            <input type="hidden" name="discount_type_id" value="{{ $types[1]->id }}">
+
+                                            <div class="input-group">
+                                                <select name="discount_type_value">
+                                                    @foreach ($brands as $brand)
+                                                        <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
-                                            <div class="row" style="margin-bottom: 20px;">
-                                                <div class="col-md-2"></div>
-                                                <div class="col-md-2"></div>
-                                                <div class="col-md-2">
-                                                    <input type="number" name="value" placeholder="Amount Value">
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <input type="text" name="value_start_date" placeholder="Value Start Date" class="form-control flatpickr">
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <input type="text" name="value_stop_date" placeholder="Value Stop Date" class="form-control flatpickr">
-                                                </div>
+                                            <div class="input-group">
+                                                <input type="number" name="percent_value" placeholder="Percent Value">
                                             </div>
-                                            <div class="row" style="margin-bottom: 20px;">
-                                                <div class="col-md-2"></div>
-                                                <div class="col-md-2"></div>
-                                                <div class="col-md-2"></div>
-                                                <div class="col-md-2"></div>
-                                                <div class="col-md-2">
-                                                    <input type="submit" value="Add" name="">
-                                                </div>
+                                            <div class="input-group">
+                                                <input type="number" name="value" placeholder="Amount Value">
                                             </div>
-                                        </div>
-                                    </form>
+                                            <div class="input-group">
+                                                <input type="text" name="percent_start_date" placeholder="Percent Start Date" class="form-control flatpickr">
+                                            </div>
+                                            <div class="input-group">
+                                                <input type="text" name="value_start_date" placeholder="Value Start Date" class="form-control flatpickr">
+                                            </div>
+                                            <div class="input-group">
+                                                <input type="text" name="percent_stop_date" placeholder="Percent Stop Date" class="form-control flatpickr">
+                                            </div>
+                                            <div class="input-group">
+                                                <input type="text" name="value_stop_date" placeholder="Value Stop Date"
+                                                       class="form-control flatpickr">
+                                            </div>
+
+                                            <div class="input-group">
+                                                <input type="submit" value="Add" name="">
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
 
                                 <div class="box-body">
@@ -401,57 +367,45 @@
 
                             <div class="tab-pane" id="time">
 
-                                <div class="add-disc">
-                                    <form action="{{ route('discount.store') }}" method="POST">
-                                        {{ csrf_field() }}
-                                        <input type="hidden" name="discount_type_id" value="{{ $types[2]->id }}">
-                                        <div class="row">
-                                            <div class="row" style="margin-bottom: 20px;">
-                                                <div class="col-md-2">
-                                                    <h4>Add a Discount</h4>
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <select name="discount_type_value">
-                                                        <option>Select Time</option>
-                                                        @foreach ($hourly_ranges as $hourly_range)
-                                                            <option value="{{ $hourly_range->id }}">{{ $hourly_range->time_range }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <input type="number" name="percent_value" placeholder="Percent Value">
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <input type="text" name="percent_start_date" placeholder="Percent Start Date" class="form-control flatpickr">
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <input type="text" name="percent_stop_date" placeholder="Percent Stop Date" class="form-control flatpickr">
-                                                </div>
+                                <div class="row">
+                                    <div class="Add-brand">
+                                        <form action="{{ route('discount.store') }}" method="POST">
+                                            {{ csrf_field() }}
+                                            <input type="hidden" name="discount_type_id" value="{{ $types[2]->id }}">
+
+                                            <div class="input-group">
+                                                <select name="discount_type_value">
+                                                    <option>Select Time</option>
+                                                    @foreach ($hourly_ranges as $hourly_range)
+                                                        <option value="{{ $hourly_range->id }}">{{ $hourly_range->time_range }}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
-                                            <div class="row" style="margin-bottom: 20px;">
-                                                <div class="col-md-2"></div>
-                                                <div class="col-md-2"></div>
-                                                <div class="col-md-2">
-                                                    <input type="number" name="value" placeholder="Amount Value">
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <input type="text" name="value_start_date" placeholder="Value Start Date" class="form-control flatpickr">
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <input type="text" name="value_stop_date" placeholder="Value Stop Date" class="form-control flatpickr">
-                                                </div>
+                                            <div class="input-group">
+                                                <input type="number" name="percent_value" placeholder="Percent Value">
                                             </div>
-                                            <div class="row" style="margin-bottom: 20px;">
-                                                <div class="col-md-2"></div>
-                                                <div class="col-md-2"></div>
-                                                <div class="col-md-2"></div>
-                                                <div class="col-md-2"></div>
-                                                <div class="col-md-2">
-                                                    <input type="submit" value="Add" name="">
-                                                </div>
+                                            <div class="input-group">
+                                                <input type="number" name="value" placeholder="Amount Value">
                                             </div>
-                                        </div>
-                                    </form>
+                                            <div class="input-group">
+                                                <input type="text" name="percent_start_date" placeholder="Percent Start Date" class="form-control flatpickr">
+                                            </div>
+                                            <div class="input-group">
+                                                <input type="text" name="value_start_date" placeholder="Value Start Date" class="form-control flatpickr">
+                                            </div>
+                                            <div class="input-group">
+                                                <input type="text" name="percent_stop_date" placeholder="Percent Stop Date" class="form-control flatpickr">
+                                            </div>
+                                            <div class="input-group">
+                                                <input type="text" name="value_stop_date" placeholder="Value Stop Date"
+                                                       class="form-control flatpickr">
+                                            </div>
+
+                                            <div class="input-group">
+                                                <input type="submit" value="Add" name="">
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
 
                                 <div class="box-body">
@@ -577,59 +531,45 @@
 
                             <div class="tab-pane" id="daypart">
 
-                                <div class="add-disc">
+                                <div class="row">
+                                    <div class="Add-brand">
+                                        <form action="{{ route('discount.store') }}" method="POST">
+                                            {{ csrf_field() }}
+                                            <input type="hidden" name="discount_type_id" value="{{ $types[3]->id }}">
 
-                                    <form action="{{ route('discount.store') }}" method="POST">
-                                        {{ csrf_field() }}
-                                        <input type="hidden" name="discount_type_id" value="{{ $types[3]->id }}">
-                                        <div class="row">
-                                            <div class="row" style="margin-bottom: 20px;">
-                                                <div class="col-md-2">
-                                                    <h4>Add a Discount</h4>
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <select name="discount_type_value">
-                                                        <option>Select Day Part</option>
-                                                        @foreach ($day_parts as $day_part)
-                                                            <option value="{{ $day_part->id }}">{{ $day_part->day_parts }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <input type="number" name="percent_value" placeholder="Percent Value">
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <input type="text" name="percent_start_date" placeholder="Percent Start Date" class="form-control flatpickr">
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <input type="text" name="percent_stop_date" placeholder="Percent Stop Date" class="form-control flatpickr">
-                                                </div>
+                                            <div class="input-group">
+                                                <select name="discount_type_value">
+                                                    <option>Select Day Part</option>
+                                                    @foreach ($day_parts as $day_part)
+                                                        <option value="{{ $day_part->id }}">{{ $day_part->day_parts }}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
-                                            <div class="row" style="margin-bottom: 20px;">
-                                                <div class="col-md-2"></div>
-                                                <div class="col-md-2"></div>
-                                                <div class="col-md-2">
-                                                    <input type="number" name="value" placeholder="Amount Value">
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <input type="text" name="value_start_date" placeholder="Value Start Date" class="form-control flatpickr">
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <input type="text" name="value_stop_date" placeholder="Value Stop Date" class="form-control flatpickr">
-                                                </div>
+                                            <div class="input-group">
+                                                <input type="number" name="percent_value" placeholder="Percent Value">
                                             </div>
-                                            <div class="row" style="margin-bottom: 20px;">
-                                                <div class="col-md-2"></div>
-                                                <div class="col-md-2"></div>
-                                                <div class="col-md-2"></div>
-                                                <div class="col-md-2"></div>
-                                                <div class="col-md-2">
-                                                    <input type="submit" value="Add" name="">
-                                                </div>
+                                            <div class="input-group">
+                                                <input type="number" name="value" placeholder="Amount Value">
                                             </div>
-                                        </div>
-                                    </form>
+                                            <div class="input-group">
+                                                <input type="text" name="percent_start_date" placeholder="Percent Start Date" class="form-control flatpickr">
+                                            </div>
+                                            <div class="input-group">
+                                                <input type="text" name="value_start_date" placeholder="Value Start Date" class="form-control flatpickr">
+                                            </div>
+                                            <div class="input-group">
+                                                <input type="text" name="percent_stop_date" placeholder="Percent Stop Date" class="form-control flatpickr">
+                                            </div>
+                                            <div class="input-group">
+                                                <input type="text" name="value_stop_date" placeholder="Value Stop Date"
+                                                       class="form-control flatpickr">
+                                            </div>
 
+                                            <div class="input-group">
+                                                <input type="submit" value="Add" name="">
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
 
                                 <div class="box-body">
@@ -755,56 +695,54 @@
                             </div>
 
                             <div class="tab-pane" id="price">
-                                <div class="add-disc">
 
-                                    <form action="{{ route('discount.store') }}" method="POST">
-                                        {{ csrf_field() }}
-                                        <input type="hidden" name="discount_type_id" value="{{ $types[4]->id }}">
-                                        <div class="row">
-                                            <div class="row" style="margin-bottom: 20px;">
-                                                <div class="col-md-2">
-                                                    <h4>Add a Discount</h4>
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <input type="number" name="discount_type_value" placeholder="Min. Value">
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <input type="number" name="percent_value" placeholder="Percent Value">
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <input type="text" name="percent_start_date" placeholder="Percent Start Date" class="form-control flatpickr">
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <input type="text" name="percent_stop_date" placeholder="Percent Stop Date" class="form-control flatpickr">
-                                                </div>
-                                            </div>
-                                            <div class="row" style="margin-bottom: 20px;">
-                                                <div class="col-md-2"></div>
-                                                <div class="col-md-2">
-                                                    <input type="number" name="discount_type_sub_value" placeholder="Max. Value">
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <input type="number" name="value" placeholder="Amount Value">
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <input type="text" name="value_start_date" placeholder="Value Start Date" class="form-control flatpickr">
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <input type="text" name="value_stop_date" placeholder="Value Stop Date" class="form-control flatpickr">
-                                                </div>
-                                            </div>
-                                            <div class="row" style="margin-bottom: 20px;">
-                                                <div class="col-md-2"></div>
-                                                <div class="col-md-2"></div>
-                                                <div class="col-md-2"></div>
-                                                <div class="col-md-2"></div>
-                                                <div class="col-md-2">
-                                                    <input type="submit" value="Add" name="">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </form>
+                                <div class="row">
+                                    <div class="Add-brand">
+                                        <form action="{{ route('discount.store') }}" method="POST">
+                                            {{ csrf_field() }}
+                                            <input type="hidden" name="discount_type_id" value="{{ $types[4]->id }}">
 
+                                            <div class="input-group">
+                                                <select name="discount_type_value">
+                                                    <option>Select Day Part</option>
+                                                    @foreach ($day_parts as $day_part)
+                                                        <option value="{{ $day_part->id }}">{{ $day_part->day_parts }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="input-group">
+                                                <input type="number" name="discount_type_value" placeholder="Min. Value">
+                                            </div>
+                                            <div class="input-group">
+                                                <input type="number" name="percent_value" placeholder="Percent Value">
+                                            </div>
+
+                                            <div class="input-group">
+                                                <input type="text" name="percent_stop_date" placeholder="Percent Stop Date" class="form-control flatpickr">
+                                            </div>
+
+                                            <div class="input-group">
+                                                <input type="text" name="percent_start_date" placeholder="Percent Start Date" class="form-control flatpickr">
+                                            </div>
+
+                                            <div class="input-group">
+                                                <input type="number" name="discount_type_sub_value" placeholder="Max. Value">
+                                            </div>
+                                            <div class="input-group">
+                                                <input type="number" name="value" placeholder="Amount Value">
+                                            </div>
+                                            <div class="input-group">
+                                                <input type="text" name="value_start_date" placeholder="Value Start Date" class="form-control flatpickr">
+                                            </div>
+                                            <div class="input-group">
+                                                <input type="text" name="value_stop_date" placeholder="Value Stop Date" class="form-control flatpickr">
+                                            </div>
+
+                                            <div class="input-group">
+                                                <input type="submit" value="Add" name="">
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
 
                                 <div class="box-body">
@@ -816,36 +754,35 @@
 
                                         <table id="example1" class="table table-bordered table-striped">
                                             <thead>
-                                            <tr>
-                                                <th>Price Discount</th>
-                                                <th>Discount %</th>
-                                                <th>Discount % Start Date</th>
-                                                <th>Discount % Stop Date</th>
-                                                <th>Discount N</th>
-                                                <th>Value Start Date</th>
-                                                <th>Value Stop Date</th>
-                                                <th>Action</th>
-                                            </tr>
+                                                <tr>
+                                                    <th>Price Discount</th>
+                                                    <th>Discount %</th>
+                                                    <th>Discount % Start Date</th>
+                                                    <th>Discount % Stop Date</th>
+                                                    <th>Discount N</th>
+                                                    <th>Value Start Date</th>
+                                                    <th>Value Stop Date</th>
+                                                    <th>Action</th>
+                                                </tr>
                                             </thead>
                                             <tbody>
-                                            @foreach ($price_discounts as $price_discount)
-                                                <tr>
-                                                    <td>{{ $price_discount->discount_type_value }} - {{ $price_discount->discount_type_sub_value }}</td>
-                                                    <td>{{ $price_discount->percent_value }}%</td>
-                                                    <td>{{ date('Y-m-d', strtotime($price_discount->percent_start_date)) }}</td>
-                                                    <td>{{ date('Y-m-d', strtotime($price_discount->percent_stop_date)) }}</td>
-                                                    <td>&#8358;{{ $price_discount->value }}</td>
-                                                    <td>{{ date('Y-m-d', strtotime($price_discount->value_start_date)) }}</td>
-                                                    <td>{{ date('Y-m-d', strtotime($price_discount->value_start_date)) }}</td>
-                                                    <td>
-                                                        <a href="#" style="font-size: 16px"><span class="label label-warning" data-toggle="modal" data-target="#myModal{{ $price_discount->id }}" style="cursor: pointer;"> Edit</span></a>
-                                                        <a href="{{ url('discount/' . $price_discount->id . '/delete') }}" id="a_del" style="font-size: 16px"><span class="label label-danger"> <i class="fa fa-trash"></i></span></a>
-                                                    </td>
-                                                </tr>
-                                            @endforeach
+                                                @foreach ($price_discounts as $price_discount)
+                                                    <tr>
+                                                        <td>{{ $price_discount->discount_type_value }} - {{ $price_discount->discount_type_sub_value }}</td>
+                                                        <td>{{ $price_discount->percent_value }}%</td>
+                                                        <td>{{ date('Y-m-d', strtotime($price_discount->percent_start_date)) }}</td>
+                                                        <td>{{ date('Y-m-d', strtotime($price_discount->percent_stop_date)) }}</td>
+                                                        <td>&#8358;{{ $price_discount->value }}</td>
+                                                        <td>{{ date('Y-m-d', strtotime($price_discount->value_start_date)) }}</td>
+                                                        <td>{{ date('Y-m-d', strtotime($price_discount->value_start_date)) }}</td>
+                                                        <td>
+                                                            <a href="#" style="font-size: 16px"><span class="label label-warning" data-toggle="modal" data-target="#myModal{{ $price_discount->id }}" style="cursor: pointer;"> Edit</span></a>
+                                                            <a href="{{ url('discount/' . $price_discount->id . '/delete') }}" id="a_del" style="font-size: 16px"><span class="label label-danger"> <i class="fa fa-trash"></i></span></a>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
                                             </tbody>
                                         </table>
-
                                     @endif
                                 </div>
 
@@ -951,56 +888,53 @@
 
                             <div class="tab-pane" id="pslot">
 
-                                <div class="add-disc">
+                                <div class="row">
+                                    <div class="Add-brand">
+                                        <<form action="{{ route('discount.store') }}" method="POST">
+                                            {{ csrf_field() }}
+                                            <input type="hidden" name="discount_type_id" value="{{ $types[5]->id }}">
 
-                                    <form action="{{ route('discount.store') }}" method="POST">
-                                        {{ csrf_field() }}
-                                        <input type="hidden" name="discount_type_id" value="{{ $types[5]->id }}">
-                                        <div class="row">
-                                            <div class="row" style="margin-bottom: 20px;">
-                                                <div class="col-md-2">
-                                                    <h4>Add a Discount</h4>
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <input type="number" name="discount_type_value" placeholder="Min. Value">
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <input type="number" name="percent_value" placeholder="Percent Value">
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <input type="text" name="percent_start_date" placeholder="Percent Start Date" class="form-control flatpickr">
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <input type="text" name="percent_stop_date" placeholder="Percent Stop Date" class="form-control flatpickr">
-                                                </div>
+                                            <div class="input-group">
+                                                <select name="discount_type_value">
+                                                    <option>Select Day Part</option>
+                                                    @foreach ($day_parts as $day_part)
+                                                        <option value="{{ $day_part->id }}">{{ $day_part->day_parts }}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
-                                            <div class="row" style="margin-bottom: 20px;">
-                                                <div class="col-md-2"></div>
-                                                <div class="col-md-2">
-                                                    <input type="number" name="discount_type_sub_value" placeholder="Max. Value">
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <input type="number" name="value" placeholder="Amount Value">
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <input type="text" name="value_start_date" placeholder="Value Start Date" class="form-control flatpickr">
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <input type="text" name="value_stop_date" placeholder="Value Stop Date" class="form-control flatpickr">
-                                                </div>
+                                            <div class="input-group">
+                                                <input type="number" name="discount_type_value" placeholder="Min. Value">
                                             </div>
-                                            <div class="row" style="margin-bottom: 20px;">
-                                                <div class="col-md-2"></div>
-                                                <div class="col-md-2"></div>
-                                                <div class="col-md-2"></div>
-                                                <div class="col-md-2"></div>
-                                                <div class="col-md-2">
-                                                    <input type="submit" value="Add" name="">
-                                                </div>
+                                            <div class="input-group">
+                                                <input type="number" name="percent_value" placeholder="Percent Value">
                                             </div>
-                                        </div>
-                                    </form>
 
+                                            <div class="input-group">
+                                                <input type="text" name="percent_stop_date" placeholder="Percent Stop Date" class="form-control flatpickr">
+                                            </div>
+
+                                            <div class="input-group">
+                                                <input type="text" name="percent_start_date" placeholder="Percent Start Date" class="form-control flatpickr">
+                                            </div>
+
+                                            <div class="input-group">
+                                                <input type="number" name="discount_type_sub_value" placeholder="Max. Value">
+                                            </div>
+                                            <div class="input-group">
+                                                <input type="number" name="value" placeholder="Amount Value">
+                                            </div>
+                                            <div class="input-group">
+                                                <input type="text" name="value_start_date" placeholder="Value Start Date" class="form-control flatpickr">
+                                            </div>
+                                            <div class="input-group">
+                                                <input type="text" name="value_stop_date" placeholder="Value Stop Date" class="form-control flatpickr">
+                                            </div>
+
+                                            <div class="input-group">
+                                                <input type="submit" value="Add" name="">
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
 
                                 <div class="box-body">
@@ -1147,20 +1081,16 @@
                                 @endforeach
 
                             </div>
-                            <!-- /.tab-pane -->
-                        </div>
-                        <!-- /.tab-content -->
-                    </div>
-                    <!-- /.nav-tabs-custom -->
-                </div>
-                <!-- /.col -->
 
+                        </div>
+
+                    </div>
+
+                </div>
             </div>
+
         </div>
     </div>
-
-</section>
-
 
 @stop
 
@@ -1190,8 +1120,6 @@
                 var c = $("#hey").value = discount_type_value;
                 console.log(c+"jj");
             });
-
-
 
             flatpickr(".flatpickr", {
                 altInput: true

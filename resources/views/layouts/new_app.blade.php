@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+<<<<<<< HEAD
 @include('partials._new_head')
 <body>
 <!--Container-->
@@ -9,8 +10,10 @@
         <!--Sidebar-->
         @if(Session::get('agency_id'))
             @include('partials.new_agent_sidebar')
-        @else
+        @elseif(Session::get('advertiser_id'))
             @include('partials.new_advertiser_sidebar')
+        @else
+            @include('partials.new_broadcaster_sidebar')
         @endif
         <!--Sidebar-->
         <!--Content-->

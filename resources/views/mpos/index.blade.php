@@ -1,6 +1,8 @@
-@extends('layouts.app')
+@extends('layouts.new_app')
 
-@section('title', trans('app.mpo'))
+@section('title')
+    <title>All MPOs</title>
+@endsection
 
 @section('stylesheets')
 
@@ -9,71 +11,55 @@
 
 @endsection
 
-
 @section('content')
 
-    <section class="content-header">
-        <h1>
-            All Media Purchase orders
-        </h1>
-        <ol class="breadcrumb" style="font-size: 16px">
+    <div class="main-section">
+        <div class="container">
 
-            <li><a href="#"><i class="fa fa-th"></i> MPOs</a> </li>
-            <li><a href="index.html"><i class="fa fa-address-card"></i> All MPOs</a> </li>
-
-        </ol>
-    </section>
-
-    <!-- Main content -->
-
-    <section class="content">
-        <div class="row">
-
-            <div class="col-md-2 hidden-sm hidden-xs"></div>
-
-            <div class="col-md-8 Campaign" style="padding:2%">
-
-                <div class="row">
-                    <h4 style="margin-left: 17px;font-weight: bold">Search by date</h4>
-                    <div class="col-md-10" style="margin-top: -2%">
-                        <div class="input-group date styledate" style="width:30% !important">
-                            <div class="input-group-addon">
-                                <i class="fa fa-calendar"></i>
-                            </div>
-                            <input type="text" placeholder="Start Date" class="form-control pull-right" id="datepicker">
-                        </div>
-
-                        <div class="input-group date styledate" style="width:30% !important">
-                            <div class="input-group-addon">
-                                <i class="fa fa-calendar"></i>
-                            </div>
-                            <input type="text" placeholder="End Date" class="form-control pull-right" id="datepickerend" >
-                        </div>
-                        <div class="input-group" style="">
-                            <input type="submit" class="search-btn" value="search" style="float:left" >
-                        </div>
-                    </div>
+            <div class="row">
+                <div class="col-12 heading-main">
+                    <h1>All MPOs</h1>
+                    <ul>
+                        <li><a href="#"><i class="fa fa-th-large"></i>All MPOs</a></li>
+                        <li><a href="#">MPOs List</a></li>
+                    </ul>
                 </div>
-
             </div>
 
-            <div class="col-md-2 hidden-sm hidden-xs"></div>
+            {{--<div class="row">--}}
+                {{--<h4 style="margin-left: 17px;font-weight: bold">Search by date</h4>--}}
+                {{--<div class="col-md-10" style="margin-top: -2%">--}}
+                    {{--<div class="input-group date styledate" style="width:30% !important">--}}
+                        {{--<div class="input-group-addon">--}}
+                            {{--<i class="fa fa-calendar"></i>--}}
+                        {{--</div>--}}
+                        {{--<input type="text" placeholder="Start Date" class="form-control pull-right" id="datepicker">--}}
+                    {{--</div>--}}
 
-            <div class="row" style="padding: 5%">
-                <div class="col-xs-12">
-                    <div class="box">
-                        <div class="box-header">
-                            <h3 class="box-title">All MPOs</h3>
-                        </div>
-                        <!-- /.box-header -->
-                        <div class="box-body">
-                            @if(count($mpo_data) === 0)
+                    {{--<div class="input-group date styledate" style="width:30% !important">--}}
+                        {{--<div class="input-group-addon">--}}
+                            {{--<i class="fa fa-calendar"></i>--}}
+                        {{--</div>--}}
+                        {{--<input type="text" placeholder="End Date" class="form-control pull-right" id="datepickerend" >--}}
+                    {{--</div>--}}
 
-                                <h4>OOPs!!!, You have mpos on your system, please create one</h4>
+                    {{--<div class="input-group" style="">--}}
+                        {{--<input type="submit" class="search-btn" value="search" style="float:left" >--}}
+                    {{--</div>--}}
+                {{--</div>--}}
+            {{--</div>--}}
 
-                            @else
-                                <table id="example1" class="table table-bordered table-striped">
-                                    <thead>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box-body">
+                        @if(count($mpo_data) === 0)
+
+                            <h4>OOPs!!!, You have mpos on your system, please create one</h4>
+
+                        @else
+
+                            <table id="example1" class="table table-bordered table-striped">
+                                <thead>
                                     <tr>
                                         <th>S/N</th>
                                         <th>Name</th>
@@ -83,8 +69,8 @@
                                         <th>Amount</th>
                                         <th>Status</th>
                                     </tr>
-                                    </thead>
-                                    <tbody>
+                                </thead>
+                                <tbody>
                                     @foreach ($mpo_data as $mpo)
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
@@ -110,20 +96,17 @@
                                             </td>
                                         </tr>
                                     @endforeach
-                                    </tbody>
-                                    <tfoot>
+                                </tbody>
 
-                                    </tfoot>
-                                </table>
-                            @endif
-                        </div>
-                        <!-- /.box-body -->
+                            </table>
+
+                        @endif
                     </div>
                 </div>
             </div>
+            
         </div>
-    </section>
-
+    </div>
 @stop
 
 

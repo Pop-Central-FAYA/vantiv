@@ -51,6 +51,9 @@
                     </span>
                 </a>
                 <ul class="treeview-menu">
+                    <li><a href=""><i class="fa fa-circle-o"></i> Create Campaign</a></li>
+                    <li><a href=""><i class="fa fa-circle-o"></i> Campaign List</a></li>
+
                     <li><a href="{{ route('advertiser_campaign.step1', ['id' => Session::get('advertiser_id')]) }}"><i class="fa fa-circle-o"></i> Create Campaign</a></li>
                     <li><a href="{{ route('advertiser.campaign.all') }}"><i class="fa fa-circle-o"></i> Campaign List</a></li>
 
@@ -80,6 +83,12 @@
             </span>
                 </a>
                 <ul class="treeview-menu">
+                    {{--<li><a href="{{ route('wallet.create') }}"><i class="fa fa-circle-o"></i> Credit Wallet</a></li>--}}
+                    {{--<li><a href="{{ route('wallet.statement') }}"><i class="fa fa-circle-o"></i> Wallet Statement </a></li>--}}
+                </ul>
+            </li>
+            <li class="treeview">
+                <a href="">
                     <li><a href="{{ route('wallet.create') }}"><i class="fa fa-circle-o"></i> Credit Wallet</a></li>
                     <li><a href="{{ route('wallet.statement') }}"><i class="fa fa-circle-o"></i> Wallet Statement </a></li>
 
