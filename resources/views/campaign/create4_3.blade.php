@@ -37,7 +37,7 @@
 
                         <div id="dynamic">
                             <div class="input-group">
-                                <label>Upload Media Step 3</label>
+                                <label>Upload Media Step 4</label>
                                 <input type="file" id="fup" name="uploads">
                                 <input type="hidden" class="form-control" name="f_du" id="f_du" size="5" />
                             </div>

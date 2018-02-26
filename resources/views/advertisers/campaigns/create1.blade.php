@@ -214,7 +214,6 @@
             altInput: true,
         });
     </script>
-    3
     <script>
 
 

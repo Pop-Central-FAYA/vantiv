@@ -20,16 +20,22 @@
                 <div class="Add-brand">
                     <form class="campform" method="POST" action="{{ route('campaign.store3', ['walkins' => $walkins]) }}">
                         {{ csrf_field() }}
+                        @if(count($adslots) === 0)
+                            <p><h3>No adslots matches your criteria, please go back and adjust.</h3></p>
+                        @endif
                         @foreach($adslots as $adslot)
                             <p>{{ $adslot['count_adslot'] }} Adslots that matches your selected criteria </p>
                         @endforeach
-
                         <br>
                         <br>
 
-                        <div class="input-group">
-                            <input type="Submit" name="Submit" value="Next" />
-                        </div>
+                        <p align="left">
+                            @if(count($adslots) === 0)
+                                <button type="button" id="step2" class="btn campaign-button" >Back <i class="fa fa-backward" aria-hidden="true"></i></button>
+                            @else
+                                <button type="submit" class="btn campaign-button" style="margin-right:15%">Next <i class="fa fa-play" aria-hidden="true"></i></button>
+                            @endif
+                        </p>
                     </form>
                 </div>
             </div>

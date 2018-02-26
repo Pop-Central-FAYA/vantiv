@@ -76,14 +76,14 @@
                             <div class="input-group-addon">
                                 <i class="fa fa-calendar"></i>
                             </div>
-                            <input type="text" placeholder="stop-date" value="{{ isset(((object) $step2)->end_date) ? ((object) $step2)->end_date : "" }}" required name="end_date" class="form-control" id="txtToDate" />
+                            <input type="text" placeholder="stop-date" value="{{ isset(((object) $step2)->end_date) ? ((object) $step2)->end_date : "" }}" readonly required name="end_date" class="form-control flatpickr" id="txtToDate" />
                         </div>
 
                         <div class="input-group date styledate">
                             <div class="input-group-addon">
                                 <i class="fa fa-calendar"></i>
                             </div>
-                            <input type="text" placeholder="start-date" value="{{ isset(((object) $step2)->start_date) ?((object) $step2)->start_date : "" }}" required name="start_date" class="form-control" id="txtFromDate" />
+                            <input type="text" placeholder="start-date" value="{{ isset(((object) $step2)->start_date) ?((object) $step2)->start_date : "" }}" readonly required name="start_date" class="form-control flatpickr" id="txtFromDate" />
                         </div>
 
                         <div class="input-group">
@@ -140,6 +140,14 @@
 @section('scripts')
     {!! HTML::script('assets/js/moment.min.js') !!}
     {!! HTML::script('assets/js/bootstrap-datetimepicker.min.js') !!}
+    <script src="https://unpkg.com/flatpickr"></script>
+
+    <script>
+        flatpickr(".flatpickr", {
+            altInput: true,
+        });
+    </script>
+
     <script>
 
 
@@ -166,4 +174,5 @@
 @section('styles')
     <link rel="stylesheet" href="{{ asset('assets/css/jquery-ui.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/theme.css') }}">
+    <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
 @stop

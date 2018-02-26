@@ -12,7 +12,7 @@ class MpoController extends Controller
     {
         $broadcaster_id = \Session::get('broadcaster_id');
 
-        $mpos = Utilities::switch_db('reports')->select("SELECT * FROM mpos WHERE broadcaster_id = '$broadcaster_id' OR agency_broadcaster = '$broadcaster_id'");
+        $mpos = Utilities::switch_db('reports')->select("SELECT * FROM mpos WHERE broadcaster_id = '$broadcaster_id' OR agency_broadcaster = '$broadcaster_id' ORDER BY time_created DESC ");
 
         $mpo_data = [];
 
@@ -55,7 +55,7 @@ class MpoController extends Controller
     {
         $broadcaster_id = \Session::get('broadcaster_id');
 
-        $pending_mpos = $mpos = Utilities::switch_db('reports')->select("SELECT * FROM mpos WHERE is_mpo_accepted = 0 AND (broadcaster_id = '$broadcaster_id' OR agency_broadcaster = '$broadcaster_id')");
+        $pending_mpos = $mpos = Utilities::switch_db('reports')->select("SELECT * FROM mpos WHERE is_mpo_accepted = 0 AND (broadcaster_id = '$broadcaster_id' OR agency_broadcaster = '$broadcaster_id') ORDER BY time_created DESC ");
 
         $mpo_data = [];
 
