@@ -13,7 +13,6 @@
 
 @section('content')
 
-<<<<<<< HEAD
     <div class="main-section">
         <div class="container">
             <div class="row">

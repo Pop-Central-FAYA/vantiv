@@ -9,10 +9,16 @@
         <!--Sidebar-->
         @if(Session::get('agency_id'))
             @include('partials.new_agent_sidebar')
+            <?php session()->forget('broadcaster_id'); ?>
+            <?php session()->forget('advertiser_id'); ?>
         @elseif(Session::get('advertiser_id'))
             @include('partials.new_advertiser_sidebar')
+            <?php session()->forget('broadcaster_id'); ?>
+            <?php session()->forget('agency_id'); ?>
         @else
             @include('partials.new_broadcaster_sidebar')
+            <?php session()->forget('agency_id'); ?>
+            <?php session()->forget('advertiser_id'); ?>
         @endif
         <!--Sidebar-->
         <!--Content-->

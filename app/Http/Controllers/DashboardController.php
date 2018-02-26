@@ -165,10 +165,6 @@ class DashboardController extends Controller
             return view('dashboard.default')->with(['campaign' => $c, 'volume' => $c_volume, 'month' => $c_mon, 'high_dayp' => $day_pie, 'days' => $days_data, 'adslot' => $ads_no, 'price' => $tot_pri, 'mon' => $mon, 'invoice' => $invoice]);
 
 
-        }
-        else if($role->role_id === 4){
-            $agency_id = Session::get('agency_id');
-
         } else if ($role->role_id === 4) {
             $allBroadcaster = Utilities::switch_db('api')->select("SELECT * from broadcasters");
             $agency_id = Session::get('agency_id');
