@@ -6,7 +6,6 @@
     ],
 
     "hash": "faf80f2ee892182a764b60b15a72a8d3",
-    25c84217481bc22f1f575bc6254e6c16a8afb71e
     "content-hash": "646a9d0dcc906ccf032a848bddd30cdd",
     "packages": [
         {
@@ -65,8 +64,6 @@
                 "driver"
             ],
             "time": "2016-03-02T13:49:15+00:00"
-            "time": "2016-03-02 13:49:15"
-            25c84217481bc22f1f575bc6254e6c16a8afb71e
         },
         {
             "name": "anhskohbo/no-captcha",
@@ -435,11 +432,7 @@
                 "singularize",
                 "string"
             ],
-<<<<<<< HEAD
             "time": "2018-01-09T20:05:19+00:00"
-=======
-            "time": "2018-01-09 20:05:19"
->>>>>>> 25c84217481bc22f1f575bc6254e6c16a8afb71e
         },
         {
             "name": "erusev/parsedown",
@@ -1509,8 +1502,6 @@
                 "laravel"
             ],
             "time": "2018-01-10T11:58:11+00:00"
-            "time": "2018-01-10 11:58:11"
-            25c84217481bc22f1f575bc6254e6c16a8afb71e
         },
         {
             "name": "monolog/monolog",
@@ -3579,8 +3570,6 @@
             "description": "CssToInlineStyles is a class that enables you to convert HTML-pages/files into HTML-pages/files with inline styles. This is very useful when you're sending emails.",
             "homepage": "https://github.com/tijsverkoyen/CssToInlineStyles",
             "time": "2017-11-27T11:13:29+00:00"
-            "time": "2017-11-27 11:13:29"
-            25c84217481bc22f1f575bc6254e6c16a8afb71e
         },
         {
             "name": "unicodeveloper/laravel-paystack",
@@ -3640,8 +3629,6 @@
                 "subscription"
             ],
             "time": "2016-12-24T08:05:37+00:00"
-            "time": "2016-12-24 08:05:37"
-            25c84217481bc22f1f575bc6254e6c16a8afb71e
         },
         {
             "name": "vlucas/phpdotenv",
@@ -3814,8 +3801,6 @@
                 "laravel"
             ],
             "time": "2018-01-11T01:35:04+00:00"
-            "time": "2018-01-11 01:35:04"
-            25c84217481bc22f1f575bc6254e6c16a8afb71e
         },
         {
             "name": "zizaco/entrust",
