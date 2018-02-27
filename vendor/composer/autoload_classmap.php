@@ -3790,6 +3790,7 @@ return array(
     'Vanguard\\Http\\Controllers\\ActivityController' => $baseDir . '/app/Http/Controllers/ActivityController.php',
     'Vanguard\\Http\\Controllers\\AdslotController' => $baseDir . '/app/Http/Controllers/AdslotController.php',
     'Vanguard\\Http\\Controllers\\Agency\\CampaignsController' => $baseDir . '/app/Http/Controllers/Agency/CampaignsController.php',
+    'Vanguard\\Http\\Controllers\\Agency\\ReportsController' => $baseDir . '/app/Http/Controllers/Agency/ReportsController.php',
     'Vanguard\\Http\\Controllers\\Agency\\WalletsController' => $baseDir . '/app/Http/Controllers/Agency/WalletsController.php',
     'Vanguard\\Http\\Controllers\\Auth\\AuthController' => $baseDir . '/app/Http/Controllers/Auth/AuthController.php',
     'Vanguard\\Http\\Controllers\\Auth\\PasswordController' => $baseDir . '/app/Http/Controllers/Auth/PasswordController.php',

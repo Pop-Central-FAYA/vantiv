@@ -158,7 +158,8 @@
                                         ?>
                                         <tr>
                                             <td><video width="200" controls><source src="{{ asset(decrypt($file->file_url)) }}"></video></td>
-                                            <td>{{ count(array($file->adslot)) }}</td>
+
+                                            <td>{{ count((array) $file->adslot) }}</td>
                                             <td>{{ $file->time_picked }} Seconds</td>
                                             <td>80%</td>
                                             @if($file->time_picked === "60")
