@@ -17,29 +17,33 @@
                     </ul>
                 </div>
 
-                <div class="row">
+                {{--<div class="row">--}}
                     {{--Dashboard charts begins here--}}
-                    <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+                    <div class="col-md-12">
+                        <div id="containerPeriodic" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                    </div>
                     <hr>
-                    <div class="row">
+
+                    {{--<div class="row">--}}
                         <div class="col-md-6">
                             <div id="containerDayparts" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
                         </div>
                         <div class="col-md-6">
                             <div id="containerDays" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
                         </div>
-                    </div>
+                    {{--</div>--}}
                     <hr>
-                    <div class="row">
+                    {{--<div class="row">--}}
                         <div class="col-md-12">
                             <div id="containerTotal"></div>
                         </div>
-                    </div>
+                    {{--</div>--}}
                     <hr>
                     {{--Dashboard charts ends here--}}
 
                     {{--Table for High Value Customer--}}
-                    <div class="row">
+                    {{--<div class="row">--}}
                         <div class="col-md-12">
                             <div class="box-body table-responsive no-padding">
                                 <h4 class="text-center"><p>High Value Customers</p></h4>
@@ -62,12 +66,12 @@
                                     @endforeach
                                 </table>
                             </div>
-                        </div>
+                        {{--</div>--}}
                     </div>
                     <hr>
 
                     {{--Table for Paid Invoice--}}
-                    <div class="row">
+                    {{--<div class="row">--}}
                         <div class="col-md-12">
                             <div class="box-body table-responsive no-padding">
                                 <h4 class="text-center"><p>Paid Invoices</p></h4>
@@ -90,9 +94,9 @@
                                     @endforeach
                                 </table>
                             </div>
-                        </div>
+                        {{--</div>--}}
                     </div>
-                </div>
+                {{--</div>--}}
 
             </div>
 
@@ -116,9 +120,8 @@
         <?php echo "var periodic_price = ".$price .";\n"; ?>
         <?php echo "var periodic_adslot = ".$adslot .";\n"; ?>
 
-        console.log(periodic_adslot);
         // Bar chart for periodic sales report
-        Highcharts.chart('container', {
+        Highcharts.chart('containerPeriodic', {
             chart: {
                 zoomType: 'xy'
             },
