@@ -31,6 +31,11 @@
             </li>
             <li class="{{ Request::is('reports') ? 'active' : ''  }}"> <a href="{{ route('reports') }}"><i class="fa fa-signal"></i><span>Reports</span></a>
             </li>
+            <li> <a href=""><i class="fa fa-power"></i><span>Profile</span></a>
+            </li>
+            <li> <a href="{{ route('auth.logout') }}"><i class="fas fa-power-off"></i><span>Logout</span></a>
+
+            </li>
         </ul>
     </div>
 </div>
