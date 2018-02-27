@@ -30,6 +30,11 @@
             <li class="{{ Request::is('advertiser/reports') ? 'active' : ''  }}"> <a href="{{ route('advertiser.report.index') }}"><i class="fa fa-signal"></i><span>Report</span></a>
 
             </li>
+            <li> <a href=""><i class="fa fa-power"></i><span>Profile</span></a>
+            </li>
+            <li> <a href="{{ route('auth.logout') }}"><i class="fa fa-power"></i><span>Logout</span></a>
+
+            </li>
         </ul>
     </div>
 </div>
