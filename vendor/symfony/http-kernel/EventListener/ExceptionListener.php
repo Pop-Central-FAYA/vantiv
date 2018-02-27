@@ -32,13 +32,11 @@ class ExceptionListener implements EventSubscriberInterface
 {
     protected $controller;
     protected $logger;
-    protected $debug;
 
-    public function __construct($controller, LoggerInterface $logger = null, $debug = false)
+    public function __construct($controller, LoggerInterface $logger = null)
     {
         $this->controller = $controller;
         $this->logger = $logger;
-        $this->debug = $debug;
     }
 
     public function onKernelException(GetResponseForExceptionEvent $event)
@@ -73,7 +71,7 @@ class ExceptionListener implements EventSubscriberInterface
 
         $event->setResponse($response);
 
-        if ($this->debug && $eventDispatcher instanceof EventDispatcherInterface) {
+        if ($eventDispatcher instanceof EventDispatcherInterface) {
             $cspRemovalListener = function (FilterResponseEvent $event) use (&$cspRemovalListener, $eventDispatcher) {
                 $event->getResponse()->headers->remove('Content-Security-Policy');
                 $eventDispatcher->removeListener(KernelEvents::RESPONSE, $cspRemovalListener);

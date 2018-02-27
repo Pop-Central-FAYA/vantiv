@@ -7,6 +7,7 @@ use Vanguard\Libraries\Api;
 use Vanguard\Libraries\Utilities;
 use Carbon\Carbon;
 use Session;
+use Image;
 
 class ClientBrandsController extends Controller
 {
@@ -64,6 +65,7 @@ class ClientBrandsController extends Controller
 
         $this->validate($request, [
             'brand_name' => 'required|regex:/^[a-zA-Z- ]+$/',
+            'brand_logo' => 'required|image|mimes:png,jpeg,jpg'
         ]);
 
         $brand = Utilities::formatString($request->brand_name);
@@ -79,7 +81,17 @@ class ClientBrandsController extends Controller
             if(count($ckeck_brand) > 0) {
                 return redirect()->back()->with('error', 'Brands already exists');
             }else{
-                $insert = Utilities::switch_db('api')->select("INSERT into brands (id, `name`, walkin_id, broadcaster_agency) VALUES ('$unique','$brand','$id', '$agency_id')");
+
+                /*handling uploading the logo*/
+                $image = $request->brand_logo;
+                $image_new_name = time().$image->getClientOriginalName();
+                $destinationPath = 'brands_logo';
+                $slide = Image::make($image->getRealPath())->resize(200, 200);
+                $slide->save($destinationPath.'/'.$image_new_name,98);
+//                $image->move($destinationPath, $image_new_name);
+                $image_path = encrypt('brands_logo/'.$image_new_name);
+
+                $insert = Utilities::switch_db('api')->select("INSERT into brands (id, `name`, walkin_id, broadcaster_agency, image_url) VALUES ('$unique','$brand','$id', '$agency_id', '$image_path')");
                 $user_activity = Api::saveActivity($agency_id, $description, $ip, $user_agent);
                 if(!$insert) {
                     return redirect()->route('agency.brand.all')->with('success', 'Brands created successfully');
@@ -95,7 +107,16 @@ class ClientBrandsController extends Controller
             if(count($ckeck_brand) > 0) {
                 return redirect()->back()->with('error', 'Brands already exists');
             }else{
-                $insert = Utilities::switch_db('api')->select("INSERT into brands (id, `name`, walkin_id, broadcaster_agency) VALUES ('$unique','$brand','$user_id', '$advertiser_id')");
+                /*handling uploading the logo*/
+                $image = $request->brand_logo;
+                $image_new_name = time().$image->getClientOriginalName();
+                $destinationPath = 'brands_logo';
+                $slide = Image::make($image->getRealPath())->resize(200, 200);
+                $slide->save($destinationPath.'/'.$image_new_name,98);
+//                $image->move($destinationPath, $image_new_name);
+                $image_path = encrypt('brands_logo/'.$image_new_name);
+
+                $insert = Utilities::switch_db('api')->select("INSERT into brands (id, `name`, walkin_id, broadcaster_agency, image_url) VALUES ('$unique','$brand','$user_id', '$advertiser_id', '$image_path')");
                 $user_activity = Api::saveActivity($advertiser_id, $description, $ip, $user_agent);
                 if(!$insert) {
                     return redirect()->route('agency.brand.all')->with('success', 'Brands created successfully');

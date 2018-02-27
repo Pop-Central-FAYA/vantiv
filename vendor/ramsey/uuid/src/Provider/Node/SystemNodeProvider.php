@@ -39,7 +39,7 @@ class SystemNodeProvider implements NodeProviderInterface
         $matches = array();
 
         // first try a  linux specific way
-        $node = $this->getSysfs();
+        $node = $this->getsysfs();
 
         // Search the ifconfig output for all MAC addresses and return
         // the first one found
@@ -84,20 +84,14 @@ class SystemNodeProvider implements NodeProviderInterface
      *
      * @return string|bool
      */
-    protected function getSysfs()
+    protected function getsysfs()
     {
         $mac = false;
-
         if (strtoupper(php_uname('s')) === "LINUX") {
-            $addressPaths = glob('/sys/class/net/*/address', GLOB_NOSORT);
-
-            if (empty($addressPaths)) {
-                return false;
-            }
-
+            // get all the macadresses of all systems
             $macs = array_map(
                 'file_get_contents',
-                $addressPaths
+                glob('/sys/class/net/*/address', GLOB_NOSORT)
             );
 
             $macs = array_map('trim', $macs);
@@ -113,7 +107,6 @@ class SystemNodeProvider implements NodeProviderInterface
 
             $mac = reset($macs);
         }
-
         return $mac;
     }
 }

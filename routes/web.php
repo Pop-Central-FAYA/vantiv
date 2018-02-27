@@ -365,8 +365,8 @@ Route::group(['middleware' => 'auth'], function () {
 
 
 Route::get('profile', [
-    'as' => 'profile',
-    'uses' => 'ProfileController@index'
+    'as' => 'user.profile',
+    'uses' => 'ProfileManagementsController@index'
 ]);
 
 Route::get('profile/activity', [

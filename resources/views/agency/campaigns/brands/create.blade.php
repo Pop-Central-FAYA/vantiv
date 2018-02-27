@@ -16,7 +16,7 @@
                 </div>
                 <div class="Add-brand">
                     <h2>Create Brands</h2>
-                    <form action="{{ route('agency.brand.store') }}" method="post">
+                    <form action="{{ route('agency.brand.store') }}" method="post" enctype="multipart/form-data">
                         {{ csrf_field() }}
                         <div class="input-group">
                             <input type="text" name="brand_name" value=""  placeholder="Brand Name">
@@ -28,9 +28,12 @@
                                 @endforeach
                             </select>
                         </div>
-
                         <div class="input-group">
                             <input type="Submit" name="Submit" value="Add Brand">
+                        </div>
+                        <div class="input-group">
+                            <label for="brand_logo">Brand Logo</label>
+                            <input type="file" name="brand_logo" value=""  placeholder="">
                         </div>
                     </form>
                 </div>

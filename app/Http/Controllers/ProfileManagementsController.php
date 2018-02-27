@@ -3,9 +3,15 @@
 namespace Vanguard\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Vanguard\Country;
 
 class ProfileManagementsController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:web');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -13,7 +19,8 @@ class ProfileManagementsController extends Controller
      */
     public function index()
     {
-        //
+        $countries = Country::all();
+        return view('profile.index')->with('countries', $countries);
     }
 
     /**

@@ -189,6 +189,7 @@ return [
         Yajra\DataTables\DataTablesServiceProvider::class,
         Unicodeveloper\Paystack\PaystackServiceProvider::class,
         Pbmedia\LaravelFFMpeg\FFMpegServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class,
         //JD\Cloudder\CloudderServiceProvider::class,
 
 
@@ -267,6 +268,7 @@ return [
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
         'Paystack' => Unicodeveloper\Paystack\Facades\Paystack::class,
+        'Image' => Intervention\Image\Facades\Image::class,
        // 'Cloudder' => JD\Cloudder\Facades\Cloudder::class
 
     ],

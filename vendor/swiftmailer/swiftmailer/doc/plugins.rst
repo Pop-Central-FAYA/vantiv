@@ -350,14 +350,14 @@ provide an implementation that does this. You need to create a small class.
 
     class DbReplacements implements Swift_Plugins_Decorator_Replacements {
       public function getReplacementsFor($address) {
-        global $db; // Your PDO instance with a connection to your database
-        $query = $db->prepare(
-          "SELECT * FROM `users` WHERE `email` = ?"
+        $sql = sprintf(
+          "SELECT * FROM user WHERE email = '%s'",
+          mysql_real_escape_string($address)
         );
 
-        $query->execute([$address]);
+        $result = mysql_query($sql);
 
-        if ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+        if ($row = mysql_fetch_assoc($result)) {
           return array(
             '{username}'=>$row['username'],
             '{password}'=>$row['password']

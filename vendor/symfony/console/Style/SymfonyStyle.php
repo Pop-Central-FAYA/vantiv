@@ -279,7 +279,7 @@ class SymfonyStyle extends OutputStyle
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function askQuestion(Question $question)
     {

@@ -15,7 +15,7 @@
                     </ul>
                 </div>
                 <div class="col-12 payments">
-                    <h2>Last transction</h2>
+                    <h2>Last transaction</h2>
                     @if(count($wallet) === 0)
                         <h3>Current Balance : <a href="#">&#8358;0.00</a></h3>
                     @else

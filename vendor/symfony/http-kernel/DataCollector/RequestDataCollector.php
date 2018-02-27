@@ -11,7 +11,6 @@
 
 namespace Symfony\Component\HttpKernel\DataCollector;
 
-use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -129,24 +128,21 @@ class RequestDataCollector extends DataCollector implements EventSubscriberInter
             unset($this->controllers[$request]);
         }
 
-        if ($request->attributes->has('_redirected') && $redirectCookie = $request->cookies->get('sf_redirect')) {
-            $this->data['redirect'] = json_decode($redirectCookie, true);
+        if (null !== $session) {
+            if ($request->attributes->has('_redirected')) {
+                $this->data['redirect'] = $session->remove('sf_redirect');
+            }
 
-            $response->headers->clearCookie('sf_redirect');
-        }
-
-        if ($response->isRedirect()) {
-            $response->headers->setCookie(new Cookie(
-                'sf_redirect',
-                json_encode(array(
+            if ($response->isRedirect()) {
+                $session->set('sf_redirect', array(
                     'token' => $response->headers->get('x-debug-token'),
                     'route' => $request->attributes->get('_route', 'n/a'),
                     'method' => $request->getMethod(),
                     'controller' => $this->parseController($request->attributes->get('_controller')),
                     'status_code' => $statusCode,
                     'status_text' => Response::$statusTexts[(int) $statusCode],
-                ))
-            ));
+                ));
+            }
         }
 
         $this->data['identifier'] = $this->data['route'] ?: (is_array($this->data['controller']) ? $this->data['controller']['class'].'::'.$this->data['controller']['method'].'()' : $this->data['controller']);
@@ -316,11 +312,11 @@ class RequestDataCollector extends DataCollector implements EventSubscriberInter
 
     public function onKernelResponse(FilterResponseEvent $event)
     {
-        if (!$event->isMasterRequest()) {
+        if (!$event->isMasterRequest() || !$event->getRequest()->hasSession()) {
             return;
         }
 
-        if ($event->getRequest()->cookies->has('sf_redirect')) {
+        if ($event->getRequest()->getSession()->has('sf_redirect')) {
             $event->getRequest()->attributes->set('_redirected', true);
         }
     }

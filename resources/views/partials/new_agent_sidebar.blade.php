@@ -41,7 +41,7 @@
             <li class="{{ Request::is('agency/reports') ? 'active' : ''  }}"> <a href="{{ route('reports.index') }}"><i class="fa fa-signal"></i><span>Report</span></a>
 
             </li>
-            <li> <a href=""><i class="fa fa-power"></i><span>Profile</span></a>
+            <li> <a href="{{ route('user.profile') }}"><i class="fa fa-power"></i><span>Profile</span></a>
             </li>
             <li> <a href="{{ route('auth.logout') }}"><i class="fa fa-power"></i><span>Logout</span></a>
 

@@ -401,11 +401,7 @@ class PdoSessionHandler extends AbstractSessionHandler
             $this->gcCalled = false;
 
             // delete the session records that have expired
-            if ('mysql' === $this->driver) {
-                $sql = "DELETE FROM $this->table WHERE $this->lifetimeCol + $this->timeCol < :time";
-            } else {
-                $sql = "DELETE FROM $this->table WHERE $this->lifetimeCol < :time - $this->timeCol";
-            }
+            $sql = "DELETE FROM $this->table WHERE $this->lifetimeCol < :time - $this->timeCol";
 
             $stmt = $this->pdo->prepare($sql);
             $stmt->bindValue(':time', time(), \PDO::PARAM_INT);

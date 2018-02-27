@@ -16,12 +16,18 @@
                 </div>
                 <div class="Add-brand">
                     <h2>Create Brands</h2>
-                    <form action="{{ route('agency.brand.store') }}" method="post">
+                    <form action="{{ route('agency.brand.store') }}" method="post" enctype="multipart/form-data">
                         {{ csrf_field() }}
                         <div class="row">
-                            <div class="col-md-8">
+                            <div class="col-md-4">
                                 <div class="input-group">
                                     <input type="text" name="brand_name" value=""  placeholder="Brand Name">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="input-group">
+                                    <label for="brand_logo">Brand Logo</label>
+                                    <input type="file" name="brand_logo" value=""  placeholder="">
                                 </div>
                             </div>
                             <div class="col-md-4">
