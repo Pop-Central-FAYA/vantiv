@@ -249,6 +249,10 @@ class DashboardController extends Controller
 
             $allBroadcaster = Utilities::switch_db('api')->select("SELECT * from broadcasters");
 
+            $date = [];
+            $tot = [];
+            $bra = [];
+
             $advertiser_id = Session::get('advertiser_id');
 
             $camp_prod = Utilities::switch_db('api')->select("SELECT id,product from campaigns where agency = '$advertiser_id'");
