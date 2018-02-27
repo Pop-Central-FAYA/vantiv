@@ -51,21 +51,16 @@ class BrandsController extends Controller
     {
         $broadcaster = Session::get('broadcaster_id');
         $this->validate($request, [
-           'brand_name' => 'required|regex:/^[a-zA-Z- ]+$/',
+            'brand_name' => 'required|regex:/^[a-zA-Z- ]+$/',
+            'image_url' => 'required'
         ]);
 
         $brand = Utilities::formatString($request->brand_name);
         $unique = uniqid();
         $walkin_id = Utilities::switch_db('api')->select("SELECT id from walkIns WHERE user_id = '$request->clients'");
         $id = $walkin_id[0]->id;
-        $ckeck_brand = Utilities::switch_db('api')->select("SELECT name from brands WHERE `name` = '$brand'");
-        if(count($ckeck_brand) > 0) {
-            return redirect()->back()->with('error', 'Brands already exists');
-        }else{
-            $insert = Utilities::switch_db('api')->select("INSERT into brands (id, `name`, walkin_id, broadcaster_agency) VALUES ('$unique','$brand','$id', '$broadcaster')");
-            if(!$insert) {
                 return redirect()->route('brand.all')->with('success', 'Brands created successfully');
-            }else{
+            } else {
                 return redirect()->back()->with('error', 'There was a problem creating this brand');
             }
         }
@@ -76,6 +71,7 @@ class BrandsController extends Controller
     {
         $this->validate($request, [
             'brand_name' => 'required|regex:/^[a-zA-Z- ]+$/',
+            'image_url' => 'required'
         ]);
 
         $brand = Utilities::formatString($request->brand_name);

@@ -18,7 +18,7 @@
             </div>
             <div class="Add-brand">
                 <h2>Create Brands</h2>
-                <form action="{{ route('brand.store') }}" method="post">
+                <form action="{{ route('brand.store') }}" method="post" enctype="multipart/form-data">
                     {{ csrf_field() }}
                     <div class="input-group">
                         <label for="brand_name">Name</label>
@@ -34,6 +34,10 @@
                     </div>
                     <div class="input-group">
                         <input type="Submit" name="Submit" value="Add Brand" />
+                    </div>
+                    <div class="input-group">
+                        <label>Brand Logo</label>
+                        <input type="file" name="image_url">
                     </div>
                 </form>
             </div>
