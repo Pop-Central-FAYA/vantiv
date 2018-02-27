@@ -18,15 +18,15 @@
             </div>
             <div class="Add-brand">
                 <h2>Create Brands</h2>
-                <form action="{{ route('brand.store') }}" method="post" enctype="multipart/form-data">
+                <form action="{{ route('brand.store') }}" method="post" enctype="multipart/form-data" data-parsley-validate="">
                     {{ csrf_field() }}
                     <div class="input-group">
                         <label for="brand_name">Name</label>
-                        <input type="text" name="brand_name" value=""  placeholder="Brand Name">
+                        <input type="text" name="brand_name" value=""  placeholder="Brand Name" required>
                     </div>
                     <div class="input-group">
                         <label>Clients</label>
-                        <select name="clients" class="Role">
+                        <select name="clients" class="Role" required>
                             @foreach($client as $clients)
                                 <option value="{{ $clients[0]->id }}">{{ $clients[0]->firstname.' '.$clients[0]->lastname }}</option>
                             @endforeach
@@ -37,7 +37,7 @@
                     </div>
                     <div class="input-group">
                         <label>Brand Logo</label>
-                        <input type="file" name="image_url">
+                        <input type="file" name="image_url" required>
                     </div>
                 </form>
             </div>
@@ -50,9 +50,9 @@
 @section('scripts')
     {!! HTML::script('assets/js/moment.min.js') !!}
     {!! HTML::script('assets/js/bootstrap-datetimepicker.min.js') !!}
+    <script src="{{ asset('assets/js/parsley.min.js') }}"></script>
+
     <script>
-
-
         $(document).ready(function(){
             $("#txtFromDate").datepicker({
                 numberOfMonths: 2,
@@ -82,7 +82,8 @@
 
 @stop
 
-@section('style')
+@section('styles')
     <link rel="stylesheet" href="{{ asset('assets/css/jquery-ui.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/theme.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/parsley.css') }}">
 @stop

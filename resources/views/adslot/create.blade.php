@@ -180,6 +180,7 @@
             });
 
             $("#add_more").click(function(){
+                console.log('hllo');
                 var n = $(".b").length + 1;
                 if(n > 4){
                     return false;
