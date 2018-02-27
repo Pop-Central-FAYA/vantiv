@@ -37,7 +37,6 @@ class MpoController extends Controller
             } else {
                 $amount = $payment_details[0]->amount;
             }
-            dd($brand);
 
             $mpo_data[] = [
                 'is_mpo_accepted' => $mpo->is_mpo_accepted,
