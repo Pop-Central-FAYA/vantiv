@@ -4,12 +4,7 @@ $('#sidebar').toggleClass('active');
 });
 });
 /*--chart--*/
-$(function() {
-$('.bar-chart').cssCharts({type:"bar"});
-$('.donut-chart').cssCharts({type:"donut"}).trigger('show-donut-chart');
-$('.line-chart').cssCharts({type:"line"});
-$('.pie-thychart').cssCharts({type:"pie"});
-});
+
 $(function(){
 $("#bars li .bar").each(function(key, bar){
 var percentage = $(this).data('percentage');
@@ -31,10 +26,7 @@ data:[
 }
 ]
 
-/*--Dropdown On Hover--*/
- $(function() {
-            $("#demo-1").bootstrapDropdownOnHover();   
-        });
+
 
 
 
@@ -73,42 +65,7 @@ $("#curve").pista(data, options);
 });
 
 <!--circularprogress--> 
-$(document).ready(function(){
-$('.newtest1').circles({
-initialPos:90,
-targetPos:75,
-showProgress: 1,
-scale: 100,
-progPostText: '%',
-onFinishMoving:function(pos){
-console.log('done ',pos);
-}
-});
-$('.newtest2').circles({
-'targetPos':70,
-speed: 40,
-onFinishMoving:function(pos){
-console.log('done ',pos);
-}
-});
-$('.newtest3').circles({
-initialPos:90,
-targetPos:20,
-showProgress: 1,
-scale: 100,
-progPostText: '%',
-onFinishMoving:function(pos){
-console.log('done ',pos);
-}
-});
-$('.newtest4').circles({
-'targetPos':220,
-speed: 40,
-onFinishMoving:function(pos){
-console.log('done ',pos);
-}
-});
-});
+
 <!--Bar chart-->
 var data = [
 
@@ -150,13 +107,10 @@ return '';
 };
 
 config.element = 'bar-chart';
-Morris.Bar(config);
 
 
 <!--donut_chart chart-->
-$(function () { 
-getMorris('donut', 'donut_chart');
-});
+
 
 function getMorris(type, element) {
 if (type === 'donut') {
@@ -186,84 +140,12 @@ formatter: function (y) {
 // REF
 // http://stackoverflow.com/questions/40094194/chart-js-line-graph-multitooltipkey-background-color-issue
 
-var canvas = document.getElementById("multiLineChart");
-var ctx = canvas.getContext('2d');
 
-  var data = {
-    labels: ["2014", "2015", "2016", "2017", "2018"],
-    datasets: [{
-      label: "",
-      data: [100, 400, 200, 400, 100],
-      borderColor: "rgba(93,19,62,0.8)",
-      backgroundColor:"rgba(93,19,62,0.5)"
-    }, {
-      label: "",
-      data: [100, 300, 200, 300, 100],
-      borderColor: "rgba(225,35,95,0.8)",
-      backgroundColor:"rgba(225,35,95,0.5)"
-    }]
-  };
-
-    var options = {
-      tooltips: {
-       enabled: true, 
-       mode: 'label'
-     },          
-      legend: {
-        display: true,
-      }  
-    };
-
-// Chart declaration:
-var multiLineChart = new Chart(ctx, {
-  type: 'line',
-  data: data,
-  options: options
-});
-
-// Spline:
-var data = {
-  labels: ['Mon', 'Tue', 'Wed'],
-  series: [
-    [0, 2, 4,]
-  ]
-};
-
-new Chartist.Line('#chart05', data);
 
 
 // Progress bar
 
-$('#google').LineProgressbar({
-percentage:90,
-radius: '3px',
-height: '20px',
-fillBackgroundColor: '#e12864'
-});
-$('#Yahoo').LineProgressbar({
-percentage:80,
-radius: '3px',
-height: '20px',
-fillBackgroundColor: '#5d123d'
-});
-$('#jaman').LineProgressbar({
-percentage:70,
-radius: '3px',
-height: '20px',
-fillBackgroundColor: '#d5203f'
-});
-$('#envato').LineProgressbar({
-percentage:70,
-radius: '3px',
-height: '20px',
-fillBackgroundColor: '#76324b'
-});
-$('#Other').LineProgressbar({
-percentage:70,
-radius: '3px',
-height: '20px',
-fillBackgroundColor: '#e01a58'
-});
+
 /*--spline--*/
 
 $(function(){

@@ -687,9 +687,7 @@ p {
     float: left;
     width: 100%;
 }
-.main-section .Total-Revenue .spline-chart canvas {
-    float: left;
-}
+
 /*----------------------------Sales----------------------------*/
 .main-section .sales-chart{
     width: 100%;
@@ -1641,11 +1639,7 @@ p {
     float: left;
     width: 100% !important;
 }
-.Order-today #spline canvas {
-    float: left;
-    width: 100% !important;
-	height:220px !important
-}
+
 /*----------------------------Latest Project----------------------------*/
 .latest-project{
     width: 100%;
@@ -1789,13 +1783,7 @@ p {
 	font-family:'Roboto', sans-serif;
 	color:#e12864;
 }
-.Alltime-Earning canvas {
-    float: left;
-    margin: 0;
-    padding: 0px;
-    width: 100% !important;
-	height:250px !important;
-}
+
 .Alltime-Earning .lineProgressbar {
     float: left;
     margin: 0;

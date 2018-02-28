@@ -4,6 +4,7 @@ namespace Vanguard\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Vanguard\Country;
+use Vanguard\Libraries\Utilities;
 
 class ProfileManagementsController extends Controller
 {
@@ -20,6 +21,14 @@ class ProfileManagementsController extends Controller
     public function index()
     {
         $countries = Country::all();
+        $broadcaster_id = \Session::get('broadcaster_id');
+        $agency_id = \Session::get('agency_id');
+        $advertiser_id = \Session::get('advertiser_id');
+        $user_details = [];
+        if($agency_id){
+            $user = Utilities::switch_db('api')->select("SELECT * from users where id = (SELECT user_id from agents where id = '$agency_id')");
+//            dd($user);
+        }
         return view('profile.index')->with('countries', $countries);
     }
 

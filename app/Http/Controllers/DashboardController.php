@@ -198,7 +198,9 @@ class DashboardController extends Controller
 
             #Periodic spend report of total * product
             $pro_period = $this->periodic_spent($agency_id);
-            $periodic_to_product = (json_encode($pro_period));
+            $periodic_name = (json_encode($pro_period['name']));
+            $periodic_data = (json_encode($pro_period['data']));
+
 
             #Budget pacing report
             $b = $this->budgetPacing($agency_id);
@@ -242,7 +244,7 @@ class DashboardController extends Controller
                                                                         'count_brands' => $count_brands, 'count_invoice' => $count_invoice,
                                                                         'count_campaigns' => $count_campaigns,  'count_client' => $count,
                                                                         'date' => $d, 'amount' => $am, 'name' => $na, 'camp_prod' => $camp_prod,
-                                                                        'periodic' => $periodic_to_product, 'amount_bud' => $amm_bud, 'date_bud' => $date_bud,
+                                                                        'periodic_name' => $periodic_name, 'periodic_data' => $periodic_data, 'amount_bud' => $amm_bud, 'date_bud' => $date_bud,
                                                                         'invoice_unapproval' => $invoice_unapproval]);
 
         } else if ($role->role_id === 6) {
@@ -493,7 +495,7 @@ class DashboardController extends Controller
         $b = [];
         foreach ($trans as $t) {
             $b[] = [
-                'date' => date('D d,Y', strtotime($t->date)),
+                'date' => date('Y-m-d', strtotime($t->date)),
                 'total' => (integer)$t->bal,
             ];
         }
@@ -537,6 +539,8 @@ class DashboardController extends Controller
     public function periodic_spent($agency_id)
     {
         $pro_period = [];
+        $name = [];
+        $data = [];
         $date = date('Y-m', time());
         $pro_cam = Utilities::switch_db('api')->select("SELECT * from campaigns where agency = '$agency_id' AND DATE_FORMAT(time_created, '%Y-%m') = '$date' ");
         foreach ($pro_cam as $pr){
@@ -548,7 +552,15 @@ class DashboardController extends Controller
             ];
         }
 
-        return $pro_period;
+        foreach ($pro_period as $p){
+            $name[] = $p['name'];
+        }
+
+        foreach ($pro_period as $p){
+            $data[] = $p['y'];
+        }
+
+        return (['name' => $name, 'data' => $data]);
     }
 
 }

@@ -1,4 +1,4 @@
-@extends('agency_layouts.app')
+@extends('layouts.new_app')
 @section('title')
     <title>Agency | Dashboard</title>
 @stop
