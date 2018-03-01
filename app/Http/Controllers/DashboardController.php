@@ -289,7 +289,9 @@ class DashboardController extends Controller
 
             #Periodic spend report of total * product
             $pro_period = $this->periodic_spent($advertiser_id);
-            $periodic_to_product = (json_encode($pro_period));
+            $periodic_name = (json_encode($pro_period['name']));
+            $periodic_data = (json_encode($pro_period['data']));
+//            $periodic_to_product = (json_encode($pro_period));
 
             #Budget pacing report
             $amm = [];
@@ -328,11 +330,11 @@ class DashboardController extends Controller
 
             return view('advertisers.dashboard.new_dashboard')->with(['broadcaster' => $allBroadcaster, 'date' => $d, 'amount' => $am,
                                                                             'name' => $na, 'camp_prod' => $camp_prod, 'amount_bud' => $amm_bud,
-                                                                            'date_bud' => $date_bud, 'periodic' => $periodic_to_product,
+                                                                            'date_bud' => $date_bud, 'periodic_name' => $periodic_name, 'periodic_data' => $periodic_data,
                                                                             'all_invoices' => $invoice_campaign_details,
                                                                             'invoice_approval' => $invoice_approval,
                                                                             'invoice_unapproval' => $invoice_unapproval,
-                                                                            'count_campaigns' => $count_campaigns,
+                                                                            'count_campaigns_advertiser' => $count_campaigns,
                                                                             'count_invoice' => $count_invoice,
                                                                             'count_brand' => $count_brands,
                                                                             'count_files' => $count_files]);
@@ -511,7 +513,42 @@ class DashboardController extends Controller
         $tot = [];
         $date = [];
         $bra = [];
-        $broad = Utilities::switch_db('api')->select("SELECT SUM(amount) as total, time_created from payments WHERE agency_broadcaster = '$b_id' GROUP BY DATE_FORMAT(time_created, '%Y-%m')");
+        $agency_id = Session::get('agency_id');
+        $broad = Utilities::switch_db('api')->select("SELECT SUM(amount) as total, time_created from payments WHERE agency_broadcaster = '$b_id' AND agency_id = '$agency_id' GROUP BY DATE_FORMAT(time_created, '%Y-%m')");
+        foreach ($broad as $broads)
+        {
+            $pe[] = [
+                'total' => (integer)$broads->total,
+                'date' => date('M', strtotime($broads->time_created)),
+                'name' => $broadcaster_brand[0]->brand,
+            ];
+        }
+        foreach ($pe as $p)
+        {
+            $tot[] = $p['total'];
+        }
+        foreach ($pe as $p)
+        {
+            $date[] = $p['date'];
+        }
+        foreach ($pe as $p)
+        {
+            $bra[] = $p['name'];
+        }
+
+        return response()->json(['date' => $date, 'amount_price' => $tot, 'name' => $bra]);
+    }
+
+    public function filterByAdvertiserBroad()
+    {
+        $b_id = request()->br_id;
+        $broadcaster_brand = Utilities::switch_db('api')->select("SELECT brand from broadcasters where id='$b_id'");
+        $pe = [];
+        $tot = [];
+        $date = [];
+        $bra = [];
+        $advertiser_id = Session::get('advertiser_id');
+        $broad = Utilities::switch_db('api')->select("SELECT SUM(amount) as total, time_created from payments WHERE agency_broadcaster = '$b_id' AND agency_id = '$advertiser_id' GROUP BY DATE_FORMAT(time_created, '%Y-%m')");
         foreach ($broad as $broads)
         {
             $pe[] = [

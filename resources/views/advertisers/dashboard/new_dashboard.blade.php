@@ -1,3 +1,6 @@
+
+{{--another--}}
+
 @extends('layouts.new_app')
 @section('title')
     <title>Faya | Advertiser Dashboard</title>
@@ -14,6 +17,8 @@
                         <li><a href="#">Dashboard </a></li>
                     </ul>
                 </div>
+            </div>
+            <div class="row">
                 <div class="col-4">
                     <form action="{{ route('advertiser.dashboard.broad') }}" id="search_by_broad" method="GET">
                         {{ csrf_field() }}
@@ -25,105 +30,117 @@
                         </select>
                     </form>
                 </div>
-                <div id="load_broad" class="load_broad" style="display: none;"></div>
-                <div class="col-12 chart-top">
-                    <div class="col-6">
-                        <div class="Sales">
-                            <h2>Periodic Spend Report</h2>
-                            <p>Total amount spent on chanel</p>
-                            <div id="containerPeriodic_total_per_chanel" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="Our-Visitors">
-                            <div id="containerPerProduct" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 Total-Revenue">
-                    <div class="col-6">
-                        <div class="col-12 Total-rev">
-                            <h2>Budget Pacing Report</h2>
-                            <div id="containerBudgetPacing" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="col-12 revenue-right">
-                            <div class="col-6">
-                                <div class="text">
-                                    <h1>{{ $count_files }}</h1>
-                                    <p>All Files</p>
-                                </div>
-                                <div class="icons icon4"> <i class="fa fa-user"></i> </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="text">
-                                    <h1>{{ $count_campaigns }}</h1>
-                                    <p>All Campaigns</p>
-                                </div>
-                                <div class="icons icon2"> <i class="fa fa-suitcase"></i> </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="text">
-                                    <h1>{{ $count_brand }}</h1>
-                                    <p>All Brands</p>
-                                </div>
-                                <div class="icons icon3"> <i class="fa fa-star fa-lg mt-4"></i> </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="text">
-                                    <h1>{{ $count_invoice }}</h1>
-                                    <p>All Invoices</p>
-                                </div>
-                                <div class="icons icon4"> <i class="fa fa-list-alt fa-lg mt-4"></i> </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            </div>
 
-                <div class="col-12 recents">
-                    <div class="col-12">
-                        <div class="col-12 recents-inner">
-                            <div class="recent-head">
-                                <h1>recent invoice</h1>
-                                <div class="reload"><a href="#"> <i class="fa fa-undo"></i></a><a href="#"><i class="fa fa-expand"></i></a> </div>
+            <div id="load_broad" class="load_broad" style="display: none;"></div>
+            {{--<div class="col-12 chart-top">--}}
+            <div class="row">
+                <div class="col-12">
+                    <div class="Sales">
+                        <h2>Periodic Spend Report</h2>
+                        <p>Total amount spent on chanel</p>
+                        <canvas id="containerPeriodic_total_per_chanel" style="width: 512px; height: 150px"></canvas>
+                        {{--<div id="containerPeriodic_total_per_chanel" style="min-width: 310px; height: 400px; margin: 0 auto"></div>--}}
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <h2>Percentage Periodic Spent Report on Products for <?php echo date('F, Y')?> </h2>
+                <div class="col-12">
+                    <div class="Our-Visitors">
+                        <canvas id="containerPerProduct" style="width: 900px; height: 276px"></canvas>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-12">
+                    <div class="col-12 Total-rev">
+                        <h2>Budget Pacing Report</h2>
+                        <canvas id="containerBudgetPacing" style="width: 512px; height: 150px"></canvas>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <p><br></p>
+            <div class="row">
+                <div class="col-12">
+                    <div class="col-12 revenue-right">
+                        <div class="col-lg-3">
+                            <div class="text">
+                                <div id="all-client"></div>
+                                {{--<h1>{{ $count_client }}</h1>--}}
+                                <h3><p class="text-center"> <i class="fa fa-user"></i> All Files</p></h3>
                             </div>
-                            <div class="summary">
-                                <p>Total approved invoices {{ $invoice_approval }},upapproved {{ $invoice_unapproval }}.</p>
-                                <a href="#">Invoice Summary<i class="fa fa-arrow-right" aria-hidden="true"></i></a> </div>
-                            <table class="table">
-                                <thead>
-                                <th>Invoice#</th>
-                                <th>Customer Name</th>
-                                <th>Brand</th>
-                                <th>Amount</th>
-                                <th>Refunded Amount</th>
-                                <th>Status</th>
-                                </thead>
-                                <tbody>
-                                @foreach($all_invoices as $invoice)
-                                    <tr>
-                                        <td>{{ $invoice['invoice_number'] }}</td>
-                                        <td>{{ $invoice['campaign_name'] }}</td>
-                                        <td>{{ $invoice['campaign_brand'] }}</td>
-                                        <td>&#8358;{{ $invoice['actual_amount_paid'] }}</td>
-                                        <td>&#8358;{{ $invoice['refunded_amount'] }}</td>
-                                        <td>
-                                            @if ($invoice['status'] == 1)
-                                                <label style="font-size: 16px" class="label label-success">
-                                                    Approved
-                                                </label>
-                                            @elseif ($invoice['status'] == 0)
-                                                <label style="font-size: 16px" class="label label-warning">
-                                                    Pending
-                                                </label>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                @endforeach
-                                </tbody>
-                            </table>
                         </div>
+                        <div class="col-lg-3">
+                            <div class="text">
+                                <div id="all-campaign"></div>
+                                {{--<h1>{{ $count_campaigns }}</h1>--}}
+                                <h3><p class="text-center"> <i class="fa fa-user"></i> All Campaign</p></h3>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="text">
+                                <div id="all-brand"></div>
+                                {{--<h1>{{ $count_brands }}</h1>--}}
+                                <h3><p class="text-center"> <i class="fa fa-user"></i> All Brands</p></h3>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="text">
+                                <div id="all-invoice"></div>
+                                {{--<h1>{{ $count_invoice }}</h1>--}}
+                                <h3><p class="text-center"> <i class="fa fa-user"></i> All Invoices</p></h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{--</div>--}}
+            <div class="col-12 recents">
+                <div class="col-12">
+                    <div class="col-12 recents-inner">
+                        <div class="recent-head">
+                            <h1>recent invoice</h1>
+                            <div class="reload"><a href="#"> <i class="fa fa-undo"></i></a><a href="#"><i class="fa fa-expand"></i></a> </div>
+                        </div>
+                        <div class="summary">
+                            <p>Total approved invoices {{ $invoice_approval }},upapproved {{ $invoice_unapproval }}.</p>
+                            <a href="#">Invoice Summary<i class="fa fa-arrow-right" aria-hidden="true"></i></a> </div>
+                        <table class="table">
+                            <thead>
+                            <th>Invoice#</th>
+                            <th>Customer Name</th>
+                            <th>Brand</th>
+                            <th>Amount</th>
+                            <th>Refunded Amount</th>
+                            <th>Status</th>
+                            </thead>
+                            <tbody>
+                            @foreach($all_invoices as $invoice)
+                                <tr>
+                                    <td>{{ $invoice['invoice_number'] }}</td>
+                                    <td>{{ $invoice['campaign_name'] }}</td>
+                                    <td>{{ $invoice['campaign_brand'] }}</td>
+                                    <td>&#8358;{{ $invoice['actual_amount_paid'] }}</td>
+                                    <td>&#8358;{{ $invoice['refunded_amount'] }}</td>
+                                    <td>
+                                        @if ($invoice['status'] == 1)
+                                            <label style="font-size: 16px" class="label label-success">
+                                                Approved
+                                            </label>
+                                        @elseif ($invoice['status'] == 0)
+                                            <label style="font-size: 16px" class="label label-warning">
+                                                Pending
+                                            </label>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -159,17 +176,14 @@
     <script src="{{ asset('agency_asset/plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('agency_asset/plugins/datatables/dataTables.bootstrap.min.js') }}"></script>
 
-    <script src="https://code.highcharts.com/highcharts.js"></script>
-    <script src="https://code.highcharts.com/modules/data.js"></script>
-    <script src="https://code.highcharts.com/modules/exporting.js"></script>
-
     <script>
         <?php echo "var date = ".$date . ";\n"; ?>
         <?php echo "var amount = ".$amount . ";\n"; ?>
         <?php echo "var name = ".$name .";\n"; ?>
-        <?php echo "var periodic_product = ".$periodic .";\n"; ?>
         <?php echo "var amount_bud =".$amount_bud ."\n"; ?>
         <?php echo "var date_bud =".$date_bud ."\n"; ?>
+        <?php echo "var periodic_name =".$periodic_name ."\n"; ?>
+        <?php echo "var periodic_data =".$periodic_data ."\n"; ?>
 
         $(document).ready(function () {
 
@@ -186,45 +200,45 @@
                     $(".content").css({
                         opacity: 1
                     });
-                    Highcharts.chart('containerPeriodic_total_per_chanel', {
-                        chart: {
-                            type: 'column'
+                    var ctx = document.getElementById("containerPeriodic_total_per_chanel");
+                    var myChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: data.date,
+                            datasets: [{
+                                label: 'Periodic Spent Report',
+                                data: data.amount_price,
+                                backgroundColor: [
+                                    'rgba(255, 99, 132, 0.2)',
+                                    'rgba(54, 162, 235, 0.2)',
+                                    'rgba(255, 206, 86, 0.2)',
+                                    'rgba(75, 192, 192, 0.2)',
+                                    'rgba(153, 102, 255, 0.2)',
+                                    'rgba(255, 159, 64, 0.2)'
+                                ],
+                                borderColor: [
+                                    'rgba(255,99,132,1)',
+                                    'rgba(54, 162, 235, 1)',
+                                    'rgba(255, 206, 86, 1)',
+                                    'rgba(75, 192, 192, 1)',
+                                    'rgba(153, 102, 255, 1)',
+                                    'rgba(255, 159, 64, 1)'
+                                ],
+                                borderWidth: 1
+                            }]
                         },
-                        title: {
-                            text: 'Periodic Spend Report'
-                        },
-                        subtitle: {
-                            text: 'Total against Channels'
-                        },
-                        xAxis: {
-                            categories: data.date,
-                            crosshair: true
-                        },
-                        yAxis: {
-                            min: 0,
-                            title: {
-                                text: 'Total (Naira)'
+                        options: {
+                            scales: {
+                                yAxes: [{
+                                    gridLines: {
+                                        display:false
+                                    },
+                                    ticks: {
+                                        beginAtZero:true
+                                    }
+                                }]
                             }
-                        },
-                        tooltip: {
-                            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-                            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                            '<td style="padding:0"><b>{point.y:.1f} Naira</b></td></tr>',
-                            footerFormat: '</table>',
-                            shared: true,
-                            useHTML: true
-                        },
-                        plotOptions: {
-                            column: {
-                                pointPadding: 0.2,
-                                borderWidth: 0
-                            }
-                        },
-                        series: [{
-//                            name: data.name,
-                            data: data.amount_price
-
-                        }]
+                        }
                     });
                 });
             })
@@ -251,10 +265,158 @@
                     {data: 'mpo', name: 'mpo'}
                 ]
             });
+
+            //setting a bench mark to get the percentage of all client
+            var all_client = "<?php echo $count_files ?>";
+            var percentage_client = 0;
+            percentage_client = ((all_client / 100) * 100);
+
+            //setting a bench mark to get the percentage of all campaigns
+            var all_campaigns = "<?php echo $count_campaigns_advertiser; ?>";
+            var percentage_campaign = 0;
+            percentage_campaign = ((all_campaigns / 100) * 100 );
+
+            //setting a bench mark to get the percentage of all brands
+            var all_brands = "<?php echo $count_brand ?>";
+            var percentage_brand = 0;
+            percentage_brand = ((all_brands / 100) * 100);
+
+            //setting a benchmark to get the percentage of all invoice
+            var all_invoices = "<?php echo $count_invoice ?>";
+            var percentage_invoices = 0;
+            percentage_invoices = ((all_invoices / 100) * 100);
+
+
+            if(percentage_client < 10){
+                $("#all-client").circliful({
+                    animationStep: 5,
+                    foregroundBorderWidth: 5,
+                    backgroundBorderWidth: 15,
+                    foregroundColor: '#32CD32',
+                    backgroundColor: '#fff',
+                    percent: percentage_client,
+                    noPercentageSign: true
+                });
+            }else if(percentage_client >=10 && percentage_client < 80) {
+                $("#all-client").circliful({
+                    animationStep: 5,
+                    foregroundBorderWidth: 5,
+                    backgroundBorderWidth: 15,
+                    foregroundColor: '#008000',
+                    backgroundColor: '#fff',
+                    percent: percentage_client,
+                    noPercentageSign: true
+                });
+            }else{
+                $("#all-client").circliful({
+                    animationStep: 5,
+                    foregroundBorderWidth: 5,
+                    backgroundBorderWidth: 15,
+                    foregroundColor: '#ff0000',
+                    backgroundColor: '#fff',
+                    percent: percentage_client,
+                    noPercentageSign: true
+                });
+            }
+
+            if(percentage_campaign < 10){
+                $("#all-campaign").circliful({
+                    animationStep: 5,
+                    foregroundBorderWidth: 5,
+                    backgroundBorderWidth: 15,
+                    foregroundColor: '#32CD32',
+                    backgroundColor: '#fff',
+                    percent: percentage_campaign,
+                    noPercentageSign: true
+                });
+            }else if(percentage_campaign >=10 && percentage_campaign < 80) {
+                $("#all-campaign").circliful({
+                    animationStep: 5,
+                    foregroundBorderWidth: 5,
+                    backgroundBorderWidth: 15,
+                    foregroundColor: '#008000',
+                    backgroundColor: '#fff',
+                    percent: percentage_campaign,
+                    noPercentageSign: true
+                });
+            }else{
+                $("#all-campaign").circliful({
+                    animationStep: 5,
+                    foregroundBorderWidth: 5,
+                    backgroundBorderWidth: 15,
+                    foregroundColor: '#ff0000',
+                    backgroundColor: '#fff',
+                    percent: percentage_campaign,
+                    noPercentageSign: true
+                });
+            }
+
+            if(percentage_brand < 10){
+                $("#all-brand").circliful({
+                    animationStep: 5,
+                    foregroundBorderWidth: 5,
+                    backgroundBorderWidth: 15,
+                    foregroundColor: '#32CD32',
+                    backgroundColor: '#fff',
+                    percent: percentage_brand,
+                    noPercentageSign: true
+                });
+            }else if(percentage_brand >=10 && percentage_brand < 80) {
+                $("#all-brand").circliful({
+                    animationStep: 5,
+                    foregroundBorderWidth: 5,
+                    backgroundBorderWidth: 15,
+                    foregroundColor: '#008000',
+                    backgroundColor: '#fff',
+                    percent: percentage_brand,
+                    noPercentageSign: true
+                });
+            }else{
+                $("#all-brand").circliful({
+                    animationStep: 5,
+                    foregroundBorderWidth: 5,
+                    backgroundBorderWidth: 15,
+                    foregroundColor: '#ff0000',
+                    backgroundColor: '#fff',
+                    percent: percentage_brand,
+                    noPercentageSign: true
+                });
+            }
+
+            if(percentage_invoices < 10){
+                $("#all-invoice").circliful({
+                    animationStep: 5,
+                    foregroundBorderWidth: 5,
+                    backgroundBorderWidth: 15,
+                    foregroundColor: '#32CD32',
+                    backgroundColor: '#fff',
+                    percent: percentage_invoices,
+                    noPercentageSign: true
+                });
+            }else if(percentage_invoices >=10 && percentage_invoices < 80) {
+                $("#all-invoice").circliful({
+                    animationStep: 5,
+                    foregroundBorderWidth: 5,
+                    backgroundBorderWidth: 15,
+                    foregroundColor: '#008000',
+                    backgroundColor: '#fff',
+                    percent: percentage_invoices,
+                    noPercentageSign: true
+                });
+            }else{
+                $("#all-invoice").circliful({
+                    animationStep: 5,
+                    foregroundBorderWidth: 5,
+                    backgroundBorderWidth: 15,
+                    foregroundColor: '#ff0000',
+                    backgroundColor: '#fff',
+                    percent: percentage_invoices,
+                    noPercentageSign: true
+                });
+            }
         })
 
     </script>
-
     <script>
         $(function () {
             //Initialize Select2 Elements
@@ -326,112 +488,122 @@
             });
         });
     </script>
-
     <script>
-
-        Highcharts.chart('containerPeriodic_total_per_chanel', {
-            chart: {
-                type: 'column'
+        var ctx = document.getElementById("containerPeriodic_total_per_chanel");
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: date,
+                datasets: [{
+                    label: 'Periodic Spent Report',
+                    data: amount,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255,99,132,1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
             },
-            title: {
-                text: 'Periodic Spend Report'
-            },
-            subtitle: {
-                text: 'Total against Channels'
-            },
-            xAxis: {
-                categories: date,
-                crosshair: true
-            },
-            yAxis: {
-                min: 0,
-                title: {
-                    text: 'Total (Naira)'
+            options: {
+                scales: {
+                    yAxes: [{
+                        gridLines: {
+                            display:false
+                        },
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
                 }
-            },
-            tooltip: {
-                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                '<td style="padding:0"><b>{point.y:.1f} Naira</b></td></tr>',
-                footerFormat: '</table>',
-                shared: true,
-                useHTML: true
-            },
-            plotOptions: {
-                column: {
-                    pointPadding: 0.2,
-                    borderWidth: 0
-                }
-            },
-            series: [{
-//                name: name,
-                data: amount
-            }]
+            }
         });
-
-        Highcharts.chart('containerPerProduct', {
-            chart: {
-                plotBackgroundColor: null,
-                plotBorderWidth: null,
-                plotShadow: false,
-                type: 'pie'
+    </script>
+    <script>
+        var ctx = document.getElementById("containerPerProduct");
+        var myChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: periodic_name,
+                datasets: [{
+                    label: '# of Votes',
+                    data: periodic_data,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255,99,132,1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
             },
-            title: {
-                text: 'Periodic Spend Report on Products for <?php echo date('F, Y')?>',
-            },
-            tooltip: {
-                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-            },
-            plotOptions: {
-                pie: {
-                    allowPointSelect: true,
-                    cursor: 'pointer',
-                    dataLabels: {
-                        enabled: false
-                    },
-                    showInLegend: true
+            options: {
+                scales: {
+                    yAxes: [{
+                        gridLines: {
+                            display:false
+                        },
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
                 }
-            },
-            series: [{
-                name: 'Total',
-                colorByPoint: true,
-                data: periodic_product
-            }]
+            }
         });
+    </script>
+    <script>
+        var ctx = document.getElementById('containerBudgetPacing').getContext('2d');
+        var chart = new Chart(ctx, {
+            // The type of chart we want to create
+            type: 'line',
 
-        Highcharts.chart('containerBudgetPacing', {
-            chart: {
-                type: 'spline'
+            // The data for our dataset
+            data: {
+                labels: date_bud,
+                datasets: [{
+                    label: "Budget Pacing",
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 0.2)',
+                    data: amount_bud,
+                }]
             },
-            title: {
-                text: 'Budget Pacing Report'
-            },
-            xAxis: {
-                categories: date_bud
-            },
-            yAxis: {
-                title: {
-                    text: 'Amount(Naira)'
-                },
-            },
-            tooltip: {
-                crosshairs: true,
-                shared: true
-            },
-            plotOptions: {
-                spline: {
-                    marker: {
-                        radius: 4,
-                        lineColor: '#e1235f',
-                        lineWidth: 1
-                    }
+
+            // Configuration options go here
+            options: {
+                scales: {
+                    xAxes: [{
+                        gridLines: {
+                            display:false
+                        }
+                    }],
+                    yAxes: [{
+                        gridLines: {
+                            display:false
+                        }
+                    }]
                 }
-            },
-            series: [{
-                name: '',
-                data: amount_bud
-
-            }]
+            }
         });
     </script>
 

@@ -66,6 +66,7 @@ class AgencyAuthController extends Controller
                 'password' => bcrypt($request->password),
                 'firstname' => $request->first_name,
                 'lastname' => $request->last_name,
+                'phone_number' => $request->phone,
                 'user_type' => 4,
                 'status' => 1
             ]);
@@ -80,7 +81,7 @@ class AgencyAuthController extends Controller
                 'sector_id' => $request->sector_id,
                 'nationality' => $request->country_id,
                 'location' => $request->location,
-                'image_url' => 'agencies/' .$agency_image,
+                'image_url' => encrypt('agencies/' .$agency_image),
                 'brand' => null
             ]);
 

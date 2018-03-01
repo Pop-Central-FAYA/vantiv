@@ -3,25 +3,18 @@
     <title>Agency | Dashboard</title>
 @stop
 @section('content')
-    <section class="content-header">
-        <h1>
-            Agency Dashboard
 
-        </h1>
-        <ol class="breadcrumb" style="font-size: 16px">
-
-            <li><a href="#"><i class="fa fa-th"></i> Agency</a> </li>
-            <li><a href="{{ route('dashboard') }}"><i class="fa fa-address-card"></i> Dashboard</a> </li>
-
-        </ol>
-    </section>
-
-    <!-- Main content -->
-
-    <section class="content">
-        <h3>Company</h3>
-        <hr>
-        <div class="row">
+    <div class="main-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 heading-main">
+                    <h1>Agency Dashboard </h1>
+                    <ul>
+                        <li><a href="#"><i class="fa fa-th-large"></i>Agency</a></li>
+                        <li><a href="#">Clients Dashboard </a></li>
+                    </ul>
+                </div>
+            </div>
             <div class="col-md-12">
                 <!-- AREA CHART -->
                 <div id="load_broad" class="load_broad" style="display: none;"></div>
@@ -38,7 +31,8 @@
                         </div>
                     </div>
                     <p><br></p>
-                    <div id="containerPeriodic_total_per_brand" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                    <canvas id="containerPeriodic_total_per_brand" style="width: 512px; height: 150px"></canvas>
+                    {{--<div id="containerPeriodic_total_per_brand" style="min-width: 310px; height: 400px; margin: 0 auto"></div>--}}
                 </form>
                 <!-- /.box -->
 
@@ -47,21 +41,9 @@
                 <!-- /.box -->
 
             </div>
-            <!-- /.col (LEFT) -->
-            <div class="col-md-6">
-                <!-- LINE CHART --><p><br></p>
-                <p><br></p>
-                <p><br></p>
-                <div id="containerPerProduct" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
-                <!-- /.box -->
-
-            </div>
-            <!-- /.col (RIGHT) -->
         </div>
-        <!-- /.row -->
-        <hr>
+    </div>
 
-    </section>
 @stop
 @section('scripts')
     <!-- Select2 -->
@@ -116,45 +98,45 @@
                     $(".content").css({
                         opacity: 1
                     });
-                    Highcharts.chart('containerPeriodic_total_per_brand', {
-                        chart: {
-                            type: 'column'
+                    var ctx = document.getElementById("containerPeriodic_total_per_brand");
+                    var myChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: data.date,
+                            datasets: [{
+                                label: 'Periodic Spent Report on brands',
+                                data: data.amount_price,
+                                backgroundColor: [
+                                    'rgba(255, 99, 132, 0.2)',
+                                    'rgba(54, 162, 235, 0.2)',
+                                    'rgba(255, 206, 86, 0.2)',
+                                    'rgba(75, 192, 192, 0.2)',
+                                    'rgba(153, 102, 255, 0.2)',
+                                    'rgba(255, 159, 64, 0.2)'
+                                ],
+                                borderColor: [
+                                    'rgba(255,99,132,1)',
+                                    'rgba(54, 162, 235, 1)',
+                                    'rgba(255, 206, 86, 1)',
+                                    'rgba(75, 192, 192, 1)',
+                                    'rgba(153, 102, 255, 1)',
+                                    'rgba(255, 159, 64, 1)'
+                                ],
+                                borderWidth: 1
+                            }]
                         },
-                        title: {
-                            text: 'Periodic Spend Report'
-                        },
-                        subtitle: {
-                            text: 'Total against Brands'
-                        },
-                        xAxis: {
-                            categories: data.date,
-                            crosshair: true
-                        },
-                        yAxis: {
-                            min: 0,
-                            title: {
-                                text: 'Total (Naira)'
+                        options: {
+                            scales: {
+                                yAxes: [{
+                                    gridLines: {
+                                        display:false
+                                    },
+                                    ticks: {
+                                        beginAtZero:true
+                                    }
+                                }]
                             }
-                        },
-                        tooltip: {
-                            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-                            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                            '<td style="padding:0"><b>{point.y:.1f} Naira</b></td></tr>',
-                            footerFormat: '</table>',
-                            shared: true,
-                            useHTML: true
-                        },
-                        plotOptions: {
-                            column: {
-                                pointPadding: 0.2,
-                                borderWidth: 0
-                            }
-                        },
-                        series: [{
-//                            name: data.name,
-                            data: data.amount_price
-
-                        }]
+                        }
                     });
                 });
             })
@@ -183,45 +165,47 @@
             });
         })
 
-        Highcharts.chart('containerPeriodic_total_per_brand', {
-            chart: {
-                type: 'column'
+    </script>
+    <script>
+        var ctx = document.getElementById("containerPeriodic_total_per_brand");
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: date,
+                datasets: [{
+                    label: 'Periodic Spent Report on brands',
+                    data: amount_price,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255,99,132,1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
             },
-            title: {
-                text: 'Periodic Spend Report'
-            },
-            subtitle: {
-                text: 'Total against Brands'
-            },
-            xAxis: {
-                categories:date,
-                crosshair: true
-            },
-            yAxis: {
-                min: 0,
-                title: {
-                    text: 'Total (Naira)'
+            options: {
+                scales: {
+                    yAxes: [{
+                        gridLines: {
+                            display:false
+                        },
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
                 }
-            },
-            tooltip: {
-                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                '<td style="padding:0"><b>{point.y:.1f} Naira</b></td></tr>',
-                footerFormat: '</table>',
-                shared: true,
-                useHTML: true
-            },
-            plotOptions: {
-                column: {
-                    pointPadding: 0.2,
-                    borderWidth: 0
-                }
-            },
-            series: [{
-//                name: name,
-                data:amount_price
-
-            }]
+            }
         });
     </script>
 

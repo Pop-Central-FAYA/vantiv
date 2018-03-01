@@ -1,7 +1,7 @@
 @extends('layouts.new_app')
 
 @section('title')
-    <title>Faya | Profile</title>
+    <title> Faya | Profile-Management </title>
 @stop
 
 @section('styles')
@@ -24,33 +24,38 @@
                     </ul>
                 </div>
                 <div class="Add-Clients">
-                    <form action="" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('profile.update.details') }}" method="POST" enctype="multipart/form-data">
                         {{ csrf_field() }}
                         <div class="col-12 ">
                             <h2>User Details</h2>
                             <div class="col-12 form-inner">
                                 <div class="input-group">
-                                    <input type="text" required class="form-control flatpickr" readonly name="birthday" value="" placeholder="Date of Birth">
-                                </div>
-                                <div class="input-group">
-                                    <input type="text" required name="phone" value=""  placeholder="Phone">
-                                </div>
-                                <div class="input-group">
+                                    <label for="first_name">First Name</label>
                                     <input type="text" required class="form-control" id="first_name"
-                                           name="first_name" placeholder="@lang('app.first_name')" value="">
+                                           name="first_name" placeholder="@lang('app.first_name')" value="{{ $user_details['first_name'] }}">
                                 </div>
                                 <div class="input-group">
-                                    <input type="text" required name="address" value=""  placeholder="Address">
-                                </div>
-                                <div class="input-group">
+                                    <label for="last_name">Last Name</label>
                                     <input type="text" required class="form-control" id="last_name"
-                                           name="last_name" placeholder="@lang('app.last_name')" value="">
+                                           name="last_name" placeholder="@lang('app.last_name')" value="{{ $user_details['last_name'] }}">
                                 </div>
-
                                 <div class="input-group">
+                                    <label for="phone">Phone Number</label>
+                                    <input type="text" required name="phone" value="{{ $user_details['phone'] }}"  placeholder="Phone">
+                                </div>
+                                <div class="input-group">
+                                    <label for="address">Address</label>
+                                    <input type="text" required name="address" value="{{ $user_details['address'] }}"  placeholder="Address">
+                                </div>
+                                <div class="input-group">
+                                    <label for="country_id">Nationality</label>
                                     <select name="country_id" required class="form-control Role">
                                         @foreach ($countries as $country)
-                                            <option value="{{ $country->country_code }}">{{ $country->name }}</option>
+                                            <option value="{{ $country->country_code }}"
+                                            @if($user_details['nationality'] === $country->country_code)
+                                                selected
+                                            @endif
+                                            >{{ $country->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -59,37 +64,41 @@
                         <div class="col-12">
                             <h2>Login Details</h2>
                             <div class="input-group">
-                                <input type="email" name="email" required value=""  placeholder="Email">
+                                <label for="email">Email</label>
+                                <input type="email" name="email" required value="{{ $user_details['email'] }}" readonly  placeholder="Email">
                             </div>
                             <div class="input-group">
-                                <input type="text" required class="form-control" id="password"
-                                       name="username" placeholder="username" value="">
+                                <label for="username">Username</label>
+                                <input type="text" required class="form-control" id="username"
+                                       name="username" placeholder="username" value="{{ $user_details['username'] }}">
                             </div>
                             <div class="input-group">
+                                <label for="password_confirmation">Re-Password</label>
                                 <input type="password" name="password_confirmation" id="password_confirmation" placeholder="Confirm Password">
                             </div>
                             <div class="input-group">
+                                <label for="password">Password</label>
                                 <input type="password" name="password" placeholder=Password">
                             </div>
                         </div>
                         <div class="col-12">
                             <h2>User Details</h2>
                             <div class="col-12 form-inner">
-                                <input type="hidden" name="broadcaster_id" value="{{ null }}">
-                                <input type="hidden" name="client_type_id" value="2">
-                                <input type="hidden" name="agency_id" value="">
                                 <div class="input-group">
-                                    <input type="text" name="location" value=""  placeholder="Location">
+                                    <label for="location">Location</label>
+                                    <input type="text" name="location" required value="{{ $user_details['location'] }}"  placeholder="Location">
                                 </div>
                                 <div class="input-group">
                                     <div class="custom-file-upload">
+                                        <label for="profile">Profile Image</label>
                                         <input type="file" id="file" name="image_url" />
-                                    </div></div>
-                                <div class="input-group">
-                                    <input type="Submit" name="Submit" value="Update Profile">
+                                    </div>
                                 </div>
 
                             </div>
+                        </div>
+                        <div class="input-group">
+                            <button type="sumbit" class="btn btn-danger btn-lg">Update</button>
                         </div>
                     </form>
                 </div>

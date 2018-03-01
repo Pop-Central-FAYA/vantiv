@@ -354,7 +354,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/pending', 'Advertiser\InvoiceController@pending')->name('advertisers.invoices.pending');
         });
 
-        Route::get('/advertiser-dashboard/periodic-sales', 'DashboardController@filterByAgencyBroad')->name('advertiser.dashboard.broad');
+        Route::get('/advertiser-dashboard/periodic-sales', 'DashboardController@filterByAdvertiserBroad')->name('advertiser.dashboard.broad');
 
     });
 });
@@ -364,7 +364,7 @@ Route::group(['middleware' => 'auth'], function () {
  */
 
 
-Route::get('profile', [
+Route::get('user/profile', [
     'as' => 'user.profile',
     'uses' => 'ProfileManagementsController@index'
 ]);
@@ -374,9 +374,9 @@ Route::get('profile/activity', [
     'uses' => 'ProfileController@activity'
 ]);
 
-Route::put('profile/details/update', [
+Route::post('profile/details/update', [
     'as' => 'profile.update.details',
-    'uses' => 'ProfileController@updateDetails'
+    'uses' => 'ProfileManagementsController@updateDetails'
 ]);
 
 Route::post('profile/avatar/update', [
