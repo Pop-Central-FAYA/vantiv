@@ -9,5 +9,8 @@
 <script type="text/javascript" src="{{ asset('new_assets/js/jquery.circliful.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('new_assets/js/script.js') }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-hover-dropdown/2.2.1/bootstrap-hover-dropdown.js" type="text/javascript"></script>
+<script>
+    $('.dropdown-toggle').dropdown()
+</script>
 
 @yield('scripts')

@@ -16,34 +16,44 @@
                         {{--<li><a href="#">Reports</a></li>--}}
                     </ul>
                 </div>
+            </div>
 
                 {{--<div class="row">--}}
                     {{--Dashboard charts begins here--}}
-
+                <div class="row">
                     <div class="col-md-12">
-                        <div id="containerPeriodic" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                        <canvas id="containerPeriodic" style="width: 512px; height: 150px"></canvas>
+                        {{--<div id="containerPeriodic" style="min-width: 310px; height: 400px; margin: 0 auto"></div>--}}
                     </div>
-                    <hr>
+                </div>
+            <p><br></p>
+            <p><br></p>
+            <hr>
 
                     {{--<div class="row">--}}
-                        <div class="col-md-6">
-                            <div id="containerDayparts" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
-                        </div>
-                        <div class="col-md-6">
-                            <div id="containerDays" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
-                        </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="containerDayparts" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div id="containerDays" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+                    </div>
+                </div>
+            <p><br></p>
+            <p><br></p>
                     {{--</div>--}}
                     <hr>
                     {{--<div class="row">--}}
-                        <div class="col-md-12">
-                            <div id="containerTotal"></div>
-                        </div>
-                    {{--</div>--}}
+                 <div class="row">
+                     <div class="col-md-12">
+                         <canvas id="containerTotal" style="width: 512px; height: 150px"></canvas>
+                         {{--<div id="containerTotal"></div>--}}
+                     </div>
+                 </div>
+                    <p><br></p>
+                    <p><br></p>
                     <hr>
-                    {{--Dashboard charts ends here--}}
-
-                    {{--Table for High Value Customer--}}
-                    {{--<div class="row">--}}
+                    <div class="row">
                         <div class="col-md-12">
                             <div class="box-body table-responsive no-padding">
                                 <h4 class="text-center"><p>High Value Customers</p></h4>
@@ -66,12 +76,11 @@
                                     @endforeach
                                 </table>
                             </div>
-                        {{--</div>--}}
+                            {{--</div>--}}
+                        </div>
                     </div>
                     <hr>
-
-                    {{--Table for Paid Invoice--}}
-                    {{--<div class="row">--}}
+                    <div class="row">
                         <div class="col-md-12">
                             <div class="box-body table-responsive no-padding">
                                 <h4 class="text-center"><p>Paid Invoices</p></h4>
@@ -94,11 +103,12 @@
                                     @endforeach
                                 </table>
                             </div>
-                        {{--</div>--}}
+                            {{--</div>--}}
+                        </div>
                     </div>
-                {{--</div>--}}
 
             </div>
+    </div>
 
         </div>
     </div>
@@ -120,75 +130,73 @@
         <?php echo "var periodic_price = ".$price .";\n"; ?>
         <?php echo "var periodic_adslot = ".$adslot .";\n"; ?>
 
-        // Bar chart for periodic sales report
-        Highcharts.chart('containerPeriodic', {
-            chart: {
-                zoomType: 'xy'
-            },
-            title: {
-                text: 'Periodic Sales Report'
-            },
-            xAxis: [{
-                categories: periodic_month,
-                crosshair: true
-            }],
-            yAxis: [{ // Primary yAxis
-                labels: {
-                    format: '{value}',
-                    style: {
-                        color: Highcharts.getOptions().colors[1]
-                    }
-                },
-                title: {
-                    text: 'Adslot',
-                    style: {
-                        color: Highcharts.getOptions().colors[1]
-                    }
-                }
-            }, { // Secondary yAxis
-                title: {
-                    text: 'Price (Naira)',
-                    style: {
-                        color: Highcharts.getOptions().colors[0]
-                    }
-                },
-                labels: {
-                    format: '{value}',
-                    style: {
-                        color: Highcharts.getOptions().colors[0]
-                    }
-                },
-                opposite: true
-            }],
-            tooltip: {
-                shared: true
-            },
-            legend: {
-                layout: 'vertical',
-                align: 'left',
-                x: 120,
-                verticalAlign: 'top',
-                y: 100,
-                floating: true,
-                backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
-            },
-            series: [{
-                name: 'Total Price',
-                type: 'column',
-                yAxis: 1,
-                data: periodic_price,
-                tooltip: {
-                    valueSuffix: ''
-                }
-
+        //Bar chart on periodic sales report using chart.js
+        var chartData = {
+            labels: periodic_month,
+            datasets: [{
+                type: 'bar',
+                label: 'Number of Adslots',
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255,99,132,1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                // borderColor: window.chartColors.blue,
+                borderWidth: 2,
+                fill: false,
+                data: periodic_adslot
             }, {
-                name: 'Number of Adslot',
-                type: 'spline',
-                data: periodic_adslot,
-                tooltip: {
-                    valueSuffix: ''
-                }
+                type: 'bar',
+                label: 'Total Amount',
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255,99,132,1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                // backgroundColor: window.chartColors.red,
+                data: periodic_price,
+                borderColor: 'white',
+                borderWidth: 2
             }]
+        };
+
+        var ctx = document.getElementById('containerPeriodic').getContext('2d');
+        window.myMixedChart = new Chart(ctx, {
+            type: 'bar',
+            data: chartData,
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: 'Periodic Sales Report'
+                },
+                tooltips: {
+                    mode: 'index',
+                    intersect: true
+                }
+            }
         });
 
         // pie chart for high performing dayparts
@@ -253,58 +261,46 @@
             }]
         });
 
-        //Barchart for Inventory fill rate
-        //inventory fill rate
-        Highcharts.chart('containerInventory', {
-            title: {
-                text: 'Inventory Fill Rate '
-            },
-            xAxis: {
-                categories: ['Apples', 'Oranges', 'Pears', 'Bananas', 'Plums']
-            },
-            labels: {
-                items: [{
-                    html: 'Inventory Fill Rate',
-                    style: {
-                        left: '50px',
-                        top: '18px',
-                        color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
-                    }
+        //Bar chart for Total Volume of Campaigns
+        var ctx = document.getElementById("containerTotal");
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: campaign_month,
+                datasets: [{
+                    label: 'Total Number of Campaigns',
+                    data: campaign_volume,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255,99,132,1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
                 }]
             },
-            series: [{
-                type: 'column',
-                name: 'Jane',
-                data: [3, 2, 1, 3, 4]
-            }, {
-                type: 'column',
-                name: 'John',
-                data: [2, 3, 5, 7, 6]
-            }, {
-                type: 'column',
-                name: 'Joe',
-                data: [4, 3, 3, 9, 0]
-            }]
-        });
-
-        //Bar chart for Total Volume of Campaigns
-        var chart = Highcharts.chart('containerTotal', {
-
-            title: {
-                text: 'Total Volume of Campaigns'
-            },
-
-            xAxis: {
-                categories: campaign_month
-            },
-
-            series: [{
-                type: 'column',
-                colorByPoint: true,
-                data: campaign_volume,
-                showInLegend: false
-            }]
-
+            options: {
+                scales: {
+                    yAxes: [{
+                        gridLines: {
+                            display:false
+                        },
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+            }
         });
 
 

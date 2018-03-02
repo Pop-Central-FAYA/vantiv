@@ -1,3 +1,16 @@
+<?php
+    if(Session::get('agency_id')){
+        $agency_id = Session::get('agency_id');
+        $profile = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT image_url from agents where id = '$agency_id'");
+    }elseif (Session::get('broadcaster_id')){
+        $broadcaster_id = Session::get('broadcaster_id');
+        $profile = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT image_url from broadcasters where id = '$broadcaster_id'");
+    }else{
+        $advertiser_id = Session::get('advertiser_id');
+        $profile = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT image_url from advertisers where id = '$advertiser_id'");
+    }
+?>
+
 <div class="header">
     <div class="container">
         <div class="row">
@@ -10,15 +23,29 @@
                     </nav>
                 </div>
                 <div class="col-6">
+                    {{--<div class="dropdown">--}}
+                        {{--<button id="dLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">--}}
+                            {{--Dropdown trigger--}}
+                            {{--<span class="caret"></span>--}}
+                        {{--</button>--}}
+                        {{--<ul class="dropdown-menu" aria-labelledby="dLabel">--}}
+                            {{--...--}}
+                        {{--</ul>--}}
+                    {{--</div>--}}
                     <div class="content">
+
+
+
                         <ul>
                             <li><a href="#"></a></li>
-                            <li class="profile"><a href="#"><span>{{ Auth::user()->username }}</span><span class="image"><img src="{{ asset('new_assets/images/profile-pic.png') }}"><span class="green-online"></span></span> <span><i class="fa fa-sort-desc"></i></span></a></li>
+                            <li class="profile"><a href="#"><span>{{ Auth::user()->username }}</span><span class="image img-responsive"><img style="width: 50px; height: 50px;" src="{{ $profile ? asset(decrypt($profile[0]->image_url)) : asset('new_assets/images/logo.png') }}"><span class="green-online"></span></span> <span><i class="fa fa-sort-desc"></i></span></a></li>
                             <li><a href="#"> <img src="{{ asset('new_assets/images/message-icon.png') }}"><span class="online2"></span> </a></li>
                         </ul>
-                    </div>
+
+                        </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+

@@ -4,6 +4,7 @@ namespace Vanguard\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Vanguard\Country;
+use Vanguard\Libraries\Api;
 use Vanguard\Libraries\Utilities;
 use Auth;
 use DB;
@@ -102,6 +103,10 @@ class ProfileManagementsController extends Controller
         $u_id = Auth::user()->id;
         $update_user = [];
 
+        $user_agent = $_SERVER['HTTP_USER_AGENT'];
+
+        $ip = request()->ip();
+
         $this->validate($request, [
             'first_name' => 'required',
             'last_name' => 'required',
@@ -113,6 +118,7 @@ class ProfileManagementsController extends Controller
         ]);
 
         if($agency_id){
+            $description = 'Profile updated with the following information first name='.$request->first_name.', last name=' .$request->last_name. ', address='.$request->address.', username='.$request->username. ', phone number='.$request->phone.', location='.$request->location.', country code='.$request->country_id.', password='.$request->password.' by '.$agency_id;
             if($request->hasFile('image_url')){
                 $this->validate($request, [
                    'image_url' => 'required|image|mimes:jpg,jpeg,png',
@@ -141,12 +147,14 @@ class ProfileManagementsController extends Controller
             $update_user_agent = Utilities::switch_db('api')->update("UPDATE agents set nationality = '$request->country_id', location = '$request->location' where id = '$agency_id'");
 
             if(!$update_local_user || !$update_api_user || !$update_user_agent){
+                $user_activity = Api::saveActivity($agency_id, $description, $ip, $user_agent);
                 return back()->with('success', 'Profile Updated...');
             }else{
                 return back()->with('error', 'Error occured while updating...');
             }
 
         }elseif($broadcaster_id){
+            $description = 'Profile updated with the following information first name='.$request->first_name.', last name=' .$request->last_name. ', address='.$request->address.', username='.$request->username. ', phone number='.$request->phone.', location='.$request->location.', country code='.$request->country_id.', password='.$request->password.' by '.$broadcaster_id;
             if($request->hasFile('image_url')){
                 $this->validate($request, [
                     'image_url' => 'required|image|mimes:jpg,jpeg,png',
@@ -175,11 +183,13 @@ class ProfileManagementsController extends Controller
             $update_user_agent = Utilities::switch_db('api')->update("UPDATE broadcasters set nationality = '$request->country_id', location = '$request->location' where id = '$broadcaster_id'");
 
             if(!$update_local_user || !$update_api_user || !$update_user_agent){
+                $user_activity = Api::saveActivity($broadcaster_id, $description, $ip, $user_agent);
                 return back()->with('success', 'Profile Updated...');
             }else{
                 return back()->with('error', 'Error occured while updating...');
             }
         }else{
+            $description = 'Profile updated with the following information first name='.$request->first_name.', last name=' .$request->last_name. ', address='.$request->address.', username='.$request->username. ', phone number='.$request->phone.', location='.$request->location.', country code='.$request->country_id.', password='.$request->password.' by '.$advertiser_id;
             if($request->hasFile('image_url')){
                 $this->validate($request, [
                     'image_url' => 'required|image|mimes:jpg,jpeg,png',
@@ -208,6 +218,7 @@ class ProfileManagementsController extends Controller
             $update_user_agent = Utilities::switch_db('api')->update("UPDATE advertisers set nationality = '$request->country_id', location = '$request->location' where id = '$advertiser_id'");
 
             if(!$update_local_user || !$update_api_user || !$update_user_agent){
+                $user_activity = Api::saveActivity($advertiser_id, $description, $ip, $user_agent);
                 return back()->with('success', 'Profile Updated...');
             }else{
                 return back()->with('error', 'Error occured while updating...');

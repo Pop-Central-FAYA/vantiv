@@ -58,7 +58,7 @@ class DashboardController extends Controller
             $invoice = (object)$invoice_array;
 
             //total volume of campaigns
-            $camp_vol = Utilities::switch_db('api')->select("SELECT COUNT(id) as volume, DATE_FORMAT(time_created, '%M, %Y') as `month` from campaigns where broadcaster = '$broadcaster' GROUP BY DATE_FORMAT(time_created, '%Y-%m') ORDER BY time_created desc");
+            $camp_vol = Utilities::switch_db('api')->select("SELECT COUNT(id) as volume, DATE_FORMAT(time_created, '%M, %Y') as `month` from campaigns where broadcaster = '$broadcaster' GROUP BY DATE_FORMAT(time_created, '%Y-%m') ");
             $c_vol = [];
             $c_month = [];
             foreach ($camp_vol as $ca) {
@@ -119,19 +119,20 @@ class DashboardController extends Controller
             $ads = [];
             $months = [];
             $slot = [];
-            $periodic = Utilities::switch_db('api')->select("SELECT count(id) as tot_camp, SUM(adslots) as adslot, time_created as days from campaigns WHERE broadcaster = '$broadcaster' GROUP BY DATE_FORMAT(time_created, '%Y-%m') ORDER BY time_created desc");
+            $periodic = Utilities::switch_db('api')->select("SELECT count(id) as tot_camp, SUM(adslots) as adslot, time_created as days from campaigns WHERE broadcaster = '$broadcaster' GROUP BY DATE_FORMAT(time_created, '%Y-%m') ");
+            $price = Utilities::switch_db('api')->select("SELECT SUM(amount) as total_price, time_created as days from payments WHERE broadcaster = '$broadcaster' GROUP BY DATE_FORMAT(time_created, '%Y-%m') ");
 
-            foreach ($periodic as $pe) {
-                $price = Utilities::switch_db('api')->select("SELECT SUM(amount) as total_price, time_created as days from payments WHERE broadcaster = '$broadcaster' GROUP BY DATE_FORMAT(time_created, '%Y-%m') ORDER BY time_created desc");
-                if (count($price) === 0) {
-                    $price = 0;
-                } else {
-                    $price = $price[0]->total_price;
-                }
+            for ($i = 0; $i < count($periodic); $i++) {
+//                dd($price[$i]->total_price, $periodic[$i]->adslot, $periodic[$i]->days);
+//                if (count($price) === 0) {
+//                    $price = 0;
+//                } else {
+//                    $price = $price[$i]->total_price;
+//                }
                 $ads[] = [
-                    'total' => $price,
-                    'adslot' => $pe->adslot,
-                    'date' => date('M, Y', strtotime($pe->days)),
+                    'total' => $price[$i]->total_price,
+                    'adslot' => $periodic[$i]->adslot,
+                    'date' => date('M, Y', strtotime($periodic[$i]->days)),
                 ];
 
             }
@@ -148,6 +149,8 @@ class DashboardController extends Controller
             $ads_no = json_encode($slot);
             $tot_pri = json_encode($prr);
             $mon = json_encode($months);
+
+//            dd($ads,$ads_no, $tot_pri, $mon);
 
 //        Inventory fill rate
             $today = getDate();
