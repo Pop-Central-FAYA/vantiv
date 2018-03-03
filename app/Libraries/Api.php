@@ -1040,5 +1040,39 @@ Class Api
         return count($files);
     }
 
+    public static function validateCampaign()
+    {
+        $campaigns = Utilities::switch_db('api')->select("SELECT * from campaigns WHERE campaign_status = 0");
+        $array = [];
+        $adslot_arrays = [];
+        foreach ($campaigns as $campaign){
+            $today = strtotime(date("Y-m-d"));
+            if($today > strtotime($campaign->stop_date)){
+                $update_campaign = Utilities::switch_db('api')->update("UPDATE campaigns set campaign_status = 1 where id = '$campaign->id'");
+                $adslots = Utilities::switch_db('api')->select("SELECT * from adslots where id IN ($campaign->adslots_id) ORDER BY time_created DESC");
+                foreach ($adslots as $adslot){
+                    $files = Utilities::switch_db('api')->select("SELECT time_picked, adslot from files where adslot = '$adslot->id' AND campaign_id = '$campaign->id'");
+                    $adslot_arrays[] = [
+                        'adslot_id' => $adslot->id,
+                        'file' => $files,
+                    ];
+                }
+
+            }
+        }
+
+        foreach ($adslot_arrays as $adslot_array){
+            $adslot_id = $adslot_array['file'][0]->adslot;
+            $time_picked = $adslot_array['file'][0]->time_picked;
+            $slot_id = $adslot_array['adslot_id'];
+            $get_adslot = Utilities::switch_db('api')->select("SELECT * from adslots where id = '$adslot_id'");
+            $new_time_used = ($get_adslot[0]->time_used) - ($time_picked);
+            $update_adslot = Utilities::switch_db('api')->update("UPDATE adslots set time_used = '$new_time_used' where id = '$adslot_id'");
+        }
+
+        return true;
+
+    }
+
 
 }

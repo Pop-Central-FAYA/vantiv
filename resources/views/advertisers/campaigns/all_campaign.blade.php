@@ -25,6 +25,7 @@
                         <th>Start Date</th>
                         <th>End Date</th>
                         <th>Amount</th>
+                        <th>Status</th>
                         <th>MPO</th>
                         <th>Invoice</th>
                         </thead>
@@ -246,6 +247,7 @@
                     {data: 'start_date', name: 'start_date'},
                     {data: 'end_date', name: 'end_date'},
                     {data: 'amount', name: 'amount'},
+                    {data: 'status', name: 'status'},
                     {data: 'mpo', name: 'mpo'},
                     {data: 'invoices', name: 'invoices'}
                 ]

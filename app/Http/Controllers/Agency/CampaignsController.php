@@ -62,6 +62,18 @@ class CampaignsController extends Controller
         $all_campaign = Utilities::switch_db('api')->select("SELECT * from campaigns WHERE agency = '$agency_id' AND adslots > 0 ORDER BY time_created desc");
         foreach ($all_campaign as $cam)
         {
+            $today = date("Y-m-d");
+            if(strtotime($today) > strtotime($cam->start_date) && strtotime($today) > strtotime($cam->stop_date)){
+                $status = 'Campaign Expired';
+            }elseif (strtotime($today) >= strtotime($cam->start_date) && strtotime($today) <= strtotime($cam->stop_date)){
+                $status = 'Campaign In Progress';
+            }else{
+                $now = strtotime($today);
+                $your_date = strtotime($cam->start_date);
+                $datediff = $your_date - $now;
+                $new_day =  round($datediff / (60 * 60 * 24));
+                $status = 'Campaign to start in '.$new_day.' day(s)';
+            }
             $brand = Utilities::switch_db('api')->select("SELECT name from brands WHERE id = '$cam->brand'");
             $pay = Utilities::switch_db('api')->select("SELECT amount from payments WHERE campaign_id = '$cam->id'");
             $campaign[] = [
@@ -73,6 +85,7 @@ class CampaignsController extends Controller
                 'start_date' => date('Y-m-d', strtotime($cam->start_date)),
                 'end_date' => date('Y-m-d', strtotime($cam->stop_date)),
                 'amount' => '&#8358;'.number_format($pay[0]->amount, 2),
+                'status' => $status,
             ];
             $j++;
         }
@@ -135,6 +148,7 @@ class CampaignsController extends Controller
         $day_parts = Utilities::switch_db('api')->select("SELECT * from dayParts");
         $region = Utilities::switch_db('api')->select("SELECT * from regions");
         $target = Utilities::switch_db('api')->select("SELECT * from targetAudiences");
+        Api::validateCampaign();
         return view('agency.campaigns.create1')->with('industry', $industry)
             ->with('chanel', $chanel)
             ->with('brands', $brands)

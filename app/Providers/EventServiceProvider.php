@@ -17,7 +17,10 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        Registered::class => [UserWasRegisteredListener::class]
+        Registered::class => [UserWasRegisteredListener::class],
+        'App\Events\CampaignValidity' => [
+            'App\Listener\CampaignValidityListener',
+        ],
     ];
 
     /**

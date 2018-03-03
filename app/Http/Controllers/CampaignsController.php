@@ -34,6 +34,19 @@ class CampaignsController extends Controller
         $all_campaign = Utilities::switch_db('api')->select("SELECT * from campaigns WHERE broadcaster = '$broadcaster' AND adslots > 0 ORDER BY time_created desc");
         foreach ($all_campaign as $cam)
         {
+//            $today = strtotime(date('Y-m-d'));
+            $today = date("Y-m-d");
+            if(strtotime($today) > strtotime($cam->start_date) && strtotime($today) > strtotime($cam->stop_date)){
+                $status = 'Campaign Expired';
+            }elseif (strtotime($today) >= strtotime($cam->start_date) && strtotime($today) <= strtotime($cam->stop_date)){
+                $status = 'Campaign In Progress';
+            }else{
+                $now = strtotime($today);
+                $your_date = strtotime($cam->start_date);
+                $datediff = $your_date - $now;
+                $new_day =  round($datediff / (60 * 60 * 24));
+                $status = 'Campaign to start in '.$new_day.' day(s)';
+            }
             $brand = Utilities::switch_db('api')->select("SELECT `name` as brand_name from brands where id = '$cam->brand'");
             $campaign[] = [
                 'id' => $j,
@@ -44,7 +57,7 @@ class CampaignsController extends Controller
                 'end_date' => date('Y-m-d', strtotime($cam->stop_date)),
                 'adslots' => $cam->adslots,
                 'compliance' => '86%',
-                'status' => 'True'
+                'status' => $status
             ];
             $j++;
         }
@@ -74,6 +87,7 @@ class CampaignsController extends Controller
         $day_parts = Utilities::switch_db('api')->select("SELECT * from dayParts");
         $regions = Utilities::switch_db('api')->select("SELECT * from regions");
 
+        Api::validateCampaign();
 
         return view('campaign.create2')->with('day_parts', $day_parts)
                                             ->with('step2', Session::get('step2'))
