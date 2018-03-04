@@ -20,11 +20,11 @@ class ClientBrandsController extends Controller
     {
         if(Session::get('agency_id') != null){
             $agrncy_id = Session::get('agency_id');
-            $db = Utilities::switch_db('api')->select("SELECT * from brands where broadcaster_agency = '$agrncy_id' ORDER BY time_created desc");
+            $db = Utilities::switch_db('api')->select("SELECT * from brands where broadcaster_agency = '$agrncy_id' AND status = 0 ORDER BY time_created desc");
             return view('agency.campaigns.brands.index')->with('brand', $db);
         }else{
             $advertiser_id = Session::get('advertiser_id');
-            $db = Utilities::switch_db('api')->select("SELECT * from brands where broadcaster_agency = '$advertiser_id' ORDER BY time_created desc");
+            $db = Utilities::switch_db('api')->select("SELECT * from brands where broadcaster_agency = '$advertiser_id' AND status = 0 ORDER BY time_created desc");
             return view('advertisers.campaigns.brands.index')->with('brand', $db);
         }
 
@@ -175,8 +175,8 @@ class ClientBrandsController extends Controller
         }else{
             $user_activity = Api::saveActivity(Session::get('advertiser_id'), $description, $ip, $user_agent);
         }
-        $brand = Utilities::switch_db('api')->select("DELETE FROM brands WHERE id = '$id'");
-        if(!$brand)
+        $brand = Utilities::switch_db('api')->update("UPDATE brands set status = 1 WHERE id = '$id'");
+        if($brand)
         {
             return redirect()->back()->with('success', 'Brands Deleted Successfully');
         }else{

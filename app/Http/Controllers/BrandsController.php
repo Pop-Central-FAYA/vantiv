@@ -17,7 +17,7 @@ class BrandsController extends Controller
     public function index()
     {
         $broadcaster = Session::get('broadcaster_id');
-        $db = Utilities::switch_db('api')->select("SELECT * from brands where broadcaster_agency = '$broadcaster' ORDER BY time_created desc");
+        $db = Utilities::switch_db('api')->select("SELECT * from brands where broadcaster_agency = '$broadcaster' AND status = 0 ORDER BY time_created desc");
         return view('brands.index')->with('brand', $db);
     }
 
@@ -101,8 +101,8 @@ class BrandsController extends Controller
      */
     public function delete($id)
     {
-        $brand = Utilities::switch_db('api')->select("DELETE FROM brands WHERE id = '$id'");
-        if(!$brand)
+        $brand = Utilities::switch_db('api')->update("UPDATE brands set status = 1 WHERE id = '$id'");
+        if($brand)
         {
             return redirect()->back()->with('success', 'Brands Deleted Successfully');
         }else{
