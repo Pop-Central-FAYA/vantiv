@@ -27,7 +27,7 @@ class WalkinsController extends Controller
         $j = 1;
         $broad_walkins = [];
         $broadcaster_id = Session::get('broadcaster_id');
-        $walkins = Utilities::switch_db('api')->select("SELECT * from users WHERE id IN (SELECT user_id from walkIns WHERE broadcaster_id = '$broadcaster_id')");
+        $walkins = Utilities::switch_db('api')->select("SELECT * from users WHERE id IN (SELECT user_id from walkIns WHERE broadcaster_id = '$broadcaster_id' AND status = 0)");
         foreach ($walkins as $walkin){
             $broad_walkins[] = [
                 'id' => $j,
@@ -100,8 +100,6 @@ class WalkinsController extends Controller
             return redirect()->route('walkins.all')->with('success', 'Walkins created successfully');
         }
 
-//        dd($insert_user, $insert_walkin);
-//
     }
 
     /**
@@ -112,9 +110,9 @@ class WalkinsController extends Controller
      */
     public function delete($id)
     {
-        $deleteUser = Utilities::switch_db('api')->delete("DELETE from users WHERE id = '$id'");
-        $deleteWalkins = Utilities::switch_db('api')->delete("DELETE from walkIns where user_id = '$id'");
-        if($deleteUser && $deleteWalkins){
+//        $deleteUser = Utilities::switch_db('api')->delete("DELETE from users WHERE id = '$id'");
+        $deleteWalkins = Utilities::switch_db('api')->update("UPDATE walkIns set status = 1 where user_id = '$id'");
+        if($deleteWalkins){
             return redirect()->back()->with('success', 'Walkins deleted successfully...');
         }else{
             return redirect()->back()->with('error', 'Error deleting walkins...');
