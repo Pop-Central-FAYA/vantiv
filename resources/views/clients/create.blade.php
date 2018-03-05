@@ -30,18 +30,7 @@
                             <h2>User Details</h2>
                             <div class="col-12 form-inner">
                                 <div class="input-group">
-                                    <select name="role" class="Role">
-                                        @foreach ($roles as $role)
-                                            <option value="{{ $role->id }}">{{ $role->display_name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="input-group">
                                     <input type="text" class="form-control flatpickr" readonly name="birthday" value="" placeholder="Date of Birth">
-                                </div>
-                                <div class="input-group">
-                                    {!! Form::select('status', $statuses, $edit ? $user->status : '',
-                                    ['class' => 'form-control Role', 'id' => 'status', $profile ? 'disabled' : '']) !!}
                                 </div>
                                 <div class="input-group">
                                     <input type="text" name="phone" value="{{ $edit ? $user->phone : '' }}"  placeholder="Phone">
