@@ -2,7 +2,9 @@
 
 namespace Vanguard\Http\Controllers;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Vanguard\Libraries\Utilities;
 use Carbon\Carbon;
 use Session;
@@ -19,7 +21,13 @@ class BrandsController extends Controller
     {
         $broadcaster = Session::get('broadcaster_id');
         $db = Utilities::switch_db('api')->select("SELECT * from brands where broadcaster_agency = '$broadcaster' AND status = 0 ORDER BY time_created desc");
-        return view('brands.index')->with('brand', $db);
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $col = new Collection($db);
+        $perPage = 10;
+        $currentPageSearchResults = $col->slice(($currentPage - 1) * $perPage, $perPage)->all();
+        $entries = new LengthAwarePaginator($currentPageSearchResults, count($col), $perPage);
+        $entries->setPath('brands');
+        return view('brands.index')->with('brands', $entries);
 
     }
 
@@ -119,6 +127,28 @@ class BrandsController extends Controller
             return redirect()->back()->with('success', 'Brands Deleted Successfully');
         }else{
             return redirect()->back()->with('error', 'There was a problem deleting this brand');
+        }
+    }
+
+    public function search()
+    {
+        $broadcaster = Session::get('broadcaster_id');
+        $request = request();
+        $result = $request->result;
+        $this->validate($request, [
+            'result' => 'required',
+        ]);
+        $brand = Utilities::switch_db('api')->select("SELECT * from brands where `name` LIKE '%{$result}%' AND broadcaster_agency = '$broadcaster' AND status = 0 ORDER BY time_created desc");
+        if($brand){
+            $currentPage = LengthAwarePaginator::resolveCurrentPage();
+            $col = new Collection($brand);
+            $perPage = 10;
+            $currentPageSearchResults = $col->slice(($currentPage - 1) * $perPage, $perPage)->all();
+            $entries = new LengthAwarePaginator($currentPageSearchResults, count($col), $perPage);
+            $entries->setPath('brands');
+            return view('brands.result.index')->with('brands', $entries)->with('result', $result);
+        }else{
+            return back()->withErrors('No result found for '.$result.'');
         }
     }
 }

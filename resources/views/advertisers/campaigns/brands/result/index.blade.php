@@ -1,6 +1,6 @@
 @extends('layouts.new_app')
 @section('title')
-    <title>Agency | Brand-Lists</title>
+    <title>Advertiser | Search Brand-Lists </title>
 @stop
 @section('content')
 
@@ -8,28 +8,12 @@
         <div class="container">
             <div class="row">
                 <div class="col-12 heading-main">
-                    <h1>All Brands </h1>
+                    <h1>Search Result for "{{ $result }}" </h1>
                     <ul>
-                        <li><a href="#"><i class="fa fa-th-large"></i>Agency</a></li>
+                        <li><a href="#"><i class="fa fa-th-large"></i>Advertiser</a></li>
                         <li><a href="#">All Brands </a></li>
                     </ul>
                 </div>
-            </div>
-                <div class="row">
-                    <div class="col-lg-4">
-                        <form action="{{ route('brands.search.user') }}" method="get">
-                            <div class="input-group">
-                                <input type="text" class="form-control" required name="result" placeholder="Search for brands">
-                                <span class="input-group-btn">
-                                <button class="btn btn-default" type="submit">Go!</button>
-                              </span>
-                            </div><!-- /input-group -->
-                        </form>
-                    </div>
-                </div>
-                <p><br></p>
-                <p><br></p>
-            <div class="row">
                 <div class="col-12 all-brands">
                     @foreach($brand as $brands)
                         <div class="col-6">
@@ -40,7 +24,6 @@
                         </div>
                     @endforeach
                 </div>
-            </div>
 
             </div>
         </div>
@@ -56,7 +39,7 @@
                     <h4>Edit : {{ $brands->name }}</h4>
                     <hr>
 
-                    <form action="{{ route('brands.update', ['id' => $brands->id]) }}" method="post">
+                    <form action="{{ route('agency.brands.update', ['id' => $brands->id]) }}" method="post">
                         {{ csrf_field() }}
                         <div class="row">
                             <div class="group">

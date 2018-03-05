@@ -16,6 +16,18 @@
                         <li><a href="#">All Brands</a></li>
                     </ul>
                 </div>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <form action="{{ route('broadcasters.brands.search') }}" method="get">
+                            <div class="input-group">
+                                <input type="text" class="form-control" required name="result" placeholder="Search for brands">
+                                <span class="input-group-btn">
+                                <button class="btn btn-default" type="submit">Go!</button>
+                              </span>
+                            </div><!-- /input-group -->
+                        </form>
+                    </div>
+                </div>
                 <div class="col-12 all-brands">
                     @foreach ($brands as $brand)
                         <div class="col-6">
@@ -24,11 +36,14 @@
                                 <a href="" class="edit" data-toggle="modal" data-target=".{{ $brand->id }}">Edit</a> <a href="" class="delete" data-toggle="modal" data-target=".{{ $brand->id }}delete">Delete</a>
                             </div>
                         <div class="col-6">
-                            <img src="{{ $brands->image_url ? asset(decrypt($brands->image_url)) : asset('new_assets/images/logo.png') }}">
+                            <img src="{{ $brand->image_url ? asset(decrypt($brand->image_url)) : asset('new_assets/images/logo.png') }}">
                         </div>
                     </div>
                 @endforeach
             </div>
+                <div class="text-center">
+                    {{ $brands->links() }}
+                </div>
         </div>
     </div>
 

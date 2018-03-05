@@ -33,16 +33,12 @@
                         {{--</ul>--}}
                     {{--</div>--}}
                     <div class="content">
-
-
-
                         <ul>
                             <li><a href="#"></a></li>
                             <li class="profile"><a href="#"><span>{{ Auth::user()->username }}</span><span class="image img-responsive"><img style="width: 50px; height: 50px;" src="{{ $profile ? asset(decrypt($profile[0]->image_url)) : asset('new_assets/images/logo.png') }}"><span class="green-online"></span></span> <span><i class="fa fa-sort-desc"></i></span></a></li>
                             <li><a href="#"> <img src="{{ asset('new_assets/images/message-icon.png') }}"><span class="online2"></span> </a></li>
                         </ul>
-
-                        </div>
+                    </div>
                 </div>
             </div>
         </div>

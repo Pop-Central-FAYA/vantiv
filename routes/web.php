@@ -124,6 +124,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/create/store', 'BrandsController@store')->name('brand.store');
         Route::post('/brands/edit/{id}', 'BrandsController@update')->name('brands.update');
         Route::get('/brands/delete/{id}', 'BrandsController@delete')->name('brands.delete');
+        Route::get('/search-brands', 'BrandsController@search')->name('broadcasters.brands.search');
     });
 
     Route::group(['prefix' => 'walkins'], function () {
@@ -315,6 +316,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/create/store', 'ClientBrandsController@store')->name('agency.brand.store');
         Route::post('/brands/edit/{id}', 'ClientBrandsController@update')->name('agency.brands.update');
         Route::get('/brands/delete/{id}', 'ClientBrandsController@delete')->name('agency.brands.delete');
+        Route::get('/search-result', 'ClientBrandsController@search')->name('brands.search.user');
     });
 
     Route::group(['prefix' => 'advertiser'], function () {

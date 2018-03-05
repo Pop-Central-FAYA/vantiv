@@ -2,7 +2,9 @@
 
 namespace Vanguard\Http\Controllers;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Vanguard\Libraries\Api;
 use Vanguard\Libraries\Utilities;
 use Carbon\Carbon;
@@ -21,11 +23,23 @@ class ClientBrandsController extends Controller
         if(Session::get('agency_id') != null){
             $agrncy_id = Session::get('agency_id');
             $db = Utilities::switch_db('api')->select("SELECT * from brands where broadcaster_agency = '$agrncy_id' AND status = 0 ORDER BY time_created desc");
-            return view('agency.campaigns.brands.index')->with('brand', $db);
+            $currentPage = LengthAwarePaginator::resolveCurrentPage();
+            $col = new Collection($db);
+            $perPage = 10;
+            $currentPageSearchResults = $col->slice(($currentPage - 1) * $perPage, $perPage)->all();
+            $entries = new LengthAwarePaginator($currentPageSearchResults, count($col), $perPage);
+            $entries->setPath('all-brands');
+            return view('agency.campaigns.brands.index')->with('brand', $entries);
         }else{
             $advertiser_id = Session::get('advertiser_id');
             $db = Utilities::switch_db('api')->select("SELECT * from brands where broadcaster_agency = '$advertiser_id' AND status = 0 ORDER BY time_created desc");
-            return view('advertisers.campaigns.brands.index')->with('brand', $db);
+            $currentPage = LengthAwarePaginator::resolveCurrentPage();
+            $col = new Collection($db);
+            $perPage = 10;
+            $currentPageSearchResults = $col->slice(($currentPage - 1) * $perPage, $perPage)->all();
+            $entries = new LengthAwarePaginator($currentPageSearchResults, count($col), $perPage);
+            $entries->setPath('all-brands');
+            return view('advertisers.campaigns.brands.index')->with('brand', $entries);
         }
 
     }
@@ -182,5 +196,47 @@ class ClientBrandsController extends Controller
         }else{
             return redirect()->back()->with('error', 'There was a problem deleting this brand');
         }
+    }
+
+    public function search()
+    {
+        $agency_id = Session::get('agency_id');
+        $request = request();
+        $result = $request->result;
+        $this->validate($request, [
+            'result' => 'required',
+        ]);
+
+        if($agency_id){
+            $db = Utilities::switch_db('api')->select("SELECT * from brands where `name` LIKE '%{$result}%' AND broadcaster_agency = '$agency_id' AND status = 0 ORDER BY time_created desc");
+            if($db){
+                $currentPage = LengthAwarePaginator::resolveCurrentPage();
+                $col = new Collection($db);
+                $perPage = 10;
+                $currentPageSearchResults = $col->slice(($currentPage - 1) * $perPage, $perPage)->all();
+                $entries = new LengthAwarePaginator($currentPageSearchResults, count($col), $perPage);
+                $entries->setPath('all-brands');
+                return view('agency.campaigns.brands.result.index')->with('brand', $entries)->with('result', $result);
+            }else{
+                return back()->withErrors('No result found for '.$result.'');
+            }
+
+        }else{
+            $advertiser_id = Session::get('advertiser_id');
+            $db = Utilities::switch_db('api')->select("SELECT * from brands where `name` LIKE '%{$result}%' AND broadcaster_agency = '$advertiser_id' AND status = 0 ORDER BY time_created desc");
+            if($db){
+                $currentPage = LengthAwarePaginator::resolveCurrentPage();
+                $col = new Collection($db);
+                $perPage = 10;
+                $currentPageSearchResults = $col->slice(($currentPage - 1) * $perPage, $perPage)->all();
+                $entries = new LengthAwarePaginator($currentPageSearchResults, count($col), $perPage);
+                $entries->setPath('all-brands');
+                return view('advertisers.campaigns.brands.result.index')->with('brand', $entries)->with('result', $result);
+            }else{
+                return back()->withErrors('No result found for '.$result.'');
+            }
+
+        }
+
     }
 }

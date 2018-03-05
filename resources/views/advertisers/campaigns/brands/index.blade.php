@@ -14,6 +14,22 @@
                         <li><a href="#">All Brands </a></li>
                     </ul>
                 </div>
+            </div>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <form action="{{ route('brands.search.user') }}" method="get">
+                            <div class="input-group">
+                                <input type="text" class="form-control" required name="result" placeholder="Search for brands">
+                                <span class="input-group-btn">
+                                <button class="btn btn-default" type="submit">Go!</button>
+                              </span>
+                            </div><!-- /input-group -->
+                        </form>
+                    </div>
+                </div>
+                <p><br></p>
+                <p><br></p>
+            <div class="row">
                 <div class="col-12 all-brands">
                     @foreach($brand as $brands)
                         <div class="col-6">
@@ -24,9 +40,12 @@
                         </div>
                     @endforeach
                 </div>
-
+            </div>
             </div>
         </div>
+    </div>
+    <div class="text-center">
+        {{ $brand->links() }}
     </div>
 
     @foreach($brand as $brands)
