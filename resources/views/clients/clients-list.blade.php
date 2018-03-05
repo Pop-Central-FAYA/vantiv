@@ -45,6 +45,10 @@
         </div>
     </div>
 
+    <div class="text-center">
+        {{ $clients->links() }}
+    </div>
+
 @stop
 
 @section('scripts')

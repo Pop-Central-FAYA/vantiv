@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Vanguard\Libraries\Utilities;
 use Carbon\Carbon;
 use Session;
+use Image;
 
 class BrandsController extends Controller
 {
@@ -19,6 +20,7 @@ class BrandsController extends Controller
         $broadcaster = Session::get('broadcaster_id');
         $db = Utilities::switch_db('api')->select("SELECT * from brands where broadcaster_agency = '$broadcaster' AND status = 0 ORDER BY time_created desc");
         return view('brands.index')->with('brand', $db);
+
     }
 
     /**
@@ -50,9 +52,18 @@ class BrandsController extends Controller
     public function store(Request $request)
     {
         $broadcaster = Session::get('broadcaster_id');
+
         $this->validate($request, [
-           'brand_name' => 'required|regex:/^[a-zA-Z- ]+$/',
+            'brand_name' => 'required|regex:/^[a-zA-Z- ]+$/',
+            'image_url' => 'required'
         ]);
+
+        $image = $request->image_url;
+        $image_new_name = time().$image->getClientOriginalName();
+        $destinationPath = 'brands_logo';
+        $slide = Image::make($image->getRealPath())->resize(200, 200);
+        $slide->save($destinationPath.'/'.$image_new_name,98);
+        $image_url = encrypt('brands_logo/'.$image_new_name);
 
         $brand = Utilities::formatString($request->brand_name);
         $unique = uniqid();
@@ -62,7 +73,7 @@ class BrandsController extends Controller
         if(count($ckeck_brand) > 0) {
             return redirect()->back()->with('error', 'Brands already exists');
         }else{
-            $insert = Utilities::switch_db('api')->select("INSERT into brands (id, `name`, walkin_id, broadcaster_agency) VALUES ('$unique','$brand','$id', '$broadcaster')");
+            $insert = Utilities::switch_db('api')->select("INSERT into brands (id, `name`, image_url, walkin_id, broadcaster_agency) VALUES ('$unique', '$brand', '$image_url', '$id', '$broadcaster')");
             if(!$insert) {
                 return redirect()->route('brand.all')->with('success', 'Brands created successfully');
             }else{
@@ -76,6 +87,7 @@ class BrandsController extends Controller
     {
         $this->validate($request, [
             'brand_name' => 'required|regex:/^[a-zA-Z- ]+$/',
+            'image_url' => 'required'
         ]);
 
         $brand = Utilities::formatString($request->brand_name);

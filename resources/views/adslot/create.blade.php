@@ -46,16 +46,16 @@
                         <div class="row">
                             <table class="table table-hover" id="dynamic_field">
                                 <thead>
-                                    <th> <p>Hourly Range Breakdown</p></th>
-                                    <th> 60 Seconds</th>
-                                    <th> 45 Seconds</th>
-                                    <th> 30 Seconds</th>
-                                    <th> 15 Seconds</th>
-                                    <th> Target Audience</th>
-                                    <th> Region</th>
-                                    <th> Day Parts</th>
-                                    <th> Min Age</th>
-                                    <th> Max Age</th>
+                                    <th><p>Hourly Range Breakdown</p></th>
+                                    <th>60 Seconds</th>
+                                    <th>45 Seconds</th>
+                                    <th>30 Seconds</th>
+                                    <th>15 Seconds</th>
+                                    <th>Target Audience</th>
+                                    <th>Region</th>
+                                    <th>Day Parts</th>
+                                    <th>Min Age</th>
+                                    <th>Max Age</th>
                                     <th></th>
                                 </thead>
                                 <tbody>
@@ -181,23 +181,20 @@
 
             $("#add_more").click(function(){
                 var n = $(".b").length + 1;
-                if(n > 4){
+                if (n > 4) {
                     return false;
                 }
                 var big_html = '';
                 big_html += '<tr class="b"><td><div class="row"><div class="col-md-6"><div class="input-group time timepicker" id="timepicker"><input name="from_time[]" required class="form-control"/><span class="input-group-addon"><span class="fa fa-clock-o"></span></span></div></div><div class="col-md-6"><div class="input-group time timepicker" id="timepicker"><input name="to_time[]" required class="form-control"/><span class="input-group-addon"><span class="fa fa-clock-o"></span></span></div></div></div></td><td><input type="text" name="price_60[]" required class="form-control"></td><td><input type="text" name="price_45[]" required class="form-control"></td><td><input type="text" required name="price_30[]" class="form-control"></td><td><input type="text" required name="price_15[]" class="form-control"></td><td><select name="target_audience[]" class="form-control" id="">';
-                $.each(tar_audience, function (index,value)
-                {
+                $.each(tar_audience, function (index,value) {
                     big_html += '<option value ="'+ value.id + '"> ' + value.audience + '</option>';
                 });
                 big_html += '</select></td><td><select name="region[]" class="form-control" id="">';
-                $.each(region, function (index,value)
-                {
+                $.each(region, function (index,value) {
                     big_html += '<option value ="'+ value.id + '"> ' + value.region + '</option>';
                 });
                 big_html += '</select></td><td><select name="dayparts[]" class="form-control">';
-                $.each(day_parts, function (index,value)
-                {
+                $.each(day_parts, function (index,value) {
                     big_html += '<option value="'+ value.id +'">'+ value.day_parts +'</option>'
                 });
                 big_html += '</select></td><td><input type="number" required name="min_age[]" placeholder="Min Age" class="form-control"></td><td><input type="number" required name="max_age[]" placeholder="Max Age" class="form-control"></td></tr>';
@@ -216,9 +213,7 @@
 
         });
 
-
     </script>
-
 
 @stop
 

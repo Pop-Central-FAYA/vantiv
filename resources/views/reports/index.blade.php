@@ -37,30 +37,39 @@
                                 <div class="tab-content">
                                     <div class="tab-pane active" id="periodic_sales_report">
                                         <div class="row">
-                                            <div class="row">
-                                                <form action="#" method="GET">
-                                                    {{ csrf_field() }}
-                                                    <h4 style="margin-left: 17px;font-weight: bold">Search by date</h4>
-                                                    <div class="col-md-10" style="margin-top: -2%">
-                                                        <div class="input-group date styledate" style="width:30% !important">
-                                                            <div class="input-group-addon">
-                                                                <i class="fa fa-calendar"></i>
-                                                            </div>
-                                                            <input type="text" name="txtFromDate_ps" placeholder="Start Date" class="form-control pull-right txtFromDate" id="txtFromDate_ps">
+                                            <form class="form-inline">
+                                                <div class="form-group">
+                                                    <label for="exampleInputName2">Name</label>
+                                                    <input type="text" class="form-control" id="exampleInputName2" placeholder="Jane Doe">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="exampleInputEmail2">Email</label>
+                                                    <input type="email" class="form-control" id="exampleInputEmail2" placeholder="jane.doe@example.com">
+                                                </div>
+                                                <button type="submit" class="btn btn-default">Send invitation</button>
+                                            </form>
+                                            <form action="#" method="GET" class="form-inline" style="text-align: center;margin: 20px auto;">
+                                                {{ csrf_field() }}
+                                                <h4 style="margin-bottom: 10px; font-weight: bold">Search by date</h4>
+                                                <div class="col-md-10" style="margin-top: 10px">
+                                                    <div class="input-group date styledate" style="width:30% !important">
+                                                        <div class="input-group-addon">
+                                                            <i class="fa fa-calendar"></i>
                                                         </div>
-
-                                                        <div class="input-group date styledate" style="width:30% !important">
-                                                            <div class="input-group-addon">
-                                                                <i class="fa fa-calendar"></i>
-                                                            </div>
-                                                            <input type="text" name="txtToDate_ps" placeholder="End Date" class="form-control pull-right txtToDate" id="txtToDate_ps" >
-                                                        </div>
-                                                        <div class="input-group" style="">
-                                                            <input type="button" class="search-btn" id="button_ps" value="Apply" style="float:left" >
-                                                        </div>
+                                                        <input type="text" name="txtFromDate_ps" placeholder="Start Date" class="form-control pull-right txtFromDate" id="txtFromDate_ps">
                                                     </div>
-                                                </form>
-                                            </div>
+
+                                                    <div class="input-group date styledate" style="width:30% !important">
+                                                        <div class="input-group-addon">
+                                                            <i class="fa fa-calendar"></i>
+                                                        </div>
+                                                        <input type="text" name="txtToDate_ps" placeholder="End Date" class="form-control pull-right txtToDate" id="txtToDate_ps" >
+                                                    </div>
+                                                    <div class="input-group" style="">
+                                                        <input type="button" class="btn btn-primary search-btn" id="button_ps" value="Apply" style="float:left" >
+                                                    </div>
+                                                </div>
+                                            </form>
                                             <hr>
                                             <div class="col-xs-12">
                                                 <div class="box">

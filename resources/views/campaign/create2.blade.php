@@ -18,7 +18,7 @@
                 </div>
 
                 <div class="Add-brand">
-                    <form class="campform" method="POST" action="{{ route('campaign.store2', ['id' => 1, 'walkins' => $walkins_id]) }}">
+                    <form class="campform" method="POST" action="{{ route('campaign.store2', ['id' => 1, 'walkins' => $walkins_id]) }}" data-parsley-validate="">
                         {{ csrf_field() }}
 
                         <div class="input-group">
@@ -100,12 +100,10 @@
                             <h3> Day Parts </h3>
                             <div class="form-group">
                                 @foreach($day_parts as $day_part)
-                                    <p>
-                                        <label>
-                                            {{ $day_part->day_parts }}
-                                            <input type="checkbox" name="dayparts[]" value="{{ $day_part->id }}" class="minimal-red" />
-                                        </label>
-                                    </p>
+                                    <label style="margin-left: 10px;">
+                                        {{ $day_part->day_parts }}
+                                        <input type="checkbox" name="dayparts[]" value="{{ $day_part->id }}" class="minimal-red" required />
+                                    </label>
                                 @endforeach
                             </div>
                         </div>
@@ -116,7 +114,7 @@
                             <p>
                                 <label>
                                     {{ $regions[0]->region }}
-                                    <input type="checkbox" name="region[]" value="{{ $regions[0]->id }}" class="minimal-red">
+                                    <input type="checkbox" name="region[]" value="{{ $regions[0]->id }}" class="minimal-red" required>
                                 </label>
                             </p>
                             {{--@endforeach--}}
@@ -141,6 +139,8 @@
     {!! HTML::script('assets/js/moment.min.js') !!}
     {!! HTML::script('assets/js/bootstrap-datetimepicker.min.js') !!}
     <script src="https://unpkg.com/flatpickr"></script>
+    <script src="{{ asset('assets/js/parsley.min.js') }}"></script>
+
 
     <script>
         flatpickr(".flatpickr", {
@@ -175,4 +175,5 @@
     <link rel="stylesheet" href="{{ asset('assets/css/jquery-ui.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/theme.css') }}">
     <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="{{ asset('assets/css/parsley.css') }}">
 @stop

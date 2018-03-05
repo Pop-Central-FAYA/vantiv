@@ -2,17 +2,19 @@
 
 namespace Vanguard\Http\Controllers;
 
-use Illuminate\Support\Facades\DB;
+use Session;
+use Vanguard\Role;
 use Vanguard\Country;
+use Vanguard\Libraries\Api;
 use Illuminate\Http\Request;
+use Vanguard\Libraries\Utilities;
+use Illuminate\Support\Facades\DB;
+use Vanguard\Support\Enum\UserStatus;
 use Vanguard\Http\Requests\StoreClient;
 use Vanguard\Http\Controllers\Controller;
-use Vanguard\Libraries\Api;
-use Vanguard\Libraries\Utilities;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Vanguard\Repositories\Permission\PermissionRepository;
-use Vanguard\Role;
-use Vanguard\Support\Enum\UserStatus;
-use Session;
 
 class ClientsController extends Controller
 {
@@ -109,9 +111,9 @@ class ClientsController extends Controller
             $campaigns = Utilities::switch_db('api')->select("SELECT COUNT(id) as number from campaigns where user_id = '$user_id'");
 
             $last_camp_date = Utilities::switch_db('api')->select("SELECT time_created from campaigns where user_id = '$user_id' ORDER BY time_created DESC LIMIT 1");
-            if($last_camp_date){
+            if ($last_camp_date) {
                 $date = $last_camp_date[0]->time_created;
-            }else{
+            } else {
                 $date = 0;
             }
 
@@ -129,7 +131,14 @@ class ClientsController extends Controller
             ];
         }
 
-        return view('clients.clients-list')->with('clients', $agency_data);
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $col = new Collection($agency_data);
+        $perPage = 5;
+        $currentPageSearchResults = $col->slice(($currentPage - 1) * $perPage, $perPage)->all();
+        $entries = new LengthAwarePaginator($currentPageSearchResults, count($col), $perPage);
+        $entries->setPath('list');
+
+        return view('clients.clients-list')->with('clients', $entries);
     }
 
     public function clientShow($client_id)
