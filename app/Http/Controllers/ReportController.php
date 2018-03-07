@@ -2,6 +2,7 @@
 
 namespace Vanguard\Http\Controllers;
 
+use Vanguard\Libraries\Api;
 use Vanguard\Libraries\Utilities;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
@@ -141,14 +142,17 @@ class ReportController extends Controller
             foreach ($periodic as $pe)
             {
                 $price = Utilities::switch_db('api')->select("SELECT amount, time_created as days from payments WHERE broadcaster = '$broadcaster' AND campaign_id = '$pe->id' ORDER BY time_created desc");
-                $customer = Utilities::switch_db('api')->select("SELECT firstname, lastname from users WHERE id = '$pe->walkins_id'");
+                $user = Utilities::switch_db('api')->select("SELECT user_id from walkIns where id = '$pe->walkins_id'");
+                $user_id = $user[0]->user_id;
+                $customer = Utilities::switch_db('api')->select("SELECT firstname, lastname from users WHERE id = '$user_id'");
+                $brand = Utilities::switch_db('api')->select("SELECT * from brands where id = '$pe->brand'");
                 $ads[] = [
                     'id' => $j,
                     'total_amount' => '&#8358;'.number_format($price[0]->amount, 2),
                     'adslot' => $pe->adslots,
                     'date' => date('Y-m-d', strtotime($pe->days)),
                     'campaign_name' => $pe->name,
-                    'brand' => $pe->brand,
+                    'brand' => $brand[0]->name,
                     'buyer' => $customer[0]->firstname.' '.$customer[0]->lastname,
                 ];
                 $j++;
@@ -168,13 +172,14 @@ class ReportController extends Controller
                 $user = Utilities::switch_db('api')->select("SELECT user_id from walkIns where id = '$pe->walkins_id'");
                 $user_id = $user[0]->user_id;
                 $customer = Utilities::switch_db('api')->select("SELECT firstname, lastname from users WHERE id = '$user_id'");
+                $brand = Utilities::switch_db('api')->select("SELECT * from brands where id = '$pe->brand'");
                 $ads[] = [
                     'id' => $j,
                     'total_amount' => '&#8358;'.number_format($price[0]->amount, 2),
                     'adslot' => $pe->adslots,
                     'date' => date('Y-m-d', strtotime($pe->days)),
                     'campaign_name' => $pe->name,
-                    'brand' => $pe->brand,
+                    'brand' => $brand[0]->name,
                     'buyer' => $customer[0]->firstname.' '.$customer[0]->lastname,
                 ];
                 $j++;
@@ -203,7 +208,7 @@ class ReportController extends Controller
                 $c_vol[] = [
                     'id' => $j,
                     'volume' => $ca->volume,
-                    'date' => date("F", $ca->month).', '.date('Y', $ca->month),
+                    'date' => date("F", strtotime($ca->month)).', '.date('Y', strtotime($ca->month)),
                 ];
                 $j++;
             }
