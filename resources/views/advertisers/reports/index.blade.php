@@ -7,9 +7,9 @@
         <div class="container">
             <div class="row">
                 <div class="col-12 heading-main">
-                    <h1>Agency | Campaigns - Report</h1>
+                    <h1>Advertiser | Campaigns - Report</h1>
                     <ul>
-                        <li><a href="#"><i class="fa fa-edit"></i>Agency</a></li>
+                        <li><a href="#"><i class="fa fa-edit"></i>Advertiser</a></li>
                         <li><a href="#">Report</a></li>
                     </ul>
                 </div>
@@ -22,33 +22,47 @@
                         <p><br></p>
                         <div class="tab-content">
                             <div class="tab-pane active" id="campaigns">
-                                <div class="row">
                                     <div class="row">
-                                        {{--<form action="#" method="GET">--}}
-                                        {{--{{ csrf_field() }}--}}
-                                        {{--<h4 style="margin-left: 17px;font-weight: bold">Search by date</h4>--}}
-                                        {{--<div class="col-md-10" style="margin-top: -2%">--}}
-                                        {{--<div class="input-group date styledate">--}}
-                                        {{--<div class="input-group-addon">--}}
-                                        {{--<i class="fa fa-calendar"></i>--}}
-                                        {{--</div>--}}
-                                        {{--<input type="text" placeholder="start-date" value="" required name="txtFromDate_camp" class="form-control txtFromDate" id="txtFromDate" />--}}
-                                        {{--</div>--}}
-
-                                        {{--<div class="input-group date styledate">--}}
-                                        {{--<div class="input-group-addon">--}}
-                                        {{--<i class="fa fa-calendar"></i>--}}
-                                        {{--</div>--}}
-                                        {{--<input type="text" placeholder="stop-date" value="" required name="txtToDate_camp" class="form-control txtToDate" id="txtToDate" />--}}
-                                        {{--</div>--}}
-
-                                        {{--<div class="input-group" style="">--}}
-                                        {{--<button type="button" class="btn btn-success" id="button_campaign" style="float:left">Apply</button>--}}
-                                        {{--</div>--}}
-                                        {{--</div>--}}
-                                        {{--</form>--}}
+                                        <form action="#" method="GET">
+                                            {{ csrf_field() }}
+                                            <h4 style="margin-left: 17px;font-weight: bold">Search by date</h4>
+                                            <div class="col-md-10" style="margin-top: -2%">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="input-group date styledate">
+                                                            <div class="input-group-addon">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </div>
+                                                            <input type="text" placeholder="start-date" value="" required
+                                                                   name="txtFromDate_camp" class="form-control flatpickr txtFromDate"
+                                                                   id="txtFromDate"/>
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <p><br></p>
+                                                    <div class="col-md-3">
+                                                        <div class="input-group date styledate">
+                                                            <div class="input-group-addon">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </div>
+                                                            <input type="text" placeholder="stop-date" value="" required
+                                                                   name="txtToDate_camp" class="form-control flatpickr txtToDate"
+                                                                   id="txtToDate"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <div class="input-group" style="">
+                                                            <button type="button" class="btn btn-success" id="button_campaign"
+                                                                    style="float:left">Apply
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
                                     </div>
                                     <hr>
+                                <div class="row">
                                     <div class="col-xs-12">
                                         <div class="box"    >
                                             <div class="box-body c_r">
@@ -71,32 +85,44 @@
 
                             <div class="tab-pane" id="revenue">
                                 <div class="row">
-                                    <div class="row">
-                                        {{--<form action="#" method="GET">--}}
-                                        {{--{{ csrf_field() }}--}}
-                                        {{--<h4 style="margin-left: 17px;font-weight: bold">Search by date</h4>--}}
-                                        {{--<div class="col-md-10" style="margin-top: -2%">--}}
-                                        {{--<div class="input-group date styledate">--}}
-                                        {{--<div class="input-group-addon">--}}
-                                        {{--<i class="fa fa-calendar"></i>--}}
-                                        {{--</div>--}}
-                                        {{--<input type="text" placeholder="start-date" value="" required name="txtFromDate_rev" class="form-control txtFromDate" id="txtFromDate" />--}}
-                                        {{--</div>--}}
-
-                                        {{--<div class="input-group date styledate">--}}
-                                        {{--<div class="input-group-addon">--}}
-                                        {{--<i class="fa fa-calendar"></i>--}}
-                                        {{--</div>--}}
-                                        {{--<input type="text" placeholder="stop-date" value="" required name="txtToDate_rev" class="form-control txtToDate" id="txtToDate" />--}}
-                                        {{--</div>--}}
-
-                                        {{--<div class="input-group" style="">--}}
-                                        {{--<button type="button" class="btn btn-success" id="button_rev" style="float:left">Apply</button>--}}
-                                        {{--</div>--}}
-                                        {{--</div>--}}
-                                        {{--</form>--}}
-                                    </div>
-                                    <hr>
+                                    <form action="#" method="GET">
+                                        {{ csrf_field() }}
+                                        <h4 style="margin-left: 17px;font-weight: bold">Search by date</h4>
+                                        <div class="col-md-10" style="margin-top: -2%">
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <div class="input-group date styledate">
+                                                        <div class="input-group-addon">
+                                                            <i class="fa fa-calendar"></i>
+                                                        </div>
+                                                        <input type="text" placeholder="start-date" value="" required
+                                                               name="txtFromDate_rev" class="form-control flatpickr txtFromDate"
+                                                               id="txtFromDate"/>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="input-group date styledate">
+                                                        <div class="input-group-addon">
+                                                            <i class="fa fa-calendar"></i>
+                                                        </div>
+                                                        <input type="text" placeholder="stop-date" value="" required
+                                                               name="txtToDate_rev" class="form-control flatpickr txtToDate"
+                                                               id="txtToDate"/>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="input-group" style="">
+                                                        <button type="button" class="btn btn-success" id="button_rev"
+                                                                style="float:left">Apply
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <hr>
+                                <div class="row">
                                     <div class="col-xs-12">
                                         <div class="box">
                                             <div class="box-body">
@@ -158,22 +184,13 @@
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/modules/data.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://unpkg.com/flatpickr"></script>
 
 
     <script>
         $(document).ready(function(){
-            $(".txtFromDate").datepicker({
-                numberOfMonths: 2,
-                onSelect: function (selected) {
-                    $("#txtToDate").datepicker("option", "minDate", selected)
-                }
-            });
-
-            $(".txtToDate").datepicker({
-                numberOfMonths: 2,
-                onSelect: function(selected) {
-                    $("#txtFromDate").datepicker("option","maxDate", selected)
-                }
+            flatpickr(".flatpickr", {
+                altInput: true,
             });
 
             var DatefilterCampaign =  $('.advertiser_campaign_report').DataTable({
@@ -306,7 +323,8 @@
 
 @stop
 
-@section('style')
+@section('styles')
+    <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
     <style>
         .load_broad {
             position: fixed;
