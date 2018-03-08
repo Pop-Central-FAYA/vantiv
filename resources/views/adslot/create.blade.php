@@ -151,24 +151,14 @@
 
 @section('scripts')
     {!! HTML::script('assets/js/moment.min.js') !!}
-    {!! HTML::script('assets/js/bootstrap-datetimepicker.min.js') !!}
-    <script src="{{ asset("assets/js/jquery.timepicker.min.js") }}"></script>
+    {{--{!! HTML::script('assets/js/bootstrap-datetimepicker.min.js') !!}--}}
+    {{--<script src="{{ asset("assets/js/jquery.timepicker.min.js") }}"></script>--}}
+    {{--<script type="text/javascript" src="{{ asset('new_assets/js/bootstrap-datetimepicker.min.js') }}"></script>--}}
+    {{--<script type="text/javascript" src="{{ asset('new_assets/js/jquery.timepicker.min.js') }}"></script>--}}
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
     <script>
         $(document).ready(function(){
-
-            $("#txtFromDate").datepicker({
-                numberOfMonths: 2,
-                onSelect: function (selected) {
-                    $("#txtToDate").datepicker("option", "minDate", selected)
-                }
-            });
-
-            $("#txtToDate").datepicker({
-                numberOfMonths: 2,
-                onSelect: function(selected) {
-                    $("#txtFromDate").datepicker("option","maxDate", selected)
-                }
-            });
 
             $('input[type=radio][name=premium]').change(function() {
                 if (this.value == 'true') {
@@ -202,6 +192,7 @@
             });
 
             $("body").delegate(".timepicker", "click", function() {
+                console.log('hmmmmm');
                 $(".timepicker").datetimepicker({
                     format: "HH:mm",
                     icons: {
