@@ -2,13 +2,14 @@
 
 namespace Vanguard\Http\Controllers;
 
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Vanguard\Libraries\Utilities;
-use Carbon\Carbon;
-use Session;
 use Image;
+use Session;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Vanguard\Libraries\Utilities;
+use JD\Cloudder\Facades\Cloudder;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class BrandsController extends Controller
 {
@@ -59,19 +60,38 @@ class BrandsController extends Controller
      */
     public function store(Request $request)
     {
+    //     $image = $request->file('image_name');
+    //    $name = $request->file('image_name')->getClientOriginalName();
+    //    $image_name = $request->file('image_name')->getRealPath();;
+    //    Cloudder::upload($image_name, null);
+    //    list($width, $height) = getimagesize($image_name);
+    //    $image_url= Cloudder::show(Cloudder::getPublicId(), ["width" => $width, "height"=>$height]);
+    //    //save to uploads directory
+    //    $image->move(public_path("uploads"), $name);
+    //    //Save images
+    //    $this->saveImages($request, $image_url);
+    //    return redirect()->back()->with('status', 'Image Uploaded Successfully');
+
+    //    $image = new Upload();
+    //    $image->image_name = $request->file('image_name')->getClientOriginalName();
+    //    $image->image_url = $image_url;
+
+    //    $image->save();
+
+
         $broadcaster = Session::get('broadcaster_id');
 
         $this->validate($request, [
             'brand_name' => 'required|regex:/^[a-zA-Z- ]+$/',
-            'image_url' => 'required'
+            'image_url' => 'required|image|mimes:jpg,jpeg,png',
         ]);
 
         $image = $request->image_url;
-        $image_new_name = time().$image->getClientOriginalName();
-        $destinationPath = 'brands_logo';
-        $slide = Image::make($image->getRealPath())->resize(200, 200);
-        $slide->save($destinationPath.'/'.$image_new_name,98);
-        $image_url = encrypt('brands_logo/'.$image_new_name);
+        $name = $image->getClientOriginalName();
+        $image_name = $image->getRealPath();
+        Cloudder::upload($image_name, Cloudder::getPublicId(), ['height' => 200, 'width' => 200]);
+        $cloudder = Cloudder::getResult();
+        $image_url = encrypt($cloudder['url']);       
 
         $brand = Utilities::formatString($request->brand_name);
         $unique = uniqid();

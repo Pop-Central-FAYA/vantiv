@@ -43,12 +43,12 @@ class ClientsController extends Controller
             ]);
 
             if ($request->hasFile('image_url')) {
-
-                $image = $request->file('image_url');
-
-                $client_image = time() . $image->getClientOriginalName();
-
-                $image->move('clients_uploads', $client_image);
+                $image = $request->image_url;
+                $name = $image->getClientOriginalName();
+                $image_name = $image->getRealPath();
+                Cloudder::upload($image_name, Cloudder::getPublicId(), ['height' => 200, 'width' => 200]);
+                $cloudder = Cloudder::getResult();
+                $image_url = encrypt($cloudder['url']);
             }
 
             if ($userInsert) {

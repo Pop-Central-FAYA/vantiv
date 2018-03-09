@@ -190,7 +190,7 @@ return [
         Unicodeveloper\Paystack\PaystackServiceProvider::class,
         Pbmedia\LaravelFFMpeg\FFMpegServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
-        //JD\Cloudder\CloudderServiceProvider::class,
+        JD\Cloudder\CloudderServiceProvider::class,
 
 
         /*
@@ -269,7 +269,7 @@ return [
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
         'Paystack' => Unicodeveloper\Paystack\Facades\Paystack::class,
         'Image' => Intervention\Image\Facades\Image::class,
-       // 'Cloudder' => JD\Cloudder\Facades\Cloudder::class
+        'Cloudder' => JD\Cloudder\Facades\Cloudder::class
 
     ],
 
