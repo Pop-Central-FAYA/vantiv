@@ -39,7 +39,7 @@ class ClientsController extends Controller
                 'phone' => $request->phone,
                 'country_id' => $request->country_id,
                 'birthday' => $request->birthday,
-                'status' => $request->status,
+                'status' => 'Active',
             ]);
 
             if ($request->hasFile('image_url')) {

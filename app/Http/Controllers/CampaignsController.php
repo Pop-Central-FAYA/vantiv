@@ -181,9 +181,10 @@ class CampaignsController extends Controller
             $extension = $filesUploaded->getClientOriginalExtension();
             if($extension == 'mp4' || $extension == 'wma' || $extension == 'ogg' || $extension == 'mkv'){
 
-                $destinationPath = 'uploads';
-                $filesUploaded->move($destinationPath,$filesUploaded->getClientOriginalName());
-                $file_gan_gan = 'uploads/'.$filesUploaded->getClientOriginalName();
+                $filename = realpath($filesUploaded);
+                Cloudder::uploadVideo($filename);
+                $clouder = Cloudder::getResult();
+                $file_gan_gan = encrypt($clouder['url']);
 
                 $time = $request->time;
                 $insert_upload = \DB::table('uploads')->insert([
@@ -226,9 +227,10 @@ class CampaignsController extends Controller
             $extension = $filesUploaded->getClientOriginalExtension();
             if($extension == 'mp4' || $extension == 'wma' || $extension == 'ogg' || $extension == 'mkv'){
 
-                $destinationPath = 'uploads';
-                $filesUploaded->move($destinationPath,$filesUploaded->getClientOriginalName());
-                $file_gan_gan = 'uploads/'.$filesUploaded->getClientOriginalName();
+                $filename = realpath($filesUploaded);
+                Cloudder::uploadVideo($filename);
+                $clouder = Cloudder::getResult();
+                $file_gan_gan = encrypt($clouder['url']);
 
                 $time = $request->time;
 
@@ -277,9 +279,10 @@ class CampaignsController extends Controller
             $extension = $filesUploaded->getClientOriginalExtension();
             if($extension == 'mp4' || $extension == 'wma' || $extension == 'ogg' || $extension == 'mkv'){
 
-                $destinationPath = 'uploads';
-                $filesUploaded->move($destinationPath,$filesUploaded->getClientOriginalName());
-                $file_gan_gan = 'uploads/'.$filesUploaded->getClientOriginalName();
+                $filename = realpath($filesUploaded);
+                Cloudder::uploadVideo($filename);
+                $clouder = Cloudder::getResult();
+                $file_gan_gan = encrypt($clouder['url']);
 
                 $time = (int)$request->time;
                 $uploads = \DB::select("SELECT * from uploads where user_id = '$walkins' AND time = '$time'");
@@ -327,9 +330,10 @@ class CampaignsController extends Controller
             $extension = $filesUploaded->getClientOriginalExtension();
             if($extension == 'mp4' || $extension == 'wma' || $extension == 'ogg' || $extension == 'mkv'){
 
-                $destinationPath = 'uploads';
-                $filesUploaded->move($destinationPath,$filesUploaded->getClientOriginalName());
-                $file_gan_gan = 'uploads/'.$filesUploaded->getClientOriginalName();
+                $filename = realpath($filesUploaded);
+                Cloudder::uploadVideo($filename);
+                $clouder = Cloudder::getResult();
+                $file_gan_gan = encrypt($clouder['url']);
 
                 $time = $request->time;
                 $uploads = \DB::select("SELECT * from uploads where user_id = '$walkins' AND time = '$time'");
@@ -388,9 +392,10 @@ class CampaignsController extends Controller
             $extension = $filesUploaded->getClientOriginalExtension();
             if($extension == 'mp4' || $extension == 'wma' || $extension == 'ogg' || $extension == 'mkv'){
 
-                $destinationPath = 'uploads';
-                $filesUploaded->move($destinationPath,$filesUploaded->getClientOriginalName());
-                $file_gan_gan = 'uploads/'.$filesUploaded->getClientOriginalName();
+                $filename = realpath($filesUploaded);
+                Cloudder::uploadVideo($filename);
+                $clouder = Cloudder::getResult();
+                $file_gan_gan = encrypt($clouder['url']);
 
                 $time = $request->time;
                 $uploads = \DB::select("SELECT * from uploads where user_id = '$walkins' AND time = '$time'");
@@ -596,9 +601,9 @@ class CampaignsController extends Controller
                 $new_q[] = [
                     'id' => uniqid(),
                     'campaign_id' => $camp_id[0]->id,
-                    'file_name' => encrypt($q->file),
+                    'file_name' => $q->file,
                     'broadcaster_id' => $broadcaster,
-                    'file_url' => encrypt($q->file),
+                    'file_url' => $q->file,
                     'adslot' => $q->adslot_id,
                     'user_id' => $walkins,
                     'file_code' => mt_rand(100000, 10000000).uniqid(),
