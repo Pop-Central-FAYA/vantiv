@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Vanguard\Libraries\Utilities;
 use Vanguard\Http\Requests\StoreAgent;
 use Vanguard\Http\Controllers\Controller;
+use JD\Cloudder\Facades\Cloudder;
 
 class AdvertiserAuthController extends Controller
 {

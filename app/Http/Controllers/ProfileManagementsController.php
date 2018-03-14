@@ -9,6 +9,7 @@ use Vanguard\Libraries\Utilities;
 use Auth;
 use DB;
 use Image;
+use JD\Cloudder\Facades\Cloudder;
 
 class ProfileManagementsController extends Controller
 {
@@ -124,11 +125,10 @@ class ProfileManagementsController extends Controller
                    'image_url' => 'required|image|mimes:jpg,jpeg,png',
                 ]);
                 $image = $request->image_url;
-                $image_new_name = time().$image->getClientOriginalName();
-                $destinationPath = 'profile';
-                $slide = Image::make($image->getRealPath())->resize(200, 200);
-                $slide->save($destinationPath.'/'.$image_new_name,98);
-                $image_path = encrypt('profile/'.$image_new_name);
+                $filename = realpath($image);
+                Cloudder::upload($filename, Cloudder::getPublicId(), ['height' => 200, 'width' => 200]);
+                $clouder = Cloudder::getResult();
+                $image_path = encrypt($clouder['url']);
                 $update_client = Utilities::switch_db('api')->select("UPDATE agents set image_url = '$image_path' where id = '$agency_id'");
             }
 
@@ -160,11 +160,10 @@ class ProfileManagementsController extends Controller
                     'image_url' => 'required|image|mimes:jpg,jpeg,png',
                 ]);
                 $image = $request->image_url;
-                $image_new_name = time().$image->getClientOriginalName();
-                $destinationPath = 'profile';
-                $slide = Image::make($image->getRealPath())->resize(200, 200);
-                $slide->save($destinationPath.'/'.$image_new_name,98);
-                $image_path = encrypt('profile/'.$image_new_name);
+                $filename = realpath($image);
+                Cloudder::upload($filename, Cloudder::getPublicId(), ['height' => 200, 'width' => 200]);
+                $clouder = Cloudder::getResult();
+                $image_path = encrypt($clouder['url']);
                 $update_client = Utilities::switch_db('api')->select("UPDATE broadcasters set image_url = '$image_path' where id = '$broadcaster_id'");
             }
 
@@ -195,14 +194,12 @@ class ProfileManagementsController extends Controller
                     'image_url' => 'required|image|mimes:jpg,jpeg,png',
                 ]);
                 $image = $request->image_url;
-                $image_new_name = time().$image->getClientOriginalName();
-                $destinationPath = 'profile';
-                $slide = Image::make($image->getRealPath())->resize(200, 200);
-                $slide->save($destinationPath.'/'.$image_new_name,98);
-                $image_path = encrypt('profile/'.$image_new_name);
+                $filename = realpath($image);
+                Cloudder::upload($filename, Cloudder::getPublicId(), ['height' => 200, 'width' => 200]);
+                $clouder = Cloudder::getResult();
+                $image_path = encrypt($clouder['url']);
                 $update_client = Utilities::switch_db('api')->select("UPDATE advertisers set image_url = '$image_path' where id = '$advertiser_id'");
             }
-
             if($request->has('password')){
                 $this->validate($request, [
                     'password' => 'required|min:6',
@@ -214,7 +211,7 @@ class ProfileManagementsController extends Controller
             }
 
             $update_local_user = DB::update("UPDATE users set first_name = '$request->first_name', last_name = '$request->last_name', address = '$request->address', username = '$request->username' where id = '$u_id'");
-            $update_api_user = Utilities::switch_db('api')->update("UPDATE users set firstname = '$request->first_name', lastname = '$request->last_name', phone_number = '$request->phone' where id = (SELECT user_id from agents where id = '$advertiser_id') ");
+            $update_api_user = Utilities::switch_db('api')->update("UPDATE users set firstname = '$request->first_name', lastname = '$request->last_name', phone_number = '$request->phone' where id = (SELECT user_id from advertisers where id = '$advertiser_id') ");
             $update_user_agent = Utilities::switch_db('api')->update("UPDATE advertisers set nationality = '$request->country_id', location = '$request->location' where id = '$advertiser_id'");
 
             if(!$update_local_user || !$update_api_user || !$update_user_agent){
