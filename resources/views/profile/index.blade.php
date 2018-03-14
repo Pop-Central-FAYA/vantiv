@@ -78,7 +78,7 @@
                             </div>
                             <div class="input-group">
                                 <label for="password">Password</label>
-                                <input type="password" name="password" placeholder=Password">
+                                <input type="password" name="password" placeholder="Password">
                             </div>
                         </div>
                         <div class="col-12">

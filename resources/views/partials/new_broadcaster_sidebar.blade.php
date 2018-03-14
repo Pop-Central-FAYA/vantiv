@@ -29,7 +29,10 @@
                     <li><a href="{{ route('discount.index') }}"><i class="fa fa-address-book-o"></i><span>Discounts</span></a></li>
                 </ul>
             </li>
-            <li class="{{ Request::is('reports') ? 'active' : ''  }}"> <a href="{{ route('reports') }}"><i class="fa fa-signal"></i><span>Reports</span></a>
+            <li class="{{ Request::is('reports') ? 'active' : ''  }}">
+                <a href="{{ route('reports') }}">
+                    <i class="fa fa-signal"></i><span>Reports</span>
+                </a>
             </li>
             <li class="{{ Request::is('user/profile') ? 'active' : ''  }}">
                 <a href="{{ route('user.profile') }}">

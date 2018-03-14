@@ -46,7 +46,7 @@ class ProfileManagementsController extends Controller
                 'username' => $local_user[0]->username,
             ];
 
-        }elseif($advertiser_id){
+        } elseif ($advertiser_id){
             $api_user = Utilities::switch_db('api')->select("SELECT * from users where id = (SELECT user_id from advertisers where id = '$advertiser_id')");
             $local_user = \DB::select("SELECT * from users where id = '$u_id'");
             $api_agent = Utilities::switch_db('api')->select("SELECT * from advertisers where id = '$advertiser_id'");
@@ -60,7 +60,7 @@ class ProfileManagementsController extends Controller
                 'nationality' => $api_agent[0]->nationality,
                 'username' => $local_user[0]->username,
             ];
-        }else{
+        } else {
             $api_user = Utilities::switch_db('api')->select("SELECT * from users where id = (SELECT user_id from broadcasters where id = '$broadcaster_id')");
             $local_user = \DB::select("SELECT * from users where id = '$u_id'");
             $api_agent = Utilities::switch_db('api')->select("SELECT * from broadcasters where id = '$broadcaster_id'");
@@ -156,15 +156,18 @@ class ProfileManagementsController extends Controller
         }elseif($broadcaster_id){
             $description = 'Profile updated with the following information first name='.$request->first_name.', last name=' .$request->last_name. ', address='.$request->address.', username='.$request->username. ', phone number='.$request->phone.', location='.$request->location.', country code='.$request->country_id.', password='.$request->password.' by '.$broadcaster_id;
             if($request->hasFile('image_url')){
+
                 $this->validate($request, [
                     'image_url' => 'required|image|mimes:jpg,jpeg,png',
                 ]);
+
                 $image = $request->image_url;
                 $filename = realpath($image);
                 Cloudder::upload($filename, Cloudder::getPublicId(), ['height' => 200, 'width' => 200]);
                 $clouder = Cloudder::getResult();
                 $image_path = encrypt($clouder['url']);
                 $update_client = Utilities::switch_db('api')->select("UPDATE broadcasters set image_url = '$image_path' where id = '$broadcaster_id'");
+
             }
 
             if($request->has('password')){
@@ -193,12 +196,14 @@ class ProfileManagementsController extends Controller
                 $this->validate($request, [
                     'image_url' => 'required|image|mimes:jpg,jpeg,png',
                 ]);
+
                 $image = $request->image_url;
                 $filename = realpath($image);
                 Cloudder::upload($filename, Cloudder::getPublicId(), ['height' => 200, 'width' => 200]);
                 $clouder = Cloudder::getResult();
                 $image_path = encrypt($clouder['url']);
                 $update_client = Utilities::switch_db('api')->select("UPDATE advertisers set image_url = '$image_path' where id = '$advertiser_id'");
+
             }
             if($request->has('password')){
                 $this->validate($request, [

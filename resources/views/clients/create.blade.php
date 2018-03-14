@@ -92,7 +92,7 @@
                                         <input type="file" id="file" name="image_url" />
                                     </div></div>
                                 <div class="input-group">
-                                    <input type="Submit" name="Submit" value="Create Clients">
+                                    <input type="Submit" name="Submit" value="Create Client">
                                 </div>
 
                             </div>

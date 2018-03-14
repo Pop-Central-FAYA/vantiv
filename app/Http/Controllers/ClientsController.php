@@ -7,6 +7,7 @@ use Vanguard\Role;
 use Vanguard\Country;
 use Vanguard\Libraries\Api;
 use Illuminate\Http\Request;
+use JD\Cloudder\Facades\Cloudder;
 use Vanguard\Libraries\Utilities;
 use Illuminate\Support\Facades\DB;
 use Vanguard\Support\Enum\UserStatus;
@@ -43,12 +44,12 @@ class ClientsController extends Controller
             ]);
 
             if ($request->hasFile('image_url')) {
-
-                $image = $request->file('image_url');
-
-                $client_image = time() . $image->getClientOriginalName();
-
-                $image->move('clients_uploads', $client_image);
+                $image = $request->image_url;
+                $name = $image->getClientOriginalName();
+                $image_name = $image->getRealPath();
+                Cloudder::upload($image_name, Cloudder::getPublicId(), ['height' => 200, 'width' => 200]);
+                $cloudder = Cloudder::getResult();
+                $image_url = encrypt($cloudder['url']);
             }
 
             if ($userInsert) {
@@ -66,7 +67,7 @@ class ClientsController extends Controller
                 'broadcaster_id' => $request->broadcaster_id,
                 'client_type_id' => $request->client_type_id,
                 'location' => $request->location,
-                'image_url' => 'clients_uploads/' . $client_image,
+                'image_url' => encrypt($cloudder['url']),
                 'agency_id' => \Session::get('agency_id')
             ]);
 
@@ -125,7 +126,7 @@ class ClientsController extends Controller
                 'image_url' => $agency->image_url,
                 'num_campaign' => $campaigns[0]->number,
                 'total' => $payments[0]->total,
-//                'name' => $user_details[0]->last_name . ' ' . $user_details[0]->first_name,
+                'name' => $user_details && $user_details[0] ? $user_details[0]->last_name . ' ' . $user_details[0]->first_name : '',
                 'created_at' => $agency->time_created,
                 'last_camp' => $date,
             ];

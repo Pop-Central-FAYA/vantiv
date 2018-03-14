@@ -2,14 +2,13 @@
 
 namespace Vanguard\Http\Controllers;
 
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Vanguard\Libraries\Utilities;
-use Carbon\Carbon;
-use Session;
 use Image;
+use Session;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Vanguard\Libraries\Utilities;
 use JD\Cloudder\Facades\Cloudder;
+
 
 class BrandsController extends Controller
 {
@@ -42,8 +41,7 @@ class BrandsController extends Controller
         $broadcaster = Session::get('broadcaster_id');
         $client = [];
         $walkins = Utilities::switch_db('api')->select("SELECT user_id from walkIns where broadcaster_id = '$broadcaster'");
-        foreach ($walkins as $walk)
-        {
+        foreach ($walkins as $walk) {
             $user_id = $walk->user_id;
             $cli = Utilities::switch_db('api')->select("SELECT * from users WHERE id = '$user_id'");
             $client[] = $cli;
@@ -64,7 +62,7 @@ class BrandsController extends Controller
 
         $this->validate($request, [
             'brand_name' => 'required|regex:/^[a-zA-Z- ]+$/',
-            'image_url' => 'required'
+            'image_url' => 'required|image|mimes:jpg,jpeg,png',
         ]);
 
         $image = $request->image_url;
@@ -72,6 +70,7 @@ class BrandsController extends Controller
         Cloudder::upload($filename, Cloudder::getPublicId(), ['height' => 200, 'width' => 200]);
         $clouder = Cloudder::getResult();
         $image_url = encrypt($clouder['url']);
+
 
         $brand = Utilities::formatString($request->brand_name);
         $unique = uniqid();

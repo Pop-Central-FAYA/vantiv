@@ -42,9 +42,6 @@
                 <ul class="treeview-menu">
                     <li><a href="{{ route('clients.create') }}"><i class="fa fa-circle-o"></i> Add Client</a></li>
                     <li><a href="{{ route('clients.list') }}"><i class="fa fa-circle-o"></i> Clients List</a></li>
-{{--
-                    <li><a href="client-portfolio.html"><i class="fa fa-circle-o"></i> Clients Portfolio</a></li>
---}}
                 </ul>
             </li>
 
@@ -65,8 +62,7 @@
 
             <li class=" treeview">
                 <a href="#">
-                    <i class="fa fa-th"></i>
-                    <span>Campaign</span>
+                    <i class="fa fa-th"></i><span>Campaign</span>
                     <span class="pull-right-container">
                       <i class="fa fa-angle-left pull-right"></i>
                     </span>
@@ -95,17 +91,14 @@
             <li class="treeview">
                 <a href="#">
                     <i class="fa fa-google-wallet"></i> <span>Wallet</span>
-
                     <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
                 </a>
                 <ul class="treeview-menu">
                     <li><a href="{{ route('agency_wallet.create') }}"><i class="fa fa-circle-o"></i> Credit Wallet</a></li>
                     <li><a href="{{ route('agency_wallet.statement') }}"><i class="fa fa-circle-o"></i> Wallet Statement </a></li>
-
                 </ul>
-
             </li>
             <li class="treeview">
                 <a href="{{ route('reports.index') }}">

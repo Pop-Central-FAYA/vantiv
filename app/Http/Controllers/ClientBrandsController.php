@@ -21,7 +21,7 @@ class ClientBrandsController extends Controller
      */
     public function index()
     {
-        if(Session::get('agency_id') != null){
+        if (Session::get('agency_id') != null) {
             $agrncy_id = Session::get('agency_id');
             $db = Utilities::switch_db('api')->select("SELECT * from brands where broadcaster_agency = '$agrncy_id' AND status = 0 ORDER BY time_created desc");
             $currentPage = LengthAwarePaginator::resolveCurrentPage();
@@ -31,7 +31,7 @@ class ClientBrandsController extends Controller
             $entries = new LengthAwarePaginator($currentPageSearchResults, count($col), $perPage);
             $entries->setPath('all-brands');
             return view('agency.campaigns.brands.index')->with('brand', $entries);
-        }else{
+        } else {
             $advertiser_id = Session::get('advertiser_id');
             $db = Utilities::switch_db('api')->select("SELECT * from brands where broadcaster_agency = '$advertiser_id' AND status = 0 ORDER BY time_created desc");
             $currentPage = LengthAwarePaginator::resolveCurrentPage();
@@ -54,16 +54,17 @@ class ClientBrandsController extends Controller
     {
         $client = [];
         $agency_id = \Session::get('agency_id');
-        if($agency_id){
+
+        if ($agency_id) {
             $walkins = Utilities::switch_db('api')->select("SELECT user_id from walkIns where agency_id = '$agency_id'");
-            foreach ($walkins as $walk)
-            {
+            foreach ($walkins as $walk) {
                 $user_id = $walk->user_id;
                 $cli = \DB::select("SELECT * from users WHERE id = '$user_id'");
                 $client[] = $cli;
             }
-            return view('agency.campaigns.brands.create')->with('client', $client);
-        }else{
+            // dd($client);
+            return view('agency.campaigns.brands.create')->with('clients', $client);
+        } else {
             return view('advertisers.campaigns.brands.create');
         }
 

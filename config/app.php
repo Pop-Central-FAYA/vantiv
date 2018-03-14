@@ -190,7 +190,7 @@ return [
         Unicodeveloper\Paystack\PaystackServiceProvider::class,
         Pbmedia\LaravelFFMpeg\FFMpegServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
-        //JD\Cloudder\CloudderServiceProvider::class,
+        JD\Cloudder\CloudderServiceProvider::class,
 
 
         /*

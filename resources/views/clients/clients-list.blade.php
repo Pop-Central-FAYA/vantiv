@@ -28,6 +28,7 @@
                     <div class="col-12 Clients-Management">
                         <div class="col-7">
                             <ul>
+                                <li>Name: <span>{{ $client['name'] }}</span></li>
                                 <li>No. of Campaigns <span>{{ $client['num_campaign'] }}</span></li>
                                 <li>Total Expense <span>&#8358;{{ number_format($client['total'],2) }}</span></li>
                                 <li>Data Created<span>{{ date('M j, Y h:ia', strtotime($client['created_at'])) }}</span></li>
@@ -38,7 +39,9 @@
                                 @endif
                             </ul>
                         </div>
-                        <div class="col-5"><img src="{{ asset($client['image_url']) }}" alt=""></div>
+                        <div class="col-5">
+                            <img src="{{ $client['image_url'] ? asset(decrypt($client['image_url'])) : asset('new_assets/images/logo.png') }}" alt="">
+                        </div>
                     </div>
                 @endforeach
             </div>
