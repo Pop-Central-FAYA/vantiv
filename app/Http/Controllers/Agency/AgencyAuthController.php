@@ -31,9 +31,11 @@ class AgencyAuthController extends Controller
         if ($request->isMethod('POST')) {
 
             if ($request->hasFile('image_url')) {
-                $image = $request->file('image_url');
-                $agency_image = time() . $image->getClientOriginalName();
-                $image->move('agencies', $agency_image);
+                $image = $request->image_url;
+                $filename = realpath($image);
+                Cloudder::upload($filename, Cloudder::getPublicId(), ['height' => 200, 'width' => 200]);
+                $clouder = Cloudder::getResult();
+                $image_path = encrypt($clouder['url']);
             }
 
             $userInsert = DB::table('users')->insert([
@@ -81,7 +83,7 @@ class AgencyAuthController extends Controller
                 'sector_id' => $request->sector_id,
                 'nationality' => $request->country_id,
                 'location' => $request->location,
-                'image_url' => encrypt('agencies/' .$agency_image),
+                'image_url' => $image_path,
                 'brand' => null
             ]);
 

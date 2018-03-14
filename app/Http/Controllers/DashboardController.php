@@ -173,6 +173,11 @@ class DashboardController extends Controller
             $agency_id = Session::get('agency_id');
             $camp_prod = Utilities::switch_db('api')->select("SELECT id,product from campaigns where agency = '$agency_id'");
             $pe = $this->broadcasterFilter($agency_id);
+            $date = [];
+            $bra = [];
+            $tot = [];
+            $amm = [];
+            $dat = [];
             foreach ($pe as $p) {
                 if (!$p) {
                     $tot[] = 0;

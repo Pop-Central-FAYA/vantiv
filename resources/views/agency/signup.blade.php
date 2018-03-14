@@ -26,37 +26,37 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <input type="text" name="email" class="form-control">
+                        <input type="text" name="email" required class="form-control">
                         @if ($errors->has('email')) <p class="help-block" style="color: red">{{ $errors->first('email') }}</p> @endif
                     </div>
 
                     <div class="form-group">
                         <label for="password">Password</label>
-                        <input type="password" name="password" class="form-control">
+                        <input type="password" name="password" required class="form-control">
                         @if ($errors->has('password')) <p class="help-block" style="color: red">{{ $errors->first('password') }}</p> @endif
                     </div>
 
                     <div class="form-group">
                         <label for="password_confirmation">Confirm Password</label>
-                        <input type="password" name="password_confirmation" class="form-control">
+                        <input type="password" required name="password_confirmation" class="form-control">
                         @if ($errors->has('password_confrimation')) <p class="help-block" style="color: red">{{ $errors->first('password_confirmation') }}</p> @endif
                     </div>
 
                     <div class="form-group">
                         <label for="first_name">First Name</label>
-                        <input type="text" name="first_name" class="form-control">
+                        <input type="text" required name="first_name" class="form-control">
                         @if ($errors->has('first_name')) <p class="help-block" style="color: red">{{ $errors->first('first_name') }}</p> @endif
                     </div>
 
                     <div class="form-group">
                         <label for="last_name">Last Name</label>
-                        <input type="text" name="last_name" class="form-control">
+                        <input type="text" required name="last_name" class="form-control">
                         @if ($errors->has('last_name')) <p class="help-block" style="color: red">{{ $errors->first('last_name') }}</p> @endif
                     </div>
 
                     <div class="form-group">
                         <label for="address">Address</label>
-                        <textarea rows="5" name="address" class="form-control"></textarea>
+                        <textarea rows="5" required name="address" class="form-control"></textarea>
                         @if ($errors->has('address')) <p class="help-block" style="color: red">{{ $errors->first('address') }}</p> @endif
                     </div>
                 </div>
@@ -64,19 +64,19 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="phone">Username</label>
-                        <input type="text" name="username" class="form-control">
+                        <input type="text" required name="username" class="form-control">
                         @if ($errors->has('username')) <p class="help-block" style="color: red">{{ $errors->first('username') }}</p> @endif
                     </div>
 
                     <div class="form-group">
                         <label for="phone">Phone</label>
-                        <input type="text" name="phone" class="form-control">
+                        <input type="text" name="phone" required class="form-control">
                         @if ($errors->has('phone')) <p class="help-block" style="color: red">{{ $errors->first('phone') }}</p> @endif
                     </div>
 
                     <div class="form-group">
                         <label for="country_id">Country</label>
-                        <select name="country_id" class="form-control">
+                        <select name="country_id" required class="form-control">
                             @foreach ($countries as $country)
                                 <option value="{{ $country->country_code }}">{{ $country->name }}</option>
                             @endforeach
@@ -86,19 +86,19 @@
 
                     <div class="form-group">
                         <label for="image_url">Avatar</label>
-                        <input type="file" name="image_url" class="form-control">
+                        <input type="file" name="image_url" required class="form-control">
                         @if ($errors->has('image_url')) <p class="help-block" style="color: red">{{ $errors->first('image_url') }}</p> @endif
                     </div>
 
                     <div class="form-group">
                         <label for="image_url">Location</label>
-                        <input type="text" name="location" class="form-control">
+                        <input type="text" name="location" required class="form-control">
                         @if ($errors->has('location')) <p class="help-block" style="color: red">{{ $errors->first('location') }}</p> @endif
                     </div>
 
                     <div class="form-group">
                         <label for="sector_id">Sector</label>
-                        <select name="sector_id" class="form-control">
+                        <select name="sector_id" required class="form-control">
                             @foreach ($sectors as $sector)
                                 <option value="{{ $sector->id }}">{{ $sector->name }}</option>
                             @endforeach
