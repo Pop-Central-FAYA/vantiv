@@ -17,19 +17,29 @@
                 <div class="Create-campaign">
                     <form>
                         <div class="col-12 ">
-                            <h2>Choose Broadcaster</h2>
-                            <hr>
-                            <p><br></p>
-                            <ul>
-                                @foreach($adslots as $adslot)
-                                    <li>
-                                        <a href="{{ route('advertiser_campaign.step3', ['id' => $id,'broadcaster' => $adslot['broadcaster']]) }}">{{ $adslot['count_adslot'] }} Adslots available for {{ $adslot['boradcaster_brand'] }}</a>
-                                    </li>
-                                @endforeach
-                            </ul>
+                            @if(empty($adslots))
+                                <p><h1>No Adslot found for this criteria, please go back</h1></p>
+                            @else
+                                <h2>Choose Broadcaster</h2>
+                                <hr>
+                                <p><br></p>
+                                <ul>
+                                    @foreach($adslots as $adslot)
+                                        <li>
+                                            <a href="{{ route('advertiser_campaign.step3', ['id' => $id,'broadcaster' => $adslot['broadcaster']]) }}">{{ $adslot['count_adslot'] }} Adslots available for {{ $adslot['boradcaster_brand'] }}</a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            @endif
                         </div>
 
                     </form>
+                    @if(empty($adslots))
+                        <p><br></p>
+                        <div class="input-group">
+                            <input type="button" id="step1" class="btn btn-danger btn-lg" name="Submit" value="<< Back">
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -67,8 +77,14 @@
     <script src="{{ asset('agency_asset/plugins/datatables/dataTables.bootstrap.min.js') }}"></script>
     <script>
 
-
         $(document).ready(function(){
+
+            var user_id = "<?php echo $id ?>";
+
+            $('#step1').click(function(){
+                window.location.href = '/advertiser/campaigns/campaign/step1/'+user_id;
+            });
+
             $("#txtFromDate").datepicker({
                 numberOfMonths: 2,
                 onSelect: function (selected) {

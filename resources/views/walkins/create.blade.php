@@ -50,7 +50,7 @@
                                 <div class="col-md-6">
                                     <div class="input-group">
                                         <label for="phone_number"> Phone Number</label>
-                                        <input type="number" name="phone_number" placeholder="Walkins Phone Number" class="form-control" required>
+                                        <input type="text" name="phone_number" placeholder="Walkins Phone Number" class="form-control" required>
                                     </div>
                                 </div>
                             </div>

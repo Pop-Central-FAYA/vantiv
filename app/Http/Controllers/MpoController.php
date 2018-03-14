@@ -10,6 +10,9 @@ class MpoController extends Controller
 {
     public function index()
     {
+//        $get = Api::getApiWelcome();
+//        dd($get);
+
         $broadcaster_id = \Session::get('broadcaster_id');
 
         $mpos = Utilities::switch_db('reports')->select("SELECT * FROM mpos WHERE broadcaster_id = '$broadcaster_id' OR agency_broadcaster = '$broadcaster_id' ORDER BY time_created DESC ");
@@ -116,12 +119,35 @@ class MpoController extends Controller
     {
         if(request()->ajax()){
 
-//            dd($is_file_accepted, $broadcaster_id, $file_code, $campaign_id);
-
             $update_file = Utilities::switch_db('reports')->select("UPDATE files SET is_file_accepted = '$is_file_accepted' WHERE file_code = '$file_code'");
 
-            //$update_file = json_decode(Api::update_fileStatus($is_file_accepted, $broadcaster_id, $file_code, $campaign_id));
+            //api call
+            if($is_file_accepted === "1"){
+                $add = Api::addFilesToApi($file_code);
+                if($add->file_code === $file_code){
+                    $insertStatus = [
+                        'id' => uniqid(),
+                        'user_id' => \Session::get('broadcaster_id'),
+                        'description' => 'Your file with file code '.$file_code. ' has been approved and pushed to the Adserver by '.\Session::get('broadcaster_id'),
+                        'ip_address' => request()->ip(),
+                        'user_agent' => $_SERVER['HTTP_USER_AGENT'],
+                    ];
 
+                    $status = Utilities::switch_db('api')->table('status_logs')->insert($insertStatus);
+                }
+            }else{
+                    $insertStatus = [
+                        'id' => uniqid(),
+                        'user_id' => \Session::get('broadcaster_id'),
+                        'description' => 'Your file with file code '.$file_code. ' has just been rejected by '.\Session::get('broadcaster_id'),
+                        'ip_address' => request()->ip(),
+                        'user_agent' => $_SERVER['HTTP_USER_AGENT'],
+                    ];
+
+                    $status = Utilities::switch_db('api')->table('status_logs')->insert($insertStatus);
+            }
+
+            //$update_file = json_decode(Api::update_fileStatus($is_file_accepted, $broadcaster_id, $file_code, $campaign_id));
             return response()->json(['is_file_accepted' => $update_file]);
 
         } else {

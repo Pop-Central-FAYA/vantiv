@@ -10,6 +10,7 @@ use Vanguard\Libraries\Utilities;
 use Carbon\Carbon;
 use Session;
 use Image;
+use JD\Cloudder\Facades\Cloudder;
 
 class ClientBrandsController extends Controller
 {
@@ -98,12 +99,10 @@ class ClientBrandsController extends Controller
 
                 /*handling uploading the logo*/
                 $image = $request->brand_logo;
-                $image_new_name = time().$image->getClientOriginalName();
-                $destinationPath = 'brands_logo';
-                $slide = Image::make($image->getRealPath())->resize(200, 200);
-                $slide->save($destinationPath.'/'.$image_new_name,98);
-//                $image->move($destinationPath, $image_new_name);
-                $image_path = encrypt('brands_logo/'.$image_new_name);
+                $filename = realpath($image);
+                Cloudder::upload($filename, Cloudder::getPublicId(), ['height' => 200, 'width' => 200]);
+                $clouder = Cloudder::getResult();
+                $image_path = encrypt($clouder['url']);
 
                 $insert = Utilities::switch_db('api')->select("INSERT into brands (id, `name`, walkin_id, broadcaster_agency, image_url) VALUES ('$unique','$brand','$id', '$agency_id', '$image_path')");
                 $user_activity = Api::saveActivity($agency_id, $description, $ip, $user_agent);
@@ -123,12 +122,10 @@ class ClientBrandsController extends Controller
             }else{
                 /*handling uploading the logo*/
                 $image = $request->brand_logo;
-                $image_new_name = time().$image->getClientOriginalName();
-                $destinationPath = 'brands_logo';
-                $slide = Image::make($image->getRealPath())->resize(200, 200);
-                $slide->save($destinationPath.'/'.$image_new_name,98);
-//                $image->move($destinationPath, $image_new_name);
-                $image_path = encrypt('brands_logo/'.$image_new_name);
+                $filename = realpath($image);
+                Cloudder::upload($filename, Cloudder::getPublicId(), ['height' => 200, 'width' => 200]);
+                $clouder = Cloudder::getResult();
+                $image_path = encrypt($clouder['url']);
 
                 $insert = Utilities::switch_db('api')->select("INSERT into brands (id, `name`, walkin_id, broadcaster_agency, image_url) VALUES ('$unique','$brand','$user_id', '$advertiser_id', '$image_path')");
                 $user_activity = Api::saveActivity($advertiser_id, $description, $ip, $user_agent);

@@ -21,6 +21,7 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="input-group">
+                                    <label for="brand_name">Brand Name</label>
                                     <input type="text" name="brand_name" value=""  placeholder="Brand Name">
                                 </div>
                             </div>

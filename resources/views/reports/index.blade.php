@@ -25,11 +25,11 @@
                                 <div class="nav-tabs-custom">
                                     <ul class="nav nav-tabs" style="background:#eee">
                                         <li class="active"><a href="#periodic_sales_report" data-toggle="tab">Periodic Sales Report</a></li>
-                                        <li><a href="#inventory_fill_rate" data-toggle="tab">Inventory Fill Rate</a></li>
+                                        {{--<li><a href="#inventory_fill_rate" data-toggle="tab">Inventory Fill Rate</a></li>--}}
                                         <li><a href="#high_performing_dayparts" data-toggle="tab">High Performing Dayparts</a></li>
                                         <li><a href="#high_performing_days" data-toggle="tab">High Performing Days</a></li>
                                         <li><a href="#high_value_customer" data-toggle="tab">High Value Customer</a></li>
-                                        <li><a href="#make_good_report" data-toggle="tab">Make Good Report</a></li>
+                                        {{--<li><a href="#make_good_report" data-toggle="tab">Make Good Report</a></li>--}}
                                         <li><a href="#total_volume_of_campaigns" data-toggle="tab">Total Volume of Capaigns</a></li>
                                         <li><a href="#paid_invoices" data-toggle="tab">Paid Invoices</a></li>
                                     </ul>
@@ -39,7 +39,7 @@
                                             <div class="row">
                                                 <form action="#" method="GET" class="form-inline" style="text-align: center;margin: 20px auto;">
                                                     {{ csrf_field() }}
-                                                    <h4 style="margin-bottom: 10px; font-weight: bold">Search by date</h4>
+                                                    {{--<h4 style="margin-bottom: 10px; font-weight: bold">Search by date</h4>--}}
                                                     <div class="col-md-10" style="margin-top: 10px">
                                                         <div class="input-group date styledate" style="width:30% !important">
                                                             <div class="input-group-addon">
@@ -91,7 +91,7 @@
                                             <div class="row">
                                                 <form action="#" method="GET" class="form-inline" style="text-align: center;margin: 20px auto;">
                                                     {{ csrf_field() }}
-                                                    <h4 style="margin-bottom: 10px; font-weight: bold">Search by date</h4>
+                                                    {{--<h4 style="margin-bottom: 10px; font-weight: bold">Search by date</h4>--}}
                                                     <div class="col-md-10" style="margin-top: 10px">
                                                         <div class="input-group date styledate" style="width:30% !important">
                                                             <div class="input-group-addon">
@@ -137,7 +137,7 @@
                                             <div class="row">
                                                 <form action="#" method="GET" class="form-inline" style="text-align: center;margin: 20px auto;">
                                                     {{ csrf_field() }}
-                                                    <h4 style="margin-bottom: 10px; font-weight: bold">Search by date</h4>
+                                                    {{--<h4 style="margin-bottom: 10px; font-weight: bold">Search by date</h4>--}}
                                                     <div class="col-md-10" style="margin-top: 10px">
                                                         <div class="input-group date styledate" style="width:30% !important">
                                                             <div class="input-group-addon">
@@ -184,7 +184,7 @@
                                                 <div class="row">
                                                     <form action="#" method="GET" class="form-inline" style="text-align: center;margin: 20px auto;">
                                                         {{ csrf_field() }}
-                                                        <h4 style="margin-bottom: 10px; font-weight: bold">Search by date</h4>
+                                                        {{--<h4 style="margin-bottom: 10px; font-weight: bold">Search by date</h4>--}}
                                                         <div class="col-md-10" style="margin-top: 10px">
                                                             <div class="input-group date styledate" style="width:30% !important">
                                                                 <div class="input-group-addon">
@@ -235,7 +235,7 @@
                                                 <div class="row">
                                                     <form action="#" method="GET" class="form-inline" style="text-align: center;margin: 20px auto;">
                                                         {{ csrf_field() }}
-                                                        <h4 style="margin-bottom: 10px; font-weight: bold">Search by date</h4>
+                                                        {{--<h4 style="margin-bottom: 10px; font-weight: bold">Search by date</h4>--}}
                                                         <div class="col-md-10" style="margin-top: 10px">
                                                             <div class="input-group date styledate" style="width:30% !important">
                                                                 <div class="input-group-addon">
@@ -279,7 +279,7 @@
                                             <div class="row">
                                                 <form action="#" method="GET" class="form-inline" style="text-align: center;margin: 20px auto;">
                                                     {{ csrf_field() }}
-                                                    <h4 style="margin-bottom: 10px; font-weight: bold">Search by date</h4>
+                                                    {{--<h4 style="margin-bottom: 10px; font-weight: bold">Search by date</h4>--}}
                                                     <div class="col-md-10" style="margin-top: 10px">
                                                         <div class="input-group date styledate" style="width:30% !important">
                                                             <div class="input-group-addon">

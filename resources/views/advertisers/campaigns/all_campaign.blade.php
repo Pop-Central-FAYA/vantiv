@@ -75,8 +75,10 @@
                                                         }
                                                         if($file[0]->is_file_accepted === 0){
                                                             $approval = "Not Approved";
-                                                        }else{
+                                                        }elseif($file[0]->is_file_accepted === 1){
                                                             $approval = "Approved";
+                                                        }else{
+                                                            $approval = "Rejected";
                                                         }
                                                     ?>
                                                     <tr>

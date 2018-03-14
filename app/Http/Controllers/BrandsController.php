@@ -9,6 +9,7 @@ use Vanguard\Libraries\Utilities;
 use Carbon\Carbon;
 use Session;
 use Image;
+use JD\Cloudder\Facades\Cloudder;
 
 class BrandsController extends Controller
 {
@@ -67,11 +68,10 @@ class BrandsController extends Controller
         ]);
 
         $image = $request->image_url;
-        $image_new_name = time().$image->getClientOriginalName();
-        $destinationPath = 'brands_logo';
-        $slide = Image::make($image->getRealPath())->resize(200, 200);
-        $slide->save($destinationPath.'/'.$image_new_name,98);
-        $image_url = encrypt('brands_logo/'.$image_new_name);
+        $filename = realpath($image);
+        Cloudder::upload($filename, Cloudder::getPublicId(), ['height' => 200, 'width' => 200]);
+        $clouder = Cloudder::getResult();
+        $image_url = encrypt($clouder['url']);
 
         $brand = Utilities::formatString($request->brand_name);
         $unique = uniqid();
@@ -95,7 +95,6 @@ class BrandsController extends Controller
     {
         $this->validate($request, [
             'brand_name' => 'required|regex:/^[a-zA-Z- ]+$/',
-            'image_url' => 'required'
         ]);
 
         $brand = Utilities::formatString($request->brand_name);

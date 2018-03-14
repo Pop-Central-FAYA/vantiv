@@ -138,6 +138,10 @@ class CampaignsController extends Controller
             'region' => 'required',
         ]);
 
+        if($request->min_age < 0 || $request->max_age < 0){
+            return back()->withErrors('The minimun or maximum age cannot assume a negetive value');
+        }
+
         $del_cart = \DB::delete("DELETE FROM carts WHERE user_id = '$id'");
         $del_uplaods = \DB::delete("DELETE FROM uploads WHERE user_id = '$id'");
 

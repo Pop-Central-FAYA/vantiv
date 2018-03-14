@@ -30,10 +30,15 @@
             <li class="{{ Request::is('advertiser/reports') ? 'active' : ''  }}"> <a href="{{ route('advertiser.report.index') }}"><i class="fa fa-signal"></i><span>Report</span></a>
 
             </li>
-            <li> <a href="{{ route('user.profile') }}"><i class="fa fa-power"></i><span>Profile</span></a>
+            <li class="{{ Request::is('user/profile') ? 'active' : ''  }}">
+                <a href="{{ route('user.profile') }}">
+                    <i class="fa fa-user"></i><span>Profile</span>
+                </a>
             </li>
-            <li> <a href="{{ route('auth.logout') }}"><i class="fa fa-power"></i><span>Logout</span></a>
-
+            <li>
+                <a href="{{ route('auth.logout') }}">
+                    <i class="fa fa-power-off"></i><span>Logout</span>
+                </a>
             </li>
         </ul>
     </div>

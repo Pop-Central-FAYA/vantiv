@@ -16,6 +16,7 @@ use Vanguard\Repositories\Session\SessionRepository;
 use Vanguard\Repositories\User\EloquentUser;
 use Vanguard\Repositories\User\UserRepository;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Validator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -28,6 +29,15 @@ class AppServiceProvider extends ServiceProvider
     {
         Carbon::setLocale(config('app.locale'));
         config(['app.name' => settings('app_name')]);
+
+        //phone validator
+        Validator::extend('phone_number', function($attribute, $value, $parameters, $validator) {
+            return preg_match('%^(?:(?:\(?(?:00|\+)([1-4]\d\d|[1-9]\d?)\)?)?[\-\.\ \\\/]?)?((?:\(?\d{1,}\)?[\-\.\ \\\/]?){0,})(?:[\-\.\ \\\/]?(?:#|ext\.?|extension|x)[\-\.\ \\\/]?(\d+))?$%i', $value) && strlen($value) <= 11;
+        });
+
+        Validator::replacer('phone_number', function($message, $attribute, $rule, $parameters) {
+            return str_replace(':attribute',$attribute, 'This is not a valid nigerian phone number');
+        });
     }
 
     /**

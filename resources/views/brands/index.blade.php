@@ -16,6 +16,7 @@
                         <li><a href="#">All Brands</a></li>
                     </ul>
                 </div>
+            </div>
                 <div class="row">
                     <div class="col-lg-4">
                         <form action="{{ route('broadcasters.brands.search') }}" method="get">
@@ -28,6 +29,8 @@
                         </form>
                     </div>
                 </div>
+                <p><br></p>
+            <div class="row">
                 <div class="col-12 all-brands">
                     @foreach ($brands as $brand)
                         <div class="col-6">
@@ -55,20 +58,22 @@
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <h4>Edit : {{ $brand->name }}</h4>
                     </div>
-                    <div class="modal-body">
-                        <form action="{{ route('brands.update', ['id' => $brand->id]) }}" method="post">
+                    <form action="{{ route('brands.update', ['id' => $brand->id]) }}" method="post">
+                        <div class="modal-body">
                             {{ csrf_field() }}
                             <div class="row">
                                 <div class="group">
                                     <input type="text" name="brand_name" value="{{ $brand->name }}" class="form-control">
-                                    <button type="submit" class="btn btn-success">Update Brand</button>
+                                    <p><br></p>
                                 </div>
                             </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-primary" data-dismiss="modal">Cancel</button>
-                    </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-success">Update Brand</button>
+                            <button class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

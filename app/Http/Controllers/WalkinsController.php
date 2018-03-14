@@ -27,7 +27,7 @@ class WalkinsController extends Controller
         $j = 1;
         $broad_walkins = [];
         $broadcaster_id = Session::get('broadcaster_id');
-        $walkins = Utilities::switch_db('api')->select("SELECT * from users WHERE id IN (SELECT user_id from walkIns WHERE broadcaster_id = '$broadcaster_id' AND status = 0)");
+        $walkins = Utilities::switch_db('api')->select("SELECT * from users WHERE id IN (SELECT user_id from walkIns WHERE broadcaster_id = '$broadcaster_id' AND status = 0) ORDER BY time_created DESC");
         foreach ($walkins as $walkin){
             $broad_walkins[] = [
                 'id' => $j,

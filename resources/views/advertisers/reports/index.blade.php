@@ -16,7 +16,7 @@
                 <div class="col-md-12">
                     <div class="nav-tabs-custom">
                         <ul class="nav nav-tabs" style="background:#eee">
-                            <li class="active"><a href="#campaigns" data-toggle="tab">Campaigns</a></li>
+                            <li class="active"><a href="#campaigns" aria-expanded="" data-toggle="tab">Campaigns</a></li>
                             <li><a href="#revenue" data-toggle="tab">Revenue</a></li>
                         </ul>
                         <p><br></p>
@@ -25,7 +25,8 @@
                                     <div class="row">
                                         <form action="#" method="GET">
                                             {{ csrf_field() }}
-                                            <h4 style="margin-left: 17px;font-weight: bold">Search by date</h4>
+                                            <p><br></p>
+                                            {{--<h4 style="margin-left: 17px;font-weight: bold">Search by date</h4>--}}
                                             <div class="col-md-10" style="margin-top: -2%">
                                                 <div class="row">
                                                     <div class="col-md-3">
@@ -87,7 +88,8 @@
                                 <div class="row">
                                     <form action="#" method="GET">
                                         {{ csrf_field() }}
-                                        <h4 style="margin-left: 17px;font-weight: bold">Search by date</h4>
+                                        <p><br></p>
+                                        {{--<h4 style="margin-left: 17px;font-weight: bold">Search by date</h4>--}}
                                         <div class="col-md-10" style="margin-top: -2%">
                                             <div class="row">
                                                 <div class="col-md-3">

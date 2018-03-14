@@ -10,3 +10,6 @@
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+Route::get('/welcome', 'Api\DummyController@index');
+Route::post('/add-file/{id}', 'Api\DummyController@addFile')->name('api.add.file');

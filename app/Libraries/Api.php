@@ -11,9 +11,7 @@ Class Api
 {
     public static $key;
 
-    public static $api_private_key = "nzrm64jtj9srsjab";
-    public static $url = "http://ec2-34-239-105-98.compute-1.amazonaws.com:8000/api/v1/";
-    public static $public = "FayaGB3DOTDBEFCUE7KEOVCS42LEMFIXQ6Z6FY2USRL3G4UTM5K3";
+    public static $url = "http://127.0.0.1:8000/api/";
 
     public function __construct()
     {
@@ -1071,6 +1069,21 @@ Class Api
         }
 
         return true;
+
+    }
+
+    public static function addFilesToApi($file_code)
+    {
+        $t = new \Vanguard\Http\Controllers\Api\DummyController();
+        $s = $t->addFile($file_code);
+        return $s->getData();
+    }
+
+    public static function getApiWelcome()
+    {
+        $t = new \Vanguard\Http\Controllers\Api\DummyController();
+        $s = $t->index();
+        return $s->getData();
 
     }
 

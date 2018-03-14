@@ -116,6 +116,11 @@ class CampaignsController extends Controller
             'dayparts' => 'required_without_all',
             'region' => 'required',
         ]);
+
+        if($request->min_age < 0 || $request->max_age < 0){
+            return back()->withErrors('The minimun or maximum age cannot assume a negetive value');
+        }
+
         $step2_req = ((object) $request->all());
         session(['step2' => $step2_req]);
 
