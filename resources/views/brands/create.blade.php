@@ -28,7 +28,9 @@
                         <label>Clients</label>
                         <select name="clients" class="Role" required>
                             @foreach($client as $clients)
-                                <option value="{{ $clients[0]->id }}">{{ $clients[0]->firstname.' '.$clients[0]->lastname }}</option>
+                                <option value="{{ $clients[0]->id }}">
+                                    {{ $clients[0]->firstname.' '.$clients[0]->lastname }}
+                                </option>
                             @endforeach
                         </select>
                     </div>

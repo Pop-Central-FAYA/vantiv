@@ -7,6 +7,7 @@ use Vanguard\Role;
 use Vanguard\Country;
 use Vanguard\Libraries\Api;
 use Illuminate\Http\Request;
+use JD\Cloudder\Facades\Cloudder;
 use Vanguard\Libraries\Utilities;
 use Illuminate\Support\Facades\DB;
 use Vanguard\Support\Enum\UserStatus;
@@ -39,7 +40,7 @@ class ClientsController extends Controller
                 'phone' => $request->phone,
                 'country_id' => $request->country_id,
                 'birthday' => $request->birthday,
-                'status' => $request->status,
+                'status' => 'Active',
             ]);
 
             if ($request->hasFile('image_url')) {
@@ -66,7 +67,7 @@ class ClientsController extends Controller
                 'broadcaster_id' => $request->broadcaster_id,
                 'client_type_id' => $request->client_type_id,
                 'location' => $request->location,
-                'image_url' => 'clients_uploads/' . $client_image,
+                'image_url' => encrypt($cloudder['url']),
                 'agency_id' => \Session::get('agency_id')
             ]);
 
@@ -125,7 +126,7 @@ class ClientsController extends Controller
                 'image_url' => $agency->image_url,
                 'num_campaign' => $campaigns[0]->number,
                 'total' => $payments[0]->total,
-//                'name' => $user_details[0]->last_name . ' ' . $user_details[0]->first_name,
+                'name' => $user_details && $user_details[0] ? $user_details[0]->last_name . ' ' . $user_details[0]->first_name : '',
                 'created_at' => $agency->time_created,
                 'last_camp' => $date,
             ];

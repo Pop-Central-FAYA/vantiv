@@ -23,8 +23,10 @@
                         </div>
                         <div class="input-group">
                             <select name="clients" class="Role">
-                                @foreach($client as $clients)
-                                    <option value="{{ $clients[0]->id }}">{{ $clients[0]->first_name.' '.$clients[0]->last_name }}</option>
+                                @foreach ($clients as $client)
+                                    <option value="{{ $client[0]->id }}">
+                                        {{ $client[0]->first_name.' '.$client[0]->last_name }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>

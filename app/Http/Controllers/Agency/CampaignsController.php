@@ -116,15 +116,14 @@ class CampaignsController extends Controller
         $cl = [];
         $agency_id = \Session::get('agency_id');
         $all_clients = Utilities::switch_db('api')->select("SELECT * from walkIns WHERE agency_id = '$agency_id'");
-        foreach ($all_clients as $all)
-        {
-            $clients = \DB::select("SELECT * from users where id= '$all->user_id'");
+        foreach ($all_clients as $all) {
+            $clients = \DB::select("SELECT * from users where id = '$all->user_id'");
             $cl[] = [
                 'id' => $j,
-                'user_id' => $clients[0]->id,
-                'name' => $clients[0]->first_name. '-' .$clients[0]->last_name,
-                'email' => $clients[0]->email,
-                'phone' => $clients[0]->phone,
+                'user_id' => $clients && $clients[0] ? $clients[0]->id : 1,
+                'name' => $clients && $clients[0] ? $clients[0]->last_name . ' ' . $clients[0]->first_name : '',
+                'email' => $clients && $clients[0] ? $clients[0]->email : '',
+                'phone' => $clients && $clients[0] ? $clients[0]->phone : '',
             ];
             $j++;
         }

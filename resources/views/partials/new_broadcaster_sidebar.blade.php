@@ -29,12 +29,20 @@
                     <li><a href="{{ route('discount.index') }}"><i class="fa fa-address-book-o"></i><span>Discounts</span></a></li>
                 </ul>
             </li>
-            <li class="{{ Request::is('reports') ? 'active' : ''  }}"> <a href="{{ route('reports') }}"><i class="fa fa-signal"></i><span>Reports</span></a>
+            <li class="{{ Request::is('reports') ? 'active' : ''  }}">
+                <a href="{{ route('reports') }}">
+                    <i class="fa fa-signal"></i><span>Reports</span>
+                </a>
             </li>
-            <li class="{{ Request::is('user/profile') ? 'active' : ''  }}"> <a href="{{ route('user.profile') }}"><i class="fa fa-power"></i><span>Profile</span></a>
+            <li class="{{ Request::is('user/profile') ? 'active' : ''  }}">
+                <a href="{{ route('user.profile') }}">
+                    <i class="fa fa-user"></i><span>Profile</span>
+                </a>
             </li>
-            <li> <a href="{{ route('auth.logout') }}"><i class="fas fa-power-off"></i><span>Logout</span></a>
-
+            <li>
+                <a href="{{ route('auth.logout') }}">
+                    <i class="fa fa-power-off"></i><span>Logout</span>
+                </a>
             </li>
         </ul>
     </div>
