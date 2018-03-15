@@ -135,19 +135,14 @@
                     <h4 class="modal-title" id="myModalLabel">Campaign Invoice -</h4>
                 </div>
                 <div class="modal-body">
-
-                    ......
-
                     <div class="table-responsive">
                         <table class="table">
                             <thead>
-                            <tr>
-                                <th>Media File</th>
-                                <th>Adslot ID</th>
-                                <th>Playtime</th>
-                                <th>Complaince</th>
-                                <th>Cost</th>
-                            </tr>
+                                <tr>
+                                    <th>Adslot ID</th>
+                                    <th>Playtime</th>
+                                    <th>Cost</th>
+                                </tr>
                             </thead>
                             <tbody>
                             <?php $m = 1; ?>
@@ -161,11 +156,8 @@
                                             $pay = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT * from payments where campaign_id = '$inv->campaign_id'");
                                         ?>
                                         <tr>
-                                            <td><video width="200" controls><source src="{{ asset(decrypt($file->file_url)) }}"></video></td>
-
                                             <td>{{ count((array) $file->adslot) }}</td>
                                             <td>{{ $file->time_picked }} Seconds</td>
-                                            <td>80%</td>
                                             @if($file->time_picked === "60")
                                                 <td>&#8358;{{ number_format($ads_price[0]->price_60, 2) }}</td>
                                             @elseif($file->time_picked === "45")

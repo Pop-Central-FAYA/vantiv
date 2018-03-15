@@ -36,7 +36,7 @@
 
                                 <div class="col-md-6">
                                     <p> <b><i class="fa fa-users"></i> Day Parts: </b>
-                                        @foreach($day_part as $daypart)
+                                        @foreach ($day_part as $daypart)
                                             {{ $daypart->day_parts }}
                                         @endforeach
                                     </p>
@@ -46,7 +46,7 @@
                                     </p>
                                     <p>
                                         <b><i class="fa fa-map-marker" aria-hidden="true"></i> Region</b>
-                                        @foreach($region as $regions)
+                                        @foreach ($region as $regions)
                                             {{ $regions->region }}
                                         @endforeach
                                     </p>

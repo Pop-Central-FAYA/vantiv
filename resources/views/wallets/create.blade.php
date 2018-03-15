@@ -1,6 +1,6 @@
 @extends('layouts.new_app')
 @section('title')
-    <title>{{ $agency_id ? 'Agency' : 'Advertiser'}}  | Credit Wallet</title>
+    <title>{{ $agency_id ? 'Agency' : 'Advertiser'}}  - Credit Wallet</title>
 @stop
 @section('content')
 
@@ -15,8 +15,15 @@
                     </ul>
                 </div>
                 <div class="col-12 Wallet-Credit">
-                    <div class="card-type"><h2>Choose Payments Method</h2><a href="#" data-toggle="modal" data-target="#myModal"><img src="{{ asset('new_assets/images/paypal-logo.png') }}" alt=""></a>
-                        @if(count($wallet) === 0)
+                    <div class="card-type">
+                        <h2>
+                            Click to credit wallet
+                            <a href="#" class="btn btn-success btn-lg" data-toggle="modal" data-target="#myModal">
+                                <!-- <img src="{{ asset('new_assets/images/paypal-logo.png') }}" alt=""> -->
+                                Pay
+                            </a>
+                        </h2>
+                        @if (count($wallet) === 0)
                             <h3>Current Balance : <a href="#">&#8358;0.00</a></h3></div>
                         @else
                             <h3>Current Balance : <a href="#">&#8358;{{ number_format($wallet[0]->balance, 2) }}</a></h3></div>
