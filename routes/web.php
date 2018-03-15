@@ -127,9 +127,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/search-brands', 'BrandsController@search')->name('broadcasters.brands.search');
     });
 
-    Route::group(['prefix' => 'walkins'], function () {
+    Route::group(['prefix' => 'walk-in'], function () {
         Route::get('/', 'WalkinsController@index')->name('walkins.all');
-        Route::get('/all-walkins/data', 'WalkinsController@walkinsData');
+        Route::get('/all-walk-in/data', 'WalkinsController@walkinsData');
         Route::get('/create', 'WalkinsController@create')->name('walkins.create');
         Route::post('/store', 'WalkinsController@store')->name('walkins.store');
         Route::get('/delete/{id}', 'WalkinsController@delete')->name('walkins.delete');

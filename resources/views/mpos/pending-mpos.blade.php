@@ -234,7 +234,7 @@
     <script src="{{ asset('asset/plugins/datepicker/bootstrap-datepicker.js') }}"></script>
     <script src="{{ asset('asset/plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('asset/plugins/datatables/dataTables.bootstrap.min.js') }}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.3/toastr.min.js"></script>
+
     <script src="https://unpkg.com/flatpickr"></script>
 
     <script>

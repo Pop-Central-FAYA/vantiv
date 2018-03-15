@@ -2,6 +2,8 @@
 
 namespace Vanguard\Http\Controllers;
 
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Image;
 use Session;
 use Carbon\Carbon;
@@ -59,17 +61,19 @@ class BrandsController extends Controller
     public function store(Request $request)
     {
         $broadcaster = Session::get('broadcaster_id');
-
+        $image_url = '';
         $this->validate($request, [
             'brand_name' => 'required|regex:/^[a-zA-Z- ]+$/',
-            'image_url' => 'required|image|mimes:jpg,jpeg,png',
+//            'image_url' => 'image|mimes:jpg,jpeg,png',
         ]);
 
-        $image = $request->image_url;
-        $filename = realpath($image);
-        Cloudder::upload($filename, Cloudder::getPublicId(), ['height' => 200, 'width' => 200]);
-        $clouder = Cloudder::getResult();
-        $image_url = encrypt($clouder['url']);
+        if($request->hasFile('image_url')){
+            $image = $request->image_url;
+            $filename = realpath($image);
+            Cloudder::upload($filename, Cloudder::getPublicId(), ['height' => 200, 'width' => 200]);
+            $clouder = Cloudder::getResult();
+            $image_url = encrypt($clouder['url']);
+        }
 
 
         $brand = Utilities::formatString($request->brand_name);
@@ -82,9 +86,11 @@ class BrandsController extends Controller
         }else{
             $insert = Utilities::switch_db('api')->select("INSERT into brands (id, `name`, image_url, walkin_id, broadcaster_agency) VALUES ('$unique', '$brand', '$image_url', '$id', '$broadcaster')");
             if(!$insert) {
-                return redirect()->route('brand.all')->with('success', 'Brands created successfully');
+                Session::flash('success', 'Brands created successfully');
+                return redirect()->route('brand.all');
             }else{
-                return redirect()->back()->with('error', 'There was a problem creating this brand');
+                Session::flash('error', 'There was a problem creating this brand');
+                return redirect()->back();
             }
         }
 
@@ -122,9 +128,11 @@ class BrandsController extends Controller
         $brand = Utilities::switch_db('api')->update("UPDATE brands set status = 1 WHERE id = '$id'");
         if($brand)
         {
-            return redirect()->back()->with('success', 'Brands Deleted Successfully');
+            Session::flash('success', 'Brands Deleted Successfully');
+            return redirect()->back();
         }else{
-            return redirect()->back()->with('error', 'There was a problem deleting this brand');
+            Session::flash('error', 'There was a problem deleting this brand');
+            return redirect()->back();
         }
     }
 

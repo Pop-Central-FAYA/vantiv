@@ -10,36 +10,43 @@
     <div class="container">
         <div class="row">
             <div class="col-12 heading-main">
-                <h1>Create Brands</h1>
+                <h1>Create Brand</h1>
                 <ul>
-                    <li><a href="#"><i class="fa fa-edit"></i>Broadcaster</a></li>
+                    <li><a href="{{ route('dashboard') }}"><i class="fa fa-edit"></i>Broadcaster</a></li>
                     <li><a href="#">Create Brands</a></li>
                 </ul>
             </div>
             <div class="Add-brand">
-                <h2>Create Brands</h2>
+                <h2>Create Brand</h2>
                 <form action="{{ route('brand.store') }}" method="post" enctype="multipart/form-data" data-parsley-validate="">
                     {{ csrf_field() }}
-                    <div class="input-group">
-                        <label for="brand_name">Name</label>
-                        <input type="text" name="brand_name" value=""  placeholder="Brand Name" required>
+                    <div class="row">
+                        <div class="input-group">
+                            <label for="brand_name">Name</label>
+                            <input type="text" name="brand_name" value=""  placeholder="Brand Name" required>
+                        </div>
                     </div>
-                    <div class="input-group">
-                        <label>Clients</label>
-                        <select name="clients" class="Role" required>
-                            @foreach($client as $clients)
-                                <option value="{{ $clients[0]->id }}">
-                                    {{ $clients[0]->firstname.' '.$clients[0]->lastname }}
-                                </option>
-                            @endforeach
-                        </select>
+                    <div class="row">
+                        <div class="input-group">
+                            <label>Clients</label>
+                            <select name="clients" class="Role" required>
+                                @foreach($client as $clients)
+                                    <option value="{{ $clients[0]->id }}">
+                                        {{ $clients[0]->firstname.' '.$clients[0]->lastname }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
+                    <div class="row">
+                        <div class="input-group">
+                            <label>Brand Logo</label>
+                            <input type="file" name="image_url" >
+                        </div>
+                    </div>
+
                     <div class="input-group">
                         <input type="Submit" name="Submit" value="Add Brand" />
-                    </div>
-                    <div class="input-group">
-                        <label>Brand Logo</label>
-                        <input type="file" name="image_url" required>
                     </div>
                 </form>
             </div>
@@ -56,19 +63,6 @@
 
     <script>
         $(document).ready(function(){
-            $("#txtFromDate").datepicker({
-                numberOfMonths: 2,
-                onSelect: function (selected) {
-                    $("#txtToDate").datepicker("option", "minDate", selected)
-                }
-            });
-
-            $("#txtToDate").datepicker({
-                numberOfMonths: 2,
-                onSelect: function(selected) {
-                    $("#txtFromDate").datepicker("option","maxDate", selected)
-                }
-            });
 
             $('input[type=radio][name=premium]').change(function() {
                 if (this.value == 'true') {

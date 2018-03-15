@@ -114,7 +114,8 @@ class AdslotController extends Controller
         $region = Utilities::switch_db('api')->select("SELECT * from regions");
         $target = Utilities::switch_db('api')->select("SELECT * from targetAudiences");
         $daypart = Utilities::switch_db('api')->select("SELECT * from dayParts");
-        return view('adslot.create')->with(['days' => $day, 'hours' => $hourly, 'regions' => $region, 'targets' => $target, 'day_parts' => $daypart]);
+        $channels = Utilities::switch_db('api')->select("SELECT * from campaignChannels");
+        return view('adslot.create')->with(['days' => $day, 'hours' => $hourly, 'regions' => $region, 'targets' => $target, 'channels' => $channels, 'day_parts' => $daypart]);
     }
 
     /**

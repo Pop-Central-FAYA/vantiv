@@ -13,5 +13,6 @@
     <!--chart-->
     <link rel="stylesheet" href="{{ asset('new_assets/css/chart.css') }}">
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.3/toastr.min.css" />
     @yield('styles')
 </head>

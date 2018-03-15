@@ -213,6 +213,9 @@
             tooltip: {
                 pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
             },
+            credits: {
+                enabled: false
+            },
             plotOptions: {
                 pie: {
                     allowPointSelect: true,
@@ -241,6 +244,7 @@
             title: {
                 text: 'High Performing Days'
             },
+
             tooltip: {
                 pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
             },

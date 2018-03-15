@@ -16,18 +16,22 @@
                     <li><a href="{{ route('brand.all') }}"><i class="fa fa-address-book-o"></i><span>Brands<br /> List</span></a></li>
                 </ul>
             </li>
-            <li class="{{ Request::is('walkins/*') ? 'active' : Request::is('walkins') ? 'active' : ''  }}"> <a href="{{ route('walkins.all') }}" ><i class="fa fa-volume-down"></i><span>Walkins</span></a>
+            <li class="{{ Request::is('walkins/*') ? 'active' : Request::is('walkins') ? 'active' : ''  }}"> <a href="{{ route('walkins.all') }}" ><i class="fa fa-volume-down"></i><span>Walk-In</span></a>
                 <ul class="sub-menu dropdown">
-                    <li><a href="{{ route('walkins.create') }}"><i class="fa fa-address-card-o"></i> <span>Add <br /> Walkins</span></a></li>
-                    <li><a href="{{ route('walkins.all') }}"><i class="fa fa-address-book-o"></i><span>Walkins<br /> List</span></a></li>
+                    <li><a href="{{ route('walkins.create') }}"><i class="fa fa-address-card-o"></i> <span>Add <br /> Walk-In</span></a></li>
+                    <li><a href="{{ route('walkins.all') }}"><i class="fa fa-address-book-o"></i><span>Walk-In<br /> List</span></a></li>
                 </ul>
             </li>
             <li class="{{ Request::is('adslot') ? 'active' : Request::is('adslot/*') || Request::is('discount') ? 'active' : ''  }}"> <a href="{{ route('adslot.all')  }}" ><i class="fa fa-volume-down"></i><span>Ads Management</span></a>
                 <ul class="sub-menu dropdown">
                     <li><a href="{{ route('adslot.all') }}"><i class="fa fa-address-card-o"></i> <span>Adslots <br /> List</span></a></li>
                     <li><a href="{{ route('adslot.create') }}"><i class="fa fa-address-book-o"></i><span>Add<br /> Adslot</span></a></li>
-                    <li><a href="{{ route('discount.index') }}"><i class="fa fa-address-book-o"></i><span>Discounts</span></a></li>
                 </ul>
+            </li>
+            <li class="{{ Request::is('discounts') ? 'active' : ''  }}">
+                <a href="{{ route('discount.index') }}">
+                    <i class="fa fa-signal"></i><span>Discounts</span>
+                </a>
             </li>
             <li class="{{ Request::is('reports') ? 'active' : ''  }}">
                 <a href="{{ route('reports') }}">

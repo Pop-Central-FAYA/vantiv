@@ -91,13 +91,15 @@ class WalkinsController extends Controller
         ];
         $check_user = Utilities::switch_db('api')->select("SELECT * from users where email = '$request->email'");
         if(count($check_user) === 1){
-            return redirect()->back()->with('error', 'Email address already exist');
+            Session::flash('error', 'Email address already exist');
+            return redirect()->back();
         }
         $saveUser = Utilities::switch_db('api')->table('users')->insert($insert_user);
         $saveWalkins = Utilities::switch_db('api')->table('walkIns')->insert($insert_walkin);
 
         if($saveUser && $saveWalkins){
-            return redirect()->route('walkins.all')->with('success', 'Walkins created successfully');
+            Session::flash('success', 'Walk-In created successfully');
+            return redirect()->route('walkins.all');
         }
 
     }
@@ -113,9 +115,11 @@ class WalkinsController extends Controller
 //        $deleteUser = Utilities::switch_db('api')->delete("DELETE from users WHERE id = '$id'");
         $deleteWalkins = Utilities::switch_db('api')->update("UPDATE walkIns set status = 1 where user_id = '$id'");
         if($deleteWalkins){
-            return redirect()->back()->with('success', 'Walkins deleted successfully...');
+            Session::flash('success', 'Walk-In deleted successfully...');
+            return redirect()->back();
         }else{
-            return redirect()->back()->with('error', 'Error deleting walkins...');
+            Session::flash('error', 'Error deleting Walk-In...');
+            return redirect()->back();
         }
 
 

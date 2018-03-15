@@ -4,7 +4,6 @@ namespace Vanguard\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Session;
 use Cloudinary;
 use JD\Cloudder\Facades\Cloudder;
 use Vanguard\Libraries\Api;
@@ -12,6 +11,7 @@ use Vanguard\Libraries\Maths;
 use Vanguard\Libraries\Utilities;
 use Yajra\Datatables\Datatables;
 use Carbon\Carbon;
+use Session;
 
 
 class CampaignsController extends Controller
@@ -118,7 +118,17 @@ class CampaignsController extends Controller
         ]);
 
         if($request->min_age < 0 || $request->max_age < 0){
-            return back()->withErrors('The minimun or maximum age cannot assume a negetive value');
+            Session::flash('error', 'The minimun or maximum age cannot assume a negetive value');
+            return back();
+        }
+
+        if($request->min_age > $request->max_age){
+            Session::flash('error', 'The minimum age cannot be greater than the maximum age');
+            return back();
+        }
+
+        if(strtotime($request->end_date) < strtotime($request->start_date)){
+            return redirect()->back()->with('error', 'Start Date cannot be greater than End Date');
         }
 
         $step2_req = ((object) $request->all());
@@ -135,7 +145,8 @@ class CampaignsController extends Controller
         $broadcaster = \Session::get('broadcaster_id');
         $step1 = Session::get('step2');
         if(!$step1){
-            return back()->with('error', 'Data lost, please go back and select your filter criteria');
+            Session::flash('error', 'Data lost, please go back and select your filter criteria');
+            return back();
         }
         $day_parts = implode("','" ,$step1->dayparts);
         $region = implode("','", $step1->region);
@@ -178,7 +189,8 @@ class CampaignsController extends Controller
         ]);
 
         if(((int)$request->f_du) > ((int)$request->time)){
-            return redirect()->back()->with('error','Your video file duration cannot be more than the time slot you picked');
+            Session::flash('error', 'Your video file duration cannot be more than the time slot you picked');
+            return redirect()->back();
         }
 
         if ($request->file('uploads')) {
@@ -201,7 +213,8 @@ class CampaignsController extends Controller
                 if($insert_upload){
                     return redirect()->route('campaign.create4_1', ['walkins' => $walkins]);
                 }else{
-                    return back()->with('error','Could not complete upload process');
+                    Session::flash('error', 'Could not complete upload process');
+                    return back();
                 }
             }
 
@@ -224,7 +237,8 @@ class CampaignsController extends Controller
         ]);
 
         if(((int)$request->f_du) > ((int)$request->time)){
-            return redirect()->back()->with('error','Your video file duration cannot be more than the time slot you picked');
+            Session::flash('error', 'Your video file duration cannot be more than the time slot you picked');
+            return redirect()->back();
         }
 
         if ($request->file('uploads')) {
@@ -241,7 +255,8 @@ class CampaignsController extends Controller
 
                 $uploads = \DB::select("SELECT * from uploads where user_id = '$walkins' AND time = '$time'");
                 if(count($uploads) === 1){
-                    return back()->with('error', 'You cannot upload twice for this time slot');
+                    Session::flash('error', 'You cannot upload twice for this time slot');
+                    return back();
                 }
 
                 $insert_upload = \DB::table('uploads')->insert([
@@ -253,7 +268,8 @@ class CampaignsController extends Controller
                 if($insert_upload){
                     return redirect()->route('campaign.create4_2', ['walkins' => $walkins]);
                 }else{
-                    return back()->with('error','Could not complete upload process');
+                    Session::flash('error', 'Could not complete upload process');
+                    return back();
                 }
             }
 
@@ -276,7 +292,8 @@ class CampaignsController extends Controller
         ]);
 
         if(((int)$request->f_du) > ((int)$request->time)){
-            return redirect()->back()->with('error','Your video file duration cannot be more than the time slot you picked');
+            Session::flash('error', 'Your video file duration cannot be more than the time slot you picked');
+            return redirect()->back();
         }
 
         if ($request->file('uploads')) {
@@ -292,7 +309,8 @@ class CampaignsController extends Controller
                 $time = (int)$request->time;
                 $uploads = \DB::select("SELECT * from uploads where user_id = '$walkins' AND time = '$time'");
                 if(count($uploads) === 1){
-                    return back()->with('error', 'You cannot upload twice for this time slot');
+                    Session::flash('error', 'You cannot upload twice for this time slot');
+                    return back();
                 }
 
                 $insert_upload = \DB::table('uploads')->insert([
@@ -304,7 +322,8 @@ class CampaignsController extends Controller
                 if($insert_upload){
                     return redirect()->route('campaign.create4_3', ['walkins' => $walkins]);
                 }else{
-                    return back()->with('error','Could not complete upload process');
+                    Session::flash('error', 'Could not complete upload process');
+                    return back();
                 }
             }
 
@@ -327,7 +346,8 @@ class CampaignsController extends Controller
         ]);
 
         if(((int)$request->f_du) > ((int)$request->time)){
-            return redirect()->back()->with('error','Your video file duration cannot be more than the time slot you picked');
+            Session::flash('error', 'Your video file duration cannot be more than the time slot you picked');
+            return redirect()->back();
         }
 
         if ($request->file('uploads')) {
@@ -343,7 +363,8 @@ class CampaignsController extends Controller
                 $time = $request->time;
                 $uploads = \DB::select("SELECT * from uploads where user_id = '$walkins' AND time = '$time'");
                 if(count($uploads) === 1){
-                    return back()->with('error', 'You cannot upload twice for this time slot');
+                    Session::flash('error', 'You cannot upload twice for this time slot');
+                    return back();
                 }
                 $insert_upload = \DB::table('uploads')->insert([
                     'user_id' => $walkins,
@@ -353,7 +374,8 @@ class CampaignsController extends Controller
                 if($insert_upload){
                     return redirect()->route('campaign.create5', ['walkins' => $walkins]);
                 }else{
-                    return back()->with('error','Could not complete upload process');
+                    Session::flash('error', 'Could not complete upload process');
+                    return back();
                 }
             }
 
@@ -370,9 +392,11 @@ class CampaignsController extends Controller
     {
         $deleteUploads = \DB::delete("DELETE from uploads WHERE id = '$id' AND user_id = '$walkins'");
         if($deleteUploads){
-            return back()->with('success', 'File deleted successfully...');
+            Session::flash('success', 'File deleted successfully...');
+            return back();
         }else{
-            return back()->with('error', 'Error deleting file...');
+            Session::flash('error', 'Error deleting file...');
+            return back();
         }
     }
 
@@ -380,7 +404,8 @@ class CampaignsController extends Controller
     {
         $uploads_check = \DB::select("SELECT * from uploads where user_id = '$walkins'");
         if(count($uploads_check) === 4){
-            return back()->with('error', 'You have reached the maximum number to time for the uploads');
+            Session::flash('error', 'You have reached the maximum number to time for the uploads');
+            return back();
         }
         $broadcaster = Session::get('broadcaster_id');
         $this->validate($request, [
@@ -389,7 +414,8 @@ class CampaignsController extends Controller
         ]);
 
         if(((int)$request->f_du) > ((int)$request->time)){
-            return redirect()->back()->with('error','Your video file duration cannot be more than the time slot you picked');
+            Session::flash('error', 'Your video file duration cannot be more than the time slot you picked');
+            return redirect()->back();
         }
 
         if ($request->file('uploads')) {
@@ -405,7 +431,8 @@ class CampaignsController extends Controller
                 $time = $request->time;
                 $uploads = \DB::select("SELECT * from uploads where user_id = '$walkins' AND time = '$time'");
                 if(count($uploads) === 1){
-                    return back()->with('error', 'You cannot upload twice for this time slot');
+                    Session::flash('error', 'You cannot upload twice for this time slot');
+                    return back();
                 }
                 $insert_upload = \DB::table('uploads')->insert([
                     'user_id' => $walkins,
@@ -413,9 +440,11 @@ class CampaignsController extends Controller
                     'uploads' => $file_gan_gan
                 ]);
                 if($insert_upload){
-                    return back()->with('success', 'Uploaded successfully...');
+                    Session::flash('success', 'Uploaded successfully...');
+                    return back();
                 }else{
-                    return back()->with('error','Could not complete upload process');
+                    Session::flash('error', 'Could not complete upload process');
+                    return back();
                 }
             }
 
@@ -428,7 +457,8 @@ class CampaignsController extends Controller
         $broadcaster = \Session::get('broadcaster_id');
         $step1 = Session::get('step2');
         if(!$step1){
-            return back()->with('error', 'Data lost, please go back and select your filter criteria');
+            Session::flash('error', 'Data lost, please go back and select your filter criteria');
+            return back();
         }
         $day_parts = "". implode("','" ,$step1->dayparts) . "";
         $region = "". implode("','", $step1->region) ."";
@@ -454,7 +484,8 @@ class CampaignsController extends Controller
         $broadcaster = \Session::get('broadcaster_id');
         $step1 = Session::get('step2');
         if(!$step1){
-            return back()->with('error', 'Data lost, please go back and select your filter criteria');
+            Session::flash('error', 'Data lost, please go back and select your filter criteria');
+            return back();
         }
         $day_parts = "". implode("','" ,$step1->dayparts) . "";
         $region = "". implode("','", $step1->region) ."";
@@ -508,7 +539,8 @@ class CampaignsController extends Controller
         $time_used = $adslot[0]->time_used;
         $total_time = $time_used + $time;
         if($total_time > $time_difference){
-            return back()->with('error', 'This file duration cannot fit in the slot, please pick another one');
+            Session::flash('error', 'This file duration cannot fit in the slot, please pick another one');
+            return back();
         }
         $hourly_range = $request->range;
         $user = $request->walkins;
@@ -685,7 +717,8 @@ class CampaignsController extends Controller
             }
 
         }else{
-            return redirect()->back()->with('error', 'Could not create this campaign');
+            Session::flash('error', 'Could not create this campaign');
+            return redirect()->back();
         }
 
     }

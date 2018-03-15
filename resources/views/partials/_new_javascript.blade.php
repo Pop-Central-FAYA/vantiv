@@ -12,5 +12,5 @@
 <script>
     $('.dropdown-toggle').dropdown()
 </script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.3/toastr.min.js"></script>
 @yield('scripts')

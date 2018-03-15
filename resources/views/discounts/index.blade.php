@@ -96,9 +96,9 @@
                                                 <th>Discount %</th>
                                                 <th>Discount % Start Date</th>
                                                 <th>Discount % Stop Date</th>
-                                                <th>Discount N</th>
-                                                <th>Discount N Start Date</th>
-                                                <th>Discount N Stop Date</th>
+                                                <th>Discount Amount</th>
+                                                <th>Discount Amount Start Date</th>
+                                                <th>Discount Amount Stop Date</th>
                                                 <th>Action</th>
                                             </tr>
                                             </thead>
@@ -890,7 +890,7 @@
 
                                 <div class="row">
                                     <div class="Add-brand">
-                                        <<form action="{{ route('discount.store') }}" method="POST">
+                                        <form action="{{ route('discount.store') }}" method="POST">
                                             {{ csrf_field() }}
                                             <input type="hidden" name="discount_type_id" value="{{ $types[5]->id }}">
 

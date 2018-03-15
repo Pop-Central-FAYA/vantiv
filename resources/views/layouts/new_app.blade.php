@@ -29,7 +29,6 @@
             <!--Section-->
                 <div class="content-wrapper">
                     <div class="container-fluid">
-                        @include('partials.messages')
                         <div class="panel panel-default">
                             <div class="container-fluid">
                                 @yield('content')
@@ -37,6 +36,7 @@
                         </div>
                     </div>
                 </div>
+
             <!--Section-->
             <!--Footer-->
                 @include('partials.new_footer')
@@ -47,5 +47,6 @@
     <!--Wrapper-End-->
 </div>
 @include('partials._new_javascript')
+@include('toastr.toastr')
 </body>
 </html>
