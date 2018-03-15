@@ -46,7 +46,7 @@
                     {{--<div class="row">--}}
                  <div class="row">
                      <div class="col-md-12">
-                         <canvas id="containerTotal" style="width: 512px; height: 150px"></canvas>
+                         <div id="containerTotal"></div>
                          {{--<div id="containerTotal"></div>--}}
                      </div>
                  </div>
@@ -266,45 +266,23 @@
         });
 
         //Bar chart for Total Volume of Campaigns
-        var ctx = document.getElementById("containerTotal");
-        var myChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: campaign_month,
-                datasets: [{
-                    label: 'Total Number of Campaigns',
-                    data: campaign_volume,
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255,99,132,1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
-                    ],
-                    borderWidth: 1
-                }]
+        var chart = Highcharts.chart('containerTotal', {
+
+            title: {
+                text: 'Total Volume of Campaigns'
             },
-            options: {
-                scales: {
-                    yAxes: [{
-                        gridLines: {
-                            display:false
-                        },
-                        ticks: {
-                            beginAtZero:true
-                        }
-                    }]
-                }
-            }
+
+            xAxis: {
+                categories: campaign_month
+            },
+
+            series: [{
+                type: 'column',
+                colorByPoint: true,
+                data: campaign_volume,
+                showInLegend: false
+            }]
+
         });
 
 
