@@ -183,17 +183,19 @@ class CampaignsController extends Controller
     public function postStep4(Request $request, $walkins)
     {
         $broadcaster = Session::get('broadcaster_id');
-        $this->validate($request, [
-            'uploads' => 'required|max:20000',
-            'time' => 'required'
-        ]);
 
         if(((int)$request->f_du) > ((int)$request->time)){
             Session::flash('error', 'Your video file duration cannot be more than the time slot you picked');
             return redirect()->back();
         }
 
-        if ($request->file('uploads')) {
+        if ($request->hasFile('uploads')) {
+
+            $this->validate($request, [
+                'uploads' => 'required|max:20000',
+                'time' => 'required'
+            ]);
+
             $filesUploaded = $request->uploads;
             $extension = $filesUploaded->getClientOriginalExtension();
             if($extension == 'mp4' || $extension == 'wma' || $extension == 'ogg' || $extension == 'mkv'){
@@ -218,6 +220,13 @@ class CampaignsController extends Controller
                 }
             }
 
+        }else{
+            $time = $request->time;
+            $insert_upload = \DB::table('uploads')->insert([
+                'user_id' => $walkins,
+                'time' => $time,
+            ]);
+            return redirect()->route('campaign.create4_1', ['walkins' => $walkins]);
         }
     }
 
@@ -231,17 +240,19 @@ class CampaignsController extends Controller
     public function postStep4_1(Request $request, $walkins)
     {
         $broadcaster = Session::get('broadcaster_id');
-        $this->validate($request, [
-            'uploads' => 'required|max:20000',
-            'time' => 'required'
-        ]);
 
         if(((int)$request->f_du) > ((int)$request->time)){
             Session::flash('error', 'Your video file duration cannot be more than the time slot you picked');
             return redirect()->back();
         }
 
-        if ($request->file('uploads')) {
+        if ($request->hasFile('uploads')) {
+
+            $this->validate($request, [
+                'uploads' => 'required|max:20000',
+                'time' => 'required'
+            ]);
+
             $filesUploaded = $request->uploads;
             $extension = $filesUploaded->getClientOriginalExtension();
             if($extension == 'mp4' || $extension == 'wma' || $extension == 'ogg' || $extension == 'mkv'){
@@ -273,6 +284,13 @@ class CampaignsController extends Controller
                 }
             }
 
+        }else{
+            $time = $request->time;
+            $insert_upload = \DB::table('uploads')->insert([
+                'user_id' => $walkins,
+                'time' => $time,
+            ]);
+            return redirect()->route('campaign.create4_2', ['walkins' => $walkins]);
         }
     }
 
@@ -286,17 +304,19 @@ class CampaignsController extends Controller
     public function postStep4_2(Request $request, $walkins)
     {
         $broadcaster = Session::get('broadcaster_id');
-        $this->validate($request, [
-            'uploads' => 'required|max:20000',
-            'time' => 'required'
-        ]);
 
         if(((int)$request->f_du) > ((int)$request->time)){
             Session::flash('error', 'Your video file duration cannot be more than the time slot you picked');
             return redirect()->back();
         }
 
-        if ($request->file('uploads')) {
+        if ($request->hasFile('uploads')) {
+
+            $this->validate($request, [
+                'uploads' => 'required|max:20000',
+                'time' => 'required'
+            ]);
+
             $filesUploaded = $request->uploads;
             $extension = $filesUploaded->getClientOriginalExtension();
             if($extension == 'mp4' || $extension == 'wma' || $extension == 'ogg' || $extension == 'mkv'){
@@ -327,6 +347,14 @@ class CampaignsController extends Controller
                 }
             }
 
+        }else{
+            $time = $request->time;
+            $insert_upload = \DB::table('uploads')->insert([
+                'user_id' => $walkins,
+                'time' => $time,
+            ]);
+
+            return redirect()->route('campaign.create4_3', ['walkins' => $walkins]);
         }
     }
 
@@ -340,17 +368,19 @@ class CampaignsController extends Controller
     public function postStep4_3(Request $request, $walkins)
     {
         $broadcaster = Session::get('broadcaster_id');
-        $this->validate($request, [
-            'uploads' => 'required|max:20000',
-            'time' => 'required'
-        ]);
 
         if(((int)$request->f_du) > ((int)$request->time)){
             Session::flash('error', 'Your video file duration cannot be more than the time slot you picked');
             return redirect()->back();
         }
 
-        if ($request->file('uploads')) {
+        if ($request->hasFile('uploads')) {
+
+            $this->validate($request, [
+                'uploads' => 'required|max:20000',
+                'time' => 'required'
+            ]);
+
             $filesUploaded = $request->uploads;
             $extension = $filesUploaded->getClientOriginalExtension();
             if($extension == 'mp4' || $extension == 'wma' || $extension == 'ogg' || $extension == 'mkv'){
@@ -379,6 +409,13 @@ class CampaignsController extends Controller
                 }
             }
 
+        }else{
+            $time = $request->time;
+            $insert_upload = \DB::table('uploads')->insert([
+                'user_id' => $walkins,
+                'time' => $time,
+            ]);
+            return redirect()->route('campaign.create5', ['walkins' => $walkins]);
         }
     }
 
@@ -408,17 +445,19 @@ class CampaignsController extends Controller
             return back();
         }
         $broadcaster = Session::get('broadcaster_id');
-        $this->validate($request, [
-            'uploads' => 'required|max:20000',
-            'time' => 'required'
-        ]);
 
         if(((int)$request->f_du) > ((int)$request->time)){
             Session::flash('error', 'Your video file duration cannot be more than the time slot you picked');
             return redirect()->back();
         }
 
-        if ($request->file('uploads')) {
+        if ($request->hasFile('uploads')) {
+
+            $this->validate($request, [
+                'uploads' => 'required|max:20000',
+                'time' => 'required'
+            ]);
+
             $filesUploaded = $request->uploads;
             $extension = $filesUploaded->getClientOriginalExtension();
             if($extension == 'mp4' || $extension == 'wma' || $extension == 'ogg' || $extension == 'mkv'){
@@ -448,6 +487,14 @@ class CampaignsController extends Controller
                 }
             }
 
+        }else{
+            $time = $request->time;
+            $insert_upload = \DB::table('uploads')->insert([
+                'user_id' => $walkins,
+                'time' => $time,
+            ]);
+            Session::flash('success', 'Uploaded successfully...');
+            return back();
         }
 
     }

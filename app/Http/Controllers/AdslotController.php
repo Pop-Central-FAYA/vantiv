@@ -132,6 +132,7 @@ class AdslotController extends Controller
         $adslot_id = uniqid();
         $insert = [];
         $price = [];
+        $time_check = [];
         $h = 0; $i = 0; $j = 0; $k = 0; $l = 0; $m = 0; $n = 0; $o = 0; $p = 0; $q = 0;
         $r = 0; $s = 0; $t = 0; $w = 0;
         $ratecard = [
@@ -141,6 +142,16 @@ class AdslotController extends Controller
             'day' => $request->days,
             'hourly_range_id' => $request->hourly_range,
         ];
+//        dd($request->all());
+        for($x = 0; $x < count($request->from_time); $x++){
+            $diff = (strtotime($request->to_time[$x]) - strtotime($request->from_time[$x]));
+            $time_check[] = $diff;
+        }
+
+        if((array_sum($time_check)) > 720){
+            Session::flash('error', 'Your From To time summation must not exceed 12minutes');
+            return redirect()->back();
+        }
 
         $save_rate = Utilities::switch_db('api')->table('rateCards')->insert($ratecard);
 

@@ -185,7 +185,7 @@
 
             $("#add_more").click(function(){
                 var n = $(".b").length + 1;
-                if (n > 4) {
+                if (n > 12) {
                     return false;
                 }
                 var big_html = '';
