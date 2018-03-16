@@ -178,9 +178,11 @@ class AdslotController extends Controller
         $save_price = Utilities::switch_db('api')->table('adslotPrices')->insert($price);
 
         if($save_adslot && $save_price && $save_rate){
-            return back()->with('success', 'Adslot created successfully...');
+            Session::flash('success', 'Adslot created successfully...');
+            return back();
         }else{
-            return back()->with('error', 'Error creating adslots, please try again');
+            Session::flash('error', 'Error creating adslots, please try again');
+            return back();
         }
 
     }
@@ -206,19 +208,23 @@ class AdslotController extends Controller
             $adslotPrice = Utilities::switch_db('api')->update("UPDATE adslotPrices SET price_60 = '$request->time_60', price_45 = '$request->time_45', 
                                                                     price_30 = '$request->time_30', price_15 = '$request->time_15' WHERE adslot_id = '$adslot'");
             if($adslotPrice){
-                return back()->with('success', 'Prices updated for this slot');
+                Session::flash('success', 'Prices updated for this slot');
+                return back();
             }else{
-                return back()->with('error', 'Error updating adslot price');
+                Session::flash('error', 'Error updating adslot price');
+                return back();
             }
         }else{
             $selectAdslotPrice = Utilities::switch_db('api')->select("SELECT * from adslotPrices WHERE adslot_id = '$adslot'");
             if(((int)$request->premium_percent) === 0){
                 $deletePremium = Utilities::switch_db('api')->delete("DELETE from adslotPercentages where adslot_id = '$adslot'");
                 if($deletePremium){
-                    return back()->with('success', 'Percentage price deleted for this slot');
+                    Session::flash('success', 'Percentage price deleted for this slot');
+                    return back();
                 }
                 if($request->premium_percent === "0"){
-                    return back()->with('error', 'You cannot apply this percentage');
+                    Session::flash('error', 'You cannot apply this percentage');
+                    return back();
                 }
             }else{
                 $premium_60 = ($selectAdslotPrice[0]->price_60 + (((int)$request->premium_percent) / 100) * $selectAdslotPrice[0]->price_60);
@@ -241,17 +247,21 @@ class AdslotController extends Controller
 
                 $creatPremium = Utilities::switch_db('api')->table('adslotPercentages')->insert($premium);
                 if($creatPremium){
-                    return back()->with('success', 'Percentage applied to prices successfully...');
+                    Session::flash('success', 'Percentage applied to prices successfully...');
+                    return back();
                 }else{
-                    return back()->with('error', 'Error applying percentage to price');
+                    Session::flash('error', 'Error applying percentage to price');
+                    return back();
                 }
             }else{
                 $updatePercentage = Utilities::switch_db('api')->update("UPDATE adslotPercentages SET price_60 = '$premium_60', price_45 = '$premium_45', 
                                                                               price_30 = '$premium_30', price_15 = '$premium_15', percentage = '$request->premium_percent'");
                 if($updatePercentage){
-                    return back()->with('success', 'Prices updated with the new percentage...');
+                    Session::flash('success', 'Prices updated with the new percentage...');
+                    return back();
                 }else{
-                    return back()->with('error', 'Error updating price with the new percentage...');
+                    Session::flash('error', 'Error updating price with the new percentage...');
+                    return back();
                 }
             }
 
