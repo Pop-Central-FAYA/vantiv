@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Vanguard\Libraries\Utilities;
 use JD\Cloudder\Facades\Cloudder;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 
 class BrandsController extends Controller
@@ -49,7 +50,7 @@ class BrandsController extends Controller
             $client[] = $cli;
         }
 
-        return view('brands.create')->with('client', $client);
+        return view('brands.create')->with('clients', $client);
     }
 
     /**
@@ -74,7 +75,6 @@ class BrandsController extends Controller
             $clouder = Cloudder::getResult();
             $image_url = encrypt($clouder['url']);
         }
-
 
         $brand = Utilities::formatString($request->brand_name);
         $unique = uniqid();

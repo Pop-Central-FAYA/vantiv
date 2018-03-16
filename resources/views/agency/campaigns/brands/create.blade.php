@@ -1,6 +1,6 @@
 @extends('layouts.new_app')
 @section('title')
-    <title>Agency | Create Brand</title>
+    <title>Agency - Create Brand</title>
 @stop
 @section('content')
 

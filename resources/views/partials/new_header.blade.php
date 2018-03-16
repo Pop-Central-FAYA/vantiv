@@ -2,10 +2,10 @@
     if(Session::get('agency_id')){
         $agency_id = Session::get('agency_id');
         $profile = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT image_url from agents where id = '$agency_id'");
-    }elseif (Session::get('broadcaster_id')){
+    } elseif (Session::get('broadcaster_id')){
         $broadcaster_id = Session::get('broadcaster_id');
         $profile = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT image_url from broadcasters where id = '$broadcaster_id'");
-    }else{
+    } else {
         $advertiser_id = Session::get('advertiser_id');
         $profile = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT image_url from advertisers where id = '$advertiser_id'");
     }

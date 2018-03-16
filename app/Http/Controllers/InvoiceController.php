@@ -19,15 +19,18 @@ class InvoiceController extends Controller
         foreach ($all_invoices as $invoice) {
 
             $campaign_id = $invoice->campaign_id;
+            $user_id = $invoice->user_id;
 
             $campaign = Utilities::switch_db('reports')->select("SELECT * FROM campaigns WHERE id = '$campaign_id'");
             $brand_id = $campaign[0]->brand;
             $brand_name = Utilities::switch_db('api')->select("SELECT name from brands where id = '$brand_id'");
+            $user_details = $user_details = \DB::select("SELECT * FROM users WHERE id = '$user_id'");
 
             $invoice_campaign_details[] = [
                 'invoice_number' => $invoice->invoice_number,
                 'actual_amount_paid' => $invoice->actual_amount_paid,
                 'refunded_amount' => $invoice->refunded_amount,
+                'name' => $user_details && $user_details[0] ? $user_details[0]->last_name . ' ' . $user_details[0]->first_name : '',
                 'status' => $invoice->status,
                 'campaign_brand' => $brand_name[0]->name,
                 'campaign_name' => $campaign[0]->name

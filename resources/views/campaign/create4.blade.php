@@ -21,20 +21,6 @@
                     <form class="campform" method="POST" action="{{ route('campaign.store4', ['walkins' => $walkins]) }}" enctype="multipart/form-data">
                         {{ csrf_field() }}
 
-                        <div class="row">
-                            <div class="col-md-12 ">
-                                <h2>
-                                    <p align="center">
-                                        The history of advertising can be traced to ancient civilizations.
-                                        It became a major force in capitalist economies in the mid-19th century,
-                                        based primarily on newspapers and magazines. In the 20th century,
-                                        advertising grew rapidly with new technologies such as direct mail, radio, television,
-                                        the internet and mobile devices.
-                                    </p>
-                                </h2>
-                            </div>
-                        </div>
-
                         <div id="dynamic">
                             <div class="input-group">
                                 <label>Upload Media Step 1</label>

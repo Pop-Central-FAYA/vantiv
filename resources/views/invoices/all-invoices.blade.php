@@ -34,6 +34,7 @@
                             <tr>
                                 <th>Invoice Number</th>
                                 <th>Campaign Name</th>
+                                <th>Client Name</th>
                                 <th>Brand</th>
                                 <th>Actual Amount Paid</th>
                                 <th>Refunded Amount</th>
@@ -45,6 +46,7 @@
                                     <tr>
                                         <td>{{ $invoice['invoice_number'] }}</td>
                                         <td>{{ $invoice['campaign_name'] }}</td>
+                                        <td>{{ $invoice['name'] }}</td>
                                         <td>{{ $invoice['campaign_brand'] }}</td>
                                         <td>&#8358;{{ $invoice['actual_amount_paid'] }}</td>
                                         <td>&#8358;{{ $invoice['refunded_amount'] }}</td>

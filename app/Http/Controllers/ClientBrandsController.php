@@ -62,7 +62,7 @@ class ClientBrandsController extends Controller
                 $cli = \DB::select("SELECT * from users WHERE id = '$user_id'");
                 $client[] = $cli;
             }
-            // dd($client);
+            
             return view('agency.campaigns.brands.create')->with('clients', $client);
         } else {
             return view('advertisers.campaigns.brands.create');

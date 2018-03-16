@@ -17,22 +17,6 @@
                     </ul>
                 </div>
 
-                <div class="Add-brand">
-                    <div class="row">
-                        <div class="col-md-12 ">
-                            <h2>
-                                <p align="center">
-                                    The history of advertising can be traced to ancient civilizations.
-                                    It became a major force in capitalist economies in the mid-19th century,
-                                    based primarily on newspapers and magazines. In the 20th century,
-                                    advertising grew rapidly with new technologies such as direct mail, radio, television,
-                                    the internet and mobile devices.
-                                </p>
-                            </h2>
-                        </div>
-                    </div>
-                </div>
-
                 <div class="row">
                     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 ">
                         <a href="{{ route('campaign.store7', ['walkins' => $walkins]) }}">

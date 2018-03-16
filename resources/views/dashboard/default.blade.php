@@ -258,6 +258,9 @@
                     showInLegend: true
                 }
             },
+            credits: {
+                enabled: false
+            },
             series: [{
                 name: 'Performing Days',
                 colorByPoint: true,
@@ -275,7 +278,9 @@
             xAxis: {
                 categories: campaign_month
             },
-
+            credits: {
+                enabled: false
+            },
             series: [{
                 type: 'column',
                 colorByPoint: true,
