@@ -155,7 +155,8 @@ class BrandsController extends Controller
             $entries->setPath('brands');
             return view('brands.result.index')->with('brands', $entries)->with('result', $result);
         }else{
-            return back()->withErrors('No result found for '.$result.'');
+            Session::flash('error', 'No result found for '.$result.'');
+            return back();
         }
     }
 }
