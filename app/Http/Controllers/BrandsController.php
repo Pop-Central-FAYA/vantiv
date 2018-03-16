@@ -10,7 +10,6 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Vanguard\Libraries\Utilities;
 use JD\Cloudder\Facades\Cloudder;
-use Illuminate\Pagination\LengthAwarePaginator;
 
 
 class BrandsController extends Controller
@@ -109,9 +108,11 @@ class BrandsController extends Controller
         }else{
             $update_brand = Utilities::switch_db('api')->select("UPDATE brands SET name = '$brand' WHERE id = '$id'");
             if(!$update_brand) {
-                return redirect()->back()->with('success', 'Brands updated successfully');
+                Session::flash('success', 'Brand Updated Successfully');
+                return redirect()->back();
             }else{
-                return redirect()->back()->with('error', 'There was a problem updating this brand');
+                Session::flash('error', 'There was a problem updating this brand');
+                return redirect()->back();
             }
         }
 
