@@ -25,7 +25,7 @@
                         <div class="row">
                             <div class="input-group" style="margin-right: 20px;">
                                 <label for="days">Select Days</label>
-                                <select name="days" id="" class="Role form-control">
+                                <select name="days" id="" required class="Role form-control">
                                     @foreach($days as $day)
                                         <option value="{{ $day->id }}">{{ $day->day }}</option>
                                     @endforeach
@@ -33,7 +33,7 @@
                             </div>
                             <div class="input-group">
                                 <label for="hourly_range">Hourly Range</label>
-                                <select name="hourly_range" id="hourly_range" class="Role form-control">
+                                <select name="hourly_range" required id="hourly_range" class="Role form-control">
                                     @foreach($hours as $hour)
                                         <option value="{{ $hour->id }}">{{ $hour->time_range }}</option>
                                     @endforeach
@@ -46,7 +46,7 @@
                         <div class="row">
                             <div class="input-group" style="margin-right: 20px;">
                                 <label for="days">Select Broadcast Channel</label>
-                                <select name="medium" id="" class="Role form-control">
+                                <select name="medium" id="" required class="Role form-control">
                                     <option value="">Select Channel</option>
                                     @foreach($channels as $channel)
                                         <option value="{{ $channel->id }}">{{ $channel->channel }}</option>
