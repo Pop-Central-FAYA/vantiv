@@ -5,7 +5,10 @@
 @endsection
 
 @section('content')
-
+    <?php
+    //get unique id
+    $up_id = uniqid();
+    ?>
     <div class="main-section">
         <div class="container">
             <div class="row">
@@ -18,7 +21,7 @@
                 </div>
 
                 <div class="Add-brand">
-                    <form class="campform" method="POST" action="{{ route('campaign.store4', ['walkins' => $walkins]) }}" enctype="multipart/form-data">
+                    <form class="campform" method="POST" id="form1" action="{{ route('campaign.store4', ['walkins' => $walkins]) }}" enctype="multipart/form-data">
                         {{ csrf_field() }}
 
                         <div id="dynamic">
@@ -35,6 +38,14 @@
                                 {{--<button type="button" id="add_more" class="btn btn-info btn-xs add_more">+ Add More</button>--}}
                             </div>
                         </div>
+
+                        <input type="hidden" name="APC_UPLOAD_PROGRESS" id="progress_key" value="<?php echo $up_id; ?>"/>
+
+                        <!--Include the iframe-->
+                        <br />
+                        <iframe id="upload_frame" name="upload_frame" frameborder="0" border="0" src="" scrolling="no" scrollbar="no" > </iframe>
+                        <br />
+                        <!---->
 
                         <audio id="audio"></audio>
 
@@ -77,7 +88,27 @@
             $('#step3').click(function(){
                 window.location.href = '/campaign/create/1/'+user_id+'/step3';
             });
+
+            //show the progress bar only if a file field was clicked
+            var show_bar = 0;
+            $('input[type="file"]').click(function(){
+                show_bar = 1;
+            });
+
+            //show iframe on form submit
+            $("#form1").submit(function(){
+
+                if (show_bar === 1) {
+                    $('#upload_frame').show();
+                    function set () {
+                        $('#upload_frame').attr('src','upload_frame.php?up_id=<?php echo $up_id; ?>');
+                    }
+                    setTimeout(set);
+                }
+            });
         });
+
+
     </script>
     <script>
         $(function () {

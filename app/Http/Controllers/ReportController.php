@@ -332,6 +332,7 @@ class ReportController extends Controller
                     'percentage' => $perc_days.'%',
                     'week' => date('W', strtotime($dd->days)),
                 ];
+                $j++;
             }
 
             return $datatables->collection($day_name)
@@ -356,6 +357,7 @@ class ReportController extends Controller
                     'percentage' => $perc_days.'%',
                     'week' => date('W', strtotime($dd->days)),
                 ];
+                $j++;
             }
 
             return $datatables->collection($day_name)
