@@ -174,7 +174,7 @@ class CampaignsController extends Controller
         }
         $day_parts = implode("','" ,$step1->dayparts);
         $region = implode("','", $step1->region);
-        $adslots = Utilities::switch_db('api')->select("SELECT broadcaster, COUNT(broadcaster) as all_slots FROM adslots where min_age >= $step1->min_age AND max_age <= $step1->max_age AND target_audience = '$step1->target_audience' AND day_parts IN ('$day_parts') AND region IN ('$region') AND is_available = 0 group by broadcaster");
+        $adslots = Utilities::switch_db('api')->select("SELECT broadcaster, COUNT(broadcaster) as all_slots FROM adslots where min_age >= $step1->min_age AND channels = '$step1->channel' AND max_age <= $step1->max_age AND target_audience = '$step1->target_audience' AND day_parts IN ('$day_parts') AND region IN ('$region') AND is_available = 0 group by broadcaster");
 
         $ads_broad = [];
         foreach ($adslots as $adslot)
@@ -201,7 +201,7 @@ class CampaignsController extends Controller
     {
 
         $this->validate($request, [
-            'uploads' => 'required|max:20000',
+            'uploads' => 'max:20000',
             'time' => 'required'
         ]);
 
@@ -209,7 +209,7 @@ class CampaignsController extends Controller
             return redirect()->back()->with('error','Your video file duration cannot be more than the time slot you picked');
         }
 
-        if ($request->file('uploads')) {
+        if ($request->hasFile('uploads')) {
             $filesUploaded = $request->uploads;
             $extension = $filesUploaded->getClientOriginalExtension();
             if($extension == 'mp4' || $extension == 'wma' || $extension == 'ogg' || $extension == 'mkv'){
@@ -237,6 +237,13 @@ class CampaignsController extends Controller
                 }
             }
 
+        }else{
+            $time = $request->time;
+            $insert_upload = \DB::table('uploads')->insert([
+                'user_id' => $id,
+                'time' => $time,
+            ]);
+            return redirect()->route('advertiser_campaign.step3_1', ['id' => $id, 'broadcaster' => $broadcaster]);
         }
     }
 
@@ -250,7 +257,7 @@ class CampaignsController extends Controller
     {
 
         $this->validate($request, [
-            'uploads' => 'required|max:20000',
+            'uploads' => 'max:20000',
             'time' => 'required'
         ]);
 
@@ -258,7 +265,7 @@ class CampaignsController extends Controller
             return redirect()->back()->with('error','Your video file duration cannot be more than the time slot you picked');
         }
 
-        if ($request->file('uploads')) {
+        if ($request->hasFile('uploads')) {
             $filesUploaded = $request->uploads;
             $extension = $filesUploaded->getClientOriginalExtension();
             if($extension == 'mp4' || $extension == 'wma' || $extension == 'ogg' || $extension == 'mkv'){
@@ -286,6 +293,13 @@ class CampaignsController extends Controller
                 }
             }
 
+        }else{
+            $time = $request->time;
+            $insert_upload = \DB::table('uploads')->insert([
+                'user_id' => $id,
+                'time' => $time,
+            ]);
+            return redirect()->route('advertiser_campaign.step3_2', ['id' => $id, 'broadcaster' => $broadcaster]);
         }
     }
 
@@ -299,7 +313,7 @@ class CampaignsController extends Controller
     {
 
         $this->validate($request, [
-            'uploads' => 'required|max:20000',
+            'uploads' => 'max:20000',
             'time' => 'required'
         ]);
 
@@ -307,7 +321,7 @@ class CampaignsController extends Controller
             return redirect()->back()->with('error','Your video file duration cannot be more than the time slot you picked');
         }
 
-        if ($request->file('uploads')) {
+        if ($request->hasFile('uploads')) {
             $filesUploaded = $request->uploads;
             $extension = $filesUploaded->getClientOriginalExtension();
             if($extension == 'mp4' || $extension == 'wma' || $extension == 'ogg' || $extension == 'mkv'){
@@ -335,6 +349,13 @@ class CampaignsController extends Controller
                 }
             }
 
+        }else{
+            $time = $request->time;
+            $insert_upload = \DB::table('uploads')->insert([
+                'user_id' => $id,
+                'time' => $time,
+            ]);
+            return redirect()->route('advertiser_campaign.step3_3', ['id' => $id, 'broadcaster' => $broadcaster]);
         }
     }
 
@@ -348,7 +369,7 @@ class CampaignsController extends Controller
     {
 
         $this->validate($request, [
-            'uploads' => 'required|max:20000',
+            'uploads' => 'max:20000',
             'time' => 'required'
         ]);
 
@@ -356,7 +377,7 @@ class CampaignsController extends Controller
             return redirect()->back()->with('error','Your video file duration cannot be more than the time slot you picked');
         }
 
-        if ($request->file('uploads')) {
+        if ($request->hasFile('uploads')) {
             $filesUploaded = $request->uploads;
             $extension = $filesUploaded->getClientOriginalExtension();
             if($extension == 'mp4' || $extension == 'wma' || $extension == 'ogg' || $extension == 'mkv'){
@@ -384,6 +405,13 @@ class CampaignsController extends Controller
                 }
             }
 
+        }else{
+            $time = $request->time;
+            $insert_upload = \DB::table('uploads')->insert([
+                'user_id' => $id,
+                'time' => $time,
+            ]);
+            return redirect()->route('advertiser_campaign.review_uploads', ['id' => $id, 'broadcaster' => $broadcaster]);
         }
     }
 
@@ -402,7 +430,7 @@ class CampaignsController extends Controller
         }
         $day_parts = implode("','" ,$step1->dayparts);
         $region = implode("','", $step1->region);
-        $adslots_count = Utilities::switch_db('api')->select("SELECT * FROM adslots where min_age >= $step1->min_age AND max_age <= $step1->max_age AND target_audience = '$step1->target_audience' AND day_parts IN ('$day_parts') AND region IN ('$region') AND is_available = 0 AND broadcaster = '$broadcaster'");
+        $adslots_count = Utilities::switch_db('api')->select("SELECT * FROM adslots where min_age >= $step1->min_age AND channels = '$step1->channel' AND max_age <= $step1->max_age AND target_audience = '$step1->target_audience' AND day_parts IN ('$day_parts') AND region IN ('$region') AND is_available = 0 AND broadcaster = '$broadcaster'");
         $result = count($adslots_count);
         $ratecards = Utilities::switch_db('api')->select("SELECT * from rateCards WHERE id IN (SELECT rate_card FROM adslots where min_age >= $step1->min_age 
                                                             AND max_age <= $step1->max_age 
@@ -533,7 +561,6 @@ class CampaignsController extends Controller
             'time_created' => date('Y-m-d H:i:s', $now),
             'time_modified' => date('Y-m-d H:i:s', $now),
             'adslots_id' => "'". implode("','" ,$ads) . "'",
-            'adslots' => count($query),
             'agency' => Session::get('advertiser_id'),
             'agency_broadcaster' => $broadcaster,
         ];
@@ -567,8 +594,6 @@ class CampaignsController extends Controller
                 'campaign_id' => $camp_id[0]->id,
                 'payment_method' => $request->payment,
                 'amount' => (integer) $request->total,
-                'time_created' => $now,
-                'time_modified' => $now,
                 'walkins_id' => $advertiser_id[0]->user_id,
                 'time_created' => date('Y-m-d H:i:s', $now),
                 'time_modified' => date('Y-m-d H:i:s', $now),

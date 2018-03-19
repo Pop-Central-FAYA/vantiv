@@ -44,7 +44,7 @@
                                             @foreach($uploads as $upload)
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ decrypt($upload->uploads) }}</td>
+                                                    <td>{{ $upload->uploads ? decrypt($upload->uploads) : 'Sorry! You do not have any media file for this period.' }}</td>
                                                     <td>{{ $upload->time }}</td>
                                                     {{--<td><button type="button" data-toggle="modal" data-target=".deleteModal{{ $upload->id }}" class="btn btn-danger btn-xs">Delete</button></td>--}}
                                                 </tr>

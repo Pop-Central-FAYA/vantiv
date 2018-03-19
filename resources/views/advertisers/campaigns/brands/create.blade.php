@@ -20,15 +20,20 @@
                         {{ csrf_field() }}
                         <div class="row">
                             <div class="col-md-4">
-                                <div class="input-group">
+                                <div class="input-group{{ $errors->has('brand_name') ? ' has-error' : '' }}">
                                     <label for="brand_name">Brand Name</label>
-                                    <input type="text" name="brand_name" value=""  placeholder="Brand Name">
+                                    <input type="text" name="brand_name" required value=""  placeholder="Brand Name">
                                 </div>
+                                @if($errors->has('brand_name'))
+                                    <strong>
+                                        <span class="help-block">{{ $errors->first }}</span>
+                                    </strong>
+                                @endif
                             </div>
                             <div class="col-md-4">
                                 <div class="input-group">
                                     <label for="brand_logo">Brand Logo</label>
-                                    <input type="file" name="brand_logo" value=""  placeholder="">
+                                    <input type="file" required name="brand_logo" value=""  placeholder="">
                                 </div>
                             </div>
                             <div class="col-md-4">

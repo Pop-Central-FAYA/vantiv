@@ -166,9 +166,11 @@ class ClientBrandsController extends Controller
                 }else{
                     $user_activity = Api::saveActivity(Session::get('advertiser_id'), $description, $ip, $user_agent);
                 }
-                return redirect()->route('agency.brand.all')->with('success', 'Brands updated successfully');
+                Session::flash('success', 'Brands updated successfully');
+                return redirect()->route('agency.brand.all');
             }else{
-                return redirect()->back()->with('error', 'There was a problem updating this brand');
+                Session::flash('error', 'There was a problem updating this brand');
+                return redirect()->back();
             }
         }
 
@@ -194,9 +196,11 @@ class ClientBrandsController extends Controller
         $brand = Utilities::switch_db('api')->update("UPDATE brands set status = 1 WHERE id = '$id'");
         if($brand)
         {
-            return redirect()->back()->with('success', 'Brands Deleted Successfully');
+            Session::flash('success', 'Brands Deleted Successfully');
+            return redirect()->back();
         }else{
-            return redirect()->back()->with('error', 'There was a problem deleting this brand');
+            Session::flash('error', 'There was a problem deleting this brand');
+            return redirect()->back();
         }
     }
 
@@ -220,7 +224,8 @@ class ClientBrandsController extends Controller
                 $entries->setPath('all-brands');
                 return view('agency.campaigns.brands.result.index')->with('brand', $entries)->with('result', $result);
             }else{
-                return back()->withErrors('No result found for '.$result.'');
+                Session::flash('error', 'No result found for '.$result.'');
+                return redirect()->back();
             }
 
         } else {
@@ -235,7 +240,8 @@ class ClientBrandsController extends Controller
                 $entries->setPath('all-brands');
                 return view('advertisers.campaigns.brands.result.index')->with('brand', $entries)->with('result', $result);
             }else{
-                return back()->withErrors('No result found for '.$result.'');
+                Session::flash('error', 'No result found for '.$result.'');
+                return redirect()->back();
             }
 
         }
