@@ -118,7 +118,7 @@ class CampaignsController extends Controller
         ]);
 
         if($request->min_age < 0 || $request->max_age < 0){
-            Session::flash('error', 'The minimun or maximum age cannot assume a negetive value');
+            Session::flash('error', 'The minimum or maximum age cannot have a negetive value');
             return back();
         }
 

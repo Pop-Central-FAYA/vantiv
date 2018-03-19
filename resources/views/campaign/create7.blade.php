@@ -25,15 +25,7 @@
                 <div class="Add-brand">
                     <div class="row">
                         <div class="col-md-12 ">
-                            <h2>
-                                <p align="center">
-                                    The history of advertising can be traced to ancient civilizations.
-                                    It became a major force in capitalist economies in the mid-19th century,
-                                    based primarily on newspapers and magazines. In the 20th century,
-                                    advertising grew rapidly with new technologies such as direct mail, radio, television,
-                                    the internet and mobile devices.
-                                </p>
-                            </h2>
+
                         </div>
                     </div>
                 </div>
@@ -41,7 +33,7 @@
                 <div class="row">
                     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 ">
                         <div class="tvspace-box">
-                            <img src="{{ asset('asset/dist/img/nta-logo.jpg') }}" width="100%">
+                            <img style="width: 150px; height: 150px;" src="{{ $broadcaster_logo[0]->image_url ? asset(decrypt($broadcaster_logo[0]->image_url)) : asset('asset/dist/img/nta-logo.jpg') }}" width="100%">
                             <div class="tv-space">
                                 <p align="center">{{ $result }} Adslot(s)</p>
                             </div>
@@ -54,7 +46,7 @@
                         <div class="row">
 
                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <img src="{{ asset('asset/dist/img/nta-logo.jpg') }}" width="65%">
+                                <img style="height: 70px; width: 70px;" src="{{ $broadcaster_logo[0]->image_url ? asset(decrypt($broadcaster_logo[0]->image_url)) : asset('asset/dist/img/nta-logo.jpg') }}" width="65%">
                             </div>
                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
                                 <h3 lign="center">{{ $ratecard['day'] }}</h3>
