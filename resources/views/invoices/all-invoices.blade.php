@@ -1,7 +1,7 @@
 @extends('layouts.new_app')
 
 @section('title')
-    <title>Agency | Invoice</title>
+    <title>Agency - Invoice</title>
 @stop
 
 @section('styles')
@@ -24,7 +24,7 @@
                     </ul>
                 </div>
                 <div class="col-12 invoice-Management">
-                    @if(count($all_invoices) === 0)
+                    @if (count($all_invoices) === 0)
 
                         <h4>You have no invoices at this moment</h4>
 
@@ -42,7 +42,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                                @foreach($all_invoices as $invoice)
+                                @foreach ($all_invoices as $invoice)
                                     <tr>
                                         <td>{{ $invoice['invoice_number'] }}</td>
                                         <td>{{ $invoice['campaign_name'] }}</td>

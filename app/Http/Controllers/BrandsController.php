@@ -41,7 +41,7 @@ class BrandsController extends Controller
      */
     public function create()
     {
-        $broadcaster = Session::get('broadcaster_id');
+        $broadcaster = Session::get('broadcaster_id'); 
         $client = [];
         $walkins = Utilities::switch_db('api')->select("SELECT user_id from walkIns where broadcaster_id = '$broadcaster'");
         foreach ($walkins as $walk) {
@@ -85,10 +85,10 @@ class BrandsController extends Controller
             return redirect()->back()->with('error', 'Brands already exists');
         }else{
             $insert = Utilities::switch_db('api')->select("INSERT into brands (id, `name`, image_url, walkin_id, broadcaster_agency) VALUES ('$unique', '$brand', '$image_url', '$id', '$broadcaster')");
-            if(!$insert) {
+            if (!$insert) {
                 Session::flash('success', 'Brands created successfully');
                 return redirect()->route('brand.all');
-            }else{
+            } else {
                 Session::flash('error', 'There was a problem creating this brand');
                 return redirect()->back();
             }
@@ -104,13 +104,13 @@ class BrandsController extends Controller
 
         $brand = Utilities::formatString($request->brand_name);
         $ckeck_brand = Utilities::switch_db('api')->select("SELECT name from brands WHERE `name` = '$brand'");
-        if(count($ckeck_brand) > 0) {
+        if (count($ckeck_brand) > 0) {
             return redirect()->back()->with('error', 'Brands already exists');
-        }else{
+        } else {
             $update_brand = Utilities::switch_db('api')->select("UPDATE brands SET name = '$brand' WHERE id = '$id'");
-            if(!$update_brand) {
+            if (!$update_brand) {
                 return redirect()->back()->with('success', 'Brands updated successfully');
-            }else{
+            } else {
                 return redirect()->back()->with('error', 'There was a problem updating this brand');
             }
         }

@@ -7,6 +7,9 @@
 Route::get('login', 'Auth\AuthController@getLogin')->name('login');
 Route::post('login', 'Auth\AuthController@postLogin');
 
+Route::get('/auth-broadcaster/signup', 'BroadcasterAuthController@getRegister')->name('broadcaster.register.form');
+Route::post('/auth-broadcaster/signup/process', 'BroadcasterAuthController@postRegister')->name('broadcaster.signup');
+
 Route::get('/auth-agent/signup', 'Agency\AgencyAuthController@getRegister')->name('agency.register.form');
 Route::post('/auth-agent/signup/process', 'Agency\AgencyAuthController@postRegister')->name('agency.signup');
 
