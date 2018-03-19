@@ -5,6 +5,8 @@ namespace Vanguard\Http\Controllers;
 use Vanguard\Country;
 use Illuminate\Http\Request;
 use Vanguard\Libraries\Utilities;
+use JD\Cloudder\Facades\Cloudder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
 class BroadcasterAuthController extends Controller
@@ -72,7 +74,7 @@ class BroadcasterAuthController extends Controller
                 $apiUser = Utilities::switch_db('api')->select("SELECT id FROM users WHERE email = '$request->email'");
             }
 
-            $broadcasterApiInsert = Utilities::switch_db('api')->table('agents')->insert([
+            $broadcasterApiInsert = Utilities::switch_db('api')->table('broadcasters')->insert([
                 'id' => uniqid(),
                 'user_id' => $apiUser[0]->id,
                 'sector_id' => $request->sector_id,
