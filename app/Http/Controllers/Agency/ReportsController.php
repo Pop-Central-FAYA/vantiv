@@ -29,14 +29,14 @@ class ReportsController extends Controller
     public function getCampaign(DataTables $dataTables, Request $request)
     {
         $agency_id = Session::get('agency_id');
-        if($request->client){
+        if ($request->client) {
             if($request->start_date && $request->stop_date){
                 $start = date('Y-m-d', strtotime($request->start_date));
                 $stop = date('Y-m-d', strtotime($request->stop_date));
                 $campaign_report = [];
                 $j = 1;
                 $camp = Utilities::switch_db('api')->select("SELECT * from campaigns where user_id = '$request->client' AND agency = '$agency_id' AND time_created BETWEEN '$start' AND '$stop' ORDER BY time_created desc");
-                foreach ($camp as $campaign){
+                foreach ($camp as $campaign) {
                     $pay = Utilities::switch_db('api')->select("SELECT amount from payments where campaign_id = '$campaign->id'");
                     $campaign_report[] = [
                         'id' => $j,
@@ -61,20 +61,20 @@ class ReportsController extends Controller
         $campaign_report = $this->dataTable($user_re_id);
         return $dataTables->collection($campaign_report)
             ->make(true);
-
     }
 
     public function getRevenue(DataTables $dataTables, Request $request)
     {
         $agency_id = Session::get('agency_id');
-        if($request->client){
-            if($request->start_date && $request->stop_date){
+        if ($request->client) {
+            if ($request->start_date && $request->stop_date) {
                 $start = date('Y-m-d', strtotime($request->start_date));
                 $stop = date('Y-m-d', strtotime($request->stop_date));
                 $campaign_report = [];
                 $j = 1;
                 $camp = Utilities::switch_db('api')->select("SELECT * from campaigns where user_id = '$request->client' AND agency = '$agency_id' AND time_created BETWEEN '$start' AND '$stop' ORDER BY time_created desc");
-                foreach ($camp as $campaign){
+
+                foreach ($camp as $campaign) {
                     $pay = Utilities::switch_db('api')->select("SELECT amount from payments where campaign_id = '$campaign->id'");
                     $campaign_report[] = [
                         'id' => $j,
@@ -93,6 +93,7 @@ class ReportsController extends Controller
             return $dataTables->collection($campaign_report)
                 ->make(true);
         }
+
         $user_re_id = 0;
 
         $campaign_report = $this->dataTable($user_re_id);
@@ -101,14 +102,13 @@ class ReportsController extends Controller
 
     }
 
-
     public function dataTable($user_id)
     {
         $agency_id = Session::get('agency_id');
         $campaign_report = [];
         $j = 1;
         $camp = Utilities::switch_db('api')->select("SELECT * from campaigns where user_id = '$user_id' AND agency = '$agency_id' ORDER BY time_created desc");
-        foreach ($camp as $campaign){
+        foreach ($camp as $campaign) {
             $pay = Utilities::switch_db('api')->select("SELECT amount from payments where campaign_id = '$campaign->id'");
             $campaign_report[] = [
                 'id' => $j,
@@ -123,4 +123,5 @@ class ReportsController extends Controller
 
         return $campaign_report;
     }
+
 }

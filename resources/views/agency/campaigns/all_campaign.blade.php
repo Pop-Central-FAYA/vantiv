@@ -1,7 +1,7 @@
 @extends('layouts.new_app')
 
 @section('title')
-    <title>Agency | Campaign-Lists</title>
+    <title>Agency - Campaign-Lists</title>
 @stop
 
 @section('content')
@@ -37,8 +37,8 @@
     </div>
 
     <!--Mpo Modal -->
-    @if(count($mpos) != 0)
-        @foreach($mpos as $mpo)
+    @if (count($mpos) != 0)
+        @foreach ($mpos as $mpo)
             <div class="modal fade mpoModal{{ $mpo['campaign_id'] }}"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
@@ -50,8 +50,8 @@
 
                             <div class="panel panel-default">
                                 <div class="panel-body">
-                                    <p><h3>Name: {{ $mpo['campaign_name'] }}</h3></p><br>
-                                    <p><h3>Brand: {{ $mpo['brand'] }}</h3></p><br>
+                                    <p><h3>Name: <strong>{{ $mpo['campaign_name'] }}</strong></h3></p><br>
+                                    <p><h3>Brand: <strong>{{ $mpo['brand'] }}</strong></h3></p><br>
 
                                     <div class="table-responsive">
                                         <table class="table">
@@ -126,7 +126,7 @@
     @endif
 
     <!-- Invoice -->
-    @foreach($invoice as $inv)
+    @foreach ($invoice as $inv)
     <div class="modal fade invoiceModal{{ $inv->campaign_id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">

@@ -36,9 +36,9 @@ class CampaignsController extends Controller
             $brand = Utilities::switch_db('api')->select("SELECT `name` from brands where id = '$brand_id'");
             $adslots = Utilities::switch_db('api')->select("SELECT * from adslots WHERE id IN ($camp_id)");
 
-            if($adslots){
+            if ($adslots) {
                 $slot = $adslots;
-            }else{
+            } else {
                 $slot = $adslots;
             }
             $all_mpo[] = [
@@ -61,14 +61,13 @@ class CampaignsController extends Controller
         $j = 1;
         $agency_id = \Session::get('agency_id');
         $all_campaign = Utilities::switch_db('api')->select("SELECT * from campaigns WHERE agency = '$agency_id' AND adslots > 0 ORDER BY time_created desc");
-        foreach ($all_campaign as $cam)
-        {
+        foreach ($all_campaign as $cam) {
             $today = date("Y-m-d");
-            if(strtotime($today) > strtotime($cam->start_date) && strtotime($today) > strtotime($cam->stop_date)){
+            if (strtotime($today) > strtotime($cam->start_date) && strtotime($today) > strtotime($cam->stop_date)) {
                 $status = 'Campaign Expired';
-            }elseif (strtotime($today) >= strtotime($cam->start_date) && strtotime($today) <= strtotime($cam->stop_date)){
+            } elseif (strtotime($today) >= strtotime($cam->start_date) && strtotime($today) <= strtotime($cam->stop_date)) {
                 $status = 'Campaign In Progress';
-            }else{
+            } else {
                 $now = strtotime($today);
                 $your_date = strtotime($cam->start_date);
                 $datediff = $your_date - $now;
@@ -176,29 +175,32 @@ class CampaignsController extends Controller
             'region' => 'required',
         ]);
 
-        if($request->min_age < 0 || $request->max_age < 0){
-            return back()->withErrors('The minimun or maximum age cannot assume a negetive value');
+        if ($request->min_age < 0 || $request->max_age < 0) {
+            Session::flash('error', 'The minimun or maximum age cannot assume a negetive value');
+            return redirect()->back();
         }
 
         $del_cart = \DB::delete("DELETE FROM carts WHERE user_id = '$id'");
         $del_uplaods = \DB::delete("DELETE FROM uploads WHERE user_id = '$id'");
 
-        if(strtotime($request->end_date) < strtotime($request->start_date)){
-            return redirect()->back()->with('error', 'Start Date cannot be greater than End Date');
+        if (strtotime($request->end_date) < strtotime($request->start_date)) {
+            Session::flash('error', 'Start Date cannot be greater than End Date');
+            return redirect()->back();
         }
         $step1_req = ((object) $request->all());
         session(['step1' => $step1_req]);
 
-        return redirect()->route('agency_campaign.step2', ['id' => $id])->with('step_1', Session::get('step1'))
+        return redirect()->route('agency_campaign.step2', ['id' => $id])
+            ->with('step_1', Session::get('step1'))
             ->with('id', $id);
-
     }
 
     public function getStep2($id)
     {
         $step1 = Session::get('step1');
-        if(!$step1){
-            return back()->with('error', 'Data lost, please go back and select your filter criteria');
+        if (!$step1) {
+            Session::flash('error', 'Data lost, please go back and select your filter criteria');
+            return redirect()->back();
         }
         $day_parts = implode("','" ,$step1->dayparts);
         $region = implode("','", $step1->region);
@@ -233,8 +235,9 @@ class CampaignsController extends Controller
             'time' => 'required'
         ]);
 
-        if(((int)$request->f_du) > ((int)$request->time)){
-            return redirect()->back()->with('error','Your video file duration cannot be more than the time slot you picked');
+        if (((int) $request->f_du) > ((int) $request->time)) {
+            Session::flash('error', 'Your video file duration cannot be more than the time slot you picked');
+            return redirect()->back();
         }
 
         if ($request->file('uploads')) {
@@ -249,8 +252,9 @@ class CampaignsController extends Controller
 
                 $time = $request->time;
                 $uploads = \DB::select("SELECT * from uploads where user_id = '$id' AND time = '$time'");
-                if(count($uploads) === 1){
-                    return back()->with('error', 'You cannot upload twice for this time slot');
+                if (count($uploads) === 1) {
+                    Session::flash('error', 'You cannot upload twice for this time slot');
+                    return back();
                 }
                 $insert_upload = \DB::table('uploads')->insert([
                     'user_id' => $id,
@@ -258,10 +262,11 @@ class CampaignsController extends Controller
                     'uploads' => $file_gan_gan
                 ]);
 
-                if($insert_upload){
+                if ($insert_upload) {
                     return redirect()->route('agency_campaign.step3_1', ['id' => $id, 'broadcaster' => $broadcaster]);
-                }else{
-                    return back()->with('error','Could not complete upload process');
+                } else {
+                    Session::flash('error', 'Could not complete upload process');
+                    return redirect()->back();
                 }
             }
 
@@ -282,14 +287,15 @@ class CampaignsController extends Controller
             'time' => 'required'
         ]);
 
-        if(((int)$request->f_du) > ((int)$request->time)){
-            return redirect()->back()->with('error','Your video file duration cannot be more than the time slot you picked');
+        if (((int) $request->f_du) > ((int) $request->time)) {
+            Session::flash('error', 'Your video file duration cannot be more than the time slot you picked');
+            return redirect()->back();
         }
 
         if ($request->file('uploads')) {
             $filesUploaded = $request->uploads;
             $extension = $filesUploaded->getClientOriginalExtension();
-            if($extension == 'mp4' || $extension == 'wma' || $extension == 'ogg' || $extension == 'mkv'){
+            if ($extension == 'mp4' || $extension == 'wma' || $extension == 'ogg' || $extension == 'mkv') {
 
                 $filename = realpath($filesUploaded);
                 Cloudder::uploadVideo($filename);
@@ -298,22 +304,24 @@ class CampaignsController extends Controller
 
                 $time = $request->time;
                 $uploads = \DB::select("SELECT * from uploads where user_id = '$id' AND time = '$time'");
-                if(count($uploads) === 1){
-                    return back()->with('error', 'You cannot upload twice for this time slot');
-                }
-                $insert_upload = \DB::table('uploads')->insert([
-                    'user_id' => $id,
-                    'time' => $time,
-                    'uploads' => $file_gan_gan
-                ]);
+                if (count($uploads) === 1) {
+                    Session::flash('error', 'You cannot upload twice for this time slot');
+                    return back();
+                    $insert_upload = \DB::table('uploads')->insert([
+                        'user_id' => $id,
+                        'time' => $time,
+                        'uploads' => $file_gan_gan
+                    ]);
 
-                if($insert_upload){
-                    return redirect()->route('agency_campaign.step3_2', ['id' => $id, 'broadcaster' => $broadcaster]);
-                }else{
-                    return back()->with('error','Could not complete upload process');
+                    if ($insert_upload) {
+                        return redirect()->route('agency_campaign.step3_2', ['id' => $id, 'broadcaster' => $broadcaster]);
+                    } else {
+                        Session::flash('error', 'Could not complete upload process');
+                        return redirect()->back();
+                    }
                 }
+
             }
-
         }
     }
 
@@ -331,14 +339,15 @@ class CampaignsController extends Controller
             'time' => 'required'
         ]);
 
-        if(((int)$request->f_du) > ((int)$request->time)){
-            return redirect()->back()->with('error','Your video file duration cannot be more than the time slot you picked');
+        if (((int) $request->f_du) > ((int) $request->time)) {
+            Session::flash('error', 'Your video file duration cannot be more than the time slot you picked');
+            return redirect()->back();
         }
 
         if ($request->file('uploads')) {
             $filesUploaded = $request->uploads;
             $extension = $filesUploaded->getClientOriginalExtension();
-            if($extension == 'mp4' || $extension == 'wma' || $extension == 'ogg' || $extension == 'mkv'){
+            if ($extension == 'mp4' || $extension == 'wma' || $extension == 'ogg' || $extension == 'mkv') {
 
                 $filename = realpath($filesUploaded);
                 Cloudder::uploadVideo($filename);
@@ -347,8 +356,9 @@ class CampaignsController extends Controller
 
                 $time = $request->time;
                 $uploads = \DB::select("SELECT * from uploads where user_id = '$id' AND time = '$time'");
-                if(count($uploads) === 1){
-                    return back()->with('error', 'You cannot upload twice for this time slot');
+                if (count($uploads) === 1) {
+                    Session::flash('error', 'You cannot upload twice for this time slot');
+                    return redirect()->back();
                 }
                 $insert_upload = \DB::table('uploads')->insert([
                     'user_id' => $id,
@@ -356,10 +366,11 @@ class CampaignsController extends Controller
                     'uploads' => $file_gan_gan
                 ]);
 
-                if($insert_upload){
+                if ($insert_upload) {
                     return redirect()->route('agency_campaign.step3_3', ['id' => $id, 'broadcaster' => $broadcaster]);
-                }else{
-                    return back()->with('error','Could not complete upload process');
+                } else {
+                    Session::flash('error', 'Could not complete upload process');
+                    return redirect()->back();
                 }
             }
 
@@ -380,8 +391,9 @@ class CampaignsController extends Controller
             'time' => 'required'
         ]);
 
-        if(((int)$request->f_du) > ((int)$request->time)){
-            return redirect()->back()->with('error','Your video file duration cannot be more than the time slot you picked');
+        if (((int) $request->f_du) > ((int) $request->time)) {
+            Session::flash('error', 'Your video file duration cannot be more than the time slot you picked');
+            return redirect()->back();
         }
 
         if ($request->file('uploads')) {
@@ -396,8 +408,9 @@ class CampaignsController extends Controller
 
                 $time = $request->time;
                 $uploads = \DB::select("SELECT * from uploads where user_id = '$id' AND time = '$time'");
-                if(count($uploads) === 1){
-                    return back()->with('error', 'You cannot upload twice for this time slot');
+                if (count($uploads) === 1) {
+                    Session::flash('error', 'You cannot upload twice for this time slot');
+                    return redirect()->back();
                 }
                 $insert_upload = \DB::table('uploads')->insert([
                     'user_id' => $id,
@@ -405,10 +418,11 @@ class CampaignsController extends Controller
                     'uploads' => $file_gan_gan
                 ]);
 
-                if($insert_upload){
+                if ($insert_upload) {
                     return redirect()->route('agency_campaign.review_uploads', ['id' => $id, 'broadcaster' => $broadcaster]);
-                }else{
-                    return back()->with('error','Could not complete upload process');
+                } else {
+                    Session::flash('error', 'Could not complete upload process');
+                    return redirect()->back();
                 }
             }
 
@@ -418,7 +432,10 @@ class CampaignsController extends Controller
     public function reviewUploads($id, $broadcaster)
     {
         $uploads = \DB::select("SELECT * from uploads where user_id = '$id'");
-        return view('agency.campaigns.review')->with('uploads', $uploads)->with('id', $id)->with('broadcaster', $broadcaster);
+        return view('agency.campaigns.review')
+            ->with('uploads', $uploads)
+            ->with('id', $id)
+            ->with('broadcaster', $broadcaster);
     }
 
     public function postNewUploads(Request $request, $id, $broadcaster)
@@ -428,8 +445,9 @@ class CampaignsController extends Controller
             'time' => 'required'
         ]);
 
-        if(((int)$request->f_du) > ((int)$request->time)){
-            return redirect()->back()->with('error','Your video file duration cannot be more than the time slot you picked');
+        if (((int) $request->f_du) > ((int) $request->time)) {
+            Session::flash('error', 'Your video file duration cannot be more than the time slot you picked');
+            return redirect()->back();
         }
 
         if ($request->file('uploads')) {
@@ -453,10 +471,11 @@ class CampaignsController extends Controller
                     'uploads' => $file_gan_gan
                 ]);
 
-                if($insert_upload){
+                if ($insert_upload) {
                     return redirect()->route('agency_campaign.review_uploads', ['id' => $id, 'broadcaster' => $broadcaster]);
-                }else{
-                    return back()->with('error','Could not complete upload process');
+                } else {
+                    Session::flash('error', 'Could not complete upload process');
+                    return redirect()->back();
                 }
             }
 
@@ -466,10 +485,12 @@ class CampaignsController extends Controller
     public function deleteUpload($upload_id, $id)
     {
         $deleteUploads = \DB::delete("DELETE from uploads WHERE id = '$upload_id' AND user_id = '$id'");
-        if($deleteUploads){
-            return back()->with('success', 'File deleted successfully...');
-        }else{
-            return back()->with('error', 'Error deleting file...');
+        if ($deleteUploads) {
+            Session::flash('success', 'File deleted successfully');
+            return redirect()-back();
+        } else {
+            Session::flash('error', 'Error deleting file');
+            return redirect()-back();
         }
     }
 
@@ -477,8 +498,9 @@ class CampaignsController extends Controller
     {
         $rate_card = [];
         $step1 = Session::get('step1');
-        if(!$step1){
-            return back()->with('error', 'Data lost, please go back and select your filter criteria');
+        if (!$step1) {
+            Session::flash('error', 'Data lost, please go back and select your filter criteria');
+            return redirect()-back();
         }
         $day_parts = implode("','" ,$step1->dayparts);
         $region = implode("','", $step1->region);
@@ -520,6 +542,7 @@ class CampaignsController extends Controller
             'rate_id' => 'required',
             'adslot_id' => 'required|unique:carts'
         ]);
+
         $price = $request->price;
         $file = $request->file;
         $time = $request->time;
@@ -529,9 +552,9 @@ class CampaignsController extends Controller
         $adslot_id = $request->adslot_id;
         $ip = \Request::ip();
         $insert = \DB::insert("INSERT INTO carts (user_id, price, ip_address, file, from_to_time, `time`, rate_id, adslot_id, agency_id, broadcaster_slot) VALUES ('$id','$price','$ip','$file','$hourly_range','$time','$rate_id', '$adslot_id','$agency','$broadcaster')");
-        if($insert){
+        if ($insert) {
             return "success";
-        }else{
+        } else {
             return "failure";
         }
     }
@@ -562,7 +585,8 @@ class CampaignsController extends Controller
     {
         $ads = $id;
         $del = \DB::select("DELETE FROM carts WHERE adslot_id = '$ads'");
-        return redirect()->back()->with('success', trans('Item deleted from cart successfully'));
+        Session::flash('success', 'Item deleted from cart successfully');
+        return redirect()->back();
     }
 
     Public function postCampaign(Request $request, $id, $broadcaster)
@@ -573,8 +597,7 @@ class CampaignsController extends Controller
 
         $user_id = $id;
 
-        foreach ($query as $q)
-        {
+        foreach ($query as $q) {
             $ads[] = $q->adslot_id;
         }
         $data = \DB::select("SELECT * from uploads WHERE user_id = '$id'");
@@ -658,7 +681,7 @@ class CampaignsController extends Controller
 
             $save_file = Utilities::switch_db('api')->table('files')->insert($new_q);
 
-            if($save_payment && $save_file){
+            if ($save_payment && $save_file) {
                 $payment_id = Utilities::switch_db('api')->select("SELECT id from payments WHERE id='$pay_id'");
 
                 $invoice[] = [
@@ -687,17 +710,17 @@ class CampaignsController extends Controller
 
                 $save_mpo = Utilities::switch_db('api')->table('mpos')->insert($mpo);
 
-                if($save_invoice && $save_mpo){
-                    foreach ($query as $q){
+                if ($save_invoice && $save_mpo) {
+                    foreach ($query as $q) {
                         $get_slots = Utilities::switch_db('api')->select("SELECT * from adslots WHERE id = '$q->adslot_id'");
                         $id = $get_slots[0]->id;
                         $time_difference = $get_slots[0]->time_difference;
                         $time_used = $get_slots[0]->time_used;
                         $time = $q->time;
                         $new_time_used = $time_used + $time;
-                        if($time_difference === $new_time_used){
+                        if ($time_difference === $new_time_used) {
                             $slot_status = 1;
-                        }else{
+                        } else {
                             $slot_status = 0;
                         }
                         $update_slot = Utilities::switch_db('api')->update("UPDATE adslots SET time_used = '$new_time_used', is_available = '$slot_status' WHERE id = '$id'");
@@ -710,14 +733,15 @@ class CampaignsController extends Controller
                     $ip = request()->ip();
                     $user_activity = Api::saveActivity(Session::get('agency_id'), $description, $ip, $user_agent);
                     Session::forget('step1');
-
-                    return redirect()->route('agency.campaign.all')->with('success', 'campaign created successfully');
+                    Session::flash('success', 'Campaign created successfully');
+                    return redirect()->route('agency.campaign.all');
 
                 }
             }
 
-        }else{
-            return redirect()->back()->with('error', 'Could not create this campaign');
+        } else {
+            Session::flash('error', 'Could not create this campaign');
+            return redirect()->back();
         }
 
     }

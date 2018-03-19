@@ -1,6 +1,6 @@
 @extends('layouts.new_app')
 @section('title')
-    <title>Agency | Brand-Lists</title>
+    <title>Agency - Brand-Lists</title>
 @stop
 @section('content')
 
@@ -23,7 +23,7 @@
                                 <span class="input-group-btn">
                                 <button class="btn btn-default" type="submit">Go!</button>
                               </span>
-                            </div><!-- /input-group -->
+                            </div>
                         </form>
                     </div>
                 </div>

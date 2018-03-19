@@ -305,7 +305,7 @@ class CampaignsController extends Controller
     {
         $broadcaster = Session::get('broadcaster_id');
 
-        if(((int)$request->f_du) > ((int)$request->time)){
+        if(((int) $request->f_du) > ((int) $request->time)){
             Session::flash('error', 'Your video file duration cannot be more than the time slot you picked');
             return redirect()->back();
         }
@@ -326,9 +326,9 @@ class CampaignsController extends Controller
                 $clouder = Cloudder::getResult();
                 $file_gan_gan = encrypt($clouder['url']);
 
-                $time = (int)$request->time;
+                $time = (int) $request->time;
                 $uploads = \DB::select("SELECT * from uploads where user_id = '$walkins' AND time = '$time'");
-                if(count($uploads) === 1){
+                if (count($uploads) === 1) {
                     Session::flash('error', 'You cannot upload twice for this time slot');
                     return back();
                 }
@@ -339,9 +339,9 @@ class CampaignsController extends Controller
                     'uploads' => $file_gan_gan
                 ]);
 
-                if($insert_upload){
+                if ($insert_upload) {
                     return redirect()->route('campaign.create4_3', ['walkins' => $walkins]);
-                }else{
+                } else {
                     Session::flash('error', 'Could not complete upload process');
                     return back();
                 }
@@ -355,6 +355,7 @@ class CampaignsController extends Controller
             ]);
 
             return redirect()->route('campaign.create4_3', ['walkins' => $walkins]);
+
         }
     }
 

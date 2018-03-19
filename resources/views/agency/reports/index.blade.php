@@ -1,13 +1,13 @@
 @extends('layouts.new_app')
 @section('title')
-    <title>Agency | Report</title>
+    <title>Agency - Report</title>
 @stop
 @section('content')
     <div class="main-section">
         <div class="container">
             <div class="row">
                 <div class="col-12 heading-main">
-                    <h1>Agency | Campaigns - Report</h1>
+                    <h1>Agency - Campaigns - Report</h1>
                     <ul>
                         <li><a href="#"><i class="fa fa-edit"></i>Agency</a></li>
                         <li><a href="#">Report</a></li>
@@ -27,7 +27,8 @@
                     <div class="nav-tabs-custom">
                         <ul class="nav nav-tabs" style="background:#eee">
                             <li class="active"><a href="#campaigns" data-toggle="tab">Campaigns</a></li>
-                            <li><a href="#revenue" data-toggle="tab">Revenue</a></li>
+                            {{--<li class=""><a href="#spend" data-toggle="tab">Budget/Spend</a></li>--}}
+                            {{--<li><a href="#revenue" data-toggle="tab">Revenue</a></li>--}}
                         </ul>
                         <p><br></p>
                         <div class="tab-content">
@@ -71,11 +72,11 @@
                                                 <div class="table-responsive">
                                                     <table class="table table-bordered campaign_report">
                                                         <thead>
-                                                        <th>S/N</th>
-                                                        <th>Campaign Name</th>
-                                                        <th>Start</th>
-                                                        <th>Stop</th>
-                                                        <th>Amount(&#8358;)</th>
+                                                            <th>S/N</th>
+                                                            <th>Campaign Name</th>
+                                                            <th>Start</th>
+                                                            <th>Stop</th>
+                                                            <th>Amount(&#8358;)</th>
                                                         </thead>
                                                     </table>
                                                 </div>
@@ -85,58 +86,60 @@
                                 </div>
                             </div>
 
-                            <div class="tab-pane" id="revenue">
-                                    <div class="row">
-                                        <form action="#" method="GET">
-                                            {{ csrf_field() }}
-                                            <h4 style="margin-left: 17px;font-weight: bold">Search by date</h4>
-                                            <div class="col-md-10" style="margin-top: -2%">
-                                                <div class="row">
-                                                    <div class="col-md-3">
-                                                        <div class="input-group date styledate">
-                                                            <div class="input-group-addon">
-                                                                <i class="fa fa-calendar"></i>
-                                                            </div>
-                                                            <input type="text" placeholder="start-date" value="" required name="txtFromDate_rev" class="form-control flatpickr txtFromDate" id="txtFromDate" />
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <div class="input-group date styledate">
-                                                            <div class="input-group-addon">
-                                                                <i class="fa fa-calendar"></i>
-                                                            </div>
-                                                            <input type="text" placeholder="stop-date" value="" required name="txtToDate_rev" class="form-control flatpickr txtToDate" id="txtToDate" />
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <div class="input-group" style="">
-                                                            <button type="button" class="btn btn-success" id="button_rev" style="float:left">Apply</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                    <hr>
-                                <div class="row">
-                                    <div class="col-xs-12">
-                                        <div class="box">
-                                            <div class="box-body">
-                                                <div class="table-responsive">
-                                                    <table class="table table-bordered revenue_report">
-                                                        <thead>
-                                                        <th>S/N</th>
-                                                        <th>Date</th>
-                                                        <th>Campaign Name</th>
-                                                        <th>Total Amount/Revenue (&#8358;)</th>
-                                                        </thead>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+
+
+                            {{--<div class="tab-pane" id="revenue">--}}
+                                    {{--<div class="row">--}}
+                                        {{--<form action="#" method="GET">--}}
+                                            {{--{{ csrf_field() }}--}}
+                                            {{--<h4 style="margin-left: 17px;font-weight: bold">Search by date</h4>--}}
+                                            {{--<div class="col-md-10" style="margin-top: -2%">--}}
+                                                {{--<div class="row">--}}
+                                                    {{--<div class="col-md-3">--}}
+                                                        {{--<div class="input-group date styledate">--}}
+                                                            {{--<div class="input-group-addon">--}}
+                                                                {{--<i class="fa fa-calendar"></i>--}}
+                                                            {{--</div>--}}
+                                                            {{--<input type="text" placeholder="start-date" value="" required name="txtFromDate_rev" class="form-control flatpickr txtFromDate" id="txtFromDate" />--}}
+                                                        {{--</div>--}}
+                                                    {{--</div>--}}
+                                                    {{--<div class="col-md-3">--}}
+                                                        {{--<div class="input-group date styledate">--}}
+                                                            {{--<div class="input-group-addon">--}}
+                                                                {{--<i class="fa fa-calendar"></i>--}}
+                                                            {{--</div>--}}
+                                                            {{--<input type="text" placeholder="stop-date" value="" required name="txtToDate_rev" class="form-control flatpickr txtToDate" id="txtToDate" />--}}
+                                                        {{--</div>--}}
+                                                    {{--</div>--}}
+                                                    {{--<div class="col-md-2">--}}
+                                                        {{--<div class="input-group" style="">--}}
+                                                            {{--<button type="button" class="btn btn-success" id="button_rev" style="float:left">Apply</button>--}}
+                                                        {{--</div>--}}
+                                                    {{--</div>--}}
+                                                {{--</div>--}}
+                                            {{--</div>--}}
+                                        {{--</form>--}}
+                                    {{--</div>--}}
+                                    {{--<hr>--}}
+                                {{--<div class="row">--}}
+                                    {{--<div class="col-xs-12">--}}
+                                        {{--<div class="box">--}}
+                                            {{--<div class="box-body">--}}
+                                                {{--<div class="table-responsive">--}}
+                                                    {{--<table class="table table-bordered revenue_report">--}}
+                                                        {{--<thead>--}}
+                                                        {{--<th>S/N</th>--}}
+                                                        {{--<th>Date</th>--}}
+                                                        {{--<th>Campaign Name</th>--}}
+                                                        {{--<th>Total Amount/Revenue (&#8358;)</th>--}}
+                                                        {{--</thead>--}}
+                                                    {{--</table>--}}
+                                                {{--</div>--}}
+                                            {{--</div>--}}
+                                        {{--</div>--}}
+                                    {{--</div>--}}
+                                {{--</div>--}}
+                            {{--</div>--}}
                             <!-- /.tab-pane -->
                         </div>
                         <!-- /.tab-content -->

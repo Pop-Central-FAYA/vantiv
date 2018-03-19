@@ -33,17 +33,16 @@ class WalletsController extends Controller
     public function getData(Datatables $datatables)
     {
         $agency_id = \Session::get('agency_id');
-        if($agency_id != null){
+        if ($agency_id != null) {
             $user_id = $agency_id;
-        }else{
+        } else {
             $user_id = Session::get('advertiser_id');
         }
         $trans = Utilities::switch_db('api')->select("SELECT * from transactions where user_id = '$user_id' ORDER BY time_created desc");
         $j = 1;
         $transaction = [];
 
-        foreach ($trans as $trans)
-        {
+        foreach ($trans as $trans) {
             $transaction[] = [
                 'id' => $j,
                 'reference' => $trans->reference,
@@ -114,18 +113,20 @@ class WalletsController extends Controller
 
             $update_transaction = Utilities::switch_db('api')->select("UPDATE transactions SET card_type = '$card', status = 'SUCCESSFUL', ip_address = '$ip_address', fees = '$fees', `type` = '$type', message = '$message' WHERE reference = '$reference'");
 
-            if($transaction) {
+            if ($transaction) {
                 $user_agent = $_SERVER['HTTP_USER_AGENT'];
                 $description = 'Wallet credited with '.$amount.' by '.$user_id;
                 $ip = request()->ip();
                 $user_activity = Api::saveActivity($user_id, $description, $ip, $user_agent);
                 $this->updateWallet($amount);
                 $msg = 'Your wallet has been funded with NGN'. $amount;
-                return redirect()->route('wallet.statement')->with('success', $msg);
+                Session::flash('success', $msg);
+                return redirect()->route('wallet.statement');
             }
 
-        }else{
-            return back()->with('error', 'Sorry, something went wrong! Please contact the Administrator or Bank.');
+        } else {
+            Session::flash('error', 'Sorry, something went wrong! Please contact the Administrator or Bank.');
+            return redirect()->back();
         }
 
 
@@ -157,7 +158,7 @@ class WalletsController extends Controller
                 'status' => 1,
             ];
             $add_walletHistory = Utilities::switch_db('api')->table('walletHistories')->insert($insert_history);
-        }else {
+        } else {
             $wallet =
                 [
                     'id' => uniqid(),
@@ -178,7 +179,6 @@ class WalletsController extends Controller
             ];
             $add_walletHistory = Utilities::switch_db('api')->table('walletHistories')->insert($insert_history);
         }
-
     }
 
     protected function query_api_transaction_verify($reference)
@@ -199,10 +199,8 @@ class WalletsController extends Controller
         if ($request) {
             $result = json_decode($request, true);
             return $result;
-        }else {
+        } else {
             return false;
         }
-
-
     }
 }

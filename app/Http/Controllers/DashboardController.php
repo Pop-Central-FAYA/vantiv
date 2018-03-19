@@ -55,12 +55,13 @@ class DashboardController extends Controller
                     'date_due' => $campaign_det[0]->stop_date,
                 ];
             }
-            $invoice = (object)$invoice_array;
+            $invoice = (object) $invoice_array;
 
             //total volume of campaigns
             $camp_vol = Utilities::switch_db('api')->select("SELECT COUNT(id) as volume, DATE_FORMAT(time_created, '%M, %Y') as `month` from campaigns where broadcaster = '$broadcaster' GROUP BY DATE_FORMAT(time_created, '%Y-%m') ");
             $c_vol = [];
             $c_month = [];
+
             foreach ($camp_vol as $ca) {
                 $c_vol[] = $ca->volume;
             }
@@ -69,6 +70,7 @@ class DashboardController extends Controller
                 $month = ($ca->month);
                 $c_month[] = $month;
             }
+
             $c_volume = json_encode($c_vol);
             $c_mon = json_encode($c_month);
 
@@ -167,11 +169,10 @@ class DashboardController extends Controller
 
             return view('dashboard.default')->with(['campaign' => $c, 'volume' => $c_volume, 'month' => $c_mon, 'high_dayp' => $day_pie, 'days' => $days_data, 'adslot' => $ads_no, 'price' => $tot_pri, 'mon' => $mon, 'invoice' => $invoice]);
 
-
         } else if ($role->role_id === 4) {
             $allBroadcaster = Utilities::switch_db('api')->select("SELECT * from broadcasters");
             $agency_id = Session::get('agency_id');
-            $camp_prod = Utilities::switch_db('api')->select("SELECT id,product from campaigns where agency = '$agency_id'");
+            $camp_prod = Utilities::switch_db('api')->select("SELECT id, product from campaigns where agency = '$agency_id'");
             $pe = $this->broadcasterFilter($agency_id);
             $date = [];
             $bra = [];

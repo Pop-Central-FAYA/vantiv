@@ -1,33 +1,29 @@
 <?php
 
-namespace Vanguard\Http\Controllers\Agency;
+namespace Vanguard\Http\Controllers;
 
-use DB;
-use Vanguard\Role;
 use Vanguard\Country;
 use Illuminate\Http\Request;
 use Vanguard\Libraries\Utilities;
-use Vanguard\Http\Requests\StoreAgent;
-use Vanguard\Http\Controllers\Controller;
 use JD\Cloudder\Facades\Cloudder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
-class AgencyAuthController extends Controller
+class BroadcasterAuthController extends Controller
 {
     public function getRegister()
     {
-        $roles = Role::all();
         $countries = Country::all();
         $sectors = Utilities::switch_db('api')->select("SELECT * FROM sectors");
 
-        return view('agency.signup')
-            ->with('roles', $roles)
-            ->with('sectors', $sectors)
-            ->with('countries', $countries);
+        return view('broadcaster_onboard.onboard')
+            ->with('countries', $countries)
+            ->with('sectors', $sectors);
     }
 
-    public function postRegister(StoreAgent $request)
+    public function postRegister(Request $request)
     {
-        $role_id = Utilities::switch_db('api')->select("SELECT id FROM roles WHERE name = 'agency'");
+        $role_id = Utilities::switch_db('api')->select("SELECT id FROM roles WHERE name = 'broadcaster'");
 
         if ($request->isMethod('POST')) {
 
@@ -46,6 +42,7 @@ class AgencyAuthController extends Controller
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
                 'phone' => $request->phone,
+                'avatar' => $image_path,
                 'country_id' => $request->country_id,
                 'address' => $request->address,
                 'fullname' => $request->first_name . ' ' . $request->last_name,
@@ -57,7 +54,7 @@ class AgencyAuthController extends Controller
 
             $role_user = DB::table('role_user')->insert([
                 'user_id' => $user_id[0]->id,
-                'role_id' => 4
+                'role_id' => 3
             ]);
 
             $userApiInsert = Utilities::switch_db('api')->table('users')->insert([
@@ -69,7 +66,7 @@ class AgencyAuthController extends Controller
                 'firstname' => $request->first_name,
                 'lastname' => $request->last_name,
                 'phone_number' => $request->phone,
-                'user_type' => 4,
+                'user_type' => 3,
                 'status' => 1
             ]);
 
@@ -77,17 +74,18 @@ class AgencyAuthController extends Controller
                 $apiUser = Utilities::switch_db('api')->select("SELECT id FROM users WHERE email = '$request->email'");
             }
 
-            $agentApiInsert = Utilities::switch_db('api')->table('agents')->insert([
+            $broadcasterApiInsert = Utilities::switch_db('api')->table('broadcasters')->insert([
                 'id' => uniqid(),
                 'user_id' => $apiUser[0]->id,
                 'sector_id' => $request->sector_id,
                 'nationality' => $request->country_id,
                 'location' => $request->location,
                 'image_url' => $image_path,
-                'brand' => null
+                'brand' => null,
+                'status' => 1,
             ]);
 
-            if ($agentApiInsert) {
+            if ($broadcasterApiInsert) {
                 Session::flash('success', 'Sign Up Successful, You can login now');
                 return redirect()->route('login');
             } else {

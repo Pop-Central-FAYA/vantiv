@@ -62,7 +62,6 @@ class ClientBrandsController extends Controller
                 $cli = \DB::select("SELECT * from users WHERE id = '$user_id'");
                 $client[] = $cli;
             }
-            
             return view('agency.campaigns.brands.create')->with('clients', $client);
         } else {
             return view('advertisers.campaigns.brands.create');
@@ -107,20 +106,23 @@ class ClientBrandsController extends Controller
 
                 $insert = Utilities::switch_db('api')->select("INSERT into brands (id, `name`, walkin_id, broadcaster_agency, image_url) VALUES ('$unique','$brand','$id', '$agency_id', '$image_path')");
                 $user_activity = Api::saveActivity($agency_id, $description, $ip, $user_agent);
-                if(!$insert) {
-                    return redirect()->route('agency.brand.all')->with('success', 'Brands created successfully');
-                }else{
-                    return redirect()->back()->with('error', 'There was a problem creating this brand');
+                if (!$insert) {
+                    Session::flash('success', 'Brands created successfully');
+                    return redirect()->route('agency.brand.all');
+                } else {
+                    Session::flash('error', 'There was a problem creating this brand');
+                    return redirect()->back();
                 }
             }
-        }else{
+        } else {
             $advertiser_id = Session::get('advertiser_id');
             $user = Utilities::switch_db('api')->select("SELECT * from users WHERE id = (SELECT user_id from advertisers where id = '$advertiser_id')");
             $user_id = $user[0]->id;
             $ckeck_brand = Utilities::switch_db('api')->select("SELECT name from brands WHERE `name` = '$brand'");
-            if(count($ckeck_brand) > 0) {
-                return redirect()->back()->with('error', 'Brands already exists');
-            }else{
+            if (count($ckeck_brand) > 0) {
+                Session::flash('error', 'Brands already exists');
+                return redirect()->back();
+            } else {
                 /*handling uploading the logo*/
                 $image = $request->brand_logo;
                 $filename = realpath($image);
@@ -130,10 +132,12 @@ class ClientBrandsController extends Controller
 
                 $insert = Utilities::switch_db('api')->select("INSERT into brands (id, `name`, walkin_id, broadcaster_agency, image_url) VALUES ('$unique','$brand','$user_id', '$advertiser_id', '$image_path')");
                 $user_activity = Api::saveActivity($advertiser_id, $description, $ip, $user_agent);
-                if(!$insert) {
-                    return redirect()->route('agency.brand.all')->with('success', 'Brands created successfully');
-                }else{
-                    return redirect()->back()->with('error', 'There was a problem creating this brand');
+                if (!$insert) {
+                    Session::flash('success', 'Brands created successfully');
+                    return redirect()->route('agency.brand.all');
+                } else {
+                    Session::flash('error', 'There was a problem creating this brand');
+                    return redirect()->back();
                 }
             }
         }
@@ -205,7 +209,7 @@ class ClientBrandsController extends Controller
             'result' => 'required',
         ]);
 
-        if($agency_id){
+        if ($agency_id) {
             $db = Utilities::switch_db('api')->select("SELECT * from brands where `name` LIKE '%{$result}%' AND broadcaster_agency = '$agency_id' AND status = 0 ORDER BY time_created desc");
             if($db){
                 $currentPage = LengthAwarePaginator::resolveCurrentPage();
@@ -219,7 +223,7 @@ class ClientBrandsController extends Controller
                 return back()->withErrors('No result found for '.$result.'');
             }
 
-        }else{
+        } else {
             $advertiser_id = Session::get('advertiser_id');
             $db = Utilities::switch_db('api')->select("SELECT * from brands where `name` LIKE '%{$result}%' AND broadcaster_agency = '$advertiser_id' AND status = 0 ORDER BY time_created desc");
             if($db){

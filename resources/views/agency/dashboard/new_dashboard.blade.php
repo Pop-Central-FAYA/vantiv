@@ -1,6 +1,6 @@
 @extends('layouts.new_app')
 @section('title')
-    <title>Faya | Agency Dashboard</title>
+    <title>Faya - Agency Dashboard</title>
 @stop
 
 @section('content')
@@ -22,7 +22,9 @@
                         <label for="channel">Channels:</label>
                         <select class="form-control" name="broadcaster" id="broadcaster">
                             @foreach($broadcaster as $broadcasters)
-                                <option value="{{ $broadcasters->id }}">{{ $broadcasters->brand }}</option>
+                                <option value="{{ $broadcasters->id }}">
+                                    {{ $broadcasters->brand }}
+                                </option>
                             @endforeach
                         </select>
                     </form>
@@ -35,7 +37,7 @@
                 <div class="col-12">
                     <div class="Sales">
                         <h2>Periodic Spend Report</h2>
-                        <p>Total amount spent on chanel</p>
+                        <p>Total amount spent on channel</p>
                         <canvas id="containerPeriodic_total_per_chanel" style="width: 512px; height: 150px"></canvas>
                         {{--<div id="containerPeriodic_total_per_chanel" style="min-width: 310px; height: 400px; margin: 0 auto"></div>--}}
                     </div>
@@ -109,12 +111,12 @@
                                 <a href="#">Invoice Summary<i class="fa fa-arrow-right" aria-hidden="true"></i></a> </div>
                             <table class="table">
                                 <thead>
-                                <th>Invoice#</th>
-                                <th>Customer Name</th>
-                                <th>Brand</th>
-                                <th>Amount</th>
-                                <th>Refunded Amount</th>
-                                <th>Status</th>
+                                    <th>Invoice#</th>
+                                    <th>Customer Name</th>
+                                    <th>Brand</th>
+                                    <th>Amount</th>
+                                    <th>Refunded Amount</th>
+                                    <th>Status</th>
                                 </thead>
                                 <tbody>
                                 @foreach($all_invoices as $invoice)
@@ -616,8 +618,8 @@
             left: 50%;
             margin-left: -50px; /* half width of the spinner gif */
             margin-top: -50px; /* half height of the spinner gif */
-            text-align:center;
-            z-index:1234;
+            text-align: center;
+            z-index: 1234;
             overflow: auto;
             width: 500px; /* width of the spinner gif */
             height: 500px; /*hight of the spinner gif +2px to fix IE8 issue */

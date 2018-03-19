@@ -129,7 +129,6 @@ class AuthController extends Controller
             $user_id = $user_details[0]->id;
             $agency_details = Utilities::switch_db('api')->select("SELECT * FROM agents WHERE user_id = '$user_id'");
             session(['agency_id' => $agency_details[0]->id]);
-
         } else {
             session()->forget('agency_id');
             session()->forget('broadcaster_id');

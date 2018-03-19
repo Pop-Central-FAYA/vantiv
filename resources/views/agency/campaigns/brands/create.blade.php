@@ -19,9 +19,11 @@
                     <form action="{{ route('agency.brand.store') }}" method="post" enctype="multipart/form-data">
                         {{ csrf_field() }}
                         <div class="input-group">
+                            <label>Brand Name</label>
                             <input type="text" name="brand_name" value=""  placeholder="Brand Name">
                         </div>
                         <div class="input-group">
+                            <label>Registered Clients</label>
                             <select name="clients" class="Role">
                                 @foreach ($clients as $client)
                                     <option value="{{ $client[0]->id }}">
