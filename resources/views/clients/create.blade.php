@@ -30,12 +30,6 @@
                             <h2>User Details</h2>
                             <div class="col-12 form-inner">
                                 <div class="input-group">
-                                    <input type="text" class="form-control flatpickr" readonly name="birthday" value="" placeholder="Date of Birth">
-                                </div>
-                                <div class="input-group">
-                                    <input type="text" name="phone" value="{{ $edit ? $user->phone : '' }}"  placeholder="Phone">
-                                </div>
-                                <div class="input-group">
                                     <input type="text" class="form-control" id="first_name"
                                            name="first_name" placeholder="@lang('app.first_name')" value="{{ $edit ? $user->first_name : '' }}">
                                 </div>
@@ -46,7 +40,9 @@
                                     <input type="text" class="form-control" id="last_name"
                                            name="last_name" placeholder="@lang('app.last_name')" value="{{ $edit ? $user->last_name : '' }}">
                                 </div>
-
+                                <div class="input-group">
+                                    <input type="text" name="phone" value="{{ $edit ? $user->phone : '' }}"  placeholder="Phone">
+                                </div>
                                 <div class="input-group">
                                     <select name="country_id" class="form-control Role">
                                         @foreach ($countries as $country)

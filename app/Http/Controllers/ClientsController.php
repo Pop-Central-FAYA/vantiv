@@ -39,7 +39,6 @@ class ClientsController extends Controller
                 'last_name' => $request->last_name,
                 'phone' => $request->phone,
                 'country_id' => $request->country_id,
-                'birthday' => $request->birthday,
                 'status' => 'Active',
             ]);
 
@@ -47,9 +46,9 @@ class ClientsController extends Controller
                 $image = $request->image_url;
                 $name = $image->getClientOriginalName();
                 $image_name = $image->getRealPath();
-                Cloudder::upload($image_name, Cloudder::getPublicId(), ['height' => 200, 'width' => 200]);
+                Cloudder::upload($image_name, Cloudder::getPublicId(), ['height' => 100, 'width' => 100]);
                 $cloudder = Cloudder::getResult();
-                $image_url = encrypt($cloudder['url']);
+                $image_url = $cloudder['url'];
             }
 
             if ($userInsert) {
@@ -67,7 +66,7 @@ class ClientsController extends Controller
                 'broadcaster_id' => $request->broadcaster_id,
                 'client_type_id' => $request->client_type_id,
                 'location' => $request->location,
-                'image_url' => encrypt($cloudder['url']),
+                'image_url' => $image_url,
                 'agency_id' => \Session::get('agency_id')
             ]);
 

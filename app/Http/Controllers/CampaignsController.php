@@ -150,7 +150,7 @@ class CampaignsController extends Controller
         }
         $day_parts = implode("','" ,$step1->dayparts);
         $region = implode("','", $step1->region);
-        $adslots = Utilities::switch_db('api')->select("SELECT broadcaster, COUNT(broadcaster) as all_slots FROM adslots where min_age >= $step1->min_age AND max_age <= $step1->max_age AND target_audience = '$step1->target_audience' AND day_parts IN ('$day_parts') AND region IN ('$region') AND is_available = 0 AND broadcaster = '$broadcaster' group by broadcaster");
+        $adslots = Utilities::switch_db('api')->select("SELECT broadcaster, COUNT(broadcaster) as all_slots FROM adslots where min_age >= $step1->min_age AND max_age <= $step1->max_age AND target_audience = '$step1->target_audience' AND day_parts IN ('$day_parts') AND region IN ('$region') AND is_available = 0 AND broadcaster = '$broadcaster' AND channels='$step1->channel' group by broadcaster");
 
         $ads_broad = [];
         foreach ($adslots as $adslot)
@@ -510,7 +510,7 @@ class CampaignsController extends Controller
         }
         $day_parts = "". implode("','" ,$step1->dayparts) . "";
         $region = "". implode("','", $step1->region) ."";
-        $adslots = Utilities::switch_db('api')->select("SELECT * FROM adslots where min_age >= $step1->min_age AND max_age <= $step1->max_age AND target_audience = '$step1->target_audience' AND day_parts IN ('$day_parts') AND region IN ('$region') AND is_available = 0 AND broadcaster = '$broadcaster'");
+        $adslots = Utilities::switch_db('api')->select("SELECT * FROM adslots where min_age >= $step1->min_age AND max_age <= $step1->max_age AND channels='$step1->channel' AND target_audience = '$step1->target_audience' AND day_parts IN ('$day_parts') AND region IN ('$region') AND is_available = 0 AND broadcaster = '$broadcaster'");
         $result = count($adslots);
         return view('campaign.create6')->with('results', $result)->with('walkins', $walkins);
     }
@@ -537,7 +537,7 @@ class CampaignsController extends Controller
         }
         $day_parts = "". implode("','" ,$step1->dayparts) . "";
         $region = "". implode("','", $step1->region) ."";
-        $adslots_count = Utilities::switch_db('api')->select("SELECT * FROM adslots where min_age >= $step1->min_age AND max_age <= $step1->max_age AND target_audience = '$step1->target_audience' AND day_parts IN ('$day_parts') AND region IN ('$region') AND is_available = 0 AND broadcaster = '$broadcaster'");
+        $adslots_count = Utilities::switch_db('api')->select("SELECT * FROM adslots where min_age >= $step1->min_age AND channels='$step1->channel' AND  max_age <= $step1->max_age AND target_audience = '$step1->target_audience' AND day_parts IN ('$day_parts') AND region IN ('$region') AND is_available = 0 AND broadcaster = '$broadcaster'");
         $result = count($adslots_count);
         $ratecards = Utilities::switch_db('api')->select("SELECT * from rateCards WHERE id IN (SELECT rate_card FROM adslots where min_age >= $step1->min_age 
                                                             AND max_age <= $step1->max_age 

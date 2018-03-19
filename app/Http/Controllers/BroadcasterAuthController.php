@@ -81,7 +81,7 @@ class BroadcasterAuthController extends Controller
                 'nationality' => $request->country_id,
                 'location' => $request->location,
                 'image_url' => $image_path,
-                'brand' => null,
+                'brand' => $request->username,
                 'status' => 1,
             ]);
 

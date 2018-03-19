@@ -169,6 +169,7 @@ class AdslotController extends Controller
                 'is_available' => 0,
                 'time_difference' => (strtotime($request->to_time[$l++])) - (strtotime($request->from_time[$o++])),
                 'time_used' => 0,
+                'channels' => $request->channel,
             ];
         }
 

@@ -40,7 +40,7 @@
                             </ul>
                         </div>
                         <div class="col-5">
-                            <img src="{{ $client['image_url'] ? asset(decrypt($client['image_url'])) : asset('new_assets/images/logo.png') }}" alt="">
+                            <img class="img-responsive" src="{{ $client['image_url'] ? asset($client['image_url']) : asset('new_assets/images/logo.png') }}" alt="">
                         </div>
                     </div>
                 @endforeach

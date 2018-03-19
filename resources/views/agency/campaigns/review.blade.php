@@ -22,8 +22,6 @@
                         <div class="row">
                             <div class="col-md-12 ">
 
-                                <p align="center">The history of advertising can be traced to ancient civilizations. It became a major force in capitalist economies in the mid-19th century, based primarily on newspapers and magazines. In the 20th century, advertising grew rapidly with new technologies such as direct mail, radio, television, the internet and mobile devices.</p>
-
                             </div>
                         </div>
                         {{--{{ dd($time_in_sec) }}--}}
@@ -44,7 +42,7 @@
                                             @foreach($uploads as $upload)
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ decrypt($upload->uploads) }}</td>
+                                                    <td>{{ $upload->uploads ? decrypt($upload->uploads) : 'You did not have video for this time' }}</td>
                                                     <td>{{ $upload->time }}</td>
                                                     {{--<td><button type="button" data-toggle="modal" data-target=".deleteModal{{ $upload->id }}" class="btn btn-danger btn-xs">Delete</button></td>--}}
                                                 </tr>

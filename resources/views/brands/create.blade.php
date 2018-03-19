@@ -18,6 +18,9 @@
             </div>
             <div class="Add-brand">
                 <h2>Create Brand</h2>
+                @if(!$clients)
+                    <p>You cannot create a brand without a client or Walk-In</p>
+                @else
                 <form action="{{ route('brand.store') }}" method="post" enctype="multipart/form-data" data-parsley-validate="">
                     {{ csrf_field() }}
                     <div class="row">
@@ -30,9 +33,9 @@
                         <div class="input-group">
                             <label>Clients</label>
                             <select name="clients" class="Role" required>
-                                @foreach($client as $clients)
-                                    <option value="{{ $clients[0]->id }}">
-                                        {{ $clients[0]->firstname.' '.$clients[0]->lastname }}
+                                @foreach($clients as $client)
+                                    <option value="{{ $client[0]->id }}">
+                                        {{ $client[0]->firstname.' '.$client[0]->lastname }}
                                     </option>
                                 @endforeach
                             </select>
@@ -49,6 +52,7 @@
                         <input type="Submit" name="Submit" value="Add Brand" />
                     </div>
                 </form>
+                @endif
             </div>
         </div>
     </div>

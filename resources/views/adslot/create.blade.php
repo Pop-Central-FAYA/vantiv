@@ -45,8 +45,8 @@
                     <div class="Add-brand">
                         <div class="row">
                             <div class="input-group" style="margin-right: 20px;">
-                                <label for="days">Select Broadcast Channel</label>
-                                <select name="medium" id="" required class="Role form-control">
+                                <label for="channel">Select Broadcast Channel</label>
+                                <select name="channel" id="" required class="Role form-control">
                                     <option value="">Select Channel</option>
                                     @foreach($channels as $channel)
                                         <option value="{{ $channel->id }}">{{ $channel->channel }}</option>

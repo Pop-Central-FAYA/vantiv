@@ -115,28 +115,30 @@
 
                                                                                     @if(((integer) $datas[$i]->time) === $times[$i] && ($rating->time_difference - $rating->time_used) >= $times[$i])
                                                                                         <tr>
-                                                                                            <td>{{ $j }}</td>
-                                                                                            <td><div class="col-md-3"> <video width="150" controls><source src="{{ asset(decrypt($datas[$i]->uploads)) }}"></video> </div></td>
-                                                                                            <input type="hidden" name="file" class="file{{ $rating->id.$datas[$i]->id }}" value="{{ $datas[$i]->uploads }}">
-                                                                                            <td><div class="col-md-3"><span style="margin-left:15%"></span>{{ $datas[$i]->time }} Seconds</div></td>
-                                                                                            <input type="hidden" name="time" class="time{{ $rating->id.$datas[$i]->id }}" value="{{ $datas[$i]->time }}">
-                                                                                            <input type="hidden" name="from_to_time" class="from_to_time{{ $rating->id.$datas[$i]->id }}" value="{{ $rating->from_to_time }}">
-                                                                                            <input type="hidden" name="adslot_id" class="adslot_id{{ $rating->id.$datas[$i]->id }}" value="{{ $rating->id }}">
-                                                                                            <input type="hidden" name="walkins" class="walkins" value="{{ $id }}">
-                                                                                            @if($datas[$i]->time === 15)
-                                                                                                <td><div class="col-md-3">&#8358;{{ $select_price[0]->price_15 }}</div></td>
-                                                                                                <input type="hidden" name="price" class="price{{ $rating->id.$datas[$i]->id }}" value="{{ $select_price[0]->price_15 }}">
-                                                                                            @elseif($datas[$i]->time === 30)
-                                                                                                <td><div class="col-md-3">&#8358;{{ $select_price[0]->price_30 }}</div></td>
-                                                                                                <input type="hidden" name="price" class="price{{ $rating->id.$datas[$i]->id }}" value="{{ $select_price[0]->price_30 }}">
-                                                                                            @elseif($datas[$i]->time === 45)
-                                                                                                <td><div class="col-md-3">&#8358;{{ $select_price[0]->price_45 }}</div></td>
-                                                                                                <input type="hidden" name="price" class="price{{ $rating->id.$datas[$i]->id }}" value="{{ $select_price[0]->price_45 }}">
-                                                                                            @elseif($datas[$i]->time === 60)
-                                                                                                <td><div class="col-md-3">&#8358;{{ $select_price[0]->price_60 }}</div></td>
-                                                                                                <input type="hidden" name="price" class="price{{ $rating->id.$datas[$i]->id }}" value="{{ $select_price[0]->price_60 }}">
+                                                                                            @if($datas[$i]->uploads)
+                                                                                                <td>{{ $j }}</td>
+                                                                                                <td><div class="col-md-3"> <video width="150" controls><source src="{{ asset(decrypt($datas[$i]->uploads)) }}"></video> </div></td>
+                                                                                                <input type="hidden" name="file" class="file{{ $rating->id.$datas[$i]->id }}" value="{{ $datas[$i]->uploads }}">
+                                                                                                <td><div class="col-md-3"><span style="margin-left:15%"></span>{{ $datas[$i]->time }} Seconds</div></td>
+                                                                                                <input type="hidden" name="time" class="time{{ $rating->id.$datas[$i]->id }}" value="{{ $datas[$i]->time }}">
+                                                                                                <input type="hidden" name="from_to_time" class="from_to_time{{ $rating->id.$datas[$i]->id }}" value="{{ $rating->from_to_time }}">
+                                                                                                <input type="hidden" name="adslot_id" class="adslot_id{{ $rating->id.$datas[$i]->id }}" value="{{ $rating->id }}">
+                                                                                                <input type="hidden" name="walkins" class="walkins" value="{{ $id }}">
+                                                                                                @if($datas[$i]->time === 15)
+                                                                                                    <td><div class="col-md-3">&#8358;{{ $select_price[0]->price_15 }}</div></td>
+                                                                                                    <input type="hidden" name="price" class="price{{ $rating->id.$datas[$i]->id }}" value="{{ $select_price[0]->price_15 }}">
+                                                                                                @elseif($datas[$i]->time === 30)
+                                                                                                    <td><div class="col-md-3">&#8358;{{ $select_price[0]->price_30 }}</div></td>
+                                                                                                    <input type="hidden" name="price" class="price{{ $rating->id.$datas[$i]->id }}" value="{{ $select_price[0]->price_30 }}">
+                                                                                                @elseif($datas[$i]->time === 45)
+                                                                                                    <td><div class="col-md-3">&#8358;{{ $select_price[0]->price_45 }}</div></td>
+                                                                                                    <input type="hidden" name="price" class="price{{ $rating->id.$datas[$i]->id }}" value="{{ $select_price[0]->price_45 }}">
+                                                                                                @elseif($datas[$i]->time === 60)
+                                                                                                    <td><div class="col-md-3">&#8358;{{ $select_price[0]->price_60 }}</div></td>
+                                                                                                    <input type="hidden" name="price" class="price{{ $rating->id.$datas[$i]->id }}" value="{{ $select_price[0]->price_60 }}">
+                                                                                                @endif
+                                                                                                <td><div class="col-md-3"><input name="hourly" class="hourly" value="{{ $rating->id.$datas[$i]->id }}" type="radio"></div></td>
                                                                                             @endif
-                                                                                            <td><div class="col-md-3"><input name="hourly" class="hourly" value="{{ $rating->id.$datas[$i]->id }}" type="radio"></div></td>
                                                                                         </tr>
                                                                                     @endif
                                                                                 <?php $j++; } ?>

@@ -180,6 +180,11 @@ class CampaignsController extends Controller
             return redirect()->back();
         }
 
+        if($request->min_age < 0 || $request->max_age < 0){
+            Session::flash('error', 'The minimun or maximum age cannot assume a negetive value');
+            return back();
+        }
+
         $del_cart = \DB::delete("DELETE FROM carts WHERE user_id = '$id'");
         $del_uplaods = \DB::delete("DELETE FROM uploads WHERE user_id = '$id'");
 
@@ -204,7 +209,7 @@ class CampaignsController extends Controller
         }
         $day_parts = implode("','" ,$step1->dayparts);
         $region = implode("','", $step1->region);
-        $adslots = Utilities::switch_db('api')->select("SELECT broadcaster, COUNT(broadcaster) as all_slots FROM adslots where min_age >= $step1->min_age AND max_age <= $step1->max_age AND target_audience = '$step1->target_audience' AND day_parts IN ('$day_parts') AND region IN ('$region') AND is_available = 0 group by broadcaster");
+        $adslots = Utilities::switch_db('api')->select("SELECT broadcaster, COUNT(broadcaster) as all_slots FROM adslots where min_age >= $step1->min_age AND max_age <= $step1->max_age AND target_audience = '$step1->target_audience' AND day_parts IN ('$day_parts') AND region IN ('$region') AND is_available = 0 AND channels = '$step1->channel' group by broadcaster");
 
         $ads_broad = [];
         foreach ($adslots as $adslot)
@@ -231,7 +236,7 @@ class CampaignsController extends Controller
     {
 
         $this->validate($request, [
-            'uploads' => 'required|max:20000',
+            'uploads' => 'max:20000',
             'time' => 'required'
         ]);
 
@@ -240,7 +245,7 @@ class CampaignsController extends Controller
             return redirect()->back();
         }
 
-        if ($request->file('uploads')) {
+        if ($request->hasFile('uploads')) {
             $filesUploaded = $request->uploads;
             $extension = $filesUploaded->getClientOriginalExtension();
             if($extension == 'mp4' || $extension == 'wma' || $extension == 'ogg' || $extension == 'mkv'){
@@ -270,6 +275,13 @@ class CampaignsController extends Controller
                 }
             }
 
+        }else{
+            $time = $request->time;
+            $insert_upload = \DB::table('uploads')->insert([
+                'user_id' => $id,
+                'time' => $time,
+            ]);
+            return redirect()->route('agency_campaign.step3_1', ['id' => $id, 'broadcaster' => $broadcaster]);
         }
     }
 
@@ -283,7 +295,7 @@ class CampaignsController extends Controller
     {
 
         $this->validate($request, [
-            'uploads' => 'required|max:20000',
+            'uploads' => 'max:20000',
             'time' => 'required'
         ]);
 
@@ -292,7 +304,7 @@ class CampaignsController extends Controller
             return redirect()->back();
         }
 
-        if ($request->file('uploads')) {
+        if ($request->hasFile('uploads')) {
             $filesUploaded = $request->uploads;
             $extension = $filesUploaded->getClientOriginalExtension();
             if ($extension == 'mp4' || $extension == 'wma' || $extension == 'ogg' || $extension == 'mkv') {
@@ -322,6 +334,13 @@ class CampaignsController extends Controller
                 }
 
             }
+        }else{
+            $time = $request->time;
+            $insert_upload = \DB::table('uploads')->insert([
+                'user_id' => $id,
+                'time' => $time,
+            ]);
+            return redirect()->route('agency_campaign.step3_2', ['id' => $id, 'broadcaster' => $broadcaster]);
         }
     }
 
@@ -335,7 +354,7 @@ class CampaignsController extends Controller
     {
 
         $this->validate($request, [
-            'uploads' => 'required|max:20000',
+            'uploads' => 'max:20000',
             'time' => 'required'
         ]);
 
@@ -344,7 +363,7 @@ class CampaignsController extends Controller
             return redirect()->back();
         }
 
-        if ($request->file('uploads')) {
+        if ($request->hasFile('uploads')) {
             $filesUploaded = $request->uploads;
             $extension = $filesUploaded->getClientOriginalExtension();
             if ($extension == 'mp4' || $extension == 'wma' || $extension == 'ogg' || $extension == 'mkv') {
@@ -374,6 +393,13 @@ class CampaignsController extends Controller
                 }
             }
 
+        }else{
+            $time = $request->time;
+            $insert_upload = \DB::table('uploads')->insert([
+                'user_id' => $id,
+                'time' => $time,
+            ]);
+            return redirect()->route('agency_campaign.step3_3', ['id' => $id, 'broadcaster' => $broadcaster]);
         }
     }
 
@@ -387,7 +413,7 @@ class CampaignsController extends Controller
     {
 
         $this->validate($request, [
-            'uploads' => 'required|max:20000',
+            'uploads' => 'max:20000',
             'time' => 'required'
         ]);
 
@@ -396,7 +422,7 @@ class CampaignsController extends Controller
             return redirect()->back();
         }
 
-        if ($request->file('uploads')) {
+        if ($request->hasFile('uploads')) {
             $filesUploaded = $request->uploads;
             $extension = $filesUploaded->getClientOriginalExtension();
             if($extension == 'mp4' || $extension == 'wma' || $extension == 'ogg' || $extension == 'mkv'){
@@ -426,6 +452,13 @@ class CampaignsController extends Controller
                 }
             }
 
+        }else{
+            $time = $request->time;
+            $insert_upload = \DB::table('uploads')->insert([
+                'user_id' => $id,
+                'time' => $time,
+            ]);
+            return redirect()->route('agency_campaign.review_uploads', ['id' => $id, 'broadcaster' => $broadcaster]);
         }
     }
 
@@ -441,7 +474,7 @@ class CampaignsController extends Controller
     public function postNewUploads(Request $request, $id, $broadcaster)
     {
         $this->validate($request, [
-            'uploads' => 'required|max:20000',
+            'uploads' => 'max:20000',
             'time' => 'required'
         ]);
 
@@ -450,7 +483,7 @@ class CampaignsController extends Controller
             return redirect()->back();
         }
 
-        if ($request->file('uploads')) {
+        if ($request->hasFile('uploads')) {
             $filesUploaded = $request->uploads;
             $extension = $filesUploaded->getClientOriginalExtension();
             if($extension == 'mp4' || $extension == 'wma' || $extension == 'ogg' || $extension == 'mkv'){
@@ -479,6 +512,13 @@ class CampaignsController extends Controller
                 }
             }
 
+        }else{
+            $time = $request->time;
+            $insert_upload = \DB::table('uploads')->insert([
+                'user_id' => $id,
+                'time' => $time,
+            ]);
+            return redirect()->route('agency_campaign.review_uploads', ['id' => $id, 'broadcaster' => $broadcaster]);
         }
     }
 
@@ -504,7 +544,7 @@ class CampaignsController extends Controller
         }
         $day_parts = implode("','" ,$step1->dayparts);
         $region = implode("','", $step1->region);
-        $adslots_count = Utilities::switch_db('api')->select("SELECT * FROM adslots where min_age >= $step1->min_age AND max_age <= $step1->max_age AND target_audience = '$step1->target_audience' AND day_parts IN ('$day_parts') AND region IN ('$region') AND is_available = 0 AND broadcaster = '$broadcaster'");
+        $adslots_count = Utilities::switch_db('api')->select("SELECT * FROM adslots where min_age >= $step1->min_age AND max_age <= $step1->max_age AND channels = '$step1->channel' AND target_audience = '$step1->target_audience' AND day_parts IN ('$day_parts') AND region IN ('$region') AND is_available = 0 AND broadcaster = '$broadcaster'");
         $result = count($adslots_count);
         $ratecards = Utilities::switch_db('api')->select("SELECT * from rateCards WHERE id IN (SELECT rate_card FROM adslots where min_age >= $step1->min_age 
                                                             AND max_age <= $step1->max_age 
