@@ -29,13 +29,13 @@
                             <div class="col-md-9 " style="padding:2%">
                                 <div class="row">
                                     <div class="col-md-12 ">
-                                        <p align="center">The history of advertising can be traced to ancient civilizations. It became a major force in capitalist economies in the mid-19th century, based primarily on newspapers and magazines. In the 20th century, advertising grew rapidly with new technologies such as direct mail, radio, television, the internet and mobile devices.</p>
+
                                     </div>
                                 </div>
                                 <div class="row" style="margin-bottom: 5%">
                                     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 ">
                                         <div class="tvspace-box">
-                                            <img src="{{ asset('asset/dist/img/nta-logo.jpg') }}" width="100%">
+                                            <img style="width: 150px; height: 150px;" src="{{ $broadcaster_logo[0]->image_url ? asset(decrypt($broadcaster_logo[0]->image_url)) : asset('asset/dist/img/nta-logo.jpg') }}" width="100%">
                                             <div class="tv-space">
                                                 <p align="center">{{ $result }} Adslot(s)</p>
                                             </div>
@@ -46,10 +46,13 @@
                                     @foreach($ratecards as $ratecard)
                                         <div class="row">
                                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                                <img src="{{ asset('asset/dist/img/nta-logo.jpg') }}" width="65%">
+                                                <img style="height: 70px; width: 70px;" src="{{ $broadcaster_logo[0]->image_url ? asset(decrypt($broadcaster_logo[0]->image_url)) : asset('asset/dist/img/nta-logo.jpg') }}" width="65%">
                                             </div>
                                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                                <h3 lign="center">{{ $ratecard['hourly_range'] }}</h3>
+                                                <h3 lign="center">{{ $ratecard['day'] }}</h3>
+                                            </div>
+                                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                                                <h3 align="center">{{ $ratecard['hourly_range'] }}</h3>
                                             </div>
                                             @foreach($ratecard['adslot'] as $rating)
                                                 <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4
@@ -115,28 +118,30 @@
 
                                                                                 @if(((integer) $datas[$i]->time) === $times[$i] && ($rating->time_difference - $rating->time_used) >= $times[$i])
                                                                                     <tr>
-                                                                                        <td>{{ $j }}</td>
-                                                                                        <td><div class="col-md-3"> <video width="150" controls><source src="{{ asset(decrypt($datas[$i]->uploads)) }}"></video> </div></td>
-                                                                                        <input type="hidden" name="file" class="file{{ $rating->id.$datas[$i]->id }}" value="{{ $datas[$i]->uploads }}">
-                                                                                        <td><div class="col-md-3"><span style="margin-left:15%"></span>{{ $datas[$i]->time }} Seconds</div></td>
-                                                                                        <input type="hidden" name="time" class="time{{ $rating->id.$datas[$i]->id }}" value="{{ $datas[$i]->time }}">
-                                                                                        <input type="hidden" name="from_to_time" class="from_to_time{{ $rating->id.$datas[$i]->id }}" value="{{ $rating->from_to_time }}">
-                                                                                        <input type="hidden" name="adslot_id" class="adslot_id{{ $rating->id.$datas[$i]->id }}" value="{{ $rating->id }}">
-                                                                                        <input type="hidden" name="walkins" class="walkins" value="{{ $id }}">
-                                                                                        @if($datas[$i]->time === 15)
-                                                                                            <td><div class="col-md-3">&#8358;{{ $select_price[0]->price_15 }}</div></td>
-                                                                                            <input type="hidden" name="price" class="price{{ $rating->id.$datas[$i]->id }}" value="{{ $select_price[0]->price_15 }}">
-                                                                                        @elseif($datas[$i]->time === 30)
-                                                                                            <td><div class="col-md-3">&#8358;{{ $select_price[0]->price_30 }}</div></td>
-                                                                                            <input type="hidden" name="price" class="price{{ $rating->id.$datas[$i]->id }}" value="{{ $select_price[0]->price_30 }}">
-                                                                                        @elseif($datas[$i]->time === 45)
-                                                                                            <td><div class="col-md-3">&#8358;{{ $select_price[0]->price_45 }}</div></td>
-                                                                                            <input type="hidden" name="price" class="price{{ $rating->id.$datas[$i]->id }}" value="{{ $select_price[0]->price_45 }}">
-                                                                                        @elseif($datas[$i]->time === 60)
-                                                                                            <td><div class="col-md-3">&#8358;{{ $select_price[0]->price_60 }}</div></td>
-                                                                                            <input type="hidden" name="price" class="price{{ $rating->id.$datas[$i]->id }}" value="{{ $select_price[0]->price_60 }}">
+                                                                                        @if($datas[$i]->uploads)
+                                                                                            <td>{{ $j }}</td>
+                                                                                            <td><div class="col-md-3"> <video width="150" controls><source src="{{ asset(decrypt($datas[$i]->uploads)) }}"></video> </div></td>
+                                                                                            <input type="hidden" name="file" class="file{{ $rating->id.$datas[$i]->id }}" value="{{ $datas[$i]->uploads }}">
+                                                                                            <td><div class="col-md-3"><span style="margin-left:15%"></span>{{ $datas[$i]->time }} Seconds</div></td>
+                                                                                            <input type="hidden" name="time" class="time{{ $rating->id.$datas[$i]->id }}" value="{{ $datas[$i]->time }}">
+                                                                                            <input type="hidden" name="from_to_time" class="from_to_time{{ $rating->id.$datas[$i]->id }}" value="{{ $rating->from_to_time }}">
+                                                                                            <input type="hidden" name="adslot_id" class="adslot_id{{ $rating->id.$datas[$i]->id }}" value="{{ $rating->id }}">
+                                                                                            <input type="hidden" name="walkins" class="walkins" value="{{ $id }}">
+                                                                                            @if($datas[$i]->time === 15)
+                                                                                                <td><div class="col-md-3">&#8358;{{ $select_price[0]->price_15 }}</div></td>
+                                                                                                <input type="hidden" name="price" class="price{{ $rating->id.$datas[$i]->id }}" value="{{ $select_price[0]->price_15 }}">
+                                                                                            @elseif($datas[$i]->time === 30)
+                                                                                                <td><div class="col-md-3">&#8358;{{ $select_price[0]->price_30 }}</div></td>
+                                                                                                <input type="hidden" name="price" class="price{{ $rating->id.$datas[$i]->id }}" value="{{ $select_price[0]->price_30 }}">
+                                                                                            @elseif($datas[$i]->time === 45)
+                                                                                                <td><div class="col-md-3">&#8358;{{ $select_price[0]->price_45 }}</div></td>
+                                                                                                <input type="hidden" name="price" class="price{{ $rating->id.$datas[$i]->id }}" value="{{ $select_price[0]->price_45 }}">
+                                                                                            @elseif($datas[$i]->time === 60)
+                                                                                                <td><div class="col-md-3">&#8358;{{ $select_price[0]->price_60 }}</div></td>
+                                                                                                <input type="hidden" name="price" class="price{{ $rating->id.$datas[$i]->id }}" value="{{ $select_price[0]->price_60 }}">
+                                                                                            @endif
+                                                                                            <td><div class="col-md-3"><input name="hourly" class="hourly" value="{{ $rating->id.$datas[$i]->id }}" type="radio"></div></td>
                                                                                         @endif
-                                                                                        <td><div class="col-md-3"><input name="hourly" class="hourly" value="{{ $rating->id.$datas[$i]->id }}" type="radio"></div></td>
                                                                                     </tr>
                                                                                 @endif
                                                                                 <?php $j++; } ?>

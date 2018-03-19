@@ -456,7 +456,8 @@ class CampaignsController extends Controller
 
         $data = \DB::select("SELECT * from uploads WHERE user_id = '$id'");
         $cart = \DB::select("SELECT * from carts WHERE user_id = '$id'");
-        return view('advertisers.campaigns.create4')->with('ratecards', $rate_card)->with('result', $result)->with('cart', $cart)->with('datas', $data)->with('times', $time)->with('id', $id)->with('broadcaster', $broadcaster);
+        $broadcaster_logo = Utilities::switch_db('api')->select("SELECT image_url from broadcasters where id = '$broadcaster'");
+        return view('advertisers.campaigns.create4')->with('ratecards', $rate_card)->with('result', $result)->with('cart', $cart)->with('datas', $data)->with('times', $time)->with('id', $id)->with('broadcaster', $broadcaster)->with('broadcaster_logo', $broadcaster_logo);
     }
 
     public function postCart(Request $request, $id, $broadcaster)

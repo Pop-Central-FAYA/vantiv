@@ -563,7 +563,8 @@ class CampaignsController extends Controller
 
         $data = \DB::select("SELECT * from uploads WHERE user_id = '$walkins'");
         $cart = \DB::select("SELECT * from carts WHERE user_id = '$walkins'");
-        return view('campaign.create7')->with('ratecards', $rate_card)->with('result', $result)->with('cart', $cart)->with('datas', $data)->with('times', $time)->with('walkins', $walkins);
+        $broadcaster_logo = Utilities::switch_db('api')->select("SELECT image_url from broadcasters where id = '$broadcaster'");
+        return view('campaign.create7')->with('ratecards', $rate_card)->with('result', $result)->with('cart', $cart)->with('datas', $data)->with('times', $time)->with('walkins', $walkins)->with('broadcaster_logo', $broadcaster_logo);
     }
 
     /**
