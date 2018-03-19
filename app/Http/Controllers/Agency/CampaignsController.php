@@ -175,14 +175,18 @@ class CampaignsController extends Controller
             'region' => 'required',
         ]);
 
-        if ($request->min_age < 0 || $request->max_age < 0) {
-            Session::flash('error', 'The minimun or maximum age cannot assume a negetive value');
-            return redirect()->back();
-        }
-
         if($request->min_age < 0 || $request->max_age < 0){
             Session::flash('error', 'The minimun or maximum age cannot assume a negetive value');
             return back();
+        }
+
+        if($request->min_age > $request->max_age){
+            Session::flash('error', 'The minimum age cannot be greater than the maximum age');
+            return back();
+        }
+
+        if(strtotime($request->end_date) < strtotime($request->start_date)){
+            return redirect()->back()->with('error', 'Start Date cannot be greater than End Date');
         }
 
         $del_cart = \DB::delete("DELETE FROM carts WHERE user_id = '$id'");
