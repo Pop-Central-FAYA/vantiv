@@ -81,6 +81,7 @@
         </div>
     </div>
 
+    <?php $i = 0; ?>
     @foreach ($mpo_data as $mpo)
 
         <div class="modal fade" id="myModal{{ $mpo['id'] }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -139,7 +140,7 @@
                                             @endif
                                         </td>
                                         <td>
-                                            <select id="is_file_accepted">
+                                            <select class="is_file_accepted form-control">
                                                 <option value="null">Select Status</option>
                                                 <option value="1">Approve</option>
                                                 <option value="2">Reject</option>
@@ -149,14 +150,14 @@
                                             {{ $file->rejection_reason }}
                                         </td>
                                         <td>
-                                            <select name="rejection_reason" class="form-control" id="reason">
+                                            <select name="rejection_reason" class="reason form-control">
                                                 <option value="null">Select Reason</option>
                                                 <option value="Inappropriate Adslot">Inappropriate Adslot</option>
                                                 <option value="Inappropriate Content">Inappropriate Content</option>
                                             </select>
                                         </td>
                                         <td>
-                                            <button class="update_file btn btn-primary"
+                                            <button class="update_file{{ $i++ }} btn btn-primary"
                                                     name="status"
                                                     data-broadcaster_id="{{ $file->broadcaster_id || $file->agency_broadcaster }}"
                                                     data-campaign_id="{{ $file->campaign_id }}"
@@ -238,8 +239,8 @@
                 // campaign_id = $(this).data("campaign_id");
                 file_code = $(this).data("file_code");
                 csrf = $(this).data("token");
-                rejection_reason = $("#reason").val();
-                is_file_accepted = $("#is_file_accepted").val();
+                rejection_reason = $(".reason").val();
+                is_file_accepted = $(".is_file_accepted").val();
 
                 if (rejection_reason === 'null' && is_file_accepted === 'null') {
                     toastr.error("File Status and Rejection reason can't be empty");
