@@ -65,7 +65,7 @@ class CampaignsController extends Controller
 
         return $datatables->collection($campaign)
             ->addColumn('details', function ($campaign) {
-                return '<a href="' . route('broadcaster.campaign.details', ['id' => $campaign['camp_id']]) .'" class="btn btn-success btn-xs" > Campaign Details </a>';
+                return '<a href="' . route('broadcaster.campaign.details', ['id' => $campaign['camp_id']]) .'" class="btn btn-primary btn-xs" > Campaign Details </a>';
             })
             ->rawColumns(['details' => 'details'])->addIndexColumn()
             ->make(true);
