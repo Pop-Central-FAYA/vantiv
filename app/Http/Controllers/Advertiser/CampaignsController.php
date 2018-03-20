@@ -203,13 +203,20 @@ class CampaignsController extends Controller
     public function postStep3(Request $request, $id, $broadcaster)
     {
 
+        if(((int)$request->f_du) > ((int)$request->time)){
+            Session::flash('error', 'Your video file duration cannot be more than the time slot you picked');
+            return redirect()->back();
+        }
+
         $this->validate($request, [
             'uploads' => 'max:20000',
             'time' => 'required'
         ]);
 
+
         if(((int)$request->f_du) > ((int)$request->time)){
-            return redirect()->back()->with('error','Your video file duration cannot be more than the time slot you picked');
+            Session::flash('error', 'Your video file duration cannot be more than the time slot you picked');
+            return redirect();
         }
 
         if ($request->hasFile('uploads')) {
@@ -258,6 +265,10 @@ class CampaignsController extends Controller
 
     public function postStep3_1(Request $request, $id, $broadcaster)
     {
+        if(((int)$request->f_du) > ((int)$request->time)){
+            Session::flash('error', 'Your video file duration cannot be more than the time slot you picked');
+            return redirect()->back();
+        }
 
         $this->validate($request, [
             'uploads' => 'max:20000',
@@ -265,7 +276,8 @@ class CampaignsController extends Controller
         ]);
 
         if(((int)$request->f_du) > ((int)$request->time)){
-            return redirect()->back()->with('error','Your video file duration cannot be more than the time slot you picked');
+            Session::flash('error', 'Your video file duration cannot be more than the time slot you picked');
+            return redirect()->back();
         }
 
         if ($request->hasFile('uploads')) {
@@ -314,6 +326,10 @@ class CampaignsController extends Controller
 
     public function postStep3_2(Request $request, $id, $broadcaster)
     {
+        if(((int)$request->f_du) > ((int)$request->time)){
+            Session::flash('error', 'Your video file duration cannot be more than the time slot you picked');
+            return redirect()->back();
+        }
 
         $this->validate($request, [
             'uploads' => 'max:20000',
@@ -370,6 +386,10 @@ class CampaignsController extends Controller
 
     public function postStep3_3(Request $request, $id, $broadcaster)
     {
+        if(((int)$request->f_du) > ((int)$request->time)){
+            Session::flash('error', 'Your video file duration cannot be more than the time slot you picked');
+            return redirect()->back();
+        }
 
         $this->validate($request, [
             'uploads' => 'max:20000',

@@ -247,6 +247,7 @@ class CampaignsController extends Controller
             'time' => 'required'
         ]);
 
+
         if (((int) $request->f_du) > ((int) $request->time)) {
             Session::flash('error', 'Your video file duration cannot be more than the time slot you picked');
             return redirect()->back();
