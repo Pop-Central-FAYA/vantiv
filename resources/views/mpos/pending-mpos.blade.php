@@ -140,7 +140,7 @@
                                             @endif
                                         </td>
                                         <td>
-                                            <select class="is_file_accepted form-control">
+                                            <select id="is_file_accepted{{ $file->file_code }}">
                                                 <option value="null">Select Status</option>
                                                 <option value="1">Approve</option>
                                                 <option value="2">Reject</option>
@@ -149,15 +149,16 @@
                                         <td>
                                             {{ $file->rejection_reason }}
                                         </td>
+                                        <input type="hidden" name="file_code" id="file_code" value="{{ $file->file_code }}">
                                         <td>
-                                            <select name="rejection_reason" class="reason form-control">
+                                            <select name="rejection_reason" class="form-control" id="reason{{ $file->file_code }}">
                                                 <option value="null">Select Reason</option>
                                                 <option value="Inappropriate Adslot">Inappropriate Adslot</option>
                                                 <option value="Inappropriate Content">Inappropriate Content</option>
                                             </select>
                                         </td>
                                         <td>
-                                            <button class="update_file{{ $i++ }} btn btn-primary"
+                                            <button class="update_file update{{ $file->file_code }} btn btn-primary"
                                                     name="status"
                                                     data-broadcaster_id="{{ $file->broadcaster_id || $file->agency_broadcaster }}"
                                                     data-campaign_id="{{ $file->campaign_id }}"
@@ -234,13 +235,16 @@
         $(document).ready(function () {
             $('#flash-file-message').hide();
 
-            $(".update_file").click(function () {
+
+            $("body").delegate('.update_file', 'click', function () {
                 // broadcaster_id = $(this).data("broadcaster_id");
                 // campaign_id = $(this).data("campaign_id");
+                var url = $(this).data('file_code');
                 file_code = $(this).data("file_code");
                 csrf = $(this).data("token");
-                rejection_reason = $(".reason").val();
-                is_file_accepted = $(".is_file_accepted").val();
+
+                rejection_reason = $("select#reason"+url).val();
+                is_file_accepted = $("select#is_file_accepted"+url).val();
 
                 if (rejection_reason === 'null' && is_file_accepted === 'null') {
                     toastr.error("File Status and Rejection reason can't be empty");
