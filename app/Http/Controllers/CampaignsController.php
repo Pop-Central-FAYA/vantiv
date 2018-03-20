@@ -50,6 +50,7 @@ class CampaignsController extends Controller
             $brand = Utilities::switch_db('api')->select("SELECT `name` as brand_name from brands where id = '$cam->brand'");
             $campaign[] = [
                 'id' => $j,
+                'camp_id' => $cam->id,
                 'name' => $cam->name,
                 'brand' => $brand[0]->brand_name,
                 'product' => $cam->product,
@@ -63,6 +64,10 @@ class CampaignsController extends Controller
         }
 
         return $datatables->collection($campaign)
+            ->addColumn('details', function ($campaign) {
+                return '<a href="' . route('broadcaster.campaign.details', ['id' => $campaign['camp_id']]) .'" class="btn btn-success btn-xs" > Campaign Details </a>';
+            })
+            ->rawColumns(['details' => 'details'])->addIndexColumn()
             ->make(true);
     }
 
@@ -777,6 +782,12 @@ class CampaignsController extends Controller
         $rate_id = $id;
         $del = \DB::select("DELETE FROM carts WHERE rate_id = '$rate_id'");
         return redirect()->back()->with('success', trans('app.campaign'));
+    }
+
+    public function campaignDetails($id)
+    {
+        $campaign_details = Utilities::campaignDetails($id);
+        return view('campaign.campaign_details', compact('campaign_details'));
     }
 
 
