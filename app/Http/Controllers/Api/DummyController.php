@@ -27,7 +27,7 @@ class DummyController extends Controller
     public function allFiles()
     {
         $file_details = [];
-        $files = Utilities::switch_db('api')->select("SELECT * FROM files where is_file_accepted = 1");
+        $files = Utilities::switch_db('api')->select("SELECT * FROM files where is_file_accepted = 1 AND airbox_status = 1");
         foreach ($files as $file){
             $campaign_details = Utilities::switch_db('api')->select("SELECT * from campaigns where id = '$file->campaign_id'");
             $brand_name = $campaign_details[0]->brand;

@@ -36,6 +36,7 @@
                                         <th>Adslots</th>
                                         <th>Compliance</th>
                                         <th>Status</th>
+                                        <th>Campaign Details</th>
                                         </thead>
                                     </table>
                                 </div>
@@ -90,6 +91,7 @@
                     {data: 'adslots', name: 'adslots'},
                     {data: 'compliance', name: 'compliance'},
                     {data: 'status', name: 'status'},
+                    {data: 'details', name: 'details'}
                 ]
             });
 

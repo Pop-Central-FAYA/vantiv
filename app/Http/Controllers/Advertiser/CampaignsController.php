@@ -91,13 +91,16 @@ class CampaignsController extends Controller
             $j++;
         }
         return $datatables->collection($campaign)
+            ->addColumn('details', function ($campaign) {
+                return '<a href="' . route('advertiser.campaign.details', ['id' => $campaign['camp_id']]) .'" class="btn btn-primary btn-xs" > Campaign Details </a>';
+            })
             ->addColumn('mpo', function ($campaign) {
                 return '<button data-toggle="modal" data-target=".mpoModal' . $campaign['camp_id']. '" class="btn btn-success btn-xs" > View Details </button>';
             })
             ->addColumn('invoices', function($campaign){
                 return '<button data-toggle="modal" data-target=".invoiceModal' . $campaign['camp_id']. '" class="btn btn-success btn-xs" > View Details </button>    ';
             })
-            ->rawColumns(['mpo' => 'mpo', 'invoices' => 'invoices'])->addIndexColumn()
+            ->rawColumns(['details' => 'details', 'mpo' => 'mpo', 'invoices' => 'invoices'])->addIndexColumn()
             ->make(true);
     }
 
@@ -200,13 +203,20 @@ class CampaignsController extends Controller
     public function postStep3(Request $request, $id, $broadcaster)
     {
 
+        if(((int)$request->f_du) > ((int)$request->time)){
+            Session::flash('error', 'Your video file duration cannot be more than the time slot you picked');
+            return redirect()->back();
+        }
+
         $this->validate($request, [
             'uploads' => 'max:20000',
             'time' => 'required'
         ]);
 
+
         if(((int)$request->f_du) > ((int)$request->time)){
-            return redirect()->back()->with('error','Your video file duration cannot be more than the time slot you picked');
+            Session::flash('error', 'Your video file duration cannot be more than the time slot you picked');
+            return redirect();
         }
 
         if ($request->hasFile('uploads')) {
@@ -255,6 +265,10 @@ class CampaignsController extends Controller
 
     public function postStep3_1(Request $request, $id, $broadcaster)
     {
+        if(((int)$request->f_du) > ((int)$request->time)){
+            Session::flash('error', 'Your video file duration cannot be more than the time slot you picked');
+            return redirect()->back();
+        }
 
         $this->validate($request, [
             'uploads' => 'max:20000',
@@ -262,7 +276,8 @@ class CampaignsController extends Controller
         ]);
 
         if(((int)$request->f_du) > ((int)$request->time)){
-            return redirect()->back()->with('error','Your video file duration cannot be more than the time slot you picked');
+            Session::flash('error', 'Your video file duration cannot be more than the time slot you picked');
+            return redirect()->back();
         }
 
         if ($request->hasFile('uploads')) {
@@ -311,6 +326,10 @@ class CampaignsController extends Controller
 
     public function postStep3_2(Request $request, $id, $broadcaster)
     {
+        if(((int)$request->f_du) > ((int)$request->time)){
+            Session::flash('error', 'Your video file duration cannot be more than the time slot you picked');
+            return redirect()->back();
+        }
 
         $this->validate($request, [
             'uploads' => 'max:20000',
@@ -367,6 +386,10 @@ class CampaignsController extends Controller
 
     public function postStep3_3(Request $request, $id, $broadcaster)
     {
+        if(((int)$request->f_du) > ((int)$request->time)){
+            Session::flash('error', 'Your video file duration cannot be more than the time slot you picked');
+            return redirect()->back();
+        }
 
         $this->validate($request, [
             'uploads' => 'max:20000',
@@ -669,6 +692,12 @@ class CampaignsController extends Controller
             return redirect()->back()->with('error', 'Could not create this campaign');
         }
 
+    }
+
+    public function getCampaignDetails($id)
+    {
+        $campaign_details = Utilities::campaignDetails($id);
+        return view('advertisers.campaigns.campaign_details', compact('campaign_details'));
     }
 
 

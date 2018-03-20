@@ -115,6 +115,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/remove-campaigns/{id}', 'CampaignsController@removeCart')->name('cart.remove');
 
         Route::get('/all-campaign/data', 'CampaignsController@getAllData');
+
+        Route::get('/campaign-details/{id}', 'CampaignsController@campaignDetails')->name('broadcaster.campaign.details');
     });
 
     /*
@@ -258,6 +260,8 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/campaign/checkout/{id}/{broadcaster}', 'Agency\CampaignsController@checkout')->name('agency_campaign.checkout');
             Route::get('/cart/remove/{id}', 'Agency\CampaignsController@removeCart')->name('agency_cart.remove');
             Route::post('/campaign/submit/{id}/{broadcaster}', 'Agency\CampaignsController@postCampaign')->name('agency_submit.campaign');
+
+            Route::get('/campaign-details/{id}', 'Agency\CampaignsController@getDetails')->name('agency.campaign.details');
         });
 
 //           Route::group(['prefix' => 'brands'], function () {
@@ -346,6 +350,8 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/campaign/checkout/{id}/{broadcaster}', 'Advertiser\CampaignsController@checkout')->name('advertiser_campaign.checkout');
             Route::get('/cart/remove/{id}', 'Advertiser\CampaignsController@removeCart')->name('advertiser_cart.remove');
             Route::post('/campaign/submit/{id}/{broadcaster}', 'Advertiser\CampaignsController@postCampaign')->name('advertiser_submit.campaign');
+
+            Route::get('/campaign-details/{id}', 'Advertiser\CampaignsController@getCampaignDetails')->name('advertiser.campaign.details');
         });
 
         Route::group(['prefix' => 'reports'], function (){

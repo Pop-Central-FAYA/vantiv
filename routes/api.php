@@ -13,5 +13,6 @@
 
 
 Route::get('/welcome', 'Api\DummyController@index');
+Route::get('/all-pushed-files', 'Api\DummyController@allFiles');
 Route::post('/add-file/{id}', 'Api\DummyController@addFile')->name('api.add.file');
 

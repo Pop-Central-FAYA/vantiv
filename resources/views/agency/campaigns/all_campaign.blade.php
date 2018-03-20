@@ -27,6 +27,7 @@
                             <th>End Date</th>
                             <th>Amount</th>
                             <th>Status</th>
+                            <th>Campaign Details</th>
                             <th>MPO</th>
                             <th>Invoice</th>
                         </thead>
@@ -244,6 +245,7 @@
                     {data: 'end_date', name: 'end_date'},
                     {data: 'amount', name: 'amount'},
                     {data: 'status', name: 'status'},
+                    {data: 'details', name: 'details'},
                     {data: 'mpo', name: 'mpo'},
                     {data: 'invoices', name: 'invoices'}
                 ]
