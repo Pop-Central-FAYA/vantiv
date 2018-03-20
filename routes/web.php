@@ -220,7 +220,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::group(['prefix' => 'mpos'], function () {
         Route::get('all', 'MpoController@index')->name('all-mpos');
         Route::get('pending', 'MpoController@pending_mpos')->name('pending-mpos');
-        Route::post('approve/{is_file_accepted}/{broadcaster_id}/{file_code}/{campaign_id}', ['as' => 'files.update', 'uses' => 'MpoController@update_file']);
+        Route::post('approve/{is_file_accepted}/{file_code}/{rejection_reason}', ['as' => 'files.update', 'uses' => 'MpoController@update_file']);
     });
 
     Route::group(['prefix' => 'reports'], function () {

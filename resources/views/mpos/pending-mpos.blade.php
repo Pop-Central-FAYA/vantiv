@@ -34,41 +34,42 @@
 
                         <div class="box-body">
 
-                            @if(count($mpo_data) === 0)
+                            @if (count($mpo_data) === 0)
 
                                 <h4>OOPs!!!, You have pending mpos on your system, please create one</h4>
 
                             @else
+
                                 <table id="example1" class="table table-bordered table-striped">
                                     <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Name</th>
-                                        <th>Brand</th>
-                                        <th>Product</th>
-                                        <th>Start Date</th>
-                                        <th>End Date</th>
-                                        <th>Status</th>
-                                    </tr>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Name</th>
+                                            <th>Brand</th>
+                                            <th>Product</th>
+                                            <th>Start Date</th>
+                                            <th>End Date</th>
+                                            <th>Status</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
-                                    @foreach ($mpo_data as $mpo)
-                                        <tr>
-                                            <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $mpo['campaign_name'] }}</td>
-                                            <td>{{ $mpo['brand'] }}</td>
-                                            <td>{{ $mpo['product'] }}</td>
-                                            <td>{{ date('Y-m-d', strtotime($mpo['start_date'])) }}</td>
-                                            <td>{{ date('Y-m-d', strtotime($mpo['stop_date'])) }}</td>
-                                            <td>
-                                                <a href="#" style="font-size: 16px">
-                                            <span data-toggle="modal" data-target="#myModal{{ $mpo['id'] }}" style="cursor: pointer;">
-                                                View
-                                            </span>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    @endforeach
+                                        @foreach ($mpo_data as $mpo)
+                                            <tr>
+                                                <td>{{ $loop->iteration }}</td>
+                                                <td>{{ $mpo['campaign_name'] }}</td>
+                                                <td>{{ $mpo['brand'] }}</td>
+                                                <td>{{ $mpo['product'] }}</td>
+                                                <td>{{ date('Y-m-d', strtotime($mpo['start_date'])) }}</td>
+                                                <td>{{ date('Y-m-d', strtotime($mpo['stop_date'])) }}</td>
+                                                <td>
+                                                    <a href="#" style="font-size: 16px">
+                                                        <span data-toggle="modal" data-target="#myModal{{ $mpo['id'] }}" style="cursor: pointer;">
+                                                            View
+                                                        </span>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             @endif
@@ -87,15 +88,13 @@
                 <div class="modal-content">
 
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                    aria-hidden="true">&times;</span></button>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title" id="myModalLabel">
                             MPO - <strong>{{ $mpo['campaign_name'] }}</strong>
                         </h4>
                     </div>
 
                     <div class="modal-body">
-
                         <div class="row">
                             <div class="col-md-6">
                                 <p><b>Campaign Name:</b> {{ $mpo['campaign_name'] }}</p>
@@ -103,67 +102,74 @@
                                 <p><b>Product Name:</b> {{ $mpo['product'] }}</p>
                                 <p><b>Channel:</b> {{ $mpo['channel'] }}</p>
                             </div>
-                            <div class="col-md-6">
-                                {{--<p><b><i class="fa fa-calendar-o"></i> Date Part:</b> {{ $mpo->campaign_id->day_parts }}</p>--}}
-                                {{--<p><b><i class="fa fa-users"></i> Target Audience:</b> {{ $mpo->campaign_id->target_audience_id->audience }}</p>--}}
-                                {{--<p><b><i class="fa fa-user"></i> Viewers age range:</b> {{ $mpo->campaign_id->minimum_age }} - {{ $mpo->campaign_id->maximum_age }}</p>--}}
-                                {{--<p><b><i class="fa fa-map-marker"></i> Region:</b> {{ $mpo->campaign_id->regions }}</p>--}}
-                            </div>
-
                         </div>
 
                         <br/>
 
                         <table id="example1" class="table table-bordered table-striped">
                             <thead>
-                            <tr>
-                                {{--<th>Ad Blocks</th>--}}
-                                {{--<th>Duration</th>--}}
-                                <th>Media</th>
-                                {{--<th>Price</th>--}}
-                                <th>Approval</th>
-                                <th>Action</th>
-                            </tr>
+                                <tr>
+                                    <th>Media</th>
+                                    <th>Approval</th>
+                                    <th>Action</th>
+                                    <th>Reason</th>
+                                    <th>Reason for Rejection</th>
+                                    <th>Action</th>
+                                </tr>
                             </thead>
                             <tbody>
-                            @foreach ($mpo['files'] as $file)
-                                <tr>
-                                    {{--<td>{{ $file->rate_id->from_to_time }}</td>--}}
-                                    {{--<td>{{ $file->rate_id->time_in_seconds }}secs</td>--}}
-                                    <td>
-                                        <a href="#" style="font-size: 16px">
-                                                                    <span data-toggle="modal"
-                                                                          data-target="#myfileModal{{ $file->file_code }}"
-                                                                          style="cursor: pointer;">
-                                                                        View
-                                                                    </span>
-                                        </a>
-                                    </td>
-                                    {{--<td>{{ $file->rate_id->price }}</td>--}}
-                                    <td>
-                                        @if ($file->is_file_accepted === 0)
-                                            <label class="label label-warning">Pending</label>
-                                        @elseif ($file->is_file_accepted === 1)
-                                            <label class="label label-success">Approved</label>
-                                        @elseif ($file->is_file_accepted === 2)
-                                            <label class="label label-danger">Rejected</label>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        <select name="status"
-                                                data-broadcaster_id="{{ $file->broadcaster_id || $file->agency_broadcaster }}"
-                                                data-campaign_id="{{ $file->campaign_id }}"
-                                                data-file_code="{{ $file->file_code }}"
-                                                data-token="{{ csrf_token() }}"
-                                                class="form-control status"
-                                        >
-                                            <option>Select Status</option>
-                                            <option value="1">Approve</option>
-                                            <option value="2">Reject</option>
-                                        </select>
-                                    </td>
-                                </tr>
-                            @endforeach
+                                @foreach ($mpo['files'] as $file)
+                                    <tr>
+                                        <td>
+                                            <a href="#" style="font-size: 16px">
+                                                <span data-toggle="modal"
+                                                      data-target="#myfileModal{{ $file->file_code }}"
+                                                      style="cursor: pointer;">
+                                                    View
+                                                </span>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            @if ($file->is_file_accepted === 0)
+                                                <label class="label label-warning">Pending</label>
+                                            @elseif ($file->is_file_accepted === 1)
+                                                <label class="label label-success">Approved</label>
+                                            @elseif ($file->is_file_accepted === 2)
+                                                <label class="label label-danger">Rejected</label>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <select id="is_file_accepted">
+                                                <option value="null">Select Status</option>
+                                                <option value="1">Approve</option>
+                                                <option value="2">Reject</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            {{ $file->rejection_reason }}
+                                        </td>
+                                        <td>
+                                            <select name="rejection_reason" class="form-control" id="reason">
+                                                <option value="null">Select Reason</option>
+                                                <option value="Inappropriate Adslot">Inappropriate Adslot</option>
+                                                <option value="Inappropriate Content">Inappropriate Content</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <button class="update_file btn btn-primary"
+                                                    name="status"
+                                                    data-broadcaster_id="{{ $file->broadcaster_id || $file->agency_broadcaster }}"
+                                                    data-campaign_id="{{ $file->campaign_id }}"
+                                                    data-file_code="{{ $file->file_code }}"
+                                                    data-token="{{ csrf_token() }}"
+                                                    data-is_file_accepted="{{ $file->is_file_accepted }}"
+                                                    data-rejection_reason="{{ $file->rejection_reason }}"
+                                            >
+                                                Update
+                                            </button>
+                                        </td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
 
@@ -182,13 +188,11 @@
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Done</button>
-                        {{--<input type="submit" value="Done" class="btn btn-primary" />--}}
                     </div>
 
                 </div>
             </div>
         </div>
-
 
         @foreach ($mpo['files'] as $file)
             <div class="modal fade" id="myfileModal{{ $file->file_code }}" tabindex="-1" role="dialog"
@@ -201,13 +205,8 @@
                         </div>
                         <div class="modal-body">
                             <div style="text-align: center;">
-                                {{--<iframe src="https://youtu.be/6ZfuNTqbHE8" width="100%" height="315" frameborder="0" allowfullscreen></iframe>--}}
-                                {{--<video width="320" height="240" controls>--}}
-                                {{--<source src="https://youtu.be/6ZfuNTqbHE8" type="video/mp4">--}}
-                                {{--</video>--}}
                                 <video src="{{ decrypt($file->file_url) }}" width="170" height="90" controls>
-                                    <p>If you are reading this, it is because your browser does not support the HTML5
-                                        video element.</p>
+                                    <p>If you are reading this, it is because your browser does not support the HTML5 video element.</p>
                                 </video>
                             </div>
                         </div>
@@ -217,24 +216,16 @@
                     </div>
                 </div>
             </div>
-            @endforeach
-
-            @endforeach
-
-            </div>
-            </div>
-            </div>
-            </div>
+        @endforeach
+    @endforeach
 
 @stop
-
 
 @section('scripts')
 
     <script src="{{ asset('asset/plugins/datepicker/bootstrap-datepicker.js') }}"></script>
     <script src="{{ asset('asset/plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('asset/plugins/datatables/dataTables.bootstrap.min.js') }}"></script>
-
     <script src="https://unpkg.com/flatpickr"></script>
 
     <script>
@@ -242,12 +233,30 @@
         $(document).ready(function () {
             $('#flash-file-message').hide();
 
-            $(".status").change(function () {
-                is_file_accepted = $(this).val();
-                broadcaster_id = $(this).data("broadcaster_id");
-                campaign_id = $(this).data("campaign_id");
+            $(".update_file").click(function () {
+                // broadcaster_id = $(this).data("broadcaster_id");
+                // campaign_id = $(this).data("campaign_id");
                 file_code = $(this).data("file_code");
                 csrf = $(this).data("token");
+                rejection_reason = $("#reason").val();
+                is_file_accepted = $("#is_file_accepted").val();
+
+                console.log(file_code, rejection_reason, is_file_accepted);
+
+                if (rejection_reason === 'null' && is_file_accepted === 'null') {
+                    toastr.error("File Status and Rejection reason can't be empty");
+                    return;
+                }
+
+                if (is_file_accepted === 1 && rejection_reason !== 'null') {
+                    toastr.error("File Status and Rejection reason can't be empty");
+                    return;
+                }
+
+                if (rejection_reason === "null" && is_file_accepted === 2) {
+                    toastr.error("Please choose a reason for rejecting this file");
+                    return;
+                }
 
                 $.ajaxSetup({
                     headers: {
@@ -256,10 +265,13 @@
                 });
 
                 $.ajax({
-                    url: 'approve/' + is_file_accepted + '/' + broadcaster_id + '/' + file_code + '/' + campaign_id,
+                    url: 'approve/' + is_file_accepted + '/' + file_code + '/' + rejection_reason,
                     method: "POST",
-                    data: {is_file_accepted: is_file_accepted},
-                    success: function(data){
+                    data: {
+                        is_file_accepted: is_file_accepted,
+                        rejection_reason: rejection_reason
+                    },
+                    success: function (data) {
                         toastr.success(data.is_file_accepted, 'File Status Successfully Updated');
                     },
                     error: function () {
@@ -270,7 +282,6 @@
 
             });
         });
-
 
         $(function () {
             $("#example1").DataTable();
