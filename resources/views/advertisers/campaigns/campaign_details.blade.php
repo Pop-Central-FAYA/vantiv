@@ -15,7 +15,10 @@
                         <li><a href="#">Campaign Details</a></li>
                     </ul>
                 </div>
-                <div class="col-12">
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
                     <h2>Campaign Information</h2>
                     <hr>
 
@@ -26,13 +29,18 @@
                     <p><h4>Start Date: {{ $campaign_details['campaign_det']['start_date'] }}</h4></p><br>
                     <p><h4>Stop Date: {{ $campaign_details['campaign_det']['end_date'] }}</h4></p><br>
                     <p><h4>Campaign Cost: &#8358;{{ $campaign_details['campaign_det']['campaign_cost'] }}</h4></p><br>
-
+                </div>
+                <div class="col-md-6">
                     <h2>Clients Information</h2>
                     <hr>
                     <p><h4>Name: {{ $campaign_details['campaign_det']['walkIn_name'] }}</h4></p><br>
                     <p><h4>E-mail: {{ $campaign_details['campaign_det']['email'] }}</h4></p><br>
                     <p><h4>Phone: {{ $campaign_details['campaign_det']['phone'] }}</h4></p><br>
+                </div>
+            </div>
 
+            <div class="row">
+                <div class="col-md-12">
                     <h2>Adslot Details</h2>
                     <hr>
                     <div class="table-responsive">
