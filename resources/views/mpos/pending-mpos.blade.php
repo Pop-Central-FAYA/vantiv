@@ -248,12 +248,7 @@
                     return;
                 }
 
-                if (is_file_accepted === 1 && rejection_reason !== 'null') {
-                    toastr.error("File Status and Rejection reason can't be empty");
-                    return;
-                }
-
-                if (rejection_reason === "null" && is_file_accepted === 2) {
+                if (rejection_reason === 'null' && is_file_accepted === 2) {
                     toastr.error("Please choose a reason for rejecting this file");
                     return;
                 }
