@@ -241,8 +241,6 @@
                 rejection_reason = $("#reason").val();
                 is_file_accepted = $("#is_file_accepted").val();
 
-                console.log(file_code, rejection_reason, is_file_accepted);
-
                 if (rejection_reason === 'null' && is_file_accepted === 'null') {
                     toastr.error("File Status and Rejection reason can't be empty");
                     return;
