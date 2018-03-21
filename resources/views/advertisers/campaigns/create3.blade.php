@@ -14,67 +14,47 @@
                         <li><a href="{{ route('advertiser.campaign.all') }}">All Campaign</a></li>
                     </ul>
                 </div>
+            </div>
+            <div class="row">
                 <div class="Create-campaign">
-                    <form class="campform" method="POST" action="{{ route('advertiser_campaign.store3', ['id' => $id, 'broadcaster' => $broadcaster]) }}" enctype="multipart/form-data">
-                        {{ csrf_field() }}
 
-                        <div class="col-12 ">
-                            <h2>Choose Media: Step 1</h2>
-                            <hr>
-                            <p><br></p>
+                    <h2>Choose Media: Upload Stage for 15 seconds slot</h2>
+                    <hr>
+                    <p><br></p>
+
+                    <div class="col-md-3 ">
+                        <form class="campform dropzone" id="upload1"  method="POST" action="{{ route('advertiser_campaign.store3', ['id' => $id, 'broadcaster' => $broadcaster]) }}" enctype="multipart/form-data">
                             {{ csrf_field() }}
-                            <div class="row">
-                                <div class="col-md-12 ">
+                        </form>
 
-                                    <p align="center">The history of advertising can be traced to ancient civilizations. It became a major force in capitalist economies in the mid-19th century, based primarily on newspapers and magazines. In the 20th century, advertising grew rapidly with new technologies such as direct mail, radio, television, the internet and mobile devices.</p>
-
-                                </div>
-                            </div>
-                            {{--{{ dd($time_in_sec) }}--}}
-                            <div class="row" style="margin-top:3%" id="dynamic">
-                                <div class="row b">
-                                    <div class="col-md-5">
-                                        <div class="form-group">
-                                            <label>Upload Media</label>
-                                            <input type="file" class="form-control" id="fup" name="uploads">
-                                            <input type="hidden" class="form-control" name="f_du" id="f_du" size="5" />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2"></div>
-                                    <div class="col-md-5">
-                                        <div class="form-group">
-                                            <label>Duration </label> <br />
-                                            <select style="width: 60%" name="time" class="form-control">
-                                                <option value="15">15 Seconds</option>
-                                            </select>
-                                            {{--<button type="button" id="add_more" class="btn btn-info btn-xs add_more">+ Add More</button>--}}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-
-                            </div>
-
-                            <audio id="audio"></audio>
-
-                            <div class="container">
-
-                                <p align="right">
-                                    {{--<button id="step3" type="button" class="btn campaign-button" >Back <i class="fa fa-backward" aria-hidden="true"></i></button>--}}
-                                    <button type="submit" class="btn campaign-button btn-danger btn-lg" style="margin-right:15%">Next <i class="fa fa-play" aria-hidden="true"></i></button>
-                                </p>
-                            </div>
+                    </div>
+                    <div class="col-md-1"></div>
+                    <div class="col-md-8">
+                        <div class="panel panel-default">
+                            @include('partials.show_file')
                         </div>
-
-                    </form>
+                    </div>
                 </div>
             </div>
+
+            <div class="row">
+                <div class="container">
+
+                    <p align="right">
+                    <form class="campform"  method="POST" action="{{ route('advertiser_campaign.store3', ['id' => $id, 'broadcaster' => $broadcaster]) }}" enctype="multipart/form-data">
+                        {{ csrf_field() }}
+                        <button type="submit" class="btn campaign-button btn-danger btn-lg" style="margin-right:15%">Next <i class="fa fa-play" aria-hidden="true"></i></button>
+                    </form>
+                    </p>
+                </div>
+            </div>
+
         </div>
     </div>
 
 @stop
 @section('scripts')
+
     <!-- Select2 -->
     <script src="{{ asset('agency_asset/plugins/select2/select2.full.min.js') }}"></script>
     <!-- InputMask -->
@@ -98,29 +78,21 @@
     <script src="{{ asset('agency_asset/plugins/fastclick/fastclick.js') }}"></script>
     <!-- AdminLTE App -->
     <script src="{{ asset('agency_asset/dist/js/app.min.js') }}"></script>
+    <script src="{{ asset('dropzone.js') }}"></script>
 
     <!-- DataTables -->
     <script src="{{ asset('agency_asset/plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('agency_asset/plugins/datatables/dataTables.bootstrap.min.js') }}"></script>
     <script>
-
-
-        $(document).ready(function(){
-            $("#txtFromDate").datepicker({
-                numberOfMonths: 2,
-                onSelect: function (selected) {
-                    $("#txtToDate").datepicker("option", "minDate", selected)
-                }
-            });
-
-            $("#txtToDate").datepicker({
-                numberOfMonths: 2,
-                onSelect: function(selected) {
-                    $("#txtFromDate").datepicker("option","maxDate", selected)
-                }
-            });
-
-        });
+        Dropzone.options.upload1 = {
+            maxFilesize: 50,
+            acceptedFiles: 'video/*',
+            maxFiles: 1,
+            dictDefaultMessage: 'Click or drag your 15 Seconds video here for quick upload',
+            init: function() {
+                this.on("queuecomplete", function(file, serverresponse) { window.location.href="/advertiser/campaigns/campaign/step3/1/"+"<?php echo $id ?>"+"/"+"<?php echo $broadcaster ?>"; });
+            }
+        };
     </script>
     <script>
         $(function () {
@@ -194,27 +166,11 @@
         });
     </script>
 
-    <script>
-        // Code to get duration of audio /video file before upload - from: http://coursesweb.net/
 
-        //register canplaythrough event to #audio element to can get duration
-        var f_duration =0;  //store duration
-        document.getElementById('audio').addEventListener('canplaythrough', function(e){
-            //add duration in the input field #f_du
-            f_duration = Math.round(e.currentTarget.duration);
-            document.getElementById('f_du').value = f_duration;
-            URL.revokeObjectURL(obUrl);
-        });
-
-        //when select a file, create an ObjectURL with the file and add it in the #audio element
-        var obUrl;
-        document.getElementById('fup').addEventListener('change', function(e){
-            var file = e.currentTarget.files[0];
-            //check file extension for audio/video type
-            if(file.name.match(/\.(avi|mp3|mp4|mpeg|ogg)$/i)){
-                obUrl = URL.createObjectURL(file);
-                document.getElementById('audio').setAttribute('src', obUrl);
-            }
-        });
-    </script>
+@stop
+@section('styles')
+    <link rel="stylesheet" href="{{ asset('dropzone.css') }}">
+    <link rel="stylesheet" href="{{ asset('progress_upload/css/style.css') }}">
+    <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+    <link rel="stylesheet" href="{{ asset('progress_upload/css/jquery.fileupload.css') }}">
 @stop

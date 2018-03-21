@@ -203,52 +203,42 @@ class CampaignsController extends Controller
     public function postStep3(Request $request, $id, $broadcaster)
     {
 
-        if(((int)$request->f_du) > ((int)$request->time)){
-            Session::flash('error', 'Your video file duration cannot be more than the time slot you picked');
-            return redirect()->back();
-        }
+        if ($request->hasFile('file')) {
+            $filesUploaded = $request->file('file');
 
-        $this->validate($request, [
-            'uploads' => 'max:20000',
-            'time' => 'required'
-        ]);
+            $filename = realpath($filesUploaded);
+            Cloudder::uploadVideo($filename);
+            $clouder = Cloudder::getResult();
+            $file_gan_gan = encrypt($clouder['url']);
 
+            $time = 15;
+            $uploads = \DB::select("SELECT * from uploads where user_id = '$id' AND time = '$time'");
+            if(count($uploads) === 1){
+                Session::flash('error', 'You cannot upload twice for this time slot');
+                return back();
+            }
+            $insert_upload = \DB::table('uploads')->insert([
+                'user_id' => $id,
+                'time' => $time,
+                'uploads' => $file_gan_gan
+            ]);
 
-        if(((int)$request->f_du) > ((int)$request->time)){
-            Session::flash('error', 'Your video file duration cannot be more than the time slot you picked');
-            return redirect();
-        }
-
-        if ($request->hasFile('uploads')) {
-            $filesUploaded = $request->uploads;
-            $extension = $filesUploaded->getClientOriginalExtension();
-            if($extension == 'mp4' || $extension == 'wma' || $extension == 'ogg' || $extension == 'mkv'){
-
-                $filename = realpath($filesUploaded);
-                Cloudder::uploadVideo($filename);
-                $clouder = Cloudder::getResult();
-                $file_gan_gan = encrypt($clouder['url']);
-
-                $time = $request->time;
-                $uploads = \DB::select("SELECT * from uploads where user_id = '$id' AND time = '$time'");
-                if(count($uploads) === 1){
-                    return back()->with('error', 'You cannot upload twice for this time slot');
-                }
-                $insert_upload = \DB::table('uploads')->insert([
-                    'user_id' => $id,
-                    'time' => $time,
-                    'uploads' => $file_gan_gan
-                ]);
-
-                if($insert_upload){
-                    return redirect()->route('advertiser_campaign.step3_1', ['id' => $id, 'broadcaster' => $broadcaster]);
-                }else{
-                    return back()->with('error','Could not complete upload process');
-                }
+            if($insert_upload){
+                return $insert_upload;
+//                return redirect()->route('advertiser_campaign.step3_1', ['id' => $id, 'broadcaster' => $broadcaster]);
+            }else{
+                Session::flash('error', 'Could not complete upload process');
+                return back();
             }
 
+
         }else{
-            $time = $request->time;
+            $time = 15;
+            $uploads = \DB::select("SELECT * from uploads where user_id = '$id' AND time = '$time'");
+            if(count($uploads) === 1){
+                Session::flash('error', 'You cannot upload twice for this time slot');
+                return back();
+            }
             $insert_upload = \DB::table('uploads')->insert([
                 'user_id' => $id,
                 'time' => $time,
@@ -265,51 +255,42 @@ class CampaignsController extends Controller
 
     public function postStep3_1(Request $request, $id, $broadcaster)
     {
-        if(((int)$request->f_du) > ((int)$request->time)){
-            Session::flash('error', 'Your video file duration cannot be more than the time slot you picked');
-            return redirect()->back();
-        }
 
-        $this->validate($request, [
-            'uploads' => 'max:20000',
-            'time' => 'required'
-        ]);
-
-        if(((int)$request->f_du) > ((int)$request->time)){
-            Session::flash('error', 'Your video file duration cannot be more than the time slot you picked');
-            return redirect()->back();
-        }
-
-        if ($request->hasFile('uploads')) {
-            $filesUploaded = $request->uploads;
+        if ($request->hasFile('file')) {
+            $filesUploaded = $request->file('file');
             $extension = $filesUploaded->getClientOriginalExtension();
-            if($extension == 'mp4' || $extension == 'wma' || $extension == 'ogg' || $extension == 'mkv'){
 
-                $filename = realpath($filesUploaded);
-                Cloudder::uploadVideo($filename);
-                $clouder = Cloudder::getResult();
-                $file_gan_gan = encrypt($clouder['url']);
+            $filename = realpath($filesUploaded);
+            Cloudder::uploadVideo($filename);
+            $clouder = Cloudder::getResult();
+            $file_gan_gan = encrypt($clouder['url']);
 
-                $time = $request->time;
-                $uploads = \DB::select("SELECT * from uploads where user_id = '$id' AND time = '$time'");
-                if(count($uploads) === 1){
-                    return back()->with('error', 'You cannot upload twice for this time slot');
-                }
-                $insert_upload = \DB::table('uploads')->insert([
-                    'user_id' => $id,
-                    'time' => $time,
-                    'uploads' => $file_gan_gan
-                ]);
+            $time = 30;
+            $uploads = \DB::select("SELECT * from uploads where user_id = '$id' AND time = '$time'");
+            if(count($uploads) === 1){
+                Session::flash('error', 'You cannot upload twice for this time slot');
+                return back();
+            }
+            $insert_upload = \DB::table('uploads')->insert([
+                'user_id' => $id,
+                'time' => $time,
+                'uploads' => $file_gan_gan
+            ]);
 
-                if($insert_upload){
-                    return redirect()->route('advertiser_campaign.step3_2', ['id' => $id, 'broadcaster' => $broadcaster]);
-                }else{
-                    return back()->with('error','Could not complete upload process');
-                }
+            if($insert_upload){
+                return $insert_upload;
+            }else{
+                Session::flash('error', 'Could not complete upload process');
+                return back();
             }
 
         }else{
-            $time = $request->time;
+            $time = 30;
+            $uploads = \DB::select("SELECT * from uploads where user_id = '$id' AND time = '$time'");
+            if(count($uploads) === 1){
+                Session::flash('error', 'You cannot upload twice for this time slot');
+                return back();
+            }
             $insert_upload = \DB::table('uploads')->insert([
                 'user_id' => $id,
                 'time' => $time,
@@ -326,50 +307,42 @@ class CampaignsController extends Controller
 
     public function postStep3_2(Request $request, $id, $broadcaster)
     {
-        if(((int)$request->f_du) > ((int)$request->time)){
-            Session::flash('error', 'Your video file duration cannot be more than the time slot you picked');
-            return redirect()->back();
-        }
-
-        $this->validate($request, [
-            'uploads' => 'max:20000',
-            'time' => 'required'
-        ]);
-
-        if(((int)$request->f_du) > ((int)$request->time)){
-            return redirect()->back()->with('error','Your video file duration cannot be more than the time slot you picked');
-        }
-
-        if ($request->hasFile('uploads')) {
-            $filesUploaded = $request->uploads;
+        if ($request->hasFile('file')) {
+            $filesUploaded = $request->file('file');
             $extension = $filesUploaded->getClientOriginalExtension();
-            if($extension == 'mp4' || $extension == 'wma' || $extension == 'ogg' || $extension == 'mkv'){
 
-                $filename = realpath($filesUploaded);
-                Cloudder::uploadVideo($filename);
-                $clouder = Cloudder::getResult();
-                $file_gan_gan = encrypt($clouder['url']);
+            $filename = realpath($filesUploaded);
+            Cloudder::uploadVideo($filename);
+            $clouder = Cloudder::getResult();
+            $file_gan_gan = encrypt($clouder['url']);
 
-                $time = $request->time;
-                $uploads = \DB::select("SELECT * from uploads where user_id = '$id' AND time = '$time'");
-                if(count($uploads) === 1){
-                    return back()->with('error', 'You cannot upload twice for this time slot');
-                }
-                $insert_upload = \DB::table('uploads')->insert([
-                    'user_id' => $id,
-                    'time' => $time,
-                    'uploads' => $file_gan_gan
-                ]);
+            $time = 45;
+            $uploads = \DB::select("SELECT * from uploads where user_id = '$id' AND time = '$time'");
+            if(count($uploads) === 1){
+                Session::flash('error', 'You cannot upload twice for this time slot');
+                return back();
+            }
+            $insert_upload = \DB::table('uploads')->insert([
+                'user_id' => $id,
+                'time' => $time,
+                'uploads' => $file_gan_gan
+            ]);
 
-                if($insert_upload){
-                    return redirect()->route('advertiser_campaign.step3_3', ['id' => $id, 'broadcaster' => $broadcaster]);
-                }else{
-                    return back()->with('error','Could not complete upload process');
-                }
+            if($insert_upload){
+                return $insert_upload;
+            }else{
+                Session::flash('error', 'Could not complete upload process');
+                return back();
             }
 
+
         }else{
-            $time = $request->time;
+            $time = 45;
+            $uploads = \DB::select("SELECT * from uploads where user_id = '$id' AND time = '$time'");
+            if(count($uploads) === 1){
+                Session::flash('error', 'You cannot upload twice for this time slot');
+                return back();
+            }
             $insert_upload = \DB::table('uploads')->insert([
                 'user_id' => $id,
                 'time' => $time,
@@ -386,55 +359,48 @@ class CampaignsController extends Controller
 
     public function postStep3_3(Request $request, $id, $broadcaster)
     {
-        if(((int)$request->f_du) > ((int)$request->time)){
-            Session::flash('error', 'Your video file duration cannot be more than the time slot you picked');
-            return redirect()->back();
-        }
 
-        $this->validate($request, [
-            'uploads' => 'max:20000',
-            'time' => 'required'
-        ]);
-
-        if(((int)$request->f_du) > ((int)$request->time)){
-            return redirect()->back()->with('error','Your video file duration cannot be more than the time slot you picked');
-        }
-
-        if ($request->hasFile('uploads')) {
-            $filesUploaded = $request->uploads;
+        if ($request->hasFile('file')) {
+            $filesUploaded = $request->file('file');
             $extension = $filesUploaded->getClientOriginalExtension();
-            if($extension == 'mp4' || $extension == 'wma' || $extension == 'ogg' || $extension == 'mkv'){
 
-                $filename = realpath($filesUploaded);
-                Cloudder::uploadVideo($filename);
-                $clouder = Cloudder::getResult();
-                $file_gan_gan = encrypt($clouder['url']);
+            $filename = realpath($filesUploaded);
+            Cloudder::uploadVideo($filename);
+            $clouder = Cloudder::getResult();
+            $file_gan_gan = encrypt($clouder['url']);
 
-                $time = $request->time;
-                $uploads = \DB::select("SELECT * from uploads where user_id = '$id' AND time = '$time'");
-                if(count($uploads) === 1){
-                    return back()->with('error', 'You cannot upload twice for this time slot');
-                }
-                $insert_upload = \DB::table('uploads')->insert([
-                    'user_id' => $id,
-                    'time' => $time,
-                    'uploads' => $file_gan_gan
-                ]);
+            $time = 60;
+            $uploads = \DB::select("SELECT * from uploads where user_id = '$id' AND time = '$time'");
+            if(count($uploads) === 1){
+                Session::flash('error', 'You cannot upload twice for this time slot');
+                return back();
+            }
+            $insert_upload = \DB::table('uploads')->insert([
+                'user_id' => $id,
+                'time' => $time,
+                'uploads' => $file_gan_gan
+            ]);
 
-                if($insert_upload){
-                    return redirect()->route('advertiser_campaign.review_uploads', ['id' => $id, 'broadcaster' => $broadcaster]);
-                }else{
-                    return back()->with('error','Could not complete upload process');
-                }
+            if($insert_upload){
+                return $insert_upload;
+            }else{
+                Session::flash('error', 'Could not complete upload process');
+                return back();
             }
 
+
         }else{
-            $time = $request->time;
+            $time = 60;
+            $uploads = \DB::select("SELECT * from uploads where user_id = '$id' AND time = '$time'");
+            if(count($uploads) === 1){
+                Session::flash('error', 'You cannot upload twice for this time slot');
+                return back();
+            }
             $insert_upload = \DB::table('uploads')->insert([
                 'user_id' => $id,
                 'time' => $time,
             ]);
-            return redirect()->route('advertiser_campaign.review_uploads', ['id' => $id, 'broadcaster' => $broadcaster]);
+            return redirect()->route('advertiser_campaign.step3_3', ['id' => $id, 'broadcaster' => $broadcaster]);
         }
     }
 
