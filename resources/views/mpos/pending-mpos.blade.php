@@ -81,6 +81,7 @@
         </div>
     </div>
 
+    <?php $i = 0; ?>
     @foreach ($mpo_data as $mpo)
 
         <div class="modal fade" id="myModal{{ $mpo['id'] }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -110,6 +111,7 @@
                             <thead>
                                 <tr>
                                     <th>Media</th>
+                                    <th>Slot Picked</th>
                                     <th>Approval</th>
                                     <th>Action</th>
                                     <th>Reason</th>
@@ -121,14 +123,9 @@
                                 @foreach ($mpo['files'] as $file)
                                     <tr>
                                         <td>
-                                            <a href="#" style="font-size: 16px">
-                                                <span data-toggle="modal"
-                                                      data-target="#myfileModal{{ $file->file_code }}"
-                                                      style="cursor: pointer;">
-                                                    View
-                                                </span>
-                                            </a>
+                                            <video width="150" controls><source src="{{ asset(decrypt($file->file_url)) }}"></video>
                                         </td>
+                                        <td>{{ $file->time_picked }} Seconds</td>
                                         <td>
                                             @if ($file->is_file_accepted === 0)
                                                 <label class="label label-warning">Pending</label>
@@ -154,6 +151,7 @@
                                                 <option value="null">Select Reason</option>
                                                 <option value="Inappropriate Adslot">Inappropriate Adslot</option>
                                                 <option value="Inappropriate Content">Inappropriate Content</option>
+                                                <option value="File does not fit in this slot">File does not fit in this slot</option>
                                             </select>
                                         </td>
                                         <td>
@@ -241,6 +239,7 @@
                 var url = $(this).data('file_code');
                 file_code = $(this).data("file_code");
                 csrf = $(this).data("token");
+
                 rejection_reason = $("select#reason"+url).val();
                 is_file_accepted = $("select#is_file_accepted"+url).val();
 
