@@ -155,6 +155,7 @@
                                                 <option value="null">Select Reason</option>
                                                 <option value="Inappropriate Adslot">Inappropriate Adslot</option>
                                                 <option value="Inappropriate Content">Inappropriate Content</option>
+                                                <option value="File does not fit in this slot">File does not fit in this slot</option>
                                             </select>
                                         </td>
                                         <td>
