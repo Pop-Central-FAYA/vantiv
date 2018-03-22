@@ -110,6 +110,7 @@
                             <thead>
                                 <tr>
                                     <th>Media</th>
+                                    <th>Slot Picked</th>
                                     <th>Approval</th>
                                     <th>Action</th>
                                     <th>Reason</th>
@@ -121,14 +122,9 @@
                                 @foreach ($mpo['files'] as $file)
                                     <tr>
                                         <td>
-                                            <a href="#" style="font-size: 16px">
-                                                <span data-toggle="modal"
-                                                      data-target="#myfileModal{{ $file->file_code }}"
-                                                      style="cursor: pointer;">
-                                                    View
-                                                </span>
-                                            </a>
+                                            <video width="150" controls><source src="{{ asset(decrypt($file->file_url)) }}"></video>
                                         </td>
+                                        <td>{{ $file->time_picked }} Seconds</td>
                                         <td>
                                             @if ($file->is_file_accepted === 0)
                                                 <label class="label label-warning">Pending</label>

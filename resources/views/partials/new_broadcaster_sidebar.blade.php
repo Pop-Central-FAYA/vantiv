@@ -3,8 +3,8 @@
         <div class="logo"><a href="{{ route('dashboard') }}"><img src="{{ asset('new_assets/images/logo.png') }}" alt=""></a></div>
         <ul class="list-unstyled components">
             <li class="{{ Request::is('/') ? 'active' : ''  }}"> <a href="{{ route('dashboard') }}"><i class="fa fa-dashboard"></i><span>Dashboard</span></a></li>
-            <li class="{{ Request::is('campaign/*') ? 'active' : ''  }}"> <a href="{{ route('campaign.all') }}"><i class="fa fa-user"></i><span>Campaigns</span></a></li>
-            <li class="{{ Request::is('mpos/*') ? 'active' : ''  }}"> <a href="{{ route('all-mpos') }}"><i class="fa fa-th-large"></i><span>MPOs</span></a>
+            <li class="{{ Request::is('campaign/*') ? 'active' : ''  }}"> <a href="{{ route('campaign.all') }}"><i class="fa fa-rocket"></i><span>Campaigns</span></a></li>
+            <li class="{{ Request::is('mpos/*') ? 'active' : ''  }}"> <a href="{{ route('all-mpos') }}"><i class="fa fa-file"></i><span>MPOs</span></a>
                 <ul class="sub-menu dropdown">
                     <li><a href="{{ route('all-mpos') }}"><i class="fa fa-address-card-o"></i> <span>All<br /> MPOs</span></a></li>
                     <li><a href="{{ route('pending-mpos') }}"><i class="fa fa-address-book-o"></i><span>Pending<br /> MPOs</span></a></li>
@@ -16,7 +16,7 @@
                     <li><a href="{{ route('brand.all') }}"><i class="fa fa-address-book-o"></i><span>Brands<br /> List</span></a></li>
                 </ul>
             </li>
-            <li class="{{ Request::is('walkins/*') ? 'active' : Request::is('walkins') ? 'active' : ''  }}"> <a href="{{ route('walkins.all') }}" ><i class="fa fa-volume-down"></i><span>Walk-In</span></a>
+            <li class="{{ Request::is('walkins/*') ? 'active' : Request::is('walkins') ? 'active' : ''  }}"> <a href="{{ route('walkins.all') }}" ><i class="fa fa-user-plus"></i><span>Walk-In</span></a>
                 <ul class="sub-menu dropdown">
                     <li><a href="{{ route('walkins.create') }}"><i class="fa fa-address-card-o"></i> <span>Add <br /> Walk-In</span></a></li>
                     <li><a href="{{ route('walkins.all') }}"><i class="fa fa-address-book-o"></i><span>Walk-In<br /> List</span></a></li>
@@ -35,12 +35,12 @@
             </li>
             <li class="{{ Request::is('reports') ? 'active' : ''  }}">
                 <a href="{{ route('reports') }}">
-                    <i class="fa fa-signal"></i><span>Reports</span>
+                    <i class="fa fa-desktop"></i><span>Reports</span>
                 </a>
             </li>
             <li class="{{ Request::is('user/profile') ? 'active' : ''  }}">
                 <a href="{{ route('user.profile') }}">
-                    <i class="fa fa-user"></i><span>Profile</span>
+                    <i class="fa fa-user-md"></i><span>Profile</span>
                 </a>
             </li>
             <li>

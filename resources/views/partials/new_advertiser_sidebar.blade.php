@@ -32,7 +32,7 @@
             </li>
             <li class="{{ Request::is('user/profile') ? 'active' : ''  }}">
                 <a href="{{ route('user.profile') }}">
-                    <i class="fa fa-user"></i><span>Profile</span>
+                    <i class="fa fa-user-md"></i><span>Profile</span>
                 </a>
             </li>
             <li>
