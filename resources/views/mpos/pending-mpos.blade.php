@@ -81,6 +81,7 @@
         </div>
     </div>
 
+    <?php $i = 0; ?>
     @foreach ($mpo_data as $mpo)
 
         <div class="modal fade" id="myModal{{ $mpo['id'] }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -150,6 +151,7 @@
                                                 <option value="null">Select Reason</option>
                                                 <option value="Inappropriate Adslot">Inappropriate Adslot</option>
                                                 <option value="Inappropriate Content">Inappropriate Content</option>
+                                                <option value="File does not fit in this slot">File does not fit in this slot</option>
                                             </select>
                                         </td>
                                         <td>
@@ -237,6 +239,7 @@
                 var url = $(this).data('file_code');
                 file_code = $(this).data("file_code");
                 csrf = $(this).data("token");
+
                 rejection_reason = $("select#reason"+url).val();
                 is_file_accepted = $("select#is_file_accepted"+url).val();
 
