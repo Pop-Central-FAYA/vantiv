@@ -254,7 +254,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/campaign/step3/store/3/{id}/{broadcaster}', 'Agency\CampaignsController@postStep3_3')->name('agency_campaign.store3_3');
             Route::post('/campaign/step3/store/new-uploads/{id}/{broadcaster}', 'Agency\CampaignsController@postNewUploads')->name('new.upload');
             Route::get('/camaigns/uploads/delete/{upload_id}/{id}', 'Agency\CampaignsController@deleteUpload')->name('agency.uploads.delete');
-            Route::get('/campaigns/review-uploads/{id}/{broadcaster}', 'Agency\CampaignsController@reviewUploads')->name('agency_campaign.review_uploads');
+            Route::get('/review-uploads/{id}/{broadcaster}', 'Agency\CampaignsController@reviewUploads')->name('agency_campaign.review_uploads');
             Route::get('/campaign/step4/{id}/{broadcaster}', 'Agency\CampaignsController@getStep4')->name('agency_campaign.step4');
             Route::post('/campaigns/cart/store/{id}/{broadcaster}', 'Agency\CampaignsController@postCart')->name('agency_campaign.cart');
             Route::get('/campaign/checkout/{id}/{broadcaster}', 'Agency\CampaignsController@checkout')->name('agency_campaign.checkout');
@@ -319,7 +319,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::group(['prefix' => 'client-brands'], function () {
         Route::get('/all-brands', 'ClientBrandsController@index')->name('agency.brand.all');
-        Route::get('/create-brands', 'ClientBrandsController@create')->name('agency.brand.create');
+        Route::get('/create-brand', 'ClientBrandsController@create')->name('agency.brand.create');
         Route::post('/create/store', 'ClientBrandsController@store')->name('agency.brand.store');
         Route::post('/brands/edit/{id}', 'ClientBrandsController@update')->name('agency.brands.update');
         Route::get('/brands/delete/{id}', 'ClientBrandsController@delete')->name('agency.brands.delete');
@@ -344,7 +344,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/campaign/step3/store/3/{id}/{broadcaster}', 'Advertiser\CampaignsController@postStep3_3')->name('advertiser_campaign.store3_3');
             Route::post('/campaign/step3/store/new-uploads/{id}/{broadcaster}', 'Advertiser\CampaignsController@postNewUploads')->name('new.upload');
             Route::get('/camaigns/uploads/delete/{upload_id}/{id}', 'Advertiser\CampaignsController@deleteUpload')->name('advertiser.uploads.delete');
-            Route::get('/campaigns/review-uploads/{id}/{broadcaster}', 'Advertiser\CampaignsController@reviewUploads')->name('advertiser_campaign.review_uploads');
+            Route::get('/review-uploads/{id}/{broadcaster}', 'Advertiser\CampaignsController@reviewUploads')->name('advertiser_campaign.review_uploads');
             Route::get('/campaign/step4/{id}/{broadcaster}', 'Advertiser\CampaignsController@getStep4')->name('advertiser_campaign.step4');
             Route::post('/campaigns/cart/store/{id}/{broadcaster}', 'Advertiser\CampaignsController@postCart')->name('advertiser_campaign.cart');
             Route::get('/campaign/checkout/{id}/{broadcaster}', 'Advertiser\CampaignsController@checkout')->name('advertiser_campaign.checkout');

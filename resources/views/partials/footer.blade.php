@@ -2,6 +2,5 @@
     <div class="pull-right hidden-xs">
 
     </div>
-    All rights
-    reserved.
+    All Rights Reserved
 </footer>

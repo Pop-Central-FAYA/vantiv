@@ -8,14 +8,14 @@
         <div class="container">
             <div class="row">
                 <div class="col-12 heading-main">
-                    <h1>Create Brands</h1>
+                    <h1>Create Brand</h1>
                     <ul>
                         <li><a href="#"><i class="fa fa-edit"></i>Advertiser</a></li>
-                        <li><a href="#">Create Brands</a></li>
+                        <li><a href="#">Create Brand</a></li>
                     </ul>
                 </div>
                 <div class="Add-brand">
-                    <h2>Create Brands</h2>
+                    <h2>Create Brand</h2>
                     <form action="{{ route('agency.brand.store') }}" method="post" enctype="multipart/form-data">
                         {{ csrf_field() }}
                         <div class="row">

@@ -88,7 +88,7 @@
 
                                                     <form id="form_cart" action="{{ route('store.cart') }}" method="GET">
                                                         {{ csrf_field() }}
-                                                        <h2 align="center">{{ $rating->from_to_time }} | {{ $rating->time_difference }} Seconds Available</h2>
+                                                        <h2 align="center">{{ $rating->from_to_time }} | {{ $rating->time_difference - $rating->time_used }} Seconds Available</h2>
                                                         <ul style="font-size: 21px; margin:0 auto; width: 80%">
                                                             <h3 align="" style="color:#9f005d">Choose a media file</h3>
                                                             <hr />

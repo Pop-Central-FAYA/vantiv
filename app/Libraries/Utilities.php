@@ -118,6 +118,7 @@ class Utilities {
                 'file' => decrypt($file->file_url),
                 'slot_time' => $file->time_picked.' seconds',
                 'file_status' => $file->is_file_accepted,
+                'rejection_reason' => $file->rejection_reason,
             ];
         }
 

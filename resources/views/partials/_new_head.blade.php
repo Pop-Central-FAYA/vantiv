@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="{{ asset('asset/bootstrap/css/bootstrap.min.css') }}">
     <link href="{{ asset('new_assets/css/bootstrap-grid.min.css') }}" rel="stylesheet" type="text/css"  />
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
     <!--Style-navigation-->
     <link href="{{ asset('new_assets/css/navigation.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('new_assets/css/jquery.circliful.css') }}" rel="stylesheet" type="text/css">

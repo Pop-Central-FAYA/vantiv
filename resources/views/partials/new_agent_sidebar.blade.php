@@ -8,7 +8,7 @@
                     <li><a href="{{ route('agency.dashboard') }}"><i class="fa fa-address-book-o"></i><span>Clients <br /> Dashboard</span></a></li>
                 </ul>
             </li>
-            <li class="{{ Request::is('agency/clients/*') ? 'active' : ''  }}"> <a href="{{ route('clients.list') }}"><i class="fa fa-user"></i><span>Clients</span></a>
+            <li class="{{ Request::is('agency/clients/*') ? 'active' : ''  }}"> <a href="{{ route('clients.list') }}"><i class="fa fa-user-plus"></i><span>Clients</span></a>
                 <ul class="sub-menu dropdown">
                     <li><a href="{{ route('clients.create') }}"><i class="fa fa-address-card-o"></i> <span>Add<br />  Client</span></a></li>
                     <li><a href="{{ route('clients.list') }}"><i class="fa fa-address-book-o"></i><span>Clients<br />  List</span></a></li>
@@ -16,8 +16,8 @@
             </li>
             <li class="{{ Request::is('client-brands/*') ? 'active' : ''  }}"> <a href="{{ route('agency.brand.all') }}"><i class="fa fa-th-large"></i><span>Brands Management</span></a>
                 <ul class="sub-menu dropdown">
-                    <li><a href="{{ route('agency.brand.create') }}"><i class="fa fa-address-card-o"></i> <span>Create<br />  Brands</span></a></li>
-                    <li><a href="{{ route('agency.brand.all') }}"><i class="fa fa-address-book-o"></i><span>Brands<br />  List</span></a></li>
+                    <li><a href="{{ route('agency.brand.create') }}"><i class="fa fa-address-card-o"></i> <span>Create<br />  Brand</span></a></li>
+                    <li><a href="{{ route('agency.brand.all') }}"><i class="fa fa-address-book-o"></i><span>Brand<br />  List</span></a></li>
                 </ul>
             </li>
             <li class="{{ Request::is('agency/campaigns/*') ? 'active' : ''  }}"> <a href="{{ route('agency.campaign.all') }}"><i class="fa fa-rocket"></i><span>Campaign</span> </a>
@@ -40,13 +40,13 @@
             </li>
             <li class="{{ Request::is('agency/reports') ? 'active' : ''  }}">
                 <a href="{{ route('reports.index') }}">
-                    <i class="fa fa-signal"></i><span>Report</span>
+                    <i class="fa fa-desktop"></i><span>Report</span>
                 </a>
             </li>
 
             <li class="{{ Request::is('user/profile') ? 'active' : ''  }}">
                 <a href="{{ route('user.profile') }}">
-                    <i class="fa fa-user"></i><span>Profile</span>
+                    <i class="fa fa-user-md"></i><span>Profile</span>
                 </a>
             </li>
             <li>
