@@ -1,6 +1,11 @@
 <?php
 
-    $all_files = DB::select("SELECT * from uploads where user_id = '$id'");
+    if(!empty($id)){
+        $user_id = $id;
+    }else{
+        $user_id = $walkins;
+    }
+    $all_files = DB::select("SELECT * from uploads where user_id = '$user_id'");
 
 ?>
 @if($all_files)

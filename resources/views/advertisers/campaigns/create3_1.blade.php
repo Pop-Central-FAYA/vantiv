@@ -168,8 +168,5 @@
 @stop
 @section('styles')
     <link rel="stylesheet" href="{{ asset('dropzone.css') }}">
-    <link rel="stylesheet" href="{{ asset('progress_upload/css/style.css') }}">
-    <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
-    <link rel="stylesheet" href="{{ asset('progress_upload/css/jquery.fileupload.css') }}">
 @stop
 

@@ -5,8 +5,8 @@
             <li class="{{ Request::is('/') ? 'active' : ''  }}"> <a href="{{ route('dashboard') }}"><i class="fa fa-dashboard"></i><span>Dashboard</span></a></li>
             <li class="{{ Request::is('client-brands/*') ? 'active' : ''  }}"> <a href="{{ route('agency.brand.all') }}"><i class="fa fa-th-large"></i><span>Brands Management</span></a>
                 <ul class="sub-menu dropdown">
-                    <li><a href="{{ route('agency.brand.create') }}"><i class="fa fa-address-card-o"></i> <span>Create<br />  Brands</span></a></li>
-                    <li><a href="{{ route('agency.brand.all') }}"><i class="fa fa-address-book-o"></i><span>Brands<br />  List</span></a></li>
+                    <li><a href="{{ route('agency.brand.create') }}"><i class="fa fa-address-card-o"></i> <span>Create<br />  Brand</span></a></li>
+                    <li><a href="{{ route('agency.brand.all') }}"><i class="fa fa-address-book-o"></i><span>Brand<br />  List</span></a></li>
                 </ul>
             </li>
             <li class="{{ Request::is('advertiser/campaigns/*') ? 'active' : ''  }}"> <a href="{{ route('advertiser.campaign.all') }}"><i class="fa fa-rocket"></i><span>Campaign</span> </a>
