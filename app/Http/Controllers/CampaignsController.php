@@ -213,7 +213,7 @@ class CampaignsController extends Controller
             ]);
 
             if($insert_upload){
-                return $insert_upload;
+                Session::flash('uploaded', 'Successfully uploaded.');
 //                return redirect()->route('campaign.create4_1', ['walkins' => $walkins]);
             }else{
                 Session::flash('error', 'Could not complete upload process');
@@ -271,7 +271,7 @@ class CampaignsController extends Controller
             ]);
 
             if($insert_upload){
-                return $insert_upload;
+                Session::flash('uploaded', 'Successfully uploaded.');
 //                return redirect()->route('campaign.create4_2', ['walkins' => $walkins]);
             }else{
                 Session::flash('error', 'Could not complete upload process');
@@ -329,7 +329,7 @@ class CampaignsController extends Controller
             ]);
 
             if ($insert_upload) {
-                return $insert_upload;
+                Session::flash('uploaded', 'Successfully uploaded.');
 //                return redirect()->route('campaign.create4_3', ['walkins' => $walkins]);
             } else {
                 Session::flash('error', 'Could not complete upload process');
@@ -389,7 +389,7 @@ class CampaignsController extends Controller
                 'uploads' => $file_gan_gan
             ]);
             if($insert_upload){
-                return $insert_upload;
+                Session::flash('uploaded', 'Successfully uploaded.');
 //                return redirect()->route('campaign.create5', ['walkins' => $walkins]);
             }else{
                 Session::flash('error', 'Could not complete upload process');

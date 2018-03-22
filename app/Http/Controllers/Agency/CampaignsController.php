@@ -264,7 +264,7 @@ class CampaignsController extends Controller
             ]);
 
             if ($insert_upload) {
-                return $insert_upload;
+                Session::flash('uploaded', 'Successfully uploaded.');
 //                return redirect()->route('agency_campaign.step3_1', ['id' => $id, 'broadcaster' => $broadcaster]);
             } else {
                 Session::flash('error', 'Could not complete upload process');
@@ -317,7 +317,7 @@ class CampaignsController extends Controller
             ]);
 
             if ($insert_upload) {
-                return $insert_upload;
+                Session::flash('uploaded', 'Successfully uploaded.');
 //                return redirect()->route('agency_campaign.step3_2', ['id' => $id, 'broadcaster' => $broadcaster]);
             } else {
                 Session::flash('error', 'Could not complete upload process');
@@ -371,7 +371,7 @@ class CampaignsController extends Controller
             ]);
 
             if ($insert_upload) {
-                return $insert_upload;
+                Session::flash('uploaded', 'Successfully uploaded.');
 //                return redirect()->route('agency_campaign.step3_3', ['id' => $id, 'broadcaster' => $broadcaster]);
             } else {
                 Session::flash('error', 'Could not complete upload process');
@@ -424,11 +424,11 @@ class CampaignsController extends Controller
             ]);
 
             if ($insert_upload) {
-                return $insert_upload;
+                Session::flash('uploaded', 'Successfully uploaded.');
 //                return redirect()->route('agency_campaign.review_uploads', ['id' => $id, 'broadcaster' => $broadcaster]);
             } else {
                 Session::flash('error', 'Could not complete upload process');
-                return redirect()->back();
+                return back();
             }
 
 
@@ -525,7 +525,7 @@ class CampaignsController extends Controller
         $step1 = Session::get('step1');
         if (!$step1) {
             Session::flash('error', 'Data lost, please go back and select your filter criteria');
-            return redirect()-back();
+            return redirect()->back();
         }
         $day_parts = implode("','" ,$step1->dayparts);
         $region = implode("','", $step1->region);

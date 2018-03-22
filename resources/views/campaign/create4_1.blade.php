@@ -12,7 +12,7 @@
                 <div class="col-12 heading-main">
                     <h1>Create Campaigns</h1>
                     <ul>
-                        <li><a href="{{ route('dashboard') }}"><i class="fa fa-th-large"></i>Advertiser</a></li>
+                        <li><a href="{{ route('dashboard') }}"><i class="fa fa-th-large"></i>Broadcaster</a></li>
                         <li><a href="{{ route('campaign.all') }}">All Campaign</a></li>
                     </ul>
                 </div>
@@ -82,8 +82,18 @@
             acceptedFiles: 'video/*',
             maxFiles: 1,
             dictDefaultMessage: 'Click or drag your 30 Seconds video here for quick upload',
-            init: function() {
-                this.on("queuecomplete", function(file, serverresponse) { window.location.href="/campaign/create/"+"<?php echo $walkins; ?>"+"/step4/2"; });
+            addRemoveLink: true,
+            init: function () {
+                this.on("complete", function (file, res) {
+                    if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && file.status === Dropzone.SUCCESS) {
+                        toastr.success('File Uploaded successfully');
+                        window.location.href="/campaign/create/"+"<?php echo $walkins; ?>"+"/step4/2";
+
+                    } else {
+                        toastr.error('Something went wrong with your upload');
+                        return;
+                    }
+                });
             }
         };
     </script>

@@ -224,7 +224,7 @@ class CampaignsController extends Controller
             ]);
 
             if($insert_upload){
-                return $insert_upload;
+                Session::flash('uploaded', 'Successfully uploaded.');
 //                return redirect()->route('advertiser_campaign.step3_1', ['id' => $id, 'broadcaster' => $broadcaster]);
             }else{
                 Session::flash('error', 'Could not complete upload process');
@@ -278,7 +278,7 @@ class CampaignsController extends Controller
             ]);
 
             if($insert_upload){
-                return $insert_upload;
+                Session::flash('uploaded', 'Successfully uploaded.');
             }else{
                 Session::flash('error', 'Could not complete upload process');
                 return back();
@@ -329,7 +329,7 @@ class CampaignsController extends Controller
             ]);
 
             if($insert_upload){
-                return $insert_upload;
+                Session::flash('uploaded', 'Successfully uploaded.');
             }else{
                 Session::flash('error', 'Could not complete upload process');
                 return back();
@@ -382,7 +382,7 @@ class CampaignsController extends Controller
             ]);
 
             if($insert_upload){
-                return $insert_upload;
+                Session::flash('uploaded', 'Successfully uploaded.');
             }else{
                 Session::flash('error', 'Could not complete upload process');
                 return back();
