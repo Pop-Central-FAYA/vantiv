@@ -27,7 +27,8 @@ class StoreWalkins extends FormRequest
             'first_name' => 'required',
             'last_name' => 'required',
             'email' => 'required|email',
-            'phone_number' => 'required|phone_number'
+            'phone_number' => 'required|phone_number',
+            'brand_name' => 'required'
         ];
     }
 }

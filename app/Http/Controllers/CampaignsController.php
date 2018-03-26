@@ -57,7 +57,7 @@ class CampaignsController extends Controller
                 'start_date' => date('Y-m-d', strtotime($cam->start_date)),
                 'end_date' => date('Y-m-d', strtotime($cam->stop_date)),
                 'adslots' => $cam->adslots,
-                'compliance' => '86%',
+                'compliance' => '0%',
                 'status' => $status
             ];
             $j++;
@@ -83,6 +83,7 @@ class CampaignsController extends Controller
 
     public function createStep2($walkins)
     {
+
         $walkins_id = Utilities::switch_db('api')->select("SELECT id from walkIns where user_id = '$walkins'");
         $walk_id = $walkins_id[0]->id;
         $industry = Utilities::switch_db('api')->select("SELECT id, `name` from sectors");
@@ -189,258 +190,14 @@ class CampaignsController extends Controller
     {
         $broadcaster = Session::get('broadcaster_id');
 
-
-        if ($request->hasFile('file')) {
-
-            $filesUploaded = $request->file('file');
-
-            $filename = realpath($filesUploaded);
-            Cloudder::uploadVideo($filename);
-            $clouder = Cloudder::getResult();
-            $file_gan_gan = encrypt($clouder['url']);
-
-            $time = 15;
-            $uploads = \DB::select("SELECT * from uploads where user_id = '$walkins' AND time = '$time'");
-            if(count($uploads) === 1){
-                Session::flash('error', 'You cannot upload twice for this time slot');
-                return back();
-            }
-
-            $insert_upload = \DB::table('uploads')->insert([
-                'user_id' => $walkins,
-                'time' => $time,
-                'uploads' => $file_gan_gan
-            ]);
-
-            if($insert_upload){
-                Session::flash('uploaded', 'Successfully uploaded.');
-//                return redirect()->route('campaign.create4_1', ['walkins' => $walkins]);
-            }else{
-                Session::flash('error', 'Could not complete upload process');
-                return back();
-            }
-
-        }else{
-            $time = 15;
-            $uploads = \DB::select("SELECT * from uploads where user_id = '$walkins' AND time = '$time'");
-            if(count($uploads) === 1){
-                Session::flash('error', 'You cannot upload twice for this time slot');
-                return back();
-            }
-
-            $insert_upload = \DB::table('uploads')->insert([
-                'user_id' => $walkins,
-                'time' => $time,
-            ]);
-            return redirect()->route('campaign.create4_1', ['walkins' => $walkins]);
-        }
-    }
-
-    public function createStep4_1($walkins)
-    {
-        $broadcaster = \Session::get('broadcaster_id');
-        return view('campaign.create4_1', ['walkins' => $walkins])->with('walkins', $walkins)
-            ->with('broadcaster', $broadcaster);
-    }
-
-    public function postStep4_1(Request $request, $walkins)
-    {
-        $broadcaster = Session::get('broadcaster_id');
-
-        if ($request->hasFile('file')) {
-
-            $filesUploaded = $request->file('file');
-
-            $filename = realpath($filesUploaded);
-            Cloudder::uploadVideo($filename);
-            $clouder = Cloudder::getResult();
-            $file_gan_gan = encrypt($clouder['url']);
-
-            $time = 30;
-
-            $uploads = \DB::select("SELECT * from uploads where user_id = '$walkins' AND time = '$time'");
-            if(count($uploads) === 1){
-                Session::flash('error', 'You cannot upload twice for this time slot');
-                return back();
-            }
-
-            $insert_upload = \DB::table('uploads')->insert([
-                'user_id' => $walkins,
-                'time' => $time,
-                'uploads' => $file_gan_gan
-            ]);
-
-            if($insert_upload){
-                Session::flash('uploaded', 'Successfully uploaded.');
-//                return redirect()->route('campaign.create4_2', ['walkins' => $walkins]);
-            }else{
-                Session::flash('error', 'Could not complete upload process');
-                return back();
-            }
-
-
-        }else{
-            $time = 30;
-            $uploads = \DB::select("SELECT * from uploads where user_id = '$walkins' AND time = '$time'");
-            if(count($uploads) === 1){
-                Session::flash('error', 'You cannot upload twice for this time slot');
-                return back();
-            }
-            $insert_upload = \DB::table('uploads')->insert([
-                'user_id' => $walkins,
-                'time' => $time,
-            ]);
-            return redirect()->route('campaign.create4_2', ['walkins' => $walkins]);
-        }
-    }
-
-    public function createStep4_2($walkins)
-    {
-        $broadcaster = \Session::get('broadcaster_id');
-        return view('campaign.create4_2', ['walkins' => $walkins])->with('walkins', $walkins)
-            ->with('broadcaster', $broadcaster);
-    }
-
-    public function postStep4_2(Request $request, $walkins)
-    {
-        $broadcaster = Session::get('broadcaster_id');
-
-
-        if ($request->hasFile('file')) {
-
-            $filesUploaded = $request->file('file');
-
-            $filename = realpath($filesUploaded);
-            Cloudder::uploadVideo($filename);
-            $clouder = Cloudder::getResult();
-            $file_gan_gan = encrypt($clouder['url']);
-
-            $time = 45;
-            $uploads = \DB::select("SELECT * from uploads where user_id = '$walkins' AND time = '$time'");
-            if (count($uploads) === 1) {
-                Session::flash('error', 'You cannot upload twice for this time slot');
-                return back();
-            }
-
-            $insert_upload = \DB::table('uploads')->insert([
-                'user_id' => $walkins,
-                'time' => $time,
-                'uploads' => $file_gan_gan
-            ]);
-
-            if ($insert_upload) {
-                Session::flash('uploaded', 'Successfully uploaded.');
-//                return redirect()->route('campaign.create4_3', ['walkins' => $walkins]);
-            } else {
-                Session::flash('error', 'Could not complete upload process');
-                return back();
-            }
-
-
-        }else{
-            $time = 45;
-            $uploads = \DB::select("SELECT * from uploads where user_id = '$walkins' AND time = '$time'");
-            if(count($uploads) === 1){
-                Session::flash('error', 'You cannot upload twice for this time slot');
-                return back();
-            }
-            $insert_upload = \DB::table('uploads')->insert([
-                'user_id' => $walkins,
-                'time' => $time,
-            ]);
-
-            return redirect()->route('campaign.create4_3', ['walkins' => $walkins]);
-
-        }
-    }
-
-    public function createStep4_3($walkins)
-    {
-        $broadcaster = \Session::get('broadcaster_id');
-        return view('campaign.create4_3', ['walkins' => $walkins])->with('walkins', $walkins)
-            ->with('broadcaster', $broadcaster);
-    }
-
-    public function postStep4_3(Request $request, $walkins)
-    {
-        $broadcaster = Session::get('broadcaster_id');
-
-
-        if ($request->hasFile('file')) {
-
-
-            $filesUploaded = $request->file('file');
-
-            $filename = realpath($filesUploaded);
-            Cloudder::uploadVideo($filename);
-            $clouder = Cloudder::getResult();
-            $file_gan_gan = encrypt($clouder['url']);
-
-            $time = 60;
-
-            $uploads = \DB::select("SELECT * from uploads where user_id = '$walkins' AND time = '$time'");
-            if(count($uploads) === 1){
-                Session::flash('error', 'You cannot upload twice for this time slot');
-                return back();
-            }
-            $insert_upload = \DB::table('uploads')->insert([
-                'user_id' => $walkins,
-                'time' => $time,
-                'uploads' => $file_gan_gan
-            ]);
-            if($insert_upload){
-                Session::flash('uploaded', 'Successfully uploaded.');
-//                return redirect()->route('campaign.create5', ['walkins' => $walkins]);
-            }else{
-                Session::flash('error', 'Could not complete upload process');
-                return back();
-            }
-
-
-        }else{
-            $time = 60;
-            $uploads = \DB::select("SELECT * from uploads where user_id = '$walkins' AND time = '$time'");
-            if(count($uploads) === 1){
-                Session::flash('error', 'You cannot upload twice for this time slot');
-                return back();
-            }
-            $insert_upload = \DB::table('uploads')->insert([
-                'user_id' => $walkins,
-                'time' => $time,
-            ]);
-            return redirect()->route('campaign.create5', ['walkins' => $walkins]);
-        }
-    }
-
-    public function createStep5($walkins)
-    {
-        $uploads = \DB::select("SELECT * from uploads where user_id = '$walkins'");
-        return view('campaign.create5')->with('uploads', $uploads)->with('walkins', $walkins);
-    }
-
-    public function deleteUploads($walkins, $id)
-    {
-        $deleteUploads = \DB::delete("DELETE from uploads WHERE id = '$id' AND user_id = '$walkins'");
-        if($deleteUploads){
-            Session::flash('success', 'File deleted successfully...');
-            return back();
-        }else{
-            Session::flash('error', 'Error deleting file...');
-            return back();
-        }
-    }
-
-    public function postStep5(Request $request, $walkins)
-    {
-        $uploads_check = \DB::select("SELECT * from uploads where user_id = '$walkins'");
-        if(count($uploads_check) === 4){
-            Session::flash('error', 'You have reached the maximum number to time for the uploads');
-            return back();
-        }
-        $broadcaster = Session::get('broadcaster_id');
-
         if(((int)$request->f_du) > ((int)$request->time)){
             Session::flash('error', 'Your video file duration cannot be more than the time slot you picked');
+            return redirect()->back();
+        }
+
+        $check_file = \DB::select("SELECT * from uploads where user_id = '$walkins'");
+        if(count($check_file) > 4){
+            Session::flash('error', 'You cannot upload more than 4 files');
             return redirect()->back();
         }
 
@@ -455,41 +212,65 @@ class CampaignsController extends Controller
             $extension = $filesUploaded->getClientOriginalExtension();
             if($extension == 'mp4' || $extension == 'wma' || $extension == 'ogg' || $extension == 'mkv'){
 
-                $filename = realpath($filesUploaded);
-                Cloudder::uploadVideo($filename);
-                $clouder = Cloudder::getResult();
-                $file_gan_gan = encrypt($clouder['url']);
-
                 $time = $request->time;
                 $uploads = \DB::select("SELECT * from uploads where user_id = '$walkins' AND time = '$time'");
                 if(count($uploads) === 1){
                     Session::flash('error', 'You cannot upload twice for this time slot');
                     return back();
                 }
+
+                $filename = realpath($filesUploaded);
+                Cloudder::uploadVideo($filename);
+                $clouder = Cloudder::getResult();
+                $file_gan_gan = encrypt($clouder['url']);
+
                 $insert_upload = \DB::table('uploads')->insert([
                     'user_id' => $walkins,
                     'time' => $time,
                     'uploads' => $file_gan_gan
                 ]);
+
                 if($insert_upload){
-                    Session::flash('success', 'Uploaded successfully...');
-                    return back();
+                    return redirect()->route('campaign.create4', ['walkins' => $walkins]);
                 }else{
                     Session::flash('error', 'Could not complete upload process');
                     return back();
                 }
             }
 
+        }
+    }
+
+    public function removeMedia($walkins, $id)
+    {
+        $deleteUploads = \DB::delete("DELETE from uploads WHERE id = '$id' AND user_id = '$walkins'");
+        if($deleteUploads){
+            Session::flash('success', 'File deleted successfully...');
+            return back();
         }else{
-            $time = $request->time;
-            $insert_upload = \DB::table('uploads')->insert([
-                'user_id' => $walkins,
-                'time' => $time,
-            ]);
-            Session::flash('success', 'Uploaded successfully...');
+            Session::flash('error', 'Error deleting file...');
             return back();
         }
+    }
 
+    public function postStep4_1(Request $request, $walkins)
+    {
+        $broadcaster = Session::get('broadcaster_id');
+        $get_uploaded_files = \DB::select("SELECT * from uploads where user_id = '$walkins'");
+        $count_files = count($get_uploaded_files);
+        if($count_files === 0){
+            Session::flash('error', 'You have not uploaded any file(s)');
+        }else{
+            $remaining_file = 4 - $count_files;
+            for ($i = 0; $i < $remaining_file; $i++){
+                $insert_upload = \DB::table('uploads')->insert([
+                    'user_id' => $walkins,
+                    'time' => 00,
+                ]);
+            }
+
+            return redirect()->route('campaign.create6', ['walkins' => $walkins]);
+        }
     }
 
     public function createStep6($walkins)

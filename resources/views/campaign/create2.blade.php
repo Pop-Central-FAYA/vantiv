@@ -16,19 +16,35 @@
                         <li><a href="#">New Media</a></li>
                     </ul>
                 </div>
+                 {{--{{ dd($step2) }}--}}
 
                 <div class="Add-brand">
                     <form class="campform" method="POST" action="{{ route('campaign.store2', ['id' => 1, 'walkins' => $walkins_id]) }}" data-parsley-validate="">
                         {{ csrf_field() }}
 
-                        <div class="input-group">
-                            <label>Brands</label>
-                            <select name="brand" class="form-control" id="">
-                                @foreach($brands as $brand)
-                                    <option value="{{ $brand->id }}">{{ $brand->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
+                        @if(isset($step2))
+                            <div class="input-group">
+                                <label>Brands</label>
+                                <select name="brand" class="form-control" id="">
+                                    @foreach($brands as $brand)
+                                        <option value="{{ $brand->id }}"
+                                            @if($step2->brand === $brand->id)
+                                                selected
+                                            @endif
+                                        >{{ $brand->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @else
+                            <div class="input-group">
+                                <label>Brands</label>
+                                <select name="brand" class="form-control" id="">
+                                    @foreach($brands as $brand)
+                                        <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @endif
 
                         <div class="input-group">
                             <label>Campaign Name</label>
@@ -41,42 +57,83 @@
                             <input type="text" name="product" value="{{ isset(((object) $step2)->product) ? ((object) $step2)->product : "" }}" required placeholder="Product">
                         </div>
 
-                        <div class="input-group">
-                            <label>Industry</label>
-                            <select name="industry" id="" class="form-control">
-                                @foreach($industry as $ind)
-                                    <option value="{{ $ind->name }}">{{ $ind->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="input-group">
-                            <label>Target Audience</label>
-                            <select name="target_audience" id="" class="form-control">
-                                @foreach($target_audience as $target_audiences)
-                                    <option value="{{ $target_audiences->id }}">{{ $target_audiences->audience }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="input-group">
-                            <label>Channel</label>
-                            <select style="width: 100%" class="form-control" name="channel">
-                                @foreach($chanel as $chanels)
-                                    <option value="{{ $chanels->id }}"
-                                            @if(isset(((object) $step2)->channel) === $chanels->id)
-                                            selected
+                        @if(isset($step2))
+                            <div class="input-group">
+                                <label>Industry</label>
+                                <select name="industry" id="" class="form-control">
+                                    @foreach($industry as $ind)
+                                        <option value="{{ $ind->name }}"
+                                            @if($step2->industry === $ind->name)
+                                                selected
                                             @endif
-                                    >{{ $chanels->channel }}</option>
-                                @endforeach
-                            </select>
-                        </div>
+                                        >{{ $ind->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @else
+                            <div class="input-group">
+                                <label>Industry</label>
+                                <select name="industry" id="" class="form-control">
+                                    @foreach($industry as $ind)
+                                        <option value="{{ $ind->name }}">{{ $ind->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @endif
+
+                        @if(isset($step2))
+                            <div class="input-group">
+                                <label>Target Audience</label>
+                                <select name="target_audience" id="" class="form-control">
+                                    @foreach($target_audience as $target_audiences)
+                                        <option value="{{ $target_audiences->id }}"
+                                            @if($step2->target_audience === $target_audiences->id)
+                                                selected
+                                            @endif
+                                        >{{ $target_audiences->audience }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @else
+                            <div class="input-group">
+                                <label>Target Audience</label>
+                                <select name="target_audience" id="" class="form-control">
+                                    @foreach($target_audience as $target_audiences)
+                                        <option value="{{ $target_audiences->id }}">{{ $target_audiences->audience }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @endif
+
+                        @if(isset($step2))
+                            <div class="input-group">
+                                <label>Channel</label>
+                                <select style="width: 100%" class="form-control" name="channel">
+                                    @foreach($chanel as $chanels)
+                                        <option value="{{ $chanels->id }}"
+                                                @if($step2->channel === $chanels->id)
+                                                selected
+                                                @endif
+                                        >{{ $chanels->channel }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @else
+                            <div class="input-group">
+                                <label>Channel</label>
+                                <select style="width: 100%" class="form-control" name="channel">
+                                    @foreach($chanel as $chanels)
+                                        <option value="{{ $chanels->id }}">{{ $chanels->channel }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @endif
 
                         <div class="input-group date styledate">
                             <div class="input-group-addon">
                                 <i class="fa fa-calendar"></i>
                             </div>
-                            <input type="text" placeholder="stop-date" value="{{ isset(((object) $step2)->end_date) ? ((object) $step2)->end_date : "" }}" readonly required name="end_date" class="form-control flatpickr" id="txtToDate" />
+                            <input type="text" placeholder="end-date" value="{{ isset(((object) $step2)->end_date) ? ((object) $step2)->end_date : "" }}" readonly required name="end_date" class="form-control flatpickr" id="txtToDate" />
                         </div>
 
                         <div class="input-group date styledate">
@@ -88,37 +145,73 @@
 
                         <div class="input-group">
                             <label>Max Age:</label>
-                            <input type="number" name="max_age" required class="form-control">
+                            <input type="number" name="max_age" value="{{ isset(((object) $step2)->start_date) ?((object) $step2)->max_age : "" }}" required class="form-control">
                         </div>
 
                         <div class="input-group">
                             <label>Min Age:</label>
-                            <input type="number" name="min_age" required class="form-control">
+                            <input type="number" name="min_age" value="{{ isset(((object) $step2)->start_date) ?((object) $step2)->min_age : "" }}" required class="form-control">
                         </div>
 
-                        <div class="input-group">
-                            <h3> Day Parts </h3>
-                            <div class="form-group">
-                                @foreach($day_parts as $day_part)
-                                    <label style="margin-left: 10px;">
-                                        {{ $day_part->day_parts }}
-                                        <input type="checkbox" name="dayparts[]" value="{{ $day_part->id }}" class="minimal-red" required />
-                                    </label>
-                                @endforeach
+                        @if(isset($step2))
+                            <div class="input-group">
+                                <h3> Day Parts </h3>
+                                <div class="form-group">
+                                    @foreach($day_parts as $day_part)
+                                        <label style="margin-left: 10px;">
+                                            {{ $day_part->day_parts }}
+                                            <input type="checkbox" name="dayparts[]"
+                                                   @foreach($step2->dayparts as $daypart)
+                                                       @if($daypart === $day_part->id)
+                                                           checked
+                                                       @endif
+                                                   @endforeach
+                                                   value="{{ $day_part->id }}" class="minimal-red" required />
+                                        </label>
+                                    @endforeach
+                                </div>
                             </div>
-                        </div>
+                        @else
+                            <div class="input-group">
+                                <h3> Day Parts </h3>
+                                <div class="form-group">
+                                    @foreach($day_parts as $day_part)
+                                        <label style="margin-left: 10px;">
+                                            {{ $day_part->day_parts }}
+                                            <input type="checkbox" name="dayparts[]" value="{{ $day_part->id }}" class="minimal-red" required />
+                                        </label>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
 
-                        <div class="input-group">
-                            <h3>Region</h3>
-                            {{--@foreach($regions as $region)--}}
-                            <p>
-                                <label>
-                                    {{ $regions[0]->region }}
-                                    <input type="checkbox" name="region[]" value="{{ $regions[0]->id }}" class="minimal-red" required>
-                                </label>
-                            </p>
-                            {{--@endforeach--}}
-                        </div>
+                        @if(isset($step2))
+                            <div class="input-group">
+                                <h3>Region</h3>
+                                <p>
+                                    <label>
+                                        {{ $regions[0]->region }}
+                                        <input type="checkbox" name="region[]"
+                                               @foreach($step2->region as $region)
+                                                   @if($region === $regions[0]->id)
+                                                        checked
+                                                   @endif
+                                               @endforeach
+                                               value="{{ $regions[0]->id }}" class="minimal-red" required>
+                                    </label>
+                                </p>
+                            </div>
+                        @else
+                            <div class="input-group">
+                                <h3>Region</h3>
+                                <p>
+                                    <label>
+                                        {{ $regions[0]->region }}
+                                        <input type="checkbox" name="region[]" value="{{ $regions[0]->id }}" class="minimal-red" required>
+                                    </label>
+                                </p>
+                            </div>
+                        @endif
 
                         <div class="input-group">
                             <input type="Submit" name="Submit" value="Next" />

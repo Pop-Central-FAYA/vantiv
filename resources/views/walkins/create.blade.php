@@ -24,7 +24,7 @@
                     <div class="Add-brand">
                         <h2>Create Walk-In</h2>
 
-                        <form action="{{ route('walkins.store') }}" method="post">
+                        <form action="{{ route('walkins.store') }}" method="post" enctype="multipart/form-data">
                             {{ csrf_field() }}
                             <div class="row">
                                 <div class="col-md-6">
@@ -51,6 +51,20 @@
                                     <div class="input-group">
                                         <label for="phone_number"> Phone Number</label>
                                         <input type="text" name="phone_number" placeholder="Phone Number" class="form-control" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <label for="brand_name">Brand Name</label>
+                                        <input type="text" name="brand_name" value=""  placeholder="Brand Name" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <label>Brand Logo</label>
+                                        <input type="file" name="image_url" >
                                     </div>
                                 </div>
                             </div>

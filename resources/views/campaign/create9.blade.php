@@ -16,6 +16,8 @@
                         <li><a href="#">Summary</a></li>
                     </ul>
                 </div>
+            </div>
+            <div class="row">
 
                 @if(count($query) === 0)
 
@@ -53,38 +55,40 @@
                                 </div>
                             </div>
 
+
                             <div class="row" style="margin-top: 20px;">
                                 <h2 style="margin-bottom: 20px;">Uploaded list</h2>
-                                <table class="table table-hover" style="font-size:16px">
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Media Station</th>
-                                        <th>Time</th>
-                                        <th>Duration</th>
-                                        <th>Amount</th>
-                                        <th>Action</th>
-                                    </tr>
-                                    @foreach($query as $queries)
+
+                                    <table class="table table-hover" style="font-size:16px">
                                         <tr>
-                                            <td>{{ $loop->iteration }}</td>
-                                            <td> <img src="{{ asset('asset/dist/img/nta-logo.jpg') }}" width="5%">   </td>
-                                            <td>{{ $queries->from_to_time }}</td>
-                                            <td>{{ $queries->time }} seconds</td>
-                                            <td>&#8358;{{ number_format($queries->price, 2) }}</td>
-                                            <td>
-                                                <a href="{{ route('agency_cart.remove', ['id' => $queries->adslot_id]) }}" style="font-size: 16px">
+                                            <th>ID</th>
+                                            <th>Time</th>
+                                            <th>Duration</th>
+                                            <th>Amount</th>
+                                            <th>Action</th>
+                                        </tr>
+                                        @foreach($query as $queries)
+                                            <tr>
+                                                <td>{{ $loop->iteration }}</td>
+                                                <td>{{ $queries->from_to_time }}</td>
+                                                <td>{{ $queries->time }} seconds</td>
+                                                <td>&#8358;{{ number_format($queries->price, 2) }}</td>
+                                                <td>
+                                                    <a href="{{ route('agency_cart.remove', ['id' => $queries->adslot_id]) }}" style="font-size: 16px">
                                                     <span class="label label-danger">
                                                         <i class="fa fa-trash-o" aria-hidden="true"></i>
                                                         Remove
                                                     </span>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </table>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </table>
+
                                 <h3 style="padding: 0;">
                                     &#8358;{{ number_format($calc[0]->total_price, 2) }}
                                 </h3>
+
                             </div>
 
                         </form>
@@ -92,8 +96,8 @@
 
                     <div class="container">
                         <p align="right">
-                            <button id="step7" class="btn campaign-button" >Back <i class="fa fa-backward" aria-hidden="true"></i></button>
-                            <button class="btn campaign-button" style="margin-right:15%" data-toggle="modal" data-target=".bs-example2-modal-lg" >Create Campaign <i class="fa fa-play" aria-hidden="true"></i></button>
+                            <button id="step7" class="btn campaign-button btn-danger btn-lg" >Back <i class="fa fa-backward" aria-hidden="true"></i></button>
+                            <button class="btn campaign-button btn-danger btn-lg" style="margin-right:15%" data-toggle="modal" data-target=".bs-example2-modal-lg" >Create Campaign <i class="fa fa-play" aria-hidden="true"></i></button>
                         </p>
 
                         <div class="modal fade bs-example2-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
@@ -108,20 +112,26 @@
                                                 for the time-slot bought for your adverts, the price is: <br />
                                                 <h3> Total: &#8358;{{ number_format($calc[0]->total_price, 2) }} </h3>
 
-                                                Choose payment plab:
-                                                <input type="radio" name="payment" value="Cash" checked> Cash<br>
-                                                <input type="radio" name="payment" value="Payment"> Cash<br>
-                                                <input type="radio" name="payment" value="other"> Transfer
+                                                Choose payment plan: <br>
+                                                <input type="radio" name="pay" id="pay" value="Cash" checked> Cash<br>
+                                                <input type="radio" name="pay" id="pay" value="Card"> Card<br>
+                                                <input type="radio" name="pay" id="pay" value="Transfer"> Transfer
                                                 <input type="hidden" value="{{ $calc[0]->total_price }}" name="total" />
 
                                             </div>
 
-                                            <div class="modal-footer">
+                                            <div class="modal-footer card_transfer">
                                                 <p align="center">
                                                     <button type="submit" class="btn btn-large" style="background: #34495e; color:white; font-size: 20px; padding: 1% 5%; margin-top:4%; border-radius: 10px;">Confirm payment</button>
+
                                                 </p>
                                             </div>
                                         </form>
+                                        <div class="modal-footer card_type" style="display: none;">
+                                            <p align="center">
+                                                <button type="button" class="btn btn-large" style="background: #34495e; color:white; font-size: 20px; padding: 1% 5%; margin-top:4%; border-radius: 10px;">Pay with Paystack</button>
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -159,83 +169,24 @@
     <script src="{{ asset('asset/plugins/timepicker/bootstrap-timepicker.min.js') }}"></script>
 
     <script>
-        $(document).ready(function(){
-            $("#step7").click(function() {
-                window.location.href = "/campaign/create/1/step7";
+        $(document).ready(function() {
+            var user_id = "<?php echo $walkins ?>";
+            $('#step7').click(function(){
+                window.location.href = '/campaign/create/'+user_id+'/step7/get';
             });
-        });
-    </script>
 
-    <script>
-        $(function () {
-            //Initialize Select2 Elements
-            $(".select2").select2();
-
-            //Datemask dd/mm/yyyy
-            $("#datemask").inputmask("dd/mm/yyyy", {"placeholder": "dd/mm/yyyy"});
-            //Datemask2 mm/dd/yyyy
-            $("#datemask2").inputmask("mm/dd/yyyy", {"placeholder": "mm/dd/yyyy"});
-            //Money Euro
-            $("[data-mask]").inputmask();
-
-            //Date range picker
-            $('#reservation').daterangepicker();
-            //Date range picker with time picker
-            $('#reservationtime').daterangepicker({timePicker: true, timePickerIncrement: 30, format: 'MM/DD/YYYY h:mm A'});
-            //Date range as a button
-            $('#daterange-btn').daterangepicker(
-                {
-                    ranges: {
-                        'Today': [moment(), moment()],
-                        'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                        'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                        'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                        'This Month': [moment().startOf('month'), moment().endOf('month')],
-                        'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-                    },
-                    startDate: moment().subtract(29, 'days'),
-                    endDate: moment()
-                },
-                function (start, end) {
-                    $('#daterange-btn span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+            $('input[name=pay]').change(function(){
+                var value = $( 'input[name=pay]:checked' ).val();
+                if(value === 'Card'){
+                    $('.card_type').show();
+                    $('.card_transfer').hide();
+                }else{
+                    $(".card_transfer").show();
+                    $(".card_type").hide();
                 }
-            );
-
-            //Date picker
-            $('#datepicker').datepicker({
-                autoclose: true
-            });
-
-            $('#datepickerend').datepicker({
-                autoclose: true
-            });
-
-            //iCheck for checkbox and radio inputs
-            $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
-                checkboxClass: 'icheckbox_minimal-blue',
-                radioClass: 'iradio_minimal-blue'
-            });
-            //Red color scheme for iCheck
-            $('input[type="checkbox"].minimal-red, input[type="radio"].minimal-red').iCheck({
-                checkboxClass: 'icheckbox_minimal-red',
-                radioClass: 'iradio_minimal-red'
-            });
-            //Flat red color scheme for iCheck
-            $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
-                checkboxClass: 'icheckbox_flat-green',
-                radioClass: 'iradio_flat-green'
-            });
-
-            //Colorpicker
-            $(".my-colorpicker1").colorpicker();
-            //color picker with addon
-            $(".my-colorpicker2").colorpicker();
-
-            //Timepicker
-            $(".timepicker").timepicker({
-                showInputs: false
             });
         });
     </script>
+
 
 @endsection

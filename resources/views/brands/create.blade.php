@@ -13,7 +13,7 @@
                 <h1>Create Brand</h1>
                 <ul>
                     <li><a href="{{ route('dashboard') }}"><i class="fa fa-edit"></i>Broadcaster</a></li>
-                    <li><a href="#">Create Brands</a></li>
+                    <li><a href="#">Create Brand</a></li>
                 </ul>
             </div>
             <div class="Add-brand">

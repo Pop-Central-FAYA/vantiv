@@ -27,10 +27,12 @@
                     <p><h4>Campaign Name: {{ $campaign_details['campaign_det']['campaign_name'] }} </h4></p><br>
                     <p><h4>Product: {{ $campaign_details['campaign_det']['product_name'] }} </h4></p><br>
                     <p><h4>Brand: {{ $campaign_details['campaign_det']['brand'] }}</h4></p><br>
-                    <p><h4>Channel: {{ $campaign_details['campaign_det']['channel'] }}</h4></p><br>
+                    @if(!Session::get('broadcaster_id'))
+                        <p><h4>Medium: {{ $campaign_details['campaign_det']['channel'] }}</h4></p><br>
+                    @endif
                     <p><h4>Start Date: {{ $campaign_details['campaign_det']['start_date'] }}</h4></p><br>
-                    <p><h4>Stop Date: {{ $campaign_details['campaign_det']['end_date'] }}</h4></p><br>
-                    <p><h4>Campaign Cost: &#8358;{{ $campaign_details['campaign_det']['campaign_cost'] }}</h4></p><br>
+                    <p><h4>End Date: {{ $campaign_details['campaign_det']['end_date'] }}</h4></p><br>
+                    <p><h4>Cost Budget: &#8358;{{ $campaign_details['campaign_det']['campaign_cost'] }}</h4></p><br>
                 </div>
                 <div class="col-md-6">
                     <h2>Walk-In Information</h2>
@@ -88,7 +90,8 @@
                             <tr>
                                 <th>S/N</th>
                                 <th>File</th>
-                                <th>Slot Purchased</th>
+                                <th>File Duration</th>
+                                <th>From t0 Time</th>
                                 <th>Play Time Status</th>
                                 <th>File Status</th>
                             </tr>
@@ -101,6 +104,7 @@
                                         <video src="{{ $file_detail['file'] }}" width="150" height="100" controls></video>
                                     </td>
                                     <td>{{ $file_detail['slot_time'] }}</td>
+                                    <td>{{ $file_detail['from_to_time'] }}</td>
                                     <td>Played</td>
                                     <td>@if($file_detail['file_status'] === 1) File Approved @elseif($file_detail['file_status'] === 2) File Rejected. With reason : <strong>{{ $file_detail['rejection_reason'] }}</strong>  @else Pending @endif</td>
                                 </tr>

@@ -113,6 +113,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/checkout/{walkins}', 'CampaignsController@getCheckout')->name('checkout');
         Route::post('/submit-campaign/{walkins}', 'CampaignsController@postCampaign')->name('submit.campaign');
         Route::get('/remove-campaigns/{id}', 'CampaignsController@removeCart')->name('cart.remove');
+        Route::post('/remove-media/{walkins}/{id}', 'CampaignsController@removeMedia')->name('uploads.remove');
 
         Route::get('/all-campaign/data', 'CampaignsController@getAllData');
 

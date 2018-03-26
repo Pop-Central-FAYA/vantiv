@@ -3,6 +3,7 @@
 namespace Vanguard\Http\Controllers;
 
 use Illuminate\Http\Request;
+use JD\Cloudder\Facades\Cloudder;
 use Vanguard\Http\Requests\StoreWalkins;
 use Yajra\DataTables\DataTables;
 use Vanguard\Libraries\Utilities;
@@ -70,8 +71,11 @@ class WalkinsController extends Controller
     public function store(StoreWalkins $request)
     {
         $user_id = uniqid();
+        $image_url = '';
         $broadcaster_id = Session::get('broadcaster_id');
+        $walkin_id = uniqid();
         $role_id = Utilities::switch_db('api')->select("SELECT role_id from users WHERE id IN ( SELECT user_id from broadcasters WHERE id = '$broadcaster_id')");
+
         $insert_user = [
             'id' => $user_id,
             'role_id' => $role_id[0]->role_id,
@@ -80,11 +84,12 @@ class WalkinsController extends Controller
             'firstname' => $request->first_name,
             'lastname' => $request->last_name,
             'phone_number' => $request->phone_number,
-            'user_type' => 5
+            'user_type' => 5,
+
         ];
 
         $insert_walkin = [
-            'id' => uniqid(),
+            'id' => $walkin_id,
             'broadcaster_id' => $broadcaster_id,
             'user_id' => $user_id,
             'client_type_id' => 1,
@@ -94,10 +99,28 @@ class WalkinsController extends Controller
             Session::flash('error', 'Email address already exist');
             return redirect()->back();
         }
+
+        $brand = Utilities::formatString($request->brand_name);
+        $unique = uniqid();
+        $ckeck_brand = Utilities::switch_db('api')->select("SELECT name from brands WHERE `name` = '$brand'");
+        if(count($ckeck_brand) > 0) {
+            Session::flash('error', 'Brands already exists');
+            return redirect()->back();
+        }
+
+        if($request->hasFile('image_url')){
+            $image = $request->image_url;
+            $filename = realpath($image);
+            Cloudder::upload($filename, Cloudder::getPublicId(), ['height' => 200, 'width' => 200]);
+            $clouder = Cloudder::getResult();
+            $image_url = encrypt($clouder['url']);
+        }
+
         $saveUser = Utilities::switch_db('api')->table('users')->insert($insert_user);
         $saveWalkins = Utilities::switch_db('api')->table('walkIns')->insert($insert_walkin);
+        $insert = Utilities::switch_db('api')->insert("INSERT into brands (id, `name`, image_url, walkin_id, broadcaster_agency) VALUES ('$unique', '$brand', '$image_url', '$walkin_id', '$broadcaster_id')");
 
-        if($saveUser && $saveWalkins){
+        if($saveUser && $saveWalkins && $insert){
             Session::flash('success', 'Walk-In created successfully');
             return redirect()->route('walkins.all');
         }

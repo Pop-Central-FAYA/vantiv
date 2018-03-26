@@ -11,14 +11,20 @@
 @if($all_files)
     <div class="row">
         @foreach($all_files as $all_file)
-            <div class="col-md-2">
-                @if($all_file->uploads)
-                    <video width="150" controls><source src="{{ asset(decrypt($all_file->uploads)) }}"></video>
-                @else
-                    <img src="{{ asset('new_assets/images/logo.png') }}" alt="">
-                @endif
-                <p>Time Picked: {{ $all_file->time }}</p>
-            </div>
+            <form action="{{ route('uploads.remove', ['walkins' => $walkins, 'id' => $all_file->id]) }}" method="POST">
+                {{ csrf_field() }}
+                <div class="col-md-2" style="padding: 5px;">
+                    @if($all_file->uploads)
+                        <video width="150" height="150" controls><source src="{{ asset(decrypt($all_file->uploads)) }}"></video>
+                    @else
+                        <img src="{{ asset('new_assets/images/logo.png') }}" alt="">
+                    @endif
+                    <p>Time Picked: {{ $all_file->time }}</p><br>
+                    <button type="submit" class="btn btn-danger btn-xs">X</button>
+                </div>
+                <p></p>
+
+            </form>
         @endforeach
     </div>
 @endif

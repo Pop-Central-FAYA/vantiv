@@ -28,7 +28,7 @@ return [
     |
     */
 
-    'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
+    'host' => env('MAIL_HOST', 'smtp.sendgrid.net'),
 
     /*
     |--------------------------------------------------------------------------
@@ -54,7 +54,7 @@ return [
     |
     */
 
-    'from' => ['address' => env('MAIL_FROM_ADDRESS', 'test@vanguard.dev'), 'name' => env('MAIL_FROM_NAME', 'Tester')],
+    'from' => ['address' => env('MAIL_FROM','admin@fayamedia.com'), 'name' => null],
 
     /*
     |--------------------------------------------------------------------------
@@ -80,7 +80,7 @@ return [
     |
     */
 
-    'username' => env('MAIL_USERNAME'),
+    'username' => env('MAIL_USERNAME', 'FAYA Media'),
 
     /*
     |--------------------------------------------------------------------------
