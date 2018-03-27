@@ -805,6 +805,13 @@ Class Api
         return $files;
     }
 
+    public static function getOutstandingFiles($campaign_id)
+    {
+        $files = Utilities::switch_db('reports')->select("SELECT * FROM files WHERE campaign_id = '$campaign_id' AND is_file_accepted <> 1");
+
+        return $files;
+    }
+
     /**
      * Sectors
      */

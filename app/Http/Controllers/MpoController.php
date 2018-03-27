@@ -91,10 +91,10 @@ class MpoController extends Controller
                 $amount = $payment_details[0]->amount;
             }
 
-            if (Api::getCampaignFiles($mpo->campaign_id) === 0) {
+            if (Api::getOutstandingFiles($mpo->campaign_id) === 0) {
                 $files = 0;
             } else {
-                $files = Api::getCampaignFiles($mpo->campaign_id);
+                $files = Api::getOutstandingFiles($mpo->campaign_id);
             }
 
             $mpo_data[] = [
