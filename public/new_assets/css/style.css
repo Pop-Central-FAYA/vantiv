@@ -244,11 +244,11 @@ p {
 .left-area .sidebar-header ul.components li a:hover, .left-area .sidebar-header ul.components li.active a{
 	text-decoration:none;
 	color:#fff;
-	background:#e1235f;
+	background:#00c4ca;
 }
 .left-area .sidebar-header ul.components li.active::after {
     border-top: 10px solid rgba(0, 0, 0, 0);
-	border-left: 10px solid #e1235f;
+	border-left: 10px solid #00c4ca;
 	border-bottom: 10px solid rgba(0, 0, 0, 0);
 	border-right: 10px solid rgba(0, 0, 0, 0);
     content: "";
@@ -258,7 +258,7 @@ p {
 }
 .left-area .sidebar-header ul.components li:hover::after {
     border-top: 10px solid rgba(0, 0, 0, 0);
-	border-left: 10px solid #e1235f;
+	border-left: 10px solid #00c4ca;
 	border-bottom: 10px solid rgba(0, 0, 0, 0);
 	border-right: 10px solid rgba(0, 0, 0, 0);
     content: "";
@@ -302,7 +302,7 @@ p {
 #sidebar ul.components li ul.sub-menu li a:hover{
 	text-decoration:none;
 	color:#fff;
-	background:#e1235f !important;
+	background:#00c4ca !important;
 }
 #sidebar ul.components li ul.sub-menu li a i {
     font-size: 20px;
@@ -358,7 +358,7 @@ p {
 
 }
 .heading-main ul li a:hover{
-	color:#e1235f ;
+	color:#00c4ca ;
 	text-decoration:none;
 }
 .heading-main ul li a i {
@@ -433,7 +433,7 @@ p {
 	background:#5a0d40
 }
 .chart-top  ul.ample li:last-child::before{
-	background:#e1235f;
+	background:#00c4ca;
 }
 .chart-top  ul.ample li a{
 	float:left;
@@ -444,7 +444,7 @@ p {
 	font-weight:300;
 }
 .chart-top  ul.ample li:last-child a{
-	color:#e1235f;
+	color:#00c4ca;
 }
 .chart-top p {
     color: #cdcdcd;
@@ -500,13 +500,13 @@ p {
 	background:#5a0d40
 }
 .chart-top .Our-Visitors .visitors ul li:last-child::before{
-	background:#e1235f;
+	background:#00c4ca;
 }
 .chart-top .Our-Visitors .visitors ul li:nth-child(2)::before{
 	background:#c1c1c1;
 }
 .chart-top .Our-Visitors .visitors ul li:first-child a{
-	color:#e1235f;
+	color:#00c4ca;
 }
 .chart-top .Our-Visitors .visitors ul li:nth-child(2) a{
 	color:#c1c1c1;
@@ -672,7 +672,7 @@ p {
 	background:#5a0d40
 }
 .main-section .Total-Revenue  ul.Revenue  li:last-child::before{
-	background:#e1235f;
+	background:#00c4ca;
 }
 .main-section .Total-Revenue  ul.Revenue  a{
 	float:left;
@@ -778,7 +778,7 @@ p {
     content: '';
     height: 8px;
     width: 8px;
-    background: #e1235f;
+    background: #00c4ca;
     display: inline-block;
     border-radius: 100%;
     position: relative;
@@ -811,7 +811,7 @@ p {
     background: none;
     height: 240px;
     border-left: 15px solid transparent;
-    border-top: 15px solid #e1235f;
+    border-top: 15px solid #00c4ca;
     border-bottom: 15px solid transparent;
     border-right: 15px solid transparent;
 }
@@ -878,7 +878,7 @@ p {
 	background:#5a0d40
 }
 .main-section .sales-chart .Sale-chart ul.growth li:last-child::before{
-	background:#e1235f;
+	background:#00c4ca;
 }
 .main-section .sales-chart .Sale-chart ul.growth a{
 	float:left;
@@ -1035,7 +1035,7 @@ p {
 	margin-right:0px;
 }
 #chart #bars li .bar {
-    background: #e1235f;
+    background: #00c4ca;
     bottom: 0;
     display: block;
     margin-left: 0 !important;
@@ -1125,7 +1125,7 @@ p {
 	color:#838383;
 }
 .main-section .recents .monthly-sales .Total-monthly-Sales p a {
-    background: #e1235f;
+    background: #00c4ca;
     border-radius: 4px;
     color: #ffffff;
     margin: 0 10px 0 0;
@@ -1266,8 +1266,8 @@ p {
 
 .showing-list .showing-left form select.minimal:focus {
   background-image:
-    linear-gradient(45deg, #e1235f 50%, transparent 50%),
-    linear-gradient(135deg, transparent 50%, #e1235f 50%),
+    linear-gradient(45deg, #00c4ca 50%, transparent 50%),
+    linear-gradient(135deg, transparent 50%, #00c4ca 50%),
     linear-gradient(to right, #ccc, #ccc);
   background-position:
     calc(100% - 13px) 0.8em,
@@ -1278,7 +1278,7 @@ p {
     5px 5px,
     1px 2em;
   background-repeat: no-repeat;
-  border-color: #e1235f;
+  border-color: #00c4ca;
   outline: 0;
 }
 
@@ -1379,10 +1379,10 @@ p {
 	position:relative
 }
 .client-dashboard .col-3 .icon::before {
-    border-top:8px solid #e1235f;
+    border-top:8px solid #00c4ca;
 	border-left:8px solid rgba(0, 0, 0, 0);
-	border-right:8px solid #e1235f;
-	border-bottom:8px solid #e1235f;
+	border-right:8px solid #00c4ca;
+	border-bottom:8px solid #00c4ca;
     border-radius: 100%;
     content: "";
     height:70px;
@@ -1401,10 +1401,10 @@ p {
 	background:#f2f2f2;
 }
 .client-dashboard .col-3:nth-child(2) .icon::before {
-    border-top:8px solid #e1235f;
+    border-top:8px solid #00c4ca;
 	border-left:8px solid rgba(0, 0, 0, 0);
-	border-right:8px solid #e1235f;
-	border-bottom:8px solid #e1235f;
+	border-right:8px solid #00c4ca;
+	border-bottom:8px solid #00c4ca;
     border-radius: 100%;
     content: "";
     height:70px;
@@ -1414,7 +1414,7 @@ p {
     width:70px;
 }
 .client-dashboard .text h3 {
-    color: #e1235f;
+    color: #00c4ca;
     float: left;
     font-family: "Roboto",sans-serif;
     font-size: 23px;
@@ -1426,7 +1426,7 @@ p {
     width: 100%;
 }
 .client-dashboard .text h6{
-    color: #e1235f;
+    color: #00c4ca;
     float: left;
     font-family: "Roboto",sans-serif;
     font-size: 18px;
@@ -1478,7 +1478,7 @@ p {
 	margin-right:0px !important;
 }
 .Total-Earnings h2 {
-    color: #e1235f;
+    color: #00c4ca;
     float: left;
     font-family: "Roboto",sans-serif;
     font-size: 17px !important;
@@ -1500,7 +1500,7 @@ p {
 }
 
 .Total-Earnings .earning h3 {
-    color: #e1235f;
+    color: #00c4ca;
     float: left;
     font-family: "Roboto",sans-serif;
     font-size: 18px !important;
@@ -1610,7 +1610,7 @@ p {
 	font-size:24px;
 	color:#666666;
 	line-height:76px;
-	border:2px solid #e1235f;
+	border:2px solid #00c4ca;
 	border-radius:100%;
 
 }
@@ -1733,7 +1733,7 @@ p {
 	line-height:40px;
 }
 .Showing-Entries ul li.active a, .Showing-Entries ul li a:hover{
-	background:#e1235f;
+	background:#00c4ca;
 	color:#fff;
 	text-decoration:none;
 }
@@ -1975,8 +1975,8 @@ p {
 
 .clients-reports form select.clients:focus {
   background-image:
-    linear-gradient(45deg, #e1235f 50%, transparent 50%),
-    linear-gradient(135deg, transparent 50%, #e1235f 50%),
+    linear-gradient(45deg, #00c4ca 50%, transparent 50%),
+    linear-gradient(135deg, transparent 50%, #00c4ca 50%),
     linear-gradient(to right, #ccc, #ccc);
   background-position:
     calc(100% - 13px) 1em,
@@ -1987,7 +1987,7 @@ p {
     5px 5px,
     1px 2.5em;
   background-repeat: no-repeat;
-  border-color: #e1235f;
+  border-color: #00c4ca;
   outline: 0;
 }
 .clients-reports form select.clients option {
@@ -2011,7 +2011,7 @@ p {
 	margin: 0;
 	padding:10px 15px;
 	width:100%;
-	background:#e1235f;
+	background:#00c4ca;
 	color:#fff;border-radius:3px 3px 0px 0px;
 }
 /*.Create-campaign form{*/
@@ -2089,8 +2089,8 @@ p {
 
 /*.Create-campaign  form .input-group select.Role:focus {*/
 	/*background-image:*/
-			/*linear-gradient(45deg, #e1235f 50%, transparent 50%),*/
-			/*linear-gradient(135deg, transparent 50%, #e1235f 50%),*/
+			/*linear-gradient(45deg, #00c4ca 50%, transparent 50%),*/
+			/*linear-gradient(135deg, transparent 50%, #00c4ca 50%),*/
 			/*linear-gradient(to right, #ccc, #ccc);*/
 	/*background-position:*/
 			/*calc(100% - 17px) 1.3em,*/
@@ -2101,7 +2101,7 @@ p {
 			/*5px 5px,*/
 			/*1px 3em;*/
 	/*background-repeat: no-repeat;*/
-	/*border-color: #e1235f;*/
+	/*border-color: #00c4ca;*/
 	/*outline: 0;*/
 /*}*/
 /*.Create-campaign  form .input-group input[type="submit"]{*/
@@ -2115,7 +2115,7 @@ p {
 	/*padding:10px 50px;*/
 	/*border:none;*/
 	/*margin: 0px;*/
-	/*background:#e01a58;*/
+	/*background:#00c4ca;*/
 	/*border-radius:3px;*/
 	/*color:#fff;*/
 	/*text-transform:uppercase;*/
@@ -2133,6 +2133,7 @@ p {
 	background:#fff;
 	border-radius:3px;
 }
+
 .Wallet-Credit .card-type {
     border-bottom: 1px solid #d3d3d3;
     float: left;
@@ -2167,7 +2168,7 @@ p {
     margin: 0;
 }
 .Wallet-Credit .card-type h3 a{
-	color:#e01a58
+	color:#00c4ca
 }
 .Wallet-Credit .card-type h3 a:hover{
 	color:#5a0f43;
@@ -2240,8 +2241,8 @@ p {
 
 .Wallet-Credit form .input-group  select.Card:focus {
   background-image:
-    linear-gradient(45deg, #e1235f 50%, transparent 50%),
-    linear-gradient(135deg, transparent 50%, #e1235f 50%),
+    linear-gradient(45deg, #00c4ca 50%, transparent 50%),
+    linear-gradient(135deg, transparent 50%, #00c4ca 50%),
     linear-gradient(to right, #ccc, #ccc);
   background-position:
     calc(100% - 13px) 1em,
@@ -2252,7 +2253,7 @@ p {
     5px 5px,
     1px 2.5em;
   background-repeat: no-repeat;
-  border-color: #e1235f;
+  border-color: #00c4ca;
   outline: 0;
 }
 .Wallet-Credit form .input-group .form-inner {
@@ -2281,7 +2282,7 @@ p {
 	padding:10px 50px;
 	border:none;
 	margin:30px 0px;
-	background:#e01a58;
+	background:#00c4ca;
 	border-radius:3px;
 	color:#fff;
 	text-transform:uppercase;
@@ -2326,7 +2327,7 @@ p {
     margin: 0;padding:0px 15px 0 0px
 }
 .payments h3 a{
-	color:#e01a58
+	color:#00c4ca
 }
 .payments h3 a:hover{
 	color:#5a0f43;
@@ -2441,7 +2442,7 @@ p {
     margin: 0;
 	padding:10px 15px;
 	width:100%;
-	background:#e1235f;
+	background:#00c4ca;
 	color:#fff;border-radius:3px 3px 0px 0px;
 }
 .Add-Clients form{
@@ -2519,8 +2520,8 @@ p {
 
 .Add-Clients  form .input-group select.Role:focus {
   background-image:
-    linear-gradient(45deg, #e1235f 50%, transparent 50%),
-    linear-gradient(135deg, transparent 50%, #e1235f 50%),
+    linear-gradient(45deg, #00c4ca 50%, transparent 50%),
+    linear-gradient(135deg, transparent 50%, #00c4ca 50%),
     linear-gradient(to right, #ccc, #ccc);
   background-position:
     calc(100% - 17px) 1.3em,
@@ -2531,7 +2532,7 @@ p {
     5px 5px,
     1px 3em;
   background-repeat: no-repeat;
-  border-color: #e1235f;
+  border-color: #00c4ca;
   outline: 0;
 }
 .Add-Clients  form .input-group input[type="submit"]{
@@ -2545,7 +2546,7 @@ p {
 	padding:10px 50px;
 	border:none;
 	margin: 0px;
-	background:#e01a58;
+	background:#00c4ca;
 	border-radius:3px;
 	color:#fff;
 	text-transform:uppercase;
@@ -2637,7 +2638,7 @@ p {
   padding: 11px 20px;
   border: none;
   margin-left: -1px;
-  background-color: #e1235f;
+  background-color: #00c4ca;
   float: left;
   /* IE 9 Fix */
   -moz-transition: all 0.2s ease-in;
@@ -2660,6 +2661,10 @@ p {
     float: right;
     width: 69% !important;
 }
+
+.btn-danger {
+	background: #00c4ca;
+}
 /*----------------------------Footer----------------------------*/
 .Add-brand{
     width: 100%;
@@ -2680,7 +2685,7 @@ p {
     margin: 0;
 	padding:10px 15px;
 	width:100%;
-	background:#e1235f;
+	background:#00c4ca;
 	color:#fff;border-radius:3px 3px 0px 0px;
 }
 .Add-brand form{
@@ -2750,8 +2755,8 @@ p {
 
 .Add-brand  form .input-group select.Role:focus {
   background-image:
-    linear-gradient(45deg, #e1235f 50%, transparent 50%),
-    linear-gradient(135deg, transparent 50%, #e1235f 50%),
+    linear-gradient(45deg, #00c4ca 50%, transparent 50%),
+    linear-gradient(135deg, transparent 50%, #00c4ca 50%),
     linear-gradient(to right, #ccc, #ccc);
   background-position:
     calc(100% - 17px) 1.3em,
@@ -2762,7 +2767,7 @@ p {
     5px 5px,
     1px 3em;
   background-repeat: no-repeat;
-  border-color: #e1235f;
+  border-color: #00c4ca;
   outline: 0;
 }
 .Add-brand  form .input-group input[type="submit"]{
@@ -2776,7 +2781,7 @@ p {
 	padding:10px 50px;
 	border:none;
 	margin: 0px;
-	background:#e01a58;
+	background:#00c4ca;
 	border-radius:3px;
 	color:#fff;
 	text-transform:uppercase;

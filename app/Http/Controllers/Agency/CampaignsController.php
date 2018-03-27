@@ -663,6 +663,7 @@ class CampaignsController extends Controller
             'adslots' => count($query),
             'agency' => Session::get('agency_id'),
             'agency_broadcaster' => $broadcaster,
+            'broadcaster' => $broadcaster,
         ];
 
 
@@ -686,6 +687,7 @@ class CampaignsController extends Controller
                     'agency_id' => Session::get('agency_id'),
                     'agency_broadcaster' => $broadcaster,
                     'time_picked' => $q->time,
+                    'broadcaster_id' => $broadcaster,
                 ];
             }
 
@@ -694,13 +696,12 @@ class CampaignsController extends Controller
                 'campaign_id' => $camp_id[0]->id,
                 'payment_method' => $request->payment,
                 'amount' => (integer) $request->total,
-                'time_created' => $now,
-                'time_modified' => $now,
                 'walkins_id' => $walkin_id[0]->id,
                 'time_created' => date('Y-m-d H:i:s', $now),
                 'time_modified' => date('Y-m-d H:i:s', $now),
                 'agency_id' => Session::get('agency_id'),
                 'agency_broadcaster' => $broadcaster,
+                'broadcaster' => $broadcaster,
             ];
 
             $save_payment = Utilities::switch_db('api')->table('payments')->insert($pay);
@@ -721,6 +722,7 @@ class CampaignsController extends Controller
                     'walkins_id' => $walkin_id[0]->id,
                     'agency_id' => Session::get('agency_id'),
                     'agency_broadcaster' => $broadcaster,
+                    'broadcaster_id' => $broadcaster,
 
                 ];
 
@@ -729,7 +731,8 @@ class CampaignsController extends Controller
                     'campaign_id' => $camp_id[0]->id,
                     'discount' => 0,
                     'agency_id' => Session::get('agency_id'),
-                    'agency_broadcaster' => $broadcaster
+                    'agency_broadcaster' => $broadcaster,
+                    'broadcaster_id' => $broadcaster,
                 ];
 
                 $save_invoice = Utilities::switch_db('api')->table('invoices')->insert($invoice);

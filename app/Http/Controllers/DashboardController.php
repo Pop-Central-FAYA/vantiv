@@ -87,31 +87,6 @@ class DashboardController extends Controller
             $c_mon = json_encode($c_month);
 
             //High performing Dayparts
-//            $dayp = Utilities::switch_db('api')->select("SELECT COUNT(id) as campaigns, DATE_FORMAT(time_created, '%a') as time_created, day_parts
-//                                                        from campaigns WHERE broadcaster = '$broadcaster' or agency_broadcaster AND day_parts != ''
-//                                                        GROUP BY day_parts");
-//
-//            $dayp_name = [];
-//            $d = [];
-//            for ($i = 0; $i < count($dayp); $i++) {
-//                $d[] = $dayp[$i]->campaigns;
-//            }
-//
-//            $s = array_sum($d);
-//            foreach ($dayp as $day) {
-//                $day_p = $day->day_parts;
-//                $query = Utilities::switch_db('api')->select("SELECT day_parts from dayParts WHERE id IN ($day_p)");
-//                $day_percent = (($day->campaigns) / $s) * 100;
-//                $day_partt = isset($query[0]) ? $query[0]->day_parts : "";
-//                $dayp_name[] = [
-//                    'name' => $day_partt,
-//                    'y' => $day_percent,
-//                    'date' => $day->time_created
-//                ];
-//            }
-//
-//
-//            $day_pie = json_encode($dayp_name);
             $all_slots = [];
             $all_dayp = [];
             $dayp_namesss = [];

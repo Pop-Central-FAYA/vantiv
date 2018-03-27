@@ -4,7 +4,7 @@
         <!-- mini logo for sidebar mini 50x50 pixels -->
         <span class="logo-mini"><b>F</b>AYA</span>
         <!-- logo for regular state and mobile devices -->
-        <span class="logo-lg"><img src="{{ asset('asset/dist/img/faya-icon.png') }}" width="20%"></span>
+        <span class="logo-lg"><img src="{{ asset('asset/dist/img/logo.png') }}" width="20%"></span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top">

@@ -553,6 +553,7 @@ class CampaignsController extends Controller
             'adslots_id' => "'". implode("','" ,$ads) . "'",
             'agency' => Session::get('advertiser_id'),
             'agency_broadcaster' => $broadcaster,
+            'broadcaster' => $broadcaster
         ];
 
 
@@ -575,6 +576,7 @@ class CampaignsController extends Controller
                     'time_modified' => date('Y-m-d H:i:s', $now),
                     'agency_id' => Session::get('advertiser_id'),
                     'agency_broadcaster' => $broadcaster,
+                    'broadcaster_id' => $broadcaster,
                     'time_picked' => $q->time,
                 ];
             }
@@ -588,6 +590,7 @@ class CampaignsController extends Controller
                 'time_created' => date('Y-m-d H:i:s', $now),
                 'time_modified' => date('Y-m-d H:i:s', $now),
                 'agency_id' => Session::get('advertiser_id'),
+                'broadcaster' => $broadcaster,
                 'agency_broadcaster' => $broadcaster,
             ];
 
@@ -609,6 +612,7 @@ class CampaignsController extends Controller
                     'walkins_id' => $advertiser_id[0]->user_id,
                     'agency_id' => Session::get('advertiser_id'),
                     'agency_broadcaster' => $broadcaster,
+                    'broadcaster_id' => $broadcaster,
 
                 ];
 
@@ -617,7 +621,8 @@ class CampaignsController extends Controller
                     'campaign_id' => $camp_id[0]->id,
                     'discount' => 0,
                     'agency_id' => Session::get('advertiser_id'),
-                    'agency_broadcaster' => $broadcaster
+                    'agency_broadcaster' => $broadcaster,
+                    'broadcaster_id' => $broadcaster,
                 ];
 
                 $save_invoice = Utilities::switch_db('api')->table('invoices')->insert($invoice);

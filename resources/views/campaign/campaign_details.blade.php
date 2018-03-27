@@ -91,7 +91,7 @@
                                 <th>S/N</th>
                                 <th>File</th>
                                 <th>File Duration</th>
-                                <th>From t0 Time</th>
+                                <th>From to Time</th>
                                 <th>Play Time Status</th>
                                 <th>File Status</th>
                             </tr>

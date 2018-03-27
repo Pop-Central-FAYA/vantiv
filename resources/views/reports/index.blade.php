@@ -123,7 +123,6 @@
                                                                     <th>Id</th>
                                                                     <th>Dayparts</th>
                                                                     <th>Percentage Fill Rate</th>
-                                                                    <th>Date</th>
                                                                     </thead>
                                                                 </table>
                                                             </div>
@@ -446,7 +445,6 @@
                     {data: 'id', name: 'id'},
                     {data: 'daypart', name: 'daypart'},
                     {data: 'percentage', name: 'percentage'},
-                    {data: 'date', name: 'date'},
                 ]
             });
 
