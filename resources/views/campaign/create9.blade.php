@@ -127,11 +127,20 @@
                                                 </p>
                                             </div>
                                         </form>
-                                        <div class="modal-footer card_type" style="display: none;">
-                                            <p align="center">
-                                                <button type="button" class="btn btn-large" style="background: #34495e; color:white; font-size: 20px; padding: 1% 5%; margin-top:4%; border-radius: 10px;">Pay with Paystack</button>
-                                            </p>
-                                        </div>
+                                        <form id="fund-form" role='form' action="{{ route('broadcaster.pay') }}" method="POST">
+                                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                            <input id="amount" type="hidden" name="amount" readonly value="{{ $calc[0]->total_price }}" class="form-control">
+                                            <input type="hidden" name="email" id="email" value="{{ $user[0]->email }}">
+                                            <input type="hidden" name="name" id="name" value="{{ $user[0]->firstname .' '.$user[0]->lastname }}">
+                                            <input type="hidden" name="phone_number" id="phone_number" value="{{ $user[0]->phone_number }}">
+                                            <input type="hidden" name="reference" id="reference" value="" />
+                                            <input type="hidden" name="user_id" value="{{ $walkins }}" />
+                                            <div class="modal-footer card_type" style="display: none;">
+                                                <p align="center">
+                                                    <button type="button" onclick="payWithPaystack()" class="btn btn-large" style="background: #34495e; color:white; font-size: 20px; padding: 1% 5%; margin-top:4%; border-radius: 10px;">Pay with your card</button>
+                                                </p>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -167,6 +176,7 @@
 
     <!-- bootstrap time picker -->
     <script src="{{ asset('asset/plugins/timepicker/bootstrap-timepicker.min.js') }}"></script>
+    <script src="https://js.paystack.co/v1/inline.js"></script>
 
     <script>
         $(document).ready(function() {
@@ -186,6 +196,35 @@
                 }
             });
         });
+    </script>
+
+    <script>
+        function payWithPaystack(){
+            $(".container").css({
+                opacity: 0.5
+            });
+            var handler = PaystackPop.setup({
+                key: 'pk_test_9945d2a543e97e34d0401f1d926e79dc1716ccc7',
+                email: "<?php echo $user[0]->email; ?>",
+                amount: parseFloat(document.getElementById('amount').value * 100),
+                metadata: {
+                    custom_fields: [
+                        {
+                            display_name: "<?php echo $user[0]->firstname .' '.$user[0]->lastname; ?>",
+                            value: "<?php echo $user[0]->phone_number; ?>"
+                        }
+                    ]
+                },
+                callback: function(response){
+                    document.getElementById('reference').value = response.reference;
+                    document.getElementById('fund-form').submit();
+                },
+                onClose: function(){
+                    alert('window closed');
+                }
+            });
+            handler.openIframe();
+        }
     </script>
 
 

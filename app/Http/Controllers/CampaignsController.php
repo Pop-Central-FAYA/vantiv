@@ -260,6 +260,7 @@ class CampaignsController extends Controller
         $count_files = count($get_uploaded_files);
         if($count_files === 0){
             Session::flash('error', 'You have not uploaded any file(s)');
+            return redirect()->back();
         }else{
             $remaining_file = 4 - $count_files;
             for ($i = 0; $i < $remaining_file; $i++){
@@ -389,6 +390,8 @@ class CampaignsController extends Controller
         $regions = Utilities::switch_db('api')->select("SELECT region from regions where id IN ('$region') ");
         $calc = \DB::select("SELECT SUM(price) as total_price FROM carts WHERE user_id = '$walkins'");
         $query = \DB::select("SELECT * FROM carts WHERE user_id = '$walkins'");
+        $user = Utilities::switch_db('api')->select("SELECT * from users where id = '$walkins'");
+
         return view('campaign.create9')->with('first_session', $first)
             ->with('calc', $calc)
             ->with('day_part', $day_partss)
@@ -397,11 +400,130 @@ class CampaignsController extends Controller
             ->with('query', $query)
             ->with('brand', $brands)
             ->with('broadcaster', $broadcaster)
-            ->with('walkins', $walkins);
+            ->with('walkins', $walkins)
+            ->with('user', $user);
     }
 
     Public function postCampaign(Request $request, $walkins)
     {
+
+        $save_campaign = $this->saveCampaign($request, $walkins);
+        if($save_campaign === 'success'){
+            $user_agent = $_SERVER['HTTP_USER_AGENT'];
+            $description = 'Campaign created by '.Session::get('broadcaster_id').' for '.$walkins;
+            $ip = request()->ip();
+            $user_activity = Api::saveActivity($walkins, $description, $ip, $user_agent);
+            Session::flash('success', 'Campaign created successfully');
+            return redirect()->route('campaign.all');
+        }else{
+            Session::flash('error', 'There was problem creating campaign');
+            return redirect()->back();
+        }
+
+    }
+
+    public function removeCart($id)
+    {
+        $rate_id = $id;
+        $del = \DB::select("DELETE FROM carts WHERE rate_id = '$rate_id'");
+        return redirect()->back()->with('success', trans('app.campaign'));
+    }
+
+    public function campaignDetails($id)
+    {
+        $campaign_details = Utilities::campaignDetails($id);
+        return view('campaign.campaign_details', compact('campaign_details'));
+    }
+
+    public function payCampaign(Request $request)
+    {
+
+        $insert = [
+            'id' => uniqid(),
+            'user_id' => $request->user_id,
+            'reference' => $request->reference,
+            'amount' => $request->amount,
+            'status' => 'PENDING',
+        ];
+
+        $req = [];
+        $user_id = $request->user_id;
+
+        $transaction = Utilities::switch_db('api')->table('transactions')->insert($insert);
+
+        $response = $this->query_api_transaction_verify($request->reference);
+
+        if($response['status'] === true){
+
+            $amount = ($response['data']['amount']/100);
+            $card = $response['data']['authorization']['card_type'];
+            $status = $response['data']['status'];
+            $message = $response['message'];
+            $reference = $response['data']['reference'];
+            $ip_address = $response['data']['ip_address'];
+            $fees = $response['data']['fees'];
+            $user_id = $request->user_id;
+            $type = 'FUND WALLET';
+
+            $update_transaction = Utilities::switch_db('api')->select("UPDATE transactions SET card_type = '$card', status = 'SUCCESSFUL', ip_address = '$ip_address', fees = '$fees', `type` = '$type', message = '$message' WHERE reference = '$reference'");
+
+            if ($transaction) {
+                $req = [
+                    'payment' => 'card',
+                    'total' => $amount,
+                ];
+                $request = (object)$req;
+                $save_campaign = $this->saveCampaign($request, $user_id);;
+                if($save_campaign === 'success'){
+                    $user_agent = $_SERVER['HTTP_USER_AGENT'];
+                    $description = 'Payment of '.$amount.' to '.Session::get('broadcaster_id').' by '.$user_id.' For Campaign';
+                    $ip = request()->ip();
+                    $user_activity = Api::saveActivity($user_id, $description, $ip, $user_agent);
+
+                    $msg = 'Your payment of '. $amount.' is successful and campaign has been created successfully';
+                    Session::flash('success', $msg);
+                    return redirect()->route('campaign.all');
+                }else{
+                    Session::flash('error', 'There was problem creating campaign');
+                    return redirect()->back();
+                }
+
+            }
+
+        } else {
+            Session::flash('error', 'Sorry, something went wrong! Please contact the Administrator or Bank.');
+            return redirect()->back();
+        }
+
+
+    }
+
+    protected function query_api_transaction_verify($reference)
+    {
+        $result = array();
+        $url = 'https://api.paystack.co/transaction/verify/'.$reference;
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt(
+            $ch, CURLOPT_HTTPHEADER, [
+                'Authorization: Bearer sk_test_485de9008374bbad12f121fefe3afe01d1568fbd']
+        );
+        $request = curl_exec($ch);
+        curl_close($ch);
+
+        if ($request) {
+            $result = json_decode($request, true);
+            return $result;
+        } else {
+            return false;
+        }
+    }
+
+    public function saveCampaign($request, $walkins)
+    {
+//        dd($request);
         $broadcaster = Session::get('broadcaster_id');
         $first = Session::get('step2');
         $query = \DB::select("SELECT * FROM carts WHERE user_id = '$walkins'");
@@ -412,7 +534,7 @@ class CampaignsController extends Controller
             $ads[] = $q->adslot_id;
         }
         $data = \DB::select("SELECT * from uploads WHERE user_id = '$walkins'");
-        $request->all();
+
         $new_q = [];
         $pay = [];
         $camp = [];
@@ -443,6 +565,7 @@ class CampaignsController extends Controller
             'industry' => $first->industry,
             'adslots' => count($query),
             'walkins_id' => $walkin_id[0]->id,
+            'agency' => $walkin_id[0]->id,
             'time_created' => date('Y-m-d H:i:s', $now),
             'time_modified' => date('Y-m-d H:i:s', $now),
             'adslots_id' => "'". implode("','" ,$ads) . "'",
@@ -530,32 +653,19 @@ class CampaignsController extends Controller
                         }
                         $update_slot = Utilities::switch_db('api')->update("UPDATE adslots SET time_used = '$new_time_used', is_available = '$slot_status' WHERE id = '$id'");
                     }
-//                    $get_adslots = Utilities::switch_db('api')->select("SELECT * FROM adslots WHERE id IN ($adssss)");
+
                     $del_cart = \DB::delete("DELETE FROM carts WHERE user_id = '$walkins'");
                     $del_uplaods = \DB::delete("DELETE FROM uploads WHERE user_id = '$walkins'");
                     Session::forget('step2');
-                    return redirect()->route('campaign.all')->with('success', 'campaign created successfully');
+                    return 'success';
                 }
             }
 
         }else{
-            Session::flash('error', 'Could not create this campaign');
-            return redirect()->back();
+
+            return 'error';
         }
 
-    }
-
-    public function removeCart($id)
-    {
-        $rate_id = $id;
-        $del = \DB::select("DELETE FROM carts WHERE rate_id = '$rate_id'");
-        return redirect()->back()->with('success', trans('app.campaign'));
-    }
-
-    public function campaignDetails($id)
-    {
-        $campaign_details = Utilities::campaignDetails($id);
-        return view('campaign.campaign_details', compact('campaign_details'));
     }
 
 

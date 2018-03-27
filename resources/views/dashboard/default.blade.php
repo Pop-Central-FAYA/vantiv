@@ -13,101 +13,98 @@
                     <h1>Broadcaster Report</h1>
                     <ul>
                         <li><a href="#"><i class="fa fa-edit"></i>Dashboard</a></li>
-                        {{--<li><a href="#">Reports</a></li>--}}
+
                     </ul>
                 </div>
             </div>
 
-                {{--<div class="row">--}}
-                    {{--Dashboard charts begins here--}}
-                <div class="row">
-                    <div class="col-md-12">
-                        <canvas id="containerPeriodic" style="width: 512px; height: 150px"></canvas>
-                        {{--<div id="containerPeriodic" style="min-width: 310px; height: 400px; margin: 0 auto"></div>--}}
-                    </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <canvas id="containerPeriodic" style="width: 512px; height: 150px"></canvas>
+
                 </div>
+            </div>
             <p><br></p>
             <p><br></p>
             <hr>
 
-                    {{--<div class="row">--}}
-                <div class="row">
-                    <div class="col-md-6">
-                        <div id="containerDayparts" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
-                    </div>
-                    <div class="col-md-6">
-                        <div id="containerDays" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
-                    </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div id="containerDayparts" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
                 </div>
-            <p><br></p>
-            <p><br></p>
-                    {{--</div>--}}
-                    <hr>
-                    {{--<div class="row">--}}
-                 <div class="row">
-                     <div class="col-md-12">
-                         <div id="containerTotal"></div>
-                         {{--<div id="containerTotal"></div>--}}
-                     </div>
-                 </div>
-                    <p><br></p>
-                    <p><br></p>
-                    <hr>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="box-body table-responsive no-padding">
-                                <h4 class="text-center"><p>High Value Customers</p></h4>
-                                <table class="table table-hover" style="font-size:16px">
-                                    <tr>
-                                        <th>S/N</th>
-                                        <th>Customer Name</th>
-                                        <th>Number of campaigns</th>
-                                        <th>Number of Adslots</th>
-                                        <th>Total Amount/Revenue</th>
-                                    </tr>
-                                    @foreach($campaign as $camp)
-                                        <tr>
-                                            <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $camp['customer_name'] }}</td>
-                                            <td>{{ $camp['number_of_campaign'] }}</td>
-                                            <td>{{ $camp['total_adslot'] }}</td>
-                                            <td>&#8358;{{ number_format($camp['payment'], 2) }}</td>
-                                        </tr>
-                                    @endforeach
-                                </table>
-                            </div>
-                            {{--</div>--}}
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="box-body table-responsive no-padding">
-                                <h4 class="text-center"><p>Paid Invoices</p></h4>
-                                <table class="table table-hover" style="font-size:16px">
-                                    <tr>
-                                        <th>S/N</th>
-                                        <th>Campaign Name</th>
-                                        <th>Customer</th>
-                                        <th>Date</th>
-                                        <th>Due Date</th>
-                                    </tr>
-                                    @foreach($invoice as $invoices)
-                                        <tr>
-                                            <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $invoices['campaign_name'] }}</td>
-                                            <td>{{ $invoices['customer'] }}</td>
-                                            <td>{{ $invoices['date'] }}</td>
-                                            <td>{{ $invoices['date_due'] }}</td>
-                                        </tr>
-                                    @endforeach
-                                </table>
-                            </div>
-                            {{--</div>--}}
-                        </div>
-                    </div>
-
+                <div class="col-md-6">
+                    <div id="containerDays" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+                </div>
             </div>
+            <p><br></p>
+            <p><br></p>
+
+             <hr>
+
+             <div class="row">
+                 <div class="col-md-12">
+                     <div id="containerTotal"></div>
+                 </div>
+             </div>
+            <p><br></p>
+            <p><br></p>
+            <hr>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box-body table-responsive no-padding">
+                        <h4 class="text-center"><p>High Value Customers</p></h4>
+                        <table class="table table-hover" style="font-size:16px">
+                            <tr>
+                                <th>S/N</th>
+                                <th>Customer Name</th>
+                                <th>Number of campaigns</th>
+                                <th>Number of Adslots</th>
+                                <th>Total Amount/Revenue</th>
+                            </tr>
+                            @foreach($campaign as $camp)
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $camp['customer_name'] }}</td>
+                                    <td>{{ $camp['number_of_campaign'] }}</td>
+                                    <td>{{ $camp['total_adslot'] }}</td>
+                                    <td>&#8358;{{ number_format($camp['payment'], 2) }}</td>
+                                </tr>
+                            @endforeach
+                        </table>
+                    </div>
+                    {{--</div>--}}
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box-body table-responsive no-padding">
+                        <h4 class="text-center"><p>Paid Invoices</p></h4>
+                        <table class="table table-hover" style="font-size:16px">
+                            <tr>
+                                <th>S/N</th>
+                                <th>Campaign Name</th>
+                                <th>Customer</th>
+                                <th>Date</th>
+                                <th>Due Date</th>
+                            </tr>
+                            @foreach($invoice as $invoices)
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $invoices['campaign_name'] }}</td>
+                                    <td>{{ $invoices['customer'] }}</td>
+                                    <td>{{ $invoices['date'] }}</td>
+                                    <td>{{ $invoices['date_due'] }}</td>
+                                </tr>
+                            @endforeach
+                        </table>
+                    </div>
+                    {{--</div>--}}
+                </div>
+            </div>
+
+        </div>
     </div>
 
         </div>

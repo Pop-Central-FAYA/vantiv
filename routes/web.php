@@ -115,6 +115,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/remove-campaigns/{id}', 'CampaignsController@removeCart')->name('cart.remove');
         Route::post('/remove-media/{walkins}/{id}', 'CampaignsController@removeMedia')->name('uploads.remove');
 
+        Route::post('/payment-process', 'CampaignsController@payCampaign')->name('broadcaster.pay');
+
         Route::get('/all-campaign/data', 'CampaignsController@getAllData');
 
         Route::get('/campaign-details/{id}', 'CampaignsController@campaignDetails')->name('broadcaster.campaign.details');

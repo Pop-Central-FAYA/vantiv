@@ -94,7 +94,7 @@
                         </div>
                         @if ($adslot['percentage'] != 0)
                             <p>
-                                <h4>You have {{ $adslot['percentage'] }}% discount on this slot</h4>
+                                <h4>You have a premium percent of {{ $adslot['percentage'] }}% on this slot</h4>
                             </p>
                             <hr>
                         @endif
