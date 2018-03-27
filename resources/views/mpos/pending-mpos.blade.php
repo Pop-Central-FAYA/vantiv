@@ -102,7 +102,7 @@
                             </thead>
                             <tbody>
                                 @foreach ($mpo['files'] as $file)
-                                    <tr>
+                                    <tr id="row{{ $file->file_code }}">
                                         <td>
                                             <video width="150" controls><source src="{{ asset(decrypt($file->file_url)) }}"></video>
                                         </td>
@@ -210,6 +210,24 @@
 
     <script>
 
+        var Datefilter =  $('#example1').DataTable({
+            paging: true,
+            serverSide: true,
+            processing: true,
+            ajax: {
+                url: '/mpos/pending_mpos_data',
+            },
+            columns: [
+                { data: 's_n', name: 's_n' },
+                { data: 'product', name: 'product' },
+                { data: 'brand', name: 'brand' },
+                { data: 'campaign_name', name: 'campaign_name' },
+                { data: 'start_date', name: 'start_date' },
+                { data: 'stop_date', name: 'stop_date' },
+                { data: 'view', name: 'view' },
+            ]
+        });
+
         $(document).ready(function () {
             $('#flash-file-message').hide();
 
@@ -254,24 +272,6 @@
                 });
 
             });
-        });
-
-        var Datefilter =  $('#example1').DataTable({
-            paging: true,
-            serverSide: true,
-            processing: true,
-            ajax: {
-                url: '/mpos/pending_mpos_data',
-            },
-            columns: [
-                { data: 's_n', name: 's_n' },
-                { data: 'product', name: 'product' },
-                { data: 'brand', name: 'brand' },
-                { data: 'campaign_name', name: 'campaign_name' },
-                { data: 'start_date', name: 'start_date' },
-                { data: 'stop_date', name: 'stop_date' },
-                { data: 'view', name: 'view' },
-            ]
         });
 
         flatpickr(".flatpickr", {
