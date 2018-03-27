@@ -87,69 +87,66 @@ class DashboardController extends Controller
             $c_mon = json_encode($c_month);
 
             //High performing Dayparts
-            $dayp = Utilities::switch_db('api')->select("SELECT COUNT(id) as campaigns, DATE_FORMAT(time_created, '%a') as time_created, day_parts
-                                                        from campaigns WHERE broadcaster = '$broadcaster' or agency_broadcaster AND day_parts != ''
-                                                        GROUP BY day_parts");
-
-            $dayp_name = [];
-            $d = [];
-            for ($i = 0; $i < count($dayp); $i++) {
-                $d[] = $dayp[$i]->campaigns;
+//            $dayp = Utilities::switch_db('api')->select("SELECT COUNT(id) as campaigns, DATE_FORMAT(time_created, '%a') as time_created, day_parts
+//                                                        from campaigns WHERE broadcaster = '$broadcaster' or agency_broadcaster AND day_parts != ''
+//                                                        GROUP BY day_parts");
+//
+//            $dayp_name = [];
+//            $d = [];
+//            for ($i = 0; $i < count($dayp); $i++) {
+//                $d[] = $dayp[$i]->campaigns;
+//            }
+//
+//            $s = array_sum($d);
+//            foreach ($dayp as $day) {
+//                $day_p = $day->day_parts;
+//                $query = Utilities::switch_db('api')->select("SELECT day_parts from dayParts WHERE id IN ($day_p)");
+//                $day_percent = (($day->campaigns) / $s) * 100;
+//                $day_partt = isset($query[0]) ? $query[0]->day_parts : "";
+//                $dayp_name[] = [
+//                    'name' => $day_partt,
+//                    'y' => $day_percent,
+//                    'date' => $day->time_created
+//                ];
+//            }
+//
+//
+//            $day_pie = json_encode($dayp_name);
+            $all_slots = [];
+            $all_dayp = [];
+            $dayp_namesss = [];
+            $slots = Utilities::switch_db('api')->select("SELECT adslots_id from campaigns where broadcaster = '$broadcaster' or agency_broadcaster = '$broadcaster'");
+            foreach ($slots as $slot){
+                $adslots = Utilities::switch_db('api')->select("SELECT day_parts from adslots where id IN ($slot->adslots_id)");
+                $all_slots[] = $adslots;
             }
 
-            $s = array_sum($d);
-            foreach ($dayp as $day) {
-                $day_p = $day->day_parts;
-                $query = Utilities::switch_db('api')->select("SELECT day_parts from dayParts WHERE id IN ($day_p)");
-                $day_percent = (($day->campaigns) / $s) * 100;
-                $day_partt = isset($query[0]) ? $query[0]->day_parts : "";
-                $dayp_name[] = [
-                    'name' => $day_partt,
+            $dayp_id = Utilities::array_flatten($all_slots);
+
+            foreach ($dayp_id as $d){
+                $day_parts = Utilities::switch_db('api')->select("SELECT * from dayParts where id = '$d->day_parts'");
+                $all_dayp[] = $day_parts;
+            }
+
+            $dayp_name = Utilities::array_flatten($all_dayp);
+            $total = (count($dayp_name));
+
+            $newArray = [];
+            foreach($dayp_name as $entity)
+            {
+                $newArray[$entity->day_parts][] = $entity;
+            }
+
+            foreach ($newArray as $nnn => $value){
+                $day_percent = ((count($value)) / $total) * 100;
+                $dayp_namesss[] = [
+                    'name' => $nnn,
                     'y' => $day_percent,
-                    'date' => $day->time_created
                 ];
             }
 
+            $day_pie = json_encode($dayp_namesss);
 
-            $day_pie = json_encode($dayp_name);
-//            $all_slots = [];
-//            $all_dayp = [];
-//            $dayp_namesss = [];
-//            $slots = Utilities::switch_db('api')->select("SELECT adslots_id from campaigns where broadcaster = '$broadcaster' or agency_broadcaster = '$broadcaster'");
-//            foreach ($slots as $slot){
-//                $adslots = Utilities::switch_db('api')->select("SELECT day_parts from adslots where id IN ($slot->adslots_id)");
-//                $all_slots[] = $adslots;
-//            }
-//
-//            $dayp_id = Utilities::array_flatten($all_slots);
-//            $newArray2 = [];
-//            foreach($dayp_id as $entity)
-//            {
-//                $newArray2[$entity->day_parts][] = $entity;
-//            }
-//
-//            dd($newArray2);
-//
-//            foreach ($dayp_id as $d){
-//                $day_parts = Utilities::switch_db('api')->select("SELECT * from dayParts where id = '$d->day_parts'");
-//                $all_dayp[] = $day_parts;
-//            }
-//
-//            $dayp_name = Utilities::array_flatten($all_dayp);
-//            $total = (count($dayp_name));
-//
-//            $newArray = [];
-//            foreach($dayp_name as $entity)
-//            {
-//                $newArray[$entity->day_parts][] = $entity;
-//            }
-//
-//            foreach ($newArray as $nnn){
-//                $day_percent = ((count($nnn)) / $total) * 100;
-//                $dayp_namesss[] = $day_percent;
-//            }
-//
-//            dd($dayp_namesss);
 
 
             //high performing days
