@@ -43,34 +43,15 @@
                                 <table id="example1" class="table table-bordered table-striped">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
-                                            <th>Name</th>
-                                            <th>Brand</th>
+                                            <th>S/N</th>
                                             <th>Product</th>
+                                            <th>Brand</th>
+                                            <th>Campaign</th>
                                             <th>Start Date</th>
                                             <th>End Date</th>
                                             <th>Status</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        @foreach ($mpo_data as $mpo)
-                                            <tr>
-                                                <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $mpo['campaign_name'] }}</td>
-                                                <td>{{ $mpo['brand'] }}</td>
-                                                <td>{{ $mpo['product'] }}</td>
-                                                <td>{{ date('Y-m-d', strtotime($mpo['start_date'])) }}</td>
-                                                <td>{{ date('Y-m-d', strtotime($mpo['stop_date'])) }}</td>
-                                                <td>
-                                                    <a href="#" style="font-size: 16px">
-                                                        <span data-toggle="modal" data-target="#myModal{{ $mpo['id'] }}" style="cursor: pointer;">
-                                                            View
-                                                        </span>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
                                 </table>
                             @endif
                         </div>
@@ -121,7 +102,7 @@
                             </thead>
                             <tbody>
                                 @foreach ($mpo['files'] as $file)
-                                    <tr>
+                                    <tr id="row{{ $file->file_code }}">
                                         <td>
                                             <video width="150" controls><source src="{{ asset(decrypt($file->file_url)) }}"></video>
                                         </td>
@@ -229,13 +210,28 @@
 
     <script>
 
+        var Datefilter =  $('#example1').DataTable({
+            paging: true,
+            serverSide: true,
+            processing: true,
+            ajax: {
+                url: '/mpos/pending_mpos_data',
+            },
+            columns: [
+                { data: 's_n', name: 's_n' },
+                { data: 'product', name: 'product' },
+                { data: 'brand', name: 'brand' },
+                { data: 'campaign_name', name: 'campaign_name' },
+                { data: 'start_date', name: 'start_date' },
+                { data: 'stop_date', name: 'stop_date' },
+                { data: 'view', name: 'view' },
+            ]
+        });
+
         $(document).ready(function () {
             $('#flash-file-message').hide();
 
-
             $("body").delegate('.update_file', 'click', function () {
-                // broadcaster_id = $(this).data("broadcaster_id");
-                // campaign_id = $(this).data("campaign_id");
                 var url = $(this).data('file_code');
                 file_code = $(this).data("file_code");
                 csrf = $(this).data("token");
@@ -275,18 +271,6 @@
                     }
                 });
 
-            });
-        });
-
-        $(function () {
-            $("#example1").DataTable();
-            $('#example2').DataTable({
-                "paging": true,
-                "lengthChange": false,
-                "searching": false,
-                "ordering": true,
-                "info": true,
-                "autoWidth": false
             });
         });
 
