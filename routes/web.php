@@ -144,25 +144,14 @@ Route::group(['middleware' => 'auth'], function () {
      * Sectors
      */
 
-    Route::get('sectors', [
-        'as' => 'sector.index',
-        'uses' => 'SectorController@index'
+    Route::get('sectors', ['as' => 'sector.index', 'uses' => 'SectorController@index']);
+
+    Route::get('sector/create', ['as' => 'sector.create', 'uses' => 'SectorController@create'
     ]);
 
-    Route::get('sector/create', [
-        'as' => 'sector.create',
-        'uses' => 'SectorController@create'
-    ]);
+    Route::post('sector/store', ['as' => 'sector.store', 'uses' => 'SectorController@store']);
 
-    Route::post('sector/store', [
-        'as' => 'sector.store',
-        'uses' => 'SectorController@store'
-    ]);
-
-    Route::delete('sector/{sector}', [
-        'as' => 'sector.delete',
-        'uses' => 'SectorController@delete'
-    ]);
+    Route::delete('sector/{sector}', ['as' => 'sector.delete', 'uses' => 'SectorController@delete']);
 
     /**
      * DayParts
@@ -174,15 +163,9 @@ Route::group(['middleware' => 'auth'], function () {
      * User Dashboard
      */
 
-    Route::get('/', [
-        'as' => 'dashboard',
-        'uses' => 'DashboardController@index',
-    ]);
+    Route::get('/', ['as' => 'dashboard', 'uses' => 'DashboardController@index']);
 
-    Route::get('/clients-dashboard', [
-        'as' => 'agency.dashboard',
-        'uses' => 'DashboardController@clientDashboard',
-    ]);
+    Route::get('/clients-dashboard', ['as' => 'agency.dashboard', 'uses' => 'DashboardController@clientDashboard']);
 
     /**
      * Adslot
@@ -220,6 +203,7 @@ Route::group(['middleware' => 'auth'], function () {
      * MPOs
      */
     Route::group(['prefix' => 'mpos'], function () {
+        Route::get('/pending_mpos_data', 'MpoController@pending_mpos_data');
         Route::get('all', 'MpoController@index')->name('all-mpos');
         Route::get('pending', 'MpoController@pending_mpos')->name('pending-mpos');
         Route::post('approve/{is_file_accepted}/{file_code}/{rejection_reason}', ['as' => 'files.update', 'uses' => 'MpoController@update_file']);

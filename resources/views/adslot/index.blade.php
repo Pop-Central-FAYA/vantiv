@@ -19,19 +19,6 @@
                 </div>
             </div>
 
-
-            {{--<div class="row">--}}
-                {{--<h4 style="margin-left: 17px;font-weight: bold">Search</h4>--}}
-                {{--<div class="col-md-12" style="margin-top: -2%">--}}
-                    {{--<div class="input-group date styledate" style="width:30% !important">--}}
-                        {{--<input type="text" placeholder="Search here..." class="form-control pull-right"  >--}}
-                    {{--</div>--}}
-                    {{--<div class="input-group" style="">--}}
-                        {{--<input type="submit" class="search-btn" value="search" style="float:left" >--}}
-                    {{--</div>--}}
-                {{--</div>--}}
-            {{--</div>--}}
-
             <div class="row">
                 <div class="col-md-12">
 

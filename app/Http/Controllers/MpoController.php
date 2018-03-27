@@ -2,17 +2,15 @@
 
 namespace Vanguard\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Vanguard\Libraries\Api;
+use Illuminate\Http\Request;
 use Vanguard\Libraries\Utilities;
+use Yajra\DataTables\DataTables;
 
 class MpoController extends Controller
 {
     public function index()
     {
-//        $get = Api::getApiWelcome();
-//        dd($get);
-
         $broadcaster_id = \Session::get('broadcaster_id');
 
         $mpos = Utilities::switch_db('reports')->select("SELECT * FROM mpos WHERE broadcaster_id = '$broadcaster_id' OR agency_broadcaster = '$broadcaster_id' ORDER BY time_created DESC ");
@@ -52,6 +50,79 @@ class MpoController extends Controller
         }
 
         return view('mpos.index', compact('mpo_data'));
+    }
+
+    public function pending_mpos_data(DataTables $dataTables)
+    {
+        $broadcaster_id = \Session::get('broadcaster_id');
+
+        $pending_mpos = $mpos = Utilities::switch_db('reports')->select("SELECT * FROM mpos WHERE is_mpo_accepted = 0 AND (broadcaster_id = '$broadcaster_id' OR agency_broadcaster = '$broadcaster_id') ORDER BY time_created DESC ");
+
+        $mpo_data = [];
+        $j = 1;
+
+        foreach ($pending_mpos as $mpo) {
+
+            $campaign_details = Api::fetchCampaign($mpo->campaign_id);
+            $payment_details = Api::fetchPayment($mpo->campaign_id);
+
+            if (count($campaign_details) === 0) {
+                $product = 0;
+                $brand = 0;
+                $name = 0;
+                $time = 0;
+                $start_date = 0;
+                $start_end = 0;
+                $channel = 0;
+            } else {
+                $product = $campaign_details[0]->product;
+                $brand = Api::brand($mpo->campaign_id);
+                $name = $campaign_details[0]->name;
+                $time = date('Y-m-d', strtotime($campaign_details[0]->time_created));
+                $start_date = $campaign_details[0]->start_date;
+                $start_end = $campaign_details[0]->stop_date;
+                $channel = Api::getChannelName($campaign_details[0]->channel)[0]->channel;
+            }
+
+            if (count($payment_details) === 0) {
+                $amount = 0;
+            } else {
+                $amount = $payment_details[0]->amount;
+            }
+
+            if (Api::getOutstandingFiles($mpo->campaign_id) === 0) {
+                $files = 0;
+            } else {
+                $files = Api::getOutstandingFiles($mpo->campaign_id);
+            }
+
+            $mpo_data[] = [
+                's_n' => $j,
+                'id' => $mpo->id,
+                'is_mpo_accepted' => $mpo->is_mpo_accepted,
+                'product' => $product,
+                'brand' => $brand[0]->name,
+                'campaign_name' => $name,
+                'channel' => $channel,
+                'time_created' => $time,
+                'start_date' => date('M j, Y h:ia', strtotime($start_date)),
+                'stop_date' => date('M j, Y h:ia', strtotime($start_end)),
+                'files' => $files,
+                'amount' => $amount
+            ];
+            $j++;
+        }
+
+        return $dataTables->collection($mpo_data)
+            ->addColumn('view', function ($mpo_data) {
+                return '
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#myModal' . $mpo_data['id'] . '" style="font-size: 16px">
+                            View
+                        </button>
+                    ';
+            })
+            ->rawColumns(['view' => 'view'])->addIndexColumn()
+            ->make(true);
     }
 
     public function pending_mpos()
