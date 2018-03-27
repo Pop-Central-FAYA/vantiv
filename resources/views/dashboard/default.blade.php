@@ -10,7 +10,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-12 heading-main">
-                    <h1>Broadcaster Report</h1>
+                    <h1>Broadcaster Dashboard</h1>
                     <ul>
                         <li><a href="#"><i class="fa fa-edit"></i>Dashboard</a></li>
 
@@ -21,6 +21,7 @@
 
             <div class="row">
                 <div class="col-md-12">
+                    <h4 class="text-center"><p>Periodic Sales Report</p></h4>
                     <canvas id="containerPeriodic" style="width: 512px; height: 150px"></canvas>
 
                 </div>
@@ -31,9 +32,11 @@
 
             <div class="row">
                 <div class="col-md-6">
+                    <h4 class="text-center"><p>High Performing Dayparts</p></h4>
                     <div id="containerDayparts" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
                 </div>
                 <div class="col-md-6">
+                    <h4 class="text-center"><p>High Performing Days</p></h4>
                     <div id="containerDays" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
                 </div>
             </div>
@@ -44,6 +47,7 @@
 
              <div class="row">
                  <div class="col-md-12">
+                     <h4 class="text-center"><p>Total Volume of campaign</p></h4>
                      <div id="containerTotal"></div>
                  </div>
              </div>
@@ -186,7 +190,7 @@
             options: {
                 responsive: true,
                 title: {
-                    display: true,
+                    display: false,
                     text: 'Periodic Sales Report'
                 },
                 tooltips: {
@@ -205,7 +209,7 @@
                 type: 'pie'
             },
             title: {
-                text: 'High Performing Dayparts'
+                text: ''
             },
             tooltip: {
                 pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -239,7 +243,7 @@
                 type: 'pie'
             },
             title: {
-                text: 'High Performing Days'
+                text: ''
             },
 
             tooltip: {
@@ -269,7 +273,7 @@
         var chart = Highcharts.chart('containerTotal', {
 
             title: {
-                text: 'Total Volume of Campaigns'
+                text: ''
             },
 
             xAxis: {

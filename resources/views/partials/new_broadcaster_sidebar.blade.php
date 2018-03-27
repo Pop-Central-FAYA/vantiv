@@ -34,6 +34,12 @@
                     <i class="fa fa-desktop"></i><span>Reports</span>
                 </a>
             </li>
+            <li class="{{ Request::is('') ? 'active' : Request::is('') || Request::is('') ? 'active' : ''  }}"> <a href="" ><i class="fa fa-user"></i><span>User Management</span></a>
+                <ul class="sub-menu dropdown">
+                    <li><a href=""><i class="fa fa-address-card-o"></i> <span>User <br /> List</span></a></li>
+                    <li><a href=""><i class="fa fa-address-book-o"></i><span>Add<br /> User</span></a></li>
+                </ul>
+            </li>
             <li class="{{ Request::is('user/profile') ? 'active' : ''  }}">
                 <a href="{{ route('user.profile') }}">
                     <i class="fa fa-user-md"></i><span>Profile</span>
