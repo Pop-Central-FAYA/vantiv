@@ -3,7 +3,7 @@
         <div class="logo"><a href="{{ route('dashboard') }}"><img src="{{ asset('new_assets/images/logo.png') }}" alt=""></a></div>
         <ul class="list-unstyled components">
             <li class="{{ Request::is('/') ? 'active' : ''  }}"> <a href="{{ route('dashboard') }}"><i class="fa fa-dashboard"></i><span>Dashboard</span></a></li>
-            <li class="{{ Request::is('campaign') ? 'active' : ''  }}"> <a href="{{ route('campaign.all') }}"><i class="fa fa-rocket"></i><span>Campaigns</span></a></li>
+            <li class="{{ Request::is('campaign') ? 'active' : Request::is('campaign/campaign-details/*') ? 'active' : ''  }}"> <a href="{{ route('campaign.all') }}"><i class="fa fa-rocket"></i><span>Campaigns</span></a></li>
             <li class="{{ Request::is('mpos/*') ? 'active' : ''  }}"> <a href="{{ route('all-mpos') }}"><i class="fa fa-file"></i><span>MPOs</span></a>
                 <ul class="sub-menu dropdown">
                     <li><a href="{{ route('all-mpos') }}"><i class="fa fa-address-card-o"></i> <span>All<br /> MPOs</span></a></li>
