@@ -41,7 +41,7 @@
                 @endif
             </div>
             <div class="form-group">
-                <button type="submit" style="background: #00c4ca;" class="btn btn-danger btn-lg btn-block" id="btn-login">
+                <button type="submit" style="background: #00c4ca;border: 0px" class="btn btn-danger btn-lg btn-block" id="btn-login">
                     @lang('app.log_in')
                 </button>
             </div>
