@@ -21,7 +21,7 @@
             <li class="{{ Request::is('adslot') ? 'active' : Request::is('adslot/*') || Request::is('discount') ? 'active' : ''  }}"> <a href="{{ route('adslot.all')  }}" ><i class="fa fa-volume-down"></i><span>Ads Management</span></a>
 
             </li>
-            <li class="{{ Request::is('reports') ? 'active' : ''  }}">
+            <li class="{{ Request::is('broadcaster-user/reports') ? 'active' : ''  }}">
                 <a href="{{ route('broadcaster.user.reports') }}">
                     <i class="fa fa-desktop"></i><span>Reports</span>
                 </a>
