@@ -31,7 +31,13 @@ class CampaignsController extends Controller
         $campaign = [];
         $j = 1;
         $broadcaster = Session::get('broadcaster_id');
-        $all_campaign = Utilities::switch_db('api')->select("SELECT * from campaigns WHERE broadcaster = '$broadcaster' AND adslots > 0 ORDER BY time_created desc");
+        $broadcaster_user = Session::get('broadcaster_user_id');
+        if($broadcaster){
+            $all_campaign = Utilities::switch_db('api')->select("SELECT * from campaigns WHERE broadcaster = '$broadcaster' AND adslots > 0 ORDER BY time_created desc");
+        }else{
+            $all_campaign = Utilities::switch_db('api')->select("SELECT * from campaigns WHERE agency_broadcaster = '$broadcaster_user' AND adslots > 0 ORDER BY time_created desc");
+        }
+
         foreach ($all_campaign as $cam)
         {
 //            $today = strtotime(date('Y-m-d'));

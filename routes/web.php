@@ -123,6 +123,16 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
     /*
+     * Broadcaster User Management
+     */
+    Route::group(['prefix' => 'broadcaster'], function (){
+        Route::get('/users', 'BroadcasterAuthController@allUser')->name('broadcaster.user.all');
+        Route::get('/user-data', 'BroadcasterAuthController@userData');
+        Route::get('/users/create', 'BroadcasterAuthController@createUser')->name('broadcaster.user.create');
+        Route::post('/user/create/store', 'BroadcasterAuthController@postBroadcasterUser')->name('broadcaster.post.user');
+    });
+
+    /*
      * WalkIns Management
      */
 

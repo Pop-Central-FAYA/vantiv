@@ -1,7 +1,7 @@
 @extends('layouts.new_app')
 
 @section('title')
-    <title>Create Walk-In</title>
+    <title>Create Broadcaster User</title>
 @endsection
 
 @section('content')
@@ -10,10 +10,10 @@
         <div class="container">
             <div class="row">
                 <div class="col-12 heading-main">
-                    <h1>Walk-In</h1>
+                    <h1>Broadcaster User</h1>
                     <ul>
-                        <li><a href="#"><i class="fa fa-th-large"></i>Walk-In</a></li>
-                        <li><a href="#">Create Walk-In</a></li>
+                        <li><a href="#"><i class="fa fa-th-large"></i>Broadcaster</a></li>
+                        <li><a href="#">Create Broadcaster User</a></li>
                     </ul>
                 </div>
             </div>
@@ -22,9 +22,9 @@
                 <div class="col-md-12">
 
                     <div class="Add-brand">
-                        <h2>Create Walk-In</h2>
+                        <h2>Create Broadcaster User</h2>
 
-                        <form action="{{ route('walkins.store') }}" method="post" enctype="multipart/form-data">
+                        <form action="{{ route('broadcaster.post.user') }}" method="post" enctype="multipart/form-data">
                             {{ csrf_field() }}
                             <div class="row">
                                 <div class="col-md-6">
@@ -57,19 +57,41 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="input-group">
-                                        <label for="brand_name">Brand Name</label>
-                                        <input type="text" name="brand_name" value=""  placeholder="Brand Name" required>
+                                        <label for="brand_name">Username</label>
+                                        <input type="text" name="username" value=""  placeholder="Username" required>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="input-group">
-                                        <label>Brand Logo</label>
+                                        <label>Profile</label>
                                         <input type="file" name="image_url" >
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
+                                    <div class="input-group">
+                                        <label for="brand_name">Address</label>
+                                        <textarea type="text" class="form-control" name="address" value=""  placeholder="Address" required></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <label>Country</label>
+                                        <select name="country" class="form-control" id="" required>
+                                            @foreach($countries as $country)
+                                                <option value="{{ $country->country_code }}">{{ $country->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <label for="brand_name">Location</label>
+                                        <input type="text" class="form-control" name="location" value=""  placeholder="Location" required>
+                                    </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="input-group">
@@ -90,35 +112,7 @@
 @section('scripts')
     {!! HTML::script('assets/js/moment.min.js') !!}
     {!! HTML::script('assets/js/bootstrap-datetimepicker.min.js') !!}
-    <script>
 
-
-        $(document).ready(function(){
-            $("#txtFromDate").datepicker({
-                numberOfMonths: 2,
-                onSelect: function (selected) {
-                    $("#txtToDate").datepicker("option", "minDate", selected)
-                }
-            });
-
-            $("#txtToDate").datepicker({
-                numberOfMonths: 2,
-                onSelect: function(selected) {
-                    $("#txtFromDate").datepicker("option","maxDate", selected)
-                }
-            });
-
-            $('input[type=radio][name=premium]').change(function() {
-                if (this.value == 'true') {
-                    $("#premium").show();
-                }
-                else if (this.value == 'false') {
-                    $("#premium").hide();
-                }
-            });
-
-        });
-    </script>
 
 @stop
 

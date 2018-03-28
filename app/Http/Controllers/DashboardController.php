@@ -368,6 +368,8 @@ class DashboardController extends Controller
                                                                             'count_brand' => $count_brands,
                                                                             'count_files' => $count_files]);
 
+        }else if ($role->role_id === 7){
+            return view('broadcaster_user.dashboard.dashboard');
         }
     }
 

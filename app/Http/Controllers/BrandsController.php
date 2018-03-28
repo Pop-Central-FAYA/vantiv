@@ -22,6 +22,11 @@ class BrandsController extends Controller
     public function index()
     {
         $broadcaster = Session::get('broadcaster_id');
+        if(!Session::get('broadcaster_id')){
+            $broadcaster_user = Session::get('broadcaster_user_id');
+            $broadcaster_id = Utilities::switch_db('api')->select("SELECT broadcaster_id from broadcasterUsers where id = '$broadcaster_user'");
+            $broadcaster = $broadcaster_id[0]->broadcaster_id;
+        }
         $db = Utilities::switch_db('api')->select("SELECT * from brands where broadcaster_agency = '$broadcaster' AND status = 0 ORDER BY time_created desc");
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
         $col = new Collection($db);
@@ -40,9 +45,19 @@ class BrandsController extends Controller
      */
     public function create()
     {
-        $broadcaster = Session::get('broadcaster_id'); 
+        if(Session::get('broadcaster_id')){
+            $broadcaster = Session::get('broadcaster_id');
+        }else{
+            $broadcaster = Session::get('broadcaster_user_id');
+        }
+
         $client = [];
-        $walkins = Utilities::switch_db('api')->select("SELECT user_id from walkIns where broadcaster_id = '$broadcaster'");
+        if(Session::get('broadcaster_id')){
+            $walkins = Utilities::switch_db('api')->select("SELECT user_id from walkIns where broadcaster_id = '$broadcaster'");
+        }else{
+            $walkins = Utilities::switch_db('api')->select("SELECT user_id from walkIns where agency_id = '$broadcaster'");
+        }
+
         foreach ($walkins as $walk) {
             $user_id = $walk->user_id;
             $cli = Utilities::switch_db('api')->select("SELECT * from users WHERE id = '$user_id'");
@@ -61,6 +76,7 @@ class BrandsController extends Controller
     public function store(Request $request)
     {
         $broadcaster = Session::get('broadcaster_id');
+        $broadcaster_user = Session::get('broadcaster_user_id');
         $image_url = '';
         $this->validate($request, [
             'brand_name' => 'required|regex:/^[a-zA-Z- ]+$/',
@@ -83,7 +99,14 @@ class BrandsController extends Controller
         if(count($ckeck_brand) > 0) {
             return redirect()->back()->with('error', 'Brands already exists');
         }else{
-            $insert = Utilities::switch_db('api')->select("INSERT into brands (id, `name`, image_url, walkin_id, broadcaster_agency) VALUES ('$unique', '$brand', '$image_url', '$id', '$broadcaster')");
+            if(Session::get('broadcaster_id')){
+                $insert = Utilities::switch_db('api')->select("INSERT into brands (id, `name`, image_url, walkin_id, broadcaster_agency) VALUES ('$unique', '$brand', '$image_url', '$id', '$broadcaster')");
+            }else{
+                $broadcaster = Utilities::switch_db('api')->select("SELECT broadcaster_id from broadcasterUsers where id = '$broadcaster_user'");
+                $broadcaster_id = $broadcaster[0]->broadcaster_id;
+                $insert = Utilities::switch_db('api')->select("INSERT into brands (id, `name`, image_url, walkin_id, broadcaster_agency) VALUES ('$unique', '$brand', '$image_url', '$id', '$broadcaster_id')");
+            }
+
             if (!$insert) {
                 Session::flash('success', 'Brands created successfully');
                 return redirect()->route('brand.all');
@@ -141,6 +164,11 @@ class BrandsController extends Controller
     public function search()
     {
         $broadcaster = Session::get('broadcaster_id');
+        $broadcaster_user = Session::get('broadcaster_user_id');
+        if(!Session::get('broadcaster_user_id')){
+            $broadcaster_id = Utilities::switch_db('api')->select("SELECT broadcaster_id from broadcasterUsers where id = '$broadcaster_user'");
+            $broadcaster = $broadcaster_id[0]->broadcaster_id;
+        }
         $request = request();
         $result = $request->result;
         $this->validate($request, [

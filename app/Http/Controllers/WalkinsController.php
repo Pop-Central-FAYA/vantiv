@@ -11,6 +11,7 @@ use Session;
 
 class WalkinsController extends Controller
 {
+    //NB: agency_id is assumed to be the broadcaster user
     /**
      * Display a listing of the resource.
      *
@@ -19,7 +20,13 @@ class WalkinsController extends Controller
     public function index()
     {
         $broadcaster_id = Session::get('broadcaster_id');
-        $walkins = Utilities::switch_db('api')->select("SELECT * from users WHERE id IN (SELECT user_id from walkIns WHERE broadcaster_id = '$broadcaster_id')");
+        $broadcaster_user = Session::get('broadcaster_user_id');
+        if($broadcaster_id){
+            $walkins = Utilities::switch_db('api')->select("SELECT * from users WHERE id IN (SELECT user_id from walkIns WHERE broadcaster_id = '$broadcaster_id')");
+        }else{
+            $walkins = Utilities::switch_db('api')->select("SELECT * from users WHERE id IN (SELECT user_id from walkIns WHERE agency_id = '$broadcaster_user')");
+        }
+
         return view('walkins.index')->with('walkins', $walkins);
     }
 
@@ -28,7 +35,13 @@ class WalkinsController extends Controller
         $j = 1;
         $broad_walkins = [];
         $broadcaster_id = Session::get('broadcaster_id');
-        $walkins = Utilities::switch_db('api')->select("SELECT * from users WHERE id IN (SELECT user_id from walkIns WHERE broadcaster_id = '$broadcaster_id' AND status = 0) ORDER BY time_created DESC");
+        $broadcaster_user = Session::get('broadcaster_user_id');
+        if($broadcaster_id){
+            $walkins = Utilities::switch_db('api')->select("SELECT * from users WHERE id IN (SELECT user_id from walkIns WHERE broadcaster_id = '$broadcaster_id' AND status = 0) ORDER BY time_created DESC");
+        }else{
+            $walkins = Utilities::switch_db('api')->select("SELECT * from users WHERE id IN (SELECT user_id from walkIns WHERE agency_id = '$broadcaster_user' AND status = 0) ORDER BY time_created DESC");
+        }
+
         foreach ($walkins as $walkin){
             $broad_walkins[] = [
                 'id' => $j,
@@ -40,15 +53,27 @@ class WalkinsController extends Controller
             $j++;
         }
 
-        return $dataTables->collection($broad_walkins)
-            ->addColumn('campaign', function ($broad_walkins) {
-                return '<a href="' . route('campaign.create2', $broad_walkins['user_id']) .'" class="btn btn-success btn-xs"> Create Campaign </a>';
-            })
-            ->addColumn('delete', function($broad_walkins){
-                return '<button data-toggle="modal" data-target=".deleteModal' . $broad_walkins['user_id']. '" class="btn btn-danger btn-xs" > Delete </button>    ';
-            })
-            ->rawColumns(['campaign' => 'campaign', 'delete' => 'delete'])->addIndexColumn()
-            ->make(true);
+        if(Session::get('broadcaster_id')) {
+            return $dataTables->collection($broad_walkins)
+                ->addColumn('campaign', function ($broad_walkins) {
+                    return '<a href="' . route('campaign.create2', $broad_walkins['user_id']) . '" class="btn btn-success btn-xs"> Create Campaign </a>';
+                })
+                ->addColumn('delete', function ($broad_walkins) {
+                    return '<button data-toggle="modal" data-target=".deleteModal' . $broad_walkins['user_id'] . '" class="btn btn-danger btn-xs" > Delete </button>    ';
+                })
+                ->rawColumns(['campaign' => 'campaign', 'delete' => 'delete'])->addIndexColumn()
+                ->make(true);
+        }else{
+            return $dataTables->collection($broad_walkins)
+                ->addColumn('campaign', function ($broad_walkins) {
+                    return '<a href="#" class="btn btn-success btn-xs"> Create Campaign </a>';
+                })
+                ->addColumn('delete', function ($broad_walkins) {
+                    return '<button data-toggle="modal" data-target=".deleteModal' . $broad_walkins['user_id'] . '" class="btn btn-danger btn-xs" > Delete </button>    ';
+                })
+                ->rawColumns(['campaign' => 'campaign', 'delete' => 'delete'])->addIndexColumn()
+                ->make(true);
+        }
 
     }
 
@@ -73,8 +98,13 @@ class WalkinsController extends Controller
         $user_id = uniqid();
         $image_url = '';
         $broadcaster_id = Session::get('broadcaster_id');
+        $broadcaster_user = Session::get('broadcaster_user_id');
         $walkin_id = uniqid();
-        $role_id = Utilities::switch_db('api')->select("SELECT role_id from users WHERE id IN ( SELECT user_id from broadcasters WHERE id = '$broadcaster_id')");
+        if($broadcaster_id){
+            $role_id = Utilities::switch_db('api')->select("SELECT role_id from users WHERE id = ( SELECT user_id from broadcasters WHERE id = '$broadcaster_id')");
+        }else{
+            $role_id = Utilities::switch_db('api')->select("SELECT role_id from users WHERE id = ( SELECT user_id from broadcasterUsers WHERE id = '$broadcaster_user')");
+        }
 
         $insert_user = [
             'id' => $user_id,
@@ -88,12 +118,28 @@ class WalkinsController extends Controller
 
         ];
 
-        $insert_walkin = [
-            'id' => $walkin_id,
-            'broadcaster_id' => $broadcaster_id,
-            'user_id' => $user_id,
-            'client_type_id' => 1,
-        ];
+        if(!Session::get('broadcaster_id')){
+            $broadcaster = Utilities::switch_db('api')->select("SELECT broadcaster_id from broadcasterUsers where id = '$broadcaster_user'");
+            $broadcaster_id = $broadcaster[0]->broadcaster_id;
+        }
+
+        if(Session::get('broadcaster_id')) {
+            $insert_walkin = [
+                'id' => $walkin_id,
+                'broadcaster_id' => $broadcaster_id,
+                'user_id' => $user_id,
+                'client_type_id' => 1,
+            ];
+        }else{
+            $insert_walkin = [
+                'id' => $walkin_id,
+                'broadcaster_id' => $broadcaster_id,
+                'user_id' => $user_id,
+                'client_type_id' => 1,
+                'agency_id' => $broadcaster_user
+            ];
+        }
+
         $check_user = Utilities::switch_db('api')->select("SELECT * from users where email = '$request->email'");
         if(count($check_user) === 1){
             Session::flash('error', 'Email address already exist');
@@ -115,6 +161,8 @@ class WalkinsController extends Controller
             $clouder = Cloudder::getResult();
             $image_url = encrypt($clouder['url']);
         }
+
+//        dd($insert_user, $insert_walkin);
 
         $saveUser = Utilities::switch_db('api')->table('users')->insert($insert_user);
         $saveWalkins = Utilities::switch_db('api')->table('walkIns')->insert($insert_walkin);
