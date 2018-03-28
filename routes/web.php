@@ -147,6 +147,7 @@ Route::group(['middleware' => 'auth'], function () {
        Route::post('/payment-process/{walkins}/{broadcaster}/{broadcaster_user}', 'BroadcasterUserCampaignsController@cardPayment')->name('broadcaster.user.pay');
        Route::get('/all-campaigns', 'BroadcasterUserCampaignsController@index')->name('broadcaster.user.campaign.all');
        Route::get('/campaign-data', 'BroadcasterUserCampaignsController@campaignData');
+       Route::get('/campaign-details/{id}', 'BroadcasterUserCampaignsController@campaignDetails')->name('user.broadcaster.campaign.details');
     });
 
     Route::group(['prefix' => 'broadcaster-user/reports'], function () {
