@@ -170,16 +170,8 @@ class ReportController extends Controller
             foreach ($periodic as $pe)
             {
                 $price = Utilities::switch_db('api')->select("SELECT amount, time_created as days from payments WHERE campaign_id = '$pe->id'");
-                $agent_id = $pe->agency;
-                $user_agency = Utilities::switch_db('api')->select("SELECT * from users where id = (SELECT user_id from agents where id = '$agent_id')");
-                if($user_agency){
-                    $user_details = $user_agency[0]->firstname . ' ' . $user_agency[0]->lastname;
-                }
-                $user_advertiser = Utilities::switch_db('api')->select("SELECT * from users where id = (SELECT user_id from advertisers where id = '$agent_id')");
-                if($user_advertiser){
-                    $user_details = $user_advertiser[0]->firstname . ' ' . $user_advertiser[0]->lastname;
-                }
-                $user_broad = Utilities::switch_db('api')->select("SELECT * from users where id = (SELECT user_id from walkIns where id = '$agent_id')");
+
+                $user_broad = Utilities::switch_db('api')->select("SELECT * from users where id = (SELECT user_id from walkIns where id = '$pe->walkins_id')");
                 if($user_broad){
                     $user_details = $user_broad[0]->firstname . ' ' . $user_broad[0]->lastname;
                 }
@@ -209,16 +201,8 @@ class ReportController extends Controller
             {
 //
                 $price = Utilities::switch_db('api')->select("SELECT amount, time_created as days from payments WHERE campaign_id = '$pe->id' ");
-                $agent_id = $pe->agency;
-                $user_agency = Utilities::switch_db('api')->select("SELECT * from users where id = (SELECT user_id from agents where id = '$agent_id')");
-                if($user_agency){
-                    $user_details = $user_agency[0]->firstname . ' ' . $user_agency[0]->lastname;
-                }
-                $user_advertiser = Utilities::switch_db('api')->select("SELECT * from users where id = (SELECT user_id from advertisers where id = '$agent_id')");
-                if($user_advertiser){
-                    $user_details = $user_advertiser[0]->firstname . ' ' . $user_advertiser[0]->lastname;
-                }
-                $user_broad = Utilities::switch_db('api')->select("SELECT * from users where id = (SELECT user_id from walkIns where id = '$agent_id')");
+
+                $user_broad = Utilities::switch_db('api')->select("SELECT * from users where id = (SELECT user_id from walkIns where id = '$pe->walkins_id')");
                 if($user_broad){
                     $user_details = $user_broad[0]->firstname . ' ' . $user_broad[0]->lastname;
                 }
