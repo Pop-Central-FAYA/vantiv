@@ -149,6 +149,16 @@ Route::group(['middleware' => 'auth'], function () {
        Route::get('/campaign-data', 'BroadcasterUserCampaignsController@campaignData');
     });
 
+    Route::group(['prefix' => 'broadcaster-user/reports'], function () {
+        Route::get('/', 'BroadcasterUserReportsController@index')->name('broadcaster.user.reports');
+        Route::get('total-volume-campaigns/all-data', 'BroadcasterUserReportsController@HVCdata');
+        Route::get('paid-invoices/all-data', 'BroadcasterUserReportsController@PIdata');
+        Route::get('/periodic-sales/all', 'BroadcasterUserReportsController@psData');
+        Route::get('/total-volume-of-campaign/all', 'BroadcasterUserReportsController@tvcData');
+        Route::get('/high-day-parts/all', 'BroadcasterUserReportsController@hpdData');
+        Route::get('/high-days/all', 'BroadcasterUserReportsController@hpdaysData');
+    });
+
     /*
      * WalkIns Management
      */
