@@ -63,8 +63,13 @@ class Utilities {
             $name = $user[0]->first_name .' '.$user[0]->last_name;
             $email = $user[0]->email;
             $phone = $user[0]->phone;
-        }else{
+        }elseif(\Session::get('advertiser_id')){
             $user = Utilities::switch_db('api')->select("SELECT * from users where id = (SELECT user_id from advertisers WHERE id = '$user_id')");
+            $name = $user[0]->firstname .' '.$user[0]->lastname;
+            $email = $user[0]->email;
+            $phone = $user[0]->phone_number;
+        }elseif(\Session::get('broadcaster_user_id')){
+            $user = Utilities::switch_db('api')->select("SELECT * from users where id = '$user_id' ");
             $name = $user[0]->firstname .' '.$user[0]->lastname;
             $email = $user[0]->email;
             $phone = $user[0]->phone_number;

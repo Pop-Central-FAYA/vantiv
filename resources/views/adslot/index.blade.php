@@ -39,7 +39,9 @@
                                             <th>45 Seconds</th>
                                             <th>30 Seconds</th>
                                             <th>15 Seconds</th>
-                                            <th>Action</th>
+                                            @if(Session::get('broadcaster_id'))
+                                                <th>Action</th>
+                                            @endif
                                         </tr>
                                     </table>
                                 </div>
@@ -179,24 +181,46 @@
             });
         });
 
-        var Datefilter =  $('.adslots').DataTable({
-            paging: true,
-            serverSide: true,
-            processing: true,
-            ajax: {
-                url: '/adslot/adslot-data',
-            },
-            columns: [
-                {data: 's_n', name: 's_n'},
-                {data: 'day', name: 'day'},
-                {data: 'time_slot', name: 'time_slot'},
-                {data: '60_seconds', name: '60_seconds'},
-                {data: '45_seconds', name: '45_seconds'},
-                {data: '30_seconds', name: '30_seconds'},
-                {data: '15_seconds', name: '15_seconds'},
-                {data: 'edit', name: 'edit'},
-            ]
-        });
+        var broadcaster_id = "<?php echo Session::get('broadcaster_id') ?>";
+        if(broadcaster_id){
+            var Datefilter =  $('.adslots').DataTable({
+                paging: true,
+                serverSide: true,
+                processing: true,
+                ajax: {
+                    url: '/adslot/adslot-data',
+                },
+                columns: [
+                    {data: 's_n', name: 's_n'},
+                    {data: 'day', name: 'day'},
+                    {data: 'time_slot', name: 'time_slot'},
+                    {data: '60_seconds', name: '60_seconds'},
+                    {data: '45_seconds', name: '45_seconds'},
+                    {data: '30_seconds', name: '30_seconds'},
+                    {data: '15_seconds', name: '15_seconds'},
+                    {data: 'edit', name: 'edit'},
+                ]
+            });
+        }else{
+            var Datefilter =  $('.adslots').DataTable({
+                paging: true,
+                serverSide: true,
+                processing: true,
+                ajax: {
+                    url: '/adslot/adslot-data',
+                },
+                columns: [
+                    {data: 's_n', name: 's_n'},
+                    {data: 'day', name: 'day'},
+                    {data: 'time_slot', name: 'time_slot'},
+                    {data: '60_seconds', name: '60_seconds'},
+                    {data: '45_seconds', name: '45_seconds'},
+                    {data: '30_seconds', name: '30_seconds'},
+                    {data: '15_seconds', name: '15_seconds'},
+                ]
+            });
+        }
+
     </script>
 
 @stop

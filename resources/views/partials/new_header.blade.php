@@ -5,9 +5,12 @@
     } elseif (Session::get('broadcaster_id')){
         $broadcaster_id = Session::get('broadcaster_id');
         $profile = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT image_url from broadcasters where id = '$broadcaster_id'");
-    } else {
+    } elseif (Session::get('advertiser_id')) {
         $advertiser_id = Session::get('advertiser_id');
         $profile = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT image_url from advertisers where id = '$advertiser_id'");
+    } elseif (Session::get('broadcaster_user_id')){
+        $broadcaster_user_id = Session::get('broadcaster_user_id');
+        $profile = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT image_url from broadcasterUsers where id = '$broadcaster_user_id'");
     }
 ?>
 

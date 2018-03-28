@@ -11,14 +11,22 @@
             @include('partials.new_agent_sidebar')
             <?php session()->forget('broadcaster_id'); ?>
             <?php session()->forget('advertiser_id'); ?>
+            <?php session()->forget('broadcaster_user_id'); ?>
         @elseif(Session::get('advertiser_id'))
             @include('partials.new_advertiser_sidebar')
             <?php session()->forget('broadcaster_id'); ?>
             <?php session()->forget('agency_id'); ?>
-        @else
+            <?php session()->forget('broadcaster_user_id'); ?>
+        @elseif(Session::get('broadcaster_id'))
             @include('partials.new_broadcaster_sidebar')
             <?php session()->forget('agency_id'); ?>
             <?php session()->forget('advertiser_id'); ?>
+            <?php session()->forget('broadcaster_user_id'); ?>
+        @elseif(Session::get('broadcaster_user_id'))
+            @include('partials.broadcaster_user_sidebar')
+            <?php session()->forget('agency_id'); ?>
+            <?php session()->forget('advertiser_id'); ?>
+            <?php session()->forget('broadcaster_id'); ?>
         @endif
         <!--Sidebar-->
         <!--Content-->

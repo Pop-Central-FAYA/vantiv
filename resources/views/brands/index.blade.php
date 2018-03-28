@@ -36,7 +36,7 @@
                         <div class="col-6">
                             <div class="col-6">
                                 <h2>{{ $brand->name }}</h2>
-                                <a href="" class="edit" data-toggle="modal" data-target=".{{ $brand->id }}">Edit</a> <a href="" class="delete" data-toggle="modal" data-target=".{{ $brand->id }}delete">Delete</a>
+                                @if(Session::get('broadcaster_id'))<a href="" class="edit" data-toggle="modal" data-target=".{{ $brand->id }}">Edit</a> <a href="" class="delete" data-toggle="modal" data-target=".{{ $brand->id }}delete">Delete</a>@endif
                             </div>
                         <div class="col-6">
                             <img src="{{ $brand->image_url ? asset(decrypt($brand->image_url)) : asset('new_assets/images/logo.png') }}">

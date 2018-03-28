@@ -23,6 +23,11 @@ class AdslotController extends Controller
     public function index()
     {
         $broadcaster = Session::get('broadcaster_id');
+        $broadcaster_user = Session::get('broadcaster_user_id');
+        if(!Session::get('broadcaster_id')){
+            $broadcaster_id = Utilities::switch_db('api')->select("SELECT broadcaster_id from broadcasterUsers where id = '$broadcaster_user'");
+            $broadcaster = $broadcaster_id[0]->broadcaster_id;
+        }
         $adslots = Utilities::switch_db('api')->select("SELECT * from adslots where broadcaster = '$broadcaster'");
         $region = Utilities::switch_db('api')->select("SELECT * from regions");
         $all_adslot = [];
@@ -64,6 +69,11 @@ class AdslotController extends Controller
     public function adslotData(DataTables $dataTables)
     {
         $broadcaster = Session::get('broadcaster_id');
+        $broadcaster_user = Session::get('broadcaster_user_id');
+        if(!Session::get('broadcaster_id')){
+            $broadcaster_id = Utilities::switch_db('api')->select("SELECT broadcaster_id from broadcasterUsers where id = '$broadcaster_user'");
+            $broadcaster = $broadcaster_id[0]->broadcaster_id;
+        }
         $adslots = Utilities::switch_db('api')->select("SELECT * from adslots where broadcaster = '$broadcaster'");
         $all_adslot = [];
         $j = 1;
@@ -94,12 +104,19 @@ class AdslotController extends Controller
             ];
             $j++;
         }
-        return $dataTables->collection($all_adslot)
-            ->addColumn('edit', function($all_adslot){
-                return '<button data-toggle="modal" data-target=".editModal' . $all_adslot['id']. '" class="btn btn-primary btn-xs" > Edit </button>    ';
-            })
-            ->rawColumns(['edit' => 'edit'])->addIndexColumn()
-            ->make(true);
+        if(Session::get('broadcaster_id')) {
+            return $dataTables->collection($all_adslot)
+                ->addColumn('edit', function ($all_adslot) {
+
+                    return '<button data-toggle="modal" data-target=".editModal' . $all_adslot['id'] . '" class="btn btn-primary btn-xs" > Edit </button>    ';
+
+                })
+                ->rawColumns(['edit' => 'edit'])->addIndexColumn()
+                ->make(true);
+        }else{
+            return $dataTables->collection($all_adslot)
+                ->make(true);
+        }
     }
 
     /**

@@ -2,19 +2,15 @@
 
 namespace Vanguard\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Input;
-use Cloudinary;
 use JD\Cloudder\Facades\Cloudder;
 use Vanguard\Libraries\Api;
-use Vanguard\Libraries\Maths;
 use Vanguard\Libraries\Utilities;
-use Yajra\Datatables\Datatables;
-use Carbon\Carbon;
 use Session;
+use Yajra\DataTables\DataTables;
 
-
-class CampaignsController extends Controller
+class BroadcasterUserCampaignsController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -23,18 +19,16 @@ class CampaignsController extends Controller
      */
     public function index()
     {
-        return view('campaign.index');
+        return view('broadcaster_user.campaigns.index');
     }
 
-    public function getAllData(Datatables $datatables, Request $request)
+    public function campaignData(DataTables $dataTables)
     {
         $campaign = [];
         $j = 1;
-        $broadcaster = Session::get('broadcaster_id');
+        $broadcaster_user = Session::get('broadcaster_user_id');
 
-
-        $all_campaign = Utilities::switch_db('api')->select("SELECT * from campaigns WHERE broadcaster = '$broadcaster' AND adslots > 0 ORDER BY time_created desc");
-
+        $all_campaign = Utilities::switch_db('api')->select("SELECT * from campaigns WHERE agency = '$broadcaster_user' AND adslots > 0 ORDER BY time_created desc");
 
         foreach ($all_campaign as $cam)
         {
@@ -67,27 +61,16 @@ class CampaignsController extends Controller
             $j++;
         }
 
-        return $datatables->collection($campaign)
+        return $dataTables->collection($campaign)
             ->addColumn('details', function ($campaign) {
-                return '<a href="' . route('broadcaster.campaign.details', ['id' => $campaign['camp_id']]) .'" class="btn btn-primary btn-xs" > Campaign Details </a>';
+                return '<a href="' . route('user.broadcaster.campaign.details', ['id' => $campaign['camp_id']]) .'" class="btn btn-primary btn-xs" > Campaign Details </a>';
             })
             ->rawColumns(['details' => 'details'])->addIndexColumn()
             ->make(true);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function createStep1($walkins, $broadcaster, $broadcaster_user)
     {
-        return view('campaign.create1');
-    }
-
-    public function createStep2($walkins)
-    {
-
         $walkins_id = Utilities::switch_db('api')->select("SELECT id from walkIns where user_id = '$walkins'");
         $walk_id = $walkins_id[0]->id;
         $industry = Utilities::switch_db('api')->select("SELECT id, `name` from sectors");
@@ -99,18 +82,24 @@ class CampaignsController extends Controller
 
         Api::validateCampaign();
 
-        return view('campaign.create2')->with('day_parts', $day_parts)
-                                            ->with('step2', Session::get('step2'))
-                                            ->with('target_audience', $target_audience)
-                                            ->with('industry', $industry)
-                                            ->with('chanel', $chanel)
-                                            ->with('regions', $regions)
-                                            ->with('walkins_id', $walkins)
-                                            ->with('brands', $brands);
-
+        return view('broadcaster_user.campaigns.create1')->with('day_parts', $day_parts)
+            ->with('step2', Session::get('step2'))
+            ->with('target_audience', $target_audience)
+            ->with('industry', $industry)
+            ->with('chanel', $chanel)
+            ->with('regions', $regions)
+            ->with('walkins_id', $walkins)
+            ->with('brands', $brands)
+            ->with('broadcaster', $broadcaster)
+            ->with('broadcaster_user', $broadcaster_user);
     }
 
-    public function postStep2(Request $request, $walkins)
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function postStore1(Request $request, $walkins, $broadcaster, $broadcaster_user)
     {
         $this->validate($request, [
             'name' => 'required',
@@ -147,12 +136,18 @@ class CampaignsController extends Controller
         $del_cart = \DB::delete("DELETE FROM carts WHERE user_id = '$walkins'");
         $del_uplaods = \DB::delete("DELETE FROM uploads WHERE user_id = '$walkins'");
 
-        return redirect()->route('campaign.create3', ['walkins' => $walkins])->with('walkins', $walkins);
+        return redirect()->route('broadcaster_user.campaigns.create2', ['walkins' => $walkins, 'broadcaster' => $broadcaster, 'broadcaster_user' => $broadcaster_user])->with('walkins', $walkins);
     }
 
-    public function createStep3($walkins)
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function createStep2($walkins, $broadcaster, $broadcaster_user)
     {
-        $broadcaster = \Session::get('broadcaster_id');
+
         $step1 = Session::get('step2');
         if(!$step1){
             Session::flash('error', 'Data lost, please go back and select your filter criteria');
@@ -173,26 +168,45 @@ class CampaignsController extends Controller
             ];
         }
 
-        return view('campaign.create3', ['walkins' => $walkins])->with('adslots', $ads_broad)
-            ->with('walkins', $walkins);
+        return view('broadcaster_user.campaigns.create2')->with('adslots', $ads_broad)
+                                            ->with('walkins', $walkins)
+                                            ->with('broadcaster', $broadcaster)
+                                            ->with('broadcaster_user', $broadcaster_user);
     }
 
-    public function postStep3(Request $request, $walkins)
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function postStore2($walkins, $broadcaster, $broadcaster_user)
     {
-
-        return redirect()->route('campaign.create4', ['walkins' => $walkins]);
+        return redirect()->route('broadcaster.user.campaign.step3', ['walkins' => $walkins, 'broadcaster' => $broadcaster, 'broadcaster_user' => $broadcaster_user]);
     }
 
-    public function createStep4($walkins)
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function createStep3($walkins, $broadcaster, $broadcaster_user)
     {
-        $broadcaster = \Session::get('broadcaster_id');
-        return view('campaign.create4', ['walkins' => $walkins])->with('walkins', $walkins)
-                            ->with('broadcaster', $broadcaster);
+        return view('broadcaster_user.campaigns.create3')->with('walkins', $walkins)
+                                                            ->with('broadcaster', $broadcaster)
+                                                            ->with('broadcaster_user', $broadcaster_user);
     }
 
-    public function postStep4(Request $request, $walkins)
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function postStore3(Request $request, $walkins, $broadcaster, $broadcaster_user)
     {
-        $broadcaster = Session::get('broadcaster_id');
 
         if(((int)$request->f_du) > ((int)$request->time)){
             Session::flash('error', 'Your video file duration cannot be more than the time slot you picked');
@@ -234,8 +248,11 @@ class CampaignsController extends Controller
                     'uploads' => $file_gan_gan
                 ]);
 
+                $msg = 'Your '.$time. ' seconds file was uploaded successfully';
+
                 if($insert_upload){
-                    return redirect()->route('campaign.create4', ['walkins' => $walkins]);
+                    Session::flash('success', $msg);
+                    return redirect()->route('broadcaster.user.campaign.step3', ['walkins' => $walkins, 'broadcaster' => $broadcaster, 'broadcaster_user' => $broadcaster_user]);
                 }else{
                     Session::flash('error', 'Could not complete upload process');
                     return back();
@@ -245,21 +262,8 @@ class CampaignsController extends Controller
         }
     }
 
-    public function removeMedia($walkins, $id)
+    public function postStore3_1($walkins, $broadcaster, $broadcaster_user)
     {
-        $deleteUploads = \DB::delete("DELETE from uploads WHERE id = '$id' AND user_id = '$walkins'");
-        if($deleteUploads){
-            Session::flash('success', 'File deleted successfully...');
-            return back();
-        }else{
-            Session::flash('error', 'Error deleting file...');
-            return back();
-        }
-    }
-
-    public function postStep4_1(Request $request, $walkins)
-    {
-        $broadcaster = Session::get('broadcaster_id');
         $get_uploaded_files = \DB::select("SELECT * from uploads where user_id = '$walkins'");
         $count_files = count($get_uploaded_files);
         if($count_files === 0){
@@ -274,13 +278,12 @@ class CampaignsController extends Controller
                 ]);
             }
 
-            return redirect()->route('campaign.create6', ['walkins' => $walkins]);
+            return redirect()->route('broadcaster.user.campaign.create4', ['walkins' => $walkins, 'broadcaster' => $broadcaster, 'broadcaster_user' => $broadcaster_user]);
         }
     }
 
-    public function createStep6($walkins)
+    public function createStep4($walkins, $broadcaster, $broadcaster_user)
     {
-        $broadcaster = \Session::get('broadcaster_id');
         $step1 = Session::get('step2');
         if(!$step1){
             Session::flash('error', 'Data lost, please go back and select your filter criteria');
@@ -290,24 +293,14 @@ class CampaignsController extends Controller
         $region = "". implode("','", $step1->region) ."";
         $adslots = Utilities::switch_db('api')->select("SELECT * FROM adslots where min_age >= $step1->min_age AND max_age <= $step1->max_age AND channels='$step1->channel' AND target_audience = '$step1->target_audience' AND day_parts IN ('$day_parts') AND region IN ('$region') AND is_available = 0 AND broadcaster = '$broadcaster'");
         $result = count($adslots);
-        return view('campaign.create6')->with('results', $result)->with('walkins', $walkins);
+        $broadcaster_brand = Utilities::switch_db('api')->select("SELECT brand from broadcasters where id = '$broadcaster'");
+        return view('broadcaster_user.campaigns.create4')->with('results', $result)->with('walkins', $walkins)->with('broadcaster', $broadcaster)->with('broadcaster_user', $broadcaster_user)->with('broadcaster_brand', $broadcaster_brand);
     }
 
-
-    public function createStep8($id)
-    {
-        return view('campaign.create8');
-    }
-
-    public function createStep9($id)
-    {
-        return view('campaign.create9');
-    }
-
-    public function getStep7($walkins)
+    public function createStep5($walkins, $broadcaster, $broadcaster_user)
     {
         $rate_card = [];
-        $broadcaster = \Session::get('broadcaster_id');
+
         $step1 = Session::get('step2');
         if(!$step1){
             Session::flash('error', 'Data lost, please go back and select your filter criteria');
@@ -342,49 +335,12 @@ class CampaignsController extends Controller
         $data = \DB::select("SELECT * from uploads WHERE user_id = '$walkins'");
         $cart = \DB::select("SELECT * from carts WHERE user_id = '$walkins'");
         $broadcaster_logo = Utilities::switch_db('api')->select("SELECT image_url from broadcasters where id = '$broadcaster'");
-        return view('campaign.create7')->with('ratecards', $rate_card)->with('result', $result)->with('cart', $cart)->with('datas', $data)->with('times', $time)->with('walkins', $walkins)->with('broadcaster_logo', $broadcaster_logo);
+        return view('broadcaster_user.campaigns.create5')->with('ratecards', $rate_card)->with('result', $result)->with('cart', $cart)->with('datas', $data)->with('times', $time)->with('walkins', $walkins)->with('broadcaster_logo', $broadcaster_logo)->with('broadcaster_user', $broadcaster_user)->with('broadcaster', $broadcaster);
     }
 
-    /**
-     * @param Request $request
-     * @return string
-     */
-    public function postCart(Request $request)
+    public function getCheckout($walkins, $broadcaster, $broadcaster_user)
     {
-        $this->validate($request, [
-            'price' => 'required',
-            'file' => 'required',
-            'time' => 'required',
-            'adslot_id' => 'required|unique:carts',
-        ]);
-        $price = $request->price;
-        $file = $request->file;
-        $time = $request->time;
-        $id = $request->adslot_id;
-        $adslot = Utilities::switch_db('api')->select("SELECT * FROM adslots where id = '$id'");
-        $time_difference = $adslot[0]->time_difference;
-        $time_used = $adslot[0]->time_used;
-        $total_time = $time_used + $time;
-        if($total_time > $time_difference){
-            Session::flash('error', 'This file duration cannot fit in the slot, please pick another one');
-            return back();
-        }
-        $hourly_range = $request->range;
-        $user = $request->walkins;
-        $broadcaster = Session::get('broadcaster_id');
-        $adslot_id = $request->adslot_id;
-        $ip = \Request::ip();
-        $insert = \DB::insert("INSERT INTO carts (user_id, broadcaster_id, price, ip_address, file, from_to_time, `time`, adslot_id) VALUES ('$user','$broadcaster','$price','$ip','$file','$hourly_range','$time','$adslot_id')");
-        if($insert){
-            return "success";
-        }else{
-            return "failure";
-        }
-    }
 
-    public function getCheckout($walkins)
-    {
-        $broadcaster = Session::get('broadcaster_id');
         $first = Session::get('step2');
         $day_parts = "". implode("','" ,$first->dayparts) . "";
         $region = "". implode("','", $first->region) ."";
@@ -396,7 +352,7 @@ class CampaignsController extends Controller
         $query = \DB::select("SELECT * FROM carts WHERE user_id = '$walkins'");
         $user = Utilities::switch_db('api')->select("SELECT * from users where id = '$walkins'");
 
-        return view('campaign.create9')->with('first_session', $first)
+        return view('broadcaster_user.campaigns.checkout')->with('first_session', $first)
             ->with('calc', $calc)
             ->with('day_part', $day_partss)
             ->with('region', $regions)
@@ -405,41 +361,27 @@ class CampaignsController extends Controller
             ->with('brand', $brands)
             ->with('broadcaster', $broadcaster)
             ->with('walkins', $walkins)
+            ->with('broadcaster_user', $broadcaster_user)
             ->with('user', $user);
     }
 
-    Public function postCampaign(Request $request, $walkins)
+    public function submitCampaign(Request $request, $walkins, $broadcaster, $broadcaster_user)
     {
-
-        $save_campaign = $this->saveCampaign($request, $walkins);
+        $save_campaign = $this->saveCampaign($request, $walkins, $broadcaster, $broadcaster_user);
         if($save_campaign === 'success'){
             $user_agent = $_SERVER['HTTP_USER_AGENT'];
-            $description = 'Campaign created by '.Session::get('broadcaster_id').' for '.$walkins;
+            $description = 'Campaign created by '.$broadcaster_user.' on behalf of '.$broadcaster.' for '.$walkins;
             $ip = request()->ip();
             $user_activity = Api::saveActivity($walkins, $description, $ip, $user_agent);
             Session::flash('success', 'Campaign created successfully');
-            return redirect()->route('campaign.all');
+            return redirect()->route('broadcaster.user.campaign.all');
         }else{
             Session::flash('error', 'There was problem creating campaign');
             return redirect()->back();
         }
-
     }
 
-    public function removeCart($id)
-    {
-        $rate_id = $id;
-        $del = \DB::select("DELETE FROM carts WHERE rate_id = '$rate_id'");
-        return redirect()->back()->with('success', trans('app.campaign'));
-    }
-
-    public function campaignDetails($id)
-    {
-        $campaign_details = Utilities::campaignDetails($id);
-        return view('campaign.campaign_details', compact('campaign_details'));
-    }
-
-    public function payCampaign(Request $request)
+    public function cardPayment(Request $request, $walkins, $broadcaster, $broadcaster_user)
     {
 
         $insert = [
@@ -477,16 +419,16 @@ class CampaignsController extends Controller
                     'total' => $amount,
                 ];
                 $request = (object)$req;
-                $save_campaign = $this->saveCampaign($request, $user_id);;
+                $save_campaign = $this->saveCampaign($request, $user_id, $broadcaster, $broadcaster_user);
                 if($save_campaign === 'success'){
                     $user_agent = $_SERVER['HTTP_USER_AGENT'];
-                    $description = 'Payment of '.$amount.' to '.Session::get('broadcaster_id').' by '.$user_id.' For Campaign';
+                    $description = 'Payment of '.$amount.' to '.$broadcaster_user.' on behalf of '.$broadcaster.' by '.$walkins.' For Campaign';
                     $ip = request()->ip();
                     $user_activity = Api::saveActivity($user_id, $description, $ip, $user_agent);
 
                     $msg = 'Your payment of '. $amount.' is successful and campaign has been created successfully';
                     Session::flash('success', $msg);
-                    return redirect()->route('campaign.all');
+                    return redirect()->route('broadcaster.user.campaign.all');
                 }else{
                     Session::flash('error', 'There was problem creating campaign');
                     return redirect()->back();
@@ -525,10 +467,10 @@ class CampaignsController extends Controller
         }
     }
 
-    public function saveCampaign($request, $walkins)
+    public function saveCampaign($request, $walkins, $broadcaster, $broadcaster_user)
     {
 //        dd($request);
-        $broadcaster = Session::get('broadcaster_id');
+
         $first = Session::get('step2');
         $query = \DB::select("SELECT * FROM carts WHERE user_id = '$walkins'");
         $ads = [];
@@ -569,11 +511,11 @@ class CampaignsController extends Controller
             'industry' => $first->industry,
             'adslots' => count($query),
             'walkins_id' => $walkin_id[0]->id,
-            'agency' => $walkin_id[0]->id,
+            'agency' => $broadcaster_user,
             'time_created' => date('Y-m-d H:i:s', $now),
             'time_modified' => date('Y-m-d H:i:s', $now),
             'adslots_id' => "'". implode("','" ,$ads) . "'",
-            'adslots' => count($query),
+            'agency_broadcaster' => $broadcaster,
         ];
 
 
@@ -596,6 +538,8 @@ class CampaignsController extends Controller
                     'time_created' => date('Y-m-d H:i:s', $now),
                     'time_modified' => date('Y-m-d H:i:s', $now),
                     'time_picked' => $q->time,
+                    'agency_id' => $broadcaster_user,
+                    'agency_broadcaster' => $broadcaster,
                 ];
             }
 
@@ -604,12 +548,12 @@ class CampaignsController extends Controller
                 'campaign_id' => $camp_id[0]->id,
                 'payment_method' => $request->payment,
                 'amount' => (integer) $request->total,
-                'time_created' => $now,
-                'time_modified' => $now,
                 'broadcaster' => $broadcaster,
                 'walkins_id' => $walkin_id[0]->id,
                 'time_created' => date('Y-m-d H:i:s', $now),
                 'time_modified' => date('Y-m-d H:i:s', $now),
+                'agency_id' => $broadcaster_user,
+                'agency_broadcaster' => $broadcaster,
             ];
 
             $save_payment = Utilities::switch_db('api')->table('payments')->insert($pay);
@@ -629,6 +573,8 @@ class CampaignsController extends Controller
                     'actual_amount_paid' => (integer) $request->total,
                     'refunded_amount' => 0,
                     'walkins_id' => $walkin_id[0]->id,
+                    'agency_id' => $broadcaster_user,
+                    'agency_broadcaster' => $broadcaster,
                 ];
 
                 $mpo[] = [
@@ -636,6 +582,8 @@ class CampaignsController extends Controller
                     'campaign_id' => $camp_id[0]->id,
                     'broadcaster_id' => $broadcaster,
                     'discount' => 0,
+                    'agency_id' => $broadcaster_user,
+                    'agency_broadcaster' => $broadcaster,
                 ];
 
                 $save_invoice = Utilities::switch_db('api')->table('invoices')->insert($invoice);
@@ -672,5 +620,9 @@ class CampaignsController extends Controller
 
     }
 
-
+    public function campaignDetails($id)
+    {
+        $campaign_details = Utilities::campaignDetails($id);
+        return view('broadcaster_user.campaigns.campaign_details', compact('campaign_details'));
+    }
 }
