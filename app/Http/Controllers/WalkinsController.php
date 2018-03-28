@@ -36,6 +36,10 @@ class WalkinsController extends Controller
         $broad_walkins = [];
         $broadcaster_id = Session::get('broadcaster_id');
         $broadcaster_user = Session::get('broadcaster_user_id');
+        if(!Session::get('broadcaster_id')){
+            $broadcaster_idddd = Utilities::switch_db('api')->select("SELECT broadcaster_id from broadcasterUsers where id = '$broadcaster_user'");
+            $broadcaster_idd = $broadcaster_idddd[0]->broadcaster_id;
+        }
         if($broadcaster_id){
             $walkins = Utilities::switch_db('api')->select("SELECT * from users WHERE id IN (SELECT user_id from walkIns WHERE broadcaster_id = '$broadcaster_id' AND status = 0) ORDER BY time_created DESC");
         }else{
@@ -49,6 +53,7 @@ class WalkinsController extends Controller
                 'email' => $walkin->email,
                 'phone' => $walkin->phone_number,
                 'user_id' => $walkin->id,
+                'broadcaster_id' => $broadcaster_idd ? $broadcaster_idd : '',
             ];
             $j++;
         }
@@ -66,7 +71,7 @@ class WalkinsController extends Controller
         }else{
             return $dataTables->collection($broad_walkins)
                 ->addColumn('campaign', function ($broad_walkins) {
-                    return '<a href="#" class="btn btn-success btn-xs"> Create Campaign </a>';
+                    return '<a href="' . route('broadcaster_user.campaign.create1', ['walkins' => $broad_walkins['user_id'], 'broadcaster' => $broad_walkins['broadcaster_id'], 'broadcaster_user' => Session::get('broadcaster_user_id')]) . '" class="btn btn-success btn-xs"> Create Campaign </a>';
                 })
                 ->addColumn('delete', function ($broad_walkins) {
                     return '<button data-toggle="modal" data-target=".deleteModal' . $broad_walkins['user_id'] . '" class="btn btn-danger btn-xs" > Delete </button>    ';

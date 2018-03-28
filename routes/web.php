@@ -132,6 +132,23 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/user/create/store', 'BroadcasterAuthController@postBroadcasterUser')->name('broadcaster.post.user');
     });
 
+    Route::group(['prefix' => 'broadcaster-user/campaign'], function (){
+       Route::get('/create/{walkins}/{broadcaster}/{broadcaster_user}/step1', 'BroadcasterUserCampaignsController@createStep1')->name('broadcaster_user.campaign.create1');
+       Route::post('/create/{walkins}/{broadcaster}/{broadcaster_user}/step1/store', 'BroadcasterUserCampaignsController@postStore1')->name('broadcaster.user.campaign.store1');
+       Route::get('/create/{walkins}/{broadcaster}/{broadcaster_user}/step2', 'BroadcasterUserCampaignsController@createStep2')->name('broadcaster_user.campaigns.create2');
+       Route::post('/create/{walkins}/{broadcaster}/{broadcaster_user}/step2/store', 'BroadcasterUserCampaignsController@postStore2')->name('broadcaster.user.campaign.store2');
+       Route::get('/create/{walkins}/{broadcaster}/{broadcaster_user}/step3', 'BroadcasterUserCampaignsController@createStep3')->name('broadcaster.user.campaign.step3');
+       Route::post('/create/{walkins}/{broadcaster}/{broadcaster_user}/step3/store', 'BroadcasterUserCampaignsController@postStore3')->name('broadcaster.user.campaign.store3');
+       Route::post('/create/{walkins}/{broadcaster}/{broadcaster_user}/step3_1/store', 'BroadcasterUserCampaignsController@postStore3_1')->name('broadcaster.user.campaign.store3_1');
+       Route::get('/create/{walkins}/{broadcaster}/{broadcaster_user}/step4', 'BroadcasterUserCampaignsController@createStep4')->name('broadcaster.user.campaign.create4');
+       Route::get('/create/{walkins}/{broadcaster}/{broadcaster_user}/step5', 'BroadcasterUserCampaignsController@createStep5')->name('broadcaster.user.campaign.store5');
+       Route::get('/checkout/{walkins}/{broadcaster}/{broadcaster_user}', 'BroadcasterUserCampaignsController@getCheckout')->name('broadcaster.user.checkout');
+       Route::post('/submit/{walkins}/{broadcaster}/{broadcaster_user}', 'BroadcasterUserCampaignsController@submitCampaign')->name('broadcaster.user.submit.campaign');
+       Route::post('/payment-process/{walkins}/{broadcaster}/{broadcaster_user}', 'BroadcasterUserCampaignsController@cardPayment')->name('broadcaster.user.pay');
+       Route::get('/all-campaigns', 'BroadcasterUserCampaignsController@index')->name('broadcaster.user.campaign.all');
+       Route::get('/campaign-data', 'BroadcasterUserCampaignsController@campaignData');
+    });
+
     /*
      * WalkIns Management
      */
