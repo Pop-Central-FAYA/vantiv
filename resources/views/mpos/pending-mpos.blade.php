@@ -235,7 +235,6 @@
                 var url = $(this).data('file_code');
                 file_code = $(this).data("file_code");
                 csrf = $(this).data("token");
-
                 rejection_reason = $("select#reason"+url).val();
                 is_file_accepted = $("select#is_file_accepted"+url).val();
 
@@ -244,7 +243,7 @@
                     return;
                 }
 
-                if (rejection_reason === 'null' && is_file_accepted === 2) {
+                if (is_file_accepted === 2 && rejection_reason === 'null') {
                     toastr.error("Please choose a reason for rejecting this file");
                     return;
                 }

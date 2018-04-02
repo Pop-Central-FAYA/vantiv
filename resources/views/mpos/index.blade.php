@@ -80,17 +80,13 @@
                                             <td>{{ date('Y-m-d', strtotime($mpo['time_created'])) }}</td>
                                             <td>&#8358; {{ $mpo['amount'] }}</td>
                                             <td>
-                                                @if ($mpo['is_mpo_accepted'] == 1)
+                                                @if ($mpo['status'] == true)
                                                     <label style="font-size: 16px" class="label label-success">
                                                         Approved
                                                     </label>
-                                                @elseif ($mpo['is_mpo_accepted'] == 0)
+                                                @else
                                                     <label style="font-size: 16px" class="label label-warning">
                                                         Pending
-                                                    </label>
-                                                @elseif ($mpo['is_mpo_accepted'] == 2)
-                                                    <label style="font-size: 16px" class="label label-danger">
-                                                        Rejected
                                                     </label>
                                                 @endif
                                             </td>
