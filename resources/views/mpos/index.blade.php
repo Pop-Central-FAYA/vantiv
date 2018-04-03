@@ -26,29 +26,6 @@
                 </div>
             </div>
 
-            {{--<div class="row">--}}
-                {{--<h4 style="margin-left: 17px;font-weight: bold">Search by date</h4>--}}
-                {{--<div class="col-md-10" style="margin-top: -2%">--}}
-                    {{--<div class="input-group date styledate" style="width:30% !important">--}}
-                        {{--<div class="input-group-addon">--}}
-                            {{--<i class="fa fa-calendar"></i>--}}
-                        {{--</div>--}}
-                        {{--<input type="text" placeholder="Start Date" class="form-control pull-right" id="datepicker">--}}
-                    {{--</div>--}}
-
-                    {{--<div class="input-group date styledate" style="width:30% !important">--}}
-                        {{--<div class="input-group-addon">--}}
-                            {{--<i class="fa fa-calendar"></i>--}}
-                        {{--</div>--}}
-                        {{--<input type="text" placeholder="End Date" class="form-control pull-right" id="datepickerend" >--}}
-                    {{--</div>--}}
-
-                    {{--<div class="input-group" style="">--}}
-                        {{--<input type="submit" class="search-btn" value="search" style="float:left" >--}}
-                    {{--</div>--}}
-                {{--</div>--}}
-            {{--</div>--}}
-
             <div class="row">
                 <div class="col-md-12">
                     <div class="box-body">
@@ -61,7 +38,7 @@
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                        <th>S/N</th>
+                                        <th>ID</th>
                                         <th>Name</th>
                                         <th>Brand</th>
                                         <th>Product</th>
@@ -73,7 +50,7 @@
                                 <tbody>
                                     @foreach ($mpo_data as $mpo)
                                         <tr>
-                                            <td>{{ $loop->iteration }}</td>
+                                            <td>{{ $mpo['id'] }}</td>
                                             <td>{{ $mpo['name'] }}</td>
                                             <td>{{ $mpo['brand'] }}</td>
                                             <td>{{ $mpo['product'] }}</td>

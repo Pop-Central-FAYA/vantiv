@@ -67,7 +67,7 @@
                                                             <div class="table-responsive">
                                                                 <table id="ps-table" class="table table-bordered ps-table">
                                                                     <thead>
-                                                                    <th>Id</th>
+                                                                    <th>ID</th>
                                                                     <th>Buyer</th>
                                                                     <th>Campaign Name</th>
                                                                     <th>Brand</th>

@@ -38,6 +38,7 @@ class CampaignsController extends Controller
 
         foreach ($all_campaign as $cam)
         {
+            $invoice_id = Utilities::switch_db('api')->select("SELECT * from invoices where campaign_id = '$cam->id'");
 //            $today = strtotime(date('Y-m-d'));
             $today = date("Y-m-d");
             if(strtotime($today) > strtotime($cam->start_date) && strtotime($today) > strtotime($cam->stop_date)){
@@ -53,7 +54,7 @@ class CampaignsController extends Controller
             }
             $brand = Utilities::switch_db('api')->select("SELECT `name` as brand_name from brands where id = '$cam->brand'");
             $campaign[] = [
-                'id' => $j,
+                'id' => $invoice_id[0]->invoice_number,
                 'camp_id' => $cam->id,
                 'name' => $cam->name,
                 'brand' => $brand[0]->brand_name,

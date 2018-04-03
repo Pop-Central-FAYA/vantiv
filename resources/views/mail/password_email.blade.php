@@ -213,7 +213,7 @@
                                                             <td align='left'>
                                                                 <div class="contentEditableContainer contentTextEditable">
                                                                     <div class="contentEditable" align='center'>
-                                                                        <h2 >You're one step closer to creating your account</h2>
+                                                                        <h2 >You have requested to change your password</h2>
                                                                     </div>
                                                                 </div>
                                                             </td>
@@ -226,7 +226,7 @@
                                                                 <div class="contentEditableContainer contentTextEditable">
                                                                     <div class="contentEditable" align='center'>
                                                                         <p >
-                                                                            Let's confirm your email address
+                                                                            Please click on the button below to change your password
                                                                             <br>
                                                                         </p>
                                                                     </div>
@@ -243,7 +243,7 @@
                                                                         <td align='center' bgcolor='#1A54BA' style='background:#00c4ca; padding:15px 18px;-webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px;'>
                                                                             <div class="contentEditableContainer contentTextEditable">
                                                                                 <div class="contentEditable" align='center'>
-                                                                                    <a href='{{ URL::to('register/verify/' . $token) }}' class='link2' style='color:#ffffff; text-decoration: none;'>Activate your Account</a>
+                                                                                    <a href='{{ URL::to('proceed/password-change/' . $token) }}' class='link2' style='color:#ffffff; text-decoration: none;'>Change Password</a>
                                                                                 </div>
                                                                             </div>
                                                                         </td>

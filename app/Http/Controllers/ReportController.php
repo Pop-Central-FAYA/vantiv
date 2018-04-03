@@ -109,7 +109,7 @@ class ReportController extends Controller
         $j = 1;
         if($request->has('start_date') && $request->has('stop_date'))
         {
-            $inv = Utilities::switch_db('api')->select("SELECT * from invoices WHERE broadcaster_id = '$broadcaster' AND time_created BETWEEN '$start' AND '$end'");
+            $inv = Utilities::switch_db('api')->select("SELECT * from invoices WHERE broadcaster_id = '$broadcaster' AND time_created BETWEEN '$start' AND '$end' ORDER BY time_created desc");
             foreach ($inv as $i)
             {
                 $walk = Utilities::switch_db('api')->select("SELECT user_id from walkIns where id='$i->walkins_id'");
@@ -130,7 +130,7 @@ class ReportController extends Controller
             return $datatables->collection($invoice_array)
                 ->make(true);
         }else{
-            $inv = Utilities::switch_db('api')->select("SELECT * from invoices WHERE broadcaster_id = '$broadcaster' ");
+            $inv = Utilities::switch_db('api')->select("SELECT * from invoices WHERE broadcaster_id = '$broadcaster' ORDER BY time_created desc");
             foreach ($inv as $i)
             {
                 $walk = Utilities::switch_db('api')->select("SELECT user_id from walkIns where id='$i->walkins_id'");
@@ -170,7 +170,7 @@ class ReportController extends Controller
             foreach ($periodic as $pe)
             {
                 $price = Utilities::switch_db('api')->select("SELECT amount, time_created as days from payments WHERE campaign_id = '$pe->id'");
-
+                $invoice_id = Utilities::switch_db('api')->select("SELECT * from invoices where campaign_id = '$pe->id'");
                 $user_broad = Utilities::switch_db('api')->select("SELECT * from users where id = (SELECT user_id from walkIns where id = '$pe->walkins_id')");
                 if($user_broad){
                     $user_details = $user_broad[0]->firstname . ' ' . $user_broad[0]->lastname;
@@ -178,7 +178,7 @@ class ReportController extends Controller
 
                 $brand = Utilities::switch_db('api')->select("SELECT * from brands where id = '$pe->brand'");
                 $ads[] = [
-                    'id' => $j,
+                    'id' => $invoice_id[0]->invoice_number,
                     'total_amount' => number_format($price[0]->amount, 2),
                     'adslot' => $pe->adslots,
                     'date' => date('Y-m-d', strtotime($pe->days)),
@@ -201,7 +201,7 @@ class ReportController extends Controller
             {
 //
                 $price = Utilities::switch_db('api')->select("SELECT amount, time_created as days from payments WHERE campaign_id = '$pe->id' ");
-
+                $invoice_id = Utilities::switch_db('api')->select("SELECT * from invoices where campaign_id = '$pe->id'");
                 $user_broad = Utilities::switch_db('api')->select("SELECT * from users where id = (SELECT user_id from walkIns where id = '$pe->walkins_id')");
                 if($user_broad){
                     $user_details = $user_broad[0]->firstname . ' ' . $user_broad[0]->lastname;
@@ -209,7 +209,7 @@ class ReportController extends Controller
 
                 $brand = Utilities::switch_db('api')->select("SELECT * from brands where id = '$pe->brand'");
                 $ads[] = [
-                    'id' => $j,
+                    'id' => $invoice_id[0]->invoice_number,
                     'total_amount' => '&#8358;'.number_format($price[0]->amount, 2),
                     'adslot' => $pe->adslots,
                     'date' => date('Y-m-d', strtotime($pe->days)),
@@ -307,11 +307,12 @@ class ReportController extends Controller
             }
 
             foreach ($newArray as $nnn => $value){
-                $day_percent = ((count($value)) / $total) * 100;
+                $day_perc = ((count($value)) / $total) * 100;
+                $day_percent = round( $day_perc, 1, PHP_ROUND_HALF_UP);
                 $dayp_namesss[] = [
                     'id' => $j,
                     'daypart' => $nnn,
-                    'percentage' => $day_percent,
+                    'percentage' => $day_percent.'%',
                 ];
                 $j++;
             }
@@ -346,11 +347,12 @@ class ReportController extends Controller
             }
 
             foreach ($newArray as $nnn => $value){
-                $day_percent = ((count($value)) / $total) * 100;
+                $day_perc = ((count($value)) / $total) * 100;
+                $day_percent = round( $day_perc, 1, PHP_ROUND_HALF_UP);
                 $dayp_namesss[] = [
                     'id' => $j,
                     'daypart' => $nnn,
-                    'percentage' => $day_percent,
+                    'percentage' => $day_percent.'%',
                 ];
                 $j++;
             }
@@ -380,7 +382,8 @@ class ReportController extends Controller
             $j = 1;
             foreach ($days as $dd)
             {
-                $perc_days = (($dd->tot_camp) / $s) * 100;
+                $perc_d = (($dd->tot_camp) / $s) * 100;
+                $perc_days = round( $perc_d, 1, PHP_ROUND_HALF_UP);
                 $day_name[] = [
                     'id' => $j,
                     'day' => date('l', strtotime($dd->days)) .' '. date('F', strtotime($dd->days)).' '. date('d', strtotime($dd->days)). ',' .date('Y', strtotime($dd->days)),
@@ -405,7 +408,8 @@ class ReportController extends Controller
             $j = 1;
             foreach ($days as $dd)
             {
-                $perc_days = (($dd->tot_camp) / $s) * 100;
+                $perc_d = (($dd->tot_camp) / $s) * 100;
+                $perc_days = round( $perc_d, 1, PHP_ROUND_HALF_UP);
                 $day_name[] = [
                     'id' => $j,
                     'day' => date('l', strtotime($dd->days)) .' '. date('F', strtotime($dd->days)).' '. date('d', strtotime($dd->days)). ',' .date('Y', strtotime($dd->days)),

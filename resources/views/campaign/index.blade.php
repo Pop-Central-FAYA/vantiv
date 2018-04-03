@@ -27,7 +27,7 @@
                                 <div class="box-body">
                                     <table id="example1" class="table table-bordered table-striped all_campaign">
                                         <thead>
-                                        <th>S/N</th>
+                                        <th>ID</th>
                                         <th>Name</th>
                                         <th>Brand</th>
                                         <th>Product</th>

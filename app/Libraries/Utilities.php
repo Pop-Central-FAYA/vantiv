@@ -145,6 +145,12 @@ class Utilities {
         return $result;
     }
 
+    public static function checkForActivation($user_id)
+    {
+        $user = DB::select("SELECT status from users where id = '$user_id'");
+        return $user[0]->status;
+    }
+
 
 
 }

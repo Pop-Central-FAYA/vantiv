@@ -9,7 +9,9 @@ use Vanguard\Libraries\Utilities;
 use JD\Cloudder\Facades\Cloudder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use Vanguard\Mail\SendConfirmationMail;
 use Yajra\DataTables\DataTables;
+use Mail;
 
 class BroadcasterAuthController extends Controller
 {
@@ -37,6 +39,9 @@ class BroadcasterAuthController extends Controller
                 $image_path = encrypt($clouder['url']);
             }
 
+            $full_name = $request->first_name . ' ' . $request->last_name;
+            $token = str_random(30);
+
             $userInsert = DB::table('users')->insert([
                 'email' => $request->email,
                 'username' => $request->username,
@@ -48,6 +53,8 @@ class BroadcasterAuthController extends Controller
                 'country_id' => $request->country_id,
                 'address' => $request->address,
                 'fullname' => $request->first_name . ' ' . $request->last_name,
+                'status' => 'Unconfirmed',
+                'confirmation_token' => $token,
             ]);
 
             if ($userInsert) {
@@ -88,7 +95,8 @@ class BroadcasterAuthController extends Controller
             ]);
 
             if ($broadcasterApiInsert) {
-                Session::flash('success', 'Sign Up Successful, You can login now');
+                $send_mail = Mail::to($request->email)->send(new SendConfirmationMail($token, $full_name, $request->email));
+                Session::flash('success', 'Sign Up Successful, Please click on the Activate your account button to verify your email address');
                 return redirect()->route('login');
             } else {
                 Session::flash('error', trans('Sign Up not successful, try again'));
@@ -160,6 +168,7 @@ class BroadcasterAuthController extends Controller
             'country_id' => $request->country,
             'address' => $request->address,
             'fullname' => $request->first_name . ' ' . $request->last_name,
+            'status' => 'Active',
         ]);
 
         if ($userInsert) {
