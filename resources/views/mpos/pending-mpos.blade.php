@@ -43,7 +43,7 @@
                                 <table id="example1" class="table table-bordered table-striped">
                                     <thead>
                                         <tr>
-                                            <th>S/N</th>
+                                            <th>ID</th>
                                             <th>Product</th>
                                             <th>Brand</th>
                                             <th>Campaign</th>

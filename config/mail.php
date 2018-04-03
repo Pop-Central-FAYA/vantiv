@@ -54,7 +54,7 @@ return [
     |
     */
 
-    'from' => ['address' => env('MAIL_FROM','admin@fayamedia.com'), 'name' => null],
+    'from' => ['address' => env('MAIL_FROM','ridwan.busari@techadvance.ng'), 'name' => null],
 
     /*
     |--------------------------------------------------------------------------

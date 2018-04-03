@@ -12,6 +12,7 @@
     {!! HTML::style("assets/css/font-awesome.min.css") !!}
     {!! HTML::style("assets/css/app.css") !!}
     {!! HTML::style("assets/css/bootstrap-social.css") !!}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.3/toastr.min.css" />
 
     @yield('header-scripts')
 </head>
@@ -25,7 +26,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-xs-12">
-                        <p>@lang('app.copyright') © - {{ settings('app_name') }} {{ date('Y') }}</p>
+                        <p>@lang('app.copyright') © - FAYA {{ date('Y') }}</p>
                     </div>
                 </div>
             </div>
@@ -37,7 +38,9 @@
     {!! HTML::script('vendor/jsvalidation/js/jsvalidation.js') !!}
     {!! HTML::script('assets/js/as/app.js') !!}
     {!! HTML::script('assets/js/as/btn.js') !!}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.3/toastr.min.js"></script>
 
     @yield('scripts')
+    @include('toastr.toastr')
 </body>
 </html>

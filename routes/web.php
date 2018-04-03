@@ -21,6 +21,11 @@ Route::get('logout', [
     'uses' => 'Auth\AuthController@getLogout'
 ]);
 
+Route::get('/forget-password', 'Auth\AuthController@getForgetPassword')->name('password.forgot');
+Route::post('/forget-password/process', 'Auth\AuthController@processForgetPassword')->name('forget_password.process');
+Route::get('/proceed/password-change/{token}','Auth\AuthController@processChangePassword');
+Route::post('/change-password/process/{id_local}/{id_api}','Auth\AuthController@processGhangePassword')->name('change_password.process');
+
 // Allow registration routes only if registration is enabled.
 if (settings('reg_enabled')) {
     Route::get('register', 'Auth\AuthController@getRegister');
@@ -73,6 +78,8 @@ Route::get('auth/twitter/email', 'Auth\SocialAuthController@getTwitterEmail');
 Route::post('auth/twitter/email', 'Auth\SocialAuthController@postTwitterEmail');
 
 Route::get('/error', 'InstallController@apiError')->name('errors');
+
+Route::get('register/verify/{token}', 'Auth\AuthController@verifyToken');
 
 Route::group(['middleware' => 'auth'], function () {
 

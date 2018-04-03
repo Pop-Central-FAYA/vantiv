@@ -22,6 +22,7 @@ class MpoController extends Controller
             $campaign_details = Api::fetchCampaign($mpo->campaign_id);
             $brand = Api::brand($mpo->campaign_id);
             $payment_details = Api::fetchPayment($mpo->campaign_id);
+            $invoice_id = Utilities::switch_db('api')->select("SELECT * from invoices where campaign_id = '$mpo->campaign_id'");
 
             if (count($campaign_details) === 0) {
                 $product = 0;
@@ -40,6 +41,7 @@ class MpoController extends Controller
             }
 
             $mpo_data[] = [
+                'id' => $invoice_id[0]->invoice_number,
                 'is_mpo_accepted' => $mpo->is_mpo_accepted,
                 'product' => $product,
                 'amount' => $amount,
@@ -65,6 +67,7 @@ class MpoController extends Controller
 
             $campaign_details = Api::fetchCampaign($mpo->campaign_id);
             $payment_details = Api::fetchPayment($mpo->campaign_id);
+            $invoice_id = Utilities::switch_db('api')->select("SELECT * from invoices where campaign_id = '$mpo->campaign_id'");
 
             if (count($campaign_details) === 0) {
                 $product = 0;
@@ -97,7 +100,7 @@ class MpoController extends Controller
             }
 
             $mpo_data[] = [
-                's_n' => $j,
+                's_n' => $invoice_id[0]->invoice_number,
                 'id' => $mpo->id,
                 'is_mpo_accepted' => $mpo->is_mpo_accepted,
                 'product' => $product,

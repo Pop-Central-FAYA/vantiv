@@ -10,6 +10,7 @@ use Vanguard\Http\Requests\Auth\LoginRequest;
 use Vanguard\Http\Requests\Auth\RegisterRequest;
 use Vanguard\Libraries\Api;
 use Vanguard\Libraries\Utilities;
+use Vanguard\Mail\PasswordChanger;
 use Vanguard\Mailers\UserMailer;
 use Vanguard\Repositories\Role\RoleRepository;
 use Vanguard\Repositories\User\UserRepository;
@@ -111,6 +112,12 @@ class AuthController extends Controller
         }
 
         Auth::login($user, settings('remember_me') && $request->get('remember'));
+
+        $user_identity = Utilities::checkForActivation(Auth::user()->id);
+
+        if($user_identity === 'Unconfirmed' || $user_identity === ''){
+            Auth::logout();
+        }
 
         $username = Auth::user()->email;
         $password = bcrypt($request->password);
@@ -478,5 +485,80 @@ class AuthController extends Controller
         $token = str_random(60);
         $this->users->update($user->id, ['confirmation_token' => $token]);
         $mailer->sendConfirmationEmail($user, $token);
+    }
+
+    public function verifyToken($token)
+    {
+        $user = \DB::select("SELECT * from users where confirmation_token = '$token'");
+        if($user && $user[0]->status === 'Unconfirmed'){
+            $update_user = \DB::update("UPDATE users set status = 'Active' where confirmation_token = '$token'");
+            \Session::flash('success', 'Your email has been verified, you can now proceed to login with your credentials');
+            return redirect()->route('login');
+        }elseif($user && $user[0]->status === 'Active'){
+            \Session::flash('info', 'You have already verified your email, please proceed to login...');
+            return redirect()->route('login');
+        }elseif(!$user){
+            \Session::flash('error', 'Wrong activation code...');
+            return redirect()->route('login');
+        }
+    }
+
+    public function getForgetPassword()
+    {
+        return view('auth.password.forget_password');
+    }
+
+    public function processForgetPassword(Request $request)
+    {
+        $this->validate($request, [
+           'email' => 'email|required',
+        ]);
+
+        $user_local = \DB::select("SELECT * from users where email = '$request->email'");
+        $user_api = Utilities::switch_db('api')->select("SELECT * from users where email = '$request->email'");
+        if($user_local && $user_api){
+
+            $token = encrypt($user_local[0]->id);
+
+            $send_mail = \Mail::to($user_local[0]->email)->send(new PasswordChanger($token));
+
+            \Session::flash('success', 'Please follow the link sent to your email');
+            return redirect()->back();
+
+        }else{
+
+            \Session::flash('error', 'Email not found on our application');
+            return redirect()->back();
+        }
+    }
+
+    public function processChangePassword($token)
+    {
+        $user_id = decrypt($token);
+        $user_details_local = \DB::select("SELECT * from users where id = '$user_id'");
+        $email = $user_details_local[0]->email;
+        $user_details_api = Utilities::switch_db('api')->select("SELECT * from users where email = '$email'");
+
+        return view('auth.password.change_password', compact('user_details_local', 'user_details_api'));
+
+    }
+
+    public function processGhangePassword(Request $request, $id_local, $id_api)
+    {
+        $this->validate($request, [
+           'password' => 'required|min:6',
+           're_password' => 'required|same:password|min:6'
+        ]);
+
+        $password = bcrypt($request->password);
+
+        $user_local_update = \DB::update("UPDATE users set password = '$password' WHERE id = '$id_local'");
+        $upser_api_update = Utilities::switch_db('api')->update("UPDATE users set password = '$password' WHERE id = '$id_api'");
+
+        if($user_local_update && $upser_api_update){
+            return redirect()->route('login')->with('success', 'You have successfully changed your password, please proceed to login');
+        }else{
+            return redirect()->back()->withErrors('Error occurred while processing your request, please try again');
+        }
     }
 }

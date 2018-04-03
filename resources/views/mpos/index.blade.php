@@ -61,7 +61,7 @@
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                        <th>S/N</th>
+                                        <th>ID</th>
                                         <th>Name</th>
                                         <th>Brand</th>
                                         <th>Product</th>
@@ -73,7 +73,7 @@
                                 <tbody>
                                     @foreach ($mpo_data as $mpo)
                                         <tr>
-                                            <td>{{ $loop->iteration }}</td>
+                                            <td>{{ $mpo['id'] }}</td>
                                             <td>{{ $mpo['name'] }}</td>
                                             <td>{{ $mpo['brand'] }}</td>
                                             <td>{{ $mpo['product'] }}</td>

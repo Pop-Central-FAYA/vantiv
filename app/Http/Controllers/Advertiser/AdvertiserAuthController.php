@@ -3,6 +3,7 @@
 namespace Vanguard\Http\Controllers\Advertiser;
 
 use DB;
+use Vanguard\Mail\SendConfirmationMail;
 use Vanguard\Role;
 use Vanguard\Country;
 use Illuminate\Http\Request;
@@ -10,6 +11,8 @@ use Vanguard\Libraries\Utilities;
 use Vanguard\Http\Requests\StoreAgent;
 use Vanguard\Http\Controllers\Controller;
 use JD\Cloudder\Facades\Cloudder;
+use Mail;
+use Session;
 
 class AdvertiserAuthController extends Controller
 {
@@ -39,6 +42,9 @@ class AdvertiserAuthController extends Controller
                 $image_path = encrypt($clouder['url']);
             }
 
+            $full_name = $request->first_name . ' ' . $request->last_name;
+            $token = str_random(30);
+
             $userInsert = DB::table('users')->insert([
                 'email' => $request->email,
                 'username' => $request->username,
@@ -49,6 +55,7 @@ class AdvertiserAuthController extends Controller
                 'country_id' => $request->country_id,
                 'address' => $request->address,
                 'fullname' => $request->first_name . ' ' . $request->last_name,
+                'status' => 'Unconfirmed',
             ]);
 
             if ($userInsert) {
@@ -87,7 +94,9 @@ class AdvertiserAuthController extends Controller
             ]);
 
             if ($agentAdvertiserInsert) {
-                return redirect()->route('login')->with('success', 'Sign Up Successful, You can login now');
+                $send_mail = Mail::to($request->email)->send(new SendConfirmationMail($token, $full_name, $request->email));
+                Session::flash('success', 'Sign Up Successful, Please click on the Activate your account button to verify your email address');
+                return redirect()->route('login');
             } else {
                 return redirect()->back()->with('error', trans('Sign Up not successful, try again'));
             }

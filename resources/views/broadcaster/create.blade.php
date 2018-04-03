@@ -95,7 +95,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="input-group">
-                                        <input type="Submit" name="Submit" value="Add Walk-In">
+                                        <input type="Submit" name="Submit" value="Add User">
                                     </div>
                                 </div>
                             </div>

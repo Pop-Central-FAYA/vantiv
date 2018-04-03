@@ -22,7 +22,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <h4 class="text-center"><p>Periodic Sales Report</p></h4>
-                    <canvas id="containerPeriodic" style="width: 512px; height: 150px"></canvas>
+                    <div id="containerPS" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 
                 </div>
             </div>
@@ -132,72 +132,77 @@
         <?php echo "var periodic_adslot = ".$adslot .";\n"; ?>
 
         //Bar chart on periodic sales report using chart.js
-        var chartData = {
-            labels: periodic_month,
-            datasets: [{
-                type: 'bar',
-                label: 'Number of Adslots',
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255,99,132,1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
-                ],
-                // borderColor: window.chartColors.blue,
-                borderWidth: 2,
-                fill: false,
-                data: periodic_adslot
-            }, {
-                type: 'bar',
-                label: 'Total Amount',
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255,99,132,1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
-                ],
-                // backgroundColor: window.chartColors.red,
-                data: periodic_price,
-                borderColor: 'white',
-                borderWidth: 2
-            }]
-        };
-
-        var ctx = document.getElementById('containerPeriodic').getContext('2d');
-        window.myMixedChart = new Chart(ctx, {
-            type: 'bar',
-            data: chartData,
-            options: {
-                responsive: true,
-                title: {
-                    display: false,
-                    text: 'Periodic Sales Report'
+        Highcharts.chart('containerPS', {
+            chart: {
+                zoomType: 'xy'
+            },
+            title: {
+                text: ''
+            },
+            credits: {
+                enabled: false
+            },
+            xAxis: [{
+                categories: periodic_month,
+                crosshair: true
+            }],
+            yAxis: [{ // Primary yAxis
+                labels: {
+                    format: '{value}',
+                    style: {
+                        color: Highcharts.getOptions().colors[1]
+                    }
                 },
-                tooltips: {
-                    mode: 'index',
-                    intersect: true
+                title: {
+                    text: 'Adslot',
+                    style: {
+                        color: Highcharts.getOptions().colors[1]
+                    }
                 }
-            }
+            }, { // Secondary yAxis
+                title: {
+                    text: 'Price (Naira)',
+                    style: {
+                        color: Highcharts.getOptions().colors[0]
+                    }
+                },
+                labels: {
+                    format: '{value}',
+                    style: {
+                        color: Highcharts.getOptions().colors[0]
+                    }
+                },
+                opposite: true
+            }],
+            tooltip: {
+                shared: true
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'left',
+                x: 120,
+                verticalAlign: 'top',
+                y: 100,
+                floating: true,
+                backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
+            },
+            series: [{
+                name: 'Total Price',
+                type: 'column',
+                yAxis: 1,
+                data: periodic_price,
+                tooltip: {
+                    valueSuffix: ''
+                }
+
+            }, {
+                name: 'Number of Adslot',
+                type: 'spline',
+                data: periodic_adslot,
+                tooltip: {
+                    valueSuffix: ''
+                }
+            }]
         });
 
         // pie chart for high performing dayparts

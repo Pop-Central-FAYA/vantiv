@@ -6,10 +6,9 @@
 
     <div class="form-wrap col-md-6 auth-form" id="login">
         <div style="text-align: center; margin-bottom: 25px;">
-            <img src="{{ asset('new_assets/images/logo.png') }}" alt="{{ settings('app_name') }}">
+            <a href="{{ route('dashboard') }}"><img src="{{ asset('new_assets/images/logo.png') }}" alt="{{ settings('app_name') }}"></a>
         </div>
 
-        {{-- This will simply include partials/messages.blade.php view here --}}
         @include('partials/messages')
 
         <form role="form" action="<?= url('login') ?>" method="POST" id="login-form" autocomplete="off">
@@ -36,9 +35,9 @@
                     <label for="remember">@lang('app.remember_me')</label>
                 @endif
 
-                @if (settings('reg_enabled'))
-                    <a href="<?= url("register") ?>" style="float: right;">@lang('app.dont_have_an_account')</a>
-                @endif
+
+                    <a href="{{ route('password.forgot') }}" style="float: right; text-decoration: none;">Forgot your password?</a>
+
             </div>
             <div class="form-group">
                 <button type="submit" style="background: #00c4ca;" class="btn btn-danger btn-lg btn-block" id="btn-login">
