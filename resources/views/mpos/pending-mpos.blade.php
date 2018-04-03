@@ -106,7 +106,7 @@
                                         <td>
                                             <video width="150" controls><source src="{{ asset(decrypt($file->file_url)) }}"></video>
                                         </td>
-                                        <td>{{ $file->time_picked }} Seconds</td>
+                                        <td>{{ $file->time_picked }} seconds</td>
                                         <td>
                                             @if ($file->is_file_accepted === 0)
                                                 <label class="label label-warning">Pending</label>
@@ -117,7 +117,7 @@
                                             @endif
                                         </td>
                                         <td>
-                                            <select id="is_file_accepted{{ $file->file_code }}">
+                                            <select id="is_file_accepted{{ $file->file_code }}" class="jide form-control" data-disappear="{{ $file->file_code }}">
                                                 <option value="null">Select Status</option>
                                                 <option value="1">Approve</option>
                                                 <option value="2">Reject</option>
@@ -128,7 +128,7 @@
                                         </td>
                                         <input type="hidden" name="file_code" id="file_code" value="{{ $file->file_code }}">
                                         <td>
-                                            <select name="rejection_reason" class="form-control" id="reason{{ $file->file_code }}">
+                                            <select name="rejection_reason" class="reason_default form-control" id="reason{{ $file->file_code }}">
                                                 <option value="null">Select Reason</option>
                                                 <option value="Inappropriate Adslot">Inappropriate Adslot</option>
                                                 <option value="Inappropriate Content">Inappropriate Content</option>
@@ -229,21 +229,33 @@
         });
 
         $(document).ready(function () {
-            $('#flash-file-message').hide();
+            $('#flash-file-message').hide()
+
+            $('.reason_default').prop('disabled', true);
+
+            $("body").delegate('.jide', 'change', function (e) {
+                var url = $(this).data('disappear');
+                var is_file_value = $(this).val()
+                if (is_file_value === '2') {
+                    $('#reason'+url).prop('disabled', false);
+                } else {
+                    $('#reason'+url).prop('disabled', true);
+                }
+            })
 
             $("body").delegate('.update_file', 'click', function () {
                 var url = $(this).data('file_code');
                 file_code = $(this).data("file_code");
                 csrf = $(this).data("token");
                 rejection_reason = $("select#reason"+url).val();
-                is_file_accepted = $("select#is_file_accepted"+url).val();
+                is_file_accepted = $("select#is_file_accepted"+url).val()
 
                 if (rejection_reason === 'null' && is_file_accepted === 'null') {
                     toastr.error("File Status and Rejection reason can't be empty");
                     return;
                 }
 
-                if (is_file_accepted === 2 && rejection_reason === 'null') {
+                if (is_file_accepted === '2' && rejection_reason === 'null') {
                     toastr.error("Please choose a reason for rejecting this file");
                     return;
                 }
