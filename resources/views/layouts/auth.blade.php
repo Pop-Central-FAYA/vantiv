@@ -35,7 +35,7 @@
 
     {!! HTML::script('assets/js/jquery-2.1.4.min.js') !!}
     {!! HTML::script('assets/js/bootstrap.min.js') !!}
-    {!! HTML::script('vendor/jsvalidation/js/jsvalidation.js') !!}
+    {!! HTML::script('vendor_public/jsvalidation/js/jsvalidation.js') !!}
     {!! HTML::script('assets/js/as/app.js') !!}
     {!! HTML::script('assets/js/as/btn.js') !!}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.3/toastr.min.js"></script>
