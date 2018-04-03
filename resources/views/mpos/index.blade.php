@@ -26,29 +26,6 @@
                 </div>
             </div>
 
-            {{--<div class="row">--}}
-                {{--<h4 style="margin-left: 17px;font-weight: bold">Search by date</h4>--}}
-                {{--<div class="col-md-10" style="margin-top: -2%">--}}
-                    {{--<div class="input-group date styledate" style="width:30% !important">--}}
-                        {{--<div class="input-group-addon">--}}
-                            {{--<i class="fa fa-calendar"></i>--}}
-                        {{--</div>--}}
-                        {{--<input type="text" placeholder="Start Date" class="form-control pull-right" id="datepicker">--}}
-                    {{--</div>--}}
-
-                    {{--<div class="input-group date styledate" style="width:30% !important">--}}
-                        {{--<div class="input-group-addon">--}}
-                            {{--<i class="fa fa-calendar"></i>--}}
-                        {{--</div>--}}
-                        {{--<input type="text" placeholder="End Date" class="form-control pull-right" id="datepickerend" >--}}
-                    {{--</div>--}}
-
-                    {{--<div class="input-group" style="">--}}
-                        {{--<input type="submit" class="search-btn" value="search" style="float:left" >--}}
-                    {{--</div>--}}
-                {{--</div>--}}
-            {{--</div>--}}
-
             <div class="row">
                 <div class="col-md-12">
                     <div class="box-body">
@@ -80,17 +57,13 @@
                                             <td>{{ date('Y-m-d', strtotime($mpo['time_created'])) }}</td>
                                             <td>&#8358; {{ $mpo['amount'] }}</td>
                                             <td>
-                                                @if ($mpo['is_mpo_accepted'] == 1)
+                                                @if ($mpo['status'] == true)
                                                     <label style="font-size: 16px" class="label label-success">
                                                         Approved
                                                     </label>
-                                                @elseif ($mpo['is_mpo_accepted'] == 0)
+                                                @else
                                                     <label style="font-size: 16px" class="label label-warning">
                                                         Pending
-                                                    </label>
-                                                @elseif ($mpo['is_mpo_accepted'] == 2)
-                                                    <label style="font-size: 16px" class="label label-danger">
-                                                        Rejected
                                                     </label>
                                                 @endif
                                             </td>

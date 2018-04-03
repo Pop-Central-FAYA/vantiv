@@ -42,15 +42,15 @@
 
                                 <table id="example1" class="table table-bordered table-striped">
                                     <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Product</th>
-                                            <th>Brand</th>
-                                            <th>Campaign</th>
-                                            <th>Start Date</th>
-                                            <th>End Date</th>
-                                            <th>Status</th>
-                                        </tr>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Product</th>
+                                        <th>Brand</th>
+                                        <th>Campaign</th>
+                                        <th>Start Date</th>
+                                        <th>End Date</th>
+                                        <th>Status</th>
+                                    </tr>
                                     </thead>
                                 </table>
                             @endif
@@ -90,66 +90,66 @@
 
                         <table id="example1" class="table table-bordered table-striped">
                             <thead>
-                                <tr>
-                                    <th>Media</th>
-                                    <th>Slot Picked</th>
-                                    <th>Approval</th>
-                                    <th>Action</th>
-                                    <th>Reason</th>
-                                    <th>Reason for Rejection</th>
-                                    <th>Action</th>
-                                </tr>
+                            <tr>
+                                <th>Media</th>
+                                <th>Slot Picked</th>
+                                <th>Approval</th>
+                                <th>Action</th>
+                                <th>Reason</th>
+                                <th>Reason for Rejection</th>
+                                <th>Action</th>
+                            </tr>
                             </thead>
                             <tbody>
-                                @foreach ($mpo['files'] as $file)
-                                    <tr id="row{{ $file->file_code }}">
-                                        <td>
-                                            <video width="150" controls><source src="{{ asset(decrypt($file->file_url)) }}"></video>
-                                        </td>
-                                        <td>{{ $file->time_picked }} Seconds</td>
-                                        <td>
-                                            @if ($file->is_file_accepted === 0)
-                                                <label class="label label-warning">Pending</label>
-                                            @elseif ($file->is_file_accepted === 1)
-                                                <label class="label label-success">Approved</label>
-                                            @elseif ($file->is_file_accepted === 2)
-                                                <label class="label label-danger">Rejected</label>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            <select id="is_file_accepted{{ $file->file_code }}">
-                                                <option value="null">Select Status</option>
-                                                <option value="1">Approve</option>
-                                                <option value="2">Reject</option>
-                                            </select>
-                                        </td>
-                                        <td>
-                                            {{ $file->rejection_reason }}
-                                        </td>
-                                        <input type="hidden" name="file_code" id="file_code" value="{{ $file->file_code }}">
-                                        <td>
-                                            <select name="rejection_reason" class="form-control" id="reason{{ $file->file_code }}">
-                                                <option value="null">Select Reason</option>
-                                                <option value="Inappropriate Adslot">Inappropriate Adslot</option>
-                                                <option value="Inappropriate Content">Inappropriate Content</option>
-                                                <option value="File does not fit in this slot">File does not fit in this slot</option>
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <button class="update_file update{{ $file->file_code }} btn btn-primary"
-                                                    name="status"
-                                                    data-broadcaster_id="{{ $file->broadcaster_id || $file->agency_broadcaster }}"
-                                                    data-campaign_id="{{ $file->campaign_id }}"
-                                                    data-file_code="{{ $file->file_code }}"
-                                                    data-token="{{ csrf_token() }}"
-                                                    data-is_file_accepted="{{ $file->is_file_accepted }}"
-                                                    data-rejection_reason="{{ $file->rejection_reason }}"
-                                            >
-                                                Update
-                                            </button>
-                                        </td>
-                                    </tr>
-                                @endforeach
+                            @foreach ($mpo['files'] as $file)
+                                <tr id="row{{ $file->file_code }}">
+                                    <td>
+                                        <video width="150" controls><source src="{{ asset(decrypt($file->file_url)) }}"></video>
+                                    </td>
+                                    <td>{{ $file->time_picked }} seconds</td>
+                                    <td>
+                                        @if ($file->is_file_accepted === 0)
+                                            <label class="label label-warning">Pending</label>
+                                        @elseif ($file->is_file_accepted === 1)
+                                            <label class="label label-success">Approved</label>
+                                        @elseif ($file->is_file_accepted === 2)
+                                            <label class="label label-danger">Rejected</label>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <select id="is_file_accepted{{ $file->file_code }}" class="jide form-control" data-disappear="{{ $file->file_code }}">
+                                            <option value="null">Select Status</option>
+                                            <option value="1">Approve</option>
+                                            <option value="2">Reject</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        {{ $file->rejection_reason }}
+                                    </td>
+                                    <input type="hidden" name="file_code" id="file_code" value="{{ $file->file_code }}">
+                                    <td>
+                                        <select name="rejection_reason" class="reason_default form-control" id="reason{{ $file->file_code }}">
+                                            <option value="null">Select Reason</option>
+                                            <option value="Inappropriate Adslot">Inappropriate Adslot</option>
+                                            <option value="Inappropriate Content">Inappropriate Content</option>
+                                            <option value="File does not fit in this slot">File does not fit in this slot</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <button class="update_file update{{ $file->file_code }} btn btn-primary"
+                                                name="status"
+                                                data-broadcaster_id="{{ $file->broadcaster_id || $file->agency_broadcaster }}"
+                                                data-campaign_id="{{ $file->campaign_id }}"
+                                                data-file_code="{{ $file->file_code }}"
+                                                data-token="{{ csrf_token() }}"
+                                                data-is_file_accepted="{{ $file->is_file_accepted }}"
+                                                data-rejection_reason="{{ $file->rejection_reason }}"
+                                        >
+                                            Update
+                                        </button>
+                                    </td>
+                                </tr>
+                            @endforeach
                             </tbody>
                         </table>
 
@@ -218,7 +218,7 @@
                 url: '/mpos/pending_mpos_data',
             },
             columns: [
-                { data: 's_n', name: 's_n' },
+                { data: 'invoice_number', name: 'invoice_number' },
                 { data: 'product', name: 'product' },
                 { data: 'brand', name: 'brand' },
                 { data: 'campaign_name', name: 'campaign_name' },
@@ -229,22 +229,33 @@
         });
 
         $(document).ready(function () {
-            $('#flash-file-message').hide();
+            $('#flash-file-message').hide()
+
+            $('.reason_default').prop('disabled', true);
+
+            $("body").delegate('.jide', 'change', function (e) {
+                var url = $(this).data('disappear');
+                var is_file_value = $(this).val()
+                if (is_file_value === '2') {
+                    $('#reason'+url).prop('disabled', false);
+                } else {
+                    $('#reason'+url).prop('disabled', true);
+                }
+            })
 
             $("body").delegate('.update_file', 'click', function () {
                 var url = $(this).data('file_code');
                 file_code = $(this).data("file_code");
                 csrf = $(this).data("token");
-
                 rejection_reason = $("select#reason"+url).val();
-                is_file_accepted = $("select#is_file_accepted"+url).val();
+                is_file_accepted = $("select#is_file_accepted"+url).val()
 
                 if (rejection_reason === 'null' && is_file_accepted === 'null') {
                     toastr.error("File Status and Rejection reason can't be empty");
                     return;
                 }
 
-                if (rejection_reason === 'null' && is_file_accepted === 2) {
+                if (is_file_accepted === '2' && rejection_reason === 'null') {
                     toastr.error("Please choose a reason for rejecting this file");
                     return;
                 }

@@ -1091,7 +1091,24 @@ Class Api
         $t = new \Vanguard\Http\Controllers\Api\DummyController();
         $s = $t->index();
         return $s->getData();
+    }
 
+    public static function approvedCampaignFiles($campaign_id)
+    {
+        $allFiles = Utilities::switch_db('reports')->select("SELECT * FROM files WHERE campaign_id = '$campaign_id'");
+
+        $approvedFiles = Utilities::switch_db('reports')->select("SELECT * FROM files WHERE campaign_id = '$campaign_id' AND is_file_accepted = 1");
+
+        return count($allFiles) === count($approvedFiles);
+    }
+
+    public static function pendingMPOs($mpo)
+    {
+        $campaign_id = $mpo->campaign_id;
+        $allFiles = Utilities::switch_db('reports')->select("SELECT * FROM files WHERE campaign_id = '$campaign_id'");
+        $approvedFiles = Utilities::switch_db('reports')->select("SELECT * FROM files WHERE campaign_id = '$campaign_id' AND is_file_accepted = 1");
+
+        return count($approvedFiles) < count($allFiles);
     }
 
 
