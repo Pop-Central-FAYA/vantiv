@@ -11,7 +11,7 @@
 @if($all_files)
     <div class="row">
         @foreach($all_files as $all_file)
-            <form action="{{ route('uploads.remove', ['walkins' => $walkins, 'id' => $all_file->id]) }}" method="POST">
+            <form action="{{ route('uploads.remove', ['walkins' => $user_id, 'id' => $all_file->id]) }}" method="POST">
                 {{ csrf_field() }}
                 <div class="col-md-2" style="padding: 5px;">
                     @if($all_file->uploads)

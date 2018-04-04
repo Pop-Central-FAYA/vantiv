@@ -116,7 +116,7 @@
                                                                                 <tbody>
                                                                                 <?php $j = 1; $i = 0; for($i = 0; $i < count($datas); $i++){ ?>
 
-                                                                                    @if(((integer) $datas[$i]->time) === $times[$i] && ($rating->time_difference - $rating->time_used) >= $times[$i])
+                                                                                @if( ($rating->time_difference - $rating->time_used) >= $datas[$i]->time)
                                                                                         <tr>
                                                                                             @if($datas[$i]->uploads)
                                                                                                 <td>{{ $j }}</td>

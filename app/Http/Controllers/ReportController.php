@@ -118,7 +118,7 @@ class ReportController extends Controller
                 $campaign_det = Utilities::switch_db('api')->select("SELECT `name` as campaign_name, DATE_FORMAT(stop_date, '%Y-%m-%d') as stop_date from campaigns where id='$i->campaign_id'");
 
                 $invoice_array[] = [
-                    'id' => $j,
+                    'id' => $i->invoice_number,
                     'campaign_name' => $campaign_det[0]->campaign_name,
                     'customer' => $customer_name[0]->firstname . ' ' .$customer_name[0]->lastname,
                     'date' => date('Y-m-d', strtotime($i->time_created)),
@@ -139,7 +139,7 @@ class ReportController extends Controller
                 $campaign_det = Utilities::switch_db('api')->select("SELECT `name` as campaign_name, DATE_FORMAT(stop_date, '%Y-%m-%d') as stop_date from campaigns where id='$i->campaign_id'");
 
                 $invoice_array[] = [
-                    'id' => $j,
+                    'id' => $i->invoice_number,
                     'campaign_name' => $campaign_det[0]->campaign_name,
                     'customer' => $customer_name[0]->firstname . ' ' .$customer_name[0]->lastname,
                     'date' => date('Y-m-d', strtotime($i->time_created)),

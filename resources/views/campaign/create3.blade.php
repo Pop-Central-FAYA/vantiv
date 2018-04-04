@@ -31,9 +31,9 @@
 
                         <p align="left">
 
-                                <button type="button" id="step2" class="btn btn-danger btn-lg campaign-button" >Back <i class="fa fa-backward" aria-hidden="true"></i></button>
+                            <button type="button" id="step2" class="btn btn-danger btn-lg campaign-button" >Back <i class="fa fa-backward" aria-hidden="true"></i></button>
 
-                                <button type="submit" class="btn btn-danger btn-lg campaign-button" style="margin-right:15%">Next <i class="fa fa-play" aria-hidden="true"></i></button>
+                            <button type="submit" class="btn btn-danger btn-lg campaign-button" style="margin-right:15%">Next <i class="fa fa-play" aria-hidden="true"></i></button>
 
                         </p>
                     </form>
