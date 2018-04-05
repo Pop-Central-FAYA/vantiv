@@ -44,7 +44,6 @@ class Utilities {
     public static function campaignDetails($id)
     {
         $file_details = [];
-        $campaign_det = [];
         $campaign_details = Utilities::switch_db('api')->select("SELECT * from campaigns where id = '$id'");
         $brand_name = $campaign_details[0]->brand;
         $channel = $campaign_details[0]->channel;
@@ -52,29 +51,22 @@ class Utilities {
         $channel_name = Utilities::switch_db('api')->select("SELECT channel from campaignChannels where id = '$channel'");
         $payments = Utilities::switch_db('api')->select("SELECT * from payments where campaign_id = '$id'");
         $user_id = $campaign_details[0]->user_id;
-
-        if(\Session::get('broadcaster_id')){
-            $user = Utilities::switch_db('api')->select("SELECT * from users where id = '$user_id' ");
-            $name = $user[0]->firstname .' '.$user[0]->lastname;
-            $email = $user[0]->email;
-            $phone = $user[0]->phone_number;
-        }elseif(\Session::get('agency_id')){
-            $user = DB::select("SELECT * from users where id = '$user_id' ");
-            $name = $user[0]->first_name .' '.$user[0]->last_name;
-            $email = $user[0]->email;
-            $phone = $user[0]->phone;
-        }elseif(\Session::get('advertiser_id')){
-            $user = Utilities::switch_db('api')->select("SELECT * from users where id = (SELECT user_id from advertisers WHERE id = '$user_id')");
-            $name = $user[0]->firstname .' '.$user[0]->lastname;
-            $email = $user[0]->email;
-            $phone = $user[0]->phone_number;
-        }elseif(\Session::get('broadcaster_user_id')){
-            $user = Utilities::switch_db('api')->select("SELECT * from users where id = '$user_id' ");
-            $name = $user[0]->firstname .' '.$user[0]->lastname;
-            $email = $user[0]->email;
-            $phone = $user[0]->phone_number;
+        $user_broad = Utilities::switch_db('api')->select("SELECT * from users where id = '$user_id' ");
+        $user_agency = DB::select("SELECT * from users where id = '$user_id' ");
+        $user_advertiser = Utilities::switch_db('api')->select("SELECT * from users where id = (SELECT user_id from advertisers WHERE id = '$user_id')");
+        if($user_broad){
+            $name = $user_broad[0]->firstname .' '.$user_broad[0]->lastname;
+            $email = $user_broad[0]->email;
+            $phone = $user_broad[0]->phone_number;
+        }elseif($user_agency){
+            $name = $user_agency[0]->first_name .' '.$user_agency[0]->last_name;
+            $email = $user_agency[0]->email;
+            $phone = $user_agency[0]->phone;
+        }else{
+            $name = $user_advertiser[0]->firstname .' '.$user_advertiser[0]->lastname;
+            $email = $user_advertiser[0]->email;
+            $phone = $user_advertiser[0]->phone_number;
         }
-
 
         $campaign_det = [
             'campaign_name' => $campaign_details[0]->name,
@@ -88,6 +80,8 @@ class Utilities {
             'email' => $email,
             'phone' => $phone,
         ];
+
+
         $files = Utilities::switch_db('api')->select("SELECT * from files where campaign_id = '$id'");
         foreach ($files as $file){
             $adslot_details = Utilities::switch_db('api')->select("SELECT * from adslots where id = '$file->adslot'");
@@ -128,6 +122,7 @@ class Utilities {
         }
 
         return (['campaign_det' => $campaign_det, 'file_details' => $file_details]);
+
     }
 
     public static function array_flatten($array) {

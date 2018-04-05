@@ -33,7 +33,7 @@ class CampaignsController extends Controller
         $broadcaster = Session::get('broadcaster_id');
 
 
-        $all_campaign = Utilities::switch_db('api')->select("SELECT * from campaigns WHERE broadcaster = '$broadcaster' AND adslots > 0 ORDER BY time_created desc");
+        $all_campaign = Utilities::switch_db('api')->select("SELECT * from campaigns WHERE broadcaster = '$broadcaster' AND adslots > 0 ORDER BY time_created DESC");
 
 
         foreach ($all_campaign as $cam)
@@ -187,6 +187,9 @@ class CampaignsController extends Controller
     public function createStep4($walkins)
     {
         $broadcaster = \Session::get('broadcaster_id');
+        $delete_uploads_without_files = \DB::delete("DELETE from uploads where user_id = '$walkins' AND time = 0");
+
+
         return view('campaign.create4', ['walkins' => $walkins])->with('walkins', $walkins)
                             ->with('broadcaster', $broadcaster);
     }

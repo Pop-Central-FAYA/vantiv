@@ -43,64 +43,136 @@
                             </div>
                             <hr>
                             <p><br></p>
-                            <div class="col-12 form-inner">
-                                <div class="form-group">
-                                    <label class="col-md-2">Brands:</label>
-                                    <div class="col-md-4">
-                                        <select name="brand" class="Role form-control">
-                                            @foreach($brands as $b)
-                                                <option value="{{ $b->id }}">{{ $b->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <hr>
-                            <p><br></p>
-                            <div class="col-12 form-inner">
-                                <div class="form-group">
-                                    <label for="brand" class="col-md-2">Industry:</label>
-                                    <div class="col-md-4">
-                                        <select name="industry" class="Role form-control">
-                                            @foreach($industry as $ind)
-                                                <option value="{{ $ind->name }}">{{ $ind->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <hr>
-                            <p><br></p>
-                            <div class="col-12 form-inner">
-                                <div class="form-group">
-                                    <label for="targer_audience" class="col-md-2">Target Audience:</label>
-                                    <div class="col-md-4">
-                                        <select name="target_audience" class="Role form-control">
-                                            @foreach($target as $target_audiences)
-                                                <option value="{{ $target_audiences->id }}">{{ $target_audiences->audience }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <hr>
-                            <p><br></p>
-                            <div class="col-12 form-inner">
-                                <div class="form-group">
-                                    <label for="channel" class="col-md-2">Channel:</label>
-                                    <div class="col-md-4">
-                                        <select name="channel" class="Role form-control">
-                                            @foreach($chanel as $chanels)
-                                                <option value="{{ $chanels->id }}"
-                                                        @if(isset(((object) $step1)->channel) === $chanels->id)
+                            @if(isset($step1))
+                                <div class="col-12 form-inner">
+                                    <div class="form-group">
+                                        <label class="col-md-2">Brands:</label>
+                                        <div class="col-md-4">
+                                            <select name="brand" class="Role form-control">
+                                                @foreach($brands as $b)
+                                                    <option value="{{ $b->id }}"
+                                                        @if($step1->brand === $b->id)
                                                         selected
                                                         @endif
-                                                >{{ $chanels->channel }}</option>
-                                            @endforeach
-                                        </select>
+                                                    >{{ $b->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            @else
+                                <div class="col-12 form-inner">
+                                    <div class="form-group">
+                                        <label class="col-md-2">Brands:</label>
+                                        <div class="col-md-4">
+                                            <select name="brand" class="Role form-control">
+                                                @foreach($brands as $b)
+                                                    <option value="{{ $b->id }}">{{ $b->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+                            <hr>
+                            <p><br></p>
+                            @if(isset($step1))
+                                <div class="col-12 form-inner">
+                                    <div class="form-group">
+                                        <label for="brand" class="col-md-2">Industry:</label>
+                                        <div class="col-md-4">
+                                            <select name="industry" class="Role form-control">
+                                                @foreach($industry as $ind)
+                                                    <option value="{{ $ind->name }}"
+                                                        @if($step1->industry === $ind->name)
+                                                        selected
+                                                        @endif
+                                                    >{{ $ind->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            @else
+                                <div class="col-12 form-inner">
+                                    <div class="form-group">
+                                        <label for="brand" class="col-md-2">Industry:</label>
+                                        <div class="col-md-4">
+                                            <select name="industry" class="Role form-control">
+                                                @foreach($industry as $ind)
+                                                    <option value="{{ $ind->name }}">{{ $ind->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+                            <hr>
+                            <p><br></p>
+                            @if(isset($step1))
+                                <div class="col-12 form-inner">
+                                    <div class="form-group">
+                                        <label for="targer_audience" class="col-md-2">Target Audience:</label>
+                                        <div class="col-md-4">
+                                            <select name="target_audience" class="Role form-control">
+                                                @foreach($target as $target_audiences)
+                                                    <option value="{{ $target_audiences->id }}"
+                                                        @if($step1->target_audience === $target_audiences->id)
+                                                            selected
+                                                        @endif
+                                                    >{{ $target_audiences->audience }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            @else
+                                <div class="col-12 form-inner">
+                                    <div class="form-group">
+                                        <label for="targer_audience" class="col-md-2">Target Audience:</label>
+                                        <div class="col-md-4">
+                                            <select name="target_audience" class="Role form-control">
+                                                @foreach($target as $target_audiences)
+                                                    <option value="{{ $target_audiences->id }}">{{ $target_audiences->audience }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+                            <hr>
+                            <p><br></p>
+                            @if(isset($step1))
+                                <div class="col-12 form-inner">
+                                    <div class="form-group">
+                                        <label for="channel" class="col-md-2">Channel:</label>
+                                        <div class="col-md-4">
+                                            <select name="channel" class="Role form-control">
+                                                @foreach($chanel as $chanels)
+                                                    <option value="{{ $chanels->id }}"
+                                                            @if($step1->channel === $chanels->id)
+                                                            selected
+                                                            @endif
+                                                    >{{ $chanels->channel }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            @else
+                                <div class="col-12 form-inner">
+                                    <div class="form-group">
+                                        <label for="channel" class="col-md-2">Channel:</label>
+                                        <div class="col-md-4">
+                                            <select name="channel" class="Role form-control">
+                                                @foreach($chanel as $chanels)
+                                                    <option value="{{ $chanels->id }}">{{ $chanels->channel }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
                             <hr>
                             <p><br></p>
                             <div class="col-12 form-inner">
@@ -129,13 +201,13 @@
                                         <div class="col-md-6">
                                             <label for="min_age" class="col-md-2">Min Age:</label>
                                             <div class="col-md-6">
-                                                <input type="number" name="min_age" required value="" class="form-control">
+                                                <input type="number" name="min_age" value="{{ isset(((object) $step1)->min_age) ?((object) $step1)->min_age : "" }}" required class="form-control">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <label for="max_age" class="col-md-2">Max Age:</label>
                                             <div class="col-md-6">
-                                                <input type="number" class="form-control" name="max_age" required value="">
+                                                <input type="number" class="form-control" name="max_age" required value="{{ isset(((object) $step1)->max_age) ?((object) $step1)->max_age : "" }}">
                                             </div>
                                         </div>
                                     </div>
@@ -143,30 +215,66 @@
                             </div>
                             <hr>
                             <p><br></p>
-                            <div class="col-12 form-inner">
-                                <div class="form-group">
-                                    <label for="day_parts" class="col-md-2">Day Parts:</label>
-                                    <div class="col-md-8">
-                                        @foreach($day_part as $day_parts)
-                                            <input type="checkbox" name="dayparts[]" value="{{ $day_parts->id }}">{{ $day_parts->day_parts }}
-                                        @endforeach
+                            @if(isset($step1))
+                                <div class="col-12 form-inner">
+                                    <div class="form-group">
+                                        <label for="day_parts" class="col-md-2">Day Parts:</label>
+                                        <div class="col-md-8">
+                                            @foreach($day_part as $day_parts)
+                                                <input type="checkbox" name="dayparts[]"
+                                                       @foreach($step1->dayparts as $daypart)
+                                                       @if($daypart === $day_parts->id)
+                                                       checked
+                                                       @endif
+                                                       @endforeach
+                                                       value="{{ $day_parts->id }}">{{ $day_parts->day_parts }}
+                                            @endforeach
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            @else
+                                <div class="col-12 form-inner">
+                                    <div class="form-group">
+                                        <label for="day_parts" class="col-md-2">Day Parts:</label>
+                                        <div class="col-md-8">
+                                            @foreach($day_part as $day_parts)
+                                                <input type="checkbox" name="dayparts[]" value="{{ $day_parts->id }}">{{ $day_parts->day_parts }}
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
                             <hr>
                             <p><br></p>
-                            <div class="col-12 form-inner">
-                                <div class="form-group">
-                                    <label for="region" class="col-md-2">Region:</label>
-                                    <div class="col-md-8">
-                                        <input type="checkbox" name="region[]" value="{{ $region[0]->id }}">{{ $region[0]->region }}
+                            @if(isset($step1))
+                                <div class="col-12 form-inner">
+                                    <div class="form-group">
+                                        <label for="region" class="col-md-2">Region:</label>
+                                        <div class="col-md-8">
+                                            <input type="checkbox" name="region[]"
+                                                   @foreach($step1->region as $regions)
+                                                       @if($regions === $region[0]->id)
+                                                            checked
+                                                       @endif
+                                                   @endforeach
+                                                   value="{{ $region[0]->id }}">{{ $region[0]->region }}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            @else
+                                <div class="col-12 form-inner">
+                                    <div class="form-group">
+                                        <label for="region" class="col-md-2">Region:</label>
+                                        <div class="col-md-8">
+                                            <input type="checkbox" name="region[]" value="{{ $region[0]->id }}">{{ $region[0]->region }}
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
                             <hr>
                             <p><br></p>
                                 <div class="input-group">
-                                    <input type="Submit" class="btn btn-danger btn-lg" name="Submit" value="Next Campaign">
+                                    <input type="Submit" style="background: #00c4ca" class="btn btn-danger btn-lg" name="Submit" value="Next Campaign">
                                 </div>
 
                             </div>

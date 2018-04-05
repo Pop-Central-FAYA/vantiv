@@ -101,27 +101,6 @@
             });
         });
     </script>
-    {{--<script>--}}
-        {{--Dropzone.options.upload1 = {--}}
-            {{--maxFilesize: 50,--}}
-            {{--acceptedFiles: 'video/*',--}}
-            {{--maxFiles: 1,--}}
-            {{--dictDefaultMessage: 'Click or drag your 15 Seconds video here for quick upload',--}}
-            {{--addRemoveLink: true,--}}
-            {{--init: function () {--}}
-                {{--this.on("complete", function (file, res) {--}}
-                    {{--if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && file.status === Dropzone.SUCCESS) {--}}
-                        {{--toastr.success('File Uploaded successfully');--}}
-                        {{--window.location.href="/campaign/create/"+"<?php echo $walkins; ?>"+"/step4/1";--}}
-
-                    {{--} else {--}}
-                        {{--toastr.error('Something went wrong with your upload');--}}
-                        {{--return;--}}
-                    {{--}--}}
-                {{--});--}}
-            {{--}--}}
-        {{--};--}}
-    {{--</script>--}}
     <script>
 
         //register canplaythrough event to #audio element to can get duration
@@ -143,15 +122,6 @@
                 document.getElementById('audio').setAttribute('src', obUrl);
             }
         });
-    </script>
-    <script>
-        $(document).ready(function() {
-            var user_id = "<?php echo $walkins ?>";
-            $('#step3').click(function(){
-                window.location.href = '/campaign/create/1/'+user_id+'/step3';
-            });
-        });
-
     </script>
 
 
