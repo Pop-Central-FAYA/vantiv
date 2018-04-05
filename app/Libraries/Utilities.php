@@ -44,7 +44,6 @@ class Utilities {
     public static function campaignDetails($id)
     {
         $file_details = [];
-        $campaign_det = [];
         $campaign_details = Utilities::switch_db('api')->select("SELECT * from campaigns where id = '$id'");
         $brand_name = $campaign_details[0]->brand;
         $channel = $campaign_details[0]->channel;
@@ -63,7 +62,7 @@ class Utilities {
             $name = $user_agency[0]->first_name .' '.$user_agency[0]->last_name;
             $email = $user_agency[0]->email;
             $phone = $user_agency[0]->phone;
-        }elseif($user_advertiser){
+        }else{
             $name = $user_advertiser[0]->firstname .' '.$user_advertiser[0]->lastname;
             $email = $user_advertiser[0]->email;
             $phone = $user_advertiser[0]->phone_number;
@@ -81,6 +80,8 @@ class Utilities {
             'email' => $email,
             'phone' => $phone,
         ];
+
+
         $files = Utilities::switch_db('api')->select("SELECT * from files where campaign_id = '$id'");
         foreach ($files as $file){
             $adslot_details = Utilities::switch_db('api')->select("SELECT * from adslots where id = '$file->adslot'");
@@ -121,6 +122,7 @@ class Utilities {
         }
 
         return (['campaign_det' => $campaign_det, 'file_details' => $file_details]);
+
     }
 
     public static function array_flatten($array) {

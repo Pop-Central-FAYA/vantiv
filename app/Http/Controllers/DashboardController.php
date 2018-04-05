@@ -54,7 +54,7 @@ class DashboardController extends Controller
 
             //paid invoices
             $invoice_array = [];
-            $inv = Utilities::switch_db('api')->select("SELECT * from invoices WHERE broadcaster_id = '$broadcaster' ORDER BY time_created DESC LIMIT 10");
+            $inv = Utilities::switch_db('api')->select("SELECT * from invoices WHERE broadcaster_id = '$broadcaster' AND agency_id IS NULL ORDER BY time_created DESC LIMIT 10");
             foreach ($inv as $i) {
                 $walk = Utilities::switch_db('api')->select("SELECT user_id from walkIns where id='$i->walkins_id'");
                 $user_id = $walk[0]->user_id;
