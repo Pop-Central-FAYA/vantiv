@@ -106,7 +106,7 @@
                                     <td>{{ $file_detail['slot_time'] }}</td>
                                     <td>{{ $file_detail['from_to_time'] }}</td>
                                     <td>Pending for Play</td>
-                                    <td>@if($file_detail['file_status'] === 1) File Approved @elseif($file_detail['file_status'] === 2) File Rejected. With reason : <strong>{{ $file_detail['rejection_reason'] }}</strong>  @else Pending Approval@endif</td>
+                                    <td>@if($file_detail['file_status'] === 1) File Approved @elseif($file_detail['file_status'] === 2) File Rejected. With reason : <strong>{{ $file_detail['rejection_reason'] }}</strong>  @else Pending Approval @endif</td>
                                 </tr>
                             @endforeach
                             </tbody>
