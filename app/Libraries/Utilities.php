@@ -82,6 +82,7 @@ class Utilities {
         ];
 
 
+
         $files = Utilities::switch_db('api')->select("SELECT * from files where campaign_id = '$id'");
         foreach ($files as $file){
             $adslot_details = Utilities::switch_db('api')->select("SELECT * from adslots where id = '$file->adslot'");
