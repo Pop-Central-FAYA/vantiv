@@ -239,6 +239,8 @@ class CampaignsController extends Controller
                 ]);
 
                 if($insert_upload){
+                    $msg = 'Your upload for '.$time.' seconds was successful';
+                    Session::flash('success', $msg);
                     return redirect()->route('campaign.create4', ['walkins' => $walkins]);
                 }else{
                     Session::flash('error', 'Could not complete upload process');
@@ -346,7 +348,9 @@ class CampaignsController extends Controller
         $data = \DB::select("SELECT * from uploads WHERE user_id = '$walkins'");
         $cart = \DB::select("SELECT * from carts WHERE user_id = '$walkins'");
         $broadcaster_logo = Utilities::switch_db('api')->select("SELECT image_url from broadcasters where id = '$broadcaster'");
-        return view('campaign.create7')->with('ratecards', $rate_card)->with('result', $result)->with('cart', $cart)->with('datas', $data)->with('times', $time)->with('walkins', $walkins)->with('broadcaster_logo', $broadcaster_logo);
+
+        $positions = Utilities::switch_db('api')->select("SELECT * from filePositions where broadcaster_id = '$broadcaster'");
+        return view('campaign.create7')->with('ratecards', $rate_card)->with('result', $result)->with('cart', $cart)->with('datas', $data)->with('times', $time)->with('walkins', $walkins)->with('broadcaster_logo', $broadcaster_logo)->with('positions', $positions);
     }
 
     /**
@@ -355,34 +359,38 @@ class CampaignsController extends Controller
      */
     public function postCart(Request $request)
     {
-        $this->validate($request, [
-            'price' => 'required',
-            'file' => 'required',
-            'time' => 'required',
-            'adslot_id' => 'required|unique:carts',
-        ]);
+
+        if((int)$request->position != ''){
+            $get_percentage = Utilities::switch_db('api')->select("SELECT percentage from filePositions where id = '$request->position'");
+            $percentage = $get_percentage[0]->percentage;
+            $percentage_price = (($percentage / 100) * (int)$request->price);
+            $new_price = $percentage_price + (int)$request->price;
+
+        }else{
+            $new_price = (int)$request->price;
+            $percentage = 0;
+        }
+
         $price = $request->price;
         $file = $request->file;
         $time = $request->time;
-        $id = $request->adslot_id;
-        $adslot = Utilities::switch_db('api')->select("SELECT * FROM adslots where id = '$id'");
-        $time_difference = $adslot[0]->time_difference;
-        $time_used = $adslot[0]->time_used;
-        $total_time = $time_used + $time;
-        if($total_time > $time_difference){
-            Session::flash('error', 'This file duration cannot fit in the slot, please pick another one');
-            return back();
-        }
         $hourly_range = $request->range;
         $user = $request->walkins;
         $broadcaster = Session::get('broadcaster_id');
         $adslot_id = $request->adslot_id;
+        $position = $request->position;
         $ip = \Request::ip();
-        $insert = \DB::insert("INSERT INTO carts (user_id, broadcaster_id, price, ip_address, file, from_to_time, `time`, adslot_id) VALUES ('$user','$broadcaster','$price','$ip','$file','$hourly_range','$time','$adslot_id')");
+        $check = \DB::select("SELECT * from carts where adslot_id = '$adslot_id' and user_id = '$user' and filePosition_id = '$position' and filePosition_id != ''");
+        if(count($check) === 1){
+            return response()->json(['error' => 'error']);
+        }
+
+
+        $insert = \DB::insert("INSERT INTO carts (user_id, broadcaster_id, price, ip_address, file, from_to_time, `time`, adslot_id, percentage, total_price, filePosition_id, status) VALUES ('$user','$broadcaster','$price','$ip','$file','$hourly_range','$time','$adslot_id', '$percentage', '$new_price', '$position', 1)");
         if($insert){
-            return "success";
+            return response()->json(['success' => 'success']);
         }else{
-            return "failure";
+            return response()->json(['failure' => 'failure']);
         }
     }
 
@@ -577,8 +585,18 @@ class CampaignsController extends Controller
             'time_created' => date('Y-m-d H:i:s', $now),
             'time_modified' => date('Y-m-d H:i:s', $now),
             'adslots_id' => "'". implode("','" ,$ads) . "'",
-            'adslots' => count($query),
         ];
+
+        foreach($query as $q){
+            $check_adslot_space = Utilities::switch_db('api')->select("SELECT * from adslots where id = '$q->adslot_id'");
+            $time_left = $check_adslot_space[0]->time_difference - $check_adslot_space[0]->time_used;
+            $broadcaster_username = Utilities::switch_db('api')->select("SELECT brand from broadcasters where id = '$broadcaster'");
+            if($time_left < $q->time){
+                $msg = 'You cannot proceed with the campaign creation because '.$check_adslot_space[0]->from_to_time.' for '.$broadcaster_username[0]->brand.' isn`t available again';
+                Session::flash('info', $msg);
+                return back();
+            }
+        }
 
 
         $save_campaign = Utilities::switch_db('api')->table('campaigns')->insert($camp);
@@ -608,8 +626,6 @@ class CampaignsController extends Controller
                 'campaign_id' => $camp_id[0]->id,
                 'payment_method' => $request->payment,
                 'amount' => (integer) $request->total,
-                'time_created' => $now,
-                'time_modified' => $now,
                 'broadcaster' => $broadcaster,
                 'walkins_id' => $walkin_id[0]->id,
                 'time_created' => date('Y-m-d H:i:s', $now),

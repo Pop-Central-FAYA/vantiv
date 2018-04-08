@@ -61,6 +61,7 @@ class DashboardController extends Controller
                 $customer_name = Utilities::switch_db('api')->select("SELECT firstname,lastname from users where id='$user_id'");
                 $campaign_det = Utilities::switch_db('api')->select("SELECT `name` as campaign_name, DATE_FORMAT(stop_date, '%Y-%m-%d') as stop_date from campaigns where id='$i->campaign_id'");
                 $invoice_array[] = [
+                    'invoice_number' => $i->invoice_number,
                     'campaign_name' => isset($campaign_det[0]->campaign_name) ? $campaign_det[0]->campaign_name : '',
                     'customer' => $customer_name[0]->firstname . ' ' . $customer_name[0]->lastname,
                     'date' => date('Y-m-d', strtotime($i->time_created)),
@@ -187,7 +188,9 @@ class DashboardController extends Controller
                 $rate_c[] = $adslot;
             }
 
-            return view('dashboard.default')->with(['campaign' => $camp, 'volume' => $c_volume, 'month' => $c_mon, 'high_dayp' => $day_pie, 'days' => $days_data, 'adslot' => $ads_no, 'price' => $tot_pri, 'mon' => $mon, 'invoice' => $invoice]);
+            $broadcaster_info = Utilities::switch_db('api')->select("SELECT * from broadcasters where id = '$broadcaster'");
+
+            return view('dashboard.default')->with(['campaign' => $camp, 'volume' => $c_volume, 'month' => $c_mon, 'high_dayp' => $day_pie, 'days' => $days_data, 'adslot' => $ads_no, 'price' => $tot_pri, 'mon' => $mon, 'invoice' => $invoice, 'broadcaster_info' => $broadcaster_info]);
 
         } else if ($role->role_id === 4) {
             $allBroadcaster = Utilities::switch_db('api')->select("SELECT * from broadcasters");

@@ -24,6 +24,9 @@
                     <li><a href="{{ route('adslot.create') }}"><i class="fa fa-address-book-o"></i><span>Add<br /> Adslot</span></a></li>
                 </ul>
             </li>
+            <li class="{{ Request::is('positions/position/all') ? 'active' : Request::is('positions/position-create') ? 'active' : '' }}"> <a href="{{ route('position.list')  }}" ><i class="fa fa-copy"></i><span>File Positions</span></a>
+
+            </li>
             <li class="{{ Request::is('discounts') ? 'active' : ''  }}">
                 <a href="{{ route('discount.index') }}">
                     <i class="fa fa-signal"></i><span>Discounts</span>

@@ -20,7 +20,7 @@
                         <img src="{{ asset('new_assets/images/logo.png') }}" alt="">
                     @endif
                     <p>Time Picked: {{ $all_file->time }}</p><br>
-                    <button type="submit" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></button>
+                    <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
                 </div>
                 <p></p>
 
