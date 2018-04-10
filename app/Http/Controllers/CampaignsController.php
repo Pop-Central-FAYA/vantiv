@@ -33,12 +33,13 @@ class CampaignsController extends Controller
         $broadcaster = Session::get('broadcaster_id');
 
 
-        $all_campaign = Utilities::switch_db('api')->select("SELECT * from campaigns WHERE broadcaster = '$broadcaster' AND adslots > 0 ORDER BY time_created DESC");
+        $all_campaign = Utilities::switch_db('api')->select("SELECT * from campaignDetails WHERE broadcaster = '$broadcaster' AND adslots > 0 ORDER BY time_created DESC");
 
 
         foreach ($all_campaign as $cam)
         {
-            $invoice_id = Utilities::switch_db('api')->select("SELECT * from invoices where campaign_id = '$cam->id'");
+
+            $campaign_reference = Utilities::switch_db('api')->select("SELECT * from campaigns where id = '$cam->campaign_id'");
 //            $today = strtotime(date('Y-m-d'));
             $today = date("Y-m-d");
             if(strtotime($today) > strtotime($cam->start_date) && strtotime($today) > strtotime($cam->stop_date)){
@@ -54,7 +55,7 @@ class CampaignsController extends Controller
             }
             $brand = Utilities::switch_db('api')->select("SELECT `name` as brand_name from brands where id = '$cam->brand'");
             $campaign[] = [
-                'id' => $invoice_id[0]->invoice_number,
+                'id' => $campaign_reference[0]->campaign_reference,
                 'camp_id' => $cam->id,
                 'name' => $cam->name,
                 'brand' => $brand[0]->brand_name,
@@ -329,6 +330,8 @@ class CampaignsController extends Controller
                                                             AND day_parts IN ('$day_parts') AND region IN ('$region') 
                                                             AND is_available = 0 AND broadcaster = '$broadcaster')");
 
+        $file_position = Utilities::switch_db('api')->select("SELECT * from filePositions");
+
         foreach ($ratecards as $ratecard){
             $day = Utilities::switch_db('api')->select("SELECT * from days where id = '$ratecard->day'");
             $hourly_range = Utilities::switch_db('api')->select("SELECT * from hourlyRanges where id = '$ratecard->hourly_range_id'");
@@ -350,7 +353,7 @@ class CampaignsController extends Controller
         $broadcaster_logo = Utilities::switch_db('api')->select("SELECT image_url from broadcasters where id = '$broadcaster'");
 
         $positions = Utilities::switch_db('api')->select("SELECT * from filePositions where broadcaster_id = '$broadcaster'");
-        return view('campaign.create7')->with('ratecards', $rate_card)->with('result', $result)->with('cart', $cart)->with('datas', $data)->with('times', $time)->with('walkins', $walkins)->with('broadcaster_logo', $broadcaster_logo)->with('positions', $positions);
+        return view('campaign.create7')->with('ratecards', $rate_card)->with('result', $result)->with('cart', $cart)->with('datas', $data)->with('times', $time)->with('walkins', $walkins)->with('broadcaster_logo', $broadcaster_logo)->with('positions', $positions)->with('file_positions', $file_position);
     }
 
     /**
@@ -396,6 +399,7 @@ class CampaignsController extends Controller
 
     public function getCheckout($walkins)
     {
+        $query = [];
         $broadcaster = Session::get('broadcaster_id');
         $first = Session::get('step2');
         $day_parts = "". implode("','" ,$first->dayparts) . "";
@@ -404,9 +408,21 @@ class CampaignsController extends Controller
         $day_partss = Utilities::switch_db('api')->select("SELECT day_parts from dayParts where id IN ('$day_parts') ");
         $targets = Utilities::switch_db('api')->select("SELECT audience from targetAudiences where id = '$first->target_audience'");
         $regions = Utilities::switch_db('api')->select("SELECT region from regions where id IN ('$region') ");
-        $calc = \DB::select("SELECT SUM(price) as total_price FROM carts WHERE user_id = '$walkins'");
-        $query = \DB::select("SELECT * FROM carts WHERE user_id = '$walkins'");
-        $user = Utilities::switch_db('api')->select("SELECT * from users where id = '$walkins'");
+        $calc = \DB::select("SELECT SUM(total_price) as total_price FROM carts WHERE user_id = '$walkins' AND broadcaster_id = '$broadcaster'");
+        $query_carts = \DB::select("SELECT * FROM carts WHERE user_id = '$walkins' AND broadcaster_id = '$broadcaster'");
+        $user = Utilities::switch_db('api')->select("SELECT * from users where id = '$walkins' ");
+        foreach ($query_carts as $query_cart){
+            $position = Utilities::switch_db('api')->select("SELECT * from filePositions where id = '$query_cart->filePosition_id'");
+            $query[] = [
+              'id' => $query_cart->id,
+              'from_to_time' => $query_cart->from_to_time,
+              'time' => $query_cart->time,
+              'price' => $query_cart->price,
+              'percentage' => $query_cart->percentage,
+              'position' => $position ? $position[0]->position : 'No Position',
+              'total_price' => $query_cart->total_price
+            ];
+        }
 
         return view('campaign.create9')->with('first_session', $first)
             ->with('calc', $calc)
@@ -542,7 +558,7 @@ class CampaignsController extends Controller
 //        dd($request);
         $broadcaster = Session::get('broadcaster_id');
         $first = Session::get('step2');
-        $query = \DB::select("SELECT * FROM carts WHERE user_id = '$walkins'");
+        $query = \DB::select("SELECT * FROM carts WHERE user_id = '$walkins' AND broadcaster_id = '$broadcaster'");
         $ads = [];
 
         foreach ($query as $q)
@@ -553,18 +569,41 @@ class CampaignsController extends Controller
 
         $new_q = [];
         $pay = [];
+        $payDetails = [];
+        $campDetails = [];
         $camp = [];
         $invoice = [];
         $mpo = [];
+        $mpoDetails = [];
+        $invoiceDetails = [];
+        $file_position = [];
         $i = 0;
 
         $adssss = implode(',' ,$ads);
         $campaign_id = uniqid();
         $pay_id = uniqid();
+        $invoice_id = uniqid();
+        $mpo_id = uniqid();
         $walkin_id = Utilities::switch_db('api')->select("SELECT id from walkIns where user_id = '$walkins'");
         $now = strtotime(Carbon::now('Africa/Lagos'));
+
+        $campaign_reference = mt_rand(1000, 10000000);
+        $invoice_number = mt_rand(500, 5000000);
+
+//        storing campaign
         $camp[] = [
             'id' => $campaign_id,
+            'time_created' => date('Y-m-d H:i:s', $now),
+            'time_modified' => date('Y-m-d H:i:s', $now),
+            'campaign_reference' => $campaign_reference
+        ];
+
+        $calc = \DB::select("SELECT SUM(total_price) as total_price FROM carts WHERE user_id = '$walkins' GROUP BY broadcaster_id");
+
+
+        $campDetails[] = [
+            'id' => uniqid(),
+            'campaign_id' => $campaign_id,
             'user_id' => $walkins,
             'broadcaster' => $broadcaster,
             'channel' => $first->channel,
@@ -587,11 +626,13 @@ class CampaignsController extends Controller
             'adslots_id' => "'". implode("','" ,$ads) . "'",
         ];
 
-        foreach($query as $q){
+        $cart_check = \DB::select("SELECT SUM(time) as time_sum, adslot_id from carts WHERE user_id = '$walkins' GROUP BY adslot_id");
+
+        foreach($cart_check as $q){
             $check_adslot_space = Utilities::switch_db('api')->select("SELECT * from adslots where id = '$q->adslot_id'");
             $time_left = $check_adslot_space[0]->time_difference - $check_adslot_space[0]->time_used;
             $broadcaster_username = Utilities::switch_db('api')->select("SELECT brand from broadcasters where id = '$broadcaster'");
-            if($time_left < $q->time){
+            if($time_left < $q->time_sum){
                 $msg = 'You cannot proceed with the campaign creation because '.$check_adslot_space[0]->from_to_time.' for '.$broadcaster_username[0]->brand.' isn`t available again';
                 Session::flash('info', $msg);
                 return back();
@@ -599,13 +640,14 @@ class CampaignsController extends Controller
         }
 
 
+        $save_campaignDetails = Utilities::switch_db('api')->table('campaignDetails')->insert($campDetails);
         $save_campaign = Utilities::switch_db('api')->table('campaigns')->insert($camp);
 
-        if($save_campaign){
-            $camp_id = Utilities::switch_db('api')->select("SELECT id from campaigns WHERE id='$campaign_id'");
+        if($save_campaign && $save_campaignDetails){
+            $camp_id = Utilities::switch_db('api')->select("SELECT * from campaigns WHERE id='$campaign_id'");
             foreach($query as $q)
             {
-//            $adslot = Utilities::switch_db('api')->select("SELECT id from adslots where id='$q->rate_id'");
+
                 $new_q[] = [
                     'id' => uniqid(),
                     'campaign_id' => $camp_id[0]->id,
@@ -618,14 +660,24 @@ class CampaignsController extends Controller
                     'time_created' => date('Y-m-d H:i:s', $now),
                     'time_modified' => date('Y-m-d H:i:s', $now),
                     'time_picked' => $q->time,
+                    'position_id' => $q->filePosition_id,
                 ];
             }
 
             $pay[] = [
                 'id' => $pay_id,
                 'campaign_id' => $camp_id[0]->id,
+                'campaign_reference' => $camp_id[0]->campaign_reference,
+                'total' => $request->total,
+                'time_created' => date('Y-m-d H:i:s', $now),
+                'time_modified' => date('Y-m-d H:i:s', $now),
+            ];
+
+            $payDetails[] = [
+                'id' => uniqid(),
+                'payment_id' => $pay_id,
                 'payment_method' => $request->payment,
-                'amount' => (integer) $request->total,
+                'amount' => (integer) $calc[0]->total_price,
                 'broadcaster' => $broadcaster,
                 'walkins_id' => $walkin_id[0]->id,
                 'time_created' => date('Y-m-d H:i:s', $now),
@@ -634,36 +686,62 @@ class CampaignsController extends Controller
 
             $save_payment = Utilities::switch_db('api')->table('payments')->insert($pay);
 
+            $save_payment_details = Utilities::switch_db('api')->table('paymentDetails')->insert($payDetails);
+
             $save_file = Utilities::switch_db('api')->table('files')->insert($new_q);
 
-            if($save_payment && $save_file){
+            if($save_payment && $save_file && $save_payment_details){
+
                 $payment_id = Utilities::switch_db('api')->select("SELECT id from payments WHERE id='$pay_id'");
 
                 $invoice[] = [
-                    'id' => uniqid(),
+                    'id' => $invoice_id,
                     'campaign_id' => $camp_id[0]->id,
-                    'user_id' => $walkins,
+                    'campaign_reference' => $camp_id[0]->campaign_reference,
+                    'invoice_number' => $invoice_number,
                     'payment_id' => $payment_id[0]->id,
+                ];
+
+                $invoiceDetails[] = [
+                    'id' => uniqid(),
+                    'invoice_id' => $invoice_id,
+                    'user_id' => $walkins,
                     'broadcaster_id' => $broadcaster,
-                    'invoice_number' => rand(10000, 10000000),
-                    'actual_amount_paid' => (integer) $request->total,
+                    'invoice_number' => $invoice_number,
+                    'actual_amount_paid' => (integer) $calc[0]->total_price,
                     'refunded_amount' => 0,
                     'walkins_id' => $walkin_id[0]->id,
                 ];
 
                 $mpo[] = [
-                    'id' => uniqid(),
+                    'id' => $mpo_id,
                     'campaign_id' => $camp_id[0]->id,
+                    'campaign_reference' => $camp_id[0]->campaign_reference,
+                    'invoice_number' => $invoice_number,
+                ];
+
+                $mpoDetails[] = [
+                    'id' => uniqid(),
+                    'mpo_id' => $mpo_id,
                     'broadcaster_id' => $broadcaster,
                     'discount' => 0,
                 ];
 
                 $save_invoice = Utilities::switch_db('api')->table('invoices')->insert($invoice);
 
+                $save_invoice_details = Utilities::switch_db('api')->table('invoiceDetails')->insert($invoiceDetails);
+
                 $save_mpo = Utilities::switch_db('api')->table('mpos')->insert($mpo);
 
-                if($save_invoice && $save_mpo){
+                $save_mpo_details = Utilities::switch_db('api')->table('mpoDetails')->insert($mpoDetails);
+
+                if($save_invoice && $save_mpo && $save_invoice_details && $save_mpo_details){
                     foreach ($query as $q){
+                        //inserting the position into the adslot_fileposition table
+                        if(!empty($q->filePosition_id)){
+                            $file_pos_id = uniqid();
+                            $insert_position = Utilities::switch_db('api')->insert("INSERT into adslot_filePositions (id, adslot_id, filePosition_id) VALUES ('$file_pos_id', '$q->adslot_id', '$q->filePosition_id')");
+                        }
                         $get_slots = Utilities::switch_db('api')->select("SELECT * from adslots WHERE id = '$q->adslot_id'");
                         $id = $get_slots[0]->id;
                         $time_difference = $get_slots[0]->time_difference;

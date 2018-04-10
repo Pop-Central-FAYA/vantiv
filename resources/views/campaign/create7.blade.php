@@ -121,39 +121,35 @@
                                                                                         <td><div class="col-md-3"> <video width="150" controls><source src="{{ asset(decrypt($datas[$i]->uploads)) }}"></video> </div></td>
                                                                                         <input type="hidden" name="file" class="file{{ $rating->id.$datas[$i]->id }}" value="{{ $datas[$i]->uploads }}">
                                                                                         <td><div class="col-md-3"><span style="margin-left:15%"></span>{{ $datas[$i]->time }} Seconds</div></td>
-                                                                                        <input type="hidden" name="time" class="time{{ $rating->id.$datas[$i]->id }}" value="{{ $datas[$i]->time }}">
-                                                                                        <input type="hidden" name="from_to_time" class="from_to_time{{ $rating->id.$datas[$i]->id }}" value="{{ $rating->from_to_time }}">
-                                                                                        <input type="hidden" name="adslot_id" class="adslot_id{{ $rating->id.$datas[$i]->id }}" value="{{ $rating->id }}">
-                                                                                        <input type="hidden" name="walkins" class="walkins" value="{{ $walkins }}">
                                                                                         @if($datas[$i]->time === 15)
                                                                                             <td><div class="col-md-3">&#8358;{{ $select_price[0]->price_15 }}</div></td>
-                                                                                            <input type="hidden" name="price" class="price{{ $rating->id.$datas[$i]->id }}" value="{{ $select_price[0]->price_15 }}">
                                                                                         @elseif($datas[$i]->time === 30)
                                                                                             <td><div class="col-md-3">&#8358;{{ $select_price[0]->price_30 }}</div></td>
-                                                                                            <input type="hidden" name="price" class="price{{ $rating->id.$datas[$i]->id }}" value="{{ $select_price[0]->price_30 }}">
                                                                                         @elseif($datas[$i]->time === 45)
                                                                                             <td><div class="col-md-3">&#8358;{{ $select_price[0]->price_45 }}</div></td>
-                                                                                            <input type="hidden" name="price" class="price{{ $rating->id.$datas[$i]->id }}" value="{{ $select_price[0]->price_45 }}">
                                                                                         @elseif($datas[$i]->time === 60)
                                                                                             <td><div class="col-md-3">&#8358;{{ $select_price[0]->price_60 }}</div></td>
-                                                                                            <input type="hidden" name="price" class="price{{ $rating->id.$datas[$i]->id }}" value="{{ $select_price[0]->price_60 }}">
                                                                                         @endif
                                                                                         <td>
                                                                                             <select name="position" class="form-control" id="position{{ $rating->id.$datas[$i]->id }}">
                                                                                                 <option value="">No Position</option>
                                                                                                 @if(count($positions) > 0)
                                                                                                     @foreach($positions as $position)
-                                                                                                        <option value="{{ $position->id }}"
-                                                                                                        @foreach($cart as $ca)
-                                                                                                            @if($ca->adslot_id === $rating->id)
-                                                                                                                @if((int)$ca->time === (int)$datas[$i]->time)
-                                                                                                                    @if($ca->filePosition_id === $position->id)
-                                                                                                                        selected
-                                                                                                                    @endif
-                                                                                                                @endif
+                                                                                                        @foreach($file_positions as $file_position)
+                                                                                                            @if($file_position->id != $position->id)
+                                                                                                                <option value="{{ $position->id }}"
+                                                                                                                    @foreach($cart as $ca)
+                                                                                                                        @if($ca->adslot_id === $rating->id)
+                                                                                                                            @if((int)$ca->time === (int)$datas[$i]->time)
+                                                                                                                                @if($ca->filePosition_id === $position->id)
+                                                                                                                                    selected
+                                                                                                                                @endif
+                                                                                                                            @endif
+                                                                                                                        @endif
+                                                                                                                    @endforeach
+                                                                                                                >{{ $position->position }}</option>
                                                                                                             @endif
                                                                                                         @endforeach
-                                                                                                        >{{ $position->position }}</option>
                                                                                                     @endforeach
                                                                                                 @endif
                                                                                             </select>
@@ -167,7 +163,6 @@
                                                                                                     @endif
                                                                                                     @endif
                                                                                                     @endforeach
-
                                                                                                     type="button"
                                                                                                     data-file_slot="{{ $rating->id.$datas[$i]->id }}"
                                                                                                     @if($datas[$i]->time === 15)
@@ -227,6 +222,25 @@
 
     </div>
 
+    <div id="mmooddaall" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Modal Header</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Some text in the modal.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
 @endsection
 
 @section('scripts')
@@ -276,7 +290,7 @@
                 var position = $("select#position"+file_slot).val();
                 var file = $(this).data('file');
                 var target = $(this).data('target');
-                // $("#button"+file_slot).attr('disabled', true);
+                $(".saveCart").attr('disabled', true);
 
                 $.ajax({
                     url: url1,
@@ -288,19 +302,25 @@
                                 opacity: 1
                             });
                             toastr.success('File picked successfully');
+                            // $(".saveCart").attr('disabled', false);
                             $("#button"+file_slot).attr('disabled', true);
+                            location.reload();
                             $("#rate_this"+adslot_id).addClass('choosen');
-                            $('#cart_item').load(location.href + ' #cart_item');
+                            // $('#cart_item').load(location.href + ' #cart_item');
                         }else if(data.error === "error"){
+                            $(".modal_container").css({
+                                opacity: 1
+                            });
                             toastr.error('You have already picked this position, please pick another one');
-                            $(".modal_container").css({
-                                opacity: 1
-                            });
+                            $("#button"+file_slot).attr('disabled', false);
+                            // location.reload();
                         }else{
-                            toastr.error('An error occured while picking this slot');
                             $(".modal_container").css({
                                 opacity: 1
                             });
+                            toastr.error('An error occured while picking this slot');
+                            $("#button"+file_slot).attr('disabled', false);
+                            location.reload();
                         }
 
                     }
