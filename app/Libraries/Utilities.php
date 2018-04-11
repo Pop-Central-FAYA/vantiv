@@ -44,12 +44,13 @@ class Utilities {
     public static function campaignDetails($id)
     {
         $file_details = [];
-        $campaign_details = Utilities::switch_db('api')->select("SELECT * from campaigns where id = '$id'");
+        $campaign_details = Utilities::switch_db('api')->select("SELECT * from campaignDetails where id = '$id'");
+        $campaign_id = $campaign_details[0]->campaign_id;
         $brand_name = $campaign_details[0]->brand;
         $channel = $campaign_details[0]->channel;
         $brand = Utilities::switch_db('api')->select("SELECT name from brands where id = '$brand_name'");
         $channel_name = Utilities::switch_db('api')->select("SELECT channel from campaignChannels where id = '$channel'");
-        $payments = Utilities::switch_db('api')->select("SELECT * from payments where campaign_id = '$id'");
+        $payments = Utilities::switch_db('api')->select("SELECT * from paymentDetails where payment_id = (SELECT id from payments where campaign_id = '$campaign_id')");
         $user_id = $campaign_details[0]->user_id;
         $user_broad = Utilities::switch_db('api')->select("SELECT * from users where id = '$user_id' ");
         $user_agency = DB::select("SELECT * from users where id = '$user_id' ");
@@ -82,7 +83,8 @@ class Utilities {
         ];
 
 
-        $files = Utilities::switch_db('api')->select("SELECT * from files where campaign_id = '$id'");
+
+        $files = Utilities::switch_db('api')->select("SELECT * from files where campaign_id = '$campaign_id'");
         foreach ($files as $file){
             $adslot_details = Utilities::switch_db('api')->select("SELECT * from adslots where id = '$file->adslot'");
             $day_part_id = $adslot_details[0]->day_parts;
@@ -145,6 +147,7 @@ class Utilities {
         $user = DB::select("SELECT status from users where id = '$user_id'");
         return $user[0]->status;
     }
+
 
 
 

@@ -228,6 +228,17 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
     /**
+     * File Position
+     */
+    Route::group(['prefix' => 'positions'], function () {
+        Route::get('/position-create', 'PositionController@createPosition')->name('position.create');
+        Route::post('/position-store', 'PositionController@storePosition')->name('position.store');
+        Route::get('/edit-position/{id}', 'PositionController@editPosition')->name('position.edit');
+        Route::post('/update-position/{id}', 'PositionController@updatePosition')->name('position.update');
+        Route::get('/position-delete/{id}', 'PositionController@deletePosition')->name('position.delete');
+    });
+
+    /**
      * Hourly Ranges
      */
 

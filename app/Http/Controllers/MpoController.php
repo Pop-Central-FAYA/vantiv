@@ -13,17 +13,18 @@ class MpoController extends Controller
     {
         $broadcaster_id = \Session::get('broadcaster_id');
 
-        $mpos = Utilities::switch_db('reports')->select("SELECT * FROM mpos WHERE broadcaster_id = '$broadcaster_id' OR agency_broadcaster = '$broadcaster_id' ORDER BY time_created DESC ");
+        $mpos = Utilities::switch_db('reports')->select("SELECT * FROM mpoDetails WHERE broadcaster_id = '$broadcaster_id' OR agency_broadcaster = '$broadcaster_id' ORDER BY time_created DESC ");
 
         $mpo_data = [];
 
         foreach ($mpos as $mpo) {
-
-            $campaign_details = Api::fetchCampaign($mpo->campaign_id);
-            $brand = Api::brand($mpo->campaign_id);
-            $payment_details = Api::fetchPayment($mpo->campaign_id);
-            $status = Api::approvedCampaignFiles($mpo->campaign_id);
-            $invoice = Utilities::switch_db('api')->select("SELECT invoice_number from invoices where campaign_id = '$mpo->campaign_id'");
+            $camp = Utilities::switch_db('api')->select("SELECT * from mpos where id = '$mpo->mpo_id'");
+            $campaign_id = $camp[0]->campaign_id;
+            $campaign_details = Api::fetchCampaign($campaign_id);
+            $brand = Api::brand($campaign_id);
+            $payment_details = Api::fetchPayment($campaign_id);
+            $status = Api::approvedCampaignFiles($campaign_id);
+            $invoice = Utilities::switch_db('api')->select("SELECT invoice_number from invoices where campaign_id = '$campaign_id'");
 
             if (count($campaign_details) === 0) {
                 $product = 0;
@@ -60,14 +61,15 @@ class MpoController extends Controller
     {
         $broadcaster_id = \Session::get('broadcaster_id');
 
-        $pending_mpos = $mpos = Utilities::switch_db('reports')->select("SELECT * FROM mpos WHERE is_mpo_accepted = 0 AND (broadcaster_id = '$broadcaster_id' OR agency_broadcaster = '$broadcaster_id') ORDER BY time_created DESC ");
+        $pending_mpos = $mpos = Utilities::switch_db('reports')->select("SELECT * FROM mpoDetails WHERE is_mpo_accepted = 0 AND (broadcaster_id = '$broadcaster_id' OR agency_broadcaster = '$broadcaster_id') ORDER BY time_created DESC ");
 
         $mpo_data = [];
 
         foreach ($pending_mpos as $mpo) {
-
-            $campaign_details = Api::fetchCampaign($mpo->campaign_id);
-            $payment_details = Api::fetchPayment($mpo->campaign_id);
+            $camp = Utilities::switch_db('api')->select("SELECT * from mpos where id = '$mpo->mpo_id'");
+            $campaign_id = $camp[0]->campaign_id;
+            $campaign_details = Api::fetchCampaign($campaign_id);
+            $payment_details = Api::fetchPayment($campaign_id);
 
             if (count($campaign_details) === 0) {
                 $product = 0;
@@ -79,7 +81,7 @@ class MpoController extends Controller
                 $channel = 0;
             } else {
                 $product = $campaign_details[0]->product;
-                $brand = Api::brand($mpo->campaign_id);
+                $brand = Api::brand($campaign_id);
                 $name = $campaign_details[0]->name;
                 $time = date('Y-m-d', strtotime($campaign_details[0]->time_created));
                 $start_date = $campaign_details[0]->start_date;
@@ -93,10 +95,10 @@ class MpoController extends Controller
                 $amount = $payment_details[0]->amount;
             }
 
-            if (Api::getOutstandingFiles($mpo->campaign_id) === 0) {
+            if (Api::getOutstandingFiles($campaign_id) === 0) {
                 $files = 0;
             } else {
-                $files = Api::getOutstandingFiles($mpo->campaign_id);
+                $files = Api::getOutstandingFiles($campaign_id);
             }
 
             $mpo_data[] = [
@@ -121,18 +123,18 @@ class MpoController extends Controller
     {
         $broadcaster_id = \Session::get('broadcaster_id');
 
-        $pending_mpos = Utilities::switch_db('reports')->select("SELECT * FROM mpos WHERE is_mpo_accepted = 0 AND (broadcaster_id = '$broadcaster_id' OR agency_broadcaster = '$broadcaster_id') ORDER BY time_created DESC ");
+        $pending_mpos = Utilities::switch_db('reports')->select("SELECT * FROM mpoDetails WHERE is_mpo_accepted = 0 AND (broadcaster_id = '$broadcaster_id' OR agency_broadcaster = '$broadcaster_id') ORDER BY time_created DESC ");
 
         $mpo_data = [];
         $j = 1;
 
         foreach ($pending_mpos as $mpo) {
-
-            if (Api::pendingMPOs($mpo) === true) {
-
-                $campaign_details = Api::fetchCampaign($mpo->campaign_id);
-                $payment_details = Api::fetchPayment($mpo->campaign_id);
-                $invoice = Utilities::switch_db('api')->select("SELECT invoice_number from invoices where campaign_id = '$mpo->campaign_id'");
+            $camp = Utilities::switch_db('api')->select("SELECT * from mpos where id = '$mpo->mpo_id'");
+            $campaign_id = $camp[0]->campaign_id;
+            if (Api::pendingMPOs($campaign_id) === true) {
+                $campaign_details = Api::fetchCampaign($campaign_id);
+                $payment_details = Api::fetchPayment($campaign_id);
+                $invoice = Utilities::switch_db('api')->select("SELECT invoice_number from invoices where campaign_id = '$campaign_id'");
 
 
                 if (count($campaign_details) === 0) {
@@ -145,7 +147,7 @@ class MpoController extends Controller
                     $channel = 0;
                 } else {
                     $product = $campaign_details[0]->product;
-                    $brand = Api::brand($mpo->campaign_id);
+                    $brand = Api::brand($campaign_id);
                     $name = $campaign_details[0]->name;
                     $time = date('Y-m-d', strtotime($campaign_details[0]->time_created));
                     $start_date = $campaign_details[0]->start_date;
@@ -159,10 +161,10 @@ class MpoController extends Controller
                     $amount = $payment_details[0]->amount;
                 }
 
-                if (Api::getOutstandingFiles($mpo->campaign_id) === 0) {
+                if (Api::getOutstandingFiles($campaign_id) === 0) {
                     $files = 0;
                 } else {
-                    $files = Api::getOutstandingFiles($mpo->campaign_id);
+                    $files = Api::getOutstandingFiles($campaign_id);
                 }
 
                 $mpo_data[] = [

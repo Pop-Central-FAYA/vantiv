@@ -64,17 +64,23 @@
                                             <th>ID</th>
                                             <th>Time</th>
                                             <th>Duration</th>
-                                            <th>Amount</th>
+                                            <th>Price</th>
+                                            <th>Position</th>
+                                            <th>Surge</th>
+                                            <th>Total Price</th>
                                             <th>Action</th>
                                         </tr>
                                         @foreach($query as $queries)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $queries->from_to_time }}</td>
-                                                <td>{{ $queries->time }} seconds</td>
-                                                <td>&#8358;{{ number_format($queries->price, 2) }}</td>
+                                                <td>{{ $queries['from_to_time'] }}</td>
+                                                <td>{{ $queries['time'] }} seconds</td>
+                                                <td>&#8358;{{ number_format($queries['price'], 2) }}</td>
+                                                <td>{{ $queries['position'] }}</td>
+                                                <td>{{ $queries['percentage'] }}%</td>
+                                                <td>&#8358;{{ number_format($queries['total_price'], 2) }}</td>
                                                 <td>
-                                                    <a href="{{ route('agency_cart.remove', ['id' => $queries->adslot_id]) }}" style="font-size: 16px">
+                                                    <a href="{{ route('agency_cart.remove', ['id' => $queries['id']]) }}" style="font-size: 16px">
                                                     <span class="label label-danger">
                                                         <i class="fa fa-trash-o" aria-hidden="true"></i>
                                                         Remove

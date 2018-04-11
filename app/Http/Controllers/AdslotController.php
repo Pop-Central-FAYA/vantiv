@@ -63,7 +63,9 @@ class AdslotController extends Controller
             $j++;
         }
 
-        return view('adslot.index')->with('adslots', $all_adslot)->with('broadcaster', $broadcaster)->with('regions', $region);
+        $broadcaster = Session::get('broadcaster_id');
+        $all_positions = Utilities::switch_db('api')->select("SELECT * from filePositions where broadcaster_id = '$broadcaster' AND status = 0");
+        return view('adslot.index')->with('adslots', $all_adslot)->with('broadcaster', $broadcaster)->with('regions', $region)->with('all_positions', $all_positions);
     }
 
     public function adslotData(DataTables $dataTables)
@@ -310,14 +312,5 @@ class AdslotController extends Controller
         return view('adslot.index')->with('ratecard', $a)->with('seconds', $seconds)->with('preload', $load);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
 
-    }
 }
