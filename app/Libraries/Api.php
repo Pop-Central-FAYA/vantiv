@@ -973,13 +973,13 @@ Class Api
 
     public static function countCampaigns($agency_id)
     {
-        $client_campaigns = Utilities::switch_db('api')->select("SELECT * from campaigns where agency = '$agency_id'");
+        $client_campaigns = Utilities::switch_db('api')->select("SELECT * from campaignDetails where agency = '$agency_id'");
         return count($client_campaigns);
     }
 
     public static function countInvoices($agency_id)
     {
-        $client_invoice = Utilities::switch_db('api')->select("SELECT * from invoices where agency_id = '$agency_id'");
+        $client_invoice = Utilities::switch_db('api')->select("SELECT * from invoiceDetails where agency_id = '$agency_id'");
         return count($client_invoice);
     }
 
@@ -991,27 +991,27 @@ Class Api
 
     public static function countApproved($agency_id)
     {
-        $count_approval = Utilities::switch_db('api')->select("SELECT * from invoices where agency_id = '$agency_id' AND status = 1");
+        $count_approval = Utilities::switch_db('api')->select("SELECT * from invoiceDetails where agency_id = '$agency_id' AND status = 1");
         return count($count_approval);
     }
 
     public static function countUnapproved($agency_id)
     {
-        $count_unapproval = Utilities::switch_db('api')->select("SELECT * from invoices where agency_id = '$agency_id' AND status = 0");
+        $count_unapproval = Utilities::switch_db('api')->select("SELECT * from invoiceDetails where agency_id = '$agency_id' AND status = 0");
         return count($count_unapproval);
     }
 
     public static function allInvoiceAdvertiserorAgency($agency_id)
     {
-        $all_invoices = Utilities::switch_db('reports')->select("SELECT * FROM invoices WHERE  agency_id = '$agency_id' ORDER BY time_created DESC LIMIT 5");
+        $all_invoices = Utilities::switch_db('reports')->select("SELECT * FROM invoiceDetails WHERE  agency_id = '$agency_id' ORDER BY time_created DESC LIMIT 5");
 
         $invoice_campaign_details = [];
 
         foreach ($all_invoices as $invoice) {
 
-            $campaign_id = $invoice->campaign_id;
-
-            $campaign = Utilities::switch_db('reports')->select("SELECT * FROM campaigns WHERE id = '$campaign_id'");
+            $inv_cam = Utilities::switch_db('api')->select("SELECT * from invoices where id = '$invoice->invoice_id'");
+            $campaign_id = $inv_cam[0]->campaign_id;
+            $campaign = Utilities::switch_db('reports')->select("SELECT * FROM campaignDetails WHERE campaign_id = '$campaign_id'");
             $brand_id = $campaign[0]->brand;
             $brand_name = Utilities::switch_db('api')->select("SELECT name from brands where id = '$brand_id'");
 

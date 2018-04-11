@@ -15,29 +15,85 @@
                     </ul>
                 </div>
             </div>
+
             <div class="row">
-                <div class="col-4">
-                    <form action="{{ route('agency.dashboard.broad')  }}" id="search_by_broad" method="GET">
-                        {{ csrf_field() }}
-                        <label for="channel">Channels:</label>
-                        <select class="form-control" name="broadcaster" id="broadcaster">
-                            @foreach($broadcaster as $broadcasters)
-                                <option value="{{ $broadcasters->id }}">
-                                    {{ $broadcasters->brand }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </form>
+                <div class="col-md-3">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <p><h2><i class="fa fa-user"></i> All Clients</h2></p>
+                        </div>
+                        <div class="panel-body">
+                            <h1>{{ $count_client }}</h1>
+                        </div>
+                    </div>
                 </div>
+                <div class="col-md-3">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <p><h2><i class="fa fa-th"></i></i> All Campaigns</h2></p>
+                        </div>
+                        <div class="panel-body">
+                            <h1>{{ $count_campaigns }}</h1>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <p><h2>All Brands</h2></p>
+                        </div>
+                        <div class="panel-body">
+                            <h1>{{ $count_brands }}</h1>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <p><h2>All Invoices</h2></p>
+                        </div>
+                        <div class="panel-body">
+                            <h1>{{ $count_invoice }}</h1>
+                        </div>
+                    </div>
+                </div>
+                {{--<div class="col-12 col-lg-6 col-xl-3">--}}
+                    {{--<div class="widget widget-title">--}}
+                        {{--<div class="info">--}}
+                            {{--<div class="desc">New Users</div>--}}
+                            {{--<div class="value">--}}
+                                {{--<span class="indicator indicator-equal mdi mdi-chevron-right"></span>--}}
+                                {{--<span data-toggle="counter" data-end="113" class="number">113</span>--}}
+                            {{--</div>--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
+                {{--</div>--}}
+
             </div>
 
-                <div id="load_broad" class="load_broad" style="display: none;"></div>
-                {{--<div class="col-12 chart-top">--}}
+
+            {{--<div class="col-12 chart-top">--}}
             <div class="row">
                 <div class="col-12">
                     <div class="Sales">
                         <h2>Periodic Spend Report</h2>
                         <p>Total amount spent on channel</p>
+                        <div class="row">
+                            <div class="col-4">
+                                <form action="{{ route('agency.dashboard.broad')  }}" id="search_by_broad" method="GET">
+                                    {{ csrf_field() }}
+                                    <label for="channel">Channels:</label>
+                                    <select class="form-control" name="broadcaster" id="broadcaster">
+                                        @foreach($broadcaster as $broadcasters)
+                                            <option value="{{ $broadcasters->id }}">
+                                                {{ $broadcasters->brand }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </form>
+                            </div>
+                        </div>
+                        <p><br></p>
                         <canvas id="containerPeriodic_total_per_chanel" style="width: 512px; height: 150px"></canvas>
                         {{--<div id="containerPeriodic_total_per_chanel" style="min-width: 310px; height: 400px; margin: 0 auto"></div>--}}
                     </div>
@@ -63,40 +119,6 @@
             </div>
                 <hr>
                 <p><br></p>
-            <div class="row">
-                <div class="col-12">
-                    <div class="col-12 revenue-right">
-                        <div class="col-lg-3">
-                            <div class="text">
-                                <div id="all-client"></div>
-                                {{--<h1>{{ $count_client }}</h1>--}}
-                                <h3><p class="text-center"> <i class="fa fa-user"></i> All Clients</p></h3>
-                            </div>
-                        </div>
-                        <div class="col-lg-3">
-                            <div class="text">
-                                <div id="all-campaign"></div>
-                                {{--<h1>{{ $count_campaigns }}</h1>--}}
-                                <h3><p class="text-center"> <i class="fa fa-user"></i> All Campaign</p></h3>
-                            </div>
-                        </div>
-                        <div class="col-lg-3">
-                            <div class="text">
-                                <div id="all-brand"></div>
-                                {{--<h1>{{ $count_brands }}</h1>--}}
-                                <h3><p class="text-center"> <i class="fa fa-user"></i> All Brands</p></h3>
-                            </div>
-                        </div>
-                        <div class="col-lg-3">
-                            <div class="text">
-                                <div id="all-invoice"></div>
-                                {{--<h1>{{ $count_invoice }}</h1>--}}
-                                <h3><p class="text-center"> <i class="fa fa-user"></i> All Invoices</p></h3>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
                 {{--</div>--}}
             <div class="row">
                 <div class="col-12 recents">
@@ -267,154 +289,6 @@
                 ]
             });
 
-            //setting a bench mark to get the percentage of all client
-            var all_client = "<?php echo $count_client ?>";
-            var percentage_client = 0;
-            percentage_client = ((all_client / 100) * 100);
-
-            //setting a bench mark to get the percentage of all campaigns
-            var all_campaigns = "<?php echo $count_campaigns; ?>";
-            var percentage_campaign = 0;
-            percentage_campaign = ((all_campaigns / 100) * 100 );
-
-            //setting a bench mark to get the percentage of all brands
-            var all_brands = "<?php echo $count_brands ?>";
-            var percentage_brand = 0;
-            percentage_brand = ((all_brands / 100) * 100);
-
-            //setting a benchmark to get the percentage of all invoice
-            var all_invoices = "<?php echo $count_invoice ?>";
-            var percentage_invoices = 0;
-            percentage_invoices = ((all_invoices / 100) * 100);
-
-
-            if(percentage_client < 10){
-                $("#all-client").circliful({
-                    animationStep: 5,
-                    foregroundBorderWidth: 5,
-                    backgroundBorderWidth: 15,
-                    foregroundColor: '#32CD32',
-                    backgroundColor: '#fff',
-                    percent: percentage_client,
-                    noPercentageSign: true
-                });
-            }else if(percentage_client >=10 && percentage_client < 80) {
-                $("#all-client").circliful({
-                    animationStep: 5,
-                    foregroundBorderWidth: 5,
-                    backgroundBorderWidth: 15,
-                    foregroundColor: '#008000',
-                    backgroundColor: '#fff',
-                    percent: percentage_client,
-                    noPercentageSign: true
-                });
-            }else{
-                $("#all-client").circliful({
-                    animationStep: 5,
-                    foregroundBorderWidth: 5,
-                    backgroundBorderWidth: 15,
-                    foregroundColor: '#ff0000',
-                    backgroundColor: '#fff',
-                    percent: percentage_client,
-                    noPercentageSign: true
-                });
-            }
-
-            if(percentage_campaign < 10){
-                $("#all-campaign").circliful({
-                    animationStep: 5,
-                    foregroundBorderWidth: 5,
-                    backgroundBorderWidth: 15,
-                    foregroundColor: '#32CD32',
-                    backgroundColor: '#fff',
-                    percent: percentage_campaign,
-                    noPercentageSign: true
-                });
-            }else if(percentage_campaign >=10 && percentage_campaign < 80) {
-                $("#all-campaign").circliful({
-                    animationStep: 5,
-                    foregroundBorderWidth: 5,
-                    backgroundBorderWidth: 15,
-                    foregroundColor: '#008000',
-                    backgroundColor: '#fff',
-                    percent: percentage_campaign,
-                    noPercentageSign: true
-                });
-            }else{
-                $("#all-campaign").circliful({
-                    animationStep: 5,
-                    foregroundBorderWidth: 5,
-                    backgroundBorderWidth: 15,
-                    foregroundColor: '#ff0000',
-                    backgroundColor: '#fff',
-                    percent: percentage_campaign,
-                    noPercentageSign: true
-                });
-            }
-
-            if(percentage_brand < 10){
-                $("#all-brand").circliful({
-                    animationStep: 5,
-                    foregroundBorderWidth: 5,
-                    backgroundBorderWidth: 15,
-                    foregroundColor: '#32CD32',
-                    backgroundColor: '#fff',
-                    percent: percentage_brand,
-                    noPercentageSign: true
-                });
-            }else if(percentage_brand >=10 && percentage_brand < 80) {
-                $("#all-brand").circliful({
-                    animationStep: 5,
-                    foregroundBorderWidth: 5,
-                    backgroundBorderWidth: 15,
-                    foregroundColor: '#008000',
-                    backgroundColor: '#fff',
-                    percent: percentage_brand,
-                    noPercentageSign: true
-                });
-            }else{
-                $("#all-brand").circliful({
-                    animationStep: 5,
-                    foregroundBorderWidth: 5,
-                    backgroundBorderWidth: 15,
-                    foregroundColor: '#ff0000',
-                    backgroundColor: '#fff',
-                    percent: percentage_brand,
-                    noPercentageSign: true
-                });
-            }
-
-            if(percentage_invoices < 10){
-                $("#all-invoice").circliful({
-                    animationStep: 5,
-                    foregroundBorderWidth: 5,
-                    backgroundBorderWidth: 15,
-                    foregroundColor: '#32CD32',
-                    backgroundColor: '#fff',
-                    percent: percentage_invoices,
-                    noPercentageSign: true
-                });
-            }else if(percentage_invoices >=10 && percentage_invoices < 80) {
-                $("#all-invoice").circliful({
-                    animationStep: 5,
-                    foregroundBorderWidth: 5,
-                    backgroundBorderWidth: 15,
-                    foregroundColor: '#008000',
-                    backgroundColor: '#fff',
-                    percent: percentage_invoices,
-                    noPercentageSign: true
-                });
-            }else{
-                $("#all-invoice").circliful({
-                    animationStep: 5,
-                    foregroundBorderWidth: 5,
-                    backgroundBorderWidth: 15,
-                    foregroundColor: '#ff0000',
-                    backgroundColor: '#fff',
-                    percent: percentage_invoices,
-                    noPercentageSign: true
-                });
-            }
         })
 
     </script>
@@ -624,5 +498,6 @@
             width: 500px; /* width of the spinner gif */
             height: 500px; /*hight of the spinner gif +2px to fix IE8 issue */
         }
+
     </style>
 @stop
