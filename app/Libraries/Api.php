@@ -766,7 +766,7 @@ Class Api
 
     public static function fetchCampaign($campaign_id)
     {
-        $campaign = Utilities::switch_db('reports')->select("SELECT * FROM campaigns WHERE id = '$campaign_id'");
+        $campaign = Utilities::switch_db('reports')->select("SELECT * FROM campaignDetails WHERE campaign_id = '$campaign_id'");
 
         return $campaign;
 
@@ -774,12 +774,12 @@ Class Api
 
     public static function brand($campaign_id)
     {
-        return Utilities::switch_db('api')->select("SELECT * from brands where id = (SELECT brand from campaigns where id = '$campaign_id')");
+        return Utilities::switch_db('api')->select("SELECT * from brands where id = (SELECT brand from campaignDetails where campaign_id = '$campaign_id')");
     }
 
     public static function fetchPayment($campaign_id)
     {
-        $payment = Utilities::switch_db('reports')->select("SELECT * FROM payments WHERE campaign_id = '$campaign_id'");
+        $payment = Utilities::switch_db('reports')->select("SELECT * FROM paymentDetails WHERE payment_id = (SELECT id from payments where campaign_id = '$campaign_id')");
 
         return $payment;
     }
@@ -1047,13 +1047,13 @@ Class Api
 
     public static function validateCampaign()
     {
-        $campaigns = Utilities::switch_db('api')->select("SELECT * from campaigns WHERE campaign_status = 0");
+        $campaigns = Utilities::switch_db('api')->select("SELECT * from campaignDetails WHERE campaign_status = 0");
         $array = [];
         $adslot_arrays = [];
         foreach ($campaigns as $campaign){
             $today = strtotime(date("Y-m-d"));
             if($today > strtotime($campaign->stop_date)){
-                $update_campaign = Utilities::switch_db('api')->update("UPDATE campaigns set campaign_status = 1 where id = '$campaign->id'");
+                $update_campaign = Utilities::switch_db('api')->update("UPDATE campaignDetails set campaign_status = 1 where campaign_id = '$campaign->id'");
                 $adslots = Utilities::switch_db('api')->select("SELECT * from adslots where id IN ($campaign->adslots_id) ORDER BY time_created DESC");
                 foreach ($adslots as $adslot){
                     $files = Utilities::switch_db('api')->select("SELECT time_picked, adslot from files where adslot = '$adslot->id' AND campaign_id = '$campaign->id'");
@@ -1102,9 +1102,8 @@ Class Api
         return count($allFiles) === count($approvedFiles);
     }
 
-    public static function pendingMPOs($mpo)
+    public static function pendingMPOs($campaign_id)
     {
-        $campaign_id = $mpo->campaign_id;
         $allFiles = Utilities::switch_db('reports')->select("SELECT * FROM files WHERE campaign_id = '$campaign_id'");
         $approvedFiles = Utilities::switch_db('reports')->select("SELECT * FROM files WHERE campaign_id = '$campaign_id' AND is_file_accepted = 1");
 

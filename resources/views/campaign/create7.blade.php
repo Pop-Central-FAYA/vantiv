@@ -135,21 +135,17 @@
                                                                                                 <option value="">No Position</option>
                                                                                                 @if(count($positions) > 0)
                                                                                                     @foreach($positions as $position)
-                                                                                                        @foreach($file_positions as $file_position)
-                                                                                                            @if($file_position->id != $position->id)
-                                                                                                                <option value="{{ $position->id }}"
-                                                                                                                    @foreach($cart as $ca)
-                                                                                                                        @if($ca->adslot_id === $rating->id)
-                                                                                                                            @if((int)$ca->time === (int)$datas[$i]->time)
-                                                                                                                                @if($ca->filePosition_id === $position->id)
-                                                                                                                                    selected
-                                                                                                                                @endif
-                                                                                                                            @endif
+                                                                                                        <option value="{{ $position->id }}"
+                                                                                                            @foreach($cart as $ca)
+                                                                                                                @if($ca->adslot_id === $rating->id)
+                                                                                                                    @if((int)$ca->time === (int)$datas[$i]->time)
+                                                                                                                        @if($ca->filePosition_id === $position->id)
+                                                                                                                            selected
                                                                                                                         @endif
-                                                                                                                    @endforeach
-                                                                                                                >{{ $position->position }}</option>
-                                                                                                            @endif
-                                                                                                        @endforeach
+                                                                                                                    @endif
+                                                                                                                @endif
+                                                                                                            @endforeach
+                                                                                                        >{{ $position->position }}</option>
                                                                                                     @endforeach
                                                                                                 @endif
                                                                                             </select>
@@ -180,7 +176,7 @@
                                                                                                         data-walkin="{{ $walkins }}"
                                                                                                         data-file="{{ $datas[$i]->uploads }}"
                                                                                                         data-target="bs-example-modal-lg{{ $rating->id }}"
-                                                                                                    class="btn btn-success btn-xs saveCart">Pick</button></td>
+                                                                                                    class="btn btn-success btn-xs saveCart">select</button></td>
 
                                                                                     @endif
                                                                                 </tr>
@@ -311,15 +307,21 @@
                             $(".modal_container").css({
                                 opacity: 1
                             });
-                            toastr.error('You have already picked this position, please pick another one');
-                            $("#button"+file_slot).attr('disabled', false);
+                            toastr.error('You have already selected this position, please select another one');
+                            $(".saveCart").attr('disabled', false);
                             // location.reload();
+                        }else if(data.file_error === "file_error"){
+                            $(".modal_container").css({
+                                opacity: 1
+                            });
+                            toastr.error('This position isnt available, please select another position');
+                            $(".saveCart").attr('disabled', false);
                         }else{
                             $(".modal_container").css({
                                 opacity: 1
                             });
-                            toastr.error('An error occured while picking this slot');
-                            $("#button"+file_slot).attr('disabled', false);
+                            toastr.error('An error occurred while selecting this slot');
+                            $(".saveCart").attr('disabled', false);
                             location.reload();
                         }
 

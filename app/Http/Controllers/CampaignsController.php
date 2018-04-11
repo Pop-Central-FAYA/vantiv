@@ -32,9 +32,7 @@ class CampaignsController extends Controller
         $j = 1;
         $broadcaster = Session::get('broadcaster_id');
 
-
         $all_campaign = Utilities::switch_db('api')->select("SELECT * from campaignDetails WHERE broadcaster = '$broadcaster' AND adslots > 0 ORDER BY time_created DESC");
-
 
         foreach ($all_campaign as $cam)
         {
@@ -148,6 +146,7 @@ class CampaignsController extends Controller
 
         $del_cart = \DB::delete("DELETE FROM carts WHERE user_id = '$walkins'");
         $del_uplaods = \DB::delete("DELETE FROM uploads WHERE user_id = '$walkins'");
+        $del_file_position = Utilities::switch_db('api')->delete("DELETE FROM adslot_filePositions where select_status = 0");
 
         return redirect()->route('campaign.create3', ['walkins' => $walkins])->with('walkins', $walkins);
     }
@@ -330,8 +329,6 @@ class CampaignsController extends Controller
                                                             AND day_parts IN ('$day_parts') AND region IN ('$region') 
                                                             AND is_available = 0 AND broadcaster = '$broadcaster')");
 
-        $file_position = Utilities::switch_db('api')->select("SELECT * from filePositions");
-
         foreach ($ratecards as $ratecard){
             $day = Utilities::switch_db('api')->select("SELECT * from days where id = '$ratecard->day'");
             $hourly_range = Utilities::switch_db('api')->select("SELECT * from hourlyRanges where id = '$ratecard->hourly_range_id'");
@@ -353,7 +350,8 @@ class CampaignsController extends Controller
         $broadcaster_logo = Utilities::switch_db('api')->select("SELECT image_url from broadcasters where id = '$broadcaster'");
 
         $positions = Utilities::switch_db('api')->select("SELECT * from filePositions where broadcaster_id = '$broadcaster'");
-        return view('campaign.create7')->with('ratecards', $rate_card)->with('result', $result)->with('cart', $cart)->with('datas', $data)->with('times', $time)->with('walkins', $walkins)->with('broadcaster_logo', $broadcaster_logo)->with('positions', $positions)->with('file_positions', $file_position);
+
+        return view('campaign.create7')->with('ratecards', $rate_card)->with('result', $result)->with('cart', $cart)->with('datas', $data)->with('times', $time)->with('walkins', $walkins)->with('broadcaster_logo', $broadcaster_logo)->with('positions', $positions);
     }
 
     /**
@@ -383,6 +381,18 @@ class CampaignsController extends Controller
         $adslot_id = $request->adslot_id;
         $position = $request->position;
         $ip = \Request::ip();
+
+        //check if the fileposition is picked
+        $check_pos = Utilities::switch_db('api')->select("SELECT * from adslot_filePositions where broadcaster_id = '$broadcaster' AND adslot_id = '$adslot_id' AND filePosition_id = '$position'");
+        if(count($check_pos) === 1){
+            return response()->json(['file_error' => 'file_error']);
+        }
+
+        if((int)$request->position != '') {
+            $id = uniqid();
+            $insert_file = Utilities::switch_db('api')->insert("INSERT into adslot_filePositions (id, adslot_id,filePosition_id, status, select_status, broadcaster_id) VALUES ('$id', '$adslot_id', '$position', 1, 0, '$broadcaster')");
+        }
+
         $check = \DB::select("SELECT * from carts where adslot_id = '$adslot_id' and user_id = '$user' and filePosition_id = '$position' and filePosition_id != ''");
         if(count($check) === 1){
             return response()->json(['error' => 'error']);
@@ -512,7 +522,7 @@ class CampaignsController extends Controller
                     $ip = request()->ip();
                     $user_activity = Api::saveActivity($user_id, $description, $ip, $user_agent);
 
-                    $msg = 'Your payment of '. $amount.' is successful and campaign has been created successfully';
+                    $msg = 'Your payment of '. $amount.' is successful and campaign has been created ';
                     Session::flash('success', $msg);
                     return redirect()->route('campaign.all');
                 }else{
@@ -740,7 +750,7 @@ class CampaignsController extends Controller
                         //inserting the position into the adslot_fileposition table
                         if(!empty($q->filePosition_id)){
                             $file_pos_id = uniqid();
-                            $insert_position = Utilities::switch_db('api')->insert("INSERT into adslot_filePositions (id, adslot_id, filePosition_id) VALUES ('$file_pos_id', '$q->adslot_id', '$q->filePosition_id')");
+                            $insert_position = Utilities::switch_db('api')->update("UPDATE adslot_filePositions set select_status = 1 WHERE adslot_id = '$q->adslot_id' AND broadcaster_id = '$broadcaster'");
                         }
                         $get_slots = Utilities::switch_db('api')->select("SELECT * from adslots WHERE id = '$q->adslot_id'");
                         $id = $get_slots[0]->id;

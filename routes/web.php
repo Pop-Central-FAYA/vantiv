@@ -233,7 +233,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::group(['prefix' => 'positions'], function () {
         Route::get('/position-create', 'PositionController@createPosition')->name('position.create');
         Route::post('/position-store', 'PositionController@storePosition')->name('position.store');
-        Route::get('/position/all', 'PositionController@allPostion')->name('position.list');
         Route::get('/edit-position/{id}', 'PositionController@editPosition')->name('position.edit');
         Route::post('/update-position/{id}', 'PositionController@updatePosition')->name('position.update');
         Route::get('/position-delete/{id}', 'PositionController@deletePosition')->name('position.delete');

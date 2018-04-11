@@ -18,15 +18,13 @@
                     <li><a href="{{ route('brand.all') }}"><i class="fa fa-address-book-o"></i><span>Brand<br /> List</span></a></li>
                 </ul>
             </li>
-            <li class="{{ Request::is('adslot') ? 'active' : Request::is('adslot/*') || Request::is('discount') ? 'active' : ''  }}"> <a href="{{ route('adslot.all')  }}" ><i class="fa fa-volume-down"></i><span>Ads Management</span></a>
+            <li class="{{ Request::is('adslot') ? 'active' : Request::is('adslot/*') || Request::is('discount') ? 'active' : Request::is('positions/position-create') ? 'active' : ''  }}"> <a href="{{ route('adslot.all')  }}" ><i class="fa fa-volume-down"></i><span>Ads Management</span></a>
                 <ul class="sub-menu dropdown">
                     <li><a href="{{ route('adslot.all') }}"><i class="fa fa-address-card-o"></i> <span>Adslots <br /> List</span></a></li>
                     <li><a href="{{ route('adslot.create') }}"><i class="fa fa-address-book-o"></i><span>Add<br /> Adslot</span></a></li>
                 </ul>
             </li>
-            <li class="{{ Request::is('positions/position/all') ? 'active' : Request::is('positions/position-create') ? 'active' : '' }}"> <a href="{{ route('position.list')  }}" ><i class="fa fa-copy"></i><span>File Positions</span></a>
 
-            </li>
             <li class="{{ Request::is('discounts') ? 'active' : ''  }}">
                 <a href="{{ route('discount.index') }}">
                     <i class="fa fa-signal"></i><span>Discounts</span>

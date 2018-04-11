@@ -63,7 +63,9 @@ class AdslotController extends Controller
             $j++;
         }
 
-        return view('adslot.index')->with('adslots', $all_adslot)->with('broadcaster', $broadcaster)->with('regions', $region);
+        $broadcaster = Session::get('broadcaster_id');
+        $all_positions = Utilities::switch_db('api')->select("SELECT * from filePositions where broadcaster_id = '$broadcaster' AND status = 0");
+        return view('adslot.index')->with('adslots', $all_adslot)->with('broadcaster', $broadcaster)->with('regions', $region)->with('all_positions', $all_positions);
     }
 
     public function adslotData(DataTables $dataTables)

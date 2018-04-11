@@ -20,7 +20,7 @@
                     @foreach ($brands as $brand)
                         <div class="col-6">
                             <div class="col-6">
-                                <h2>{{ $brand->name }}</h2>
+                                <h2>{{ ucfirst($brand->name) }}</h2>
                                 @if(Session::get('broadcaster_id'))<a href="" class="edit" data-toggle="modal" data-target=".{{ $brand->id }}">Edit</a> <a href="" class="delete" data-toggle="modal" data-target=".{{ $brand->id }}delete">Delete</a>@endif
                             </div>
                             <div class="col-6">

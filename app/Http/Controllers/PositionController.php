@@ -12,7 +12,7 @@ class PositionController extends Controller
     {
         $broadcaster = Session::get('broadcaster_id');
         $all_positions = Utilities::switch_db('api')->select("SELECT * from filePositions where broadcaster_id = '$broadcaster' AND status = 0");
-        return view('file_position.index', compact('all_positions'));
+        return view('adslot.index', compact('all_positions'));
     }
 
     public function createPosition()
@@ -53,7 +53,7 @@ class PositionController extends Controller
 
         if($insert){
             Session::flash('success', 'Position created successfully');
-            return redirect()->route('position.list');
+            return redirect()->route('adslot.all');
         }else{
             Session::flash('error', 'An error occurred while creating this position');
             return redirect()->back();

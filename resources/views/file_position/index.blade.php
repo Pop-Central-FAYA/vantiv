@@ -38,7 +38,7 @@
                                         <thead>
                                             <th>S/N</th>
                                             <th>Position</th>
-                                            <th>Percentage</th>
+                                            <th>Surge</th>
                                             <th>Edit</th>
                                             <th>Delete</th>
                                         </thead>
