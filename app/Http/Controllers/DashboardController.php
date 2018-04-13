@@ -25,7 +25,7 @@ class DashboardController extends Controller
             $broadcaster = Session::get('broadcaster_id');
             $camp = [];
             $user_details = '';
-            $campaign = Utilities::switch_db('api')->select("SELECT COUNT(id) as total_campaign, agency_broadcaster, agency, time_created as `time`, id, walkins_id, SUM(adslots) as total_adslot from campaignDetails WHERE broadcaster = '$broadcaster' or agency_broadcaster = '$broadcaster' AND walkins_id != '' GROUP BY agency LIMIT 10");
+            $campaign = Utilities::switch_db('api')->select("SELECT COUNT(id) as total_campaign, agency_broadcaster, agency, time_created as `time`, id, walkins_id, SUM(adslots) as total_adslot from campaignDetails WHERE broadcaster = '$broadcaster' AND walkins_id != '' GROUP BY walkins_id LIMIT 10");
             foreach ($campaign as $c) {
                 $agent_id = $c->agency;
                 $user_agency = Utilities::switch_db('api')->select("SELECT * from users where id = (SELECT user_id from agents where id = '$agent_id')");
@@ -40,7 +40,7 @@ class DashboardController extends Controller
                 if($user_broad){
                     $user_details = $user_broad[0]->firstname . ' ' . $user_broad[0]->lastname;
                 }
-                $payments = Utilities::switch_db('api')->select("SELECT SUM(amount) as total_price from paymentDetails WHERE walkins_id = '$c->walkins_id'");
+                $payments = Utilities::switch_db('api')->select("SELECT SUM(amount) as total_price from paymentDetails WHERE walkins_id = '$c->walkins_id' and broadcaster = '$broadcaster' group by walkins_id");
                 $camp[] = [
                     'number_of_campaign' => $c->total_campaign,
                     'user_id' => $c->walkins_id,
@@ -54,18 +54,28 @@ class DashboardController extends Controller
 
             //paid invoices
             $invoice_array = [];
-            $inv = Utilities::switch_db('api')->select("SELECT * from invoiceDetails WHERE broadcaster_id = '$broadcaster' AND agency_id IS NULL ORDER BY time_created DESC LIMIT 10");
+            $broadcaster_det = Utilities::switch_db('api')->select("SELECT * from broadcasters where id = '$broadcaster'");
+            $broadcaster_name = $broadcaster_det[0]->brand;
+            $inv = Utilities::switch_db('api')->select("SELECT * from invoiceDetails WHERE broadcaster_id = '$broadcaster' ORDER BY time_created DESC LIMIT 10");
             foreach ($inv as $i) {
-                $walk = Utilities::switch_db('api')->select("SELECT user_id from walkIns where id='$i->walkins_id'");
                 $inv_details = Utilities::switch_db('api')->select("SELECT * FROM invoices where id = '$i->invoice_id'");
                 $camp_id = $inv_details[0]->campaign_id;
-                $user_id = $walk[0]->user_id;
-                $customer_name = Utilities::switch_db('api')->select("SELECT firstname,lastname from users where id='$user_id'");
                 $campaign_det = Utilities::switch_db('api')->select("SELECT `name` as campaign_name, DATE_FORMAT(stop_date, '%Y-%m-%d') as stop_date from campaignDetails where campaign_id='$camp_id'");
+                $user_id = $i->user_id;
+                $user_broad = Utilities::switch_db('api')->select("SELECT * from users where id = '$user_id' ");
+                $user_agency = Utilities::switch_db('api')->select("SELECT * from users where id = (SELECT user_id from agents where id = '$i->agency_id')");
+                $user_advertiser = Utilities::switch_db('api')->select("SELECT * from users where id = (SELECT user_id from advertisers WHERE id = '$user_id')");
+                if($user_broad){
+                    $name = $user_broad[0]->firstname .' '.$user_broad[0]->lastname;
+                }elseif($user_agency){
+                    $name = $user_agency[0]->firstname .' '.$user_agency[0]->lastname;
+                }else{
+                    $name = $user_advertiser[0]->firstname .' '.$user_advertiser[0]->lastname;
+                }
                 $invoice_array[] = [
-                    'invoice_number' => $i->invoice_number,
+                    'invoice_number' => $i->agency_id ? $i->invoice_number.'v'.$broadcaster_name[0] : $i->invoice_number,
                     'campaign_name' => isset($campaign_det[0]->campaign_name) ? $campaign_det[0]->campaign_name : '',
-                    'customer' => $customer_name[0]->firstname . ' ' . $customer_name[0]->lastname,
+                    'customer' => $name,
                     'date' => date('Y-m-d', strtotime($i->time_created)),
                     'date_due' => $campaign_det[0]->stop_date,
                 ];

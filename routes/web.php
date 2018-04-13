@@ -287,11 +287,11 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/campaign/step1/{id}', 'Agency\CampaignsController@getStep1')->name('agency_campaign.step1');
             Route::post('/campaign/step1/store/{id}', 'Agency\CampaignsController@postStep1')->name('agency_campaign.store1');
             Route::get('/campaigns/step2/{id}', 'Agency\CampaignsController@getStep2')->name('agency_campaign.step2');
-            Route::get('/campaign/step3/{id}/{broadcaster}', 'Agency\CampaignsController@getStep3')->name('agency_campaign.step3');
-            Route::post('/campaign/step3/store/{id}/{broadcaster}', 'Agency\CampaignsController@postStep3')->name('agency_campaign.store3');
-            Route::get('/campaign/step3/1/{id}/{broadcaster}', 'Agency\CampaignsController@getStep3_1')->name('agency_campaign.step3_1');
-            Route::post('/campaign/step3/store/1/{id}/{broadcaster}', 'Agency\CampaignsController@postStep3_1')->name('agency_campaign.store3_1');
-            Route::get('/campaign/step3/2/{id}/{broadcaster}', 'Agency\CampaignsController@getStep3_2')->name('agency_campaign.step3_2');
+            Route::get('/campaign/step3/{id}', 'Agency\CampaignsController@getStep3')->name('agency_campaign.step3');
+            Route::post('/campaign/step3/store/{id}', 'Agency\CampaignsController@postStep3')->name('agency_campaign.store3');
+            Route::get('/campaign/step3/1/{id}', 'Agency\CampaignsController@getStep3_1')->name('agency_campaign.step3_1');
+            Route::post('/campaign/step3/store/1/{id}', 'Agency\CampaignsController@postStep3_1')->name('agency_campaign.store3_1');
+            Route::get('/campaign/step3/2/{id}', 'Agency\CampaignsController@getStep3_2')->name('agency_campaign.step3_2');
             Route::post('/campaign/step3/store/2/{id}/{broadcaster}', 'Agency\CampaignsController@postStep3_2')->name('agency_campaign.store3_2');
             Route::get('/campaign/step3/3/{id}/{broadcaster}', 'Agency\CampaignsController@getStep3_3')->name('agency_campaign.step3_3');
             Route::post('/campaign/step3/store/3/{id}/{broadcaster}', 'Agency\CampaignsController@postStep3_3')->name('agency_campaign.store3_3');
@@ -299,12 +299,13 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/camaigns/uploads/delete/{upload_id}/{id}', 'Agency\CampaignsController@deleteUpload')->name('agency.uploads.delete');
             Route::get('/review-uploads/{id}/{broadcaster}', 'Agency\CampaignsController@reviewUploads')->name('agency_campaign.review_uploads');
             Route::get('/campaign/step4/{id}/{broadcaster}', 'Agency\CampaignsController@getStep4')->name('agency_campaign.step4');
-            Route::post('/campaigns/cart/store/{id}/{broadcaster}', 'Agency\CampaignsController@postCart')->name('agency_campaign.cart');
-            Route::get('/campaign/checkout/{id}/{broadcaster}', 'Agency\CampaignsController@checkout')->name('agency_campaign.checkout');
+            Route::get('/campaigns/cart/store', 'Agency\CampaignsController@postCart')->name('agency_campaign.cart');
+            Route::get('/campaign/checkout/{id}', 'Agency\CampaignsController@checkout')->name('agency_campaign.checkout');
             Route::get('/cart/remove/{id}', 'Agency\CampaignsController@removeCart')->name('agency_cart.remove');
-            Route::post('/campaign/submit/{id}/{broadcaster}', 'Agency\CampaignsController@postCampaign')->name('agency_submit.campaign');
+            Route::post('/campaign/submit/{id}', 'Agency\CampaignsController@postCampaign')->name('agency_submit.campaign');
 
             Route::get('/campaign-details/{id}', 'Agency\CampaignsController@getDetails')->name('agency.campaign.details');
+            Route::get('/mpo-details/{id}', 'Agency\CampaignsController@mpoDetails')->name('agency.mpo.details');
         });
 
 //           Route::group(['prefix' => 'brands'], function () {

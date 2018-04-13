@@ -23,7 +23,7 @@
                     <p><br></p>
 
                     <div class="col-md-3 ">
-                        <form class="campform dropzone" id="upload1"  method="POST" action="{{ route('agency_campaign.store3_1', ['id' => $id, 'broadcaster' => $broadcaster]) }}" enctype="multipart/form-data">
+                        <form class="campform dropzone" id="upload1"  method="POST" action="{{ route('agency_campaign.store3_1', ['id' => $id]) }}" enctype="multipart/form-data">
                             {{ csrf_field() }}
                         </form>
 
@@ -41,7 +41,7 @@
                 <div class="container">
 
                     <p align="right">
-                    <form class="campform"  method="POST" action="{{ route('agency_campaign.store3_1', ['id' => $id, 'broadcaster' => $broadcaster]) }}" enctype="multipart/form-data">
+                    <form class="campform"  method="POST" action="{{ route('agency_campaign.store3_1', ['id' => $id]) }}" enctype="multipart/form-data">
                         {{ csrf_field() }}
                         <button type="submit" class="btn campaign-button btn-danger btn-lg" style="margin-right:15%">Next <i class="fa fa-play" aria-hidden="true"></i></button>
                     </form>
