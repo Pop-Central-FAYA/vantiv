@@ -22,6 +22,7 @@ class CampaignsController extends Controller
      */
     public function index()
     {
+        $inv = [];
         $all_mpo = [];
         $agency_id = Session::get('agency_id');
         $invoice = Utilities::switch_db('api')->select("SELECT * from invoices");
@@ -53,7 +54,9 @@ class CampaignsController extends Controller
             ];
         }
 
-        return view('agency.campaigns.all_campaign')->with('invoice', $invoice)->with('files', $file)->with('mpos', $all_mpo);
+        $invoices_all = Utilities::invoiceDetails();
+        dd($invoices_all);
+        return view('agency.campaigns.all_campaign')->with('invoices', $invoices_all)->with('files', $file)->with('mpos', $all_mpo);
     }
 
     public function getData(DataTables $datatables, Request $request)
@@ -99,7 +102,7 @@ class CampaignsController extends Controller
                 return '<a href="' . route('agency.mpo.details', ['id' => $campaign['campaign_id']]) .'" class="btn btn-default btn-xs" > MPO Details </a>';
             })
             ->addColumn('invoices', function($campaign){
-                return '<button data-toggle="modal" data-target=".invoiceModal' . $campaign['camp_id']. '" class="btn btn-success btn-xs" > Invoice Details </button>    ';
+                return '<button data-toggle="modal" data-target=".invoiceModal' . $campaign['campaign_id']. '" class="btn btn-success btn-xs" > Invoice Details </button>    ';
             })
             ->rawColumns(['details' => 'details', 'mpo' => 'mpo', 'invoices' => 'invoices'])->addIndexColumn()
             ->make(true);

@@ -12,7 +12,7 @@
                 <div class="col-12 heading-main">
                     <h1>MPO details</h1>
                     <ul>
-                        <li><a href="{{ route('agency.campaign.all') }}"><i class="fa fa-th-large"></i>All MPO</a></li>
+                        <li><a href="{{ route('agency.campaign.all') }}"><i class="fa fa-th-large"></i>All Campaigns</a></li>
                         <li><a href="#">MPO</a></li>
                     </ul>
                 </div>
@@ -46,7 +46,7 @@
                             <tr>
                                 <th>Year</th>
                                 <th>Media</th>
-                                <th>Specification</th>
+                                {{--<th>Specification</th>--}}
                                 <th>Spots</th>
                                 <th>Total</th>
                             </tr>
@@ -56,7 +56,7 @@
                                 <tr>
                                     <td>{{ $all_mpo['year'] }}</td>
                                     <td>{{ $all_mpo['media'] }}</td>
-                                    <td></td>
+                                    {{--<td></td>--}}
                                     <td>{{ $all_mpo['spot'] }}</td>
                                     <td>{{ $all_mpo['total'] }}</td>
                                 </tr>

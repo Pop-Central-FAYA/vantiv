@@ -37,6 +37,53 @@
         </div>
     </div>
 
+    @foreach ($invoices as $invoice)
+        <div class="modal fade invoiceModal{{ $invoice['campaign_id'] }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Campaign Invoice -</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Adslot ID</th>
+                                    <th>Playtime</th>
+                                    <th>Cost</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                    {{--<tr>--}}
+                                        {{--<td>{{ count((array) $file->adslot) }}</td>--}}
+                                        {{--<td>{{ $file->time_picked }} Seconds</td>--}}
+                                        {{--<td>&#8358;{{ number_format($ads_price[0]->price_60, 2) }}</td>--}}
+                                    {{--</tr>--}}
+
+                                <tr>
+                                    <td><b><h3>Total:</h3></b></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><h3></h3></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Done</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endforeach
+
 
 @stop
 @section('scripts')

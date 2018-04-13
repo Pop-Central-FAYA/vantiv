@@ -12,7 +12,7 @@
                 <div class="col-12 heading-main">
                     <h1>Campaign Details</h1>
                     <ul>
-                        <li><a href="#"><i class="fa fa-th-large"></i>Agency Campaign</a></li>
+                        <li><a href="{{ route('agency.campaign.all') }}"><i class="fa fa-th-large"></i>Agency Campaign</a></li>
                         <li><a href="#">Campaign Details</a></li>
                     </ul>
                 </div>
