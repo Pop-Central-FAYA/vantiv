@@ -50,7 +50,7 @@ class Utilities {
         $channel = $campaign_details[0]->channel;
         $brand = Utilities::switch_db('api')->select("SELECT name from brands where id = '$brand_name'");
         $channel_name = Utilities::switch_db('api')->select("SELECT channel from campaignChannels where id = '$channel'");
-        $payments = Utilities::switch_db('api')->select("SELECT * from paymentDetails where payment_id = (SELECT id from payments where campaign_id = '$campaign_id')");
+        $payments = Utilities::switch_db('api')->select("SELECT * from payments where campaign_id = '$campaign_id' ");
         $user_id = $campaign_details[0]->user_id;
         $user_broad = Utilities::switch_db('api')->select("SELECT * from users where id = '$user_id' ");
         $user_agency = DB::select("SELECT * from users where id = '$user_id' ");
@@ -76,7 +76,7 @@ class Utilities {
             'channel' => $channel_name[0]->channel,
             'start_date' => date('Y-m-d', strtotime($campaign_details[0]->start_date)),
             'end_date' => date('Y-m-d', strtotime($campaign_details[0]->stop_date)),
-            'campaign_cost' => number_format($payments[0]->amount, '2'),
+            'campaign_cost' => number_format($payments[0]->total, '2'),
             'walkIn_name' => $name,
             'email' => $email,
             'phone' => $phone,
@@ -105,8 +105,8 @@ class Utilities {
                 'file_id' => $file->id,
                 'user_id' => $file->user_id,
                 'agency_id' => $campaign_details[0]->agency,
-                'agency_broadcaster' => $campaign_details[0]->agency_broadcaster,
-                'broadcaster_id' => $campaign_details[0]->broadcaster,
+                'agency_broadcaster' => $file->broadcaster_id,
+                'broadcaster_id' => $file->broadcaster_id,
                 'from_to_time' => $adslot_details[0]->from_to_time,
                 'day_part' => $day_parts[0]->day_parts,
                 'target_audience' => $target_audience[0]->audience,
@@ -146,6 +146,21 @@ class Utilities {
     {
         $user = DB::select("SELECT status from users where id = '$user_id'");
         return $user[0]->status;
+    }
+
+    public static function fetchTimeInCart($id, $broadcaster)
+    {
+        $cart_check = \DB::select("SELECT SUM(time) as time_sum, adslot_id from carts WHERE user_id = '$id' GROUP BY adslot_id");
+        foreach($cart_check as $q){
+            $check_adslot_space = Utilities::switch_db('api')->select("SELECT * from adslots where id = '$q->adslot_id'");
+            $time_left = $check_adslot_space[0]->time_difference - $check_adslot_space[0]->time_used;
+            $broadcaster_username = Utilities::switch_db('api')->select("SELECT brand from broadcasters where id = '$broadcaster'");
+            if($time_left < $q->time_sum){
+                $msg = 'You cannot proceed with the campaign creation because '.$check_adslot_space[0]->from_to_time.' for '.$broadcaster_username[0]->brand.' isn`t available again';
+                \Session::flash('info', $msg);
+                return back();
+            }
+        }
     }
 
 

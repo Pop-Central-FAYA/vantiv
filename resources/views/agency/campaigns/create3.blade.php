@@ -24,7 +24,7 @@
                     <p><br></p>
 
                     <div class="row">
-                        <form method="POST" action="{{ route('agency_campaign.store3', ['id' => $id, 'broadcaster' => $broadcaster]) }}" enctype="multipart/form-data">
+                        <form method="POST" action="{{ route('agency_campaign.store3', ['id' => $id]) }}" enctype="multipart/form-data">
                             {{ csrf_field() }}
                             <div class="col-md-3">
                                 <select class="form-control" name="time" id="">
@@ -58,7 +58,7 @@
             <div class="row">
                 <div class="container">
                     <p align="right">
-                    <form class="campform"  method="POST" action="{{ route('agency_campaign.store3_1', ['id' => $id, 'broadcaster' => $broadcaster]) }}" enctype="multipart/form-data">
+                    <form class="campform"  method="POST" action="{{ route('agency_campaign.store3_1', ['id' => $id]) }}" enctype="multipart/form-data">
                         {{ csrf_field() }}
                         <button type="button" style="background: #00c4ca" id="step2" class="btn campaign-button btn-danger btn-lg" >Back <i class="fa fa-backward" aria-hidden="true"></i></button>
                         <button type="submit" class="btn campaign-button btn-danger btn-lg" style="background:#00c4ca; margin-right:15%">Next <i class="fa fa-play" aria-hidden="true"></i></button>

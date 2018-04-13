@@ -360,7 +360,6 @@ class CampaignsController extends Controller
      */
     public function postCart(Request $request)
     {
-
         if((int)$request->position != ''){
             $get_percentage = Utilities::switch_db('api')->select("SELECT percentage from filePositions where id = '$request->position'");
             $percentage = $get_percentage[0]->percentage;
@@ -636,19 +635,7 @@ class CampaignsController extends Controller
             'adslots_id' => "'". implode("','" ,$ads) . "'",
         ];
 
-        $cart_check = \DB::select("SELECT SUM(time) as time_sum, adslot_id from carts WHERE user_id = '$walkins' GROUP BY adslot_id");
-
-        foreach($cart_check as $q){
-            $check_adslot_space = Utilities::switch_db('api')->select("SELECT * from adslots where id = '$q->adslot_id'");
-            $time_left = $check_adslot_space[0]->time_difference - $check_adslot_space[0]->time_used;
-            $broadcaster_username = Utilities::switch_db('api')->select("SELECT brand from broadcasters where id = '$broadcaster'");
-            if($time_left < $q->time_sum){
-                $msg = 'You cannot proceed with the campaign creation because '.$check_adslot_space[0]->from_to_time.' for '.$broadcaster_username[0]->brand.' isn`t available again';
-                Session::flash('info', $msg);
-                return back();
-            }
-        }
-
+        $check_time_adslot = Utilities::fetchTimeInCart($walkins, $broadcaster);
 
         $save_campaignDetails = Utilities::switch_db('api')->table('campaignDetails')->insert($campDetails);
         $save_campaign = Utilities::switch_db('api')->table('campaigns')->insert($camp);

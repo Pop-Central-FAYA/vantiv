@@ -774,7 +774,7 @@ Class Api
 
     public static function brand($campaign_id)
     {
-        return Utilities::switch_db('api')->select("SELECT * from brands where id = (SELECT brand from campaignDetails where campaign_id = '$campaign_id')");
+        return Utilities::switch_db('api')->select("SELECT * from brands where id = (SELECT brand from campaignDetails where campaign_id = '$campaign_id' GROUP BY campaign_id)");
     }
 
     public static function fetchPayment($campaign_id)
@@ -805,9 +805,9 @@ Class Api
         return $files;
     }
 
-    public static function getOutstandingFiles($campaign_id)
+    public static function getOutstandingFiles($campaign_id, $broadcaster)
     {
-        $files = Utilities::switch_db('reports')->select("SELECT * FROM files WHERE campaign_id = '$campaign_id' AND is_file_accepted <> 1");
+        $files = Utilities::switch_db('reports')->select("SELECT * FROM files WHERE campaign_id = '$campaign_id' AND is_file_accepted <> 1 AND broadcaster_id = '$broadcaster'");
 
         return $files;
     }

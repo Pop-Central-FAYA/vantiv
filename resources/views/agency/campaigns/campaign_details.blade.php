@@ -27,8 +27,8 @@
                     <p><h4>Brand: {{ $campaign_details['campaign_det']['brand'] }}</h4></p><br>
                     <p><h4>Channel: {{ $campaign_details['campaign_det']['channel'] }}</h4></p><br>
                     <p><h4>Start Date: {{ $campaign_details['campaign_det']['start_date'] }}</h4></p><br>
-                    <p><h4>Stop Date: {{ $campaign_details['campaign_det']['end_date'] }}</h4></p><br>
-                    <p><h4>Campaign Cost: &#8358;{{ $campaign_details['campaign_det']['campaign_cost'] }}</h4></p><br>
+                    <p><h4>End Date: {{ $campaign_details['campaign_det']['end_date'] }}</h4></p><br>
+                    <p><h4>Campaign Budget: &#8358;{{ $campaign_details['campaign_det']['campaign_cost'] }}</h4></p><br>
                 </div>
                 <div class="col-md-6">
                     <h2>Clients Information</h2>
@@ -47,6 +47,7 @@
                             <thead>
                             <tr>
                                 <th>S/N</th>
+                                <th>Broadcaster Station</th>
                                 <th>Day</th>
                                 <th>From-To Time</th>
                                 <th>Day-parts</th>
@@ -61,6 +62,7 @@
                             @foreach($campaign_details['file_details'] as $file_detail)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $file_detail['broadcast_station'] }}</td>
                                     <td>{{ $file_detail['day'] }}</td>
                                     <td>{{ $file_detail['from_to_time'] }}</td>
                                     <td>{{ $file_detail['day_part'] }}</td>
@@ -84,6 +86,7 @@
                             <tr>
                                 <th>S/N</th>
                                 <th>File</th>
+                                <th>Broadcaster</th>
                                 <th>Slot Purchased</th>
                                 <th>Play Time Status</th>
                                 <th>File Status</th>
@@ -96,6 +99,7 @@
                                     <td>
                                         <video src="{{ $file_detail['file'] }}" width="150" height="100" controls></video>
                                     </td>
+                                    <td>{{ $file_detail['broadcast_station'] }}</td>
                                     <td>{{ $file_detail['slot_time'] }}</td>
                                     <td>Played</td>
                                     <td>@if($file_detail['file_status'] === 1) File Approved @elseif($file_detail['file_status'] === 2) File Rejected. With reason : <strong>{{ $file_detail['rejection_reason'] }}</strong> @else Pending @endif</td>

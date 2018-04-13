@@ -13,11 +13,16 @@ class MpoController extends Controller
     {
         $broadcaster_id = \Session::get('broadcaster_id');
 
-        $mpos = Utilities::switch_db('reports')->select("SELECT * FROM mpoDetails WHERE broadcaster_id = '$broadcaster_id' OR agency_broadcaster = '$broadcaster_id' ORDER BY time_created DESC ");
+        $mpos = Utilities::switch_db('reports')->select("SELECT * FROM mpoDetails WHERE broadcaster_id = '$broadcaster_id' ORDER BY time_created DESC ");
 
         $mpo_data = [];
 
+        $broadcaster_det = Utilities::switch_db('api')->select("SELECT * from broadcasters where id = '$broadcaster_id'");
+
+        $broadcaster_name = $broadcaster_det[0]->brand;
+
         foreach ($mpos as $mpo) {
+            $n = 1;
             $camp = Utilities::switch_db('api')->select("SELECT * from mpos where id = '$mpo->mpo_id'");
             $campaign_id = $camp[0]->campaign_id;
             $campaign_details = Api::fetchCampaign($campaign_id);
@@ -43,7 +48,7 @@ class MpoController extends Controller
             }
 
             $mpo_data[] = [
-                'id' => $invoice[0]->invoice_number,
+                'id' => $mpo->agency_id ? $invoice[0]->invoice_number.'v'.$broadcaster_name[0] : $invoice[0]->invoice_number,
                 'is_mpo_accepted' => $mpo->is_mpo_accepted,
                 'product' => $product,
                 'amount' => $amount,
@@ -52,6 +57,8 @@ class MpoController extends Controller
                 'time_created' => $time,
                 'status' => $status
             ];
+
+            $n++;
         }
 
         return view('mpos.index', compact('mpo_data'));
@@ -64,6 +71,10 @@ class MpoController extends Controller
         $pending_mpos = $mpos = Utilities::switch_db('reports')->select("SELECT * FROM mpoDetails WHERE is_mpo_accepted = 0 AND (broadcaster_id = '$broadcaster_id' OR agency_broadcaster = '$broadcaster_id') ORDER BY time_created DESC ");
 
         $mpo_data = [];
+
+        $broadcaster_det = Utilities::switch_db('api')->select("SELECT * from broadcasters where id = '$broadcaster_id'");
+
+        $broadcaster_name = $broadcaster_det[0]->brand;
 
         foreach ($pending_mpos as $mpo) {
             $camp = Utilities::switch_db('api')->select("SELECT * from mpos where id = '$mpo->mpo_id'");
@@ -95,10 +106,10 @@ class MpoController extends Controller
                 $amount = $payment_details[0]->amount;
             }
 
-            if (Api::getOutstandingFiles($campaign_id) === 0) {
+            if (Api::getOutstandingFiles($campaign_id, $broadcaster_id) === 0) {
                 $files = 0;
             } else {
-                $files = Api::getOutstandingFiles($campaign_id);
+                $files = Api::getOutstandingFiles($campaign_id, $broadcaster_id);
             }
 
             $mpo_data[] = [
@@ -123,12 +134,17 @@ class MpoController extends Controller
     {
         $broadcaster_id = \Session::get('broadcaster_id');
 
-        $pending_mpos = Utilities::switch_db('reports')->select("SELECT * FROM mpoDetails WHERE is_mpo_accepted = 0 AND (broadcaster_id = '$broadcaster_id' OR agency_broadcaster = '$broadcaster_id') ORDER BY time_created DESC ");
+        $pending_mpos = Utilities::switch_db('reports')->select("SELECT * FROM mpoDetails WHERE is_mpo_accepted = 0 AND broadcaster_id = '$broadcaster_id' ORDER BY time_created DESC ");
 
         $mpo_data = [];
         $j = 1;
 
+        $broadcaster_det = Utilities::switch_db('api')->select("SELECT * from broadcasters where id = '$broadcaster_id'");
+
+        $broadcaster_name = $broadcaster_det[0]->brand;
+
         foreach ($pending_mpos as $mpo) {
+            $n = 1;
             $camp = Utilities::switch_db('api')->select("SELECT * from mpos where id = '$mpo->mpo_id'");
             $campaign_id = $camp[0]->campaign_id;
             if (Api::pendingMPOs($campaign_id) === true) {
@@ -161,15 +177,15 @@ class MpoController extends Controller
                     $amount = $payment_details[0]->amount;
                 }
 
-                if (Api::getOutstandingFiles($campaign_id) === 0) {
+                if (Api::getOutstandingFiles($campaign_id, $broadcaster_id) === 0) {
                     $files = 0;
                 } else {
-                    $files = Api::getOutstandingFiles($campaign_id);
+                    $files = Api::getOutstandingFiles($campaign_id, $broadcaster_id);
                 }
 
                 $mpo_data[] = [
                     's_n' => $j,
-                    'invoice_number' => $invoice[0]->invoice_number,
+                    'invoice_number' => $mpo->agency_id ? $invoice[0]->invoice_number.'v'.$broadcaster_name[0] : $invoice[0]->invoice_number,
                     'id' => $mpo->id,
                     'is_mpo_accepted' => $mpo->is_mpo_accepted,
                     'product' => $product,
@@ -183,6 +199,7 @@ class MpoController extends Controller
                     'amount' => $amount
                 ];
                 $j++;
+                $n++;
             }
 
 

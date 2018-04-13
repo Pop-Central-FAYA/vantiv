@@ -17,35 +17,23 @@
             </div>
             <div class="row">
                 <div class="Create-campaign">
-
-                    <h2>Choose Media: Upload Stage for 45 seconds slot</h2>
-                    <hr>
-                    <p><br></p>
-
-                    <div class="col-md-3 ">
-                        <form class="campform dropzone" id="upload1"  method="POST" action="{{ route('agency_campaign.store3_2', ['id' => $id, 'broadcaster' => $broadcaster]) }}" enctype="multipart/form-data">
-                            {{ csrf_field() }}
-                        </form>
-
-                    </div>
-                    <div class="col-md-1"></div>
-                    <div class="col-md-8">
-                        <div class="panel panel-default">
-                            @include('partials.show_file')
-                        </div>
+                    <div class="col-md-6">
+                        <p><h4>Select preffered broadcasters:</h4></p>
+                        <select name="broadcaster" class="form-control broadcaster" id="">
+                            <option value="">Choose Broadcaster</option>
+                            @foreach($adslot_search_results as $adslot_search_result)
+                                <option value="{{ $adslot_search_result['broadcaster'] }}">{{ $adslot_search_result['boradcaster_brand'] }}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
             </div>
+            <p><br></p>
+            <p><br></p>
 
             <div class="row">
                 <div class="container">
-
-                    <p align="right">
-                    <form class="campform"  method="POST" action="{{ route('agency_campaign.store3_2', ['id' => $id, 'broadcaster' => $broadcaster]) }}" enctype="multipart/form-data">
-                        {{ csrf_field() }}
-                        <button type="submit" class="btn campaign-button btn-danger btn-lg" style="margin-right:15%">Next <i class="fa fa-play" aria-hidden="true"></i></button>
-                    </form>
-                    </p>
+                    <button type="button" style="background: #00c4ca" id="step3" class="btn campaign-button btn-danger btn-lg" >Back <i class="fa fa-backward" aria-hidden="true"></i></button>
                 </div>
             </div>
 
@@ -82,30 +70,27 @@
     <script src="{{ asset('agency_asset/plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('agency_asset/plugins/datatables/dataTables.bootstrap.min.js') }}"></script>
 
-    <script src="{{ asset('dropzone.js') }}"></script>
-
     <script>
-        Dropzone.options.upload1 = {
-            maxFilesize: 50,
-            acceptedFiles: 'video/*',
-            maxFiles: 1,
-            addRemoveLinks: true,
-            dictDefaultMessage: 'Click or drag your 45 Seconds video here for quick upload',
-            init: function () {
-                this.on("complete", function (file, res) {
-                    if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && file.status === Dropzone.SUCCESS) {
-                        toastr.success('File Uploaded successfully');
-                        window.location.href="/agency/campaigns/campaign/step3/3/"+"<?php echo $id ?>"+"/"+"<?php echo $broadcaster ?>";
+        $(document).ready(function() {
+            var user_id = "<?php echo $id ?>";
+            $('#step3').click(function(){
+                window.location.href = '/agency/campaigns/campaign/step3/'+user_id;
+            });
 
-                    } else {
-                        toastr.error('Something went wrong with your upload');
-                        return;
-                    }
-                });
-            }
-        };
+            $("body").delegate('.broadcaster', 'change', function (e) {
+                var user_id = "<?php echo $id ?>";
+                var broadcaster_id = $(".broadcaster").val();
+                if(broadcaster_id != ''){
+                    window.location.href = '/agency/campaigns/campaign/step4/'+user_id+'/'+broadcaster_id;
+                }
+            });
+
+
+
+        });
     </script>
+
 @stop
 @section('styles')
-    <link rel="stylesheet" href="{{ asset('dropzone.css') }}">
+
 @stop
