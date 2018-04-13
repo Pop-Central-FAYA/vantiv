@@ -87,6 +87,7 @@ class CampaignsController extends Controller
                 'end_date' => date('Y-m-d', strtotime($cam->stop_date)),
                 'amount' => '&#8358;'.number_format($pay[0]->total, 2),
                 'status' => $status,
+                'campaign_id' => $cam->campaign_id,
             ];
             $j++;
         }
@@ -95,7 +96,7 @@ class CampaignsController extends Controller
                 return '<a href="' . route('agency.campaign.details', ['id' => $campaign['camp_id']]) .'" class="btn btn-primary btn-xs" > Campaign Details </a>';
             })
             ->addColumn('mpo', function ($campaign) {
-                return '<a href="' . route('agency.mpo.details', ['id' => $campaign['camp_id']]) .'" class="btn btn-default btn-xs" > MPO Details </a>';
+                return '<a href="' . route('agency.mpo.details', ['id' => $campaign['campaign_id']]) .'" class="btn btn-default btn-xs" > MPO Details </a>';
             })
             ->addColumn('invoices', function($campaign){
                 return '<button data-toggle="modal" data-target=".invoiceModal' . $campaign['camp_id']. '" class="btn btn-success btn-xs" > Invoice Details </button>    ';
@@ -719,7 +720,9 @@ class CampaignsController extends Controller
 
     public function mpoDetails($id)
     {
+        $mpo_details = Utilities::getMpoDetails($id);
 
+        return view('agency.mpo.mpo')->with('mpo_details', $mpo_details);
     }
 
 

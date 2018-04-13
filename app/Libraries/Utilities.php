@@ -163,6 +163,56 @@ class Utilities {
         }
     }
 
+    public static function getMpoDetails($id)
+    {
+        $agency_id = \Session::get('agency_id');
+        $mpo = Utilities::switch_db('api')->select("SELECT * from mpos where campaign_id = '$id'");
+        $mpo_id = $mpo[0]->id;
+        $mpo_details = Utilities::switch_db('api')->select("SELECT * FROM mpoDetails where mpo_id = '$mpo_id'");
+        $all_details_mpos = [];
+        $agency_det = Utilities::switch_db('api')->select("SELECT * from agents where id = '$agency_id'");
+        $camp_det = Utilities::switch_db('api')->select("SELECT * from campaignDetails where campaign_id = '$id' GROUP BY campaign_id");
+        $brand_id = $camp_det[0]->brand;
+        $brands = Utilities::switch_db('api')->select("SELECT * FROM brands where id = '$brand_id'");
+        $user_id = $camp_det[0]->user_id;
+        $user_broad = Utilities::switch_db('api')->select("SELECT * from users where id = '$user_id' ");
+        $user_agency = DB::select("SELECT * from users where id = '$user_id' ");
+        $user_advertiser = Utilities::switch_db('api')->select("SELECT * from users where id = (SELECT user_id from advertisers WHERE id = '$user_id')");
+        if($user_broad){
+            $name = $user_broad[0]->firstname .' '.$user_broad[0]->lastname;
+        }elseif($user_agency){
+            $name = $user_agency[0]->first_name .' '.$user_agency[0]->last_name;
+        }else{
+            $name = $user_advertiser[0]->firstname .' '.$user_advertiser[0]->lastname;
+        }
+
+        $all_mpos = [];
+        foreach ($mpo_details as $mpo_detail){
+            $payments_det = Utilities::switch_db('api')->select("SELECT * from paymentDetails where payment_id = (SELECT id from payments where campaign_id = '$id') AND broadcaster = '$mpo_detail->broadcaster_id'");
+            $broadcaster_details = Utilities::switch_db('api')->select("SELECT * from broadcasters where id = '$mpo_detail->broadcaster_id'");
+            $broadcaster_name = $broadcaster_details[0]->brand;
+            $campaigns = Utilities::switch_db('api')->select("SELECT * from campaignDetails where broadcaster = '$mpo_detail->broadcaster_id' AND campaign_id = '$id'");
+            $all_mpos[] = [
+                'year' => date('Y', strtotime($mpo[0]->time_created)),
+                'media' => $broadcaster_name,
+                'spot' => $campaigns[0]->adslots,
+                'total' => number_format($payments_det[0]->amount, 2)
+            ];
+        }
+
+        $all_details_mpos = [
+            'clients' => $name,
+            'brand' => $brands[0]->name,
+            'campaign' => $camp_det[0]->name,
+            'date' => date('Y-m-d', strtotime($camp_det[0]->time_created)),
+            'agency' => $agency_det[0]->brand,
+            'invoice_number' => $mpo[0]->invoice_number,
+            'mpo' => $all_mpos,
+        ];
+
+        return $all_details_mpos;
+    }
+
 
 
 
