@@ -55,6 +55,7 @@ class CampaignsController extends Controller
         return view('agency.campaigns.all_campaign')->with('invoice', $invoice)->with('files', $file)->with('mpos', $all_mpo);
     }
 
+
     public function getData(DataTables $datatables, Request $request)
     {
         $campaign = [];
