@@ -220,8 +220,12 @@
                                     <div class="form-group">
                                         <label for="day_parts" class="col-md-2">Day Parts:</label>
                                         <div class="col-md-8">
+                                            All
+                                            <p>
+                                                <input type="checkbox" id="checkAll"
+                                                       value="" class="minimal-red"  /></p>
                                             @foreach($day_part as $day_parts)
-                                                <input type="checkbox" name="dayparts[]"
+                                                <input type="checkbox" class="checked_this" name="dayparts[]"
                                                        @foreach($step1->dayparts as $daypart)
                                                        @if($daypart === $day_parts->id)
                                                        checked
@@ -237,8 +241,12 @@
                                     <div class="form-group">
                                         <label for="day_parts" class="col-md-2">Day Parts:</label>
                                         <div class="col-md-8">
+                                            All
+                                            <p>
+                                            <input type="checkbox" id="checkAll"
+                                                   value="" class="minimal-red"  /></p>
                                             @foreach($day_part as $day_parts)
-                                                <input type="checkbox" name="dayparts[]" value="{{ $day_parts->id }}">{{ $day_parts->day_parts }}
+                                                <input type="checkbox" name="dayparts[]" class="checked_this" value="{{ $day_parts->id }}">{{ $day_parts->day_parts }}
                                             @endforeach
                                         </div>
                                     </div>
@@ -322,11 +330,13 @@
             altInput: true,
         });
     </script>
-3
     <script>
 
-
         $(document).ready(function(){
+            $("#checkAll").click(function () {
+                $('input:checkbox.checked_this').not(this).prop('checked', this.checked);
+            });
+
             $("#txtFromDate").datepicker({
                 numberOfMonths: 2,
                 onSelect: function (selected) {
@@ -343,77 +353,7 @@
 
         });
     </script>
-    <script>
-        $(function () {
-            //Initialize Select2 Elements
-            $(".select2").select2();
 
-            //Datemask dd/mm/yyyy
-            $("#datemask").inputmask("yyyy-mm-dd", {"placeholder": "dd/mm/yyyy"});
-            //Datemask2 mm/dd/yyyy
-            $("#datemask2").inputmask("yyyy-mm-dd", {"placeholder": "mm/dd/yyyy"});
-            //Money Euro
-            $("[data-mask]").inputmask();
-
-            //Date range picker
-            $('#reservation').daterangepicker();
-            //Date range picker with time picker
-            $('#reservationtime').daterangepicker({timePicker: true, timePickerIncrement: 30, format: 'YYYY-MM-DD h:mm A'});
-            //Date range as a button
-            $('#daterange-btn').daterangepicker(
-                {
-                    ranges: {
-                        'Today': [moment(), moment()],
-                        'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                        'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                        'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                        'This Month': [moment().startOf('month'), moment().endOf('month')],
-                        'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-                    },
-                    startDate: moment().subtract(29, 'days'),
-                    endDate: moment()
-                },
-                function (start, end) {
-                    $('#daterange-btn span').html(start.format('YYYY MMMM, D') + ' - ' + end.format('YYYY MM, D'));
-                }
-            );
-
-            //Date picker
-            $('#datepicker').datepicker({
-                autoclose: true
-            });
-
-            $('#datepickerend').datepicker({
-                autoclose: true
-            });
-
-            //iCheck for checkbox and radio inputs
-            $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
-                checkboxClass: 'icheckbox_minimal-blue',
-                radioClass: 'iradio_minimal-blue'
-            });
-            //Red color scheme for iCheck
-            $('input[type="checkbox"].minimal-red, input[type="radio"].minimal-red').iCheck({
-                checkboxClass: 'icheckbox_minimal-red',
-                radioClass: 'iradio_minimal-red'
-            });
-            //Flat red color scheme for iCheck
-            $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
-                checkboxClass: 'icheckbox_flat-green',
-                radioClass: 'iradio_flat-green'
-            });
-
-            //Colorpicker
-            $(".my-colorpicker1").colorpicker();
-            //color picker with addon
-            $(".my-colorpicker2").colorpicker();
-
-            //Timepicker
-            $(".timepicker").timepicker({
-                showInputs: false
-            });
-        });
-    </script>
 @stop
 @section('styles')
     <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">

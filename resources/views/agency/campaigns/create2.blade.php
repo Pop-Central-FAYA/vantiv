@@ -25,7 +25,7 @@
                                 <p><br></p>
                                 @foreach($adslots as $adslot)
                                     <li>
-                                        <a class="btn btn-defaul" href="{{ route('agency_campaign.step3', ['id' => $id,'broadcaster' => $adslot['broadcaster']]) }}">{{ $adslot['count_adslot'] }} Adslots available for {{ $adslot['boradcaster_brand'] }}</a>
+                                        <a style="text-decoration: none;" class="btn btn-defaul" href="#">{{ $adslot['count_adslot'] }} Adslots available for {{ $adslot['boradcaster_brand'] }}</a>
                                     </li>
                                 @endforeach
                             @endif
@@ -35,6 +35,7 @@
                     <p><br></p>
                     <div class="input-group">
                         <input type="button" style="background: #00c4ca" id="step1" class="btn btn-danger btn-lg" name="Submit" value="<< Back">
+                        <a class="btn btn-danger btn-lg" style="background: #00c4ca" href="{{ route('agency_campaign.step3', ['id' => $id]) }}">Next >></a>
                     </div>
                 </div>
             </div>

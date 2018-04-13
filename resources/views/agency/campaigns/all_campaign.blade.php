@@ -37,161 +37,53 @@
         </div>
     </div>
 
-    <!--Mpo Modal -->
-    @if (count($mpos) != 0)
-        @foreach ($mpos as $mpo)
-            <div class="modal fade mpoModal{{ $mpo['campaign_id'] }}"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="myModalLabel"></h4>
-                        </div>
-                        <div class="modal-body">
-
-                            <div class="panel panel-default">
-                                <div class="panel-body">
-                                    <p><h3>Name: <strong>{{ $mpo['campaign_name'] }}</strong></h3></p><br>
-                                    <p><h3>Brand: <strong>{{ $mpo['brand'] }}</strong></h3></p><br>
-
-                                    <div class="table-responsive">
-                                        <table class="table">
-                                            <thead>
-                                            <tr>
-                                                <th>Ad Blocks</th>
-                                                <th>Duration</th>
-                                                <th>Media</th>
-                                                <th>Price</th>
-                                                <th>Approval</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach($mpo['adslot'] as $adslot)
-                                                    <?php
-                                                        $camp_id = $mpo['campaign_id'];
-                                                        $file = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT * from files where adslot = '$adslot->id' AND campaign_id = '$camp_id'");
-                                                        $adslot_id = $file[0]->adslot;
-                                                        $pay = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT * from adslotPercentages where adslot_id = '$adslot_id'");
-                                                        if(!$pay){
-                                                            $pay = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT * from adslotPrices where adslot_id = '$adslot_id'");
-                                                        }
-                                                        if($file[0]->is_file_accepted === 0){
-                                                            $approval = "Not Approved";
-                                                        }elseif($file[0]->is_file_accepted === 1){
-                                                            $approval = "Approved";
-                                                        }else{
-                                                            $approval = "Rejected";
-                                                        }
-                                                    ?>
-                                                    <tr>
-                                                        <td>{{ $adslot->from_to_time }}</td>
-                                                        <td>{{ $file[0]->time_picked }}</td>
-                                                        <td><video width="200" controls><source src="{{ asset(decrypt($file[0]->file_url)) }}"></video></td>
-                                                        @if($file[0]->time_picked === "60")
-                                                            <td>&#8358;{{ number_format($pay[0]->price_60, 2) }}</td>
-                                                        @elseif($file[0]->time_picked === "45")
-                                                            <td>&#8358;{{ number_format($pay[0]->price_45, 2) }}</td>
-                                                        @elseif($file[0]->time_picked === "30")
-                                                            <td>&#8358;{{ number_format($pay[0]->price_30, 2) }}</td>
-                                                        @else
-                                                            <td>&#8358;{{ number_format($pay[0]->price_15, 2) }}</td>
-                                                        @endif
-                                                        <td>{{ $approval }}</td>
-                                                    </tr>
-                                                @endforeach
-                                            </tbody>
-                                            <tr>
-                                                <td><b><h3>Discount: {{ $mpo['discount'] }}</h3></b></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td><h3>Total : &#8358;{{ number_format($mpo['total'], 2) }}</h3></td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                    <br>
-
-                                </div>
-                            </div>
-
-
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Done</button>
-                        </div>
+    @foreach ($invoices as $invoice)
+        <div class="modal fade invoiceModal{{ $invoice['campaign_id'] }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Campaign Invoice -</h4>
                     </div>
-                </div>
-            </div>
-        @endforeach
-    @endif
-
-    <!-- Invoice -->
-    @foreach ($invoice as $inv)
-    <div class="modal fade invoiceModal{{ $inv->campaign_id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Campaign Invoice -</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
+                    <div class="modal-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
                                 <tr>
                                     <th>Adslot ID</th>
                                     <th>Playtime</th>
                                     <th>Cost</th>
                                 </tr>
-                            </thead>
-                            <tbody>
-                            <?php $m = 1; ?>
-                                @foreach($files as $file)
-                                    @if($file->campaign_id === $inv->campaign_id)
-                                        <?php
-                                            $ads_price = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT * from adslotPercentages where adslot_id = '$file->adslot'");
-                                            if(!$ads_price){
-                                                $ads_price = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT * from adslotPrices where adslot_id = '$file->adslot'");
-                                            }
-                                            $pay = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT * from payments where campaign_id = '$inv->campaign_id'");
-                                        ?>
-                                        <tr>
-                                            <td>{{ count((array) $file->adslot) }}</td>
-                                            <td>{{ $file->time_picked }} Seconds</td>
-                                            @if($file->time_picked === "60")
-                                                <td>&#8358;{{ number_format($ads_price[0]->price_60, 2) }}</td>
-                                            @elseif($file->time_picked === "45")
-                                                <td>&#8358;{{ number_format($ads_price[0]->price_45, 2) }}</td>
-                                            @elseif($file->time_picked === "30")
-                                                <td>&#8358;{{ number_format($ads_price[0]->price_30, 2) }}</td>
-                                            @else
-                                                <td>&#8358;{{ number_format($ads_price[0]->price_15, 2) }}</td>
-                                            @endif
-                                        </tr>
-                                    @endif
-                                    <?php $m++; ?>
-                                @endforeach
-                            <tr>
-                                <td><b><h3>Total:</h3></b></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td><h3>&#8358;{{ number_format($pay[0]->amount, 2) }}</h3></td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                                </thead>
+                                <tbody>
 
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Done</button>
+                                    {{--<tr>--}}
+                                        {{--<td>{{ count((array) $file->adslot) }}</td>--}}
+                                        {{--<td>{{ $file->time_picked }} Seconds</td>--}}
+                                        {{--<td>&#8358;{{ number_format($ads_price[0]->price_60, 2) }}</td>--}}
+                                    {{--</tr>--}}
+
+                                <tr>
+                                    <td><b><h3>Total:</h3></b></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><h3></h3></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Done</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
     @endforeach
+
 
 @stop
 @section('scripts')
