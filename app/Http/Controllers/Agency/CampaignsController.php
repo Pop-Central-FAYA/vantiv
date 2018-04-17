@@ -700,7 +700,7 @@ class CampaignsController extends Controller
                         $update_slot = Utilities::switch_db('api')->update("UPDATE adslots SET time_used = '$new_time_used', is_available = '$slot_status' WHERE id = '$id'");
                     }
 
-                    $del_cart = \DB::delete("DELETE FROM carts WHERE user_id = '$user_id'");
+                    $del_cart = \DB::delete("DELETE FROM carts WHERE user_id = '$user_id' AND agency_id = '$agency_id'");
                     $del_uplaods = \DB::delete("DELETE FROM uploads WHERE user_id = '$user_id'");
                     $user_agent = $_SERVER['HTTP_USER_AGENT'];
                     $description = 'Campaign '.$first->name.' created successfully by '.Session::get('agency_id');

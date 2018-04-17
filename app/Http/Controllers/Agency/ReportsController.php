@@ -35,15 +35,15 @@ class ReportsController extends Controller
                 $stop = date('Y-m-d', strtotime($request->stop_date));
                 $campaign_report = [];
                 $j = 1;
-                $camp = Utilities::switch_db('api')->select("SELECT * from campaigns where user_id = '$request->client' AND agency = '$agency_id' AND time_created BETWEEN '$start' AND '$stop' ORDER BY time_created desc");
+                $camp = Utilities::switch_db('api')->select("SELECT * from campaignDetails where user_id = '$request->client' AND agency = '$agency_id' AND time_created BETWEEN '$start' AND '$stop' GROUP BY campaign_id ORDER BY time_created desc");
                 foreach ($camp as $campaign) {
-                    $pay = Utilities::switch_db('api')->select("SELECT amount from payments where campaign_id = '$campaign->id'");
+                    $pay = Utilities::switch_db('api')->select("SELECT amount from payments where campaign_id = '$campaign->campaign_id'");
                     $campaign_report[] = [
                         'id' => $j,
                         'campaign_name' => $campaign->name,
                         'start' => date('Y-m-d', strtotime($campaign->start_date)),
                         'stop' => date('Y-m-d', strtotime($campaign->stop_date)),
-                        'amount' => '&#8358;'.number_format($pay[0]->amount, 2),
+                        'amount' => '&#8358;'.number_format($pay[0]->total, 2),
                     ];
                     $j++;
                 }
@@ -75,7 +75,7 @@ class ReportsController extends Controller
                 $camp = Utilities::switch_db('api')->select("SELECT * from campaigns where user_id = '$request->client' AND agency = '$agency_id' AND time_created BETWEEN '$start' AND '$stop' ORDER BY time_created desc");
 
                 foreach ($camp as $campaign) {
-                    $pay = Utilities::switch_db('api')->select("SELECT amount from payments where campaign_id = '$campaign->id'");
+                    $pay = Utilities::switch_db('api')->select("SELECT total from payments where campaign_id = '$campaign->id'");
                     $campaign_report[] = [
                         'id' => $j,
                         'date' => date('Y-m-d', strtotime($campaign->time_created)),
@@ -107,15 +107,15 @@ class ReportsController extends Controller
         $agency_id = Session::get('agency_id');
         $campaign_report = [];
         $j = 1;
-        $camp = Utilities::switch_db('api')->select("SELECT * from campaigns where user_id = '$user_id' AND agency = '$agency_id' ORDER BY time_created desc");
+        $camp = Utilities::switch_db('api')->select("SELECT * from campaignDetails where user_id = '$user_id' AND agency = '$agency_id' GROUP BY campaign_id ORDER BY time_created desc");
         foreach ($camp as $campaign) {
-            $pay = Utilities::switch_db('api')->select("SELECT amount from payments where campaign_id = '$campaign->id'");
+            $pay = Utilities::switch_db('api')->select("SELECT total from payments where campaign_id = '$campaign->campaign_id'");
             $campaign_report[] = [
                 'id' => $j,
                 'campaign_name' => $campaign->name,
                 'start' => date('Y-m-d', strtotime($campaign->start_date)),
                 'stop' => date('Y-m-d', strtotime($campaign->stop_date)),
-                'amount' => '&#8358;'.number_format($pay[0]->amount, 2),
+                'amount' => '&#8358;'.number_format($pay[0]->total, 2),
                 'date' => date('Y-m-d', strtotime($campaign->time_created)),
             ];
             $j++;
