@@ -57,18 +57,6 @@
                         </div>
                     </div>
                 </div>
-                {{--<div class="col-12 col-lg-6 col-xl-3">--}}
-                    {{--<div class="widget widget-title">--}}
-                        {{--<div class="info">--}}
-                            {{--<div class="desc">New Users</div>--}}
-                            {{--<div class="value">--}}
-                                {{--<span class="indicator indicator-equal mdi mdi-chevron-right"></span>--}}
-                                {{--<span data-toggle="counter" data-end="113" class="number">113</span>--}}
-                            {{--</div>--}}
-                        {{--</div>--}}
-                    {{--</div>--}}
-                {{--</div>--}}
-
             </div>
 
 
@@ -79,7 +67,7 @@
                         <h2>Periodic Spend Report</h2>
                         <p>Total amount spent on channel</p>
                         <div class="row">
-                            <div class="col-4">
+                            <div class="col-4 content">
                                 <form action="{{ route('agency.dashboard.broad')  }}" id="search_by_broad" method="GET">
                                     {{ csrf_field() }}
                                     <label for="channel">Channels:</label>
@@ -94,17 +82,61 @@
                             </div>
                         </div>
                         <p><br></p>
-                        <canvas id="containerPeriodic_total_per_chanel" style="width: 512px; height: 150px"></canvas>
-                        {{--<div id="containerPeriodic_total_per_chanel" style="min-width: 310px; height: 400px; margin: 0 auto"></div>--}}
+                        <div id="containerPeriodic_total_per_chanel" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                     </div>
                 </div>
             </div>
-                <hr>
+            <hr>
             <div class="row">
-                <h2>Percentage Periodic Spent Report on Products for <?php echo date('F, Y')?> </h2>
+                <div class="col-md-12">
+                    <!-- AREA CHART -->
+                    <h2>Periodic Spend Report</h2>
+                    <p>Total amount spent on brand</p>
+                    <form action="{{ route('agency.dashboard.data') }}" id="search_by_brand" method="GET">
+                        {{ csrf_field() }}
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label for="channel">Brands:</label>
+                                <select class="form-control" name="brand" id="brand">
+                                    @foreach($brand as $brands)
+                                        <option value="{{ $brands->id }}">{{ $brands->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                    <p><br></p>
+                    <div id="containerPeriodic_total_per_brand" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <h2>Percentage Periodic Spent Report on Products for <?php echo date('F, Y')?> </h2><br>
+            </div>
+            <div class="row">
+                <p>Percentege spent on product per month</p>
+            </div>
+            <div class="row">
+                <div class="col-md-4 content_month">
+                    <form action="{{ route('agency.month') }}" method="get" id="filter_month">
+                        <label for="month">Months:</label>
+                        <select name="month" class="form-control" id="month">
+                            @foreach($months as $month)
+                                <option value="{{ $month }}"
+                                        @if($current_month === $month)
+                                        selected
+                                        @endif
+                                >{{ $month }}</option>
+                            @endforeach
+                        </select>
+                    </form>
+                </div>
+            </div>
+            <div class="row">
                 <div class="col-12">
                     <div class="Our-Visitors">
-                        <canvas id="containerPerProduct" style="width: 900px; height: 276px"></canvas>
+                        <div id="containerPerProduct" style="min-width: 900px; height: 400px; margin: 0 auto"></div>
                     </div>
                 </div>
             </div>
@@ -113,7 +145,7 @@
                 <div class="col-12">
                     <div class="col-12 Total-rev">
                         <h2>Budget Pacing Report</h2>
-                        <canvas id="containerBudgetPacing" style="width: 512px; height: 150px"></canvas>
+                        <div id="containerBudgetPacing" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                     </div>
                 </div>
             </div>
@@ -126,11 +158,11 @@
                         <div class="col-12 recents-inner">
                             <div class="recent-head">
                                 <h1>recent invoice</h1>
-                                <div class="reload"><a href="#"> <i class="fa fa-undo"></i></a><a href="#"><i class="fa fa-expand"></i></a> </div>
+
                             </div>
                             <div class="summary">
                                 <p>Total approved invoices {{ $invoice_approval }},upapproved {{ $invoice_unapproval }}.</p>
-                                <a href="#">Invoice Summary<i class="fa fa-arrow-right" aria-hidden="true"></i></a> </div>
+                                <a style="text-decoration: none;" href="{{ route('invoices.all') }}">All Invoices<i class="fa fa-arrow-right" aria-hidden="true"></i></a> </div>
                             <table class="table">
                                 <thead>
                                     <th>Invoice#</th>
@@ -169,6 +201,7 @@
             </div>
             </div>
         </div>
+
 @stop
 @section('scripts')
     <!-- Select2 -->
@@ -199,305 +232,281 @@
     <script src="{{ asset('agency_asset/plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('agency_asset/plugins/datatables/dataTables.bootstrap.min.js') }}"></script>
 
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/highcharts-more.js"></script>
+
     <script>
         <?php echo "var date = ".$date . ";\n"; ?>
         <?php echo "var amount = ".$amount . ";\n"; ?>
         <?php echo "var name = ".$name .";\n"; ?>
-        <?php echo "var amount_bud =".$amount_bud ."\n"; ?>
-        <?php echo "var date_bud =".$date_bud ."\n"; ?>
-        <?php echo "var periodic_name =".$periodic_name ."\n"; ?>
+        <?php echo "var b_pacing =".$b_pacing ."\n"; ?>
         <?php echo "var periodic_data =".$periodic_data ."\n"; ?>
+        <?php echo "var brand_date =".$bra_dates ."\n"; ?>
+        <?php echo "var brand_name =".$bra_na ."\n"; ?>
+        <?php echo "var brand_amount =".$bra_am ."\n"; ?>
 
         $(document).ready(function () {
 
             $("#broadcaster").change(function () {
-                $("#load_broad").show();
+                // $("#load_broad").show();
                 $(".content").css({
                     opacity: 0.5
                 });
+
                 $('#load_broad').html('<img src="{{ asset('loader.gif') }}" align="absmiddle"> Please wait while we process your request...');
                 var br_id = $("#broadcaster").val();
                 var url = $("#search_by_broad").attr('action');
+                $.get(url, {'br_id': br_id, '_token':$('input[name=_token]').val()}, function(data) {
+                    $(".content").css({
+                        opacity: 1
+                    });
+                    var chart = Highcharts.chart('containerPeriodic_total_per_chanel', {
+
+                        title: {
+                            text: 'Periodic Spent Report'
+                        },
+                        credits: {
+                            enabled: false
+                        },
+
+                        xAxis: {
+                            categories: data.date
+                        },
+
+                        series: [{
+                            type: 'column',
+                            colorByPoint: true,
+                            data: data.amount_price,
+                            showInLegend: false
+                        }]
+
+                    });
+                });
+            });
+
+            var chart = Highcharts.chart('containerPeriodic_total_per_chanel', {
+
+                title: {
+                    text: 'Periodic Spent Report'
+                },
+                credits: {
+                    enabled: false
+                },
+
+                xAxis: {
+                    categories: date
+                },
+
+                series: [{
+                    type: 'column',
+                    colorByPoint: true,
+                    data: amount,
+                    showInLegend: false
+                }]
+
+            });
+
+            $("#month").change(function () {
+
+                $(".content_month").css({
+                    opacity: 0.5
+                });
+
+                var month = $("#month").val();
+                var url = $("#filter_month").attr('action');
+
+                $.get(url, {'month': month, '_token':$('input[name=_token]').val()}, function(data) {
+
+                    $(".content_month").css({
+                        opacity: 1
+                    });
+
+                    Highcharts.chart('containerPerProduct', {
+                        chart: {
+                            plotBackgroundColor: null,
+                            plotBorderWidth: null,
+                            plotShadow: false,
+                            type: 'pie'
+                        },
+                        title: {
+                            text: ''
+                        },
+                        tooltip: {
+                            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                        },
+                        credits: {
+                            enabled: false
+                        },
+                        plotOptions: {
+                            pie: {
+                                allowPointSelect: true,
+                                cursor: 'pointer',
+                                dataLabels: {
+                                    enabled: false
+                                },
+                                showInLegend: true
+                            }
+                        },
+                        series: [{
+                            name: 'Products',
+                            colorByPoint: true,
+                            data: data.pro_month
+                        }]
+                    });
+                });
+
+            });
+
+            $("#brand").change(function () {
+                $(".content").css({
+                    opacity: 0.5
+                });
+                var br_id = $("#brand").val();
+                var url = $("#search_by_brand").attr('action');
                 $.get(url, {'br_id': br_id, '_token':$('input[name=_token]').val()}, function(data) {
                     $("#load_broad").hide();
                     $(".content").css({
                         opacity: 1
                     });
-                    var ctx = document.getElementById("containerPeriodic_total_per_chanel");
-                    var myChart = new Chart(ctx, {
-                        type: 'bar',
-                        data: {
-                            labels: data.date,
-                            datasets: [{
-                                label: 'Periodic Spent Report',
-                                data: data.amount_price,
-                                backgroundColor: [
-                                    'rgba(255, 99, 132, 0.2)',
-                                    'rgba(54, 162, 235, 0.2)',
-                                    'rgba(255, 206, 86, 0.2)',
-                                    'rgba(75, 192, 192, 0.2)',
-                                    'rgba(153, 102, 255, 0.2)',
-                                    'rgba(255, 159, 64, 0.2)'
-                                ],
-                                borderColor: [
-                                    'rgba(255,99,132,1)',
-                                    'rgba(54, 162, 235, 1)',
-                                    'rgba(255, 206, 86, 1)',
-                                    'rgba(75, 192, 192, 1)',
-                                    'rgba(153, 102, 255, 1)',
-                                    'rgba(255, 159, 64, 1)'
-                                ],
-                                borderWidth: 1
-                            }]
-                        },
-                        options: {
-                            scales: {
-                                yAxes: [{
-                                    gridLines: {
-                                        display:false
-                                    },
-                                    ticks: {
-                                        beginAtZero:true
-                                    }
-                                }]
-                            }
-                        }
-                    });
-                });
-            })
 
-            var Datefilter =  $('.agency_campaign_all').DataTable({
-                paging: true,
-                serverSide: true,
-                processing: true,
-                ajax: {
-                    url: '/agency/campaigns/all-campaign/data',
-                    data: function (d) {
-                        d.start_date = $('input[name=txtFromDate_hvc]').val();
-                        d.stop_date = $('input[name=txtToDate_hvc]').val();
+                    Highcharts.chart('containerPeriodic_total_per_brand', {
+
+                        title: {
+                            text: 'Periodic Spent Report'
+                        },
+                        credits: {
+                            enabled: false
+                        },
+
+                        xAxis: {
+                            categories: data.date
+                        },
+
+                        series: [{
+                            type: 'column',
+                            colorByPoint: true,
+                            data: data.amount_price,
+                            showInLegend: false
+                        }]
+
+                    });
+
+                });
+            });
+
+            Highcharts.chart('containerPerProduct', {
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false,
+                    type: 'pie'
+                },
+                title: {
+                    text: ''
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                },
+                credits: {
+                    enabled: false
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: false
+                        },
+                        showInLegend: true
                     }
                 },
-                columns: [
-                    {data: 'id', name: 'id'},
-                    {data: 'name', name: 'name'},
-                    {data: 'brand', name: 'brand'},
-                    {data: 'product', name: 'product'},
-                    {data: 'start_date', name: 'start_date'},
-                    {data: 'end_date', name: 'end_date'},
-                    {data: 'amount', name: 'amount'},
-                    {data: 'mpo', name: 'mpo'}
-                ]
+                series: [{
+                    name: 'Products',
+                    colorByPoint: true,
+                    data: periodic_data
+                }]
+            });
+
+            Highcharts.chart('containerPeriodic_total_per_brand', {
+
+                title: {
+                    text: 'Periodic Spent Report'
+                },
+                credits: {
+                    enabled: false
+                },
+
+                xAxis: {
+                    categories: brand_date
+                },
+
+                series: [{
+                    type: 'column',
+                    colorByPoint: true,
+                    data: brand_amount,
+                    showInLegend: false
+                }]
+
+            });
+
+            Highcharts.chart('containerBudgetPacing', {
+                chart: {
+                    zoomType: 'x'
+                },
+                title: {
+                    text: ''
+                },
+                xAxis: {
+                    type: 'datetime'
+                },
+                yAxis: {
+                    title: {
+                        text: 'Amount'
+                    }
+                },
+                credits: {
+                    enabled: false
+                },
+                legend: {
+                    enabled: false
+                },
+                plotOptions: {
+                    area: {
+                        fillColor: {
+                            linearGradient: {
+                                x1: 0,
+                                y1: 0,
+                                x2: 0,
+                                y2: 1
+                            },
+                            stops: [
+                                [0, Highcharts.getOptions().colors[0]],
+                                [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                            ]
+                        },
+                        marker: {
+                            radius: 2
+                        },
+                        lineWidth: 1,
+                        states: {
+                            hover: {
+                                lineWidth: 1
+                            }
+                        },
+                        threshold: null
+                    }
+                },
+
+                series: [{
+                    type: 'area',
+                    name: 'Budget Pacing',
+                    data: b_pacing
+                }]
             });
 
         })
 
     </script>
-    <script>
-        $(function () {
-            //Initialize Select2 Elements
-            $(".select2").select2();
 
-            //Datemask dd/mm/yyyy
-            $("#datemask").inputmask("dd/mm/yyyy", {"placeholder": "dd/mm/yyyy"});
-            //Datemask2 mm/dd/yyyy
-            $("#datemask2").inputmask("mm/dd/yyyy", {"placeholder": "mm/dd/yyyy"});
-            //Money Euro
-            $("[data-mask]").inputmask();
-
-            //Date range picker
-            $('#reservation').daterangepicker();
-            //Date range picker with time picker
-            $('#reservationtime').daterangepicker({timePicker: true, timePickerIncrement: 30, format: 'MM/DD/YYYY h:mm A'});
-            //Date range as a button
-            $('#daterange-btn').daterangepicker(
-                {
-                    ranges: {
-                        'Today': [moment(), moment()],
-                        'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                        'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                        'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                        'This Month': [moment().startOf('month'), moment().endOf('month')],
-                        'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-                    },
-                    startDate: moment().subtract(29, 'days'),
-                    endDate: moment()
-                },
-                function (start, end) {
-                    $('#daterange-btn span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-                }
-            );
-
-            //Date picker
-            $('#datepicker').datepicker({
-                autoclose: true
-            });
-
-            $('#datepickerend').datepicker({
-                autoclose: true
-            });
-
-            //iCheck for checkbox and radio inputs
-            $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
-                checkboxClass: 'icheckbox_minimal-blue',
-                radioClass: 'iradio_minimal-blue'
-            });
-            //Red color scheme for iCheck
-            $('input[type="checkbox"].minimal-red, input[type="radio"].minimal-red').iCheck({
-                checkboxClass: 'icheckbox_minimal-red',
-                radioClass: 'iradio_minimal-red'
-            });
-            //Flat red color scheme for iCheck
-            $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
-                checkboxClass: 'icheckbox_flat-green',
-                radioClass: 'iradio_flat-green'
-            });
-
-            //Colorpicker
-            $(".my-colorpicker1").colorpicker();
-            //color picker with addon
-            $(".my-colorpicker2").colorpicker();
-
-            //Timepicker
-            $(".timepicker").timepicker({
-                showInputs: false
-            });
-        });
-    </script>
-    <script>
-        var ctx = document.getElementById("containerPeriodic_total_per_chanel");
-        var myChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: date,
-                datasets: [{
-                    label: 'Periodic Spent Report',
-                    data: amount,
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255,99,132,1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    yAxes: [{
-                        gridLines: {
-                            display:false
-                        },
-                        ticks: {
-                            beginAtZero:true
-                        }
-                    }]
-                }
-            }
-        });
-    </script>
-    <script>
-        var ctx = document.getElementById("containerPerProduct");
-        var myChart = new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: periodic_name,
-                datasets: [{
-                    label: '# of Votes',
-                    data: periodic_data,
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255,99,132,1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    yAxes: [{
-                        gridLines: {
-                            display:false
-                        },
-                        ticks: {
-                            beginAtZero:true
-                        }
-                    }]
-                }
-            }
-        });
-    </script>
-    <script>
-        var ctx = document.getElementById('containerBudgetPacing').getContext('2d');
-        var chart = new Chart(ctx, {
-            // The type of chart we want to create
-            type: 'line',
-
-            // The data for our dataset
-            data: {
-                labels: date_bud,
-                datasets: [{
-                    label: "Budget Pacing",
-                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                    borderColor: 'rgba(255, 99, 132, 0.2)',
-                    data: amount_bud,
-                }]
-            },
-
-            // Configuration options go here
-            options: {
-                scales: {
-                    xAxes: [{
-                        gridLines: {
-                            display:false
-                        }
-                    }],
-                    yAxes: [{
-                        gridLines: {
-                            display:false
-                        }
-                    }]
-                }
-            }
-        });
-    </script>
-
-@stop
-
-@section('style')
-    <style>
-        .load_broad {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            margin-left: -50px; /* half width of the spinner gif */
-            margin-top: -50px; /* half height of the spinner gif */
-            text-align: center;
-            z-index: 1234;
-            overflow: auto;
-            width: 500px; /* width of the spinner gif */
-            height: 500px; /*hight of the spinner gif +2px to fix IE8 issue */
-        }
-
-    </style>
 @stop

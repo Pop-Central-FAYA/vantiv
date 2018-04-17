@@ -25,7 +25,6 @@ class CampaignsController extends Controller
         $inv = [];
         $all_mpo = [];
         $agency_id = Session::get('agency_id');
-        $invoice = Utilities::switch_db('api')->select("SELECT * from invoices");
         $file = Utilities::switch_db('api')->select("SELECT * from files");
         $mpos = Utilities::switch_db('api')->select("SELECT * from mpos");
         foreach ($mpos as $mpo){
@@ -55,7 +54,7 @@ class CampaignsController extends Controller
         }
 
         $invoices_all = Utilities::invoiceDetails();
-        dd($invoices_all);
+
         return view('agency.campaigns.all_campaign')->with('invoices', $invoices_all)->with('files', $file)->with('mpos', $all_mpo);
     }
 
@@ -184,6 +183,8 @@ class CampaignsController extends Controller
             'region' => 'required',
         ]);
 
+        $agency_id = Session::get('agency_id');
+
         if($request->min_age < 0 || $request->max_age < 0){
             Session::flash('error', 'The minimum or maximum age cannot have a negetive value');
             return back();
@@ -198,7 +199,7 @@ class CampaignsController extends Controller
             return redirect()->back()->with('error', 'Start Date cannot be greater than End Date');
         }
 
-        $del_cart = \DB::delete("DELETE FROM carts WHERE user_id = '$id'");
+        $del_cart = \DB::delete("DELETE FROM carts WHERE user_id = '$id' AND agency_id = '$agency_id'");
         $del_uplaods = \DB::delete("DELETE FROM uploads WHERE user_id = '$id'");
         $del_file_position = Utilities::switch_db('api')->delete("DELETE FROM adslot_filePositions where select_status = 0");
 
@@ -290,6 +291,8 @@ class CampaignsController extends Controller
                 ]);
 
                 if($insert_upload){
+                    $msg = 'Your upload for '.$time.' seconds was successful';
+                    Session::flash('success', $msg);
                     return redirect()->route('agency_campaign.step3', ['id' => $id]);
                 }else{
                     Session::flash('error', 'Could not complete upload process');
@@ -450,6 +453,7 @@ class CampaignsController extends Controller
 
     public function checkout($id)
     {
+        $agency_id = Session::get('agency_id');
         $query = [];
         $first = Session::get('step1');
         $day_parts = implode("','" ,$first->dayparts);
@@ -458,7 +462,7 @@ class CampaignsController extends Controller
         $day_partss = Utilities::switch_db('api')->select("SELECT day_parts from dayParts where id IN ('$day_parts') ");
         $targets = Utilities::switch_db('api')->select("SELECT audience from targetAudiences where id = '$first->target_audience'");
         $regions = Utilities::switch_db('api')->select("SELECT region from regions where id IN ('$region') ");
-        $calc = \DB::select("SELECT SUM(price) as total_price FROM carts WHERE user_id = '$id'");
+        $calc = \DB::select("SELECT SUM(total_price) as total_price FROM carts WHERE user_id = '$id' and agency_id = '$agency_id'");
 //        $query = \DB::select("SELECT * FROM carts WHERE user_id = '$id'");
         $query_carts = \DB::select("SELECT * FROM carts WHERE user_id = '$id' ");
         foreach ($query_carts as $query_cart){
@@ -505,7 +509,7 @@ class CampaignsController extends Controller
             $ads[] = $q->adslot_id;
         }
         $data = \DB::select("SELECT * from uploads WHERE user_id = '$id'");
-        $group_datas = \DB::select("SELECT SUM(total_price) as total, COUNT(id) as total_slot, broadcaster_id from carts where user_id = '$id' GROUP BY broadcaster_id");
+        $group_datas = \DB::select("SELECT SUM(total_price) as total, COUNT(id) as total_slot, broadcaster_id from carts where user_id = '$id' and agency_id = '$agency_id' GROUP BY broadcaster_id");
 
         $request->all();
         $new_q = [];
@@ -573,7 +577,7 @@ class CampaignsController extends Controller
             $camp_id = Utilities::switch_db('api')->select("SELECT * from campaigns WHERE id='$campaign_id'");
             foreach($query as $q)
             {
-//            $adslot = Utilities::switch_db('api')->select("SELECT id from adslots where id='$q->rate_id'");
+
                 $new_q[] = [
                     'id' => uniqid(),
                     'campaign_id' => $camp_id[0]->id,

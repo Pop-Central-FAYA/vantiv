@@ -37,39 +37,91 @@
         </div>
     </div>
 
-    @foreach ($invoices as $invoice)
-        <div class="modal fade invoiceModal{{ $invoice['campaign_id'] }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    @foreach ($invoices as $inv)
+        <div class="modal fade invoiceModal{{ $inv['campaign_id'] }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Campaign Invoice -</h4>
+                        <h4 class="modal-title" id="myModalLabel"> Invoice Number - {{ $inv['invoice_number'] }}</h4>
                     </div>
                     <div class="modal-body">
                         <div class="table-responsive">
                             <table class="table">
                                 <thead>
                                 <tr>
-                                    <th>Adslot ID</th>
+                                    <th>Media</th>
                                     <th>Playtime</th>
-                                    <th>Cost</th>
+                                    <th>Surge</th>
+                                    <th>Rate</th>
+                                    <th>Total Cost</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-
-                                    {{--<tr>--}}
-                                        {{--<td>{{ count((array) $file->adslot) }}</td>--}}
-                                        {{--<td>{{ $file->time_picked }} Seconds</td>--}}
-                                        {{--<td>&#8358;{{ number_format($ads_price[0]->price_60, 2) }}</td>--}}
-                                    {{--</tr>--}}
-
+                                <?php $m = 1; ?>
+                                @foreach($files as $file)
+                                    @if($file->campaign_id === $inv['campaign_id'])
+                                        <?php
+                                        $campaign_id = $inv['campaign_id'];
+                                        $broad_media = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT * from broadcasters where id = '$file->broadcaster_id'");
+                                        if($file->position_id){
+                                            $surge_id = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT * from filePositions where id = '$file->position_id'");
+                                            $surge = $surge_id[0]->percentage;
+                                        }else{
+                                            $surge = 0;
+                                        }
+                                        $ads_price = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT * from adslotPercentages where adslot_id = '$file->adslot'");
+                                        if(!$ads_price){
+                                            $ads_price = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT * from adslotPrices where adslot_id = '$file->adslot'");
+                                        }
+                                        $pay = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT * from payments where campaign_id = '$campaign_id'");
+                                        ?>
+                                        <tr>
+                                            <td>{{ $broad_media[0]->brand }}</td>
+                                            <td>{{ $file->time_picked }} Seconds</td>
+                                            <td>{{ $surge }}%</td>
+                                            @if($file->time_picked === "60")
+                                                <td>&#8358;{{ number_format($ads_price[0]->price_60, 2) }}</td>
+                                            @elseif($file->time_picked === "45")
+                                                <td>&#8358;{{ number_format($ads_price[0]->price_45, 2) }}</td>
+                                            @elseif($file->time_picked === "30")
+                                                <td>&#8358;{{ number_format($ads_price[0]->price_30, 2) }}</td>
+                                            @else
+                                                <td>&#8358;{{ number_format($ads_price[0]->price_15, 2) }}</td>
+                                            @endif
+                                            {{--percentage cost--}}
+                                            @if($file->time_picked === "60")
+                                                <?php
+                                                    $total_60 = (($surge / 100) * $ads_price[0]->price_60) + $ads_price[0]->price_60;
+                                                ?>
+                                                <td>&#8358;{{ number_format($total_60, 2) }}</td>
+                                            @elseif($file->time_picked === "45")
+                                                <?php
+                                                    $total_45 = (($surge / 100) * $ads_price[0]->price_45) + $ads_price[0]->price_45;
+                                                ?>
+                                                <td>&#8358;{{ number_format($total_45, 2) }}</td>
+                                            @elseif($file->time_picked === "30")
+                                                <?php
+                                                    $total_30 = (($surge / 100) * $ads_price[0]->price_30) + $ads_price[0]->price_30;
+                                                ?>
+                                                <td>&#8358;{{ number_format($total_30, 2) }}</td>
+                                            @else
+                                                <?php
+                                                    $total_15 = (($surge / 100) * $ads_price[0]->price_15) + $ads_price[0]->price_15;
+                                                ?>
+                                                <td>&#8358;{{ number_format($total_15, 2) }}</td>
+                                            @endif
+                                        </tr>
+                                    @endif
+                                    <?php $m++; ?>
+                                @endforeach
                                 <tr>
                                     <td><b><h3>Total:</h3></b></td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
-                                    <td><h3></h3></td>
+                                    <td><h3>&#8358;{{ number_format($pay[0]->total, 2) }}</h3></td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -83,6 +135,7 @@
             </div>
         </div>
     @endforeach
+
 
 
 @stop

@@ -3,10 +3,7 @@
         <div class="logo"><a href="{{ route('dashboard') }}"><img src="{{ asset('new_assets/images/logo.png') }}" alt=""></a></div>
         <ul class="list-unstyled components">
             <li class="{{ Request::is('/') ? 'active' : ''  }}"> <a href="{{ route('dashboard') }}"><i class="fa fa-dashboard"></i><span>Dashboard</span></a>
-                <ul class="sub-menu dropdown">
-                    <li><a href="{{ route('dashboard') }}"><i class="fa fa-address-card-o"></i> <span>Agency <br /> Dashboard</span></a></li>
-                    <li><a href="{{ route('agency.dashboard') }}"><i class="fa fa-address-book-o"></i><span>Clients <br /> Dashboard</span></a></li>
-                </ul>
+
             </li>
             <li class="{{ Request::is('agency/clients/*') ? 'active' : ''  }}"> <a href="{{ route('clients.list') }}"><i class="fa fa-user-plus"></i><span>Clients</span></a>
                 <ul class="sub-menu dropdown">
