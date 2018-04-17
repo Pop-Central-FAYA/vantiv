@@ -3,6 +3,7 @@
 namespace Vanguard\Http\Controllers\Agency;
 
 use Carbon\Carbon;
+use Hamcrest\Util;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use JD\Cloudder\Facades\Cloudder;
@@ -710,10 +711,25 @@ class CampaignsController extends Controller
                     Session::flash('success', 'Campaign created successfully');
                     return redirect()->route('agency.campaign.all');
 
+                }else{
+                    $delete_invoice = Utilities::switch_db('api')->delete("DELETE from invoices where id = '$invoice_id'");
+                    $delete_invoice_details = Utilities::switch_db('api')->delete("DELETE from invoiceDetails where invoice_id = '$invoice_id'");
+                    $delete_mpo = Utilities::switch_db('api')->delete("DELETE from mpos where id = '$mpo_id'");
+                    $delete_mpo_details = Utilities::switch_db('api')->delete("DELETE * from mpoDetails where mpo_id = '$mpo_id'");
+                    Session::flash('error', 'Could not create this campaign');
+                    return redirect()->back();
                 }
+            }else{
+                $delete_pay = Utilities::switch_db('api')->delete("DELETE from payments where id = '$pay_id'");
+                $delete_pay_details = Utilities::switch_db('api')->delete("DELETE from paymentDetails where payment_id = '$pay_id'");
+                $delete_files = Utilities::switch_db('api')->delete("DELETE from files where campaign_id = '$campaign_id'");
+                Session::flash('error', 'Could not create this campaign');
+                return redirect()->back();
             }
 
         } else {
+            $delete_camp = Utilities::switch_db('api')->delete("DELETE from campaigns where id = '$campaign_id'");
+            $delete_camp_details = Utilities::switch_db('api')->delete("DELETE from campaignDetails where campaign_id = '$campaign_id'");
             Session::flash('error', 'Could not create this campaign');
             return redirect()->back();
         }

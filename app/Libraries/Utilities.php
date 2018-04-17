@@ -51,6 +51,11 @@ class Utilities {
         $brand = Utilities::switch_db('api')->select("SELECT name from brands where id = '$brand_name'");
         $channel_name = Utilities::switch_db('api')->select("SELECT channel from campaignChannels where id = '$channel'");
         $payments = Utilities::switch_db('api')->select("SELECT * from payments where campaign_id = '$campaign_id' ");
+        $payment_id = $payments[0]->id;
+        if(\Session::get('broadcaster_id')){
+            $broadcaster_id = \Session::get('broadcaster_id');
+            $payments = Utilities::switch_db('api')->select("SELECT amount as total from paymentDetails where payment_id = '$payment_id' and broadcaster = '$broadcaster_id'");
+        }
         $user_id = $campaign_details[0]->user_id;
         $user_broad = Utilities::switch_db('api')->select("SELECT * from users where id = '$user_id' ");
         $user_agency = DB::select("SELECT * from users where id = '$user_id' ");
@@ -85,6 +90,10 @@ class Utilities {
 
 
         $files = Utilities::switch_db('api')->select("SELECT * from files where campaign_id = '$campaign_id'");
+        if(\Session::get('broadcaster_id')){
+            $broadcaster_id = \Session::get('broadcaster_id');
+            $files = Utilities::switch_db('api')->select("SELECT * from files where campaign_id = '$campaign_id' AND broadcaster_id = '$broadcaster_id'");
+        }
         foreach ($files as $file){
             $adslot_details = Utilities::switch_db('api')->select("SELECT * from adslots where id = '$file->adslot'");
             $day_part_id = $adslot_details[0]->day_parts;

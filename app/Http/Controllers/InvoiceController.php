@@ -12,23 +12,30 @@ class InvoiceController extends Controller
     {
         $agency_id = Session::get('agency_id');
 
-        $all_invoices = Utilities::switch_db('reports')->select("SELECT * FROM invoices WHERE  agency_id = '$agency_id'");
+        $all_invoices = Utilities::switch_db('reports')->select("SELECT * FROM invoiceDetails WHERE  agency_id = '$agency_id' GROUP BY invoice_id");
 
         $invoice_campaign_details = [];
 
         foreach ($all_invoices as $invoice) {
 
-            $campaign_id = $invoice->campaign_id;
+//            $campaign_id = $invoice->campaign_id;
+
+            $campaign_list = Utilities::switch_db('api')->select("SELECT * from invoices where id = '$invoice->invoice_id' ");
+
+            $campaign_id = $campaign_list[0]->campaign_id;
+
             $user_id = $invoice->user_id;
 
-            $campaign = Utilities::switch_db('reports')->select("SELECT * FROM campaigns WHERE id = '$campaign_id'");
+            $campaign = Utilities::switch_db('reports')->select("SELECT * FROM campaignDetails WHERE campaign_id = '$campaign_id' GROUP BY campaign_id");
             $brand_id = $campaign[0]->brand;
             $brand_name = Utilities::switch_db('api')->select("SELECT name from brands where id = '$brand_id'");
             $user_details = $user_details = \DB::select("SELECT * FROM users WHERE id = '$user_id'");
 
+            $payment = Utilities::switch_db('api')->select("SELECT * from payments where campaign_id = '$campaign_id'");
+
             $invoice_campaign_details[] = [
                 'invoice_number' => $invoice->invoice_number,
-                'actual_amount_paid' => $invoice->actual_amount_paid,
+                'actual_amount_paid' => number_format($payment[0]->total, 2),
                 'refunded_amount' => $invoice->refunded_amount,
                 'name' => $user_details && $user_details[0] ? $user_details[0]->last_name . ' ' . $user_details[0]->first_name : '',
                 'status' => $invoice->status,
@@ -46,22 +53,28 @@ class InvoiceController extends Controller
     {
         $agency_id = Session::get('agency_id');
 
-        $all_invoices = Utilities::switch_db('reports')->select("SELECT * FROM invoices WHERE  agency_id = '$agency_id' AND status = 0");
+        $all_invoices = Utilities::switch_db('reports')->select("SELECT * FROM invoiceDetails WHERE  agency_id = '$agency_id' AND status = 0 GROUP BY invoice_id");
 
         $invoice_campaign_details = [];
 
         foreach ($all_invoices as $invoice) {
 
-            $campaign_id = $invoice->campaign_id;
+//            $campaign_id = $invoice->campaign_id;
 
-            $campaign = Utilities::switch_db('reports')->select("SELECT * FROM campaigns WHERE id = '$campaign_id'");
+            $campaign_list = Utilities::switch_db('api')->select("SELECT * from invoices where id = '$invoice->invoice_id' ");
+
+            $campaign_id = $campaign_list[0]->campaign_id;
+
+            $campaign = Utilities::switch_db('reports')->select("SELECT * FROM campaignDetails WHERE campaign_id = '$campaign_id'");
             $brand_id = $campaign[0]->brand;
             $brand_name = Utilities::switch_db('api')->select("SELECT name from brands where id = '$brand_id'");
 
+            $payment = Utilities::switch_db('api')->select("SELECT * from payments where campaign_id = '$campaign_id'");
+
             $invoice_campaign_details[] = [
-                'id' => $invoice->id,
+                'id' => $invoice->invoice_id,
                 'invoice_number' => $invoice->invoice_number,
-                'actual_amount_paid' => $invoice->actual_amount_paid,
+                'actual_amount_paid' => $payment[0]->total,
                 'refunded_amount' => $invoice->refunded_amount,
                 'status' => $invoice->status,
                 'campaign_brand' => $brand_name[0]->name,
@@ -75,9 +88,10 @@ class InvoiceController extends Controller
 
     public function approveInvoice($invoice_id)
     {
-        $invoice = Utilities::switch_db('reports')->select("SELECT * FROM invoices WHERE id = '$invoice_id' LIMIT 1");
-        $amount = $invoice[0]->actual_amount_paid;
         $agency_id = Session::get('agency_id');
+
+        $invoice = Utilities::switch_db('reports')->select("SELECT SUM(actual_amount_paid) as actual_amount_paid, invoice_number, invoice_id FROM invoiceDetails WHERE invoice_id = '$invoice_id' LIMIT 1");
+        $amount = $invoice[0]->actual_amount_paid;
 
         $user_agent = $_SERVER['HTTP_USER_AGENT'];
         $description = 'Invoice with invoice number '.$invoice[0]->invoice_number.' has been approved by '.$agency_id.'';
@@ -95,7 +109,7 @@ class InvoiceController extends Controller
             'id' => uniqid(),
             'amount' => $amount,
             'user_id' => $agency_id,
-            'reference' => $invoice[0]->id,
+            'reference' => $invoice[0]->invoice_id,
             'ip_address' => request()->ip(),
             'type' => 'DEBIT WALLET',
             'message' => 'Debit successful'
@@ -114,7 +128,7 @@ class InvoiceController extends Controller
 
         if ($transaction && $walletHistory && empty($updateWallet)) {
 
-            $update_invoice = Utilities::switch_db('reports')->select("UPDATE invoices SET status = 1 WHERE id = '$invoice_id'");
+            $update_invoice = Utilities::switch_db('reports')->select("UPDATE invoiceDetails SET status = 1 WHERE invoice_id = '$invoice_id'");
 
             if (empty($update_invoice)) {
                 $save_activity = Api::saveActivity($agency_id, $description, $ip, $user_agent);
