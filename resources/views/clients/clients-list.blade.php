@@ -24,26 +24,31 @@
                     </ul>
                 </div>
 
-                @foreach ($clients as $client)
-                    <div class="col-12 Clients-Management">
-                        <div class="col-7">
-                            <ul>
-                                <li>Name: <span>{{ $client['name'] }}</span></li>
-                                <li>No. of Campaigns <span>{{ $client['num_campaign'] }}</span></li>
-                                <li>Total Expense <span>&#8358;{{ number_format($client['total'],2) }}</span></li>
-                                <li>Data Created<span>{{ date('M j, Y h:ia', strtotime($client['created_at'])) }}</span></li>
-                                @if($client['last_camp'] === 0)
-                                    <li>Last Campaign<span></span></li>
-                                @else
-                                    <li>Last Campaign<span>{{ date('M j, Y', strtotime($client['last_camp'])) }}</span></li>
-                                @endif
-                            </ul>
+                @if(count($clients) === 0)
+                    <p><h3>Sorry you don't have a client yet...</h3></p>
+                @else
+                    @foreach ($clients as $client)
+                        <div class="col-12 Clients-Management">
+                            <div class="col-7">
+                                <ul>
+                                    <li>Name: <span>{{ $client['name'] }}</span></li>
+                                    <li>No. of Campaigns <span>{{ $client['num_campaign'] }}</span></li>
+                                    <li>Total Expense <span>&#8358;{{ number_format($client['total'],2) }}</span></li>
+                                    <li>Data Created<span>{{ date('M j, Y h:ia', strtotime($client['created_at'])) }}</span></li>
+                                    @if($client['last_camp'] === 0)
+                                        <li>Last Campaign<span></span></li>
+                                    @else
+                                        <li>Last Campaign<span>{{ date('M j, Y', strtotime($client['last_camp'])) }}</span></li>
+                                    @endif
+                                    <li><a href="{{ route('client_brands', ['id' => $client['client_id']]) }}" class="btn btn-success">View Brands </a></li>
+                                </ul>
+                            </div>
+                            <div class="col-5">
+                                <img style="height: 400px;" class="img-responsive" src="{{ $client['image_url'] ? asset($client['image_url']) : '' }}" alt="">
+                            </div>
                         </div>
-                        <div class="col-5">
-                            <img class="img-responsive" src="{{ $client['image_url'] ? asset($client['image_url']) : asset('new_assets/images/logo.png') }}" alt="">
-                        </div>
-                    </div>
-                @endforeach
+                    @endforeach
+                @endif
             </div>
         </div>
     </div>

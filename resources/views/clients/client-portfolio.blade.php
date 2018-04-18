@@ -18,7 +18,7 @@
 
     <ol class="breadcrumb" style="font-size: 16px">
         <li><a href="#"><i class="fa fa-edit"></i> Clients Management</a> </li>
-        <li><a href="index.html"><i class="fa fa-address-card"></i> View Client</a> </li>
+        <li><a href=""><i class="fa fa-address-card"></i> View Client</a> </li>
     </ol>
 </section>
 

@@ -14,6 +14,7 @@ class ReportsController extends Controller
     {
         $agency_id = Session::get('agency_id');
         $user_d = [];
+        dd($agency_id);
         $user = Utilities::switch_db('api')->select("SELECT user_id from walkIns where agency_id = '$agency_id'");
         foreach ($user as $u){
             $user_det = \DB::select("SELECT * from users where id = '$u->user_id'");

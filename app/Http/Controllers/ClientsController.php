@@ -27,10 +27,40 @@ class ClientsController extends Controller
     public function create(Request $request)
     {
         $user_agent = $_SERVER['HTTP_USER_AGENT'];
-        $description = 'Client '.$request->first_name.' '. $request->last_name.' Created by '.Session::get('agency_id');
+        $description = 'Client '.$request->first_name.' '. $request->last_name.' with brand '.$request->brand_name.' Created by '.Session::get('agency_id');
         $ip = request()->ip();
+        $client_id = uniqid();
+        $agency_id = Session::get('agency_id');
 
         if ($request->isMethod('POST')) {
+
+            $this->validate($request, [
+                'first_name' => 'required',
+                'last_name' => 'required',
+                'email' => 'required|email',
+                'phone' => 'required|phone_number',
+                'brand_name' => 'required',
+                'image_url' => 'required|image',
+                'password' => 'required|min:6',
+                'password_confirmation' => 'required|same:password|min:6'
+            ]);
+
+            $brand = Utilities::formatString($request->brand_name);
+            $unique = uniqid();
+            $ckeck_brand = Utilities::switch_db('api')->select("SELECT name from brands WHERE `name` = '$brand'");
+            if(count($ckeck_brand) > 0) {
+                Session::flash('error', 'Brands already exists');
+                return redirect()->back();
+            }
+
+            if($request->hasFile('image_url')){
+                $image = $request->image_url;
+                $filename = realpath($image);
+                Cloudder::upload($filename, Cloudder::getPublicId(), ['height' => 200, 'width' => 200]);
+                $clouder = Cloudder::getResult();
+                $image_url = encrypt($clouder['url']);
+            }
+
             $userInsert = DB::table('users')->insert([
                 'email' => $request->email,
                 'username' => $request->username,
@@ -42,17 +72,10 @@ class ClientsController extends Controller
                 'status' => 'Active',
             ]);
 
-            if ($request->hasFile('image_url')) {
-                $image = $request->image_url;
-                $name = $image->getClientOriginalName();
-                $image_name = $image->getRealPath();
-                Cloudder::upload($image_name, Cloudder::getPublicId(), ['height' => 100, 'width' => 100]);
-                $cloudder = Cloudder::getResult();
-                $image_url = $cloudder['url'];
-            }
-
             if ($userInsert) {
                 $user_id = \DB::select("SELECT id from users WHERE email = '$request->email'");
+            }else{
+                $deleteUser = DB::delete("DELETE FROM users where email = '$request->email'");
             }
 
             $role_user = DB::table('role_user')->insert([
@@ -61,21 +84,24 @@ class ClientsController extends Controller
             ]);
 
             $walkinInsert = Utilities::switch_db('reports')->table('walkIns')->insert([
-                'id' => uniqid(),
+                'id' => $client_id,
                 'user_id' => $user_id[0]->id,
                 'broadcaster_id' => $request->broadcaster_id,
                 'client_type_id' => $request->client_type_id,
                 'location' => $request->location,
-                'image_url' => $image_url,
-                'agency_id' => \Session::get('agency_id')
+                'agency_id' => $agency_id
             ]);
 
-            if ($userInsert && $walkinInsert) {
-                $save_activity = Api::saveActivity(Session::get('agency_id'), $description, $ip, $user_agent);
-                return redirect()->route('clients.list')->with('success', 'Client Successfully created');
+            $insertBrands = Utilities::switch_db('api')->insert("INSERT into brands (id, `name`, image_url, walkin_id, broadcaster_agency) VALUES ('$unique', '$brand', '$image_url', '$client_id', '$agency_id')");
+
+            if ($userInsert && $walkinInsert && $insertBrands) {
+                $save_activity = Api::saveActivity($agency_id, $description, $ip, $user_agent);
+                Session::flash('success', 'Client created successfully');
+                return redirect()->route('clients.list');
 
             } else {
-                return redirect()->back()->with('error', trans('Client not created, try again'));
+                Session::flash('error', 'Error occured while creating this client');
+                return redirect()->back();
             }
         } else {
             $roles = Role::all();
@@ -108,22 +134,22 @@ class ClientsController extends Controller
 
             $user_details = \DB::select("SELECT * FROM users WHERE id = '$user_id'");
 
-            $campaigns = Utilities::switch_db('api')->select("SELECT COUNT(id) as number from campaigns where user_id = '$user_id'");
+            $campaigns = Utilities::switch_db('api')->select("SELECT count(id) as number from campaigns where id IN (SELECT campaign_id from campaignDetails where user_id = '$user_id')");
 
-            $last_camp_date = Utilities::switch_db('api')->select("SELECT time_created from campaigns where user_id = '$user_id' ORDER BY time_created DESC LIMIT 1");
+            $last_camp_date = Utilities::switch_db('api')->select("SELECT time_created from campaignDetails where user_id = '$user_id' GROUP BY campaign_id ORDER BY time_created DESC LIMIT 1");
             if ($last_camp_date) {
                 $date = $last_camp_date[0]->time_created;
             } else {
                 $date = 0;
             }
 
-            $payments = Utilities::switch_db('api')->select("SELECT SUM(amount) as total from payments WHERE campaign_id IN(SELECT id from campaigns WHERE user_id = '$user_id')");
+            $payments = Utilities::switch_db('api')->select("SELECT SUM(total) as total from payments WHERE campaign_id IN(SELECT campaign_id from campaignDetails WHERE user_id = '$user_id' GROUP BY campaign_id)");
 
             $agency_data[] = [
                 'client_id' => $agency->id,
                 'user_id' => $agency->user_id,
                 'image_url' => $agency->image_url,
-                'num_campaign' => $campaigns[0]->number,
+                'num_campaign' => $campaigns ? $campaigns[0]->number : 0,
                 'total' => $payments[0]->total,
                 'name' => $user_details && $user_details[0] ? $user_details[0]->last_name . ' ' . $user_details[0]->first_name : '',
                 'created_at' => $agency->time_created,
@@ -133,7 +159,7 @@ class ClientsController extends Controller
 
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
         $col = new Collection($agency_data);
-        $perPage = 5;
+        $perPage = 3;
         $currentPageSearchResults = $col->slice(($currentPage - 1) * $perPage, $perPage)->all();
         $entries = new LengthAwarePaginator($currentPageSearchResults, count($col), $perPage);
         $entries->setPath('list');
@@ -152,9 +178,9 @@ class ClientsController extends Controller
         $user_camp = [];
 
 //        $brands = Utilities::switch_db('reports')->select("SELECT * FROM brands WHERE walkin_id = '$walknin_id'");
-        $campaigns = Utilities::switch_db('api')->select("SELECT * from campaigns where user_id = '$user_id'");
+        $campaigns = Utilities::switch_db('api')->select("SELECT SUM(adslots) as adslots, time_created, product from campaignDetails where user_id = '$user_id' GROUP BY campaign_id");
         foreach ($campaigns as $campaign){
-            $pay = Utilities::switch_db('api')->select("SELECT amount from payments where campaign_id = '$campaign->id'");
+            $pay = Utilities::switch_db('api')->select("SELECT amount from payments where campaign_id = '$campaign->campaign_id'");
             $user_camp[] = [
                 'product' => $campaign->product,
                 'num_of_slot' => $campaign->adslots,
@@ -170,5 +196,24 @@ class ClientsController extends Controller
             ->with('user_details', $user_details)
             ->with('campaign', $user_camp);
 
+    }
+
+    public function getClientBrands($id)
+    {
+        $brs = Utilities::switch_db('api')->select("SELECT * from brands where walkin_id = '$id'");
+        $brands = [];
+        foreach ($brs as $br){
+            $campaigns = Utilities::switch_db('api')->select("SELECT count(id) as total_campaign from campaigns WHERE id IN (SELECT campaign_id from campaignDetails WHERE brand = '$br->id' GROUP BY campaign_id)");
+
+            $brands[] = [
+                'brand' => $br->name,
+                'campaigns' => $campaigns[0]->total_campaign,
+            ];
+        }
+        if(count($brands) === 0){
+            Session::flash('info', 'You don`t have a brand on this client');
+            return redirect()->back();
+        }
+        return view('clients.client_brand')->with('brands', $brands);
     }
 }

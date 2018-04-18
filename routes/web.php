@@ -320,6 +320,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/agency-dashboard/periodic-brand', 'DashboardController@filterByBrand')->name('agency.dashboard.data');
         Route::get('/agency/percentage-periodic', 'DashboardController@filterByMonth')->name('agency.month');
 
+
         /**
          * Clients
          */
@@ -328,6 +329,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::any('/create', 'ClientsController@create')->name('clients.create');
             Route::get('list', 'ClientsController@clients')->name('clients.list');
             Route::get('/client/{client_id}', 'ClientsController@clientShow')->name('client.show');
+            Route::get('/client/brand/{id}', 'ClientsController@getClientBrands')->name('client_brands');
         });
 
         Route::group(['prefix' => 'invoices'], function () {

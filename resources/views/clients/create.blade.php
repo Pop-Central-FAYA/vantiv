@@ -29,43 +29,89 @@
                         <div class="col-12 ">
                             <h2>User Details</h2>
                             <div class="col-12 form-inner">
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="first_name"
-                                           name="first_name" placeholder="@lang('app.first_name')" value="{{ $edit ? $user->first_name : '' }}">
+                                <div class="input-group{{ $errors->has('first_name') ? ' has-error' : '' }}">
+                                    <input type="text" class="form-control" id="first_name" name="first_name" required placeholder="@lang('app.first_name')" value="{{ $edit ? $user->first_name : '' }}">
+                                    @if($errors->has('first_name'))
+                                        <strong>
+                                            <span class="error-block" style="color: red;">{{ $errors->first('first_name') }}</span>
+                                        </strong>
+                                    @endif
                                 </div>
-                                <div class="input-group">
-                                    <input type="text" name="address" value="{{ $edit ? $user->address : '' }}"  placeholder="Address">
+                                <div class="input-group{{ $errors->has('address') ? ' has-error' : '' }}">
+                                    <input type="text" name="address" value="{{ $edit ? $user->address : '' }}" required placeholder="Address">
+                                    @if($errors->has('address'))
+                                        <strong>
+                                            <span class="error-block" style="color: red;">{{ $errors->first('address') }}</span>
+                                        </strong>
+                                    @endif
                                 </div>
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="last_name"
-                                           name="last_name" placeholder="@lang('app.last_name')" value="{{ $edit ? $user->last_name : '' }}">
+                                <div class="input-group{{ $errors->has('last_name') ? ' has-error' : '' }}">
+                                    <input type="text" class="form-control" id="last_name" name="last_name" required placeholder="@lang('app.last_name')" value="{{ $edit ? $user->last_name : '' }}">
+                                    @if($errors->has('last_name'))
+                                        <strong>
+                                            <span class="error-block" style="color: red;">{{ $errors->first('last_name') }}</span>
+                                        </strong>
+                                    @endif
                                 </div>
-                                <div class="input-group">
-                                    <input type="text" name="phone" value="{{ $edit ? $user->phone : '' }}"  placeholder="Phone">
+                                <div class="input-group{{ $errors->has('phone') ? ' has-error' : '' }}">
+                                    <input type="text" name="phone" value="{{ $edit ? $user->phone : '' }}" required placeholder="Phone">
+                                    @if($errors->has('phone'))
+                                        <strong>
+                                            <span class="error-block" style="color: red;">{{ $errors->first('phone') }}</span>
+                                        </strong>
+                                    @endif
                                 </div>
-                                <div class="input-group">
-                                    <select name="country_id" class="form-control Role">
+                                <div class="input-group{{ $errors->has('country_id') ? ' has-error' : '' }}">
+                                    <select name="country_id" required class="form-control Role">
                                         @foreach ($countries as $country)
                                             <option value="{{ $country->country_code }}">{{ $country->name }}</option>
                                         @endforeach
                                     </select>
+
+                                    @if($errors->has('country_id'))
+                                        <strong>
+                                            <span class="error-block" style="color: red;">{{ $errors->first('country_id') }}</span>
+                                        </strong>
+                                    @endif
+                                </div>
+                                <div class="input-group{{ $errors->has('location') ? ' has-error' : '' }}">
+                                    <input type="text" name="location" value="{{ $edit ? $user->location : '' }}" required  placeholder="Location">
+                                    @if($errors->has('location'))
+                                        <strong>
+                                            <span class="error-block" style="color: red;">{{ $errors->first('location') }}</span>
+                                        </strong>
+                                    @endif
                                 </div>
                             </div>
                         </div>
                         <div class="col-12">
                             <h2>Login Details</h2>
-                            <div class="input-group">
-                                <input type="email" name="email" value="{{ $edit ? $user->email : '' }}"  placeholder="Email">
+                            <div class="input-group{{ $errors->has('email') ? ' has-error' : '' }}">
+                                <input type="email" name="email" value="{{ $edit ? $user->email : '' }}" required placeholder="Email">
+                                @if($errors->has('email'))
+                                    <strong>
+                                        <span class="error-block" style="color: red;">{{ $errors->first('email') }}</span>
+                                    </strong>
+                                @endif
                             </div>
                             <div class="input-group">
-                                <input type="text" class="form-control" id="password"
-                                       name="username" placeholder="username" value="{{ $edit ? $user->username : '' }}">
+                                <input type="text" class="form-control" id="password" required name="username" placeholder="username" value="{{ $edit ? $user->username : '' }}">
                             </div>
-                            <div class="input-group">
-                                <input type="password" name="password_confirmation" id="password_confirmation" @if ($edit) placeholder="@lang('app.leave_blank_if_you_dont_want_to_change')" @else placeholder="Confirm Password" @endif>
+                            <div class="input-group{{ $errors->has('password_confirmation') ? ' has-error' : '' }}">
+                                <input type="password" name="password_confirmation" required id="password_confirmation" @if ($edit) placeholder="@lang('app.leave_blank_if_you_dont_want_to_change')" @else placeholder="Confirm Password" @endif>
+                                @if($errors->has('password_confirmation'))
+                                    <strong>
+                                        <span class="error-block" style="color: red;">{{ $errors->first('password_confirmation') }}</span>
+                                    </strong>
+                                @endif
                             </div>
-                            <div class="input-group">
-                                <input type="password" name="password" @if ($edit) placeholder="@lang('app.leave_blank_if_you_dont_want_to_change')" @else placeholder="Password" @endif>
+                            <div class="input-group{{ $errors->has('password') ? ' has-error' : '' }}">
+                                <input type="password" name="password" required @if ($edit) placeholder="@lang('app.leave_blank_if_you_dont_want_to_change')" @else placeholder="Password" @endif>
+                                @if($errors->has('password'))
+                                    <strong>
+                                        <span class="error-block" style="color: red;">{{ $errors->first('password') }}</span>
+                                    </strong>
+                                @endif
                             </div>
                             @if ($edit)
                                 <button type="submit" class="btn btn-primary" id="update-login-details-btn">
@@ -75,18 +121,31 @@
                             @endif
                         </div>
                         <div class="col-12">
-                            <h2>User Details</h2>
+                            <h2>Brand Details</h2>
                             <div class="col-12 form-inner">
                                 <input type="hidden" name="broadcaster_id" value="{{ null }}">
                                 <input type="hidden" name="client_type_id" value="2">
                                 <input type="hidden" name="agency_id" value="">
-                                <div class="input-group">
-                                    <input type="text" name="location" value=""  placeholder="Location">
-                                </div>
-                                <div class="input-group">
+                                <div class="input-group{{ $errors->has('image_url') ? ' has-error' : '' }}">
                                     <div class="custom-file-upload">
+                                        <label for="brand_logo">Brand Logo</label>
                                         <input type="file" id="file" name="image_url" />
-                                    </div></div>
+                                        @if($errors->has('image_url'))
+                                            <strong>
+                                                <span class="error-block" style="color: red;">{{ $errors->first('image_url') }}</span>
+                                            </strong>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="input-group{{ $errors->has('brand_name') ? ' has-error' : '' }}">
+                                    <label for="brand_name">Brand</label>
+                                    <input type="text" name="brand_name" value=""  placeholder="Brands">
+                                    @if($errors->has('brand_name'))
+                                        <strong>
+                                            <span class="error-block" style="color: red;">{{ $errors->first('brand_name') }}</span>
+                                        </strong>
+                                    @endif
+                                </div>
                                 <div class="input-group">
                                     <input type="Submit" name="Submit" value="Create Client">
                                 </div>
