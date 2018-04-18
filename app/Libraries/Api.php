@@ -973,13 +973,13 @@ Class Api
 
     public static function countCampaigns($agency_id)
     {
-        $client_campaigns = Utilities::switch_db('api')->select("SELECT * from campaignDetails where agency = '$agency_id'");
+        $client_campaigns = Utilities::switch_db('api')->select("SELECT * from campaignDetails where agency = '$agency_id' GROUP BY campaign_id");
         return count($client_campaigns);
     }
 
     public static function countInvoices($agency_id)
     {
-        $client_invoice = Utilities::switch_db('api')->select("SELECT * from invoiceDetails where agency_id = '$agency_id'");
+        $client_invoice = Utilities::switch_db('api')->select("SELECT * from invoiceDetails where agency_id = '$agency_id' GROUP BY invoice_id");
         return count($client_invoice);
     }
 
@@ -991,20 +991,19 @@ Class Api
 
     public static function countApproved($agency_id)
     {
-        $count_approval = Utilities::switch_db('api')->select("SELECT * from invoiceDetails where agency_id = '$agency_id' AND status = 1");
+        $count_approval = Utilities::switch_db('api')->select("SELECT * from invoiceDetails where agency_id = '$agency_id' AND status = 1 GROUP BY invoice_id");
         return count($count_approval);
     }
 
     public static function countUnapproved($agency_id)
     {
-        $count_unapproval = Utilities::switch_db('api')->select("SELECT * from invoiceDetails where agency_id = '$agency_id' AND status = 0");
+        $count_unapproval = Utilities::switch_db('api')->select("SELECT * from invoiceDetails where agency_id = '$agency_id' AND status = 0 GROUP BY invoice_id");
         return count($count_unapproval);
     }
 
     public static function allInvoiceAdvertiserorAgency($agency_id)
     {
-        $all_invoices = Utilities::switch_db('reports')->select("SELECT * FROM invoiceDetails WHERE  agency_id = '$agency_id' ORDER BY time_created DESC LIMIT 5");
-
+        $all_invoices = Utilities::switch_db('reports')->select("SELECT SUM(actual_amount_paid) as total, invoice_number, SUM(refunded_amount) as refunded, status, invoice_id FROM invoiceDetails WHERE  agency_id = '$agency_id' GROUP BY invoice_id ORDER BY time_created DESC LIMIT 5");
         $invoice_campaign_details = [];
 
         foreach ($all_invoices as $invoice) {
@@ -1017,8 +1016,8 @@ Class Api
 
             $invoice_campaign_details[] = [
                 'invoice_number' => $invoice->invoice_number,
-                'actual_amount_paid' => $invoice->actual_amount_paid,
-                'refunded_amount' => $invoice->refunded_amount,
+                'actual_amount_paid' => $invoice->total,
+                'refunded_amount' => $invoice->refunded,
                 'status' => $invoice->status,
                 'campaign_brand' => $brand_name[0]->name,
                 'campaign_name' => $campaign[0]->name

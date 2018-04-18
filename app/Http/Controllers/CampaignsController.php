@@ -112,6 +112,7 @@ class CampaignsController extends Controller
 
     public function postStep2(Request $request, $walkins)
     {
+        $broadcaster_id = Session::get('broadcaster_id');
         $this->validate($request, [
             'name' => 'required',
             'brand' => 'required',
@@ -144,7 +145,7 @@ class CampaignsController extends Controller
         $step2_req = ((object) $request->all());
         session(['step2' => $step2_req]);
 
-        $del_cart = \DB::delete("DELETE FROM carts WHERE user_id = '$walkins'");
+        $del_cart = \DB::delete("DELETE FROM carts WHERE user_id = '$walkins' AND broadcaster_id = '$broadcaster_id'");
         $del_uplaods = \DB::delete("DELETE FROM uploads WHERE user_id = '$walkins'");
         $del_file_position = Utilities::switch_db('api')->delete("DELETE FROM adslot_filePositions where select_status = 0");
 
@@ -757,7 +758,18 @@ class CampaignsController extends Controller
                     $del_uplaods = \DB::delete("DELETE FROM uploads WHERE user_id = '$walkins'");
                     Session::forget('step2');
                     return 'success';
+                }else{
+                    $delete_invoice = Utilities::switch_db('api')->delete("DELETE from invoices where id = '$invoice_id'");
+                    $delete_invoice_details = Utilities::switch_db('api')->delete("DELETE from invoiceDetails where invoice_id = '$invoice_id'");
+                    $delete_mpo = Utilities::switch_db('api')->delete("DELETE from mpos where id = '$mpo_id'");
+                    $delete_mpo_details = Utilities::switch_db('api')->delete("DELETE * from mpoDetails where mpo_id = '$mpo_id'");
+                    return 'error';
                 }
+            }else{
+                $delete_pay = Utilities::switch_db('api')->delete("DELETE from payments where id = '$pay_id'");
+                $delete_pay_details = Utilities::switch_db('api')->delete("DELETE from paymentDetails where payment_id = '$pay_id'");
+                $delete_files = Utilities::switch_db('api')->delete("DELETE from files where campaign_id = '$campaign_id'");
+                return 'error';
             }
 
         }else{

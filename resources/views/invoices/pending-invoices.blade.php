@@ -47,7 +47,7 @@
                                     <td>{{ $invoice['invoice_number'] }}</td>
                                     <td>{{ $invoice['campaign_name'] }}</td>
                                     <td>{{ $invoice['campaign_brand'] }}</td>
-                                    <td>&#8358;{{ $invoice['actual_amount_paid'] }}</td>
+                                    <td>&#8358;{{ number_format($invoice['actual_amount_paid'], 2) }}</td>
                                     <td>&#8358;{{ $invoice['refunded_amount'] }}</td>
                                     <td>
                                         @if ($invoice['status'] == 1)

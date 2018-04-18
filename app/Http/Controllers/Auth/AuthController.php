@@ -119,7 +119,10 @@ class AuthController extends Controller
             Auth::logout();
         }
 
+
+
         $username = Auth::user()->email;
+
         $password = bcrypt($request->password);
         $role = \DB::table('role_user')->where('user_id', Auth::user()->id)->first();
         if ($role->role_id === 3) {

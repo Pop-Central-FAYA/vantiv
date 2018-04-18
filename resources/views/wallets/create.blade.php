@@ -36,7 +36,7 @@
     <!-- Modal -->
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
-            <div class="modal-content">
+            <div class="modal-content container">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title" id="myModalLabel">Fund Wallet</h4>
@@ -99,6 +99,9 @@
 
     <script>
         function payWithPaystack(){
+            $(".container").css({
+                opacity: 0.5
+            });
             var handler = PaystackPop.setup({
                 key: 'pk_test_9945d2a543e97e34d0401f1d926e79dc1716ccc7',
                 email: "<?php echo $user_det[0]->email; ?>",

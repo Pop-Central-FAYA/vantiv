@@ -34,11 +34,6 @@
                     <canvas id="containerPeriodic_total_per_brand" style="width: 512px; height: 150px"></canvas>
                     {{--<div id="containerPeriodic_total_per_brand" style="min-width: 310px; height: 400px; margin: 0 auto"></div>--}}
                 </form>
-                <!-- /.box -->
-
-                <!-- DONUT CHART -->
-
-                <!-- /.box -->
 
             </div>
         </div>
@@ -86,11 +81,9 @@
         $(document).ready(function () {
 
             $("#brand").change(function () {
-                $("#load_broad").show();
                 $(".content").css({
                     opacity: 0.5
                 });
-                $('#load_broad').html('<img src="{{ asset('loader.gif') }}" align="absmiddle"> Please wait while we process your request...');
                 var br_id = $("#brand").val();
                 var url = $("#search_by_brand").attr('action');
                 $.get(url, {'br_id': br_id, '_token':$('input[name=_token]').val()}, function(data) {
@@ -140,29 +133,6 @@
                     });
                 });
             })
-
-            var Datefilter =  $('.agency_campaign_all').DataTable({
-                paging: true,
-                serverSide: true,
-                processing: true,
-                ajax: {
-                    url: '/agency/campaigns/all-campaign/data',
-                    data: function (d) {
-                        d.start_date = $('input[name=txtFromDate_hvc]').val();
-                        d.stop_date = $('input[name=txtToDate_hvc]').val();
-                    }
-                },
-                columns: [
-                    {data: 'id', name: 'id'},
-                    {data: 'name', name: 'name'},
-                    {data: 'brand', name: 'brand'},
-                    {data: 'product', name: 'product'},
-                    {data: 'start_date', name: 'start_date'},
-                    {data: 'end_date', name: 'end_date'},
-                    {data: 'amount', name: 'amount'},
-                    {data: 'mpo', name: 'mpo'}
-                ]
-            });
         })
 
     </script>

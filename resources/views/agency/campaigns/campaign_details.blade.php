@@ -47,9 +47,9 @@
                             <thead>
                             <tr>
                                 <th>S/N</th>
-                                <th>Broadcaster Station</th>
+                                <th>Media Station</th>
                                 <th>Day</th>
-                                <th>From-To Time</th>
+                                <th>From To Time</th>
                                 <th>Day-parts</th>
                                 <th>Target Audience</th>
                                 <th>Region</th>
@@ -86,8 +86,9 @@
                             <tr>
                                 <th>S/N</th>
                                 <th>File</th>
-                                <th>Broadcaster</th>
-                                <th>Slot Purchased</th>
+                                <th>Media Station</th>
+                                <th>File Duration</th>
+                                <th>From To Time</th>
                                 <th>Play Time Status</th>
                                 <th>File Status</th>
                             </tr>
@@ -101,8 +102,9 @@
                                     </td>
                                     <td>{{ $file_detail['broadcast_station'] }}</td>
                                     <td>{{ $file_detail['slot_time'] }}</td>
-                                    <td>Played</td>
-                                    <td>@if($file_detail['file_status'] === 1) File Approved @elseif($file_detail['file_status'] === 2) File Rejected. With reason : <strong>{{ $file_detail['rejection_reason'] }}</strong> @else Pending @endif</td>
+                                    <td>{{ $file_detail['from_to_time'] }}</td>
+                                    <td>Pending to Play</td>
+                                    <td>@if($file_detail['file_status'] === 1) File Approved @elseif($file_detail['file_status'] === 2) File Rejected. With reason : <strong>{{ $file_detail['rejection_reason'] }}</strong> @else Pending Approval @endif</td>
                                 </tr>
                             @endforeach
                             </tbody>

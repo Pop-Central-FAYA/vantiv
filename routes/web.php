@@ -318,6 +318,7 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::get('/agency-dashboard/periodic-sales', 'DashboardController@filterByBroad')->name('agency.dashboard.broad');
         Route::get('/agency-dashboard/periodic-brand', 'DashboardController@filterByBrand')->name('agency.dashboard.data');
+        Route::get('/agency/percentage-periodic', 'DashboardController@filterByMonth')->name('agency.month');
 
         /**
          * Clients

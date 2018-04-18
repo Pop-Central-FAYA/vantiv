@@ -51,6 +51,11 @@ class Utilities {
         $brand = Utilities::switch_db('api')->select("SELECT name from brands where id = '$brand_name'");
         $channel_name = Utilities::switch_db('api')->select("SELECT channel from campaignChannels where id = '$channel'");
         $payments = Utilities::switch_db('api')->select("SELECT * from payments where campaign_id = '$campaign_id' ");
+        $payment_id = $payments[0]->id;
+        if(\Session::get('broadcaster_id')){
+            $broadcaster_id = \Session::get('broadcaster_id');
+            $payments = Utilities::switch_db('api')->select("SELECT amount as total from paymentDetails where payment_id = '$payment_id' and broadcaster = '$broadcaster_id'");
+        }
         $user_id = $campaign_details[0]->user_id;
         $user_broad = Utilities::switch_db('api')->select("SELECT * from users where id = '$user_id' ");
         $user_agency = DB::select("SELECT * from users where id = '$user_id' ");
@@ -85,6 +90,10 @@ class Utilities {
 
 
         $files = Utilities::switch_db('api')->select("SELECT * from files where campaign_id = '$campaign_id'");
+        if(\Session::get('broadcaster_id')){
+            $broadcaster_id = \Session::get('broadcaster_id');
+            $files = Utilities::switch_db('api')->select("SELECT * from files where campaign_id = '$campaign_id' AND broadcaster_id = '$broadcaster_id'");
+        }
         foreach ($files as $file){
             $adslot_details = Utilities::switch_db('api')->select("SELECT * from adslots where id = '$file->adslot'");
             $day_part_id = $adslot_details[0]->day_parts;
@@ -216,35 +225,15 @@ class Utilities {
     public static function invoiceDetails()
     {
         $all_invoices = [];
+        $inv_files = [];
         $invoices = Utilities::switch_db('api')->select("SELECT * from invoices");
         foreach ($invoices as $invoice)
         {
             $invoice_details = Utilities::switch_db('api')->select("SELECT * from invoiceDetails where invoice_id = '$invoice->id'");
-            $files = Utilities::switch_db('api')->select("SELECT * from files where campaign_id = '$invoice->campaign_id'");
-            foreach ($files as $file) {
-                $ads_price = Utilities::switch_db('api')->select("SELECT * from adslotPercentages where adslot_id = '$file->adslot'");
-                if (!$ads_price) {
-                    $ads_price = Utilities::switch_db('api')->select("SELECT * from adslotPrices where adslot_id = '$file->adslot'");
-                }
-                $pay = Utilities::switch_db('api')->select("SELECT * from payments where campaign_id = '$invoice->campaign_id'");
-
-                if ($file->time_picked === "60") {
-                    $price = '&#8358;' . number_format($ads_price[0]->price_60, 2);
-                } elseif ($file->time_picked === "45") {
-                    $price = '&#8358;' . number_format($ads_price[0]->price_45, 2);
-                } elseif ($file->time_picked === "30") {
-                    $price = '&#8358;' . number_format($ads_price[0]->price_30, 2);
-                } else {
-                    $price = '&#8358;' . number_format($ads_price[0]->price_15, 2);
-                }
-
-            }
 
             $all_invoices[] = [
                 'campaign_id' => $invoice->campaign_id,
-                'adslot_id' => count(array($file->adslot)),
-                'play_time' => $file->time_picked,
-                'cost' => $price,
+                'invoice_number' => $invoice->invoice_number,
             ];
         }
 
