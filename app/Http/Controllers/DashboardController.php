@@ -257,21 +257,22 @@ class DashboardController extends Controller
             $bra = Utilities::switch_db('api')->select("SELECT * from brands where walkin_id IN (SELECT id from walkIns where agency_id = '$agency_id')");
             $brand = $this->clientDashboard($agency_id);
 
-            foreach ($brand as $b) {
-                $bra_tot[] = (integer)$b['total'];
-            }
-            foreach ($brand as $b) {
-                $braa[] = $b['brand'];
-            }
-            foreach ($brand as $b) {
-                $bra_dates[] = $b['date'];
+            if($brand){
+                foreach ($brand as $b) {
+                    $bra_tot[] = (integer)$b['total'];
+                }
+                foreach ($brand as $b) {
+                    $braa[] = $b['brand'];
+                }
+                foreach ($brand as $b) {
+                    $bra_dates[] = $b['date'];
+                }
+
             }
 
             $bra_d = json_encode($bra_dates);
             $bra_am = json_encode($bra_tot);
             $bra_na = json_encode($braa);
-
-
 
             $pro_period = $this->periodic_spent($agency_id);
             $p = json_encode($pro_period);
@@ -581,13 +582,14 @@ class DashboardController extends Controller
 
     public function filterByBroad()
     {
+        $agency_id = Session::get('agency_id');
         $b_id = request()->br_id;
         $broadcaster_brand = Utilities::switch_db('api')->select("SELECT brand from broadcasters where id='$b_id'");
         $pe = [];
         $tot = [];
         $date = [];
         $bra = [];
-        $broad = Utilities::switch_db('api')->select("SELECT SUM(amount) as total, time_created from paymentDetails WHERE agency_broadcaster = '$b_id' GROUP BY DATE_FORMAT(time_created, '%Y-%m')");
+        $broad = Utilities::switch_db('api')->select("SELECT SUM(amount) as total, time_created from paymentDetails WHERE agency_broadcaster = '$b_id' AND agency_id = '$agency_id' GROUP BY DATE_FORMAT(time_created, '%Y-%m')");
         foreach ($broad as $broads) {
             $pe[] = [
                 'total' => (integer)$broads->total,
