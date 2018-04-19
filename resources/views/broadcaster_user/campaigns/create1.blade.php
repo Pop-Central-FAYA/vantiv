@@ -1,3 +1,4 @@
+
 @extends('layouts.new_app')
 
 @section('title')
@@ -153,9 +154,17 @@
                             <input type="number" name="min_age" value="{{ isset(((object) $step2)->start_date) ?((object) $step2)->min_age : "" }}" required class="form-control">
                         </div>
 
+
                         @if(isset($step2))
                             <div class="input-group">
                                 <h3> Day Parts </h3>
+                                <div class="form-group">
+                                    <label style="margin-left: 10px;">
+                                        All
+                                        <input type="checkbox" id="checkAll"
+                                               value="" class="minimal-red"  />
+                                    </label>
+                                </div>
                                 <div class="form-group">
                                     @foreach($day_parts as $day_part)
                                         <label style="margin-left: 10px;">
@@ -166,7 +175,7 @@
                                                    checked
                                                    @endif
                                                    @endforeach
-                                                   value="{{ $day_part->id }}" class="minimal-red" required />
+                                                   value="{{ $day_part->id }}" class="minimal-red checked_this" required />
                                         </label>
                                     @endforeach
                                 </div>
@@ -175,10 +184,17 @@
                             <div class="input-group">
                                 <h3> Day Parts </h3>
                                 <div class="form-group">
+                                    <label style="margin-left: 10px;">
+                                        All
+                                        <input type="checkbox" id="checkAll"
+                                               value="" class="minimal-red"  />
+                                    </label>
+                                </div>
+                                <div class="form-group">
                                     @foreach($day_parts as $day_part)
                                         <label style="margin-left: 10px;">
                                             {{ $day_part->day_parts }}
-                                            <input type="checkbox" name="dayparts[]" value="{{ $day_part->id }}" class="minimal-red" required />
+                                            <input type="checkbox" name="dayparts[]" value="{{ $day_part->id }}" class="minimal-red checked_this" required />
                                         </label>
                                     @endforeach
                                 </div>
@@ -245,6 +261,11 @@
 
 
         $(document).ready(function(){
+
+            $("#checkAll").click(function () {
+                $('input:checkbox.checked_this').not(this).prop('checked', this.checked);
+            });
+
             $("#txtFromDate").datepicker({
                 numberOfMonths: 2,
                 onSelect: function (selected) {
@@ -270,3 +291,4 @@
     <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="{{ asset('assets/css/parsley.css') }}">
 @stop
+

@@ -155,6 +155,7 @@ Route::group(['middleware' => 'auth'], function () {
        Route::get('/all-campaigns', 'BroadcasterUserCampaignsController@index')->name('broadcaster.user.campaign.all');
        Route::get('/campaign-data', 'BroadcasterUserCampaignsController@campaignData');
        Route::get('/campaign-details/{id}', 'BroadcasterUserCampaignsController@campaignDetails')->name('user.broadcaster.campaign.details');
+       Route::get('/post-cart/{walkins}/{broadcaster}/{broadcaster_user}', 'BroadcasterUserCampaignsController@postCart')->name('broadcaster_user.post.cart');
     });
 
     Route::group(['prefix' => 'broadcaster-user/reports'], function () {

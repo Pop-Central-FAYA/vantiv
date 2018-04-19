@@ -78,8 +78,10 @@
                                         <th>S/N</th>
                                         <th>Position</th>
                                         <th>Surge</th>
-                                        <th>Edit</th>
-                                        <th>Delete</th>
+                                        @if(Session::get('broadcaster_id'))
+                                            <th>Edit</th>
+                                            <th>Delete</th>
+                                        @endif
                                         </thead>
                                         <tbody>
                                         @foreach($all_positions as $all_position)
@@ -87,8 +89,10 @@
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ ucfirst($all_position->position) }}</td>
                                                 <td>{{ $all_position->percentage }}</td>
-                                                <td><button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#edit{{ $all_position->id }}">Edit</button></td>
-                                                <td><button type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#delete{{ $all_position->id }}">Delete</button></td>
+                                                @if(Session::get('broadcaster_id'))
+                                                    <td><button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#edit{{ $all_position->id }}">Edit</button></td>
+                                                    <td><button type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#delete{{ $all_position->id }}">Delete</button></td>
+                                                @endif
                                             </tr>
                                         @endforeach
                                         </tbody>

@@ -120,6 +120,7 @@ class BroadcasterAuthController extends Controller
 
     public function userData(DataTables $dataTables)
     {
+
         $users = [];
         $j = 1;
         $broadcaster = Session::get('broadcaster_id');

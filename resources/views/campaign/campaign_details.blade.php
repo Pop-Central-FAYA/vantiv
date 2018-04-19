@@ -97,18 +97,18 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach($campaign_details['file_details'] as $file_detail)
-                                <tr>
-                                    <td>{{ $loop->iteration }}</td>
-                                    <td>
-                                        <video src="{{ $file_detail['file'] }}" width="150" height="100" controls></video>
-                                    </td>
-                                    <td>{{ $file_detail['slot_time'] }}</td>
-                                    <td>{{ $file_detail['from_to_time'] }}</td>
-                                    <td>Pending for Play</td>
-                                    <td>@if($file_detail['file_status'] === 1) File Approved @elseif($file_detail['file_status'] === 2) File Rejected. With reason : <strong>{{ $file_detail['rejection_reason'] }}</strong>  @else Pending Approval @endif</td>
-                                </tr>
-                            @endforeach
+                                @foreach($campaign_details['file_details'] as $file_detail)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>
+                                            <video src="{{ $file_detail['file'] }}" width="150" height="100" controls></video>
+                                        </td>
+                                        <td>{{ $file_detail['slot_time'] }}</td>
+                                        <td>{{ $file_detail['from_to_time'] }}</td>
+                                        <td>Pending for Play</td>
+                                        <td>@if($file_detail['file_status'] === 1) File Approved @elseif($file_detail['file_status'] === 2) File Rejected. With reason : <strong>{{ $file_detail['rejection_reason'] }}</strong>  @else Pending Approval @endif</td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>

@@ -38,7 +38,7 @@
                 </div>
             </div>
 
-            <div class="row">
+            <div class="row load_this">
                 <div class="col-md-12">
                     <div id="tv-time-box" style="border:1px solid #ccc" >
                         @foreach($ratecards as $ratecard)
@@ -58,7 +58,7 @@
                                                     choosen
 @endif
                                             @endforeach
-                                                    " id="rate_this">
+                                                    " id="rate_this{{ $rating->id }}">
                                                 <p align="center">{{ $rating->from_to_time }}
                                                     <br>
                                                     {{ $rating->time_difference - $rating->time_used }} Seconds Available
@@ -73,17 +73,17 @@
                                             @foreach($cart as $carts)
                                                     @if($carts->adslot_id === $rating->id)
                                                             disabled
-@endif
+                                                    @endif
                                                     @endforeach
                                                             " data-toggle="modal" data-target=".bs-example-modal-lg{{ $rating->id }}" role="progressbar" style="width: {{ $percentage_used }}%" aria-valuenow="{{ $percentage_used }}" aria-valuemin="0" aria-valuemax="100">
                                                     </div>
                                                 </div>
 
-                                                <div class="modal fade bs-example-modal-lg{{ $rating->id }}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+                                                <div class="modal modal_container fade bs-example-modal-lg{{ $rating->id }}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
                                                     <div class="modal-dialog modal-lg" role="document">
-                                                        <div class="modal-content" style="padding: 5%">
+                                                        <div id="modal_con" class="modal-content" style="padding: 5%">
 
-                                                            <form id="form_cart" action="{{ route('store.cart') }}" method="GET">
+                                                            <form id="form_cart" action="{{ route('broadcaster_user.post.cart', ['walkins' => $walkins, 'broadcaster' => $broadcaster, 'broadcaster_user' => $broadcaster_user]) }}" method="GET">
                                                                 {{ csrf_field() }}
                                                                 <h2 align="center">{{ $rating->from_to_time }} | {{ $rating->time_difference - $rating->time_used }} Seconds Available</h2>
                                                                 <ul style="font-size: 21px; margin:0 auto; width: 80%">
@@ -98,14 +98,16 @@
                                                                         ?>
 
 
-                                                                        <table class="table table-bordered table-striped">
+                                                                        <table id="mod" class="table table-bordered table-striped">
                                                                             <thead>
                                                                             <tr>
                                                                                 <th>S/N</th>
                                                                                 <th>Name</th>
-                                                                                <th>duration</th>
-                                                                                <th>price</th>
-                                                                                <th>Select</th>
+                                                                                <th>Duration</th>
+                                                                                <th>Price</th>
+                                                                                <th>Position</th>
+                                                                                {{--<th>Select</th>--}}
+                                                                                <th>Action</th>
                                                                             </tr>
                                                                             </thead>
                                                                             <tbody>
@@ -114,28 +116,68 @@
                                                                             @if( ($rating->time_difference - $rating->time_used) >= $datas[$i]->time)
                                                                                 <tr>
                                                                                     @if($datas[$i]->uploads)
+
                                                                                         <td>{{ $j }}</td>
                                                                                         <td><div class="col-md-3"> <video width="150" controls><source src="{{ asset(decrypt($datas[$i]->uploads)) }}"></video> </div></td>
                                                                                         <input type="hidden" name="file" class="file{{ $rating->id.$datas[$i]->id }}" value="{{ $datas[$i]->uploads }}">
                                                                                         <td><div class="col-md-3"><span style="margin-left:15%"></span>{{ $datas[$i]->time }} Seconds</div></td>
-                                                                                        <input type="hidden" name="time" class="time{{ $rating->id.$datas[$i]->id }}" value="{{ $datas[$i]->time }}">
-                                                                                        <input type="hidden" name="from_to_time" class="from_to_time{{ $rating->id.$datas[$i]->id }}" value="{{ $rating->from_to_time }}">
-                                                                                        <input type="hidden" name="adslot_id" class="adslot_id{{ $rating->id.$datas[$i]->id }}" value="{{ $rating->id }}">
-                                                                                        <input type="hidden" name="walkins" class="walkins" value="{{ $walkins }}">
                                                                                         @if($datas[$i]->time === 15)
                                                                                             <td><div class="col-md-3">&#8358;{{ $select_price[0]->price_15 }}</div></td>
-                                                                                            <input type="hidden" name="price" class="price{{ $rating->id.$datas[$i]->id }}" value="{{ $select_price[0]->price_15 }}">
                                                                                         @elseif($datas[$i]->time === 30)
                                                                                             <td><div class="col-md-3">&#8358;{{ $select_price[0]->price_30 }}</div></td>
-                                                                                            <input type="hidden" name="price" class="price{{ $rating->id.$datas[$i]->id }}" value="{{ $select_price[0]->price_30 }}">
                                                                                         @elseif($datas[$i]->time === 45)
                                                                                             <td><div class="col-md-3">&#8358;{{ $select_price[0]->price_45 }}</div></td>
-                                                                                            <input type="hidden" name="price" class="price{{ $rating->id.$datas[$i]->id }}" value="{{ $select_price[0]->price_45 }}">
                                                                                         @elseif($datas[$i]->time === 60)
                                                                                             <td><div class="col-md-3">&#8358;{{ $select_price[0]->price_60 }}</div></td>
-                                                                                            <input type="hidden" name="price" class="price{{ $rating->id.$datas[$i]->id }}" value="{{ $select_price[0]->price_60 }}">
                                                                                         @endif
-                                                                                        <td><div class="col-md-3"><input name="hourly" class="hourly" value="{{ $rating->id.$datas[$i]->id }}" type="radio"></div></td>
+                                                                                        <td>
+                                                                                            <select name="position" class="form-control" id="position{{ $rating->id.$datas[$i]->id }}">
+                                                                                                <option value="">No Position</option>
+                                                                                                @if(count($positions) > 0)
+                                                                                                    @foreach($positions as $position)
+                                                                                                        <option value="{{ $position->id }}"
+                                                                                                                @foreach($cart as $ca)
+                                                                                                                @if($ca->adslot_id === $rating->id)
+                                                                                                                @if((int)$ca->time === (int)$datas[$i]->time)
+                                                                                                                @if($ca->filePosition_id === $position->id)
+                                                                                                                selected
+                                                                                                                @endif
+                                                                                                                @endif
+                                                                                                                @endif
+                                                                                                                @endforeach
+                                                                                                        >{{ $position->position }}</option>
+                                                                                                    @endforeach
+                                                                                                @endif
+                                                                                            </select>
+                                                                                        </td>
+
+                                                                                        <td class="pick_button{{ $rating->id.$datas[$i]->id }}"><button id="button{{ $rating->id.$datas[$i]->id }}"
+                                                                                                                                                        @foreach($cart as $ca)
+                                                                                                                                                        @if($ca->adslot_id === $rating->id)
+                                                                                                                                                        @if((int)$ca->time === (int)$datas[$i]->time)
+                                                                                                                                                        disabled
+                                                                                                                                                        @endif
+                                                                                                                                                        @endif
+                                                                                                                                                        @endforeach
+                                                                                                                                                        type="button"
+                                                                                                                                                        data-file_slot="{{ $rating->id.$datas[$i]->id }}"
+                                                                                                                                                        @if($datas[$i]->time === 15)
+                                                                                                                                                        data-price="{{ $select_price[0]->price_15 }}"
+                                                                                                                                                        @elseif($datas[$i]->time === 30)
+                                                                                                                                                        data-price="{{ $select_price[0]->price_30 }}"
+                                                                                                                                                        @elseif($datas[$i]->time === 45)
+                                                                                                                                                        data-price="{{ $select_price[0]->price_45 }}"
+                                                                                                                                                        @elseif($datas[$i]->time === 60)
+                                                                                                                                                        data-price="{{ $select_price[0]->price_60 }}"
+                                                                                                                                                        @endif
+                                                                                                                                                        data-adslot_id="{{ $rating->id }}"
+                                                                                                                                                        data-range="{{ $rating->from_to_time }}"
+                                                                                                                                                        data-time="{{ $datas[$i]->time }}"
+                                                                                                                                                        data-walkin="{{ $walkins }}"
+                                                                                                                                                        data-file="{{ $datas[$i]->uploads }}"
+                                                                                                                                                        data-target="bs-example-modal-lg{{ $rating->id }}"
+                                                                                                                                                        class="btn btn-success btn-xs saveCart">select</button></td>
+
                                                                                     @endif
                                                                                 </tr>
                                                                             @endif
@@ -147,7 +189,8 @@
 
                                                                     <hr/>
                                                                 </ul>
-                                                                <button type="button" id="save_cart"  class="btn btn-large save_cart" style="background: #9f005d; color:white; font-size: 20px; padding: 1% 5%; margin-top:4%; border-radius: 10px;">Save</button></a></p>
+                                                                {{--<button type="button" id="save_cart"  class="btn btn-large save_cart" style="background: #9f005d; color:white; font-size: 20px; padding: 1% 5%; margin-top:4%; border-radius: 10px;">Save</button></a></p>--}}
+                                                                <button type="button" data-dismiss="modal" class="btn btn-large" style="background: #9f005d; color:white; font-size: 20px; padding: 1% 5%; margin-top:4%; border-radius: 10px;">Close</button></a></p>
                                                             </form>
 
                                                         </div>
@@ -163,13 +206,12 @@
                 </div>
             </div>
             <br>
-            @if(count($cart) != 0)
-                <a class="btn btn-success btn-lg pull-right" href="{{ route('broadcaster.user.checkout', ['walkins' => $walkins, 'broadcaster' => $broadcaster, 'broadcaster_user' => $broadcaster_user]) }}"><i class="fa fa-shopping-cart"></i>{{ count($cart) }} Cart</a>
-            @endif
+            <div class="row" id="cart_item">
+                @if(count($cart) != 0)
+                    <a class="btn btn-success btn-lg pull-right" href="{{ route('broadcaster.user.checkout', ['walkins' => $walkins, 'broadcaster' => $broadcaster, 'broadcaster_user' => $broadcaster_user]) }}"><i class="fa fa-shopping-cart"></i>{{ count($cart) }} Cart</a>
+                @endif
+            </div>
         </div>
-
-    </div>
-    <div class="row">
 
     </div>
 
@@ -206,30 +248,64 @@
                 window.location.href = "/campaign/create/1/step";
             });
 
-            $("body").delegate(".save_cart", "click", function() {
-                var url1 = $("#form_cart").attr("action");
-                var pick = $("input[name='hourly']:checked").val();
-                var price = $(".price"+pick+"").val();
-                var file = $(".file"+pick+"").val();
-                var time = $(".time"+pick+"").val();
-                var range = $(".from_to_time"+pick+"").val();
-                var adslot_id = $(".adslot_id"+pick+"").val();
-                var walkins = $(".walkins").val();
-//                console.log(url1,pick,price,file,time,range,adslot_id, walkins);
-                if(pick){
-                    $.ajax({
-                        url: url1,
-                        method: "GET",
-                        data: {price: price, adslot_id: adslot_id, file: file, range: range, time: time, walkins: walkins, '_token':$('input[name=_token]').val()},
-                        success: function(data){
-                            if(data === "success"){
-                                location.reload();
-                                $("#rate_this").addClass('choosen');
-                            }
+            $("body").delegate(".saveCart", "click", function() {
+                $(".modal_container").css({
+                    opacity: 0.5
+                });
 
+                $('.saveCart').attr("disabled", false);
+                var file_slot = $(this).data('file_slot');
+                var price = $(this).data('price');
+                var adslot_id = $(this).data('adslot_id');
+                var range = $(this).data('range');
+                var time = $(this).data('time');
+                var walkins = $(this).data('walkin');
+                var url1 = $("#form_cart").attr("action");
+                var position = $("select#position"+file_slot).val();
+                var file = $(this).data('file');
+                var target = $(this).data('target');
+                $(".saveCart").attr('disabled', true);
+
+                $.ajax({
+                    url: url1,
+                    method: "GET",
+                    data: {price: price, adslot_id: adslot_id, file: file, range: range, time: time, position: position, walkins: walkins, '_token':$('input[name=_token]').val()},
+                    success: function(data){
+                        if(data.success === "success"){
+                            $(".modal_container").css({
+                                opacity: 1
+                            });
+                            toastr.success('File picked successfully');
+                            // $(".saveCart").attr('disabled', false);
+                            $("#button"+file_slot).attr('disabled', true);
+                            location.reload();
+                            $("#rate_this"+adslot_id).addClass('choosen');
+                            // $('#cart_item').load(location.href + ' #cart_item');
+                        }else if(data.error === "error"){
+                            $(".modal_container").css({
+                                opacity: 1
+                            });
+                            toastr.error('You have already selected this position, please select another one');
+                            $(".saveCart").attr('disabled', false);
+                            // location.reload();
+                        }else if(data.file_error === "file_error"){
+                            $(".modal_container").css({
+                                opacity: 1
+                            });
+                            toastr.error('This position isnt available, please select another position');
+                            $(".saveCart").attr('disabled', false);
+                        }else{
+                            $(".modal_container").css({
+                                opacity: 1
+                            });
+                            toastr.error('An error occurred while selecting this slot');
+                            $(".saveCart").attr('disabled', false);
+                            location.reload();
                         }
-                    })
-                }
+
+                    }
+                })
+
 
             });
         });
@@ -244,9 +320,9 @@
             background: white;
             border-radius: 10px
         }
-        .disabled{
-            cursor: not-allowed;
-            pointer-events: none;
-        }
+        /*.disabled{*/
+        /*cursor: not-allowed;*/
+        /*pointer-events: none;*/
+        /*}*/
     </style>
 @stop
