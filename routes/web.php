@@ -137,6 +137,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/user-data', 'BroadcasterAuthController@userData');
         Route::get('/users/create', 'BroadcasterAuthController@createUser')->name('broadcaster.user.create');
         Route::post('/user/create/store', 'BroadcasterAuthController@postBroadcasterUser')->name('broadcaster.post.user');
+        Route::get('/user/delete/{id}', 'BroadcasterAuthController@deleteBroadcasterUser')->name('broadcaster_user.delete');
     });
 
     Route::group(['prefix' => 'broadcaster-user/campaign'], function (){
