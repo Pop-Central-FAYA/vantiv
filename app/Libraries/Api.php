@@ -1055,7 +1055,7 @@ Class Api
                 $update_campaign = Utilities::switch_db('api')->update("UPDATE campaignDetails set campaign_status = 1 where campaign_id = '$campaign->id'");
                 $adslots = Utilities::switch_db('api')->select("SELECT * from adslots where id IN ($campaign->adslots_id) ORDER BY time_created DESC");
                 foreach ($adslots as $adslot){
-                    $files = Utilities::switch_db('api')->select("SELECT time_picked, adslot from files where adslot = '$adslot->id' AND campaign_id = '$campaign->id'");
+                    $files = Utilities::switch_db('api')->select("SELECT time_picked, adslot from files where adslot = '$adslot->id' AND campaign_id = '$campaign->campaign_id'");
                     $adslot_arrays[] = [
                         'adslot_id' => $adslot->id,
                         'file' => $files,
