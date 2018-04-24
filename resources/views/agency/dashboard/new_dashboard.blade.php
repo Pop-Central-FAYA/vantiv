@@ -1,7 +1,14 @@
 @extends('layouts.new_app')
+
 @section('title')
     <title>Faya - Agency Dashboard</title>
 @stop
+
+@section('styles')
+
+    <link rel="stylesheet" href="{{ asset('asset/dist/css/dashboard.css') }}" />
+
+@endsection
 
 @section('content')
     <div class="main-section">
@@ -18,41 +25,45 @@
 
             <div class="row">
                 <div class="col-md-3">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            <p><h2><i class="fa fa-user"></i> All Clients</h2></p>
+                    <div class="metrics-widget">
+                        <div class="metrics-widget-heading">
+                            <h2>All Clients</h2>
                         </div>
-                        <div class="panel-body">
+                        <hr/>
+                        <div class="metrics-widget-value">
                             <h1>{{ $count_client }}</h1>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="panel panel-success">
-                        <div class="panel-heading">
-                            <p><h2><i class="fa fa-th"></i></i> All Campaigns</h2></p>
+                    <div class="metrics-widget">
+                        <div class="metrics-widget-heading">
+                            <h2>All Campaigns</h2>
                         </div>
-                        <div class="panel-body">
+                        <hr/>
+                        <div class="metrics-widget-value">
                             <h1>{{ $count_campaigns }}</h1>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
+                    <div class="metrics-widget">
+                        <div class="metrics-widget-heading">
                             <p><h2>All Brands</h2></p>
                         </div>
-                        <div class="panel-body">
+                        <hr/>
+                        <div class="metrics-widget-value">
                             <h1>{{ $count_brands }}</h1>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="panel panel-success">
-                        <div class="panel-heading">
+                    <div class="metrics-widget">
+                        <div class="metrics-widget-heading">
                             <p><h2>All Invoices</h2></p>
                         </div>
-                        <div class="panel-body">
+                        <hr/>
+                        <div class="metrics-widget-value">
                             <h1>{{ $count_invoice }}</h1>
                         </div>
                     </div>

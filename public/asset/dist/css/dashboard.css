@@ -1,0 +1,27 @@
+.metrics-widget {
+    margin: 10px;
+    padding: 20px;
+    border: 1px solid #00C4CA;
+    max-height: 500px;
+    border-radius: 3px;
+    box-shadow: 2px 4px 10px 4px #00A4A0;
+}
+
+.metrics-widget hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #00C4CA;
+    margin: 1em 0;
+    padding: 0;
+}
+
+.metrics-widget-heading {
+    text-align: left;
+    opacity: 0.6;
+}
+
+.metrics-widget-value h1 {
+    text-align: left;
+    font-size: 90px;
+}
