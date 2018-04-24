@@ -37,7 +37,7 @@ class WalkinsController extends Controller
         $broadcaster_idd = '';
         $broadcaster_id = Session::get('broadcaster_id');
         $broadcaster_user = Session::get('broadcaster_user_id');
-        if(Session::get('broadcaster_user')){
+        if($broadcaster_user){
             $broadcaster_idddd = Utilities::switch_db('api')->select("SELECT broadcaster_id from broadcasterUsers where id = '$broadcaster_user'");
             $broadcaster_idd = $broadcaster_idddd[0]->broadcaster_id;
         }

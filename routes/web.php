@@ -137,6 +137,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/user-data', 'BroadcasterAuthController@userData');
         Route::get('/users/create', 'BroadcasterAuthController@createUser')->name('broadcaster.user.create');
         Route::post('/user/create/store', 'BroadcasterAuthController@postBroadcasterUser')->name('broadcaster.post.user');
+        Route::get('/user/delete/{id}', 'BroadcasterAuthController@deleteBroadcasterUser')->name('broadcaster_user.delete');
     });
 
     Route::group(['prefix' => 'broadcaster-user/campaign'], function (){
@@ -155,6 +156,7 @@ Route::group(['middleware' => 'auth'], function () {
        Route::get('/all-campaigns', 'BroadcasterUserCampaignsController@index')->name('broadcaster.user.campaign.all');
        Route::get('/campaign-data', 'BroadcasterUserCampaignsController@campaignData');
        Route::get('/campaign-details/{id}', 'BroadcasterUserCampaignsController@campaignDetails')->name('user.broadcaster.campaign.details');
+       Route::get('/post-cart/{walkins}/{broadcaster}/{broadcaster_user}', 'BroadcasterUserCampaignsController@postCart')->name('broadcaster_user.post.cart');
     });
 
     Route::group(['prefix' => 'broadcaster-user/reports'], function () {
@@ -320,6 +322,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/agency-dashboard/periodic-brand', 'DashboardController@filterByBrand')->name('agency.dashboard.data');
         Route::get('/agency/percentage-periodic', 'DashboardController@filterByMonth')->name('agency.month');
 
+
         /**
          * Clients
          */
@@ -328,6 +331,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::any('/create', 'ClientsController@create')->name('clients.create');
             Route::get('list', 'ClientsController@clients')->name('clients.list');
             Route::get('/client/{client_id}', 'ClientsController@clientShow')->name('client.show');
+            Route::get('/client/brand/{id}', 'ClientsController@getClientBrands')->name('client_brands');
         });
 
         Route::group(['prefix' => 'invoices'], function () {

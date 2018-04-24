@@ -55,12 +55,9 @@
                         </h4>
                     </div>
 
-                    <div class="modal-body">
-
-                    </div>
-
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Done</button>
+                        <a type="button" href="{{ route('broadcaster_user.delete', ['id' => $all_user->id]) }}" class="btn btn-danger" >Delete</a>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
                     </div>
 
                 </div>

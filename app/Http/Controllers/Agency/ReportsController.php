@@ -14,6 +14,7 @@ class ReportsController extends Controller
     {
         $agency_id = Session::get('agency_id');
         $user_d = [];
+
         $user = Utilities::switch_db('api')->select("SELECT user_id from walkIns where agency_id = '$agency_id'");
         foreach ($user as $u){
             $user_det = \DB::select("SELECT * from users where id = '$u->user_id'");
@@ -108,6 +109,7 @@ class ReportsController extends Controller
         $campaign_report = [];
         $j = 1;
         $camp = Utilities::switch_db('api')->select("SELECT * from campaignDetails where user_id = '$user_id' AND agency = '$agency_id' GROUP BY campaign_id ORDER BY time_created desc");
+
         foreach ($camp as $campaign) {
             $pay = Utilities::switch_db('api')->select("SELECT total from payments where campaign_id = '$campaign->campaign_id'");
             $campaign_report[] = [

@@ -61,7 +61,7 @@
 
                                     <table class="table table-hover" style="font-size:16px">
                                         <tr>
-                                            <th>ID</th>
+                                            <th>S/N</th>
                                             <th>Time</th>
                                             <th>Duration</th>
                                             <th>Price</th>

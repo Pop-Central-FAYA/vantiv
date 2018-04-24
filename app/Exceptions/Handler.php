@@ -9,9 +9,13 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Session\TokenMismatchException;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\Debug\Exception\FlattenException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Debug\ExceptionHandler as SymfonyExceptionHandler;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Mail;
+use Vanguard\Mail\SendErrorMail;
 
 class Handler extends ExceptionHandler
 {
@@ -35,9 +39,13 @@ class Handler extends ExceptionHandler
      * @param  Exception  $e
      * @return void
      */
-    public function report(Exception $e)
+    public function report(Exception $exception)
     {
-        parent::report($e);
+        if ($this->shouldReport($exception)) {
+            $this->sendMail($exception); // sends an email
+        }
+
+        parent::report($exception);
     }
 
     /**
@@ -65,9 +73,11 @@ class Handler extends ExceptionHandler
             return $this->toIlluminateResponse($this->renderHttpException($e), $e);
         }
 
+
         return config('app.debug')
             ? $this->toIlluminateResponse($this->convertExceptionToResponse($e), $e)
             : response()->view('errors.500', [], 500);
+
     }
 
     /**
@@ -85,4 +95,23 @@ class Handler extends ExceptionHandler
 
         return redirect()->guest('login');
     }
+
+    public function sendMail(Exception $exception)
+    {
+
+        try {
+
+            $e = FlattenException::create($exception);
+
+            $handler = new SymfonyExceptionHandler();
+
+            $html = $handler->getHtml($e);
+
+            $sendMail = Mail::to('ridwan.busari@techadvance.ng')->send(new SendErrorMail($html));
+
+        }catch (Exception $ex){
+            dd($ex);
+        }
+    }
+
 }

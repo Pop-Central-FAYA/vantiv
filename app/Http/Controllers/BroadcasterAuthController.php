@@ -120,10 +120,11 @@ class BroadcasterAuthController extends Controller
 
     public function userData(DataTables $dataTables)
     {
+
         $users = [];
         $j = 1;
         $broadcaster = Session::get('broadcaster_id');
-        $all_users = Utilities::switch_db('api')->select("SELECT * from users where id IN(SELECT user_id from broadcasterUsers where broadcaster_id = '$broadcaster')");
+        $all_users = Utilities::switch_db('api')->select("SELECT * from users where id IN(SELECT user_id from broadcasterUsers where broadcaster_id = '$broadcaster') AND status = 1");
         foreach ($all_users as $all_user){
             $users[] = [
                 's_n' => $j,
@@ -215,6 +216,22 @@ class BroadcasterAuthController extends Controller
             Session::flash('error', trans('There was an error while creating this user'));
             return redirect()->back();
         }
+    }
+
+    public function deleteBroadcasterUser($id)
+    {
+        $user = Utilities::switch_db('api')->select("SELECT * from users where id = '$id'");
+        $email = $user[0]->email;
+        $update_api_user_table = Utilities::switch_db('api')->update("UPDATE users set status = 0 where id = '$id'");
+        $update_local_user_db = DB::update("UPDATE users set status = 'Banned' where email = '$email'");
+        if($update_local_user_db && $update_api_user_table){
+            Session::flash('success', 'User Deleted successfully');
+            return redirect()->back();
+        }else{
+            Session::flash('error', 'Problem occur while deleting this user');
+            return redirect()->back();
+        }
+
     }
 
 }

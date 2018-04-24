@@ -64,6 +64,11 @@ class AdslotController extends Controller
         }
 
         $broadcaster = Session::get('broadcaster_id');
+        if(Session::get('broadcaster_user_id')){
+            $br_user_id = Session::get('broadcaster_user_id');
+            $broadcaster_id = Utilities::switch_db('api')->select("SELECT broadcaster_id from broadcasterUsers where id = '$br_user_id'");
+            $broadcaster = $broadcaster_id[0]->broadcaster_id;
+        }
         $all_positions = Utilities::switch_db('api')->select("SELECT * from filePositions where broadcaster_id = '$broadcaster' AND status = 0");
         return view('adslot.index')->with('adslots', $all_adslot)->with('broadcaster', $broadcaster)->with('regions', $region)->with('all_positions', $all_positions);
     }

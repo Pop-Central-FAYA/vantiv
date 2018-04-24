@@ -465,7 +465,7 @@ class CampaignsController extends Controller
         $regions = Utilities::switch_db('api')->select("SELECT region from regions where id IN ('$region') ");
         $calc = \DB::select("SELECT SUM(total_price) as total_price FROM carts WHERE user_id = '$id' and agency_id = '$agency_id'");
 //        $query = \DB::select("SELECT * FROM carts WHERE user_id = '$id'");
-        $query_carts = \DB::select("SELECT * FROM carts WHERE user_id = '$id' ");
+        $query_carts = \DB::select("SELECT * FROM carts WHERE user_id = '$id' AND agency_id = '$agency_id'");
         foreach ($query_carts as $query_cart){
             $position = Utilities::switch_db('api')->select("SELECT * from filePositions where id = '$query_cart->filePosition_id'");
             $broadcaster_logo = Utilities::switch_db('api')->select("SELECT * from broadcasters where id = '$query_cart->broadcaster_id'");

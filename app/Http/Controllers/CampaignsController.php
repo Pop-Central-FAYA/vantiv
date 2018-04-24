@@ -610,7 +610,6 @@ class CampaignsController extends Controller
 
         $calc = \DB::select("SELECT SUM(total_price) as total_price FROM carts WHERE user_id = '$walkins' GROUP BY broadcaster_id");
 
-
         $campDetails[] = [
             'id' => uniqid(),
             'campaign_id' => $campaign_id,
