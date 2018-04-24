@@ -282,7 +282,8 @@
                             <hr>
                             <p><br></p>
                                 <div class="input-group">
-                                    <input type="Submit" style="background: #00c4ca" class="btn btn-danger btn-lg" name="Submit" value="Next Campaign">
+                                    <a href="{{ route('agency.campaign.create') }}" style="background: #00c4ca" class="btn btn-danger btn-lg"><< Back</a>
+                                    <input type="Submit" style="background: #00c4ca" class="btn btn-danger btn-lg" name="Submit" value="Next >>">
                                 </div>
 
                             </div>
