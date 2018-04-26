@@ -20,7 +20,7 @@
                             @if(empty($adslots))
                                 <p><h1>No Adslot found for this criteria, please go back</h1></p>
                             @else
-                                <h2>Broadcaster Summary</h2>
+                                <h2>Broadcaster's Summary</h2>
                                 <hr>
                                 <p><br></p>
                                 @foreach($adslots as $adslot)

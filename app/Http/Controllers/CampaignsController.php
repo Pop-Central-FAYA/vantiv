@@ -635,7 +635,14 @@ class CampaignsController extends Controller
             'adslots_id' => "'". implode("','" ,$ads) . "'",
         ];
 
-        $check_time_adslot = Utilities::fetchTimeInCart($walkins, $broadcaster);
+        $check_time_adslots = Utilities::fetchTimeInCart($walkins, $broadcaster);
+        foreach ($check_time_adslots as $check_time_adslot){
+            if($check_time_adslot['initial_time_left'] < $check_time_adslot['time_bought']){
+                $msg = 'You cannot proceed with the campaign creation because '.$check_time_adslot['from_to_time'].' for '.$check_time_adslot['broadcaster_name'].' isn`t available again';
+                \Session::flash('info', $msg);
+                return back();
+            }
+        }
 
         $save_campaignDetails = Utilities::switch_db('api')->table('campaignDetails')->insert($campDetails);
         $save_campaign = Utilities::switch_db('api')->table('campaigns')->insert($camp);
@@ -740,7 +747,7 @@ class CampaignsController extends Controller
                             $insert_position = Utilities::switch_db('api')->update("UPDATE adslot_filePositions set select_status = 1 WHERE adslot_id = '$q->adslot_id' AND broadcaster_id = '$broadcaster'");
                         }
                         $get_slots = Utilities::switch_db('api')->select("SELECT * from adslots WHERE id = '$q->adslot_id'");
-                        $id = $get_slots[0]->id;
+                        $slots_id = $get_slots[0]->id;
                         $time_difference = $get_slots[0]->time_difference;
                         $time_used = $get_slots[0]->time_used;
                         $time = $q->time;
@@ -750,7 +757,7 @@ class CampaignsController extends Controller
                         }else{
                             $slot_status = 0;
                         }
-                        $update_slot = Utilities::switch_db('api')->update("UPDATE adslots SET time_used = '$new_time_used', is_available = '$slot_status' WHERE id = '$id'");
+                        $update_slot = Utilities::switch_db('api')->update("UPDATE adslots SET time_used = '$new_time_used', is_available = '$slot_status' WHERE id = '$slots_id'");
                     }
 
                     $del_cart = \DB::delete("DELETE FROM carts WHERE user_id = '$walkins'");
