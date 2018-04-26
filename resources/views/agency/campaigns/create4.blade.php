@@ -52,10 +52,10 @@
                                     <div class="row">
                                         @foreach($ratecard['adslot'] as $rating)
                                             <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2>
-                                    @foreach($cart as $carts)
-                                            @if($carts->adslot_id === $rating->id)
-                                                    choosen
-@endif
+                                            @foreach($cart as $carts)
+                                                @if($carts->adslot_id === $rating->id)
+                                                        choosen
+                                                @endif
                                             @endforeach
                                                     " id="rate_this{{ $rating->id }}">
                                                 <p align="center">{{ $rating->from_to_time }}
@@ -69,7 +69,7 @@
 
                                                 <div class="progress" style="cursor: pointer;">
                                                     <div class="progress-bar bg-success
-                                            @foreach($cart as $carts)
+                                                    @foreach($cart as $carts)
                                                     @if($carts->adslot_id === $rating->id)
                                                             disabled
                                                     @endif
