@@ -2,31 +2,36 @@
 @section('title')
     <title>Agency | Campaign-Lists</title>
 @stop
+
+
+@section('styles')
+
+    <link rel="stylesheet" href="{{ asset('asset/dist/css/dashboard.css') }}" />
+
+@endsection
+
 @section('content')
 
-    <div class="main-section">
+    <div class="main-section" style="height: 1000px;">
         <div class="container">
             <div class="row">
                 <div class="col-12 heading-main">
-                    <h1>All Campaign</h1>
+                    <h1>Create Campaign</h1>
                     <ul>
                         <li><a href="#"><i class="fa fa-th-large"></i>Agency</a></li>
-                        <li><a href="#">All Campaign</a></li>
+                        <li><a href="#">Create Campaign</a></li>
                     </ul>
                 </div>
-                <div class="col-12 campaign-Management">
-                    <table id="client_list" class="table table-bordered table-striped client_list">
-                        <thead>
-                        <tr>
-                            <th>S/N</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Phone Number</th>
-                            <th>Create Campaign</th>
-                        </tr>
-                        </thead>
-                    </table>
+            </div>
+            <div class="row">
+                <div class="big-button col-md-5">
+                    <a class="" href="{{ route('clients.list') }}">Existing Client</a>
                 </div>
+                <div class="col-md-2"></div>
+                <div class="big-button col-md-5">
+                    <a class="" href="{{ route('clients.create') }}">New Client</a>
+                </div>
+
             </div>
         </div>
     </div>

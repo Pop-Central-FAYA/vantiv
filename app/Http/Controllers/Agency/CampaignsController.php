@@ -148,11 +148,17 @@ class CampaignsController extends Controller
 
     public function getStep1($id)
     {
+
         $industry = Utilities::switch_db('api')->select("SELECT id, `name` from sectors");
         $chanel = Utilities::switch_db('api')->select("SELECT * from campaignChannels");
         $walkins = Utilities::switch_db('api')->select("SELECT id from walkIns where user_id='$id'");
         $walkins_id = $walkins[0]->id;
         $brands = Utilities::switch_db('api')->select("SELECT * from brands WHERE walkin_id = '$walkins_id'");
+        if(count($brands) === 0)
+        {
+            Session::flash('error', 'This client doesnt have a brand');
+            return redirect()->back();
+        }
         $day_parts = Utilities::switch_db('api')->select("SELECT * from dayParts");
         $region = Utilities::switch_db('api')->select("SELECT * from regions");
         $target = Utilities::switch_db('api')->select("SELECT * from targetAudiences");

@@ -148,6 +148,7 @@ class ClientsController extends Controller
             $agency_data[] = [
                 'client_id' => $agency->id,
                 'user_id' => $agency->user_id,
+                'agency_client_id' => $user_details && $user_details[0]->id ? $user_details[0]->id : 1,
                 'image_url' => $agency->image_url,
                 'num_campaign' => $campaigns ? $campaigns[0]->number : 0,
                 'total' => $payments[0]->total,
