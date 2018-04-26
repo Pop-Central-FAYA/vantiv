@@ -20,12 +20,12 @@
                             @if(empty($adslots))
                                 <p><h1>No Adslot found for this criteria, please go back</h1></p>
                             @else
-                                <h2>Choose Broadcaster</h2>
+                                <h2>Broadcaster Summary</h2>
                                 <hr>
                                 <p><br></p>
                                 @foreach($adslots as $adslot)
                                     <li>
-                                        <a style="text-decoration: none;" class="btn btn-defaul" href="#">{{ $adslot['count_adslot'] }} Adslots available for {{ $adslot['boradcaster_brand'] }}</a>
+                                        <a style="text-decoration: none;" class="btn btn-default" href="#">{{ $adslot['count_adslot'] }} Adslots available for {{ $adslot['boradcaster_brand'] }}</a>
                                     </li>
                                 @endforeach
                             @endif

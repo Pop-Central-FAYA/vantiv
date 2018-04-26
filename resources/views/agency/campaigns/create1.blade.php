@@ -282,7 +282,7 @@
                             <hr>
                             <p><br></p>
                                 <div class="input-group">
-                                    <input type="Submit" style="background: #00c4ca" class="btn btn-danger btn-lg" name="Submit" value="Next Campaign">
+                                    <input type="Submit" style="background: #00c4ca" class="btn btn-danger btn-lg" name="Submit" value="Next >>">
                                 </div>
 
                             </div>
