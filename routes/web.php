@@ -93,6 +93,7 @@ Route::group(['middleware' => 'auth'], function () {
     */
     Route::group(['prefix' => 'campaign'], function(){
         Route::get('/', 'CampaignsController@index')->name('campaign.all');
+        Route::get('/setup', 'CampaignsController@setup')->name('campaign.setup');
         Route::get('/create', 'CampaignsController@create')->name('campaign.create');
         Route::get('/create/{walkins}/step2', 'CampaignsController@createStep2')->name('campaign.create2');
         Route::get('/create/{walkins}/step3', 'CampaignsController@createStep3')->name('campaign.create3');
