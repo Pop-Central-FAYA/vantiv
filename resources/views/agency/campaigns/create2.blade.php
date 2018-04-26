@@ -25,7 +25,7 @@
                                 <p><br></p>
                                 @foreach($adslots as $adslot)
                                     <li>
-                                        <a style="text-decoration: none;" class="btn btn-defaul" href="#">{{ $adslot['count_adslot'] }} Adslots available for {{ $adslot['boradcaster_brand'] }}</a>
+                                        <a style="text-decoration: none;" class="btn btn-default" href="#">{{ $adslot['count_adslot'] }} Adslots available for {{ $adslot['boradcaster_brand'] }}</a>
                                     </li>
                                 @endforeach
                             @endif

@@ -16,6 +16,10 @@ use Session;
 
 class CampaignsController extends Controller
 {
+    public function setup()
+    {
+        return view('campaign.new-campaign');
+    }
     /**
      * Display a listing of the resource.
      *
