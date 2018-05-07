@@ -12,21 +12,31 @@
             <?php session()->forget('broadcaster_id'); ?>
             <?php session()->forget('advertiser_id'); ?>
             <?php session()->forget('broadcaster_user_id'); ?>
+            <?php session()->forget('admin_id'); ?>
         @elseif(Session::get('advertiser_id'))
             @include('partials.new_advertiser_sidebar')
             <?php session()->forget('broadcaster_id'); ?>
             <?php session()->forget('agency_id'); ?>
             <?php session()->forget('broadcaster_user_id'); ?>
+            <?php session()->forget('admin_id'); ?>
         @elseif(Session::get('broadcaster_id'))
             @include('partials.new_broadcaster_sidebar')
             <?php session()->forget('agency_id'); ?>
             <?php session()->forget('advertiser_id'); ?>
             <?php session()->forget('broadcaster_user_id'); ?>
+            <?php session()->forget('admin_id'); ?>
         @elseif(Session::get('broadcaster_user_id'))
             @include('partials.broadcaster_user_sidebar')
             <?php session()->forget('agency_id'); ?>
             <?php session()->forget('advertiser_id'); ?>
             <?php session()->forget('broadcaster_id'); ?>
+            <?php session()->forget('admin_id'); ?>
+        @elseif(Session::get('admin_id'))
+            @include('partials.admin_sidebar')
+            <?php session()->forget('agency_id'); ?>
+            <?php session()->forget('advertiser_id'); ?>
+            <?php session()->forget('broadcaster_id'); ?>
+            <?php session()->forget('broadcaster_user_id') ?>
         @endif
         <!--Sidebar-->
         <!--Content-->

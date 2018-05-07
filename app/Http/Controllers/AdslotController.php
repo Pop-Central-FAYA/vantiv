@@ -22,6 +22,7 @@ class AdslotController extends Controller
      */
     public function index()
     {
+
         $broadcaster = Session::get('broadcaster_id');
         $broadcaster_user = Session::get('broadcaster_user_id');
         if(!Session::get('broadcaster_id')){

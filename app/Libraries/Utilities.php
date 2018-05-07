@@ -172,12 +172,6 @@ class Utilities {
                 'broadcaster_name' => $broadcaster_username[0]->brand,
                 'from_to_time' => $check_adslot_space[0]->from_to_time,
             ];
-//            return response()->json(['time_left' => $time_left, 'time_used' => $q->time_sum]);
-//            if($time_left < $q->time_sum){
-//                $msg = 'You cannot proceed with the campaign creation because '.$check_adslot_space[0]->from_to_time.' for '.$broadcaster_username[0]->brand.' isn`t available again';
-//                \Session::flash('info', $msg);
-//                return back();
-//            }
         }
 
         return $times;

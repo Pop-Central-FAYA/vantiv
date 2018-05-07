@@ -15,7 +15,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-12 heading-main">
-                    <h1>Agency Dashboard </h1>
+                    <h1>{{ $agency_info[0]->brand }} Dashboard </h1>
                     <ul>
                         <li><a href="#"><i class="fa fa-th-large"></i>Agency</a></li>
                         <li><a href="#">Dashboard </a></li>

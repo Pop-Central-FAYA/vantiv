@@ -47,6 +47,18 @@
                                     <label for="address">Address</label>
                                     <input type="text" required name="address" value="{{ $user_details['address'] }}"  placeholder="Address">
                                 </div>
+
+                                <div class="input-group">
+                                    <label for="location">Location</label>
+                                    <input type="text" name="location" required value="{{ $user_details['location'] }}"  placeholder="Location">
+                                </div>
+                                <div class="input-group">
+                                    <div class="custom-file-upload">
+                                        <label for="profile">Profile Image</label>
+                                        <input type="file" id="file" name="image_url" />
+                                    </div>
+                                </div>
+
                                 <div class="input-group">
                                     <label for="country_id">Nationality</label>
                                     <select name="country_id" required class="form-control Role">
@@ -79,22 +91,6 @@
                             <div class="input-group">
                                 <label for="password">Password</label>
                                 <input type="password" name="password" placeholder="Password">
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <h2>User Details</h2>
-                            <div class="col-12 form-inner">
-                                <div class="input-group">
-                                    <label for="location">Location</label>
-                                    <input type="text" name="location" required value="{{ $user_details['location'] }}"  placeholder="Location">
-                                </div>
-                                <div class="input-group">
-                                    <div class="custom-file-upload">
-                                        <label for="profile">Profile Image</label>
-                                        <input type="file" id="file" name="image_url" />
-                                    </div>
-                                </div>
-
                             </div>
                         </div>
                         <div class="input-group">

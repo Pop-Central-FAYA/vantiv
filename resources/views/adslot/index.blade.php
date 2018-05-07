@@ -70,8 +70,10 @@
                             <div class="active tab-pane" id="all">
                                 <h3>Position Management</h3>
                                 <p><br></p>
+                                @if(Session::get('broadcaster_id'))
                                 <a href="{{ route('position.create') }}" class="btn btn-success btn-lg">Add Position</a>
                                 <p><br></p>
+                                @endif
                                 <div class="box-body">
                                     <table id="example1" class="table table-bordered table-striped all_campaign">
                                         <thead>

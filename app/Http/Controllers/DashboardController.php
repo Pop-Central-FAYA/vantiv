@@ -208,6 +208,7 @@ class DashboardController extends Controller
             //agency dashboard
             $allBroadcaster = Utilities::switch_db('api')->select("SELECT * from broadcasters");
             $agency_id = Session::get('agency_id');
+            $agency_info = Utilities::switch_db('api')->select("SELECT * from agents where id = '$agency_id'");
             $camp_prod = Utilities::switch_db('api')->select("SELECT id, product from campaignDetails where agency = '$agency_id' GROUP BY campaign_id");
             $pe = $this->broadcasterFilter($agency_id);
 
@@ -317,7 +318,8 @@ class DashboardController extends Controller
                                                                     'bra_dates' => $bra_d,
                                                                     'bra_am' => $bra_am,
                                                                     'bra_na' => $bra_na,
-                                                                    'brand' => $bra,]);
+                                                                    'brand' => $bra,
+                                                                    'agency_info' => $agency_info]);
 
         } else if ($role->role_id === 6) {
 
@@ -578,6 +580,8 @@ class DashboardController extends Controller
 
             return view('broadcaster_user.dashboard.dashboard')->with(['campaign' => $camp, 'volume' => $c_volume, 'month' => $c_mon, 'high_dayp' => $day_pie, 'days' => $days_data, 'adslot' => $ads_no, 'price' => $tot_pri, 'mon' => $mon, 'invoice' => $invoice]);
 
+        }elseif ($role->role_id === 1){
+            return view('admin.dashboard');
         }
     }
 

@@ -1046,7 +1046,8 @@ Class Api
 
     public static function validateCampaign()
     {
-        $campaigns = Utilities::switch_db('api')->select("SELECT * from campaignDetails WHERE campaign_status = 0");
+        $campaigns = Utilities::switch_db('api')->select("SELECT * from campaignDetails WHERE campaign_status = 0 GROUP BY campaign_id");
+
         $array = [];
         $adslot_arrays = [];
         foreach ($campaigns as $campaign){
@@ -1058,6 +1059,7 @@ Class Api
                     $files = Utilities::switch_db('api')->select("SELECT time_picked, adslot from files where adslot = '$adslot->id' AND campaign_id = '$campaign->campaign_id'");
                     $adslot_arrays[] = [
                         'adslot_id' => $adslot->id,
+                        'campaign_id' => $campaign->campaign_id,
                         'file' => $files,
                     ];
                 }
@@ -1066,12 +1068,24 @@ Class Api
         }
 
         foreach ($adslot_arrays as $adslot_array){
-            $adslot_id = $adslot_array['file'][0]->adslot;
-            $time_picked = $adslot_array['file'][0]->time_picked;
+            $adslot_id = $adslot_array['file'] ? $adslot_array['file'][0]->adslot : '';
+            $time_picked = $adslot_array['file'] ? (integer)$adslot_array['file'][0]->time_picked : '';
             $slot_id = $adslot_array['adslot_id'];
+            $camp_id = $adslot_array['campaign_id'];
             $get_adslot = Utilities::switch_db('api')->select("SELECT * from adslots where id = '$adslot_id'");
-            $new_time_used = ($get_adslot[0]->time_used) - ($time_picked);
-            $update_adslot = Utilities::switch_db('api')->update("UPDATE adslots set time_used = '$new_time_used' where id = '$adslot_id'");
+            if(!empty($adslot_id)){
+                $time_used = $get_adslot[0]->time_used;
+                $new_time_used = ($get_adslot[0]->time_used) - ($time_picked);
+                $update_adslot = Utilities::switch_db('api')->update("UPDATE adslots set time_used = '$new_time_used' where id = '$adslot_id'");
+            }
+
+            $array[] = [
+                'slot' => $adslot_id,
+                'init_time' => $time_used,
+                'time_picked' => $time_picked,
+                'time_remaining' => $new_time_used,
+                'camp_id' => $camp_id
+            ];
         }
 
         return true;

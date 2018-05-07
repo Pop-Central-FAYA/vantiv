@@ -30,6 +30,7 @@ class ProfileManagementsController extends Controller
         $agency_id = \Session::get('agency_id');
         $advertiser_id = \Session::get('advertiser_id');
         $broadcaster_user = \Session::get('broadcaster_user_id');
+        $admin_id = \Session::get('admin_id');
         $user_details = [];
         $u_id = Auth::user()->id;
         if($agency_id){
@@ -89,6 +90,20 @@ class ProfileManagementsController extends Controller
                 'nationality' => $api_agent[0]->nationality,
                 'username' => $local_user[0]->username,
             ];
+        }elseif($admin_id){
+            $api_user = Utilities::switch_db('api')->select("SELECT * from users where id = (SELECT user_id from admins where id = '$admin_id')");
+            $local_user = \DB::select("SELECT * from users where id = '$u_id'");
+            $api_agent = Utilities::switch_db('api')->select("SELECT * from admins where id = '$admin_id'");
+            $user_details = [
+                'first_name' => $api_user[0]->firstname,
+                'last_name' => $api_user[0]->lastname,
+                'phone' => $api_user[0]->phone_number,
+                'email' => $api_user[0]->email,
+                'address' => $local_user[0]->address,
+                'location' => $api_agent[0]->location,
+                'nationality' => $api_agent[0]->nationality,
+                'username' => $local_user[0]->username,
+            ];
         }
         return view('profile.index')->with('countries', $countries)->with('user_details', $user_details)
                                          ->with('agency_id', $agency_id)->with('advertiser_id', $advertiser_id)
@@ -117,6 +132,7 @@ class ProfileManagementsController extends Controller
         $agency_id = \Session::get('agency_id');
         $advertiser_id = \Session::get('advertiser_id');
         $broadcaster_user = \Session::get('broadcaster_user_id');
+        $admin_id = \Session::get('admin_id');
         $u_id = Auth::user()->id;
         $update_user = [];
 
@@ -272,6 +288,41 @@ class ProfileManagementsController extends Controller
 
             if(!$update_local_user || !$update_api_user || !$update_user_agent){
                 $user_activity = Api::saveActivity($broadcaster_user, $description, $ip, $user_agent);
+                return back()->with('success', 'Profile Updated...');
+            }else{
+                return back()->with('error', 'Error occured while updating...');
+            }
+        }elseif($admin_id){
+            $description = 'Profile updated with the following information first name='.$request->first_name.', last name=' .$request->last_name. ', address='.$request->address.', username='.$request->username. ', phone number='.$request->phone.', location='.$request->location.', country code='.$request->country_id.', password='.$request->password.' by '.$admin_id;
+            if($request->hasFile('image_url')){
+                $this->validate($request, [
+                    'image_url' => 'required|image|mimes:jpg,jpeg,png',
+                ]);
+
+                $image = $request->image_url;
+                $filename = realpath($image);
+                Cloudder::upload($filename, Cloudder::getPublicId(), ['height' => 200, 'width' => 200]);
+                $clouder = Cloudder::getResult();
+                $image_path = encrypt($clouder['url']);
+                $update_client = Utilities::switch_db('api')->select("UPDATE admins set image_url = '$image_path' where id = '$admin_id'");
+
+            }
+            if($request->has('password')){
+                $this->validate($request, [
+                    'password' => 'required|min:6',
+                    'password_confirmation' => 'required|same:password'
+                ]);
+                $password = bcrypt($request->password);
+                $update_local = DB::update("UPDATE users set password = '$password' where id = '$u_id'");
+                $update_api = Utilities::switch_db('api')->select("UPDATE users set password = '$password' where id = (SELECT user_id from admins where id = '$admin_id')");
+            }
+
+            $update_local_user = DB::update("UPDATE users set first_name = '$request->first_name', last_name = '$request->last_name', address = '$request->address', username = '$request->username' where id = '$u_id'");
+            $update_api_user = Utilities::switch_db('api')->update("UPDATE users set firstname = '$request->first_name', lastname = '$request->last_name', phone_number = '$request->phone' where id = (SELECT user_id from admins where id = '$admin_id') ");
+            $update_user_agent = Utilities::switch_db('api')->update("UPDATE admins set nationality = '$request->country_id', location = '$request->location' where id = '$admin_id'");
+
+            if(!$update_local_user || !$update_api_user || !$update_user_agent){
+                $user_activity = Api::saveActivity($admin_id, $description, $ip, $user_agent);
                 return back()->with('success', 'Profile Updated...');
             }else{
                 return back()->with('error', 'Error occured while updating...');

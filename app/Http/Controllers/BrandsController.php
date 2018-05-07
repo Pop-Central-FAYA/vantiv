@@ -64,6 +64,8 @@ class BrandsController extends Controller
             $client[] = $cli;
         }
 
+//        $industires = Utilities::switch_db('api')->select("SELECT * from ")
+
         return view('brands.create')->with('clients', $client);
     }
 

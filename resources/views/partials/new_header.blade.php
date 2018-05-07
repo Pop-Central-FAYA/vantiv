@@ -11,6 +11,9 @@
     } elseif (Session::get('broadcaster_user_id')){
         $broadcaster_user_id = Session::get('broadcaster_user_id');
         $profile = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT image_url from broadcasterUsers where id = '$broadcaster_user_id'");
+    }elseif (Session::get('admin_id')){
+        $admin_id = Session::get('admin_id');
+        $profile = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT image_url from admins where id = '$admin_id'");
     }
 ?>
 

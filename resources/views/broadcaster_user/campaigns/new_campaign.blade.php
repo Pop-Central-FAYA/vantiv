@@ -1,6 +1,6 @@
 @extends('layouts.new_app')
 @section('title')
-    <title>Create Broadcaster</title>
+    <title>Create Campaign</title>
 @stop
 
 
@@ -18,7 +18,7 @@
                 <div class="col-12 heading-main">
                     <h1>Create Campaign</h1>
                     <ul>
-                        <li><a href="#"><i class="fa fa-th-large"></i>Broadcaster</a></li>
+                        <li><a href="#"><i class="fa fa-th-large"></i>Broadcaster-User</a></li>
                         <li><a href="#">Create Campaign</a></li>
                     </ul>
                 </div>

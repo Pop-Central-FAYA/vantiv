@@ -757,4 +757,9 @@ class BroadcasterUserCampaignsController extends Controller
         $campaign_details = Utilities::campaignDetails($id);
         return view('broadcaster_user.campaigns.campaign_details', compact('campaign_details'));
     }
+
+    public function setup()
+    {
+        return view('broadcaster_user.campaigns.new_campaign');
+    }
 }

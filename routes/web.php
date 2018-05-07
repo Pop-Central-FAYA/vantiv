@@ -81,12 +81,21 @@ Route::get('/error', 'InstallController@apiError')->name('errors');
 
 Route::get('register/verify/{token}', 'Auth\AuthController@verifyToken');
 
+Route::get('/reg-admin', 'AdminAuthController@getAdmin')->name('admin.register.get');
+
+Route::post('/admin/post', 'AdminAuthController@postRegister')->name('admin.post');
+
 Route::group(['middleware' => 'auth'], function () {
 
 
 //        Route::post('/pay', 'PaymentController@redirectToGateway')->name('pay');
 //
 //        Route::get('/payment/callback', 'PaymentController@handleGatewayCallback');
+
+    /*
+     * Super Admin
+     */
+
 
     /*
     * Campaign
@@ -158,6 +167,7 @@ Route::group(['middleware' => 'auth'], function () {
        Route::get('/campaign-data', 'BroadcasterUserCampaignsController@campaignData');
        Route::get('/campaign-details/{id}', 'BroadcasterUserCampaignsController@campaignDetails')->name('user.broadcaster.campaign.details');
        Route::get('/post-cart/{walkins}/{broadcaster}/{broadcaster_user}', 'BroadcasterUserCampaignsController@postCart')->name('broadcaster_user.post.cart');
+       Route::get('/set-up', 'BroadcasterUserCampaignsController@setup')->name('broadcaster_user.campaign.setup');
     });
 
     Route::group(['prefix' => 'broadcaster-user/reports'], function () {

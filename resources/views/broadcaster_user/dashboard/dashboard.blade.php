@@ -57,33 +57,6 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="box-body table-responsive no-padding">
-                        <h4 class="text-center"><p>High Value Customers</p></h4>
-                        <table class="table table-hover" style="font-size:16px">
-                            <tr>
-                                <th>S/N</th>
-                                <th>Customer Name</th>
-                                <th>Number of campaigns</th>
-                                <th>Number of Adslots</th>
-                                <th>Total Amount/Revenue</th>
-                            </tr>
-                            @foreach($campaign as $camp)
-                                <tr>
-                                    <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $camp['customer_name'] }}</td>
-                                    <td>{{ $camp['number_of_campaign'] }}</td>
-                                    <td>{{ $camp['total_adslot'] }}</td>
-                                    <td>&#8358;{{ number_format($camp['payment'], 2) }}</td>
-                                </tr>
-                            @endforeach
-                        </table>
-                    </div>
-                    {{--</div>--}}
-                </div>
-            </div>
-            <hr>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="box-body table-responsive no-padding">
                         <h4 class="text-center"><p>Paid Invoices</p></h4>
                         <table class="table table-hover" style="font-size:16px">
                             <tr>
@@ -107,7 +80,33 @@
                     {{--</div>--}}
                 </div>
             </div>
-
+            <hr>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box-body table-responsive no-padding">
+                        <h4 class="text-center"><p>High Value Customers</p></h4>
+                        <table class="table table-hover" style="font-size:16px">
+                            <tr>
+                                <th>S/N</th>
+                                <th>Customer Name</th>
+                                <th>Number of campaigns</th>
+                                <th>Number of Adslots</th>
+                                <th>Total Amount/Revenue</th>
+                            </tr>
+                            @foreach($campaign as $camp)
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $camp['customer_name'] }}</td>
+                                    <td>{{ $camp['number_of_campaign'] }}</td>
+                                    <td>{{ $camp['total_adslot'] }}</td>
+                                    <td>&#8358;{{ number_format($camp['payment'], 2) }}</td>
+                                </tr>
+                            @endforeach
+                        </table>
+                    </div>
+                    {{--</div>--}}
+                </div>
+            </div>
         </div>
     </div>
 

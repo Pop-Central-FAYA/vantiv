@@ -129,6 +129,7 @@ class AuthController extends Controller
             session()->forget('agency_id');
             session()->forget('advertiser_id');
             session()->forget('broadcaster_user_id');
+            session()->forget('admin_id');
             $user_details = Utilities::switch_db('api')->select("SELECT * FROM users WHERE email = '$username' LIMIT 1");
             $user_id = $user_details[0]->id;
             $broadcaster_details = Utilities::switch_db('api')->select("SELECT * FROM broadcasters WHERE user_id = '$user_id'");
@@ -137,6 +138,7 @@ class AuthController extends Controller
             session()->forget('broadcaster_id');
             session()->forget('advertiser_id');
             session()->forget('broadcaster_user_id');
+            session()->forget('admin_id');
             $user_details = Utilities::switch_db('api')->select("SELECT * FROM users WHERE email = '$username' LIMIT 1");
             $user_id = $user_details[0]->id;
             $agency_details = Utilities::switch_db('api')->select("SELECT * FROM agents WHERE user_id = '$user_id'");
@@ -145,6 +147,7 @@ class AuthController extends Controller
             session()->forget('agency_id');
             session()->forget('broadcaster_id');
             session()->forget('broadcaster_user_id');
+            session()->forget('admin_id');
             $user_details = Utilities::switch_db('api')->select("SELECT * FROM users WHERE email = '$username' LIMIT 1");
             $user_id = $user_details[0]->id;
             $advertiser_details = Utilities::switch_db('api')->select("SELECT * FROM advertisers WHERE user_id = '$user_id'");
@@ -153,10 +156,21 @@ class AuthController extends Controller
             session()->forget('agency_id');
             session()->forget('broadcaster_id');
             session()->forget('advertiser_id');
+            session()->forget('admin_id');
             $user_details = Utilities::switch_db('api')->select("SELECT * FROM users WHERE email = '$username' LIMIT 1");
             $user_id = $user_details[0]->id;
             $broadcaster_user_details = Utilities::switch_db('api')->select("SELECT * FROM broadcasterUsers WHERE user_id = '$user_id'");
             session(['broadcaster_user_id' => $broadcaster_user_details[0]->id]);
+        } elseif($role->role_id === 1){
+            session()->forget('agency_id');
+            session()->forget('broadcaster_id');
+            session()->forget('advertiser_id');
+            session()->forget('broadcaster_user_id');
+            $user_details = Utilities::switch_db('api')->select("SELECT * from users WHERE email = '$username' LIMIT 1");
+            $user_id = $user_details[0]->id;
+            $admin_id = Utilities::switch_db('api')->select("SELECT * FROM admins where user_id = '$user_id'");
+            session(['admin_id' => $admin_id[0]->id]);
+
         }
 
         return $this->handleUserWasAuthenticated($request, $throttles, $user);
