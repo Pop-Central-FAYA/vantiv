@@ -96,6 +96,25 @@ Route::group(['middleware' => 'auth'], function () {
      * Super Admin
      */
 
+    Route::group(['prefix' => 'industry'], function () {
+       Route::get('/', 'IndustriesController@index')->name('industry.index');
+       Route::get('/create', 'IndustriesController@create')->name('industry.create');
+       Route::post('/store', 'IndustriesController@store')->name('industry.store');
+       Route::get('/edit/{code}', 'IndustriesController@edit')->name('industry.edit');
+       Route::post('/update/{id}', 'IndustriesController@update')->name('industry.update');
+       Route::get('/delete/{id}', 'IndustriesController@delete')->name('industry.delete');
+       Route::get('/get-data', 'IndustriesController@getData');
+
+       Route::group(['prefix' => 'sub-industry'], function () {
+          Route::get('/', 'IndustriesController@indexSubIndustry')->name('sub_industry.index');
+          Route::get('/get-data', 'IndustriesController@subIndustryData');
+          Route::get('/create', 'IndustriesController@indexCreateIndustry')->name('sub_industry.create');
+          Route::post('/store', 'IndustriesController@storeSubIndustry')->name('sub_industry.store');
+          Route::get('/delete/{id}', 'IndustriesController@deleteSubIndustry')->name('sub_industry.delete');
+          Route::get('/edit/{code}', 'IndustriesController@editSubIndustry')->name('sub_industry.edit');
+       });
+    });
+
 
     /*
     * Campaign
