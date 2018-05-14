@@ -203,6 +203,8 @@
                             </div>
                         @endforeach
                     </div>
+
+                    {{ $ratecards->links() }}
                 </div>
             </div>
             <br>

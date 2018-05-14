@@ -90,7 +90,21 @@ class WalkinsController extends Controller
      */
     public function create()
     {
-        return view('walkins.create');
+        $industries = Utilities::switch_db('api')->select("SELECT * from sectors");
+        return view('walkins.create', compact('industries'));
+    }
+
+    public function getSubIndustry()
+    {
+        $industry = request()->industry;
+
+        $sud_industry = Utilities::switch_db('api')->select("SELECT * from subSectors where sector_id = '$industry'");
+
+        if(count($sud_industry) > 0){
+            return $sud_industry;
+        }else{
+            return response()->json(['error' => 'error']);
+        }
     }
 
     /**
@@ -172,7 +186,7 @@ class WalkinsController extends Controller
 
         $saveUser = Utilities::switch_db('api')->table('users')->insert($insert_user);
         $saveWalkins = Utilities::switch_db('api')->table('walkIns')->insert($insert_walkin);
-        $insert = Utilities::switch_db('api')->insert("INSERT into brands (id, `name`, image_url, walkin_id, broadcaster_agency) VALUES ('$unique', '$brand', '$image_url', '$walkin_id', '$broadcaster_id')");
+        $insert = Utilities::switch_db('api')->insert("INSERT into brands (id, `name`, image_url, walkin_id, broadcaster_agency, industry_id, sub_industry_id) VALUES ('$unique', '$brand', '$image_url', '$walkin_id', '$broadcaster_id', '$request->industry', '$request->sub_industry')");
 
         if($saveUser && $saveWalkins && $insert){
             Session::flash('success', 'Walk-In created successfully');

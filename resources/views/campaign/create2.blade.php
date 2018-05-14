@@ -18,7 +18,7 @@
                 </div>
                  {{--{{ dd($step2) }}--}}
 
-                <div class="Add-brand">
+                <div class="Add-brand changing">
                     <form class="campform" method="POST" action="{{ route('campaign.store2', ['id' => 1, 'walkins' => $walkins_id]) }}" data-parsley-validate="">
                         {{ csrf_field() }}
 
@@ -38,7 +38,8 @@
                         @else
                             <div class="input-group">
                                 <label>Brands</label>
-                                <select name="brand" class="form-control" id="">
+                                <select name="brand" class="form-control" id="brand">
+                                    <option value="">Select Brand</option>
                                     @foreach($brands as $brand)
                                         <option value="{{ $brand->id }}">{{ $brand->name }}</option>
                                     @endforeach
@@ -60,24 +61,12 @@
                         @if(isset($step2))
                             <div class="input-group">
                                 <label>Industry</label>
-                                <select name="industry" id="" class="form-control">
-                                    @foreach($industry as $ind)
-                                        <option value="{{ $ind->name }}"
-                                            @if($step2->industry === $ind->name)
-                                                selected
-                                            @endif
-                                        >{{ $ind->name }}</option>
-                                    @endforeach
-                                </select>
+                                <input type="text" name="industry" id="industry" required readonly @foreach($industry as $ind) @if($step2->industry === $ind->sector_code) value="{{ $ind->name }}" @endif @endforeach>
                             </div>
                         @else
                             <div class="input-group">
                                 <label>Industry</label>
-                                <select name="industry" id="" class="form-control">
-                                    @foreach($industry as $ind)
-                                        <option value="{{ $ind->name }}">{{ $ind->name }}</option>
-                                    @endforeach
-                                </select>
+                                <input type="text" name="industry" readonly id="industry">
                             </div>
                         @endif
 
@@ -104,6 +93,25 @@
                                 </select>
                             </div>
                         @endif
+
+                        @if(isset($step2))
+                            <div class="input-group">
+                                <label>Sub Industry</label>
+                                <input type="text" name="sub_industry" id="sub_industry" required readonly @foreach($sub_industries as $sub_industry) @if($step2->sub_industry === $ind->sub_sector_code) value="{{ $ind->name }}" @endif @endforeach>
+                            </div>
+                        @else
+                            <div class="input-group">
+                                <label>Sub Industry</label>
+                                <input type="text" name="sub_industry" readonly id="sub_industry">
+                            </div>
+                        @endif
+
+                        <div class="input-group date styledate">
+                            <div class="input-group-addon">
+                                <i class="fa fa-calendar"></i>
+                            </div>
+                            <input type="text" placeholder="start-date" value="{{ isset(((object) $step2)->start_date) ?((object) $step2)->start_date : "" }}" readonly required name="start_date" class="form-control flatpickr" id="txtFromDate" />
+                        </div>
 
                         @if(isset($step2))
                             <div class="input-group">
@@ -136,21 +144,14 @@
                             <input type="text" placeholder="end-date" value="{{ isset(((object) $step2)->end_date) ? ((object) $step2)->end_date : "" }}" readonly required name="end_date" class="form-control flatpickr" id="txtToDate" />
                         </div>
 
-                        <div class="input-group date styledate">
-                            <div class="input-group-addon">
-                                <i class="fa fa-calendar"></i>
-                            </div>
-                            <input type="text" placeholder="start-date" value="{{ isset(((object) $step2)->start_date) ?((object) $step2)->start_date : "" }}" readonly required name="start_date" class="form-control flatpickr" id="txtFromDate" />
+                        <div class="input-group">
+                            <label>Min Age:</label>
+                            <input type="number" name="min_age" value="{{ isset(((object) $step2)->start_date) ?((object) $step2)->min_age : "" }}" required class="form-control">
                         </div>
 
                         <div class="input-group">
                             <label>Max Age:</label>
                             <input type="number" name="max_age" value="{{ isset(((object) $step2)->start_date) ?((object) $step2)->max_age : "" }}" required class="form-control">
-                        </div>
-
-                        <div class="input-group">
-                            <label>Min Age:</label>
-                            <input type="number" name="min_age" value="{{ isset(((object) $step2)->start_date) ?((object) $step2)->min_age : "" }}" required class="form-control">
                         </div>
 
 
@@ -229,7 +230,7 @@
                         @endif
 
                         <div class="input-group">
-                            <input type="Submit" name="Submit" value="Next" />
+                            <input type="Submit" name="Submit" class="next" value="Next" />
                         </div>
 
                         {{--<div class="input-group">--}}
@@ -245,7 +246,6 @@
 @endsection
 @section('scripts')
     {!! HTML::script('assets/js/moment.min.js') !!}
-    {!! HTML::script('assets/js/bootstrap-datetimepicker.min.js') !!}
     <script src="https://unpkg.com/flatpickr"></script>
     <script src="{{ asset('assets/js/parsley.min.js') }}"></script>
 
@@ -256,30 +256,51 @@
         });
     </script>
 
+
     <script>
-
-
-        $(document).ready(function(){
-
+        $(document).ready(function () {
             $("#checkAll").click(function () {
                 $('input:checkbox.checked_this').not(this).prop('checked', this.checked);
             });
 
-            $("#txtFromDate").datepicker({
-                numberOfMonths: 2,
-                onSelect: function (selected) {
-                    $("#txtToDate").datepicker("option", "minDate", selected)
+            // $("#state").change(function() {
+            $('#brand').on('change', function(e){
+                var brand = $("#brand").val();
+                if(brand != ''){
+                    $(".changing").css({
+                        opacity: 0.5
+                    });
+                    $('.next').attr("disabled", true);
+                    var url = '/brand/get-industry';
+                    $.ajax({
+                        url: url,
+                        method: "GET",
+                        data: {brand: brand},
+                        success: function(data){
+                            if(data.error === 'error'){
+                                $(".changing").css({
+                                    opacity: 1
+                                });
+                                $('.next').attr("disabled", false);
+                            }else{
+                                $(".changing").css({
+                                    opacity: 1
+                                });
+                                $('.next').attr("disabled", false);
+
+                                $("#industry").val(data.industry[0].name);
+                                $("#sub_industry").val(data.sub_industry[0].name);
+                            }
+
+                        }
+                    });
+                }else{
+                    $("#industry").val('');
+                    $("#sub_industry").val('');
                 }
             });
-
-            $("#txtToDate").datepicker({
-                numberOfMonths: 2,
-                onSelect: function(selected) {
-                    $("#txtFromDate").datepicker("option","maxDate", selected)
-                }
-            });
-
         });
+
     </script>
 
 @stop

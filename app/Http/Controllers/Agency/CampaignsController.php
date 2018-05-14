@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Hamcrest\Util;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use JD\Cloudder\Facades\Cloudder;
 use Pbmedia\LaravelFFMpeg\FFMpeg;
 use Vanguard\Http\Controllers\Controller;
@@ -367,12 +368,16 @@ class CampaignsController extends Controller
         $day_parts = implode("','" ,$step1->dayparts);
         $region = implode("','", $step1->region);
         $adslots_count = Utilities::switch_db('api')->select("SELECT * FROM adslots where min_age >= $step1->min_age AND max_age <= $step1->max_age AND channels = '$step1->channel' AND target_audience = '$step1->target_audience' AND day_parts IN ('$day_parts') AND region IN ('$region') AND is_available = 0 AND broadcaster = '$broadcaster'");
+
         $result = count($adslots_count);
-        $ratecards = Utilities::switch_db('api')->select("SELECT * from rateCards WHERE id IN (SELECT rate_card FROM adslots where min_age >= $step1->min_age 
-                                                            AND max_age <= $step1->max_age 
-                                                            AND target_audience = '$step1->target_audience' 
-                                                            AND day_parts IN ('$day_parts') AND region IN ('$region') 
-                                                            AND is_available = 0 AND broadcaster = '$broadcaster')");
+//        dd($broadcaster);
+        $ratecards = Utilities::switch_db('api')->select("SELECT * from rateCards WHERE id IN (SELECT rate_card FROM adslots where min_age >= $step1->min_age
+                                                            AND max_age <= $step1->max_age
+                                                            AND target_audience = '$step1->target_audience'
+                                                            AND day_parts IN ('$day_parts') AND region IN ('$region')
+                                                            AND is_available = 0 AND broadcaster = '$broadcaster') ");
+
+        dd($ratecards);
 
         foreach ($ratecards as $ratecard){
             $day = Utilities::switch_db('api')->select("SELECT * from days where id = '$ratecard->day'");
@@ -387,6 +392,7 @@ class CampaignsController extends Controller
                 'price' => $price,
             ];
         }
+
 
         $time = [15, 30, 45, 60];
 
@@ -403,10 +409,19 @@ class CampaignsController extends Controller
             $ads_broad[] = [
                 'broadcaster' => $adslots_broadcaster->broadcaster,
                 'count_adslot' => $adslots_broadcaster->all_slots,
-                'boradcaster_brand' => $broad[0]->brand,
+                'broadcaster_brand' => $broad[0]->brand,
             ];
         }
-        return view('agency.campaigns.create4')->with('ratecards', $rate_card)->with('ads_broads', $ads_broad)->with('result', $result)->with('cart', $cart)->with('datas', $data)->with('times', $time)->with('id', $id)->with('broadcaster', $broadcaster)->with('broadcaster_logo', $broadcaster_logo)->with('positions', $positions);
+
+
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $col = new Collection($rate_card);
+        $perPage = 5;
+        $currentPageSearchResults = $col->slice(($currentPage - 1) * $perPage, $perPage)->all();
+        $entries = new LengthAwarePaginator($currentPageSearchResults, count($col), $perPage);
+        $entries->setPath('/agency/campaigns/campaign/step4/'.$id.'/'.$broadcaster);
+
+        return view('agency.campaigns.create4')->with('ratecards', $entries)->with('ads_broads', $ads_broad)->with('result', $result)->with('cart', $cart)->with('datas', $data)->with('times', $time)->with('id', $id)->with('broadcaster', $broadcaster)->with('broadcaster_logo', $broadcaster_logo)->with('positions', $positions);
     }
 
     public function postCart(Request $request)

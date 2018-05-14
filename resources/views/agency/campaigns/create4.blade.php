@@ -18,7 +18,7 @@
             <div class="row">
                 <div class="Create-campaign">
                     <div class="col-md-6">
-                        <p><h4>Select preffered broadcasters:</h4></p>
+                        <p><h4>Select preferred broadcasters:</h4></p>
                         <select name="broadcaster" class="form-control broadcaster" id="">
                             <option value="">Choose Broadcaster</option>
                             @foreach($ads_broads as $ads_broad)
@@ -26,7 +26,7 @@
                                 @if($broadcaster === $ads_broad['broadcaster'])
                                     selected
                                 @endif
-                                >{{ $ads_broad['boradcaster_brand'] }}</option>
+                                >{{ $ads_broad['broadcaster_brand'] }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -204,6 +204,8 @@
                         @endforeach
                     </div>
                 </div>
+
+                {{ $ratecards->links() }}
             </div>
             <br>
             <div class="row" id="cart_item">

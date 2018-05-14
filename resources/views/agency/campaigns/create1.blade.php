@@ -14,7 +14,7 @@
                         <li><a href="{{ route('agency.campaign.all') }}">All Campaign</a></li>
                     </ul>
                 </div>
-                <div class="Create-campaign">
+                <div class="Create-campaign changing">
                     <form class="campform" method="POST" action="{{ route('agency_campaign.store1', ['id' => $id]) }}">
                         {{ csrf_field() }}
                         <div class="col-12 ">
@@ -65,7 +65,8 @@
                                     <div class="form-group">
                                         <label class="col-md-2">Brands:</label>
                                         <div class="col-md-4">
-                                            <select name="brand" class="Role form-control">
+                                            <select name="brand" id="brand" class="Role form-control">
+                                                <option value="">Select Brand</option>
                                                 @foreach($brands as $b)
                                                     <option value="{{ $b->id }}">{{ $b->name }}</option>
                                                 @endforeach
@@ -76,33 +77,42 @@
                             @endif
                             <hr>
                             <p><br></p>
-                            @if(isset($step1))
+                            @if(isset($step2))
                                 <div class="col-12 form-inner">
                                     <div class="form-group">
-                                        <label for="brand" class="col-md-2">Industry:</label>
+                                        <label class="col-md-2">Industry:</label>
                                         <div class="col-md-4">
-                                            <select name="industry" class="Role form-control">
-                                                @foreach($industry as $ind)
-                                                    <option value="{{ $ind->name }}"
-                                                        @if($step1->industry === $ind->name)
-                                                        selected
-                                                        @endif
-                                                    >{{ $ind->name }}</option>
-                                                @endforeach
-                                            </select>
+                                            <input type="text" name="industry" id="industry" required readonly class="form-control" @foreach($industry as $ind) @if($step2->industry === $ind->sector_code) value="{{ $ind->name }}" @endif @endforeach>
                                         </div>
                                     </div>
                                 </div>
                             @else
                                 <div class="col-12 form-inner">
                                     <div class="form-group">
-                                        <label for="brand" class="col-md-2">Industry:</label>
+                                        <label class="col-md-2">Industry:</label>
                                         <div class="col-md-4">
-                                            <select name="industry" class="Role form-control">
-                                                @foreach($industry as $ind)
-                                                    <option value="{{ $ind->name }}">{{ $ind->name }}</option>
-                                                @endforeach
-                                            </select>
+                                            <input type="text" name="industry" class="form-control" readonly id="industry">
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+                            <hr>
+                            <p><br></p>
+                            @if(isset($step2))
+                                <div class="col-12 form-inner">
+                                    <div class="form-group">
+                                        <label class="col-md-2">Sub Industry:</label>
+                                        <div class="col-md-4">
+                                            <input type="text" name="sub_industry" id="sub_industry" class="form-control" required readonly @foreach($sub_industries as $sub_industry) @if($step2->sub_industry === $ind->sub_sector_code) value="{{ $ind->name }}" @endif @endforeach>
+                                        </div>
+                                    </div>
+                                </div>
+                            @else
+                                <div class="col-12 form-inner">
+                                    <div class="form-group">
+                                        <label class="col-md-2">Sub Industry:</label>
+                                        <div class="col-md-4">
+                                            <input type="text" name="sub_industry" class="form-control" readonly id="sub_industry">
                                         </div>
                                     </div>
                                 </div>
@@ -283,7 +293,7 @@
                             <p><br></p>
                                 <div class="input-group">
                                     <a href="{{ route('clients.list') }}" style="background: #00c4ca" class="btn btn-danger btn-lg"><< Back</a>
-                                    <input type="Submit" style="background: #00c4ca" class="btn btn-danger btn-lg" name="Submit" value="Next >>">
+                                    <input type="Submit" style="background: #00c4ca" class="btn btn-danger btn-lg next" name="Submit" value="Next >>">
                                 </div>
 
                             </div>
@@ -353,6 +363,51 @@
             });
 
         });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $("#checkAll").click(function () {
+                $('input:checkbox.checked_this').not(this).prop('checked', this.checked);
+            });
+
+            // $("#state").change(function() {
+            $('#brand').on('change', function(e){
+                var brand = $("#brand").val();
+                if(brand != ''){
+                    $(".changing").css({
+                        opacity: 0.5
+                    });
+                    $('.next').attr("disabled", true);
+                    var url = '/brand/get-industry';
+                    $.ajax({
+                        url: url,
+                        method: "GET",
+                        data: {brand: brand},
+                        success: function(data){
+                            if(data.error === 'error'){
+                                $(".changing").css({
+                                    opacity: 1
+                                });
+                                $('.next').attr("disabled", false);
+                            }else{
+                                $(".changing").css({
+                                    opacity: 1
+                                });
+                                $('.next').attr("disabled", false);
+
+                                $("#industry").val(data.industry[0].name);
+                                $("#sub_industry").val(data.sub_industry[0].name);
+                            }
+
+                        }
+                    });
+                }else{
+                    $("#industry").val('');
+                    $("#sub_industry").val('');
+                }
+            });
+        });
+
     </script>
 
 @stop

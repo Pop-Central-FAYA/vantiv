@@ -3,6 +3,8 @@
 namespace Vanguard\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Input;
 use Cloudinary;
 use JD\Cloudder\Facades\Cloudder;
@@ -94,7 +96,8 @@ class CampaignsController extends Controller
 
         $walkins_id = Utilities::switch_db('api')->select("SELECT id from walkIns where user_id = '$walkins'");
         $walk_id = $walkins_id[0]->id;
-        $industry = Utilities::switch_db('api')->select("SELECT id, `name` from sectors");
+        $industry = Utilities::switch_db('api')->select("SELECT * from sectors");
+        $sub_industries = Utilities::switch_db('api')->select("SELECT * from subSectors");
         $chanel = Utilities::switch_db('api')->select("SELECT * from campaignChannels");
         $brands = Utilities::switch_db('api')->select("SELECT * from brands WHERE walkin_id = '$walk_id'");
         $target_audience = Utilities::switch_db('api')->select("SELECT * from targetAudiences");
@@ -112,6 +115,21 @@ class CampaignsController extends Controller
                                             ->with('walkins_id', $walkins)
                                             ->with('brands', $brands);
 
+    }
+
+    public function getIndustrySubIndustry()
+    {
+        $brand_id = request()->brand;
+        $brand = Utilities::switch_db('api')->select("SELECT * from brands where id = '$brand_id'");
+        $industry_id = $brand[0]->industry_id;
+        $sub_industry_id = $brand[0]->sub_industry_id;
+        $industry = Utilities::switch_db('api')->select("SELECT * from sectors where sector_code = '$industry_id'");
+        $sub_industry = Utilities::switch_db('api')->select("SELECT * from subSectors where sub_sector_code = '$sub_industry_id'");
+        if($industry && $sub_industry){
+            return response()->json(['industry' => $industry, 'sub_industry' => $sub_industry]);
+        }else{
+            return response()->json(['error' => 'error']);
+        }
     }
 
     public function postStep2(Request $request, $walkins)
@@ -356,7 +374,14 @@ class CampaignsController extends Controller
 
         $positions = Utilities::switch_db('api')->select("SELECT * from filePositions where broadcaster_id = '$broadcaster'");
 
-        return view('campaign.create7')->with('ratecards', $rate_card)->with('result', $result)->with('cart', $cart)->with('datas', $data)->with('times', $time)->with('walkins', $walkins)->with('broadcaster_logo', $broadcaster_logo)->with('positions', $positions);
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $col = new Collection($rate_card);
+        $perPage = 10;
+        $currentPageSearchResults = $col->slice(($currentPage - 1) * $perPage, $perPage)->all();
+        $entries = new LengthAwarePaginator($currentPageSearchResults, count($col), $perPage);
+        $entries->setPath('/campaign/create/'.$walkins.'/step7/get');
+
+        return view('campaign.create7')->with('ratecards', $entries)->with('result', $result)->with('cart', $cart)->with('datas', $data)->with('times', $time)->with('walkins', $walkins)->with('broadcaster_logo', $broadcaster_logo)->with('positions', $positions);
     }
 
     /**

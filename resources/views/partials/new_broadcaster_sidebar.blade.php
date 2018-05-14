@@ -3,7 +3,7 @@
         <div class="logo"><a href="{{ route('dashboard') }}"><img src="{{ asset('new_assets/images/logo.png') }}" alt=""></a></div>
         <ul class="list-unstyled components">
             <li class="{{ Request::is('/') ? 'active' : ''  }}"> <a href="{{ route('dashboard') }}"><i class="fa fa-dashboard"></i><span>Dashboard</span></a></li>
-            <li class="{{ Request::is('campaign/*') ? 'active' : Request::is('campaign/campaign-details/*') ? 'active' : ''  }}"><a href="{{ route('campaign.all') }}"><i class="fa fa-rocket"></i><span>Campaigns</span></a>
+            <li class="{{ Request::is('campaign/*') ? 'active' : Request::is('campaign/campaign-details/*') ? 'active' : ''  }}"><a href=""><i class="fa fa-rocket"></i><span>Campaigns</span></a>
                 <ul class="sub-menu dropdown">
                     <li><a href="{{ route('campaign.setup') }}"><i class="fa fa-address-card-o"></i> <span>Create <br /> Campaign</span></a></li>
                     <li><a href="{{ route('campaign.all') }}"><i class="fa fa-address-book-o"></i><span>All <br /> Campaigns</span></a></li>

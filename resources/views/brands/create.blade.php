@@ -8,7 +8,7 @@
 
 <div class="main-section">
     <div class="container">
-        <div class="row">
+        <div class="row charging">
             <div class="col-12 heading-main">
                 <h1>Create Brand</h1>
                 <ul>
@@ -42,6 +42,27 @@
                         </div>
                     </div>
                     <div class="row">
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <label for="brand_name">Industry</label>
+                                <select name="industry" id="industry">
+                                    <option value="">Select Industry</option>
+                                    @foreach($industries as $industry)
+                                        <option value="{{ $industry->sector_code }}">{{ $industry->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <label>Sub Industry</label>
+                                <select name="sub_industry" id="sub_industry">
+
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="input-group">
                             <label>Brand Logo</label>
                             <input type="file" name="image_url" >
@@ -62,22 +83,46 @@
 
 @section('scripts')
     {!! HTML::script('assets/js/moment.min.js') !!}
-    {!! HTML::script('assets/js/bootstrap-datetimepicker.min.js') !!}
-    <script src="{{ asset('assets/js/parsley.min.js') }}"></script>
-
     <script>
-        $(document).ready(function(){
+        $(document).ready(function () {
+            // $("#state").change(function() {
+            $('#industry').on('change', function(e){
+                $(".changing").css({
+                    opacity: 0.5
+                });
+                $('.update').attr("disabled", true);
+                var industry = $("#industry").val();
+                var url = '/walk-in/brand';
+                $.ajax({
+                    url: url,
+                    method: "GET",
+                    data: {industry: industry},
+                    success: function(data){
+                        if(data.error === 'error'){
+                            $(".changing").css({
+                                opacity: 1
+                            });
+                            $('.update').attr("disabled", false);
+                        }else{
+                            $(".changing").css({
+                                opacity: 1
+                            });
+                            $('.update').attr("disabled", false);
 
-            $('input[type=radio][name=premium]').change(function() {
-                if (this.value == 'true') {
-                    $("#premium").show();
-                }
-                else if (this.value == 'false') {
-                    $("#premium").hide();
-                }
+                            $('#sub_industry').empty();
+
+                            $('#sub_industry').append(' Please choose one');
+
+                            $.each(data, function(index, title){
+                                $("#sub_industry").append('' + '<option value ="'+ title.sub_sector_code + '"  > ' + title.name + '  </option>');
+                            });
+                        }
+
+                    }
+                });
             });
-
         });
+
     </script>
 
 @stop

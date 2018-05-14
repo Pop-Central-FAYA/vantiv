@@ -56,6 +56,7 @@ class AgencyAuthController extends Controller
                 'address' => $request->address,
                 'fullname' => $request->first_name . ' ' . $request->last_name,
                 'status' => 'Unconfirmed',
+                'confirmation_token' => $token
             ]);
 
             if ($userInsert) {

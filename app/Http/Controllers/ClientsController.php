@@ -92,7 +92,7 @@ class ClientsController extends Controller
                 'agency_id' => $agency_id
             ]);
 
-            $insertBrands = Utilities::switch_db('api')->insert("INSERT into brands (id, `name`, image_url, walkin_id, broadcaster_agency) VALUES ('$unique', '$brand', '$image_url', '$client_id', '$agency_id')");
+            $insertBrands = Utilities::switch_db('api')->insert("INSERT into brands (id, `name`, image_url, walkin_id, broadcaster_agency, industry_id, sub_industry_id) VALUES ('$unique', '$brand', '$image_url', '$client_id', '$agency_id', '$request->industry', '$request->sub_industry')");
 
             if ($userInsert && $walkinInsert && $insertBrands) {
                 $save_activity = Api::saveActivity($agency_id, $description, $ip, $user_agent);
@@ -107,6 +107,7 @@ class ClientsController extends Controller
             $roles = Role::all();
             $countries = Country::all();
             $statuses = UserStatus::lists();
+            $industries = Utilities::switch_db('api')->select("SELECT * FROM sectors");
             $edit = false;
             $profile = false;
 
@@ -115,7 +116,8 @@ class ClientsController extends Controller
                 ->with('statuses', $statuses)
                 ->with('countries', $countries)
                 ->with('edit', $edit)
-                ->with('profile', $profile);
+                ->with('profile', $profile)
+                ->with('industries', $industries);
         }
 
     }

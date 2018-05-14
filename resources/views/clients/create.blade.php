@@ -23,7 +23,7 @@
                         <li><a href="#">Create Client</a></li>
                     </ul>
                 </div>
-                <div class="Add-Clients">
+                <div class="Add-Clients changing">
                     <form action="{{ url('agency/clients/create') }}" method="POST" enctype="multipart/form-data">
                         {{ csrf_field() }}
                         <div class="col-12 ">
@@ -146,8 +146,26 @@
                                         </strong>
                                     @endif
                                 </div>
+
                                 <div class="input-group">
-                                    <input type="Submit" name="Submit" value="Create Client">
+                                    <label>Sub Industry</label>
+                                    <select name="sub_industry" id="sub_industry">
+
+                                    </select>
+                                </div>
+
+                                <div class="input-group">
+                                    <label for="brand_name">Industry</label>
+                                    <select name="industry" id="industry">
+                                        <option value="">Select Industry</option>
+                                        @foreach($industries as $industry)
+                                            <option value="{{ $industry->sector_code }}">{{ $industry->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="input-group">
+                                    <input type="Submit" name="Submit" class="update" value="Create Client">
                                 </div>
 
                             </div>
@@ -177,6 +195,48 @@
         flatpickr(".flatpickr", {
             altInput: true,
         });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            // $("#state").change(function() {
+            $('#industry').on('change', function(e){
+                $(".changing").css({
+                    opacity: 0.5
+                });
+                $('.update').attr("disabled", true);
+                var industry = $("#industry").val();
+                var url = '/walk-in/brand';
+                $.ajax({
+                    url: url,
+                    method: "GET",
+                    data: {industry: industry},
+                    success: function(data){
+                        if(data.error === 'error'){
+                            $(".changing").css({
+                                opacity: 1
+                            });
+                            $('.update').attr("disabled", false);
+                        }else{
+                            $(".changing").css({
+                                opacity: 1
+                            });
+                            $('.update').attr("disabled", false);
+
+                            $('#sub_industry').empty();
+
+                            $('#sub_industry').append(' Please choose one');
+
+                            $.each(data, function(index, title){
+                                $("#sub_industry").append('' + '<option value ="'+ title.sub_sector_code + '"  > ' + title.name + '  </option>');
+                            });
+                        }
+
+                    }
+                });
+            });
+        });
+
     </script>
 
 

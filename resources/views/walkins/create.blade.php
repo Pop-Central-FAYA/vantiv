@@ -18,7 +18,7 @@
                 </div>
             </div>
 
-            <div class="row">
+            <div class="row changing">
                 <div class="col-md-12">
 
                     <div class="Add-brand">
@@ -70,10 +70,31 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
+                                    <div class="input-group">
+                                        <label for="brand_name">Industry</label>
+                                        <select name="industry" id="industry">
+                                            <option value="">Select Industry</option>
+                                            @foreach($industries as $industry)
+                                                <option value="{{ $industry->sector_code }}">{{ $industry->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="input-group">
-                                        <input type="Submit" name="Submit" value="Add Walk-In">
+                                        <label>Sub Industry</label>
+                                        <select name="sub_industry" id="sub_industry">
+
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <input type="Submit" class="update" name="Submit" value="Add Walk-In">
                                     </div>
                                 </div>
                             </div>
@@ -89,35 +110,46 @@
 
 @section('scripts')
     {!! HTML::script('assets/js/moment.min.js') !!}
-    {!! HTML::script('assets/js/bootstrap-datetimepicker.min.js') !!}
     <script>
+        $(document).ready(function () {
+            // $("#state").change(function() {
+            $('#industry').on('change', function(e){
+                $(".changing").css({
+                    opacity: 0.5
+                });
+                $('.update').attr("disabled", true);
+                var industry = $("#industry").val();
+                var url = '/walk-in/brand';
+                $.ajax({
+                    url: url,
+                    method: "GET",
+                    data: {industry: industry},
+                    success: function(data){
+                        if(data.error === 'error'){
+                            $(".changing").css({
+                                opacity: 1
+                            });
+                            $('.update').attr("disabled", false);
+                        }else{
+                            $(".changing").css({
+                                opacity: 1
+                            });
+                            $('.update').attr("disabled", false);
 
+                            $('#sub_industry').empty();
 
-        $(document).ready(function(){
-            $("#txtFromDate").datepicker({
-                numberOfMonths: 2,
-                onSelect: function (selected) {
-                    $("#txtToDate").datepicker("option", "minDate", selected)
-                }
+                            $('#sub_industry').append(' Please choose one');
+
+                            $.each(data, function(index, title){
+                                $("#sub_industry").append('' + '<option value ="'+ title.sub_sector_code + '"  > ' + title.name + '  </option>');
+                            });
+                        }
+
+                    }
+                });
             });
-
-            $("#txtToDate").datepicker({
-                numberOfMonths: 2,
-                onSelect: function(selected) {
-                    $("#txtFromDate").datepicker("option","maxDate", selected)
-                }
-            });
-
-            $('input[type=radio][name=premium]').change(function() {
-                if (this.value == 'true') {
-                    $("#premium").show();
-                }
-                else if (this.value == 'false') {
-                    $("#premium").hide();
-                }
-            });
-
         });
+
     </script>
 
 @stop

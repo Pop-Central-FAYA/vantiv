@@ -52,6 +52,7 @@ class BrandsController extends Controller
         }
 
         $client = [];
+        $industries = Utilities::switch_db('api')->select("SELECT * from sectors");
         if(Session::get('broadcaster_id')){
             $walkins = Utilities::switch_db('api')->select("SELECT user_id from walkIns where broadcaster_id = '$broadcaster'");
         }else{
@@ -66,7 +67,7 @@ class BrandsController extends Controller
 
 //        $industires = Utilities::switch_db('api')->select("SELECT * from ")
 
-        return view('brands.create')->with('clients', $client);
+        return view('brands.create')->with('clients', $client)->with('industries', $industries);
     }
 
     /**
@@ -102,11 +103,11 @@ class BrandsController extends Controller
             return redirect()->back()->with('error', 'Brands already exists');
         }else{
             if(Session::get('broadcaster_id')){
-                $insert = Utilities::switch_db('api')->select("INSERT into brands (id, `name`, image_url, walkin_id, broadcaster_agency) VALUES ('$unique', '$brand', '$image_url', '$id', '$broadcaster')");
+                $insert = Utilities::switch_db('api')->select("INSERT into brands (id, `name`, image_url, walkin_id, broadcaster_agency, industry_id, sub_industry_id) VALUES ('$unique', '$brand', '$image_url', '$id', '$broadcaster', '$request->industry', '$request->sub_industry')");
             }else{
                 $broadcaster = Utilities::switch_db('api')->select("SELECT broadcaster_id from broadcasterUsers where id = '$broadcaster_user'");
                 $broadcaster_id = $broadcaster[0]->broadcaster_id;
-                $insert = Utilities::switch_db('api')->select("INSERT into brands (id, `name`, image_url, walkin_id, broadcaster_agency) VALUES ('$unique', '$brand', '$image_url', '$id', '$broadcaster_id')");
+                $insert = Utilities::switch_db('api')->select("INSERT into brands (id, `name`, image_url, walkin_id, broadcaster_agency, industry_id, sub_industry_id) VALUES ('$unique', '$brand', '$image_url', '$id', '$broadcaster_id', '$request->industry', '$request->sub_industry')");
             }
 
             if (!$insert) {

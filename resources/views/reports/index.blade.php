@@ -339,6 +339,14 @@
 @section('scripts')
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.flash.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.html5.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.print.min.js"></script>
+
     {!! HTML::script('assets/js/moment.min.js') !!}
     {!! HTML::script('assets/js/bootstrap-datetimepicker.min.js') !!}
     <script src="https://unpkg.com/flatpickr"></script>
@@ -351,9 +359,13 @@
         $(document).ready(function(){
 
             var Datefilter =  $('.hvc-table').DataTable({
+                dom: 'Bfrtip',
                 paging: true,
                 serverSide: true,
                 processing: true,
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ],
                 ajax: {
                     url: '/reports/total-volume-campaigns/all-data/',
                     data: function (d) {
@@ -371,9 +383,13 @@
             });
 
             var DateFilterPI =  $('#pi-table').DataTable({
+                dom: 'Bfrtip',
                 paging: true,
                 serverSide: true,
                 processing: true,
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ],
                 ajax: {
                     url: '/reports/paid-invoices/all-data',
                     data: function (d) {
@@ -391,9 +407,13 @@
             });
 
             var DateFilterPS = $('#ps-table').DataTable({
+                dom: 'Bfrtip',
                 paging: true,
                 serverSide: true,
                 processing: true,
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ],
                 ajax: {
                     url: '/reports/periodic-sales/all',
                     data: function (d) {
@@ -413,9 +433,13 @@
             });
 
             var DateFilterTvc = $('#tvc-table').DataTable({
+                dom: 'Bfrtip',
                 paging: true,
                 serverSide: true,
                 processing: true,
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ],
                 ajax: {
                     url: '/reports/total-volume-of-campaign/all',
                     data: function (d) {
@@ -431,9 +455,13 @@
             });
 
             var DateFilterHpd = $('#hpd-table').DataTable({
+                dom: 'Bfrtip',
                 paging: true,
                 serverSide: true,
                 processing: true,
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ],
                 ajax: {
                     url: '/reports/high-day-parts/all',
                     data: function (d) {
@@ -449,9 +477,13 @@
             });
 
             var DateFilterHpdays = $('#hpdays-table').DataTable({
+                dom: 'Bfrtip',
                 paging: true,
                 serverSide: true,
                 processing: true,
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ],
                 ajax: {
                     url: '/reports/high-days/all',
                     data: function (d) {
@@ -503,4 +535,5 @@
     <link rel="stylesheet" href="{{ asset('assets/css/theme.css') }}">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css" type="text/css"/>
     <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.5.1/css/buttons.dataTables.min.css" type="text/css"/>
 @stop

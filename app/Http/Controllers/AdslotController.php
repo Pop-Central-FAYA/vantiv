@@ -99,7 +99,10 @@ class AdslotController extends Controller
                 $price_30 = '&#8358;'.number_format($prices[0]->price_30,2);
                 $price_15 = '&#8358;'.number_format($prices[0]->price_15,2);
             }
-            $day = Utilities::switch_db('api')->select("SELECT `day` as this_day from days where id IN(SELECT day from rateCards where id = '$adslot->rate_card')");
+
+            $rate = Utilities::switch_db('api')->select("SELECT * from rateCards where id = '$adslot->rate_card'");
+
+            $day = Utilities::switch_db('api')->select("SELECT `day` as this_day from days where id = (SELECT `day` from rateCards where id = '$adslot->rate_card')");
             $all_adslot[] = [
                 's_n' => $j,
                 'id' => $adslot->id,
@@ -112,6 +115,7 @@ class AdslotController extends Controller
             ];
             $j++;
         }
+
         if(Session::get('broadcaster_id')) {
             return $dataTables->collection($all_adslot)
                 ->addColumn('edit', function ($all_adslot) {

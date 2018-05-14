@@ -124,7 +124,7 @@ class IndustriesController extends Controller
                     $update_industry = Utilities::switch_db('api')->update("UPDATE sectors set name = '$request->industry_name' WHERE id = '$id'");
                     if($update_industry){
                         \Session::flash('success', 'Industry updated');
-                        return back();
+                        return redirect()->route('industry.index');
                     }else{
                         \Session::flash('error', 'An error occurred');
                         return back();
@@ -143,7 +143,7 @@ class IndustriesController extends Controller
                     $update_industry = Utilities::switch_db('api')->update("UPDATE sectors set sector_code = '$request->sic' WHERE id = '$id'");
                     if($update_industry){
                         \Session::flash('success', 'Industry updated');
-                        return back();
+                        return redirect()->route('industry.index');
                     }else{
                         \Session::flash('error', 'An error occurred');
                         return back();
@@ -242,5 +242,72 @@ class IndustriesController extends Controller
     public function deleteSubIndustry($id)
     {
 
+    }
+
+    public function updateSubIndustry(Request $request, $id)
+    {
+        $sub_industry = Utilities::switch_db('api')->select("SELECT * from subSectors where id = '$id'");
+        if($request->sub_industry_name !== $sub_industry[0]->name || $request->sub_sic !== $sub_industry[0]->sub_sector_code || $request->industry !== $sub_industry[0]->sector_id){
+            if($request->sub_industry_name !== $sub_industry[0]->name){
+                $this->validate($request, [
+                    'sub_industry_name' => 'required'
+                ]);
+                $check_validity = Utilities::switch_db('api')->select("SELECT * from subSectors where name = '$request->sub_industry_name'");
+                if(count($check_validity) === 1){
+                    \Session::flash('error', 'Sub Industry already exist');
+                    return redirect()->back();
+                }else{
+                    $update_industry = Utilities::switch_db('api')->update("UPDATE subSectors set name = '$request->sub_industry_name' WHERE id = '$id'");
+                    if($update_industry){
+                        \Session::flash('success', 'Sub Industry updated');
+                        return redirect()->route('sub_industry.index');
+                    }else{
+                        \Session::flash('error', 'An error occurred');
+                        return back();
+                    }
+                }
+            }
+            if($request->sub_sic !== $sub_industry[0]->sub_sector_code){
+                $this->validate($request, [
+                    'sub_sic' => 'required'
+                ]);
+                $check_validity = Utilities::switch_db('api')->select("SELECT * from subSectors where sub_sector_code = '$request->sub_sic'");
+                if(count($check_validity) === 1){
+                    \Session::flash('error', 'Sub Industry already exist');
+                    return redirect()->back();
+                }else{
+                    $update_industry = Utilities::switch_db('api')->update("UPDATE subSectors set sub_sector_code = '$request->sub_sic' WHERE id = '$id'");
+                    if($update_industry){
+                        \Session::flash('success', 'Sub Industry updated');
+                        return redirect()->route('sub_industry.index');
+                    }else{
+                        \Session::flash('error', 'An error occurred');
+                        return back();
+                    }
+                }
+            }
+            if($request->industry !== $sub_industry[0]->sector_id){
+                $this->validate($request, [
+                    'industry' => 'required'
+                ]);
+                $check_validity = Utilities::switch_db('api')->select("SELECT * from subSectors where sub_sector_code = '$request->sub_sic' AND name = '$request->sub_industry_name' AND sub_sector_code = '$request->sub_sic'");
+                if(count($check_validity) === 1){
+                    \Session::flash('error', 'Sub Industry already exist');
+                    return redirect()->back();
+                }else{
+                    $update_industry = Utilities::switch_db('api')->update("UPDATE subSectors set sector_id = '$request->industry' WHERE id = '$id'");
+                    if($update_industry){
+                        \Session::flash('success', 'Sub Industry updated');
+                        return redirect()->route('sub_industry.index');
+                    }else{
+                        \Session::flash('error', 'An error occurred');
+                        return back();
+                    }
+                }
+            }
+        }
+
+        \Session::flash('info', 'No changes made');
+        return redirect()->back();
     }
 }

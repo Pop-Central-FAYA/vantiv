@@ -24,24 +24,36 @@
                     <div class="Add-brand">
                         <h2>Edit Industry | {{ $sub_industry ? $sub_industry[0]->name : '' }}</h2>
 
-                        <form action="" method="post" enctype="multipart/form-data">
+                        <form action="{{ route('sub_industry.update', ['id' => $sub_industry[0]->id]) }}" method="post" enctype="multipart/form-data">
                             {{ csrf_field() }}
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="input-group">
                                         <label for="first_name">Industry Name</label>
-                                        <input type="text" name="industry_name" value="{{ $sub_industry[0]->name }}" class="form-control" required>
+                                        <input type="text" name="sub_industry_name" value="{{ $sub_industry[0]->name }}" class="form-control" required>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="input-group">
                                         <label for="last_name">Sector Code</label>
-                                        <input type="text" name="sic" value="{{ $sub_industry[0]->sub_sector_code }}" class="form-control" required>
+                                        <input type="text" name="sub_sic" value="{{ $sub_industry[0]->sub_sector_code }}" class="form-control" required>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
+                                    <div class="input-group">
+                                        <label for="industry">Industry</label>
+                                        <select class="form-control" name="industry" id="">
+                                            @foreach($industries as $industry)
+                                                <option value="{{ $industry->sector_code }}"
+                                                        @if($sub_industry[0]->sector_id === $industry->sector_code)
+                                                        selected
+                                                        @endif
+                                                >{{ $industry->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="input-group">

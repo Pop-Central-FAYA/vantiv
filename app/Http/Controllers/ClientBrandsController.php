@@ -55,6 +55,8 @@ class ClientBrandsController extends Controller
         $client = [];
         $agency_id = \Session::get('agency_id');
 
+        $industries = Utilities::switch_db('api')->select("SELECT * from sectors");
+
         if ($agency_id) {
             $walkins = Utilities::switch_db('api')->select("SELECT user_id from walkIns where agency_id = '$agency_id'");
             foreach ($walkins as $walk) {
@@ -62,9 +64,9 @@ class ClientBrandsController extends Controller
                 $cli = \DB::select("SELECT * from users WHERE id = '$user_id'");
                 $client[] = $cli;
             }
-            return view('agency.campaigns.brands.create')->with('clients', $client);
+            return view('agency.campaigns.brands.create')->with('clients', $client)->with('industries', $industries);
         } else {
-            return view('advertisers.campaigns.brands.create');
+            return view('advertisers.campaigns.brands.create')->with('industries', $industries);
         }
 
     }

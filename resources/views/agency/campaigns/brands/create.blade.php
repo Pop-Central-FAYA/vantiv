@@ -4,7 +4,7 @@
 @stop
 @section('content')
 
-    <div class="main-section">
+    <div class="main-section changing">
         <div class="container">
             <div class="row">
                 <div class="col-12 heading-main">
@@ -32,8 +32,29 @@
                                 @endforeach
                             </select>
                         </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <label for="brand_name">Industry</label>
+                                    <select name="industry" id="industry">
+                                        <option value="">Select Industry</option>
+                                        @foreach($industries as $industry)
+                                            <option value="{{ $industry->sector_code }}">{{ $industry->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <label>Sub Industry</label>
+                                    <select name="sub_industry" id="sub_industry">
+
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                         <div class="input-group">
-                            <input type="Submit" name="Submit" value="Add Brand">
+                            <input type="Submit" name="Submit" class="update" value="Add Brand">
                         </div>
                         <div class="input-group">
                             <label for="brand_logo">Brand Logo</label>
@@ -76,76 +97,47 @@
     <script src="{{ asset('agency_asset/plugins/datatables/dataTables.bootstrap.min.js') }}"></script>
 
     <script>
-        $(function () {
-            //Initialize Select2 Elements
-            $(".select2").select2();
+        $(document).ready(function () {
+            // $("#state").change(function() {
+            $('#industry').on('change', function(e){
+                $(".changing").css({
+                    opacity: 0.5
+                });
+                $('.update').attr("disabled", true);
+                var industry = $("#industry").val();
+                var url = '/walk-in/brand';
+                $.ajax({
+                    url: url,
+                    method: "GET",
+                    data: {industry: industry},
+                    success: function(data){
+                        if(data.error === 'error'){
+                            $(".changing").css({
+                                opacity: 1
+                            });
+                            $('.update').attr("disabled", false);
+                        }else{
+                            $(".changing").css({
+                                opacity: 1
+                            });
+                            $('.update').attr("disabled", false);
 
-            //Datemask dd/mm/yyyy
-            $("#datemask").inputmask("dd/mm/yyyy", {"placeholder": "dd/mm/yyyy"});
-            //Datemask2 mm/dd/yyyy
-            $("#datemask2").inputmask("mm/dd/yyyy", {"placeholder": "mm/dd/yyyy"});
-            //Money Euro
-            $("[data-mask]").inputmask();
+                            $('#sub_industry').empty();
 
-            //Date range picker
-            $('#reservation').daterangepicker();
-            //Date range picker with time picker
-            $('#reservationtime').daterangepicker({timePicker: true, timePickerIncrement: 30, format: 'MM/DD/YYYY h:mm A'});
-            //Date range as a button
-            $('#daterange-btn').daterangepicker(
-                {
-                    ranges: {
-                        'Today': [moment(), moment()],
-                        'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                        'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                        'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                        'This Month': [moment().startOf('month'), moment().endOf('month')],
-                        'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-                    },
-                    startDate: moment().subtract(29, 'days'),
-                    endDate: moment()
-                },
-                function (start, end) {
-                    $('#daterange-btn span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-                }
-            );
+                            $('#sub_industry').append(' Please choose one');
 
-            //Date picker
-            $('#datepicker').datepicker({
-                autoclose: true
-            });
+                            $.each(data, function(index, title){
+                                $("#sub_industry").append('' + '<option value ="'+ title.sub_sector_code + '"  > ' + title.name + '  </option>');
+                            });
+                        }
 
-            $('#datepickerend').datepicker({
-                autoclose: true
-            });
-
-            //iCheck for checkbox and radio inputs
-            $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
-                checkboxClass: 'icheckbox_minimal-blue',
-                radioClass: 'iradio_minimal-blue'
-            });
-            //Red color scheme for iCheck
-            $('input[type="checkbox"].minimal-red, input[type="radio"].minimal-red').iCheck({
-                checkboxClass: 'icheckbox_minimal-red',
-                radioClass: 'iradio_minimal-red'
-            });
-            //Flat red color scheme for iCheck
-            $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
-                checkboxClass: 'icheckbox_flat-green',
-                radioClass: 'iradio_flat-green'
-            });
-
-            //Colorpicker
-            $(".my-colorpicker1").colorpicker();
-            //color picker with addon
-            $(".my-colorpicker2").colorpicker();
-
-            //Timepicker
-            $(".timepicker").timepicker({
-                showInputs: false
+                    }
+                });
             });
         });
+
     </script>
+
 @stop
 
 

@@ -72,9 +72,11 @@ class Maths {
                         ->select("SELECT * from hourlyRanges WHERE time_range = '$value->hourly_range'");
 
                     $h_id = $gethourly[0]->id;
+
                     $adslot_id = uniqid();
 
                     $get_rate = Utilities::switch_db('api')->select("SELECT id from rateCards WHERE hourly_range_id = '$h_id'");
+
                     $insert[] = [
                         'id' => $adslot_id,
                         'rate_card' => $get_rate[0]->id,

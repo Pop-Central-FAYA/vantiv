@@ -112,7 +112,16 @@ Route::group(['middleware' => 'auth'], function () {
           Route::post('/store', 'IndustriesController@storeSubIndustry')->name('sub_industry.store');
           Route::get('/delete/{id}', 'IndustriesController@deleteSubIndustry')->name('sub_industry.delete');
           Route::get('/edit/{code}', 'IndustriesController@editSubIndustry')->name('sub_industry.edit');
+          Route::post('/update/{id}', 'IndustriesController@updateSubIndustry')->name('sub_industry.update');
        });
+    });
+
+    Route::group(['prefix' => 'admin-broadcaster'], function() {
+       Route::get('/', 'BroadcasterManagementController@index')->name('admin.broadcaster.index');
+       Route::get('/broadcaster-data', 'BroadcasterManagementController@braodcasterData');
+       Route::get('/details/{id}', 'BroadcasterManagementController@broadcasterDetails')->name('admin.broadcaster.details');
+       Route::get('/inventory/{id}', 'BroadcasterManagementController@getInventory')->name('admin.broadcaster.upload_inventory');
+       Route::post('/inventory/store/{id}', 'BroadcasterManagementController@storeInventory')->name('upload_inventory.store');
     });
 
 
@@ -199,6 +208,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/high-days/all', 'BroadcasterUserReportsController@hpdaysData');
     });
 
+    Route::get('/brand/get-industry', 'CampaignsController@getIndustrySubIndustry');
+
     /*
      * WalkIns Management
      */
@@ -218,6 +229,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/create', 'WalkinsController@create')->name('walkins.create');
         Route::post('/store', 'WalkinsController@store')->name('walkins.store');
         Route::get('/delete/{id}', 'WalkinsController@delete')->name('walkins.delete');
+        Route::get('/brand', 'WalkinsController@getSubIndustry');
     });
 
     /**
