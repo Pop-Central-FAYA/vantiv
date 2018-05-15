@@ -1,7 +1,7 @@
 @extends('layouts.new_app')
 
 @section('title')
-    <title>Faya - Agency Dashboard</title>
+    <title>Faya - Admin Dashboard</title>
 @stop
 
 @section('styles')

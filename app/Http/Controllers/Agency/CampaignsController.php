@@ -150,7 +150,8 @@ class CampaignsController extends Controller
     public function getStep1($id)
     {
 
-        $industry = Utilities::switch_db('api')->select("SELECT id, `name` from sectors");
+        $industry = Utilities::switch_db('api')->select("SELECT * from sectors");
+        $sub_industries = Utilities::switch_db('api')->select("select * from subSectors");
         $chanel = Utilities::switch_db('api')->select("SELECT * from campaignChannels");
         $walkins = Utilities::switch_db('api')->select("SELECT id from walkIns where user_id='$id'");
         $walkins_id = $walkins[0]->id;
@@ -163,6 +164,7 @@ class CampaignsController extends Controller
         $day_parts = Utilities::switch_db('api')->select("SELECT * from dayParts");
         $region = Utilities::switch_db('api')->select("SELECT * from regions");
         $target = Utilities::switch_db('api')->select("SELECT * from targetAudiences");
+
         Api::validateCampaign();
         return view('agency.campaigns.create1')->with('industry', $industry)
             ->with('chanel', $chanel)
@@ -171,7 +173,8 @@ class CampaignsController extends Controller
             ->with('day_part', $day_parts)
             ->with('target', $target)
             ->with('step1', \Session::get('step1'))
-            ->with('id', $id);
+            ->with('id', $id)
+            ->with('sub_industries', $sub_industries);
     }
 
     public function postStep1(Request $request, $id)
@@ -368,16 +371,15 @@ class CampaignsController extends Controller
         $day_parts = implode("','" ,$step1->dayparts);
         $region = implode("','", $step1->region);
         $adslots_count = Utilities::switch_db('api')->select("SELECT * FROM adslots where min_age >= $step1->min_age AND max_age <= $step1->max_age AND channels = '$step1->channel' AND target_audience = '$step1->target_audience' AND day_parts IN ('$day_parts') AND region IN ('$region') AND is_available = 0 AND broadcaster = '$broadcaster'");
-
+        //dd($adslots_count);
         $result = count($adslots_count);
-//        dd($broadcaster);
-        $ratecards = Utilities::switch_db('api')->select("SELECT * from rateCards WHERE id IN (SELECT rate_card FROM adslots where min_age >= $step1->min_age
+
+        $ratecards = Utilities::switch_db('api')->select("SELECT * from rateCards WHERE broadcaster = '$broadcaster' AND id IN (SELECT rate_card FROM adslots where min_age >= $step1->min_age
                                                             AND max_age <= $step1->max_age
                                                             AND target_audience = '$step1->target_audience'
                                                             AND day_parts IN ('$day_parts') AND region IN ('$region')
                                                             AND is_available = 0 AND broadcaster = '$broadcaster') ");
 
-        dd($ratecards);
 
         foreach ($ratecards as $ratecard){
             $day = Utilities::switch_db('api')->select("SELECT * from days where id = '$ratecard->day'");
@@ -619,6 +621,7 @@ class CampaignsController extends Controller
                 'agency' => $agency_id,
                 'agency_broadcaster' => $group_data->broadcaster_id,
                 'broadcaster' => $group_data->broadcaster_id,
+                'sub_industry' => $first->sub_industry,
             ];
 
             $check_time_adslots = Utilities::fetchTimeInCart($id, $group_data->broadcaster_id);

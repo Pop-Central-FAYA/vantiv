@@ -25,6 +25,8 @@
                     <p><h4>Campaign Name: {{ $campaign_details['campaign_det']['campaign_name'] }} </h4></p><br>
                     <p><h4>Product: {{ $campaign_details['campaign_det']['product_name'] }} </h4></p><br>
                     <p><h4>Brand: {{ $campaign_details['campaign_det']['brand'] }}</h4></p><br>
+                    <p><h4>Sub-Industry: {{ $campaign_details['campaign_det']['sub_industry'] }}</h4></p><br>
+                    <p><h4>Industry: {{ $campaign_details['campaign_det']['industry'] }}</h4></p><br>
                     <p><h4>Channel: {{ $campaign_details['campaign_det']['channel'] }}</h4></p><br>
                     <p><h4>Start Date: {{ $campaign_details['campaign_det']['start_date'] }}</h4></p><br>
                     <p><h4>End Date: {{ $campaign_details['campaign_det']['end_date'] }}</h4></p><br>

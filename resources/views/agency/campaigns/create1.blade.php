@@ -77,12 +77,12 @@
                             @endif
                             <hr>
                             <p><br></p>
-                            @if(isset($step2))
+                            @if(isset($step1))
                                 <div class="col-12 form-inner">
                                     <div class="form-group">
                                         <label class="col-md-2">Industry:</label>
                                         <div class="col-md-4">
-                                            <input type="text" name="industry" id="industry" required readonly class="form-control" @foreach($industry as $ind) @if($step2->industry === $ind->sector_code) value="{{ $ind->name }}" @endif @endforeach>
+                                            <input type="text" name="industry" id="industry" required readonly class="form-control" @foreach($industry as $ind) @if($step1->industry === $ind->name) value="{{ $ind->name }}" @endif @endforeach>
                                         </div>
                                     </div>
                                 </div>
@@ -98,12 +98,12 @@
                             @endif
                             <hr>
                             <p><br></p>
-                            @if(isset($step2))
+                            @if(isset($step1))
                                 <div class="col-12 form-inner">
                                     <div class="form-group">
                                         <label class="col-md-2">Sub Industry:</label>
                                         <div class="col-md-4">
-                                            <input type="text" name="sub_industry" id="sub_industry" class="form-control" required readonly @foreach($sub_industries as $sub_industry) @if($step2->sub_industry === $ind->sub_sector_code) value="{{ $ind->name }}" @endif @endforeach>
+                                            <input type="text" name="sub_industry" id="sub_industry" class="form-control" required readonly @foreach($sub_industries as $sub_industry) @if($step1->sub_industry === $sub_industry->name) value="{{ $sub_industry->name }}" @endif @endforeach>
                                         </div>
                                     </div>
                                 </div>

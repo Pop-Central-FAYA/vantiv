@@ -78,6 +78,8 @@ class Utilities {
             'campaign_name' => $campaign_details[0]->name,
             'product_name' => $campaign_details[0]->product,
             'brand' => $brand[0]->name,
+            'industry' => $campaign_details[0]->Industry,
+            'sub_industry' => $campaign_details[0]->sub_industry,
             'channel' => $channel_name[0]->channel,
             'start_date' => date('Y-m-d', strtotime($campaign_details[0]->start_date)),
             'end_date' => date('Y-m-d', strtotime($campaign_details[0]->stop_date)),

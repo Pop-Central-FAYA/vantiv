@@ -90,7 +90,7 @@ class BroadcasterManagementController extends Controller
         //check if the inventory exists
         $check_inventory = Utilities::switch_db('api')->select("SELECT * FROM rateCards where broadcaster = '$id' AND day = '$request->days'");
 
-        if(count($check_inventory) === 1){
+        if(count($check_inventory) > 0){
             \Session::flash('error', 'Inventory already exist');
             return redirect()->back();
         }
@@ -147,7 +147,7 @@ class BroadcasterManagementController extends Controller
 
                         $h_id = $gethourly[0]->id;
 
-                        $get_rate = Utilities::switch_db('api')->select("SELECT id from rateCards WHERE hourly_range_id = '$h_id' AND day = '$request->days'");
+                        $get_rate = Utilities::switch_db('api')->select("SELECT id from rateCards WHERE hourly_range_id = '$h_id' AND day = '$request->days' AND broadcaster = '$id'");
 
                         $insert[] = [
                             'id' => $adslot_id,
