@@ -32,26 +32,20 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="input-group">
-                                    <label for="brand_name">Industry</label>
-                                    <select name="industry" id="industry">
-                                        <option value="">Select Industry</option>
-                                        @foreach($industries as $industry)
-                                            <option value="{{ $industry->sector_code }}">{{ $industry->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="input-group">
-                                    <label>Sub Industry</label>
-                                    <select name="sub_industry" id="sub_industry">
+                        <div class="input-group">
+                            <label>Sub Industry</label>
+                            <select name="sub_industry" id="sub_industry">
 
-                                    </select>
-                                </div>
-                            </div>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label for="brand_name">Industry</label>
+                            <select name="industry" id="industry">
+                                <option value="">Select Industry</option>
+                                @foreach($industries as $industry)
+                                    <option value="{{ $industry->sector_code }}">{{ $industry->name }}</option>
+                                @endforeach
+                            </select>
                         </div>
                         <div class="input-group">
                             <input type="Submit" name="Submit" class="update" value="Add Brand">

@@ -205,6 +205,7 @@ class DashboardController extends Controller
             return view('dashboard.default')->with(['campaign' => $camp, 'volume' => $c_volume, 'month' => $c_mon, 'high_dayp' => $day_pie, 'days' => $days_data, 'adslot' => $ads_no, 'price' => $tot_pri, 'mon' => $mon, 'invoice' => $invoice, 'broadcaster_info' => $broadcaster_info]);
 
         } else if ($role->role_id === 4) {
+
             //agency dashboard
             $allBroadcaster = Utilities::switch_db('api')->select("SELECT * from broadcasters");
             $agency_id = Session::get('agency_id');
@@ -323,95 +324,117 @@ class DashboardController extends Controller
 
         } else if ($role->role_id === 6) {
 
+            //advertiser dashboard
             $allBroadcaster = Utilities::switch_db('api')->select("SELECT * from broadcasters");
-
-            $date = [];
-            $tot = [];
-            $bra = [];
-
             $advertiser_id = Session::get('advertiser_id');
+            $advertiser_info = Utilities::switch_db('api')->select("SELECT * from advertisers where id = '$advertiser_id'");
+            $camp_prod_advertiser = Utilities::switch_db('api')->select("SELECT id, product from campaignDetails where agency = '$advertiser_id' GROUP BY campaign_id");
+            $pe_advertiser = $this->broadcasterFilter($advertiser_id);
 
-            $camp_prod = Utilities::switch_db('api')->select("SELECT id,product from campaigns where agency = '$advertiser_id'");
-
-            $pe = $this->broadcasterFilter($advertiser_id);
-
-            foreach ($pe as $p) {
-                if (!$p) {
-                    $tot[] = 0;
-                } else {
-                    $tot[] = $p['total'];
-                }
-            }
-            foreach ($pe as $p) {
-                if (!$p) {
-                    $date[] = 0;
-                } else {
-                    $date[] = $p['date'];
-                }
-            }
-            foreach ($pe as $p) {
-                if (!$p) {
-                    $bra[] = 0;
-                } else {
-                    $bra[] = $p['name'];
-                }
-            }
-
-            $d = json_encode($date);
-            $am = json_encode($tot);
-            $na = json_encode($bra);
-
-            #Periodic spend report of total * product
-            $pro_period = $this->periodic_spent($advertiser_id);
-            $periodic_name = (json_encode($pro_period['name']));
-            $periodic_data = (json_encode($pro_period['data']));
-//            $periodic_to_product = (json_encode($pro_period));
-
-            #Budget pacing report
+            $date_advertiser = [];
+            $bra_advertiser = [];
+            $tot_advertiser = [];
             $amm = [];
             $dat = [];
-            $b = $this->budgetPacing($advertiser_id);
-            foreach ($b as $bud) {
-                $amm[] = $bud['total'];
+            $bra_tot_advertiser = [];
+            $bra_dates_advertiser = [];
+            $braa_advertiser = [];
+            foreach ($pe_advertiser as $p) {
+                if (!$p) {
+                    $tot_advertiser[] = 0;
+                } else {
+                    $tot_advertiser[] = $p['total'];
+                }
             }
-            foreach ($b as $bud) {
-                $dat[] = $bud['date'];
+            foreach ($pe_advertiser as $p) {
+                if (!$p) {
+                    $date_advertiser[] = 0;
+                } else {
+                    $date_advertiser[] = $p['date'];
+                }
+            }
+            foreach ($pe_advertiser as $p) {
+                if (!$p) {
+                    $bra_advertiser[] = 0;
+                } else {
+                    $bra_advertiser[] = $p['name'];
+                }
             }
 
-            $amm_bud = json_encode($amm);
+            $d_advertiser = json_encode($date_advertiser);
+            $am_advertiser = json_encode($tot_advertiser);
+            $na_advertiser = json_encode($bra_advertiser);
 
-            $date_bud = json_encode($dat);
+            #Periodic spend report of total * product
+            $current_month = date('F');
+            $months = [];
+            $default_month = date('F', strtotime("2018-01-01"));
+            for($i = 1; $i <= 12; $i++){
+                $months[] = date('F', strtotime("2018-".$i."-01"));
+            }
 
-            $invoice_campaign_details = Api::allInvoiceAdvertiserorAgency($advertiser_id);
+            #periodic spent report on brands
+            $bra = Utilities::switch_db('api')->select("SELECT * from brands where walkin_id IN (SELECT id from walkIns where agency_id = '$advertiser_id')");
+            $brand = $this->clientDashboard($advertiser_id);
 
-            #approval
-            $invoice_approval = Api::countApproved($advertiser_id);
+            if($brand){
+                foreach ($brand as $b) {
+                    $bra_tot_advertiser[] = (integer)$b['total'];
+                }
+                foreach ($brand as $b) {
+                    $braa_advertiser[] = $b['brand'];
+                }
+                foreach ($brand as $b) {
+                    $bra_dates_advertiser[] = $b['date'];
+                }
 
-            #unapproval
-            $invoice_unapproval = Api::countUnapproved($advertiser_id);
+            }
+
+            $bra_d_advertiser = json_encode($bra_dates_advertiser);
+            $bra_am_advertiser = json_encode($bra_tot_advertiser);
+            $bra_na_advertiser = json_encode($braa_advertiser);
+
+            $pro_period_advertiser = $this->periodic_spent($advertiser_id);
+            $p_advertiser = json_encode($pro_period_advertiser);
+
+            #Budget pacing report
+            $b_pacing_advertiser = $this->budgetPacing($advertiser_id);
+
 
             #all campaigns
-            $count_campaigns = Api::countCampaigns($advertiser_id);
+            $count_campaigns_advertiser = Api::countCampaigns($advertiser_id);
 
             #invoices
-            $count_invoice =Api::countInvoices($advertiser_id);
+            $count_invoice_advertiser =Api::countInvoices($advertiser_id);
 
             #count Brands
-            $count_brands = Api::countBrands($advertiser_id);
+            $count_brands_advertiser = Api::countBrands($advertiser_id);
 
-            #count files
-            $count_files = Api::countFiles($advertiser_id);
+            #invoice
+            $invoice_campaign_details_advertiser = Api::allInvoiceAdvertiserorAgency($advertiser_id);
 
-            return view('advertisers.dashboard.new_dashboard')->with(['broadcaster' => $allBroadcaster, 'date' => $d, 'amount' => $am,
-                                                                            'name' => $na, 'camp_prod' => $camp_prod, 'amount_bud' => $amm_bud,
-                                                                            'date_bud' => $date_bud, 'periodic_name' => $periodic_name, 'periodic_data' => $periodic_data,
-                                                                            'all_invoices' => $invoice_campaign_details,
-                                                                            'invoice_approval' => $invoice_approval,
-                                                                            'invoice_unapproval' => $invoice_unapproval,
-                                                                            'count_campaigns_advertiser' => $count_campaigns,
-                                                                            'count_invoice' => $count_invoice,
-                                                                            'count_brand' => $count_brands,
-                                                                            'count_files' => $count_files]);
+            #approval
+            $invoice_approval_advertiser = Api::countApproved($advertiser_id);
+
+            #unapproval
+            $invoice_unapproval_advertiser = Api::countUnapproved($advertiser_id);
+
+            return view('advertisers.dashboard.new_dashboard')->with(['broadcaster' => $allBroadcaster,
+                                                                            'invoice_approval' => $invoice_approval_advertiser,
+                                                                            'pending_invoice' => $invoice_unapproval_advertiser,
+                                                                            'all_invoices' => $invoice_campaign_details_advertiser,
+                                                                            'count_brands' => $count_brands_advertiser, 'count_invoice' => $count_invoice_advertiser,
+                                                                            'count_campaigns' => $count_campaigns_advertiser,
+                                                                            'date' => $d_advertiser, 'amount' => $am_advertiser, 'name' => $na_advertiser, 'camp_prod' => $camp_prod_advertiser,
+                                                                            'periodic_data' => $p_advertiser, 'b_pacing' => $b_pacing_advertiser,
+                                                                            'invoice_unapproval' => $invoice_unapproval_advertiser,
+                                                                            'months' => $months,
+                                                                            'current_month' => $current_month,
+                                                                            'bra_dates' => $bra_d_advertiser,
+                                                                            'bra_am' => $bra_am_advertiser,
+                                                                            'bra_na' => $bra_na_advertiser,
+                                                                            'brand' => $bra_advertiser,
+                                                                            'advertiser_info' => $advertiser_info]);
 
         }else if ($role->role_id === 7){
 
@@ -835,6 +858,64 @@ class DashboardController extends Controller
 
         return response()->json(['pro_month' => $pro_period_month]);
 
+    }
+
+    public function filterByAdvertiserBrand()
+    {
+        $b_id = request()->br_id;
+        $advertiser_id = Session::get('advertiser_id');
+        $brand = [];
+        $tot = [];
+        $dates = [];
+        $braa = [];
+        $br = Utilities::switch_db('api')->select("SELECT * from brands where id = '$b_id'");
+        foreach ($br as $b) {
+            $camp_pay = Utilities::switch_db('api')->select("SELECT SUM(total) as total, time_created FROM payments WHERE campaign_id IN (SELECT campaign_id from campaignDetails WHERE brand = '$b->id' AND agency = '$advertiser_id' GROUP BY campaign_id) GROUP BY DATE_FORMAT(time_created, '%Y-%m')");
+            if (!$camp_pay) {
+                $total = 0;
+                $date = 0;
+            } else {
+                $total = $camp_pay[0]->total;
+                $date = $camp_pay[0]->time_created;
+            }
+            $brand[] = [
+                'brand_id' => $b->id,
+                'brand' => $b->name,
+                'total' => $total,
+                'date' => date('M', strtotime($date)),
+            ];
+        }
+        foreach ($brand as $b) {
+            $tot[] = (integer)$b['total'];
+        }
+        foreach ($brand as $b) {
+            $braa[] = $b['brand'];
+        }
+        foreach ($brand as $b) {
+            $dates[] = $b['date'];
+        }
+
+        return response()->json(['date' => $dates, 'amount_price' => $tot, 'name' => $braa]);
+    }
+
+    public function filterByAdvertiserMonth()
+    {
+        $advertiser_id = Session::get('advertiser_id');
+        $month = request()->month;
+        $year = date('Y');
+        $date = (string)($year.'-'.$month);
+        $pro_period_month = [];
+        $pro_cam = Utilities::switch_db('api')->select("SELECT * from campaignDetails where agency = '$advertiser_id' AND DATE_FORMAT(time_created, '%Y-%M') = '$date' GROUP BY campaign_id");
+        foreach ($pro_cam as $pr){
+            $campaign_p = Utilities::switch_db('api')->select("SELECT * from payments where campaign_id = '$pr->campaign_id'");
+            $paym = Utilities::switch_db('api')->select("SELECT SUM(amount) as total from paymentDetails where agency_id = '$advertiser_id' AND DATE_FORMAT(time_created, '%Y-%M') = '$date' GROUP BY payment_id");
+            $pro_period_month[] = [
+                'name' => $pr->product,
+                'y' => (($campaign_p[0]->total) / $paym[0]->total) * 100,
+            ];
+        }
+
+        return response()->json(['pro_month' => $pro_period_month]);
     }
 
 

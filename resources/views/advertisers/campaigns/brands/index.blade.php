@@ -15,6 +15,12 @@
                     </ul>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <a href="{{ route('agency.brand.create') }}" class="btn btn-success btn-lg">Add Brand</a>
+                </div>
+            </div>
+            <p><br></p>
                 <div class="row">
                     <div class="col-lg-4">
                         <form action="{{ route('brands.search.user') }}" method="get">
@@ -34,7 +40,7 @@
                     @foreach($brand as $brands)
                         <div class="col-6">
                             <div class="col-6">
-                                <h2>{{ $brands->name }}</h2>
+                                <h2>{{ ucfirst($brands->name) }}</h2>
                                 <a href="#" class="edit" data-toggle="modal" data-target=".{{ $brands->id }}">Edit</a> <a href="#" class="delete" data-toggle="modal" data-target=".{{ $brands->id }}delete">Delete</a> </div>
                             <div class="col-6"> <img class="img-responsive" src="{{ $brands->image_url ? asset(decrypt($brands->image_url)) : asset('new_assets/images/logo.png') }}"> </div>
                         </div>

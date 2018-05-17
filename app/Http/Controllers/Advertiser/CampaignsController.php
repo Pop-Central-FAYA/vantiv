@@ -20,6 +20,12 @@ class CampaignsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    public function firstPage()
+    {
+        return view('advertisers.campaigns.create_first');
+    }
+
     public function index()
     {
         $all_mpo = [];

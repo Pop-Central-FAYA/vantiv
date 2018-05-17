@@ -101,12 +101,6 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="sector_id">Sector</label>
-                                <select name="sector_id" class="form-control" required>
-                                    @foreach ($sectors as $sector)
-                                        <option value="{{ $sector->id }}">{{ $sector->name }}</option>
-                                    @endforeach
-                                </select>
                                 @if ($errors->has('country_id')) <p class="help-block" style="color: red">{{ $errors->first('country_id') }}</p> @endif
                             </div>
                         </div>

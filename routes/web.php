@@ -419,6 +419,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::group(['prefix' => 'advertiser'], function () {
         Route::group(['prefix' => 'campaigns'], function() {
+            Route::get('/', 'Advertiser\CampaignsController@firstPage')->name('advertiser.first_page');
             Route::get('/all-campaigns', 'Advertiser\CampaignsController@index')->name('advertiser.campaign.all');
             Route::get('/all-campaign/data', 'Advertiser\CampaignsController@getData');
             Route::get('/all-clients', 'Advertiser\CampaignsController@allClient')->name('advertiser.campaign.create');
@@ -457,6 +458,8 @@ Route::group(['middleware' => 'auth'], function () {
         });
 
         Route::get('/advertiser-dashboard/periodic-sales', 'DashboardController@filterByAdvertiserBroad')->name('advertiser.dashboard.broad');
+        Route::get('/advertiser-dashboard/periodic-brand', 'DashboardController@filterByAdvertiserBrand')->name('advertiser.dashboard.data');
+        Route::get('/advertiser/percentage-periodic', 'DashboardController@filterByAdvertiserMonth')->name('advertiser.month');
 
     });
 });

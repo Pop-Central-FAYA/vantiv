@@ -82,7 +82,9 @@ class ClientBrandsController extends Controller
 
         $this->validate($request, [
             'brand_name' => 'required|regex:/^[a-zA-Z- ]+$/',
-            'brand_logo' => 'required|image|mimes:png,jpeg,jpg'
+            'brand_logo' => 'required|image|mimes:png,jpeg,jpg',
+            'industry' => 'required',
+            'sub_industry' => 'required'
         ]);
 
         $brand = Utilities::formatString($request->brand_name);
@@ -106,7 +108,7 @@ class ClientBrandsController extends Controller
                 $clouder = Cloudder::getResult();
                 $image_path = encrypt($clouder['url']);
 
-                $insert = Utilities::switch_db('api')->select("INSERT into brands (id, `name`, walkin_id, broadcaster_agency, image_url) VALUES ('$unique','$brand','$id', '$agency_id', '$image_path')");
+                $insert = Utilities::switch_db('api')->select("INSERT into brands (id, `name`, walkin_id, broadcaster_agency, image_url, industry_id, sub_industry_id) VALUES ('$unique','$brand','$id', '$agency_id', '$image_path', '$request->industry', '$request->sub_industry')");
                 $user_activity = Api::saveActivity($agency_id, $description, $ip, $user_agent);
                 if (!$insert) {
                     Session::flash('success', 'Brands created successfully');
@@ -132,7 +134,7 @@ class ClientBrandsController extends Controller
                 $clouder = Cloudder::getResult();
                 $image_path = encrypt($clouder['url']);
 
-                $insert = Utilities::switch_db('api')->select("INSERT into brands (id, `name`, walkin_id, broadcaster_agency, image_url) VALUES ('$unique','$brand','$user_id', '$advertiser_id', '$image_path')");
+                $insert = Utilities::switch_db('api')->select("INSERT into brands (id, `name`, walkin_id, broadcaster_agency, image_url, industry_id, sub_industry_id) VALUES ('$unique','$brand','$user_id', '$advertiser_id', '$image_path', '$request->industry', '$request->sub_industry')");
                 $user_activity = Api::saveActivity($advertiser_id, $description, $ip, $user_agent);
                 if (!$insert) {
                     Session::flash('success', 'Brands created successfully');
