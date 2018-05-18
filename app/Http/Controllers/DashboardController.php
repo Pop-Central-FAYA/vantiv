@@ -374,7 +374,9 @@ class DashboardController extends Controller
             }
 
             #periodic spent report on brands
-            $bra = Utilities::switch_db('api')->select("SELECT * from brands where walkin_id IN (SELECT id from walkIns where agency_id = '$advertiser_id')");
+
+            $bra = Utilities::switch_db('api')->select("SELECT * from brands where broadcaster_agency  = '$advertiser_id'");
+
             $brand = $this->clientDashboard($advertiser_id);
 
             if($brand){
@@ -434,7 +436,8 @@ class DashboardController extends Controller
                                                                             'bra_am' => $bra_am_advertiser,
                                                                             'bra_na' => $bra_na_advertiser,
                                                                             'brand' => $bra_advertiser,
-                                                                            'advertiser_info' => $advertiser_info]);
+                                                                            'advertiser_info' => $advertiser_info,
+                                                                                'brand' => $bra]);
 
         }else if ($role->role_id === 7){
 
@@ -642,7 +645,12 @@ class DashboardController extends Controller
     {
         $brand = [];
 
-        $br = Utilities::switch_db('api')->select("SELECT * from brands where walkin_id IN (SELECT id from walkIns where agency_id = '$agency_id') LIMIT 1");
+        if(Session::get('advertiser_id')){
+            $br = Utilities::switch_db('api')->select("SELECT * from brands where walkin_id IN (SELECT user_id from advertisers where id = '$agency_id') LIMIT 1");
+        }else{
+            $br = Utilities::switch_db('api')->select("SELECT * from brands where walkin_id IN (SELECT id from walkIns where agency_id = '$agency_id') LIMIT 1");
+        }
+
         foreach ($br as $b) {
             $camp_pay = Utilities::switch_db('api')->select("SELECT SUM(total) as total, time_created FROM payments WHERE campaign_id IN (SELECT campaign_id from campaignDetails WHERE brand = '$b->id' AND agency = '$agency_id' GROUP BY campaign_id) GROUP BY DATE_FORMAT(time_created, '%Y-%m')");
             if (!$camp_pay) {

@@ -1,22 +1,22 @@
 @extends('layouts.new_app')
 
 @section('title')
-    <title>Advertiser | Campaign-Details</title>
+    <title>Advertiser - Campaign-Details</title>
 @stop
 
 @section('content')
+
     <div class="main-section">
         <div class="container">
             <div class="row">
                 <div class="col-12 heading-main">
                     <h1>Campaign Details</h1>
                     <ul>
-                        <li><a href="#"><i class="fa fa-th-large"></i>Campaign</a></li>
+                        <li><a href="{{ route('agency.campaign.all') }}"><i class="fa fa-th-large"></i>Advertiser Campaign</a></li>
                         <li><a href="#">Campaign Details</a></li>
                     </ul>
                 </div>
             </div>
-
             <div class="row">
                 <div class="col-md-6">
                     <h2>Campaign Information</h2>
@@ -25,10 +25,12 @@
                     <p><h4>Campaign Name: {{ $campaign_details['campaign_det']['campaign_name'] }} </h4></p><br>
                     <p><h4>Product: {{ $campaign_details['campaign_det']['product_name'] }} </h4></p><br>
                     <p><h4>Brand: {{ $campaign_details['campaign_det']['brand'] }}</h4></p><br>
+                    <p><h4>Sub-Industry: {{ $campaign_details['campaign_det']['sub_industry'] }}</h4></p><br>
+                    <p><h4>Industry: {{ $campaign_details['campaign_det']['industry'] }}</h4></p><br>
                     <p><h4>Channel: {{ $campaign_details['campaign_det']['channel'] }}</h4></p><br>
                     <p><h4>Start Date: {{ $campaign_details['campaign_det']['start_date'] }}</h4></p><br>
-                    <p><h4>Stop Date: {{ $campaign_details['campaign_det']['end_date'] }}</h4></p><br>
-                    <p><h4>Campaign Cost: &#8358;{{ $campaign_details['campaign_det']['campaign_cost'] }}</h4></p><br>
+                    <p><h4>End Date: {{ $campaign_details['campaign_det']['end_date'] }}</h4></p><br>
+                    <p><h4>Campaign Budget: &#8358;{{ $campaign_details['campaign_det']['campaign_cost'] }}</h4></p><br>
                 </div>
                 <div class="col-md-6">
                     <h2>Clients Information</h2>
@@ -38,7 +40,6 @@
                     <p><h4>Phone: {{ $campaign_details['campaign_det']['phone'] }}</h4></p><br>
                 </div>
             </div>
-
             <div class="row">
                 <div class="col-md-12">
                     <h2>Adslot Details</h2>
@@ -48,8 +49,9 @@
                             <thead>
                             <tr>
                                 <th>S/N</th>
+                                <th>Media Station</th>
                                 <th>Day</th>
-                                <th>From-To Time</th>
+                                <th>From To Time</th>
                                 <th>Day-parts</th>
                                 <th>Target Audience</th>
                                 <th>Region</th>
@@ -62,6 +64,7 @@
                             @foreach($campaign_details['file_details'] as $file_detail)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $file_detail['broadcast_station'] }}</td>
                                     <td>{{ $file_detail['day'] }}</td>
                                     <td>{{ $file_detail['from_to_time'] }}</td>
                                     <td>{{ $file_detail['day_part'] }}</td>
@@ -75,7 +78,8 @@
                             </tbody>
                         </table>
                     </div>
-
+                </div>
+                <div class="col-md-12">
                     <h2>File Details</h2>
                     <hr>
                     <div class="table-responsive">
@@ -84,7 +88,9 @@
                             <tr>
                                 <th>S/N</th>
                                 <th>File</th>
-                                <th>Slot Purchased</th>
+                                <th>Media Station</th>
+                                <th>File Duration</th>
+                                <th>From To Time</th>
                                 <th>Play Time Status</th>
                                 <th>File Status</th>
                             </tr>
@@ -96,9 +102,11 @@
                                     <td>
                                         <video src="{{ $file_detail['file'] }}" width="150" height="100" controls></video>
                                     </td>
+                                    <td>{{ $file_detail['broadcast_station'] }}</td>
                                     <td>{{ $file_detail['slot_time'] }}</td>
-                                    <td>Played</td>
-                                    <td>@if($file_detail['file_status'] === 1) File Approved @elseif($file_detail['file_status'] === 2) File Rejected. With reason : <strong>{{ $file_detail['rejection_reason'] }}</strong> @else Pending @endif</td>
+                                    <td>{{ $file_detail['from_to_time'] }}</td>
+                                    <td>Pending to Play</td>
+                                    <td>@if($file_detail['file_status'] === 1) File Approved @elseif($file_detail['file_status'] === 2) File Rejected. With reason : <strong>{{ $file_detail['rejection_reason'] }}</strong> @else Pending Approval @endif</td>
                                 </tr>
                             @endforeach
                             </tbody>
@@ -108,7 +116,6 @@
             </div>
         </div>
     </div>
-
 
 @stop
 @section('scripts')

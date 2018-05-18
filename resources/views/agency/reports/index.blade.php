@@ -75,7 +75,7 @@
                                                             <th>S/N</th>
                                                             <th>Campaign Name</th>
                                                             <th>Start</th>
-                                                            <th>Stop</th>
+                                                            <th>End</th>
                                                             <th>Amount(&#8358;)</th>
                                                         </thead>
                                                     </table>

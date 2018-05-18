@@ -20,26 +20,23 @@
                             @if(empty($adslots))
                                 <p><h1>No Adslot found for this criteria, please go back</h1></p>
                             @else
-                                <h2>Choose Broadcaster</h2>
+                                <h2>Broadcaster's Summary</h2>
                                 <hr>
                                 <p><br></p>
-                                <ul>
-                                    @foreach($adslots as $adslot)
-                                        <li>
-                                            <a href="{{ route('advertiser_campaign.step3', ['id' => $id,'broadcaster' => $adslot['broadcaster']]) }}">{{ $adslot['count_adslot'] }} Adslots available for {{ $adslot['boradcaster_brand'] }}</a>
-                                        </li>
-                                    @endforeach
-                                </ul>
+                                @foreach($adslots as $adslot)
+                                    <li>
+                                        <a style="text-decoration: none;" class="btn btn-default" href="#">{{ $adslot['count_adslot'] }} Adslots available for {{ $adslot['boradcaster_brand'] }}</a>
+                                    </li>
+                                @endforeach
                             @endif
                         </div>
 
                     </form>
-                    @if(empty($adslots))
-                        <p><br></p>
-                        <div class="input-group">
-                            <input type="button" id="step1" class="btn btn-danger btn-lg" name="Submit" value="<< Back">
-                        </div>
-                    @endif
+                    <p><br></p>
+                    <div class="input-group">
+                        <input type="button" style="background: #00c4ca" id="step1" class="btn btn-danger btn-lg" name="Submit" value="<< Back">
+                        <a class="btn btn-danger btn-lg" style="background: #00c4ca" href="{{ route('advertiser_campaign.step3', ['id' => $id]) }}">Next >></a>
+                    </div>
                 </div>
             </div>
         </div>

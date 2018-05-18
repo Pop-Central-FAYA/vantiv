@@ -86,6 +86,7 @@ class AdvertiserAuthController extends Controller
                 'password' => bcrypt($request->password),
                 'firstname' => $request->first_name,
                 'lastname' => $request->last_name,
+                'phone_number' => $request->phone,
                 'user_type' => 4,
                 'status' => 1
             ]);

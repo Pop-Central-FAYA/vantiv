@@ -5,6 +5,7 @@ namespace Vanguard\Http\Controllers\Advertiser;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use JD\Cloudder\Facades\Cloudder;
 use Pbmedia\LaravelFFMpeg\FFMpeg;
 use Vanguard\Http\Controllers\Controller;
@@ -28,23 +29,24 @@ class CampaignsController extends Controller
 
     public function index()
     {
+        $inv = [];
         $all_mpo = [];
         $advertiser_id = Session::get('advertiser_id');
-        $invoice = Utilities::switch_db('api')->select("SELECT * from invoices WHERE agency_id = '$advertiser_id'");
-        $file = Utilities::switch_db('api')->select("SELECT * from files WHERE agency_id = '$advertiser_id'");
-        $mpos = Utilities::switch_db('api')->select("SELECT * from mpos where agency_id = '$advertiser_id'");
+        $file = Utilities::switch_db('api')->select("SELECT * from files");
+        $mpos = Utilities::switch_db('api')->select("SELECT * from mpos");
         foreach ($mpos as $mpo){
-            $campaign = Utilities::switch_db('api')->select("SELECT * FROM campaigns where id = '$mpo->campaign_id'");
+            $mpo_details = Utilities::switch_db('api')->select("SELECT * from mpoDetails where mpo_id = '$mpo->id'");
+            $campaign = Utilities::switch_db('api')->select("SELECT * FROM campaignDetails where campaign_id = '$mpo->campaign_id' GROUP BY campaign_id");
             $campaign_id = $campaign[0]->id;
             $camp_id = $campaign[0]->adslots_id;
-            $total = Utilities::switch_db('api')->select("SELECT amount from payments where campaign_id = '$mpo->campaign_id'");
+            $total = Utilities::switch_db('api')->select("SELECT total from payments where campaign_id = '$mpo->campaign_id'");
             $brand_id = $campaign[0]->brand;
             $brand = Utilities::switch_db('api')->select("SELECT `name` from brands where id = '$brand_id'");
             $adslots = Utilities::switch_db('api')->select("SELECT * from adslots WHERE id IN ($camp_id)");
 
-            if($adslots){
+            if ($adslots) {
                 $slot = $adslots;
-            }else{
+            } else {
                 $slot = $adslots;
             }
             $all_mpo[] = [
@@ -53,28 +55,29 @@ class CampaignsController extends Controller
                 'campaign_name' => $campaign[0]->name,
                 'brand' => $brand[0]->name,
                 'adslot' => $slot,
-                'discount' => $mpo->discount,
-                'total' => $total[0]->amount,
+                'discount' => $mpo_details[0]->discount,
+                'total' => $total[0]->total,
             ];
         }
 
-        return view('advertisers.campaigns.all_campaign')->with('invoice', $invoice)->with('files', $file)->with('mpos', $all_mpo);
+        $invoices_all = Utilities::invoiceDetails();
+
+        return view('advertisers.campaigns.all_campaign')->with('invoices', $invoices_all)->with('files', $file)->with('mpos', $all_mpo);
     }
 
     public function getData(DataTables $datatables, Request $request)
     {
         $campaign = [];
         $j = 1;
-        $agency_id = \Session::get('advertiser_id');
-        $all_campaign = Utilities::switch_db('api')->select("SELECT * from campaigns WHERE agency = '$agency_id' AND adslots > 0 ORDER BY time_created desc");
-        foreach ($all_campaign as $cam)
-        {
+        $advertiser_id = \Session::get('advertiser_id');
+        $all_campaign = Utilities::switch_db('api')->select("SELECT * from campaignDetails WHERE agency = '$advertiser_id' AND adslots > 0 GROUP BY campaign_id ORDER BY time_created desc ");
+        foreach ($all_campaign as $cam) {
             $today = date("Y-m-d");
-            if(strtotime($today) > strtotime($cam->start_date) && strtotime($today) > strtotime($cam->stop_date)){
+            if (strtotime($today) > strtotime($cam->start_date) && strtotime($today) > strtotime($cam->stop_date)) {
                 $status = 'Campaign Expired';
-            }elseif (strtotime($today) >= strtotime($cam->start_date) && strtotime($today) <= strtotime($cam->stop_date)){
+            } elseif (strtotime($today) >= strtotime($cam->start_date) && strtotime($today) <= strtotime($cam->stop_date)) {
                 $status = 'Campaign In Progress';
-            }else{
+            } else {
                 $now = strtotime($today);
                 $your_date = strtotime($cam->start_date);
                 $datediff = $your_date - $now;
@@ -82,7 +85,7 @@ class CampaignsController extends Controller
                 $status = 'Campaign to start in '.$new_day.' day(s)';
             }
             $brand = Utilities::switch_db('api')->select("SELECT name from brands WHERE id = '$cam->brand'");
-            $pay = Utilities::switch_db('api')->select("SELECT amount from payments WHERE campaign_id = '$cam->id'");
+            $pay = Utilities::switch_db('api')->select("SELECT total from payments WHERE campaign_id = '$cam->campaign_id'");
             $campaign[] = [
                 'id' => $j,
                 'camp_id' => $cam->id,
@@ -91,8 +94,9 @@ class CampaignsController extends Controller
                 'product' => $cam->product,
                 'start_date' => date('Y-m-d', strtotime($cam->start_date)),
                 'end_date' => date('Y-m-d', strtotime($cam->stop_date)),
-                'amount' => '&#8358;'.number_format($pay[0]->amount, 2),
+                'amount' => '&#8358;'.number_format($pay[0]->total, 2),
                 'status' => $status,
+                'campaign_id' => $cam->campaign_id,
             ];
             $j++;
         }
@@ -100,19 +104,17 @@ class CampaignsController extends Controller
             ->addColumn('details', function ($campaign) {
                 return '<a href="' . route('advertiser.campaign.details', ['id' => $campaign['camp_id']]) .'" class="btn btn-primary btn-xs" > Campaign Details </a>';
             })
-            ->addColumn('mpo', function ($campaign) {
-                return '<button data-toggle="modal" data-target=".mpoModal' . $campaign['camp_id']. '" class="btn btn-success btn-xs" > View Details </button>';
-            })
             ->addColumn('invoices', function($campaign){
-                return '<button data-toggle="modal" data-target=".invoiceModal' . $campaign['camp_id']. '" class="btn btn-success btn-xs" > View Details </button>    ';
+                return '<button data-toggle="modal" data-target=".invoiceModal' . $campaign['campaign_id']. '" class="btn btn-success btn-xs" > Invoice Details </button>    ';
             })
-            ->rawColumns(['details' => 'details', 'mpo' => 'mpo', 'invoices' => 'invoices'])->addIndexColumn()
+            ->rawColumns(['details' => 'details', 'invoices' => 'invoices'])->addIndexColumn()
             ->make(true);
     }
 
     public function getStep1($id)
     {
         $industry = Utilities::switch_db('api')->select("SELECT id, `name` from sectors");
+        $sub_industries = Utilities::switch_db('api')->select("SELECT * from subSectors");
         $chanel = Utilities::switch_db('api')->select("SELECT * from campaignChannels");
         $brands = Utilities::switch_db('api')->select("SELECT * from brands WHERE broadcaster_agency = '$id'");
         $day_parts = Utilities::switch_db('api')->select("SELECT * from dayParts");
@@ -120,6 +122,7 @@ class CampaignsController extends Controller
         $target = Utilities::switch_db('api')->select("SELECT * from targetAudiences");
 
         $validate = Api::validateCampaign();
+
         return view('advertisers.campaigns.create1')->with('industry', $industry)
             ->with('chanel', $chanel)
             ->with('brands', $brands)
@@ -127,7 +130,8 @@ class CampaignsController extends Controller
             ->with('day_part', $day_parts)
             ->with('target', $target)
             ->with('step1', \Session::get('step1'))
-            ->with('id', $id);
+            ->with('id', $id)
+            ->with('sub_industries', $sub_industries);
     }
 
     public function postStep1(Request $request, $id)
@@ -143,6 +147,7 @@ class CampaignsController extends Controller
             'start_date' => 'required|date',
             'end_date' => 'required|date',
             'industry' => 'required',
+            'sub_industry' => 'required',
             'dayparts' => 'required_without_all',
             'region' => 'required',
         ]);
@@ -200,238 +205,135 @@ class CampaignsController extends Controller
             ->with('id', $id);
     }
 
-    public function getStep3($id, $broadcaster)
+    public function getStep3($id)
     {
-        return view('advertisers.campaigns.create3')->with('id', $id)
-            ->with('broadcaster', $broadcaster);
+        $delete_uploads_without_files = \DB::delete("DELETE from uploads where user_id = '$id' AND time = 0");
+        return view('advertisers.campaigns.create3')->with('id', $id);
     }
 
-    public function postStep3(Request $request, $id, $broadcaster)
+    public function postStep3(Request $request, $id)
     {
 
-        if ($request->hasFile('file')) {
-            $filesUploaded = $request->file('file');
-
-            $filename = realpath($filesUploaded);
-            Cloudder::uploadVideo($filename);
-            $clouder = Cloudder::getResult();
-            $file_gan_gan = encrypt($clouder['url']);
-
-            $time = 15;
-            $uploads = \DB::select("SELECT * from uploads where user_id = '$id' AND time = '$time'");
-            if(count($uploads) === 1){
-                Session::flash('error', 'You cannot upload twice for this time slot');
-                return back();
-            }
-            $insert_upload = \DB::table('uploads')->insert([
-                'user_id' => $id,
-                'time' => $time,
-                'uploads' => $file_gan_gan
-            ]);
-
-            if($insert_upload){
-                Session::flash('uploaded', 'Successfully uploaded.');
-//                return redirect()->route('advertiser_campaign.step3_1', ['id' => $id, 'broadcaster' => $broadcaster]);
-            }else{
-                Session::flash('error', 'Could not complete upload process');
-                return back();
-            }
-
-
-        }else{
-            $time = 15;
-            $uploads = \DB::select("SELECT * from uploads where user_id = '$id' AND time = '$time'");
-            if(count($uploads) === 1){
-                Session::flash('error', 'You cannot upload twice for this time slot');
-                return back();
-            }
-            $insert_upload = \DB::table('uploads')->insert([
-                'user_id' => $id,
-                'time' => $time,
-            ]);
-            return redirect()->route('advertiser_campaign.step3_1', ['id' => $id, 'broadcaster' => $broadcaster]);
+        if(((int)$request->f_du) > ((int)$request->time)){
+            Session::flash('error', 'Your video file duration cannot be more than the time slot you picked');
+            return redirect()->back();
         }
-    }
 
-    public function getStep3_1($id, $broadcaster)
-    {
-        return view('advertisers.campaigns.create3_1')->with('id', $id)
-            ->with('broadcaster', $broadcaster);
-    }
+        $check_file = \DB::select("SELECT * from uploads where user_id = '$id'");
+        if(count($check_file) > 4){
+            Session::flash('error', 'You cannot upload more than 4 files');
+            return redirect()->back();
+        }
 
-    public function postStep3_1(Request $request, $id, $broadcaster)
-    {
+        if ($request->hasFile('uploads')) {
 
-        if ($request->hasFile('file')) {
-            $filesUploaded = $request->file('file');
+            $this->validate($request, [
+                'uploads' => 'required|max:20000',
+                'time' => 'required'
+            ]);
+
+            $filesUploaded = $request->uploads;
             $extension = $filesUploaded->getClientOriginalExtension();
+            if($extension == 'mp4' || $extension == 'wma' || $extension == 'ogg' || $extension == 'mkv'){
 
-            $filename = realpath($filesUploaded);
-            Cloudder::uploadVideo($filename);
-            $clouder = Cloudder::getResult();
-            $file_gan_gan = encrypt($clouder['url']);
+                $time = $request->time;
+                $uploads = \DB::select("SELECT * from uploads where user_id = '$id' AND time = '$time'");
+                if(count($uploads) === 1){
+                    Session::flash('error', 'You cannot upload twice for this time slot');
+                    return back();
+                }
 
-            $time = 30;
-            $uploads = \DB::select("SELECT * from uploads where user_id = '$id' AND time = '$time'");
-            if(count($uploads) === 1){
-                Session::flash('error', 'You cannot upload twice for this time slot');
-                return back();
+                $filename = realpath($filesUploaded);
+                Cloudder::uploadVideo($filename);
+                $clouder = Cloudder::getResult();
+                $file_gan_gan = encrypt($clouder['url']);
+
+                $insert_upload = \DB::table('uploads')->insert([
+                    'user_id' => $id,
+                    'time' => $time,
+                    'uploads' => $file_gan_gan
+                ]);
+
+                if($insert_upload){
+                    $msg = 'Your upload for '.$time.' seconds was successful';
+                    Session::flash('success', $msg);
+                    return redirect()->route('advertiser_campaign.step3', ['id' => $id]);
+                }else{
+                    Session::flash('error', 'Could not complete upload process');
+                    return back();
+                }
             }
-            $insert_upload = \DB::table('uploads')->insert([
-                'user_id' => $id,
-                'time' => $time,
-                'uploads' => $file_gan_gan
-            ]);
 
-            if($insert_upload){
-                Session::flash('uploaded', 'Successfully uploaded.');
-            }else{
-                Session::flash('error', 'Could not complete upload process');
-                return back();
-            }
-
-        }else{
-            $time = 30;
-            $uploads = \DB::select("SELECT * from uploads where user_id = '$id' AND time = '$time'");
-            if(count($uploads) === 1){
-                Session::flash('error', 'You cannot upload twice for this time slot');
-                return back();
-            }
-            $insert_upload = \DB::table('uploads')->insert([
-                'user_id' => $id,
-                'time' => $time,
-            ]);
-            return redirect()->route('advertiser_campaign.step3_2', ['id' => $id, 'broadcaster' => $broadcaster]);
         }
     }
 
-    public function getStep3_2($id, $broadcaster)
+    public function getStep3_1($id)
     {
-        return view('advertisers.campaigns.create3_2')->with('id', $id)
-            ->with('broadcaster', $broadcaster);
+        return view('advertiser.campaigns.create3_1')->with('id', $id);
     }
 
-    public function postStep3_2(Request $request, $id, $broadcaster)
+    public function postStep3_1(Request $request, $id)
     {
-        if ($request->hasFile('file')) {
-            $filesUploaded = $request->file('file');
-            $extension = $filesUploaded->getClientOriginalExtension();
 
-            $filename = realpath($filesUploaded);
-            Cloudder::uploadVideo($filename);
-            $clouder = Cloudder::getResult();
-            $file_gan_gan = encrypt($clouder['url']);
-
-            $time = 45;
-            $uploads = \DB::select("SELECT * from uploads where user_id = '$id' AND time = '$time'");
-            if(count($uploads) === 1){
-                Session::flash('error', 'You cannot upload twice for this time slot');
-                return back();
-            }
-            $insert_upload = \DB::table('uploads')->insert([
-                'user_id' => $id,
-                'time' => $time,
-                'uploads' => $file_gan_gan
-            ]);
-
-            if($insert_upload){
-                Session::flash('uploaded', 'Successfully uploaded.');
-            }else{
-                Session::flash('error', 'Could not complete upload process');
-                return back();
-            }
-
-
+        $get_uploaded_files = \DB::select("SELECT * from uploads where user_id = '$id'");
+        $count_files = count($get_uploaded_files);
+        if($count_files === 0){
+            Session::flash('error', 'You have not uploaded any file(s)');
+            return redirect()->back();
         }else{
-            $time = 45;
-            $uploads = \DB::select("SELECT * from uploads where user_id = '$id' AND time = '$time'");
-            if(count($uploads) === 1){
-                Session::flash('error', 'You cannot upload twice for this time slot');
-                return back();
+            $remaining_file = 4 - $count_files;
+            for ($i = 0; $i < $remaining_file; $i++){
+                $insert_upload = \DB::table('uploads')->insert([
+                    'user_id' => $id,
+                    'time' => 00,
+                ]);
             }
-            $insert_upload = \DB::table('uploads')->insert([
-                'user_id' => $id,
-                'time' => $time,
-            ]);
-            return redirect()->route('advertiser_campaign.step3_3', ['id' => $id, 'broadcaster' => $broadcaster]);
+
+            return redirect()->route('advertiser_campaign.step3_2', ['id' => $id]);
         }
     }
 
-    public function getStep3_3($id, $broadcaster)
+    public function getStep3_2($id)
     {
-        return view('advertisers.campaigns.create3_3')->with('id', $id)
-            ->with('broadcaster', $broadcaster);
-    }
-
-    public function postStep3_3(Request $request, $id, $broadcaster)
-    {
-
-        if ($request->hasFile('file')) {
-            $filesUploaded = $request->file('file');
-            $extension = $filesUploaded->getClientOriginalExtension();
-
-            $filename = realpath($filesUploaded);
-            Cloudder::uploadVideo($filename);
-            $clouder = Cloudder::getResult();
-            $file_gan_gan = encrypt($clouder['url']);
-
-            $time = 60;
-            $uploads = \DB::select("SELECT * from uploads where user_id = '$id' AND time = '$time'");
-            if(count($uploads) === 1){
-                Session::flash('error', 'You cannot upload twice for this time slot');
-                return back();
-            }
-            $insert_upload = \DB::table('uploads')->insert([
-                'user_id' => $id,
-                'time' => $time,
-                'uploads' => $file_gan_gan
-            ]);
-
-            if($insert_upload){
-                Session::flash('uploaded', 'Successfully uploaded.');
-            }else{
-                Session::flash('error', 'Could not complete upload process');
-                return back();
-            }
-
-
-        }else{
-            $time = 60;
-            $uploads = \DB::select("SELECT * from uploads where user_id = '$id' AND time = '$time'");
-            if(count($uploads) === 1){
-                Session::flash('error', 'You cannot upload twice for this time slot');
-                return back();
-            }
-            $insert_upload = \DB::table('uploads')->insert([
-                'user_id' => $id,
-                'time' => $time,
-            ]);
-            return redirect()->route('advertiser_campaign.step3_3', ['id' => $id, 'broadcaster' => $broadcaster]);
+        $step1 = Session::get('step1');
+        $day_parts = implode("','" ,$step1->dayparts);
+        $region = implode("','", $step1->region);
+        $adslots = Utilities::switch_db('api')->select("SELECT broadcaster, COUNT(broadcaster) as all_slots FROM adslots where min_age >= $step1->min_age AND max_age <= $step1->max_age AND target_audience = '$step1->target_audience' AND day_parts IN ('$day_parts') AND region IN ('$region') AND is_available = 0 AND channels = '$step1->channel' group by broadcaster");
+        $ads_broad = [];
+        foreach ($adslots as $adslot)
+        {
+            $broad = Utilities::switch_db('api')->select("SELECT brand from broadcasters where id = '$adslot->broadcaster'");
+            $ads_broad[] = [
+                'broadcaster' => $adslot->broadcaster,
+                'count_adslot' => $adslot->all_slots,
+                'boradcaster_brand' => $broad[0]->brand,
+            ];
         }
+        return view('advertisers.campaigns.create3_2')->with('adslot_search_results', $ads_broad)->with('id', $id);
     }
 
-    public function reviewUploads($id, $broadcaster)
-    {
-        $uploads = \DB::select("SELECT * from uploads where user_id = '$id'");
-        return view('advertisers.campaigns.review')->with('uploads', $uploads)->with('id', $id)->with('broadcaster', $broadcaster);
-    }
 
     public function getStep4($id, $broadcaster)
     {
+
         $rate_card = [];
         $step1 = Session::get('step1');
-        if(!$step1){
-            return back()->with('error', 'Data lost, please go back and select your filter criteria');
+        if (!$step1) {
+            Session::flash('error', 'Data lost, please go back and select your filter criteria');
+            return redirect()->back();
         }
         $day_parts = implode("','" ,$step1->dayparts);
         $region = implode("','", $step1->region);
-        $adslots_count = Utilities::switch_db('api')->select("SELECT * FROM adslots where min_age >= $step1->min_age AND channels = '$step1->channel' AND max_age <= $step1->max_age AND target_audience = '$step1->target_audience' AND day_parts IN ('$day_parts') AND region IN ('$region') AND is_available = 0 AND broadcaster = '$broadcaster'");
+        $adslots_count = Utilities::switch_db('api')->select("SELECT * FROM adslots where min_age >= $step1->min_age AND max_age <= $step1->max_age AND channels = '$step1->channel' AND target_audience = '$step1->target_audience' AND day_parts IN ('$day_parts') AND region IN ('$region') AND is_available = 0 AND broadcaster = '$broadcaster'");
+        //dd($adslots_count);
         $result = count($adslots_count);
-        $ratecards = Utilities::switch_db('api')->select("SELECT * from rateCards WHERE id IN (SELECT rate_card FROM adslots where min_age >= $step1->min_age 
-                                                            AND max_age <= $step1->max_age 
-                                                            AND target_audience = '$step1->target_audience' 
-                                                            AND day_parts IN ('$day_parts') AND region IN ('$region') 
-                                                            AND is_available = 0 AND broadcaster = '$broadcaster')");
+
+        $ratecards = Utilities::switch_db('api')->select("SELECT * from rateCards WHERE broadcaster = '$broadcaster' AND id IN (SELECT rate_card FROM adslots where min_age >= $step1->min_age
+                                                            AND max_age <= $step1->max_age
+                                                            AND target_audience = '$step1->target_audience'
+                                                            AND day_parts IN ('$day_parts') AND region IN ('$region')
+                                                            AND is_available = 0 AND broadcaster = '$broadcaster') ");
+
 
         foreach ($ratecards as $ratecard){
             $day = Utilities::switch_db('api')->select("SELECT * from days where id = '$ratecard->day'");
@@ -447,41 +349,90 @@ class CampaignsController extends Controller
             ];
         }
 
+
         $time = [15, 30, 45, 60];
 
         $data = \DB::select("SELECT * from uploads WHERE user_id = '$id'");
         $cart = \DB::select("SELECT * from carts WHERE user_id = '$id'");
         $broadcaster_logo = Utilities::switch_db('api')->select("SELECT image_url from broadcasters where id = '$broadcaster'");
-        return view('advertisers.campaigns.create4')->with('ratecards', $rate_card)->with('result', $result)->with('cart', $cart)->with('datas', $data)->with('times', $time)->with('id', $id)->with('broadcaster', $broadcaster)->with('broadcaster_logo', $broadcaster_logo);
+        $positions = Utilities::switch_db('api')->select("SELECT * from filePositions where broadcaster_id = '$broadcaster'");
+
+        $adslots_broadcasters = Utilities::switch_db('api')->select("SELECT broadcaster, COUNT(broadcaster) as all_slots FROM adslots where min_age >= $step1->min_age AND max_age <= $step1->max_age AND target_audience = '$step1->target_audience' AND day_parts IN ('$day_parts') AND region IN ('$region') AND is_available = 0 AND channels = '$step1->channel' group by broadcaster");
+        $ads_broad = [];
+        foreach ($adslots_broadcasters as $adslots_broadcaster)
+        {
+            $broad = Utilities::switch_db('api')->select("SELECT brand from broadcasters where id = '$adslots_broadcaster->broadcaster'");
+            $ads_broad[] = [
+                'broadcaster' => $adslots_broadcaster->broadcaster,
+                'count_adslot' => $adslots_broadcaster->all_slots,
+                'broadcaster_brand' => $broad[0]->brand,
+            ];
+        }
+
+
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $col = new Collection($rate_card);
+        $perPage = 5;
+        $currentPageSearchResults = $col->slice(($currentPage - 1) * $perPage, $perPage)->all();
+        $entries = new LengthAwarePaginator($currentPageSearchResults, count($col), $perPage);
+        $entries->setPath('/advertiser/campaigns/campaign/step4/'.$id.'/'.$broadcaster);
+
+        return view('advertisers.campaigns.create4')->with('ratecards', $entries)->with('ads_broads', $ads_broad)->with('result', $result)->with('cart', $cart)->with('datas', $data)->with('times', $time)->with('id', $id)->with('broadcaster', $broadcaster)->with('broadcaster_logo', $broadcaster_logo)->with('positions', $positions);
     }
 
-    public function postCart(Request $request, $id, $broadcaster)
+    public function postCart(Request $request)
     {
-        $this->validate($request, [
-            'price' => 'required',
-            'file' => 'required',
-            'time' => 'required',
-            'rate_id' => 'required',
-            'adslot_id' => 'required|unique:carts'
-        ]);
+        if((int)$request->position != ''){
+            $get_percentage = Utilities::switch_db('api')->select("SELECT percentage from filePositions where id = '$request->position'");
+            $percentage = $get_percentage[0]->percentage;
+            $percentage_price = (($percentage / 100) * (int)$request->price);
+            $new_price = $percentage_price + (int)$request->price;
+
+        }else{
+            $new_price = (int)$request->price;
+            $percentage = 0;
+        }
+
         $price = $request->price;
         $file = $request->file;
         $time = $request->time;
-        $rate_id = $request->rate_id;
         $hourly_range = $request->range;
-        $agency = Session::get('agency_id');
+        $user = $request->walkins;
         $adslot_id = $request->adslot_id;
+        $position = $request->position;
+        $broadcaster = $request->broadcaster;
+        $advertiser = Session::get('advertiser_id');
         $ip = \Request::ip();
-        $insert = \DB::insert("INSERT INTO carts (user_id, price, ip_address, file, from_to_time, `time`, rate_id, adslot_id, agency_id, broadcaster_slot) VALUES ('$id','$price','$ip','$file','$hourly_range','$time','$rate_id', '$adslot_id','$agency','$broadcaster')");
+
+        //check if the fileposition is picked
+        $check_pos = Utilities::switch_db('api')->select("SELECT * from adslot_filePositions where broadcaster_id = '$broadcaster' AND adslot_id = '$adslot_id' AND filePosition_id = '$position'");
+        if(count($check_pos) === 1){
+            return response()->json(['file_error' => 'file_error']);
+        }
+
+        if((int)$request->position != '') {
+            $id = uniqid();
+            $insert_file = Utilities::switch_db('api')->insert("INSERT into adslot_filePositions (id, adslot_id,filePosition_id, status, select_status, broadcaster_id) VALUES ('$id', '$adslot_id', '$position', 1, 0, '$broadcaster')");
+        }
+
+        $check = \DB::select("SELECT * from carts where adslot_id = '$adslot_id' and user_id = '$user' and filePosition_id = '$position' and filePosition_id != ''");
+        if(count($check) === 1){
+            return response()->json(['error' => 'error']);
+        }
+
+        $insert = \DB::insert("INSERT INTO carts (user_id, broadcaster_id, price, ip_address, file, from_to_time, `time`, adslot_id, percentage, total_price, filePosition_id, status, agency_id) VALUES ('$user','$broadcaster','$price','$ip','$file','$hourly_range','$time','$adslot_id', '$percentage', '$new_price', '$position', 1, '$advertiser')");
+
         if($insert){
-            return "success";
+            return response()->json(['success' => 'success']);
         }else{
-            return "failure";
+            return response()->json(['failure' => 'failure']);
         }
     }
 
-    public function checkout($id, $broadcaster)
+    public function checkout($id)
     {
+        $advertiser_id = Session::get('advertiser_id');
+        $query = [];
         $first = Session::get('step1');
         $day_parts = implode("','" ,$first->dayparts);
         $region = implode("','", $first->region);
@@ -489,8 +440,24 @@ class CampaignsController extends Controller
         $day_partss = Utilities::switch_db('api')->select("SELECT day_parts from dayParts where id IN ('$day_parts') ");
         $targets = Utilities::switch_db('api')->select("SELECT audience from targetAudiences where id = '$first->target_audience'");
         $regions = Utilities::switch_db('api')->select("SELECT region from regions where id IN ('$region') ");
-        $calc = \DB::select("SELECT SUM(price) as total_price FROM carts WHERE user_id = '$id'");
-        $query = \DB::select("SELECT * FROM carts WHERE user_id = '$id'");
+        $calc = \DB::select("SELECT SUM(total_price) as total_price FROM carts WHERE user_id = '$id' and agency_id = '$advertiser_id'");
+//        $query = \DB::select("SELECT * FROM carts WHERE user_id = '$id'");
+        $query_carts = \DB::select("SELECT * FROM carts WHERE user_id = '$id' AND agency_id = '$advertiser_id'");
+
+        foreach ($query_carts as $query_cart){
+            $position = Utilities::switch_db('api')->select("SELECT * from filePositions where id = '$query_cart->filePosition_id'");
+            $broadcaster_logo = Utilities::switch_db('api')->select("SELECT * from broadcasters where id = '$query_cart->broadcaster_id'");
+            $query[] = [
+                'id' => $query_cart->id,
+                'from_to_time' => $query_cart->from_to_time,
+                'time' => $query_cart->time,
+                'price' => $query_cart->price,
+                'percentage' => $query_cart->percentage,
+                'position' => $position ? $position[0]->position : 'No Position',
+                'total_price' => $query_cart->total_price,
+                'broadcaster_logo' => $broadcaster_logo[0]->image_url
+            ];
+        }
         return view('advertisers.campaigns.checkout')->with('first_session', $first)
             ->with('calc', $calc)
             ->with('day_part', $day_partss)
@@ -498,8 +465,7 @@ class CampaignsController extends Controller
             ->with('target', $targets)
             ->with('query', $query)
             ->with('brand', $brands)
-            ->with('id', $id)
-            ->with('broadcaster', $broadcaster);
+            ->with('id', $id);
     }
 
     public function removeCart($id)
@@ -509,67 +475,97 @@ class CampaignsController extends Controller
         return redirect()->back()->with('success', trans('Item deleted from cart successfully'));
     }
 
-    Public function postCampaign(Request $request, $id, $broadcaster)
+    Public function postCampaign(Request $request, $id)
     {
+        $advertiser_id = Session::get('advertiser_id');
         $first = Session::get('step1');
-        $query = \DB::select("SELECT * FROM carts WHERE user_id = '$id'");
+        $query = \DB::select("SELECT * FROM carts WHERE user_id = '$id' AND agency_id = '$advertiser_id'");
         $ads = [];
+        $test = [];
 
         $user_id = $id;
 
-        foreach ($query as $q)
-        {
+        foreach ($query as $q) {
             $ads[] = $q->adslot_id;
         }
         $data = \DB::select("SELECT * from uploads WHERE user_id = '$id'");
+        $group_datas = \DB::select("SELECT SUM(total_price) as total, COUNT(id) as total_slot, broadcaster_id from carts where user_id = '$id' and agency_id = '$advertiser_id' GROUP BY broadcaster_id");
+
         $request->all();
         $new_q = [];
         $pay = [];
+        $payDets = [];
         $camp = [];
+        $campDets = [];
         $invoice = [];
+        $invDets = [];
         $mpo = [];
+        $mpoDet = [];
         $i = 0;
-
-        //NB: The advertiser is assumed to be its own agency so, the agency_id and agency_broadcaster is same as the advertiser_id and the advertiser_broadcaster.
 
         $adssss = implode(',' ,$ads);
         $campaign_id = uniqid();
         $pay_id = uniqid();
-        $advertiser_id = Utilities::switch_db('api')->select("SELECT user_id from advertisers where id = '$id'");
+        $invoice_id = uniqid();
+        $mpo_id = uniqid();
+        $campaign_reference = mt_rand(1000, 10000000);
+        $invoice_number = mt_rand(500, 5000000);
+        $walkin_id = Utilities::switch_db('api')->select("SELECT id from walkIns where user_id = '$id'");
         $now = strtotime(Carbon::now('Africa/Lagos'));
+
         $camp[] = [
             'id' => $campaign_id,
-            'user_id' => $id,
-            'channel' => $first->channel,
-            'brand' => $first->brand,
-            'start_date' => date('Y-m-d', strtotime($first->start_date)),
-            'stop_date' => date('Y-m-d', strtotime($first->end_date)),
-            'name' => $first->name,
-            'product' => $first->product,
-            'day_parts' => "'". implode("','" ,$first->dayparts) . "'",
-            'target_audience' => $first->target_audience,
-            'region' => implode(',' ,$first->region),
-            'min_age' => (integer)$first->min_age,
-            'max_age' => (integer)$first->max_age,
-            'industry' => $first->industry,
-            'adslots' => count($query),
-            'walkins_id' => $advertiser_id[0]->user_id,
             'time_created' => date('Y-m-d H:i:s', $now),
             'time_modified' => date('Y-m-d H:i:s', $now),
-            'adslots_id' => "'". implode("','" ,$ads) . "'",
-            'agency' => Session::get('advertiser_id'),
-            'agency_broadcaster' => $broadcaster,
-            'broadcaster' => $broadcaster
+            'campaign_reference' => $campaign_reference
         ];
 
+        foreach ($group_datas as $group_data){
+            $campDets[] = [
+                'id' => uniqid(),
+                'campaign_id' => $campaign_id,
+                'user_id' => $id,
+                'channel' => $first->channel,
+                'brand' => $first->brand,
+                'start_date' => date('Y-m-d', strtotime($first->start_date)),
+                'stop_date' => date('Y-m-d', strtotime($first->end_date)),
+                'name' => $first->name,
+                'product' => $first->product,
+                'day_parts' => "'". implode("','" ,$first->dayparts) . "'",
+                'target_audience' => $first->target_audience,
+                'region' => implode(',' ,$first->region),
+                'min_age' => (integer)$first->min_age,
+                'max_age' => (integer)$first->max_age,
+                'industry' => $first->industry,
+                'adslots' => $group_data->total_slot,
+                'walkins_id' => $id,
+                'time_created' => date('Y-m-d H:i:s', $now),
+                'time_modified' => date('Y-m-d H:i:s', $now),
+                'adslots_id' => "'". implode("','" ,$ads) . "'",
+                'agency' => $advertiser_id,
+                'agency_broadcaster' => $group_data->broadcaster_id,
+                'broadcaster' => $group_data->broadcaster_id,
+                'sub_industry' => $first->sub_industry,
+            ];
+
+            $check_time_adslots = Utilities::fetchTimeInCart($id, $group_data->broadcaster_id);
+            foreach ($check_time_adslots as $check_time_adslot){
+                if($check_time_adslot['initial_time_left'] < $check_time_adslot['time_bought']){
+                    $msg = 'You cannot proceed with the campaign creation because '.$check_time_adslot['from_to_time'].' for '.$check_time_adslot['broadcaster_name'].' isn`t available again';
+                    \Session::flash('info', $msg);
+                    return back();
+                }
+            }
+        }
 
         $save_campaign = Utilities::switch_db('api')->table('campaigns')->insert($camp);
+        $save_campaign_details = Utilities::switch_db('api')->table('campaignDetails')->insert($campDets);
 
-        if($save_campaign){
-            $camp_id = Utilities::switch_db('api')->select("SELECT id from campaigns WHERE id='$campaign_id'");
+        if($save_campaign && $save_campaign_details){
+            $camp_id = Utilities::switch_db('api')->select("SELECT * from campaigns WHERE id='$campaign_id'");
             foreach($query as $q)
             {
-//            $adslot = Utilities::switch_db('api')->select("SELECT id from adslots where id='$q->rate_id'");
+
                 $new_q[] = [
                     'id' => uniqid(),
                     'campaign_id' => $camp_id[0]->id,
@@ -580,103 +576,158 @@ class CampaignsController extends Controller
                     'file_code' => mt_rand(100000, 10000000).uniqid(),
                     'time_created' => date('Y-m-d H:i:s', $now),
                     'time_modified' => date('Y-m-d H:i:s', $now),
-                    'agency_id' => Session::get('advertiser_id'),
-                    'agency_broadcaster' => $broadcaster,
-                    'broadcaster_id' => $broadcaster,
+                    'agency_id' => $advertiser_id,
+                    'agency_broadcaster' => $q->broadcaster_id,
                     'time_picked' => $q->time,
+                    'broadcaster_id' => $q->broadcaster_id,
                 ];
             }
 
             $pay[] = [
                 'id' => $pay_id,
                 'campaign_id' => $camp_id[0]->id,
-                'payment_method' => $request->payment,
-                'amount' => (integer) $request->total,
-                'walkins_id' => $advertiser_id[0]->user_id,
+                'campaign_reference' => $camp_id[0]->campaign_reference,
+                'total' => $request->total,
                 'time_created' => date('Y-m-d H:i:s', $now),
                 'time_modified' => date('Y-m-d H:i:s', $now),
-                'agency_id' => Session::get('advertiser_id'),
-                'broadcaster' => $broadcaster,
-                'agency_broadcaster' => $broadcaster,
             ];
+
+            foreach ($group_datas as $group_data){
+                $payDets[] = [
+                    'id' => uniqid(),
+                    'payment_id' => $pay_id,
+                    'payment_method' => $request->payment,
+                    'amount' => (integer) $group_data->total,
+                    'walkins_id' => $id,
+                    'time_created' => date('Y-m-d H:i:s', $now),
+                    'time_modified' => date('Y-m-d H:i:s', $now),
+                    'agency_id' => $advertiser_id,
+                    'agency_broadcaster' => $group_data->broadcaster_id,
+                    'broadcaster' => $group_data->broadcaster_id,
+                ];
+            }
 
             $save_payment = Utilities::switch_db('api')->table('payments')->insert($pay);
 
+            $save_payment_details = Utilities::switch_db('api')->table('paymentDetails')->insert($payDets);
+
             $save_file = Utilities::switch_db('api')->table('files')->insert($new_q);
 
-            if($save_payment && $save_file){
+            if ($save_payment && $save_file && $save_payment_details) {
+
                 $payment_id = Utilities::switch_db('api')->select("SELECT id from payments WHERE id='$pay_id'");
 
                 $invoice[] = [
-                    'id' => uniqid(),
+                    'id' => $invoice_id,
                     'campaign_id' => $camp_id[0]->id,
-                    'user_id' => $id,
+                    'campaign_reference' => $camp_id[0]->campaign_reference,
+                    'invoice_number' => $invoice_number,
                     'payment_id' => $payment_id[0]->id,
-                    'invoice_number' => rand(10000, 10000000),
-                    'actual_amount_paid' => (integer) $request->total,
-                    'refunded_amount' => 0,
-                    'walkins_id' => $advertiser_id[0]->user_id,
-                    'agency_id' => Session::get('advertiser_id'),
-                    'agency_broadcaster' => $broadcaster,
-                    'broadcaster_id' => $broadcaster,
-
                 ];
+
+                foreach ($group_datas as $group_data) {
+                    $invDets[] = [
+                        'id' => uniqid(),
+                        'invoice_id' => $invoice_id,
+                        'user_id' => $id,
+                        'invoice_number' => $invoice_number,
+                        'actual_amount_paid' => (integer)$group_data->total,
+                        'refunded_amount' => 0,
+                        'walkins_id' => $id,
+                        'agency_id' => $advertiser_id,
+                        'agency_broadcaster' => $group_data->broadcaster_id,
+                        'broadcaster_id' => $group_data->broadcaster_id,
+
+                    ];
+                }
 
                 $mpo[] = [
-                    'id' => uniqid(),
+                    'id' => $mpo_id,
                     'campaign_id' => $camp_id[0]->id,
-                    'discount' => 0,
-                    'agency_id' => Session::get('advertiser_id'),
-                    'agency_broadcaster' => $broadcaster,
-                    'broadcaster_id' => $broadcaster,
+                    'campaign_reference' => $camp_id[0]->campaign_reference,
+                    'invoice_number' => $invoice_number,
                 ];
+
+                foreach ($group_datas as $group_data) {
+                    $mpoDet[] = [
+                        'id' => uniqid(),
+                        'mpo_id' => $mpo_id,
+                        'discount' => 0,
+                        'agency_id' => $advertiser_id,
+                        'agency_broadcaster' => $group_data->broadcaster_id,
+                        'broadcaster_id' => $group_data->broadcaster_id,
+                    ];
+                }
 
                 $save_invoice = Utilities::switch_db('api')->table('invoices')->insert($invoice);
 
+                $save_invoice_details = Utilities::switch_db('api')->table('invoiceDetails')->insert($invDets);
+
                 $save_mpo = Utilities::switch_db('api')->table('mpos')->insert($mpo);
 
-                if($save_invoice && $save_mpo){
-                    foreach ($query as $q){
+                $save_mpo_details = Utilities::switch_db('api')->table('mpoDetails')->insert($mpoDet);
+
+                if ($save_invoice && $save_mpo && $save_invoice_details && $save_mpo_details) {
+                    foreach ($query as $q) {
+                        //inserting the position into the adslot_fileposition table
+                        if(!empty($q->filePosition_id)){
+                            $file_pos_id = uniqid();
+                            $insert_position = Utilities::switch_db('api')->update("UPDATE adslot_filePositions set select_status = 1 WHERE adslot_id = '$q->adslot_id' ");
+                        }
                         $get_slots = Utilities::switch_db('api')->select("SELECT * from adslots WHERE id = '$q->adslot_id'");
-                        $id = $get_slots[0]->id;
-                        $time_difference = $get_slots[0]->time_difference;
-                        $time_used = $get_slots[0]->time_used;
-                        $time = $q->time;
+                        $slots_id = $get_slots[0]->id;
+                        $time_difference = (integer)$get_slots[0]->time_difference;
+                        $time_used = (integer)$get_slots[0]->time_used;
+                        $time = (integer)$q->time;
                         $new_time_used = $time_used + $time;
-                        if($time_difference === $new_time_used){
+                        if ($time_difference === $new_time_used) {
                             $slot_status = 1;
-                        }else{
+                        } else {
                             $slot_status = 0;
                         }
-                        $update_slot = Utilities::switch_db('api')->update("UPDATE adslots SET time_used = '$new_time_used', is_available = '$slot_status' WHERE id = '$id'");
+                        $update_slot = Utilities::switch_db('api')->update("UPDATE adslots SET time_used = '$new_time_used', is_available = '$slot_status' WHERE id = '$slots_id'");
                     }
 
-                    $del_cart = \DB::delete("DELETE FROM carts WHERE user_id = '$user_id'");
+                    $del_cart = \DB::delete("DELETE FROM carts WHERE user_id = '$user_id' AND agency_id = '$advertiser_id'");
                     $del_uplaods = \DB::delete("DELETE FROM uploads WHERE user_id = '$user_id'");
-
                     $user_agent = $_SERVER['HTTP_USER_AGENT'];
-                    $description = 'Campaign '.$first->name.' was created successfully by '.Session::get('advertiser_id');
+                    $description = 'Campaign '.$first->name.' created successfully by '.Session::get('agency_id');
                     $ip = request()->ip();
-                    $user_activity = Api::saveActivity(Session::get('advertiser_id'), $description, $ip, $user_agent);
+                    $user_activity = Api::saveActivity($advertiser_id, $description, $ip, $user_agent);
                     Session::forget('step1');
+                    Session::flash('success', 'Campaign created successfully');
+                    return redirect()->route('advertiser.campaign.all');
 
-                    return redirect()->route('advertiser.campaign.all')->with('success', 'campaign created successfully');
-
+                }else{
+                    $delete_invoice = Utilities::switch_db('api')->delete("DELETE from invoices where id = '$invoice_id'");
+                    $delete_invoice_details = Utilities::switch_db('api')->delete("DELETE from invoiceDetails where invoice_id = '$invoice_id'");
+                    $delete_mpo = Utilities::switch_db('api')->delete("DELETE from mpos where id = '$mpo_id'");
+                    $delete_mpo_details = Utilities::switch_db('api')->delete("DELETE * from mpoDetails where mpo_id = '$mpo_id'");
+                    Session::flash('error', 'Could not create this campaign');
+                    return redirect()->back();
                 }
+            }else{
+                $delete_pay = Utilities::switch_db('api')->delete("DELETE from payments where id = '$pay_id'");
+                $delete_pay_details = Utilities::switch_db('api')->delete("DELETE from paymentDetails where payment_id = '$pay_id'");
+                $delete_files = Utilities::switch_db('api')->delete("DELETE from files where campaign_id = '$campaign_id'");
+                Session::flash('error', 'Could not create this campaign');
+                return redirect()->back();
             }
 
-        }else{
-            return redirect()->back()->with('error', 'Could not create this campaign');
+        } else {
+            $delete_camp = Utilities::switch_db('api')->delete("DELETE from campaigns where id = '$campaign_id'");
+            $delete_camp_details = Utilities::switch_db('api')->delete("DELETE from campaignDetails where campaign_id = '$campaign_id'");
+            Session::flash('error', 'Could not create this campaign');
+            return redirect()->back();
         }
 
     }
 
-    public function getCampaignDetails($id)
+    public function getDetails($id)
     {
         $campaign_details = Utilities::campaignDetails($id);
         return view('advertisers.campaigns.campaign_details', compact('campaign_details'));
     }
-
 
 
 }

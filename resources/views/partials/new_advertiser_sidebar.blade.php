@@ -18,7 +18,7 @@
                     <li><a href="{{ route('advertisers.invoices.pending') }}"><i class="fa fa-address-book-o"></i><span>Pending<br />  Invoices </span></a></li>
                 </ul>
             </li>
-            <li class="{{ Request::is('advertiser/wallets/*') ? 'active' : ''  }}"> <a href="{{ route('wallet.statement') }}"><i class="fa fa-briefcase"></i><span>Wallet</span></a>
+            <li class="{{ Request::is('wallets/*') ? 'active' : ''  }}"> <a href="{{ route('wallet.statement') }}"><i class="fa fa-briefcase"></i><span>Wallet</span></a>
                 <ul class="sub-menu dropdown">
                     <li><a href="{{ route('wallet.create') }}"><i class="fa fa-address-card-o"></i> <span>Credit <br /> Wallet</span></a></li>
                     <li><a href="{{ route('wallet.statement') }}"><i class="fa fa-address-book-o"></i><span>Wallet<br />  Statement </span></a></li>

@@ -526,38 +526,6 @@ class CampaignsController extends Controller
         $first = Session::get('step1');
         $query = \DB::select("SELECT * FROM carts WHERE user_id = '$id' AND agency_id = '$agency_id'");
         $ads = [];
-        $test = [];
-
-        foreach ($query as $q) {
-            //inserting the position into the adslot_fileposition table
-//            if(!empty($q->filePosition_id)){
-//                $file_pos_id = uniqid();
-//                $insert_position = Utilities::switch_db('api')->update("UPDATE adslot_filePositions set select_status = 1 WHERE adslot_id = '$q->adslot_id' ");
-//            }
-            $get_slots = Utilities::switch_db('api')->select("SELECT * from adslots WHERE id = '$q->adslot_id'");
-            $slots_id = $get_slots[0]->id;
-            $time_difference = (integer)$get_slots[0]->time_difference;
-            $time_used = (integer)$get_slots[0]->time_used;
-            $time = (integer)$q->time;
-            $new_time_used = $time_used + $time;
-            if ($time_difference === $new_time_used) {
-                $slot_status = 1;
-            } else {
-                $slot_status = 0;
-            }
-
-            $test[] = [
-                'id' => $slots_id,
-                'initial_time_used' => $time_used,
-                'new_time' => $new_time_used,
-                'time_bought' => $time,
-                'time_difference' => $time_difference,
-                'status' => $slot_status,
-            ];
-//            $update_slot = Utilities::switch_db('api')->update("UPDATE adslots SET time_used = '$new_time_used', is_available = '$slot_status' WHERE id = '$slots_id'");
-        }
-
-//        dd($test);
 
         $user_id = $id;
 
