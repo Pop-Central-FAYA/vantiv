@@ -25,7 +25,7 @@
                 <div class="col-md-4"></div>
                 <div class="col-md-4">
                     <p><h4>Client: {{ $mpo_details['clients'] }}</h4></p>
-                    <p><h4>Brand: {{ $mpo_details['brand'] }}</h4></p>
+                    <p><h4>Brand: {{ ucfirst($mpo_details['brand']) }}</h4></p>
                     <p><h4>Campaign: {{ $mpo_details['campaign'] }}</h4></p>
                     <p><h4>Date: {{ $mpo_details['date'] }}</h4></p>
                 </div>

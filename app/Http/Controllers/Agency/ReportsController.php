@@ -17,10 +17,10 @@ class ReportsController extends Controller
 
         $user = Utilities::switch_db('api')->select("SELECT user_id from walkIns where agency_id = '$agency_id'");
         foreach ($user as $u){
-            $user_det = \DB::select("SELECT * from users where id = '$u->user_id'");
+            $user_det = Utilities::switch_db('api')->select("SELECT * from users where id = '$u->user_id'");
             $user_d[] = [
                 'user_id' => $u->user_id,
-                'name' => $user_det[0]->first_name.' '.$user_det[0]->last_name,
+                'name' => $user_det[0]->firstname.' '.$user_det[0]->lastname,
             ];
         }
 

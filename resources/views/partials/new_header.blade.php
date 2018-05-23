@@ -14,6 +14,9 @@
     }elseif (Session::get('admin_id')){
         $admin_id = Session::get('admin_id');
         $profile = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT image_url from admins where id = '$admin_id'");
+    }elseif (Session::get('client_id')){
+        $client_id = Session::get('client_id');
+        $profile = \Vanguard\Libraries\Utilities::switch_db('api')->select("select image_url from walkIns where id = '$client_id' ");
     }
 ?>
 

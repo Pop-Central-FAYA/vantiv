@@ -1,6 +1,6 @@
 @extends('layouts.new_app')
 @section('title')
-    <title>Agency | Dashboard</title>
+    <title>Clients | Dashboard</title>
 @stop
 @section('content')
 
@@ -8,32 +8,16 @@
         <div class="container">
             <div class="row">
                 <div class="col-12 heading-main">
-                    <h1>Agency Dashboard </h1>
+                    <h1>{{ Auth::user()->username }} Dashboard </h1>
                     <ul>
-                        <li><a href="#"><i class="fa fa-th-large"></i>Agency</a></li>
+                        <li><a href="#"><i class="fa fa-th-large"></i>Client</a></li>
                         <li><a href="#">Clients Dashboard </a></li>
                     </ul>
                 </div>
             </div>
             <div class="col-md-12">
                 <!-- AREA CHART -->
-                <div id="load_broad" class="load_broad" style="display: none;"></div>
-                <form action="{{ route('agency.dashboard.data') }}" id="search_by_brand" method="GET">
-                    {{ csrf_field() }}
-                    <div class="row">
-                        <div class="col-md-4">
-                            <label for="channel">Brands:</label>
-                            <select class="form-control" name="brand" id="brand">
-                                @foreach($brand as $brands)
-                                    <option value="{{ $brands->id }}">{{ $brands->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                    <p><br></p>
-                    <canvas id="containerPeriodic_total_per_brand" style="width: 512px; height: 150px"></canvas>
-                    {{--<div id="containerPeriodic_total_per_brand" style="min-width: 310px; height: 400px; margin: 0 auto"></div>--}}
-                </form>
+
 
             </div>
         </div>
@@ -73,128 +57,5 @@
     <script src="https://code.highcharts.com/modules/data.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
 
-    <script>
-        <?php echo "var date = ".$date . ";\n"; ?>
-        <?php echo "var amount_price = ".$amount . ";\n"; ?>
-        <?php echo "var name = ".$name .";\n"; ?>
-
-        $(document).ready(function () {
-
-            $("#brand").change(function () {
-                $(".content").css({
-                    opacity: 0.5
-                });
-                var br_id = $("#brand").val();
-                var url = $("#search_by_brand").attr('action');
-                $.get(url, {'br_id': br_id, '_token':$('input[name=_token]').val()}, function(data) {
-                    $("#load_broad").hide();
-                    $(".content").css({
-                        opacity: 1
-                    });
-                    var ctx = document.getElementById("containerPeriodic_total_per_brand");
-                    var myChart = new Chart(ctx, {
-                        type: 'bar',
-                        data: {
-                            labels: data.date,
-                            datasets: [{
-                                label: 'Periodic Spent Report on brands',
-                                data: data.amount_price,
-                                backgroundColor: [
-                                    'rgba(255, 99, 132, 0.2)',
-                                    'rgba(54, 162, 235, 0.2)',
-                                    'rgba(255, 206, 86, 0.2)',
-                                    'rgba(75, 192, 192, 0.2)',
-                                    'rgba(153, 102, 255, 0.2)',
-                                    'rgba(255, 159, 64, 0.2)'
-                                ],
-                                borderColor: [
-                                    'rgba(255,99,132,1)',
-                                    'rgba(54, 162, 235, 1)',
-                                    'rgba(255, 206, 86, 1)',
-                                    'rgba(75, 192, 192, 1)',
-                                    'rgba(153, 102, 255, 1)',
-                                    'rgba(255, 159, 64, 1)'
-                                ],
-                                borderWidth: 1
-                            }]
-                        },
-                        options: {
-                            scales: {
-                                yAxes: [{
-                                    gridLines: {
-                                        display:false
-                                    },
-                                    ticks: {
-                                        beginAtZero:true
-                                    }
-                                }]
-                            }
-                        }
-                    });
-                });
-            })
-        })
-
-    </script>
-    <script>
-        var ctx = document.getElementById("containerPeriodic_total_per_brand");
-        var myChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: date,
-                datasets: [{
-                    label: 'Periodic Spent Report on brands',
-                    data: amount_price,
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255,99,132,1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    yAxes: [{
-                        gridLines: {
-                            display:false
-                        },
-                        ticks: {
-                            beginAtZero:true
-                        }
-                    }]
-                }
-            }
-        });
-    </script>
-
-@stop
-
-@section('style')
-    <style>
-        .load_broad {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            margin-left: -50px; /* half width of the spinner gif */
-            margin-top: -50px; /* half height of the spinner gif */
-            text-align:center;
-            z-index:1234;
-            overflow: auto;
-            width: 500px; /* width of the spinner gif */
-            height: 500px; /*hight of the spinner gif +2px to fix IE8 issue */
-        }
-    </style>
 @stop
 

@@ -32,6 +32,7 @@
                                 <th>S/N</th>
                                 <th>Brands</th>
                                 <th>No. of Campaigns</th>
+                                <th>Brand Logo</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -40,6 +41,7 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ ucfirst($brand['brand']) }}</td>
                                     <td>{{ $brand['campaigns'] }}</td>
+                                    <td><img src="{{ $brand['image_url'] ? asset(decrypt($brand['image_url'])) : '' }}" class="img-circle img-responsive" alt=""></td>
                                 </tr>
                             @endforeach
                             </tbody>

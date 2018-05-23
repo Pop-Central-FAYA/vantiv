@@ -409,6 +409,13 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/search-result', 'ClientBrandsController@search')->name('brands.search.user');
     });
 
+    Route::group(['prefix' => 'clients'], function () {
+       Route::get('/campaigns', 'Clients\CampaignsController@index')->name('client.campaign.all');
+       Route::get('/campaigns-data', 'Clients\CampaignsController@getData');
+       Route::get('/campaigns/details/{id}', 'Clients\CampaignsController@getDetails')->name('client.campaign.details');
+       Route::get('/reports', 'Clients\ReportsController@index')->name('client.report.index');
+    });
+
     Route::group(['prefix' => 'advertiser'], function () {
         Route::group(['prefix' => 'campaigns'], function() {
             Route::get('/', 'Advertiser\CampaignsController@firstPage')->name('advertiser.first_page');

@@ -29,7 +29,7 @@ class InvoiceController extends Controller
             $campaign = Utilities::switch_db('reports')->select("SELECT * FROM campaignDetails WHERE campaign_id = '$campaign_id' GROUP BY campaign_id");
             $brand_id = $campaign[0]->brand;
             $brand_name = Utilities::switch_db('api')->select("SELECT name from brands where id = '$brand_id'");
-            $user_details = $user_details = \DB::select("SELECT * FROM users WHERE id = '$user_id'");
+            $user_details = $user_details = Utilities::switch_db('api')->select("SELECT * FROM users WHERE id = '$user_id'");
 
             $payment = Utilities::switch_db('api')->select("SELECT * from payments where campaign_id = '$campaign_id'");
 
@@ -37,7 +37,7 @@ class InvoiceController extends Controller
                 'invoice_number' => $invoice->invoice_number,
                 'actual_amount_paid' => number_format($payment[0]->total, 2),
                 'refunded_amount' => $invoice->refunded_amount,
-                'name' => $user_details && $user_details[0] ? $user_details[0]->last_name . ' ' . $user_details[0]->first_name : '',
+                'name' => $user_details && $user_details[0] ? $user_details[0]->lastname . ' ' . $user_details[0]->firstname : '',
                 'status' => $invoice->status,
                 'campaign_brand' => $brand_name[0]->name,
                 'campaign_name' => $campaign[0]->name

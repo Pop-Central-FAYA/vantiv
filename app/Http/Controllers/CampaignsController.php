@@ -38,6 +38,53 @@ class CampaignsController extends Controller
         $j = 1;
         $broadcaster = Session::get('broadcaster_id');
 
+        if($request->start_date && $request->stop_date) {
+            $start = date('Y-m-d', strtotime($request->start_date));
+            $stop = date('Y-m-d', strtotime($request->stop_date));
+
+            $all_campaign = Utilities::switch_db('api')->select("SELECT * from campaignDetails WHERE broadcaster = '$broadcaster' AND adslots > 0 AND time_created BETWEEN '$start' AND '$stop' ORDER BY time_created DESC");
+
+            foreach ($all_campaign as $cam)
+            {
+
+                $campaign_reference = Utilities::switch_db('api')->select("SELECT * from campaigns where id = '$cam->campaign_id'");
+//            $today = strtotime(date('Y-m-d'));
+                $today = date("Y-m-d");
+                if(strtotime($today) > strtotime($cam->start_date) && strtotime($today) > strtotime($cam->stop_date)){
+                    $status = 'Campaign Expired';
+                }elseif (strtotime($today) >= strtotime($cam->start_date) && strtotime($today) <= strtotime($cam->stop_date)){
+                    $status = 'Campaign In Progress';
+                }else{
+                    $now = strtotime($today);
+                    $your_date = strtotime($cam->start_date);
+                    $datediff = $your_date - $now;
+                    $new_day =  round($datediff / (60 * 60 * 24));
+                    $status = 'Campaign to start in '.$new_day.' day(s)';
+                }
+                $brand = Utilities::switch_db('api')->select("SELECT `name` as brand_name from brands where id = '$cam->brand'");
+                $campaign[] = [
+                    'id' => $campaign_reference[0]->campaign_reference,
+                    'camp_id' => $cam->id,
+                    'name' => $cam->name,
+                    'brand' => $brand[0]->brand_name,
+                    'product' => $cam->product,
+                    'start_date' => date('Y-m-d', strtotime($cam->start_date)),
+                    'end_date' => date('Y-m-d', strtotime($cam->stop_date)),
+                    'adslots' => $cam->adslots,
+                    'compliance' => '0%',
+                    'status' => $status
+                ];
+                $j++;
+            }
+
+            return $datatables->collection($campaign)
+                ->addColumn('details', function ($campaign) {
+                    return '<a href="' . route('broadcaster.campaign.details', ['id' => $campaign['camp_id']]) .'" class="btn btn-primary btn-xs" > Campaign Details </a>';
+                })
+                ->rawColumns(['details' => 'details'])->addIndexColumn()
+                ->make(true);
+        }
+
         $all_campaign = Utilities::switch_db('api')->select("SELECT * from campaignDetails WHERE broadcaster = '$broadcaster' AND adslots > 0 ORDER BY time_created DESC");
 
         foreach ($all_campaign as $cam)

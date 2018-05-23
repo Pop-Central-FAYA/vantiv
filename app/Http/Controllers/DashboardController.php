@@ -608,6 +608,8 @@ class DashboardController extends Controller
 
         }elseif ($role->role_id === 1){
             return view('admin.dashboard');
+        }elseif($role->role_id === 5){
+            return view('clients.dashboard.dashboard');
         }
     }
 

@@ -56,7 +56,7 @@
                                 </ul>
                             </div>
                             <div class="col-5">
-                                <img style="height: 400px;" class="img-responsive" src="{{ $client['image_url'] ? asset($client['image_url']) : '' }}" alt="">
+                                <img style="height: 400px;" class="img-responsive" src="{{ $client['image_url'] ? asset(decrypt($client['image_url'])) : '' }}" alt="">
                             </div>
                         </div>
                     @endforeach

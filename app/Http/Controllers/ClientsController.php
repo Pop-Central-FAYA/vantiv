@@ -31,6 +31,7 @@ class ClientsController extends Controller
         $ip = request()->ip();
         $client_id = uniqid();
         $agency_id = Session::get('agency_id');
+        $role_id = Utilities::switch_db('reports')->select("SELECT id FROM roles WHERE name = 'agency_client'");
 
         if ($request->isMethod('POST')) {
 
@@ -56,7 +57,7 @@ class ClientsController extends Controller
             if($request->hasFile('image_url')){
                 $image = $request->image_url;
                 $filename = realpath($image);
-                Cloudder::upload($filename, Cloudder::getPublicId(), ['height' => 200, 'width' => 200]);
+                Cloudder::upload($filename, Cloudder::getPublicId(), ``);
                 $clouder = Cloudder::getResult();
                 $image_url = encrypt($clouder['url']);
             }
@@ -83,13 +84,29 @@ class ClientsController extends Controller
                 'role_id' => 5
             ]);
 
+            $userApiInsert = Utilities::switch_db('reports')->table('users')->insert([
+                'id' => uniqid(),
+                'role_id' => $role_id[0]->id,
+                'email' => $request->email,
+                'token' => '',
+                'password' => bcrypt($request->password),
+                'firstname' => $request->first_name,
+                'lastname' => $request->last_name,
+                'phone_number' => $request->phone,
+                'user_type' => 4,
+                'status' => 1
+            ]);
+
+            $apiUserDetails = Utilities::switch_db('api')->select("SELECT * FROM users where email = '$request->email'");
+
             $walkinInsert = Utilities::switch_db('reports')->table('walkIns')->insert([
                 'id' => $client_id,
-                'user_id' => $user_id[0]->id,
+                'user_id' => $apiUserDetails[0]->id,
                 'broadcaster_id' => $request->broadcaster_id,
                 'client_type_id' => $request->client_type_id,
                 'location' => $request->location,
-                'agency_id' => $agency_id
+                'agency_id' => $agency_id,
+                'nationality' => $request->country_id
             ]);
 
             $insertBrands = Utilities::switch_db('api')->insert("INSERT into brands (id, `name`, image_url, walkin_id, broadcaster_agency, industry_id, sub_industry_id) VALUES ('$unique', '$brand', '$image_url', '$client_id', '$agency_id', '$request->industry', '$request->sub_industry')");
@@ -132,9 +149,9 @@ class ClientsController extends Controller
 
         foreach ($agencies as $agency) {
 
-            $user_id = (int) $agency->user_id;
+            $user_id = $agency->user_id;
 
-            $user_details = \DB::select("SELECT * FROM users WHERE id = '$user_id'");
+            $user_details = Utilities::switch_db('api')->select("SELECT * FROM users WHERE id = '$user_id'");
 
             $campaigns = Utilities::switch_db('api')->select("SELECT count(id) as number from campaigns where id IN (SELECT campaign_id from campaignDetails where user_id = '$user_id')");
 
@@ -145,7 +162,7 @@ class ClientsController extends Controller
                 $date = 0;
             }
 
-            $payments = Utilities::switch_db('api')->select("SELECT SUM(total) as total from payments WHERE campaign_id IN(SELECT campaign_id from campaignDetails WHERE user_id = '$user_id' GROUP BY campaign_id)");
+            $payments = Utilities::switch_db('api')->select("SELECT SUM(total) as total from payments WHERE campaign_id IN (SELECT campaign_id from campaignDetails WHERE user_id = '$user_id' GROUP BY campaign_id)");
 
             $agency_data[] = [
                 'client_id' => $agency->id,
@@ -154,7 +171,7 @@ class ClientsController extends Controller
                 'image_url' => $agency->image_url,
                 'num_campaign' => $campaigns ? $campaigns[0]->number : 0,
                 'total' => $payments[0]->total,
-                'name' => $user_details && $user_details[0] ? $user_details[0]->last_name . ' ' . $user_details[0]->first_name : '',
+                'name' => $user_details && $user_details[0] ? $user_details[0]->lastname . ' ' . $user_details[0]->firstname : '',
                 'created_at' => $agency->time_created,
                 'last_camp' => $date,
             ];
@@ -211,6 +228,7 @@ class ClientsController extends Controller
             $brands[] = [
                 'brand' => $br->name,
                 'campaigns' => $campaigns[0]->total_campaign,
+                'image_url' => $br->image_url
             ];
         }
         if(count($brands) === 0){
