@@ -607,7 +607,12 @@ class DashboardController extends Controller
             return view('broadcaster_user.dashboard.dashboard')->with(['campaign' => $camp, 'volume' => $c_volume, 'month' => $c_mon, 'high_dayp' => $day_pie, 'days' => $days_data, 'adslot' => $ads_no, 'price' => $tot_pri, 'mon' => $mon, 'invoice' => $invoice]);
 
         }elseif ($role->role_id === 1){
-            return view('admin.dashboard');
+            //admin dashboard
+            $all_agency = Utilities::switch_db('api')->select("SELECT * FROM  agents");
+            $all_advertisers = Utilities::switch_db('api')->select("SELECT * FROM advertisers");
+            $all_industries = Utilities::switch_db('api')->select("SELECT * from sectors");
+            $all_broadcasters = Utilities::switch_db('api')->select("SELECT * FROM broadcasters");
+            return view('admin.dashboard', compact('all_agency', 'all_advertisers','all_industries','all_broadcasters'));
         }elseif($role->role_id === 5){
             return view('clients.dashboard.dashboard');
         }
@@ -691,22 +696,25 @@ class DashboardController extends Controller
         $dates = [];
         $braa = [];
         $br = Utilities::switch_db('api')->select("SELECT * from brands where id = '$b_id'");
-        foreach ($br as $b) {
-            $camp_pay = Utilities::switch_db('api')->select("SELECT SUM(total) as total, time_created FROM payments WHERE campaign_id IN (SELECT campaign_id from campaignDetails WHERE brand = '$b->id' AND agency = '$agency_id' GROUP BY campaign_id) GROUP BY DATE_FORMAT(time_created, '%Y-%m')");
-            if (!$camp_pay) {
+
+        $brand_id = $br[0]->id;
+        $camp_pay = Utilities::switch_db('api')->select("SELECT SUM(total) as total, time_created FROM payments WHERE campaign_id IN (SELECT campaign_id from campaignDetails WHERE brand = '$brand_id' AND agency = '$agency_id' ) GROUP BY DATE_FORMAT(time_created, '%Y-%m')");
+        foreach ($camp_pay as $cam){
+            if (!$cam) {
                 $total = 0;
                 $date = 0;
             } else {
-                $total = $camp_pay[0]->total;
-                $date = $camp_pay[0]->time_created;
+                $total = $cam->total;
+                $date = $cam->time_created;
             }
             $brand[] = [
-                'brand_id' => $b->id,
-                'brand' => $b->name,
+                'brand_id' => $br[0]->id,
+                'brand' => $br[0]->name,
                 'total' => $total,
                 'date' => date('M', strtotime($date)),
             ];
         }
+
         foreach ($brand as $b) {
             $tot[] = (integer)$b['total'];
         }

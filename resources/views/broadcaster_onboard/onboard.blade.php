@@ -119,7 +119,7 @@
                                 Sign Up
                             </button>
 
-                            <a href="/" class="btn btn-primary pull-right">
+                            <a href="{{ route('admin.broadcaster.index') }}" class="btn btn-primary pull-right">
                                 <span class="glyphicon glyphicon-chevron-left"></span>
                                 Back to Home
                             </a>

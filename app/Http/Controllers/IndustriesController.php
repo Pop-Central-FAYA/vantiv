@@ -41,7 +41,7 @@ class IndustriesController extends Controller
                 return '<a href="' . route('industry.edit', $industriesArray['sector_code']) . '" class="btn btn-success btn-xs"> Edit  </a>';
             })
             ->addColumn('delete', function ($industriesArray) {
-                return '<button data-toggle="modal" data-target=".deleteModal' . $industriesArray['id'] . '" class="btn btn-danger btn-xs" > Delete </button>    ';
+                return '<button data-toggle="modal" data-target=".deleteModal' . $industriesArray['id'] . '" class="btn btn-danger btn-xs" > Delete </button>';
             })
             ->rawColumns(['edit' => 'edit', 'delete' => 'delete'])->addIndexColumn()
             ->make(true);

@@ -31,7 +31,7 @@
                         </div>
                         <hr/>
                         <div class="metrics-widget-value">
-                            <h1>10</h1>
+                            <h1>{{ count($all_broadcasters) }}</h1>
                         </div>
                     </div>
                 </div>
@@ -42,18 +42,18 @@
                         </div>
                         <hr/>
                         <div class="metrics-widget-value">
-                            <h1>10</h1>
+                            <h1>{{ count($all_agency) }}</h1>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="metrics-widget">
                         <div class="metrics-widget-heading">
-                            <p><h2>All Advertises</h2></p>
+                            <p><h2>All Advertisers</h2></p>
                         </div>
                         <hr/>
                         <div class="metrics-widget-value">
-                            <h1>10</h1>
+                            <h1>{{ count($all_advertisers) }}</h1>
                         </div>
                     </div>
                 </div>
@@ -64,7 +64,7 @@
                         </div>
                         <hr/>
                         <div class="metrics-widget-value">
-                            <h1>50</h1>
+                            <h1>{{ count($all_industries) }}</h1>
                         </div>
                     </div>
                 </div>

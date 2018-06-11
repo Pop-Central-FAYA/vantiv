@@ -116,12 +116,39 @@ Route::group(['middleware' => 'auth'], function () {
        });
     });
 
+    Route::group(['prefix' => 'regions'], function() {
+        Route::get('/', 'RegionsController@index')->name('admin.region.index');
+        Route::get('/data', 'RegionsController@data');
+        Route::get('/create', 'RegionsController@create')->name('admin.region.create');
+        Route::post('/store', 'RegionsController@store')->name('admin.region.store');
+        Route::post('/update/{id}', 'RegionsController@update')->name('admin.region.update');
+        Route::get('/delete/{id}', 'RegionsController@delete')->name('admin.region.delete');
+    });
+
+    Route::group(['prefix' => 'target-audiences'], function() {
+        Route::get('/', 'TargetAudienceController@index')->name('target_audience.index');
+        Route::get('/data', 'TargetAudienceController@getData');
+        Route::get('/create', 'TargetAudienceController@create')->name('admin.target_audience.create');
+        Route::post('/store', 'TargetAudienceController@store')->name('admin.target_audience.store');
+        Route::post('/update/{id}', 'TargetAudienceController@update')->name('admin.target_audience.update');
+        Route::get('/delete/{id}', 'TargetAudienceController@delete')->name('admin.target_audience.delete');
+    });
+
     Route::group(['prefix' => 'admin-broadcaster'], function() {
        Route::get('/', 'BroadcasterManagementController@index')->name('admin.broadcaster.index');
        Route::get('/broadcaster-data', 'BroadcasterManagementController@braodcasterData');
        Route::get('/details/{id}', 'BroadcasterManagementController@broadcasterDetails')->name('admin.broadcaster.details');
        Route::get('/inventory/{id}', 'BroadcasterManagementController@getInventory')->name('admin.broadcaster.upload_inventory');
        Route::post('/inventory/store/{id}', 'BroadcasterManagementController@storeInventory')->name('upload_inventory.store');
+    });
+
+    Route::group(['prefix' => 'day-parts'], function() {
+       Route::get('/', 'AdminDayPartsController@index')->name('admin.dayparts');
+       Route::get('/data', 'AdminDayPartsController@getData');
+       Route::get('/create', 'AdminDayPartsController@create')->name('admin.daypart.create');
+       Route::post('/store', 'AdminDayPartsController@store')->name('admin.daypart.store');
+       Route::post('/update/{id}', 'AdminDayPartsController@update')->name('admin.daypart.update');
+       Route::get('/delete/{id}', 'AdminDayPartsController@delete')->name('admin.daypart.delete');
     });
 
 

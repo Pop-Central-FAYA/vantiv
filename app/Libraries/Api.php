@@ -498,7 +498,7 @@ Class Api
 
     public static function getTargetAudience()
     {
-        $url = Api::$url.'campaign/target-audience?key='.Api::$public;
+        $url = Api::$url.'campaign/target_audience?key='.Api::$public;
         $token = Session::get('token');
         $enc_token = Session::get('encrypted_token');
         $response = Curl::to($url)

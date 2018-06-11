@@ -1,7 +1,7 @@
 @extends('layouts.new_app')
 
 @section('title')
-    <title>All Broadcasters</title>
+    <title>Target Audience</title>
 @endsection
 
 @section('content')
@@ -11,16 +11,16 @@
 
             <div class="row">
                 <div class="col-12 heading-main">
-                    <h1>All Broadcasters</h1>
+                    <h1>Target Audience</h1>
                     <ul>
-                        <li><a href="#"><i class="fa fa-th-large"></i>Dashboard</a></li>
-                        <li><a href="#">All Broadcasters</a></li>
+                        <li><a href="{{ route('dashboard') }}"><i class="fa fa-th-large"></i>Dashboard</a></li>
+                        <li><a href="#">Target Audience</a></li>
                     </ul>
                 </div>
             </div>
 
             <div class="row">
-                <a href="{{ route('broadcaster.register.form') }}" class="btn btn-success btn-lg">Add New Broadcaster</a>
+                <a href="{{ route('admin.target_audience.create') }}" class="btn btn-success btn-lg">Add Target Audience</a>
             </div>
             <p><br></p>
 
@@ -31,15 +31,13 @@
                             <div class="active tab-pane" id="all">
 
                                 <div class="box-body">
-                                    <table class="table table-bordered table-striped broadcaster">
+                                    <table class="table table-bordered table-striped target_audience">
                                         <thead>
                                         <tr>
                                             <th>S/N</th>
-                                            <th>Media Name</th>
-                                            <th>Email</th>
-                                            <th>Phone Number</th>
-                                            <th>Details</th>
-                                            <th>Inventory</th>
+                                            <th>Audience</th>
+                                            <th>Edit</th>
+                                            <th>Delete</th>
                                         </tr>
                                         </thead>
                                     </table>
@@ -55,6 +53,54 @@
             </div>
         </div>
     </div>
+
+    @foreach($target_audiences as $target_audience)
+        <div class="modal fade edit{{ $target_audience->id }}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content" style="padding: 5%">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4>Edit : {{ $target_audience->audience }}</h4>
+                    </div>
+                    <form action="" method="post">
+                        <div class="modal-body">
+                            {{ csrf_field() }}
+                            <div class="row">
+                                <div class="group">
+                                    <input type="text" name="brand_name" value="{{ $target_audience->audience }}" class="form-control">
+                                    <p><br></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-success">Update Brand</button>
+                            <button class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade delete{{ $target_audience->id }}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content" style="padding: 5%">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4>Delete : {{ $target_audience->audience }}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to proceed?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="" class="btn btn-danger">Delete</a>
+                        <button class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    @endforeach
 
 @stop
 
@@ -84,7 +130,7 @@
             });
         });
 
-        var DataCampaign = $('.broadcaster').DataTable({
+        var DataCampaign = $('.target_audience').DataTable({
             dom: 'Bfrtip',
             paging: true,
             serverSide: true,
@@ -93,7 +139,7 @@
                 'copy', 'csv', 'excel', 'pdf', 'print'
             ],
             ajax: {
-                url: '/admin-broadcaster/broadcaster-data',
+                url: '/target-audiences/data',
                 data: function (d) {
                     d.start_date = $('input[name=txtFromDate_tvc]').val();
                     d.stop_date = $('input[name=txtToDate_tvc]').val();
@@ -101,10 +147,8 @@
             },
             columns: [
                 {data: 's_n', name: 's_n'},
-                {data: 'media_name', name: 'media_name'},
-                {data: 'email', name: 'email'},
-                {data: 'phone', name: 'phone'},
-                {data: 'details', name: 'details'},
+                {data: 'name', name: 'name'},
+                {data: 'edit', name: 'edit'},
                 {data: 'delete', name: 'delete'}
             ]
         });
