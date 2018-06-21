@@ -311,6 +311,9 @@ class CampaignsController extends Controller
                 }
             }
 
+        }else{
+            Session::flash('error', 'Please choose a file');
+            return back();
         }
     }
 
@@ -552,8 +555,8 @@ class CampaignsController extends Controller
         $pay_id = uniqid();
         $invoice_id = uniqid();
         $mpo_id = uniqid();
-        $campaign_reference = mt_rand(1000, 10000000);
-        $invoice_number = mt_rand(500, 5000000);
+        $campaign_reference = Utilities::generateReference();
+        $invoice_number = Utilities::generateReference();
         $walkin_id = Utilities::switch_db('api')->select("SELECT id from walkIns where user_id = '$id'");
         $now = strtotime(Carbon::now('Africa/Lagos'));
 
@@ -617,7 +620,7 @@ class CampaignsController extends Controller
                     'file_url' => $q->file,
                     'adslot' => $q->adslot_id,
                     'user_id' => $id,
-                    'file_code' => mt_rand(100000, 10000000).uniqid(),
+                    'file_code' => Utilities::generateReference(),
                     'time_created' => date('Y-m-d H:i:s', $now),
                     'time_modified' => date('Y-m-d H:i:s', $now),
                     'agency_id' => $agency_id,

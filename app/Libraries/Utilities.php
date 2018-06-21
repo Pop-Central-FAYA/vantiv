@@ -247,7 +247,11 @@ class Utilities {
         return $all_invoices;
     }
 
-
-
+    public static function generateReference()
+    {
+        $date = strtotime(date("Y-m-d H:i:s"));
+        $reference = mt_rand(10000000, 99000000).$date;
+        return $reference;
+    }
 
 }

@@ -229,6 +229,7 @@
         });
 
         $(document).ready(function () {
+
             $('#flash-file-message').hide()
 
             $('.reason_default').prop('disabled', true);
@@ -246,6 +247,7 @@
             $("body").delegate('.update_file', 'click', function () {
                 var url = $(this).data('file_code');
                 file_code = $(this).data("file_code");
+
                 csrf = $(this).data("token");
                 rejection_reason = $("select#reason"+url).val();
                 is_file_accepted = $("select#is_file_accepted"+url).val()
@@ -268,15 +270,17 @@
 
                 $.ajax({
                     url: 'approve/' + is_file_accepted + '/' + file_code + '/' + rejection_reason,
-                    method: "POST",
+                    method: "GET",
                     data: {
                         is_file_accepted: is_file_accepted,
                         rejection_reason: rejection_reason
                     },
                     success: function (data) {
+                        console.log(data);
                         toastr.success(data.is_file_accepted, 'File Status Successfully Updated');
                     },
                     error: function () {
+                        // console.log(data);
                         toastr.error(data.is_file_accepted, 'File Status not Updated');
                         alert('not sent to server');
                     }

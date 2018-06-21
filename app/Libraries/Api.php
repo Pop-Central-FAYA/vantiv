@@ -1092,18 +1092,57 @@ Class Api
 
     }
 
-    public static function addFilesToApi($file_code)
-    {
-        $t = new \Vanguard\Http\Controllers\Api\DummyController();
-        $s = $t->addFile($file_code);
-        return $s->getData();
-    }
+//    public static function addFilesToApi($file_code)
+//    {
+//        return Api::addFile($file_code);
+//    }
 
-    public static function getApiWelcome()
+    public static function addFile($id)
     {
-        $t = new \Vanguard\Http\Controllers\Api\DummyController();
-        $s = $t->index();
-        return $s->getData();
+
+        ignore_user_abort(true);
+
+        set_time_limit(0);
+
+        $check_file = Utilities::switch_db('api')->select("SELECT * from files where file_code = '$id'");
+
+        if($check_file[0]->airbox_status === 1){
+            return response()->json(['file_code' => $id], 200);
+        }
+
+        $url = decrypt($check_file[0]->file_url);
+
+        $explode = explode('.', $url);
+        $extension = end($explode);
+
+        $destination_file = "/media/ridwan/RIDWAN/Files/".$check_file[0]->file_code.".".$extension;
+
+        $ci = curl_init();
+
+        $fp = fopen($destination_file, "x+"); // Destination location
+        curl_setopt_array( $ci, array(
+            CURLOPT_URL => $url,
+            CURLOPT_TIMEOUT => 3600,
+            CURLOPT_FILE => $fp
+        ));
+        $contents = curl_exec($ci); // Returns '1' if successful
+        curl_close($ci);
+        fclose($fp);
+
+        $destination_xml = "/media/ridwan/RIDWAN/Playlists/".$check_file[0]->file_code.".xml";
+        $xml = '<?xml version="1.0" encoding="utf-8"?>
+                <PBPlaylist id="'.$check_file[0]->file_code.'"><ITEM id="'.$check_file[0]->file_code.'" type="video_clip" file="H:/Files/'.$check_file[0]->file_code.".".$extension.'" outp="'.$check_file[0]->time_picked.'" duration="'.$check_file[0]->time_picked.'" isdynamicmedia="true" title="Test"/></PBPlaylist>';
+
+        file_put_contents($destination_xml, $xml);
+
+        $update_file = Utilities::switch_db('api')->update("UPDATE files set airbox_status = 1 WHERE file_code = '$id'");
+
+        if($update_file){
+            return response()->json(['file_code' => $id], 200);
+        }else{
+            return response()->json(['error' => 'Error Occured'], 500);
+        }
+
     }
 
     public static function approvedCampaignFiles($campaign_id)

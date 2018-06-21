@@ -66,6 +66,8 @@ class MpoController extends Controller
 
     public function pending_mpos()
     {
+//        fopen("/Documents/comingsoon.zip", 'r');
+
         $broadcaster_id = \Session::get('broadcaster_id');
 
         $pending_mpos = Utilities::switch_db('reports')->select("SELECT * FROM mpoDetails WHERE is_mpo_accepted = 0 AND broadcaster_id = '$broadcaster_id' ORDER BY time_created DESC ");
@@ -221,6 +223,8 @@ class MpoController extends Controller
     {
         if (request()->ajax()) {
 
+            $add = Api::addFile($file_code);
+
             if ($is_file_accepted !== 'null' && $rejection_reason === 'null') {
                 $update_file = Utilities::switch_db('reports')->select("UPDATE files SET is_file_accepted = '$is_file_accepted' WHERE file_code = '$file_code'");
             }
@@ -235,7 +239,7 @@ class MpoController extends Controller
 
             //api call
             if($is_file_accepted === "1"){
-                $add = Api::addFilesToApi($file_code);
+
                 if ($add->file_code === $file_code) {
                     $insertStatus = [
                         'id' => uniqid(),
@@ -259,7 +263,6 @@ class MpoController extends Controller
                     $status = Utilities::switch_db('api')->table('status_logs')->insert($insertStatus);
             }
 
-            //$update_file = json_decode(Api::update_fileStatus($is_file_accepted, $broadcaster_id, $file_code, $campaign_id));
             return response()->json([
                 'is_file_accepted' => $update_file
             ]);
@@ -268,4 +271,5 @@ class MpoController extends Controller
             return;
         }
     }
+
 }
