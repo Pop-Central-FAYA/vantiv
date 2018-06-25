@@ -1138,7 +1138,7 @@ Class Api
         $update_file = Utilities::switch_db('api')->update("UPDATE files set airbox_status = 1 WHERE file_code = '$id'");
 
         if($update_file){
-            return response()->json(['file_code' => $id], 200);
+            return $id;
         }else{
             return response()->json(['error' => 'Error Occured'], 500);
         }

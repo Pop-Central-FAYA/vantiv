@@ -240,7 +240,7 @@ class MpoController extends Controller
             //api call
             if($is_file_accepted === "1"){
 
-                if ($add->file_code === $file_code) {
+                if ($add === $file_code) {
                     $insertStatus = [
                         'id' => uniqid(),
                         'user_id' => \Session::get('broadcaster_id'),

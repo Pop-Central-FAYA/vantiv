@@ -276,11 +276,9 @@
                         rejection_reason: rejection_reason
                     },
                     success: function (data) {
-                        console.log(data);
                         toastr.success(data.is_file_accepted, 'File Status Successfully Updated');
                     },
                     error: function () {
-                        // console.log(data);
                         toastr.error(data.is_file_accepted, 'File Status not Updated');
                         alert('not sent to server');
                     }
