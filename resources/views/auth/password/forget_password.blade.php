@@ -1,41 +1,32 @@
 @extends('layouts.auth')
 
-@section('page-title', trans('app.login'))
+@section('title')
+    <title>FAYA.</title>
+@stop
 
 @section('content')
 
-    <div class="form-wrap col-md-6 auth-form" id="login">
-        <div style="text-align: center; margin-bottom: 25px;">
-            <a href="{{ route('dashboard') }}"><img src="{{ asset('new_assets/images/logo.png') }}" alt="{{ settings('app_name') }}"></a>
+    <form role="form" action="{{ route('forget_password.process') }}" method="POST" id="login-form" autocomplete="off">
+        <input type="hidden" value="<?= csrf_token() ?>" name="_token">
+        <div class="align_center mb4">
+            <h2 class="m-b">Reset Your Password</h2>
+            <p class="mb4">Enter your email and we'd send you a link to reset your password</p>
+
+            <br>
+
+            <div class="auth_input">
+                <input type="email" name="email" id="username" placeholder="Email">
+            </div>
         </div>
 
-        @include('partials/messages')
+        <input type="submit" value="Reset my Password" class= "btn full">
+    </form>
 
-        <form role="form" action="{{ route('forget_password.process') }}" method="POST" id="login-form" autocomplete="off">
-            <input type="hidden" value="<?= csrf_token() ?>" name="_token">
-
-            @if (Input::has('to'))
-                <input type="hidden" value="{{ Input::get('to') }}" name="to">
-            @endif
-
-            <div class="form-group input-icon">
-                <label for="username" class="sr-only">Email</label>
-                <i class="fa fa-user"></i>
-                <input type="email" name="email" id="username" class="form-control" placeholder="Enter your email">
-            </div>
-            <div class="form-group">
-                <button type="submit" style="background: #00c4ca;" class="btn btn-danger btn-lg btn-block" id="btn-login">
-                    Send
-                </button>
-            </div>
-
-        </form>
-
-    </div>
+    <p class="align_center pt">Have an account? <a href="{{ route('login') }}" class="">Sign In</a></p>
 
 @stop
 
 @section('scripts')
-    {!! HTML::script('assets/js/as/login.js') !!}
     {!! JsValidator::formRequest('Vanguard\Http\Requests\Auth\LoginRequest', '#login-form') !!}
 @stop
+

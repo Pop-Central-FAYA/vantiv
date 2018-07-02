@@ -389,10 +389,14 @@ Route::group(['middleware' => 'auth'], function () {
          */
         Route::group(['prefix' => 'clients'], function () {
             Route::get('/', 'ClientsController@index')->name('clients.all');
-            Route::any('/create', 'ClientsController@create')->name('clients.create');
-            Route::get('list', 'ClientsController@clients')->name('clients.list');
+            Route::post('/create/store', 'ClientsController@create')->name('clients.create');
+            Route::get('/list', 'ClientsController@clients')->name('clients.list');
             Route::get('/client/{client_id}', 'ClientsController@clientShow')->name('client.show');
             Route::get('/client/brand/{id}', 'ClientsController@getClientBrands')->name('client_brands');
+            Route::get('/client/{client_id}/{user_id}', 'ClientsController@getCampaignData');
+            Route::get('/client-month/{client_id}', 'ClientsController@filterByMonth')->name('client.month');
+            Route::get('/client-yearly/{client_id}', 'ClientsController@filterByYear')->name('client.year');
+            Route::get('/client-brand/{id}/{client_id}', 'ClientsController@brandCampaign')->name('campaign.brand.client');
         });
 
         Route::group(['prefix' => 'invoices'], function () {

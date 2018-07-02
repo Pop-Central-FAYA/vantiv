@@ -69,8 +69,11 @@ class AuthController extends Controller
      * @param LoginRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function postLogin(LoginRequest $request)
+    public function postLogin(Request $request)
     {
+        if(empty($request->email) || empty($request->password)){
+            return redirect()->back()->with('error', 'email and or password cannot be empty');
+        }
 
         // In case that request throttling is enabled, we have to check if user can perform this request.
         // We'll key this by the username and the IP address of the client making these requests into this application.

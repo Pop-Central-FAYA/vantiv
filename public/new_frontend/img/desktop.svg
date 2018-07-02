@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="66px" height="54px" viewBox="0 0 66 54" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.2 (51160) - http://www.bohemiancoding.com/sketch -->
+    <title>Page 1</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Dashboard-Campaigns" transform="translate(-960.000000, -315.000000)" stroke="#000000" stroke-width="3">
+            <g id="Pie-chats" transform="translate(258.000000, 288.000000)">
+                <g id="desktop" transform="translate(652.000000, 0.000000)">
+                    <g id="Page-1" transform="translate(51.000000, 28.000000)">
+                        <polygon id="Stroke-1" points="0.509615385 42.8076923 62.6826923 42.8076923 62.6826923 0.509615385 0.509615385 0.509615385"></polygon>
+                        <path d="M0.509615385,32.1057692 L62.6826923,32.1057692" id="Stroke-3"></path>
+                        <path d="M18.8557692,42.2980769 L18.8557692,50.4519231" id="Stroke-4"></path>
+                        <path d="M44.3365385,42.8076923 L44.3365385,50.9615385" id="Stroke-5"></path>
+                        <path d="M12.2307692,51.4711538 L50.9615385,51.4711538" id="Stroke-6"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

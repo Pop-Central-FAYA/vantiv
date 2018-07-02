@@ -1,523 +1,219 @@
-@extends('layouts.new_app')
+@extends('layouts.faya_app')
 
 @section('title')
-    <title>Faya - Agency Dashboard</title>
+    <title> FAYA | DASHBOARD</title>
 @stop
 
-@section('styles')
-
-    <link rel="stylesheet" href="{{ asset('asset/dist/css/dashboard.css') }}" />
-
-@endsection
-
 @section('content')
-    <div class="main-section">
-        <div class="container">
-            <div class="row">
-                <div class="col-12 heading-main">
-                    <h1>{{ $agency_info[0]->brand }} Dashboard </h1>
-                    <ul>
-                        <li><a href="#"><i class="fa fa-th-large"></i>Agency</a></li>
-                        <li><a href="#">Dashboard </a></li>
-                    </ul>
-                </div>
-            </div>
 
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="metrics-widget">
-                        <div class="metrics-widget-heading">
-                            <h2>All Clients</h2>
-                        </div>
-                        <hr/>
-                        <div class="metrics-widget-value">
-                            <h1>{{ $count_client }}</h1>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="metrics-widget">
-                        <div class="metrics-widget-heading">
-                            <h2>All Campaigns</h2>
-                        </div>
-                        <hr/>
-                        <div class="metrics-widget-value">
-                            <h1>{{ $count_campaigns }}</h1>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="metrics-widget">
-                        <div class="metrics-widget-heading">
-                            <p><h2>All Brands</h2></p>
-                        </div>
-                        <hr/>
-                        <div class="metrics-widget-value">
-                            <h1>{{ $count_brands }}</h1>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="metrics-widget">
-                        <div class="metrics-widget-heading">
-                            <p><h2>All Invoices</h2></p>
-                        </div>
-                        <hr/>
-                        <div class="metrics-widget-value">
-                            <h1>{{ $count_invoice }}</h1>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <div class="main_contain">
+        <!-- heaser -->
+        @include('partials.new-frontend.agency.header')
 
-
-            {{--<div class="col-12 chart-top">--}}
-            <div class="row">
-                <div class="col-12">
-                    <div class="Sales">
-                        <h2>Periodic Spend Report</h2>
-                        <p>Total amount spent on channel</p>
-                        <div class="row">
-                            <div class="col-4 content">
-                                <form action="{{ route('agency.dashboard.broad')  }}" id="search_by_broad" method="GET">
-                                    {{ csrf_field() }}
-                                    <label for="channel">Channels:</label>
-                                    <select class="form-control" name="broadcaster" id="broadcaster">
-                                        @foreach($broadcaster as $broadcasters)
-                                            <option value="{{ $broadcasters->id }}">
-                                                {{ $broadcasters->brand }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </form>
-                            </div>
-                        </div>
-                        <p><br></p>
-                        <div id="containerPeriodic_total_per_chanel" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-                    </div>
-                </div>
-            </div>
-            <hr>
-            <div class="row">
-                <div class="col-md-12">
-                    <!-- AREA CHART -->
-                    <h2>Periodic Spend Report</h2>
-                    <p>Total amount spent on brand</p>
-                    <form action="{{ route('agency.dashboard.data') }}" id="search_by_brand" method="GET">
-                        {{ csrf_field() }}
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label for="channel">Brands:</label>
-                                <select class="form-control" name="brand" id="brand">
-                                    @foreach($brand as $brands)
-                                        <option value="{{ $brands->id }}">{{ $brands->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                    </form>
-                    <p><br></p>
-                    <div id="containerPeriodic_total_per_brand" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-
-                </div>
-            </div>
-            <hr>
-            <div class="row">
-                <h2>Percentage Periodic Spent Report on Products for <?php echo date('F, Y')?> </h2><br>
-            </div>
-            <div class="row">
-                <p>Percentege spent on product per month</p>
-            </div>
-            <div class="row">
-                <div class="col-md-4 content_month">
-                    <form action="{{ route('agency.month') }}" method="get" id="filter_month">
-                        <label for="month">Months:</label>
-                        <select name="month" class="form-control" id="month">
-                            @foreach($months as $month)
-                                <option value="{{ $month }}"
-                                        @if($current_month === $month)
-                                        selected
-                                        @endif
-                                >{{ $month }}</option>
-                            @endforeach
-                        </select>
-                    </form>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12">
-                    <div class="Our-Visitors">
-                        <div id="containerPerProduct" style="min-width: 900px; height: 400px; margin: 0 auto"></div>
-                    </div>
-                </div>
-            </div>
-                <hr>
-            <div class="row">
-                <div class="col-12">
-                    <div class="col-12 Total-rev">
-                        <h2>Budget Pacing Report</h2>
-                        <div id="containerBudgetPacing" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-                    </div>
-                </div>
-            </div>
-                <hr>
-                <p><br></p>
-                {{--</div>--}}
-            <div class="row">
-                <div class="col-12 recents">
-                    <div class="col-12">
-                        <div class="col-12 recents-inner">
-                            <div class="recent-head">
-                                <h1>recent invoice</h1>
-
-                            </div>
-                            <div class="summary">
-                                <p>Total approved invoices {{ $invoice_approval }},upapproved {{ $invoice_unapproval }}.</p>
-                                <a style="text-decoration: none;" href="{{ route('invoices.all') }}">All Invoices<i class="fa fa-arrow-right" aria-hidden="true"></i></a> </div>
-                            <table class="table">
-                                <thead>
-                                    <th>Invoice#</th>
-                                    <th>Customer Name</th>
-                                    <th>Brand</th>
-                                    <th>Amount</th>
-                                    <th>Refunded Amount</th>
-                                    <th>Status</th>
-                                </thead>
-                                <tbody>
-                                @foreach($all_invoices as $invoice)
-                                    <tr>
-                                        <td>{{ $invoice['invoice_number'] }}</td>
-                                        <td>{{ $invoice['campaign_name'] }}</td>
-                                        <td>{{ $invoice['campaign_brand'] }}</td>
-                                        <td>&#8358;{{ $invoice['actual_amount_paid'] }}</td>
-                                        <td>&#8358;{{ $invoice['refunded_amount'] }}</td>
-                                        <td>
-                                            @if ($invoice['status'] == 1)
-                                                <label style="font-size: 16px" class="label label-success">
-                                                    Approved
-                                                </label>
-                                            @elseif ($invoice['status'] == 0)
-                                                <label style="font-size: 16px" class="label label-warning">
-                                                    Pending
-                                                </label>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <!-- subheader -->
+        <div class="sub_header clearfix mb pt">
+            <div class="column col_6">
+                <h2 class="sub_header">Dashboard</h2>
             </div>
         </div>
 
-@stop
-@section('scripts')
-    <!-- Select2 -->
-    <script src="{{ asset('agency_asset/plugins/select2/select2.full.min.js') }}"></script>
-    <!-- InputMask -->
-    <script src="{{ asset('agency_asset/plugins/input-mask/jquery.inputmask.js') }}"></script>
-    <script src="{{ asset('agency_asset/plugins/input-mask/jquery.inputmask.date.extensions.js') }}"></script>
-    <script src="{{ asset('agency_asset/plugins/input-mask/jquery.inputmask.extensions.js') }}"></script>
-    <!-- date-range-picker -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
-    <script src="{{ asset('agency_asset/plugins/daterangepicker/daterangepicker.js') }}"></script>
-    <!-- bootstrap datepicker -->
-    <script src="{{ asset('agency_asset/plugins/datepicker/bootstrap-datepicker.js') }}"></script>
-    <!-- bootstrap color picker -->
-    <script src="{{ asset('agency_asset/plugins/colorpicker/bootstrap-colorpicker.min.js') }}"></script>
-    <!-- bootstrap time picker -->
-    <script src="{{ asset('agency_asset/plugins/timepicker/bootstrap-timepicker.min.js') }}"></script>
-    <!-- SlimScroll 1.3.0 -->
-    <script src="{{ asset('agency_asset/plugins/slimScroll/jquery.slimscroll.min.js') }}"></script>
-    <!-- iCheck 1.0.1 -->
-    <script src="{{ asset('agency_asset/plugins/iCheck/icheck.min.js') }}"></script>
-    <!-- FastClick -->
-    <script src="{{ asset('agency_asset/plugins/fastclick/fastclick.js') }}"></script>
-    <!-- AdminLTE App -->
-    <script src="{{ asset('agency_asset/dist/js/app.min.js') }}"></script>
 
-    <!-- DataTables -->
-    <script src="{{ asset('agency_asset/plugins/datatables/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('agency_asset/plugins/datatables/dataTables.bootstrap.min.js') }}"></script>
+        <!-- main stats -->
+        <div class="the_stats the_frame clearfix mb4">
+            <div class="column col_3">
+                <span class="weight_medium small_faint uppercased">Active Campaigns</span>
+                <h3>{{ count($active_campaigns) }}</h3>
+            </div>
 
-    <script src="https://code.highcharts.com/highcharts.js"></script>
-    <script src="https://code.highcharts.com/modules/exporting.js"></script>
-    <script src="https://code.highcharts.com/highcharts-more.js"></script>
+            <div class="column col_3">
+                <span class="weight_medium small_faint uppercased">All Clients</span>
+                <h3>{{ count($clients) }}</h3>
+            </div>
 
-    <script>
-        <?php echo "var date = ".$date . ";\n"; ?>
-        <?php echo "var amount = ".$amount . ";\n"; ?>
-        <?php echo "var name = ".$name .";\n"; ?>
-        <?php echo "var b_pacing =".$b_pacing ."\n"; ?>
-        <?php echo "var periodic_data =".$periodic_data ."\n"; ?>
-        <?php echo "var brand_date =".$bra_dates ."\n"; ?>
-        <?php echo "var brand_name =".$bra_na ."\n"; ?>
-        <?php echo "var brand_amount =".$bra_am ."\n"; ?>
+            <div class="column col_3">
+                <span class="weight_medium small_faint uppercased">Pending Invoices</span>
+                <h3>{{ count($pending_invoices) }}</h3>
+            </div>
 
-        $(document).ready(function () {
+            <div class="column col_3">
+                <span class="weight_medium small_faint uppercased">All Brands</span>
+                <h3>{{ count($all_brands) }}</h3>
+            </div>
+        </div>
 
-            $("#broadcaster").change(function () {
-                // $("#load_broad").show();
-                $(".content").css({
-                    opacity: 0.5
-                });
 
-                $('#load_broad').html('<img src="{{ asset('loader.gif') }}" align="absmiddle"> Please wait while we process your request...');
-                var br_id = $("#broadcaster").val();
-                var url = $("#search_by_broad").attr('action');
-                $.get(url, {'br_id': br_id, '_token':$('input[name=_token]').val()}, function(data) {
-                    $(".content").css({
-                        opacity: 1
-                    });
-                    var chart = Highcharts.chart('containerPeriodic_total_per_chanel', {
+        <!-- client charts -->
+        <div class="clearfix dashboard_pies">
+            <!-- tv -->
+            <div class="">
+                <div class="pie_icon margin_center">
+                    <img src="{{ asset('new_frontend/img/tv.svg') }}">
+                </div>
+                <p class="align_center">TV</p>
 
-                        title: {
-                            text: 'Periodic Spent Report'
-                        },
-                        credits: {
-                            enabled: false
-                        },
+                <div class="_pie_chart"></div>
 
-                        xAxis: {
-                            categories: data.date
-                        },
+                <ul>
+                    <li class="pie_legend active"><span class="weight_medium">{{ $active }}%</span> Active</li>
+                    <li class="pie_legend pending"><span class="weight_medium">{{ $pending }}%</span> Pending</li>
+                    <li class="pie_legend finished"><span class="weight_medium">{{ $finished }}%</span> Finished</li>
+                </ul>
+            </div>
 
-                        series: [{
-                            type: 'column',
-                            colorByPoint: true,
-                            data: data.amount_price,
-                            showInLegend: false
-                        }]
+            <!-- radio -->
+            <div class="">
+                <div class="pie_icon margin_center">
+                    <img src="{{ asset('new_frontend/img/radio.svg') }}">
+                </div>
+                <p class="align_center">Radio</p>
 
-                    });
-                });
-            });
+                <div class="_pie_chart"></div>
 
-            var chart = Highcharts.chart('containerPeriodic_total_per_chanel', {
+                <ul>
+                    <li class="pie_legend active"><span class="weight_medium">25%</span> Active</li>
+                    <li class="pie_legend pending"><span class="weight_medium">15%</span> Pending</li>
+                    <li class="pie_legend finished"><span class="weight_medium">60%</span> Finished</li>
+                </ul>
+            </div>
 
-                title: {
-                    text: 'Periodic Spent Report'
-                },
-                credits: {
-                    enabled: false
-                },
+            <!-- newspaper -->
+            <div class="">
+                <div class="pie_icon margin_center">
+                    <img src="{{ asset('new_frontend/img/paper.svg') }}">
+                </div>
+                <p class="align_center">Newspaper</p>
 
-                xAxis: {
-                    categories: date
-                },
+                <div class="_pie_chart"></div>
 
-                series: [{
-                    type: 'column',
-                    colorByPoint: true,
-                    data: amount,
-                    showInLegend: false
-                }]
+                <ul>
+                    <li class="pie_legend active"><span class="weight_medium">48%</span> Active</li>
+                    <li class="pie_legend pending"><span class="weight_medium">38%</span> Pending</li>
+                    <li class="pie_legend finished"><span class="weight_medium">14%</span> Finished</li>
+                </ul>
+            </div>
 
-            });
+            <!-- ooh -->
+            <div class="">
+                <div class="pie_icon margin_center">
+                    <img src="{{ asset('new_frontend/img/ooh.svg') }}">
+                </div>
+                <p class="align_center">OOH</p>
 
-            $("#month").change(function () {
+                <div class="_pie_chart"></div>
 
-                $(".content_month").css({
-                    opacity: 0.5
-                });
+                <ul>
+                    <li class="pie_legend active"><span class="weight_medium">50%</span> Active</li>
+                    <li class="pie_legend pending"><span class="weight_medium">30%</span> Pending</li>
+                    <li class="pie_legend finished"><span class="weight_medium">20%</span> Finished</li>
+                </ul>
+            </div>
 
-                var month = $("#month").val();
-                var url = $("#filter_month").attr('action');
+            <!-- desktop -->
+            <div class="">
+                <div class="pie_icon margin_center">
+                    <img src="{{ asset('new_frontend/img/desktop.svg') }}">
+                </div>
+                <p class="align_center">Desktop</p>
 
-                $.get(url, {'month': month, '_token':$('input[name=_token]').val()}, function(data) {
+                <div class="_pie_chart"></div>
 
-                    $(".content_month").css({
-                        opacity: 1
-                    });
+                <ul>
+                    <li class="pie_legend active"><span class="weight_medium">75%</span> Active</li>
+                    <li class="pie_legend pending"><span class="weight_medium">18%</span> Pending</li>
+                    <li class="pie_legend finished"><span class="weight_medium">7%</span> Finished</li>
+                </ul>
+            </div>
 
-                    Highcharts.chart('containerPerProduct', {
-                        chart: {
-                            plotBackgroundColor: null,
-                            plotBorderWidth: null,
-                            plotShadow: false,
-                            type: 'pie'
-                        },
-                        title: {
-                            text: ''
-                        },
-                        tooltip: {
-                            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-                        },
-                        credits: {
-                            enabled: false
-                        },
-                        plotOptions: {
-                            pie: {
-                                allowPointSelect: true,
-                                cursor: 'pointer',
-                                dataLabels: {
-                                    enabled: false
-                                },
-                                showInLegend: true
-                            }
-                        },
-                        series: [{
-                            name: 'Products',
-                            colorByPoint: true,
-                            data: data.pro_month
-                        }]
-                    });
-                });
+            <!-- mobile -->
+            <div class="">
+                <div class="pie_icon margin_center">
+                    <img src="{{ asset('new_frontend/img/mobile.svg') }}">
+                </div>
+                <p class="align_center">Mobile</p>
 
-            });
+                <div class="_pie_chart"></div>
 
-            $("#brand").change(function () {
-                $(".content").css({
-                    opacity: 0.5
-                });
-                var br_id = $("#brand").val();
-                var url = $("#search_by_brand").attr('action');
-                $.get(url, {'br_id': br_id, '_token':$('input[name=_token]').val()}, function(data) {
-                    $("#load_broad").hide();
-                    $(".content").css({
-                        opacity: 1
-                    });
+                <ul>
+                    <li class="pie_legend active"><span class="weight_medium">45.5%</span> Active</li>
+                    <li class="pie_legend pending"><span class="weight_medium">28.7%</span> Pending</li>
+                    <li class="pie_legend finished"><span class="weight_medium">25.8%</span> Finished</li>
+                </ul>
+            </div>
 
-                    Highcharts.chart('containerPeriodic_total_per_brand', {
+        </div>
 
-                        title: {
-                            text: 'Periodic Spent Report'
-                        },
-                        credits: {
-                            enabled: false
-                        },
 
-                        xAxis: {
-                            categories: data.date
-                        },
+        <div class="the_frame client_dets mb4">
 
-                        series: [{
-                            type: 'column',
-                            colorByPoint: true,
-                            data: data.amount_price,
-                            showInLegend: false
-                        }]
+            <div class="filters border_bottom clearfix">
+                <div class="column col_8 p-t">
+                    <p class="uppercased weight_medium">All Campaigns</p>
+                </div>
 
-                    });
+                <div class="column col_4 clearfix">
+                    <div class="col_7 column">
+                        <div class="header_search">
+                            <form>
+                                <input type="text" placeholder="Search...">
+                            </form>
+                        </div>
+                    </div>
 
-                });
-            });
+                    <div class="col_4 column shadow">
+                        <div class="select_wrap">
+                            <select>
+                                <option>All Time</option>
+                                <option>This Month</option>
+                            </select>
+                        </div>
+                    </div>
 
-            Highcharts.chart('containerPerProduct', {
-                chart: {
-                    plotBackgroundColor: null,
-                    plotBorderWidth: null,
-                    plotShadow: false,
-                    type: 'pie'
-                },
-                title: {
-                    text: ''
-                },
-                tooltip: {
-                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-                },
-                credits: {
-                    enabled: false
-                },
-                plotOptions: {
-                    pie: {
-                        allowPointSelect: true,
-                        cursor: 'pointer',
-                        dataLabels: {
-                            enabled: false
-                        },
-                        showInLegend: true
-                    }
-                },
-                series: [{
-                    name: 'Products',
-                    colorByPoint: true,
-                    data: periodic_data
-                }]
-            });
+                    <div class="col_1 column">
+                        <a href="" class="export_table"></a>
+                    </div>
+                </div>
+            </div>
 
-            Highcharts.chart('containerPeriodic_total_per_brand', {
+            <!-- campaigns table -->
+            <table>
+                <tr>
+                    <th></th>
+                    <th>S/N</th>
+                    <th>Name</th>
+                    <th>Brand</th>
+                    <th>Product</th>
+                    <th>Date</th>
+                    <th>Budget</th>
+                    <th>Ad Slots</th>
+                    <th>Comp.</th>
+                    <th>Status</th>
+                    <th>Invoice</th>
+                </tr>
 
-                title: {
-                    text: 'Periodic Spent Report'
-                },
-                credits: {
-                    enabled: false
-                },
+                @foreach($agency_campaigns as $agency_campaign)
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td>{{ $agency_campaign['id'] }}</td>
+                        <td><a href="">{{ $agency_campaign['name'] }}</a></td>
+                        <td>{{ ucfirst($agency_campaign['brand']) }}</td>
+                        <td>{{ $agency_campaign['product'] }}</td>
+                        <td>12 June, 18</td>
+                        <td>&#8358;{{ $agency_campaign['budget'] }}</td>
+                        <td>{{ $agency_campaign['adslots'] }}</td>
+                        <td>0%</td>
+                        @if($agency_campaign['status'] === 'expired')
+                            <td><span class="span_state status_danger">Finished</span></td>
+                        @elseif($agency_campaign['status'] === 'active')
+                            <td><span class="span_state status_success">Active</span></td>
+                        @else
+                            <td><span class="span_state status_pending">Pending</span></td>
+                        @endif
+                        <td><a href="">View</a></td>
+                    </tr>
+                @endforeach
+            </table>
+            <!-- end -->
+        </div>
 
-                xAxis: {
-                    categories: brand_date
-                },
-
-                series: [{
-                    type: 'column',
-                    colorByPoint: true,
-                    data: brand_amount,
-                    showInLegend: false
-                }]
-
-            });
-
-            Highcharts.chart('containerBudgetPacing', {
-                chart: {
-                    zoomType: 'x'
-                },
-                title: {
-                    text: ''
-                },
-                xAxis: {
-                    type: 'datetime'
-                },
-                yAxis: {
-                    title: {
-                        text: 'Amount'
-                    }
-                },
-                credits: {
-                    enabled: false
-                },
-                legend: {
-                    enabled: false
-                },
-                plotOptions: {
-                    area: {
-                        fillColor: {
-                            linearGradient: {
-                                x1: 0,
-                                y1: 0,
-                                x2: 0,
-                                y2: 1
-                            },
-                            stops: [
-                                [0, Highcharts.getOptions().colors[0]],
-                                [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
-                            ]
-                        },
-                        marker: {
-                            radius: 2
-                        },
-                        lineWidth: 1,
-                        states: {
-                            hover: {
-                                lineWidth: 1
-                            }
-                        },
-                        threshold: null
-                    }
-                },
-
-                series: [{
-                    type: 'area',
-                    name: 'Budget Pacing',
-                    data: b_pacing
-                }]
-            });
-
-        })
-
-    </script>
-
+    </div>
 @stop

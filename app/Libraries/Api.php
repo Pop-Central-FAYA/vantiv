@@ -1104,11 +1104,31 @@ Class Api
 
         set_time_limit(0);
 
+        $broadcaster = Session::get('broadcaster_id');
+
         $check_file = Utilities::switch_db('api')->select("SELECT * from files where file_code = '$id'");
 
         if($check_file[0]->airbox_status === 1){
             return response()->json(['file_code' => $id], 200);
         }
+
+        $adslot_id = $check_file[0]->adslot;
+
+        $campaign_id = $check_file[0]->campaign_id;
+
+        $campsign_details = Utilities::switch_db('api')->select("SELECT * from campaignDetails where campaign_id = '$campaign_id' and broadcaster = '$broadcaster'");
+
+        $adslot_day_details = Utilities::switch_db('api')->select("SELECT * FROM days where id = (SELECT `day` from rateCards where id = (SELECT rate_card from adslots where id = '$adslot_id'))");
+
+        $adslot_day = $adslot_day_details[0]->day;
+
+        $end_date = date('Y-m-d', strtotime($campaign_id[0]->stop_date));
+
+        $start_date = date('Y-m-d', strtotime($campaign_id[0]->start_date));
+
+        $end_date = new \DateTime($end_date);
+
+        $start_date = new \DateTime($start_date);
 
         $url = decrypt($check_file[0]->file_url);
 

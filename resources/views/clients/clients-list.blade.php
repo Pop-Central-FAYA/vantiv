@@ -1,131 +1,232 @@
-@extends('layouts.new_app')
+@extends('layouts.faya_app')
 
 @section('title')
-    <title>Agency | All Clients</title>
+    <title> FAYA | Clients </title>
 @stop
 
-@section('styles')
-
-    <link rel="stylesheet" href="{{ asset('asset/plugins/datatables/dataTables.bootstrap.css') }}" />
-    <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
-
-@endsection
-
 @section('content')
+    <div class="main_contain">
+        <!-- header -->
+        @include('partials.new-frontend.agency.header')
 
-    <div class="main-section">
-        <div class="container">
-            <div class="row">
-                <div class="col-12 heading-main">
-                    <h1>All Clients</h1>
-                    <ul>
-                        <li><a href="#"><i class="fa fa-edit"></i>Clients Management</a></li>
-                        <li><a href="#">Client List</a></li>
-                    </ul>
+        <!-- subheader -->
+        <div class="sub_header clearfix mb pt">
+            <div class="column col_6">
+                <h2 class="sub_header">Clients</h2>
+            </div>
+
+            <div class="column col_6 align_right">
+                <a href="#new_client" class="btn modal_click">New Client</a>
+            </div>
+        </div>
+
+        <!-- main stats -->
+        <div class="the_stats clearfix mb4">
+            <div class="active column col_4">
+                <span class="small_faint uppercased">Total Clients</span>
+                <h3>{{ count($clients) }}</h3>
+            </div>
+
+            <div class="column col_4">
+                <span class="small_faint uppercased">Active Clients</span>
+                <h3>{{ count($clients) }}</h3>
+            </div>
+
+            <div class="column col_4">
+                <span class="small_faint uppercased">Inactive Clients</span>
+                <h3>{{ count($clients) }}</h3>
+            </div>
+        </div>
+
+
+        <div class="similar_table pt3">
+            <!-- table header -->
+            <div class="_table_header clearfix m-b">
+                <span class="small_faint block_disp padd column col_4">Basic Info</span>
+                <span class="small_faint block_disp column col_1">Brands</span>
+                <span class="block_disp column col_2 color_trans">.</span>
+                <span class="small_faint block_disp column col_2">Active Campaigns</span>
+                <span class="small_faint block_disp column col_2">Inactive Campaigns</span>
+                <span class="block_disp column col_1 color_trans">.</span>
+            </div>
+
+            <!-- table item -->
+            @foreach($clients as $client)
+            <div class="_table_item the_frame clearfix">
+                <div class="padd column col_4">
+                    <span class="client_ava"><img src="{{ $client['image_url'] ? asset(decrypt($client['image_url'])) : '' }}"></span>
+                    <p>{{ $client['name'] }}</p>
+                    <span class="small_faint">Added {{ date('M j, Y h:ia', strtotime($client['created_at'])) }}</span>
                 </div>
+                <div class="column col_1">{{ $client['count_brands'] }}</div>
+                <div class="column col_2">&#8358; {{ number_format($client['total'],2) }}</div>
+                <div class="column col_2">{{ $client['active_campaign'] }}</div>
+                <div class="column col_2">{{ $client['inactive_campaign'] }}</div>
+                <div class="column col_1">
+                    <span class="more_icon"></span>
+                </div>
+                <a href="{{ route('client.show', ['id' => $client['client_id']]) }}">details</a>
+            </div>
+            @endforeach
+            <!-- table item end -->
+        </div>
 
-                @if(count($clients) === 0)
-                    <p><h3>Sorry you don't have a client yet...</h3></p>
-                @else
-                    @foreach ($clients as $client)
-                        <div class="col-12 Clients-Management">
-                            <div class="col-7">
-                                <ul>
-                                    <li>Name: <span>{{ $client['name'] }}</span></li>
-                                    <li>No. of Campaigns <span>{{ $client['num_campaign'] }}</span></li>
-                                    <li>Total Expense <span>&#8358;{{ number_format($client['total'],2) }}</span></li>
-                                    <li>Data Created<span>{{ date('M j, Y h:ia', strtotime($client['created_at'])) }}</span></li>
-                                    @if($client['last_camp'] === 0)
-                                        <li>Last Campaign<span></span></li>
-                                    @else
-                                        <li>Last Campaign<span>{{ date('M j, Y', strtotime($client['last_camp'])) }}</span></li>
-                                    @endif
-                                    <li>
-                                        <div class="row">
-                                            <div class="col-md-2">
-                                                <a href="{{ route('client_brands', ['id' => $client['client_id']]) }}" class="btn btn-success">View Brands </a>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <a href="{{ route('agency_campaign.step1', ['id' => $client['agency_client_id']]) }}" style="background-color: #00c4ca; color: white;" class="btn btn-default">Create Campaign</a>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <button class="btn btn-default" data-toggle="modal" data-target="#brand{{ $client['client_id'] }}">Add Brand</button>
-                                            </div>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="col-5">
-                                <img style="height: 400px;" class="img-responsive" src="{{ $client['image_url'] ? asset(decrypt($client['image_url'])) : '' }}" alt="">
-                            </div>
-                        </div>
-                    @endforeach
+    </div>
+
+    <!-- new client modal -->
+
+    <div class="modal_contain" id="new_client">
+        <h2 class="sub_header mb4">New Client</h2>
+        <form action="{{ route('clients.create') }}" method="POST" enctype="multipart/form-data">
+            {{ csrf_field() }}
+            <div class="clearfix">
+                <div class="input_wrap column col_7{{ $errors->has('brand_name') ? ' has-error' : '' }}">
+                    <label class="small_faint">Client Brand</label>
+                    <input type="text" name="brand_name" value=""  placeholder="e.g Coca Cola">
+                    @if($errors->has('brand_name'))
+                        <strong>
+                            <span class="error-block" style="color: red;">{{ $errors->first('brand_name') }}</span>
+                        </strong>
+                    @endif
+                </div>
+                <input type="hidden" name="broadcaster_id" value="{{ null }}">
+                <input type="hidden" name="client_type_id" value="2">
+                <input type="hidden" name="agency_id" value="">
+                <div class='column col_5 file_select align_center pt3{{ $errors->has('image_url') ? ' has-error' : '' }}'>
+                    <input type="file" id="file" name="image_url" />
+                    <span class="small_faint block_disp mb3">Add Logo</span>
+                    @if($errors->has('image_url'))
+                        <strong>
+                            <span class="error-block" style="color: red;">{{ $errors->first('image_url') }}</span>
+                        </strong>
+                    @endif
+                </div>
+            </div>
+
+            <div class="input_wrap{{ $errors->has('email') ? ' has-error' : '' }}">
+                <label class="small_faint">Email</label>
+                <input type="email" name="email" placeholder="name@example.com">
+                @if($errors->has('email'))
+                    <strong>
+                        <span class="error-block" style="color: red;">{{ $errors->first('email') }}</span>
+                    </strong>
                 @endif
             </div>
-        </div>
-    </div>
 
-    <div class="text-center">
-        {{ $clients->links() }}
-    </div>
+            <div class="input_wrap{{ $errors->has('phone') ? ' has-error' : '' }}">
+                <label class="small_faint">Phone Number</label>
+                <input type="text" name="phone" placeholder="234** **** ****">
+                @if($errors->has('phone'))
+                    <strong>
+                        <span class="error-block" style="color: red;">{{ $errors->first('phone') }}</span>
+                    </strong>
+                @endif
+            </div>
 
-    @foreach($clients as $client)
-    <div class="modal fade" id="brand{{ $client['client_id'] }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
+            <div class="input_wrap{{ $errors->has('address') ? ' has-error' : '' }}">
+                <label class="small_faint">Address</label>
+                <input type="text" name="address" placeholder="Enter Address">
+                @if($errors->has('address'))
+                    <strong>
+                        <span class="error-block" style="color: red;">{{ $errors->first('address') }}</span>
+                    </strong>
+                @endif
+            </div>
 
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">
-                        Add a new brand for <strong>{{ $client['name'] }}</strong>
-                    </h4>
+            <div class="input_wrap">
+                <label class="small_faint">Industry</label>
+
+                <div class="select_wrap">
+                    <select name="industry" id="industry">
+                        <option value="">Select Industry</option>
+                        @foreach($industries as $industry)
+                            <option value="{{ $industry->sector_code }}">{{ $industry->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
+            <div class="input_wrap">
+                <label class="small_faint">Sub Industry</label>
+
+                <div class="select_wrap">
+                    <select name="sub_industry" id="sub_industry">
+
+                    </select>
+                </div>
+            </div>
+
+            <div class="clearfix mb">
+                <div class="input_wrap col_6 column{{ $errors->has('first_name') ? ' has-error' : '' }}">
+                    <label class="small_faint">First Name</label>
+                    <input type="text" id="first_name" name="first_name" placeholder="Enter First Name">
+                    @if($errors->has('first_name'))
+                        <strong>
+                            <span class="error-block" style="color: red;">{{ $errors->first('first_name') }}</span>
+                        </strong>
+                    @endif
                 </div>
 
-                <form action="{{ route('agency.brand.store') }}" method="post" enctype="multipart/form-data">
-                    {{ csrf_field() }}
-                    <div class="modal-body">
-                        <div class="input-group{{ $errors->has('brand_name') ? ' has-error' : '' }}">
-                            <label for="brand">Brand Name</label>
-                            <input type="text" class="form-control" name="brand_name" value=""  placeholder="Brand Name">
-
-                            @if($errors->has('brand_name'))
-                                <strong>
-                                    <span class="help-block">{{ $errors->first('brand_name') }}</span>
-                                </strong>
-                            @endif
-                        </div>
-                        <div class="input-group">
-                            <input type="hidden" name="clients" value="{{ $client['agency_client_id'] }}">
-                        </div>
-                        <div class="input-group{{ $errors->has('brand_logo') ? ' has-error' : '' }}">
-                            <label for="brand_logo">Brand Logo</label>
-                            <input type="file" class="form-control" name="brand_logo" value=""  placeholder="">
-
-                            @if($errors->has('brand_logo'))
-                                <strong>
-                                    <span class="help-block">{{ $errors->first('brand_logo') }}</span>
-                                </strong>
-                            @endif
-                        </div>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-success">Add Brand</button>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                    </div>
-                </form>
-
+                <div class="input_wrap col_6 column{{ $errors->has('last_name') ? ' has-error' : '' }}">
+                    <label class="small_faint">Last Name</label>
+                    <input type="text" id="last_name" name="last_name" placeholder="Enter Last Name">
+                    @if($errors->has('last_name'))
+                        <strong>
+                            <span class="error-block" style="color: red;">{{ $errors->first('last_name') }}</span>
+                        </strong>
+                    @endif
+                </div>
             </div>
-        </div>
-    </div>
-    @endforeach
 
+
+            <div class="align_right">
+                <input type="submit" value="Create Client" class="btn uppercased update">
+            </div>
+
+        </form>
+    </div>
 @stop
 
 @section('scripts')
+    <script>
+        $(document).ready(function () {
+            // $("#state").change(function() {
+            $('#industry').on('change', function(e){
+                $(".modal_contain").css({
+                    opacity: 0.5
+                });
+                $('.update').attr("disabled", true);
+                var industry = $("#industry").val();
+                var url = '/walk-in/brand';
+                $.ajax({
+                    url: url,
+                    method: "GET",
+                    data: {industry: industry},
+                    success: function(data){
+                        if(data.error === 'error'){
+                            $(".changing").css({
+                                opacity: 1
+                            });
+                            $('.update').attr("disabled", false);
+                        }else{
+                            $(".modal_contain").css({
+                                opacity: 1
+                            });
+                            $('.update').attr("disabled", false);
 
-    {!! HTML::script('assets/js/moment.min.js') !!}
-    {!! HTML::script('assets/js/bootstrap-datetimepicker.min.js') !!}
-    {!! HTML::script('assets/js/as/profile.js') !!}
+                            $('#sub_industry').empty();
 
+                            $('#sub_industry').append(' Please choose one');
+
+                            $.each(data, function(index, title){
+                                $("#sub_industry").append('' + '<option value ="'+ title.sub_sector_code + '"  > ' + title.name + '  </option>');
+                            });
+                        }
+
+                    }
+                });
+            });
+        });
+
+    </script>
 @stop
