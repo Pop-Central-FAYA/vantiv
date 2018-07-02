@@ -1,4 +1,4 @@
-@extends('layouts.auth')
+@extends('layouts.old_auth')
 
 @section('page-title', trans('app.reset_password'))
 

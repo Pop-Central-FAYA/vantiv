@@ -228,6 +228,7 @@ class DashboardController extends Controller
                     $tot[] = $p['total'];
                 }
             }
+
             foreach ($pe as $p) {
                 if (!$p) {
                     $date[] = 0;
@@ -235,6 +236,7 @@ class DashboardController extends Controller
                     $date[] = $p['date'];
                 }
             }
+
             foreach ($pe as $p) {
                 if (!$p) {
                     $bra[] = 0;
@@ -303,6 +305,63 @@ class DashboardController extends Controller
             #unapproval
             $invoice_unapproval = Api::countUnapproved($agency_id);
 
+//            TV
+            $tv_rating = $this->tv($agency_id);
+            $active = $tv_rating['per_active'];
+            $pending = $tv_rating['per_pending'];
+            $finished = $tv_rating['per_finished'];
+
+            $today = date("Y-m-d");
+
+//            all clients
+            $clients = Utilities::switch_db('reports')->select("SELECT * FROM walkIns WHERE agency_id = '$agency_id' ORDER BY time_created DESC");
+
+//            pending invoices
+            $pending_invoices = Utilities::switch_db('api')->select("SELECT * FROM invoiceDetails where agency_id = '$agency_id' AND status = 0 GROUP BY invoice_id");
+
+//            all_brands
+            $all_brands = Utilities::switch_db('api')->select("SELECT * FROM brands where broadcaster_agency = '$agency_id'");
+
+            $active_campaigns = Utilities::switch_db('api')->select("SELECT * FROM campaignDetails where agency = '$agency_id' AND start_date < '$today' AND stop_date > '$today' GROUP BY campaign_id");
+
+//            campaigns
+            $agency_campaigns = [];
+            $all_campaign = Utilities::switch_db('api')->select("SELECT * from campaignDetails WHERE agency = '$agency_id' AND adslots > 0 GROUP BY campaign_id ORDER BY time_created DESC");
+
+            foreach ($all_campaign as $cam)
+            {
+
+                $campaign_reference = Utilities::switch_db('api')->select("SELECT * from campaigns where id = '$cam->campaign_id'");
+//            $today = strtotime(date('Y-m-d'));
+                $today = date("Y-m-d");
+                if(strtotime($today) > strtotime($cam->start_date) && strtotime($today) > strtotime($cam->stop_date)){
+                    $status = 'expired';
+                }elseif (strtotime($today) >= strtotime($cam->start_date) && strtotime($today) <= strtotime($cam->stop_date)){
+                    $status = 'active';
+                }else{
+                    $now = strtotime($today);
+                    $your_date = strtotime($cam->start_date);
+                    $datediff = $your_date - $now;
+                    $new_day =  round($datediff / (60 * 60 * 24));
+                    $status = 'pending';
+                }
+                $brand = Utilities::switch_db('api')->select("SELECT `name` as brand_name from brands where id = '$cam->brand'");
+                $pay = Utilities::switch_db('api')->select("SELECT total from payments where campaign_id = '$cam->campaign_id'");
+                $agency_campaigns[] = [
+                    'id' => $campaign_reference[0]->campaign_reference,
+                    'camp_id' => $cam->id,
+                    'name' => $cam->name,
+                    'brand' => $brand[0]->brand_name,
+                    'product' => $cam->product,
+                    'start_date' => date('Y-m-d', strtotime($cam->start_date)),
+                    'end_date' => date('Y-m-d', strtotime($cam->stop_date)),
+                    'adslots' => $cam->adslots,
+                    'budget' => number_format($pay[0]->total, 2),
+                    'compliance' => '0%',
+                    'status' => $status
+                ];
+            }
+
             #region
 //            $payments = Utilities::switch_db('api')->select("SELECT SUM(amount) as total from payments WHERE campaign_id IN(SELECT id from campaigns where adslots_id IN(SELECT * from ))");
 
@@ -320,6 +379,14 @@ class DashboardController extends Controller
                                                                     'bra_am' => $bra_am,
                                                                     'bra_na' => $bra_na,
                                                                     'brand' => $bra,
+                                                                    'active_campaigns' => $active_campaigns,
+                                                                    'all_brands' => $all_brands,
+                                                                    'pending_invoices' => $pending_invoices,
+                                                                    'clients' => $clients,
+                                                                    'active' => $active,
+                                                                    'pending' => $pending,
+                                                                    'finished' => $finished,
+                                                                    'agency_campaigns' => $agency_campaigns,
                                                                     'agency_info' => $agency_info]);
 
         } else if ($role->role_id === 6) {
@@ -934,6 +1001,31 @@ class DashboardController extends Controller
         }
 
         return response()->json(['pro_month' => $pro_period_month]);
+    }
+
+    public function tv($agency_id)
+    {
+        $today = date("Y-m-d");
+        $chanel_tv = Utilities::switch_db('api')->select("SELECT * FROM campaignChannels where channel = 'TV'");
+        $chanel_tv_id = $chanel_tv[0]->id;
+        $all_tv_campaigns = Utilities::switch_db('api')->select("SELECT * FROM campaignDetails where channel = '$chanel_tv_id' AND agency = '$agency_id' GROUP BY campaign_id");
+//        $active_tv_channel = Utilities::switch_db('api')->select("SELECT * FROM campaignDetails where channel = '$chanel_tv_id' AND agency = '$agency_id' AND start_date >= '$today' AND stop_date >= '$today' GROUP BY campaign_id");
+        $pending_tv_channel = Utilities::switch_db('api')->select("SELECT * FROM campaignDetails where channel = '$chanel_tv_id' AND agency = '$agency_id' AND start_date > '$today'  GROUP BY campaign_id");
+        $finished_tv_channel = Utilities::switch_db('api')->select("SELECT * FROM campaignDetails where channel = '$chanel_tv_id' AND agency = '$agency_id' AND stop_date < '$today'  GROUP BY campaign_id");
+
+        //maths to calculate the percentage values
+        $total_for_tv = count($all_tv_campaigns);
+        $total_pending = count($pending_tv_channel);
+        $total_finished = count($finished_tv_channel);
+
+        $total_active = $total_for_tv - ($total_finished + $total_pending);
+
+        //percentage values
+        $perc_active = ($total_active / $total_for_tv) * 100;
+        $perc_finished = ($total_finished / $total_for_tv) * 100;
+        $perc_pending = ($total_pending / $total_for_tv) * 100;
+
+        return (['per_active' => $perc_active, 'per_finished' => $perc_finished, 'per_pending' => $perc_pending]);
     }
 
 

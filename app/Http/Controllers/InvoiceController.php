@@ -12,7 +12,7 @@ class InvoiceController extends Controller
     {
         $agency_id = Session::get('agency_id');
 
-        $all_invoices = Utilities::switch_db('reports')->select("SELECT * FROM invoiceDetails WHERE  agency_id = '$agency_id' GROUP BY invoice_id");
+        $all_invoices = Utilities::switch_db('reports')->select("SELECT * FROM invoiceDetails WHERE  agency_id = '$agency_id' GROUP BY invoice_id ORDER BY time_created DESC");
 
         $invoice_campaign_details = [];
 
@@ -34,13 +34,16 @@ class InvoiceController extends Controller
             $payment = Utilities::switch_db('api')->select("SELECT * from payments where campaign_id = '$campaign_id'");
 
             $invoice_campaign_details[] = [
+                'id' => $invoice->invoice_id,
                 'invoice_number' => $invoice->invoice_number,
                 'actual_amount_paid' => number_format($payment[0]->total, 2),
                 'refunded_amount' => $invoice->refunded_amount,
                 'name' => $user_details && $user_details[0] ? $user_details[0]->lastname . ' ' . $user_details[0]->firstname : '',
                 'status' => $invoice->status,
                 'campaign_brand' => $brand_name[0]->name,
-                'campaign_name' => $campaign[0]->name
+                'campaign_name' => $campaign[0]->name,
+                'start_date' => date('Y/m/d', strtotime($campaign[0]->start_date)),
+                'end_date' =>   date('Y/m/d', strtotime($campaign[0]->stop_date)),
             ];
         }
 

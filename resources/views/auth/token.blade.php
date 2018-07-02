@@ -1,4 +1,4 @@
-@extends('layouts.auth')
+@extends('layouts.old_auth')
 
 @section('page-title', trans('app.two_factor_authentication'))
 

@@ -21,13 +21,18 @@ class WalletsController extends Controller
         $agency_id = \Session::get('agency_id');
         if($agency_id != null){
             $user_id = $agency_id;
+            $agent_user_id = Utilities::switch_db('api')->select("SELECT user_id from agents where id = '$user_id'");
+            $user = $agent_user_id[0]->user_id;
+            $user_det = Utilities::switch_db('api')->select("SELECT * from users where id = '$user'");
         }else{
             $user_id = Session::get('advertiser_id');
+            $user_det = Utilities::switch_db('api')->select("SELECT * from users where id = (SELECT user_id from advertisers where id = '$user_id')");
         }
         $wallets = Utilities::switch_db('api')->select("SELECT SUM(current_balance) as balance from wallets where user_id = '$user_id'");
         $wallet_history = Utilities::switch_db('api')->select("SELECT * from walletHistories where user_id = '$user_id'");
-        $transaction = Utilities::switch_db('api')->select("SELECT * from transactions WHERE user_id = '$user_id' ORDER BY time_created DESC LIMIT 1");
-        return view('wallets.wallet_statement')->with('wallet', $wallets)->with('history', $wallet_history)->with('transaction', $transaction)->with(['agency_id' => $agency_id, 'advertiser_id' => Session::get('advertiser_id')]);
+        $transaction = Utilities::switch_db('api')->select("SELECT * from transactions WHERE user_id = '$user_id' ORDER BY time_created DESC ");
+
+        return view('wallets.wallet_statement')->with('wallet', $wallets)->with('user_det', $user_det)->with('user_id', $user_id)->with('history', $wallet_history)->with('transactions', $transaction)->with(['agency_id' => $agency_id, 'advertiser_id' => Session::get('advertiser_id')]);
     }
 
     public function getData(Datatables $datatables)
@@ -121,7 +126,7 @@ class WalletsController extends Controller
                 $this->updateWallet($amount);
                 $msg = 'Your wallet has been funded with NGN'. $amount;
                 Session::flash('success', $msg);
-                return redirect()->route('wallet.statement');
+                return redirect()->back();
             }
 
         } else {

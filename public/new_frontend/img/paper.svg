@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="46px" height="57px" viewBox="0 0 46 57" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.2 (51160) - http://www.bohemiancoding.com/sketch -->
+    <title>Page 1</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Dashboard-Campaigns" transform="translate(-643.000000, -313.000000)" stroke="#000000" stroke-width="3">
+            <g id="Pie-chats" transform="translate(258.000000, 288.000000)">
+                <g id="news" transform="translate(326.000000, 0.000000)">
+                    <g id="Page-1" transform="translate(61.000000, 27.000000)">
+                        <polygon id="Stroke-1" points="0.311764706 52.6882353 42.0882353 52.6882353 42.0882353 0.311764706 0.311764706 0.311764706"></polygon>
+                        <polygon id="Stroke-3" points="7.17058824 20.2647059 21.5117647 20.2647059 21.5117647 5.92352941 7.17058824 5.92352941"></polygon>
+                        <path d="M25.8916847,5.92352941 L36.7884847,5.92352941" id="Stroke-4"></path>
+                        <path d="M25.8916847,12.4705882 L36.7884847,12.4705882" id="Stroke-5"></path>
+                        <path d="M25.8916847,19.0176471 L36.7884847,19.0176471" id="Stroke-6"></path>
+                        <path d="M6.23529412,26.5 L36.4764706,26.5" id="Stroke-7"></path>
+                        <path d="M6.23529412,32.9432412 L36.4764706,32.9432412" id="Stroke-8"></path>
+                        <path d="M6.23529412,39.3861706 L36.4764706,39.3861706" id="Stroke-9"></path>
+                        <path d="M6.23529412,45.8294118 L16.5235294,45.8294118" id="Stroke-10"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

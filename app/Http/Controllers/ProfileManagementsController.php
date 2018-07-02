@@ -47,6 +47,7 @@ class ProfileManagementsController extends Controller
                 'location' => $api_agent[0]->location,
                 'nationality' => $api_agent[0]->nationality,
                 'username' => $local_user[0]->username,
+                'image' => $api_agent[0]->image_url ? decrypt($api_agent[0]->image_url) : ''
             ];
 
         } elseif ($advertiser_id){
@@ -62,6 +63,7 @@ class ProfileManagementsController extends Controller
                 'location' => $api_agent[0]->location,
                 'nationality' => $api_agent[0]->nationality,
                 'username' => $local_user[0]->username,
+                'image' => $api_agent[0]->image_url ? decrypt($api_agent[0]->image_url) : ''
             ];
         } elseif($broadcaster_id) {
             $api_user = Utilities::switch_db('api')->select("SELECT * from users where id = (SELECT user_id from broadcasters where id = '$broadcaster_id')");
@@ -76,6 +78,7 @@ class ProfileManagementsController extends Controller
                 'location' => $api_agent[0]->location,
                 'nationality' => $api_agent[0]->nationality,
                 'username' => $local_user[0]->username,
+                'image' => $api_agent[0]->image_url ? decrypt($api_agent[0]->image_url) : ''
             ];
         }elseif($broadcaster_user){
             $api_user = Utilities::switch_db('api')->select("SELECT * from users where id = (SELECT user_id from broadcasterUsers where id = '$broadcaster_user')");
@@ -90,6 +93,7 @@ class ProfileManagementsController extends Controller
                 'location' => $api_agent[0]->location,
                 'nationality' => $api_agent[0]->nationality,
                 'username' => $local_user[0]->username,
+                'image' => $api_agent[0]->image_url ? decrypt($api_agent[0]->image_url) : ''
             ];
         }elseif($admin_id){
             $api_user = Utilities::switch_db('api')->select("SELECT * from users where id = (SELECT user_id from admins where id = '$admin_id')");
@@ -104,6 +108,7 @@ class ProfileManagementsController extends Controller
                 'location' => $api_agent[0]->location,
                 'nationality' => $api_agent[0]->nationality,
                 'username' => $local_user[0]->username,
+                'image' => $api_agent[0]->image_url ? decrypt($api_agent[0]->image_url) : ''
             ];
         }elseif($client_id){
             $api_user = Utilities::switch_db('api')->select("SELECT * from users where id = (SELECT user_id from walkIns where id = '$client_id')");
@@ -118,6 +123,7 @@ class ProfileManagementsController extends Controller
                 'location' => $api_agent[0]->location ? $api_agent[0]->location : '',
                 'nationality' => $api_agent[0]->nationality ? $api_agent[0]->nationality : '',
                 'username' => $local_user[0]->username,
+                'image' => $api_agent[0]->image_url ? decrypt($api_agent[0]->image_url) : ''
             ];
 
         }

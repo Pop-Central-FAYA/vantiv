@@ -1,85 +1,469 @@
-@extends('layouts.app')
+@extends('layouts.faya_app')
 
-@section('stylesheets')
-
-    <link rel="stylesheet" href="{{ asset('asset/plugins/datatables/dataTables.bootstrap.css') }}" />
-    <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
-
-@endsection
+@section('title')
+    <title>FAYA | Client List</title>
+@stop
 
 @section('content')
+    <div class="main_contain">
+        <!-- heaser -->
+        @include('partials.new-frontend.agency.header')
 
-@section('title', trans('app.view-client'))
+        <!-- subheader -->
+        <div class="sub_header clearfix mb pt">
+            <div class="column col_6">
+                <h2 class="sub_header">Clients</h2>
+            </div>
+        </div>
 
-<section class="content-header">
-    <h1>
-        All Clients <small>Clients Portfolio</small>
-    </h1>
 
-    <ol class="breadcrumb" style="font-size: 16px">
-        <li><a href="#"><i class="fa fa-edit"></i> Clients Management</a> </li>
-        <li><a href=""><i class="fa fa-address-card"></i> View Client</a> </li>
-    </ol>
-</section>
+        <!-- main stats -->
+        <div class="the_frame clearfix mb ">
+            <div class="border_bottom clearfix client_name">
+                <a href="{{ route('clients.list') }}" class="back_icon block_disp left"></a>
+                <div class="left">
+                    <h2 class='sub_header'>{{ $user_details[0]->firstname . ' ' . $user_details[0]->lastname }}</h2>
+                </div>
 
-<!-- Main content -->
+                <span class="client_ava right"><img src="{{ $client[0]->image_url ? asset(decrypt($client[0]->image_url)) : '' }}"></span>
+            </div>
 
-<section class="content">
+            <div class="clearfix client_personal">
+                <div class="column col_3">
+                    <span class="small_faint">Email</span>
+                    <p class='weight_medium'>{{ $user_details[0]->email }}</p>
+                </div>
 
-    <div class="row">
+                <div class="column col_3">
+                    <span class="small_faint">Phone</span>
+                    <p class='weight_medium'>{{ $user_details[0]->phone_number }}</p>
+                </div>
 
-        <div class="col-xs-12">
+                <div class="column col_3">
+                    <span class="small_faint">Address</span>
+                    <p class='weight_medium'>{{ $client[0]->location }}</p>
+                </div>
 
-            <div class="col-md-6" style="margin-bottom: 10px;"></div>
+                <div class="column col_3">
+                    <span class="small_faint">Joined</span>
+                    <p class='weight_medium'>{{ date('M j, Y', strtotime($user_details[0]->time_created)) }}</p>
+                </div>
+            </div>
+        </div>
 
-            <div class="col-md-12">
 
-                {{--<h3 align="right">Current Balance: N200,000</h3>--}}
+        <!-- client charts -->
+        <div class="the_frame mb client_charts content_month">
 
-                <h2>{{ $user_details[0]->first_name . ' ' . $user_details[0]->last_name }}</h2>
+            <form action="{{ route('client.month', ['client_id' => $client_id]) }}" id="client_month" method="get">
 
-                <div class="col-xs-12">
-                    <div class="box">
-                        <div class="box-body">
-                            <table id="example1" class="table table-bordered table-striped" style="font-size: 16px">
-                                <thead>
-                                    <tr>
-                                        <th>Product</th>
-                                        <th>No. of Adslots</th>
-                                        <th>Total Expense</th>
-                                        <th>Date Created</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($campaign as $campaigns)
-                                        <tr>
-                                            <td>{{ $campaigns['product'] }}</td>
-                                            <td>{{ $campaigns['num_of_slot'] }}</td>
-                                            <td>&#8358;{{ number_format($campaigns['payment'], 2) }}</td>
-                                            <td>{{ date('M j, Y', strtotime($campaigns['date'])) }}</td>
-                                        </tr>
+                <div class="chart_filters border_bottom clearfix">
+                    <div class="column col_10 date_filter">
+                        <a id="default" href="" class="active">1M</a>
+                        <a id="yearly_client" href="{{ route('client.year', ['client_id' => $client_id]) }}">1Y</a>
+                    </div>
+
+                    <div class="column col_2">
+                        <div class="select_wrap">
+
+                                <select name="month" id="month">
+                                    @foreach($months as $month)
+                                        <option value="{{ $month }}"
+                                                @if($current_month === $month)
+                                                selected
+                                                @endif
+                                        >{{ $month }}</option>
                                     @endforeach
-                                </tbody>
-                            </table>
+                                </select>
+
                         </div>
 
                     </div>
                 </div>
 
-            </div>
+                <div class="the_stats clearfix mb border_bottom mb" id="this_box">
+                    <div class="active_fill column col_4">
+                        <span class="small_faint uppercased weight_medium">Total Campaigns</span>
+                        <h3>{{ count($all_campaign_this_month) }}</h3>
+                    </div>
+
+                    <div class="column col_4">
+                        <span class="small_faint uppercased weight_medium">Total Spent</span>
+                        <h3>&#8358; {{ $total_this_month ? number_format($total_this_month[0]->total, 2) : 0 }}</h3>
+                    </div>
+
+                    <div class="column col_4">
+                        <span class="small_faint uppercased weight_medium">Brands</span>
+                        <h3>{{ $brand_this_month[0]->brand }}</h3>
+
+                        <a href="" class="weight_medium small_font view_brands">View Brands</a>
+                    </div>
+                </div>
+
+                <div class="the_stats clearfix mb border_bottom mb" id="show_this" style="display: none">
+                    <div class="active_fill column col_4">
+                        <span class="small_faint uppercased weight_medium">Total Campaigns</span>
+                        <h3>{{ count($all_campaign_this_month) }}</h3>
+                    </div>
+
+                    <div class="column col_4">
+                        <span class="small_faint uppercased weight_medium">Total Spent</span>
+                        <h3>&#8358; {{ $total_this_month ? number_format($total_this_month[0]->total, 2) : 0 }}</h3>
+                    </div>
+
+                    <div class="column col_4">
+                        <span class="small_faint uppercased weight_medium">Brands</span>
+                        <h3>{{ $brand_this_month[0]->brand }}</h3>
+
+                        <a href="" class="weight_medium small_font view_brands">View Brands</a>
+                    </div>
+                </div>
+
+
+                <div class="main_chart padd">
+                    <h3>Campaigns Vs Time</h3>
+                    <p><br></p><br>
+                    <div id="container" style="min-width: 310px; height: 350px; margin: 0 auto"></div>
+                </div>
+
+            </form>
 
         </div>
 
 
-    </div>
-</section>
+        <div class="the_frame client_dets mb4">
 
+            <div class="tab_header m4 border_bottom clearfix">
+                <a href="#history">Campaign History</a>
+                <a href="#brands">Brands</a>
+            </div>
+
+            <div class="tab_contain">
+                <div class="tab_content" id="history">
+
+                    <table>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Brand</th>
+                            <th>Product</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Budget</th>
+                            <th>Ad Slots</th>
+                            <th>Status</th>
+                        </tr>
+                        @foreach($all_campaigns as $all_campaign)
+                            <tr>
+                                <td>243</td>
+                                <td><a href="">{{ $all_campaign['name'] }}</a></td>
+                                <td>{{ ucfirst($all_campaign['brand']) }}</td>
+                                <td>{{ $all_campaign['product'] }}</td>
+                                <td>{{ $all_campaign['start_date'] }}</td>
+                                <td>{{ $all_campaign['end_date'] }}</td>
+                                <td>&#8358;{{ $all_campaign['budget'] }}</td>
+                                <td>{{ $all_campaign['adslots'] }}</td>
+                                @if($all_campaign['status'] === 'active')
+                                    <td><span class="span_state status_success">Active</span></td>
+                                @elseif($all_campaign['status'] === 'expired')
+                                    <td><span class="span_state status_danger">Expired</span></td>
+                                @else
+                                    <td><span class="span_state status_pending">Pending</span></td>
+                                @endif
+                            </tr>
+                        @endforeach
+                    </table>
+
+                </div>
+                <!-- end -->
+
+                <!-- brand -->
+                <div class="tab_content" id="brands">
+
+                    <div class="similar_table pt3">
+                        <!-- table header -->
+                        <div class="_table_header clearfix m-b">
+                            <span class="weight_medium small_faint block_disp column col_4 padd">Brand</span>
+                            <span class="weight_medium small_faint block_disp column col_2">All Campaigns</span>
+                            <span class="weight_medium small_faint block_disp column col_2">Total Expense</span>
+                            <span class="weight_medium small_faint block_disp column col_3">Last Campaign</span>
+                            <span class="weight_medium block_disp column col_1 color_trans">.</span>
+                        </div>
+
+                        <!-- table item -->
+                        @foreach($all_brands as $all_brand)
+                        <div class="_table_item the_frame clearfix">
+                            <div class="padd column col_4">
+                                <span class="client_ava"><img src="{{ $all_brand['image_url'] ? asset(decrypt($all_brand['image_url'])) : '' }}"></span>
+                                <p>{{ ucfirst($all_brand['brand']) }}</p>
+                                <span class="small_faint">Added {{ date('M j, Y', strtotime($all_brand['date'])) }}</span>
+                            </div>
+                            <div class="column col_2">{{ $all_brand['campaigns'] }}</div>
+                            <div class="column col_2">&#8358; {{ $all_brand['total'] }}</div>
+                            <div class="column col_3">{{ $all_brand['last_campaign'] }}</div>
+                            <div class="column col_1">
+                                <span class="more_icon"></span>
+                            </div>
+                            <a href="{{ route('campaign.brand.client', ['id' => $all_brand['id'], 'client_id' => $client_id]) }}">Details</a>
+                        </div>
+                        @endforeach
+                        <!-- table item end -->
+                    </div>
+
+                </div>
+                <!-- end -->
+            </div>
+
+        </div>
+
+    </div>
 @stop
 
 @section('scripts')
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script>
+        <?php echo "var week_date = ".$week_date . ";\n"; ?>
+        <?php echo "var week_amount = ".$week_payment . ";\n"; ?>
+        Highcharts.chart('container', {
+            chart: {
+                type: 'area'
+            },
+            xAxis: {
+                categories: week_date,
+                labels: {
+                    formatter: function () {
+                        return Highcharts.dateFormat('%Y-%m-%d', this.value);
+                    }
+                }
+            },
+            yAxis: {
+                title: {
+                    text: 'Number of Campaigns'
+                },
+                labels: {
+                    formatter: function () {
+                        return this.value / 1000 + 'k';
+                    }
+                }
+            },
+            tooltip: {
+                pointFormat: '<b>{series.name} {point.y:,.0f}</b><br/> '
+            },
+            plotOptions: {
+                area: {
+                    pointStart: week_date[0],
+                    marker: {
+                        enabled: false,
+                        symbol: 'circle',
+                        radius: 2,
+                        states: {
+                            hover: {
+                                enabled: true
+                            }
+                        }
+                    }
+                }
+            },
+            credits: {
+                enabled: false
+            },
+            series: [{
+                name: 'Total Budget',
+                color: '#00C4CA',
+                data: week_amount,
+            }]
+        });
 
-    {!! HTML::script('assets/js/moment.min.js') !!}
-    {!! HTML::script('assets/js/bootstrap-datetimepicker.min.js') !!}
-    {!! HTML::script('assets/js/as/profile.js') !!}
 
+        $(document).ready(function () {
+
+            //monthly filter
+            $("#month").change(function () {
+
+                $(".content_month").css({
+                    opacity: 0.3
+                });
+
+                var month = $("#month").val();
+                var url = $("#client_month").attr('action');
+                var user_id = "<?php echo $client_id; ?>";
+
+                $.get(url, {'month': month, 'user_id' : user_id, '_token':$('input[name=_token]').val()}, function(data) {
+
+                    $(".content_month").css({
+                        opacity: 1
+                    });
+
+                    var big_html =
+                        '                    <div class="active_fill column col_4">\n' +
+                        '                        <span class="small_faint uppercased weight_medium">Total Campaigns</span>\n' +
+                        '                        <h3>'+data.all_campaign.length+'</h3>\n' +
+                        '                    </div>\n' +
+                        '\n' +
+                        '                    <div class="column col_4">\n' +
+                        '                        <span class="small_faint uppercased weight_medium">Total Spent</span>\n' +
+                        '                        <h3>&#8358;'+ data.all_total +'</h3>\n' +
+                        '                    </div>\n' +
+                        '\n' +
+                        '                    <div class="column col_4">\n' +
+                        '                        <span class="small_faint uppercased weight_medium">Brands</span>\n' +
+                        '                        <h3>'+data.all_brand.length +'</h3>\n' +
+                        '\n' +
+                        '                        <a href="" class="weight_medium small_font view_brands">View Brands</a>\n' +
+                        '                    </div>\n';
+
+                    $("#this_box").hide();
+                    $('#show_this').show();
+                    $('#show_this').html(big_html);
+
+
+                    Highcharts.chart('container', {
+                        chart: {
+                            type: 'area'
+                        },
+                        xAxis: {
+                            categories: data.monthly_date
+                        },
+                        yAxis: {
+                            title: {
+                                text: 'Number of Campaigns'
+                            },
+                            labels: {
+                                formatter: function () {
+                                    return this.value / 1000 + 'k';
+                                }
+                            }
+                        },
+                        tooltip: {
+                            pointFormat: '<b>{series.name} {point.y:,.0f}</b><br/> '
+                        },
+                        plotOptions: {
+                            area: {
+                                pointStart: 0,
+                                marker: {
+                                    enabled: false,
+                                    symbol: 'circle',
+                                    radius: 2,
+                                    states: {
+                                        hover: {
+                                            enabled: true
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        credits: {
+                            enabled: false
+                        },
+                        series: [{
+                            name: 'Total Budget',
+                            color: '#00C4CA',
+                            data: data.monthly_total,
+                        }]
+                    });
+
+
+                })
+            })
+
+            //Yearly filter
+            $("#yearly_client").click(function () {
+                event.preventDefault();
+                $(".content_month").css({
+                    opacity: 0.3
+                });
+
+                var url = $("#yearly_client").attr('href');
+                var user_id = "<?php echo $client_id; ?>";
+
+                $.get(url, {'user_id' : user_id, '_token':$('input[name=_token]').val()}, function(data) {
+
+                    $(".content_month").css({
+                        opacity: 1
+                    });
+
+                    var big_html =
+                        '                    <div class="active_fill column col_4">\n' +
+                        '                        <span class="small_faint uppercased weight_medium">Total Campaigns</span>\n' +
+                        '                        <h3>'+data.all_campaign.length+'</h3>\n' +
+                        '                    </div>\n' +
+                        '\n' +
+                        '                    <div class="column col_4">\n' +
+                        '                        <span class="small_faint uppercased weight_medium">Total Spent</span>\n' +
+                        '                        <h3>&#8358;'+ data.all_total +'</h3>\n' +
+                        '                    </div>\n' +
+                        '\n' +
+                        '                    <div class="column col_4">\n' +
+                        '                        <span class="small_faint uppercased weight_medium">Brands</span>\n' +
+                        '                        <h3>'+data.all_brand.length +'</h3>\n' +
+                        '\n' +
+                        '                        <a href="" class="weight_medium small_font view_brands">View Brands</a>\n' +
+                        '                    </div>\n';
+
+                    $("#this_box").hide();
+                    $('#show_this').show();
+                    $('#show_this').html(big_html);
+                    $("#default").removeClass('active');
+                    $("#yearly_client").addClass('active');
+
+                    Highcharts.chart('container', {
+                        chart: {
+                            type: 'area'
+                        },
+                        xAxis: {
+                            categories: data.monthly_date
+                        },
+                        yAxis: {
+                            title: {
+                                text: 'Number of Campaigns'
+                            },
+                            labels: {
+                                formatter: function () {
+                                    return this.value / 1000 + 'k';
+                                }
+                            }
+                        },
+                        tooltip: {
+                            pointFormat: '<b>{series.name} {point.y:,.0f}</b><br/> '
+                        },
+                        plotOptions: {
+                            area: {
+                                pointStart: 0,
+                                marker: {
+                                    enabled: false,
+                                    symbol: 'circle',
+                                    radius: 2,
+                                    states: {
+                                        hover: {
+                                            enabled: true
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        credits: {
+                            enabled: false
+                        },
+                        series: [{
+                            name: 'Total Budget',
+                            color: '#00C4CA',
+                            data: data.monthly_total,
+                        }]
+                    });
+
+
+                })
+
+            })
+
+        })
+    </script>
+@stop
+
+@section('styles')
+    <style>
+        .highcharts-grid path { display: none;}
+    </style>
 @stop
