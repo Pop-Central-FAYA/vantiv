@@ -772,8 +772,27 @@ class CampaignsController extends Controller
 
     public function getDetails($id)
     {
+        $agency_id = \Session::get('agency_id');
         $campaign_details = Utilities::campaignDetails($id);
-        return view('agency.campaigns.campaign_details', compact('campaign_details'));
+        $user_id = $campaign_details['campaign_det']['company_user_id'];
+        $all_campaigns = Utilities::switch_db('api')->select("SELECT * FROM campaignDetails where agency = '$agency_id' and user_id = '$user_id' GROUP BY campaign_id");
+        $all_clients = Utilities::switch_db('api')->select("SELECT * FROM walkIns where agency_id = '$agency_id'");
+        return view('agency.campaigns.campaign_details', compact('campaign_details', 'all_campaigns', 'all_clients'));
+    }
+
+    public function filterByUser($user_id)
+    {
+        $agency_id = \Session::get('agency_id');
+        $all_campaigns = Utilities::switch_db('api')->select("SELECT * FROM campaignDetails where agency = '$agency_id' and user_id = '$user_id' GROUP BY campaign_id");
+
+        $media_chanel = Utilities::switch_db('api')->select("SELECT * FROM broadcasters where id IN (SELECT broadcaster from campaignDetails where user_id = '$user_id')");
+        return (['campaign' => $all_campaigns, 'channel' => $media_chanel]);
+    }
+
+    public function filterByCampaignId($campaign_id)
+    {
+        $media_chanel = Utilities::switch_db('api')->select("SELECT * FROM broadcasters where id IN (SELECT broadcaster from campaignDetails where campaign_id = '$campaign_id')");
+        return $media_chanel;
     }
 
     public function mpoDetails($id)

@@ -28,6 +28,7 @@ class ClientsController extends Controller
 
     public function create(Request $request)
     {
+
         $user_agent = $_SERVER['HTTP_USER_AGENT'];
         $description = 'Client '.$request->first_name.' '. $request->last_name.' with brand '.$request->brand_name.' Created by '.Session::get('agency_id');
         $ip = request()->ip();
@@ -42,6 +43,8 @@ class ClientsController extends Controller
             'phone' => 'required|phone_number',
             'brand_name' => 'required',
             'image_url' => 'required|image',
+            'company_name' => 'required',
+            'company_logo' => 'required|image',
         ]);
 
         $brand = Utilities::formatString($request->brand_name);
@@ -58,6 +61,16 @@ class ClientsController extends Controller
             Cloudder::upload($filename, Cloudder::getPublicId());
             $clouder = Cloudder::getResult();
             $image_url = encrypt($clouder['url']);
+        }
+
+        if($request->hasFile('company_logo')){
+            /*handling uploading the image*/
+            $featured = $request->company_logo;
+            $featured_new_name = time().$featured->getClientOriginalName();
+            /*moving the image to public/uploads/post*/
+            $featured->move('company_logo', $featured_new_name);
+
+            $company_image = encrypt('company_logo/'.$featured_new_name);
         }
 
         $userInsert = DB::table('users')->insert([
@@ -104,7 +117,9 @@ class ClientsController extends Controller
             'client_type_id' => $request->client_type_id,
             'location' => $request->address,
             'agency_id' => $agency_id,
-            'nationality' => 566
+            'nationality' => 566,
+            'company_name' => $request->company_name,
+            'company_logo' => $company_image
         ]);
 
         $insertBrands = Utilities::switch_db('api')->insert("INSERT into brands (id, `name`, image_url, walkin_id, broadcaster_agency, industry_id, sub_industry_id) VALUES ('$unique', '$brand', '$image_url', '$client_id', '$agency_id', '$request->industry', '$request->sub_industry')");
@@ -126,7 +141,7 @@ class ClientsController extends Controller
     {
         $ageny_id = \Session::get('agency_id');
 
-        $agencies = Utilities::switch_db('reports')->select("SELECT id, user_id, image_url, time_created FROM walkIns WHERE agency_id = '$ageny_id' ORDER BY time_created DESC");
+        $agencies = Utilities::switch_db('reports')->select("SELECT * FROM walkIns WHERE agency_id = '$ageny_id' ORDER BY time_created DESC");
 
         $agency_data = [];
 
@@ -167,7 +182,9 @@ class ClientsController extends Controller
                 'last_camp' => $date,
                 'active_campaign' => $active_campaign ? count($active_campaign) : 'None',
                 'inactive_campaign' => $inactive_campaign ? count($inactive_campaign) : 'None',
-                'count_brands' => count($brs)
+                'count_brands' => count($brs),
+                'company_name' => $agency->company_name,
+                'company_logo' => $agency->company_logo
             ];
         }
 
@@ -296,7 +313,7 @@ class ClientsController extends Controller
             $pay = Utilities::switch_db('api')->select("SELECT total from payments where campaign_id = '$cam->campaign_id'");
             $campaigns[] = [
                 'id' => $campaign_reference[0]->campaign_reference,
-                'camp_id' => $cam->id,
+                'camp_id' => $cam->campaign_id,
                 'name' => $cam->name,
                 'brand' => $brand[0]->brand_name,
                 'product' => $cam->product,
@@ -471,7 +488,7 @@ class ClientsController extends Controller
             ];
         }
 
-        return view('clients.client_brand', compact('this_brand', 'campaigns', 'user_details', 'client_id'));
+        return view('clients.client_brand', compact('this_brand', 'campaigns', 'user_details', 'client_id', 'client'));
     }
 
 }

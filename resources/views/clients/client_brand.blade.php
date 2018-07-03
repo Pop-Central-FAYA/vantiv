@@ -14,7 +14,7 @@
         <div class="sub_header clearfix mb pt">
             <div class="column col_6">
                 <h2 class="sub_header">Clients</h2>
-                <p class="bread small_font"><a href="{{ route('client.show', ['id' => $client_id]) }}">{{ $user_details[0]->firstname . ' ' . $user_details[0]->lastname }}</a> &raquo; <a href="">Brand</a> &raquo; <span class="weight_medium">{{ $this_brand[0]->name }}</span></p>
+                <p class="bread small_font"><a href="{{ route('client.show', ['id' => $client_id]) }}">{{ $client[0]->company_name }}</a> &raquo; <a href="">Brand</a> &raquo; <span class="weight_medium">{{ $this_brand[0]->name }}</span></p>
             </div>
         </div>
 
@@ -25,7 +25,7 @@
             <div class="tab_contain">
                 <div class="tab_content" id="history">
                     @if(count($campaigns) === 0)
-                        <p>No campaigns for this brand</p>
+
                     @else
                     <table>
                         <tr>

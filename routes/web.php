@@ -377,11 +377,21 @@ Route::group(['middleware' => 'auth'], function () {
 
             Route::get('/campaign-details/{id}', 'Agency\CampaignsController@getDetails')->name('agency.campaign.details');
             Route::get('/mpo-details/{id}', 'Agency\CampaignsController@mpoDetails')->name('agency.mpo.details');
+
+            Route::get('/this/campaign-details/{campaign_id}', 'Agency\CampaignsController@filterByCampaignId');
         });
 
         Route::get('/agency-dashboard/periodic-sales', 'DashboardController@filterByBroad')->name('agency.dashboard.broad');
         Route::get('/agency-dashboard/periodic-brand', 'DashboardController@filterByBrand')->name('agency.dashboard.data');
         Route::get('/agency/percentage-periodic', 'DashboardController@filterByMonth')->name('agency.month');
+
+        Route::get('/campaign-details/{user_id}', 'Agency\CampaignsController@filterByUser');
+        
+        /*
+         * User Management
+         */
+
+        Route::get('/user/manage', 'Agency\UserManagementController@index')->name('agency.use_management');
 
 
         /**

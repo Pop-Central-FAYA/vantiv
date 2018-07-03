@@ -658,9 +658,46 @@ h2.sub_header {
 	padding: 20px;
 }
 
+.campaign_summary {
+	padding: 50px;
+}
 
+.campaign_filter select {
+	padding: 0;
+	border: 0;
+	font-weight: 500;
+	color: #222;
+	font-size: 16px;
+	height: 40px;
+}
 
+.campaign_filter > .column {
+	border: 0;
+}
 
+.tags {
+	padding-top: 15px;
+}
+
+.tags span {
+	background: #5281FE;
+	color: #fff;
+	font-size: 14px;
+	padding: 4px 6px 3px;
+	border-radius: 2px;
+	display: inline-block;
+	margin-bottom: 5px;
+}
+
+.tags span a {
+	display: inline-block;
+	width: 10px;
+	height: 10px;
+	margin-left: 5px;
+	background: #fff;
+	background: url(../img/close_white.svg) no-repeat;
+	background-size: contain;
+}
 
 
 

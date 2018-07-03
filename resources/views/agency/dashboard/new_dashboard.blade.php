@@ -70,9 +70,9 @@
                 <div class="_pie_chart"></div>
 
                 <ul>
-                    <li class="pie_legend active"><span class="weight_medium">25%</span> Active</li>
-                    <li class="pie_legend pending"><span class="weight_medium">15%</span> Pending</li>
-                    <li class="pie_legend finished"><span class="weight_medium">60%</span> Finished</li>
+                    <li class="pie_legend active"><span class="weight_medium">0%</span> Active</li>
+                    <li class="pie_legend pending"><span class="weight_medium">0%</span> Pending</li>
+                    <li class="pie_legend finished"><span class="weight_medium">0%</span> Finished</li>
                 </ul>
             </div>
 
@@ -86,9 +86,9 @@
                 <div class="_pie_chart"></div>
 
                 <ul>
-                    <li class="pie_legend active"><span class="weight_medium">48%</span> Active</li>
-                    <li class="pie_legend pending"><span class="weight_medium">38%</span> Pending</li>
-                    <li class="pie_legend finished"><span class="weight_medium">14%</span> Finished</li>
+                    <li class="pie_legend active"><span class="weight_medium">0%</span> Active</li>
+                    <li class="pie_legend pending"><span class="weight_medium">0%</span> Pending</li>
+                    <li class="pie_legend finished"><span class="weight_medium">0%</span> Finished</li>
                 </ul>
             </div>
 
@@ -102,9 +102,9 @@
                 <div class="_pie_chart"></div>
 
                 <ul>
-                    <li class="pie_legend active"><span class="weight_medium">50%</span> Active</li>
-                    <li class="pie_legend pending"><span class="weight_medium">30%</span> Pending</li>
-                    <li class="pie_legend finished"><span class="weight_medium">20%</span> Finished</li>
+                    <li class="pie_legend active"><span class="weight_medium">0%</span> Active</li>
+                    <li class="pie_legend pending"><span class="weight_medium">0%</span> Pending</li>
+                    <li class="pie_legend finished"><span class="weight_medium">0%</span> Finished</li>
                 </ul>
             </div>
 
@@ -118,9 +118,9 @@
                 <div class="_pie_chart"></div>
 
                 <ul>
-                    <li class="pie_legend active"><span class="weight_medium">75%</span> Active</li>
-                    <li class="pie_legend pending"><span class="weight_medium">18%</span> Pending</li>
-                    <li class="pie_legend finished"><span class="weight_medium">7%</span> Finished</li>
+                    <li class="pie_legend active"><span class="weight_medium">0%</span> Active</li>
+                    <li class="pie_legend pending"><span class="weight_medium">0%</span> Pending</li>
+                    <li class="pie_legend finished"><span class="weight_medium">0%</span> Finished</li>
                 </ul>
             </div>
 
@@ -134,9 +134,9 @@
                 <div class="_pie_chart"></div>
 
                 <ul>
-                    <li class="pie_legend active"><span class="weight_medium">45.5%</span> Active</li>
-                    <li class="pie_legend pending"><span class="weight_medium">28.7%</span> Pending</li>
-                    <li class="pie_legend finished"><span class="weight_medium">25.8%</span> Finished</li>
+                    <li class="pie_legend active"><span class="weight_medium">0%</span> Active</li>
+                    <li class="pie_legend pending"><span class="weight_medium">0%</span> Pending</li>
+                    <li class="pie_legend finished"><span class="weight_medium">0%</span> Finished</li>
                 </ul>
             </div>
 
