@@ -44,19 +44,24 @@ class Utilities {
     public static function campaignDetails($id)
     {
         $file_details = [];
-        $campaign_details = Utilities::switch_db('api')->select("SELECT * from campaignDetails where id = '$id'");
+        $campaign_details = Utilities::switch_db('api')->select("SELECT * from campaignDetails where campaign_id = '$id' GROUP BY campaign_id");
         $campaign_id = $campaign_details[0]->campaign_id;
         $brand_name = $campaign_details[0]->brand;
         $channel = $campaign_details[0]->channel;
+        $location_id = $campaign_details[0]->region;
+        $location = Utilities::switch_db('api')->select("SELECT * FROM regions where id = '$location_id'");
         $brand = Utilities::switch_db('api')->select("SELECT name from brands where id = '$brand_name'");
         $channel_name = Utilities::switch_db('api')->select("SELECT channel from campaignChannels where id = '$channel'");
         $payments = Utilities::switch_db('api')->select("SELECT * from payments where campaign_id = '$campaign_id' ");
         $payment_id = $payments[0]->id;
+        $broadcasters = Utilities::switch_db('api')->select("SELECT * FROM broadcasters where id IN (SELECT broadcaster from campaignDetails where campaign_id = '$id')");
         if(\Session::get('broadcaster_id')){
             $broadcaster_id = \Session::get('broadcaster_id');
             $payments = Utilities::switch_db('api')->select("SELECT amount as total from paymentDetails where payment_id = '$payment_id' and broadcaster = '$broadcaster_id'");
         }
         $user_id = $campaign_details[0]->user_id;
+        $company_info = Utilities::switch_db('api')->select("SELECT * from walkIns where user_id = '$user_id'");
+        $company_name = $company_info[0]->company_name ? $company_info[0]->company_name : '';
         $user_broad = Utilities::switch_db('api')->select("SELECT * from users where id = '$user_id' ");
         $user_agency = DB::select("SELECT * from users where id = '$user_id' ");
         $user_advertiser = Utilities::switch_db('api')->select("SELECT * from users where id = (SELECT user_id from advertisers WHERE id = '$user_id')");
@@ -68,6 +73,7 @@ class Utilities {
             $name = $user_agency[0]->first_name .' '.$user_agency[0]->last_name;
             $email = $user_agency[0]->email;
             $phone = $user_agency[0]->phone;
+            #
         }else{
             $name = $user_advertiser[0]->firstname .' '.$user_advertiser[0]->lastname;
             $email = $user_advertiser[0]->email;
@@ -75,18 +81,24 @@ class Utilities {
         }
 
         $campaign_det = [
+            'campaign_id' => $campaign_details[0]->campaign_id,
             'campaign_name' => $campaign_details[0]->name,
             'product_name' => $campaign_details[0]->product,
             'brand' => $brand[0]->name,
             'industry' => $campaign_details[0]->Industry,
             'sub_industry' => $campaign_details[0]->sub_industry,
             'channel' => $channel_name[0]->channel,
+            'channel_id' => $channel,
             'start_date' => date('Y-m-d', strtotime($campaign_details[0]->start_date)),
             'end_date' => date('Y-m-d', strtotime($campaign_details[0]->stop_date)),
             'campaign_cost' => number_format($payments[0]->total, '2'),
             'walkIn_name' => $name,
+            'company_name' => $company_name,
+            'company_user_id' => $user_id,
             'email' => $email,
             'phone' => $phone,
+            'location' => $location[0]->region,
+            'age' => $campaign_details[0]->min_age .' - '.$campaign_details[0]->max_age,
         ];
 
 
@@ -134,7 +146,7 @@ class Utilities {
             ];
         }
 
-        return (['campaign_det' => $campaign_det, 'file_details' => $file_details]);
+        return (['campaign_det' => $campaign_det, 'file_details' => $file_details, 'broadcasters' => $broadcasters]);
 
     }
 

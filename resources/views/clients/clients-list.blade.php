@@ -54,8 +54,8 @@
             @foreach($clients as $client)
             <div class="_table_item the_frame clearfix">
                 <div class="padd column col_4">
-                    <span class="client_ava"><img src="{{ $client['image_url'] ? asset(decrypt($client['image_url'])) : '' }}"></span>
-                    <p>{{ $client['name'] }}</p>
+                    <span class="client_ava"><img src="{{ $client['company_logo'] ? asset(decrypt($client['company_logo'])) : '' }}"></span>
+                    <p>{{ $client['company_name'] }}</p>
                     <span class="small_faint">Added {{ date('M j, Y h:ia', strtotime($client['created_at'])) }}</span>
                 </div>
                 <div class="column col_1">{{ $client['count_brands'] }}</div>
@@ -80,21 +80,39 @@
         <form action="{{ route('clients.create') }}" method="POST" enctype="multipart/form-data">
             {{ csrf_field() }}
             <div class="clearfix">
+                <div class="input_wrap column col_7{{ $errors->has('company_name') ? ' has-error' : '' }}">
+                    <label class="small_faint">Company Name</label>
+                    <input type="text" name="company_name" value=""  placeholder="e.g Coca Cola">
+                    @if($errors->has('company_name'))
+                        <strong>
+                            <span class="error-block" style="color: red;">{{ $errors->first('company_name') }}</span>
+                        </strong>
+                    @endif
+                </div>
+                <div class='column col_5 file_select align_center pt3{{ $errors->has('company_logo') ? ' has-error' : '' }}'>
+                    <input type="file" id="file" name="company_logo" />
+                    <span class="small_faint block_disp mb3">Company Logo</span>
+                    @if($errors->has('company_logo'))
+                        <strong>
+                            <span class="error-block" style="color: red;">{{ $errors->first('company_logo') }}</span>
+                        </strong>
+                    @endif
+                </div>
+            </div>
+
+            <div class="clearfix">
                 <div class="input_wrap column col_7{{ $errors->has('brand_name') ? ' has-error' : '' }}">
                     <label class="small_faint">Client Brand</label>
-                    <input type="text" name="brand_name" value=""  placeholder="e.g Coca Cola">
+                    <input type="text" name="brand_name" value=""  placeholder="e.g Coke">
                     @if($errors->has('brand_name'))
                         <strong>
                             <span class="error-block" style="color: red;">{{ $errors->first('brand_name') }}</span>
                         </strong>
                     @endif
                 </div>
-                <input type="hidden" name="broadcaster_id" value="{{ null }}">
-                <input type="hidden" name="client_type_id" value="2">
-                <input type="hidden" name="agency_id" value="">
                 <div class='column col_5 file_select align_center pt3{{ $errors->has('image_url') ? ' has-error' : '' }}'>
                     <input type="file" id="file" name="image_url" />
-                    <span class="small_faint block_disp mb3">Add Logo</span>
+                    <span class="small_faint block_disp mb3">Brand Logo</span>
                     @if($errors->has('image_url'))
                         <strong>
                             <span class="error-block" style="color: red;">{{ $errors->first('image_url') }}</span>
@@ -102,6 +120,10 @@
                     @endif
                 </div>
             </div>
+
+            <input type="hidden" name="broadcaster_id" value="{{ null }}">
+            <input type="hidden" name="client_type_id" value="2">
+            <input type="hidden" name="agency_id" value="">
 
             <div class="input_wrap{{ $errors->has('email') ? ' has-error' : '' }}">
                 <label class="small_faint">Email</label>

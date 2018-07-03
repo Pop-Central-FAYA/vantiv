@@ -22,10 +22,10 @@
             <div class="border_bottom clearfix client_name">
                 <a href="{{ route('clients.list') }}" class="back_icon block_disp left"></a>
                 <div class="left">
-                    <h2 class='sub_header'>{{ $user_details[0]->firstname . ' ' . $user_details[0]->lastname }}</h2>
+                    <h2 class='sub_header'>{{ $client[0]->company_name }}</h2>
                 </div>
 
-                <span class="client_ava right"><img src="{{ $client[0]->image_url ? asset(decrypt($client[0]->image_url)) : '' }}"></span>
+                <span class="client_ava right"><img src="{{ $client[0]->company_logo ? asset(decrypt($client[0]->company_logo)) : '' }}"></span>
             </div>
 
             <div class="clearfix client_personal">
@@ -121,7 +121,6 @@
 
 
                 <div class="main_chart padd">
-                    <h3>Campaigns Vs Time</h3>
                     <p><br></p><br>
                     <div id="container" style="min-width: 310px; height: 350px; margin: 0 auto"></div>
                 </div>
@@ -156,7 +155,7 @@
                         @foreach($all_campaigns as $all_campaign)
                             <tr>
                                 <td>243</td>
-                                <td><a href="">{{ $all_campaign['name'] }}</a></td>
+                                <td><a href="{{ route('agency.campaign.details', ['id' => $all_campaign['camp_id']]) }}">{{ $all_campaign['name'] }}</a></td>
                                 <td>{{ ucfirst($all_campaign['brand']) }}</td>
                                 <td>{{ $all_campaign['product'] }}</td>
                                 <td>{{ $all_campaign['start_date'] }}</td>
@@ -230,6 +229,9 @@
             chart: {
                 type: 'area'
             },
+            title:{
+                text:''
+            },
             xAxis: {
                 categories: week_date,
                 labels: {
@@ -269,9 +271,10 @@
             credits: {
                 enabled: false
             },
+            exporting: { enabled: false },
             series: [{
                 name: 'Total Budget',
-                color: '#00C4CA',
+                color: '#91e81e1',
                 data: week_amount,
             }]
         });
@@ -326,6 +329,9 @@
                         xAxis: {
                             categories: data.monthly_date
                         },
+                        title:{
+                            text:''
+                        },
                         yAxis: {
                             title: {
                                 text: 'Number of Campaigns'
@@ -357,6 +363,7 @@
                         credits: {
                             enabled: false
                         },
+                        exporting: { enabled: false },
                         series: [{
                             name: 'Total Budget',
                             color: '#00C4CA',
@@ -415,6 +422,9 @@
                         xAxis: {
                             categories: data.monthly_date
                         },
+                        title:{
+                            text:''
+                        },
                         yAxis: {
                             title: {
                                 text: 'Number of Campaigns'
@@ -446,6 +456,10 @@
                         credits: {
                             enabled: false
                         },
+                        title:{
+                            text:''
+                        },
+                        exporting: { enabled: false },
                         series: [{
                             name: 'Total Budget',
                             color: '#00C4CA',
