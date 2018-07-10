@@ -326,6 +326,11 @@ class CampaignsController extends Controller
 
     public function removeMedia($walkins, $id)
     {
+        $media_file = \DB::select("SELECT * from uploads where id = '$id' AND user_id = '$walkins'");
+        $public_id = $media_file[0]->file_code;
+
+        $c = Cloudder::destroy($public_id, array("invalidate" => TRUE, 'resource_type' => 'video', 'type' => 'upload'));
+
         $deleteUploads = \DB::delete("DELETE from uploads WHERE id = '$id' AND user_id = '$walkins'");
         if($deleteUploads){
             Session::flash('success', 'File deleted successfully...');

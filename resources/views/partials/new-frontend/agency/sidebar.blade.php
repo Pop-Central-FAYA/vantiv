@@ -6,7 +6,7 @@
 
     <div class="_nav">
         <ul>
-            <li class="campaign_icon {{ Request::is('/') ? 'active' : ''  }}"><a href="{{ route('dashboard') }}">Campaigns</a></li>
+            <li class="campaign_icon {{ Request::is('/') ? 'active' : ''  }}"><a href="{{ route('dashboard') }}">Dashboard</a></li>
             <li class="report_icon"><a href="">Reports</a></li>
 
             <span class="small_faint">Financials</span>
@@ -18,7 +18,7 @@
     </div>
 
     <div class="_nav_button">
-        <a href="" class="btn full block_disp uppercased align_center"><span class="_plus"></span>New Campaign</a>
+        <a href="{{ route('agency_campaign.step1') }}" class="btn full block_disp uppercased align_center"><span class="_plus"></span>New Campaign</a>
     </div>
 
 </div>

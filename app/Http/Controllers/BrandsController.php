@@ -191,4 +191,10 @@ class BrandsController extends Controller
             return back();
         }
     }
+
+    public function getBrandsWithClients($id)
+    {
+        $brands = Utilities::switch_db('api')->select("SELECT * from brands where walkin_id = '$id'");
+        return response()->json(['brands' => $brands]);
+    }
 }

@@ -177,7 +177,17 @@
     </div>
 
     {{--old one--}}
+    <div class="modal_contain" id="new_client">
+        <h2 class="sub_header mb4"></h2>
+        <form action="#" method="POST" enctype="multipart/form-data">
+            {{ csrf_field() }}
 
+            <div class="align_right">
+                <input type="submit" value="Create Client" class="btn uppercased update">
+            </div>
+
+        </form>
+    </div>
 
 <!-- Main content -->
 

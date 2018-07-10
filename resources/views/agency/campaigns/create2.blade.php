@@ -1,88 +1,81 @@
-@extends('layouts.new_app')
+@extends('layouts.faya_app')
+
 @section('title')
-    <title>Agency | Create Campaigns</title>
+    <title>FAYA | Create Campaign Step 2</title>
 @stop
+
 @section('content')
+    <div class="main_contain">
+        <!-- heaser -->
+        @include('partials.new-frontend.agency.header')
 
-    <div class="main-section">
-        <div class="container">
-            <div class="row">
-                <div class="col-12 heading-main">
-                    <h1>Create Campaigns</h1>
-                    <ul>
-                        <li><a href="{{ route('dashboard') }}"><i class="fa fa-th-large"></i>Agency</a></li>
-                        <li><a href="{{ route('agency.campaign.all') }}">All Campaign</a></li>
-                    </ul>
-                </div>
-                <div class="Create-campaign">
-                    <form>
-                        <div class="col-12 ">
-                            @if(empty($adslots))
-                                <p><h1>No Adslot found for this criteria, please go back</h1></p>
-                            @else
-                                <h2>Broadcaster's Summary</h2>
-                                <hr>
-                                <p><br></p>
-                                @foreach($adslots as $adslot)
-                                    <li>
-                                        <a style="text-decoration: none;" class="btn btn-default" href="#">{{ $adslot['count_adslot'] }} Adslots available for {{ $adslot['boradcaster_brand'] }}</a>
-                                    </li>
-                                @endforeach
-                            @endif
-                        </div>
-
-                    </form>
-                    <p><br></p>
-                    <div class="input-group">
-                        <input type="button" style="background: #00c4ca" id="step1" class="btn btn-danger btn-lg" name="Submit" value="<< Back">
-                        <a class="btn btn-danger btn-lg" style="background: #00c4ca" href="{{ route('agency_campaign.step3', ['id' => $id]) }}">Next >></a>
-                    </div>
-                </div>
+        <!-- subheader -->
+        <div class="sub_header clearfix mb pt">
+            <div class="column col_6">
+                <h2 class="sub_header">Create New Campaign</h2>
             </div>
         </div>
+
+
+        <!-- main frame -->
+        <div class="the_frame clearfix mb border_top_color">
+
+            <div class="margin_center col_7 clearfix pt4 create_fields">
+
+                <div class="create_gauge clearfix">
+                    <div class="_progress active">
+                        <span class="one_point"></span>
+                    </div>
+
+                    <div class="_progress active">
+                        <span class="one_point"></span>
+                    </div>
+
+                    <div class="_progress">
+                        <span class="one_point"></span>
+                    </div>
+
+                    <div class="_progress">
+                        <span class="one_point"></span>
+                    </div>
+                </div>
+                <!-- media houses -->
+                <div class="media_houses mb3 clearfix">
+                    @if(empty($adslots))
+                        <p><h2>No Adslot found for this criteria, please go back</h2></p>
+                    @else
+                        @foreach($adslots as $adslot)
+                            <div class='align_center one_media'>
+                                <div><img src="{{ asset($adslot['logo'] ? decrypt($adslot['logo']) : '') }}"></div>
+                                <span class="small_faint"></span>
+                                <p><br></p>
+                                <p><br></p>
+                                <p><br></p>
+                                <p><br></p>
+                                <p>Number of slots: {{ $adslot['count_adslot'] }}</p>
+                            </div>
+                        @endforeach
+                    @endif
+                </div>
+
+                <!-- proceed buttons -->
+                <div class="mb4 clearfix pt4 mb4">
+                    <div class="column col_4">
+                        <a href="{{ route('agency_campaign.step1') }}" class="btn uppercased _white _go_back"><span class=""></span> Back</a>
+                    </div>
+
+                    <div class="align_center column col_4">
+
+                    </div>
+                    @if(!empty($adslots))
+                        <div class="column col_4 align_right">
+                            <a href="{{ route('agency_campaign.step3', ['id' => $id]) }}" class="btn uppercased _proceed modal_click">Proceed <span class=""></span></a>
+                        </div>
+                    @endif
+                </div>
+
+            </div>
+        </div>
+        <!-- main frame end -->
     </div>
-    <!--Section-->
-
 @stop
-@section('scripts')
-    <!-- Select2 -->
-    <script src="{{ asset('agency_asset/plugins/select2/select2.full.min.js') }}"></script>
-    <!-- InputMask -->
-    <script src="{{ asset('agency_asset/plugins/input-mask/jquery.inputmask.js') }}"></script>
-    <script src="{{ asset('agency_asset/plugins/input-mask/jquery.inputmask.date.extensions.js') }}"></script>
-    <script src="{{ asset('agency_asset/plugins/input-mask/jquery.inputmask.extensions.js') }}"></script>
-    <!-- date-range-picker -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
-    <script src="{{ asset('agency_asset/plugins/daterangepicker/daterangepicker.js') }}"></script>
-    <!-- bootstrap datepicker -->
-    <script src="{{ asset('agency_asset/plugins/datepicker/bootstrap-datepicker.js') }}"></script>
-    <!-- bootstrap color picker -->
-    <script src="{{ asset('agency_asset/plugins/colorpicker/bootstrap-colorpicker.min.js') }}"></script>
-    <!-- bootstrap time picker -->
-    <script src="{{ asset('agency_asset/plugins/timepicker/bootstrap-timepicker.min.js') }}"></script>
-    <!-- SlimScroll 1.3.0 -->
-    <script src="{{ asset('agency_asset/plugins/slimScroll/jquery.slimscroll.min.js') }}"></script>
-    <!-- iCheck 1.0.1 -->
-    <script src="{{ asset('agency_asset/plugins/iCheck/icheck.min.js') }}"></script>
-    <!-- FastClick -->
-    <script src="{{ asset('agency_asset/plugins/fastclick/fastclick.js') }}"></script>
-    <!-- AdminLTE App -->
-    <script src="{{ asset('agency_asset/dist/js/app.min.js') }}"></script>
-
-    <!-- DataTables -->
-    <script src="{{ asset('agency_asset/plugins/datatables/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('agency_asset/plugins/datatables/dataTables.bootstrap.min.js') }}"></script>
-    <script>
-        $(document).ready(function(){
-
-            var user_id = "<?php echo $id ?>";
-
-            $('#step1').click(function(){
-                window.location.href = '/agency/campaigns/campaign/step1/'+user_id;
-            });
-
-        });
-    </script>
-@stop
-
-

@@ -1,141 +1,229 @@
-@extends('layouts.new_app')
+@extends('layouts.faya_app')
+
 @section('title')
-    <title>Agency | Create Campaigns</title>
+    <title>FAYA | Create Campaign Step 3</title>
 @stop
+
 @section('content')
 
-    <div class="main-section">
-        <div class="container">
-            <div class="row">
-                <div class="col-12 heading-main">
-                    <h1>Create Campaigns</h1>
-                    <ul>
-                        <li><a href="{{ route('dashboard') }}"><i class="fa fa-th-large"></i>Agency</a></li>
-                        <li><a href="{{ route('agency.campaign.all') }}">All Campaign</a></li>
-                    </ul>
-                </div>
+    <div class="main_contain">
+        <!-- heaser -->
+        @include('partials.new-frontend.agency.header')
+
+        <!-- subheader -->
+        <div class="sub_header clearfix mb pt">
+            <div class="column col_6">
+                <h2 class="sub_header">Create New Campaign</h2>
             </div>
-            <div class="row">
-                <div class="Create-campaign">
-
-                    <h2>Choose Media</h2>
-                    <hr>
-
-                    <p><br></p>
-
-                    <div class="row">
-                        <form method="POST" action="{{ route('agency_campaign.store3', ['id' => $id]) }}" enctype="multipart/form-data">
-                            {{ csrf_field() }}
-                            <div class="col-md-3">
-                                <select class="form-control" name="time" id="">
-                                    <option value="15">15 Seconds</option>
-                                    <option value="30">30 Seconds</option>
-                                    <option value="45">45 Seconds</option>
-                                    <option value="60">60 Seconds</option>
-                                </select>
-                            </div>
-                            <div class="col-md-1"></div>
-                            <div class="col-md-3">
-                                <input type="file" class="form-control" id="fup" name="uploads">
-                                <input type="hidden" name="f_du" id="f_du" size="5" />
-                            </div>
-                            <div class="col-md-1"></div>
-
-                            <audio id="audio"></audio>
-                            <div class="col-md-3">
-                                <button class="btn btn-success" type="submit">Upload</button>
-                            </div>
-                        </form>
-                    </div>
-                    <p><br></p>
-                    @include('partials.show_file')
-                </div>
-            </div>
-            <p><br></p>
-            <p><br></p>
-            <p><br></p>
-
-            <div class="row">
-                <div class="container">
-                    <p align="right">
-                    <form class="campform"  method="POST" action="{{ route('agency_campaign.store3_1', ['id' => $id]) }}" enctype="multipart/form-data">
-                        {{ csrf_field() }}
-                        <button type="button" style="background: #00c4ca" id="step2" class="btn campaign-button btn-danger btn-lg" >Back <i class="fa fa-backward" aria-hidden="true"></i></button>
-                        <button type="submit" class="btn campaign-button btn-danger btn-lg" style="background:#00c4ca; margin-right:15%">Next <i class="fa fa-play" aria-hidden="true"></i></button>
-                    </form>
-                    </p>
-                </div>
-            </div>
-
         </div>
 
+
+        <!-- main frame -->
+        <div class="the_frame clearfix mb border_top_color">
+
+            <div class="margin_center col_7 clearfix pt4 create_fields">
+
+                <div class="create_gauge clearfix">
+                    <div class="_progress active">
+                        <span class="one_point"></span>
+                    </div>
+
+                    <div class="_progress active">
+                        <span class="one_point"></span>
+                    </div>
+
+                    <div class="_progress active">
+                        <span class="one_point"></span>
+                    </div>
+
+                    <div class="_progress">
+                        <span class="one_point"></span>
+                    </div>
+                </div>
+
+                <!-- progress bar -->
+                <div class="create_gauge">
+                    <div class=""></div>
+                </div>
+
+
+                <p class='weight_medium m-b'>Upload Media Steps</p>
+                <p class="small_faint col_9 mb4"><ul>Step 1 : Select time slot from the time slot drop down</ul>
+                <ul>Step 2 : Upload your content to fit in the slot</ul>
+                <ul>Step 3 : Wait for the content to complete</ul>
+                <ul>Step 4 : Click on the upload button.</ul>
+                <br>
+                </p>
+
+
+                <div class="upload_block clearfix">
+                    @if((Session::get('first_step')) != null)
+                        @foreach($first_step->channel as $channel)
+                            @if($channel === 'nzrm6hchjats36')
+                                <div class=" align_center _block_one">
+                                    <p class="small_faint">TV Content</p><br>
+                                    <form method="GET" action="{{ route('agency_campaign.store3', ['id' => $id]) }}" id="form-data" enctype="multipart/form-data">
+                                        <div class="dashed_upload file_select mb">
+                                            <input type="file" name="file" class="cloudinary_fileupload" >
+                                            <p class="small_faint">Drag files to upload</p>
+                                        </div>
+                                        <div class="progress">
+
+                                        </div><br>
+                                        <div class="clearfix mb">
+                                            <div class="input_wrap column col_12">
+                                                <label class="small_faint">Time Slot</label>
+
+                                                <div class="select_wrap{{ $errors->has('time') ? ' has-error' : '' }}">
+                                                    <select name="time" id="time" required>
+                                                        <option value="">Select Time</option>
+                                                        <option value="15">15 Seconds</option>
+                                                        <option value="30">30 Seconds</option>
+                                                        <option value="45">45 Seconds</option>
+                                                        <option value="60">60 Seconds</option>
+                                                    </select>
+
+                                                    @if($errors->has('time'))
+                                                        <strong>{{ $errors->first('time') }}</strong>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div class="column col_12 align_right">
+                                            <button type="button" id="button_submit" class="btn uppercased _proceed">Submit <span class=""></span></button>
+                                        </div>
+                                    </form>
+                                </div>
+                            @elseif($channel === 'nzrm64hjatseog6')
+                                <div class=" align_center _block_one">
+                                    <p class="small_faint">Radio Content</p><br>
+                                    {{--<div class="dashed_upload file_select mb">--}}
+                                        {{--<input type="file">--}}
+                                        {{--<p class="small_faint">Drag files to upload</p>--}}
+                                    {{--</div>--}}
+                                </div>
+                            @endif
+                        @endforeach
+                    @endif
+                    <div class="_block_two align_center gallery">
+                        <p class="small_faint">Uploaded files will appear here</p>
+                        @include('partials.show_file')
+                    </div>
+                </div>
+
+
+
+                <div class="mb4 clearfix pt4 mb4">
+                    <div class="column col_6">
+                        <a href="{{ route('agency_campaign.step2', ['id' => $id]) }}" class="btn uppercased _white _go_back"><span class=""></span> Back</a>
+                    </div>
+
+                    <div class="column col_6 align_right">
+                        <a href="{{ route('agency_campaign.store3_1', ['id' => $id]) }}" class="btn uppercased _proceed modal_click">Proceed <span class=""></span></a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- main frame end -->
+
+
     </div>
-
-
 @stop
+
 @section('scripts')
-    <!-- Select2 -->
-    <script src="{{ asset('agency_asset/plugins/select2/select2.full.min.js') }}"></script>
-    <!-- InputMask -->
-    <script src="{{ asset('agency_asset/plugins/input-mask/jquery.inputmask.js') }}"></script>
-    <script src="{{ asset('agency_asset/plugins/input-mask/jquery.inputmask.date.extensions.js') }}"></script>
-    <script src="{{ asset('agency_asset/plugins/input-mask/jquery.inputmask.extensions.js') }}"></script>
-    <!-- date-range-picker -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
-    <script src="{{ asset('agency_asset/plugins/daterangepicker/daterangepicker.js') }}"></script>
-    <!-- bootstrap datepicker -->
-    <script src="{{ asset('agency_asset/plugins/datepicker/bootstrap-datepicker.js') }}"></script>
-    <!-- bootstrap color picker -->
-    <script src="{{ asset('agency_asset/plugins/colorpicker/bootstrap-colorpicker.min.js') }}"></script>
-    <!-- bootstrap time picker -->
-    <script src="{{ asset('agency_asset/plugins/timepicker/bootstrap-timepicker.min.js') }}"></script>
-    <!-- SlimScroll 1.3.0 -->
-    <script src="{{ asset('agency_asset/plugins/slimScroll/jquery.slimscroll.min.js') }}"></script>
-    <!-- iCheck 1.0.1 -->
-    <script src="{{ asset('agency_asset/plugins/iCheck/icheck.min.js') }}"></script>
-    <!-- FastClick -->
-    <script src="{{ asset('agency_asset/plugins/fastclick/fastclick.js') }}"></script>
-    <!-- AdminLTE App -->
-    <script src="{{ asset('agency_asset/dist/js/app.min.js') }}"></script>
-
-    <!-- DataTables -->
-    <script src="{{ asset('agency_asset/plugins/datatables/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('agency_asset/plugins/datatables/dataTables.bootstrap.min.js') }}"></script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.4.0/dropzone.js"></script>
+    <script src="{{ asset('new_frontend/js/jquery.ui.widget.js') }}" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.iframe-transport/1.0.1/jquery.iframe-transport.min.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-file-upload/9.22.0/js/jquery.fileupload.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/cloudinary-jquery-file-upload/2.5.0/cloudinary-jquery-file-upload.js"></script>
 
     <script>
-        $(document).ready(function() {
-            var user_id = "<?php echo $id ?>";
-            $('#step2').click(function(){
-                window.location.href = '/agency/campaigns/campaigns/step2/'+user_id;
+
+        $(document).ready(function(){
+
+            $("body").delegate('#time','change', function() {
+                $(".image_show_upload").show();
             });
-        });
-    </script>
-    <script>
 
-        //register canplaythrough event to #audio element to can get duration
-        var f_duration =0;  //store duration
-        document.getElementById('audio').addEventListener('canplaythrough', function(e){
-            //add duration in the input field #f_du
-            f_duration = Math.round(e.currentTarget.duration);
-            document.getElementById('f_du').value = f_duration;
-            URL.revokeObjectURL(obUrl);
+            var cloudName = 'drwrickhm';
+            var unsignedUploadPreset = 'wjqyenpq';
+
+            $.cloudinary.config({
+                cloud_name: cloudName
+            });
+
+            $('.cloudinary_fileupload').unsigned_cloudinary_upload(unsignedUploadPreset,
+            {
+                    cloud_name: cloudName,
+                    tags: 'browser_uploads',
+                }, {
+                    multiple: false
+                }
+            )
+            .bind('cloudinarydone', function(e, data) {
+                // console.log(data.loaded: ${data.loaded},data.total: ${data.total})
+            })
+            .bind('fileuploadprogress', function(e, data) {
+                // console.log(fileuploadprogress data.loaded: ${data.loaded},data.total: ${data.total});
+            })
+            .bind('cloudinaryprogress', function(e, data) {
+                var maths = Math.round((data.loaded * 100.0) / data.total);
+                var big_html = '<div class="progress-bar" role="progressbar" aria-valuenow="'+maths+'"'+
+                    'aria-valuemin="0" aria-valuemax="100" style="width:'+maths+'%">'+
+                    '<span class="sr-only">'+maths+'% Complete</span>'+
+                    '</div>';
+                $('.progress').html(big_html);
+                // console.log(cloudinaryprogress data.loaded: ${data.loaded},data.total: ${data.total});
+            })
+            .bind('cloudinarydone', function(e, data) {
+                console.log(data.result);
+                toastr.success('You are one step closer, please select the right timeslot for your content and hit the submit button to complete your upload');
+                $(".progress").hide();
+                var vid_show = '<video width="350" height="300" controls>\n' +
+                    '  <source src="'+data.result.secure_url+'" type="video/mp4">\n' +
+                    '</video>' ;
+                $(".gallery").html(vid_show);
+                var user_id = "<?php echo $id; ?>";
+                var channel = 'nzrm6hchjats36';
+
+
+                $("#button_submit").click(function () {
+                    var time_slot = $("#time").val();
+                    var url1 = $("#form-data").attr('action');
+                    if(time_slot > data.result.duration){
+                        $.ajax({
+                            url: url1,
+                            method: "GET",
+                            data: {'time_picked' : time_slot, 'duration' : data.result.duration, 'image_url' : data.result.secure_url, 'file_name' : data.result.original_filename, 'user_id' : user_id, 'public_id' : data.result.public_id, 'channel' : channel},
+                            success: function(result){
+                                if(result.error === 'error'){
+                                    toastr.error('You are trying to upload a file of '+data.result.duration+' secnds into a '+time_slot+' seconds slot');
+                                    return;
+                                }else if(result.error_number === 'error_number'){
+                                    toastr.error('You have reached the maximum number of files that can be uploaded, please hit the proceed button');
+                                    return;
+                                }else if(result.error_check_image === 'error_check_image'){
+                                    toastr.error('You cannt upload this content more than once');
+                                    return;
+                                }else if(result.success === 'success'){
+                                    toastr.success('Your upload for '+time_slot+' seconds was successful');
+                                    location.reload();
+                                }
+                            }
+                        })
+
+                        }else{
+
+                        toastr.error('You are trying to upload a file of '+data.result.duration+'secnds into a '+time_slot+'seconds slot');
+                    }
+
+                });
+
+            });
+
         });
 
-        //when select a file, create an ObjectURL with the file and add it in the #audio element
-        var obUrl;
-        document.getElementById('fup').addEventListener('change', function(e){
-            var file = e.currentTarget.files[0];
-            //check file extension for audio/video type
-            if(file.name.match(/\.(avi|mp3|mp4|mpeg|ogg)$/i)){
-                obUrl = URL.createObjectURL(file);
-                document.getElementById('audio').setAttribute('src', obUrl);
-            }
-        });
     </script>
-@stop
-@section('styles')
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.4.0/dropzone.css">
 @stop
 

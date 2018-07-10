@@ -13,14 +13,14 @@
         @foreach($all_files as $all_file)
             <form action="{{ route('uploads.remove', ['walkins' => $user_id, 'id' => $all_file->id]) }}" method="POST">
                 {{ csrf_field() }}
-                <div class="col-md-2" style="padding: 5px;">
+                <div style="padding: 5px;">
                     @if($all_file->uploads)
                         <video width="150" height="150" controls><source src="{{ asset(decrypt($all_file->uploads)) }}"></video>
                     @else
                         <img src="{{ asset('new_assets/images/logo.png') }}" alt="">
                     @endif
                     <p>Time Picked: {{ $all_file->time }}</p><br>
-                    <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                    <button type="submit" class="btn btn-danger">delete</button>
                 </div>
                 <p></p>
 

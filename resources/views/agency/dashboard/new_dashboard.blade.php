@@ -194,7 +194,7 @@
                     <tr>
                         <td><input type="checkbox"></td>
                         <td>{{ $agency_campaign['id'] }}</td>
-                        <td><a href="">{{ $agency_campaign['name'] }}</a></td>
+                        <td><a href="{{ route('agency.campaign.details', ['id' => $agency_campaign['camp_id']]) }}">{{ $agency_campaign['name'] }}</a></td>
                         <td>{{ ucfirst($agency_campaign['brand']) }}</td>
                         <td>{{ $agency_campaign['product'] }}</td>
                         <td>12 June, 18</td>

@@ -349,19 +349,22 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/high-days/all', 'ReportController@hpdaysData');
     });
 
+    //get all brands per walkins or clients
+    Route::get('/client/get-brands/{id}', 'BrandsController@getBrandsWithClients');
+
     Route::group(['prefix' => 'agency'], function() {
         Route::group(['prefix' => 'campaigns'], function() {
             Route::get('/all-campaigns', 'Agency\CampaignsController@index')->name('agency.campaign.all');
             Route::get('/all-campaign/data', 'Agency\CampaignsController@getData');
             Route::get('/all-clients', 'Agency\CampaignsController@allClient')->name('agency.campaign.create');
             Route::get('/all-client/data', 'Agency\CampaignsController@clientData');
-            Route::get('/campaign/step1/{id}', 'Agency\CampaignsController@getStep1')->name('agency_campaign.step1');
-            Route::post('/campaign/step1/store/{id}', 'Agency\CampaignsController@postStep1')->name('agency_campaign.store1');
+            Route::get('/campaign/step1', 'Agency\CampaignsController@getStep1')->name('agency_campaign.step1');
+            Route::post('/campaign/step1/store', 'Agency\CampaignsController@postStep1')->name('agency_campaign.store1');
             Route::get('/campaigns/step2/{id}', 'Agency\CampaignsController@getStep2')->name('agency_campaign.step2');
             Route::get('/campaign/step3/{id}', 'Agency\CampaignsController@getStep3')->name('agency_campaign.step3');
-            Route::post('/campaign/step3/store/{id}', 'Agency\CampaignsController@postStep3')->name('agency_campaign.store3');
+            Route::get('/campaign/step3/store/{id}', 'Agency\CampaignsController@postStep3')->name('agency_campaign.store3');
             Route::get('/campaign/step3/1/{id}', 'Agency\CampaignsController@getStep3_1')->name('agency_campaign.step3_1');
-            Route::post('/campaign/step3/store/1/{id}', 'Agency\CampaignsController@postStep3_1')->name('agency_campaign.store3_1');
+            Route::get('/campaign/step3/store/1/{id}', 'Agency\CampaignsController@postStep3_1')->name('agency_campaign.store3_1');
             Route::get('/campaign/step3/2/{id}', 'Agency\CampaignsController@getStep3_2')->name('agency_campaign.step3_2');
             Route::post('/campaign/step3/store/2/{id}/{broadcaster}', 'Agency\CampaignsController@postStep3_2')->name('agency_campaign.store3_2');
             Route::get('/campaign/step3/3/{id}/{broadcaster}', 'Agency\CampaignsController@getStep3_3')->name('agency_campaign.step3_3');

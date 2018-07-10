@@ -18,7 +18,13 @@ $(function () {
 		return false;
 	});
 
+    // Time slots media house select
+    $('.one_media').click(function() {
 
+        $('.one_media').removeClass('active');
+        $(this).addClass('active');
+
+    });
 
     //Scroll
 	$('.click_nav').click(function() {
@@ -35,7 +41,6 @@ $(function () {
 	        }
 	    }
 	});
-
 
     jQuery( document ).ready(function( $ ) {
         $('.modal_click').on('click', function () {

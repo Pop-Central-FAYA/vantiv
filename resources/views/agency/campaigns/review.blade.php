@@ -24,7 +24,7 @@
 
                             </div>
                         </div>
-                        {{--{{ dd($time_in_sec) }}--}}
+                        {{ dd($time_in_sec) }}
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="box">
@@ -44,7 +44,7 @@
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{ $upload->uploads ? decrypt($upload->uploads) : 'Sorry! You do not have any media file for this period.' }}</td>
                                                     <td>{{ $upload->time }}</td>
-                                                    {{--<td><button type="button" data-toggle="modal" data-target=".deleteModal{{ $upload->id }}" class="btn btn-danger btn-xs">Delete</button></td>--}}
+                                                    <td><button type="button" data-toggle="modal" data-target=".deleteModal{{ $upload->id }}" class="btn btn-danger btn-xs">Delete</button></td>
                                                 </tr>
                                             @endforeach
                                         </table>
@@ -58,7 +58,7 @@
                             <div class="container">
 
                                 <p align="right">
-                                    {{--<button type="button" id="step4" class="btn campaign-button" >Back <i class="fa fa-backward" aria-hidden="true"></i></button>--}}
+                                    <button type="button" id="step4" class="btn campaign-button" >Back <i class="fa fa-backward" aria-hidden="true"></i></button>
                                     <button type="submit" class="btn campaign-button btn-danger btn-lg" style="margin-right:15%">Next <i class="fa fa-play" aria-hidden="true"></i></button>
                                 </p>
 
