@@ -147,51 +147,56 @@ class CampaignsController extends Controller
 
     }
 
-    public function getStep1($id)
+    public function getStep1()
     {
-
+        if(Session::get('first_step')){
+            $first_step = Session::get('first_step');
+            $brands = Utilities::switch_db('api')->select("SELECT * from brands WHERE walkin_id = '$first_step->clients'");
+        }
+        $agency_id = Session::get('agency_id');
         $industry = Utilities::switch_db('api')->select("SELECT * from sectors");
         $sub_industries = Utilities::switch_db('api')->select("select * from subSectors");
         $chanel = Utilities::switch_db('api')->select("SELECT * from campaignChannels");
-        $walkins = Utilities::switch_db('api')->select("SELECT id from walkIns where user_id='$id'");
-        $walkins_id = $walkins[0]->id;
-        $brands = Utilities::switch_db('api')->select("SELECT * from brands WHERE walkin_id = '$walkins_id'");
-        if(count($brands) === 0)
-        {
-            Session::flash('error', 'This client doesnt have a brand');
-            return redirect()->back();
-        }
+        $clients = Utilities::switch_db('api')->select("SELECT * from walkIns where agency_id = '$agency_id'");
+//        $walkins = Utilities::switch_db('api')->select("SELECT id from walkIns where user_id='$id'");
+//        $walkins_id = $walkins[0]->id;
+//        if(count($brands) === 0)
+//        {
+//            Session::flash('error', 'This client doesnt have a brand');
+//            return redirect()->back();
+//        }
         $day_parts = Utilities::switch_db('api')->select("SELECT * from dayParts");
         $region = Utilities::switch_db('api')->select("SELECT * from regions");
         $target = Utilities::switch_db('api')->select("SELECT * from targetAudiences");
 
         Api::validateCampaign();
-        return view('agency.campaigns.create1')->with('industry', $industry)
-            ->with('chanel', $chanel)
-            ->with('brands', $brands)
-            ->with('region', $region)
-            ->with('day_part', $day_parts)
-            ->with('target', $target)
-            ->with('step1', \Session::get('step1'))
-            ->with('id', $id)
+        return view('agency.campaigns.create1')->with('industries', $industry)
+            ->with('channels', $chanel)
+            ->with('regions', $region)
+            ->with('day_parts', $day_parts)
+            ->with('targets', $target)
+            ->with('clients', $clients)
+            ->with('first_step', Session::get('first_step') ? $first_step : '')
+            ->with('brands', Session::get('first_step') ? $brands : '')
             ->with('sub_industries', $sub_industries);
     }
 
-    public function postStep1(Request $request, $id)
+    public function postStep1(Request $request)
     {
         $this->validate($request, [
-            'name' => 'required',
+            'clients' => 'required',
+            'campaign_name' => 'required',
             'brand' => 'required',
             'product' => 'required',
-            'channel' => 'required',
+            'channel' => 'required_without_all',
             'min_age' => 'required',
             'max_age' => 'required',
-            'target_audience' => 'required',
+            'target_audience' => 'required_without_all',
             'start_date' => 'required|date',
             'end_date' => 'required|date',
             'industry' => 'required',
             'dayparts' => 'required_without_all',
-            'region' => 'required',
+            'region' => 'required_without_all',
         ]);
 
         $agency_id = Session::get('agency_id');
@@ -206,45 +211,53 @@ class CampaignsController extends Controller
             return back();
         }
 
+        $walkin = Utilities::switch_db('api')->select("SELECT * from walkIns where id = '$request->clients'");
+        $user_id = $walkin[0]->user_id;
+
         if(strtotime($request->end_date) < strtotime($request->start_date)){
             return redirect()->back()->with('error', 'Start Date cannot be greater than End Date');
         }
 
-        $del_cart = \DB::delete("DELETE FROM carts WHERE user_id = '$id' AND agency_id = '$agency_id'");
-        $del_uplaods = \DB::delete("DELETE FROM uploads WHERE user_id = '$id'");
+        $del_cart = \DB::delete("DELETE FROM carts WHERE user_id = '$user_id' AND agency_id = '$agency_id'");
+        $del_uplaods = \DB::delete("DELETE FROM uploads WHERE user_id = '$user_id'");
         $del_file_position = Utilities::switch_db('api')->delete("DELETE FROM adslot_filePositions where select_status = 0");
 
         if (strtotime($request->end_date) < strtotime($request->start_date)) {
             Session::flash('error', 'Start Date cannot be greater than End Date');
             return redirect()->back();
         }
-        $step1_req = ((object) $request->all());
-        session(['step1' => $step1_req]);
 
-        return redirect()->route('agency_campaign.step2', ['id' => $id])
-            ->with('step_1', Session::get('step1'))
-            ->with('id', $id);
+        $step1_req = ((object) $request->all());
+        session(['first_step' => $step1_req]);
+
+        return redirect()->route('agency_campaign.step2', ['id' => $user_id])
+            ->with('step_1', Session::get('first_step'))
+            ->with('id', $user_id);
     }
 
     public function getStep2($id)
     {
-        $step1 = Session::get('step1');
+        $step1 = Session::get('first_step');
         if (!$step1) {
             Session::flash('error', 'Data lost, please go back and select your filter criteria');
             return redirect()->back();
         }
+
         $day_parts = implode("','" ,$step1->dayparts);
         $region = implode("','", $step1->region);
-        $adslots = Utilities::switch_db('api')->select("SELECT broadcaster, COUNT(broadcaster) as all_slots FROM adslots where min_age >= $step1->min_age AND max_age <= $step1->max_age AND target_audience = '$step1->target_audience' AND day_parts IN ('$day_parts') AND region IN ('$region') AND is_available = 0 AND channels = '$step1->channel' group by broadcaster");
-
+        $target_audience = implode(",", $step1->target_audience);
+        $channel = implode(",", $step1->channel);
+        $adslots = Utilities::switch_db('api')->select("SELECT broadcaster, COUNT(broadcaster) as all_slots FROM adslots where min_age >= $step1->min_age AND max_age <= $step1->max_age AND target_audience IN ('$target_audience') AND day_parts IN ('$day_parts') AND region IN ('$region') AND is_available = 0 AND channels IN ('$channel') group by broadcaster");
+//        dd($adslots);
         $ads_broad = [];
         foreach ($adslots as $adslot)
         {
-            $broad = Utilities::switch_db('api')->select("SELECT brand from broadcasters where id = '$adslot->broadcaster'");
+            $broad = Utilities::switch_db('api')->select("SELECT * from broadcasters where id = '$adslot->broadcaster'");
             $ads_broad[] = [
                 'broadcaster' => $adslot->broadcaster,
                 'count_adslot' => $adslot->all_slots,
                 'boradcaster_brand' => $broad[0]->brand,
+                'logo' => $broad[0]->image_url,
             ];
         }
 
@@ -255,65 +268,68 @@ class CampaignsController extends Controller
     public function getStep3($id)
     {
         $delete_uploads_without_files = \DB::delete("DELETE from uploads where user_id = '$id' AND time = 0");
-        return view('agency.campaigns.create3')->with('id', $id);
+
+        $first_step = Session::get('first_step');
+        if (!$first_step) {
+            Session::flash('error', 'Data lost, please go back and select your filter criteria');
+            return redirect()->back();
+        }
+        $day_parts = implode("','" ,$first_step->dayparts);
+        $region = implode("','", $first_step->region);
+        $target_audience = implode(",", $first_step->target_audience);
+        $channel = implode(",", $first_step->channel);
+        $adslots = Utilities::switch_db('api')->select("SELECT broadcaster, COUNT(broadcaster) as all_slots FROM adslots where min_age >= $first_step->min_age AND max_age <= $first_step->max_age AND target_audience IN ('$target_audience') AND day_parts IN ('$day_parts') AND region IN ('$region') AND is_available = 0 AND channels IN ('$channel') group by broadcaster");
+//        dd($adslots);
+        $ads_broad = [];
+        foreach ($adslots as $adslot)
+        {
+            $broad = Utilities::switch_db('api')->select("SELECT * from broadcasters where id = '$adslot->broadcaster'");
+            $ads_broad[] = [
+                'broadcaster' => $adslot->broadcaster,
+                'count_adslot' => $adslot->all_slots,
+                'boradcaster_brand' => $broad[0]->brand,
+                'logo' => $broad[0]->image_url,
+            ];
+        }
+
+        if(count($ads_broad) === 0){
+            Session::flash('error', 'No adslots matches your filter criteria, please go back and re-adjust your requirements');
+            return redirect()->back();
+        }
+
+        return view('agency.campaigns.create3')->with('id', $id)->with('first_step', $first_step);
     }
 
-    public function postStep3(Request $request, $id)
+    public function postStep3($id)
     {
-
-        if(((int)$request->f_du) > ((int)$request->time)){
-            Session::flash('error', 'Your video file duration cannot be more than the time slot you picked');
-            return redirect()->back();
+        $id = request()->user_id;
+        if(request()->duration > request()->time_picked){
+            return response()->json(['error' => 'error']);
         }
 
         $check_file = \DB::select("SELECT * from uploads where user_id = '$id'");
         if(count($check_file) > 4){
-            Session::flash('error', 'You cannot upload more than 4 files');
-            return redirect()->back();
+            return response()->json(['error_number' => 'error_number']);
         }
+        $image_url = encrypt(request()->image_url);
+        $time = request()->time_picked;
+        if (request()->image_url) {
 
-        if ($request->hasFile('uploads')) {
-
-            $this->validate($request, [
-                'uploads' => 'required|max:20000',
-                'time' => 'required'
-            ]);
-
-            $filesUploaded = $request->uploads;
-            $extension = $filesUploaded->getClientOriginalExtension();
-            if($extension == 'mp4' || $extension == 'wma' || $extension == 'ogg' || $extension == 'mkv'){
-
-                $time = $request->time;
-                $uploads = \DB::select("SELECT * from uploads where user_id = '$id' AND time = '$time'");
-                if(count($uploads) === 1){
-                    Session::flash('error', 'You cannot upload twice for this time slot');
-                    return back();
-                }
-
-                $filename = realpath($filesUploaded);
-                Cloudder::uploadVideo($filename);
-                $clouder = Cloudder::getResult();
-                $file_gan_gan = encrypt($clouder['url']);
-
-                $insert_upload = \DB::table('uploads')->insert([
-                    'user_id' => $id,
-                    'time' => $time,
-                    'uploads' => $file_gan_gan
-                ]);
-
-                if($insert_upload){
-                    $msg = 'Your upload for '.$time.' seconds was successful';
-                    Session::flash('success', $msg);
-                    return redirect()->route('agency_campaign.step3', ['id' => $id]);
-                }else{
-                    Session::flash('error', 'Could not complete upload process');
-                    return back();
-                }
+            $check_image = \DB::select("SELECT * from uploads where time = '$time' AND user_id = '$id'");
+            if(count($check_image) === 1){
+                return response()->json(['error_check_image' => 'error_check_image']);
             }
 
-        }else{
-            Session::flash('error', 'Please choose a file');
-            return back();
+            $insert_upload = \DB::table('uploads')->insert([
+                'user_id' => $id,
+                'time' => $time,
+                'uploads' => $image_url,
+                'file_name' => request()->file_name,
+                'file_code' => request()->public_id,
+            ]);
+
+            return response()->json(['success' => 'success']);
+
         }
     }
 
@@ -322,7 +338,7 @@ class CampaignsController extends Controller
         return view('agency.campaigns.create3_1')->with('id', $id);
     }
 
-    public function postStep3_1(Request $request, $id)
+    public function postStep3_1($id)
     {
 
         $get_uploaded_files = \DB::select("SELECT * from uploads where user_id = '$id'");
@@ -345,11 +361,14 @@ class CampaignsController extends Controller
 
     public function getStep3_2($id)
     {
-        $step1 = Session::get('step1');
-        $day_parts = implode("','" ,$step1->dayparts);
-        $region = implode("','", $step1->region);
-        $adslots = Utilities::switch_db('api')->select("SELECT broadcaster, COUNT(broadcaster) as all_slots FROM adslots where min_age >= $step1->min_age AND max_age <= $step1->max_age AND target_audience = '$step1->target_audience' AND day_parts IN ('$day_parts') AND region IN ('$region') AND is_available = 0 AND channels = '$step1->channel' group by broadcaster");
+        $first_step = Session::get('first_step');
+        $day_parts = implode("','" ,$first_step->dayparts);
+        $region = implode("','", $first_step->region);
+        $target_audience = implode(",", $first_step->target_audience);
+        $channel = implode(",", $first_step->channel);
+        $adslots = Utilities::switch_db('api')->select("SELECT broadcaster, COUNT(broadcaster) as all_slots FROM adslots where min_age >= $first_step->min_age AND max_age <= $first_step->max_age AND target_audience IN ('$target_audience') AND day_parts IN ('$day_parts') AND region IN ('$region') AND is_available = 0 AND channels IN ('$channel') group by broadcaster");
         $ads_broad = [];
+        
         foreach ($adslots as $adslot)
         {
             $broad = Utilities::switch_db('api')->select("SELECT brand from broadcasters where id = '$adslot->broadcaster'");

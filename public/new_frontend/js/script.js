@@ -18,7 +18,14 @@ $(function () {
 		return false;
 	});
 
+    // Time slots media house select
+    $('.one_media').click(function() {
 
+        $('.one_media').removeClass('active');
+        $(this).addClass('active');
+
+        return false;
+    });
 
     //Scroll
 	$('.click_nav').click(function() {

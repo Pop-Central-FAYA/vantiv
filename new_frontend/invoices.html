@@ -120,7 +120,7 @@
 						<td>12/5/18</td>
 						<td>&#8358; 12,000,000</td>
 						<td><span class="span_state status_success">Approved</span></td>
-						<td><a href="">View</a></td>
+						<td><a href="#invoice" class="modal_click">View</a></td>
 					</tr>
 
 					<tr>
@@ -133,7 +133,7 @@
 						<td>12/5/18</td>
 						<td>&#8358; 12,000,000</td>
 						<td><a href="#approve_invoice" class="span_state status_pending modal_click">Pending</a></td>
-						<td><a href="">View</a></td>
+						<td><a href="#invoice" class="modal_click">View</a></td>
 					</tr>
 
 					<tr>
@@ -146,15 +146,14 @@
 						<td>12/5/18</td>
 						<td>&#8358; 12,000,000</td>
 						<td><span class="span_state status_success">Approved</span></td>
-						<td><a href="">View</a></td>
+						<td><a href="#invoice" class="modal_click">View</a></td>
 					</tr>
 				</table>
 			</div>
-			<!--  -->
-
+			<!-- end -->
 		</div>
 
-
+		<!-- approve invoice modal -->
 		<div class="modal_contain" id="approve_invoice">
 			<div class="wallet_placer margin_center mb3"></div>
 
@@ -165,6 +164,84 @@
 				<a href="" class="btn">Continue</a>
 			</div>
 		</div>
+		<!-- end -->
+
+
+		<!-- full invoice modal -->
+		<div class="modal_contain wide full_invoice" id="invoice">
+
+			<div class="clearfix mb3">
+				<div class="logo column">
+					<img src="img/logo.svg">
+				</div>
+
+				<div class="right">
+					<p class='weight_medium'>Invoice</p>
+					<p class="small_faint">No 1234</p>
+				</div>
+			</div>
+
+			<h3 class="weight_medium mb">Client Name</h3>
+
+			<p class="m-b"><span class="small_faint weight_medium">Date</span> 12th May, 2018</p>
+			<p class="m-b"><span class="small_faint weight_medium">Campaign Name</span> World Cup</p>
+			<p class="mb4"><span class="small_faint weight_medium">Brand</span> Coke</p>
+
+
+			<table class="mb">
+				<tr>
+					<th>Media</th>
+					<th>Ad Spots</th>
+					<th>Playtime</th>
+					<th>Compliance</th>
+					<th class='align_right'>Cost</th>
+				</tr>
+
+				<tr>
+					<td>Cocacola_w.mp4</td>
+					<td>08:30</td>
+					<td>2mins</td>
+					<td>98</td>
+					<td class='align_right'>&#8358; 68,000</td>
+				</tr>
+
+				<tr>
+					<td>Cocacola_w.mp4</td>
+					<td>08:30</td>
+					<td>2mins</td>
+					<td>98</td>
+					<td class='align_right'>&#8358; 68,000</td>
+				</tr>
+
+				<tr>
+					<td>Cocacola_w.mp4</td>
+					<td>08:30</td>
+					<td>2mins</td>
+					<td>98</td>
+					<td class='align_right'>&#8358; 68,000</td>
+				</tr>
+
+				<tr>
+					<td>Cocacola_w.mp4</td>
+					<td>08:30</td>
+					<td>2mins</td>
+					<td>98</td>
+					<td class='align_right'>&#8358; 68,000</td>
+				</tr>
+			</table>
+
+			<div class="clearfix weight_medium padd mb4">
+				<div class="column col_6">Total</div>
+				<div class="column col_6 align_right"><h3 class="weight_medium">&#8358; 272,000</h3></div>
+			</div>
+
+			<div class="align_right">
+				<a href="" class="color_red weight_medium padd">Disapprove</a>
+				<a href="" class="btn">Approve</a>
+			</div>
+
+		</div>
+		<!-- end -->
 
 
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>

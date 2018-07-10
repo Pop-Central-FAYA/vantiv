@@ -349,7 +349,7 @@ class DashboardController extends Controller
                 $pay = Utilities::switch_db('api')->select("SELECT total from payments where campaign_id = '$cam->campaign_id'");
                 $agency_campaigns[] = [
                     'id' => $campaign_reference[0]->campaign_reference,
-                    'camp_id' => $cam->id,
+                    'camp_id' => $cam->campaign_id,
                     'name' => $cam->name,
                     'brand' => $brand[0]->brand_name,
                     'product' => $cam->product,
