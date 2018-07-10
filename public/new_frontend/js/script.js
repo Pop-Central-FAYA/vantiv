@@ -24,7 +24,6 @@ $(function () {
         $('.one_media').removeClass('active');
         $(this).addClass('active');
 
-        return false;
     });
 
     //Scroll
@@ -42,7 +41,6 @@ $(function () {
 	        }
 	    }
 	});
-
 
     jQuery( document ).ready(function( $ ) {
         $('.modal_click').on('click', function () {

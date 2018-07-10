@@ -48,8 +48,7 @@ class Utilities {
         $campaign_id = $campaign_details[0]->campaign_id;
         $brand_name = $campaign_details[0]->brand;
         $channel = $campaign_details[0]->channel;
-        $location_id = $campaign_details[0]->region;
-        $location = Utilities::switch_db('api')->select("SELECT * FROM regions where id = '$location_id'");
+        $location = Utilities::switch_db('api')->select("SELECT * FROM regions where id IN (SELECT region from campaignDetails where campaign_id = '$id' GROUP BY campaign_id) ");
         $brand = Utilities::switch_db('api')->select("SELECT name from brands where id = '$brand_name'");
         $channel_name = Utilities::switch_db('api')->select("SELECT channel from campaignChannels where id = '$channel'");
         $payments = Utilities::switch_db('api')->select("SELECT * from payments where campaign_id = '$campaign_id' ");

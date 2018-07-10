@@ -156,7 +156,7 @@
             $('.cloudinary_fileupload').unsigned_cloudinary_upload(unsignedUploadPreset,
             {
                     cloud_name: cloudName,
-                    tags: 'browser_uploads'
+                    tags: 'browser_uploads',
                 }, {
                     multiple: false
                 }
@@ -182,10 +182,12 @@
                 $(".progress").hide();
                 var vid_show = '<video width="350" height="300" controls>\n' +
                     '  <source src="'+data.result.secure_url+'" type="video/mp4">\n' +
-                    '</video>';
+                    '</video>' ;
                 $(".gallery").html(vid_show);
                 var user_id = "<?php echo $id; ?>";
                 var channel = 'nzrm6hchjats36';
+
+
                 $("#button_submit").click(function () {
                     var time_slot = $("#time").val();
                     var url1 = $("#form-data").attr('action');
@@ -212,7 +214,7 @@
                         })
 
                         }else{
-                        console.log('1');
+
                         toastr.error('You are trying to upload a file of '+data.result.duration+'secnds into a '+time_slot+'seconds slot');
                     }
 
