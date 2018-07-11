@@ -101,7 +101,7 @@
             </div>
         </div>
 
-
+        {{--{{ dd($ratecards) }}--}}
         @foreach($ratecards as $ratecard)
             @foreach($ratecard['adslot'] as $rating)
                 <div class="modal_contain" id="modal_slot{{ $rating->id }}">

@@ -1047,7 +1047,6 @@ Class Api
     public static function validateCampaign()
     {
         $campaigns = Utilities::switch_db('api')->select("SELECT * from campaignDetails WHERE campaign_status = 0 GROUP BY campaign_id");
-
         $array = [];
         $adslot_arrays = [];
         foreach ($campaigns as $campaign){
@@ -1066,6 +1065,8 @@ Class Api
 
             }
         }
+
+//        dd($adslot_arrays);
 
         foreach ($adslot_arrays as $adslot_array){
             $adslot_id = $adslot_array['file'] ? $adslot_array['file'][0]->adslot : '';
