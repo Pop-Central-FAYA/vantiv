@@ -1009,22 +1009,68 @@ class DashboardController extends Controller
         $today = date("Y-m-d");
         $chanel_tv = Utilities::switch_db('api')->select("SELECT * FROM campaignChannels where channel = 'TV'");
         $chanel_tv_id = $chanel_tv[0]->id;
-        $all_tv_campaigns = Utilities::switch_db('api')->select("SELECT * FROM campaignDetails where channel = '$chanel_tv_id' AND agency = '$agency_id' GROUP BY campaign_id");
-//        $active_tv_channel = Utilities::switch_db('api')->select("SELECT * FROM campaignDetails where channel = '$chanel_tv_id' AND agency = '$agency_id' AND start_date >= '$today' AND stop_date >= '$today' GROUP BY campaign_id");
-        $pending_tv_channel = Utilities::switch_db('api')->select("SELECT * FROM campaignDetails where channel = '$chanel_tv_id' AND agency = '$agency_id' AND start_date > '$today'  GROUP BY campaign_id");
-        $finished_tv_channel = Utilities::switch_db('api')->select("SELECT * FROM campaignDetails where channel = '$chanel_tv_id' AND agency = '$agency_id' AND stop_date < '$today'  GROUP BY campaign_id");
+        $all_tv_campaigns = [];
+        $finished_tv_campaigns = [];
+        $pending_tv_campaign = [];
+        $active_tv_campaign = [];
+        $campaigns = Utilities::switch_db('api')->select("SELECT * FROM campaignDetails where agency = '$agency_id' GROUP BY campaign_id");
+        foreach ($campaigns as $campaign){
+            $channels = Utilities::switch_db('api')->select("SELECT * from campaignChannels where id IN ($campaign->channel) AND channel = 'TV' ");
+            $all_tv_campaigns[] = [
+                'campaign_id' => $campaign->campaign_id,
+                'start_date' => $campaign->start_date,
+                'end_date' => $campaign->stop_date,
+                'channel' => $channels[0]->channel,
+                'channel_id' => $channels[0]->id,
+            ];
+        }
+
+        foreach ($all_tv_campaigns as $all_tv_campaign){
+            if($today > $all_tv_campaign['end_date']){
+                $finished_tv_campaigns[] = [
+                    'campaign_id' => $all_tv_campaign['campaign_id'],
+                    'start_date' => $all_tv_campaign['start_date'],
+                    'end_date' => $all_tv_campaign['end_date'],
+                    'channel' => $all_tv_campaign['channel'],
+                    'channel_id' => $all_tv_campaign['channel_id'],
+                ];
+            }
+        }
+
+        foreach ($all_tv_campaigns as $all_tv_campaign){
+            if($today < $all_tv_campaign['start_date']){
+                $pending_tv_campaign[] = [
+                    'campaign_id' => $all_tv_campaign['campaign_id'],
+                    'start_date' => $all_tv_campaign['start_date'],
+                    'end_date' => $all_tv_campaign['end_date'],
+                    'channel' => $all_tv_campaign['channel'],
+                    'channel_id' => $all_tv_campaign['channel_id'],
+                ];
+            }
+        }
+
+        foreach ($all_tv_campaigns as $all_tv_campaign){
+            if($today >= $all_tv_campaign['start_date'] && $today <= $all_tv_campaign['end_date']){
+                $active_tv_campaign[] = [
+                    'campaign_id' => $all_tv_campaign['campaign_id'],
+                    'start_date' => $all_tv_campaign['start_date'],
+                    'end_date' => $all_tv_campaign['end_date'],
+                    'channel' => $all_tv_campaign['channel'],
+                    'channel_id' => $all_tv_campaign['channel_id'],
+                ];
+            }
+        }
 
         //maths to calculate the percentage values
-        $total_for_tv = count($all_tv_campaigns);
-        $total_pending = count($pending_tv_channel);
-        $total_finished = count($finished_tv_channel);
-
-        $total_active = $total_for_tv - ($total_finished + $total_pending);
+        $total_for_active = count($active_tv_campaign);
+        $total_pending = count($pending_tv_campaign);
+        $total_finished = count($finished_tv_campaigns);
+        $total_campaigns_tv = count($all_tv_campaigns);
 
         //percentage values
-        $perc_active = ($total_active / $total_for_tv) * 100;
-        $perc_finished = ($total_finished / $total_for_tv) * 100;
-        $perc_pending = ($total_pending / $total_for_tv) * 100;
+        $perc_active = ($total_for_active / $total_campaigns_tv) * 100;
+        $perc_finished = ($total_finished / $total_campaigns_tv) * 100;
+        $perc_pending = ($total_pending / $total_campaigns_tv) * 100;
 
         return (['per_active' => $perc_active, 'per_finished' => $perc_finished, 'per_pending' => $perc_pending]);
     }

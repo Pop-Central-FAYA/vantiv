@@ -216,7 +216,7 @@
 
                         }else{
 
-                        toastr.error('Hurray You are trying to upload a file of '+data.result.duration+'seconds into a '+time_slot+'seconds slot');
+                        toastr.error('You are trying to upload a file of '+data.result.duration+'seconds into a '+time_slot+'seconds slot');
                     }
 
                 });
