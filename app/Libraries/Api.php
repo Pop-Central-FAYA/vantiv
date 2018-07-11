@@ -1046,47 +1046,31 @@ Class Api
 
     public static function validateCampaign()
     {
-        $campaigns = Utilities::switch_db('api')->select("SELECT * from campaignDetails WHERE campaign_status = 0 GROUP BY campaign_id");
-        $array = [];
+
+        $campaigns = Utilities::switch_db('api')->select("SELECT * from campaignDetails WHERE campaign_status = 0 AND stop_date < current_date GROUP BY campaign_id");
         $adslot_arrays = [];
         foreach ($campaigns as $campaign){
-            $today = strtotime(date("Y-m-d"));
-            if($today > strtotime($campaign->stop_date)){
-                $update_campaign = Utilities::switch_db('api')->update("UPDATE campaignDetails set campaign_status = 1 where campaign_id = '$campaign->id'");
                 $adslots = Utilities::switch_db('api')->select("SELECT * from adslots where id IN ($campaign->adslots_id) ORDER BY time_created DESC");
                 foreach ($adslots as $adslot){
-                    $files = Utilities::switch_db('api')->select("SELECT time_picked, adslot from files where adslot = '$adslot->id' AND campaign_id = '$campaign->campaign_id'");
+                    $files = Utilities::switch_db('api')->select("SELECT * from files where adslot = '$adslot->id' AND campaign_id = '$campaign->campaign_id'");
                     $adslot_arrays[] = [
-                        'adslot_id' => $adslot->id,
-                        'campaign_id' => $campaign->campaign_id,
                         'file' => $files,
                     ];
                 }
 
-            }
         }
 
-//        dd($adslot_arrays);
+        $flatten_arrays = Utilities::array_flatten($adslot_arrays);
 
-        foreach ($adslot_arrays as $adslot_array){
-            $adslot_id = $adslot_array['file'] ? $adslot_array['file'][0]->adslot : '';
-            $time_picked = $adslot_array['file'] ? (integer)$adslot_array['file'][0]->time_picked : '';
-            $slot_id = $adslot_array['adslot_id'];
-            $camp_id = $adslot_array['campaign_id'];
-            $get_adslot = Utilities::switch_db('api')->select("SELECT * from adslots where id = '$adslot_id'");
-            if(!empty($adslot_id)){
-                $time_used = $get_adslot[0]->time_used;
-                $new_time_used = ($get_adslot[0]->time_used) - ($time_picked);
-                $update_adslot = Utilities::switch_db('api')->update("UPDATE adslots set time_used = '$new_time_used' where id = '$adslot_id'");
-            }
+        foreach ($flatten_arrays as $flatten_array){
+            $adslots = Utilities::switch_db('api')->select("SELECT * FROM adslots where id = '$flatten_array->adslot'");
+            $time_picked = (integer)$flatten_array->time_picked;
+            $new_time_used = (integer)$adslots[0]->time_used - $time_picked;
+            $update_adslot = Utilities::switch_db('api')->update("UPDATE adslots set time_used = '$new_time_used' where id = '$flatten_array->adslot'");
+        }
 
-            $array[] = [
-                'slot' => $adslot_id,
-                'init_time' => $time_used,
-                'time_picked' => $time_picked,
-                'time_remaining' => $new_time_used,
-                'camp_id' => $camp_id
-            ];
+        foreach ($campaigns as $campaign){
+            $update_campaign = Utilities::switch_db('api')->update("UPDATE campaignDetails set campaign_status = 1 where campaign_id = '$campaign->campaign_id' AND stop_date < current_date ");
         }
 
         return true;
