@@ -169,7 +169,7 @@ class CampaignsController extends Controller
         $region = Utilities::switch_db('api')->select("SELECT * from regions");
         $target = Utilities::switch_db('api')->select("SELECT * from targetAudiences");
 
-        Api::validateCampaign();
+//        Api::validateCampaign();
         return view('agency.campaigns.create1')->with('industries', $industry)
             ->with('channels', $chanel)
             ->with('regions', $region)
@@ -401,10 +401,9 @@ class CampaignsController extends Controller
 
         $ratecards = Utilities::switch_db('api')->select("SELECT * from rateCards WHERE broadcaster = '$broadcaster' AND id IN (SELECT rate_card FROM adslots where min_age >= $step1->min_age
                                                             AND max_age <= $step1->max_age
-                                                            AND target_audience = '$target_audience'
+                                                            AND target_audience IN ('$target_audience')
                                                             AND day_parts IN ('$day_parts') AND region IN ('$region')
                                                             AND is_available = 0 AND broadcaster = '$broadcaster') ");
-
 
         foreach ($ratecards as $ratecard){
             $day = Utilities::switch_db('api')->select("SELECT * from days where id = '$ratecard->day'");
@@ -419,7 +418,6 @@ class CampaignsController extends Controller
                 'price' => $price,
             ];
         }
-
 
         $time = [15, 30, 45, 60];
 
@@ -445,7 +443,7 @@ class CampaignsController extends Controller
 
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
         $col = new Collection($rate_card);
-        $perPage = 5;
+        $perPage = 100;
         $currentPageSearchResults = $col->slice(($currentPage - 1) * $perPage, $perPage)->all();
         $entries = new LengthAwarePaginator($currentPageSearchResults, count($col), $perPage);
         $entries->setPath('/agency/campaigns/campaign/step4/'.$id.'/'.$broadcaster);
