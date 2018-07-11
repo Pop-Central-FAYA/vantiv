@@ -109,6 +109,7 @@ class DashboardController extends Controller
                 $all_slots[] = $adslots;
             }
 
+
             $dayp_id = Utilities::array_flatten($all_slots);
 
             foreach ($dayp_id as $d){

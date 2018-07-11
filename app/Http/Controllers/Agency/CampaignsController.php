@@ -169,7 +169,7 @@ class CampaignsController extends Controller
         $region = Utilities::switch_db('api')->select("SELECT * from regions");
         $target = Utilities::switch_db('api')->select("SELECT * from targetAudiences");
 
-//        Api::validateCampaign();
+        Api::validateCampaign();
         return view('agency.campaigns.create1')->with('industries', $industry)
             ->with('channels', $chanel)
             ->with('regions', $region)
@@ -303,7 +303,7 @@ class CampaignsController extends Controller
     public function postStep3($id)
     {
         $id = request()->user_id;
-        if(request()->duration > request()->time_picked){
+        if(round((integer)request()->duration) > (integer)request()->time_picked){
             return response()->json(['error' => 'error']);
         }
 

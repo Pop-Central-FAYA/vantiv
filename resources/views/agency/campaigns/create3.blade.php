@@ -189,16 +189,17 @@
 
 
                 $("#button_submit").click(function () {
-                    var time_slot = $("#time").val();
+                    var time_slotss = $("#time").val();
                     var url1 = $("#form-data").attr('action');
-                    if(time_slot > data.result.duration){
+                    var time_slot = parseInt(time_slotss);
+                    if(time_slot >= Math.round(data.result.duration)){
                         $.ajax({
                             url: url1,
                             method: "GET",
                             data: {'time_picked' : time_slot, 'duration' : data.result.duration, 'image_url' : data.result.secure_url, 'file_name' : data.result.original_filename, 'user_id' : user_id, 'public_id' : data.result.public_id, 'channel' : channel},
                             success: function(result){
                                 if(result.error === 'error'){
-                                    toastr.error('You are trying to upload a file of '+data.result.duration+' secnds into a '+time_slot+' seconds slot');
+                                    toastr.error('You are trying to upload a file of '+data.result.duration+' seconds into a '+time_slot+' seconds slot');
                                     return;
                                 }else if(result.error_number === 'error_number'){
                                     toastr.error('You have reached the maximum number of files that can be uploaded, please hit the proceed button');
@@ -215,7 +216,7 @@
 
                         }else{
 
-                        toastr.error('You are trying to upload a file of '+data.result.duration+'secnds into a '+time_slot+'seconds slot');
+                        toastr.error('Hurray You are trying to upload a file of '+data.result.duration+'seconds into a '+time_slot+'seconds slot');
                     }
 
                 });
