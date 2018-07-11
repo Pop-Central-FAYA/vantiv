@@ -51,7 +51,7 @@
                 </div>
                 <p class="align_center">TV</p>
 
-                <div class="_pie_chart"></div>
+                <div id="tv" style="height: 150px"></div>
 
                 <ul>
                     <li class="pie_legend active"><span class="weight_medium">{{ round($active, 2) }}%</span> Active</li>
@@ -216,4 +216,58 @@
         </div>
 
     </div>
+@stop
+
+@section('scripts')
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/highcharts-3d.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script>
+        <?php echo "var tv_active = ".round($active) . ";\n"; ?>
+        <?php echo "var tv_pending = ".round($pending) . ";\n"; ?>
+        <?php echo "var tv_finished = ".round($finished) . ";\n"; ?>
+
+        Highcharts.chart('tv', {
+            chart: {
+                type: 'pie',
+                options3d: {
+                    enabled: true,
+                    alpha: 45,
+                    beta: 0
+                }
+            },
+            title: {
+                text: ''
+            },
+            tooltip: {
+                pointFormat: ''
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    depth: 35,
+                    dataLabels: {
+                        enabled: false,
+                        format: '{point.name}'
+                    }
+                }
+            },
+            credits: {
+                enabled: false
+            },
+            exporting: { enabled: false },
+            colors: ['#00C4CA', '#E89B0B', '#E8235F'],
+            series: [{
+                type: 'pie',
+                name: 'Browser share',
+                data: [
+                    ['Active', tv_active],
+                    ['Pending', tv_pending],
+                    ['Finished', tv_finished],
+                ]
+            }]
+        });
+    </script>
 @stop
