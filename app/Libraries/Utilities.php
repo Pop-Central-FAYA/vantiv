@@ -48,10 +48,14 @@ class Utilities {
         $campaign_id = $campaign_details[0]->campaign_id;
         $brand_name = $campaign_details[0]->brand;
         $channel = $campaign_details[0]->channel;
-        $location = Utilities::switch_db('api')->select("SELECT * FROM regions where id IN (SELECT region from campaignDetails where campaign_id = '$id' GROUP BY campaign_id) ");
+
+        $location_ids = $campaign_details[0]->region;
+        $target_id = $campaign_details[0]->target_audience;
+        $location = Utilities::switch_db('api')->select("SELECT * FROM regions where id IN ($location_ids) ");
         $brand = Utilities::switch_db('api')->select("SELECT name from brands where id = '$brand_name'");
-        $channel_name = Utilities::switch_db('api')->select("SELECT channel from campaignChannels where id = '$channel'");
+        $channel = Utilities::switch_db('api')->select("SELECT * from campaignChannels where id IN ($channel) ");
         $payments = Utilities::switch_db('api')->select("SELECT * from payments where campaign_id = '$campaign_id' ");
+        $target_audiences = Utilities::switch_db('api')->select("SELECT * from targetAudiences where id IN ($target_id)");
         $payment_id = $payments[0]->id;
         $broadcasters = Utilities::switch_db('api')->select("SELECT * FROM broadcasters where id IN (SELECT broadcaster from campaignDetails where campaign_id = '$id')");
         if(\Session::get('broadcaster_id')){
@@ -86,8 +90,7 @@ class Utilities {
             'brand' => $brand[0]->name,
             'industry' => $campaign_details[0]->Industry,
             'sub_industry' => $campaign_details[0]->sub_industry,
-            'channel' => $channel_name[0]->channel,
-            'channel_id' => $channel,
+            'channel' => $channel,
             'start_date' => date('Y-m-d', strtotime($campaign_details[0]->start_date)),
             'end_date' => date('Y-m-d', strtotime($campaign_details[0]->stop_date)),
             'campaign_cost' => number_format($payments[0]->total, '2'),
@@ -96,8 +99,9 @@ class Utilities {
             'company_user_id' => $user_id,
             'email' => $email,
             'phone' => $phone,
-            'location' => $location[0]->region,
+            'location' => $location,
             'age' => $campaign_details[0]->min_age .' - '.$campaign_details[0]->max_age,
+            'target_audience' => $target_audiences
         ];
 
 
@@ -142,6 +146,7 @@ class Utilities {
                 'slot_time' => $file->time_picked.' seconds',
                 'file_status' => $file->is_file_accepted,
                 'rejection_reason' => $file->rejection_reason,
+                'file_name' => $file->file_name,
             ];
         }
 

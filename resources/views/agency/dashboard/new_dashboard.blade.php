@@ -54,9 +54,9 @@
                 <div class="_pie_chart"></div>
 
                 <ul>
-                    <li class="pie_legend active"><span class="weight_medium">{{ $active }}%</span> Active</li>
-                    <li class="pie_legend pending"><span class="weight_medium">{{ $pending }}%</span> Pending</li>
-                    <li class="pie_legend finished"><span class="weight_medium">{{ $finished }}%</span> Finished</li>
+                    <li class="pie_legend active"><span class="weight_medium">{{ round($active, 2) }}%</span> Active</li>
+                    <li class="pie_legend pending"><span class="weight_medium">{{ round($pending, 2) }}%</span> Pending</li>
+                    <li class="pie_legend finished"><span class="weight_medium">{{ round($finished, 2) }}%</span> Finished</li>
                 </ul>
             </div>
 
