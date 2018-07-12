@@ -48,8 +48,8 @@
 
 
                 <p class='weight_medium m-b'>Upload Media Steps</p>
-                <p class="small_faint col_9 mb4"><ul>Step 1 : Select time slot from the time slot drop down</ul>
-                <ul>Step 2 : Upload your content to fit in the slot</ul>
+                <p class="small_faint col_9 mb4"><ul>Step 1 : Upload your content to fit in the slot</ul>
+                <ul>Step 2 : Select time slot from the time slot drop down</ul>
                 <ul>Step 3 : Wait for the content to complete</ul>
                 <ul>Step 4 : Click on the upload button.</ul>
                 <br>
@@ -216,7 +216,7 @@
 
                         }else{
 
-                        toastr.error('You are trying to upload a file of '+data.result.duration+'seconds into a '+time_slot+'seconds slot');
+                        toastr.error('You are trying to upload a file of '+data.result.duration+' seconds into a '+time_slot+'seconds slot');
                     }
 
                 });

@@ -54,30 +54,22 @@
 
         <!-- client charts -->
         <div class="the_frame mb client_charts content_month">
-
             <form action="{{ route('client.month', ['client_id' => $client_id]) }}" id="client_month" method="get">
 
-                <div class="chart_filters border_bottom clearfix">
-                    <div class="column col_10 date_filter">
-                        <a id="default" href="" class="active">1M</a>
+                <div class="filters chart_filters border_bottom clearfix">
+                    <div class="column col_6 date_filter">
+                        <a href="">1M</a>
                         <a id="yearly_client" href="{{ route('client.year', ['client_id' => $client_id]) }}">1Y</a>
                     </div>
 
-                    <div class="column col_2">
-                        <div class="select_wrap">
-
-                                <select name="month" id="month">
-                                    @foreach($months as $month)
-                                        <option value="{{ $month }}"
-                                                @if($current_month === $month)
-                                                selected
-                                                @endif
-                                        >{{ $month }}</option>
-                                    @endforeach
-                                </select>
-
-                        </div>
-
+                    <div class="column col_2 m-b">
+                        <input type="text" class="flatpickr" id="start_date" name="start_date" placeholder="Start Date">
+                    </div>
+                    <div class="column col_2 m-b">
+                        <input type="text" class="flatpickr" id="stop_date" name="stop_date" placeholder="Stop Date">
+                    </div>
+                    <div class="column col_2 m-b">
+                        <button type="button" id="filterDate">Filter</button>
                     </div>
                 </div>
 
@@ -212,88 +204,89 @@
                 </div>
                 <!-- end -->
             </div>
-
         </div>
-
     </div>
 @stop
-
 @section('scripts')
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://unpkg.com/flatpickr"></script>
     <script>
-        <?php echo "var week_date = ".$week_date . ";\n"; ?>
-        <?php echo "var week_amount = ".$week_payment . ";\n"; ?>
-        Highcharts.chart('container', {
-            chart: {
-                type: 'area'
-            },
-            title:{
-                text:''
-            },
-            xAxis: {
-                categories: week_date,
-                labels: {
-                    formatter: function () {
-                        return Highcharts.dateFormat('%Y-%m-%d', this.value);
-                    }
-                }
-            },
-            yAxis: {
-                title: {
-                    text: 'Number of Campaigns'
+        <?php echo "var week_date = ".$week_date. ";\n"; ?>
+        <?php echo "var week_amount = ".$week_payment. ";\n"; ?>
+        $(document).ready(function() {
+
+            flatpickr(".flatpickr", {
+                altInput: true,
+            });
+
+            //default chart
+            Highcharts.chart('container', {
+                chart: {
+                    type: 'area'
                 },
-                labels: {
-                    formatter: function () {
-                        return this.value / 1000 + 'k';
+                xAxis: {
+                    categories: week_date
+                },
+                title:{
+                    text:''
+                },
+                yAxis: {
+                    title: {
+                        text: 'Number of Campaigns'
+                    },
+                    labels: {
+                        formatter: function () {
+                            return this.value / 1000 + 'k';
+                        }
                     }
-                }
-            },
-            tooltip: {
-                pointFormat: '<b>{series.name} {point.y:,.0f}</b><br/> '
-            },
-            plotOptions: {
-                area: {
-                    pointStart: week_date[0],
-                    marker: {
-                        enabled: false,
-                        symbol: 'circle',
-                        radius: 2,
-                        states: {
-                            hover: {
-                                enabled: true
+                },
+                tooltip: {
+                    pointFormat: '<b>{series.name} {point.y:,.0f}</b><br/> '
+                },
+                plotOptions: {
+                    area: {
+                        pointStart: 0,
+                        marker: {
+                            enabled: false,
+                            symbol: 'circle',
+                            radius: 2,
+                            states: {
+                                hover: {
+                                    enabled: true
+                                }
                             }
                         }
                     }
-                }
-            },
-            credits: {
-                enabled: false
-            },
-            exporting: { enabled: false },
-            series: [{
-                name: 'Total Budget',
-                color: '#91e81e1',
-                data: week_amount,
-            }]
-        });
+                },
+                credits: {
+                    enabled: false
+                },
+                title:{
+                    text:''
+                },
+                exporting: { enabled: false },
+                series: [{
+                    name: 'Total Budget',
+                    color: '#00C4CA',
+                    data: week_amount,
+                }]
+            });
 
-
-        $(document).ready(function () {
-
-            //monthly filter
-            $("#month").change(function () {
+            //filter by date
+            $("#filterDate").click(function () {
 
                 $(".content_month").css({
                     opacity: 0.3
                 });
 
-                var month = $("#month").val();
+                var start_date = $("#start_date").val();
+                var stop_date = $("#stop_date").val();
                 var url = $("#client_month").attr('action');
                 var user_id = "<?php echo $client_id; ?>";
 
-                $.get(url, {'month': month, 'user_id' : user_id, '_token':$('input[name=_token]').val()}, function(data) {
+                $.get(url, {'start_date': start_date, 'stop_date': stop_date, 'user_id' : user_id, '_token':$('input[name=_token]').val()}, function(data) {
 
                     $(".content_month").css({
                         opacity: 1
@@ -472,11 +465,12 @@
 
             })
 
-        })
+        });
     </script>
 @stop
 
 @section('styles')
+    <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
     <style>
         .highcharts-grid path { display: none;}
     </style>

@@ -56,22 +56,21 @@
 
                 <div class="column col_3">
                     <span class="small_faint block_disp">Media Type</span>
-                    <select name="department" id="department">
-                        @foreach($campaign_details['campaign_det']['channel'] as $channel)
-                            <option value="{{ $channel->id }}">{{ $channel->channel }}</option>
-                        @endforeach
-                    </select>
+
+                    <div class="select_wrap">
+                        <select class="js-example-basic-multiple" name="channel" id="channel" multiple="multiple">
+                            @foreach($campaign_details['campaign_det']['channel'] as $channel)
+                                <option value="{{ $channel->id }}">{{ $channel->channel }}</option>
+                            @endforeach
+                        </select>
+                    </div>
 
                 </div>
 
                 <div class="column col_3 check_this">
                     <span class="small_faint block_disp">Media Channel</span>
-                    <p class='weight_medium tags show_channel'></p>
-                    <p class='weight_medium tags hide_channel'>
-                        @foreach($campaign_details['broadcasters'] as $broadcaster)
-                            <span> {{ $broadcaster->brand }} <a href=""></a></span>
-                        @endforeach
-                    </p>
+
+
                 </div>
             </div>
         </div>
@@ -87,7 +86,6 @@
                     <div class="column col_9">
                         <h4 class="small_faint uppercased weight_medium">Compliance</h4>
                     </div>
-
                     <div class="column col_3 clearfix">
                         <div class="">
                             <div class="select_wrap">
@@ -98,6 +96,7 @@
                             </div>
                         </div>
                     </div>
+                    <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                 </div>
                 <!-- end -->
 
@@ -137,7 +136,7 @@
 
             {{--{{ dd($campaign_details) }}--}}
 
-            <div class="tab_contain">
+            <div class="tab_contain default_summary">
 
                 <!-- summary -->
                 <div class="tab_content col_10 campaign_summary" id="summary">
@@ -360,9 +359,10 @@
                 </div>
                 <!-- end -->
 
-
-
-
+            </div>
+            
+            <div class="tab_contain new_summary" style="display: none;">
+                
             </div>
 
         </div>
@@ -371,7 +371,10 @@
 @stop
 
 @section('scripts')
-    <script type="text/javascript" src="{{ asset('new_frontend/js/jquery_multiselect.js') }}" ></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
     <script>
         $('document').ready(function () {
             $('body').delegate("#client", "change", function (e) {
@@ -389,7 +392,7 @@
                     success: function (data) {
                         console.log(data);
                         var big_html = '<div class="select_wrap show_this" id="show_this">\n' +
-                                        ' <select name="campaign" id="campaign">';
+                                        ' <select name="campaign" id="campaign"><option value="">Select Campaign</option>';
                         big_html +=  '';
                         $.each(data.campaign, function (index, value) {
                            big_html += '<option value="'+value.campaign_id+'">'+value.name+'</option>';
@@ -407,9 +410,6 @@
                         $(".show_this").show();
                         $(".show_this").html(big_html);
 
-                        $(".hide_channel").hide();
-                        $(".show_channel").show();
-                        $(".show_channel").html(chanel_html);
                         $(".load_this").css({
                             opacity: 1
                         });
@@ -422,44 +422,127 @@
                 });
             });
 
+            $('.js-example-basic-multiple').select2();
+            //placeholder for target audienct
+            $('#channel').select2({
+                placeholder: "Please select Media Type"
+            });
+
             $('body').delegate("#campaign", "change", function (e) {
                 var campaign_id = $("#campaign").val();
-                $(".check_this").css({
-                    opacity: 0.3
-                });
+                window.location = '/agency/campaigns/campaign-details/'+campaign_id;
+
+            });
+
+        });
+        jQuery( document ).ready(function( $ ) {
+            $('body').delegate("#channel", "change", function () {
+                var channel = $("#channel").val();
+                var campaign_id = "<?php echo $campaign_details['campaign_det']['campaign_id'] ?>";
+
                 $.ajax({
-                    url: '/agency/campaigns/this/campaign-details/'+campaign_id,
+                    url: '/agency/campaigns/media-channel/'+campaign_id,
                     method: "GET",
                     data: {
-                        campaign_id : campaign_id,
+                        channel: channel, campaign_id: campaign_id,
                     },
-                    success: function (data) {
+                    success: function(data) {
                         console.log(data);
+                        var big_html = '<span class="small_faint block_disp">Media Channel</span><div class="select_wrap"><select class="js-example-basic-multiple_1" name="media" id="media" multiple="multiple">';
 
-                        var chanel_html = '';
-                        $.each(data, function (index, value) {
-                            chanel_html += '<span> '+value.brand+' <a href=""></a></span>';
-                        });
+                            $.each(data, function (index, value) {
+                                big_html += '<option value="'+value.broadcaster_id+'">'+value.broadcaster+'</option>';
+                            });
+                            big_html += '</select></div>';
 
-                        $(".hide_channel").hide();
-                        $(".show_channel").show();
-                        $(".show_channel").html(chanel_html);
-                        $(".check_this").css({
-                            opacity: 1
-                        });
-                    },
-                    error: function () {
-                        $(".check_this").css({
-                            opacity: 1
-                        });
+                            $(".check_this").html(big_html);
+
+                        $('.js-example-basic-multiple_1').select2();
+
                     }
                 });
+            });
+        })
+
+        jQuery( document ).ready(function( $ ) {
+            $('body').delegate("#media", "change", function () {
+                var channel = $("#media").val();
+                console.log(channel);
             })
         })
+
+
+        Highcharts.chart('container', {
+
+            chart: {
+                type: 'column'
+            },
+
+            title: {
+                text: ''
+            },
+
+            xAxis: {
+                categories: ['2018-04-05', '2018-04-07', '2018-04-09', '2018-04-11', '2018-04-14']
+            },
+
+            yAxis: {
+                allowDecimals: false,
+                min: 0,
+                title: {
+                    text: 'Total Amount'
+                }
+            },
+            credits: {
+                enabled: false
+            },
+            exporting: { enabled: false },
+            tooltip: {
+                formatter: function () {
+                    return '<b>' + this.x + '</b><br/>' +
+                        this.series.name + ': ' + this.y + '<br/>' +
+                        'Total: ' + this.point.stackTotal;
+                },
+
+            },
+
+            plotOptions: {
+                column: {
+                    stacking: 'normal'
+                }
+            },
+
+            series: [{
+                color: '#5281FE',
+                name: 'NTA',
+                data: [5, 3],
+                stack: 'TV'
+            }, {
+                color: '#5281FE',
+                name: 'Silverbird',
+                data: [3, 4],
+                stack: 'TV'
+            }, {
+                color: '#00C4CA',
+                name: 'Ray Power',
+                data: [3, 4],
+                stack: 'Radio'
+            }, {
+                color: '#00C4CA',
+                name: 'Naija Info',
+                data: [3, 4],
+                stack: 'Radio'
+            }]
+        });
     </script>
 @stop
 
 
 @section('styles')
-    <link rel="stylesheet" href="{{ asset('new_frontend/css/multi_select.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+    <style>
+        .highcharts-grid path { display: none;}
+        .highcharts-legend {
+            display: none;}
+    </style>
 @stop

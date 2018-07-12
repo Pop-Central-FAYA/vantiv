@@ -250,7 +250,7 @@ class ClientsController extends Controller
         $last_weekly_total = [];
         $last_weekly_date = [];
 //        $all_camps = Utilities::switch_db('api')->select("SELECT * FROM campaigns WHERE (time_created >= curdate() - INTERVAL DAYOFWEEK(curdate())+6 DAY) AND (time_created < curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY) AND id IN (SELECT campaign_id from campaignDetails where user_id = '$user_id' GROUP BY campaign_id)");
-        $all_camps = Utilities::switch_db('api')->select("SELECT * FROM campaigns where DATE_FORMAT(time_created, '%Y-%m') = '$date' AND id IN (SELECT campaign_id from campaignDetails where user_id = '$user_id' GROUP BY campaign_id)");
+        $all_camps = Utilities::switch_db('api')->select("SELECT * FROM campaigns where id IN (SELECT campaign_id from campaignDetails where user_id = '$user_id' GROUP BY campaign_id)");
         foreach ($all_camps as $all_camp){
             $pay = Utilities::switch_db('api')->select("SELECT * from payments where campaign_id = '$all_camp->id' AND time_created = '$all_camp->time_created'");
             $last_weekly_campaign[] = [
@@ -361,21 +361,20 @@ class ClientsController extends Controller
         $client = Utilities::switch_db('reports')->select("SELECT * FROM walkIns WHERE id = '$client_id'");
 
         $user_id = $client[0]->user_id;
-        $month = request()->month;
-        $year = date('Y');
-        $date = (string)($year.'-'.$month);
+        $start_date = date('Y-m-d', strtotime(request()->start_date));
+        $stop_date = date('Y-m-d', strtotime(request()->stop_date));
 
         $last_weekly_campaign = [];
         $last_weekly_total = [];
         $last_weekly_date = [];
 
-        $all_campaign_this_month = Utilities::switch_db('api')->select("SELECT * from campaignDetails WHERE user_id = '$user_id' AND adslots > 0 AND DATE_FORMAT(time_created, '%Y-%M') = '$date' GROUP BY campaign_id ORDER BY time_created DESC");
+        $all_campaign_this_month = Utilities::switch_db('api')->select("SELECT * from campaignDetails WHERE user_id = '$user_id' AND adslots > 0 AND time_created BETWEEN '$start_date' AND '$stop_date' GROUP BY campaign_id ORDER BY time_created DESC");
 
-        $total_this_month = Utilities::switch_db('api')->select("SELECT SUM(total) as total from payments where campaign_id IN (SELECT campaign_id from campaignDetails where user_id = '$user_id' GROUP BY campaign_id) AND DATE_FORMAT(time_created, '%Y-%M') = '$date'");
+        $total_this_month = Utilities::switch_db('api')->select("SELECT SUM(total) as total from payments where campaign_id IN (SELECT campaign_id from campaignDetails where user_id = '$user_id' GROUP BY campaign_id) AND time_created BETWEEN '$start_date' AND '$stop_date'");
 
-        $brand_this_month = Utilities::switch_db('api')->select("SELECT * from brands where walkin_id = '$client_id' AND DATE_FORMAT(time_created, '%Y-%M') = '$date' ");
+        $brand_this_month = Utilities::switch_db('api')->select("SELECT * from brands where walkin_id = '$client_id' AND time_created BETWEEN '$start_date' AND '$stop_date' ");
 
-        $all_camps = Utilities::switch_db('api')->select("SELECT * FROM campaigns where DATE_FORMAT(time_created, '%Y-%M') = '$date' AND id IN (SELECT campaign_id from campaignDetails where user_id = '$user_id' GROUP BY campaign_id)");
+        $all_camps = Utilities::switch_db('api')->select("SELECT * FROM campaigns where time_created BETWEEN '$start_date' AND '$stop_date' AND id IN (SELECT campaign_id from campaignDetails where user_id = '$user_id' GROUP BY campaign_id)");
 
         foreach ($all_camps as $all_camp){
             $pay = Utilities::switch_db('api')->select("SELECT * from payments where campaign_id = '$all_camp->id' AND time_created = '$all_camp->time_created'");

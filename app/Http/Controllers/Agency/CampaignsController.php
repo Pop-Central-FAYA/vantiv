@@ -828,8 +828,9 @@ class CampaignsController extends Controller
 
     public function filterByCampaignId($campaign_id)
     {
+        $summary = Utilities::campaignDetails($campaign_id);
         $media_chanel = Utilities::switch_db('api')->select("SELECT * FROM broadcasters where id IN (SELECT broadcaster from campaignDetails where campaign_id = '$campaign_id')");
-        return $media_chanel;
+        return response()->json(['media_channel' => $media_chanel, 'summary' => $summary]);
     }
 
     public function mpoDetails($id)
@@ -837,6 +838,28 @@ class CampaignsController extends Controller
         $mpo_details = Utilities::getMpoDetails($id);
 
         return view('agency.mpo.mpo')->with('mpo_details', $mpo_details);
+    }
+
+    public function getMediaChannel($campaign_id)
+    {
+        $channel = request()->channel;
+        $channel_id = $channel[0];
+//        dd($channel_id);
+        $all_channel = [];
+        $campaigns = Utilities::switch_db('api')->select("SELECT * from campaignDetails where campaign_id = '$campaign_id' ");
+        foreach ($campaigns as $campaign){
+            $channel_raw = in_array("'".$channel_id."'",explode(',', $campaign->channel));
+            if($channel_raw){
+                $broadcaster = Utilities::switch_db('api')->select("SELECT * from broadcasters where id = '$campaign->broadcaster'");
+                $all_channel[] = [
+                    'broadcaster_id' => $campaign->broadcaster ? $campaign->broadcaster : '',
+                    'broadcaster' => $broadcaster ? $broadcaster[0]->brand : '',
+                    'campaign_id' => $campaign->id
+                ];
+            }
+        }
+
+        return $all_channel;
     }
 
 

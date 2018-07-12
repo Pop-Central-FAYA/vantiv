@@ -382,6 +382,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/mpo-details/{id}', 'Agency\CampaignsController@mpoDetails')->name('agency.mpo.details');
 
             Route::get('/this/campaign-details/{campaign_id}', 'Agency\CampaignsController@filterByCampaignId');
+            Route::get('/media-channel/{campaign_id}', 'Agency\CampaignsController@getMediaChannel');
         });
 
         Route::get('/agency-dashboard/periodic-sales', 'DashboardController@filterByBroad')->name('agency.dashboard.broad');
