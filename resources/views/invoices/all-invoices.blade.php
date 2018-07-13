@@ -20,38 +20,20 @@
 
         <div class="the_frame client_dets mb4">
 
-            <table>
-                <tr>
-                    <th><input type="checkbox"></th>
-                    <th>Invoice Number</th>
-                    <th>Name</th>
-                    <th>Client</th>
-                    <th>Brand</th>
-                    <th>Start Date</th>
-                    <th>End Date</th>
-                    <th>Amount</th>
-                    <th>Status</th>
-                    <th></th>
-                </tr>
-
-                @foreach ($all_invoices as $invoice)
+            <table class="invoice">
+                <thead>
                     <tr>
-                        <td><input type="checkbox"></td>
-                        <td>{{ $invoice['invoice_number'] }}</td>
-                        <td>{{ $invoice['campaign_name'] }}</td>
-                        <td>{{ $invoice['name'] }}</td>
-                        <td class="weight_medium">{{ ucfirst($invoice['campaign_brand']) }}</td>
-                        <td>{{ $invoice['start_date'] }}</td>
-                        <td>{{ $invoice['end_date'] }}</td>
-                        <td>&#8358; {{ $invoice['actual_amount_paid'] }}</td>
-                        @if($invoice['status'] === 1)
-                            <td><span class="span_state status_success">Approved</span></td>
-                        @else
-                            <td><a href="#approve_invoice{{ $invoice['id'] }}" class="span_state status_pending modal_click">Pending</a></td>
-                        @endif
-                        <td><a href="">View</a></td>
+                        <th>S/N</th>
+                        <th>Invoice Number</th>
+                        <th>Campaign Name</th>
+                        <th>Client</th>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>View</th>
                     </tr>
-                @endforeach
+                </thead>
+
             </table>
         </div>
         <!--  -->
@@ -72,6 +54,76 @@
         </form>
     </div>
     @endforeach
+
+@stop
+
+@section('styles')
+    {{--<link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css" type="text/css"/>--}}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.5.1/css/buttons.dataTables.min.css" type="text/css"/>
+@stop
+
+@section('scripts')
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+    {{--<script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>--}}
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.flash.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.html5.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.print.min.js"></script>
+
+    <script>
+        //datatables
+        $(document).ready(function( $ ) {
+
+            $("body").delegate(".modal_invoice_click", "click", function() {
+                var href = $(this).attr("href");
+                $(href).modal();
+                return false;
+            });
+
+            var Datefilter =  $('.invoice').DataTable({
+                dom: 'Bfrtip',
+                paging: true,
+                serverSide: true,
+                processing: true,
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ],
+                ajax: {
+                    url: '/agency/invoices/data',
+                    data: function (d) {
+                        d.start_date = $('input[name=txtFromDate_ps]').val();
+                        d.stop_date = $('input[name=txtToDate_ps]').val();
+                    }
+                },
+                columns: [
+                    {data: 's_n', name: 's_n'},
+                    {data: 'invoice_number', name: 'invoice_number'},
+                    {data: 'campaign_name', name: 'campaign_name'},
+                    {data: 'name', name: 'name'},
+                    {data: 'date', name: 'date'},
+                    {data: 'actual_amount_paid', name: 'actual_amount_paid'},
+                    {data: 'status', name: 'status'},
+                    {data: 'view', name: 'view'}
+                ],
+                "createdRow": function( row, data, dataIndex ) {
+
+                    // Add a class to the cell in the second column
+                    $(row).children(':nth-child(4)').addClass('weight_medium');
+
+                    // Add a class to the row
+                    $(row).addClass('important');
+                }
+            });
+
+            $('#button_ps').on('click', function() {
+                Datefilter.draw();
+            });
+        } );
+    </script>
 @stop
 
 

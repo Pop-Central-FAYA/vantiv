@@ -35,7 +35,7 @@ class WalletsController extends Controller
         return view('wallets.wallet_statement')->with('wallet', $wallets)->with('user_det', $user_det)->with('user_id', $user_id)->with('history', $wallet_history)->with('transactions', $transaction)->with(['agency_id' => $agency_id, 'advertiser_id' => Session::get('advertiser_id')]);
     }
 
-    public function getData(Datatables $datatables)
+    public function getData(Datatables $datatables, Request $request)
     {
         $agency_id = \Session::get('agency_id');
         if ($agency_id != null) {
@@ -43,6 +43,29 @@ class WalletsController extends Controller
         } else {
             $user_id = Session::get('advertiser_id');
         }
+
+        if($request->has('start_date') && $request->has('stop_date')){
+            $start_date = $request->start_date;
+            $stop_date = $request->stop_date;
+            $trans = Utilities::switch_db('api')->select("SELECT * from transactions where user_id = '$user_id' AND time_created BETWEEN '$start_date' AND '$stop_date' ORDER BY time_created desc");
+
+            $j = 1;
+            $transaction = [];
+
+            foreach ($trans as $trans) {
+                $transaction[] = [
+                    'id' => $j,
+                    'reference' => strtoupper($trans->reference),
+                    'type' => strtolower($trans->type),
+                    'amount' => '&#8358;'.number_format($trans->amount, 2),
+                    'date' => date('d/m/Y', strtotime($trans->time_created))
+                ];
+                $j++;
+            }
+            return $datatables->collection($transaction)
+                ->make(true);
+        }
+
         $trans = Utilities::switch_db('api')->select("SELECT * from transactions where user_id = '$user_id' ORDER BY time_created desc");
         $j = 1;
         $transaction = [];
@@ -50,8 +73,8 @@ class WalletsController extends Controller
         foreach ($trans as $trans) {
             $transaction[] = [
                 'id' => $j,
-                'reference' => $trans->reference,
-                'type' => $trans->type,
+                'reference' => strtoupper($trans->reference),
+                'type' => strtolower($trans->type),
                 'amount' => '&#8358;'.number_format($trans->amount, 2),
                 'date' => date('d/m/Y', strtotime($trans->time_created))
             ];

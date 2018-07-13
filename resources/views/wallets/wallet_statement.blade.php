@@ -31,36 +31,24 @@
             </div>
         </div>
 
-
         <div class="the_frame client_dets mb4">
 
-            <div class="chart_filters border_bottom clearfix">
-                <div class="column col_7 date_filter">
-                    All Transactions
+            <div class="filters border_bottom clearfix">
+                <div class="column col_8 p-t">
+                    <p class="uppercased weight_medium">All Transactions</p>
                 </div>
 
-                <div class="column col_5 clearfix">
-
-                    <div class="col_6 column">
-                        <div class="header_search">
-                            <form>
-                                <input type="text" placeholder="Search...">
-                            </form>
-                        </div>
+                <div class="column col_4 clearfix">
+                    <div class="col_5 column">
+                        <input type="text" name="start_date" class="flatpickr" placeholder="Start Date">
                     </div>
 
-                    <div class="col_4 column">
-
-                        <div class="select_wrap">
-                            <select>
-                                <option>All Time</option>
-                                <option>This Month</option>
-                            </select>
-                        </div>
+                    <div class="col_5 column">
+                        <input type="text" name="stop_date" class="flatpickr" placeholder="Stop Date">
                     </div>
 
-                    <div class="col_2 column">
-                        <a href="" class="export_table"></a>
+                    <div class="col_1 column">
+                        <button type="button" id="filter_wallet" class="btn">Filter</button>
                     </div>
                 </div>
             </div>
@@ -69,26 +57,16 @@
             <div class="tab_contain">
                 <div class="tab_content" id="history">
 
-                    <table>
-                        <tr>
-                            <th><input type="checkbox"></th>
-                            <th>S/N</th>
-                            <th>Invoice No</th>
-                            <th>Type</th>
-                            <th>Amount</th>
-                            <th>Date</th>
-                        </tr>
-
-                        @foreach($transactions as $transaction)
+                    <table class="wallet_hitory">
+                        <thead>
                             <tr>
-                                <td><input type="checkbox"></td>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $transaction->reference }}</td>
-                                <td class="weight_medium">{{ $transaction->type }}</td>
-                                <td>&#8358; {{ number_format($transaction->amount,2) }}</td>
-                                <td>{{ date('Y-m-d', strtotime($transaction->time_created)) }}</td>
+                                <th>Date</th>
+                                <th>Amount</th>
+                                <th>Transaction Ref.</th>
+                                <th>Type</th>
                             </tr>
-                        @endforeach
+                        </thead>
+
                     </table>
 
                 </div>
@@ -127,6 +105,16 @@
 @stop
 
 @section('scripts')
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+    {{--<script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>--}}
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.flash.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.html5.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.print.min.js"></script>
+    <script src="https://unpkg.com/flatpickr"></script>
     <script>
         function payWithPaystack(){
             $(".modal_contain").css({
@@ -154,45 +142,47 @@
             });
             handler.openIframe();
         }
+
+    //    datatables
+        $(document).ready(function () {
+            flatpickr(".flatpickr", {
+                altInput: true,
+            });
+            var Datefilter =  $('.wallet_hitory').DataTable({
+                dom: 'Bfrtip',
+                paging: true,
+                serverSide: true,
+                processing: true,
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ],
+                ajax: {
+                    url: '/wallets/get-wallet/data',
+                    data: function (d) {
+                        d.start_date = $('input[name=start_date]').val();
+                        d.stop_date = $('input[name=stop_date]').val();
+                    }
+                },
+                columns: [
+                    {data: 'date', name: 'date'},
+                    {data: 'amount', name: 'amount'},
+                    {data: 'reference', name: 'reference'},
+                    {data: 'type', name: 'type'},
+
+                ],
+
+            });
+
+            $('#filter_wallet').on('click', function() {
+                Datefilter.draw();
+            });
+        })
     </script>
 @stop
 
-{{--@section('scripts')--}}
-    {{--<script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>--}}
-    {{--<script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>--}}
-    {{--<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/dataTables.buttons.min.js"></script>--}}
-    {{--<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.flash.min.js"></script>--}}
-    {{--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>--}}
-    {{--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>--}}
-    {{--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>--}}
-    {{--<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.html5.min.js"></script>--}}
-    {{--<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.print.min.js"></script>--}}
-    {{--<script>--}}
-        {{--$(document).ready(function () {--}}
-            {{--var Datefilter =  $('.wallet_hitory').DataTable({--}}
-                {{--paging: true,--}}
-                {{--serverSide: true,--}}
-                {{--processing: true,--}}
-                {{--ajax: {--}}
-                    {{--url: '/wallets/get-wallet/data',--}}
-                    {{--data: function (d) {--}}
-                        {{--d.start_date = $('input[name=txtFromDate_hvc]').val();--}}
-                        {{--d.stop_date = $('input[name=txtToDate_hvc]').val();--}}
-                    {{--}--}}
-                {{--},--}}
-                {{--columns: [--}}
-                    {{--{data: 'id', name: 'id'},--}}
-                    {{--{data: 'reference', name: 'reference'},--}}
-                    {{--{data: 'type', name: 'type'},--}}
-                    {{--{data: 'amount', name: 'amount'},--}}
-                    {{--{data: 'date', name: 'date'},--}}
-                {{--]--}}
-            {{--});--}}
-        {{--})--}}
-    {{--</script>--}}
-{{--@stop--}}
+@section('styles')
+    <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.5.1/css/buttons.dataTables.min.css" type="text/css"/>
+@stop
 
-{{--@section('styles')--}}
-    {{--<link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css" type="text/css"/>--}}
-    {{--<link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.5.1/css/buttons.dataTables.min.css" type="text/css"/>--}}
-{{--@stop--}}

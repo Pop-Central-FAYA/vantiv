@@ -135,6 +135,28 @@
                 @endif
             </div>
 
+            <div class="clearfix mb">
+                <div class="input_wrap col_6 column{{ $errors->has('first_name') ? ' has-error' : '' }}">
+                    <label class="small_faint">First Name</label>
+                    <input type="text" id="first_name" name="first_name" placeholder="Enter First Name">
+                    @if($errors->has('first_name'))
+                        <strong>
+                            <span class="error-block" style="color: red;">{{ $errors->first('first_name') }}</span>
+                        </strong>
+                    @endif
+                </div>
+
+                <div class="input_wrap col_6 column{{ $errors->has('last_name') ? ' has-error' : '' }}">
+                    <label class="small_faint">Last Name</label>
+                    <input type="text" id="last_name" name="last_name" placeholder="Enter Last Name">
+                    @if($errors->has('last_name'))
+                        <strong>
+                            <span class="error-block" style="color: red;">{{ $errors->first('last_name') }}</span>
+                        </strong>
+                    @endif
+                </div>
+            </div>
+
             <div class="input_wrap{{ $errors->has('phone') ? ' has-error' : '' }}">
                 <label class="small_faint">Phone Number</label>
                 <input type="text" name="phone" placeholder="234** **** ****">
@@ -177,29 +199,6 @@
                     </select>
                 </div>
             </div>
-
-            <div class="clearfix mb">
-                <div class="input_wrap col_6 column{{ $errors->has('first_name') ? ' has-error' : '' }}">
-                    <label class="small_faint">First Name</label>
-                    <input type="text" id="first_name" name="first_name" placeholder="Enter First Name">
-                    @if($errors->has('first_name'))
-                        <strong>
-                            <span class="error-block" style="color: red;">{{ $errors->first('first_name') }}</span>
-                        </strong>
-                    @endif
-                </div>
-
-                <div class="input_wrap col_6 column{{ $errors->has('last_name') ? ' has-error' : '' }}">
-                    <label class="small_faint">Last Name</label>
-                    <input type="text" id="last_name" name="last_name" placeholder="Enter Last Name">
-                    @if($errors->has('last_name'))
-                        <strong>
-                            <span class="error-block" style="color: red;">{{ $errors->first('last_name') }}</span>
-                        </strong>
-                    @endif
-                </div>
-            </div>
-
 
             <div class="align_right">
                 <input type="submit" value="Create Client" class="btn uppercased update">

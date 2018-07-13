@@ -266,7 +266,7 @@ class Utilities {
     public static function generateReference()
     {
         $date = strtotime(date("Y-m-d H:i:s")) * 4;
-        $reference = mt_rand(10000000, 99000000).$date;
+        $reference = (integer)round((mt_rand(100000, 999999999).$date) / 199999999999);
         return $reference;
     }
 

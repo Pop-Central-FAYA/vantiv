@@ -23,12 +23,18 @@
                 <a href="{{ route('clients.list') }}" class="back_icon block_disp left"></a>
                 <div class="left">
                     <h2 class='sub_header'>{{ $client[0]->company_name }}</h2>
+                    <p class="small_faint">{{ $client[0]->location }}</p>
                 </div>
 
                 <span class="client_ava right"><img src="{{ $client[0]->company_logo ? asset(decrypt($client[0]->company_logo)) : '' }}"></span>
             </div>
 
             <div class="clearfix client_personal">
+                <div class="column col_3">
+                    <span class="small_faint">Contact Name</span>
+                    <p class='weight_medium'>{{ $user_details[0]->firstname.' '.$user_details[0]->lastname }}</p>
+                </div>
+
                 <div class="column col_3">
                     <span class="small_faint">Email</span>
                     <p class='weight_medium'>{{ $user_details[0]->email }}</p>
@@ -40,17 +46,11 @@
                 </div>
 
                 <div class="column col_3">
-                    <span class="small_faint">Address</span>
-                    <p class='weight_medium'>{{ $client[0]->location }}</p>
-                </div>
-
-                <div class="column col_3">
                     <span class="small_faint">Joined</span>
                     <p class='weight_medium'>{{ date('M j, Y', strtotime($user_details[0]->time_created)) }}</p>
                 </div>
             </div>
         </div>
-
 
         <!-- client charts -->
         <div class="the_frame mb client_charts content_month">

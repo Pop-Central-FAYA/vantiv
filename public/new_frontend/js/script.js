@@ -42,6 +42,7 @@ $(function () {
 	    }
 	});
 
+
     jQuery( document ).ready(function( $ ) {
         $('.modal_click').on('click', function () {
             var ref = $(this).attr('href');

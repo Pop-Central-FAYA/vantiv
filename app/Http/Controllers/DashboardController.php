@@ -3,7 +3,7 @@
 namespace Vanguard\Http\Controllers;
 
 use Hamcrest\Util;
-use Vanguard\Http\Requests\Request;
+use Illuminate\Http\Request;
 use Vanguard\Libraries\Api;
 use Vanguard\Libraries\Utilities;
 use Vanguard\Repositories\Activity\ActivityRepository;
@@ -12,6 +12,7 @@ use Vanguard\Support\Enum\UserStatus;
 use Auth;
 use Carbon\Carbon;
 use Session;
+use Yajra\DataTables\DataTables;
 
 class DashboardController extends Controller
 {
@@ -325,43 +326,7 @@ class DashboardController extends Controller
 
             $active_campaigns = Utilities::switch_db('api')->select("SELECT * FROM campaignDetails where agency = '$agency_id' AND start_date < '$today' AND stop_date > '$today' GROUP BY campaign_id");
 
-//            campaigns
-            $agency_campaigns = [];
-            $all_campaign = Utilities::switch_db('api')->select("SELECT * from campaignDetails WHERE agency = '$agency_id' AND adslots > 0 GROUP BY campaign_id ORDER BY time_created DESC");
-
-            foreach ($all_campaign as $cam)
-            {
-
-                $campaign_reference = Utilities::switch_db('api')->select("SELECT * from campaigns where id = '$cam->campaign_id'");
-//            $today = strtotime(date('Y-m-d'));
-                $today = date("Y-m-d");
-                if(strtotime($today) > strtotime($cam->start_date) && strtotime($today) > strtotime($cam->stop_date)){
-                    $status = 'expired';
-                }elseif (strtotime($today) >= strtotime($cam->start_date) && strtotime($today) <= strtotime($cam->stop_date)){
-                    $status = 'active';
-                }else{
-                    $now = strtotime($today);
-                    $your_date = strtotime($cam->start_date);
-                    $datediff = $your_date - $now;
-                    $new_day =  round($datediff / (60 * 60 * 24));
-                    $status = 'pending';
-                }
-                $brand = Utilities::switch_db('api')->select("SELECT `name` as brand_name from brands where id = '$cam->brand'");
-                $pay = Utilities::switch_db('api')->select("SELECT total from payments where campaign_id = '$cam->campaign_id'");
-                $agency_campaigns[] = [
-                    'id' => $campaign_reference[0]->campaign_reference,
-                    'camp_id' => $cam->campaign_id,
-                    'name' => $cam->name,
-                    'brand' => $brand[0]->brand_name,
-                    'product' => $cam->product,
-                    'start_date' => date('Y-m-d', strtotime($cam->start_date)),
-                    'end_date' => date('Y-m-d', strtotime($cam->stop_date)),
-                    'adslots' => $cam->adslots,
-                    'budget' => number_format($pay[0]->total, 2),
-                    'compliance' => '0%',
-                    'status' => $status
-                ];
-            }
+//
 
             #region
 //            $payments = Utilities::switch_db('api')->select("SELECT SUM(amount) as total from payments WHERE campaign_id IN(SELECT id from campaigns where adslots_id IN(SELECT * from ))");
@@ -387,7 +352,6 @@ class DashboardController extends Controller
                                                                     'active' => $active,
                                                                     'pending' => $pending,
                                                                     'finished' => $finished,
-                                                                    'agency_campaigns' => $agency_campaigns,
                                                                     'agency_info' => $agency_info]);
 
         } else if ($role->role_id === 6) {
@@ -1073,6 +1037,128 @@ class DashboardController extends Controller
         $perc_pending = ($total_pending / $total_campaigns_tv) * 100;
 
         return (['per_active' => $perc_active, 'per_finished' => $perc_finished, 'per_pending' => $perc_pending]);
+    }
+
+    public function dashboardCampaigns(DataTables $dataTables, Request $request)
+    {
+            //campaigns
+            $agency_campaigns = [];
+            $agency_id = Session::get('agency_id');
+
+            if($request->has('start_date') && $request->has('stop_date')){
+                $start_date = $request->start_date;
+                $stop_date = $request->stop_date;
+
+                $all_campaign = Utilities::switch_db('api')->select("SELECT * from campaignDetails WHERE agency = '$agency_id' AND adslots > 0 AND time_created BETWEEN '$start_date' AND '$stop_date' GROUP BY campaign_id ORDER BY time_created DESC");
+                $j = 1;
+                foreach ($all_campaign as $cam)
+                {
+
+                    $campaign_reference = Utilities::switch_db('api')->select("SELECT * from campaigns where id = '$cam->campaign_id'");
+//            $today = strtotime(date('Y-m-d'));
+                    $today = date("Y-m-d");
+                    if(strtotime($today) > strtotime($cam->start_date) && strtotime($today) > strtotime($cam->stop_date)){
+                        $status = 'Finished';
+                    }elseif (strtotime($today) >= strtotime($cam->start_date) && strtotime($today) <= strtotime($cam->stop_date)){
+                        $status = 'Active';
+                    }else{
+                        $now = strtotime($today);
+                        $your_date = strtotime($cam->start_date);
+                        $datediff = $your_date - $now;
+                        $new_day =  round($datediff / (60 * 60 * 24));
+                        $status = 'Pending';
+                    }
+                    $brand = Utilities::switch_db('api')->select("SELECT `name` as brand_name from brands where id = '$cam->brand'");
+                    $pay = Utilities::switch_db('api')->select("SELECT total from payments where campaign_id = '$cam->campaign_id'");
+                    $agency_campaigns[] = [
+                        'id' => $campaign_reference[0]->campaign_reference,
+                        'camp_id' => $cam->campaign_id,
+                        'name' => $cam->name,
+                        'brand' => $brand[0]->brand_name,
+                        'product' => $cam->product,
+                        'date_created' => date('M j, Y', strtotime($cam->time_created)),
+                        'start_date' => date('Y-m-d', strtotime($cam->start_date)),
+                        'end_date' => date('Y-m-d', strtotime($cam->stop_date)),
+                        'adslots' => $cam->adslots,
+                        'budget' => number_format($pay[0]->total, 2),
+                        'status' => $status
+                    ];
+                    $j++;
+                }
+
+                return $dataTables->collection($agency_campaigns)
+                    ->addColumn('name', function ($agency_campaigns) {
+                        return '<a href="'.route('agency.campaign.details', ['id' => $agency_campaigns['camp_id']]).'">'.$agency_campaigns['name'].'</a>';
+                    })
+                    ->editColumn('status', function ($agency_campaigns){
+                        if($agency_campaigns['status'] === "Finished"){
+                            return '<span class="span_state status_danger">Finished</span>';
+                        }elseif ($agency_campaigns['status'] === "Active"){
+                            return '<span class="span_state status_success">Active</span>';
+                        }else{
+                            return '<span class="span_state status_pending">Pending</span>';
+                        }
+                    })
+                    ->rawColumns(['status' => 'status', 'name' => 'name'])
+                    ->addIndexColumn()
+                    ->make(true);
+            }
+
+            $all_campaign = Utilities::switch_db('api')->select("SELECT * from campaignDetails WHERE agency = '$agency_id' AND adslots > 0 GROUP BY campaign_id ORDER BY time_created DESC");
+            $j = 1;
+            foreach ($all_campaign as $cam)
+            {
+
+                $campaign_reference = Utilities::switch_db('api')->select("SELECT * from campaigns where id = '$cam->campaign_id'");
+//            $today = strtotime(date('Y-m-d'));
+                $today = date("Y-m-d");
+                if(strtotime($today) > strtotime($cam->start_date) && strtotime($today) > strtotime($cam->stop_date)){
+                    $status = 'Finished';
+                }elseif (strtotime($today) >= strtotime($cam->start_date) && strtotime($today) <= strtotime($cam->stop_date)){
+                    $status = 'Active';
+                }else{
+                    $now = strtotime($today);
+                    $your_date = strtotime($cam->start_date);
+                    $datediff = $your_date - $now;
+                    $new_day =  round($datediff / (60 * 60 * 24));
+                    $status = 'Pending';
+                }
+                $brand = Utilities::switch_db('api')->select("SELECT `name` as brand_name from brands where id = '$cam->brand'");
+                $pay = Utilities::switch_db('api')->select("SELECT total from payments where campaign_id = '$cam->campaign_id'");
+                $agency_campaigns[] = [
+                    'id' => $campaign_reference[0]->campaign_reference,
+                    'camp_id' => $cam->campaign_id,
+                    'name' => $cam->name,
+                    'brand' => $brand[0]->brand_name,
+                    'product' => $cam->product,
+                    'date_created' => date('M j, Y', strtotime($cam->time_created)),
+                    'start_date' => date('Y-m-d', strtotime($cam->start_date)),
+                    'end_date' => date('Y-m-d', strtotime($cam->stop_date)),
+                    'adslots' => $cam->adslots,
+                    'budget' => number_format($pay[0]->total, 2),
+                    'status' => $status
+                ];
+                $j++;
+            }
+
+        return $dataTables->collection($agency_campaigns)
+            ->addColumn('name', function ($agency_campaigns) {
+                return '<a href="'.route('agency.campaign.details', ['id' => $agency_campaigns['camp_id']]).'">'.$agency_campaigns['name'].'</a>';
+            })
+            ->editColumn('status', function ($agency_campaigns){
+                if($agency_campaigns['status'] === "Finished"){
+                    return '<span class="span_state status_danger">Finished</span>';
+                }elseif ($agency_campaigns['status'] === "Active"){
+                    return '<span class="span_state status_success">Active</span>';
+                }else{
+                    return '<span class="span_state status_pending">Pending</span>';
+                }
+            })
+            ->rawColumns(['status' => 'status', 'name' => 'name'])
+            ->addIndexColumn()
+            ->make(true);
+
+
     }
 
 

@@ -54,9 +54,9 @@
                 <div id="tv" style="height: 150px"></div>
 
                 <ul>
-                    <li class="pie_legend active"><span class="weight_medium">{{ round($active, 2) }}%</span> Active</li>
-                    <li class="pie_legend pending"><span class="weight_medium">{{ round($pending, 2) }}%</span> Pending</li>
-                    <li class="pie_legend finished"><span class="weight_medium">{{ round($finished, 2) }}%</span> Finished</li>
+                    <li class="pie_legend active"><span class="weight_medium">{{ round($active) }}%</span> Active</li>
+                    <li class="pie_legend pending"><span class="weight_medium">{{ round($pending) }}%</span> Pending</li>
+                    <li class="pie_legend finished"><span class="weight_medium">{{ round($finished) }}%</span> Finished</li>
                 </ul>
             </div>
 
@@ -149,68 +149,34 @@
                 <div class="column col_8 p-t">
                     <p class="uppercased weight_medium">All Campaigns</p>
                 </div>
-
                 <div class="column col_4 clearfix">
-                    <div class="col_7 column">
-                        <div class="header_search">
-                            <form>
-                                <input type="text" placeholder="Search...">
-                            </form>
-                        </div>
+                    <div class="col_5 column">
+                        <input type="text" name="start_date" class="flatpickr" placeholder="Start Date">
                     </div>
 
-                    <div class="col_4 column shadow">
-                        <div class="select_wrap">
-                            <select>
-                                <option>All Time</option>
-                                <option>This Month</option>
-                            </select>
-                        </div>
+                    <div class="col_5 column">
+                        <input type="text" name="stop_date" class="flatpickr" placeholder="Stop Date">
                     </div>
 
                     <div class="col_1 column">
-                        <a href="" class="export_table"></a>
+                        <button type="button" id="dashboard_filter_campaign" class="btn">Filter</button>
                     </div>
                 </div>
             </div>
 
             <!-- campaigns table -->
-            <table>
+            <table class="display dashboard_campaigns">
+                <thead>
                 <tr>
-                    <th></th>
-                    <th>S/N</th>
+                    <th>ID</th>
                     <th>Name</th>
                     <th>Brand</th>
-                    <th>Product</th>
-                    <th>Date</th>
+                    <th>Date Created</th>
                     <th>Budget</th>
                     <th>Ad Slots</th>
-                    <th>Comp.</th>
                     <th>Status</th>
-                    <th>Invoice</th>
                 </tr>
-
-                @foreach($agency_campaigns as $agency_campaign)
-                    <tr>
-                        <td><input type="checkbox"></td>
-                        <td>{{ $agency_campaign['id'] }}</td>
-                        <td><a href="{{ route('agency.campaign.details', ['id' => $agency_campaign['camp_id']]) }}">{{ $agency_campaign['name'] }}</a></td>
-                        <td>{{ ucfirst($agency_campaign['brand']) }}</td>
-                        <td>{{ $agency_campaign['product'] }}</td>
-                        <td>12 June, 18</td>
-                        <td>&#8358;{{ $agency_campaign['budget'] }}</td>
-                        <td>{{ $agency_campaign['adslots'] }}</td>
-                        <td>0%</td>
-                        @if($agency_campaign['status'] === 'expired')
-                            <td><span class="span_state status_danger">Finished</span></td>
-                        @elseif($agency_campaign['status'] === 'active')
-                            <td><span class="span_state status_success">Active</span></td>
-                        @else
-                            <td><span class="span_state status_pending">Pending</span></td>
-                        @endif
-                        <td><a href="">View</a></td>
-                    </tr>
-                @endforeach
+                </thead>
             </table>
             <!-- end -->
         </div>
@@ -223,51 +189,96 @@
     <script src="https://code.highcharts.com/highcharts-3d.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+    {{--<script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>--}}
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.flash.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.html5.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.print.min.js"></script>
+    <script src="https://unpkg.com/flatpickr"></script>
     <script>
         <?php echo "var tv_active = ".round($active) . ";\n"; ?>
         <?php echo "var tv_pending = ".round($pending) . ";\n"; ?>
         <?php echo "var tv_finished = ".round($finished) . ";\n"; ?>
 
-        Highcharts.chart('tv', {
+        Highcharts.chart('tv',{
             chart: {
+                renderTo: 'container',
                 type: 'pie',
-                options3d: {
-                    enabled: true,
-                    alpha: 45,
-                    beta: 0
-                }
+                height: 150,
+                width: 150
             },
             title: {
-                text: ''
-            },
-            tooltip: {
-                pointFormat: ''
-            },
+                        text: ''
+                    },
+            credits: {
+                        enabled: false
+                    },
             plotOptions: {
                 pie: {
-                    allowPointSelect: true,
-                    cursor: 'pointer',
-                    depth: 35,
+                    allowPointSelect: false,
                     dataLabels: {
                         enabled: false,
                         format: '{point.name}'
                     }
                 }
             },
-            credits: {
-                enabled: false
-            },
             exporting: { enabled: false },
-            colors: ['#00C4CA', '#E89B0B', '#E8235F'],
             series: [{
-                type: 'pie',
-                name: 'Browser share',
+                innerSize: '30%',
                 data: [
-                    ['Active', tv_active],
-                    ['Pending', tv_pending],
-                    ['Finished', tv_finished],
+                    {name: 'Active', y: tv_active, color: '#00C4CA'},
+                    {name: 'Pending', y: tv_pending, color: '#E89B0B' },
+                    {name: 'Finished', y: tv_finished, color: '#E8235F'}
                 ]
             }]
         });
     </script>
+    {{--datatables--}}
+    <script>
+        $(document).ready(function( $ ) {
+            flatpickr(".flatpickr", {
+                altInput: true,
+            });
+            var Datefilter =  $('.dashboard_campaigns').DataTable({
+                dom: 'Bfrtip',
+                paging: true,
+                serverSide: true,
+                processing: true,
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ],
+                ajax: {
+                    url: '/agency/dashboard/campaigns',
+                    data: function (d) {
+                        d.start_date = $('input[name=start_date]').val();
+                        d.stop_date = $('input[name=stop_date]').val();
+                    }
+                },
+                columns: [
+                    {data: 'id', name: 'id'},
+                    {data: 'name', name: 'name'},
+                    {data: 'brand', name: 'brand'},
+                    {data: 'date_created', name: 'date_created'},
+                    {data: 'budget', name: 'budget'},
+                    {data: 'adslots', name: 'adslots'},
+                    {data: 'status', name: 'status'},
+                ],
+            });
+
+            $('#dashboard_filter_campaign').on('click', function() {
+                Datefilter.draw();
+            });
+        } );
+    </script>
+@stop
+
+@section('styles')
+    {{--<link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css" type="text/css"/>--}}
+    <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.5.1/css/buttons.dataTables.min.css" type="text/css"/>
 @stop

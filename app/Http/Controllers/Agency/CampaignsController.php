@@ -862,5 +862,35 @@ class CampaignsController extends Controller
         return $all_channel;
     }
 
+    public function complianceGraph()
+    {
+        $all_comp_data = [];
+        $date = [];
+        $campaign_id = request()->campaign_id;
+        $media_channels = request()->channel;
+
+        foreach ($media_channels as $media_channel){
+            $broadcaster = Utilities::switch_db('api')->select("SELECT * from broadcasters where id = '$media_channel'");
+            $campaigns = Utilities::switch_db('api')->select("SELECT * from campaignDetails where campaign_id = '$campaign_id' AND broadcaster = '$media_channel' ");
+            $channel_id = $campaigns[0]->channel;
+            $stack = Utilities::switch_db('api')->select("SELECT * from campaignChannels where id = (SELECT channel_id from broadcasters where id = '$media_channel')");
+            $payments = Utilities::switch_db('api')->select("SELECT amount from paymentDetails where broadcaster = '$media_channel' AND payment_id IN (SELECT id FROM payments where campaign_id = '$campaign_id')");
+            if($stack[0]->channel === 'TV'){
+                $color = '#5281FE';
+            }else{
+                $color = '#00C4CA';
+            }
+            $all_comp_data[] = [
+                'color' => $color,
+                'name' => $broadcaster[0]->brand,
+                'data' => array($payments[0]->amount),
+                'stack' => $stack[0]->channel
+                ];
+
+        }
+
+        return response()->json(['data' => $all_comp_data]);
+    }
+
 
 }

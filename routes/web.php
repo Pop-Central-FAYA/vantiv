@@ -383,6 +383,7 @@ Route::group(['middleware' => 'auth'], function () {
 
             Route::get('/this/campaign-details/{campaign_id}', 'Agency\CampaignsController@filterByCampaignId');
             Route::get('/media-channel/{campaign_id}', 'Agency\CampaignsController@getMediaChannel');
+            Route::get('/compliance-graph', 'Agency\CampaignsController@complianceGraph');
         });
 
         Route::get('/agency-dashboard/periodic-sales', 'DashboardController@filterByBroad')->name('agency.dashboard.broad');
@@ -390,6 +391,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/agency/percentage-periodic', 'DashboardController@filterByMonth')->name('agency.month');
 
         Route::get('/campaign-details/{user_id}', 'Agency\CampaignsController@filterByUser');
+
+        Route::get('/dashboard/campaigns', 'DashboardController@dashboardCampaigns');
         
         /*
          * User Management
@@ -415,6 +418,7 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::group(['prefix' => 'invoices'], function () {
             Route::get('/all', 'InvoiceController@all')->name('invoices.all');
+            Route::get('/data', 'InvoiceController@getInvoiceDate');
             Route::get('/pending', 'InvoiceController@pending')->name('invoices.pending');
             Route::post('/{invoice_id}/update', 'InvoiceController@approveInvoice')->name('invoices.update');
         });

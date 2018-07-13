@@ -4,7 +4,7 @@
         @if(Request::is('agency/clients/*'))
         <form method="get" action="#">
         @endif
-            <input type="text">
+            <input type="text" placeholder="Search">
         </form>
     </div>
 

@@ -38,7 +38,7 @@
 
                     <div class="clearfix">
                         <div class="input_wrap column col_6">
-                            <label class="small_faint uppercased weight_medium">Firt Name</label>
+                            <label class="small_faint uppercased weight_medium">First Name</label>
                             <input type="text" type="text" required id="first_name"
                                    name="first_name" placeholder="@lang('app.first_name')" value="{{ $user_details['first_name'] }}" >
                         </div>

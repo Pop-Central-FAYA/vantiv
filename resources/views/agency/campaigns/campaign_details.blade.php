@@ -13,7 +13,7 @@
         <!-- subheader -->
         <div class="sub_header clearfix mb pt">
             <div class="column col_6">
-                <h2 class="sub_header">Campaign Name</h2>
+                <h2 class="sub_header">{{ $campaign_details['campaign_det']['campaign_name'] }}</h2>
             </div>
         </div>
 
@@ -83,17 +83,20 @@
 
                 <!-- filter -->
                 <div class="filters clearfix">
-                    <div class="column col_9">
+                    <div class="column col_6">
                         <h4 class="small_faint uppercased weight_medium">Compliance</h4>
                     </div>
-                    <div class="column col_3 clearfix">
-                        <div class="">
-                            <div class="select_wrap">
-                                <select>
-                                    <option>All Time</option>
-                                    <option>This Month</option>
-                                </select>
-                            </div>
+                    <div class="column col_4 clearfix">
+                        <div class="col_5 column">
+                            <input type="text" name="start_date" class="flatpickr" placeholder="Start Date">
+                        </div>
+
+                        <div class="col_5 column">
+                            <input type="text" name="stop_date" class="flatpickr" placeholder="Stop Date">
+                        </div>
+
+                        <div class="col_1 column">
+                            <button type="button" id="dashboard_filter_campaign" class="btn">Filter</button>
                         </div>
                     </div>
                     <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
@@ -375,8 +378,12 @@
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script src="https://code.highcharts.com/modules/export-data.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+    <script src="https://unpkg.com/flatpickr"></script>
     <script>
         $('document').ready(function () {
+            flatpickr(".flatpickr", {
+                altInput: true,
+            });
             $('body').delegate("#client", "change", function (e) {
                 var user_id = $("#client").val();
                 var campaign_id = "<?php echo $campaign_details['campaign_det']['campaign_id']; ?>";
@@ -447,7 +454,7 @@
                         channel: channel, campaign_id: campaign_id,
                     },
                     success: function(data) {
-                        console.log(data);
+
                         var big_html = '<span class="small_faint block_disp">Media Channel</span><div class="select_wrap"><select class="js-example-basic-multiple_1" name="media" id="media" multiple="multiple">';
 
                             $.each(data, function (index, value) {
@@ -459,6 +466,10 @@
 
                         $('.js-example-basic-multiple_1').select2();
 
+                        $('#media').select2({
+                            placeholder: "Please select Media Channel"
+                        });
+
                     }
                 });
             });
@@ -468,77 +479,124 @@
             $('body').delegate("#media", "change", function () {
                 var channel = $("#media").val();
                 console.log(channel);
+                if(channel != null){
+                    var campaign_id = "<?php echo $campaign_details['campaign_det']['campaign_id'] ?>";
+                    $.ajax({
+                        url: '/agency/campaigns/compliance-graph',
+                        method: 'GET',
+                        data: {
+                            channel: channel, campaign_id: campaign_id,
+                        },
+                        success: function(data){
+                            console.log(data);
+                            Highcharts.chart('container', {
+
+                                chart: {
+                                    type: 'column'
+                                },
+
+                                title: {
+                                    text: ''
+                                },
+
+                                xAxis: {
+                                    categories: ['2018-04-05']
+                                },
+
+                                yAxis: {
+                                    allowDecimals: false,
+                                    min: 0,
+                                    title: {
+                                        text: 'Total Amount'
+                                    }
+                                },
+                                credits: {
+                                    enabled: false
+                                },
+                                exporting: { enabled: false },
+                                tooltip: {
+                                    formatter: function () {
+                                        return '<b>' + this.x + '</b><br/>' +
+                                            this.series.name + ': ' + this.y + '<br/>' +
+                                            'Total: ' + this.point.stackTotal;
+                                    },
+
+                                },
+
+                                plotOptions: {
+                                    column: {
+                                        stacking: 'normal'
+                                    },
+                                    series: {
+                                        pointPadding: 0,
+                                        groupPadding: 0.1,
+                                        pointWidth: 60,
+                                    }
+                                },
+
+                                series: data.data
+                            });
+                        }
+                    })
+                }else{
+                    Highcharts.chart('container', {
+
+                        chart: {
+                            type: 'column'
+                        },
+
+                        title: {
+                            text: ''
+                        },
+
+                        xAxis: {
+                            categories: []
+                        },
+
+                        yAxis: {
+                            allowDecimals: false,
+                            min: 0,
+                            title: {
+                                text: 'Total Amount'
+                            }
+                        },
+                        credits: {
+                            enabled: false
+                        },
+                        exporting: { enabled: false },
+                        tooltip: {
+                            formatter: function () {
+                                return '<b>' + this.x + '</b><br/>' +
+                                    this.series.name + ': ' + this.y + '<br/>' +
+                                    'Total: ' + this.point.stackTotal;
+                            },
+
+                        },
+
+                        plotOptions: {
+                            column: {
+                                stacking: 'normal'
+                            },
+                            series: {
+                                pointPadding: 0,
+                                groupPadding: 0.1,
+                                pointWidth: 60,
+                            }
+                        },
+
+                        series: []
+                    });
+                }
             })
         })
 
 
-        Highcharts.chart('container', {
-
-            chart: {
-                type: 'column'
-            },
-
-            title: {
-                text: ''
-            },
-
-            xAxis: {
-                categories: ['2018-04-05', '2018-04-07', '2018-04-09', '2018-04-11', '2018-04-14']
-            },
-
-            yAxis: {
-                allowDecimals: false,
-                min: 0,
-                title: {
-                    text: 'Total Amount'
-                }
-            },
-            credits: {
-                enabled: false
-            },
-            exporting: { enabled: false },
-            tooltip: {
-                formatter: function () {
-                    return '<b>' + this.x + '</b><br/>' +
-                        this.series.name + ': ' + this.y + '<br/>' +
-                        'Total: ' + this.point.stackTotal;
-                },
-
-            },
-
-            plotOptions: {
-                column: {
-                    stacking: 'normal'
-                }
-            },
-
-            series: [{
-                color: '#5281FE',
-                name: 'NTA',
-                data: [5, 3],
-                stack: 'TV'
-            }, {
-                color: '#5281FE',
-                name: 'Silverbird',
-                data: [3, 4],
-                stack: 'TV'
-            }, {
-                color: '#00C4CA',
-                name: 'Ray Power',
-                data: [3, 4],
-                stack: 'Radio'
-            }, {
-                color: '#00C4CA',
-                name: 'Naija Info',
-                data: [3, 4],
-                stack: 'Radio'
-            }]
-        });
     </script>
 @stop
 
 
 @section('styles')
+    <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
     <style>
         .highcharts-grid path { display: none;}
