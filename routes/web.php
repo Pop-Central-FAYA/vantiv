@@ -26,6 +26,10 @@ Route::post('/forget-password/process', 'Auth\AuthController@processForgetPasswo
 Route::get('/proceed/password-change/{token}','Auth\AuthController@processChangePassword');
 Route::post('/change-password/process/{id_local}/{id_api}','Auth\AuthController@processGhangePassword')->name('change_password.process');
 
+Route::get('/cron-job/compliance-report', 'CronjobController@getCmpliance');
+
+Route::get('/cron-job/validate-campaign', 'CronjobController@validateCampaign');
+
 // Allow registration routes only if registration is enabled.
 if (settings('reg_enabled')) {
     Route::get('register', 'Auth\AuthController@getRegister');
