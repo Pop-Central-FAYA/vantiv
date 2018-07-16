@@ -87,17 +87,19 @@
                         <h4 class="small_faint uppercased weight_medium">Compliance</h4>
                     </div>
                     <div class="column col_4 clearfix">
-                        <div class="col_5 column">
-                            <input type="text" name="start_date" class="flatpickr" placeholder="Start Date">
-                        </div>
+                        <form action="{{ route('campaign_details.compliance') }}" method="GET" id="compliance-form">
+                            <div class="col_5 column">
+                                <input type="text" name="start_date" id="start_date" class="flatpickr" placeholder="Start Date">
+                            </div>
 
-                        <div class="col_5 column">
-                            <input type="text" name="stop_date" class="flatpickr" placeholder="Stop Date">
-                        </div>
+                            <div class="col_5 column">
+                                <input type="text" name="stop_date" id="stop_date" class="flatpickr" placeholder="Stop Date">
+                            </div>
 
-                        <div class="col_1 column">
-                            <button type="button" id="dashboard_filter_campaign" class="btn">Filter</button>
-                        </div>
+                            <div class="col_1 column">
+                                <button type="button" id="dashboard_filter_campaign" class="btn">Filter</button>
+                            </div>
+                        </form>
                     </div>
                     <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                 </div>
@@ -397,7 +399,6 @@
                         user_id: user_id, campaign_id : campaign_id,
                     },
                     success: function (data) {
-                        console.log(data);
                         var big_html = '<div class="select_wrap show_this" id="show_this">\n' +
                                         ' <select name="campaign" id="campaign"><option value="">Select Campaign</option>';
                         big_html +=  '';
@@ -478,7 +479,6 @@
         jQuery( document ).ready(function( $ ) {
             $('body').delegate("#media", "change", function () {
                 var channel = $("#media").val();
-                console.log(channel);
                 if(channel != null){
                     var campaign_id = "<?php echo $campaign_details['campaign_det']['campaign_id'] ?>";
                     $.ajax({
@@ -488,7 +488,6 @@
                             channel: channel, campaign_id: campaign_id,
                         },
                         success: function(data){
-                            console.log(data);
                             Highcharts.chart('container', {
 
                                 chart: {
@@ -587,6 +586,74 @@
                         series: []
                     });
                 }
+            });
+
+            $("body").delegate("#dashboard_filter_campaign", "click", function () {
+                var url = $("#compliance-form").attr("action");
+                var campaign_id = "<?php echo $campaign_details['campaign_det']['campaign_id']; ?>";
+                var start_date = $("#start_date").val();
+                var stop_date = $("#stop_date").val();
+                var media_type = $("#channel").val();
+                var media_channel = $("#media").val();
+                if(media_type != null && media_channel != null){
+                    $.ajax({
+                        method: "GET",
+                        url: url,
+                        data: { campaign_id : campaign_id,start_date: start_date, stop_date: stop_date, media_channel: media_channel },
+                        success: function (data) {
+                            Highcharts.chart('container', {
+
+                                chart: {
+                                    type: 'column'
+                                },
+
+                                title: {
+                                    text: ''
+                                },
+
+                                xAxis: {
+                                    categories: data.date
+                                },
+
+                                yAxis: {
+                                    allowDecimals: false,
+                                    min: 0,
+                                    title: {
+                                        text: 'Total Amount'
+                                    }
+                                },
+                                credits: {
+                                    enabled: false
+                                },
+                                exporting: { enabled: false },
+                                tooltip: {
+                                    formatter: function () {
+                                        return '<b>' + this.x + '</b><br/>' +
+                                            this.series.name + ': ' + this.y + '<br/>' +
+                                            'Total: ' + this.point.stackTotal;
+                                    },
+
+                                },
+
+                                plotOptions: {
+                                    column: {
+                                        stacking: 'normal'
+                                    },
+                                    series: {
+                                        pointPadding: 0,
+                                        groupPadding: 0.1,
+                                        pointWidth: 60,
+                                    }
+                                },
+
+                                series: data.data
+                            });
+                        }
+                    })
+                }else{
+                    toastr.error("Please select the media type and channel");
+                }
+
             })
         })
 

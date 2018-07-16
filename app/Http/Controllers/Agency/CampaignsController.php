@@ -243,12 +243,11 @@ class CampaignsController extends Controller
             return redirect()->back();
         }
 
-        $day_parts = implode("','" ,$step1->dayparts);
-        $region = implode("','", $step1->region);
-        $target_audience = implode(",", $step1->target_audience);
-        $channel = implode(",", $step1->channel);
-        $adslots = Utilities::switch_db('api')->select("SELECT broadcaster, COUNT(broadcaster) as all_slots FROM adslots where min_age >= $step1->min_age AND max_age <= $step1->max_age AND target_audience IN ('$target_audience') AND day_parts IN ('$day_parts') AND region IN ('$region') AND is_available = 0 AND channels IN ('$channel') group by broadcaster");
-//        dd($adslots);
+        $day_parts = "'".implode("','" ,$step1->dayparts)."'";
+        $region = "'".implode("','", $step1->region)."'";
+        $target_audience = "'".implode("','", $step1->target_audience)."'";
+        $channel = "'".implode("','", $step1->channel)."'";
+        $adslots = Utilities::switch_db('api')->select("SELECT broadcaster, COUNT(broadcaster) as all_slots FROM adslots where min_age >= $step1->min_age AND max_age <= $step1->max_age AND target_audience IN ($target_audience) AND day_parts IN ($day_parts) AND region IN ($region) AND is_available = 0 AND channels IN ($channel) group by broadcaster");
         $ads_broad = [];
         foreach ($adslots as $adslot)
         {
@@ -274,11 +273,11 @@ class CampaignsController extends Controller
             Session::flash('error', 'Data lost, please go back and select your filter criteria');
             return redirect()->back();
         }
-        $day_parts = implode("','" ,$first_step->dayparts);
-        $region = implode("','", $first_step->region);
-        $target_audience = implode(",", $first_step->target_audience);
-        $channel = implode(",", $first_step->channel);
-        $adslots = Utilities::switch_db('api')->select("SELECT broadcaster, COUNT(broadcaster) as all_slots FROM adslots where min_age >= $first_step->min_age AND max_age <= $first_step->max_age AND target_audience IN ('$target_audience') AND day_parts IN ('$day_parts') AND region IN ('$region') AND is_available = 0 AND channels IN ('$channel') group by broadcaster");
+        $day_parts = "'".implode("','" ,$first_step->dayparts)."'";
+        $region = "'".implode("','", $first_step->region)."'";
+        $target_audience = "'".implode("','", $first_step->target_audience)."'";
+        $channel = "'".implode("','", $first_step->channel)."'";
+        $adslots = Utilities::switch_db('api')->select("SELECT broadcaster, COUNT(broadcaster) as all_slots FROM adslots where min_age >= $first_step->min_age AND max_age <= $first_step->max_age AND target_audience IN ($target_audience) AND day_parts IN ($day_parts) AND region IN ($region) AND is_available = 0 AND channels IN ($channel) group by broadcaster");
 //        dd($adslots);
         $ads_broad = [];
         foreach ($adslots as $adslot)
@@ -313,9 +312,10 @@ class CampaignsController extends Controller
         }
         $image_url = encrypt(request()->image_url);
         $time = request()->time_picked;
+        $channel = request()->channel;
         if (request()->image_url) {
 
-            $check_image = \DB::select("SELECT * from uploads where time = '$time' AND user_id = '$id'");
+            $check_image = \DB::select("SELECT * from uploads where time = '$time' AND channel = '$channel' AND user_id = '$id'");
             if(count($check_image) === 1){
                 return response()->json(['error_check_image' => 'error_check_image']);
             }
@@ -326,6 +326,7 @@ class CampaignsController extends Controller
                 'uploads' => $image_url,
                 'file_name' => request()->file_name,
                 'file_code' => request()->public_id,
+                'channel' => $channel,
             ]);
 
             return response()->json(['success' => 'success']);
@@ -340,35 +341,42 @@ class CampaignsController extends Controller
 
     public function postStep3_1($id)
     {
+        $first_step = Session::get('first_step');
+        foreach($first_step->channel as $channel){
+            $channel_name = Utilities::switch_db('api')->select("SELECT * FROM campaignChannels where id = '$channel'");
+            $get_uploaded_files = \DB::select("SELECT * from uploads where user_id = '$id' AND channel = '$channel'");
+            $count_files = count($get_uploaded_files);
+            if($count_files === 0){
+                $msg = 'You have not uploaded any file(s) for '.$channel_name[0]->channel;
+                Session::flash('error', $msg);
+                return redirect()->back();
+            }else{
+                $remaining_file = 4 - $count_files;
+                for ($i = 0; $i < $remaining_file; $i++){
+                    $insert_upload = \DB::table('uploads')->insert([
+                        'user_id' => $id,
+                        'time' => 00,
+                        'channel' => $channel
+                    ]);
+                }
 
-        $get_uploaded_files = \DB::select("SELECT * from uploads where user_id = '$id'");
-        $count_files = count($get_uploaded_files);
-        if($count_files === 0){
-            Session::flash('error', 'You have not uploaded any file(s)');
-            return redirect()->back();
-        }else{
-            $remaining_file = 4 - $count_files;
-            for ($i = 0; $i < $remaining_file; $i++){
-                $insert_upload = \DB::table('uploads')->insert([
-                    'user_id' => $id,
-                    'time' => 00,
-                ]);
             }
-
-            return redirect()->route('agency_campaign.step3_2', ['id' => $id]);
         }
+
+        return redirect()->route('agency_campaign.step3_2', ['id' => $id]);
+
     }
 
     public function getStep3_2($id)
     {
         $first_step = Session::get('first_step');
-        $day_parts = implode("','" ,$first_step->dayparts);
-        $region = implode("','", $first_step->region);
-        $target_audience = implode(",", $first_step->target_audience);
-        $channel = implode(",", $first_step->channel);
-        $adslots = Utilities::switch_db('api')->select("SELECT broadcaster, COUNT(broadcaster) as all_slots FROM adslots where min_age >= $first_step->min_age AND max_age <= $first_step->max_age AND target_audience IN ('$target_audience') AND day_parts IN ('$day_parts') AND region IN ('$region') AND is_available = 0 AND channels IN ('$channel') group by broadcaster");
+        $day_parts = "'".implode("','" ,$first_step->dayparts)."'";
+        $region = "'".implode("','", $first_step->region)."'";
+        $target_audience = "'".implode("','", $first_step->target_audience)."'";
+        $channel = "'".implode("','", $first_step->channel)."'";
+        $adslots = Utilities::switch_db('api')->select("SELECT broadcaster, COUNT(broadcaster) as all_slots FROM adslots where min_age >= $first_step->min_age AND max_age <= $first_step->max_age AND target_audience IN ($target_audience) AND day_parts IN ($day_parts) AND region IN ($region) AND is_available = 0 AND channels IN ($channel) group by broadcaster");
         $ads_broad = [];
-        
+
         foreach ($adslots as $adslot)
         {
             $broad = Utilities::switch_db('api')->select("SELECT * from broadcasters where id = '$adslot->broadcaster'");
@@ -391,18 +399,18 @@ class CampaignsController extends Controller
             Session::flash('error', 'Data lost, please go back and select your filter criteria');
             return redirect()->back();
         }
-        $day_parts = implode("','" ,$step1->dayparts);
-        $region = implode("','", $step1->region);
-        $target_audience = implode(",", $step1->target_audience);
-        $channel = implode(",", $step1->channel);
-        $adslots_count = Utilities::switch_db('api')->select("SELECT * FROM adslots where min_age >= $step1->min_age AND max_age <= $step1->max_age AND channels = '$channel' AND target_audience = '$target_audience' AND day_parts IN ('$day_parts') AND region IN ('$region') AND is_available = 0 AND broadcaster = '$broadcaster'");
+        $day_parts = "'".implode("','" ,$step1->dayparts)."'";
+        $region = "'".implode("','", $step1->region)."'";
+        $target_audience = "'".implode("','", $step1->target_audience)."'";
+        $channel = "'".implode("','", $step1->channel)."'";
+        $adslots_count = Utilities::switch_db('api')->select("SELECT * FROM adslots where min_age >= $step1->min_age AND max_age <= $step1->max_age AND channels IN ($channel) AND target_audience IN ($target_audience) AND day_parts IN ($day_parts) AND region IN ($region) AND is_available = 0 AND broadcaster = '$broadcaster'");
         //dd($adslots_count);
         $result = count($adslots_count);
 
         $ratecards = Utilities::switch_db('api')->select("SELECT * from rateCards WHERE broadcaster = '$broadcaster' AND id IN (SELECT rate_card FROM adslots where min_age >= $step1->min_age
                                                             AND max_age <= $step1->max_age
-                                                            AND target_audience IN ('$target_audience')
-                                                            AND day_parts IN ('$day_parts') AND region IN ('$region')
+                                                            AND target_audience IN ($target_audience)
+                                                            AND day_parts IN ($day_parts) AND region IN ($region)
                                                             AND is_available = 0 AND broadcaster = '$broadcaster') ");
 
         foreach ($ratecards as $ratecard){
@@ -427,7 +435,7 @@ class CampaignsController extends Controller
         $broadcaster_logo = Utilities::switch_db('api')->select("SELECT image_url from broadcasters where id = '$broadcaster'");
         $positions = Utilities::switch_db('api')->select("SELECT * from filePositions where broadcaster_id = '$broadcaster'");
 
-        $adslots_broadcasters = Utilities::switch_db('api')->select("SELECT broadcaster, COUNT(broadcaster) as all_slots FROM adslots where min_age >= $step1->min_age AND max_age <= $step1->max_age AND target_audience = '$target_audience' AND day_parts IN ('$day_parts') AND region IN ('$region') AND is_available = 0 AND channels = '$channel' group by broadcaster");
+        $adslots_broadcasters = Utilities::switch_db('api')->select("SELECT broadcaster, COUNT(broadcaster) as all_slots FROM adslots where min_age >= $step1->min_age AND max_age <= $step1->max_age AND target_audience IN ($target_audience) AND day_parts IN ($day_parts) AND region IN ($region) AND is_available = 0 AND channels IN ($channel) group by broadcaster");
         $ads_broad = [];
         foreach ($adslots_broadcasters as $adslots_broadcaster)
         {
@@ -889,7 +897,47 @@ class CampaignsController extends Controller
 
         }
 
+//        $date_compliances = Utilities::switch_db('api')->select("SELECT time_created from compliances where campaign_id = '$campaign_id' AND time_created BETWEEN '$start_date' AND '$stop_date' GROUP BY DATE_FORMAT(time_created, '%Y-%m-%d') ");
+//        foreach ($date_compliances as $date_compliance){
+//            $date[] = [date('Y-m-d', strtotime($date_compliance->time_created))];
+//        }
+
         return response()->json(['data' => $all_comp_data]);
+    }
+
+    public function complianceFilter()
+    {
+        $all_comp_data = [];
+        $campaign_id = request()->campaign_id;
+        $start_date = request()->start_date;
+        $stop_date = request()->stop_date;
+        $media_channel = request()->media_channel;
+        $broadcaster = "'".implode("','", $media_channel)."'";
+        $date = [];
+//        dd($broadcaster);
+        $complince_report_queries = Utilities::switch_db('api')->select("SELECT SUM(amount_spent) as amount_spent, broadcaster_id, channel, time_created from compliances where campaign_id = '$campaign_id' AND time_created BETWEEN '$start_date' AND '$stop_date' AND broadcaster_id IN ($broadcaster) GROUP BY broadcaster_id ");
+        foreach ($complince_report_queries as $complince_report_query){
+            $broadcaster = Utilities::switch_db('api')->select("SELECT * from broadcasters where id = '$complince_report_query->broadcaster_id'");
+            $stack = Utilities::switch_db('api')->select("SELECT * from campaignChannels where id = '$complince_report_query->channel'");
+            if($stack[0]->channel === 'TV'){
+                $color = '#5281FE';
+            }else{
+                $color = '#00C4CA';
+            }
+            $all_comp_data[] = [
+                'color' => $color,
+                'name' =>  $broadcaster[0]->brand,
+                'data' => array((integer)$complince_report_query->amount_spent),
+                'stack' => $stack[0]->channel
+            ];
+
+        }
+
+        $date_compliances = Utilities::switch_db('api')->select("SELECT time_created from compliances where campaign_id = '$campaign_id' AND time_created BETWEEN '$start_date' AND '$stop_date' GROUP BY DATE_FORMAT(time_created, '%Y-%m-%d') ");
+        foreach ($date_compliances as $date_compliance){
+            $date[] = [date('Y-m-d', strtotime($date_compliance->time_created))];
+        }
+        return response()->json(['date' => $date, 'data' => $all_comp_data]);
     }
 
 

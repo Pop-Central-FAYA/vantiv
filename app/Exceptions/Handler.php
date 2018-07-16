@@ -107,7 +107,7 @@ class Handler extends ExceptionHandler
 
             $html = $handler->getHtml($e);
 
-            $sendMail = Mail::to('ridwan.busari@techadvance.ng')->send(new SendErrorMail($html));
+            $sendMail = \Mail::to('ridwan.busari@techadvance.ng')->send(new SendErrorMail($html));
 
         }catch (Exception $ex){
             dd($ex);

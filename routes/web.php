@@ -26,7 +26,7 @@ Route::post('/forget-password/process', 'Auth\AuthController@processForgetPasswo
 Route::get('/proceed/password-change/{token}','Auth\AuthController@processChangePassword');
 Route::post('/change-password/process/{id_local}/{id_api}','Auth\AuthController@processGhangePassword')->name('change_password.process');
 
-Route::get('/cron-job/compliance-report', 'CronjobController@getCmpliance');
+Route::get('/cron-job/compliance-report', 'CronjobController@getCompliance');
 
 Route::get('/cron-job/validate-campaign', 'CronjobController@validateCampaign');
 
@@ -388,6 +388,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/this/campaign-details/{campaign_id}', 'Agency\CampaignsController@filterByCampaignId');
             Route::get('/media-channel/{campaign_id}', 'Agency\CampaignsController@getMediaChannel');
             Route::get('/compliance-graph', 'Agency\CampaignsController@complianceGraph');
+            Route::get('/compliance-graph/filter', 'Agency\CampaignsController@complianceFilter')->name('campaign_details.compliance');
         });
 
         Route::get('/agency-dashboard/periodic-sales', 'DashboardController@filterByBroad')->name('agency.dashboard.broad');

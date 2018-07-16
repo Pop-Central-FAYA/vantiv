@@ -133,7 +133,7 @@
                             <?php $j = 1; $i = 0; for($i = 0; $i < count($times); $i++){ ?>
                             @if( ($rating->time_difference - $rating->time_used) >= $datas[$i]->time)
                                 <tr>
-                                    @if($datas[$i]->uploads)
+                                    @if($datas[$i]->uploads && $datas[$i]->channel === $rating->channels)
 
                                         <td>{{ $j }}</td>
                                         <td><div class="col-md-3"> <video width="150" controls><source src="{{ asset(decrypt($datas[$i]->uploads)) }}"></video> </div></td>

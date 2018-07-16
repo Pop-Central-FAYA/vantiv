@@ -67,7 +67,7 @@
 
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="phone">Username</label>
+                                <label for="phone">Company Name</label>
                                 <input type="text" name="username" class="form-control" required>
                                 @if ($errors->has('username')) <p class="help-block" style="color: red">{{ $errors->first('username') }}</p> @endif
                             </div>

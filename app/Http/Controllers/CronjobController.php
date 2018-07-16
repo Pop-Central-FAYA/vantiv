@@ -12,11 +12,11 @@ class CronjobController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getCmpliance()
+    public function getCompliance()
     {
         $today = date('Y-m-d');
         $file_details = [];
-        $all_files = Utilities::switch_db('api')->select("SELECT * from files where campaign_id IN (SELECT campaign_id from campaignDetails where start_date > '$today' AND stop_date > '$today' GROUP BY campaign_id)");
+        $all_files = Utilities::switch_db('api')->select("SELECT * from files where campaign_id IN (SELECT campaign_id from campaignDetails where start_date < '$today' AND stop_date > '$today' GROUP BY campaign_id)");
         foreach ($all_files as $all_file){
             $adslot_price = Utilities::switch_db('api')->select("SELECT * from adslotPercentages where adslot_id = '$all_file->adslot'");
             if(!$adslot_price){
