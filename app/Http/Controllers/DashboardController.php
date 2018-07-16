@@ -326,11 +326,6 @@ class DashboardController extends Controller
 
             $active_campaigns = Utilities::switch_db('api')->select("SELECT * FROM campaignDetails where agency = '$agency_id' AND start_date < '$today' AND stop_date > '$today' GROUP BY campaign_id");
 
-//
-
-            #region
-//            $payments = Utilities::switch_db('api')->select("SELECT SUM(amount) as total from payments WHERE campaign_id IN(SELECT id from campaigns where adslots_id IN(SELECT * from ))");
-
             return view('agency.dashboard.new_dashboard')->with(['broadcaster' => $allBroadcaster,
                                                                     'invoice_approval' => $invoice_approval,
                                                                     'all_invoices' => $invoice_campaign_details,
@@ -1074,7 +1069,7 @@ class DashboardController extends Controller
                         'id' => $campaign_reference[0]->campaign_reference,
                         'camp_id' => $cam->campaign_id,
                         'name' => $cam->name,
-                        'brand' => $brand[0]->brand_name,
+                        'brand' => ucfirst($brand[0]->brand_name),
                         'product' => $cam->product,
                         'date_created' => date('M j, Y', strtotime($cam->time_created)),
                         'start_date' => date('Y-m-d', strtotime($cam->start_date)),
@@ -1129,7 +1124,7 @@ class DashboardController extends Controller
                     'id' => $campaign_reference[0]->campaign_reference,
                     'camp_id' => $cam->campaign_id,
                     'name' => $cam->name,
-                    'brand' => $brand[0]->brand_name,
+                    'brand' => ucfirst($brand[0]->brand_name),
                     'product' => $cam->product,
                     'date_created' => date('M j, Y', strtotime($cam->time_created)),
                     'start_date' => date('Y-m-d', strtotime($cam->start_date)),

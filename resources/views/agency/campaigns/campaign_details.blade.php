@@ -601,6 +601,7 @@
     <style>
         .highcharts-grid path { display: none;}
         .highcharts-legend {
-            display: none;}
+            display: none;
+        }
     </style>
 @stop

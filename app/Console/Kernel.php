@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         '\Vanguard\Console\Commands\ValidateCampaigns',
+        'Vanguard\Console\Commands\ComplianceMimicReport'
     ];
 
     /**
@@ -24,8 +25,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('ValidateCampaigns:validatecampaigns')
-            ->hourly();
+        $schedule->command('ValidateCampaigns:validatecampaigns')->hourly();
+
+        $schedule->command('ComplianceMimicReport:mimiccompliance')->daily("01:37");
     }
 
 
