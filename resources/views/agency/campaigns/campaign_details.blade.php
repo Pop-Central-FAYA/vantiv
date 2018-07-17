@@ -23,7 +23,7 @@
 
             <div class="clearfix client_personal campaign_filter">
                 <div class="column col_3">
-                    <span class="small_faint">Clients</span>
+                    <span class="small_faint">Client</span>
 
                     <div class="select_wrap">
                         <select name="client" id="client">
@@ -83,24 +83,29 @@
 
                 <!-- filter -->
                 <div class="filters clearfix">
-                    <div class="column col_6">
-                        <h4 class="small_faint uppercased weight_medium">Compliance</h4>
+                    <div class="column col_7">
+                        <h4 class="small_faint 7ppercased weight_medium">Compliance</h4>
                     </div>
-                    <div class="column col_4 clearfix">
-                        <form action="{{ route('campaign_details.compliance') }}" method="GET" id="compliance-form">
-                            <div class="col_5 column">
-                                <input type="text" name="start_date" id="start_date" class="flatpickr" placeholder="Start Date">
-                            </div>
+                    <div class="column col_5 clearfix">
+                        <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
+                            <i class="fa fa-calendar"></i>&nbsp;
+                            <span></span> <i class="fa fa-caret-down"></i>
+                        </div>
 
-                            <div class="col_5 column">
-                                <input type="text" name="stop_date" id="stop_date" class="flatpickr" placeholder="Stop Date">
-                            </div>
+                        {{--<form action="{{ route('campaign_details.compliance') }}" method="GET" id="compliance-form">--}}
+                            {{--<div class="col_5 column">--}}
+                                {{--<input type="text" name="start_date" id="start_date" class="flatpickr" placeholder="Start Date">--}}
+                            {{--</div>--}}
 
-                            <div class="col_1 column">
-                                <button type="button" id="dashboard_filter_campaign" class="btn git add ">Filter</button>
+                            {{--<div class="col_5 column">--}}
+                                {{--<input type="text" name="stop_date" id="stop_date" class="flatpickr" placeholder="Stop Date">--}}
+                            {{--</div>--}}
+
+                            {{--<div class="col_1 column">--}}
+                                {{--<button type="button" id="dashboard_filter_campaign" class="btn small_btn">Filter</button>--}}
                                 {{--<button type="button" id="dashboard_filter_campaign" class="btn">Filter</button>--}}
-                            </div>
-                        </form>
+                            {{--</div>--}}
+                        {{--</form>--}}
                     </div>
                     <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                 </div>
@@ -110,14 +115,19 @@
 
             <div class="column col_4">
                 <div class="the_frame clearfix _stat mb">
-                    <div class="column col_6 the_stats">
+                    <div class="column col_3 the_stats">
                         <span class="weight_medium small_faint uppercased m-b block_disp">Target CPM</span>
                         <h3>23</h3>
                     </div>
 
-                    <div class="column col_6 the_stats">
+                    <div class="column col_3 the_stats">
                         <span class="weight_medium small_faint uppercased m-b block_disp">Reached CPM</span>
                         <h3>23</h3>
+                    </div>
+
+                    <div class="column col_6 the_stats">
+                        <span class="weight_medium small_faint uppercased m-b block_disp">Total Budget</span>
+                        <h3>N{{ $campaign_details['campaign_det']['campaign_cost'] }}</h3>
                     </div>
                 </div>
 
@@ -384,6 +394,9 @@
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
     <script src="https://unpkg.com/flatpickr"></script>
     <script>
@@ -448,6 +461,7 @@
             });
 
         });
+
         jQuery( document ).ready(function( $ ) {
             $('body').delegate("#channel", "change", function () {
                 var channel = $("#channel").val();
@@ -509,7 +523,9 @@
                                 xAxis: {
                                     categories: ['2018-04-05']
                                 },
-
+                                tooltip: {
+                                    enabled: false
+                                },
                                 yAxis: {
                                     allowDecimals: false,
                                     min: 0,
@@ -524,8 +540,7 @@
                                 tooltip: {
                                     formatter: function () {
                                         return '<b>' + this.x + '</b><br/>' +
-                                            this.series.name + ': ' + this.y + '<br/>' +
-                                            'Total: ' + this.point.stackTotal;
+                                            this.series.name + ': ' + this.y + '<br/>';
                                     },
 
                                 },
@@ -538,6 +553,14 @@
                                         pointPadding: 0,
                                         groupPadding: 0.1,
                                         pointWidth: 60,
+                                    },
+                                    bar: {
+                                        animation: true,
+                                        dataLabels: {
+                                            enabled: true,
+                                            align: "center",
+                                            color: "#FFFFFF"
+                                        }
                                     }
                                 },
 
@@ -669,8 +692,7 @@
                                 tooltip: {
                                     formatter: function () {
                                         return '<b>' + this.x + '</b><br/>' +
-                                            this.series.name + ': ' + this.y + '<br/>' +
-                                            'Total: ' + this.point.stackTotal;
+                                            this.series.name + ': ' + this.y + '<br/>';
                                     },
 
                                 },
@@ -726,7 +748,33 @@
             })
         })
 
+    </script>
+    <script type="text/javascript">
+        $(function() {
 
+            var start = moment().subtract(29, 'days');
+            var end = moment();
+
+            function cb(start, end) {
+                $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+            }
+
+            $('#reportrange').daterangepicker({
+                startDate: start,
+                endDate: end,
+                ranges: {
+                    'Today': [moment(), moment()],
+                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                    'This Month': [moment().startOf('month'), moment().endOf('month')],
+                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                }
+            }, cb);
+
+            cb(start, end);
+
+        });
     </script>
 @stop
 
@@ -734,6 +782,7 @@
 @section('styles')
     <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
     <style>
         .highcharts-grid path { display: none;}
         .highcharts-legend {

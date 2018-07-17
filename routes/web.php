@@ -358,7 +358,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::group(['prefix' => 'agency'], function() {
         Route::group(['prefix' => 'campaigns'], function() {
-            Route::get('/all-campaigns', 'Agency\CampaignsController@index')->name('agency.campaign.all');
+            Route::get('/all-campaigns/active', 'Agency\CampaignsController@index')->name('agency.campaign.all');
             Route::get('/all-campaign/data', 'Agency\CampaignsController@getData');
             Route::get('/all-clients', 'Agency\CampaignsController@allClient')->name('agency.campaign.create');
             Route::get('/all-client/data', 'Agency\CampaignsController@clientData');
@@ -424,6 +424,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::group(['prefix' => 'invoices'], function () {
             Route::get('/all', 'InvoiceController@all')->name('invoices.all');
             Route::get('/data', 'InvoiceController@getInvoiceDate');
+            Route::get('/pending/data', 'InvoiceController@pendingData');
             Route::get('/pending', 'InvoiceController@pending')->name('invoices.pending');
             Route::post('/{invoice_id}/update', 'InvoiceController@approveInvoice')->name('invoices.update');
         });

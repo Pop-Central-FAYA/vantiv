@@ -222,13 +222,13 @@ class ClientsController extends Controller
 
         $all_brands = $this->getClientBrands($client_id);
 
-        $date = date('Y-m', time());
+//        $date = date('Y-m', time());
 
-        $all_campaign_this_month = Utilities::switch_db('api')->select("SELECT * from campaignDetails WHERE user_id = '$user_id' AND adslots > 0 AND DATE_FORMAT(time_created, '%Y-%m') = '$date' GROUP BY campaign_id ORDER BY time_created DESC");
+        $all_campaign_this_month = Utilities::switch_db('api')->select("SELECT * from campaignDetails WHERE user_id = '$user_id' AND adslots > 0  GROUP BY campaign_id ORDER BY time_created DESC");
 
-        $total_this_month = Utilities::switch_db('api')->select("SELECT SUM(total) as total from payments where campaign_id IN (SELECT campaign_id from campaignDetails where user_id = '$user_id' GROUP BY campaign_id) AND DATE_FORMAT(time_created, '%Y-%m') = '$date'");
+        $total_this_month = Utilities::switch_db('api')->select("SELECT SUM(total) as total from payments where campaign_id IN (SELECT campaign_id from campaignDetails where user_id = '$user_id' GROUP BY campaign_id) ");
 
-        $brand_this_month = Utilities::switch_db('api')->select("SELECT count(id) as brand from brands where walkin_id = '$user_id' AND DATE_FORMAT(time_created, '%Y-%m') = '$date'");
+        $brand_this_month = Utilities::switch_db('api')->select("SELECT count(id) as brand from brands where walkin_id = '$client_id' ");
 
         $total = Utilities::switch_db('api')->select("SELECT SUM(total) as total from payments where campaign_id IN (SELECT campaign_id from campaignDetails where user_id = '$user_id' GROUP BY campaign_id) ");
 

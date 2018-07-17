@@ -24,90 +24,130 @@ class CampaignsController extends Controller
      */
     public function index()
     {
-        $inv = [];
-        $all_mpo = [];
-        $agency_id = Session::get('agency_id');
-        $file = Utilities::switch_db('api')->select("SELECT * from files");
-        $mpos = Utilities::switch_db('api')->select("SELECT * from mpos");
-        foreach ($mpos as $mpo){
-            $mpo_details = Utilities::switch_db('api')->select("SELECT * from mpoDetails where mpo_id = '$mpo->id'");
-            $campaign = Utilities::switch_db('api')->select("SELECT * FROM campaignDetails where campaign_id = '$mpo->campaign_id' GROUP BY campaign_id");
-            $campaign_id = $campaign[0]->id;
-            $camp_id = $campaign[0]->adslots_id;
-            $total = Utilities::switch_db('api')->select("SELECT total from payments where campaign_id = '$mpo->campaign_id'");
-            $brand_id = $campaign[0]->brand;
-            $brand = Utilities::switch_db('api')->select("SELECT `name` from brands where id = '$brand_id'");
-            $adslots = Utilities::switch_db('api')->select("SELECT * from adslots WHERE id IN ($camp_id)");
-
-            if ($adslots) {
-                $slot = $adslots;
-            } else {
-                $slot = $adslots;
-            }
-            $all_mpo[] = [
-                'id' => $mpo->id,
-                'campaign_id' => $campaign_id,
-                'campaign_name' => $campaign[0]->name,
-                'brand' => $brand[0]->name,
-                'adslot' => $slot,
-                'discount' => $mpo_details[0]->discount,
-                'total' => $total[0]->total,
-            ];
-        }
-
-        $invoices_all = Utilities::invoiceDetails();
-
-        return view('agency.campaigns.all_campaign')->with('invoices', $invoices_all)->with('files', $file)->with('mpos', $all_mpo);
+        return view('agency.campaigns.active_campaign');
     }
 
 
-    public function getData(DataTables $datatables, Request $request)
+    public function getData(DataTables $dataTables, Request $request)
     {
-        $campaign = [];
+        //campaigns
+        $agency_campaigns = [];
+        $agency_id = Session::get('agency_id');
+        $today_date = date("Y-m-d");
+
+        if($request->has('start_date') && $request->has('stop_date')){
+            $start_date = $request->start_date;
+            $stop_date = $request->stop_date;
+
+            $all_campaign = Utilities::switch_db('api')->select("SELECT * from campaignDetails WHERE agency = '$agency_id' AND adslots > 0 AND start_date <= '$today_date' AND stop_date > '$today_date' AND time_created BETWEEN '$start_date' AND '$stop_date' GROUP BY campaign_id ORDER BY time_created DESC");
+            $j = 1;
+            foreach ($all_campaign as $cam)
+            {
+
+                $campaign_reference = Utilities::switch_db('api')->select("SELECT * from campaigns where id = '$cam->campaign_id'");
+//            $today = strtotime(date('Y-m-d'));
+                $today = date("Y-m-d");
+                if(strtotime($today) > strtotime($cam->start_date) && strtotime($today) > strtotime($cam->stop_date)){
+                    $status = 'Finished';
+                }elseif (strtotime($today) >= strtotime($cam->start_date) && strtotime($today) <= strtotime($cam->stop_date)){
+                    $status = 'Active';
+                }else{
+                    $now = strtotime($today);
+                    $your_date = strtotime($cam->start_date);
+                    $datediff = $your_date - $now;
+                    $new_day =  round($datediff / (60 * 60 * 24));
+                    $status = 'Pending';
+                }
+                $brand = Utilities::switch_db('api')->select("SELECT `name` as brand_name from brands where id = '$cam->brand'");
+                $pay = Utilities::switch_db('api')->select("SELECT total from payments where campaign_id = '$cam->campaign_id'");
+                $agency_campaigns[] = [
+                    'id' => $campaign_reference[0]->campaign_reference,
+                    'camp_id' => $cam->campaign_id,
+                    'name' => $cam->name,
+                    'brand' => ucfirst($brand[0]->brand_name),
+                    'product' => $cam->product,
+                    'date_created' => date('M j, Y', strtotime($cam->time_created)),
+                    'start_date' => date('Y-m-d', strtotime($cam->start_date)),
+                    'end_date' => date('Y-m-d', strtotime($cam->stop_date)),
+                    'adslots' => $cam->adslots,
+                    'budget' => number_format($pay[0]->total, 2),
+                    'status' => $status
+                ];
+                $j++;
+            }
+
+            return $dataTables->collection($agency_campaigns)
+                ->addColumn('name', function ($agency_campaigns) {
+                    return '<a href="'.route('agency.campaign.details', ['id' => $agency_campaigns['camp_id']]).'">'.$agency_campaigns['name'].'</a>';
+                })
+                ->editColumn('status', function ($agency_campaigns){
+                    if($agency_campaigns['status'] === "Finished"){
+                        return '<span class="span_state status_danger">Finished</span>';
+                    }elseif ($agency_campaigns['status'] === "Active"){
+                        return '<span class="span_state status_success">Active</span>';
+                    }else{
+                        return '<span class="span_state status_pending">Pending</span>';
+                    }
+                })
+                ->rawColumns(['status' => 'status', 'name' => 'name'])
+                ->addIndexColumn()
+                ->make(true);
+        }
+
+        $all_campaign = Utilities::switch_db('api')->select("SELECT * from campaignDetails WHERE agency = '$agency_id' AND start_date <= '$today_date' AND stop_date > '$today_date' AND adslots > 0 GROUP BY campaign_id ORDER BY time_created DESC");
         $j = 1;
-        $agency_id = \Session::get('agency_id');
-        $all_campaign = Utilities::switch_db('api')->select("SELECT * from campaignDetails WHERE agency = '$agency_id' AND adslots > 0 GROUP BY campaign_id ORDER BY time_created desc ");
-        foreach ($all_campaign as $cam) {
+        foreach ($all_campaign as $cam)
+        {
+
+            $campaign_reference = Utilities::switch_db('api')->select("SELECT * from campaigns where id = '$cam->campaign_id'");
+//            $today = strtotime(date('Y-m-d'));
             $today = date("Y-m-d");
-            if (strtotime($today) > strtotime($cam->start_date) && strtotime($today) > strtotime($cam->stop_date)) {
-                $status = 'Campaign Expired';
-            } elseif (strtotime($today) >= strtotime($cam->start_date) && strtotime($today) <= strtotime($cam->stop_date)) {
-                $status = 'Campaign In Progress';
-            } else {
+            if(strtotime($today) > strtotime($cam->start_date) && strtotime($today) > strtotime($cam->stop_date)){
+                $status = 'Finished';
+            }elseif (strtotime($today) >= strtotime($cam->start_date) && strtotime($today) <= strtotime($cam->stop_date)){
+                $status = 'Active';
+            }else{
                 $now = strtotime($today);
                 $your_date = strtotime($cam->start_date);
                 $datediff = $your_date - $now;
                 $new_day =  round($datediff / (60 * 60 * 24));
-                $status = 'Campaign to start in '.$new_day.' day(s)';
+                $status = 'Pending';
             }
-            $brand = Utilities::switch_db('api')->select("SELECT name from brands WHERE id = '$cam->brand'");
-            $pay = Utilities::switch_db('api')->select("SELECT total from payments WHERE campaign_id = '$cam->campaign_id'");
-            $campaign[] = [
-                'id' => $j,
-                'camp_id' => $cam->id,
+            $brand = Utilities::switch_db('api')->select("SELECT `name` as brand_name from brands where id = '$cam->brand'");
+            $pay = Utilities::switch_db('api')->select("SELECT total from payments where campaign_id = '$cam->campaign_id'");
+            $agency_campaigns[] = [
+                'id' => $campaign_reference[0]->campaign_reference,
+                'camp_id' => $cam->campaign_id,
                 'name' => $cam->name,
-                'brand' => $brand[0]->name,
+                'brand' => ucfirst($brand[0]->brand_name),
                 'product' => $cam->product,
+                'date_created' => date('M j, Y', strtotime($cam->time_created)),
                 'start_date' => date('Y-m-d', strtotime($cam->start_date)),
                 'end_date' => date('Y-m-d', strtotime($cam->stop_date)),
-                'amount' => '&#8358;'.number_format($pay[0]->total, 2),
-                'status' => $status,
-                'campaign_id' => $cam->campaign_id,
+                'adslots' => $cam->adslots,
+                'budget' => number_format($pay[0]->total, 2),
+                'status' => $status
             ];
             $j++;
         }
-        return $datatables->collection($campaign)
-            ->addColumn('details', function ($campaign) {
-                return '<a href="' . route('agency.campaign.details', ['id' => $campaign['camp_id']]) .'" class="btn btn-primary btn-xs" > Campaign Details </a>';
+
+        return $dataTables->collection($agency_campaigns)
+            ->addColumn('name', function ($agency_campaigns) {
+                return '<a href="'.route('agency.campaign.details', ['id' => $agency_campaigns['camp_id']]).'">'.$agency_campaigns['name'].'</a>';
             })
-            ->addColumn('mpo', function ($campaign) {
-                return '<a href="' . route('agency.mpo.details', ['id' => $campaign['campaign_id']]) .'" class="btn btn-default btn-xs" > MPO Details </a>';
+            ->editColumn('status', function ($agency_campaigns){
+                if($agency_campaigns['status'] === "Finished"){
+                    return '<span class="span_state status_danger">Finished</span>';
+                }elseif ($agency_campaigns['status'] === "Active"){
+                    return '<span class="span_state status_success">Active</span>';
+                }else{
+                    return '<span class="span_state status_pending">Pending</span>';
+                }
             })
-            ->addColumn('invoices', function($campaign){
-                return '<button data-toggle="modal" data-target=".invoiceModal' . $campaign['campaign_id']. '" class="btn btn-success btn-xs" > Invoice Details </button>    ';
-            })
-            ->rawColumns(['details' => 'details', 'mpo' => 'mpo', 'invoices' => 'invoices'])->addIndexColumn()
+            ->rawColumns(['status' => 'status', 'name' => 'name'])
+            ->addIndexColumn()
             ->make(true);
+
     }
 
     /**

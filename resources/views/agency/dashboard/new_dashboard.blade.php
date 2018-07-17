@@ -22,22 +22,22 @@
         <div class="the_stats the_frame clearfix mb4">
             <div class="column col_3">
                 <span class="weight_medium small_faint uppercased">Active Campaigns</span>
-                <h3>{{ count($active_campaigns) }}</h3>
+                <h3><a href="{{ route('agency.campaign.all') }}">{{ count($active_campaigns) }}</a></h3>
             </div>
 
             <div class="column col_3">
                 <span class="weight_medium small_faint uppercased">All Clients</span>
-                <h3>{{ count($clients) }}</h3>
+                <h3><a href="{{ route('clients.list') }}">{{ count($clients) }}</a></h3>
             </div>
 
             <div class="column col_3">
                 <span class="weight_medium small_faint uppercased">Pending Invoices</span>
-                <h3>{{ count($pending_invoices) }}</h3>
+                <h3><a href="{{ route('invoices.pending') }}">{{ count($pending_invoices) }}</a></h3>
             </div>
 
             <div class="column col_3">
                 <span class="weight_medium small_faint uppercased">All Brands</span>
-                <h3>{{ count($all_brands) }}</h3>
+                <h3><a href="">{{ count($all_brands) }}</a></h3>
             </div>
         </div>
 
@@ -155,7 +155,7 @@
                     </div>
 
                     <div class="col_5 column">
-                        <input type="text" name="stop_date" class="flatpickr" placeholder="Stop Date">
+                        <input type="text" name="stop_date" class="flatpickr" placeholder="End Date">
                     </div>
 
                     <div class="col_1 column">

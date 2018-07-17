@@ -15,7 +15,7 @@ $(function () {
 		$('.tab_header a').removeClass('active'); 
 		$(this).addClass('active');
 
-		return false;
+		// return false;
 	});
 
     // Time slots media house select

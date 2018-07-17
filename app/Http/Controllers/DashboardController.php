@@ -313,7 +313,7 @@ class DashboardController extends Controller
             $pending = $tv_rating['per_pending'];
             $finished = $tv_rating['per_finished'];
 
-            $today = date("Y-m-d");
+            $today_date = date("Y-m-d");
 
 //            all clients
             $clients = Utilities::switch_db('reports')->select("SELECT * FROM walkIns WHERE agency_id = '$agency_id' ORDER BY time_created DESC");
@@ -324,7 +324,7 @@ class DashboardController extends Controller
 //            all_brands
             $all_brands = Utilities::switch_db('api')->select("SELECT * FROM brands where broadcaster_agency = '$agency_id'");
 
-            $active_campaigns = Utilities::switch_db('api')->select("SELECT * FROM campaignDetails where agency = '$agency_id' AND start_date < '$today' AND stop_date > '$today' GROUP BY campaign_id");
+            $active_campaigns = Utilities::switch_db('api')->select("SELECT * FROM campaignDetails where agency = '$agency_id' AND start_date <= '$today_date' AND stop_date > '$today_date' GROUP BY campaign_id");
 
             return view('agency.dashboard.new_dashboard')->with(['broadcaster' => $allBroadcaster,
                                                                     'invoice_approval' => $invoice_approval,

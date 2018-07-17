@@ -12,7 +12,7 @@
         <!-- subheader -->
         <div class="sub_header clearfix mb pt">
             <div class="column col_6">
-                <h2 class="sub_header">Clients</h2>
+                <h2 class="sub_header">Client</h2>
             </div>
         </div>
 
@@ -31,7 +31,7 @@
 
             <div class="clearfix client_personal">
                 <div class="column col_3">
-                    <span class="small_faint">Contact Name</span>
+                    <span class="small_faint">Account Executive</span>
                     <p class='weight_medium'>{{ $user_details[0]->firstname.' '.$user_details[0]->lastname }}</p>
                 </div>
 
