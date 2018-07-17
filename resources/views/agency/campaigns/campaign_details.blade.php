@@ -97,7 +97,8 @@
                             </div>
 
                             <div class="col_1 column">
-                                <button type="button" id="dashboard_filter_campaign" class="btn">Filter</button>
+                                <button type="button" id="dashboard_filter_campaign" class="btn git add ">Filter</button>
+                                {{--<button type="button" id="dashboard_filter_campaign" class="btn">Filter</button>--}}
                             </div>
                         </form>
                     </div>
@@ -121,7 +122,9 @@
                 </div>
 
                 <div class="the_frame _pie">
-                    <h4 class="small_faint uppercased weight_medium">Media Mix</h4>
+                    <h4 class="small_faint uppercased weight_medium">Media Mix</h4><br>
+                    <div id="media_mix" style="padding-left: 60px;"></div>
+
                 </div>
             </div>
 
@@ -290,13 +293,15 @@
                     <table>
                         <tr>
                             <th>Files</th>
+                            <th>Format</th>
                             <th>Description</th>
                         </tr>
 
                         @foreach($campaign_details['file_details'] as $file_detail)
                             <tr>
                                 <td><video src="{{ $file_detail['file'] }}" width="150" height="100" controls></video></td>
-                                <td>{{  $file_detail['file_name'] ? $file_detail['file_name'] : '' }}</td>
+                                <td>{{ $file_detail['format'] ? $file_detail['format'] : '' }}</td>
+                                <td>{{  $file_detail['file_name'] ? str_limit($file_detail['file_name'], 30) : '' }}</td>
                             </tr>
                         @endforeach
                     </table>
@@ -348,15 +353,15 @@
                             <th>View Playtimes</th>
                         </tr>
 
-                        @foreach($campaign_details['file_details'] as $file_detail)
+                        @foreach($campaign_details['compliance_reports'] as $compliance_report)
                             <tr>
-                                <td>@foreach($campaign_details['campaign_det']['channel'] as $channel) {{ $channel->channel }} @endforeach</td>
+                                <td>{{ $compliance_report['media_type'] }}</td>
                                 <td>
-                                    {{ $file_detail['broadcast_station'] }}
+                                    {{ $compliance_report['media_channel'] }}
                                 </td>
-                                <td>12 June, 2018</td>
-                                <td>08:00 - 08:30</td>
-                                <td>08:00 - 08:30</td>
+                                <td>{{ $compliance_report['date'] }}</td>
+                                <td>{{ $compliance_report['booked_spot'] }}</td>
+                                <td>{{ $compliance_report['aired_spot'] }}</td>
                                 <td><a href="" class="weight_medium">View Media</a></td>
                             </tr>
                         @endforeach
@@ -455,11 +460,13 @@
                         channel: channel, campaign_id: campaign_id,
                     },
                     success: function(data) {
-
+                        console.log(data);
                         var big_html = '<span class="small_faint block_disp">Media Channel</span><div class="select_wrap"><select class="js-example-basic-multiple_1" name="media" id="media" multiple="multiple">';
 
                             $.each(data, function (index, value) {
-                                big_html += '<option value="'+value.broadcaster_id+'">'+value.broadcaster+'</option>';
+                                if(value.broadcaster_id != ""){
+                                    big_html += '<option value="'+value.broadcaster_id+'">'+value.broadcaster+'</option>';
+                                }
                             });
                             big_html += '</select></div>';
 
@@ -488,6 +495,7 @@
                             channel: channel, campaign_id: campaign_id,
                         },
                         success: function(data){
+                            console.log(data);
                             Highcharts.chart('container', {
 
                                 chart: {
@@ -535,6 +543,37 @@
 
                                 series: data.data
                             });
+
+                            Highcharts.chart('media_mix',{
+                                chart: {
+                                    renderTo: 'container',
+                                    type: 'pie',
+                                    height: 200,
+                                    width: 200
+                                },
+                                title: {
+                                    text: ''
+                                },
+                                credits: {
+                                    enabled: false
+                                },
+                                plotOptions: {
+                                    pie: {
+                                        allowPointSelect: false,
+                                        dataLabels: {
+                                            enabled: false,
+                                            format: ''
+                                        }
+                                    }
+                                },
+                                exporting: { enabled: false },
+                                series: [{
+                                    innerSize: '50%',
+                                    data: data.media_mix
+                                }]
+                            });
+
+                            $('.highcharts-legend').hide();
                         }
                     })
                 }else{
@@ -601,6 +640,7 @@
                         url: url,
                         data: { campaign_id : campaign_id,start_date: start_date, stop_date: stop_date, media_channel: media_channel },
                         success: function (data) {
+                            console.log(data);
                             Highcharts.chart('container', {
 
                                 chart: {
@@ -647,6 +687,35 @@
                                 },
 
                                 series: data.data
+                            });
+
+                            Highcharts.chart('media_mix',{
+                                chart: {
+                                    renderTo: 'container',
+                                    type: 'pie',
+                                    height: 200,
+                                    width: 200
+                                },
+                                title: {
+                                    text: ''
+                                },
+                                credits: {
+                                    enabled: false
+                                },
+                                plotOptions: {
+                                    pie: {
+                                        allowPointSelect: false,
+                                        dataLabels: {
+                                            enabled: false,
+                                            format: '{point.name}'
+                                        }
+                                    }
+                                },
+                                exporting: { enabled: false },
+                                series: [{
+                                    innerSize: '50%',
+                                    data: data.media_mix
+                                }]
                             });
                         }
                     })

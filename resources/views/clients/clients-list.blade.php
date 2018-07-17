@@ -21,7 +21,8 @@
         </div>
 
         <!-- main stats -->
-        <div class="the_stats clearfix mb4">
+        <!-- main stats -->
+        <div class="the_stats the_frame clearfix mb4">
             <div class="active column col_4">
                 <span class="small_faint uppercased">Total Clients</span>
                 <h3>{{ count($clients) }}</h3>
@@ -33,11 +34,10 @@
             </div>
 
             <div class="column col_4">
-                <span class="small_faint uppercased">Inactive Clients</span>
+                <span class="small_faint uppercased">Active Clients</span>
                 <h3>{{ count($clients) }}</h3>
             </div>
         </div>
-
 
         <div class="similar_table pt3">
             <!-- table header -->
@@ -63,9 +63,19 @@
                 <div class="column col_2">{{ $client['active_campaign'] }}</div>
                 <div class="column col_2">{{ $client['inactive_campaign'] }}</div>
                 <div class="column col_1">
-                    <span class="more_icon"></span>
+
+                    <!-- more links -->
+                    <div class="list_more">
+                        <span class="more_icon"></span>
+
+                        <div class="more_more">
+                            <a href="{{ route('client.show', ['id' => $client['client_id']]) }}">Details</a>
+                            {{--<a href="" class="color_red">Delete</a>--}}
+                        </div>
+                    </div>
+
                 </div>
-                <a href="{{ route('client.show', ['id' => $client['client_id']]) }}">details</a>
+                {{--<a href="{{ route('client.show', ['id' => $client['client_id']]) }}">details</a>--}}
             </div>
             @endforeach
             <!-- table item end -->

@@ -2,6 +2,7 @@
 
 namespace Vanguard\Libraries;
 
+use Hamcrest\Util;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
@@ -147,10 +148,26 @@ class Utilities {
                 'file_status' => $file->is_file_accepted,
                 'rejection_reason' => $file->rejection_reason,
                 'file_name' => $file->file_name,
+                'format' => $file->format ? $file->format : ''
             ];
         }
 
-        return (['campaign_det' => $campaign_det, 'file_details' => $file_details, 'broadcasters' => $broadcasters]);
+        $compliance_reports = [];
+        $campaign_compliances = Utilities::switch_db('api')->select("SELECT * from compliances where campaign_id = '$id'");
+        foreach ($campaign_compliances as $campaign_compliance){
+            $media_type = Utilities::switch_db('api')->select("SELECT * FROM campaignChannels where id = '$campaign_compliance->channel'");
+            $media_channel = Utilities::switch_db('api')->select("SELECT * FROM broadcasters where id = '$campaign_compliance->broadcaster_id'");
+            $adslots = Utilities::switch_db('api')->select("SELECT * FROM adslots where id = '$campaign_compliance->adslot_id'");
+            $compliance_reports[] = [
+                'media_type' => $media_type[0]->channel,
+                'media_channel' => $media_channel[0]->brand,
+                'date' => date('M j, Y', strtotime($campaign_compliance->time_created)),
+                'booked_spot' => $adslots[0]->from_to_time,
+                'aired_spot' => $adslots[0]->from_to_time,
+            ];
+        }
+
+        return (['campaign_det' => $campaign_det, 'file_details' => $file_details, 'broadcasters' => $broadcasters, 'compliance_reports' => $compliance_reports]);
 
     }
 

@@ -313,6 +313,7 @@ class CampaignsController extends Controller
         $image_url = encrypt(request()->image_url);
         $time = request()->time_picked;
         $channel = request()->channel;
+        $format = request()->file_format;
         if (request()->image_url) {
 
             $check_image = \DB::select("SELECT * from uploads where time = '$time' AND channel = '$channel' AND user_id = '$id'");
@@ -327,6 +328,7 @@ class CampaignsController extends Controller
                 'file_name' => request()->file_name,
                 'file_code' => request()->public_id,
                 'channel' => $channel,
+                'format' => $format
             ]);
 
             return response()->json(['success' => 'success']);
@@ -483,6 +485,7 @@ class CampaignsController extends Controller
         $file_name = $request->file_name;
         $public_id = $request->file_code;
         $broadcaster = $request->broadcaster;
+        $file_format = $request->file_format;
         $agency = Session::get('agency_id');
         $ip = \Request::ip();
 
@@ -502,7 +505,7 @@ class CampaignsController extends Controller
             return response()->json(['error' => 'error']);
         }
 
-        $insert = \DB::insert("INSERT INTO carts (user_id, broadcaster_id, price, ip_address, file, from_to_time, `time`, adslot_id, percentage, total_price, filePosition_id, status, agency_id, file_name, public_id) VALUES ('$user','$broadcaster','$price','$ip','$file','$hourly_range','$time','$adslot_id', '$percentage', '$new_price', '$position', 1, '$agency', '$file_name', '$public_id')");
+        $insert = \DB::insert("INSERT INTO carts (user_id, broadcaster_id, price, ip_address, file, from_to_time, `time`, adslot_id, percentage, total_price, filePosition_id, status, agency_id, file_name, public_id, format) VALUES ('$user','$broadcaster','$price','$ip','$file','$hourly_range','$time','$adslot_id', '$percentage', '$new_price', '$position', 1, '$agency', '$file_name', '$public_id', '$file_format')");
 
         if($insert){
             return response()->json(['success' => 'success']);
@@ -670,6 +673,7 @@ class CampaignsController extends Controller
                     'time_picked' => $q->time,
                     'broadcaster_id' => $q->broadcaster_id,
                     'public_id' => $q->public_id,
+                    'format' => $q->format
                 ];
             }
 
@@ -851,21 +855,18 @@ class CampaignsController extends Controller
     public function getMediaChannel($campaign_id)
     {
         $channel = request()->channel;
-        $channel_id = $channel[0];
-//        dd($channel_id);
+        $formatted_channel = "'".implode("','", $channel)."'";
         $all_channel = [];
-        $campaigns = Utilities::switch_db('api')->select("SELECT * from campaignDetails where campaign_id = '$campaign_id' ");
-        foreach ($campaigns as $campaign){
-            $channel_raw = in_array("'".$channel_id."'",explode(',', $campaign->channel));
-            if($channel_raw){
-                $broadcaster = Utilities::switch_db('api')->select("SELECT * from broadcasters where id = '$campaign->broadcaster'");
-                $all_channel[] = [
-                    'broadcaster_id' => $campaign->broadcaster ? $campaign->broadcaster : '',
-                    'broadcaster' => $broadcaster ? $broadcaster[0]->brand : '',
-                    'campaign_id' => $campaign->id
-                ];
-            }
+        $broadcasters = Utilities::switch_db('api')->select("SELECT * from broadcasters where channel_id IN ($formatted_channel)");
+        foreach ($broadcasters as $broadcaster){
+            $campaigns = Utilities::switch_db('api')->select("SELECT * from campaignDetails where broadcaster = '$broadcaster->id' AND campaign_id = '$campaign_id'");
+            $all_channel[] = [
+                'broadcaster_id' => $campaigns ? $broadcaster->id : '',
+                'broadcaster' => $campaigns ? $broadcaster->brand : '',
+                'campaign_id' => $campaign_id ? $campaign_id : '',
+            ];
         }
+
 
         return $all_channel;
     }
@@ -897,12 +898,30 @@ class CampaignsController extends Controller
 
         }
 
+        //media mix
+        $media_mix_datas = [];
+        $media_mixes = Utilities::switch_db('api')->select("SELECT SUM(amount_spent) as total_amount_spent, channel FROM compliances where campaign_id = '$campaign_id' GROUP BY channel");
+        $total_amount = Utilities::switch_db('api')->select("SELECT * from payments where campaign_id = '$campaign_id'");
+        foreach ($media_mixes as $media_mix){
+            $channel = Utilities::switch_db('api')->select("SELECT * from campaignChannels where id = '$media_mix->channel'");
+            if($channel[0]->channel === 'TV'){
+                $color = '#5281FE';
+            }else{
+                $color = '#00C4CA';
+            }
+            $media_mix_datas[] = [
+                'name' => $channel[0]->channel,
+                'y' => (integer)(($media_mix->total_amount_spent / $total_amount[0]->total) * 100),
+                'color' => $color
+            ];
+        }
+
 //        $date_compliances = Utilities::switch_db('api')->select("SELECT time_created from compliances where campaign_id = '$campaign_id' AND time_created BETWEEN '$start_date' AND '$stop_date' GROUP BY DATE_FORMAT(time_created, '%Y-%m-%d') ");
 //        foreach ($date_compliances as $date_compliance){
 //            $date[] = [date('Y-m-d', strtotime($date_compliance->time_created))];
 //        }
 
-        return response()->json(['data' => $all_comp_data]);
+        return response()->json(['data' => $all_comp_data, 'media_mix' => $media_mix_datas]);
     }
 
     public function complianceFilter()
@@ -937,7 +956,27 @@ class CampaignsController extends Controller
         foreach ($date_compliances as $date_compliance){
             $date[] = [date('Y-m-d', strtotime($date_compliance->time_created))];
         }
-        return response()->json(['date' => $date, 'data' => $all_comp_data]);
+
+        //media mix
+        $media_mix_datas = [];
+        $media_mixes = Utilities::switch_db('api')->select("SELECT SUM(amount_spent) as total_amount_spent, channel FROM compliances where campaign_id = '$campaign_id' AND time_created BETWEEN '$start_date' AND '$stop_date' GROUP BY channel");
+        $total_amount = Utilities::switch_db('api')->select("SELECT * from payments where campaign_id = '$campaign_id'");
+        foreach ($media_mixes as $media_mix){
+            $channel = Utilities::switch_db('api')->select("SELECT * from campaignChannels where id = '$media_mix->channel'");
+            if($channel[0]->channel === 'TV'){
+                $color = '#5281FE';
+            }else{
+                $color = '#00C4CA';
+            }
+            $media_mix_datas[] = [
+                'name' => $channel[0]->channel,
+                'y' => (integer)(($media_mix->total_amount_spent / $total_amount[0]->total) * 100),
+                'color' => $color
+            ];
+        }
+
+
+        return response()->json(['date' => $date, 'data' => $all_comp_data, 'media_mix' => $media_mix_datas]);
     }
 
 

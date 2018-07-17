@@ -159,7 +159,7 @@
                     </div>
 
                     <div class="col_1 column">
-                        <button type="button" id="dashboard_filter_campaign" class="btn">Filter</button>
+                        <button type="button" id="dashboard_filter_campaign" class="btn small_btn">Filter</button>
                     </div>
                 </div>
             </div>

@@ -193,9 +193,18 @@
                             <div class="column col_2">&#8358; {{ $all_brand['total'] }}</div>
                             <div class="column col_3">{{ $all_brand['last_campaign'] }}</div>
                             <div class="column col_1">
-                                <span class="more_icon"></span>
+                                <span class="more_icon">
+                                    <!-- more links -->
+                                    <div class="list_more">
+                                        <span class="more_icon"></span>
+
+                                        <div class="more_more">
+                                            <a href="{{ route('campaign.brand.client', ['id' => $all_brand['id'], 'client_id' => $client_id]) }}">Details</a>
+                                            {{--<a href="" class="color_red">Delete</a>--}}
+                                        </div>
+                                    </div>
+                                </span>
                             </div>
-                            <a href="{{ route('campaign.brand.client', ['id' => $all_brand['id'], 'client_id' => $client_id]) }}">Details</a>
                         </div>
                         @endforeach
                         <!-- table item end -->

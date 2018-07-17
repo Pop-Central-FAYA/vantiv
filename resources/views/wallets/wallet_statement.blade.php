@@ -18,7 +18,7 @@
             </div>
 
             <div class="column col_6 align_right">
-                <a href="#fund_wallet" class="btn modal_click">Fund Wallet</a>
+                <a href="#fund_wallet" class="btn modal_click small_btn"><span class="_plus"></span>Fund Wallet</a>
             </div>
         </div>
 
@@ -48,7 +48,7 @@
                     </div>
 
                     <div class="col_1 column">
-                        <button type="button" id="filter_wallet" class="btn">Filter</button>
+                        <button type="button" id="filter_wallet" class="btn small_btn">Filter</button>
                     </div>
                 </div>
             </div>

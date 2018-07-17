@@ -195,6 +195,7 @@
                                                                                                         data-file="{{ $datas[$i]->uploads }}"
                                                                                                         data-file_name="{{ $datas[$i]->file_name }}"
                                                                                                         data-file_code="{{ $datas[$i]->file_code }}"
+                                                                                                        data-file_format="{{ $datas[$i]->format }}"
                                                                                                         data-broadcaster="{{ $broadcaster }}"
                                                                                                         data-target="bs-example-modal-lg{{ $rating->id }}"
                                                                                                         class="btn btn-success btn-xs saveCart">select</button></td>
@@ -235,6 +236,7 @@
             var file = $(this).data('file');
             var file_name = $(this).data('file_name');
             var file_code = $(this).data('file_code');
+            var file_format = $(this).data('file_format');
             var broadcaster = $(this).data("broadcaster");
             var target = $(this).data('target');
             $(".saveCart").attr('disabled', true);
@@ -253,6 +255,7 @@
                     time: time,
                     position: position,
                     walkins: walkins,
+                    file_format: file_format,
                     '_token': $('input[name=_token]').val()
                 },
                 success: function (data) {
