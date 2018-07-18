@@ -540,10 +540,18 @@ class CampaignsController extends Controller
             $insert_file = Utilities::switch_db('api')->insert("INSERT into adslot_filePositions (id, adslot_id,filePosition_id, status, select_status, broadcaster_id) VALUES ('$id', '$adslot_id', '$position', 1, 0, '$broadcaster')");
         }
 
-        $check = \DB::select("SELECT * from carts where adslot_id = '$adslot_id' and user_id = '$user' and filePosition_id = '$position' and filePosition_id != ''");
+        $check = \DB::select("SELECT * from carts where adslot_id = '$adslot_id' and user_id = '$user' AND agency_id = '$agency' and filePosition_id = '$position' and filePosition_id != ''");
         if(count($check) === 1){
             return response()->json(['error' => 'error']);
         }
+
+        //check if the budget has not been reached
+        $check_cart = \DB::select("SELECT SUM(total_price) as total from carts where user_id = '$user' AND agency_id = '$agency'");
+        $new_total = (integer)$new_price + $check_cart[0]->total;
+        if((integer)$new_total > (integer)Session::get('first_step')->campaign_budget){
+            return response()->json(['budget_exceed_error' => 'budget_exceed_error']);
+        }
+
 
         $insert = \DB::insert("INSERT INTO carts (user_id, broadcaster_id, price, ip_address, file, from_to_time, `time`, adslot_id, percentage, total_price, filePosition_id, status, agency_id, file_name, public_id, format) VALUES ('$user','$broadcaster','$price','$ip','$file','$hourly_range','$time','$adslot_id', '$percentage', '$new_price', '$position', 1, '$agency', '$file_name', '$public_id', '$file_format')");
 
@@ -895,8 +903,14 @@ class CampaignsController extends Controller
     public function getMediaChannel($campaign_id)
     {
         $channel = request()->channel;
+        $broadcaster_retain = request()->media_channel;
+
+        if(!empty($broadcaster_retain)){
+            $formatted_broadcaster = "'".implode("','", $broadcaster_retain)."'";
+        }
         $formatted_channel = "'".implode("','", $channel)."'";
         $all_channel = [];
+        $retained_channel = [];
         $broadcasters = Utilities::switch_db('api')->select("SELECT * from broadcasters where channel_id IN ($formatted_channel)");
         foreach ($broadcasters as $broadcaster){
             $campaigns = Utilities::switch_db('api')->select("SELECT * from campaignDetails where broadcaster = '$broadcaster->id' AND campaign_id = '$campaign_id'");
@@ -907,8 +921,19 @@ class CampaignsController extends Controller
             ];
         }
 
+        if(!empty($broadcaster_retain)){
+            $retained_broadcasters = Utilities::switch_db('api')->select("SELECT * from broadcasters where id IN ($formatted_broadcaster)");
+            foreach ($retained_broadcasters as $retained_broadcaster){
+                $campaigns = Utilities::switch_db('api')->select("SELECT * from campaignDetails where broadcaster = '$retained_broadcaster->id' AND campaign_id = '$campaign_id'");
+                $retained_channel[] = [
+                    'broadcaster_id' => $campaigns ? $broadcaster->id : '',
+                    'broadcaster' => $campaigns ? $broadcaster->brand : '',
+                    'campaign_id' => $campaign_id ? $campaign_id : '',
+                ];
+            }
+        }
 
-        return $all_channel;
+        return response()->json(['all_channel' => $all_channel, 'retained_channel' => $retained_channel]);
     }
 
     public function complianceGraph()
@@ -917,7 +942,6 @@ class CampaignsController extends Controller
         $date = [];
         $campaign_id = request()->campaign_id;
         $media_channels = request()->channel;
-
         foreach ($media_channels as $media_channel){
             $broadcaster = Utilities::switch_db('api')->select("SELECT * from broadcasters where id = '$media_channel'");
             $campaigns = Utilities::switch_db('api')->select("SELECT * from campaignDetails where campaign_id = '$campaign_id' AND broadcaster = '$media_channel' ");
@@ -1017,6 +1041,13 @@ class CampaignsController extends Controller
 
 
         return response()->json(['date' => $date, 'data' => $all_comp_data, 'media_mix' => $media_mix_datas]);
+    }
+
+    public function updateBudget(Request $request)
+    {
+        Session::get('first_step')->campaign_budget = $request->campaign_budget;
+        Session::flash('success', 'Campaign Budget Updated');
+        return back();
     }
 
 

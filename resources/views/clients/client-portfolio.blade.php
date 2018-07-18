@@ -69,7 +69,8 @@
                         <input type="text" class="flatpickr" id="stop_date" name="stop_date" placeholder="Stop Date">
                     </div>
                     <div class="column col_2 m-b">
-                        <button type="button" id="filterDate">Filter</button>
+                        <button type="button" id="filterDate" class="btn small_btn">Filter</button>
+                        {{--<button type="button" id="filterDate">Filter</button>--}}
                     </div>
                 </div>
 
@@ -171,7 +172,22 @@
                 <!-- brand -->
                 <div class="tab_content" id="brands">
 
-                    <div class="similar_table pt3">
+                    <div class="similar_table p_t">
+                        <div class="filters clearfix mb">
+                            <div class="right col_6 clearfix">
+                                <div class="col_7 column">
+                                    <div class="header_search">
+                                        <form>
+                                            <input type="text" placeholder="Search...">
+                                        </form>
+                                    </div>
+                                </div>
+
+                                <div class="col_5 column">
+                                    <a href="" class="btn small_btn"><span class="_plus"></span> New Brand</a>
+                                </div>
+                            </div>
+                        </div>
                         <!-- table header -->
                         <div class="_table_header clearfix m-b">
                             <span class="weight_medium small_faint block_disp column col_4 padd">Brand</span>

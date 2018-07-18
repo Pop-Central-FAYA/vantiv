@@ -1,7 +1,7 @@
 @extends('layouts.faya_app')
 
 @section('title')
-    <title> FAYA | DASHBOARD</title>
+    <title> FAYA | Dashboard</title>
 @stop
 
 @section('content')
@@ -312,7 +312,9 @@
                     {data: 'budget', name: 'budget'},
                     {data: 'adslots', name: 'adslots'},
                     {data: 'status', name: 'status'},
+
                 ],
+
             });
 
             $('#dashboard_filter_campaign').on('click', function() {

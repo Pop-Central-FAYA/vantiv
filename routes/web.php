@@ -389,6 +389,8 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/media-channel/{campaign_id}', 'Agency\CampaignsController@getMediaChannel');
             Route::get('/compliance-graph', 'Agency\CampaignsController@complianceGraph');
             Route::get('/compliance-graph/filter', 'Agency\CampaignsController@complianceFilter')->name('campaign_details.compliance');
+
+            Route::post('/update-budget', 'Agency\CampaignsController@updateBudget')->name('update.budget');
         });
 
         Route::get('/agency-dashboard/periodic-sales', 'DashboardController@filterByBroad')->name('agency.dashboard.broad');

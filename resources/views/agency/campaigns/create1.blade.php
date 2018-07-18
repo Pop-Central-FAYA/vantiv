@@ -300,10 +300,14 @@
                             </strong>
                         @endif
                     </div>
+                    <div class="mb4 clearfix pt4 mb4">
+                        <div class="column col_6">
+                            <a  class="btn uppercased _proceed modal_click">Upload Media Plan </a>
+                        </div>
 
-                    <div class="mb4 pt">
-                        <input type="submit" id="button" value="Upload Media Plan" class="btn uppercased mb4 align_left">&nbsp;	&nbsp;		&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <input type="submit" id="button" value="Proceed" class="btn uppercased mb4 align_right">
+                        <div class="column col_6 align_right">
+                            <a  class="btn uppercased _proceed modal_click">Proceed <span class=""></span></a>
+                        </div>
                     </div>
 
                 </form>

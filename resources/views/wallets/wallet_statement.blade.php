@@ -1,7 +1,7 @@
 @extends('layouts.faya_app')
 
 @section('title')
-    <title>Wallet</title>
+    <title>FAYA | Wallet</title>
 @stop
 
 @section('content')

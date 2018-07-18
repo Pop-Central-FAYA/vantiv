@@ -1130,11 +1130,11 @@ class DashboardController extends Controller
                 $start_date = $request->start_date;
                 $stop_date = $request->stop_date;
 
-                $all_campaign = Utilities::switch_db('api')->select("SELECT * from campaignDetails WHERE agency = '$agency_id' AND adslots > 0 AND time_created BETWEEN '$start_date' AND '$stop_date' GROUP BY campaign_id ORDER BY time_created DESC");
+                $all_campaign = Utilities::switch_db('api')->select("SELECT * from campaignDetails WHERE agency = '$agency_id' AND adslots > 0 AND time_created BETWEEN '$start_date' AND '$stop_date' GROUP BY campaign_id ");
                 $j = 1;
                 foreach ($all_campaign as $cam)
                 {
-
+                    $adslots = Utilities::switch_db('api')->select("SELECT * from adslots where id IN ($cam->adslots_id)");
                     $campaign_reference = Utilities::switch_db('api')->select("SELECT * from campaigns where id = '$cam->campaign_id'");
 //            $today = strtotime(date('Y-m-d'));
                     $today = date("Y-m-d");
@@ -1160,7 +1160,7 @@ class DashboardController extends Controller
                         'date_created' => date('M j, Y', strtotime($cam->time_created)),
                         'start_date' => date('Y-m-d', strtotime($cam->start_date)),
                         'end_date' => date('Y-m-d', strtotime($cam->stop_date)),
-                        'adslots' => $cam->adslots,
+                        'adslots' => count($adslots),
                         'budget' => number_format($pay[0]->total, 2),
                         'status' => $status
                     ];
@@ -1185,12 +1185,12 @@ class DashboardController extends Controller
                     ->make(true);
             }
 
-            $all_campaign = Utilities::switch_db('api')->select("SELECT * from campaignDetails WHERE agency = '$agency_id' AND adslots > 0 GROUP BY campaign_id ORDER BY time_created DESC");
+            $all_campaign = Utilities::switch_db('api')->select("SELECT * from campaignDetails WHERE agency = '$agency_id' AND adslots > 0 GROUP BY campaign_id ");
             $j = 1;
             foreach ($all_campaign as $cam)
             {
-
                 $campaign_reference = Utilities::switch_db('api')->select("SELECT * from campaigns where id = '$cam->campaign_id'");
+                $adslots = Utilities::switch_db('api')->select("SELECT * from adslots where id IN ($cam->adslots_id)");
 //            $today = strtotime(date('Y-m-d'));
                 $today = date("Y-m-d");
                 if(strtotime($today) > strtotime($cam->start_date) && strtotime($today) > strtotime($cam->stop_date)){
@@ -1215,12 +1215,13 @@ class DashboardController extends Controller
                     'date_created' => date('M j, Y', strtotime($cam->time_created)),
                     'start_date' => date('Y-m-d', strtotime($cam->start_date)),
                     'end_date' => date('Y-m-d', strtotime($cam->stop_date)),
-                    'adslots' => $cam->adslots,
+                    'adslots' => count($adslots),
                     'budget' => number_format($pay[0]->total, 2),
                     'status' => $status
                 ];
                 $j++;
             }
+
 
         return $dataTables->collection($agency_campaigns)
             ->addColumn('name', function ($agency_campaigns) {

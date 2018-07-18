@@ -91,6 +91,18 @@
                     <div class="align_center column col_4">
                         <p class="weight_medium">Total: &#8358; {{ $total_amount ? number_format($total_amount[0]->total, 2) : '0.00' }}</p>
                         <p class="small_font"> {{ $cart ? count($cart) : '0' }} ad slots selected</p>
+                        <?php
+                            $percen_val = round((($total_amount ? $total_amount[0]->total : 0) / Session::get('first_step')->campaign_budget) * 100);
+                        ?>
+                        <div class="w3-border">
+                            <div class="w3-grey @if($percen_val > 80) danger @else success_p @endif" style="height:24px;width:{{ $percen_val }}%"></div>
+                        </div>
+                        <br>
+                        @if($percen_val > 80)
+                            <div class="budget_div">
+                                <a href="#budget" class="btn modal_click small_btn">Increase Budget</a>
+                            </div>
+                        @endif
                     </div>
 
                     <div class="column col_4 align_right">
@@ -99,6 +111,29 @@
                 </div>
 
             </div>
+        </div>
+
+        <div class="modal_contain" id="budget">
+            <div class="wallet_placer margin_center mb3"></div>
+            <form method="POST" class="selsec" action="{{ route('update.budget') }}">
+                {{ csrf_field() }}
+
+                <div class="clearfix mb3">
+                    <div class="input_wrap{{ $errors->has('campaign_budget') ? ' has-error' : '' }}">
+                        <label class="small_faint">Campaign Budget</label>
+                        <input type="number" required @if((Session::get('first_step')) != null) value="{{ (Session::get('first_step'))->campaign_budget }}" @endif name="campaign_budget" placeholder="Campaign Budget">
+
+                        @if($errors->has('campaign_budget'))
+                            <strong>
+                                <span class="help-block">{{ $errors->first('campaign_budget') }}</span>
+                            </strong>
+                        @endif
+                    </div>
+                </div>
+                <div class="align_right">
+                    <button type="submit" class="btn">Update</button>
+                </div>
+            </form>
         </div>
 
         {{--{{ dd($ratecards) }}--}}
@@ -282,7 +317,15 @@
                         });
                         toastr.error('This position isnt available, please select another position');
                         $(".saveCart").attr('disabled', false);
-                    } else {
+                    }else if(data.budget_exceed_error === "budget_exceed_error"){
+                        $(".modal_container").css({
+                            opacity: 1
+                        });
+                        toastr.error('Your total amount has exceeded your budget, please increase the budget');
+                        // $(".budget_div").show();
+                        // $(".progress").addClass('danger');
+                        $(".saveCart").attr('disabled', false);
+                    }else {
                         $(".modal_container").css({
                             opacity: 1
                         });
@@ -299,5 +342,16 @@
     </script>
 @stop
 
+@section('styles')
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <style>
+        .danger  {
+            background-color: red!important;
+        }
+        .success_p {
+            background-color: green!important;
+        }
+    </style>
+@stop
 
 

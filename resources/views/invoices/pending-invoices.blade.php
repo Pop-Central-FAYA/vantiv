@@ -1,7 +1,7 @@
 @extends('layouts.faya_app')
 
 @section('title')
-    <title> FAYA | INVOICE </title>
+    <title> FAYA | Pending Invoices </title>
 @stop
 
 @section('content')

@@ -86,26 +86,26 @@
                     <div class="column col_7">
                         <h4 class="small_faint 7ppercased weight_medium">Compliance</h4>
                     </div>
-                    <div class="column col_5 clearfix">
-                        <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
-                            <i class="fa fa-calendar"></i>&nbsp;
-                            <span></span> <i class="fa fa-caret-down"></i>
-                        </div>
+                    <div class="column col_4 clearfix">
+                        {{--<div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">--}}
+                            {{--<i class="fa fa-calendar"></i>&nbsp;--}}
+                            {{--<span></span> <i class="fa fa-caret-down"></i>--}}
+                        {{--</div>--}}
 
-                        {{--<form action="{{ route('campaign_details.compliance') }}" method="GET" id="compliance-form">--}}
-                            {{--<div class="col_5 column">--}}
-                                {{--<input type="text" name="start_date" id="start_date" class="flatpickr" placeholder="Start Date">--}}
-                            {{--</div>--}}
+                        <form action="{{ route('campaign_details.compliance') }}" method="GET" id="compliance-form">
+                            <div class="col_5 column">
+                                <input type="text" name="start_date" id="start_date" class="flatpickr" placeholder="Start Date">
+                            </div>
 
-                            {{--<div class="col_5 column">--}}
-                                {{--<input type="text" name="stop_date" id="stop_date" class="flatpickr" placeholder="Stop Date">--}}
-                            {{--</div>--}}
+                            <div class="col_5 column">
+                                <input type="text" name="stop_date" id="stop_date" class="flatpickr" placeholder="Stop Date">
+                            </div>
 
-                            {{--<div class="col_1 column">--}}
-                                {{--<button type="button" id="dashboard_filter_campaign" class="btn small_btn">Filter</button>--}}
+                            <div class="col_1 column">
+                                <button type="button" id="dashboard_filter_campaign" class="btn small_btn">Filter</button>
                                 {{--<button type="button" id="dashboard_filter_campaign" class="btn">Filter</button>--}}
-                            {{--</div>--}}
-                        {{--</form>--}}
+                            </div>
+                        </form>
                     </div>
                     <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                 </div>
@@ -307,11 +307,11 @@
                             <th>Description</th>
                         </tr>
 
-                        @foreach($campaign_details['file_details'] as $file_detail)
+                        @foreach($campaign_details['uploaded_files'] as $uploaded_file)
                             <tr>
-                                <td><video src="{{ $file_detail['file'] }}" width="150" height="100" controls></video></td>
-                                <td>{{ $file_detail['format'] ? $file_detail['format'] : '' }}</td>
-                                <td>{{  $file_detail['file_name'] ? str_limit($file_detail['file_name'], 30) : '' }}</td>
+                                <td><video src="{{ asset(decrypt($uploaded_file->file_url)) }}" width="150" height="100" controls></video></td>
+                                <td>{{ $uploaded_file->format ? $uploaded_file->format : '' }}</td>
+                                <td>{{  $uploaded_file->file_name ? str_limit($uploaded_file->file_name, 50) : '' }}</td>
                             </tr>
                         @endforeach
                     </table>
@@ -395,8 +395,8 @@
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script src="https://code.highcharts.com/modules/export-data.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    {{--<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>--}}
+    {{--<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>--}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
     <script src="https://unpkg.com/flatpickr"></script>
     <script>
@@ -466,18 +466,19 @@
             $('body').delegate("#channel", "change", function () {
                 var channel = $("#channel").val();
                 var campaign_id = "<?php echo $campaign_details['campaign_det']['campaign_id'] ?>";
+                var media_channel = $("#media").val();
 
                 $.ajax({
                     url: '/agency/campaigns/media-channel/'+campaign_id,
                     method: "GET",
                     data: {
-                        channel: channel, campaign_id: campaign_id,
+                        channel: channel, campaign_id: campaign_id, media_channel: media_channel,
                     },
                     success: function(data) {
                         console.log(data);
                         var big_html = '<span class="small_faint block_disp">Media Channel</span><div class="select_wrap"><select class="js-example-basic-multiple_1" name="media" id="media" multiple="multiple">';
 
-                            $.each(data, function (index, value) {
+                            $.each(data.all_channel, function (index, value) {
                                 if(value.broadcaster_id != ""){
                                     big_html += '<option value="'+value.broadcaster_id+'">'+value.broadcaster+'</option>';
                                 }
@@ -749,41 +750,44 @@
         })
 
     </script>
-    <script type="text/javascript">
-        $(function() {
+    {{--<script type="text/javascript">--}}
+        {{--$(function() {--}}
 
-            var start = moment().subtract(29, 'days');
-            var end = moment();
+            {{--var start = moment().subtract(29, 'days');--}}
+            {{--var end = moment();--}}
 
-            function cb(start, end) {
-                $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-            }
+            {{--// console.log(start, end);--}}
 
-            $('#reportrange').daterangepicker({
-                startDate: start,
-                endDate: end,
-                ranges: {
-                    'Today': [moment(), moment()],
-                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                    'This Month': [moment().startOf('month'), moment().endOf('month')],
-                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-                }
-            }, cb);
+            {{--function cb(start, end) {--}}
+                {{--$('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));--}}
+            {{--}--}}
 
-            cb(start, end);
+            {{--$('#reportrange').daterangepicker({--}}
+                {{--startDate: start,--}}
+                {{--endDate: end,--}}
+                {{--ranges: {--}}
+                    {{--'Today': [moment(), moment()],--}}
+                    {{--'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],--}}
+                    {{--'Last 7 Days': [moment().subtract(6, 'days'), moment()],--}}
+                    {{--'Last 30 Days': [moment().subtract(29, 'days'), moment()],--}}
+                    {{--'This Month': [moment().startOf('month'), moment().endOf('month')],--}}
+                    {{--'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]--}}
+                {{--}--}}
+            {{--}, cb);--}}
 
-        });
-    </script>
+            {{--cb(start, end);--}}
+
+        {{--});--}}
+    {{--</script>--}}
 @stop
 
 
 @section('styles')
     <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    {{--<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />--}}
     <style>
+
         .highcharts-grid path { display: none;}
         .highcharts-legend {
             display: none;
