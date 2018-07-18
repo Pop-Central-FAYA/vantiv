@@ -117,17 +117,17 @@
                 <div class="the_frame clearfix _stat mb">
                     <div class="column col_3 the_stats">
                         <span class="weight_medium small_faint uppercased m-b block_disp">Target CPM</span>
-                        <h3>23</h3>
+                        <p class="weight_medium">23</p>
                     </div>
 
                     <div class="column col_3 the_stats">
                         <span class="weight_medium small_faint uppercased m-b block_disp">Reached CPM</span>
-                        <h3>23</h3>
+                        <p class="weight_medium">23</p>
                     </div>
 
                     <div class="column col_6 the_stats">
                         <span class="weight_medium small_faint uppercased m-b block_disp">Total Budget</span>
-                        <h3>N{{ $campaign_details['campaign_det']['campaign_cost'] }}</h3>
+                        <p class="weight_medium">N{{ $campaign_details['campaign_det']['campaign_cost'] }}</p>
                     </div>
                 </div>
 
@@ -162,12 +162,12 @@
                     <div class="clearfix mb">
                         <div class="column col_6">
                             <span class="weight_medium small_faint">Campaign</span>
-                            <h2>{{ $campaign_details['campaign_det']['campaign_name'] }}</h2>
+                            <p class="weight_medium">{{ $campaign_details['campaign_det']['campaign_name'] }}</p>
                         </div>
 
                         <div class="column col_6">
                             <span class="weight_medium small_faint">Budget</span>
-                            <h2>N{{ $campaign_details['campaign_det']['campaign_cost'] }}</h2>
+                            <p class="weight_medium">N{{ $campaign_details['campaign_det']['campaign_cost'] }}</p>
                         </div>
                     </div>
 
