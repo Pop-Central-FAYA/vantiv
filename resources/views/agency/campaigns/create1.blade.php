@@ -306,7 +306,7 @@
                         </div>
 
                         <div class="column col_6 align_right">
-                            <a  class="btn uppercased _proceed modal_click">Proceed <span class=""></span></a>
+                            <button type="submit"  class="btn uppercased ">Proceed <span class=""></span></button>
                         </div>
                     </div>
 
