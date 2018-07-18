@@ -49,7 +49,7 @@
                         </form>
                     </div>
                     <p><br></p>
-                    @include('partials.show_file')
+                    @include('show_file_tv.blade.php')
                 </div>
             </div>
             <p><br></p>

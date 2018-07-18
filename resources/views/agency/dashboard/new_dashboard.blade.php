@@ -67,15 +67,14 @@
                 </div>
                 <p class="align_center">Radio</p>
 
-                <div class="_pie_chart"></div>
+                <div id="radio" style="height: 150px"></div>
 
                 <ul>
-                    <li class="pie_legend active"><span class="weight_medium">0%</span> Active</li>
-                    <li class="pie_legend pending"><span class="weight_medium">0%</span> Pending</li>
-                    <li class="pie_legend finished"><span class="weight_medium">0%</span> Finished</li>
+                    <li class="pie_legend active"><span class="weight_medium">{{ round($active_radio) }}%</span> Active</li>
+                    <li class="pie_legend pending"><span class="weight_medium">{{ round($pending_radio) }}%</span> Pending</li>
+                    <li class="pie_legend finished"><span class="weight_medium">{{ round($finish_radio) }}%</span> Finished</li>
                 </ul>
             </div>
-
             <!-- newspaper -->
             <div class="">
                 <div class="pie_icon margin_center">
@@ -203,6 +202,9 @@
         <?php echo "var tv_active = ".round($active) . ";\n"; ?>
         <?php echo "var tv_pending = ".round($pending) . ";\n"; ?>
         <?php echo "var tv_finished = ".round($finished) . ";\n"; ?>
+        <?php echo "var radio_active = ".round($active_radio) . ";\n"; ?>
+        <?php echo "var radio_pending = ".round($pending_radio) . ";\n"; ?>
+        <?php echo "var radio_finished = ".round($finish_radio) . ";\n"; ?>
 
         Highcharts.chart('tv',{
             chart: {
@@ -236,6 +238,40 @@
                 ]
             }]
         });
+
+        Highcharts.chart('radio',{
+            chart: {
+                renderTo: 'container',
+                type: 'pie',
+                height: 150,
+                width: 150,
+                backgroundColor:'rgba(255, 255, 255, 0.0)'
+            },
+            title: {
+                text: ''
+            },
+            credits: {
+                enabled: false
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: false,
+                    dataLabels: {
+                        enabled: false,
+                        format: '{point.name}'
+                    }
+                }
+            },
+            exporting: { enabled: false },
+            series: [{
+                innerSize: '30%',
+                data: [
+                    {name: 'Active', y: radio_active, color: '#00C4CA'},
+                    {name: 'Pending', y: radio_pending, color: '#E89B0B' },
+                    {name: 'Finished', y: radio_finished, color: '#E8235F'}
+                ]
+            }]
+        });
     </script>
     {{--datatables--}}
     <script>
@@ -248,9 +284,19 @@
                 paging: true,
                 serverSide: true,
                 processing: true,
-                buttons: [
-                    'copy', 'csv', 'excel', 'pdf', 'print'
-                ],
+                buttons: {
+                    dom: {
+                        container: {
+                            tag: 'select'
+                        },
+                        buttonContainer: {
+                            tag: 'option'
+                        },
+                        button: {
+                            tag: 'a'
+                        }
+                    }
+                },
                 ajax: {
                     url: '/agency/dashboard/campaigns',
                     data: function (d) {
@@ -281,4 +327,9 @@
     <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.5.1/css/buttons.dataTables.min.css" type="text/css"/>
+    <style>
+        .dataTables_filter {
+            display: none;
+        }
+    </style>
 @stop

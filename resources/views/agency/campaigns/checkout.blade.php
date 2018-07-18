@@ -53,7 +53,7 @@
                             <td>{{ $query['percentage'] }}%</td>
                             <td>{{ $query['position'] }}</td>
                             <td>&#8358; {{ number_format($query['total_price'], 2) }}</td>
-                            <td><a href="{{ route('agency_cart.remove', ['id' => $query['id']]) }}" class="color_red close_red"><span class="_icon"></span> Remove</a></td>
+                            <td><a href="#delete_cart{{ $query['id'] }}" class="color_red close_red modal_click"><span class="_icon"></span> Remove</a></td>
                         </tr>
                     @endforeach
                 </table>
@@ -79,6 +79,20 @@
         <!-- main frame end -->
 
     </div>
+
+    <!-- are you sure modal -->
+    @foreach($queries as $query)
+        <div class="modal_contain" id="delete_cart{{ $query['id'] }}">
+            <div class="wallet_placer margin_center mb3"></div>
+
+                <p class="align_center margin_center col_10 mb4">Are you sure you want to delete this item ?</p>
+
+                <div class="align_right">
+                    <a href="{{ route('agency_cart.remove', ['id' => $query['id']]) }}" class="btn">Delete</a>
+                </div>
+
+        </div>
+    @endforeach
 
     <!-- payment modal -->
     <div class="modal_contain payment_modal" id="payment">

@@ -104,7 +104,7 @@
         {{--{{ dd($ratecards) }}--}}
         @foreach($ratecards as $ratecard)
             @foreach($ratecard['adslot'] as $rating)
-                <div class="modal_contain" id="modal_slot{{ $rating->id }}">
+                <div class="modal_contain" style="width: 1000px;" id="modal_slot{{ $rating->id }}">
                     <h2 class="sub_header mb4">{{ $rating->from_to_time }} | {{ $rating->time_difference - $rating->time_used }} Seconds Available</h2></h2>
                     <form id="form_cart" action="{{ route('agency_campaign.cart') }}" method="GET">
                         {{ csrf_field() }}

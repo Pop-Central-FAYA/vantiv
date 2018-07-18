@@ -81,6 +81,8 @@
                                             >{{ $brand->name }}</option>
                                         @endforeach
                                     </select>
+                                @else
+                                    <select name="brand" id=""></select>
                                 @endif
                                 @if($errors->has('brand'))
                                     <strong>{{ $errors->first('brand') }}</strong>
@@ -299,10 +301,9 @@
                         @endif
                     </div>
 
-
-                    <div class="mb4 align_right pt">
-                        {{--<button class="btn uppercased mb4" type="submit">Proceed</button>--}}
-                        <input type="submit" id="button" value="Proceed" class="btn uppercased mb4">
+                    <div class="mb4 pt">
+                        <input type="submit" id="button" value="Upload Media Plan" class="btn uppercased mb4 align_left">&nbsp;	&nbsp;		&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="submit" id="button" value="Proceed" class="btn uppercased mb4 align_right">
                     </div>
 
                 </form>
@@ -329,6 +330,7 @@
             $('#target_aud').select2({
                 placeholder: "Please select Target Audience"
             });
+            
             // fetch all brands when a clientSis selected
             $('body').delegate('#clients','change', function(e){
                 var clients = $("#clients").val();

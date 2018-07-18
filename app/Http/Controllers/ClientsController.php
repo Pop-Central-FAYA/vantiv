@@ -180,8 +180,8 @@ class ClientsController extends Controller
                 'name' => $user_details && $user_details[0] ? $user_details[0]->lastname . ' ' . $user_details[0]->firstname : '',
                 'created_at' => $agency->time_created,
                 'last_camp' => $date,
-                'active_campaign' => $active_campaign ? count($active_campaign) : 'None',
-                'inactive_campaign' => $inactive_campaign ? count($inactive_campaign) : 'None',
+                'active_campaign' => $active_campaign ? count($active_campaign) : '0',
+                'inactive_campaign' => $inactive_campaign ? count($inactive_campaign) : '0',
                 'count_brands' => count($brs),
                 'company_name' => $agency->company_name,
                 'company_logo' => $agency->company_logo

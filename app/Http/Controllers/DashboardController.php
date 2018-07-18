@@ -313,6 +313,12 @@ class DashboardController extends Controller
             $pending = $tv_rating['per_pending'];
             $finished = $tv_rating['per_finished'];
 
+            //Radio
+            $radio_rating = $this->radio($agency_id);
+            $active_radio = $radio_rating['per_active'];
+            $pending_radio = $radio_rating['per_pending'];
+            $finished_radio = $radio_rating['per_finished'];
+
             $today_date = date("Y-m-d");
 
 //            all clients
@@ -347,6 +353,10 @@ class DashboardController extends Controller
                                                                     'active' => $active,
                                                                     'pending' => $pending,
                                                                     'finished' => $finished,
+                                                                    'radio_rating' => $radio_rating,
+                                                                    'active_radio' => $active_radio,
+                                                                    'pending_radio' => $pending_radio,
+                                                                    'finish_radio' => $finished_radio,
                                                                     'agency_info' => $agency_info]);
 
         } else if ($role->role_id === 6) {
@@ -972,7 +982,9 @@ class DashboardController extends Controller
         $finished_tv_campaigns = [];
         $pending_tv_campaign = [];
         $active_tv_campaign = [];
-        $campaigns = Utilities::switch_db('api')->select("SELECT * FROM campaignDetails where agency = '$agency_id' GROUP BY campaign_id");
+
+        $campaigns = Utilities::switch_db('api')->select("SELECT * from campaignDetails where broadcaster IN (SELECT id from broadcasters where channel_id = '$chanel_tv_id')");
+
         foreach ($campaigns as $campaign){
             $channels = Utilities::switch_db('api')->select("SELECT * from campaignChannels where id IN ($campaign->channel) AND channel = 'TV' ");
             $all_tv_campaigns[] = [
@@ -982,6 +994,80 @@ class DashboardController extends Controller
                 'channel' => $channels[0]->channel,
                 'channel_id' => $channels[0]->id,
             ];
+        }
+
+        foreach ($all_tv_campaigns as $all_tv_campaign){
+            if($today > $all_tv_campaign['end_date']){
+                $finished_tv_campaigns[] = [
+                    'campaign_id' => $all_tv_campaign['campaign_id'],
+                    'start_date' => $all_tv_campaign['start_date'],
+                    'end_date' => $all_tv_campaign['end_date'],
+                    'channel' => $all_tv_campaign['channel'],
+                    'channel_id' => $all_tv_campaign['channel_id'],
+                ];
+            }
+        }
+
+        foreach ($all_tv_campaigns as $all_tv_campaign){
+            if($today < $all_tv_campaign['start_date']){
+                $pending_tv_campaign[] = [
+                    'campaign_id' => $all_tv_campaign['campaign_id'],
+                    'start_date' => $all_tv_campaign['start_date'],
+                    'end_date' => $all_tv_campaign['end_date'],
+                    'channel' => $all_tv_campaign['channel'],
+                    'channel_id' => $all_tv_campaign['channel_id'],
+                ];
+            }
+        }
+
+        foreach ($all_tv_campaigns as $all_tv_campaign){
+            if($today >= $all_tv_campaign['start_date'] && $today <= $all_tv_campaign['end_date']){
+                $active_tv_campaign[] = [
+                    'campaign_id' => $all_tv_campaign['campaign_id'],
+                    'start_date' => $all_tv_campaign['start_date'],
+                    'end_date' => $all_tv_campaign['end_date'],
+                    'channel' => $all_tv_campaign['channel'],
+                    'channel_id' => $all_tv_campaign['channel_id'],
+                ];
+            }
+        }
+
+        //maths to calculate the percentage values
+        $total_for_active = count($active_tv_campaign);
+        $total_pending = count($pending_tv_campaign);
+        $total_finished = count($finished_tv_campaigns);
+        $total_campaigns_tv = count($all_tv_campaigns);
+
+        //percentage values
+        $perc_active = ($total_for_active / $total_campaigns_tv) * 100;
+        $perc_finished = ($total_finished / $total_campaigns_tv) * 100;
+        $perc_pending = ($total_pending / $total_campaigns_tv) * 100;
+
+        return (['per_active' => $perc_active, 'per_finished' => $perc_finished, 'per_pending' => $perc_pending]);
+    }
+
+    public function radio($agency_id)
+    {
+        $today = date("Y-m-d");
+        $chanel_tv = Utilities::switch_db('api')->select("SELECT * FROM campaignChannels where channel = 'Radio'");
+        $chanel_tv_id = $chanel_tv[0]->id;
+        $all_tv_campaigns = [];
+        $finished_tv_campaigns = [];
+        $pending_tv_campaign = [];
+        $active_tv_campaign = [];
+
+        $campaigns = Utilities::switch_db('api')->select("SELECT * from campaignDetails where broadcaster IN (SELECT id from broadcasters where channel_id = '$chanel_tv_id')");
+
+        foreach ($campaigns as $campaign){
+            $channels = Utilities::switch_db('api')->select("SELECT * from campaignChannels where id IN ($campaign->channel) AND channel = 'Radio' ");
+                $all_tv_campaigns[] = [
+                    'campaign_id' => $campaign->campaign_id,
+                    'start_date' => $campaign->start_date,
+                    'end_date' => $campaign->stop_date,
+                    'channel' => $channels[0]->channel,
+                    'channel_id' => $channels[0]->id,
+                ];
+
         }
 
         foreach ($all_tv_campaigns as $all_tv_campaign){

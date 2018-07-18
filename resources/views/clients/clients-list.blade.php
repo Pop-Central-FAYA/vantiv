@@ -34,8 +34,8 @@
             </div>
 
             <div class="column col_4">
-                <span class="small_faint uppercased">Active Clients</span>
-                <h3>{{ count($clients) }}</h3>
+                <span class="small_faint uppercased">Inactive Clients</span>
+                <h3>0</h3>
             </div>
         </div>
 
@@ -70,7 +70,8 @@
 
                         <div class="more_more">
                             <a href="{{ route('client.show', ['id' => $client['client_id']]) }}">Details</a>
-                            {{--<a href="" class="color_red">Delete</a>--}}
+                            <a href="">Edit</a>
+                            <a href="" class="color_red">Delete</a>
                         </div>
                     </div>
 

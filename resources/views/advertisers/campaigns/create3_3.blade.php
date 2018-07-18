@@ -31,7 +31,7 @@
                     <div class="col-md-1"></div>
                     <div class="col-md-8">
                         <div class="panel panel-default">
-                            @include('partials.show_file')
+                            @include('show_file_tv.blade.php')
                         </div>
                     </div>
                 </div>
