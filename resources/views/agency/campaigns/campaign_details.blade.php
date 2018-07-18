@@ -493,6 +493,40 @@
                             placeholder: "Please select Media Channel"
                         });
 
+                        Highcharts.chart('media_mix',{
+                            chart: {
+                                renderTo: 'container',
+                                type: 'pie',
+                                height: 250,
+                                width: 250
+                            },
+                            title: {
+                                text: ''
+                            },
+
+                            credits: {
+                                enabled: false
+                            },
+                            plotOptions: {
+                                pie: {
+                                    allowPointSelect: false,
+                                    dataLabels: {
+                                        enabled: true,
+                                        formatter: function () {
+                                            // display only if larger than 1
+                                            return this.y > 1 ? '<b>' + this.point.name + ':</b> ' +
+                                                this.y + '%' : null;
+                                        }
+                                    }
+                                }
+                            },
+                            exporting: { enabled: false },
+                            series: [{
+                                innerSize: '50%',
+                                data: data.media_mix
+                            }]
+                        });
+
                     }
                 });
             });
@@ -501,13 +535,14 @@
         jQuery( document ).ready(function( $ ) {
             $('body').delegate("#media", "change", function () {
                 var channel = $("#media").val();
+                var type = $("#channel").val();
                 if(channel != null){
                     var campaign_id = "<?php echo $campaign_details['campaign_det']['campaign_id'] ?>";
                     $.ajax({
                         url: '/agency/campaigns/compliance-graph',
                         method: 'GET',
                         data: {
-                            channel: channel, campaign_id: campaign_id,
+                            channel: channel, campaign_id: campaign_id, type: type,
                         },
                         success: function(data){
                             console.log(data);
@@ -566,35 +601,6 @@
                                 },
 
                                 series: data.data
-                            });
-
-                            Highcharts.chart('media_mix',{
-                                chart: {
-                                    renderTo: 'container',
-                                    type: 'pie',
-                                    height: 200,
-                                    width: 200
-                                },
-                                title: {
-                                    text: ''
-                                },
-                                credits: {
-                                    enabled: false
-                                },
-                                plotOptions: {
-                                    pie: {
-                                        allowPointSelect: false,
-                                        dataLabels: {
-                                            enabled: false,
-                                            format: ''
-                                        }
-                                    }
-                                },
-                                exporting: { enabled: false },
-                                series: [{
-                                    innerSize: '50%',
-                                    data: data.media_mix
-                                }]
                             });
 
                             $('.highcharts-legend').hide();
@@ -716,8 +722,8 @@
                                 chart: {
                                     renderTo: 'container',
                                     type: 'pie',
-                                    height: 200,
-                                    width: 200
+                                    height: 250,
+                                    width: 250
                                 },
                                 title: {
                                     text: ''
@@ -729,8 +735,12 @@
                                     pie: {
                                         allowPointSelect: false,
                                         dataLabels: {
-                                            enabled: false,
-                                            format: '{point.name}'
+                                            enabled: true,
+                                            formatter: function () {
+                                                return '<b>' + this.x + '</b><br/>' +
+                                                    this.series.name + ': ' + this.y + '<br/>' +
+                                                    'Total: ' + this.point.stackTotal;
+                                            },
                                         }
                                     }
                                 },
