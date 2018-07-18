@@ -133,7 +133,7 @@
 
                 <div class="the_frame _pie">
                     <h4 class="small_faint uppercased weight_medium">Media Mix</h4><br>
-                    <div id="media_mix" style="padding-left: 60px;"></div>
+                    <div id="media_mix" style="height: 250px;"></div>
 
                 </div>
             </div>
@@ -497,8 +497,6 @@
                             chart: {
                                 renderTo: 'container',
                                 type: 'pie',
-                                height: 250,
-                                width: 250
                             },
                             title: {
                                 text: ''
