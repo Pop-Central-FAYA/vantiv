@@ -44,7 +44,7 @@
             <div class="_table_header clearfix m-b">
                 <span class="small_faint block_disp padd column col_4">Basic Info</span>
                 <span class="small_faint block_disp column col_1">Brands</span>
-                <span class="block_disp column col_2 color_trans">.</span>
+                <span class="small_faint block_disp column col_2">Total Spend</span>
                 <span class="small_faint block_disp column col_2">Active Campaigns</span>
                 <span class="small_faint block_disp column col_2">Inactive Campaigns</span>
                 <span class="block_disp column col_1 color_trans">.</span>

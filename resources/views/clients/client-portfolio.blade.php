@@ -81,7 +81,7 @@
                     </div>
 
                     <div class="column col_4">
-                        <span class="small_faint uppercased weight_medium">Total Spent</span>
+                        <span class="small_faint uppercased weight_medium">Total Spend</span>
                         <h3>&#8358; {{ $total_this_month ? number_format($total_this_month[0]->total, 2) : 0 }}</h3>
                     </div>
 
@@ -100,7 +100,7 @@
                     </div>
 
                     <div class="column col_4">
-                        <span class="small_faint uppercased weight_medium">Total Spent</span>
+                        <span class="small_faint uppercased weight_medium">Total Spend</span>
                         <h3>&#8358; {{ $total_this_month ? number_format($total_this_month[0]->total, 2) : 0 }}</h3>
                     </div>
 
@@ -259,7 +259,7 @@
                 },
                 yAxis: {
                     title: {
-                        text: 'Number of Campaigns'
+                        text: ''
                     },
                     labels: {
                         formatter: function () {
@@ -324,7 +324,7 @@
                         '                    </div>\n' +
                         '\n' +
                         '                    <div class="column col_4">\n' +
-                        '                        <span class="small_faint uppercased weight_medium">Total Spent</span>\n' +
+                        '                        <span class="small_faint uppercased weight_medium">Total Spend</span>\n' +
                         '                        <h3>&#8358;'+ data.all_total +'</h3>\n' +
                         '                    </div>\n' +
                         '\n' +
@@ -352,7 +352,7 @@
                         },
                         yAxis: {
                             title: {
-                                text: 'Number of Campaigns'
+                                text: ''
                             },
                             labels: {
                                 formatter: function () {
@@ -416,7 +416,7 @@
                         '                    </div>\n' +
                         '\n' +
                         '                    <div class="column col_4">\n' +
-                        '                        <span class="small_faint uppercased weight_medium">Total Spent</span>\n' +
+                        '                        <span class="small_faint uppercased weight_medium">Total Spend</span>\n' +
                         '                        <h3>&#8358;'+ data.all_total +'</h3>\n' +
                         '                    </div>\n' +
                         '\n' +
@@ -445,7 +445,7 @@
                         },
                         yAxis: {
                             title: {
-                                text: 'Number of Campaigns'
+                                text: ''
                             },
                             labels: {
                                 formatter: function () {
