@@ -992,10 +992,11 @@ class CampaignsController extends Controller
         $start_date = date('Y-m-d', strtotime(request()->start_date));
         $stop_date = date('Y-m-d', strtotime(request()->stop_date));
         $media_channel = request()->media_channel;
-        $broadcaster = "'".implode("','", $media_channel)."'";
+        if($media_channel){
+            $broadcaster = "'".implode("','", $media_channel)."'";
+        }
         $date = [];
-//        dd($start_date, $stop_date);
-//        dd($broadcaster);
+
         $complince_report_queries = Utilities::switch_db('api')->select("SELECT SUM(amount_spent) as amount_spent, broadcaster_id, channel, time_created from compliances where campaign_id = '$campaign_id' AND time_created BETWEEN '$start_date' AND '$stop_date' AND broadcaster_id IN ($broadcaster) GROUP BY broadcaster_id ");
         foreach ($complince_report_queries as $complince_report_query){
             $broadcaster = Utilities::switch_db('api')->select("SELECT * from broadcasters where id = '$complince_report_query->broadcaster_id'");
