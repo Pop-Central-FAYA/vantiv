@@ -908,6 +908,7 @@ class CampaignsController extends Controller
         if(!empty($broadcaster_retain)){
             $formatted_broadcaster = "'".implode("','", $broadcaster_retain)."'";
         }
+
         $formatted_channel = "'".implode("','", $channel)."'";
         $all_channel = [];
         $retained_channel = [];
@@ -924,11 +925,11 @@ class CampaignsController extends Controller
         if(!empty($broadcaster_retain)){
             $retained_broadcasters = Utilities::switch_db('api')->select("SELECT * from broadcasters where id IN ($formatted_broadcaster)");
             foreach ($retained_broadcasters as $retained_broadcaster){
-                $campaigns = Utilities::switch_db('api')->select("SELECT * from campaignDetails where broadcaster = '$retained_broadcaster->id' AND campaign_id = '$campaign_id'");
+                $campaigns_retained = Utilities::switch_db('api')->select("SELECT * from campaignDetails where broadcaster = '$retained_broadcaster->id' AND campaign_id = '$campaign_id'");
                 $retained_channel[] = [
-                    'broadcaster_id' => $campaigns ? $broadcaster->id : '',
-                    'broadcaster' => $campaigns ? $broadcaster->brand : '',
-                    'campaign_id' => $campaign_id ? $campaign_id : '',
+                    'broadcaster_id' => $campaigns_retained ? $retained_broadcaster->id : '',
+                    'broadcaster' => $campaigns_retained ? $retained_broadcaster->brand : '',
+                    'campaign_id' => $campaigns_retained ? $campaign_id : '',
                 ];
             }
         }
@@ -952,7 +953,7 @@ class CampaignsController extends Controller
             ];
         }
 
-        return response()->json(['all_channel' => $all_channel, 'media_mix' => $media_mix_datas]);
+        return response()->json(['all_channel' => $all_channel, 'media_mix' => $media_mix_datas, 'retained_channel' => $retained_channel]);
     }
 
     public function complianceGraph()
@@ -988,11 +989,12 @@ class CampaignsController extends Controller
     {
         $all_comp_data = [];
         $campaign_id = request()->campaign_id;
-        $start_date = request()->start_date;
-        $stop_date = request()->stop_date;
+        $start_date = date('Y-m-d', strtotime(request()->start_date));
+        $stop_date = date('Y-m-d', strtotime(request()->stop_date));
         $media_channel = request()->media_channel;
         $broadcaster = "'".implode("','", $media_channel)."'";
         $date = [];
+//        dd($start_date, $stop_date);
 //        dd($broadcaster);
         $complince_report_queries = Utilities::switch_db('api')->select("SELECT SUM(amount_spent) as amount_spent, broadcaster_id, channel, time_created from compliances where campaign_id = '$campaign_id' AND time_created BETWEEN '$start_date' AND '$stop_date' AND broadcaster_id IN ($broadcaster) GROUP BY broadcaster_id ");
         foreach ($complince_report_queries as $complince_report_query){
