@@ -82,7 +82,7 @@
             <div class="column col_8 the_frame main_campaign_chart">
 
                 <!-- filter -->
-                <div class="filters clearfix">
+                <div class="filters clearfix compliance_load">
                     <div class="column col_7">
                         <h4 class="small_faint 7ppercased weight_medium">Compliance</h4>
                     </div>
@@ -120,7 +120,7 @@
                     </div>
                 </div>
 
-                <div class="the_frame _pie">
+                <div class="the_frame _pie media_mix_load">
                     <h4 class="small_faint uppercased weight_medium">Media Mix</h4><br>
                     <div id="media_mix" style="height: 250px;"></div>
 
@@ -457,6 +457,10 @@
                 var campaign_id = "<?php echo $campaign_details['campaign_det']['campaign_id'] ?>";
                 var media_channel = $("#media").val();
 
+                $(".media_mix_load").css({
+                    opacity: 0.1
+                });
+
                 $.ajax({
                     url: '/agency/campaigns/media-channel/'+campaign_id,
                     method: "GET",
@@ -464,7 +468,9 @@
                         channel: channel, campaign_id: campaign_id, media_channel: media_channel,
                     },
                     success: function(data) {
-                        var big_html = '<span class="small_faint block_disp">Media Channel</span><div class="select_wrap"><select class="js-example-basic-multiple_1" name="media" id="media" multiple="multiple">';
+
+                        if(data.media_mix != null && data.all_channel != null){
+                            var big_html = '<span class="small_faint block_disp">Media Channel</span><div class="select_wrap"><select class="js-example-basic-multiple_1" name="media" id="media" multiple="multiple">';
 
                             $.each(data.all_channel, function (index, value) {
                                 if(value.broadcaster_id != "" ){
@@ -482,42 +488,85 @@
 
                             $(".check_this").html(big_html);
 
-                        $('.js-example-basic-multiple_1').select2();
+                            $('.js-example-basic-multiple_1').select2();
 
-                        $('#media').select2({
-                            placeholder: "Please select Media Channel",
-                        });
+                            $('#media').select2({
+                                placeholder: "Please select Media Channel",
+                            });
 
-                        Highcharts.chart('media_mix',{
-                            chart: {
-                                renderTo: 'container',
-                                type: 'pie',
-                            },
-                            title: {
-                                text: ''
-                            },
+                            $(".media_mix_load").css({
+                                opacity: 1
+                            });
 
-                            credits: {
-                                enabled: false
-                            },
-                            plotOptions: {
-                                pie: {
-                                    allowPointSelect: false,
-                                    dataLabels: {
-                                        enabled: true,
-                                        formatter: function () {
-                                            return this.y > 1 ? '<b>' + this.point.name + ':</b> ' +
-                                                this.y + '%' : null;
+                            Highcharts.chart('media_mix',{
+                                chart: {
+                                    renderTo: 'container',
+                                    type: 'pie',
+                                },
+                                title: {
+                                    text: ''
+                                },
+
+                                credits: {
+                                    enabled: false
+                                },
+                                plotOptions: {
+                                    pie: {
+                                        allowPointSelect: false,
+                                        dataLabels: {
+                                            enabled: true,
+                                            formatter: function () {
+                                                return this.y > 1 ? '<b>' + this.point.name + ':</b> ' +
+                                                    this.y + '%' : null;
+                                            }
                                         }
                                     }
-                                }
-                            },
-                            exporting: { enabled: false },
-                            series: [{
-                                innerSize: '50%',
-                                data: data.media_mix
-                            }]
-                        });
+                                },
+                                exporting: { enabled: false },
+                                series: [{
+                                    innerSize: '50%',
+                                    data: data.media_mix
+                                }]
+                            });
+                        }else{
+
+                            $("#media").empty().trigger('change')
+
+                            $(".media_mix_load").css({
+                                opacity: 1
+                            });
+
+                            Highcharts.chart('media_mix',{
+                                chart: {
+                                    renderTo: 'container',
+                                    type: 'pie',
+                                },
+                                title: {
+                                    text: ''
+                                },
+
+                                credits: {
+                                    enabled: false
+                                },
+                                plotOptions: {
+                                    pie: {
+                                        allowPointSelect: false,
+                                        dataLabels: {
+                                            enabled: true,
+                                            formatter: function () {
+                                                return this.y > 1 ? '<b>' + this.point.name + ':</b> ' +
+                                                    this.y + '%' : null;
+                                            }
+                                        }
+                                    }
+                                },
+                                exporting: { enabled: false },
+                                series: [{
+                                    innerSize: '50%',
+                                    data: ''
+                                }]
+                            });
+                        }
 
                     }
                 });
@@ -528,6 +577,10 @@
             $('body').delegate("#media", "change", function () {
                 var channel = $("#media").val();
                 var type = $("#channel").val();
+                $(".compliance_load").css({
+                    opacity : 0.1
+                });
+
                 if(channel != null){
                     var campaign_id = "<?php echo $campaign_details['campaign_det']['campaign_id'] ?>";
                     $.ajax({
@@ -537,147 +590,120 @@
                             channel: channel, campaign_id: campaign_id, type: type,
                         },
                         success: function(data){
-                            Highcharts.chart('container', {
+                            if(data.data != null && data.date != null){
 
-                                chart: {
-                                    type: 'column'
-                                },
+                                $(".compliance_load").css({
+                                    opacity: 1
+                                });
+                                Highcharts.chart('container', {
 
-                                title: {
-                                    text: ''
-                                },
+                                    chart: {
+                                        type: 'column'
+                                    },
 
-                                xAxis: {
-                                    categories: ['2018-04-05']
-                                },
-                                tooltip: {
-                                    enabled: false
-                                },
-                                yAxis: {
-                                    allowDecimals: false,
-                                    min: 0,
                                     title: {
-                                        text: 'Total Amount'
-                                    }
-                                },
-                                credits: {
-                                    enabled: false
-                                },
-                                exporting: { enabled: false },
-                                tooltip: {
-                                    formatter: function () {
-                                        return '<b>' + this.x + '</b><br/>' +
-                                            this.series.name + ': ' + this.y + '<br/>';
+                                        text: ''
                                     },
 
-                                },
-
-                                plotOptions: {
-                                    column: {
-                                        stacking: 'normal'
+                                    xAxis: {
+                                        categories: data.date
                                     },
-                                    bar: {
-                                        animation: true,
-                                        dataLabels: {
-                                            enabled: true,
-                                            align: "center",
-                                            color: "#FFFFFF"
+                                    tooltip: {
+                                        enabled: false
+                                    },
+                                    yAxis: {
+                                        allowDecimals: false,
+                                        min: 0,
+                                        title: {
+                                            text: 'Total Amount'
                                         }
-                                    }
-                                },
+                                    },
+                                    credits: {
+                                        enabled: false
+                                    },
+                                    exporting: { enabled: false },
+                                    tooltip: {
+                                        formatter: function () {
+                                            return '<b>' + this.x + '</b><br/>' +
+                                                this.series.name + ': ' + this.y + '<br/>';
+                                        },
 
-                                series: data.data
-                            });
+                                    },
+
+                                    plotOptions: {
+                                        column: {
+                                            stacking: 'normal'
+                                        },
+                                        bar: {
+                                            animation: true,
+                                            dataLabels: {
+                                                enabled: true,
+                                                align: "center",
+                                                color: "#FFFFFF"
+                                            }
+                                        }
+                                    },
+
+                                    series: data.data
+                                });
+                            }else{
+                                $(".compliance_load").css({
+                                    opacity: 1
+                                });
+
+                                Highcharts.chart('container', {
+
+                                    chart: {
+                                        type: 'column'
+                                    },
+
+                                    title: {
+                                        text: ''
+                                    },
+
+                                    xAxis: {
+                                        categories: []
+                                    },
+
+                                    yAxis: {
+                                        allowDecimals: false,
+                                        min: 0,
+                                        title: {
+                                            text: 'Total Amount'
+                                        }
+                                    },
+                                    credits: {
+                                        enabled: false
+                                    },
+                                    exporting: { enabled: false },
+                                    tooltip: {
+                                        formatter: function () {
+                                            return '<b>' + this.x + '</b><br/>' +
+                                                this.series.name + ': ' + this.y + '<br/>' +
+                                                'Total: ' + this.point.stackTotal;
+                                        },
+
+                                    },
+
+                                    plotOptions: {
+                                        column: {
+                                            stacking: 'normal'
+                                        },
+                                        series: {
+                                            pointPadding: 0,
+                                            groupPadding: 0.1,
+                                            pointWidth: 60,
+                                        }
+                                    },
+
+                                    series: []
+                                });
+
+                            }
 
                             $('.highcharts-legend').hide();
                         }
                     });
-
-                    var start_php = "<?php echo date('Y-m-d',strtotime($campaign_details['campaign_det']['start_date'])) ?>";
-                    var end_php = "<?php echo date('Y-m-d',strtotime($campaign_details['campaign_det']['end_date']))?>"
-                    var start = moment(start_php);
-                    var end =  moment(end_php);
-
-                    function cb(start, end) {
-                        $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-
-                        var start_date = start.format('YYYY-MM-DD');
-                        var stop_date = end.format('YYYY-MM-DD');
-                        var url = $("#compliance-form").attr("action");
-                        var campaign_id = "<?php echo $campaign_details['campaign_det']['campaign_id']; ?>";
-                        var media_type = $("#channel").val();
-                        var media_channel = $("#media").val();
-                        if(media_type != null && media_channel != null){
-                            $.ajax({
-                                method: "GET",
-                                url: url,
-                                data: { campaign_id : campaign_id,start_date: start_date, stop_date: stop_date, media_channel: media_channel },
-                                success: function (data) {
-                                    Highcharts.chart('container', {
-
-                                        chart: {
-                                            type: 'column'
-                                        },
-
-                                        title: {
-                                            text: ''
-                                        },
-
-                                        xAxis: {
-                                            categories: data.date
-                                        },
-
-                                        yAxis: {
-                                            allowDecimals: false,
-                                            min: 0,
-                                            title: {
-                                                text: 'Total Amount'
-                                            }
-                                        },
-                                        credits: {
-                                            enabled: false
-                                        },
-                                        exporting: { enabled: false },
-                                        tooltip: {
-                                            formatter: function () {
-                                                return '<b>' + this.x + '</b><br/>' +
-                                                    this.series.name + ': ' + this.y + '<br/>';
-                                            },
-
-                                        },
-
-                                        plotOptions: {
-                                            column: {
-                                                stacking: 'normal'
-                                            }
-                                        },
-
-                                        series: data.data
-                                    });
-
-                                }
-                            })
-                        }else{
-                            toastr.error("Please select the media type and channel");
-                        }
-
-
-                    }
-
-                    $('#reportrange').daterangepicker({
-                        startDate: start,
-                        endDate: end,
-                        ranges: {
-                            'Ongoing': [moment(start_php), moment(end_php)],
-                            'Last Week': [moment().subtract(6, 'days'), moment()],
-                            'One Month': [moment().subtract(1, 'month').startOf('month'), moment()],
-                            'Three Month': [moment().subtract(3, 'month').startOf('month'), moment()],
-                            'Six Month': [moment().subtract(6, 'month').startOf('month'), moment()],
-                            '1 Year': [moment().subtract(12, 'month').startOf('month'), moment()],
-                        }
-                    }, cb);
-
-                    cb(start, end);
 
                 }else{
                     Highcharts.chart('container', {
@@ -732,6 +758,95 @@
             });
 
         });
+
+        $(function () {
+            var start_php = "<?php echo date('Y-m-d',strtotime($campaign_details['campaign_det']['start_date'])) ?>";
+            var end_php = "<?php echo date('Y-m-d',strtotime($campaign_details['campaign_det']['end_date']))?>"
+            var start = moment(start_php);
+            var end =  moment(end_php);
+
+            function cb(start, end) {
+                $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+
+                var start_date = start.format('YYYY-MM-DD');
+                var stop_date = end.format('YYYY-MM-DD');
+                var url = $("#compliance-form").attr("action");
+                var campaign_id = "<?php echo $campaign_details['campaign_det']['campaign_id']; ?>";
+                var media_type = $("#channel").val();
+                var media_channel = $("#media").val();
+                if(media_type != null && media_channel != null){
+                    $.ajax({
+                        method: "GET",
+                        url: url,
+                        data: { campaign_id : campaign_id,start_date: start_date, stop_date: stop_date, media_channel: media_channel },
+                        success: function (data) {
+                            Highcharts.chart('container', {
+
+                                chart: {
+                                    type: 'column'
+                                },
+
+                                title: {
+                                    text: ''
+                                },
+
+                                xAxis: {
+                                    categories: data.date
+                                },
+
+                                yAxis: {
+                                    allowDecimals: false,
+                                    min: 0,
+                                    title: {
+                                        text: 'Total Amount'
+                                    }
+                                },
+                                credits: {
+                                    enabled: false
+                                },
+                                exporting: { enabled: false },
+                                tooltip: {
+                                    formatter: function () {
+                                        return '<b>' + this.x + '</b><br/>' +
+                                            this.series.name + ': ' + this.y + '<br/>';
+                                    },
+
+                                },
+
+                                plotOptions: {
+                                    column: {
+                                        stacking: 'normal'
+                                    }
+                                },
+
+                                series: data.data
+                            });
+
+                        }
+                    })
+                }else{
+                    // toastr.error("Please select the media type and channel");
+                }
+
+
+            }
+
+            $('#reportrange').daterangepicker({
+                startDate: start,
+                endDate: end,
+                ranges: {
+                    'Ongoing': [moment(start_php), moment(end_php)],
+                    'Last Week': [moment().subtract(6, 'days'), moment()],
+                    'One Month': [moment().subtract(1, 'month').startOf('month'), moment()],
+                    'Three Month': [moment().subtract(3, 'month').startOf('month'), moment()],
+                    'Six Month': [moment().subtract(6, 'month').startOf('month'), moment()],
+                    '1 Year': [moment().subtract(12, 'month').startOf('month'), moment()],
+                }
+            }, cb);
+
+            cb(start, end);
+
+        })
 
     </script>
 @stop

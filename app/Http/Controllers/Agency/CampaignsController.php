@@ -909,51 +909,57 @@ class CampaignsController extends Controller
             $formatted_broadcaster = "'".implode("','", $broadcaster_retain)."'";
         }
 
-        $formatted_channel = "'".implode("','", $channel)."'";
+
+        $formatted_channel = $channel ? "'".implode("','", $channel)."'" : '';
         $all_channel = [];
         $retained_channel = [];
-        $broadcasters = Utilities::switch_db('api')->select("SELECT * from broadcasters where channel_id IN ($formatted_channel)");
-        foreach ($broadcasters as $broadcaster){
-            $campaigns = Utilities::switch_db('api')->select("SELECT * from campaignDetails where broadcaster = '$broadcaster->id' AND campaign_id = '$campaign_id'");
-            $all_channel[] = [
-                'broadcaster_id' => $campaigns ? $broadcaster->id : '',
-                'broadcaster' => $campaigns ? $broadcaster->brand : '',
-                'campaign_id' => $campaign_id ? $campaign_id : '',
-            ];
-        }
 
-        if(!empty($broadcaster_retain)){
-            $retained_broadcasters = Utilities::switch_db('api')->select("SELECT * from broadcasters where id IN ($formatted_broadcaster)");
-            foreach ($retained_broadcasters as $retained_broadcaster){
-                $campaigns_retained = Utilities::switch_db('api')->select("SELECT * from campaignDetails where broadcaster = '$retained_broadcaster->id' AND campaign_id = '$campaign_id'");
-                $retained_channel[] = [
-                    'broadcaster_id' => $campaigns_retained ? $retained_broadcaster->id : '',
-                    'broadcaster' => $campaigns_retained ? $retained_broadcaster->brand : '',
-                    'campaign_id' => $campaigns_retained ? $campaign_id : '',
+        if($channel){
+            $broadcasters = Utilities::switch_db('api')->select("SELECT * from broadcasters where channel_id IN ($formatted_channel)");
+            foreach ($broadcasters as $broadcaster){
+                $campaigns = Utilities::switch_db('api')->select("SELECT * from campaignDetails where broadcaster = '$broadcaster->id' AND campaign_id = '$campaign_id'");
+                $all_channel[] = [
+                    'broadcaster_id' => $campaigns ? $broadcaster->id : '',
+                    'broadcaster' => $campaigns ? $broadcaster->brand : '',
+                    'campaign_id' => $campaign_id ? $campaign_id : '',
                 ];
             }
-        }
 
-        //media mix
-        $media_types = request()->channel;
-        $media_mix_datas = [];
-        foreach ($media_types as $media_type){
-            $channel = Utilities::switch_db('api')->select("SELECT * from campaignChannels where id = '$media_type'");
-            $payments = Utilities::switch_db('api')->select("SELECT SUM(amount) as amount from paymentDetails where broadcaster IN (SELECT id from broadcasters where channel_id = '$media_type') AND payment_id = (SELECT id from payments where campaign_id = '$campaign_id')");
-            $total_amount = Utilities::switch_db('api')->select("SELECT * from payments where campaign_id = '$campaign_id'");
-            if($channel[0]->channel === 'TV'){
-                $color = '#5281FE';
-            }else{
-                $color = '#00C4CA';
+            if(!empty($broadcaster_retain)){
+                $retained_broadcasters = Utilities::switch_db('api')->select("SELECT * from broadcasters where id IN ($formatted_broadcaster)");
+                foreach ($retained_broadcasters as $retained_broadcaster){
+                    $campaigns_retained = Utilities::switch_db('api')->select("SELECT * from campaignDetails where broadcaster = '$retained_broadcaster->id' AND campaign_id = '$campaign_id'");
+                    $retained_channel[] = [
+                        'broadcaster_id' => $campaigns_retained ? $retained_broadcaster->id : '',
+                        'broadcaster' => $campaigns_retained ? $retained_broadcaster->brand : '',
+                        'campaign_id' => $campaigns_retained ? $campaign_id : '',
+                    ];
+                }
             }
-            $media_mix_datas[] = [
-                'name' => $channel[0]->channel,
-                'y' => (integer)(($payments[0]->amount / $total_amount[0]->total) * 100),
-                'color' => $color
-            ];
-        }
 
-        return response()->json(['all_channel' => $all_channel, 'media_mix' => $media_mix_datas, 'retained_channel' => $retained_channel]);
+            //media mix
+            $media_types = request()->channel;
+            $media_mix_datas = [];
+            foreach ($media_types as $media_type){
+                $channel = Utilities::switch_db('api')->select("SELECT * from campaignChannels where id = '$media_type'");
+                $payments = Utilities::switch_db('api')->select("SELECT SUM(amount) as amount from paymentDetails where broadcaster IN (SELECT id from broadcasters where channel_id = '$media_type') AND payment_id = (SELECT id from payments where campaign_id = '$campaign_id')");
+                $total_amount = Utilities::switch_db('api')->select("SELECT * from payments where campaign_id = '$campaign_id'");
+                if($channel[0]->channel === 'TV'){
+                    $color = '#5281FE';
+                }else{
+                    $color = '#00C4CA';
+                }
+                $media_mix_datas[] = [
+                    'name' => $channel[0]->channel,
+                    'y' => (integer)(($payments[0]->amount / $total_amount[0]->total) * 100),
+                    'color' => $color
+                ];
+            }
+
+            return response()->json(['all_channel' => $all_channel, 'media_mix' => $media_mix_datas, 'retained_channel' => $retained_channel]);
+        }else{
+            return null;
+        }
     }
 
     public function complianceGraph()
@@ -962,27 +968,37 @@ class CampaignsController extends Controller
         $date = [];
         $campaign_id = request()->campaign_id;
         $media_channels = request()->channel;
-        foreach ($media_channels as $media_channel){
-            $broadcaster = Utilities::switch_db('api')->select("SELECT * from broadcasters where id = '$media_channel'");
-            $campaigns = Utilities::switch_db('api')->select("SELECT * from campaignDetails where campaign_id = '$campaign_id' AND broadcaster = '$media_channel' ");
-            $channel_id = $campaigns[0]->channel;
-            $stack = Utilities::switch_db('api')->select("SELECT * from campaignChannels where id = (SELECT channel_id from broadcasters where id = '$media_channel')");
-            $payments = Utilities::switch_db('api')->select("SELECT amount from paymentDetails where broadcaster = '$media_channel' AND payment_id IN (SELECT id FROM payments where campaign_id = '$campaign_id')");
-            if($stack[0]->channel === 'TV'){
-                $color = '#5281FE';
-            }else{
-                $color = '#00C4CA';
-            }
-            $all_comp_data[] = [
-                'color' => $color,
-                'name' => $broadcaster[0]->brand,
-                'data' => array($payments[0]->amount),
-                'stack' => $stack[0]->channel
+        if($media_channels){
+            foreach ($media_channels as $media_channel){
+                $broadcaster = Utilities::switch_db('api')->select("SELECT * from broadcasters where id = '$media_channel'");
+                $campaigns = Utilities::switch_db('api')->select("SELECT * from campaignDetails where campaign_id = '$campaign_id' AND broadcaster = '$media_channel' ");
+                $channel_id = $campaigns[0]->channel;
+                $stack = Utilities::switch_db('api')->select("SELECT * from campaignChannels where id = (SELECT channel_id from broadcasters where id = '$media_channel')");
+                $payments = Utilities::switch_db('api')->select("SELECT amount from paymentDetails where broadcaster = '$media_channel' AND payment_id IN (SELECT id FROM payments where campaign_id = '$campaign_id')");
+                if($stack[0]->channel === 'TV'){
+                    $color = '#5281FE';
+                }else{
+                    $color = '#00C4CA';
+                }
+                $all_comp_data[] = [
+                    'color' => $color,
+                    'name' => $broadcaster[0]->brand,
+                    'data' => array($payments[0]->amount),
+                    'stack' => $stack[0]->channel
                 ];
 
+            }
+
+            $date_compliances = Utilities::switch_db('api')->select("SELECT time_created from campaignDetails where campaign_id = '$campaign_id' GROUP BY DATE_FORMAT(time_created, '%Y-%m-%d') ");
+            foreach ($date_compliances as $date_compliance){
+                $date[] = [date('Y-m-d', strtotime($date_compliance->time_created))];
+            }
+
+            return response()->json(['data' => $all_comp_data, 'date' => $date]);
+        }else{
+            return null;
         }
 
-        return response()->json(['data' => $all_comp_data]);
     }
 
     public function complianceFilter()
