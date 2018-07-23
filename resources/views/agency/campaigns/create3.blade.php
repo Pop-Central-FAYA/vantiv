@@ -323,7 +323,7 @@
                                 $.ajax({
                                     url: url1,
                                     method: "GET",
-                                    data: {'time_picked' : time_slot, 'duration' : data.result.duration, 'image_url' : data.result.secure_url, 'file_name' : data.result.original_filename, 'user_id' : user_id, 'public_id' : data.result.public_id, 'channel' : channel},
+                                    data: {'time_picked' : time_slot, 'duration' : data.result.duration, 'image_url' : data.result.secure_url, 'file_name' : data.result.original_filename, 'user_id' : user_id, 'public_id' : data.result.public_id, 'channel' : channel, 'file_format' : data.result.format},
                                     success: function(result){
                                         if(result.error === 'error'){
                                             toastr.error('You are trying to upload a file of '+data.result.duration+' seconds into a '+time_slot+' seconds slot');

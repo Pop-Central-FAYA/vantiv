@@ -19,7 +19,7 @@ $all_files = DB::select("SELECT * from uploads where user_id = '$user_id' AND ch
                             <p><br></p>
                             <audio width="100" height="100" controls><source src="{{ asset(decrypt($all_file->uploads)) }}"></audio>
                             <br>
-                            <p>Time Picked: {{ $all_file->time }} </p>
+                            <p>Time Picked: {{ $all_file->time }} Seconds</p>
                         @else
                             <img src="{{ asset('new_assets/images/logo.png') }}" alt="">
                         @endif

@@ -25,7 +25,7 @@
                     <div class="column col_4">
                         <p><br></p>
                         <p><br></p>
-                        <p>Time Picked: {{ $all_file->time }} </p>
+                        <p>Time Picked: {{ $all_file->time }} Seconds</p>
                     </div>
 
                     <div class="column col_4">

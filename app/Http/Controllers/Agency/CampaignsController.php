@@ -198,13 +198,7 @@ class CampaignsController extends Controller
         $sub_industries = Utilities::switch_db('api')->select("select * from subSectors");
         $chanel = Utilities::switch_db('api')->select("SELECT * from campaignChannels");
         $clients = Utilities::switch_db('api')->select("SELECT * from walkIns where agency_id = '$agency_id'");
-//        $walkins = Utilities::switch_db('api')->select("SELECT id from walkIns where user_id='$id'");
-//        $walkins_id = $walkins[0]->id;
-//        if(count($brands) === 0)
-//        {
-//            Session::flash('error', 'This client doesnt have a brand');
-//            return redirect()->back();
-//        }
+
         $day_parts = Utilities::switch_db('api')->select("SELECT * from dayParts");
         $region = Utilities::switch_db('api')->select("SELECT * from regions");
         $target = Utilities::switch_db('api')->select("SELECT * from targetAudiences");
@@ -365,7 +359,7 @@ class CampaignsController extends Controller
                 'user_id' => $id,
                 'time' => $time,
                 'uploads' => $image_url,
-                'file_name' => request()->file_name,
+                'file_name' => $time.'_'.$format.'_'.request()->file_name,
                 'file_code' => request()->public_id,
                 'channel' => $channel,
                 'format' => $format
