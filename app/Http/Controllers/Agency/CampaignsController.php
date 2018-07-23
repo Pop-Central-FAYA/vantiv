@@ -348,6 +348,7 @@ class CampaignsController extends Controller
         $time = request()->time_picked;
         $channel = request()->channel;
         $format = request()->file_format;
+
         if (request()->image_url) {
 
             $check_image = \DB::select("SELECT * from uploads where time = '$time' AND channel = '$channel' AND user_id = '$id'");

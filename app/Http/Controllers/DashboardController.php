@@ -1185,7 +1185,7 @@ class DashboardController extends Controller
                     ->make(true);
             }
 
-            $all_campaign = Utilities::switch_db('api')->select("SELECT * from campaignDetails WHERE agency = '$agency_id' AND adslots > 0 GROUP BY campaign_id ");
+            $all_campaign = Utilities::switch_db('api')->select("SELECT * from campaignDetails WHERE agency = '$agency_id' AND adslots > 0 GROUP BY campaign_id ORDER BY time_created DESC");
             $j = 1;
             foreach ($all_campaign as $cam)
             {

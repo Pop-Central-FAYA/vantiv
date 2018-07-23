@@ -303,7 +303,6 @@
                         return;
                     }
 
-                    console.log(data.result);
                     toastr.success('You are one step closer, please select the right timeslot for your content and hit the submit button to complete your upload');
                     $(".progress").hide();
                     var vid_show = '<audio controls>\n' +
@@ -312,7 +311,6 @@
                     $(".gallery_radio").html(vid_show);
                     var user_id = "<?php echo $id; ?>";
                     var channel = 'nzrm64hjatseog6';
-
 
                     $("#button_submit_radio").click(function () {
                         var time_slotss = $("#time_radio").val();
