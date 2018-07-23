@@ -70,7 +70,7 @@
 
                         <div class="more_more">
                             <a href="{{ route('client.show', ['id' => $client['client_id']]) }}">Details</a>
-                            <a href="">Edit</a>
+                            <a href="#edit_client{{ $client['client_id'] }}" class="modal_click">Edit</a>
                             <a href="" class="color_red">Delete</a>
                         </div>
                     </div>
@@ -217,6 +217,93 @@
 
         </form>
     </div>
+
+    {{--modal for editing a client--}}
+    @foreach($clients as $client)
+        <div class="modal_contain" id="edit_client{{ $client['client_id'] }}">
+        <h2 class="sub_header mb4">Edit Client : {{ $client['company_name'] }}</h2>
+        <form action="{{ route('agency.client.update', ['client_id' => $client['client_id']]) }}" method="POST" enctype="multipart/form-data">
+            {{ csrf_field() }}
+            <div class="clearfix">
+                <div class="input_wrap column col_7{{ $errors->has('company_name') ? ' has-error' : '' }}">
+                    <label class="small_faint">Company Name</label>
+                    <input type="text" name="company_name" value="{{ $client['company_name'] }}"  placeholder="e.g Coca Cola">
+                    @if($errors->has('company_name'))
+                        <strong>
+                            <span class="error-block" style="color: red;">{{ $errors->first('company_name') }}</span>
+                        </strong>
+                    @endif
+                </div>
+                <div class='column col_5 file_select align_center pt3{{ $errors->has('company_logo') ? ' has-error' : '' }}' style="height: 70px;">
+                    <input type="file" id="file" name="company_logo" />
+                    <span class="small_faint block_disp mb3">Company Logo</span>
+                    @if($errors->has('company_logo'))
+                        <strong>
+                            <span class="error-block" style="color: red;">{{ $errors->first('company_logo') }}</span>
+                        </strong>
+                    @endif
+                </div>
+            </div>
+
+            <div class="input_wrap{{ $errors->has('email') ? ' has-error' : '' }}">
+                <label class="small_faint">Email</label>
+                <input type="email" name="email" readonly value="{{ $client['email'] }}" placeholder="name@example.com">
+                @if($errors->has('email'))
+                    <strong>
+                        <span class="error-block" style="color: red;">{{ $errors->first('email') }}</span>
+                    </strong>
+                @endif
+            </div>
+
+            <div class="clearfix mb">
+                <div class="input_wrap col_6 column{{ $errors->has('first_name') ? ' has-error' : '' }}">
+                    <label class="small_faint">First Name</label>
+                    <input type="text" id="first_name" name="first_name" value="{{ $client['first_name'] }}" placeholder="Enter First Name">
+                    @if($errors->has('first_name'))
+                        <strong>
+                            <span class="error-block" style="color: red;">{{ $errors->first('first_name') }}</span>
+                        </strong>
+                    @endif
+                </div>
+
+                <div class="input_wrap col_6 column{{ $errors->has('last_name') ? ' has-error' : '' }}">
+                    <label class="small_faint">Last Name</label>
+                    <input type="text" id="last_name" name="last_name" value="{{ $client['last_name'] }}" placeholder="Enter Last Name">
+                    @if($errors->has('last_name'))
+                        <strong>
+                            <span class="error-block" style="color: red;">{{ $errors->first('last_name') }}</span>
+                        </strong>
+                    @endif
+                </div>
+            </div>
+
+            <div class="input_wrap{{ $errors->has('phone') ? ' has-error' : '' }}">
+                <label class="small_faint">Phone Number</label>
+                <input type="text" name="phone" value="{{ $client['phone_number'] }}" placeholder="234** **** ****">
+                @if($errors->has('phone'))
+                    <strong>
+                        <span class="error-block" style="color: red;">{{ $errors->first('phone') }}</span>
+                    </strong>
+                @endif
+            </div>
+
+            <div class="input_wrap{{ $errors->has('address') ? ' has-error' : '' }}">
+                <label class="small_faint">Address</label>
+                <input type="text" name="address" value="{{ $client['location'] }}" placeholder="Enter Address">
+                @if($errors->has('address'))
+                    <strong>
+                        <span class="error-block" style="color: red;">{{ $errors->first('address') }}</span>
+                    </strong>
+                @endif
+            </div>
+
+            <div class="align_right">
+                <input type="submit" value="Update Client" class="btn uppercased update">
+            </div>
+
+        </form>
+    </div>
+    @endforeach
 @stop
 
 @section('scripts')

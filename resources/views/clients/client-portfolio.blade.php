@@ -184,7 +184,7 @@
                                 </div>
 
                                 <div class="col_5 column">
-                                    <a href="" class="btn small_btn"><span class="_plus"></span> New Brand</a>
+                                    <a href="#new_brand" class="btn small_btn modal_click"><span class="_plus"></span> New Brand</a>
                                 </div>
                             </div>
                         </div>
@@ -207,7 +207,7 @@
                             </div>
                             <div class="column col_2">{{ $all_brand['campaigns'] }}</div>
                             <div class="column col_2">&#8358; {{ $all_brand['total'] }}</div>
-                            <div class="column col_3">{{ $all_brand['last_campaign'] }}</div>
+                            <div class="column col_3">{{ ucfirst($all_brand['last_campaign']) }}</div>
                             <div class="column col_1">
                                 <span class="more_icon">
                                     <!-- more links -->
@@ -216,6 +216,7 @@
 
                                         <div class="more_more">
                                             <a href="{{ route('campaign.brand.client', ['id' => $all_brand['id'], 'client_id' => $client_id]) }}">Details</a>
+                                            <a href="#brand{{ $all_brand['id'] }}" class="modal_click">Edit</a>
                                             {{--<a href="" class="color_red">Delete</a>--}}
                                         </div>
                                     </div>
@@ -231,6 +232,141 @@
             </div>
         </div>
     </div>
+
+    {{--modal for adding up brands--}}
+    <div class="modal_contain" id="new_brand">
+        <h2 class="sub_header mb4">New Brand</h2>
+        <form action="{{ route('agency.brand.store') }}" method="POST" enctype="multipart/form-data">
+            {{ csrf_field() }}
+            <div class="clearfix">
+                <div class="input_wrap column col_7{{ $errors->has('brand_name') ? ' has-error' : '' }}">
+                    <label class="small_faint">Brand Name</label>
+                    <input type="text" name="brand_name" value=""  placeholder="e.g Coca Cola">
+                    @if($errors->has('brand_name'))
+                        <strong>
+                            <span class="error-block" style="color: red;">{{ $errors->first('brand_name') }}</span>
+                        </strong>
+                    @endif
+                </div>
+                <div class='column col_5 file_select align_center pt3{{ $errors->has('brand_logo') ? ' has-error' : '' }}'>
+                    <input type="file" id="file" name="brand_logo" />
+                    <span class="small_faint block_disp mb3">Brand Logo</span>
+                    @if($errors->has('brand_logo'))
+                        <strong>
+                            <span class="error-block" style="color: red;">{{ $errors->first('brand_logo') }}</span>
+                        </strong>
+                    @endif
+                </div>
+            </div>
+
+            <input type="hidden" name="walkin_id" value="{{ $client_id }}">
+
+            <div class="input_wrap">
+                <label class="small_faint">Industry</label>
+
+                <div class="select_wrap">
+                    <select name="industry" id="industry">
+                        <option value="">Select Industry</option>
+                        @foreach($industries as $industry)
+                            <option value="{{ $industry->sector_code }}">{{ $industry->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
+            <div class="input_wrap">
+                <label class="small_faint">Sub Industry</label>
+
+                <div class="select_wrap">
+                    <select name="sub_industry" id="sub_industry">
+
+                    </select>
+                </div>
+            </div>
+
+            <div class="align_right">
+                <input type="submit" value="Create Brand" class="btn uppercased update">
+            </div>
+
+        </form>
+    </div>
+
+    {{--modal for editing brands--}}
+    @foreach($all_brands as $all_brand)
+        <div class="modal_contain" id="brand{{ $all_brand['id'] }}">
+        <h2 class="sub_header mb4">Edit Brand : {{ $all_brand['brand'] }}</h2>
+        <form action="{{ route('agency.brands.update', ['id' => $all_brand['id']]) }}" method="POST" enctype="multipart/form-data">
+            {{ csrf_field() }}
+            <div class="clearfix">
+                <div class="input_wrap column col_7{{ $errors->has('brand_name') ? ' has-error' : '' }}">
+                    <label class="small_faint">Brand Name</label>
+                    <input type="text" name="brand_name" value="{{ $all_brand['brand'] }}"  placeholder="e.g Coca Cola">
+                    @if($errors->has('brand_name'))
+                        <strong>
+                            <span class="error-block" style="color: red;">{{ $errors->first('brand_name') }}</span>
+                        </strong>
+                    @endif
+                </div>
+                <div class='column col_5 file_select align_center pt3{{ $errors->has('brand_logo') ? ' has-error' : '' }}' style="height: 70px;">
+                    <input type="file" id="file" name="brand_logo" />
+                    <span class="small_faint block_disp mb3">Brand Logo</span>
+                    @if($errors->has('brand_logo'))
+                        <strong>
+                            <span class="error-block" style="color: red;">{{ $errors->first('brand_logo') }}</span>
+                        </strong>
+                    @endif
+                </div>
+            </div>
+
+            <input type="hidden" name="walkin_id" value="{{ $client_id }}">
+
+            <div class="input_wrap">
+                <label class="small_faint">Industry</label>
+
+                <div class="select_wrap">
+                    <select name="industry" id="industry">
+                        <option value="">Select Industry</option>
+                        @foreach($industries as $industry)
+                            @if($industry->sector_code === $all_brand['industry_id'])
+                                <option value="{{ $industry->sector_code }}"
+                                @if($industry->sector_code === $all_brand['industry_id'])
+                                    selected
+                                @endif
+                                >{{ $industry->name }}</option>
+                            @endif
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
+            <div class="input_wrap">
+                <label class="small_faint">Sub Industry</label>
+
+                <div class="select_wrap">
+                    <select name="sub_industry" id="sub_industry">
+                        @foreach($sub_industries as $sub_industry)
+                            @foreach($sub_industry as $sub_in)
+                                @if($sub_in->sub_sector_code === $all_brand['sub_industry_id'])
+                                    <option value="{{ $sub_in->sub_sector_code }}"
+                                    @if($sub_in->sub_sector_code === $all_brand['sub_industry_id'])
+                                        selected
+                                    @endif
+                                    >{{ $sub_in->name }}</option>
+                                @endif
+                            @endforeach
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
+            <div class="align_right">
+                <input type="submit" value="Update Brand" class="btn uppercased update">
+            </div>
+
+        </form>
+    </div>
+    @endforeach
+
 @stop
 @section('scripts')
     <script src="https://code.highcharts.com/highcharts.js"></script>
@@ -490,6 +626,45 @@
 
             })
 
+        });
+
+        $(document).ready(function () {
+            // $("#state").change(function() {
+            $('#industry').on('change', function(e){
+                $(".modal_contain").css({
+                    opacity: 0.5
+                });
+                $('.update').attr("disabled", true);
+                var industry = $("#industry").val();
+                var url = '/walk-in/brand';
+                $.ajax({
+                    url: url,
+                    method: "GET",
+                    data: {industry: industry},
+                    success: function(data){
+                        if(data.error === 'error'){
+                            $(".changing").css({
+                                opacity: 1
+                            });
+                            $('.update').attr("disabled", false);
+                        }else{
+                            $(".modal_contain").css({
+                                opacity: 1
+                            });
+                            $('.update').attr("disabled", false);
+
+                            $('#sub_industry').empty();
+
+                            $('#sub_industry').append(' Please choose one');
+
+                            $.each(data, function(index, title){
+                                $("#sub_industry").append('' + '<option value ="'+ title.sub_sector_code + '"  > ' + title.name + '  </option>');
+                            });
+                        }
+
+                    }
+                });
+            });
         });
     </script>
 @stop

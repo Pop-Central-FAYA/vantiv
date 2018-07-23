@@ -421,6 +421,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/client-month/{client_id}', 'ClientsController@filterByMonth')->name('client.month');
             Route::get('/client-yearly/{client_id}', 'ClientsController@filterByYear')->name('client.year');
             Route::get('/client-brand/{id}/{client_id}', 'ClientsController@brandCampaign')->name('campaign.brand.client');
+            Route::post('/update-client/{client_id}', 'ClientsController@updateClients')->name('agency.client.update');
         });
 
         Route::group(['prefix' => 'invoices'], function () {

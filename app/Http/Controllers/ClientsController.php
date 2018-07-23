@@ -151,6 +151,8 @@ class ClientsController extends Controller
 
             $user_details = Utilities::switch_db('api')->select("SELECT * FROM users WHERE id = '$user_id'");
 
+            $client_location = Utilities::switch_db('api')->select("SELECT * FROM walkIns WHERE user_id = '$user_id'");
+
             $campaigns = Utilities::switch_db('api')->select("SELECT count(id) as number from campaigns where id IN (SELECT campaign_id from campaignDetails where user_id = '$user_id')");
 
             $last_camp_date = Utilities::switch_db('api')->select("SELECT time_created from campaignDetails where user_id = '$user_id' GROUP BY campaign_id ORDER BY time_created DESC LIMIT 1");
@@ -178,16 +180,20 @@ class ClientsController extends Controller
                 'num_campaign' => $campaigns ? $campaigns[0]->number : 0,
                 'total' => $payments[0]->total,
                 'name' => $user_details && $user_details[0] ? $user_details[0]->lastname . ' ' . $user_details[0]->firstname : '',
+                'email' => $user_details[0]->email,
+                'phone_number' => $user_details[0]->phone_number,
+                'first_name' => $user_details ? $user_details[0]->firstname : '',
+                'last_name' => $user_details ? $user_details[0]->lastname : '',
                 'created_at' => $agency->time_created,
                 'last_camp' => $date,
                 'active_campaign' => $active_campaign ? count($active_campaign) : '0',
                 'inactive_campaign' => $inactive_campaign ? count($inactive_campaign) : '0',
                 'count_brands' => count($brs),
                 'company_name' => $agency->company_name,
-                'company_logo' => $agency->company_logo
+                'company_logo' => $agency->company_logo,
+                'location' => $client_location[0]->location,
             ];
         }
-
 
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
         $col = new Collection($agency_data);
@@ -272,6 +278,15 @@ class ClientsController extends Controller
         $week_payment = json_encode($last_weekly_total);
         $week_date = json_encode($last_weekly_date);
 
+        $industries = Utilities::switch_db('api')->select("SELECT * FROM sectors");
+
+        $sub_inds = [];
+
+        foreach ($industries as $industry){
+            $sub_industries = Utilities::switch_db('api')->select("SELECT * FROM subSectors where sector_id = '$industry->sector_code'");
+            $sub_inds[] = $sub_industries;
+        }
+
         return view('clients.client-portfolio')->with('clients')
             ->with('client_id', $client_id)
             ->with('client', $client)
@@ -286,7 +301,9 @@ class ClientsController extends Controller
             ->with('months', $months)
             ->with('total_this_month', $total_this_month)
             ->with('brand_this_month', $brand_this_month)
-            ->with('all_campaign_this_month', $all_campaign_this_month);
+            ->with('all_campaign_this_month', $all_campaign_this_month)
+            ->with('industries', $industries)
+            ->with('sub_industries', $sub_inds);
 
     }
 
@@ -346,6 +363,8 @@ class ClientsController extends Controller
                 'image_url' => $br->image_url,
                 'last_campaign' => $last_campaign ? $last_campaign[0]->name : 'none',
                 'total' => number_format($pay[0]->total,2),
+                'industry_id' => $br->industry_id,
+                'sub_industry_id' => $br->sub_industry_id,
             ];
         }
         if(count($brands) === 0){
@@ -488,6 +507,43 @@ class ClientsController extends Controller
         }
 
         return view('clients.client_brand', compact('this_brand', 'campaigns', 'user_details', 'client_id', 'client'));
+    }
+
+    public function updateClients(Request $request, $client_id)
+    {
+        $this->validate($request, [
+            'company_name' => 'required',
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'phone' => 'required',
+            'address' => 'required'
+        ]);
+
+        $walkins = Utilities::switch_db('api')->select("SELECT * from walkIns where id = '$client_id'");
+        $user_id = $walkins[0]->user_id;
+
+        if($request->hasFile('company_logo')){
+            $image = $request->company_logo;
+            $filename = $request->file('company_logo')->getRealPath();
+            Cloudder::upload($filename, Cloudder::getPublicId());
+            $clouder = Cloudder::getResult();
+            $image_url = encrypt($clouder['url']);
+            $walkins_update_logo = Utilities::switch_db('api')->update("UPDATE walkIns set company_logo = '$image_url' where id = '$client_id'");
+        }
+
+        $walkins_update = Utilities::switch_db('api')->update("UPDATE walkIns set location = '$request->address', company_name = '$request->company_name' where id = '$client_id'");
+
+        $api_user_update = Utilities::switch_db('api')->update("UPDATE users set firstname = '$request->first_name', lastname = '$request->last_name', phone_number = '$request->phone' where id = '$user_id'");
+
+        $local_db_update = DB::update("UPDATE users set first_name = '$request->first_name', last_name = '$request->last_name', phone = '$request->phone' where email = '$request->email'");
+
+        if($api_user_update || $walkins_update || $local_db_update || $walkins_update_logo){
+            Session::flash('success', 'Client profile updated successfully');
+            return redirect()->back();
+        }else{
+            Session::flash('error', 'An error occured while submitting your request');
+            return redirect()->back();
+        }
     }
 
 }

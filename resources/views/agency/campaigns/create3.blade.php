@@ -140,7 +140,6 @@
                                 </div>
 
                                 <div class="_block_two align_center gallery_radio">
-                                    {{--<p class="small_faint">Uploaded files will appear here</p>--}}
                                     @include('partials.show_file_radio')
                                 </div>
                             </div>

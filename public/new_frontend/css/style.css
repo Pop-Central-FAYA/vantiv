@@ -344,6 +344,9 @@ h2.sub_header {
 	height: 70px;
 }
 
+#new_brand .file_select {
+	height: 70px;
+}
 
 /* datatables */
 

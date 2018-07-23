@@ -94,11 +94,11 @@ class ClientBrandsController extends Controller
         $ip = request()->ip();
         if(Session::get('agency_id') != null){
             $agency_id = Session::get('agency_id');
-            $walkin_id = Utilities::switch_db('api')->select("SELECT id from walkIns WHERE user_id = '$request->clients'");
-            $id = $walkin_id[0]->id;
+            $walkin_id = $request->walkin_id;
             $ckeck_brand = Utilities::switch_db('api')->select("SELECT name from brands WHERE `name` = '$brand'");
             if(count($ckeck_brand) > 0) {
-                return redirect()->back()->with('error', 'Brands already exists');
+                Session::flash('error', 'Brand already exists');
+                return redirect()->back();
             }else{
 
                 /*handling uploading the logo*/
@@ -108,11 +108,11 @@ class ClientBrandsController extends Controller
                 $clouder = Cloudder::getResult();
                 $image_path = encrypt($clouder['url']);
 
-                $insert = Utilities::switch_db('api')->select("INSERT into brands (id, `name`, walkin_id, broadcaster_agency, image_url, industry_id, sub_industry_id) VALUES ('$unique','$brand','$id', '$agency_id', '$image_path', '$request->industry', '$request->sub_industry')");
+                $insert = Utilities::switch_db('api')->select("INSERT into brands (id, `name`, walkin_id, broadcaster_agency, image_url, industry_id, sub_industry_id) VALUES ('$unique','$brand','$walkin_id', '$agency_id', '$image_path', '$request->industry', '$request->sub_industry')");
                 $user_activity = Api::saveActivity($agency_id, $description, $ip, $user_agent);
                 if (!$insert) {
                     Session::flash('success', 'Brands created successfully');
-                    return redirect()->route('agency.brand.all');
+                    return redirect()->back();
                 } else {
                     Session::flash('error', 'There was a problem creating this brand');
                     return redirect()->back();
@@ -159,11 +159,49 @@ class ClientBrandsController extends Controller
         $user_agent = $_SERVER['HTTP_USER_AGENT'];
         $description = Session::get('agency_id') ? 'Brand '.$brand .' Updated by '.Session::get('agency_id') : 'Brand '.$brand .' Updated by '.Session::get('advertiser_id');
         $ip = request()->ip();
-        $ckeck_brand = Utilities::switch_db('api')->select("SELECT name from brands WHERE `name` = '$brand'");
-        if(count($ckeck_brand) > 0) {
-            return redirect()->back()->with('error', 'Brands already exists');
+        $brands = Utilities::switch_db('api')->select("SELECT * from brands WHERE id = '$id'");
+        if($brands[0]->name != $brand){
+            $ckeck_brand = Utilities::switch_db('api')->select("SELECT name from brands WHERE `name` = '$brand'");
+            if(count($ckeck_brand) > 0) {
+                Session::flash('error', 'Brands already exists');
+                return redirect()->back();
+            }else{
+                if($request->has('brand_logo')){
+                    $image = $request->brand_logo;
+                    $filename = realpath($image);
+                    Cloudder::upload($filename, Cloudder::getPublicId(), ['height' => 200, 'width' => 200]);
+                    $clouder = Cloudder::getResult();
+                    $image_path = encrypt($clouder['url']);
+                    $update_brand = Utilities::switch_db('api')->select("UPDATE brands SET image_url = '$image_path' WHERE id = '$id'");
+
+                }
+
+                $update_brand = Utilities::switch_db('api')->select("UPDATE brands SET name = '$brand', sub_industry_id = '$request->sub_industry' WHERE id = '$id'");
+                if(!$update_brand) {
+                    if(Session::get('agency_id')){
+                        $user_activity = Api::saveActivity(Session::get('agency_id'), $description, $ip, $user_agent);
+                    }else{
+                        $user_activity = Api::saveActivity(Session::get('advertiser_id'), $description, $ip, $user_agent);
+                    }
+                    Session::flash('success', 'Brands updated successfully');
+                    return redirect()->back();
+                }else{
+                    Session::flash('error', 'There was a problem updating this brand');
+                    return redirect()->back();
+                }
+            }
         }else{
-            $update_brand = Utilities::switch_db('api')->select("UPDATE brands SET name = '$brand' WHERE id = '$id'");
+            if($request->hasFile('brand_logo')){
+                $image = $request->brand_logo;
+                $filename = realpath($image);
+                Cloudder::upload($filename, Cloudder::getPublicId(), ['height' => 200, 'width' => 200]);
+                $clouder = Cloudder::getResult();
+                $image_path = encrypt($clouder['url']);
+                $update_brand = Utilities::switch_db('api')->select("UPDATE brands SET image_url = '$image_path' WHERE id = '$id'");
+
+            }
+
+            $update_brand = Utilities::switch_db('api')->select("UPDATE brands SET name = '$brand', sub_industry_id = '$request->sub_industry' WHERE id = '$id'");
             if(!$update_brand) {
                 if(Session::get('agency_id')){
                     $user_activity = Api::saveActivity(Session::get('agency_id'), $description, $ip, $user_agent);
@@ -171,7 +209,7 @@ class ClientBrandsController extends Controller
                     $user_activity = Api::saveActivity(Session::get('advertiser_id'), $description, $ip, $user_agent);
                 }
                 Session::flash('success', 'Brands updated successfully');
-                return redirect()->route('agency.brand.all');
+                return redirect()->back();
             }else{
                 Session::flash('error', 'There was a problem updating this brand');
                 return redirect()->back();
