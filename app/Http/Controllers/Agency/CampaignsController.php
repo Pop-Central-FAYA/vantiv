@@ -999,6 +999,7 @@ class CampaignsController extends Controller
     public function complianceFilter()
     {
         $all_comp_data = [];
+        $compliance_datas = [];
         $campaign_id = request()->campaign_id;
         $start_date = date('Y-m-d', strtotime(request()->start_date));
         $stop_date = date('Y-m-d', strtotime(request()->stop_date));
@@ -1006,30 +1007,57 @@ class CampaignsController extends Controller
         if($media_channel){
             $broadcaster = "'".implode("','", $media_channel)."'";
         }
-        $date = [];
+        $dates = [];
 
-        $complince_report_queries = Utilities::switch_db('api')->select("SELECT SUM(amount_spent) as amount_spent, broadcaster_id, channel, time_created from compliances where campaign_id = '$campaign_id' AND time_created BETWEEN '$start_date' AND '$stop_date' AND broadcaster_id IN ($broadcaster) GROUP BY broadcaster_id ");
-        foreach ($complince_report_queries as $complince_report_query){
-            $broadcaster = Utilities::switch_db('api')->select("SELECT * from broadcasters where id = '$complince_report_query->broadcaster_id'");
-            $stack = Utilities::switch_db('api')->select("SELECT * from campaignChannels where id = '$complince_report_query->channel'");
-            if($stack[0]->channel === 'TV'){
+        $date_compliances = Utilities::switch_db('api')->select("SELECT time_created from compliances where campaign_id = '$campaign_id' AND time_created BETWEEN '$start_date' AND '$stop_date' GROUP BY DATE_FORMAT(time_created, '%Y-%m-%d') ");
+        foreach ($date_compliances as $date_compliance){
+            $date_created = date('Y-m-d', strtotime($date_compliance->time_created));
+            $compliances = Utilities::switch_db('api')->select("SELECT IF(c.amount_spent IS NOT NULL, sum(c.amount_spent), 0) as amount, c.broadcaster_id, c.campaign_id, date_format(c.time_created, '%Y-%m-%d') as time, b.brand, e.channel as stack, c.channel from compliances as c, broadcasters as b, campaignChannels as e where c.broadcaster_id = b.id and c.channel = e.id and c.broadcaster_id IN ($broadcaster) and c.campaign_id = '$campaign_id' and date_format(c.time_created, '%Y-%m-%d') = '$date_created' GROUP BY c.broadcaster_id");
+
+            $all_comp_data[] = $compliances;
+            $dates[] = [date('Y-m-d', strtotime($date_compliance->time_created))];
+        }
+
+        $flatened_comp = array_flatten($all_comp_data);
+
+        $array = json_decode(json_encode($flatened_comp), true);
+
+        $final_arr = array();
+
+        foreach($array as $key=>$value){
+            $date_data = [];
+            if(!array_key_exists($value['broadcaster_id'],$final_arr)){
+                $final_arr[$value['broadcaster_id']] = $value;
+                unset($final_arr[$value['broadcaster_id']]['amount']);
+                $final_arr[$value['broadcaster_id']]['time_amount'] =array();
+                $final_arr[$value['broadcaster_id']]['amount'] =array();
+
+                array_push($final_arr[$value['broadcaster_id']]['time_amount'],$value['time']);
+                array_push($final_arr[$value['broadcaster_id']]['amount'],(integer)$value['amount']);
+            }else
+            {
+                array_push($final_arr[$value['broadcaster_id']]['time_amount'],$value['time']);
+                array_push($final_arr[$value['broadcaster_id']]['amount'],(integer)$value['amount']);
+            }
+        }
+
+        $array_values = array_values($final_arr);
+
+        foreach ($array_values as $array_value){
+            if($array_value['stack'] === 'TV'){
                 $color = '#5281FE';
             }else{
                 $color = '#00C4CA';
             }
-            $all_comp_data[] = [
+            $compliance_datas[] = [
                 'color' => $color,
-                'name' =>  $broadcaster[0]->brand,
-                'data' => array((integer)$complince_report_query->amount_spent),
-                'stack' => $stack[0]->channel
+                'name' => $array_value['brand'],
+                'data' => $array_value['amount'],
+                'stack' => $array_value['stack']
             ];
-
         }
 
-        $date_compliances = Utilities::switch_db('api')->select("SELECT time_created from compliances where campaign_id = '$campaign_id' AND time_created BETWEEN '$start_date' AND '$stop_date' GROUP BY DATE_FORMAT(time_created, '%Y-%m-%d') ");
-        foreach ($date_compliances as $date_compliance){
-            $date[] = [date('Y-m-d', strtotime($date_compliance->time_created))];
-        }
+//        dd($compliance_datas, $dates);
 
         //media mix
         $media_mix_datas = [];
@@ -1050,7 +1078,7 @@ class CampaignsController extends Controller
         }
 
 
-        return response()->json(['date' => $date, 'data' => $all_comp_data, 'media_mix' => $media_mix_datas]);
+        return response()->json(['date' => $dates, 'data' => $compliance_datas, 'media_mix' => $media_mix_datas]);
     }
 
     public function updateBudget(Request $request)
@@ -1059,6 +1087,5 @@ class CampaignsController extends Controller
         Session::flash('success', 'Campaign Budget Updated');
         return back();
     }
-
 
 }
