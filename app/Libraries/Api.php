@@ -793,7 +793,8 @@ Class Api
 
     public static function getChannelName($channel_id)
     {
-        $channel = Utilities::switch_db('reports')->select("SELECT * FROM campaignChannels WHERE id = '$channel_id'");
+//        dd($channel_id);
+        $channel = Utilities::switch_db('reports')->select("SELECT * FROM campaignChannels WHERE id IN ($channel_id) ");
 
         return $channel;
     }

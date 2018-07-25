@@ -284,19 +284,7 @@
                 paging: true,
                 serverSide: true,
                 processing: true,
-                buttons: {
-                    dom: {
-                        container: {
-                            tag: 'select'
-                        },
-                        buttonContainer: {
-                            tag: 'option'
-                        },
-                        button: {
-                            tag: 'a'
-                        }
-                    }
-                },
+                aaSorting: [],
                 ajax: {
                     url: '/agency/dashboard/campaigns',
                     data: function (d) {
@@ -332,6 +320,32 @@
     <style>
         .dataTables_filter {
             display: none;
+        }
+
+        #DataTables_Table_0_wrapper .dt-buttons button {
+            line-height: 2.5;
+            color: #fff;
+            cursor: pointer;
+            background: #44C1C9;
+            -webkit-appearance: none;
+            font-family: "Roboto", sans-serif;
+            font-weight: 500;
+            border: 0;
+            padding: 3px 20px 0;
+            font-size: 14px;
+
+            -webkit-border-radius: 2px;
+            -moz-border-radius: 2px;
+            border-radius: 2px;
+
+            -webkit-box-shadow: 9px 10px 20px 1px rgba(0,159,160,0.21);
+            -moz-box-shadow: 9px 10px 20px 1px rgba(0,159,160,0.21);
+            box-shadow: 9px 10px 20px 1px rgba(0,159,160,0.21);
+
+            position: relative;
+            display: inline-block;
+            text-transform: uppercase;
+            !important;
         }
     </style>
 @stop

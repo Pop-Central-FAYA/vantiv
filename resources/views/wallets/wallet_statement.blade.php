@@ -153,6 +153,7 @@
                 paging: true,
                 serverSide: true,
                 processing: true,
+                "searching": false,
                 buttons: [
                     'copy', 'csv', 'excel', 'pdf', 'print'
                 ],
@@ -184,5 +185,32 @@
     <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.5.1/css/buttons.dataTables.min.css" type="text/css"/>
+    <style>
+        #DataTables_Table_0_wrapper .dt-buttons button {
+            line-height: 2.5;
+            color: #fff;
+            cursor: pointer;
+            background: #44C1C9;
+            -webkit-appearance: none;
+            font-family: "Roboto", sans-serif;
+            font-weight: 500;
+            border: 0;
+            padding: 3px 20px 0;
+            font-size: 14px;
+
+            -webkit-border-radius: 2px;
+            -moz-border-radius: 2px;
+            border-radius: 2px;
+
+            -webkit-box-shadow: 9px 10px 20px 1px rgba(0,159,160,0.21);
+            -moz-box-shadow: 9px 10px 20px 1px rgba(0,159,160,0.21);
+            box-shadow: 9px 10px 20px 1px rgba(0,159,160,0.21);
+
+            position: relative;
+            display: inline-block;
+            text-transform: uppercase;
+        !important;
+        }
+    </style>
 @stop
 
