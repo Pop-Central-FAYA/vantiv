@@ -1,196 +1,138 @@
-@extends('layouts.new_app')
+@extends('layouts.faya_app')
 @section('title')
-    <title>Agency - Brand-Lists</title>
+    <title>FAYA | Agency - All Brands</title>
 @stop
 @section('content')
+    <div class="main_contain">
+        <!-- header -->
+    @include('partials.new-frontend.agency.header')
 
-    <div class="main-section">
-        <div class="container">
-            <div class="row">
-                <div class="col-12 heading-main">
-                    <h1>All Brands </h1>
-                    <ul>
-                        <li><a href="#"><i class="fa fa-th-large"></i>Agency</a></li>
-                        <li><a href="#">All Brands </a></li>
-                    </ul>
-                </div>
+    <!-- subheader -->
+        <div class="sub_header clearfix mb pt">
+            <div class="column col_6">
+                <h2 class="sub_header">Brands</h2>
             </div>
-                <div class="row">
-                    <div class="col-lg-4">
-                        <form action="{{ route('brands.search.user') }}" method="get">
-                            <div class="input-group">
-                                <input type="text" class="form-control" required name="result" placeholder="Search for brands">
-                                <span class="input-group-btn">
-                                <button class="btn btn-default" type="submit">Go!</button>
-                              </span>
+        </div>
+
+        <div class="similar_table pt3">
+            <!-- table header -->
+            <div class="_table_header clearfix m-b">
+                <span class="weight_medium small_faint block_disp column col_4 padd">Brand</span>
+                <span class="weight_medium small_faint block_disp column col_2">All Campaigns</span>
+                <span class="weight_medium small_faint block_disp column col_2">Total Expense</span>
+                <span class="weight_medium small_faint block_disp column col_3">Last Campaign</span>
+                <span class="weight_medium block_disp column col_1 color_trans">.</span>
+            </div>
+
+            <!-- table item -->
+            @foreach($all_brands as $all_brand)
+                <div class="_table_item the_frame clearfix">
+                    <div class="padd column col_4">
+                        <span class="client_ava"><img src="{{ $all_brand['image_url'] ? asset(decrypt($all_brand['image_url'])) : '' }}"></span>
+                        <p>{{ ucfirst($all_brand['brand']) }}</p>
+                        <span class="small_faint">Added {{ date('M j, Y', strtotime($all_brand['date'])) }}</span>
+                    </div>
+                    <div class="column col_2">{{ $all_brand['campaigns'] }}</div>
+                    <div class="column col_2">&#8358; {{ $all_brand['total'] }}</div>
+                    <div class="column col_3">{{ ucfirst($all_brand['last_campaign']) }}</div>
+                    <div class="column col_1">
+                        <span class="more_icon">
+                            <!-- more links -->
+                            <div class="list_more">
+                                <span class="more_icon"></span>
+
+                                <div class="more_more">
+                                    <a href="{{ route('campaign.brand.client', ['id' => $all_brand['id'], 'client_id' => $all_brand['client_id']]) }}">Details</a>
+                                    <a href="#brand{{ $all_brand['id'] }}" class="modal_click">Edit</a>
+                                    {{--<a href="" class="color_red">Delete</a>--}}
+                                </div>
                             </div>
-                        </form>
+                        </span>
                     </div>
                 </div>
-                <p><br></p>
-                <p><br></p>
-            <div class="row">
-                <div class="col-12 all-brands">
-                    @foreach($brand as $brands)
-                        <div class="col-6">
-                            <div class="col-6">
-                                <h2>{{ ucfirst($brands->name) }}</h2>
-                                <a href="#" class="edit" data-toggle="modal" data-target=".{{ $brands->id }}">Edit</a> <a href="#" class="delete" data-toggle="modal" data-target=".{{ $brands->id }}delete">Delete</a> </div>
-                            <div class="col-6"> <img class="img-responsive" src="{{ $brands->image_url ? asset(decrypt($brands->image_url)) : asset('new_assets/images/logo.png') }}"> </div>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-
-            </div>
+            @endforeach
+            <!-- table item end -->
         </div>
+        <p><br></p>
+        {{ $all_brands->links('pagination.general') }}
+
     </div>
-    <div class="text-center">
-        {{ $brand->links() }}
-    </div>
-
-    @foreach($brand as $brands)
-        <div class="modal fade {{ $brands->id }}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content" style="padding: 5%">
-                    <h4>Edit : {{ $brands->name }}</h4>
-                    <hr>
-
-                    <form action="{{ route('brands.update', ['id' => $brands->id]) }}" method="post">
-                        {{ csrf_field() }}
-                        <div class="row">
-                            <div class="group">
-                                <input type="text" name="brand_name" value="{{ $brands->name }}" class="form-control">
-                            </div>
-                        </div>
-                        <br>
-                        <div class="row">
-                            <button type="submit" class="btn btn-success">Update Brand</button>
-                        </div>
-                    </form>
-
-                </div>
-            </div>
-        </div>
-    @endforeach
-
-    @foreach($brand as $brands)
-        <div class="modal fade {{ $brands->id }}delete" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content" style="padding: 5%">
-                    <h4>Delete : {{ $brands->name }}</h4>
-                    <hr>
-
-                    <p>Are you sure you want to delete this brand?</p>
-                    <br>
-
-
-                    <a class="btn btn-danger btn-xs" href="{{ route('agency.brands.delete', ['id' => $brands->id ]) }}">Yes</a> <button class="btn btn-primary btn-xs" data-dismiss="modal">Cancel</button>
-
-                </div>
-            </div>
-        </div>
-    @endforeach
-    <!-- /.conte
 @stop
+
 @section('scripts')
-    <!-- Select2 -->
-    <script src="{{ asset('agency_asset/plugins/select2/select2.full.min.js') }}"></script>
-    <!-- InputMask -->
-    <script src="{{ asset('agency_asset/plugins/input-mask/jquery.inputmask.js') }}"></script>
-    <script src="{{ asset('agency_asset/plugins/input-mask/jquery.inputmask.date.extensions.js') }}"></script>
-    <script src="{{ asset('agency_asset/plugins/input-mask/jquery.inputmask.extensions.js') }}"></script>
-    <!-- date-range-picker -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
-    <script src="{{ asset('agency_asset/plugins/daterangepicker/daterangepicker.js') }}"></script>
-    <!-- bootstrap datepicker -->
-    <script src="{{ asset('agency_asset/plugins/datepicker/bootstrap-datepicker.js') }}"></script>
-    <!-- bootstrap color picker -->
-    <script src="{{ asset('agency_asset/plugins/colorpicker/bootstrap-colorpicker.min.js') }}"></script>
-    <!-- bootstrap time picker -->
-    <script src="{{ asset('agency_asset/plugins/timepicker/bootstrap-timepicker.min.js') }}"></script>
-    <!-- SlimScroll 1.3.0 -->
-    <script src="{{ asset('agency_asset/plugins/slimScroll/jquery.slimscroll.min.js') }}"></script>
-    <!-- iCheck 1.0.1 -->
-    <script src="{{ asset('agency_asset/plugins/iCheck/icheck.min.js') }}"></script>
-    <!-- FastClick -->
-    <script src="{{ asset('agency_asset/plugins/fastclick/fastclick.js') }}"></script>
-    <!-- AdminLTE App -->
-    <script src="{{ asset('agency_asset/dist/js/app.min.js') }}"></script>
+    {{--modal for editing brands--}}
+    @foreach($all_brands as $all_brand)
+        <div class="modal_contain" id="brand{{ $all_brand['id'] }}">
+            <h2 class="sub_header mb4">Edit Brand : {{ $all_brand['brand'] }}</h2>
+            <form action="{{ route('agency.brands.update', ['id' => $all_brand['id']]) }}" method="POST" enctype="multipart/form-data">
+                {{ csrf_field() }}
+                <div class="clearfix">
+                    <div class="input_wrap column col_7{{ $errors->has('brand_name') ? ' has-error' : '' }}">
+                        <label class="small_faint">Brand Name</label>
+                        <input type="text" name="brand_name" value="{{ $all_brand['brand'] }}"  placeholder="e.g Coca Cola">
+                        @if($errors->has('brand_name'))
+                            <strong>
+                                <span class="error-block" style="color: red;">{{ $errors->first('brand_name') }}</span>
+                            </strong>
+                        @endif
+                    </div>
+                    <div class='column col_5 file_select align_center pt3{{ $errors->has('brand_logo') ? ' has-error' : '' }}' style="height: 70px;">
+                        <input type="file" id="file" name="brand_logo" />
+                        <span class="small_faint block_disp mb3">Brand Logo</span>
+                        @if($errors->has('brand_logo'))
+                            <strong>
+                                <span class="error-block" style="color: red;">{{ $errors->first('brand_logo') }}</span>
+                            </strong>
+                        @endif
+                    </div>
+                </div>
 
-    <!-- DataTables -->
-    <script src="{{ asset('agency_asset/plugins/datatables/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('agency_asset/plugins/datatables/dataTables.bootstrap.min.js') }}"></script>
+                <input type="hidden" name="walkin_id" value="{{ $all_brand['client_id'] }}">
 
-    <script>
-        $(function () {
-            //Initialize Select2 Elements
-            $(".select2").select2();
+                <div class="input_wrap">
+                    <label class="small_faint">Industry</label>
 
-            //Datemask dd/mm/yyyy
-            $("#datemask").inputmask("dd/mm/yyyy", {"placeholder": "dd/mm/yyyy"});
-            //Datemask2 mm/dd/yyyy
-            $("#datemask2").inputmask("mm/dd/yyyy", {"placeholder": "mm/dd/yyyy"});
-            //Money Euro
-            $("[data-mask]").inputmask();
+                    <div class="select_wrap">
+                        <select name="industry" id="industry">
+                            <option value="">Select Industry</option>
+                            @foreach($industries as $industry)
+                                @if($industry->sector_code === $all_brand['industry_id'])
+                                    <option value="{{ $industry->sector_code }}"
+                                            @if($industry->sector_code === $all_brand['industry_id'])
+                                            selected
+                                            @endif
+                                    >{{ $industry->name }}</option>
+                                @endif
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
 
-            //Date range picker
-            $('#reservation').daterangepicker();
-            //Date range picker with time picker
-            $('#reservationtime').daterangepicker({timePicker: true, timePickerIncrement: 30, format: 'MM/DD/YYYY h:mm A'});
-            //Date range as a button
-            $('#daterange-btn').daterangepicker(
-                {
-                    ranges: {
-                        'Today': [moment(), moment()],
-                        'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                        'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                        'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                        'This Month': [moment().startOf('month'), moment().endOf('month')],
-                        'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-                    },
-                    startDate: moment().subtract(29, 'days'),
-                    endDate: moment()
-                },
-                function (start, end) {
-                    $('#daterange-btn span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-                }
-            );
+                <div class="input_wrap">
+                    <label class="small_faint">Sub Industry</label>
 
-            //Date picker
-            $('#datepicker').datepicker({
-                autoclose: true
-            });
+                    <div class="select_wrap">
+                        <select name="sub_industry" id="sub_industry">
+                            @foreach($sub_industries as $sub_industry)
+                                @foreach($sub_industry as $sub_in)
+                                    @if($sub_in->sub_sector_code === $all_brand['sub_industry_id'])
+                                        <option value="{{ $sub_in->sub_sector_code }}"
+                                                @if($sub_in->sub_sector_code === $all_brand['sub_industry_id'])
+                                                selected
+                                                @endif
+                                        >{{ $sub_in->name }}</option>
+                                    @endif
+                                @endforeach
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
 
-            $('#datepickerend').datepicker({
-                autoclose: true
-            });
+                <div class="align_right">
+                    <input type="submit" value="Update Brand" class="btn uppercased update">
+                </div>
 
-            //iCheck for checkbox and radio inputs
-            $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
-                checkboxClass: 'icheckbox_minimal-blue',
-                radioClass: 'iradio_minimal-blue'
-            });
-            //Red color scheme for iCheck
-            $('input[type="checkbox"].minimal-red, input[type="radio"].minimal-red').iCheck({
-                checkboxClass: 'icheckbox_minimal-red',
-                radioClass: 'iradio_minimal-red'
-            });
-            //Flat red color scheme for iCheck
-            $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
-                checkboxClass: 'icheckbox_flat-green',
-                radioClass: 'iradio_flat-green'
-            });
-
-            //Colorpicker
-            $(".my-colorpicker1").colorpicker();
-            //color picker with addon
-            $(".my-colorpicker2").colorpicker();
-
-            //Timepicker
-            $(".timepicker").timepicker({
-                showInputs: false
-            });
-        });
-    </script>
+            </form>
+        </div>
+    @endforeach
 @stop

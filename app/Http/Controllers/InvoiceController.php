@@ -101,7 +101,7 @@ class InvoiceController extends Controller
                     return '<a href="#approve_invoice'.$invoice_campaign_details['id'].'" class="span_state status_pending modal_invoice_click">Pending</a>';
                 }
             })->addColumn('view', function ($invoice_campaign_details){
-                return '<a href="#invoice" class="modal_click">View</a>';
+                return '<a href="#invoice'.$invoice_campaign_details['id'].'" class="modal_view_invoice_click">View</a>';
             })
             ->rawColumns(['status' => 'status', 'view' => 'view'])
             ->addIndexColumn()
@@ -202,7 +202,7 @@ class InvoiceController extends Controller
                     return '<a href="#approve_invoice'.$invoice_campaign_details['id'].'" class="span_state status_pending modal_invoice_click">Pending</a>';
                 }
             })->addColumn('view', function ($invoice_campaign_details){
-                return '<a href="#invoice" class="modal_click">View</a>';
+                return '<a href="#invoice'.$invoice_campaign_details['id'].'" class="modal_view_invoice_click">View</a>';
             })
             ->rawColumns(['status' => 'status', 'view' => 'view'])
             ->addIndexColumn()
