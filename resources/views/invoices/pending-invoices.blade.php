@@ -41,6 +41,7 @@
     </div>
 
     @foreach($all_invoices as $invoice)
+        {{--modal for approving invoices--}}
         <div class="modal_contain" id="approve_invoice{{ $invoice['id'] }}">
             <div class="wallet_placer margin_center mb3"></div>
             <form method="POST" class="selsec" action="{{ route('invoices.update', ['invoice_id' => $invoice['id']]) }}">
@@ -52,6 +53,12 @@
                     <button type="submit" class="btn">Continue</button>
                 </div>
             </form>
+        </div>
+
+        {{--modal for viewing invoices--}}
+        <div class="modal_contain" id="invoice{{ $invoice['id'] }}">
+
+            <h3>Invoice Details for {{ $invoice['campaign_name'] }}</h3>
         </div>
     @endforeach
 
@@ -110,6 +117,12 @@
                 $(href).modal();
                 return false;
             });
+
+            $("body").delegate(".modal_view_invoice_click", "click", function() {
+                var href = $(this).attr("href");
+                $(href).modal();
+                return false;
+            })
 
             var Datefilter =  $('.invoice').DataTable({
                 dom: 'Bfrtip',
