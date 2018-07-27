@@ -45,23 +45,21 @@ class Utilities {
     public static function campaignDetails($id)
     {
         $file_details = [];
-        $campaign_details = Utilities::switch_db('api')->select("SELECT * from campaignDetails where campaign_id = '$id' GROUP BY campaign_id");
-        $campaign_id = $campaign_details[0]->campaign_id;
-        $brand_name = $campaign_details[0]->brand;
-        $channel = $campaign_details[0]->channel;
+//        $campaign_details = Utilities::switch_db('api')->select("SELECT * from campaignDetails where campaign_id = '$id' GROUP BY campaign_id");
+        $campaign_details = Utilities::switch_db('api')->select("SELECT c_d.campaign_id, c_d.min_age, c_d.max_age, c_d.name, c_d.user_id, c_d.agency, c_d.product, c_d.Industry, c_d.sub_industry, c_d.start_date, c_d.stop_date, b.name as brand, c_d.channel, c_d.target_audience, c_d.region, b.name, p.total, p.id as payment_id from campaignDetails as c_d, brands as b, payments as p where p.campaign_id = c_d.campaign_id and c_d.brand = b.id  and c_d.campaign_id = '$id' GROUP BY c_d.campaign_id");
 
+        $campaign_id = $campaign_details[0]->campaign_id;
+        $channel = $campaign_details[0]->channel;
         $location_ids = $campaign_details[0]->region;
         $target_id = $campaign_details[0]->target_audience;
         $location = Utilities::switch_db('api')->select("SELECT * FROM regions where id IN ($location_ids) ");
-        $brand = Utilities::switch_db('api')->select("SELECT name from brands where id = '$brand_name'");
         $channel = Utilities::switch_db('api')->select("SELECT * from campaignChannels where id IN ($channel) ");
-        $payments = Utilities::switch_db('api')->select("SELECT * from payments where campaign_id = '$campaign_id' ");
         $target_audiences = Utilities::switch_db('api')->select("SELECT * from targetAudiences where id IN ($target_id)");
-        $payment_id = $payments[0]->id;
         $broadcasters = Utilities::switch_db('api')->select("SELECT * FROM broadcasters where id IN (SELECT broadcaster from campaignDetails where campaign_id = '$id')");
+        $payment_id = $campaign_details[0]->payment_id;
         if(\Session::get('broadcaster_id')){
             $broadcaster_id = \Session::get('broadcaster_id');
-            $payments = Utilities::switch_db('api')->select("SELECT amount as total from paymentDetails where payment_id = '$payment_id' and broadcaster = '$broadcaster_id'");
+            $campaign_details = Utilities::switch_db('api')->select("SELECT amount as total from paymentDetails where payment_id = '$payment_id' and broadcaster = '$broadcaster_id'");
         }
         $user_id = $campaign_details[0]->user_id;
         $company_info = Utilities::switch_db('api')->select("SELECT * from walkIns where user_id = '$user_id'");
@@ -88,13 +86,13 @@ class Utilities {
             'campaign_id' => $campaign_details[0]->campaign_id,
             'campaign_name' => $campaign_details[0]->name,
             'product_name' => $campaign_details[0]->product,
-            'brand' => $brand[0]->name,
+            'brand' => $campaign_details[0]->brand,
             'industry' => $campaign_details[0]->Industry,
             'sub_industry' => $campaign_details[0]->sub_industry,
             'channel' => $channel,
             'start_date' => date('Y-m-d', strtotime($campaign_details[0]->start_date)),
             'end_date' => date('Y-m-d', strtotime($campaign_details[0]->stop_date)),
-            'campaign_cost' => number_format($payments[0]->total, '2'),
+            'campaign_cost' => number_format($campaign_details[0]->total, '2'),
             'walkIn_name' => $name,
             'company_name' => $company_name,
             'company_user_id' => $user_id,
@@ -105,44 +103,30 @@ class Utilities {
             'target_audience' => $target_audiences
         ];
 
+        $files = Utilities::switch_db('api')->select("SELECT f.id, f.user_id, f.broadcaster_id, f.file_url, f.time_picked, f.is_file_accepted, f.rejection_reason, f.file_name, f.format, a.from_to_time, a.min_age, a.max_age, d_p.day_parts, t.audience, r.region, h.time_range, d.day, b.brand from files as f, dayParts as d_p, adslots as a, targetAudiences as t, regions as r, days as d, hourlyRanges as h, rateCards as r_c, broadcasters as b where f.broadcaster_id = b.id and 
+                                                          f.adslot = a.id and a.day_parts = d_p.id and a.target_audience = t.id and a.region = r.id and a.rate_card = r_c.id and h.id = r_c.hourly_range_id and r_c.day = d.id and a.broadcaster = b.id and campaign_id = '$campaign_id'");
 
-
-        $files = Utilities::switch_db('api')->select("SELECT * from files where campaign_id = '$campaign_id'");
         if(\Session::get('broadcaster_id')){
             $broadcaster_id = \Session::get('broadcaster_id');
-            $files = Utilities::switch_db('api')->select("SELECT * from files where campaign_id = '$campaign_id' AND broadcaster_id = '$broadcaster_id'");
+            $files = Utilities::switch_db('api')->select("SELECT f.id, f.user_id, f.broadcaster_id, f.file_url, f.time_picked, f.is_file_accepted, f.rejection_reason, f.file_name, f.format, a.from_to_time, a.min_age, a.max_age, d_p.day_parts, t.audience, r.region, h.time_range, d.day, b.brand from files as f, dayParts as d_p, adslots as a, targetAudiences as t, regions as r, days as d, hourlyRanges as h, rateCards as r_c, broadcasters as b where f.broadcaster_id = b.id and 
+                                                          f.adslot = a.id and a.day_parts = d_p.id and a.target_audience = t.id and a.region = r.id and a.rate_card = r_c.id and h.id = r_c.hourly_range_id and r_c.day = d.id and a.broadcaster = b.id and campaign_id = '$campaign_id' and f.broadcaster_id = '$broadcaster_id'");
         }
         foreach ($files as $file){
-            $adslot_details = Utilities::switch_db('api')->select("SELECT * from adslots where id = '$file->adslot'");
-            $day_part_id = $adslot_details[0]->day_parts;
-            $day_parts = Utilities::switch_db('api')->select("SELECT day_parts from dayParts where id = '$day_part_id'");
-            $target_audience_id = $adslot_details[0]->target_audience;
-            $target_audience = Utilities::switch_db('api')->select("SELECT * from targetAudiences where id = '$target_audience_id'");
-            $region_id = $adslot_details[0]->region;
-            $region = Utilities::switch_db('api')->select("SELECT * from regions where id = '$region_id'");
-            $rate_card_id = $adslot_details[0]->rate_card;
-            $rate_card_details = Utilities::switch_db('api')->select("SELECT * from rateCards where id = '$rate_card_id'");
-            $hourly_range_id = $rate_card_details[0]->hourly_range_id;
-            $hourly_range = Utilities::switch_db('api')->select("SELECT * from hourlyRanges where id = '$hourly_range_id'");
-            $day_id = $rate_card_details[0]->day;
-            $day = Utilities::switch_db('api')->select("SELECT * from days where id = '$day_id'");
-            $broad_id = $adslot_details[0]->broadcaster;
-            $broadcaster_info = Utilities::switch_db('api')->select("SELECT * from broadcasters where id = '$broad_id'");
             $file_details[] = [
                 'file_id' => $file->id,
                 'user_id' => $file->user_id,
                 'agency_id' => $campaign_details[0]->agency,
                 'agency_broadcaster' => $file->broadcaster_id,
                 'broadcaster_id' => $file->broadcaster_id,
-                'from_to_time' => $adslot_details[0]->from_to_time,
-                'day_part' => $day_parts[0]->day_parts,
-                'target_audience' => $target_audience[0]->audience,
-                'region' => $region[0]->region,
-                'minimum_age' => $adslot_details[0]->min_age,
-                'maximum_age' => $adslot_details[0]->max_age,
-                'hourly_range' => $hourly_range[0]->time_range,
-                'day' => $day[0]->day,
-                'broadcast_station' => $broadcaster_info[0]->brand,
+                'from_to_time' => $file->from_to_time,
+                'day_part' => $file->day_parts,
+                'target_audience' => $file->audience,
+                'region' => $file->region,
+                'minimum_age' => $file->min_age,
+                'maximum_age' => $file->max_age,
+                'hourly_range' => $file->time_range,
+                'day' => $file->day,
+                'broadcast_station' => $file->brand,
                 'file' => decrypt($file->file_url),
                 'slot_time' => $file->time_picked.' seconds',
                 'file_status' => $file->is_file_accepted,
@@ -153,17 +137,16 @@ class Utilities {
         }
 
         $compliance_reports = [];
-        $campaign_compliances = Utilities::switch_db('api')->select("SELECT * from compliances where campaign_id = '$id'");
+        $campaign_compliances = Utilities::switch_db('api')->select("SELECT c.time_created, c_c.channel, b.brand, a.from_to_time from compliances as c, campaignChannels as c_c, adslots as a, broadcasters as b where
+                                                                         c_c.id = c.channel and b.id = c.broadcaster_id and a.id = c.adslot_id and campaign_id = '$id'");
+
         foreach ($campaign_compliances as $campaign_compliance){
-            $media_type = Utilities::switch_db('api')->select("SELECT * FROM campaignChannels where id = '$campaign_compliance->channel'");
-            $media_channel = Utilities::switch_db('api')->select("SELECT * FROM broadcasters where id = '$campaign_compliance->broadcaster_id'");
-            $adslots = Utilities::switch_db('api')->select("SELECT * FROM adslots where id = '$campaign_compliance->adslot_id'");
             $compliance_reports[] = [
-                'media_type' => $media_type[0]->channel,
-                'media_channel' => $media_channel[0]->brand,
+                'media_type' => $campaign_compliance->channel,
+                'media_channel' => $campaign_compliance->brand,
                 'date' => date('M j, Y', strtotime($campaign_compliance->time_created)),
-                'booked_spot' => $adslots[0]->from_to_time,
-                'aired_spot' => $adslots[0]->from_to_time,
+                'booked_spot' => $campaign_compliance->from_to_time,
+                'aired_spot' => $campaign_compliance->from_to_time,
             ];
         }
 

@@ -85,6 +85,10 @@
                 <div class="filters clearfix compliance_load">
                     <div class="column col_7">
                         <h4 class="small_faint 7ppercased weight_medium">Compliance</h4>
+                        <div class="small_faint weight_medium add_reports">
+
+                        </div>
+                        <p><br></p>
                     </div>
                     <div class="column col_4 clearfix">
                         <form action="{{ route('campaign_details.compliance') }}" method="GET" id="compliance-form">
@@ -780,6 +784,12 @@
                         url: url,
                         data: { campaign_id : campaign_id,start_date: start_date, stop_date: stop_date, media_channel: media_channel },
                         success: function (data) {
+                            var small_html = '<p>';
+                            $.each(data.media_mix, function (index, value) {
+                                small_html += value.name+' : '+value.y+'% ';
+                            });
+                            small_html += '</p>'
+                            $(".add_reports").html(small_html);
                             Highcharts.chart('container', {
 
                                 chart: {
