@@ -13,13 +13,15 @@ class InvoiceController extends Controller
     {
         $agency_id = Session::get('agency_id');
 
+//        $allll_inv = Utilities::switch_db('api')->select("SELECT ")
+
+//        $all_invoicessss = Utilities::switch_db('reports')->select("SELECT i_d.user_id, i_d.invoice_id, i_d.invoice_number, i_d.refunded_amount, i_d.status, i_d.time_created, i.campaign_id, c.name as campaign_name, b.name as brand, u.firstname, u.lastname, p.total FROM invoiceDetails as i_d, invoices as i, campaignDetails as c, brands as b, payments as p, users as u WHERE  i_d.agency_id = '$agency_id' and c.brand = b.id and u.id = i_d.user_id and p.campaign_id = i.campaign_id GROUP BY i_d.invoice_id ORDER BY i_d.time_created DESC");
+
         $all_invoices = Utilities::switch_db('reports')->select("SELECT * FROM invoiceDetails WHERE  agency_id = '$agency_id' GROUP BY invoice_id ORDER BY time_created DESC");
 
         $invoice_campaign_details = [];
 
         foreach ($all_invoices as $invoice) {
-
-//            $campaign_id = $invoice->campaign_id;
 
             $campaign_list = Utilities::switch_db('api')->select("SELECT * from invoices where id = '$invoice->invoice_id' ");
 
@@ -47,6 +49,8 @@ class InvoiceController extends Controller
             ];
         }
 
+//        dd($invoice_campaign_details, $all_invoicessss);
+
         return view('invoices.all-invoices')
             ->with('all_invoices', $invoice_campaign_details);
     }
@@ -61,8 +65,6 @@ class InvoiceController extends Controller
         $j = 1;
 
         foreach ($all_invoices as $invoice) {
-
-//            $campaign_id = $invoice->campaign_id;
 
             $campaign_list = Utilities::switch_db('api')->select("SELECT * from invoices where id = '$invoice->invoice_id' ");
 

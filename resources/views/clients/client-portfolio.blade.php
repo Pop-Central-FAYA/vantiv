@@ -345,15 +345,15 @@
                 <div class="select_wrap">
                     <select name="sub_industry" id="sub_industry">
                         @foreach($sub_industries as $sub_industry)
-                            @foreach($sub_industry as $sub_in)
-                                @if($sub_in->sub_sector_code === $all_brand['sub_industry_id'])
-                                    <option value="{{ $sub_in->sub_sector_code }}"
-                                    @if($sub_in->sub_sector_code === $all_brand['sub_industry_id'])
-                                        selected
-                                    @endif
-                                    >{{ $sub_in->name }}</option>
+
+                            @if($sub_industry->sub_sector_code === $all_brand['sub_industry_id'])
+                                <option value="{{ $sub_industry->sub_sector_code }}"
+                                @if($sub_industry->sub_sector_code === $all_brand['sub_industry_id'])
+                                    selected
                                 @endif
-                            @endforeach
+                                >{{ $sub_industry->name }}</option>
+                            @endif
+
                         @endforeach
                     </select>
                 </div>
