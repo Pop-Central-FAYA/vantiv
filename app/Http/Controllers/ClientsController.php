@@ -149,7 +149,7 @@ class ClientsController extends Controller
 
             $campaigns = Utilities::switch_db('api')->select("SELECT count(id) as total_campaigns from campaigns where id IN (SELECT campaign_id from campaignDetails where user_id = '$client->user_id')");
 
-            $last_camp_date = Utilities::switch_db('api')->select("SELECT time_created from campaignDetails where user_id = '$client->user_id' GROUP BY campaign_id ORDER BY time_created DESC LIMIT 1");
+            $last_camp_date = Utilities::switch_db('api')->select("SELECT time_created from campaignDetails where user_id = '$client->user_id' ORDER BY time_created DESC LIMIT 1");
             if ($last_camp_date) {
                 $date = $last_camp_date[0]->time_created;
             } else {
