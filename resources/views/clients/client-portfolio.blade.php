@@ -374,8 +374,8 @@
     <script src="https://code.highcharts.com/modules/export-data.js"></script>
     <script src="https://unpkg.com/flatpickr"></script>
     <script>
-        <?php echo "var week_date = ".$week_date. ";\n"; ?>
-        <?php echo "var week_amount = ".$week_payment. ";\n"; ?>
+        <?php echo "var campaign_date = ".$campaign_date. ";\n"; ?>
+        <?php echo "var campaign_amount = ".$campaign_payment. ";\n"; ?>
         $(document).ready(function() {
 
             flatpickr(".flatpickr", {
@@ -388,7 +388,7 @@
                     type: 'area'
                 },
                 xAxis: {
-                    categories: week_date
+                    categories: campaign_date
                 },
                 title:{
                     text:''
@@ -431,7 +431,7 @@
                 series: [{
                     name: 'Total Budget',
                     color: '#00C4CA',
-                    data: week_amount,
+                    data: campaign_amount,
                 }]
             });
 
