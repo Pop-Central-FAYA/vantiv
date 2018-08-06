@@ -998,34 +998,49 @@ class CampaignsController extends Controller
 
     public function complianceFilter()
     {
+        /**
+         * The compliance graph
+         *The first graph you see when you select media types and subsequest media channels attached on the campaign details page is just a summary of how the campaign budget is been spent on the different
+         *broadcasters and are grouped by the media types they belong to, in my case (TV, Radio for now)
+         *
+         * When the filter is then applied, it hits this method to fetch data from the compliances table.
+         */
+
         $all_comp_data = [];
         $compliance_datas = [];
         $campaign_id = request()->campaign_id;
         $start_date = date('Y-m-d', strtotime(request()->start_date));
         $stop_date = date('Y-m-d', strtotime(request()->stop_date));
         $media_channel = request()->media_channel;
+
         if($media_channel){
             $broadcaster = "'".implode("','", $media_channel)."'";
         }
+
         $dates = [];
 
+        //querying the compliances table get date
         $date_compliances = Utilities::switch_db('api')->select("SELECT time_created from compliances where campaign_id = '$campaign_id' AND time_created BETWEEN '$start_date' AND '$stop_date' GROUP BY DATE_FORMAT(time_created, '%Y-%m-%d') ");
         foreach ($date_compliances as $date_compliance){
             $date_created = date('Y-m-d', strtotime($date_compliance->time_created));
+            //this query results to a multidimensional array
             $compliances = Utilities::switch_db('api')->select("SELECT IF(c.amount_spent IS NOT NULL, sum(c.amount_spent), 0) as amount, c.broadcaster_id, c.campaign_id, date_format(c.time_created, '%Y-%m-%d') as time, b.brand, e.channel as stack, c.channel from compliances as c, broadcasters as b, campaignChannels as e where c.broadcaster_id = b.id and c.channel = e.id and c.broadcaster_id IN ($broadcaster) and c.campaign_id = '$campaign_id' and date_format(c.time_created, '%Y-%m-%d') = '$date_created' GROUP BY c.broadcaster_id");
 
             $all_comp_data[] = $compliances;
             $dates[] = [date('Y-m-d', strtotime($date_compliance->time_created))];
         }
 
+        //array_flatten brings out all the arrays to form an array of objects
         $flatened_comp = array_flatten($all_comp_data);
 
+        //returned back to array of arrays
         $array = json_decode(json_encode($flatened_comp), true);
 
         $final_arr = array();
 
+        //this group the array by broadcasters
         foreach($array as $key=>$value){
-            $date_data = [];
+
             if(!array_key_exists($value['broadcaster_id'],$final_arr)){
                 $final_arr[$value['broadcaster_id']] = $value;
                 unset($final_arr[$value['broadcaster_id']]['amount']);
