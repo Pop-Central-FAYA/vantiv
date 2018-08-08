@@ -1072,8 +1072,6 @@ class CampaignsController extends Controller
             ];
         }
 
-//        dd($compliance_datas, $dates);
-
         //media mix
         $media_mix_datas = [];
         $media_mixes = Utilities::switch_db('api')->select("SELECT SUM(amount_spent) as total_amount_spent, channel FROM compliances where campaign_id = '$campaign_id' AND time_created BETWEEN '$start_date' AND '$stop_date' AND broadcaster_id IN ($broadcaster) GROUP BY channel");

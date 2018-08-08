@@ -22,189 +22,11 @@ class DashboardController extends Controller
         //Broadcaster Dashboard module
         $role = \DB::table('role_user')->where('user_id', Auth::user()->id)->first();
         if ($role->role_id === 3) {
-            // high value customer
+
+            //redirect user to the new landing page of the broadcaster.
             $broadcaster = Session::get('broadcaster_id');
-            $camp = [];
-            $user_details = '';
-            $campaign = Utilities::switch_db('api')->select("SELECT COUNT(id) as total_campaign, agency_broadcaster, agency, time_created as `time`, id, walkins_id, SUM(adslots) as total_adslot from campaignDetails WHERE broadcaster = '$broadcaster' AND walkins_id != '' GROUP BY walkins_id LIMIT 10");
-            foreach ($campaign as $c) {
-                $agent_id = $c->agency;
-                $user_agency = Utilities::switch_db('api')->select("SELECT * from users where id = (SELECT user_id from agents where id = '$agent_id')");
-                if($user_agency){
-                    $user_details = $user_agency[0]->firstname . ' ' . $user_agency[0]->lastname;
-                }
-                $user_advertiser = Utilities::switch_db('api')->select("SELECT * from users where id = (SELECT user_id from advertisers where id = '$agent_id')");
-                if($user_advertiser){
-                    $user_details = $user_advertiser[0]->firstname . ' ' . $user_advertiser[0]->lastname;
-                }
-                $user_broad = Utilities::switch_db('api')->select("SELECT * from users where id = (SELECT user_id from walkIns where id = '$agent_id')");
-                if($user_broad){
-                    $user_details = $user_broad[0]->firstname . ' ' . $user_broad[0]->lastname;
-                }
-                $payments = Utilities::switch_db('api')->select("SELECT SUM(amount) as total_price from paymentDetails WHERE walkins_id = '$c->walkins_id' and broadcaster = '$broadcaster' group by walkins_id");
-                $camp[] = [
-                    'number_of_campaign' => $c->total_campaign,
-                    'user_id' => $c->walkins_id,
-                    'total_adslot' => $c->total_adslot,
-                    'customer_name' => $user_details,
-                    'payment' => $payments[0]->total_price,
-                ];
-            }
-
-            array_multisort(array_column($camp, 'payment'), SORT_DESC, $camp);
-
-            //paid invoices
-            $invoice_array = [];
-            $broadcaster_det = Utilities::switch_db('api')->select("SELECT * from broadcasters where id = '$broadcaster'");
-            $broadcaster_name = $broadcaster_det[0]->brand;
-            $inv = Utilities::switch_db('api')->select("SELECT * from invoiceDetails WHERE broadcaster_id = '$broadcaster' ORDER BY time_created DESC LIMIT 10");
-            foreach ($inv as $i) {
-                $inv_details = Utilities::switch_db('api')->select("SELECT * FROM invoices where id = '$i->invoice_id'");
-                $camp_id = $inv_details[0]->campaign_id;
-                $campaign_det = Utilities::switch_db('api')->select("SELECT `name` as campaign_name, DATE_FORMAT(stop_date, '%Y-%m-%d') as stop_date from campaignDetails where campaign_id='$camp_id'");
-                $user_id = $i->user_id;
-                $user_broad = Utilities::switch_db('api')->select("SELECT * from users where id = '$user_id' ");
-                $user_agency = Utilities::switch_db('api')->select("SELECT * from users where id = (SELECT user_id from agents where id = '$i->agency_id')");
-                $user_advertiser = Utilities::switch_db('api')->select("SELECT * from users where id = (SELECT user_id from advertisers WHERE id = '$user_id')");
-                if($user_broad){
-                    $name = $user_broad[0]->firstname .' '.$user_broad[0]->lastname;
-                }elseif($user_agency){
-                    $name = $user_agency[0]->firstname .' '.$user_agency[0]->lastname;
-                }else{
-                    $name = $user_advertiser[0]->firstname .' '.$user_advertiser[0]->lastname;
-                }
-                $invoice_array[] = [
-                    'invoice_number' => $i->agency_id ? $i->invoice_number.'v'.$broadcaster_name[0] : $i->invoice_number,
-                    'campaign_name' => isset($campaign_det[0]->campaign_name) ? $campaign_det[0]->campaign_name : '',
-                    'customer' => $name,
-                    'date' => date('Y-m-d', strtotime($i->time_created)),
-                    'date_due' => $campaign_det[0]->stop_date,
-                ];
-            }
-            $invoice = (object) $invoice_array;
-
-            //total volume of campaigns
-            $camp_vol = Utilities::switch_db('api')->select("SELECT COUNT(id) as volume, DATE_FORMAT(time_created, '%M, %Y') as `month` from campaignDetails where broadcaster = '$broadcaster' or agency_broadcaster = '$broadcaster' GROUP BY DATE_FORMAT(time_created, '%Y-%m') ");
-            $c_vol = [];
-            $c_month = [];
-
-            foreach ($camp_vol as $ca) {
-                $c_vol[] = $ca->volume;
-            }
-
-            foreach ($camp_vol as $ca) {
-                $month = ($ca->month);
-                $c_month[] = $month;
-            }
-
-            $c_volume = json_encode($c_vol);
-            $c_mon = json_encode($c_month);
-
-            //High performing Dayparts
-            $all_slots = [];
-            $all_dayp = [];
-            $dayp_namesss = [];
-            $slots = Utilities::switch_db('api')->select("SELECT adslots_id from campaignDetails where broadcaster = '$broadcaster' ");
-            foreach ($slots as $slot){
-                $adslots = Utilities::switch_db('api')->select("SELECT day_parts from adslots where id IN ($slot->adslots_id)");
-                $all_slots[] = $adslots;
-            }
-
-
-            $dayp_id = Utilities::array_flatten($all_slots);
-
-            foreach ($dayp_id as $d){
-                $day_parts = Utilities::switch_db('api')->select("SELECT * from dayParts where id = '$d->day_parts'");
-                $all_dayp[] = $day_parts;
-            }
-
-            $dayp_name = Utilities::array_flatten($all_dayp);
-            $total = (count($dayp_name));
-
-            $newArray = [];
-            foreach($dayp_name as $entity)
-            {
-                $newArray[$entity->day_parts][] = $entity;
-            }
-
-            foreach ($newArray as $nnn => $value){
-                $day_percent = ((count($value)) / $total) * 100;
-                $dayp_namesss[] = [
-                    'name' => $nnn,
-                    'y' => $day_percent,
-                ];
-            }
-
-            $day_pie = json_encode($dayp_namesss);
-
-
-
-            //high performing days
-            $days = Utilities::switch_db('api')->select("SELECT COUNT(id) as tot_camp, DATE_FORMAT(time_created, '%a %M %d, %Y') as days from campaignDetails where broadcaster = '$broadcaster' AND day_parts != '' GROUP BY DATE_FORMAT(time_created, '%a'), broadcaster ORDER BY WEEK(time_created) desc LIMIT 7");
-            $day_name = [];
-            $b = [];
-            for ($j = 0; $j < count($days); $j++) {
-                $b[] = $days[$j]->tot_camp;
-            }
-            $s = array_sum($b);
-
-            foreach ($days as $dd) {
-                $perc_days = (($dd->tot_camp) / $s) * 100;
-                $day_name[] = [
-                    'name' => $dd->days,
-                    'y' => $perc_days
-                ];
-            }
-            $days_data = json_encode($day_name);
-
-            //periodic sales report
-            $prr = [];
-            $ads = [];
-            $months = [];
-            $slot = [];
-            $periodic = Utilities::switch_db('api')->select("SELECT count(id) as tot_camp, SUM(adslots) as adslot, time_created as days from campaignDetails WHERE broadcaster = '$broadcaster' GROUP BY DATE_FORMAT(time_created, '%Y-%m') ");
-            $price = Utilities::switch_db('api')->select("SELECT SUM(amount) as total_price, time_created as days from paymentDetails WHERE broadcaster = '$broadcaster' GROUP BY DATE_FORMAT(time_created, '%Y-%m') ");
-
-            for ($i = 0; $i < count($periodic); $i++) {
-                $ads[] = [
-                    'total' => $price[$i]->total_price,
-                    'adslot' => $periodic[$i]->adslot,
-                    'date' => date('M, Y', strtotime($periodic[$i]->days)),
-                ];
-
-            }
-            foreach ($ads as $a) {
-                $months[] = $a['date'];
-            }
-            foreach ($ads as $a) {
-                $prr[] = $a['total'];
-            }
-            foreach ($ads as $a) {
-                $slot[] = (integer)$a['adslot'];
-            }
-
-            $ads_no = json_encode($slot);
-            $tot_pri = json_encode($prr);
-            $mon = json_encode($months);
-
-//            dd($ads,$ads_no, $tot_pri, $mon);
-
-//        Inventory fill rate
-            $today = getDate();
-            $today_day = $today['weekday'];
-            $rate_c = [];
-            $get_day_id = Utilities::switch_db('api')->select("SELECT id as day_id from days WHERE day = '$today_day'");
-            $t_day = $get_day_id[0]->day_id;
-            $get_ratecards_for_this_day = Utilities::switch_db('api')->select("SELECT * from rateCards WHERE day = '$t_day' AND broadcaster = '$broadcaster'");
-            foreach ($get_ratecards_for_this_day as $gr) {
-                $adslot = Utilities::switch_db('api')->select("SELECT COUNT(id) as total_slot, rate_card from adslots WHERE rate_card = '$gr->id'");
-//            $campaign = Utilities::switch_db('reports')->select("SELECT SUM(adslots) as total_sold from campaigns WHERE broadcaster = '$broadcaster' AND  GROUP BY ");
-                $rate_c[] = $adslot;
-            }
-
             $broadcaster_info = Utilities::switch_db('api')->select("SELECT * from broadcasters where id = '$broadcaster'");
-
-            return view('dashboard.default')->with(['campaign' => $camp, 'volume' => $c_volume, 'month' => $c_mon, 'high_dayp' => $day_pie, 'days' => $days_data, 'adslot' => $ads_no, 'price' => $tot_pri, 'mon' => $mon, 'invoice' => $invoice, 'broadcaster_info' => $broadcaster_info]);
+            return view('broadcaster_module.landing_page', compact('broadcaster_info'));
 
         } else if ($role->role_id === 4) {
 
@@ -1119,16 +941,27 @@ class DashboardController extends Controller
     public function dashboardCampaigns(DataTables $dataTables, Request $request)
     {
             //campaigns
-            $agency_campaigns = [];
+            $campaigns_datatables = [];
             $agency_id = Session::get('agency_id');
-
-            if($request->has('start_date') && $request->has('stop_date')) {
-                $start_date = $request->start_date;
-                $stop_date = $request->stop_date;
-                $all_campaigns = Utilities::switch_db('api')->select("SELECT c_d.adslots_id, c_d.stop_date, c_d.start_date, c_d.time_created, c_d.product, c_d.name, c_d.campaign_id, p.total, b.name as brand_name, c.campaign_reference from campaignDetails as c_d, payments as p, campaigns as c, brands as b where c.id = c_d.campaign_id and p.campaign_id = c_d.campaign_id and c_d.brand = b.id and c_d.agency = '$agency_id' and c_d.adslots  > 0 AND c_d.time_created BETWEEN '$start_date' AND '$stop_date' GROUP BY c_d.campaign_id ORDER BY c_d.time_created DESC");
-            }else{
-                $all_campaigns = Utilities::switch_db('api')->select("SELECT c_d.adslots_id, c_d.stop_date, c_d.start_date, c_d.time_created, c_d.product, c_d.name, c_d.campaign_id, p.total, b.name as brand_name, c.campaign_reference from campaignDetails as c_d, payments as p, campaigns as c, brands as b where c.id = c_d.campaign_id and p.campaign_id = c_d.campaign_id and c_d.brand = b.id and c_d.agency = '$agency_id' and c_d.adslots  > 0 GROUP BY c_d.campaign_id ORDER BY c_d.time_created DESC");
+            $broadcaster_id = Session::get('broadcaster_id');
+            if($agency_id){
+                if($request->has('start_date') && $request->has('stop_date')) {
+                    $start_date = $request->start_date;
+                    $stop_date = $request->stop_date;
+                    $all_campaigns = Utilities::switch_db('api')->select("SELECT c_d.adslots_id, c_d.stop_date, c_d.start_date, c_d.time_created, c_d.product, c_d.name, c_d.campaign_id, p.total, b.name as brand_name, c.campaign_reference from campaignDetails as c_d, payments as p, campaigns as c, brands as b where c.id = c_d.campaign_id and p.campaign_id = c_d.campaign_id and c_d.brand = b.id and c_d.agency = '$agency_id' and c_d.adslots  > 0 AND c_d.time_created BETWEEN '$start_date' AND '$stop_date' GROUP BY c_d.campaign_id ORDER BY c_d.time_created DESC");
+                }else{
+                    $all_campaigns = Utilities::switch_db('api')->select("SELECT c_d.adslots_id, c_d.stop_date, c_d.start_date, c_d.time_created, c_d.product, c_d.name, c_d.campaign_id, p.total, b.name as brand_name, c.campaign_reference from campaignDetails as c_d, payments as p, campaigns as c, brands as b where c.id = c_d.campaign_id and p.campaign_id = c_d.campaign_id and c_d.brand = b.id and c_d.agency = '$agency_id' and c_d.adslots  > 0 GROUP BY c_d.campaign_id ORDER BY c_d.time_created DESC");
+                }
+            }else if($broadcaster_id){
+                if($request->has('start_date') && $request->has('stop_date')) {
+                    $start_date = $request->start_date;
+                    $stop_date = $request->stop_date;
+                    $all_campaigns = Utilities::switch_db('api')->select("SELECT c_d.adslots_id, c_d.stop_date, c_d.start_date, c_d.time_created, c_d.product, c_d.name, c_d.campaign_id, p.total, b.name as brand_name, c.campaign_reference from campaignDetails as c_d, payments as p, campaigns as c, brands as b where c.id = c_d.campaign_id and p.campaign_id = c_d.campaign_id and c_d.brand = b.id and c_d.broadcaster = '$broadcaster_id' and c_d.adslots  > 0 AND c_d.time_created BETWEEN '$start_date' AND '$stop_date' ORDER BY c_d.time_created DESC");
+                }else{
+                    $all_campaigns = Utilities::switch_db('api')->select("SELECT c_d.adslots_id, c_d.stop_date, c_d.start_date, c_d.time_created, c_d.product, c_d.name, c_d.campaign_id, p.total, b.name as brand_name, c.campaign_reference from campaignDetails as c_d, payments as p, campaigns as c, brands as b where c.id = c_d.campaign_id and p.campaign_id = c_d.campaign_id and c_d.brand = b.id and c_d.broadcaster = '$broadcaster_id' and c_d.adslots  > 0 ORDER BY c_d.time_created DESC");
+                }
             }
+
             $j = 1;
             foreach ($all_campaigns as $cam)
             {
@@ -1145,7 +978,7 @@ class DashboardController extends Controller
                     $new_day =  round($datediff / (60 * 60 * 24));
                     $status = 'Pending';
                 }
-                $agency_campaigns[] = [
+                $campaigns_datatables[] = [
                     'id' => $cam->campaign_reference,
                     'camp_id' => $cam->campaign_id,
                     'name' => $cam->name,
@@ -1162,14 +995,18 @@ class DashboardController extends Controller
             }
 
 
-        return $dataTables->collection($agency_campaigns)
-            ->addColumn('name', function ($agency_campaigns) {
-                return '<a href="'.route('agency.campaign.details', ['id' => $agency_campaigns['camp_id']]).'">'.$agency_campaigns['name'].'</a>';
+        return $dataTables->collection($campaigns_datatables)
+            ->addColumn('name', function ($campaigns_datatables) {
+                if(Session::has('agency_id')){
+                    return '<a href="'.route('agency.campaign.details', ['id' => $campaigns_datatables['camp_id']]).'">'.$campaigns_datatables['name'].'</a>';
+                }else if(Session::has('broadcaster_id')){
+                    return '<a href="">'.$campaigns_datatables['name'].'</a>';
+                }
             })
-            ->editColumn('status', function ($agency_campaigns){
-                if($agency_campaigns['status'] === "Finished"){
+            ->editColumn('status', function ($campaigns_datatables){
+                if($campaigns_datatables['status'] === "Finished"){
                     return '<span class="span_state status_danger">Finished</span>';
-                }elseif ($agency_campaigns['status'] === "Active"){
+                }elseif ($campaigns_datatables['status'] === "Active"){
                     return '<span class="span_state status_success">Active</span>';
                 }else{
                     return '<span class="span_state status_pending">Pending</span>';
@@ -1180,6 +1017,213 @@ class DashboardController extends Controller
             ->make(true);
 
 
+    }
+
+    public function campaignManagementDashbaord()
+    {
+        $broadcaster = Session::get('broadcaster_id');
+        //total volume of campaigns
+        $camp_vol = Utilities::switch_db('api')->select("SELECT COUNT(id) as volume, DATE_FORMAT(time_created, '%M, %Y') as `month` from campaignDetails where broadcaster = '$broadcaster' or agency_broadcaster = '$broadcaster' GROUP BY DATE_FORMAT(time_created, '%Y-%m') ");
+        $c_vol = [];
+        $c_month = [];
+
+        foreach ($camp_vol as $ca) {
+            $c_vol[] = $ca->volume;
+        }
+
+        foreach ($camp_vol as $ca) {
+            $month = ($ca->month);
+            $c_month[] = $month;
+        }
+
+        $c_volume = json_encode($c_vol);
+        $c_mon = json_encode($c_month);
+
+        $today_date = date("Y-m-d");
+
+//            all clients
+        $clients = Utilities::switch_db('reports')->select("SELECT * FROM walkIns WHERE broadcaster_id = '$broadcaster' ORDER BY time_created DESC");
+
+//            pending invoices
+        $pending_invoices = Utilities::switch_db('api')->select("SELECT * FROM invoiceDetails where broadcaster_id = '$broadcaster' AND status = 0 ");
+
+//            all_brands
+        $all_brands = Utilities::switch_db('api')->select("SELECT * FROM brands where broadcaster_agency = '$broadcaster'");
+
+        $active_campaigns = Utilities::switch_db('api')->select("SELECT * FROM campaignDetails where broadcaster = '$broadcaster' AND start_date <= '$today_date' AND stop_date > '$today_date' ");
+
+
+        $broadcaster_info = Utilities::switch_db('api')->select("SELECT * from broadcasters where id = '$broadcaster'");
+
+        return view('broadcaster_module.dashboard.campaign_management.dashboard')->with(['volume' => $c_volume, 'month' => $c_mon, 'broadcaster_info' => $broadcaster_info,
+                                                                                                'walkins' => $clients, 'pending_invoices' => $pending_invoices, 'brands' => $all_brands, 'active_campaigns' => $active_campaigns]);
+
+    }
+
+    public function inventoryManagementDashboard()
+    {
+        // high value customer
+//            $broadcaster = Session::get('broadcaster_id');
+//            $camp = [];
+//            $user_details = '';
+//            $campaign = Utilities::switch_db('api')->select("SELECT COUNT(id) as total_campaign, agency_broadcaster, agency, time_created as `time`, id, walkins_id, SUM(adslots) as total_adslot from campaignDetails WHERE broadcaster = '$broadcaster' AND walkins_id != '' GROUP BY walkins_id LIMIT 10");
+//            foreach ($campaign as $c) {
+//                $agent_id = $c->agency;
+//                $user_agency = Utilities::switch_db('api')->select("SELECT * from users where id = (SELECT user_id from agents where id = '$agent_id')");
+//                if($user_agency){
+//                    $user_details = $user_agency[0]->firstname . ' ' . $user_agency[0]->lastname;
+//                }
+//                $user_advertiser = Utilities::switch_db('api')->select("SELECT * from users where id = (SELECT user_id from advertisers where id = '$agent_id')");
+//                if($user_advertiser){
+//                    $user_details = $user_advertiser[0]->firstname . ' ' . $user_advertiser[0]->lastname;
+//                }
+//                $user_broad = Utilities::switch_db('api')->select("SELECT * from users where id = (SELECT user_id from walkIns where id = '$agent_id')");
+//                if($user_broad){
+//                    $user_details = $user_broad[0]->firstname . ' ' . $user_broad[0]->lastname;
+//                }
+//                $payments = Utilities::switch_db('api')->select("SELECT SUM(amount) as total_price from paymentDetails WHERE walkins_id = '$c->walkins_id' and broadcaster = '$broadcaster' group by walkins_id");
+//                $camp[] = [
+//                    'number_of_campaign' => $c->total_campaign,
+//                    'user_id' => $c->walkins_id,
+//                    'total_adslot' => $c->total_adslot,
+//                    'customer_name' => $user_details,
+//                    'payment' => $payments[0]->total_price,
+//                ];
+//            }
+//
+//            array_multisort(array_column($camp, 'payment'), SORT_DESC, $camp);
+
+//            //paid invoices
+//            $invoice_array = [];
+//            $broadcaster_det = Utilities::switch_db('api')->select("SELECT * from broadcasters where id = '$broadcaster'");
+//            $broadcaster_name = $broadcaster_det[0]->brand;
+//            $inv = Utilities::switch_db('api')->select("SELECT * from invoiceDetails WHERE broadcaster_id = '$broadcaster' ORDER BY time_created DESC LIMIT 10");
+//            foreach ($inv as $i) {
+//                $inv_details = Utilities::switch_db('api')->select("SELECT * FROM invoices where id = '$i->invoice_id'");
+//                $camp_id = $inv_details[0]->campaign_id;
+//                $campaign_det = Utilities::switch_db('api')->select("SELECT `name` as campaign_name, DATE_FORMAT(stop_date, '%Y-%m-%d') as stop_date from campaignDetails where campaign_id='$camp_id'");
+//                $user_id = $i->user_id;
+//                $user_broad = Utilities::switch_db('api')->select("SELECT * from users where id = '$user_id' ");
+//                $user_agency = Utilities::switch_db('api')->select("SELECT * from users where id = (SELECT user_id from agents where id = '$i->agency_id')");
+//                $user_advertiser = Utilities::switch_db('api')->select("SELECT * from users where id = (SELECT user_id from advertisers WHERE id = '$user_id')");
+//                if($user_broad){
+//                    $name = $user_broad[0]->firstname .' '.$user_broad[0]->lastname;
+//                }elseif($user_agency){
+//                    $name = $user_agency[0]->firstname .' '.$user_agency[0]->lastname;
+//                }else{
+//                    $name = $user_advertiser[0]->firstname .' '.$user_advertiser[0]->lastname;
+//                }
+//                $invoice_array[] = [
+//                    'invoice_number' => $i->agency_id ? $i->invoice_number.'v'.$broadcaster_name[0] : $i->invoice_number,
+//                    'campaign_name' => isset($campaign_det[0]->campaign_name) ? $campaign_det[0]->campaign_name : '',
+//                    'customer' => $name,
+//                    'date' => date('Y-m-d', strtotime($i->time_created)),
+//                    'date_due' => $campaign_det[0]->stop_date,
+//                ];
+//            }
+//            $invoice = (object) $invoice_array;
+
+        //High performing Dayparts
+//            $all_slots = [];
+//            $all_dayp = [];
+//            $dayp_namesss = [];
+//            $slots = Utilities::switch_db('api')->select("SELECT adslots_id from campaignDetails where broadcaster = '$broadcaster' ");
+//            foreach ($slots as $slot){
+//                $adslots = Utilities::switch_db('api')->select("SELECT day_parts from adslots where id IN ($slot->adslots_id)");
+//                $all_slots[] = $adslots;
+//            }
+//
+//
+//            $dayp_id = Utilities::array_flatten($all_slots);
+//
+//            foreach ($dayp_id as $d){
+//                $day_parts = Utilities::switch_db('api')->select("SELECT * from dayParts where id = '$d->day_parts'");
+//                $all_dayp[] = $day_parts;
+//            }
+//
+//            $dayp_name = Utilities::array_flatten($all_dayp);
+//            $total = (count($dayp_name));
+//
+//            $newArray = [];
+//            foreach($dayp_name as $entity)
+//            {
+//                $newArray[$entity->day_parts][] = $entity;
+//            }
+//
+//            foreach ($newArray as $nnn => $value){
+//                $day_percent = ((count($value)) / $total) * 100;
+//                $dayp_namesss[] = [
+//                    'name' => $nnn,
+//                    'y' => $day_percent,
+//                ];
+//            }
+//
+//            $day_pie = json_encode($dayp_namesss);
+
+
+
+        //high performing days
+//            $days = Utilities::switch_db('api')->select("SELECT COUNT(id) as tot_camp, DATE_FORMAT(time_created, '%a %M %d, %Y') as days from campaignDetails where broadcaster = '$broadcaster' AND day_parts != '' GROUP BY DATE_FORMAT(time_created, '%a'), broadcaster ORDER BY WEEK(time_created) desc LIMIT 7");
+//            $day_name = [];
+//            $b = [];
+//            for ($j = 0; $j < count($days); $j++) {
+//                $b[] = $days[$j]->tot_camp;
+//            }
+//            $s = array_sum($b);
+//
+//            foreach ($days as $dd) {
+//                $perc_days = (($dd->tot_camp) / $s) * 100;
+//                $day_name[] = [
+//                    'name' => $dd->days,
+//                    'y' => $perc_days
+//                ];
+//            }
+//            $days_data = json_encode($day_name);
+
+        //periodic sales report
+//            $prr = [];
+//            $ads = [];
+//            $months = [];
+//            $slot = [];
+//            $periodic = Utilities::switch_db('api')->select("SELECT count(id) as tot_camp, SUM(adslots) as adslot, time_created as days from campaignDetails WHERE broadcaster = '$broadcaster' GROUP BY DATE_FORMAT(time_created, '%Y-%m') ");
+//            $price = Utilities::switch_db('api')->select("SELECT SUM(amount) as total_price, time_created as days from paymentDetails WHERE broadcaster = '$broadcaster' GROUP BY DATE_FORMAT(time_created, '%Y-%m') ");
+//
+//            for ($i = 0; $i < count($periodic); $i++) {
+//                $ads[] = [
+//                    'total' => $price[$i]->total_price,
+//                    'adslot' => $periodic[$i]->adslot,
+//                    'date' => date('M, Y', strtotime($periodic[$i]->days)),
+//                ];
+//
+//            }
+//            foreach ($ads as $a) {
+//                $months[] = $a['date'];
+//            }
+//            foreach ($ads as $a) {
+//                $prr[] = $a['total'];
+//            }
+//            foreach ($ads as $a) {
+//                $slot[] = (integer)$a['adslot'];
+//            }
+//
+//            $ads_no = json_encode($slot);
+//            $tot_pri = json_encode($prr);
+//            $mon = json_encode($months);
+
+//            dd($ads,$ads_no, $tot_pri, $mon);
+
+//        Inventory fill rate
+//            $today = getDate();
+//            $today_day = $today['weekday'];
+//            $rate_c = [];
+//            $get_day_id = Utilities::switch_db('api')->select("SELECT id as day_id from days WHERE day = '$today_day'");
+//            $t_day = $get_day_id[0]->day_id;
+//            $get_ratecards_for_this_day = Utilities::switch_db('api')->select("SELECT * from rateCards WHERE day = '$t_day' AND broadcaster = '$broadcaster'");
+//            foreach ($get_ratecards_for_this_day as $gr) {
+//                $adslot = Utilities::switch_db('api')->select("SELECT COUNT(id) as total_slot, rate_card from adslots WHERE rate_card = '$gr->id'");
+////            $campaign = Utilities::switch_db('reports')->select("SELECT SUM(adslots) as total_sold from campaigns WHERE broadcaster = '$broadcaster' AND  GROUP BY ");
+//                $rate_c[] = $adslot;
+//            }
     }
 
 
