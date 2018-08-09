@@ -256,8 +256,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::group(['prefix' => 'walk-in'], function () {
         Route::get('/', 'WalkinsController@index')->name('walkins.all');
-        Route::get('/all-walk-in/data', 'WalkinsController@walkinsData');
-        Route::get('/create', 'WalkinsController@create')->name('walkins.create');
+        Route::post('/update/{client_id}', 'WalkinsController@updateWalKins')->name('walkins.update');
         Route::post('/store', 'WalkinsController@store')->name('walkins.store');
         Route::get('/delete/{id}', 'WalkinsController@delete')->name('walkins.delete');
         Route::get('/brand', 'WalkinsController@getSubIndustry');

@@ -4,6 +4,8 @@ namespace Vanguard\Libraries;
 
 use Hamcrest\Util;
 use Illuminate\Support\Facades\DB;
+use JD\Cloudder\Facades\Cloudder;
+use Session;
 use Carbon\Carbon;
 
 class Utilities {
@@ -270,6 +272,33 @@ class Utilities {
         $date = strtotime(date("Y-m-d H:i:s")) * 4;
         $reference = (integer)round((mt_rand(100000, 999999999).$date) / 199999999999);
         return $reference;
+    }
+
+    public static function updateClients($request, $client_id)
+    {
+        $walkins = Utilities::switch_db('api')->select("SELECT * from walkIns where id = '$client_id'");
+        $user_id = $walkins[0]->user_id;
+
+        if($request->hasFile('company_logo')){
+            $image = $request->company_logo;
+            $filename = $request->file('company_logo')->getRealPath();
+            Cloudder::upload($filename, Cloudder::getPublicId());
+            $clouder = Cloudder::getResult();
+            $image_url = encrypt($clouder['url']);
+            $walkins_update_logo = Utilities::switch_db('api')->update("UPDATE walkIns set company_logo = '$image_url' where id = '$client_id'");
+        }
+
+        $walkins_update = Utilities::switch_db('api')->update("UPDATE walkIns set location = '$request->address', company_name = '$request->company_name' where id = '$client_id'");
+
+        $api_user_update = Utilities::switch_db('api')->update("UPDATE users set firstname = '$request->first_name', lastname = '$request->last_name', phone_number = '$request->phone' where id = '$user_id'");
+
+        $local_db_update = DB::update("UPDATE users set first_name = '$request->first_name', last_name = '$request->last_name', phone = '$request->phone' where email = '$request->email'");
+
+        if($api_user_update || $walkins_update || $local_db_update || $walkins_update_logo){
+            return "success";
+        }else{
+            return "error";
+        }
     }
 
 }
