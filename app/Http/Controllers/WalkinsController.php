@@ -25,7 +25,7 @@ class WalkinsController extends Controller
     {
         $broadcaster_id = Session::get('broadcaster_id');
         $broadcaster_user = Session::get('broadcaster_user_id');
-
+        
         if($broadcaster_id){
             $clients = Utilities::switch_db('api')->select("SELECT w.user_id, w.id, u.id as user_det_id, u.firstname, u.lastname, u.phone_number, w.location, w.company_logo, w.company_name, w.time_created, u.email, w.image_url from walkIns as w, users as u where u.id = w.user_id and w.broadcaster_id = '$broadcaster_id'");
         }else{
@@ -259,5 +259,76 @@ class WalkinsController extends Controller
         }
     }
 
+    public function getDetails($client_id)
+    {
+        $broadcaster_id = Session::get('broadcaster_id');
+        $client = Utilities::switch_db('reports')->select("SELECT * FROM walkIns WHERE id = '$client_id'");
+
+        $user_id = $client[0]->user_id;
+
+        $user_camp = [];
+
+        $all_campaigns = Utilities::getClientCampaignData($user_id, $broadcaster_id);
+
+        $all_brands = Utilities::getClientsBrands($client_id, $broadcaster_id);
+
+        $total = Utilities::switch_db('api')->select("SELECT SUM(total) as total from payments where campaign_id IN (SELECT campaign_id from campaignDetails where user_id = '$user_id' and broadcaster = '$broadcaster_id') ");
+
+        $campaigns = Utilities::switch_db('api')->select("SELECT c.campaign_id, SUM(c.adslots) as adslots, c.time_created, c.product, p.total, c.time_created from campaignDetails as c, payments as p where c.user_id = '$user_id' and p.campaign_id = c.campaign_id and c.broadcaster = '$broadcaster_id'");
+
+        foreach ($campaigns as $campaign){
+            $user_camp[] = [
+                'product' => $campaign->product,
+                'num_of_slot' => $campaign->adslots,
+                'payment' => $campaign->total,
+                'date' => $campaign->time_created
+            ];
+        }
+
+        $user_details = Utilities::switch_db('api')->select("SELECT * FROM users where id = '$user_id'");
+
+//        campaign vs time graph
+        $all_campaign_graph = [];
+        $all_campaign_total_graph = [];
+        $all_campaign_date_graph = [];
+
+        foreach ($campaigns as $all_camp){
+            $all_campaign_graph[] = [
+                'id' => $all_camp->campaign_id,
+                'date' => date('Y-m-d', strtotime($all_camp->time_created)),
+                'total' => $all_camp->total
+            ];
+        }
+
+//        get the price
+        foreach ($all_campaign_graph as $all_camp_graph){
+            $all_campaign_total_graph[] = $all_camp_graph['total'];
+        }
+//        get the date
+        foreach ($all_campaign_graph as $all_camp_graph){
+            $all_campaign_date_graph[] = $all_camp_graph['date'];
+        }
+
+        $campaign_payment = json_encode($all_campaign_total_graph);
+        $campaign_date = json_encode($all_campaign_date_graph);
+
+        $industries = Utilities::switch_db('api')->select("SELECT * FROM sectors");
+
+        $sub_inds = Utilities::switch_db('api')->select("SELECT sub.id, sub.sector_id, sub.name, sub.sub_sector_code from subSectors as sub, sectors as s where sub.sector_id = s.sector_code");
+
+        return view('broadcaster_module.walk-In.details')->with('clients')
+            ->with('client_id', $client_id)
+            ->with('client', $client)
+            ->with('user_details', $user_details)
+            ->with('campaign', $user_camp)
+            ->with('all_campaigns', $all_campaigns)
+            ->with('all_brands', $all_brands)
+            ->with('total', $total)
+            ->with('campaign_payment', $campaign_payment)
+            ->with('campaign_date', $campaign_date)
+            ->with('total_this_month', $total)
+            ->with('industries', $industries)
+            ->with('sub_industries', $sub_inds);
+    }
 
 }

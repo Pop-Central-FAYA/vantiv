@@ -1000,7 +1000,7 @@ class DashboardController extends Controller
                 if(Session::has('agency_id')){
                     return '<a href="'.route('agency.campaign.details', ['id' => $campaigns_datatables['camp_id']]).'">'.$campaigns_datatables['name'].'</a>';
                 }else if(Session::has('broadcaster_id')){
-                    return '<a href="">'.$campaigns_datatables['name'].'</a>';
+                    return '<a href="'.route('broadcaster.campaign.details', ['id' => $campaigns_datatables['camp_id']]).'">'.$campaigns_datatables['name'].'</a>';
                 }
             })
             ->editColumn('status', function ($campaigns_datatables){

@@ -1,6 +1,6 @@
 @extends('layouts.faya_app')
 @section('title')
-    <title>FAYA | Agency - All Brands</title>
+    <title>FAYA | Broadcaster - All Brands</title>
 @stop
 @section('content')
     <div class="main_contain">
@@ -14,6 +14,7 @@
             <div class="column col_6">
                 <h2 class="sub_header">Brands</h2>
             </div>
+
         </div>
 
         <div class="similar_table pt3">
@@ -44,7 +45,7 @@
                                 <span class="more_icon"></span>
 
                                 <div class="more_more">
-                                    <a href="">Details</a>
+                                    <a href="{{ route('brand.details', ['id' => $all_brand['id'], 'client_id' => $all_brand['client_id']]) }}">Details</a>
                                     <a href="#brand{{ $all_brand['id'] }}" class="modal_click">Edit</a>
                                     {{--<a href="" class="color_red">Delete</a>--}}
                                 </div>
@@ -66,7 +67,7 @@
     @foreach($all_brands as $all_brand)
         <div class="modal_contain" id="brand{{ $all_brand['id'] }}">
             <h2 class="sub_header mb4">Edit Brand : {{ $all_brand['brand'] }}</h2>
-            <form action="{{ route('agency.brands.update', ['id' => $all_brand['id']]) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('brands.update', ['id' => $all_brand['id']]) }}" method="POST" enctype="multipart/form-data">
                 {{ csrf_field() }}
                 <div class="clearfix">
                     <div class="input_wrap column col_7{{ $errors->has('brand_name') ? ' has-error' : '' }}">

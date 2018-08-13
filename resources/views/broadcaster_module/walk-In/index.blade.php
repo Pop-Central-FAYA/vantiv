@@ -1,7 +1,7 @@
 @extends('layouts.faya_app')
 
 @section('title')
-    <title> FAYA | Clients </title>
+    <title> FAYA | Walk-Ins </title>
 @stop
 
 @section('content')
@@ -71,7 +71,7 @@
                             <span class="more_icon"></span>
 
                             <div class="more_more">
-                                <a href="{{ route('client.show', ['id' => $client['client_id']]) }}">Details</a>
+                                <a href="{{ route('walkins.details', ['id' => $client['client_id']]) }}">Details</a>
                                 <a href="#edit_client{{ $client['client_id'] }}" class="modal_click">Edit</a>
                                 <a href="" class="color_red">Delete</a>
                             </div>

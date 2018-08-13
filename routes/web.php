@@ -196,6 +196,14 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/all-campaign/data', 'CampaignsController@getAllData');
 
         Route::get('/campaign-details/{id}', 'CampaignsController@campaignDetails')->name('broadcaster.campaign.details');
+
+        Route::get('/{user_id}', 'CampaignsController@filterByUser');
+
+        Route::get('/media-channel/{campaign_id}', 'CampaignsController@getMediaChannel');
+
+        Route::get('/compliance-graph/broadcaster', 'CampaignsController@complianceGraph');
+
+        Route::get('/compliance-graph/filter/broadcaster', 'CampaignsController@complianceFilter')->name('broadcaster.campaign_details.compliance');
     });
 
     /*
@@ -241,18 +249,19 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/brand/get-industry', 'CampaignsController@getIndustrySubIndustry');
 
-    /*
-     * WalkIns Management
-     */
-
     Route::group(['prefix' => 'brands'], function () {
         Route::get('/', 'BrandsController@index')->name('brand.all');
         Route::get('/create', 'BrandsController@create')->name('brand.create');
         Route::post('/create/store', 'BrandsController@store')->name('brand.store');
-        Route::post('/brands/edit/{id}', 'BrandsController@update')->name('brands.update');
+        Route::post('/brands/update/{id}', 'BrandsController@update')->name('brands.update');
         Route::get('/brands/delete/{id}', 'BrandsController@delete')->name('brands.delete');
         Route::get('/search-brands', 'BrandsController@search')->name('broadcasters.brands.search');
+        Route::get('/details/{id}/{client_id}', 'BrandsController@getBrandDetails')->name('brand.details');
     });
+
+    /*
+     * WalkIns Management
+     */
 
     Route::group(['prefix' => 'walk-in'], function () {
         Route::get('/', 'WalkinsController@index')->name('walkins.all');
@@ -260,6 +269,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/store', 'WalkinsController@store')->name('walkins.store');
         Route::get('/delete/{id}', 'WalkinsController@delete')->name('walkins.delete');
         Route::get('/brand', 'WalkinsController@getSubIndustry');
+        Route::get('/walk-in/details/{client_id}', 'WalkinsController@getDetails')->name('walkins.details');
     });
 
     /**
