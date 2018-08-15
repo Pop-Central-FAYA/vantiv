@@ -391,4 +391,35 @@ class Utilities {
         return $brands;
     }
 
+    public static function numberOfAdslotOccurrence($adslot_id, $start_date, $end_date, $broadcaster_id)
+    {
+        $format = 'Y-m-d';
+        $start  = new \DateTime($start_date);
+        $end    = new \DateTime($end_date);
+        $invert = $start > $end;
+
+        $dates = array();
+        $dates[] = $start->format($format);
+        while ($start != $end) {
+            $start->modify(($invert ? '-' : '+') . '1 day');
+            $dates[] = $start->format($format);
+        }
+        $adslot_array = [];
+
+        foreach ($dates as $index => $date){
+            $date_name = date('l', strtotime($date));
+            $date_id = Utilities::switch_db('api')->select("SELECT * from days where `day` = '$date_name'");
+            $day_id = $date_id[0]->id;
+            $adslots = Utilities::switch_db('api')->select("SELECT a.id, r.day from adslots as a, rateCards as r where a.id = '$adslot_id' and r.id = a.rate_card");
+            if($adslots[0]->day === $day_id){
+                $adslot_array[] = [
+                    'adslot' => $adslots
+                ];
+            }
+        }
+
+        return count($adslot_array);
+
+    }
+
 }
