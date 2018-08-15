@@ -28,7 +28,9 @@
 <body>
 
 <!-- side navigation -->
-    @include('partials.new-frontend.agency.sidebar')
+    @if(Session::has('agency_id'))
+        @include('partials.new-frontend.agency.sidebar')
+    @endif
 
     @yield('content')
 

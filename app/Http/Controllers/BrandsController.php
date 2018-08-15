@@ -21,20 +21,38 @@ class BrandsController extends Controller
      */
     public function index()
     {
-        $broadcaster = Session::get('broadcaster_id');
-        if(!Session::get('broadcaster_id')){
-            $broadcaster_user = Session::get('broadcaster_user_id');
-            $broadcaster_id = Utilities::switch_db('api')->select("SELECT broadcaster_id from broadcasterUsers where id = '$broadcaster_user'");
-            $broadcaster = $broadcaster_id[0]->broadcaster_id;
+        $broadcaster_id = Session::get('broadcaster_id');
+        $industries = Utilities::switch_db('api')->select("SELECT * FROM sectors");
+        $sub_inds = Utilities::switch_db('api')->select("SELECT sub.id, sub.sector_id, sub.name, sub.sub_sector_code from subSectors as sub, sectors as s where sub.sector_id = s.sector_code");
+        $brs = Utilities::switch_db('api')->select("SELECT * from brands where broadcaster_agency = '$broadcaster_id' AND status = 0 ORDER BY time_created desc");
+        $brands = [];
+
+        foreach ($brs as $br){
+            $campaigns = Utilities::switch_db('api')->select("SELECT * from campaignDetails WHERE brand = '$br->id'");
+            $last_count_campaign = count($campaigns) - 1;
+            $pay = Utilities::switch_db('api')->select("SELECT SUM(total) as total from payments where campaign_id IN (SELECT campaign_id from campaignDetails where brand = '$br->id')");
+            $brands[] = [
+                'id' => $br->id,
+                'brand' => $br->name,
+                'date' => $br->time_created,
+                'count_brand' => count($brs),
+                'campaigns' => count($campaigns),
+                'image_url' => $br->image_url,
+                'last_campaign' => $campaigns ? $campaigns[$last_count_campaign]->name : 'none',
+                'total' => number_format($pay[0]->total,2),
+                'industry_id' => $br->industry_id,
+                'sub_industry_id' => $br->sub_industry_id,
+                'client_id' => $br->walkin_id
+            ];
         }
-        $db = Utilities::switch_db('api')->select("SELECT * from brands where broadcaster_agency = '$broadcaster' AND status = 0 ORDER BY time_created desc");
+
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
-        $col = new Collection($db);
+        $col = new Collection($brands);
         $perPage = 10;
         $currentPageSearchResults = $col->slice(($currentPage - 1) * $perPage, $perPage)->all();
         $entries = new LengthAwarePaginator($currentPageSearchResults, count($col), $perPage);
-        $entries->setPath('brands');
-        return view('brands.index')->with('brands', $entries);
+        $entries->setPath('all-brands');
+        return view('broadcaster_module.brands.index')->with('all_brands', $entries)->with('industries', $industries)->with('sub_industries', $sub_inds);
 
     }
 

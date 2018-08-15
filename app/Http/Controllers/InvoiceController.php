@@ -13,36 +13,23 @@ class InvoiceController extends Controller
     {
         $agency_id = Session::get('agency_id');
 
-        $all_invoices = Utilities::switch_db('reports')->select("SELECT * FROM invoiceDetails WHERE  agency_id = '$agency_id' GROUP BY invoice_id ORDER BY time_created DESC");
+        $all_invoices = Utilities::switch_db('reports')->select("SELECT i_d.user_id, i_d.invoice_id, i_d.invoice_number, i_d.refunded_amount, i_d.status, i_d.time_created, u.firstname, u.lastname, i.campaign_id FROM invoiceDetails as i_d, invoices as i, users as u WHERE  i_d.agency_id = '$agency_id' and i_d.invoice_id = i.id and u.id = i_d.user_id GROUP BY i_d.invoice_id ORDER BY i_d.time_created DESC");
 
         $invoice_campaign_details = [];
 
         foreach ($all_invoices as $invoice) {
 
-//            $campaign_id = $invoice->campaign_id;
-
-            $campaign_list = Utilities::switch_db('api')->select("SELECT * from invoices where id = '$invoice->invoice_id' ");
-
-            $campaign_id = $campaign_list[0]->campaign_id;
-
-            $user_id = $invoice->user_id;
-
-            $campaign = Utilities::switch_db('reports')->select("SELECT * FROM campaignDetails WHERE campaign_id = '$campaign_id' GROUP BY campaign_id");
-            $brand_id = $campaign[0]->brand;
-            $brand_name = Utilities::switch_db('api')->select("SELECT name from brands where id = '$brand_id'");
-            $user_details = $user_details = Utilities::switch_db('api')->select("SELECT * FROM users WHERE id = '$user_id'");
-
-            $payment = Utilities::switch_db('api')->select("SELECT * from payments where campaign_id = '$campaign_id'");
+            $campaign_details = Utilities::switch_db('api')->select("SELECT c.name as campaign_name, b.name as brand_name, p.total from campaignDetails as c, payments as p, brands as b where c.campaign_id = '$invoice->campaign_id' and p.campaign_id = '$invoice->campaign_id' and b.id = c.brand GROUP BY c.campaign_id");
 
             $invoice_campaign_details[] = [
                 'id' => $invoice->invoice_id,
                 'invoice_number' => $invoice->invoice_number,
-                'actual_amount_paid' => number_format($payment[0]->total, 2),
+                'actual_amount_paid' => number_format($campaign_details[0]->total, 2),
                 'refunded_amount' => $invoice->refunded_amount,
-                'name' => $user_details && $user_details[0] ? $user_details[0]->lastname . ' ' . $user_details[0]->firstname : '',
+                'name' => $invoice->lastname . ' ' . $invoice->firstname,
                 'status' => $invoice->status,
-                'campaign_brand' => $brand_name[0]->name,
-                'campaign_name' => $campaign[0]->name,
+                'campaign_brand' => $campaign_details[0]->brand_name,
+                'campaign_name' => $campaign_details[0]->campaign_name,
                 'date' => date('Y/m/d', strtotime($invoice->time_created)),
             ];
         }
@@ -55,41 +42,27 @@ class InvoiceController extends Controller
     {
         $agency_id = Session::get('agency_id');
 
-        $all_invoices = Utilities::switch_db('reports')->select("SELECT * FROM invoiceDetails WHERE  agency_id = '$agency_id' GROUP BY invoice_id ORDER BY time_created DESC");
+        $all_invoices = Utilities::switch_db('reports')->select("SELECT i_d.user_id, i_d.invoice_id, i_d.invoice_number, i_d.refunded_amount, i_d.status, i_d.time_created, u.firstname, u.lastname, i.campaign_id FROM invoiceDetails as i_d, invoices as i, users as u WHERE  i_d.agency_id = '$agency_id' and i_d.invoice_id = i.id and u.id = i_d.user_id GROUP BY i_d.invoice_id ORDER BY i_d.time_created DESC");
 
         $invoice_campaign_details = [];
         $j = 1;
 
         foreach ($all_invoices as $invoice) {
 
-//            $campaign_id = $invoice->campaign_id;
-
-            $campaign_list = Utilities::switch_db('api')->select("SELECT * from invoices where id = '$invoice->invoice_id' ");
-
-            $campaign_id = $campaign_list[0]->campaign_id;
-
-            $user_id = $invoice->user_id;
-
-            $campaign = Utilities::switch_db('reports')->select("SELECT * FROM campaignDetails WHERE campaign_id = '$campaign_id' GROUP BY campaign_id");
-            $brand_id = $campaign[0]->brand;
-            $brand_name = Utilities::switch_db('api')->select("SELECT name from brands where id = '$brand_id'");
-            $user_details = $user_details = Utilities::switch_db('api')->select("SELECT * FROM users WHERE id = '$user_id'");
-
-            $payment = Utilities::switch_db('api')->select("SELECT * from payments where campaign_id = '$campaign_id'");
+            $campaign_details = Utilities::switch_db('api')->select("SELECT c.name as campaign_name, b.name as brand_name, p.total from campaignDetails as c, payments as p, brands as b where c.campaign_id = '$invoice->campaign_id' and p.campaign_id = '$invoice->campaign_id' and b.id = c.brand GROUP BY c.campaign_id");
 
             $invoice_campaign_details[] = [
                 's_n' => $j,
                 'id' => $invoice->invoice_id,
                 'invoice_number' => $invoice->invoice_number,
-                'actual_amount_paid' => number_format($payment[0]->total, 2),
+                'actual_amount_paid' => number_format($campaign_details[0]->total, 2),
                 'refunded_amount' => $invoice->refunded_amount,
-                'name' => $user_details && $user_details[0] ? $user_details[0]->lastname . ' ' . $user_details[0]->firstname : '',
+                'name' => $invoice->lastname . ' ' . $invoice->firstname,
                 'status' => $invoice->status,
-                'campaign_brand' => $brand_name[0]->name,
-                'campaign_name' => $campaign[0]->name,
+                'campaign_brand' => $campaign_details[0]->brand_name,
+                'campaign_name' => $campaign_details[0]->campaign_name,
                 'date' => date('Y/m/d', strtotime($invoice->time_created)),
             ];
-
             $j++;
         }
 
@@ -113,36 +86,23 @@ class InvoiceController extends Controller
     {
         $agency_id = Session::get('agency_id');
 
-        $all_invoices = Utilities::switch_db('reports')->select("SELECT * FROM invoiceDetails WHERE  agency_id = '$agency_id' AND status = 0 GROUP BY invoice_id ORDER BY time_created DESC");
+        $all_pending_invoices = Utilities::switch_db('reports')->select("SELECT i_d.user_id, i_d.invoice_id, i_d.invoice_number, i_d.refunded_amount, i_d.status, i_d.time_created, u.firstname, u.lastname, i.campaign_id FROM invoiceDetails as i_d, invoices as i, users as u WHERE  i_d.agency_id = '$agency_id' and i_d.invoice_id = i.id and u.id = i_d.user_id and i_d.status = 0 GROUP BY i_d.invoice_id ORDER BY i_d.time_created DESC");
 
         $invoice_campaign_details = [];
 
-        foreach ($all_invoices as $invoice) {
+        foreach ($all_pending_invoices as $invoice) {
 
-//            $campaign_id = $invoice->campaign_id;
-
-            $campaign_list = Utilities::switch_db('api')->select("SELECT * from invoices where id = '$invoice->invoice_id' ");
-
-            $campaign_id = $campaign_list[0]->campaign_id;
-
-            $user_id = $invoice->user_id;
-
-            $campaign = Utilities::switch_db('reports')->select("SELECT * FROM campaignDetails WHERE campaign_id = '$campaign_id' GROUP BY campaign_id");
-            $brand_id = $campaign[0]->brand;
-            $brand_name = Utilities::switch_db('api')->select("SELECT name from brands where id = '$brand_id'");
-            $user_details = $user_details = Utilities::switch_db('api')->select("SELECT * FROM users WHERE id = '$user_id'");
-
-            $payment = Utilities::switch_db('api')->select("SELECT * from payments where campaign_id = '$campaign_id'");
+            $campaign_details = Utilities::switch_db('api')->select("SELECT c.name as campaign_name, b.name as brand_name, p.total from campaignDetails as c, payments as p, brands as b where c.campaign_id = '$invoice->campaign_id' and p.campaign_id = '$invoice->campaign_id' and b.id = c.brand GROUP BY c.campaign_id");
 
             $invoice_campaign_details[] = [
                 'id' => $invoice->invoice_id,
                 'invoice_number' => $invoice->invoice_number,
-                'actual_amount_paid' => number_format($payment[0]->total, 2),
+                'actual_amount_paid' => number_format($campaign_details[0]->total, 2),
                 'refunded_amount' => $invoice->refunded_amount,
-                'name' => $user_details && $user_details[0] ? $user_details[0]->lastname . ' ' . $user_details[0]->firstname : '',
+                'name' => $invoice->lastname . ' ' . $invoice->firstname,
                 'status' => $invoice->status,
-                'campaign_brand' => $brand_name[0]->name,
-                'campaign_name' => $campaign[0]->name,
+                'campaign_brand' => $campaign_details[0]->brand_name,
+                'campaign_name' => $campaign_details[0]->campaign_name,
                 'date' => date('Y/m/d', strtotime($invoice->time_created)),
             ];
         }
@@ -156,41 +116,27 @@ class InvoiceController extends Controller
     {
         $agency_id = Session::get('agency_id');
 
-        $all_invoices = Utilities::switch_db('reports')->select("SELECT * FROM invoiceDetails WHERE  agency_id = '$agency_id' AND status = 0 GROUP BY invoice_id ORDER BY time_created DESC");
+        $all_pending_invoices = Utilities::switch_db('reports')->select("SELECT i_d.user_id, i_d.invoice_id, i_d.invoice_number, i_d.refunded_amount, i_d.status, i_d.time_created, u.firstname, u.lastname, i.campaign_id FROM invoiceDetails as i_d, invoices as i, users as u WHERE  i_d.agency_id = '$agency_id' and i_d.invoice_id = i.id and u.id = i_d.user_id and i_d.status = 0 GROUP BY i_d.invoice_id ORDER BY i_d.time_created DESC");
 
         $invoice_campaign_details = [];
         $j = 1;
 
-        foreach ($all_invoices as $invoice) {
+        foreach ($all_pending_invoices as $invoice) {
 
-//            $campaign_id = $invoice->campaign_id;
-
-            $campaign_list = Utilities::switch_db('api')->select("SELECT * from invoices where id = '$invoice->invoice_id' ");
-
-            $campaign_id = $campaign_list[0]->campaign_id;
-
-            $user_id = $invoice->user_id;
-
-            $campaign = Utilities::switch_db('reports')->select("SELECT * FROM campaignDetails WHERE campaign_id = '$campaign_id' GROUP BY campaign_id");
-            $brand_id = $campaign[0]->brand;
-            $brand_name = Utilities::switch_db('api')->select("SELECT name from brands where id = '$brand_id'");
-            $user_details = $user_details = Utilities::switch_db('api')->select("SELECT * FROM users WHERE id = '$user_id'");
-
-            $payment = Utilities::switch_db('api')->select("SELECT * from payments where campaign_id = '$campaign_id'");
+            $campaign_details = Utilities::switch_db('api')->select("SELECT c.name as campaign_name, b.name as brand_name, p.total from campaignDetails as c, payments as p, brands as b where c.campaign_id = '$invoice->campaign_id' and p.campaign_id = '$invoice->campaign_id' and b.id = c.brand GROUP BY c.campaign_id");
 
             $invoice_campaign_details[] = [
                 's_n' => $j,
                 'id' => $invoice->invoice_id,
                 'invoice_number' => $invoice->invoice_number,
-                'actual_amount_paid' => number_format($payment[0]->total, 2),
+                'actual_amount_paid' => number_format($campaign_details[0]->total, 2),
                 'refunded_amount' => $invoice->refunded_amount,
-                'name' => $user_details && $user_details[0] ? $user_details[0]->lastname . ' ' . $user_details[0]->firstname : '',
+                'name' => $invoice->lastname . ' ' . $invoice->firstname,
                 'status' => $invoice->status,
-                'campaign_brand' => $brand_name[0]->name,
-                'campaign_name' => $campaign[0]->name,
+                'campaign_brand' => $campaign_details[0]->brand_name,
+                'campaign_name' => $campaign_details[0]->campaign_name,
                 'date' => date('Y/m/d', strtotime($invoice->time_created)),
             ];
-
             $j++;
         }
 

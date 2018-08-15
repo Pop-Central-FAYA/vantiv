@@ -100,7 +100,7 @@
                             </div>
                         </form>
                     </div>
-                    <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                    <div id="container" style="min-width: 310px; height: 370px; margin: 0 auto"></div>
                 </div>
                 <!-- end -->
 
