@@ -12,33 +12,25 @@ class MpoController extends Controller
     public function index()
     {
         $broadcaster_id = \Session::get('broadcaster_id');
-
-        $mpos = Utilities::switch_db('reports')->select("SELECT * FROM mpoDetails WHERE broadcaster_id = '$broadcaster_id' ORDER BY time_created DESC ");
-
+        $mpos = Utilities::switch_db('api')->select("SELECT m_d.mpo_id, m_d.is_mpo_accepted, m_d.agency_id, m.campaign_id from mpoDetails as m_d, mpos as m where m_d.broadcaster_id = '$broadcaster_id' and m.id = m_d.mpo_id order by m_d.time_created desc");
         $mpo_data = [];
-
         $broadcaster_det = Utilities::switch_db('api')->select("SELECT * from broadcasters where id = '$broadcaster_id'");
-
         $broadcaster_name = $broadcaster_det[0]->brand;
 
         foreach ($mpos as $mpo) {
             $n = 1;
-            $camp = Utilities::switch_db('api')->select("SELECT * from mpos where id = '$mpo->mpo_id'");
-            $campaign_id = $camp[0]->campaign_id;
-            $campaign_details = Api::fetchCampaign($campaign_id);
-            $brand = Api::brand($campaign_id);
-            $payment_details = Api::fetchPayment($campaign_id);
-            $status = Api::approvedCampaignFiles($campaign_id);
-            $invoice = Utilities::switch_db('api')->select("SELECT invoice_number from invoices where campaign_id = '$campaign_id'");
+            $campaign = Utilities::switch_db('api')->select("SELECT c.name, c.product, c.time_created, b.name as brand_name, i.invoice_number from campaignDetails as c, brands as b, invoices as i where c.campaign_id = '$mpo->campaign_id' and c.brand = b.id and i.campaign_id = c.campaign_id");
+            $payment_details = Api::fetchPayment($mpo->campaign_id);
+            $status = Api::approvedCampaignFiles($mpo->campaign_id);
 
-            if (count($campaign_details) === 0) {
+            if (count($campaign) === 0) {
                 $product = 0;
                 $name = 0;
                 $time = 0;
             } else {
-                $product = $campaign_details[0]->product;
-                $name = $campaign_details[0]->name;
-                $time = date('Y-m-d', strtotime($campaign_details[0]->time_created));
+                $product = $campaign[0]->product;
+                $name = $campaign[0]->name;
+                $time = date('Y-m-d', strtotime($campaign[0]->time_created));
             }
 
             if (count($payment_details) === 0) {
@@ -48,12 +40,13 @@ class MpoController extends Controller
             }
 
             $mpo_data[] = [
-                'id' => $mpo->agency_id ? $invoice[0]->invoice_number.'v'.$broadcaster_name[0] : $invoice[0]->invoice_number,
+                'mpo_id' => $mpo->mpo_id,
+                'id' => $mpo->agency_id ? $campaign[0]->invoice_number.'v'.$broadcaster_name[0] : $campaign[0]->invoice_number,
                 'is_mpo_accepted' => $mpo->is_mpo_accepted,
                 'product' => $product,
                 'amount' => $amount,
                 'name' => $name,
-                'brand' => $brand[0]->name,
+                'brand' => $campaign[0]->brand_name,
                 'time_created' => $time,
                 'status' => $status
             ];
@@ -61,7 +54,73 @@ class MpoController extends Controller
             $n++;
         }
 
-        return view('mpos.index', compact('mpo_data'));
+
+
+        return view('broadcaster_module.mpos.index', compact('mpo_data'));
+    }
+
+    public function getAllData(Request $request, DataTables $dataTables)
+    {
+        $broadcaster_id = \Session::get('broadcaster_id');
+        if($request->has('start_date') && $request->has('stop_date')) {
+            $start_date = $request->start_date;
+            $stop_date = $request->stop_date;
+            $mpos = Utilities::switch_db('api')->select("SELECT m_d.mpo_id, m_d.is_mpo_accepted, m_d.agency_id, m.campaign_id from mpoDetails as m_d, mpos as m where m_d.broadcaster_id = '$broadcaster_id' and m.id = m_d.mpo_id and m_d.time_created between '$start_date' and '$stop_date' order by m_d.time_created desc");
+        }else{
+            $mpos = Utilities::switch_db('api')->select("SELECT m_d.mpo_id, m_d.is_mpo_accepted, m_d.agency_id, m.campaign_id from mpoDetails as m_d, mpos as m where m_d.broadcaster_id = '$broadcaster_id' and m.id = m_d.mpo_id order by m_d.time_created desc");
+        }
+        $mpo_data = [];
+        $broadcaster_det = Utilities::switch_db('api')->select("SELECT * from broadcasters where id = '$broadcaster_id'");
+        $broadcaster_name = $broadcaster_det[0]->brand;
+
+        foreach ($mpos as $mpo) {
+            $n = 1;
+            $campaign = Utilities::switch_db('api')->select("SELECT c.name, c.product, c.time_created, b.name as brand_name, i.invoice_number from campaignDetails as c, brands as b, invoices as i where c.campaign_id = '$mpo->campaign_id' and c.brand = b.id and i.campaign_id = c.campaign_id");
+            $payment_details = Api::fetchPayment($mpo->campaign_id);
+            $status = Api::approvedCampaignFiles($mpo->campaign_id);
+
+            if (count($campaign) === 0) {
+                $product = 0;
+                $name = 0;
+                $time = 0;
+            } else {
+                $product = $campaign[0]->product;
+                $name = $campaign[0]->name;
+                $time = date('Y-m-d', strtotime($campaign[0]->time_created));
+            }
+
+            if (count($payment_details) === 0) {
+                $amount = 0;
+            } else {
+                $amount = $payment_details[0]->amount;
+            }
+
+            $mpo_data[] = [
+                'mpo_id' => $mpo->mpo_id,
+                'id' => $mpo->agency_id ? $campaign[0]->invoice_number.'v'.$broadcaster_name[0] : $campaign[0]->invoice_number,
+                'is_mpo_accepted' => $mpo->is_mpo_accepted,
+                'product' => $product,
+                'budget' => $amount,
+                'name' => $name,
+                'brand' => $campaign[0]->brand_name,
+                'date_created' => $time,
+                'status' => $status
+            ];
+
+            $n++;
+        }
+
+        return $dataTables->collection($mpo_data)
+            ->editColumn('status', function ($mpo_data){
+                if($mpo_data['status'] === true){
+                    return '<span class="span_state status_success">Approved</span>';
+                }else {
+                    return '<a href="#pending_mpos'.$mpo_data['mpo_id'].'" class="span_state status_danger modal_mpo_click">Pending</a>';
+                }
+            })
+            ->rawColumns(['status' => 'status', 'name' => 'name'])
+            ->addIndexColumn()
+            ->make(true);
     }
 
     public function pending_mpos()
