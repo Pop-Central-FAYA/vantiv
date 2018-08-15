@@ -983,7 +983,7 @@ class CampaignsController extends Controller
         foreach ($date_compliances as $date_compliance){
             $date_created = date('Y-m-d', strtotime($date_compliance->time_created));
             //this query results to a multidimensional array
-            $compliances = Utilities::switch_db('api')->select("SELECT IF(c.amount_spent IS NOT NULL, sum(c.amount_spent), 0) as amount, c.broadcaster_id, c.campaign_id, date_format(c.time_created, '%Y-%m-%d') as time, b.brand, e.channel as stack, c.channel from compliances as c, broadcasters as b, campaignChannels as e where c.broadcaster_id = '$broadcaster_id' and b.id = '$broadcaster_id' and c.channel = e.id and c.broadcaster_id = '$broadcaster_id' and c.campaign_id = '$campaign_id' and date_format(c.time_created, '%Y-%m-%d') = '$date_created' ");
+            $compliances = Utilities::switch_db('api')->select("SELECT IF(c.amount_spent IS NOT NULL, sum(c.amount_spent), 0) as amount, c.broadcaster_id, c.campaign_id, date_format(c.time_created, '%Y-%m-%d') as `time`, b.brand, e.channel as stack, c.channel from compliances as c, broadcasters as b, campaignChannels as e where c.broadcaster_id = '$broadcaster_id' and b.id = '$broadcaster_id' and c.channel = e.id and c.broadcaster_id = '$broadcaster_id' and c.campaign_id = '$campaign_id' and date_format(c.time_created, '%Y-%m-%d') = '$date_created' ");
 
             $all_comp_data[] = $compliances;
             $dates[] = [date('Y-m-d', strtotime($date_compliance->time_created))];

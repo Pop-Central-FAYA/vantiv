@@ -498,7 +498,7 @@ class CampaignsController extends Controller
 
     public function postCart(Request $request)
     {
-
+        $first = Session::get('first_step');
         if((int)$request->position != ''){
             $get_percentage = Utilities::switch_db('api')->select("SELECT percentage from filePositions where id = '$request->position'");
             $percentage = $get_percentage[0]->percentage;
@@ -523,6 +523,10 @@ class CampaignsController extends Controller
         $file_format = $request->file_format;
         $agency = Session::get('agency_id');
         $ip = \Request::ip();
+
+        $number_of_occurrence = Utilities::numberOfAdslotOccurrence($adslot_id, date('Y-m-d', strtotime($first->start_date)), date('Y-m-d', strtotime($first->end_date)), $time, $broadcaster);
+
+        $new_price = $new_price * $number_of_occurrence;
 
         //check if the fileposition is picked
         $check_pos = Utilities::switch_db('api')->select("SELECT * from adslot_filePositions where broadcaster_id = '$broadcaster' AND adslot_id = '$adslot_id' AND filePosition_id = '$position'");
