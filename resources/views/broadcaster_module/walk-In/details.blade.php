@@ -1,18 +1,21 @@
 @extends('layouts.faya_app')
 
 @section('title')
-    <title>FAYA | Client List</title>
+    <title>FAYA | Walk-In Details</title>
 @stop
 
 @section('content')
+
     <div class="main_contain">
         <!-- heaser -->
-        @include('partials.new-frontend.agency.header')
+    @include('partials.new-frontend.broadcaster.header')
 
-        <!-- subheader -->
+    @include('partials.new-frontend.broadcaster.campaign_management.sidebar')
+
+    <!-- subheader -->
         <div class="sub_header clearfix mb pt">
             <div class="column col_6">
-                <h2 class="sub_header">Client</h2>
+                <h2 class="sub_header">Walk-In</h2>
             </div>
         </div>
 
@@ -20,7 +23,7 @@
         <!-- main stats -->
         <div class="the_frame clearfix mb ">
             <div class="border_bottom clearfix client_name">
-                <a href="{{ route('clients.list') }}" class="back_icon block_disp left"></a>
+                <a href="{{ route('walkins.all') }}" class="back_icon block_disp left"></a>
                 <div class="left">
                     <h2 class='sub_header'>{{ $client[0]->company_name }}</h2>
                     <p class="small_faint">{{ $client[0]->location }}</p>
@@ -77,7 +80,7 @@
                 <div class="the_stats clearfix mb border_bottom mb" id="this_box">
                     <div class="active_fill column col_4">
                         <span class="small_faint uppercased weight_medium">Total Campaigns</span>
-                        <h3>{{ count($all_campaign_this_month) }}</h3>
+                        <h3>{{ count($all_campaigns) }}</h3>
                     </div>
 
                     <div class="column col_4">
@@ -87,29 +90,14 @@
 
                     <div class="column col_4">
                         <span class="small_faint uppercased weight_medium">Brands</span>
-                        <h3>{{ $brand_this_month[0]->brand }}</h3>
+                        <h3>{{ count($all_brands) }}</h3>
 
                         <a href="" class="weight_medium small_font view_brands">View Brands</a>
                     </div>
                 </div>
 
                 <div class="the_stats clearfix mb border_bottom mb" id="show_this" style="display: none">
-                    <div class="active_fill column col_4">
-                        <span class="small_faint uppercased weight_medium">Total Campaigns</span>
-                        <h3>{{ count($all_campaign_this_month) }}</h3>
-                    </div>
 
-                    <div class="column col_4">
-                        <span class="small_faint uppercased weight_medium">Total Spend</span>
-                        <h3>&#8358; {{ $total_this_month ? number_format($total_this_month[0]->total, 2) : 0 }}</h3>
-                    </div>
-
-                    <div class="column col_4">
-                        <span class="small_faint uppercased weight_medium">Brands</span>
-                        <h3>{{ $brand_this_month[0]->brand }}</h3>
-
-                        <a href="" class="weight_medium small_font view_brands">View Brands</a>
-                    </div>
                 </div>
 
 
@@ -199,32 +187,32 @@
 
                         <!-- table item -->
                         @foreach($all_brands as $all_brand)
-                        <div class="_table_item the_frame clearfix">
-                            <div class="padd column col_4">
-                                <span class="client_ava"><img src="{{ $all_brand['image_url'] ? asset(decrypt($all_brand['image_url'])) : '' }}"></span>
-                                <p>{{ ucfirst($all_brand['brand']) }}</p>
-                                <span class="small_faint">Added {{ date('M j, Y', strtotime($all_brand['date'])) }}</span>
-                            </div>
-                            <div class="column col_2">{{ $all_brand['campaigns'] }}</div>
-                            <div class="column col_2">&#8358; {{ $all_brand['total'] }}</div>
-                            <div class="column col_3">{{ ucfirst($all_brand['last_campaign']) }}</div>
-                            <div class="column col_1">
+                            <div class="_table_item the_frame clearfix">
+                                <div class="padd column col_4">
+                                    <span class="client_ava"><img src="{{ $all_brand['image_url'] ? asset(decrypt($all_brand['image_url'])) : '' }}"></span>
+                                    <p>{{ ucfirst($all_brand['brand']) }}</p>
+                                    <span class="small_faint">Added {{ date('M j, Y', strtotime($all_brand['date'])) }}</span>
+                                </div>
+                                <div class="column col_2">{{ $all_brand['campaigns'] }}</div>
+                                <div class="column col_2">&#8358; {{ $all_brand['total'] }}</div>
+                                <div class="column col_3">{{ ucfirst($all_brand['last_campaign']) }}</div>
+                                <div class="column col_1">
                                 <span class="more_icon">
                                     <!-- more links -->
                                     <div class="list_more">
                                         <span class="more_icon"></span>
 
                                         <div class="more_more">
-                                            <a href="{{ route('campaign.brand.client', ['id' => $all_brand['id'], 'client_id' => $client_id]) }}">Details</a>
+                                            <a href="{{ route('brand.details', ['id' => $all_brand['id'], 'client_id' => $client_id]) }}">Details</a>
                                             <a href="#brand{{ $all_brand['id'] }}" class="modal_click">Edit</a>
                                             {{--<a href="" class="color_red">Delete</a>--}}
                                         </div>
                                     </div>
                                 </span>
+                                </div>
                             </div>
-                        </div>
-                        @endforeach
-                        <!-- table item end -->
+                    @endforeach
+                    <!-- table item end -->
                     </div>
 
                 </div>
@@ -236,7 +224,7 @@
     {{--modal for adding up brands--}}
     <div class="modal_contain" id="new_brand">
         <h2 class="sub_header mb4">New Brand</h2>
-        <form action="{{ route('agency.brand.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('brand.store') }}" method="POST" enctype="multipart/form-data">
             {{ csrf_field() }}
             <div class="clearfix">
                 <div class="input_wrap column col_7{{ $errors->has('brand_name') ? ' has-error' : '' }}">
@@ -294,77 +282,77 @@
     {{--modal for editing brands--}}
     @foreach($all_brands as $all_brand)
         <div class="modal_contain" id="brand{{ $all_brand['id'] }}">
-        <h2 class="sub_header mb4">Edit Brand : {{ $all_brand['brand'] }}</h2>
-        <form action="{{ route('agency.brands.update', ['id' => $all_brand['id']]) }}" method="POST" enctype="multipart/form-data">
-            {{ csrf_field() }}
-            <div class="clearfix">
-                <div class="input_wrap column col_7{{ $errors->has('brand_name') ? ' has-error' : '' }}">
-                    <label class="small_faint">Brand Name</label>
-                    <input type="text" name="brand_name" value="{{ $all_brand['brand'] }}"  placeholder="e.g Coca Cola">
-                    @if($errors->has('brand_name'))
-                        <strong>
-                            <span class="error-block" style="color: red;">{{ $errors->first('brand_name') }}</span>
-                        </strong>
-                    @endif
+            <h2 class="sub_header mb4">Edit Brand : {{ $all_brand['brand'] }}</h2>
+            <form action="{{ route('brands.update', ['id' => $all_brand['id']]) }}" method="POST" enctype="multipart/form-data">
+                {{ csrf_field() }}
+                <div class="clearfix">
+                    <div class="input_wrap column col_7{{ $errors->has('brand_name') ? ' has-error' : '' }}">
+                        <label class="small_faint">Brand Name</label>
+                        <input type="text" name="brand_name" value="{{ $all_brand['brand'] }}"  placeholder="e.g Coca Cola">
+                        @if($errors->has('brand_name'))
+                            <strong>
+                                <span class="error-block" style="color: red;">{{ $errors->first('brand_name') }}</span>
+                            </strong>
+                        @endif
+                    </div>
+                    <div class='column col_5 file_select align_center pt3{{ $errors->has('brand_logo') ? ' has-error' : '' }}' style="height: 70px;">
+                        <input type="file" id="file" name="brand_logo" />
+                        <span class="small_faint block_disp mb3">Brand Logo</span>
+                        @if($errors->has('brand_logo'))
+                            <strong>
+                                <span class="error-block" style="color: red;">{{ $errors->first('brand_logo') }}</span>
+                            </strong>
+                        @endif
+                    </div>
                 </div>
-                <div class='column col_5 file_select align_center pt3{{ $errors->has('brand_logo') ? ' has-error' : '' }}' style="height: 70px;">
-                    <input type="file" id="file" name="brand_logo" />
-                    <span class="small_faint block_disp mb3">Brand Logo</span>
-                    @if($errors->has('brand_logo'))
-                        <strong>
-                            <span class="error-block" style="color: red;">{{ $errors->first('brand_logo') }}</span>
-                        </strong>
-                    @endif
-                </div>
-            </div>
 
-            <input type="hidden" name="walkin_id" value="{{ $client_id }}">
+                <input type="hidden" name="walkin_id" value="{{ $client_id }}">
 
-            <div class="input_wrap">
-                <label class="small_faint">Industry</label>
+                <div class="input_wrap">
+                    <label class="small_faint">Industry</label>
 
-                <div class="select_wrap">
-                    <select name="industry" id="industry">
-                        <option value="">Select Industry</option>
-                        @foreach($industries as $industry)
-                            @if($industry->sector_code === $all_brand['industry_id'])
-                                <option value="{{ $industry->sector_code }}"
+                    <div class="select_wrap">
+                        <select name="industry" id="industry">
+                            <option value="">Select Industry</option>
+                            @foreach($industries as $industry)
                                 @if($industry->sector_code === $all_brand['industry_id'])
-                                    selected
+                                    <option value="{{ $industry->sector_code }}"
+                                            @if($industry->sector_code === $all_brand['industry_id'])
+                                            selected
+                                            @endif
+                                    >{{ $industry->name }}</option>
                                 @endif
-                                >{{ $industry->name }}</option>
-                            @endif
-                        @endforeach
-                    </select>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
-            </div>
 
-            <div class="input_wrap">
-                <label class="small_faint">Sub Industry</label>
+                <div class="input_wrap">
+                    <label class="small_faint">Sub Industry</label>
 
-                <div class="select_wrap">
-                    <select name="sub_industry" class="sub_industry" id="sub_industry">
-                        @foreach($sub_industries as $sub_industry)
+                    <div class="select_wrap">
+                        <select name="sub_industry" class="sub_industry" id="sub_industry">
+                            @foreach($sub_industries as $sub_industry)
 
-                            @if($sub_industry->sub_sector_code === $all_brand['sub_industry_id'])
-                                <option value="{{ $sub_industry->sub_sector_code }}"
                                 @if($sub_industry->sub_sector_code === $all_brand['sub_industry_id'])
-                                    selected
+                                    <option value="{{ $sub_industry->sub_sector_code }}"
+                                            @if($sub_industry->sub_sector_code === $all_brand['sub_industry_id'])
+                                            selected
+                                            @endif
+                                    >{{ $sub_industry->name }}</option>
                                 @endif
-                                >{{ $sub_industry->name }}</option>
-                            @endif
 
-                        @endforeach
-                    </select>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
-            </div>
 
-            <div class="align_right">
-                <input type="submit" value="Update Brand" class="btn uppercased update">
-            </div>
+                <div class="align_right">
+                    <input type="submit" value="Update Brand" class="btn uppercased update">
+                </div>
 
-        </form>
-    </div>
+            </form>
+        </div>
     @endforeach
 
 @stop
