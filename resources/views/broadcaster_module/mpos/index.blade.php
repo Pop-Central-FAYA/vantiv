@@ -58,18 +58,6 @@
 
     </div>
 
-    @foreach($mpo_data as $mpo_datum)
-        {{--modal for approving invoice--}}
-        <div class="modal_contain" style="width: 1000px;" id="pending_mpos{{ $mpo_datum['mpo_id'] }}">
-            <p><h2>MPO-{{ $mpo_datum['name'] }}</h2></p>
-
-            <div class="align_right">
-                <span class="padd color_initial light_font" onclick="$.modal.close()">Cancel</span>
-                <button type="submit" class="btn">Continue</button>
-            </div>
-        </div>
-
-    @endforeach
 @stop
 
 @section('scripts')
@@ -91,12 +79,6 @@
     <script>
 
         $(document).ready(function( $ ) {
-
-            $("body").delegate(".modal_mpo_click", "click", function() {
-                var href = $(this).attr("href");
-                $(href).modal();
-                return false;
-            });
 
             flatpickr(".flatpickr", {
                 altInput: true,

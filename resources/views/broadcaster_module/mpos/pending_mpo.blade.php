@@ -1,62 +1,29 @@
 @extends('layouts.faya_app')
 
 @section('title')
-    <title>FAYA | Dashboard </title>
+    <title> FAYA | MPO'S</title>
 @stop
 
 @section('content')
+
     <div class="main_contain">
         <!-- heaser -->
     @include('partials.new-frontend.broadcaster.header')
 
+    @include('partials.new-frontend.broadcaster.campaign_management.sidebar')
+
     <!-- subheader -->
         <div class="sub_header clearfix mb pt">
             <div class="column col_6">
-                <h2 class="sub_header">Dashboard</h2>
+                <h2 class="sub_header">Pending MPO'S</h2>
             </div>
         </div>
-
-    {{--sidebar--}}
-        @include('partials.new-frontend.broadcaster.campaign_management.sidebar')
-        <!-- main stats -->
-        <div class="the_stats the_frame clearfix mb4">
-            <div class="column col_3">
-                <span class="weight_medium small_faint uppercased">Active Campaigns</span>
-                <h3><a href="{{ route('campaign.all') }}">{{ count($active_campaigns) }}</a></h3>
-            </div>
-
-            <div class="column col_3">
-                <span class="weight_medium small_faint uppercased">All Walk-Ins</span>
-                <h3><a href="{{ route('walkins.all') }}">{{ count($walkins) }}</a></h3>
-            </div>
-
-            <div class="column col_3">
-                <span class="weight_medium small_faint uppercased">Pending MPO's</span>
-                <h3><a href="{{ route('pending-mpos') }}" style="color: red;">5</a></h3>
-            </div>
-
-            <div class="column col_3">
-                <span class="weight_medium small_faint uppercased">All Brands</span>
-                <h3><a href="{{ route('brand.all') }}">{{ count($brands) }}</a></h3>
-            </div>
-        </div>
-
-
-        <!-- client charts -->
-        <div class="clearfix">
-            <h4><p>Total Volume of campaign</p></h4>
-            <br>
-            {{--Total Volume of campaigns graph goes here--}}
-            <div id="containerTotal" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-        </div>
-
-        <p><br></p>
 
         <div class="the_frame client_dets mb4">
 
             <div class="filters border_bottom clearfix">
                 <div class="column col_8 p-t">
-                    <p class="uppercased weight_medium">All Campaigns</p>
+                    <p class="uppercased weight_medium">Pending MPO's</p>
                 </div>
                 <div class="column col_4 clearfix">
                     <div class="col_5 column">
@@ -68,7 +35,7 @@
                     </div>
 
                     <div class="col_1 column">
-                        <button type="button" id="dashboard_filter_campaign" class="btn small_btn">Filter</button>
+                        <button type="button" id="mpo_filters" class="btn small_btn">Filter</button>
                     </div>
                 </div>
             </div>
@@ -82,7 +49,6 @@
                     <th>Brand</th>
                     <th>Date Created</th>
                     <th>Budget</th>
-                    <th>Ad Slots</th>
                     <th>Status</th>
                 </tr>
                 </thead>
@@ -91,12 +57,14 @@
         </div>
 
     </div>
+
 @stop
 
 @section('scripts')
     <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/highcharts-3d.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
-    <script src="https://code.highcharts.com/highcharts-more.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
     {{--<script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>--}}
     <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/dataTables.buttons.min.js"></script>
@@ -107,41 +75,14 @@
     <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.html5.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.print.min.js"></script>
     <script src="https://unpkg.com/flatpickr"></script>
-
+    {{--datatables--}}
     <script>
-        //Bar chart for Total Volume of Campaigns
-            <?php echo "var campaign_volume = ".$volume . ";\n"; ?>
-            <?php echo "var campaign_month = ".$month . ";\n"; ?>
-        var chart = Highcharts.chart('containerTotal', {
-
-            title: {
-                text: ''
-            },
-
-            xAxis: {
-                categories: campaign_month
-            },
-            credits: {
-                enabled: false
-            },
-            exporting: {
-                enabled: false
-            },
-            series: [{
-                type: 'column',
-                colorByPoint: true,
-                data: campaign_volume,
-                showInLegend: false
-            }]
-
-        });
 
         $(document).ready(function( $ ) {
 
             flatpickr(".flatpickr", {
                 altInput: true,
             });
-
             var Datefilter =  $('.dashboard_campaigns').DataTable({
                 dom: 'Bfrtip',
                 paging: true,
@@ -149,8 +90,11 @@
                 processing: true,
                 "searching": false,
                 aaSorting: [],
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ],
                 ajax: {
-                    url: '/agency/dashboard/campaigns',
+                    url: '/mpos/all-data',
                     data: function (d) {
                         d.start_date = $('input[name=start_date]').val();
                         d.stop_date = $('input[name=stop_date]').val();
@@ -162,20 +106,16 @@
                     {data: 'brand', name: 'brand'},
                     {data: 'date_created', name: 'date_created'},
                     {data: 'budget', name: 'budget'},
-                    {data: 'adslots', name: 'adslots'},
                     {data: 'status', name: 'status'},
-
                 ],
-
             });
 
-            $('#dashboard_filter_campaign').on('click', function() {
+            $('#mpo_filters').on('click', function() {
                 Datefilter.draw();
             });
         } );
     </script>
-
-@endsection
+@stop
 
 @section('styles')
     <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
@@ -214,4 +154,4 @@
 
         }
     </style>
-@endsection
+@stop
