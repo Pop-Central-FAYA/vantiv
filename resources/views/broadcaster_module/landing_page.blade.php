@@ -1,44 +1,53 @@
-@extends('layouts.faya_app')
 
-@section('title')
-    <title>FAYA | Broadcaster Welcome</title>
-@stop
+<!DOCTYPE html>
+<html lang="en">
 
-@section('content')
-    <div class="main_contain">
-        <!-- heaser -->
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>FAYA | Welcome</title>
+    <meta property="og:url" content="http://www.faya.com" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="FAYA" />
+    <meta property="og:description" content="Advertising" />
 
-    <!-- subheader -->
+    <link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
 
-        <!-- main frame -->
-        <p><br></p>
-        <p><br></p>
-        <p><br></p>
-        <div class="the_frame col_10 clearfix mb border_top_color">
+    <link href="{{ asset('new_frontend/css/reset.css') }}" rel="stylesheet">
+    <link href="{{ asset('new_frontend/css/style.css') }}" rel="stylesheet">
 
-            <div class="margin_center col_5 clearfix pt4 create_fields">
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
 
-                <!-- progress bar -->
-                <div class="create_gauge">
-                    <div class=""></div>
-                </div>
+<body>
 
 
-                <p class='weight_medium m-b' style="text-align: center"><h1>Welcome {{ $broadcaster_info[0]->brand }}</h1></p><br>
+<div class="login_logo">
+    <img src="{{ asset('new_frontend/img/logo.svg') }}">
+</div>
 
-                <div class="mb4 clearfix pt4 mb4">
-                    <div class="column col_6">
-                        <a href="{{ route('bradcaster.campaign_management') }}" class="btn uppercased ">Campaign Management</a>
-                    </div>
 
-                    <div class="column col_6 align_right">
-                        <a href="#" class="btn uppercased ">Inventory Management</a>
-                    </div>
-                </div>
+<div class="auth_contain col_4 margin_center">
 
-            </div>
-        </div>
-        <!-- main frame end -->
+    <div class="align_center m-b">
+        <h2 class="m-b">Welcome Back {{ $broadcaster_info[0]->brand }}</h2>
+        <p class="mb4">What would you like to do?</p>
 
+        <a href="{{ route('bradcaster.campaign_management') }}" class="m-b block_disp btn full ghost">Campaign Management</a>
+        <a href="" class="m-b block_disp btn full ghost">Inventory Management</a>
     </div>
-@stop
+
+</div>
+
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script type="text/javascript" src="{{ asset('new_frontend/js/modal.js') }}"></script>
+<script type="text/javascript" src="{{ asset('new_frontend/js/script.js') }}"></script>
+
+</body>
+
+</html>
