@@ -25,12 +25,12 @@
                 <div class="border_bottom clearfix client_name">
                     <a href="{{ route('all-mpos') }}" class="back_icon block_disp left"></a>
                     <div class="left">
-                        <h2 class='sub_header'>MPO - {{ $mpo_data['name'] }}</h2>
+                        <h2 class='sub_header'>MPO - {{ $mpo_data[0]['name'] }}</h2>
                         <p class="small_faint"></p>
-                        <p><b>Campaign Name:</b> {{ $mpo_data['name'] }}</p>
-                        <p><b>Brand Name:</b> {{ $mpo_data['brand'] }}</p>
-                        <p><b>Product Name:</b> {{ $mpo_data['product'] }}</p>
-                        <p><b>Channel:</b> {{ $mpo_data['channel'] }}</p>
+                        <p><b>Campaign Name:</b> {{ $mpo_data[0]['name'] }}</p>
+                        <p><b>Brand Name:</b> {{ $mpo_data[0]['brand'] }}</p>
+                        <p><b>Product Name:</b> {{ $mpo_data[0]['product'] }}</p>
+                        <p><b>Channel:</b> {{ $mpo_data[0]['channel'] }}</p>
                     </div>
                 </div>
             </div>
@@ -48,7 +48,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                @foreach ($mpo_data['files'] as $file)
+                @foreach ($mpo_data[0]['files'] as $file)
                     <tr id="row{{ $file->file_code }}">
                         <td>
                             <video width="150" controls><source src="{{ asset(decrypt($file->file_url)) }}"></video>
@@ -159,6 +159,7 @@
                 csrf = $(this).data("token");
                 rejection_reason = $("select#reason"+file_code).val();
                 is_file_accepted = $("select#is_file_accepted"+file_code).val();
+                campaign_id = $(this).data("campaign_id");
 
                 if (rejection_reason === 'null' && is_file_accepted === 'null') {
                     toastr.error("File Status and Rejection reason can't be empty");
@@ -183,11 +184,12 @@
                 });
 
                 $.ajax({
-                    url: 'approve/' + is_file_accepted + '/' + file_code + '/' + rejection_reason,
+                    url: 'approve/' + is_file_accepted + '/' + file_code + '/' + rejection_reason + '/' + campaign_id,
                     method: "GET",
                     data: {
                         is_file_accepted: is_file_accepted,
-                        rejection_reason: rejection_reason
+                        rejection_reason: rejection_reason,
+                        campaign_id: campaign_id,
                     },
                     success: function (data) {
                         $(".load").css({

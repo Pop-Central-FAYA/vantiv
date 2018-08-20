@@ -32,7 +32,7 @@
 
             <div class="column col_3">
                 <span class="weight_medium small_faint uppercased">Pending MPO's</span>
-                <h3><a href="{{ route('pending-mpos') }}" style="color: red;">5</a></h3>
+                <h3><a href="{{ route('pending-mpos') }}" style="color: red;">{{ count($pending_mpos) }}</a></h3>
             </div>
 
             <div class="column col_3">

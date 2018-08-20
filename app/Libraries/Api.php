@@ -297,12 +297,12 @@ Class Api
         return count($allFiles) === count($approvedFiles);
     }
 
-    public static function pendingMPOs($campaign_id, $broadcaster_id)
+    public static function checkFilesForUpdatingMpos($campaign_id, $broadcaster_id)
     {
-        $allFiles = Utilities::switch_db('reports')->select("SELECT * FROM files WHERE campaign_id = '$campaign_id' and broadcaster_id = '$broadcaster_id' and broadcaster_id = '$broadcaster_id'");
-        $approvedFiles = Utilities::switch_db('reports')->select("SELECT * FROM files WHERE campaign_id = '$campaign_id' AND is_file_accepted = 1");
+        $allFiles = Utilities::switch_db('reports')->select("SELECT * FROM files WHERE campaign_id = '$campaign_id' and broadcaster_id = '$broadcaster_id'");
+        $approvedFiles = Utilities::switch_db('reports')->select("SELECT * FROM files WHERE campaign_id = '$campaign_id' AND broadcaster_id = '$broadcaster_id' AND is_file_accepted = 1");
 
-        return count($approvedFiles) < count($allFiles);
+        return count($allFiles) - count($approvedFiles);
     }
 
 
