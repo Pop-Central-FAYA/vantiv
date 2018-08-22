@@ -354,7 +354,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/pending/data', 'MpoController@pendingData');
         Route::get('pending', 'MpoController@pending_mpos')->name('pending-mpos');
         Route::get('/mpo-action/{mpo_id}', 'MpoController@mpoAction')->name('mpo.action');
-        Route::get('/mpo-action/approve/{is_file_accepted}/{file_code}/{rejection_reason}/{campaign_id}', ['as' => 'files.update', 'uses' => 'MpoController@update_file']);
+        Route::get('/mpo-action/approve/{is_file_accepted}/{file_code}/{rejection_reason}/{campaign_id}/{mpo_id}', ['as' => 'files.update', 'uses' => 'MpoController@update_file']);
     });
 
     Route::group(['prefix' => 'reports'], function () {

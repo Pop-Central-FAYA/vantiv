@@ -11,19 +11,9 @@ use Yajra\DataTables\DataTables;
 class MpoController extends Controller
 {
     
-    public function index(Request $request)
+    public function index()
     {
-        $broadcaster_id = \Session::get('broadcaster_id');
-        if($request->has('start_date') && $request->has('stop_date')) {
-            $start_date = $request->start_date;
-            $stop_date = $request->stop_date;
-            $mpos = Utilities::switch_db('api')->select("SELECT m_d.mpo_id, m_d.is_mpo_accepted, m_d.agency_id, m.campaign_id from mpoDetails as m_d JOIN mpos as m ON m.id = m_d.mpo_id where m_d.broadcaster_id = '$broadcaster_id' and m_d.time_created between '$start_date' and '$stop_date' order by m_d.time_created desc");
-        }else{
-            $mpos = Utilities::switch_db('api')->select("SELECT m_d.mpo_id, m_d.is_mpo_accepted, m_d.agency_id, m.campaign_id from mpoDetails as m_d JOIN mpos as m ON m.id = m_d.mpo_id where m_d.broadcaster_id = '$broadcaster_id' order by m_d.time_created desc");
-        }
-        $mpo_data = $this->getMpoCollection($mpos, $broadcaster_id);
-
-        return view('broadcaster_module.mpos.index', compact('mpo_data'));
+        return view('broadcaster_module.mpos.index');
     }
 
     public function getAllData(Request $request, DataTables $dataTables)
@@ -36,35 +26,15 @@ class MpoController extends Controller
         }else{
             $mpos = Utilities::switch_db('api')->select("SELECT m_d.mpo_id, m_d.is_mpo_accepted, m_d.agency_id, m.campaign_id from mpoDetails as m_d JOIN mpos as m ON m.id = m_d.mpo_id where m_d.broadcaster_id = '$broadcaster_id' order by m_d.time_created desc");
         }
+
         $mpo_data = $this->getMpoCollection($mpos, $broadcaster_id);
 
-        return $dataTables->collection($mpo_data)
-            ->editColumn('status', function ($mpo_data){
-                if($mpo_data['status'] === true){
-                    return '<span class="span_state status_success">Approved</span>';
-                }else {
-                    return '<a href="'.route('mpo.action', ['mpo_id' => $mpo_data['mpo_id']]).'" class="span_state status_danger modal_mpo_click">Pending</a>';
-                }
-            })
-            ->rawColumns(['status' => 'status', 'name' => 'name'])
-            ->addIndexColumn()
-            ->make(true);
+        return $this->mpoDatatablesCollection($dataTables, $mpo_data);
     }
 
     public function pending_mpos(Request $request)
     {
-        $broadcaster_id = \Session::get('broadcaster_id');
-        if($request->has('start_date') && $request->has('stop_date')) {
-            $start_date = $request->start_date;
-            $stop_date = $request->stop_date;
-            $mpos = Utilities::switch_db('api')->select("SELECT m_d.mpo_id, m_d.is_mpo_accepted, m_d.agency_id, m.campaign_id from mpoDetails as m_d JOIN mpos as m ON m.id = m_d.mpo_id where m_d.broadcaster_id = '$broadcaster_id' and m_d.is_mpo_accepted = 0 and m_d.time_created between '$start_date' and '$stop_date' order by m_d.time_created desc");
-        }else{
-            $mpos = Utilities::switch_db('api')->select("SELECT m_d.mpo_id, m_d.is_mpo_accepted, m_d.agency_id, m.campaign_id from mpoDetails as m_d JOIN mpos as m ON m.id = m_d.mpo_id where m_d.broadcaster_id = '$broadcaster_id' and m_d.is_mpo_accepted = 0 order by m_d.time_created desc");
-        }
-
-        $mpo_data = $this->getMpoCollection($mpos, $broadcaster_id);
-
-        return view('broadcaster_module.mpos.pending_mpo', compact('mpo_data'));
+        return view('broadcaster_module.mpos.pending_mpo');
     }
 
     public function pendingData(Request $request, DataTables $dataTables)
@@ -77,19 +47,10 @@ class MpoController extends Controller
         }else{
             $mpos = Utilities::switch_db('api')->select("SELECT m_d.mpo_id, m_d.is_mpo_accepted, m_d.agency_id, m.campaign_id from mpoDetails as m_d, mpos as m where m_d.broadcaster_id = '$broadcaster_id' and m_d.is_mpo_accepted = 0 and m.id = m_d.mpo_id order by m_d.time_created desc");
         }
+
         $mpo_data = $this->getMpoCollection($mpos, $broadcaster_id);
 
-        return $dataTables->collection($mpo_data)
-            ->editColumn('status', function ($mpo_data){
-                if($mpo_data['status'] === true){
-                    return '<span class="span_state status_success">Approved</span>';
-                }else {
-                    return '<a href="'.route('mpo.action', ['mpo_id' => $mpo_data['mpo_id']]).'" class="span_state status_danger modal_mpo_click">Pending</a>';
-                }
-            })
-            ->rawColumns(['status' => 'status', 'name' => 'name'])
-            ->addIndexColumn()
-            ->make(true);
+        return $this->mpoDatatablesCollection($dataTables, $mpo_data);
     }
 
     public function mpoAction($mpo_id)
@@ -101,24 +62,29 @@ class MpoController extends Controller
         return view('broadcaster_module.mpos.action', compact('mpo_data'));
     }
 
-    public function update_file($is_file_accepted, $file_code, $rejection_reason, $campaign_id)
+    public function update_file($is_file_accepted, $file_code, $rejection_reason, $campaign_id, $mpo_id)
     {
-        if (request()->ajax()) {
 
+        if (request()->ajax()) {
             $broadcaster_id = \Session::get('broadcaster_id');
 //            $add = Api::addFile($file_code);
             $check_files = Api::checkFilesForUpdatingMpos($campaign_id, $broadcaster_id);
 
-            if($check_files == 1){
-                $update_mpo_details = Utilities::switch_db('api')->update("UPDATE mpoDetails set is_mpo_accepted = 1 where mpo_id = (SELECT id from mpos where campaign_id = '$campaign_id') and broadcaster_id = '$broadcaster_id'");
+            if ($is_file_accepted !== 'null' && $rejection_reason === 'null') {
+                $file_accepted = $is_file_accepted;
+                $file_rejection = null;
+            }else if ($is_file_accepted === 'null' && $rejection_reason !== 'null') {
+                $file_accepted = null;
+                $file_rejection = $rejection_reason;
+            }else if ($is_file_accepted !== 'null' && $rejection_reason !== 'null') {
+                $file_accepted = $is_file_accepted;
+                $file_rejection = $rejection_reason;
             }
 
-            if ($is_file_accepted !== 'null' && $rejection_reason === 'null') {
-                $update_file = Utilities::switch_db('reports')->update("UPDATE files SET is_file_accepted = '$is_file_accepted' WHERE file_code = '$file_code'");
-            }else if ($is_file_accepted === 'null' && $rejection_reason !== 'null') {
-                $update_file = Utilities::switch_db('reports')->update("UPDATE files SET rejection_reason = '$rejection_reason' WHERE file_code = '$file_code'");
-            }else if ($is_file_accepted !== 'null' && $rejection_reason !== 'null') {
-                $update_file = Utilities::switch_db('reports')->update("UPDATE files SET is_file_accepted = '$is_file_accepted', rejection_reason = '$rejection_reason' WHERE file_code = '$file_code'");
+            $update_file = Utilities::switch_db('api')->update("UPDATE files SET is_file_accepted = '$file_accepted', rejection_reason = '$file_rejection' WHERE file_code = '$file_code'");
+
+            if($check_files == 1){
+                $update_mpo_details = Utilities::switch_db('api')->update("UPDATE mpoDetails set is_mpo_accepted = 1 where mpo_id = '$mpo_id' and broadcaster_id = '$broadcaster_id'");
             }
 
             //api call
@@ -145,7 +111,6 @@ class MpoController extends Controller
 
     public function getMpoCollection($mpos, $broadcaster_id)
     {
-
         $mpo_data = [];
         $broadcaster_det = Utilities::switch_db('api')->select("SELECT * from broadcasters where id = '$broadcaster_id'");
         $broadcaster_name = $broadcaster_det[0]->brand;
@@ -198,6 +163,21 @@ class MpoController extends Controller
         }
 
         return $mpo_data;
+    }
+
+    public static function mpoDatatablesCollection($dataTables, $mpo_data)
+    {
+        return $dataTables->collection($mpo_data)
+            ->editColumn('status', function ($mpo_data){
+                if($mpo_data['status'] === true){
+                    return '<span class="span_state status_success">Approved</span>';
+                }else {
+                    return '<a href="'.route('mpo.action', ['mpo_id' => $mpo_data['mpo_id']]).'" class="span_state status_danger modal_mpo_click">Pending</a>';
+                }
+            })
+            ->rawColumns(['status' => 'status', 'name' => 'name'])
+            ->addIndexColumn()
+            ->make(true);
     }
 
 }

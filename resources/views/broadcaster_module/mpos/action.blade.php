@@ -89,6 +89,7 @@
                                     data-campaign_id="{{ $file->campaign_id }}"
                                     data-file_code="{{ $file->file_code }}"
                                     data-token="{{ csrf_token() }}"
+                                    data-mpo_id="{{ $mpo_data[0]['mpo_id'] }}"
                                     data-is_file_accepted="{{ $file->is_file_accepted }}"
                                     data-rejection_reason="{{ $file->rejection_reason }}"
                             >
@@ -160,6 +161,7 @@
                 rejection_reason = $("select#reason"+file_code).val();
                 is_file_accepted = $("select#is_file_accepted"+file_code).val();
                 campaign_id = $(this).data("campaign_id");
+                mpo_id = $(this).data("mpo_id");
 
                 if (rejection_reason === 'null' && is_file_accepted === 'null') {
                     toastr.error("File Status and Rejection reason can't be empty");
@@ -184,12 +186,13 @@
                 });
 
                 $.ajax({
-                    url: 'approve/' + is_file_accepted + '/' + file_code + '/' + rejection_reason + '/' + campaign_id,
+                    url: 'approve/' + is_file_accepted + '/' + file_code + '/' + rejection_reason + '/' + campaign_id + '/' + mpo_id,
                     method: "GET",
                     data: {
                         is_file_accepted: is_file_accepted,
                         rejection_reason: rejection_reason,
                         campaign_id: campaign_id,
+                        mpo_id : mpo_id
                     },
                     success: function (data) {
                         $(".load").css({
