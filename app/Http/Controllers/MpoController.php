@@ -2,7 +2,6 @@
 
 namespace Vanguard\Http\Controllers;
 
-use Symfony\Component\VarDumper\Cloner\Data;
 use Vanguard\Libraries\Api;
 use Illuminate\Http\Request;
 use Vanguard\Libraries\Utilities;
