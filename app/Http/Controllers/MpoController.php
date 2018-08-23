@@ -67,7 +67,6 @@ class MpoController extends Controller
         if (request()->ajax()) {
             $broadcaster_id = \Session::get('broadcaster_id');
 //            $add = Api::addFile($file_code);
-            $check_files = Api::checkFilesForUpdatingMpos($campaign_id, $broadcaster_id);
 
             if ($is_file_accepted !== 'null' && $rejection_reason === 'null') {
                 $file_accepted = $is_file_accepted;
@@ -82,7 +81,9 @@ class MpoController extends Controller
 
             $update_file = Utilities::switch_db('api')->update("UPDATE files SET is_file_accepted = '$file_accepted', rejection_reason = '$file_rejection' WHERE file_code = '$file_code'");
 
-            if($check_files == 1){
+            $check_files = Api::checkFilesForUpdatingMpos($campaign_id, $broadcaster_id);
+
+            if($check_files == 0){
                 $update_mpo_details = Utilities::switch_db('api')->update("UPDATE mpoDetails set is_mpo_accepted = 1 where mpo_id = '$mpo_id' and broadcaster_id = '$broadcaster_id'");
             }
 

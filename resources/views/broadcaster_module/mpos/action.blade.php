@@ -23,7 +23,7 @@
         <div class="the_frame client_dets mb4">
             <div class="the_frame clearfix mb ">
                 <div class="border_bottom clearfix client_name">
-                    <a href="{{ route('all-mpos') }}" class="back_icon block_disp left"></a>
+                    <a href="{{ route('pending-mpos') }}" class="back_icon block_disp left"></a>
                     <div class="left">
                         <h2 class='sub_header'>MPO - {{ $mpo_data[0]['name'] }}</h2>
                         <p class="small_faint"></p>
