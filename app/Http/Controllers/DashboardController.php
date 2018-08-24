@@ -1055,8 +1055,10 @@ class DashboardController extends Controller
 
         $broadcaster_info = Utilities::switch_db('api')->select("SELECT * from broadcasters where id = '$broadcaster'");
 
+        $pending_mpos = Utilities::switch_db('api')->select("SELECT * FROM mpoDetails where is_mpo_accepted = 0 and broadcaster_id = '$broadcaster'");
+
         return view('broadcaster_module.dashboard.campaign_management.dashboard')->with(['volume' => $c_volume, 'month' => $c_mon, 'broadcaster_info' => $broadcaster_info,
-                                                                                                'walkins' => $clients, 'pending_invoices' => $pending_invoices, 'brands' => $all_brands, 'active_campaigns' => $active_campaigns]);
+                                                                                                'walkins' => $clients, 'pending_invoices' => $pending_invoices, 'brands' => $all_brands, 'active_campaigns' => $active_campaigns, 'pending_mpos' => $pending_mpos]);
 
     }
 
