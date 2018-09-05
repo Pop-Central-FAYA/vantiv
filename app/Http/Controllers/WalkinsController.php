@@ -272,6 +272,11 @@ class WalkinsController extends Controller
 
         $all_brands = Utilities::getClientsBrands($client_id, $broadcaster_id);
 
+        if($all_brands['error']){
+            Session::flash('info', 'You don`t have a brand on this client');
+            return redirect()->back();
+        }
+
         $total = Utilities::switch_db('api')->select("SELECT SUM(total) as total from payments where campaign_id IN (SELECT campaign_id from campaignDetails where user_id = '$user_id' and broadcaster = '$broadcaster_id') ");
 
         $campaigns = Utilities::switch_db('api')->select("SELECT c.campaign_id, SUM(c.adslots) as adslots, c.time_created, c.product, p.total, c.time_created from campaignDetails as c, payments as p where c.user_id = '$user_id' and p.campaign_id = c.campaign_id and c.broadcaster = '$broadcaster_id'");

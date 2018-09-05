@@ -161,33 +161,17 @@ Route::group(['middleware' => 'auth'], function () {
     */
     Route::group(['prefix' => 'campaign'], function(){
         Route::get('/active_campaigns', 'CampaignsController@index')->name('campaign.all');
-        Route::get('/setup', 'CampaignsController@setup')->name('campaign.setup');
         Route::get('/create', 'CampaignsController@create')->name('campaign.create');
-        Route::get('/create/{walkins}/step2', 'CampaignsController@createStep2')->name('campaign.create2');
-        Route::get('/create/{walkins}/step3', 'CampaignsController@createStep3')->name('campaign.create3');
-        Route::get('/create/{walkins}/step4', 'CampaignsController@createStep4')->name('campaign.create4');
-        Route::get('/create/{walkins}/step4/1', 'CampaignsController@createStep4_1')->name('campaign.create4_1');
-        Route::get('/create/{walkins}/step4/2', 'CampaignsController@createStep4_2')->name('campaign.create4_2');
-        Route::get('/create/{walkins}/step4/3', 'CampaignsController@createStep4_3')->name('campaign.create4_3');
-        Route::get('/create/{walkins}/step5', 'CampaignsController@createStep5')->name('campaign.create5');
-        Route::get('/upload/delete/{walkins}/{id}', 'CampaignsController@deleteUploads')->name('uploads.delete');
-        Route::get('/create/{walkins}/step6', 'CampaignsController@createStep6')->name('campaign.create6');
-        Route::get('/create/{walkins}/step7', 'CampaignsController@createStep7')->name('campaign.create7');
-        Route::get('/create/step8', 'CampaignsController@createStep8')->name('campaign.create8');
-        Route::get('/create/step9', 'CampaignsController@createStep9')->name('campaign.create9');
-        Route::post('/create/{walkins}/step2/store', 'CampaignsController@postStep2')->name('campaign.store2');
-        Route::post('/create/{walkins}/step3/store', 'CampaignsController@postStep3')->name('campaign.store3');
-        Route::post('/create/{walkins}/step4/store', 'CampaignsController@postStep4')->name('campaign.store4');
-        Route::post('/create/{walkins}/step4/1/store', 'CampaignsController@postStep4_1')->name('campaign.store4_1');
-        Route::post('/create/{walkins}/step4/2/store', 'CampaignsController@postStep4_2')->name('campaign.store4_2');
-        Route::post('/create/{walkins}/step4/3/store', 'CampaignsController@postStep4_3')->name('campaign.store4_3');
-        Route::post('/create/{walkins}/step5/uploads/store', 'CampaignsController@postStep5')->name('campaign.store5.uploads');
-        Route::post('/create/{walkins}/step6/store', 'CampaignsController@postStep6')->name('campaign.store6');
-        Route::get('/create/{walkins}/step7/get', 'CampaignsController@getStep7')->name('campaign.store7');
-        Route::post('/store/{walkins}', 'CampaignsController@store')->name('campaign.store');
-        Route::get('/add-to-cart', 'CampaignsController@postCart')->name('store.cart');
-        Route::get('/checkout/{walkins}', 'CampaignsController@getCheckout')->name('checkout');
-        Route::post('/submit-campaign/{walkins}', 'CampaignsController@postCampaign')->name('submit.campaign');
+        Route::post('/create/step1/store', 'CampaignsController@postStep1')->name('campaign.store_1');
+        Route::get('/create/step2/{id}', 'CampaignsController@createStep2')->name('campaign.create2');
+        Route::get('/create/step3/{id}', 'CampaignsController@createStep3')->name('campaign.create3');
+        Route::get('/create/step3/store/{id}', 'CampaignsController@postStep3')->name('campaign.store3');
+        Route::get('/create/step3_1/{id}', 'CampaignsController@storeStep3_1')->name('campaign.create3_1');
+        Route::get('/create/step4/{id}/{broadcaster}', 'CampaignsController@createStep4')->name('campaign.create4');
+        Route::get('/cart/store', 'CampaignsController@postCart')->name('broadcaster_campaign.cart');
+        Route::get('/checkout/{id}', 'CampaignsController@checkout')->name('broadcaster_campaign.checkout');
+        Route::post('/submit-campaign/{id}', 'CampaignsController@postCampaign')->name('submit.campaign');
+
         Route::get('/remove-campaigns/{id}', 'CampaignsController@removeCart')->name('cart.remove');
         Route::post('/remove-media/{walkins}/{id}', 'CampaignsController@removeMedia')->name('uploads.remove');
 
