@@ -26,7 +26,7 @@ html, body {
 .auth_input {
 	border: 1px solid #ddd;
 	border-radius: 2px;
-} 
+}
 
 .auth_input input {
 	font-size: 17px;
@@ -168,6 +168,7 @@ h2.sub_header {
 .notif_icon {
 	background: url(../img/notif_icon.svg) no-repeat;
 	position: relative;
+	cursor: pointer;
 }
 
 .notif_icon span {
@@ -235,8 +236,8 @@ h2.sub_header {
 
 ._table_item > div {
 	height: 48px;
-	display: flex; 
-	align-items: center; 
+	display: flex;
+	align-items: center;
 	font-size: 15px;
 }
 
@@ -275,18 +276,18 @@ h2.sub_header {
 
 .more_more {
 	position: absolute;
-    top: 20px;
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
-    border-radius: 4px;
-    background: #fff;
-    border: 1px solid #eee;
-    z-index: 9;
-    visibility: hidden;
-    width: 100px;
-    right: -15px;
-    box-shadow: 5px 10px 10px 0 rgba(0,0,0,0.08);
-    padding: 10px 15px 0;
+	top: 20px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+	background: #fff;
+	border: 1px solid #eee;
+	z-index: 9;
+	visibility: hidden;
+	width: 100px;
+	right: -15px;
+	box-shadow: 5px 10px 10px 0 rgba(0,0,0,0.08);
+	padding: 10px 15px 0;
 }
 
 .more_more a {
@@ -301,7 +302,7 @@ h2.sub_header {
 }
 
 .tab_header a {
-	padding: 15px 30px;
+	padding: 12px 30px;
 	color: inherit;
 	font-weight: 500;
 	display: inline-block;
@@ -334,19 +335,16 @@ h2.sub_header {
 
 .small_btn ._plus {
 	height: 11px;
-    width: 11px;
-    margin-right: 10px;
-    margin-top: 11px;
-    background-size: contain;
+	width: 11px;
+	margin-right: 10px;
+	margin-top: 6px;
+	background-size: contain;
 }
 
 #new_client .file_select {
 	height: 70px;
 }
 
-#new_brand .file_select {
-	height: 70px;
-}
 
 /* datatables */
 
@@ -365,6 +363,10 @@ h2.sub_header {
 
 ._nav li.campaign_icon:before {
 	content: url(../img/campaign_icon.svg);
+}
+
+._nav li.dash_icon:before {
+	content: url(../img/dashboard.svg);
 }
 
 ._nav li.report_icon:before {
@@ -387,13 +389,26 @@ h2.sub_header {
 	content: url(../img/client_icon.svg);
 }
 
+._nav li.discount_icon:before {
+	content: url(../img/discount.svg);
+}
+
 .header_search:before {
 	content: url(../img/search_icon.svg);
 	opacity: 0.4;
 }
 
+
+._nav li.active.discount_icon:before {
+	content: url(../img/discount_active.svg);
+}
+
 ._nav li.active.campaign_icon:before {
 	content: url(../img/campaign_active.svg);
+}
+
+._nav li.active.dash_icon:before {
+	content: url(../img/dashboard_active.svg);
 }
 
 ._nav li.active.report_icon:before {
@@ -426,14 +441,14 @@ h2.sub_header {
 	margin-top: 10px;
 }
 
-.user_acct {
+.user_acct, .notif_side {
 	position: relative;
 }
 
 .eliptic {
 	white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .inner_nav a {
@@ -441,23 +456,27 @@ h2.sub_header {
 	margin-bottom: 10px;
 }
 
-.inner_nav {
+.inner_nav, .notif_show {
+	text-align: left;
 	position: absolute;
-    top: 30px;
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
-    border-radius: 4px;
-    background: #fff;
-    border: 1px solid #eee;
-    z-index: 9;
-    visibility: hidden;
-    width: 200px;
-    right: -15px;
-    padding-top: 10px;
-    box-shadow: 1px 2px 10px 0 rgba(0,0,0,0.08);
+	top: 30px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+	background: #fff;
+	border: 1px solid #e8e8e8;
+	z-index: 9;
+	visibility: hidden;
+	box-shadow: 1px 2px 10px 0 rgba(0,0,0,0.08);
 }
 
-.inner_nav:before {
+.inner_nav {
+	width: 200px;
+	right: -15px;
+	padding-top: 10px;
+}
+
+.inner_nav:before, .notif_show:before {
 	content: '';
 	height: 0px;
 	width: 0px;
@@ -469,7 +488,20 @@ h2.sub_header {
 	position: absolute;
 }
 
-.user_acct:hover > .inner_nav {
+.notif_show {
+	width: 350px;
+	padding: 20px;
+	padding-bottom: 0;
+	right: 35px;
+	font-size: 14px;
+}
+
+.notif_show p {
+	opacity: 0.6;
+	margin-top: 3px;
+}
+
+.user_acct:hover > .inner_nav, .notif_side:hover > .notif_show {
 	visibility: visible;
 }
 
@@ -479,8 +511,8 @@ h2.sub_header {
 
 .input_wrap {
 	border-radius: 2px;
-	box-shadow: 0 0 1px 0 rgba(0,0,0,0.014), 0 2px 2px 0 rgba(0,0,0,0.14);
-	border: 1px solid #e8e8e8;
+	box-shadow: 0 0 1px 0 rgba(0,0,0,0.014), 0 2px 4px 0 rgba(0,0,0,0.14);
+	border-top: 1px solid #f4f4f4;
 	padding: 10px 15px;
 	padding-bottom: 5px;
 	margin-bottom: 10px;
@@ -490,7 +522,7 @@ h2.sub_header {
 	font-size: 16px;
 	border: 0;
 	padding: 0;
-    height: 30px;
+	height: 30px;
 }
 
 .client_charts {
@@ -685,6 +717,56 @@ h2.sub_header {
 	background: #E8235F;
 }
 
+.table_nav {
+	position: relative;
+}
+
+.table_nav span {
+	border: 1px solid;
+	display: block;
+	height: 10px;
+	width: 40px;
+	color: red;
+	cursor: pointer;
+	position: relative;
+}
+
+.table_nav div {
+	position: absolute;
+	top: -30px;
+	left: -75px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+	background: #fff;
+	border: 1px solid #eee;
+	z-index: 9;
+	visibility: hidden;
+	padding: 15px;
+	box-shadow: 1px 2px 10px 0 rgba(0,0,0,0.08);
+}
+
+.table_nav > div a {
+	display: block;
+}
+
+.table_nav > div:before {
+	content: '';
+	height: 0px;
+	width: 0px;
+	border-top: 10px solid transparent;
+	border-bottom: 10px solid transparent;
+	border-left: 10px solid #e8e8e8;
+	top: 23px;
+	right: -10px;
+	position: absolute;
+}
+
+.table_nav:hover > div {
+	visibility: visible;
+}
+
+
 .pager {
 	text-align: center;
 	margin-bottom: 50px;
@@ -793,8 +875,8 @@ h2.sub_header {
 }
 
 .create_fields .input_wrap {
-    box-shadow: 0 0 0;
-    border: 1px solid #ddd;
+	box-shadow: 0 0 0;
+	border: 1px solid #ddd;
 }
 
 .create_check li:nth-child(3n+1) {
@@ -880,7 +962,7 @@ h2.sub_header {
 
 .upload_block > div._block_two {
 	border: 0;
-	padding-top: 10px;
+	padding-top: 130px;
 }
 
 .dashed_upload {
@@ -916,7 +998,7 @@ h2.sub_header {
 	margin-bottom: 3px;
 	padding: 20px 30px;
 	height: 100px;
-	border-radius: 2px;	
+	border-radius: 2px;
 }
 
 .one_media {
@@ -974,8 +1056,8 @@ h2.sub_header {
 ._progress:first-child .one_point:before, ._progress.active + ._progress .one_point:before {
 	content: "";
 	display: block;
-	height: 10px;	
-	width: 10px;	
+	height: 10px;
+	width: 10px;
 	border-radius: 11px;
 	top: 50%;
 	margin-top: -5px;
@@ -1019,6 +1101,11 @@ h2.sub_header {
 	border-bottom: 1px solid #ddd;
 }
 
+._campaign_mgt {
+	font-size: 14px;
+	padding-left: 15px;
+	padding-right: 15px;
+}
 
 
 
@@ -1030,7 +1117,7 @@ h2.sub_header {
 
 @media only screen and (max-width: 580px) {
 
-	
+
 
 }
 
@@ -1038,12 +1125,12 @@ h2.sub_header {
 
 
 @media
-	(min--moz-device-pixel-ratio: 2),
-	(-o-min-device-pixel-ratio: 2/1),
-	(-webkit-min-device-pixel-ratio: 2),
-	(min-device-pixel-ratio: 2) {
+(min--moz-device-pixel-ratio: 2),
+(-o-min-device-pixel-ratio: 2/1),
+(-webkit-min-device-pixel-ratio: 2),
+(min-device-pixel-ratio: 2) {
 
-  	
+
 
 
 }

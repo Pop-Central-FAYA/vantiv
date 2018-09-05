@@ -255,8 +255,6 @@ class CampaignsController extends Controller
 
         $adslots = $rate_card['adslot'];
 
-//        dd($rate_card, $data, $cart, $positions);
-
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
         $col = new Collection($rate_card['rate_card']);
         $perPage = 100;

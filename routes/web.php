@@ -284,6 +284,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/clients-dashboard', ['as' => 'agency.dashboard', 'uses' => 'DashboardController@clientDashboard']);
 
     Route::get('/campaign-management/dashboard', 'DashboardController@campaignManagementDashbaord')->name('bradcaster.campaign_management');
+    Route::get('/inventory-management/dashboard', 'DashboardController@inventoryManagementDashboard')->name('broadcaster.inventory_management');
 
     /**
      * Adslot
