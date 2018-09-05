@@ -7,9 +7,11 @@
 @section('content')
     <div class="main_contain">
         <!-- heaser -->
-        @include('partials.new-frontend.agency.header')
+    @include('partials.new-frontend.broadcaster.header')
 
-        <!-- subheader -->
+    @include('partials.new-frontend.broadcaster.campaign_management.sidebar')
+
+    <!-- subheader -->
         <div class="sub_header clearfix mb pt">
             <div class="column col_6">
                 <h2 class="sub_header">Create New Campaign</h2>
@@ -38,7 +40,7 @@
                     </div>
                 </div>
 
-                <form method="POST" action="{{ route('agency_campaign.store1') }}">
+                <form method="POST" action="{{ route('campaign.store_1') }}">
                     {{ csrf_field() }}
                     <div class="create_gauge">
                         <div class=""></div>
@@ -47,16 +49,16 @@
                         <div class="input_wrap column col_6">
                             <label class="small_faint">Clients</label>
 
-                            <div class="select_wrap{{ $errors->has('clients') ? ' has-error' : '' }}">
+                            <div class="select_wrap{{ $errors->has('client') ? ' has-error' : '' }}">
                                 <select name="client" id="clients" required>
                                     <option>Select Client</option>
                                     @foreach($clients as $client)
                                         <option value="{{ $client->id }}"
-                                        @if((Session::get('first_step')) != null)
-                                            @if($first_step->client === $client->id))
+                                                @if((Session::get('first_step')) != null)
+                                                @if($first_step->client === $client->id))
                                                 selected="selected"
-                                            @endif
-                                        @endif
+                                                @endif
+                                                @endif
                                         >{{ $client->company_name }}</option>
                                     @endforeach
                                 </select>
@@ -75,9 +77,9 @@
                                     <select name="brand" id="brand">
                                         @foreach($brands as $brand)
                                             <option value="{{ $brand->id }}"
-                                            @if($first_step->brand === $brand->id)
-                                                selected
-                                            @endif
+                                                    @if($first_step->brand === $brand->id)
+                                                    selected
+                                                    @endif
                                             >{{ $brand->name }}</option>
                                         @endforeach
                                     </select>
@@ -171,32 +173,6 @@
                         </div>
                     </div>
 
-                    <p class="mb">Media Type</p>
-                    <div class="create_check clearfix mb3{{ $errors->has('channel') ? ' has-error' : '' }}">
-                        <ul>
-                            @foreach($channels as $channel)
-                                <li class="col_4 column m-b">
-                                    <input name="channel[]" value="{{ $channel->id }}"
-                                           @if((Session::get('first_step')) != null)
-                                                @foreach($first_step->channel as $checked_channel)
-                                                    @if($checked_channel === $channel->id)
-                                                        checked
-                                                    @endif
-                                                @endforeach
-                                           @endif
-                                           type="checkbox" id='{{ $channel->id }}'>
-                                    <label for="{{ $channel->id }}">{{ $channel->channel }}</label>
-                                </li>
-                            @endforeach
-                        </ul>
-
-                        @if($errors->has('channel'))
-                            <strong>
-                                <span class="help-block">{{ $errors->first('channel') }}</span>
-                            </strong>
-                        @endif
-                    </div>
-
                     <p class='mb'>Day Parts</p>
 
                     <div class="create_check clearfix mb3{{ $errors->has('dayparts') ? ' has-error' : '' }}">
@@ -205,11 +181,11 @@
                                 <li class="col_4 column m-b">
                                     <input name="dayparts[]" value="{{ $day_part->id }}"
                                            @if((Session::get('first_step')) != null)
-                                               @foreach($first_step->dayparts as $checked_dayparts)
-                                                   @if($checked_dayparts === $day_part->id)
-                                                        checked
-                                                   @endif
-                                               @endforeach
+                                           @foreach($first_step->dayparts as $checked_dayparts)
+                                           @if($checked_dayparts === $day_part->id)
+                                           checked
+                                           @endif
+                                           @endforeach
                                            @endif
                                            type="checkbox" id='{{ $day_part->id }}'>
                                     <label for="{{ $day_part->id }}">{{ $day_part->day_parts }}</label>
@@ -231,13 +207,13 @@
                                 <option value=""></option>
                                 @foreach($targets as $target)
                                     <option value="{{ $target->id }}"
-                                    @if((Session::get('first_step')) != null)
-                                        @foreach($first_step->target_audience as $selected_audience)
+                                            @if((Session::get('first_step')) != null)
+                                            @foreach($first_step->target_audience as $selected_audience)
                                             @if($selected_audience === $target->id)
-                                                selected
+                                            selected
                                             @endif
-                                        @endforeach
-                                    @endif
+                                            @endforeach
+                                            @endif
                                     >{{ $target->audience }}</option>
                                 @endforeach
                             </select>
@@ -282,11 +258,11 @@
                                 <li class="col_4 column m-b">
                                     <input name="region[]" value="{{ $region->id }}"
                                            @if((Session::get('first_step')) != null)
-                                               @foreach($first_step->region as $checked_region)
-                                                   @if($checked_region === $region->id)
-                                                       checked
-                                                   @endif
-                                               @endforeach
+                                           @foreach($first_step->region as $checked_region)
+                                           @if($checked_region === $region->id)
+                                           checked
+                                           @endif
+                                           @endforeach
                                            @endif
                                            type="checkbox" id='{{ $region->id }}'>
                                     <label for="{{ $region->id }}">{{ $region->region }}</label>
@@ -334,7 +310,7 @@
             $('#target_aud').select2({
                 placeholder: "Please select Target Audience"
             });
-            
+
             // fetch all brands when a clientSis selected
             $('body').delegate('#clients','change', function(e){
                 var clients = $("#clients").val();
