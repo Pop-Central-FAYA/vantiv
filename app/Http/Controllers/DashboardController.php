@@ -1067,7 +1067,6 @@ class DashboardController extends Controller
         $broadcaster = Session::get('broadcaster_id');
         // high value customer
         $high_value_customers = $this->getHighValueCustomer($broadcaster);
-        array_multisort(array_column($high_value_customers, 'payment'), SORT_DESC, $high_value_customers);
 
         //paid invoices
         $paid_invoices = $this->getPeriodicPaidInvoices($broadcaster);
@@ -1095,10 +1094,10 @@ class DashboardController extends Controller
     {
         $days = Utilities::switch_db('api')->select("SELECT COUNT(id) as total_campaigns, DATE_FORMAT(time_created, '%a') as days 
                                                             from campaignDetails where broadcaster = '$broadcaster_id' AND day_parts != '' 
-                                                            GROUP BY DATE_FORMAT(time_created, '%a') ORDER BY WEEK(time_created) desc LIMIT 7");
+                                                            GROUP BY DATE_FORMAT(time_created, '%a') desc LIMIT 7");
 
         $day_names = [];
-//        $total_campaign_day = [];
+
         $total_campaign_amount = 0;
         foreach ($days as $day) {
             $total_campaign_amount += $day->total_campaigns;
@@ -1132,6 +1131,7 @@ class DashboardController extends Controller
             ];
 
         }
+
         foreach ($adslots as $adslot) {
             $months[] = $adslot['date'];
             $total_month[] = $adslot['total'];
@@ -1147,7 +1147,8 @@ class DashboardController extends Controller
         $all_daypart_names = [];
         $adslot_ids = Utilities::switch_db('api')->select("SELECT adslots_id from campaignDetails where broadcaster = '$broadcaster_id' ");
         foreach ($adslot_ids as $adslot_id){
-            $adslot_dayparts_ids = Utilities::switch_db('api')->select("SELECT a.day_parts as id, d.day_parts as day_parts from adslots as a LEFT JOIN dayParts as d ON a.day_parts = d.id where a.id IN ($adslot_id->adslots_id)");
+            $adslot_dayparts_ids = Utilities::switch_db('api')->select("SELECT a.day_parts as id, d.day_parts as day_parts from adslots as a INNER JOIN dayParts
+                                                                            as d ON a.day_parts = d.id where a.id IN ($adslot_id->adslots_id)");
             $all_adslots_dayparts[] = $adslot_dayparts_ids;
         }
 
@@ -1169,7 +1170,6 @@ class DashboardController extends Controller
             ];
         }
 
-
         return  json_encode($all_daypart_names);
     }
 
@@ -1179,7 +1179,7 @@ class DashboardController extends Controller
         $broadcaster_det = Utilities::getBroadcasterDetails($broadcaster_id);
         $broadcaster_name = $broadcaster_det[0]->brand;
         $invoices = Utilities::switch_db('api')->select("SELECT i_d.*, i.campaign_id, c.name as campaign_name, c.campaign_id, DATE_FORMAT(c.stop_date, '%Y-%m-%d') as stop_date, 
-                                                             u.firstname, u.lastname from invoiceDetails as i_d LEFT JOIN invoices as i ON i.id = i_d.invoice_id 
+                                                             u.firstname, u.lastname from invoiceDetails as i_d INNER JOIN invoices as i ON i.id = i_d.invoice_id 
                                                             INNER JOIN campaignDetails as c ON c.campaign_id = i.campaign_id AND c.broadcaster = '$broadcaster_id' 
                                                             INNER JOIN users as u ON u.id = i_d.user_id  WHERE 
                                                             i_d.broadcaster_id = '$broadcaster_id' ORDER BY i_d.time_created DESC LIMIT 10");
@@ -1201,21 +1201,17 @@ class DashboardController extends Controller
     public function getHighValueCustomer($broadcaster_id)
     {
             $high_value_campaigns = [];
-            $user_details = '';
-            $campaigns = Utilities::switch_db('api')->select("SELECT COUNT(c.id) as total_campaign, walkins_id, c.campaign_id, c.broadcaster, c.agency, 
-                                                                 c.time_created as `time`, c.id, c.user_id, SUM(c.adslots) as total_adslot, 
-                                                                 u.firstname, u.lastname from campaignDetails as c
-                                                                 INNER JOIN users as u ON u.id = c.user_id 
-                                                                 WHERE broadcaster = '$broadcaster_id' GROUP BY user_id LIMIT 10");
-            /*dd($campaigns);*/
-            foreach ($campaigns as $campaign) {
-                $payments = Utilities::switch_db('api')->select("SELECT SUM(amount) as total_price from paymentDetails WHERE walkins_id = '$campaign->walkins_id' and broadcaster = '$broadcaster_id' group by walkins_id");
+            $payments = Utilities::switch_db('api')->select("SELECT SUM(p.amount) as total_price, p.walkins_id, u.firstname, u.lastname from paymentDetails as p
+                                                                INNER JOIN walkIns as w ON w.id = p.walkins_id 
+                                                                INNER JOIN users as u ON u.id = w.user_id 
+                                                                where p.broadcaster = '$broadcaster_id' GROUP BY p.walkins_id ORDER BY total_price DESC");
+            foreach ($payments as $payment){
+                $campaign_count = Utilities::switch_db('api')->select("SELECT COUNT(id) as total_campaign_count, SUM(adslots) as total_adslots from campaignDetails where walkins_id = '$payment->walkins_id' AND broadcaster = '$broadcaster_id'");
                 $high_value_campaigns[] = [
-                    'number_of_campaigns' => $campaign->total_campaign,
-                    'user_id' => $campaign->user_id,
-                    'total_adslots' => $campaign->total_adslot,
-                    'customer_name' => $campaign->firstname.' '.$campaign->lastname,
-                    'payment' => $payments[0]->total_price,
+                    'number_of_campaigns' => $campaign_count[0]->total_campaign_count,
+                    'total_adslots' => $campaign_count[0]->total_adslots,
+                    'customer_name' => $payment->firstname.' '.$payment->lastname,
+                    'payment' => $payment->total_price,
                 ];
             }
 
