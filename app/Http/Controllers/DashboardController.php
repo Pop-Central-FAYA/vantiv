@@ -1098,13 +1098,14 @@ class DashboardController extends Controller
                                                             GROUP BY DATE_FORMAT(time_created, '%a') ORDER BY WEEK(time_created) desc LIMIT 7");
 
         $day_names = [];
-        $total_campaign_day = [];
-        for ($j = 0; $j < count($days); $j++) {
-            $total_campaign_day[] = $days[$j]->total_campaigns;
+//        $total_campaign_day = [];
+        $total_campaign_amount = 0;
+        foreach ($days as $day) {
+            $total_campaign_amount += $day->total_campaigns;
         }
 
         foreach ($days as $day) {
-            $percentage_days = (($day->total_campaigns) / array_sum($total_campaign_day)) * 100;
+            $percentage_days = (($day->total_campaigns) / $total_campaign_amount) * 100;
             $day_names[] = [
                 'name' => $day->days,
                 'y' => $percentage_days
@@ -1181,7 +1182,7 @@ class DashboardController extends Controller
                                                              u.firstname, u.lastname from invoiceDetails as i_d LEFT JOIN invoices as i ON i.id = i_d.invoice_id 
                                                             INNER JOIN campaignDetails as c ON c.campaign_id = i.campaign_id AND c.broadcaster = '$broadcaster_id' 
                                                             INNER JOIN users as u ON u.id = i_d.user_id  WHERE 
-                                                            broadcaster_id = '$broadcaster_id' ORDER BY time_created DESC LIMIT 10");
+                                                            i_d.broadcaster_id = '$broadcaster_id' ORDER BY i_d.time_created DESC LIMIT 10");
 
         foreach ($invoices as $invoice) {
             $invoice_array[] = [
