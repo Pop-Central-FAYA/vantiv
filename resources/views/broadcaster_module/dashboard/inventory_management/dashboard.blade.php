@@ -113,7 +113,7 @@
                         <td>{{ $high_value_customer['customer_name'] }}</td>
                         <td>{{ $high_value_customer['number_of_campaigns'] }}</td>
                         <td>{{ $high_value_customer['total_adslots'] }}</td>
-                        <td>{{ $high_value_customer['payment'] }}</td>
+                        <td>{{ number_format($high_value_customer['payment'], 2) }}</td>
                     </tr>
                 @endforeach
             </table>

@@ -160,34 +160,34 @@ Route::group(['middleware' => 'auth'], function () {
     * Campaign
     */
     Route::group(['prefix' => 'campaign'], function(){
-        Route::get('/active_campaigns', 'CampaignsController@index')->name('campaign.all');
-        Route::get('/create', 'CampaignsController@create')->name('campaign.create');
-        Route::post('/create/step1/store', 'CampaignsController@postStep1')->name('campaign.store_1');
-        Route::get('/create/step2/{id}', 'CampaignsController@createStep2')->name('campaign.create2');
-        Route::get('/create/step3/{id}', 'CampaignsController@createStep3')->name('campaign.create3');
-        Route::get('/create/step3/store/{id}', 'CampaignsController@postStep3')->name('campaign.store3');
-        Route::get('/create/step3_1/{id}', 'CampaignsController@storeStep3_1')->name('campaign.create3_1');
-        Route::get('/create/step4/{id}/{broadcaster}', 'CampaignsController@createStep4')->name('campaign.create4');
-        Route::get('/cart/store', 'CampaignsController@postCart')->name('broadcaster_campaign.cart');
-        Route::get('/checkout/{id}', 'CampaignsController@checkout')->name('broadcaster_campaign.checkout');
-        Route::post('/submit-campaign/{id}', 'CampaignsController@postCampaign')->name('submit.campaign');
+        Route::get('/active_campaigns', 'Broadcaster\CampaignsController@index')->name('campaign.all');
+        Route::get('/create', 'Broadcaster\CampaignsController@create')->name('campaign.create');
+        Route::post('/create/step1/store', 'Broadcaster\CampaignsController@postStep1')->name('campaign.store_1');
+        Route::get('/create/step2/{id}', 'Broadcaster\CampaignsController@createStep2')->name('campaign.create2');
+        Route::get('/create/step3/{id}', 'Broadcaster\CampaignsController@createStep3')->name('campaign.create3');
+        Route::get('/create/step3/store/{id}', 'Broadcaster\CampaignsController@postStep3')->name('campaign.store3');
+        Route::get('/create/step3_1/{id}', 'Broadcaster\CampaignsController@storeStep3_1')->name('campaign.create3_1');
+        Route::get('/create/step4/{id}/{broadcaster}', 'Broadcaster\CampaignsController@createStep4')->name('campaign.create4');
+        Route::get('/cart/store', 'Broadcaster\CampaignsController@postCart')->name('broadcaster_campaign.cart');
+        Route::get('/checkout/{id}', 'Broadcaster\CampaignsController@checkout')->name('broadcaster_campaign.checkout');
+        Route::post('/submit-campaign/{id}', 'Broadcaster\CampaignsController@postCampaign')->name('submit.campaign');
 
-        Route::get('/remove-campaigns/{id}', 'CampaignsController@removeCart')->name('cart.remove');
-        Route::post('/remove-media/{walkins}/{id}', 'CampaignsController@removeMedia')->name('uploads.remove');
+        Route::get('/remove-campaigns/{id}', 'Broadcaster\CampaignsController@removeCart')->name('cart.remove');
+        Route::post('/remove-media/{walkins}/{id}', 'Broadcaster\CampaignsController@removeMedia')->name('uploads.remove');
 
-        Route::post('/payment-process', 'CampaignsController@payCampaign')->name('broadcaster.pay');
+        Route::post('/payment-process', 'Broadcaster\CampaignsController@payCampaign')->name('broadcaster.pay');
 
-        Route::get('/all-campaign/data', 'CampaignsController@getAllData');
+        Route::get('/all-campaign/data', 'Broadcaster\CampaignsController@getAllData');
 
-        Route::get('/campaign-details/{id}', 'CampaignsController@campaignDetails')->name('broadcaster.campaign.details');
+        Route::get('/campaign-details/{id}', 'Broadcaster\CampaignsController@campaignDetails')->name('broadcaster.campaign.details');
 
-        Route::get('/{user_id}', 'CampaignsController@filterByUser');
+        Route::get('/{user_id}', 'Broadcaster\CampaignsController@filterByUser');
 
-        Route::get('/media-channel/{campaign_id}', 'CampaignsController@getMediaChannel');
+        Route::get('/media-channel/{campaign_id}', 'Broadcaster\CampaignsController@getMediaChannel');
 
-        Route::get('/compliance-graph/broadcaster', 'CampaignsController@complianceGraph');
+        Route::get('/compliance-graph/broadcaster', 'Broadcaster\CampaignsController@complianceGraph');
 
-        Route::get('/compliance-graph/filter/broadcaster', 'CampaignsController@complianceFilter')->name('broadcaster.campaign_details.compliance');
+        Route::get('/compliance-graph/filter/broadcaster', 'Broadcaster\CampaignsController@complianceFilter')->name('broadcaster.campaign_details.compliance');
     });
 
     /*
@@ -231,7 +231,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/high-days/all', 'BroadcasterUserReportsController@hpdaysData');
     });
 
-    Route::get('/brand/get-industry', 'CampaignsController@getIndustrySubIndustry');
+    Route::get('/brand/get-industry', 'Broadcaster\CampaignsController@getIndustrySubIndustry');
 
     Route::group(['prefix' => 'brands'], function () {
         Route::get('/', 'BrandsController@index')->name('brand.all');
