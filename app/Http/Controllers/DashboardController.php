@@ -1124,18 +1124,10 @@ class DashboardController extends Controller
         $price = Utilities::switch_db('api')->select("SELECT SUM(amount) as total_price, time_created as days from paymentDetails WHERE broadcaster = '$broadcaster_id' GROUP BY DATE_FORMAT(time_created, '%Y-%m') ");
 
         for ($i = 0; $i < count($periodic); $i++) {
-            $adslots[] = [
-                'total' => $price[$i]->total_price,
-                'adslot' => $periodic[$i]->adslot,
-                'date' => date('M, Y', strtotime($periodic[$i]->days)),
-            ];
+            $months[] = date('M, Y', strtotime($periodic[$i]->days));
+            $total_month[] = $price[$i]->total_price;
+            $adslot_monthly[] = (integer)$periodic[$i]->adslot;
 
-        }
-
-        foreach ($adslots as $adslot) {
-            $months[] = $adslot['date'];
-            $total_month[] = $adslot['total'];
-            $adslot_monthly[] = (integer)$adslot['adslot'];
         }
 
         return (['months' => $months, 'total_month' => $total_month, 'adslot_monthly' => $adslot_monthly]);
