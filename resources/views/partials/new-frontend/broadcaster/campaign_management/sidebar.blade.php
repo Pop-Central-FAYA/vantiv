@@ -18,7 +18,7 @@
     </div>
 
     <div class="_nav_button">
-        <a href="" class="btn full block_disp uppercased align_center">Inventory Mgnt.</a><p><br></p>
+        <a href="{{ route('broadcaster.inventory_management') }}" class="btn full block_disp uppercased align_center">Inventory Mgnt.</a><p><br></p>
         <a href="{{ route('campaign.create') }}" class="btn full block_disp uppercased align_center"><span class="_plus"></span>New Campaign</a>
     </div>
 

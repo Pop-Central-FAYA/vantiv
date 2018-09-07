@@ -1,6 +1,6 @@
 <?php
 
-namespace Vanguard\Http\Controllers;
+namespace Vanguard\Http\Controllers\Broadcaster;
 
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -14,6 +14,7 @@ use Vanguard\Libraries\Utilities;
 use Yajra\Datatables\Datatables;
 use Carbon\Carbon;
 use Session;
+use Vanguard\Http\Controllers\Controller;
 
 
 class CampaignsController extends Controller
@@ -254,8 +255,6 @@ class CampaignsController extends Controller
         $rate_card = Utilities::getRatecards($step1, $broadcaster);
 
         $adslots = $rate_card['adslot'];
-
-//        dd($rate_card, $data, $cart, $positions);
 
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
         $col = new Collection($rate_card['rate_card']);

@@ -38,7 +38,7 @@
         <p class="mb4">What would you like to do?</p>
 
         <a href="{{ route('bradcaster.campaign_management') }}" class="m-b block_disp btn full ghost">Campaign Management</a>
-        <a href="" class="m-b block_disp btn full ghost">Inventory Management</a>
+        <a href="{{ route('broadcaster.inventory_management') }}" class="m-b block_disp btn full ghost">Inventory Management</a>
     </div>
 
 </div>
