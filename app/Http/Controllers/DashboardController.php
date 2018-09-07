@@ -1204,7 +1204,7 @@ class DashboardController extends Controller
             $payments = Utilities::switch_db('api')->select("SELECT SUM(p.amount) as total_price, p.walkins_id, u.firstname, u.lastname from paymentDetails as p
                                                                 INNER JOIN walkIns as w ON w.id = p.walkins_id 
                                                                 INNER JOIN users as u ON u.id = w.user_id 
-                                                                where p.broadcaster = '$broadcaster_id' GROUP BY p.walkins_id ORDER BY total_price DESC");
+                                                                where p.broadcaster = '$broadcaster_id' GROUP BY p.walkins_id ORDER BY total_price DESC LIMIT 10");
             foreach ($payments as $payment){
                 $campaign_count = Utilities::switch_db('api')->select("SELECT COUNT(id) as total_campaign_count, SUM(adslots) as total_adslots from campaignDetails where walkins_id = '$payment->walkins_id' AND broadcaster = '$broadcaster_id'");
                 $high_value_campaigns[] = [
