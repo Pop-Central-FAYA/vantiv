@@ -239,7 +239,7 @@ class AdslotController extends Controller
     {
         $all_adslots = [];
         if($day){
-            $adslots = Utilities::switch_db('api')->select("SELECT a.id,d.day, p_p.percentage,
+            $adslots = Utilities::switch_db('api')->select("SELECT a.id,d.day,a.from_to_time, p_p.percentage,
                                                             IF(a.id = p_p.adslot_id, p_p.price_60, p.price_60) as price_60,
                                                             IF(a.id = p_p.adslot_id, p_p.price_45, p.price_45) as price_45,
                                                             IF(a.id = p_p.adslot_id, p_p.price_30, p.price_30) as price_30,
