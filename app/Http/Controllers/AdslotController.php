@@ -65,75 +65,42 @@ class AdslotController extends Controller
      */
     public function store(StoreAdslotsRequests $request)
     {
-        $broadcaster = Session::get('broadcaster_id');
-        $broadcaster_details = Utilities::getBroadcasterDetails($broadcaster);
+
+        $broadcaster_id = Session::get('broadcaster_id');
+        $broadcaster_details = Utilities::getBroadcasterDetails($broadcaster_id);
         $user_id = $broadcaster_details[0]->user_id;
-        $rate_id = uniqid();
-        $adslot_id = uniqid();
-        $insert = [];
-        $price = [];
-        $time_check = [];
-        $h = 0; $i = 0; $j = 0; $k = 0; $l = 0; $m = 0; $n = 0; $o = 0; $p = 0; $q = 0;
-        $r = 0; $s = 0; $t = 0; $w = 0;
-        $ratecard = [
-            'id' => $rate_id,
-            'user_id' => $user_id[0]->user_id,
-            'broadcaster' => $broadcaster,
-            'day' => $request->days,
-            'hourly_range_id' => $request->hourly_range,
-        ];
+        $rate_card_id = uniqid();
+        $time_check = 0;
+
         for($x = 0; $x < count($request->from_time); $x++){
-            $diff = (strtotime($request->to_time[$x]) - strtotime($request->from_time[$x]));
-            $time_check[] = $diff;
+            $time_difference = (strtotime(Utilities::removeSpace($request->to_time[$x])) - strtotime(Utilities::removeSpace($request->from_time[$x])));
+            $time_check += $time_difference;
         }
 
-        if((array_sum($time_check)) > 720){
+        if($time_check > 720){
             Session::flash('error', 'Your From To time summation must not exceed 12minutes');
             return redirect()->back();
         }
 
-        $save_rate = Utilities::switch_db('api')->table('rateCards')->insert($ratecard);
+        $ratecard_array = $this->rateCardArray($rate_card_id, $user_id, $broadcaster_id, $request);
 
-        foreach ($request->from_time as $r){
-            $insert[] = [
-                'id' => uniqid(),
-                'rate_card' => $rate_id,
-                'target_audience' => $request->target_audience[$h++],
-                'day_parts' => $request->dayparts[$i++],
-                'region' => $request->region[$j++],
-                'from_to_time' => $request->from_time[$k++]. ' - ' .$request->to_time[$p++],
-                'min_age' => $request->min_age[$m++],
-                'max_age' => $request->max_age[$n++],
-                'broadcaster' => $broadcaster,
-                'is_available' => 0,
-                'time_difference' => (strtotime($request->to_time[$l++])) - (strtotime($request->from_time[$o++])),
-                'time_used' => 0,
-                'channels' => $broadcaster_details[0]->channel_id,
-            ];
+        $adslot_array = $this->adslotsArray($rate_card_id, $request, $broadcaster_id, $broadcaster_details);
+
+        $save_rate = Utilities::switch_db('api')->table('rateCards')->insert($ratecard_array);
+        $save_adslot = Utilities::switch_db('api')->table('adslots')->insert($adslot_array);
+
+        if($save_rate && $save_adslot){
+            $select_adslots = Utilities::switch_db('api')->select("SELECT id from adslots where rate_card = '$rate_card_id'");
+            $price_array = $this->priceArray($select_adslots, $request);
+            $save_price = Utilities::switch_db('api')->table('adslotPrices')->insert($price_array);
         }
-
-        $save_adslot = Utilities::switch_db('api')->table('adslots')->insert($insert);
-        $select_adslot = Utilities::switch_db('api')->select("SELECT id from adslots where rate_card = '$rate_id'");
-
-        foreach ($select_adslot as $p){
-            $price[] = [
-                'id' => uniqid(),
-                'adslot_id' => $p->id,
-                'price_60' => $request->price_60[$w++],
-                'price_45' => $request->price_45[$q++],
-                'price_30' => $request->price_30[$t++],
-                'price_15' => $request->price_15[$s++],
-            ];
-        }
-
-        $save_price = Utilities::switch_db('api')->table('adslotPrices')->insert($price);
 
         if($save_adslot && $save_price && $save_rate){
             Session::flash('success', 'Adslot created successfully...');
-            return back();
+            return redirect()->route('adslot.all');
         }else{
             Session::flash('error', 'Error creating adslots, please try again');
-            return back();
+            return redirect()->back();
         }
 
     }
@@ -267,6 +234,60 @@ class AdslotController extends Controller
         }
 
         return $all_adslots;
+    }
+
+    public function rateCardArray($rate_card_id, $user_id, $broadcaster_id, $request)
+    {
+        $ratecard_array = [
+            'id' => $rate_card_id,
+            'user_id' => $user_id,
+            'broadcaster' => $broadcaster_id,
+            'day' => $request->days,
+            'hourly_range_id' => $request->hourly_ranges,
+        ];
+
+        return $ratecard_array;
+    }
+
+    public function adslotsArray($rate_card_id, $request, $broadcaster_id, $broadcaster_details)
+    {
+        $adslot_array = [];
+        for ($i = 0; $i < count($request->regions); $i++){
+            $adslot_array[] = [
+                'id'=> uniqid(),
+                'rate_card' => $rate_card_id,
+                'target_audience' => $request->target_audiences[$i],
+                'day_parts' => $request->dayparts[$i],
+                'region' => $request->regions[$i],
+                'from_to_time' => Utilities::removeSpace($request->from_time[$i]). ' - '.Utilities::removeSpace($request->to_time[$i]),
+                'min_age' => $request->min_age[$i],
+                'max_age' => $request->max_age[$i],
+                'broadcaster' => $broadcaster_id,
+                'is_available' => 0,
+                'time_difference' => (strtotime(Utilities::removeSpace($request->to_time[$i]))) - (strtotime(Utilities::removeSpace($request->from_time[$i]))),
+                'time_used' => 0,
+                'channels' => $broadcaster_details[0]->channel_id,
+            ];
+        }
+
+        return $adslot_array;
+    }
+
+    public function priceArray($select_adslots, $request)
+    {
+        $price = [];
+        for ($j = 0; $j < count($select_adslots); $j++){
+            $price[] = [
+                'id' => uniqid(),
+                'adslot_id' => $select_adslots[$j]->id,
+                'price_60' => $request->price_60[$j],
+                'price_45' => $request->price_45[$j],
+                'price_30' => $request->price_30[$j],
+                'price_15' => $request->price_15[$j],
+            ];
+        }
+
+        return $price;
     }
 
 

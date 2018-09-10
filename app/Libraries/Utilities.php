@@ -41,6 +41,11 @@ class Utilities {
 
     }
 
+    public static function removeSpace($string)
+    {
+        return str_replace(' ','',$string);
+    }
+
     public static function campaignDetails($id, $broadcaster_id, $agency_id)
     {
         $file_details = [];
