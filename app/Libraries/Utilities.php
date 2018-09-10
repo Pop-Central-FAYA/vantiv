@@ -296,7 +296,7 @@ class Utilities {
     {
         $walkins = Utilities::switch_db('api')->select("SELECT * from walkIns where id = '$client_id'");
         $user_id = $walkins[0]->user_id;
-
+        $walkins_update_logo = '';
         if($request->hasFile('company_logo')){
             $image = $request->company_logo;
             $filename = $request->file('company_logo')->getRealPath();
@@ -312,7 +312,7 @@ class Utilities {
 
         $local_db_update = DB::update("UPDATE users set first_name = '$request->first_name', last_name = '$request->last_name', phone = '$request->phone' where email = '$request->email'");
 
-        if($api_user_update || $walkins_update || $local_db_update || $walkins_update_logo){
+        if($api_user_update || $walkins_update || $local_db_update ){
             return "success";
         }else{
             return "error";
@@ -452,8 +452,10 @@ class Utilities {
         $industries = Utilities::switch_db('api')->select("SELECT * from sectors");
         $subindustries = Utilities::switch_db('api')->select("select * from subSectors");
         $channels = Utilities::switch_db('api')->select("SELECT * from campaignChannels");
+        $days = Utilities::switch_db('api')->select("SELECT * from days");
+        $hourly_ranges = Utilities::switch_db('api')->select("SELECT * from hourlyRanges");
 
-        return (['regions' => $regions, 'target_audience' => $targetAudiences, 'day_parts' => $day_parts, 'industries' => $industries, 'subindustries' => $subindustries, 'channels' => $channels]);
+        return (['hourly_ranges' => $hourly_ranges, 'days' => $days, 'regions' => $regions, 'target_audience' => $targetAudiences, 'day_parts' => $day_parts, 'industries' => $industries, 'subindustries' => $subindustries, 'channels' => $channels]);
     }
 
     public static function getAllAvailableSlots($step1, $broadcaster_id)

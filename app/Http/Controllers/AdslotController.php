@@ -51,13 +51,10 @@ class AdslotController extends Controller
      */
     public function create()
     {
-        $day = Utilities::switch_db('api')->select("SELECT * from days");
-        $hourly = Utilities::switch_db('api')->select("SELECT * from hourlyRanges");
-        $region = Utilities::switch_db('api')->select("SELECT * from regions");
-        $target = Utilities::switch_db('api')->select("SELECT * from targetAudiences");
-        $daypart = Utilities::switch_db('api')->select("SELECT * from dayParts");
-        $channels = Utilities::switch_db('api')->select("SELECT * from campaignChannels");
-        return view('adslot.create')->with(['days' => $day, 'hours' => $hourly, 'regions' => $region, 'targets' => $target, 'channels' => $channels, 'day_parts' => $daypart]);
+        $preloaded_data = Utilities::getPreloadedData();
+        return view('broadcaster_module.adslots.create')->with(['days' => $preloaded_data['days'], 'hours' => $preloaded_data['hourly_ranges'],
+                                                                    'regions' => $preloaded_data['regions'], 'target_audiences' => $preloaded_data['target_audience'],
+                                                                    'channels' => $preloaded_data['channels'], 'day_parts' => $preloaded_data['day_parts']]);
     }
 
     /**
@@ -69,7 +66,8 @@ class AdslotController extends Controller
     public function store(StoreAdslotsRequests $request)
     {
         $broadcaster = Session::get('broadcaster_id');
-        $user_id = Utilities::switch_db('api')->select("SELECT user_id from broadcasters where id = '$broadcaster'");
+        $broadcaster_details = Utilities::getBroadcasterDetails($broadcaster);
+        $user_id = $broadcaster_details[0]->user_id;
         $rate_id = uniqid();
         $adslot_id = uniqid();
         $insert = [];
@@ -84,7 +82,6 @@ class AdslotController extends Controller
             'day' => $request->days,
             'hourly_range_id' => $request->hourly_range,
         ];
-//        dd($request->all());
         for($x = 0; $x < count($request->from_time); $x++){
             $diff = (strtotime($request->to_time[$x]) - strtotime($request->from_time[$x]));
             $time_check[] = $diff;
@@ -111,7 +108,7 @@ class AdslotController extends Controller
                 'is_available' => 0,
                 'time_difference' => (strtotime($request->to_time[$l++])) - (strtotime($request->from_time[$o++])),
                 'time_used' => 0,
-                'channels' => $request->channel,
+                'channels' => $broadcaster_details[0]->channel_id,
             ];
         }
 
@@ -148,7 +145,7 @@ class AdslotController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $broadcaster, $adslot)
+    public function update(Request $request, $adslot)
     {
         $premium = [];
         $this->validate($request, [
@@ -162,23 +159,19 @@ class AdslotController extends Controller
             $adslotPrice = Utilities::switch_db('api')->update("UPDATE adslotPrices SET price_60 = '$request->time_60', price_45 = '$request->time_45', 
                                                                     price_30 = '$request->time_30', price_15 = '$request->time_15' WHERE adslot_id = '$adslot'");
             if($adslotPrice){
-                Session::flash('success', 'Prices updated for this slot');
-                return back();
+                return response()->json(['success' => 'prices_update']);
             }else{
-                Session::flash('error', 'Error updating adslot price');
-                return back();
+                return response()->json(['error_no_changes' => 'no_changes']);
             }
         }else{
             $selectAdslotPrice = Utilities::switch_db('api')->select("SELECT * from adslotPrices WHERE adslot_id = '$adslot'");
             if(((int)$request->premium_percent) === 0){
                 $deletePremium = Utilities::switch_db('api')->delete("DELETE from adslotPercentages where adslot_id = '$adslot'");
                 if($deletePremium){
-                    Session::flash('success', 'Percentage price deleted for this slot');
-                    return back();
+                    return response()->json(['success_price' => 'prices_update']);
                 }
                 if($request->premium_percent === "0"){
-                    Session::flash('error', 'You cannot apply this percentage');
-                    return back();
+                    return response()->json(['error_percentage' => 'error_percentage']);
                 }
             }else{
                 $premium_60 = ($selectAdslotPrice[0]->price_60 + (((int)$request->premium_percent) / 100) * $selectAdslotPrice[0]->price_60);
@@ -201,21 +194,17 @@ class AdslotController extends Controller
 
                 $creatPremium = Utilities::switch_db('api')->table('adslotPercentages')->insert($premium);
                 if($creatPremium){
-                    Session::flash('success', 'Percentage applied to prices successfully...');
-                    return back();
+                    return response()->json(['success_percentage' => 'percentage_applied']);
                 }else{
-                    Session::flash('error', 'Error applying percentage to price');
-                    return back();
+                    return response()->json(['error_apply_percentage' => 'error_applying_percentage']);
                 }
             }else{
                 $updatePercentage = Utilities::switch_db('api')->update("UPDATE adslotPercentages SET price_60 = '$premium_60', price_45 = '$premium_45', 
                                                                               price_30 = '$premium_30', price_15 = '$premium_15', percentage = '$request->premium_percent'");
                 if($updatePercentage){
-                    Session::flash('success', 'Prices updated with the new percentage...');
-                    return back();
+                    return response()->json(['success_update_new_percentage' => 'price_update_new_percentage']);
                 }else{
-                    Session::flash('error', 'Error updating price with the new percentage...');
-                    return back();
+                    return response()->json(['error_updating_percentage_price' => 'error_updating_percentage_price']);
                 }
             }
 

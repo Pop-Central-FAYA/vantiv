@@ -294,7 +294,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/data', 'AdslotController@adslotData');
         Route::get('/create', 'AdslotController@create')->name('adslot.create');
         Route::post('/store', 'AdslotController@store')->name('adslot.store');
-        Route::post('/update/{broadcaster}/{adslot}', 'AdslotController@update')->name('adslot.update');
+        Route::post('/update/{adslot}', 'AdslotController@update')->name('adslot.update');
         Route::get('/{region_id}', 'AdslotController@getAdslotByRegion')->name('adslot.region');
     });
 

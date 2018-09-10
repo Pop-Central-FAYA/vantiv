@@ -39,7 +39,7 @@
                 <div class="column col_4 clearfix">
 
                     <div class="col_8 right align_right">
-                        <a href="" class="btn small_btn"><span class="_plus"></span> Create Ad Slots</a>
+                        <a href="{{ route('adslot.create') }}" class="btn small_btn"><span class="_plus"></span> Create Ad Slots</a>
                     </div>
 
                     <div class="right col_4">
@@ -82,21 +82,24 @@
                 <h4>You have a premium percent of {{ $adslot['percentage'] }}% on this slot</h4>
                 </p>
             @endif
-            <form method="POST" action="{{ route('adslot.update', ['broadcaster' => $broadcaster, 'adslot' => $adslot['id']]) }}" class="selsec">
+
+            <form method="post" action="{{ route('adslot.update', ['adslot' => $adslot['id']]) }}" id="adslot_update{{ $adslot['id'] }}">
                 {{ csrf_field() }}
+
                 <div class="input_wrap">
                     <label class="small_faint weight_medium">Premium Percentage</label>
-                    <input type="number" name="premium_percent" placeholder="Enter Percentage Value %" />
+                    <input type="number" name="premium_percent" id="premium_percent{{ $adslot['id'] }}" value="" placeholder="Enter Percentage Value %" />
                 </div>
+
                 <div class="clearfix">
                     <div class="input_wrap column col_6">
                         <label class="small_faint weight_medium">60 Seconds (&#8358;)</label>
-                        <input type="number" name="time_60" value="{{ $adslot['60_seconds'] }}" placeholder="Enter Price" />
+                        <input type="number" name="time_60" id="time_60{{ $adslot['id'] }}" value="{{ $adslot['60_seconds'] }}" placeholder="Enter Price" />
                     </div>
 
                     <div class="input_wrap column col_6">
                         <label class="small_faint weight_medium">45 Seconds (&#8358;)</label>
-                        <input type="number" name="time_45" value="{{ $adslot['45_seconds'] }}" placeholder="Enter Price" />
+                        <input type="number" name="time_45" id="time_45{{ $adslot['id'] }}" value="{{ $adslot['45_seconds'] }}" placeholder="Enter Price" />
                     </div>
 
                 </div>
@@ -104,23 +107,24 @@
                 <div class="clearfix">
                     <div class="input_wrap column col_6">
                         <label class="small_faint weight_medium">30 Seconds (&#8358;)</label>
-                        <input type="number" name="time_30" value="{{ $adslot['30_seconds'] }}" placeholder="Enter Price" />
+                        <input type="number" name="time_30" id="time_30{{ $adslot['id'] }}" value="{{ $adslot['30_seconds'] }}" placeholder="Enter Price" />
                     </div>
 
                     <div class="input_wrap column col_6">
                         <label class="small_faint weight_medium">15 Seconds (&#8358;)</label>
-                        <input type="number" name="time_15" value="{{ $adslot['15_seconds'] }}" placeholder="Enter Price" />
+                        <input type="number" name="time_15" id="time_15{{ $adslot['id'] }}" value="{{ $adslot['15_seconds'] }}" placeholder="Enter Price" />
                     </div>
                 </div>
 
 
                 <div class="align_right pt3">
-                    <a href="" class="padd color_initial light_font" onclick="$.modal.close();">Cancel</a>
-                    <input type="submit" value="Update Ad Slot" class="btn uppercased update">
+                    <a href="" class="padd color_initial light_font simplemodal-close">Cancel</a>
+                    <button type="button" data-adslot_id="{{ $adslot['id'] }}" class="btn uppercased update_slot">Update Ad Slot</button>
                 </div>
+
             </form>
         </div>
-        @endforeach
+    @endforeach
         <!-- end ad slot modal -->
 
 
@@ -143,6 +147,62 @@
                 var href = $(this).attr("href");
                 $(href).modal();
                 return false;
+            });
+
+            $(".update_slot").click(function () {
+                var adslot_id = $(this).data("adslot_id");
+                var premium_percent = $("#premium_percent"+adslot_id).val();
+                var time_60 = $("#time_60"+adslot_id).val();
+                var time_45 = $("#time_45"+adslot_id).val();
+                var time_30 = $("#time_30"+adslot_id).val();
+                var time_15 = $("#time_15"+adslot_id).val();
+                var url = $("#adslot_update"+adslot_id).attr("action");
+                $.ajax({
+                    url: url,
+                    method: 'POST',
+                    data: {
+                        premium_percent: premium_percent,
+                        time_60: time_60,
+                        time_45: time_45,
+                        time_30: time_30,
+                        time_15: time_15,
+                        '_token': $('input[name=_token]').val()
+                    },
+                    success: function (data) {
+                        if(data.success === "prices_update"){
+                            toastr.success("Prices updated for this slot");
+                            location.reload();
+                        }
+                        if(data.error_no_changes === "no_changes"){
+                            toastr.info("No changes made");
+                        }
+                        if(data.success_price === "prices_update"){
+                            toastr.success("Percentage price deleted for this slot");
+                            location.reload();
+                        }
+                        if(data.error_percentage === "error_percentage"){
+                            toastr.error("You cannot apply this percentage");
+                        }
+                        if(data.success_percentage === "percentage_applied"){
+                            toastr.success("Percentage applied to prices successfully...");
+                            location.reload();
+                        }
+                        if(data.error_apply_percentage === "error_applying_percentage"){
+                            toastr.error("Error applying percentage to price");
+                        }
+                        if(data.success_update_new_percentage === "price_update_new_percentage"){
+                            toastr.success("Prices updated with the new percentage...");
+                            location.reload();
+                        }
+                        if(data.error_updating_percentage_price === "error_updating_percentage_price")
+                        {
+                            toastr.error("Error updating price with the new percentage...");
+                        }
+                    }
+
+                })
+                // console.log(premium_percent, time_60, time_45, time_30, time_15, url, adslot_id);
+
             });
 
             var Datefilter =  $('.adslots').DataTable({
@@ -174,7 +234,8 @@
 
             $('#searchTable').on( 'keyup', function () {
                 Datefilter.search( this.value ).draw();
-            } );
+            });
+
         } );
     </script>
 @stop
