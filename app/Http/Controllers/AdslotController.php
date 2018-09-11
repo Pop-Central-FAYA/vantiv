@@ -5,6 +5,7 @@ namespace Vanguard\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Vanguard\Http\Requests\StoreAdslotsRequests;
+use Vanguard\Http\Requests\UpdateAdslotsRequest;
 use Vanguard\Libraries\Api;
 use Vanguard\Libraries\Maths;
 use League\Flysystem\Exception;
@@ -44,11 +45,6 @@ class AdslotController extends Controller
             ->make(true);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         $preloaded_data = Utilities::getPreloadedData();
@@ -57,12 +53,6 @@ class AdslotController extends Controller
                                                                     'channels' => $preloaded_data['channels'], 'day_parts' => $preloaded_data['day_parts']]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(StoreAdslotsRequests $request)
     {
 
@@ -79,6 +69,12 @@ class AdslotController extends Controller
 
         if($time_check > 720){
             Session::flash('error', 'Your From To time summation must not exceed 12minutes');
+            return redirect()->back();
+        }
+
+        $check_ratecard = Utilities::checkRatecardExistence($broadcaster_id, $request->hourly_ranges, $request->days);
+        if($check_ratecard){
+            Session::flash('error', 'Rate card with this day already exists for this broadcaster');
             return redirect()->back();
         }
 
@@ -105,23 +101,8 @@ class AdslotController extends Controller
 
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $adslot)
+    public function update(UpdateAdslotsRequest $request, $adslot)
     {
-        $premium = [];
-        $this->validate($request, [
-            'time_60' => 'required',
-            'time_45' => 'required',
-            'time_30' => 'required',
-            'time_15' => 'required'
-        ]);
-
         if($request->premium_percent === ""){
             $adslotPrice = Utilities::switch_db('api')->update("UPDATE adslotPrices SET price_60 = '$request->time_60', price_45 = '$request->time_45', 
                                                                     price_30 = '$request->time_30', price_15 = '$request->time_15' WHERE adslot_id = '$adslot'");
@@ -136,59 +117,29 @@ class AdslotController extends Controller
                 $deletePremium = Utilities::switch_db('api')->delete("DELETE from adslotPercentages where adslot_id = '$adslot'");
                 if($deletePremium){
                     return response()->json(['success_price' => 'prices_update']);
-                }
-                if($request->premium_percent === "0"){
+                }else{
                     return response()->json(['error_percentage' => 'error_percentage']);
                 }
-            }else{
-                $premium_60 = ($selectAdslotPrice[0]->price_60 + (((int)$request->premium_percent) / 100) * $selectAdslotPrice[0]->price_60);
-                $premium_45 = ($selectAdslotPrice[0]->price_45 + (((int)$request->premium_percent) / 100) * $selectAdslotPrice[0]->price_45);
-                $premium_30 = ($selectAdslotPrice[0]->price_30 + (((int)$request->premium_percent) / 100) * $selectAdslotPrice[0]->price_30);
-                $premium_15 = ($selectAdslotPrice[0]->price_15 + (((int)$request->premium_percent) / 100) * $selectAdslotPrice[0]->price_15);
             }
 
-            $premiumPrice = Utilities::switch_db('api')->select("SELECT * from adslotPercentages where adslot_id = '$adslot'");
+            $premiumPrice = $this->getAdslotPercentages($adslot);
+
             if(count($premiumPrice) === 0){
-                $premium[] = [
-                    'id' => uniqid(),
-                    'adslot_id' => $adslot,
-                    'price_60' => $premium_60,
-                    'price_45' => $premium_45,
-                    'price_30' => $premium_30,
-                    'price_15' => $premium_15,
-                    'percentage' => $request->premium_percent
-                ];
+
+                $premium = $this->premiumPrices($selectAdslotPrice, $request, $adslot);
 
                 $creatPremium = Utilities::switch_db('api')->table('adslotPercentages')->insert($premium);
+
                 if($creatPremium){
                     return response()->json(['success_percentage' => 'percentage_applied']);
                 }else{
                     return response()->json(['error_apply_percentage' => 'error_applying_percentage']);
                 }
             }else{
-                $updatePercentage = Utilities::switch_db('api')->update("UPDATE adslotPercentages SET price_60 = '$premium_60', price_45 = '$premium_45', 
-                                                                              price_30 = '$premium_30', price_15 = '$premium_15', percentage = '$request->premium_percent'");
-                if($updatePercentage){
-                    return response()->json(['success_update_new_percentage' => 'price_update_new_percentage']);
-                }else{
-                    return response()->json(['error_updating_percentage_price' => 'error_updating_percentage_price']);
-                }
+                return response()->json(['premium_exists' => 'premium_exists']);
             }
 
         }
-    }
-
-    public function getAdslotByRegion($region_d)
-    {
-        //        api for adslot
-        $ratecard = Api::get_adslot_by_region($region_d);
-        $a = (json_decode($ratecard)->data);
-        $preload_ratecard = Api::get_ratecard_preloaded();
-        $load = $preload_ratecard->data;
-        $seconds = [60, 45, 39, 15];
-        $preload_ratecard = Api::get_ratecard_preloaded();
-        $load = $preload_ratecard->data;
-        return view('adslot.index')->with('ratecard', $a)->with('seconds', $seconds)->with('preload', $load);
     }
 
     public function getAdslotDetails($broadcaster_id, $day)
@@ -288,6 +239,32 @@ class AdslotController extends Controller
         }
 
         return $price;
+    }
+
+    public function premiumPrices($selectAdslotPrice, $request, $adslot)
+    {
+        $premium_60 = ($selectAdslotPrice[0]->price_60 + (((int)$request->premium_percent) / 100) * $selectAdslotPrice[0]->price_60);
+        $premium_45 = ($selectAdslotPrice[0]->price_45 + (((int)$request->premium_percent) / 100) * $selectAdslotPrice[0]->price_45);
+        $premium_30 = ($selectAdslotPrice[0]->price_30 + (((int)$request->premium_percent) / 100) * $selectAdslotPrice[0]->price_30);
+        $premium_15 = ($selectAdslotPrice[0]->price_15 + (((int)$request->premium_percent) / 100) * $selectAdslotPrice[0]->price_15);
+
+        $premium = [
+            'id' => uniqid(),
+            'adslot_id' => $adslot,
+            'price_60' => $premium_60,
+            'price_45' => $premium_45,
+            'price_30' => $premium_30,
+            'price_15' => $premium_15,
+            'percentage' => $request->premium_percent
+        ];
+
+        return $premium;
+
+    }
+
+    public function getAdslotPercentages($adslot_id)
+    {
+        return Utilities::switch_db('api')->select("SELECT * from adslotPercentages where adslot_id = '$adslot_id'");
     }
 
 

@@ -94,12 +94,12 @@
                 <div class="clearfix">
                     <div class="input_wrap column col_6">
                         <label class="small_faint weight_medium">60 Seconds (&#8358;)</label>
-                        <input type="number" name="time_60" id="time_60{{ $adslot['id'] }}" value="{{ $adslot['60_seconds'] }}" placeholder="Enter Price" />
+                        <input type="number" name="time_60" id="time_60{{ $adslot['id'] }}" value="{{ $adslot['60_seconds'] }}" {{ $adslot['percentage'] ? 'disabled' : '' }} placeholder="Enter Price" />
                     </div>
 
                     <div class="input_wrap column col_6">
                         <label class="small_faint weight_medium">45 Seconds (&#8358;)</label>
-                        <input type="number" name="time_45" id="time_45{{ $adslot['id'] }}" value="{{ $adslot['45_seconds'] }}" placeholder="Enter Price" />
+                        <input type="number" name="time_45" id="time_45{{ $adslot['id'] }}" value="{{ $adslot['45_seconds'] }}" {{ $adslot['percentage'] ? 'disabled' : '' }} placeholder="Enter Price" />
                     </div>
 
                 </div>
@@ -107,12 +107,12 @@
                 <div class="clearfix">
                     <div class="input_wrap column col_6">
                         <label class="small_faint weight_medium">30 Seconds (&#8358;)</label>
-                        <input type="number" name="time_30" id="time_30{{ $adslot['id'] }}" value="{{ $adslot['30_seconds'] }}" placeholder="Enter Price" />
+                        <input type="number" name="time_30" id="time_30{{ $adslot['id'] }}" value="{{ $adslot['30_seconds'] }}" {{ $adslot['percentage'] ? 'disabled' : '' }} placeholder="Enter Price" />
                     </div>
 
                     <div class="input_wrap column col_6">
                         <label class="small_faint weight_medium">15 Seconds (&#8358;)</label>
-                        <input type="number" name="time_15" id="time_15{{ $adslot['id'] }}" value="{{ $adslot['15_seconds'] }}" placeholder="Enter Price" />
+                        <input type="number" name="time_15" id="time_15{{ $adslot['id'] }}" value="{{ $adslot['15_seconds'] }}" {{ $adslot['percentage'] ? 'disabled' : '' }} placeholder="Enter Price" />
                     </div>
                 </div>
 
@@ -190,13 +190,9 @@
                         if(data.error_apply_percentage === "error_applying_percentage"){
                             toastr.error("Error applying percentage to price");
                         }
-                        if(data.success_update_new_percentage === "price_update_new_percentage"){
-                            toastr.success("Prices updated with the new percentage...");
-                            location.reload();
-                        }
-                        if(data.error_updating_percentage_price === "error_updating_percentage_price")
+                        if(data.premium_exists === "premium_exists")
                         {
-                            toastr.error("Error updating price with the new percentage...");
+                            toastr.error("Please use 0 on the premium percent to cancel the initial premuim prices");
                         }
                     }
 

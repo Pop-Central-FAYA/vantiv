@@ -750,7 +750,7 @@ class Utilities {
             }
 
 
-            $insert = \DB::insert("INSERT INTO carts (user_id, broadcaster_id, price, ip_address, file, from_to_time, `time`, adslot_id, percentage, total_price, filePosition_id, status, agency_id, file_name, public_id, format) VALUES ('$user','$broadcaster','$price','$ip','$file','$hourly_range','$time','$adslot_id', '$percentage', '$new_price', '$position', 1, '$agency', '$file_name', '$public_id', '$file_format')");
+            $insert = \DB::insert("INSERT INTO carts (user_id, broadcaster_id, price, ip_address, file, from_to_time, `time`, adslot_id, percentage, total_price, filePosition_id, status, agency_id, file_name, public_id, format) VALUES ('$user','$broadcaster','$price','$ip','$file','$hourly_range','$time','$adslot_id', '$percentage', '$new_price', '$position', 1, '$agency_id', '$file_name', '$public_id', '$file_format')");
         }
 
         return $insert;
@@ -791,6 +791,12 @@ class Utilities {
 
         return (['calc' => $calc, 'brands' => $brands, 'queries' => $query, 'day_parts' => $day_partss, 'targets' => $targets, 'regions' => $regions, 'user' => $user]);
 
+    }
+
+    public static function checkRatecardExistence($broadcaster_id, $hourly_range_id, $day_id)
+    {
+        $check_rate_card = Utilities::switch_db('api')->select("SELECT * from rateCards where broadcaster = '$broadcaster_id' AND day = '$day_id' AND hourly_range_id = '$hourly_range_id'");
+        return $check_rate_card;
     }
 
 
