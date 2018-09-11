@@ -39,7 +39,8 @@ class DiscountController extends Controller
         $price_discounts = Api::get_discounts_by_type($types[4]->id);
         $pslot_discounts = Api::get_discounts_by_type($types[5]->id);
 
-        return view('discounts.index',
+
+        return view('broadcaster_module.discounts.index',
             compact(
                 'agency_discounts', 'brand_discounts', 'time_discounts',
                 'daypart_discounts', 'price_discounts', 'pslot_discounts',
