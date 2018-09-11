@@ -245,8 +245,7 @@ class AdslotController extends Controller
             'time_15' => 'required'
         ]);
 
-        if($request->premium_percent === ""){
-            $adslotPrice = Utilities::switch_db('api')->update("UPDATE adslotPrices SET price_60 = '$request->time_60', price_45 = '$request->time_45', 
+        if($request->premium_percent === ""){$adslotPrice = Utilities::switch_db('api')->update("UPDATE adslotPrices SET price_60 = '$request->time_60', price_45 = '$request->time_45', 
                                                                     price_30 = '$request->time_30', price_15 = '$request->time_15' WHERE adslot_id = '$adslot'");
             if($adslotPrice){
                 Session::flash('success', 'Prices updated for this slot');
