@@ -35,62 +35,21 @@ class DiscountController extends Controller
         );
     }
 
-    public function searchObject($categories, $id, $index)
-    {
-        foreach ($categories as $category) {
-            if ($id == $category->id) {
-                return $category->$index;
-            }
-        }
-
-        return false;
-    }
-
     public function store(Request $request)
     {
-        $hourly_ranges = Api::get_hourly_ranges();
-        $day_parts = Api::get_dayParts();
-        $types = Api::get_discountTypes();
-        $agencies = Api::get_agencies();
-        $classes = Api::get_discount_classes();
-
-        $number_value = (int) $request->value;
-        $percent_value = (int) $request->percent_value;
+        dd($request->all());
 
         $broadcaster_id = \Session::get('broadcaster_id');
 
-        if ($number_value !== 0 && $percent_value !== 0) {
-            $request->discount_class_id = $classes[2]->id;
-        } elseif ($percent_value !== 0 && $number_value == 0) {
-            $request->discount_class_id = $classes[0]->id;
-        } elseif ($number_value !== 0 && $percent_value == 0) {
-            $request->discount_class_id = $classes[1]->id;
-        } else {
-            $request->discount_class_id = null;
-        }
+        $discount_class_type = $this->getDiscountAndClass($request);
 
-        $discount_type_id = $request->discount_type_id;
-        $discount_type_value = $request->discount_type_value;
-
-        if ($discount_type_id == $types[0]->id) {
-            $discount_type_sub_value = $this->searchObject($agencies, $discount_type_value, 'brand');
-        } elseif ($discount_type_id == $types[1]->id) {
-            $discount_type_sub_value = null;
-        } elseif ($discount_type_id == $types[2]->id) {
-            $discount_type_sub_value = $this->searchObject($hourly_ranges, $discount_type_value, 'time_range');
-        } elseif ($discount_type_id == $types[3]->id) {
-            $discount_type_sub_value = $this->searchObject($day_parts, $discount_type_value, 'day_parts');
-        } elseif ($discount_type_id == $types[4]->id || $discount_type_id == $types[5]->id) {
-            $discount_type_sub_value = $request->discount_type_sub_value;
-        } else {
-            $discount_type_sub_value = null;
-        }
+        dd($discount_class_type);
 
         $discountInsert = Utilities::switch_db('reports')->table('discounts')->insert([
             'id' => uniqid(),
             'broadcaster' => $broadcaster_id,
             'discount_type' => $request->discount_type_id,
-            'discount_class' => $request->discount_class_id,
+            'discount_class' => $discount_class_type->discount_class_id,
             'discount_type_value' => $request->discount_type_value,
             'percent_value' => (int) $request->percent_value,
             'percent_start_date' => $request->percent_start_date,
@@ -98,78 +57,48 @@ class DiscountController extends Controller
             'value' => (int) $request->value,
             'value_start_date' => $request->value_start_date,
             'value_stop_date' => $request->value_stop_date,
-            'discount_type_sub_value' => $discount_type_sub_value
+            'discount_type_sub_value' => $discount_class_type->discount_type_sub_value
         ]);
 
         if($discountInsert) {
-            return redirect()->back()->with('success', 'Discount created successfully');
+            \Session::flash('success', 'Discount created successfully');
+            return redirect()->back();
         } else {
-            return redirect()->back()->with('error', 'Discount not created');
+            \Session::flash('success', 'Discount not created');
+            return redirect()->back();
         }
     }
 
     public function update(Request $request, $discount)
     {
-        $number_value = (int) $request->value;
-        $percent_value = (int) $request->percent_value;
-
-        $hourly_ranges = Api::get_hourly_ranges();
-        $day_parts = Api::get_dayParts();
-        $types = Api::get_discountTypes();
-        $agencies = Api::get_agencies();
-        $classes = Api::get_discount_classes();
 
         $broadcaster_id = \Session::get('broadcaster_id');
-
-        if ($number_value !== 0 && $percent_value !== 0) {
-            $request->discount_class_id = $classes[2]->id;
-        } elseif ($percent_value !== 0 && $number_value == 0) {
-            $request->discount_class_id = $classes[0]->id;
-        } elseif ($number_value !== 0 && $percent_value == 0) {
-            $request->discount_class_id = $classes[1]->id;
-        } else {
-            $request->discount_class_id = null;
-        }
-
-        $discount_type_id = $request->discount_type_id;
-        $discount_type_value = $request->discount_type_value;
-
-        if ($discount_type_id == $types[0]->id) {
-            $discount_type_sub_value = $this->searchObject($agencies, $discount_type_value, 'brand');
-        } elseif ($discount_type_id == $types[1]->id) {
-            $discount_type_sub_value = null;
-        } elseif ($discount_type_id == $types[2]->id) {
-            $discount_type_sub_value = $this->searchObject($hourly_ranges, $discount_type_value, 'time_range');
-        } elseif ($discount_type_id == $types[3]->id) {
-            $discount_type_sub_value = $this->searchObject($day_parts, $discount_type_value, 'day_parts');
-        } elseif ($discount_type_id == $types[4]->id || $discount_type_id == $types[5]->id) {
-            $discount_type_sub_value = $request->discount_type_sub_value;
-        } else {
-            $discount_type_sub_value = null;
-        }
+        $discount_class_type = $this->getDiscountAndClass($request);
 
         $discountUpdate = Utilities::switch_db('reports')
-            ->select(
+            ->update(
                 "UPDATE discounts 
                   SET
                   broadcaster = '$broadcaster_id',
                   discount_type = '$request->discount_type_id',
-                  discount_class = '$request->discount_class_id',
+                  discount_class = '$discount_class_type->discount_class_id',
                   discount_type_value = '$request->discount_type_value',
                   percent_value = '$request->percent_value',
                   percent_start_date = '$request->percent_start_date',
                   percent_stop_date = '$request->percent_stop_date',
-                  value =  '$request->value',
+                  `value` =  '$request->value',
                   value_start_date = '$request->value_start_date',
                   value_stop_date = '$request->value_stop_date',
-                  discount_type_sub_value = '$discount_type_sub_value'
+                  discount_type_sub_value = '$discount_class_type->discount_type_sub_value'
                   WHERE id = '$discount'"
             );
 
-        if(empty($discountUpdate)) {
-            return redirect()->back()->with('success', 'Discount updated successfully');
+        if($discountUpdate) {
+            \Session::flash('success', 'Discount updated successfully');
+            return redirect()->back();
         } else {
-            return redirect()->back()->with('error', 'Discount not updated, try again');
+            \Session::flash('error', 'Discount not updated, try again');
+            return redirect()->back();
         }
     }
 
@@ -185,6 +114,83 @@ class DiscountController extends Controller
             return redirect()->back()->with('error', 'Discount not deleted, try again');
         }
 
+    }
+
+    public function getDiscountClassId($number_value, $percent_value, $classes, $request)
+    {
+        $discount_class_id = $request->discount_class_id;
+        switch ($discount_class_id){
+            case $number_value !== 0 && $percent_value !== 0:
+                $discount_class_id = $classes[2]->id;
+                break;
+            case $percent_value !== 0 && $number_value == 0:
+                $discount_class_id = $classes[0]->id;
+                break;
+            case $number_value !== 0 && $percent_value == 0:
+                $discount_class_id = $classes[1]->id;
+                break;
+            default:
+                $discount_class_id = null;
+        }
+
+        return $discount_class_id;
+    }
+
+    public function getDiscountTypeSubValue($request, $agencies, $types, $hourly_ranges, $day_parts )
+    {
+        $discount_type_id = $request->discount_type_id;
+        $discount_type_value = $request->discount_type_value;
+
+        switch ($discount_type_value){
+            case $discount_type_id == $types[0]->id:
+                $discount_type_sub_value = $this->searchObject($agencies, $discount_type_value, 'brand');
+                break;
+            case $discount_type_id == $types[1]->id:
+                $discount_type_sub_value = null;
+                break;
+            case $discount_type_id == $types[2]->id:
+                $discount_type_sub_value = $this->searchObject($hourly_ranges, $discount_type_value, 'time_range');
+                break;
+            case $discount_type_id == $types[3]->id:
+                $discount_type_sub_value = $this->searchObject($day_parts, $discount_type_value, 'day_parts');
+                break;
+            case $discount_type_id == $types[4]->id || $discount_type_id == $types[5]->id:
+                $discount_type_sub_value = $request->discount_type_sub_value;
+                break;
+            default :
+                $discount_type_sub_value = null;
+        }
+
+        return $discount_type_sub_value;
+    }
+
+    public function getDiscountAndClass($request)
+    {
+        $hourly_ranges = Api::get_hourly_ranges();
+        $day_parts = Api::get_dayParts();
+        $types = Api::get_discountTypes();
+        $agencies = Api::get_agencies();
+        $classes = Api::get_discount_classes();
+
+        $number_value = (int) $request->value;
+        $percent_value = (int) $request->percent_value;
+
+        $discount_class_id = $this->getDiscountClassId($number_value, $percent_value, $classes, $request);
+
+        $discount_type_sub_value = $this->getDiscountTypeSubValue($request, $agencies, $types, $hourly_ranges, $day_parts);
+
+        return json_encode(['discount_class_id' => $discount_class_id, 'discount_type_sub_value' => $discount_type_sub_value]);
+    }
+
+    public function searchObject($categories, $id, $index)
+    {
+        foreach ($categories as $category) {
+            if ($id == $category->id) {
+                return $category->$index;
+            }
+        }
+
+        return false;
     }
 
 }

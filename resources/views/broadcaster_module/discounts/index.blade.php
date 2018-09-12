@@ -499,12 +499,12 @@
 
                     <div class="input_wrap column col_4">
                         <label class="small_faint weight_medium">Value Start</label>
-                        <input type="text" name="value_start_date" placeholder="Select date">
+                        <input type="text" name="value_start_date" class="flatpickr" placeholder="Select date">
                     </div>
 
                     <div class="input_wrap column col_4">
                         <label class="small_faint weight_medium">Value End</label>
-                        <input type="text" name="value_stop_date" placeholder="Select Date">
+                        <input type="text" name="value_stop_date" class="flatpickr" placeholder="Select Date">
                     </div>
                 </div>
 
@@ -516,12 +516,12 @@
 
                     <div class="input_wrap column col_4">
                         <label class="small_faint weight_medium">% Start</label>
-                        <input type="text" name="percent_start_date" placeholder="Select date">
+                        <input type="text" name="percent_start_date" class="flatpickr" placeholder="Select date">
                     </div>
 
                     <div class="input_wrap column col_4">
                         <label class="small_faint weight_medium">% End</label>
-                        <input type="text" name="percent_stop_date" placeholder="Select date">
+                        <input type="text" name="percent_stop_date" class="flatpickr" placeholder="Select date">
                     </div>
                 </div>
 
@@ -814,9 +814,16 @@
 @stop
 
 @section('scripts')
-
+    <script src="https://unpkg.com/flatpickr"></script>
+    <script>
+        $(document).ready(function () {
+            flatpickr(".flatpickr", {
+                altInput: true,
+            });
+        })
+    </script>
 @stop
 
 @section('styles')
-
+    <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
 @stop
