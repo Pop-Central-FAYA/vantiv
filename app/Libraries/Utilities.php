@@ -795,7 +795,7 @@ class Utilities {
 
     public static function checkRatecardExistence($broadcaster_id, $hourly_range_id, $day_id)
     {
-        $check_rate_card = Utilities::switch_db('api')->select("SELECT * from rateCards where broadcaster = '$broadcaster_id' AND day = '$day_id' AND hourly_range_id = '$hourly_range_id'");
+        $check_rate_card = Utilities::switch_db('api')->select("SELECT id from rateCards where broadcaster = '$broadcaster_id' AND day = '$day_id' AND hourly_range_id = '$hourly_range_id'");
         return $check_rate_card;
     }
 

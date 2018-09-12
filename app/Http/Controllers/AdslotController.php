@@ -68,13 +68,14 @@ class AdslotController extends Controller
         }
 
         if($time_check > 720){
-            Session::flash('error', 'Your From To time summation must not exceed 12minutes');
+            Session::flash('error', 'You have exceeded the 12 minutes break for this hour');
             return redirect()->back();
         }
 
         $check_ratecard = Utilities::checkRatecardExistence($broadcaster_id, $request->hourly_ranges, $request->days);
         if($check_ratecard){
-            Session::flash('error', 'Rate card with this day already exists for this broadcaster');
+            $message = 'Your time of '.(($time_check) / 60).' is above the allowed max of 12 minutes per hour';
+            Session::flash('error', $message);
             return redirect()->back();
         }
 
@@ -204,18 +205,20 @@ class AdslotController extends Controller
     {
         $adslot_array = [];
         for ($i = 0; $i < count($request->regions); $i++){
+            $from_time = Utilities::removeSpace($request->from_time[$i]);
+            $to_time = Utilities::removeSpace($request->to_time[$i]);
             $adslot_array[] = [
                 'id'=> uniqid(),
                 'rate_card' => $rate_card_id,
                 'target_audience' => $request->target_audiences[$i],
                 'day_parts' => $request->dayparts[$i],
                 'region' => $request->regions[$i],
-                'from_to_time' => Utilities::removeSpace($request->from_time[$i]). ' - '.Utilities::removeSpace($request->to_time[$i]),
+                'from_to_time' => $from_time. ' - '.$to_time,
                 'min_age' => $request->min_age[$i],
                 'max_age' => $request->max_age[$i],
                 'broadcaster' => $broadcaster_id,
                 'is_available' => 0,
-                'time_difference' => (strtotime(Utilities::removeSpace($request->to_time[$i]))) - (strtotime(Utilities::removeSpace($request->from_time[$i]))),
+                'time_difference' => strtotime($from_time) - strtotime($to_time),
                 'time_used' => 0,
                 'channels' => $broadcaster_details[0]->channel_id,
             ];
