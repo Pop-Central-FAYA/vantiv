@@ -10,20 +10,21 @@ class DiscountController extends Controller
 {
     public function index()
     {
+        $broadcaster_id = \Session::get('broadcaster_id');
         $hourly_ranges = Api::get_hourly_ranges();
         $day_parts = Api::get_dayParts();
         $types = Api::get_discountTypes();
 
-        $agencies = Utilities::switch_db('reports')->select("SELECT u.id as user_id, CONCAT(u.firstname,' ', u.lastname) as name FROM agents as a INNER JOIN users as u ON u.id = a.user_id");
+        $agencies = Utilities::switch_db('reports')->select("SELECT u.id as user_id, a.id as agency_id, CONCAT(u.firstname,' ', u.lastname) as name FROM agents as a INNER JOIN users as u ON u.id = a.user_id");
 
-        $brands = Utilities::switch_db('reports')->select("SELECT id, name FROM brands");
+        $brands = Api::get_brands($broadcaster_id);
 
-        $agency_discounts = Api::get_discounts_by_type($types[0]->id);
-        $brand_discounts = Api::get_discounts_by_type($types[1]->id);
-        $time_discounts = Api::get_discounts_by_type($types[2]->id);
-        $daypart_discounts = Api::get_discounts_by_type($types[3]->id);
-        $price_discounts = Api::get_discounts_by_type($types[4]->id);
-        $pslot_discounts = Api::get_discounts_by_type($types[5]->id);
+        $agency_discounts = Api::get_agency_discounts($types[0]->id, $broadcaster_id);
+        $brand_discounts = Api::get_brand_discounts($types[1]->id, $broadcaster_id);
+        $time_discounts = Api::get_time_discounts($types[2]->id, $broadcaster_id);
+        $daypart_discounts = Api::get_dayparts_discount($types[3]->id, $broadcaster_id);
+        $price_discounts = Api::getPriceAndSurchargeDiscount($types[4]->id, $broadcaster_id);
+//        $pslot_discounts = Api::get_discounts_by_type($types[5]->id);
 
 
         return view('broadcaster_module.discounts.index',
@@ -37,13 +38,10 @@ class DiscountController extends Controller
 
     public function store(Request $request)
     {
-//        dd($request->all());
 
         $broadcaster_id = \Session::get('broadcaster_id');
 
-        $discount_class_type = $this->getDiscountAndClass($request);
-
-        dd($discount_class_type);
+        $discount_class_type = $this->getDiscountAndClass($request, $broadcaster_id);
 
         $discountInsert = Utilities::switch_db('reports')->table('discounts')->insert([
             'id' => uniqid(),
@@ -73,7 +71,7 @@ class DiscountController extends Controller
     {
 
         $broadcaster_id = \Session::get('broadcaster_id');
-        $discount_class_type = $this->getDiscountAndClass($request);
+        $discount_class_type = $this->getDiscountAndClass($request, $broadcaster_id);
 
         $discountUpdate = Utilities::switch_db('reports')
             ->update(
@@ -106,8 +104,6 @@ class DiscountController extends Controller
     {
         $delete_discount = Utilities::switch_db('reports')->select("UPDATE discounts SET status = '0' WHERE id = '$discount' AND status = '0'");
 
-        dd($delete_discount);
-
         if(empty($delete_discount)) {
             return redirect()->back()->with('success', 'Discount deleted successfully');
         } else {
@@ -130,56 +126,50 @@ class DiscountController extends Controller
 
     }
 
-    public function getDiscountTypeSubValue($request, $agencies, $types, $hourly_ranges, $day_parts )
+    public function getDiscountTypeSubValue($request, $agencies, $types,$brands, $hourly_ranges, $day_parts )
     {
         $discount_type_id = $request->discount_type_id;
         $discount_type_value = $request->discount_type_value;
-
-        switch ($discount_type_value){
-            case $discount_type_id == $types[0]->id:
-                $discount_type_sub_value = $this->searchObject($agencies, $discount_type_value, 'brand');
-                break;
-            case $discount_type_id == $types[1]->id:
-                $discount_type_sub_value = null;
-                break;
-            case $discount_type_id == $types[2]->id:
-                $discount_type_sub_value = $this->searchObject($hourly_ranges, $discount_type_value, 'time_range');
-                break;
-            case $discount_type_id == $types[3]->id:
-                $discount_type_sub_value = $this->searchObject($day_parts, $discount_type_value, 'day_parts');
-                break;
-            case $discount_type_id == $types[4]->id || $discount_type_id == $types[5]->id:
-                $discount_type_sub_value = $request->discount_type_sub_value;
-                break;
-            default :
-                $discount_type_sub_value = null;
+        if($discount_type_id == $types[0]->id){
+            return $this->searchObject($agencies, $discount_type_value);
+        }elseif ($discount_type_id == $types[1]->id){
+            return $this->searchObject($brands, $discount_type_value);
+        }elseif ($discount_type_id == $types[2]->id){
+            return $this->searchObject($hourly_ranges, $discount_type_value);
+        }elseif ($discount_type_id == $types[3]->id){
+            return $this->searchObject($day_parts, $discount_type_value);
+        }elseif ($discount_type_id == $types[4]->id || $discount_type_id == $types[5]->id){
+            return $request->discount_type_sub_value;
+        }else{
+            return null;
         }
-
-        return $discount_type_sub_value;
     }
 
-    public function getDiscountAndClass($request)
+    public function getDiscountAndClass($request, $broadcaster_id)
     {
         $hourly_ranges = Api::get_hourly_ranges();
         $day_parts = Api::get_dayParts();
         $types = Api::get_discountTypes();
         $agencies = Api::get_agencies();
         $classes = Api::get_discount_classes();
+        $brands = Api::get_brands($broadcaster_id);
         $number_value = (int) $request->value;
         $percent_value = (int) $request->percent_value;
 
         $discount_class_id = $this->getDiscountClassId($number_value, $percent_value, $classes);
 
-        $discount_type_sub_value = $this->getDiscountTypeSubValue($request, $agencies, $types, $hourly_ranges, $day_parts);
+        $discount_type_sub_value = $this->getDiscountTypeSubValue($request, $agencies, $types, $brands, $hourly_ranges, $day_parts);
 
-        return json_encode(['discount_class_id' => $discount_class_id, 'discount_type_sub_value' => $discount_type_sub_value]);
+
+
+        return (object)(['discount_class_id' => $discount_class_id, 'discount_type_sub_value' => $discount_type_sub_value]);
     }
 
-    public function searchObject($categories, $id, $index)
+    public function searchObject($categories, $id)
     {
         foreach ($categories as $category) {
             if ($id == $category->id) {
-                return $category->$index;
+                return $category->id;
             }
         }
 
