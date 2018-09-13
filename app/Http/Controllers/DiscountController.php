@@ -37,7 +37,7 @@ class DiscountController extends Controller
 
     public function store(Request $request)
     {
-        dd($request->all());
+//        dd($request->all());
 
         $broadcaster_id = \Session::get('broadcaster_id');
 
@@ -116,24 +116,18 @@ class DiscountController extends Controller
 
     }
 
-    public function getDiscountClassId($number_value, $percent_value, $classes, $request)
+    public function getDiscountClassId($number_value, $percent_value, $classes)
     {
-        $discount_class_id = $request->discount_class_id;
-        switch ($discount_class_id){
-            case $number_value !== 0 && $percent_value !== 0:
-                $discount_class_id = $classes[2]->id;
-                break;
-            case $percent_value !== 0 && $number_value == 0:
-                $discount_class_id = $classes[0]->id;
-                break;
-            case $number_value !== 0 && $percent_value == 0:
-                $discount_class_id = $classes[1]->id;
-                break;
-            default:
-                $discount_class_id = null;
+        if($number_value !== 0 && $percent_value !== 0){
+            return $classes[2]->id;
+        }elseif ($percent_value !== 0 && $number_value == 0){
+            return $classes[2]->id;
+        }elseif ($number_value !== 0 && $percent_value == 0){
+            return $classes[1]->id;
+        }else{
+            return null;
         }
 
-        return $discount_class_id;
     }
 
     public function getDiscountTypeSubValue($request, $agencies, $types, $hourly_ranges, $day_parts )
@@ -171,11 +165,10 @@ class DiscountController extends Controller
         $types = Api::get_discountTypes();
         $agencies = Api::get_agencies();
         $classes = Api::get_discount_classes();
-
         $number_value = (int) $request->value;
         $percent_value = (int) $request->percent_value;
 
-        $discount_class_id = $this->getDiscountClassId($number_value, $percent_value, $classes, $request);
+        $discount_class_id = $this->getDiscountClassId($number_value, $percent_value, $classes);
 
         $discount_type_sub_value = $this->getDiscountTypeSubValue($request, $agencies, $types, $hourly_ranges, $day_parts);
 

@@ -481,8 +481,8 @@
                 <div class="input_wrap">
                     <label class="small_faint">Agency</label>
                     <div class="select_wrap">
-                        <select name="discount_type_value">
-                            <option>Select Agency</option>
+                        <select name="discount_type_value" required>
+                            <option value="">Select Agency</option>
                             @foreach($agencies as $agency)
                                 <option value="{{ $agency->user_id }}">{{ $agency->name }}</option>
                             @endforeach
@@ -524,7 +524,6 @@
                         <input type="text" name="percent_stop_date" class="flatpickr" placeholder="Select date">
                     </div>
                 </div>
-
 
                 <div class="align_right pt3">
                     <a href="" class="padd color_initial light_font" onclick="$.modal.close();">Cancel</a>
