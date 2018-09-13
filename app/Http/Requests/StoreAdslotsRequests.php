@@ -30,11 +30,13 @@ class StoreAdslotsRequests extends FormRequest
             'price_45' => 'required',
             'price_30' => 'required',
             'price_15' => 'required',
-            'region' => 'required',
-            'target_audience' => 'required',
+            'regions' => 'required',
+            'target_audiences' => 'required',
             'dayparts' => 'required',
             'min_age' => 'required',
             'max_age' => 'required',
+            'days' => 'required',
+            'hourly_ranges' => 'required'
         ];
     }
 }

@@ -41,6 +41,11 @@ class Utilities {
 
     }
 
+    public static function removeSpace($string)
+    {
+        return str_replace(' ','',$string);
+    }
+
     public static function campaignDetails($id, $broadcaster_id, $agency_id)
     {
         $file_details = [];
@@ -296,7 +301,7 @@ class Utilities {
     {
         $walkins = Utilities::switch_db('api')->select("SELECT * from walkIns where id = '$client_id'");
         $user_id = $walkins[0]->user_id;
-
+        $walkins_update_logo = '';
         if($request->hasFile('company_logo')){
             $image = $request->company_logo;
             $filename = $request->file('company_logo')->getRealPath();
@@ -312,7 +317,7 @@ class Utilities {
 
         $local_db_update = DB::update("UPDATE users set first_name = '$request->first_name', last_name = '$request->last_name', phone = '$request->phone' where email = '$request->email'");
 
-        if($api_user_update || $walkins_update || $local_db_update || $walkins_update_logo){
+        if($api_user_update || $walkins_update || $local_db_update ){
             return "success";
         }else{
             return "error";
@@ -452,8 +457,10 @@ class Utilities {
         $industries = Utilities::switch_db('api')->select("SELECT * from sectors");
         $subindustries = Utilities::switch_db('api')->select("select * from subSectors");
         $channels = Utilities::switch_db('api')->select("SELECT * from campaignChannels");
+        $days = Utilities::switch_db('api')->select("SELECT * from days");
+        $hourly_ranges = Utilities::switch_db('api')->select("SELECT * from hourlyRanges");
 
-        return (['regions' => $regions, 'target_audience' => $targetAudiences, 'day_parts' => $day_parts, 'industries' => $industries, 'subindustries' => $subindustries, 'channels' => $channels]);
+        return (['hourly_ranges' => $hourly_ranges, 'days' => $days, 'regions' => $regions, 'target_audience' => $targetAudiences, 'day_parts' => $day_parts, 'industries' => $industries, 'subindustries' => $subindustries, 'channels' => $channels]);
     }
 
     public static function getAllAvailableSlots($step1, $broadcaster_id)
@@ -743,7 +750,7 @@ class Utilities {
             }
 
 
-            $insert = \DB::insert("INSERT INTO carts (user_id, broadcaster_id, price, ip_address, file, from_to_time, `time`, adslot_id, percentage, total_price, filePosition_id, status, agency_id, file_name, public_id, format) VALUES ('$user','$broadcaster','$price','$ip','$file','$hourly_range','$time','$adslot_id', '$percentage', '$new_price', '$position', 1, '$agency', '$file_name', '$public_id', '$file_format')");
+            $insert = \DB::insert("INSERT INTO carts (user_id, broadcaster_id, price, ip_address, file, from_to_time, `time`, adslot_id, percentage, total_price, filePosition_id, status, agency_id, file_name, public_id, format) VALUES ('$user','$broadcaster','$price','$ip','$file','$hourly_range','$time','$adslot_id', '$percentage', '$new_price', '$position', 1, '$agency_id', '$file_name', '$public_id', '$file_format')");
         }
 
         return $insert;
@@ -784,6 +791,12 @@ class Utilities {
 
         return (['calc' => $calc, 'brands' => $brands, 'queries' => $query, 'day_parts' => $day_partss, 'targets' => $targets, 'regions' => $regions, 'user' => $user]);
 
+    }
+
+    public static function checkRatecardExistence($broadcaster_id, $hourly_range_id, $day_id)
+    {
+        $check_rate_card = Utilities::switch_db('api')->select("SELECT id from rateCards where broadcaster = '$broadcaster_id' AND day = '$day_id' AND hourly_range_id = '$hourly_range_id'");
+        return $check_rate_card;
     }
 
 

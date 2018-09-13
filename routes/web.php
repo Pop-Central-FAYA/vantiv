@@ -291,10 +291,10 @@ Route::group(['middleware' => 'auth'], function () {
      */
     Route::group(['prefix' => '/adslot'], function () {
         Route::get('/', 'AdslotController@index')->name('adslot.all');
-        Route::get('/adslot-data', 'AdslotController@adslotData');
+        Route::get('/data', 'AdslotController@adslotData');
         Route::get('/create', 'AdslotController@create')->name('adslot.create');
         Route::post('/store', 'AdslotController@store')->name('adslot.store');
-        Route::post('/update/{broadcaster}/{adslot}', 'AdslotController@update')->name('adslot.update');
+        Route::post('/update/{adslot}', 'AdslotController@update')->name('adslot.update');
         Route::get('/{region_id}', 'AdslotController@getAdslotByRegion')->name('adslot.region');
     });
 
