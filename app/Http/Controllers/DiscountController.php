@@ -23,7 +23,7 @@ class DiscountController extends Controller
         $brand_discounts = Api::get_brand_discounts($types[1]->id, $broadcaster_id);
         $time_discounts = Api::get_time_discounts($types[2]->id, $broadcaster_id);
         $daypart_discounts = Api::get_dayparts_discount($types[3]->id, $broadcaster_id);
-        $price_discounts = Api::getPriceAndSurchargeDiscount($types[4]->id, $broadcaster_id);
+        $price_discounts = Api::getPriceDiscount($types[4]->id, $broadcaster_id);
 //        $pslot_discounts = Api::get_discounts_by_type($types[5]->id);
 
 
@@ -42,6 +42,11 @@ class DiscountController extends Controller
         $broadcaster_id = \Session::get('broadcaster_id');
 
         $discount_class_type = $this->getDiscountAndClass($request, $broadcaster_id);
+
+        if($discount_class_type->discount_type_sub_value === 'error'){
+            \Session::flash('error', 'Please ensure that the Max. Value is greater than the Min. value');
+            return redirect()->back();
+        }
 
         $discountInsert = Utilities::switch_db('reports')->table('discounts')->insert([
             'id' => uniqid(),
@@ -73,6 +78,11 @@ class DiscountController extends Controller
         $broadcaster_id = \Session::get('broadcaster_id');
         $discount_class_type = $this->getDiscountAndClass($request, $broadcaster_id);
 
+        if($discount_class_type->discount_type_sub_value === 'error'){
+            \Session::flash('error', 'Please ensure that the Max. Value is greater than the Min. value');
+            return redirect()->back();
+        }
+
         $discountUpdate = Utilities::switch_db('reports')
             ->update(
                 "UPDATE discounts 
@@ -95,19 +105,22 @@ class DiscountController extends Controller
             \Session::flash('success', 'Discount updated successfully');
             return redirect()->back();
         } else {
-            \Session::flash('error', 'Discount not updated, try again');
+            \Session::flash('error', 'Discount not updated or no changes made, try again');
             return redirect()->back();
         }
     }
 
     public function destroy($discount)
     {
-        $delete_discount = Utilities::switch_db('reports')->select("UPDATE discounts SET status = '0' WHERE id = '$discount' AND status = '0'");
+        dd($discount);
+        $delete_discount = Utilities::switch_db('api')->update("UPDATE discounts SET status = 0 WHERE id = '$discount' AND status = 1");
 
-        if(empty($delete_discount)) {
-            return redirect()->back()->with('success', 'Discount deleted successfully');
+        if($delete_discount) {
+            \Session::flash('success', 'Discount deleted successfully');
+            return redirect()->back();
         } else {
-            return redirect()->back()->with('error', 'Discount not deleted, try again');
+            \Session::flash('error', 'Discount not deleted, try again');
+            return redirect()->back();
         }
 
     }
@@ -138,8 +151,12 @@ class DiscountController extends Controller
             return $this->searchObject($hourly_ranges, $discount_type_value);
         }elseif ($discount_type_id == $types[3]->id){
             return $this->searchObject($day_parts, $discount_type_value);
-        }elseif ($discount_type_id == $types[4]->id || $discount_type_id == $types[5]->id){
-            return $request->discount_type_sub_value;
+        }elseif ($discount_type_id == $types[4]->id ){
+            if((integer)$request->discount_type_sub_value < $request->discount_type_value){
+                return 'error';
+            }else{
+                return $request->discount_type_sub_value;
+            }
         }else{
             return null;
         }

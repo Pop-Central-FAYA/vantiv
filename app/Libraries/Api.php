@@ -85,9 +85,9 @@ Class Api
                                                         WHERE d.broadcaster = '$broadcaster_id' AND d.discount_type = '$type' AND d.status = '1'");
     }
 
-    public static function getPriceAndSurchargeDiscount($type, $broadcaster_id)
+    public static function getPriceDiscount($type, $broadcaster_id)
     {
-        return Utilities::switch_db('api')->select("SELECT * from discounts where broadcaster = '$broadcaster_id' and discount_type = '$type'");
+        return Utilities::switch_db('api')->select("SELECT * from discounts where broadcaster = '$broadcaster_id' and discount_type = '$type' AND status = '1'");
     }
 
 
