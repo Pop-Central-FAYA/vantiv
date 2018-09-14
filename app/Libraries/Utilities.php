@@ -362,27 +362,24 @@ class Utilities {
 
     public static function getClientsBrands($id, $broadcaster_id)
     {
-        $brs = Utilities::switch_db('api')->select("SELECT * from brands where walkin_id = '$id'");
+        $walkin_brands = Utilities::switch_db('api')->select("SELECT * from brands where walkin_id = '$id'");
         $brands = [];
-        foreach ($brs as $br){
-            $campaigns = Utilities::switch_db('api')->select("SELECT * from campaignDetails where brand = '$br->id' and broadcaster = '$broadcaster_id'");
+        foreach ($walkin_brands as $walkin_brand){
+            $campaigns = Utilities::switch_db('api')->select("SELECT * from campaignDetails where brand = '$walkin_brand->id' and broadcaster = '$broadcaster_id'");
             $last_count_campaign = count($campaigns) - 1;
-            $pay = Utilities::switch_db('api')->select("SELECT SUM(total) as total from payments where campaign_id IN (SELECT campaign_id from campaignDetails where brand = '$br->id' and broadcaster = '$broadcaster_id')");
+            $pay = Utilities::switch_db('api')->select("SELECT SUM(total) as total from payments where campaign_id IN (SELECT campaign_id from campaignDetails where brand = '$walkin_brand->id' and broadcaster = '$broadcaster_id')");
             $brands[] = [
-                'id' => $br->id,
-                'brand' => $br->name,
-                'date' => $br->time_created,
-                'count_brand' => count($brs),
+                'id' => $walkin_brand->id,
+                'brand' => $walkin_brand->name,
+                'date' => $walkin_brand->time_created,
+                'count_brand' => count($walkin_brands),
                 'campaigns' => count($campaigns),
-                'image_url' => $br->image_url,
+                'image_url' => $walkin_brand->image_url,
                 'last_campaign' => $campaigns ? $campaigns[$last_count_campaign]->name : 'none',
                 'total' => number_format($pay[0]->total,2),
-                'industry_id' => $br->industry_id,
-                'sub_industry_id' => $br->sub_industry_id,
+                'industry_id' => $walkin_brand->industry_id,
+                'sub_industry_id' => $walkin_brand->sub_industry_id,
             ];
-        }
-        if(count($brands) === 0){
-            return 'error';
         }
 
         return $brands;
@@ -797,6 +794,55 @@ class Utilities {
     {
         $check_rate_card = Utilities::switch_db('api')->select("SELECT id from rateCards where broadcaster = '$broadcaster_id' AND day = '$day_id' AND hourly_range_id = '$hourly_range_id'");
         return $check_rate_card;
+    }
+
+    public static function getProfileDetails($api_user, $local_user,$api_agent)
+    {
+        $user_details = [
+            'first_name' => $api_user[0]->firstname,
+            'last_name' => $api_user[0]->lastname,
+            'phone' => $api_user[0]->phone_number,
+            'email' => $api_user[0]->email,
+            'address' => $local_user[0]->address,
+            'location' => $api_agent[0]->location,
+            'nationality' => $api_agent[0]->nationality,
+            'username' => $local_user[0]->username,
+            'image' => $api_agent[0]->image_url ? decrypt($api_agent[0]->image_url) : ''
+        ];
+
+        return $user_details;
+    }
+
+    public static function clientscampaigns($campaigns)
+    {
+        $user_camp = [];
+        foreach ($campaigns as $campaign){
+            $user_camp[] = [
+                'product' => $campaign->product,
+                'num_of_slot' => $campaign->adslots,
+                'payment' => $campaign->total,
+                'date' => $campaign->time_created
+            ];
+        }
+
+        return $user_camp;
+    }
+
+    public static function clientGraph($campaigns)
+    {
+        $all_campaign_total_graph = [];
+        $all_campaign_date_graph = [];
+
+        foreach ($campaigns as $all_camp){
+            $all_campaign_total_graph[] = $all_camp->total;
+            $all_campaign_date_graph[] = date('Y-m-d', strtotime($all_camp->time_created));
+        }
+
+
+        $campaign_payment = json_encode($all_campaign_total_graph);
+        $campaign_date = json_encode($all_campaign_date_graph);
+
+        return (['campaign_payment' => $campaign_payment, 'campaign_date' => $campaign_date]);
     }
 
 

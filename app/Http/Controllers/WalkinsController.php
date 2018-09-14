@@ -266,56 +266,28 @@ class WalkinsController extends Controller
 
         $user_id = $client[0]->user_id;
 
-        $user_camp = [];
-
         $all_campaigns = Utilities::getClientCampaignData($user_id, $broadcaster_id);
 
         $all_brands = Utilities::getClientsBrands($client_id, $broadcaster_id);
 
-        if($all_brands['error']){
+        if(count($all_brands) === 0){
             Session::flash('info', 'You don`t have a brand on this client');
             return redirect()->back();
         }
 
         $total = Utilities::switch_db('api')->select("SELECT SUM(total) as total from payments where campaign_id IN (SELECT campaign_id from campaignDetails where user_id = '$user_id' and broadcaster = '$broadcaster_id') ");
 
-        $campaigns = Utilities::switch_db('api')->select("SELECT c.campaign_id, SUM(c.adslots) as adslots, c.time_created, c.product, p.total, c.time_created from campaignDetails as c, payments as p where c.user_id = '$user_id' and p.campaign_id = c.campaign_id and c.broadcaster = '$broadcaster_id'");
+        $campaigns = Utilities::switch_db('api')->select("SELECT c.campaign_id, c.adslots, c.time_created, c.product, p.total, c.time_created from campaignDetails as c 
+                                                              INNER JOIN payments as p ON p.campaign_id = c.campaign_id where c.user_id = '$user_id' and c.broadcaster = '$broadcaster_id'");
 
-        foreach ($campaigns as $campaign){
-            $user_camp[] = [
-                'product' => $campaign->product,
-                'num_of_slot' => $campaign->adslots,
-                'payment' => $campaign->total,
-                'date' => $campaign->time_created
-            ];
-        }
+        $user_camp = Utilities::clientscampaigns($campaigns);
 
         $user_details = Utilities::switch_db('api')->select("SELECT * FROM users where id = '$user_id'");
 
 //        campaign vs time graph
-        $all_campaign_graph = [];
-        $all_campaign_total_graph = [];
-        $all_campaign_date_graph = [];
-
-        foreach ($campaigns as $all_camp){
-            $all_campaign_graph[] = [
-                'id' => $all_camp->campaign_id,
-                'date' => date('Y-m-d', strtotime($all_camp->time_created)),
-                'total' => $all_camp->total
-            ];
-        }
-
-//        get the price
-        foreach ($all_campaign_graph as $all_camp_graph){
-            $all_campaign_total_graph[] = $all_camp_graph['total'];
-        }
-//        get the date
-        foreach ($all_campaign_graph as $all_camp_graph){
-            $all_campaign_date_graph[] = $all_camp_graph['date'];
-        }
-
-        $campaign_payment = json_encode($all_campaign_total_graph);
-        $campaign_date = json_encode($all_campaign_date_graph);
+        $campaign_graph = Utilities::clientGraph($campaigns);
+        $campaign_payment = $campaign_graph['campaign_payment'];
+        $campaign_date = $campaign_graph['campaign_date'];
 
         $industries = Utilities::switch_db('api')->select("SELECT * FROM sectors");
 
@@ -331,7 +303,7 @@ class WalkinsController extends Controller
             ->with('total', $total)
             ->with('campaign_payment', $campaign_payment)
             ->with('campaign_date', $campaign_date)
-            ->with('total_this_month', $total)
+            ->with('total_spent', $total)
             ->with('industries', $industries)
             ->with('sub_industries', $sub_inds);
     }

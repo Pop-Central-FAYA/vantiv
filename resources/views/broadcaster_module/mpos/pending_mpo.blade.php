@@ -15,7 +15,7 @@
     <!-- subheader -->
         <div class="sub_header clearfix mb pt">
             <div class="column col_6">
-                <h2 class="sub_header">Pending MPO'S</h2>
+                <h2 class="sub_header">Pending MPO</h2>
             </div>
         </div>
 
@@ -23,7 +23,7 @@
 
             <div class="filters border_bottom clearfix">
                 <div class="column col_8 p-t">
-                    <p class="uppercased weight_medium">Pending MPO's</p>
+                    <p class="uppercased weight_medium">Pending MPOS</p>
                 </div>
                 <div class="column col_4 clearfix">
                     <div class="col_5 column">

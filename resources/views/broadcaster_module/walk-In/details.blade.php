@@ -19,7 +19,6 @@
             </div>
         </div>
 
-
         <!-- main stats -->
         <div class="the_frame clearfix mb ">
             <div class="border_bottom clearfix client_name">
@@ -57,11 +56,10 @@
 
         <!-- client charts -->
         <div class="the_frame mb client_charts content_month">
-            <form action="{{ route('client.month', ['client_id' => $client_id]) }}" id="client_month" method="get">
+            <form action="{{ route('client.date', ['client_id' => $client_id]) }}" id="client_month" method="get">
 
                 <div class="filters chart_filters border_bottom clearfix">
                     <div class="column col_6 date_filter">
-                        <a href="">1M</a>
                         <a id="yearly_client" href="{{ route('client.year', ['client_id' => $client_id]) }}">1Y</a>
                     </div>
 
@@ -73,7 +71,6 @@
                     </div>
                     <div class="column col_2 m-b">
                         <button type="button" id="filterDate" class="btn small_btn">Filter</button>
-                        {{--<button type="button" id="filterDate">Filter</button>--}}
                     </div>
                 </div>
 
@@ -85,7 +82,7 @@
 
                     <div class="column col_4">
                         <span class="small_faint uppercased weight_medium">Total Spend</span>
-                        <h3>&#8358; {{ $total_this_month ? number_format($total_this_month[0]->total, 2) : 0 }}</h3>
+                        <h3>&#8358; {{ $total_spent ? number_format($total_spent[0]->total, 2) : 0 }}</h3>
                     </div>
 
                     <div class="column col_4">

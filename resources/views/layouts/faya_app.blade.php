@@ -39,6 +39,8 @@
 
     @yield('content')
 
+    @include('profile.index')
+
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
     <script type="text/javascript" src="{{ asset('new_frontend/js/jquery.simplemodal.1.4.4.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('new_frontend/js/script.js') }}"></script>
@@ -49,6 +51,8 @@
     <script type="text/javascript">
         (function() { var s = document.createElement("script"); s.type = "text/javascript"; s.async = true; s.src = '//api.usersnap.com/load/ec075f05-c488-417b-ba4e-beb5366a9c15.js';
             var x = document.getElementsByTagName('script')[0]; x.parentNode.insertBefore(s, x); })();
+
+
     </script>
 
 </body>

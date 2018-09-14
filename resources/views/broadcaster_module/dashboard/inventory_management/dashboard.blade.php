@@ -19,29 +19,6 @@
     {{--sidebar--}}
     @include('partials.new-frontend.broadcaster.inventory_management.sidebar')
     <!-- main stats -->
-        {{--<div class="the_stats the_frame clearfix mb4">--}}
-            {{--<div class="column col_3">--}}
-                {{--<span class="weight_medium small_faint uppercased">Active Campaigns</span>--}}
-                {{--<h3><a href="{{ route('campaign.all') }}">{{ count($active_campaigns) }}</a></h3>--}}
-            {{--</div>--}}
-
-            {{--<div class="column col_3">--}}
-                {{--<span class="weight_medium small_faint uppercased">All Walk-Ins</span>--}}
-                {{--<h3><a href="{{ route('walkins.all') }}">{{ count($walkins) }}</a></h3>--}}
-            {{--</div>--}}
-
-            {{--<div class="column col_3">--}}
-                {{--<span class="weight_medium small_faint uppercased">Pending MPO's</span>--}}
-                {{--<h3><a href="{{ route('pending-mpos') }}" style="color: red;">{{ count($pending_mpos) }}</a></h3>--}}
-            {{--</div>--}}
-
-            {{--<div class="column col_3">--}}
-                {{--<span class="weight_medium small_faint uppercased">All Brands</span>--}}
-                {{--<h3><a href="{{ route('brand.all') }}">{{ count($brands) }}</a></h3>--}}
-            {{--</div>--}}
-        {{--</div>--}}
-
-
         <!-- client charts -->
         <div class="clearfix">
             <p class="uppercased weight_medium">Periodic Spend Chart</p>
