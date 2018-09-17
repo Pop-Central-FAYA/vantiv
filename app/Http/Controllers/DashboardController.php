@@ -1171,9 +1171,9 @@ class DashboardController extends Controller
         $broadcaster_det = Utilities::getBroadcasterDetails($broadcaster_id);
         $broadcaster_name = $broadcaster_det[0]->brand;
         $invoices = Utilities::switch_db('api')->select("SELECT i_d.*, i.campaign_id, c.name as campaign_name, c.campaign_id, DATE_FORMAT(c.stop_date, '%Y-%m-%d') as stop_date, 
-                                                             u.firstname, u.lastname from invoiceDetails as i_d INNER JOIN invoices as i ON i.id = i_d.invoice_id 
+                                                             b.name as brand_name from invoiceDetails as i_d INNER JOIN invoices as i ON i.id = i_d.invoice_id 
                                                             INNER JOIN campaignDetails as c ON c.campaign_id = i.campaign_id AND c.broadcaster = '$broadcaster_id' 
-                                                            INNER JOIN users as u ON u.id = i_d.user_id  WHERE 
+                                                            INNER JOIN brands as b ON b.walkin_id = i_d.walkins_id  WHERE 
                                                             i_d.broadcaster_id = '$broadcaster_id' ORDER BY i_d.time_created DESC LIMIT 10");
 
         foreach ($invoices as $invoice) {
@@ -1181,7 +1181,7 @@ class DashboardController extends Controller
                 'campaign_id' => $invoice->campaign_id,
                 'invoice_number' => $invoice->agency_id ? $invoice->invoice_number.'v'.$broadcaster_name[0] : $invoice->invoice_number,
                 'campaign_name' => $invoice->campaign_name,
-                'customer' => $invoice->firstname.' '.$invoice->lastname,
+                'customer' => ucfirst($invoice->brand_name),
                 'date' => date('Y-m-d', strtotime($invoice->time_created)),
                 'date_due' => $invoice->stop_date,
             ];
@@ -1193,16 +1193,15 @@ class DashboardController extends Controller
     public function getHighValueCustomer($broadcaster_id)
     {
             $high_value_campaigns = [];
-            $payments = Utilities::switch_db('api')->select("SELECT SUM(p.amount) as total_price, p.walkins_id, u.firstname, u.lastname from paymentDetails as p
-                                                                INNER JOIN walkIns as w ON w.id = p.walkins_id 
-                                                                INNER JOIN users as u ON u.id = w.user_id 
+            $payments = Utilities::switch_db('api')->select("SELECT SUM(p.amount) as total_price, p.walkins_id, b.name as brand_name from paymentDetails as p
+                                                                INNER JOIN brands as b ON b.walkin_id = p.walkins_id 
                                                                 where p.broadcaster = '$broadcaster_id' GROUP BY p.walkins_id ORDER BY total_price DESC LIMIT 10");
             foreach ($payments as $payment){
                 $campaign_count = Utilities::switch_db('api')->select("SELECT COUNT(id) as total_campaign_count, SUM(adslots) as total_adslots from campaignDetails where walkins_id = '$payment->walkins_id' AND broadcaster = '$broadcaster_id'");
                 $high_value_campaigns[] = [
                     'number_of_campaigns' => $campaign_count[0]->total_campaign_count,
                     'total_adslots' => $campaign_count[0]->total_adslots,
-                    'customer_name' => $payment->firstname.' '.$payment->lastname,
+                    'customer_name' => ucfirst($payment->brand_name),
                     'payment' => $payment->total_price,
                 ];
             }

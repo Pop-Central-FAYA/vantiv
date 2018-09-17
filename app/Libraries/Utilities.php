@@ -50,10 +50,18 @@ class Utilities {
     {
         $file_details = [];
         if($broadcaster_id){
-            $campaign_details = Utilities::switch_db('api')->select("SELECT c_d.campaign_id, c_d.min_age, c_d.max_age, c_d.name, c_d.user_id, c_d.agency, c_d.product, c_d.Industry, c_d.sub_industry, c_d.broadcaster, c_d.start_date, c_d.stop_date, b.name as brand, c_d.channel, c_d.target_audience, c_d.region, b.name, p.total, p.id as payment_id from campaignDetails as c_d, brands as b, payments as p where p.campaign_id = c_d.campaign_id and c_d.brand = b.id  and c_d.campaign_id = '$id' and c_d.broadcaster = '$broadcaster_id'");
+            $campaign_details = Utilities::switch_db('api')->select("SELECT c_d.campaign_id, c_d.min_age, c_d.max_age, c_d.name as campaign_name, c_d.user_id, c_d.agency, c_d.product, 
+                                                                c_d.Industry, c_d.sub_industry, c_d.broadcaster, c_d.start_date, c_d.stop_date, b.name as brand, c_d.channel, c_d.target_audience,
+                                                                 c_d.region, b.name, p.total, p.id as payment_id from campaignDetails as c_d INNER JOIN brands as b ON b.id = c_d.brand
+                                                                  INNER JOIN payments as p ON p.campaign_id = c_d.campaign_id where  
+                                                                   c_d.campaign_id = '$id' and c_d.broadcaster = '$broadcaster_id'");
         }else if($agency_id){
-            $campaign_details = Utilities::switch_db('api')->select("SELECT c_d.campaign_id, c_d.min_age, c_d.max_age, c_d.name, c_d.user_id, c_d.agency, c_d.product, c_d.Industry, c_d.sub_industry, c_d.start_date, c_d.stop_date, b.name as brand, c_d.channel, c_d.target_audience, c_d.region, b.name, p.total, p.id as payment_id from campaignDetails as c_d, brands as b, payments as p where p.campaign_id = c_d.campaign_id and c_d.brand = b.id  and c_d.campaign_id = '$id' GROUP BY c_d.campaign_id");
+            $campaign_details = Utilities::switch_db('api')->select("SELECT c_d.campaign_id, c_d.min_age, c_d.max_age, c_d.name as campaign_name, c_d.user_id, c_d.agency, c_d.product, c_d.Industry, 
+                                                                        c_d.sub_industry, c_d.start_date, c_d.stop_date, b.name as brand, c_d.channel, c_d.target_audience, c_d.region, b.name, 
+                                                                        p.total, p.id as payment_id from campaignDetails as c_d INNER JOIN brands as b ON b.id = c_d.brand
+                                                                        INNER JOIN payments as p ON p.campaign_id = c_d.campaign_id where  c_d.campaign_id = '$id' GROUP BY c_d.campaign_id");
         }
+
         $campaign_id = $campaign_details[0]->campaign_id;
         $channel = $campaign_details[0]->channel;
         $location_ids = $campaign_details[0]->region;
@@ -101,7 +109,7 @@ class Utilities {
 
         $campaign_det = [
             'campaign_id' => $campaign_details[0]->campaign_id,
-            'campaign_name' => $campaign_details[0]->name,
+            'campaign_name' => $campaign_details[0]->campaign_name,
             'product_name' => $campaign_details[0]->product,
             'brand' => $campaign_details[0]->brand,
             'industry' => $campaign_details[0]->Industry,

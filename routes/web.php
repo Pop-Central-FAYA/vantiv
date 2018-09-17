@@ -404,7 +404,7 @@ Route::group(['middleware' => 'auth'], function () {
          * User Management
          */
 
-        Route::get('/user/manage', 'Agency\UserManagementController@index')->name('agency.use_management');
+        Route::get('/user/manage', 'Agency\UserManagementController@index')->name('agency.user_management');
 
 
         /**

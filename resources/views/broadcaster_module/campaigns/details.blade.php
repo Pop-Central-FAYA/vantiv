@@ -15,7 +15,7 @@
     <!-- subheader -->
         <div class="sub_header clearfix mb pt">
             <div class="column col_6">
-                <h2 class="sub_header">{{ $campaign_details['campaign_det']['campaign_name'] }}</h2>
+                <h2 class="sub_header"> {{ ucfirst($campaign_details['campaign_det']['campaign_name']) }}</h2>
             </div>
         </div>
 

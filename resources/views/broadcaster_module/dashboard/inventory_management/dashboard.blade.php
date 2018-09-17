@@ -51,26 +51,43 @@
         <p><br></p>
         <div class="the_frame client_dets mb4">
             <!-- campaigns table -->
-            <table>
-                <tr>
-                    <th>Invoice Number</th>
-                    <th>Campaign Name</th>
-                    <th>Customer Name</th>
-                    <th>Start Date</th>
-                    <th>Due Date</th>
-                </tr>
+            <div class="similar_table pt3">
+                <!-- table header -->
+                <div class="_table_header clearfix m-b">
+                    <span class="small_faint block_disp padd column col_2">Invoice Number</span>
+                    <span class="small_faint block_disp column col_2">Campaign Name</span>
+                    <span class="small_faint block_disp column col_2">Customer Name</span>
+                    <span class="small_faint block_disp column col_2">Start Date</span>
+                    <span class="small_faint block_disp column col_2">Due Date</span>
+                    <span class="block_disp column col_2 color_trans"></span>
+                </div>
+
+                <!-- table item -->
                 @foreach($paid_invoices as $paid_invoice)
-                    <tr>
-                        <td>{{ $paid_invoice['invoice_number'] }}</td>
-                        <td><a href="{{ route('broadcaster.campaign.details', ['id' => $paid_invoice['campaign_id']]) }}">{{ $paid_invoice['campaign_name'] }}</a></td>
-                        <td>{{ $paid_invoice['customer'] }}</td>
-                        <td>{{ $paid_invoice['date'] }}</td>
-                        <td>{{ $paid_invoice['date_due'] }}</td>
-                        <td><a href="">View</a></td>
-                    </tr>
-                @endforeach
-            </table>
-            <!-- end -->
+                    <div class="_table_item the_frame clearfix">
+                        <div class="column padd col_2">{{ $paid_invoice['invoice_number'] }}</div>
+                        <div class="column col_2"><a href="{{ route('broadcaster.campaign.details', ['id' => $paid_invoice['campaign_id']]) }}">{{ $paid_invoice['campaign_name'] }}</a></div>
+                        <div class="column col_2"> {{ $paid_invoice['customer'] }}</div>
+                        <div class="column col_2"> {{ $paid_invoice['date'] }}</div>
+                        <div class="column col_2">{{ $paid_invoice['date_due'] }}</div>
+                        <div class="column col_2">
+
+                            <!-- more links -->
+                            <div class="list_more">
+                                <span class="more_icon"></span>
+
+                                <div class="more_more">
+                                    <a href="#" class="modal_click">View</a>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+            @endforeach
+            <!-- table item end -->
+            </div>
+
         </div>
 
         <p><br></p>
@@ -78,23 +95,29 @@
         <p><br></p>
         <div class="the_frame client_dets mb4">
             <!-- campaigns table -->
-            <table>
-                <tr>
-                    <th>Customer Name</th>
-                    <th>No of Campaigns</th>
-                    <th>No of Slots</th>
-                    <th>Amount Spent</th>
-                </tr>
+
+            <div class="similar_table pt3">
+                <!-- table header -->
+                <div class="_table_header clearfix m-b">
+                    <span class="small_faint block_disp padd column col_4">Customer Brand</span>
+                    <span class="small_faint block_disp column col_2">No of Campaigns</span>
+                    <span class="small_faint block_disp column col_2">No of Slots</span>
+                    <span class="small_faint block_disp column col_4">Total Spend (Cumulative)</span>
+                </div>
+
+                <!-- table item -->
                 @foreach($high_value_customers as $high_value_customer)
-                    <tr>
-                        <td>{{ $high_value_customer['customer_name'] }}</td>
-                        <td>{{ $high_value_customer['number_of_campaigns'] }}</td>
-                        <td>{{ $high_value_customer['total_adslots'] }}</td>
-                        <td>{{ number_format($high_value_customer['payment'], 2) }}</td>
-                    </tr>
-                @endforeach
-            </table>
-            <!-- end -->
+                    <div class="_table_item the_frame clearfix">
+                        <div class="column padd col_4">{{ $high_value_customer['customer_name'] }}</div>
+                        <div class="column col_2">{{ $high_value_customer['number_of_campaigns'] }}</div>
+                        <div class="column col_2"> {{ $high_value_customer['total_adslots'] }}</div>
+                        <div class="column col_4"> {{ number_format($high_value_customer['payment'], 2) }}</div>
+
+                    </div>
+            @endforeach
+            <!-- table item end -->
+            </div>
+
         </div>
 
     </div>
@@ -159,13 +182,13 @@
                 title: {
                     text: 'Price (Naira)',
                     style: {
-                        color: Highcharts.getOptions().colors[0]
+                        color: Highcharts.getOptions().colors[1]
                     }
                 },
 
                 labels: {
                     style: {
-                        color: Highcharts.getOptions().colors[0]
+                        color: Highcharts.getOptions().colors[1]
                     }
                 },
                 opposite: true
@@ -186,6 +209,7 @@
                 name: 'Total Price',
                 type: 'column',
                 yAxis: 1,
+                color: '#44C1C9',
                 data: periodic_price,
                 tooltip: {
                     valueSuffix: ''
@@ -194,6 +218,7 @@
             }, {
                 name: 'Number of Adslot',
                 type: 'spline',
+                color: '#000000',
                 data: periodic_adslot,
                 tooltip: {
                     valueSuffix: ''
@@ -276,43 +301,6 @@
             }]
         });
 
-        {{--$(document).ready(function( $ ) {--}}
-
-            {{--flatpickr(".flatpickr", {--}}
-                {{--altInput: true,--}}
-            {{--});--}}
-
-            {{--var Datefilter =  $('.dashboard_campaigns').DataTable({--}}
-                {{--dom: 'Bfrtip',--}}
-                {{--paging: true,--}}
-                {{--serverSide: true,--}}
-                {{--processing: true,--}}
-                {{--"searching": false,--}}
-                {{--aaSorting: [],--}}
-                {{--ajax: {--}}
-                    {{--url: '/agency/dashboard/campaigns',--}}
-                    {{--data: function (d) {--}}
-                        {{--d.start_date = $('input[name=start_date]').val();--}}
-                        {{--d.stop_date = $('input[name=stop_date]').val();--}}
-                    {{--}--}}
-                {{--},--}}
-                {{--columns: [--}}
-                    {{--{data: 'id', name: 'id'},--}}
-                    {{--{data: 'name', name: 'name'},--}}
-                    {{--{data: 'brand', name: 'brand'},--}}
-                    {{--{data: 'date_created', name: 'date_created'},--}}
-                    {{--{data: 'budget', name: 'budget'},--}}
-                    {{--{data: 'adslots', name: 'adslots'},--}}
-                    {{--{data: 'status', name: 'status'},--}}
-
-                {{--],--}}
-
-            {{--});--}}
-
-            {{--$('#dashboard_filter_campaign').on('click', function() {--}}
-                {{--Datefilter.draw();--}}
-            {{--});--}}
-        {{--} );--}}
     </script>
 
 @endsection
@@ -353,5 +341,11 @@
         !important;
 
         }
+         ._table_item > div:first-child {
+             padding-top: 12px;
+             font-size: 16px;
+         @import;
+         }
+
     </style>
 @endsection
