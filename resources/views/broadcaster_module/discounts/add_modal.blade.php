@@ -3,7 +3,7 @@
     <h2 class="sub_header mb4">New Discount</h2>
     <form action="{{ route('discount.store') }}" method="POST">
         {{ csrf_field() }}
-        <input type="hidden" name="discount_type_id" value="{{ $types[0]->id }}">
+        <input type="hidden" name="discount_type_id" value="{{ $types['agency'] }}">
         <div class="input_wrap">
             <label class="small_faint">Agency</label>
             <div class="select_wrap">
@@ -66,7 +66,7 @@
 
     <form action="{{ route('discount.store') }}" method="POST">
         {{ csrf_field() }}
-        <input type="hidden" name="discount_type_id" value="{{ $types[1]->id }}">
+        <input type="hidden" name="discount_type_id" value="{{ $types['brands'] }}">
 
         <div class="input_wrap">
             <label class="small_faint">Brand</label>
@@ -131,7 +131,7 @@
 
     <form action="{{ route('discount.store') }}" method="POST">
         {{ csrf_field() }}
-        <input type="hidden" name="discount_type_id" value="{{ $types[2]->id }}">
+        <input type="hidden" name="discount_type_id" value="{{ $types['time'] }}">
 
         <div class="input_wrap">
             <label class="small_faint">Time</label>
@@ -195,7 +195,7 @@
 
     <form action="{{ route('discount.store') }}" method="POST">
         {{ csrf_field() }}
-        <input type="hidden" name="discount_type_id" value="{{ $types[3]->id }}">
+        <input type="hidden" name="discount_type_id" value="{{ $types['day_parts'] }}">
 
         <div class="input_wrap">
             <label class="small_faint">Day Part</label>
@@ -259,7 +259,7 @@
 
     <form action="{{ route('discount.store') }}" method="POST">
         {{ csrf_field() }}
-        <input type="hidden" name="discount_type_id" value="{{ $types[4]->id }}">
+        <input type="hidden" name="discount_type_id" value="{{ $types['price'] }}">
 
         <div class="clearfix">
             <div class="input_wrap column col_6">
