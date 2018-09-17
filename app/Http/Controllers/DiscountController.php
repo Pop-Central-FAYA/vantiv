@@ -60,7 +60,7 @@ class DiscountController extends Controller
             'value' => (int) $request->value,
             'value_start_date' => $request->value_start_date,
             'value_stop_date' => $request->value_stop_date,
-            'discount_type_sub_value' => $request->discount_type_value
+            'discount_type_sub_value' => $request->discount_type_sub_value ? $request->discount_type_sub_value : $request->discount_type_value
         ]);
 
         if($discountInsert) {
@@ -83,6 +83,12 @@ class DiscountController extends Controller
             return redirect()->back();
         }
 
+        if($request->discount_type_sub_value){
+            $discount_type_sub_value = $request->discount_type_sub_value;
+        }else{
+            $discount_type_sub_value = $request->discount_type_value;
+        }
+
         $discountUpdate = Utilities::switch_db('reports')
             ->update(
                 "UPDATE discounts 
@@ -97,7 +103,7 @@ class DiscountController extends Controller
                   `value` =  '$request->value',
                   value_start_date = '$request->value_start_date',
                   value_stop_date = '$request->value_stop_date',
-                  discount_type_sub_value = '$request->discount_type_value'
+                  discount_type_sub_value = '$discount_type_sub_value'
                   WHERE id = '$discount'"
             );
 
