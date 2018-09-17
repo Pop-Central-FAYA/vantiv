@@ -941,16 +941,25 @@ class DashboardController extends Controller
     public function dashboardCampaigns(DataTables $dataTables, Request $request)
     {
             //campaigns
-            $campaigns_datatables = [];
             $agency_id = Session::get('agency_id');
             $broadcaster_id = Session::get('broadcaster_id');
             if($agency_id){
                 if($request->has('start_date') && $request->has('stop_date')) {
                     $start_date = $request->start_date;
                     $stop_date = $request->stop_date;
-                    $all_campaigns = Utilities::switch_db('api')->select("SELECT c_d.adslots_id, c_d.stop_date, c_d.start_date, c_d.time_created, c_d.product, c_d.name, c_d.campaign_id, p.total, b.name as brand_name, c.campaign_reference from campaignDetails as c_d, payments as p, campaigns as c, brands as b where c.id = c_d.campaign_id and p.campaign_id = c_d.campaign_id and c_d.brand = b.id and c_d.agency = '$agency_id' and c_d.adslots  > 0 and c_d.stop_date > '$start_date' and c_d.stop_date > '$stop_date' GROUP BY c_d.campaign_id ORDER BY c_d.time_created DESC");
+                    $all_campaigns = Utilities::switch_db('api')->select("SELECT c_d.adslots_id, c_d.stop_date, c_d.start_date, c_d.time_created, c_d.product, c_d.name, c_d.campaign_id, 
+                                                                            p.total, b.name as brand_name, c.campaign_reference from campaignDetails as c_d 
+                                                                            INNER JOIN payments as p ON p.campaign_id = c_d.campaign_id 
+                                                                            INNER JOIN campaigns as c ON c.id = c_d.campaign_id
+                                                                            INNER JOIN brands as b ON b.id = c_d.brand where  c_d.agency = '$agency_id' and c_d.adslots  > 0 and 
+                                                                            c_d.stop_date > '$start_date' and c_d.stop_date > '$stop_date' GROUP BY c_d.campaign_id ORDER BY c_d.time_created DESC");
                 }else{
-                    $all_campaigns = Utilities::switch_db('api')->select("SELECT c_d.adslots_id, c_d.stop_date, c_d.start_date, c_d.time_created, c_d.product, c_d.name, c_d.campaign_id, p.total, b.name as brand_name, c.campaign_reference from campaignDetails as c_d, payments as p, campaigns as c, brands as b where c.id = c_d.campaign_id and p.campaign_id = c_d.campaign_id and c_d.brand = b.id and c_d.agency = '$agency_id' and c_d.adslots  > 0 GROUP BY c_d.campaign_id ORDER BY c_d.time_created DESC");
+                    $all_campaigns = Utilities::switch_db('api')->select("SELECT c_d.adslots_id, c_d.stop_date, c_d.start_date, c_d.time_created, c_d.product, c_d.name, c_d.campaign_id, 
+                                                                             p.total, b.name as brand_name, c.campaign_reference from campaignDetails as c_d
+                                                                              INNER JOIN payments as p ON p.campaign_id = c_d.campaign_id
+                                                                               INNER JOIN campaigns as c ON c.id = c_d.campaign_id 
+                                                                               INNER JOIN brands as b ON b.id = c_d.brand where  c_d.agency = '$agency_id' and 
+                                                                               c_d.adslots  > 0 GROUP BY c_d.campaign_id ORDER BY c_d.time_created DESC");
                 }
             }else if($broadcaster_id){
                 if($request->has('start_date') && $request->has('stop_date')) {
@@ -962,45 +971,15 @@ class DashboardController extends Controller
                 }
             }
 
-            $j = 1;
-            foreach ($all_campaigns as $cam)
-            {
-//            $today = strtotime(date('Y-m-d'));
-                $today = date("Y-m-d");
-                if(strtotime($today) > strtotime($cam->start_date) && strtotime($today) > strtotime($cam->stop_date)){
-                    $status = 'Finished';
-                }elseif (strtotime($today) >= strtotime($cam->start_date) && strtotime($today) <= strtotime($cam->stop_date)){
-                    $status = 'Active';
-                }else{
-                    $now = strtotime($today);
-                    $your_date = strtotime($cam->start_date);
-                    $datediff = $your_date - $now;
-                    $new_day =  round($datediff / (60 * 60 * 24));
-                    $status = 'Pending';
-                }
-                $campaigns_datatables[] = [
-                    'id' => $cam->campaign_reference,
-                    'camp_id' => $cam->campaign_id,
-                    'name' => $cam->name,
-                    'brand' => ucfirst($cam->brand_name),
-                    'product' => $cam->product,
-                    'date_created' => date('M j, Y', strtotime($cam->time_created)),
-                    'start_date' => date('Y-m-d', strtotime($cam->start_date)),
-                    'end_date' => date('Y-m-d', strtotime($cam->stop_date)),
-                    'adslots' => count((explode(',', $cam->adslots_id))),
-                    'budget' => number_format($cam->total, 2),
-                    'status' => $status
-                ];
-                $j++;
-            }
+            $campaigns_datatables = Utilities::getCampaignDatatables($all_campaigns);
 
 
         return $dataTables->collection($campaigns_datatables)
             ->addColumn('name', function ($campaigns_datatables) {
                 if(Session::has('agency_id')){
-                    return '<a href="'.route('agency.campaign.details', ['id' => $campaigns_datatables['camp_id']]).'">'.$campaigns_datatables['name'].'</a>';
+                    return '<a href="'.route('agency.campaign.details', ['id' => $campaigns_datatables['campaign_id']]).'">'.$campaigns_datatables['name'].'</a>';
                 }else if(Session::has('broadcaster_id')){
-                    return '<a href="'.route('broadcaster.campaign.details', ['id' => $campaigns_datatables['camp_id']]).'">'.$campaigns_datatables['name'].'</a>';
+                    return '<a href="'.route('broadcaster.campaign.details', ['id' => $campaigns_datatables['campaign_id']]).'">'.$campaigns_datatables['name'].'</a>';
                 }
             })
             ->editColumn('status', function ($campaigns_datatables){

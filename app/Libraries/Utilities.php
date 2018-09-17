@@ -493,13 +493,14 @@ class Utilities {
         {
             $start_date = strtotime($all_campaign->start_date);
             $stop_date = strtotime($all_campaign->stop_date);
-            if($today > $stop_date){
+            if($today > $start_date && $today > $stop_date){
                 $status = 'Finished';
-            }elseif ($today >= $start_date && $today <= $all_campaign->stop_date){
+            }elseif ($today >= $start_date && $today <= $stop_date){
                 $status = 'Active';
             }else{
                 $status = 'Pending';
             }
+
             $campaigns[] = [
                 'id' => $all_campaign->campaign_reference,
                 'campaign_id' => $all_campaign->campaign_id,
