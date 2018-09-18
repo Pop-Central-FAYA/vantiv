@@ -319,7 +319,8 @@ class AuthControllerTest extends FunctionalTestCase
      * @param bool $remember
      * @return $this
      */
-    private function loginUser($username, $password, $remember = false)
+    private function
+    loginUser($username, $password, $remember = false)
     {
         $this->visit('login')
             ->type($username, 'username')
