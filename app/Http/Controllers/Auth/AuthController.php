@@ -106,12 +106,12 @@ class AuthController extends Controller
 
         if ($user->isUnconfirmed()) {
             return redirect()->to('login' . $to)
-                ->with('error', 'Please confirm yur account first');
+                ->with('error', 'Please confirm your account first');
         }
 
         if ($user->isBanned()) {
             return redirect()->to('login' . $to)
-                ->with('error', 'Your account has been banned, please contact administrator');
+                ->with('error', 'Your account has been banned, please contact your administrator');
         }
 
         Auth::login($user, settings('remember_me') && $request->get('remember'));
