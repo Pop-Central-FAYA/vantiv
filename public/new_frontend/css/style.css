@@ -962,7 +962,6 @@ h2.sub_header {
 
 .upload_block > div._block_two {
 	border: 0;
-	padding-top: 130px;
 }
 
 .dashed_upload {
@@ -1103,7 +1102,7 @@ h2.sub_header {
 
 ._campaign_mgt {
 	font-size: 14px;
-	padding-left: 15px;
+	padding-left: 10px;
 	padding-right: 15px;
 }
 

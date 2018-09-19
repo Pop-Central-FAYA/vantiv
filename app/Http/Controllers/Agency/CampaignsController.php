@@ -214,8 +214,9 @@ class CampaignsController extends Controller
 
     public function getStep3_2($id)
     {
+        $agency_id = Session::get('agency_id');
         $first_step = Session::get('first_step');
-        $ads_broad = Utilities::adslotFilter($first_step);
+        $ads_broad = Utilities::adslotFilter($first_step, null, $agency_id );
         return view('agency.campaigns.create3_2')->with('adslot_search_results', $ads_broad)->with('id', $id);
     }
 
@@ -223,6 +224,7 @@ class CampaignsController extends Controller
     {
         ini_set('memory_limit','512M');
         $step1 = Session::get('first_step');
+        $agency_id = Session::get('agency_id');
         $result_check = Utilities::checkRequestSession($step1);
         if($result_check === 'data_lost'){
             Session::flash('error', 'Data lost, please go back and select your filter criteria');
@@ -234,7 +236,7 @@ class CampaignsController extends Controller
         $r = $ratecards['rate_card'];
         $adslots = $ratecards['adslot'];
 
-        $ads_broad = Utilities::adslotFilter($step1);
+        $ads_broad = Utilities::adslotFilter($step1, null, $agency_id);
 
         $time = [15, 30, 45, 60];
 

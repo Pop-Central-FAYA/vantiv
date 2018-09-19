@@ -54,11 +54,10 @@
 
         <!-- client charts -->
         <div class="the_frame mb client_charts content_month">
-            <form action="{{ route('client.month', ['client_id' => $client_id]) }}" id="client_month" method="get">
+            <form action="{{ route('client.date', ['client_id' => $client_id]) }}" id="client_month" method="get">
 
                 <div class="filters chart_filters border_bottom clearfix">
                     <div class="column col_6 date_filter">
-                        <a href="">1M</a>
                         <a id="yearly_client" href="{{ route('client.year', ['client_id' => $client_id]) }}">1Y</a>
                     </div>
 

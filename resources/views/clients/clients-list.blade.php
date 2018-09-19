@@ -71,7 +71,7 @@
                         <div class="more_more">
                             <a href="{{ route('client.show', ['id' => $client['client_id']]) }}">Details</a>
                             <a href="#edit_client{{ $client['client_id'] }}" class="modal_click">Edit</a>
-                            <a href="" class="color_red">Delete</a>
+                            {{--<a href="" class="color_red">Delete</a>--}}
                         </div>
                     </div>
 
