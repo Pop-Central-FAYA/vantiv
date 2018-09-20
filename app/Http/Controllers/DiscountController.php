@@ -15,15 +15,17 @@ class DiscountController extends Controller
         $day_parts = Api::get_dayParts();
         $types = Api::get_discountTypes();
 
-        $agencies = Utilities::switch_db('reports')->select("SELECT u.id as user_id, a.id as agency_id, CONCAT(u.firstname,' ', u.lastname) as name FROM agents as a INNER JOIN users as u ON u.id = a.user_id");
+        $agencies = Utilities::switch_db('reports')->select("SELECT u.id as user_id, a_g.id as agency_id, CONCAT(u.firstname,' ', u.lastname) as name
+                                                                FROM agents as a_g INNER JOIN users as u ON u.id = a_g.user_id");
 
         $brands = Api::get_brands($broadcaster_id);
 
-        $agency_discounts = Api::get_agency_discounts($types['agency'], $broadcaster_id);
-        $brand_discounts = Api::get_brand_discounts($types['brands'], $broadcaster_id);
-        $time_discounts = Api::get_time_discounts($types['time'], $broadcaster_id);
-        $daypart_discounts = Api::get_dayparts_discount($types['day_parts'], $broadcaster_id);
-        $price_discounts = Api::getPriceDiscount($types['price'], $broadcaster_id);
+        $agency_discounts = Api::get_agency_discounts($types['Agency'], $broadcaster_id);
+        $brand_discounts = Api::get_brand_discounts($types['Brands'], $broadcaster_id);
+        $time_discounts = Api::get_time_discounts($types['Time'], $broadcaster_id);
+        $daypart_discounts = Api::get_dayparts_discount($types['Day Part'], $broadcaster_id);
+        $price_discounts = Api::getPriceDiscount($types['Price'], $broadcaster_id);
+
 
 
         return view('broadcaster_module.discounts.index',
@@ -35,9 +37,13 @@ class DiscountController extends Controller
         );
     }
 
+    public function searchObjects($objects)
+    {
+
+    }
+
     public function store(Request $request)
     {
-//        dd($request->all());
 
         $broadcaster_id = \Session::get('broadcaster_id');
 
@@ -133,11 +139,11 @@ class DiscountController extends Controller
     public function getDiscountClassId($number_value, $percent_value, $classes)
     {
         if($number_value !== 0 && $percent_value !== 0){
-            return $classes['both'];
+            return $classes['Both'];
         }elseif ($percent_value !== 0 && $number_value == 0){
-            return $classes['percent'];
+            return $classes['Percent'];
         }else{
-            return $classes['number']->id;
+            return $classes['Number']->id;
         }
 
     }
@@ -145,7 +151,6 @@ class DiscountController extends Controller
 
     public function getDiscountAndClass($request)
     {
-
         $types = Api::get_discountTypes();
         $classes = Api::get_discount_classes();
         $number_value = (int) $request->value;
@@ -153,7 +158,7 @@ class DiscountController extends Controller
 
         $discount_class_id = $this->getDiscountClassId($number_value, $percent_value, $classes);
 
-        if($types['price'] === $request->discount_type_id){
+        if($types['Price'] === $request->discount_type_id){
             if((integer)$request->discount_type_sub_value < (integer)$request->discount_type_value){
                 return 'error';
             }

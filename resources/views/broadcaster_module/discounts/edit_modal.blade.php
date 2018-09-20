@@ -4,7 +4,7 @@
         <h2 class="sub_header mb4">New Discount</h2>
         <form method="POST" class="selsec" action="{{ route('discount.update', ['discount' => $agency_discount->id]) }}">
             {{ csrf_field() }}
-            <input type="hidden" name="discount_type_id" value="{{ $types['agency'] }}">
+            <input type="hidden" name="discount_type_id" value="{{ $types['Agency'] }}">
             <input type="hidden" name="discount_type_value" value="{{ $agency_discount->discount_type_value }}">
             <input type="hidden" name="discount_type_sub_value" value="{{ $agency_discount->discount_type_sub_value }}">
             <div class="input_wrap">
@@ -66,7 +66,7 @@
         <h2 class="sub_header mb4">New Discount</h2>
         <form method="POST" class="selsec" action="{{ route('discount.update', ['discount' => $brand_discount->id]) }}">
             {{ csrf_field() }}
-            <input type="hidden" name="discount_type_id" value="{{ $types['brands'] }}">
+            <input type="hidden" name="discount_type_id" value="{{ $types['Brands'] }}">
             <input type="hidden" name="discount_type_value" value="{{ $brand_discount->discount_type_value }}">
             <input type="hidden" name="discount_type_sub_value" value="{{ $brand_discount->discount_type_sub_value }}">
             <div class="input_wrap">
@@ -128,7 +128,7 @@
         <h2 class="sub_header mb4">New Discount</h2>
         <form method="POST" class="selsec" action="{{ route('discount.update', ['discount' => $time_discount->id]) }}">
             {{ csrf_field() }}
-            <input type="hidden" name="discount_type_id" value="{{ $types['time'] }}">
+            <input type="hidden" name="discount_type_id" value="{{ $types['Time'] }}">
             <input type="hidden" name="discount_type_value" value="{{ $time_discount->discount_type_value }}">
             <input type="hidden" name="discount_type_sub_value" value="{{ $time_discount->discount_type_sub_value }}">
             <div class="input_wrap">
@@ -190,7 +190,7 @@
         <h2 class="sub_header mb4">New Discount</h2>
         <form method="POST" class="selsec" action="{{ route('discount.update', ['discount' => $daypart_discount->id]) }}">
             {{ csrf_field() }}
-            <input type="hidden" name="discount_type_id" value="{{ $types['day_parts'] }}">
+            <input type="hidden" name="discount_type_id" value="{{ $types['Day Part'] }}">
             <input type="hidden" name="discount_type_value" value="{{ $daypart_discount->discount_type_value }}">
             <input type="hidden" name="discount_type_sub_value" value="{{ $daypart_discount->discount_type_sub_value }}">
             <div class="input_wrap">
@@ -252,7 +252,7 @@
         <h2 class="sub_header mb4">New Discount</h2>
         <form method="POST" class="selsec" action="{{ route('discount.update', ['discount' => $price_discount->id]) }}">
             {{ csrf_field() }}
-            <input type="hidden" name="discount_type_id" value="{{ $types['price'] }}">
+            <input type="hidden" name="discount_type_id" value="{{ $types['Price'] }}">
             {{--<input type="hidden" name="discount_type_value" value="{{ $price_discount->discount_type_value }}">--}}
             {{--<input type="hidden" name="discount_type_sub_value" value="{{ $price_discount->discount_type_sub_value }}">--}}
             <div class="clearfix">

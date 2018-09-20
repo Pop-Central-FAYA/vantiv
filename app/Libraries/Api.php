@@ -27,16 +27,15 @@ Class Api
 
     public static function get_discountTypes()
     {
+        $discount_types = [];
         $types =  Utilities::switch_db('reports')->select("SELECT * FROM discount_types");
+        foreach ($types as $type){
+            $key = $type->value;
+            $discount_types[$key] = $type->id;
+        }
 
-        $discount_types = [
-            'agency' => $types[0]->id,
-            'brands' => $types[1]->id,
-            'time' => $types[2]->id,
-            'day_parts' => $types[3]->id,
-            'price' => $types[4]->id,
-        ];
         return $discount_types;
+
     }
 
     public static function get_agencies()
@@ -53,12 +52,12 @@ Class Api
 
     public static function get_discount_classes()
     {
+        $discount_classes = [];
         $classes =  Utilities::switch_db('reports')->select("SELECT * FROM discount_classes");
-        $discount_classes = [
-            'both' => $classes[2]->id,
-            'number' => $classes[1]->id,
-            'percent' => $classes[0]->id
-        ];
+        foreach ($classes as $class){
+            $key = $class->class;
+            $discount_classes[$key] = $class->id;
+        }
 
         return $discount_classes;
     }
