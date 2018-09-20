@@ -37,11 +37,6 @@ class DiscountController extends Controller
         );
     }
 
-    public function searchObjects($objects)
-    {
-
-    }
-
     public function store(Request $request)
     {
 
