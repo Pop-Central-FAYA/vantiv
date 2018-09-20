@@ -2,6 +2,7 @@
 
 namespace Vanguard\Libraries;
 
+use Hamcrest\Util;
 use Illuminate\Support\Facades\Session;
 use Ixudra\Curl\Facades\Curl;
 use Vanguard\ApiLog;
@@ -26,7 +27,15 @@ Class Api
 
     public static function get_discountTypes()
     {
-        return Utilities::switch_db('reports')->select("SELECT * FROM discount_types");
+        $discount_types = [];
+        $types =  Utilities::switch_db('reports')->select("SELECT * FROM discount_types");
+        foreach ($types as $type){
+            $key = $type->value;
+            $discount_types[$key] = $type->id;
+        }
+
+        return $discount_types;
+
     }
 
     public static function get_agencies()
@@ -43,7 +52,18 @@ Class Api
 
     public static function get_discount_classes()
     {
-        return Utilities::switch_db('reports')->select("SELECT * FROM discount_classes");
+        $discount_classes = [];
+        $classes =  Utilities::switch_db('reports')->select("SELECT * FROM discount_classes");
+        foreach ($classes as $class){
+            $key = $class->class;
+            $discount_classes[$key] = $class->id;
+        }
+
+        return $discount_classes;
+    }
+
+    public static function get_brands($broadcaster_id){
+        return Utilities::switch_db('reports')->select("SELECT id, name FROM brands where broadcaster_agency = '$broadcaster_id'");
     }
 
     public static function session_id(){
@@ -55,11 +75,34 @@ Class Api
      * Discounts
      */
 
-    public static function get_discounts_by_type($type)
+    public static function get_agency_discounts($type, $broadcaster_id)
     {
-        $broadcaster_id = \Session::get('broadcaster_id');
+        return Utilities::switch_db('reports')->select("SELECT d.*, CONCAT(u.firstname,' ',u.lastname) as name FROM discounts as d
+                                                          INNER JOIN agents as a ON d.discount_type_value = a.id
+                                                          INNER JOIN users as u ON u.id = a.user_id
+                                                          WHERE d.broadcaster = '$broadcaster_id' AND d.discount_type = '$type' AND d.status = '1'");
+    }
 
-        return Utilities::switch_db('reports')->select("SELECT * FROM discounts WHERE broadcaster = '$broadcaster_id' AND discount_type = '$type' AND status = '1'");
+    public static function get_brand_discounts($type, $broadcaster_id){
+        return Utilities::switch_db('api')->select("SELECT d.*, b.name as name from discounts as d INNER JOIN brands as b ON b.id = d.discount_type_value
+                                                        WHERE d.broadcaster = '$broadcaster_id' AND d.discount_type = '$type' AND d.status = '1'");
+    }
+
+    public static function get_time_discounts($type, $broadcaster_id)
+    {
+        return Utilities::switch_db('api')->select("SELECT d.*, h.time_range as hourly_range from discounts as d INNER JOIN hourlyRanges as h on h.id = d.discount_type_value
+                                                        WHERE d.broadcaster = '$broadcaster_id' AND d.discount_type = '$type' AND d.status = '1'");
+    }
+
+    public static function get_dayparts_discount($type, $broadcaster_id)
+    {
+        return Utilities::switch_db('api')->select("SELECT d.*, dp.day_parts as day_part from discounts as d INNER JOIN dayParts as dp ON dp.id = d.discount_type_value
+                                                        WHERE d.broadcaster = '$broadcaster_id' AND d.discount_type = '$type' AND d.status = '1'");
+    }
+
+    public static function getPriceDiscount($type, $broadcaster_id)
+    {
+        return Utilities::switch_db('api')->select("SELECT * from discounts where broadcaster = '$broadcaster_id' and discount_type = '$type' AND status = '1'");
     }
 
 
