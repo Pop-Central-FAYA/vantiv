@@ -549,18 +549,14 @@
                 var campaign_id = "<?php echo $campaign_details['campaign_det']['campaign_id']; ?>";
                 var media_type = $("#channel").val();
                 var media_channel = $("#media").val();
-                console.log(media_channel, media_type);
                 if(media_type != null && media_channel != null){
                     $.ajax({
                         method: "GET",
                         url: url,
                         data: { campaign_id : campaign_id,start_date: start_date, stop_date: stop_date, media_channel: media_channel },
                         success: function (data) {
-                            var small_html = '<p>';
-                            $.each(data.media_mix, function (index, value) {
-                                small_html += value.name+' : '+value.y+'% ';
-                            });
-                            small_html += '</p>'
+                            console.log(data);
+                            var small_html = '<p>'+ data.percentage_compliance +'</p>'
                             $(".add_reports").html(small_html);
                             Highcharts.chart('container', {
 
@@ -601,7 +597,7 @@
                                     }
                                 },
 
-                                series: data.data
+                                series: data.compliance_data
                             });
 
                         }

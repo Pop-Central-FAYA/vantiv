@@ -669,6 +669,7 @@ class CampaignsController extends Controller
         $all_clients = Utilities::switch_db('api')->select("SELECT * FROM walkIns where broadcaster_id = '$broadcaster_id'");
         $media_mix_data = $this->getMediaMix($campaign_details);
         $campaign_price_graph = $this->getCampaignPriceGraph($campaign_details);
+//        dd($campaign_price_graph);
 
         return view('broadcaster_module.campaigns.details', compact('campaign_details', 'all_campaigns', 'all_clients', 'media_mix_data', 'campaign_price_graph'));
     }
@@ -734,103 +735,194 @@ class CampaignsController extends Controller
 
     }
 
+
+//    public function complianceFilter()
+//    {
+//
+//        $broadcaster_id = Session::get('broadcaster_id');
+//        $all_comp_data = [];
+//        $compliance_datas = [];
+//        $campaign_id = request()->campaign_id;
+//        $start_date = date('Y-m-d', strtotime(request()->start_date));
+//        $stop_date = date('Y-m-d', strtotime(request()->stop_date));
+//        $media_channel = request()->media_channel;
+//
+//        $dates = [];
+//
+//        //querying the compliances table get date
+//        $date_compliances = Utilities::switch_db('api')->select("SELECT time_created from compliances where campaign_id = '$campaign_id'
+//                                                                    AND time_created BETWEEN '$start_date' AND '$stop_date' and broadcaster_id = '$broadcaster_id'
+//                                                                    GROUP BY DATE_FORMAT(time_created, '%Y-%m-%d') ");
+//        foreach ($date_compliances as $date_compliance){
+//            $date_created = date('Y-m-d', strtotime($date_compliance->time_created));
+//            //this query results to a multidimensional array
+//            $compliances = Utilities::switch_db('api')->select("SELECT IF(c.amount_spent IS NOT NULL, sum(c.amount_spent), 0) as amount,
+//                                                                              c.broadcaster_id, c.campaign_id, date_format(c.time_created, '%Y-%m-%d') as `time`,
+//                                                                               b.brand, c_c.channel as stack, c.channel from compliances as c INNER JOIN
+//                                                                               broadcasters as b ON b.id = c.broadcaster_id
+//                                                                               INNER JOIN campaignChannels as c_c ON c_c.id = c.channel where c.broadcaster_id = '$broadcaster_id'
+//                                                                               and b.id = '$broadcaster_id' and c.broadcaster_id = '$broadcaster_id'
+//                                                                               and c.campaign_id = '$campaign_id' and date_format(c.time_created, '%Y-%m-%d') = '$date_created' ");
+//
+//            $all_comp_data[] = $compliances;
+//            $dates[] = [date('Y-m-d', strtotime($date_compliance->time_created))];
+//        }
+//
+//        //array_flatten brings out all the arrays to form an array of objects
+//        $flatened_comp = array_flatten($all_comp_data);
+//
+//        //returned back to array of arrays
+//        $array = json_decode(json_encode($flatened_comp), true);
+//
+//        $final_arr = array();
+//
+//        //this group the array by broadcasters
+//        foreach($array as $key=>$value){
+//
+//            if(!array_key_exists($value['broadcaster_id'],$final_arr)){
+//                $final_arr[$value['broadcaster_id']] = $value;
+//                unset($final_arr[$value['broadcaster_id']]['amount']);
+//                $final_arr[$value['broadcaster_id']]['time_amount'] =array();
+//                $final_arr[$value['broadcaster_id']]['amount'] =array();
+//
+//                array_push($final_arr[$value['broadcaster_id']]['time_amount'],$value['time']);
+//                array_push($final_arr[$value['broadcaster_id']]['amount'],(integer)$value['amount']);
+//            }else
+//            {
+//                array_push($final_arr[$value['broadcaster_id']]['time_amount'],$value['time']);
+//                array_push($final_arr[$value['broadcaster_id']]['amount'],(integer)$value['amount']);
+//            }
+//        }
+//
+//        $array_values = array_values($final_arr);
+//
+//        dd($array_values);
+//
+//        foreach ($array_values as $array_value){
+//            if($array_value['stack'] === 'TV'){
+//                $color = '#5281FE';
+//            }else{
+//                $color = '#00C4CA';
+//            }
+//            $compliance_datas[] = [
+//                'color' => $color,
+//                'name' => $array_value['brand'],
+//                'data' => $array_value['amount'],
+//                'stack' => $array_value['stack']
+//            ];
+//        }
+//
+//        //media mix
+//        $media_mix_datas = [];
+//        $media_mixes = Utilities::switch_db('api')->select("SELECT SUM(amount_spent) as total_amount_spent, channel FROM compliances
+//                                                                where campaign_id = '$campaign_id' AND time_created BETWEEN '$start_date'
+//                                                                AND '$stop_date' AND broadcaster_id = '$broadcaster_id' GROUP BY channel");
+//
+//        $total_amount = Utilities::switch_db('api')->select("SELECT * from payments where campaign_id = '$campaign_id'");
+//        foreach ($media_mixes as $media_mix){
+//            $channel = Utilities::switch_db('api')->select("SELECT * from campaignChannels where id = '$media_mix->channel'");
+//            if($channel[0]->channel === 'TV'){
+//                $color = '#5281FE';
+//            }else{
+//                $color = '#00C4CA';
+//            }
+//            $media_mix_datas[] = [
+//                'name' => $channel[0]->channel,
+//                'y' => (integer)(($media_mix->total_amount_spent / $total_amount[0]->total) * 100),
+//                'color' => $color
+//            ];
+//        }
+//
+//        return response()->json(['date' => $dates, 'data' => $compliance_datas, 'media_mix' => $media_mix_datas]);
+//    }
+
+
     public function complianceFilter()
     {
 
         $broadcaster_id = Session::get('broadcaster_id');
-        $all_comp_data = [];
-        $compliance_datas = [];
         $campaign_id = request()->campaign_id;
         $start_date = date('Y-m-d', strtotime(request()->start_date));
         $stop_date = date('Y-m-d', strtotime(request()->stop_date));
-        $media_channel = request()->media_channel;
+        $compliance_data = [];
 
+        $compliances = $this->getDateAndCampaignCompliances($campaign_id, $start_date, $stop_date, $broadcaster_id);
+        $formatted_compliances = $this->formatToGraphFormat($compliances['compliance_data'], $campaign_id);
+
+        foreach ($formatted_compliances['formatted_compliances'] as $compliance){
+            if($compliance['stack'] === 'TV'){
+                $color = '#5281FE';
+            }else{
+                $color = '#00C4CA';
+            }
+            $compliance_data[] = [
+                'color' => $color,
+                'name' => $compliance['brand'],
+                'data' => $compliance['amount'],
+                'stack' => $compliance['stack']
+            ];
+        }
+
+
+        return response()->json(['date' => $compliances['dates'], 'compliance_data' => $compliance_data, 'percentage_compliance' => $formatted_compliances['percentage_compliance']]);
+    }
+
+
+    public function getDateAndCampaignCompliances($campaign_id, $start_date, $stop_date, $broadcaster_id)
+    {
         $dates = [];
-
-        //querying the compliances table get date
+        $all_compliances_data = [];
         $date_compliances = Utilities::switch_db('api')->select("SELECT time_created from compliances where campaign_id = '$campaign_id'
-                                                                    AND time_created BETWEEN '$start_date' AND '$stop_date' and broadcaster_id = '$broadcaster_id' 
+                                                                    AND DATE_FORMAT(time_created, '%Y-%m-%d') BETWEEN '$start_date' AND '$stop_date' and broadcaster_id = '$broadcaster_id'
                                                                     GROUP BY DATE_FORMAT(time_created, '%Y-%m-%d') ");
         foreach ($date_compliances as $date_compliance){
             $date_created = date('Y-m-d', strtotime($date_compliance->time_created));
             //this query results to a multidimensional array
-            $compliances = Utilities::switch_db('api')->select("SELECT IF(c.amount_spent IS NOT NULL, sum(c.amount_spent), 0) as amount, 
+            $compliances = Utilities::switch_db('api')->select("SELECT IF(c.amount_spent IS NOT NULL, sum(c.amount_spent), 0) as amount,
                                                                               c.broadcaster_id, c.campaign_id, date_format(c.time_created, '%Y-%m-%d') as `time`,
-                                                                               b.brand, c_c.channel as stack, c.channel from compliances as c INNER JOIN 
-                                                                               broadcasters as b ON b.id = c.broadcaster_id, 
-                                                                               INNER JOIN campaignChannels as c_c ON c_c.id = c.channel where c.broadcaster_id = '$broadcaster_id' 
-                                                                               and b.id = '$broadcaster_id' and c.broadcaster_id = '$broadcaster_id' 
+                                                                               b.brand, c_c.channel as stack, c.channel from compliances as c INNER JOIN
+                                                                               broadcasters as b ON b.id = c.broadcaster_id
+                                                                               INNER JOIN campaignChannels as c_c ON c_c.id = c.channel where c.broadcaster_id = '$broadcaster_id'
+                                                                               and b.id = '$broadcaster_id' and c.broadcaster_id = '$broadcaster_id'
                                                                                and c.campaign_id = '$campaign_id' and date_format(c.time_created, '%Y-%m-%d') = '$date_created' ");
 
-            $all_comp_data[] = $compliances;
+            $all_compliances_data[] = [$compliances];
             $dates[] = [date('Y-m-d', strtotime($date_compliance->time_created))];
         }
 
-        //array_flatten brings out all the arrays to form an array of objects
-        $flatened_comp = array_flatten($all_comp_data);
+        $flatened_compliances = array_flatten($all_compliances_data);
 
-        //returned back to array of arrays
-        $array = json_decode(json_encode($flatened_comp), true);
+        return (['dates' => $dates, 'compliance_data' => $flatened_compliances]);
+    }
 
-        $final_arr = array();
+    public function formatToGraphFormat($compliances, $campaign_id)
+    {
+        $compliances_array = json_decode(json_encode($compliances), true);
+        $formatted_compliances = [];
+        $total_spent = 0;
+        foreach($compliances_array as $key=>$value){
+            $total_spent += $value['amount'];
+            if(!array_key_exists($value['broadcaster_id'],$formatted_compliances)){
+                $formatted_compliances[$value['broadcaster_id']] = $value;
+                unset($formatted_compliances[$value['broadcaster_id']]['amount']);
+                $formatted_compliances[$value['broadcaster_id']]['date_reference'] =array();
+                $formatted_compliances[$value['broadcaster_id']]['amount'] =array();
 
-        //this group the array by broadcasters
-        foreach($array as $key=>$value){
-
-            if(!array_key_exists($value['broadcaster_id'],$final_arr)){
-                $final_arr[$value['broadcaster_id']] = $value;
-                unset($final_arr[$value['broadcaster_id']]['amount']);
-                $final_arr[$value['broadcaster_id']]['time_amount'] =array();
-                $final_arr[$value['broadcaster_id']]['amount'] =array();
-
-                array_push($final_arr[$value['broadcaster_id']]['time_amount'],$value['time']);
-                array_push($final_arr[$value['broadcaster_id']]['amount'],(integer)$value['amount']);
+                array_push($formatted_compliances[$value['broadcaster_id']]['date_reference'],$value['time']);
+                array_push($formatted_compliances[$value['broadcaster_id']]['amount'],(integer)$value['amount']);
             }else
             {
-                array_push($final_arr[$value['broadcaster_id']]['time_amount'],$value['time']);
-                array_push($final_arr[$value['broadcaster_id']]['amount'],(integer)$value['amount']);
+                array_push($formatted_compliances[$value['broadcaster_id']]['date_reference'],$value['time']);
+                array_push($formatted_compliances[$value['broadcaster_id']]['amount'],(integer)$value['amount']);
             }
+
         }
 
-        $array_values = array_values($final_arr);
+        $total_amount_budgeted = Utilities::switch_db('api')->select("SELECT * from payments where campaign_id = '$campaign_id'");
 
-        foreach ($array_values as $array_value){
-            if($array_value['stack'] === 'TV'){
-                $color = '#5281FE';
-            }else{
-                $color = '#00C4CA';
-            }
-            $compliance_datas[] = [
-                'color' => $color,
-                'name' => $array_value['brand'],
-                'data' => $array_value['amount'],
-                'stack' => $array_value['stack']
-            ];
-        }
+        $percentage_compliance = round(($total_spent / $total_amount_budgeted[0]->total) * 100);
 
-        //media mix
-        $media_mix_datas = [];
-        $media_mixes = Utilities::switch_db('api')->select("SELECT SUM(amount_spent) as total_amount_spent, channel FROM compliances
-                                                                where campaign_id = '$campaign_id' AND time_created BETWEEN '$start_date' 
-                                                                AND '$stop_date' AND broadcaster_id = '$broadcaster_id' GROUP BY channel");
-
-        $total_amount = Utilities::switch_db('api')->select("SELECT * from payments where campaign_id = '$campaign_id'");
-        foreach ($media_mixes as $media_mix){
-            $channel = Utilities::switch_db('api')->select("SELECT * from campaignChannels where id = '$media_mix->channel'");
-            if($channel[0]->channel === 'TV'){
-                $color = '#5281FE';
-            }else{
-                $color = '#00C4CA';
-            }
-            $media_mix_datas[] = [
-                'name' => $channel[0]->channel,
-                'y' => (integer)(($media_mix->total_amount_spent / $total_amount[0]->total) * 100),
-                'color' => $color
-            ];
-        }
-
-
-        return response()->json(['date' => $dates, 'data' => $compliance_datas, 'media_mix' => $media_mix_datas]);
+        return (['formatted_compliances' => $formatted_compliances, 'percentage_compliance' => $percentage_compliance]);
     }
 
 
