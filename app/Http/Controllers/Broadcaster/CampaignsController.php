@@ -898,6 +898,7 @@ class CampaignsController extends Controller
     public function formatToGraphFormat($compliances, $campaign_id)
     {
         $compliances_array = json_decode(json_encode($compliances), true);
+
         $formatted_compliances = [];
         $total_spent = 0;
         foreach($compliances_array as $key=>$value){
