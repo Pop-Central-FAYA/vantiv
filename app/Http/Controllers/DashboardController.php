@@ -353,7 +353,7 @@ class DashboardController extends Controller
                                                              b.name as brand_name from invoiceDetails as i_d INNER JOIN invoices as i ON i.id = i_d.invoice_id 
                                                             INNER JOIN campaignDetails as c ON c.campaign_id = i.campaign_id AND c.broadcaster = '$broadcaster_id' 
                                                             INNER JOIN brand_client as b_c ON b_c.brands_client = i_d.walkins_id
-                                                            INNER JOIN brands as b ON b.id = b_c.id  WHERE 
+                                                            INNER JOIN brands as b ON b.id = b_c.brand_id  WHERE 
                                                             i_d.broadcaster_id = '$broadcaster_id' ORDER BY i_d.time_created DESC LIMIT 10");
 
         foreach ($invoices as $invoice) {
