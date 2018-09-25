@@ -444,11 +444,6 @@ class Utilities {
         return Utilities::switch_db('api')->select("SELECT * from brands WHERE walkin_id = '$walkin_id'");
     }
 
-    public static function getBrands($client_id)
-    {
-        return Utilities::switch_db('api')->select("SELECT b.* FROM brand_client as b_c INNER JOIN brands as b ON b.id = b_c.brand_id where client_id = '$client_id'");
-    }
-
     public static function getBroadcasterDetails($broadcaster_id)
     {
         return Utilities::switch_db('api')->select("SELECT * from broadcasters where id = '$broadcaster_id'");
