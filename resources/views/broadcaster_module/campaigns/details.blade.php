@@ -58,16 +58,21 @@
 
                 <div class="column col_3">
                     <span class="small_faint block_disp">Media Type</span>
-                    <select name="channel" id="channel" >
-                        <option class="{{ strtolower($campaign_details['campaign_det']['channel'][0]->channel) }}" selected value="{{ $campaign_details['campaign_det']['channel'][0]->id }}">{{ $campaign_details['campaign_det']['channel'][0]->channel }}</option>
-                    </select>
+
+                    <div class="select_wrap">
+                        <select class="js-example-basic-multiple" name="channel" id="channel" multiple="multiple">
+                            @foreach($campaign_details['campaign_det']['channel'] as $channel)
+                                <option @if($channel->id === 'nzrm64hjatseog6') class="radio" @else class="tv" @endif value="{{ $channel->id }}">{{ $channel->channel }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
                 </div>
 
                 <div class="column col_3 check_this">
                     <span class="small_faint block_disp">Media Channel</span>
-                    <select name="media" id="media">
-                        <option class="" selected value="{{ $campaign_details['broadcasters'][0]->id }}">{{ $campaign_details['broadcasters'][0]->brand }}</option>
-                    </select>
+
+
                 </div>
             </div>
         </div>
@@ -387,14 +392,12 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+    {{--<script src="https://unpkg.com/flatpickr"></script>--}}
     <script>
-        <?php echo "var media_mix_data = ".$media_mix_data .";\n"; ?>
-        <?php echo "var campaign_price_graph = ".$campaign_price_graph .";\n"; ?>
-
-        jQuery( document ).ready(function () {
-
-            $('.js-example-basic-multiple_1').select2();
-
+        $('document').ready(function () {
+            // flatpickr(".flatpickr", {
+            //     altInput: true,
+            // });
             $('body').delegate("#client", "change", function (e) {
                 var user_id = $("#client").val();
                 var campaign_id = "<?php echo $campaign_details['campaign_det']['campaign_id']; ?>";
@@ -441,7 +444,10 @@
 
             $('.js-example-basic-multiple').select2();
             //placeholder for target audienct
-
+            $('#channel').select2({
+                // theme: "flat",
+                placeholder: "Please select Media Type"
+            });
 
             $('body').delegate("#campaign", "change", function (e) {
                 var campaign_id = $("#campaign").val();
@@ -449,87 +455,312 @@
 
             });
 
-            Highcharts.chart('media_mix',{
-                chart: {
-                    renderTo: 'container',
-                    type: 'pie',
-                },
-                title: {
-                    text: ''
-                },
+        });
 
-                credits: {
-                    enabled: false
-                },
-                plotOptions: {
-                    pie: {
-                        allowPointSelect: false,
-                        dataLabels: {
-                            enabled: true,
-                            formatter: function () {
-                                return this.y > 1 ? '<b>' + this.point.name + ':</b> ' +
-                                    this.y + '%' : null;
-                            }
+        jQuery( document ).ready(function( $ ) {
+            $('body').delegate("#channel", "change", function () {
+                var channel = $("#channel").val();
+                var campaign_id = "<?php echo $campaign_details['campaign_det']['campaign_id'] ?>";
+                var media_channel = $("#media").val();
+
+                $(".media_mix_load").css({
+                    opacity: 0.1
+                });
+
+                $.ajax({
+                    url: '/campaign/media-channel/'+campaign_id,
+                    method: "GET",
+                    data: {
+                        channel: channel, campaign_id: campaign_id, media_channel: media_channel,
+                    },
+                    success: function(data) {
+
+                        if(data.media_mix != null && data.all_channel != null){
+                            var big_html = '<span class="small_faint block_disp">Media Channel</span><div class="select_wrap"><select class="js-example-basic-multiple_1" name="media" id="media" multiple="multiple">';
+
+                            $.each(data.all_channel, function (index, value) {
+                                if(value.broadcaster_id != "" ){
+                                    big_html += '<option value="'+value.broadcaster_id+'"';
+                                    $.each(data.retained_channel, function (index_retained, value_retained) {
+                                        if(value_retained.broadcaster_id === value.broadcaster_id){
+                                            big_html += 'selected';
+                                        }
+                                    });
+                                    big_html += '>'+value.broadcaster+'</option>';
+                                }
+                            });
+
+                            big_html += '</select></div>';
+
+                            $(".check_this").html(big_html);
+
+                            $('.js-example-basic-multiple_1').select2();
+
+                            $('#media').select2({
+                                placeholder: "Please select Media Channel",
+                            });
+
+                            $(".media_mix_load").css({
+                                opacity: 1
+                            });
+
+                            Highcharts.chart('media_mix',{
+                                chart: {
+                                    renderTo: 'container',
+                                    type: 'pie',
+                                },
+                                title: {
+                                    text: ''
+                                },
+
+                                credits: {
+                                    enabled: false
+                                },
+                                plotOptions: {
+                                    pie: {
+                                        allowPointSelect: false,
+                                        dataLabels: {
+                                            enabled: true,
+                                            formatter: function () {
+                                                return this.y > 1 ? '<b>' + this.point.name + ':</b> ' +
+                                                    this.y + '%' : null;
+                                            }
+                                        }
+                                    }
+                                },
+                                exporting: { enabled: false },
+                                series: [{
+                                    innerSize: '50%',
+                                    data: data.media_mix
+                                }]
+                            });
+                        }else{
+
+                            $("#media").empty().trigger('change')
+
+                            $(".media_mix_load").css({
+                                opacity: 1
+                            });
+
+                            Highcharts.chart('media_mix',{
+                                chart: {
+                                    renderTo: 'container',
+                                    type: 'pie',
+                                },
+                                title: {
+                                    text: ''
+                                },
+
+                                credits: {
+                                    enabled: false
+                                },
+                                plotOptions: {
+                                    pie: {
+                                        allowPointSelect: false,
+                                        dataLabels: {
+                                            enabled: true,
+                                            formatter: function () {
+                                                return this.y > 1 ? '<b>' + this.point.name + ':</b> ' +
+                                                    this.y + '%' : null;
+                                            }
+                                        }
+                                    }
+                                },
+                                exporting: { enabled: false },
+                                series: [{
+                                    innerSize: '50%',
+                                    data: ''
+                                }]
+                            });
                         }
+
                     }
-                },
-                exporting: { enabled: false },
-                series: [{
-                    innerSize: '50%',
-                    data: media_mix_data
-                }]
+                });
             });
+        })
 
-            Highcharts.chart('container', {
+        jQuery( document ).ready(function( $ ) {
+            $('body').delegate("#media", "change", function () {
+                var channel = $("#media").val();
+                var type = $("#channel").val();
+                $(".compliance_load").css({
+                    opacity : 0.1
+                });
 
-                chart: {
-                    type: 'column'
-                },
+                if(channel != null){
+                    var campaign_id = "<?php echo $campaign_details['campaign_det']['campaign_id'] ?>";
+                    $.ajax({
+                        url: '/campaign/compliance-graph/broadcaster',
+                        method: 'GET',
+                        data: {
+                            channel: channel, campaign_id: campaign_id, type: type,
+                        },
+                        success: function(data){
+                            if(data.data != null && data.date != null){
 
-                title: {
-                    text: ''
-                },
+                                $(".compliance_load").css({
+                                    opacity: 1
+                                });
+                                Highcharts.chart('container', {
 
-                xAxis: {
-                    categories: campaign_price_graph.date
-                },
-                tooltip: {
-                    enabled: false
-                },
-                yAxis: {
-                    allowDecimals: false,
-                    min: 0,
-                    title: {
-                        text: 'Total Amount'
-                    }
-                },
-                credits: {
-                    enabled: false
-                },
-                exporting: { enabled: false },
-                tooltip: {
-                    formatter: function () {
-                        return '<b>' + this.x + '</b><br/>' +
-                            this.series.name + ': ' + this.y + '<br/>';
-                    },
+                                    chart: {
+                                        type: 'column'
+                                    },
 
-                },
+                                    title: {
+                                        text: ''
+                                    },
 
-                plotOptions: {
-                    column: {
-                        stacking: 'normal'
-                    },
-                    bar: {
-                        animation: true,
-                        dataLabels: {
-                            enabled: true,
-                            align: "center",
-                            color: "#FFFFFF"
+                                    xAxis: {
+                                        categories: data.date
+                                    },
+                                    tooltip: {
+                                        enabled: false
+                                    },
+                                    yAxis: {
+                                        allowDecimals: false,
+                                        min: 0,
+                                        title: {
+                                            text: 'Total Amount'
+                                        }
+                                    },
+                                    credits: {
+                                        enabled: false
+                                    },
+                                    exporting: { enabled: false },
+                                    tooltip: {
+                                        formatter: function () {
+                                            return '<b>' + this.x + '</b><br/>' +
+                                                this.series.name + ': ' + this.y + '<br/>';
+                                        },
+
+                                    },
+
+                                    plotOptions: {
+                                        column: {
+                                            stacking: 'normal'
+                                        },
+                                        bar: {
+                                            animation: true,
+                                            dataLabels: {
+                                                enabled: true,
+                                                align: "center",
+                                                color: "#FFFFFF"
+                                            }
+                                        }
+                                    },
+
+                                    series: data.data
+                                });
+                            }else{
+                                $(".compliance_load").css({
+                                    opacity: 1
+                                });
+
+                                Highcharts.chart('container', {
+
+                                    chart: {
+                                        type: 'column'
+                                    },
+
+                                    title: {
+                                        text: ''
+                                    },
+
+                                    xAxis: {
+                                        categories: []
+                                    },
+
+                                    yAxis: {
+                                        allowDecimals: false,
+                                        min: 0,
+                                        title: {
+                                            text: 'Total Amount'
+                                        }
+                                    },
+                                    credits: {
+                                        enabled: false
+                                    },
+                                    exporting: { enabled: false },
+                                    tooltip: {
+                                        formatter: function () {
+                                            return '<b>' + this.x + '</b><br/>' +
+                                                this.series.name + ': ' + this.y + '<br/>' +
+                                                'Total: ' + this.point.stackTotal;
+                                        },
+
+                                    },
+
+                                    plotOptions: {
+                                        column: {
+                                            stacking: 'normal'
+                                        },
+                                        series: {
+                                            pointPadding: 0,
+                                            groupPadding: 0.1,
+                                            pointWidth: 60,
+                                        }
+                                    },
+
+                                    series: []
+                                });
+
+                            }
+
+                            $('.highcharts-legend').hide();
                         }
-                    }
-                },
+                    });
 
-                series: campaign_price_graph.campaign_price_data
+                }else{
+                    Highcharts.chart('container', {
+
+                        chart: {
+                            type: 'column'
+                        },
+
+                        title: {
+                            text: ''
+                        },
+
+                        xAxis: {
+                            categories: []
+                        },
+
+                        yAxis: {
+                            allowDecimals: false,
+                            min: 0,
+                            title: {
+                                text: 'Total Amount'
+                            }
+                        },
+                        credits: {
+                            enabled: false
+                        },
+                        exporting: { enabled: false },
+                        tooltip: {
+                            formatter: function () {
+                                return '<b>' + this.x + '</b><br/>' +
+                                    this.series.name + ': ' + this.y + '<br/>' +
+                                    'Total: ' + this.point.stackTotal;
+                            },
+
+                        },
+
+                        plotOptions: {
+                            column: {
+                                stacking: 'normal'
+                            },
+                            series: {
+                                pointPadding: 0,
+                                groupPadding: 0.1,
+                                pointWidth: 60,
+                            }
+                        },
+
+                        series: []
+                    });
+                }
+
             });
 
         });
@@ -555,8 +786,11 @@
                         url: url,
                         data: { campaign_id : campaign_id,start_date: start_date, stop_date: stop_date, media_channel: media_channel },
                         success: function (data) {
-                            console.log(data);
-                            var small_html = '<p>'+ data.percentage_compliance +'</p>'
+                            var small_html = '<p>';
+                            $.each(data.media_mix, function (index, value) {
+                                small_html += value.name+' : '+value.y+'% ';
+                            });
+                            small_html += '</p>'
                             $(".add_reports").html(small_html);
                             Highcharts.chart('container', {
 
@@ -597,7 +831,7 @@
                                     }
                                 },
 
-                                series: data.compliance_data
+                                series: data.data
                             });
 
                         }

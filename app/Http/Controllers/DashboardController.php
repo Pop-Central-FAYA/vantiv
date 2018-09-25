@@ -965,19 +965,9 @@ class DashboardController extends Controller
                 if($request->has('start_date') && $request->has('stop_date')) {
                     $start_date = $request->start_date;
                     $stop_date = $request->stop_date;
-                    $all_campaigns = Utilities::switch_db('api')->select("SELECT c_d.adslots_id, c_d.stop_date, c_d.start_date, c_d.time_created, c_d.product, c_d.name, 
-                                                                              c_d.campaign_id, p.total, b.name as brand_name, c.campaign_reference from campaignDetails as c_d 
-                                                                              INNER JOIN payments as p ON p.campaign_id = c_d.campaign_id 
-                                                                              INNER JOIN campaigns as c ON c.id = c_d.campaign_id 
-                                                                              INNER JOIN brands as b ON c_d.brand = b.id where  c_d.broadcaster = '$broadcaster_id' and 
-                                                                              c_d.adslots  > 0 and c_d.stop_date > '$start_date' and c_d.stop_date > '$stop_date' ORDER BY c_d.time_created DESC");
+                    $all_campaigns = Utilities::switch_db('api')->select("SELECT c_d.adslots_id, c_d.stop_date, c_d.start_date, c_d.time_created, c_d.product, c_d.name, c_d.campaign_id, p.total, b.name as brand_name, c.campaign_reference from campaignDetails as c_d, payments as p, campaigns as c, brands as b where c.id = c_d.campaign_id and p.campaign_id = c_d.campaign_id and c_d.brand = b.id and c_d.broadcaster = '$broadcaster_id' and c_d.adslots  > 0 and c_d.stop_date > '$start_date' and c_d.stop_date > '$stop_date' ORDER BY c_d.time_created DESC");
                 }else{
-                    $all_campaigns = Utilities::switch_db('api')->select("SELECT c_d.adslots_id, c_d.stop_date, c_d.start_date, c_d.time_created, c_d.product, 
-                                                                              c_d.name, c_d.campaign_id, p.total, b.name as brand_name, c.campaign_reference from campaignDetails 
-                                                                              as c_d INNER JOIN payments as p ON p.campaign_id = c_d.campaign_id 
-                                                                              INNER JOIN campaigns as c ON c.id = c_d.campaign_id
-                                                                              INNER JOIN brands as b  ON c_d.brand = b.id where c_d.broadcaster = '$broadcaster_id' 
-                                                                              and c_d.adslots  > 0 ORDER BY c_d.time_created DESC");
+                    $all_campaigns = Utilities::switch_db('api')->select("SELECT c_d.adslots_id, c_d.stop_date, c_d.start_date, c_d.time_created, c_d.product, c_d.name, c_d.campaign_id, p.total, b.name as brand_name, c.campaign_reference from campaignDetails as c_d, payments as p, campaigns as c, brands as b where c.id = c_d.campaign_id and p.campaign_id = c_d.campaign_id and c_d.brand = b.id and c_d.broadcaster = '$broadcaster_id' and c_d.adslots  > 0 ORDER BY c_d.time_created DESC");
                 }
             }
 
@@ -1012,9 +1002,7 @@ class DashboardController extends Controller
     {
         $broadcaster = Session::get('broadcaster_id');
         //total volume of campaigns
-        $camp_vol = Utilities::switch_db('api')->select("SELECT COUNT(id) as volume, DATE_FORMAT(time_created, '%M, %Y') as `month` 
-                                                              from campaignDetails where broadcaster = '$broadcaster' or agency_broadcaster = '$broadcaster' 
-                                                              GROUP BY DATE_FORMAT(time_created, '%Y-%m') ");
+        $camp_vol = Utilities::switch_db('api')->select("SELECT COUNT(id) as volume, DATE_FORMAT(time_created, '%M, %Y') as `month` from campaignDetails where broadcaster = '$broadcaster' or agency_broadcaster = '$broadcaster' GROUP BY DATE_FORMAT(time_created, '%Y-%m') ");
         $c_vol = [];
         $c_month = [];
 
@@ -1111,10 +1099,8 @@ class DashboardController extends Controller
         $adslots = [];
         $months = [];
         $adslot_monthly = [];
-        $periodic = Utilities::switch_db('api')->select("SELECT count(id) as tot_camp, SUM(adslots) as adslot, time_created as days from
-                                                              campaignDetails WHERE broadcaster = '$broadcaster_id' GROUP BY DATE_FORMAT(time_created, '%Y-%m') ");
-        $price = Utilities::switch_db('api')->select("SELECT SUM(amount) as total_price, time_created as days from paymentDetails WHERE 
-                                                          broadcaster = '$broadcaster_id' GROUP BY DATE_FORMAT(time_created, '%Y-%m') ");
+        $periodic = Utilities::switch_db('api')->select("SELECT count(id) as tot_camp, SUM(adslots) as adslot, time_created as days from campaignDetails WHERE broadcaster = '$broadcaster_id' GROUP BY DATE_FORMAT(time_created, '%Y-%m') ");
+        $price = Utilities::switch_db('api')->select("SELECT SUM(amount) as total_price, time_created as days from paymentDetails WHERE broadcaster = '$broadcaster_id' GROUP BY DATE_FORMAT(time_created, '%Y-%m') ");
 
         for ($i = 0; $i < count($periodic); $i++) {
             $months[] = date('M, Y', strtotime($periodic[$i]->days));
