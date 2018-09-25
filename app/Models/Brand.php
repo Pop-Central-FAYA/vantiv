@@ -1,6 +1,6 @@
 <?php
 
-namespace Vanguard;
+namespace Vanguard\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
