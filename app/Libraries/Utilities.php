@@ -370,7 +370,7 @@ class Utilities {
 
     public static function getClientsBrands($id, $broadcaster_id)
     {
-        $walkin_brands = Utilities::switch_db('api')->select("SELECT * from brands where walkin_id = '$id'");
+        $walkin_brands = Utilities::getBrandsForWalkins($id);
         $brands = [];
         foreach ($walkin_brands as $walkin_brand){
             $campaigns = Utilities::switch_db('api')->select("SELECT * from campaignDetails where brand = '$walkin_brand->id' and broadcaster = '$broadcaster_id'");
@@ -379,14 +379,14 @@ class Utilities {
             $brands[] = [
                 'id' => $walkin_brand->id,
                 'brand' => $walkin_brand->name,
-                'date' => $walkin_brand->time_created,
+                'date' => $walkin_brand->created_at,
                 'count_brand' => count($walkin_brands),
                 'campaigns' => count($campaigns),
                 'image_url' => $walkin_brand->image_url,
                 'last_campaign' => $campaigns ? $campaigns[$last_count_campaign]->name : 'none',
                 'total' => number_format($pay[0]->total,2),
-                'industry_id' => $walkin_brand->industry_id,
-                'sub_industry_id' => $walkin_brand->sub_industry_id,
+                'industry_id' => $walkin_brand->industry_code,
+                'sub_industry_id' => $walkin_brand->sub_industry_code,
             ];
         }
 
@@ -441,7 +441,7 @@ class Utilities {
 
     public static function getBrandsForWalkins($walkin_id)
     {
-        return Utilities::switch_db('api')->select("SELECT * from brands WHERE walkin_id = '$walkin_id'");
+        return Utilities::switch_db('api')->select("SELECT b.* FROM brand_client as b_c INNER JOIN brands as b ON b.id = b_c.brand_id where brands_client = '$walkin_id'");
     }
 
     public static function getBrands($client_id)
