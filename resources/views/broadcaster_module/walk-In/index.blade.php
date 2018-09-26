@@ -115,7 +115,7 @@
             <div class="clearfix">
                 <div class="input_wrap column col_7{{ $errors->has('brand_name') ? ' has-error' : '' }}">
                     <label class="small_faint">Walk-In Brand</label>
-                    <input type="text" name="brand_name" value=""  placeholder="e.g Coke">
+                    <input type="text" name="brand_name" class="brands_name" id="brands_name" value=""  placeholder="e.g Coke">
                     @if($errors->has('brand_name'))
                         <strong>
                             <span class="error-block" style="color: red;">{{ $errors->first('brand_name') }}</span>
@@ -346,6 +346,24 @@
                     }
                 });
             });
+
+            $(".brands_name").keyup(function () {
+                var brand_name = $("input#brands_name").val();
+                var url = '/check-brand-existence';
+                $.ajax({
+                    url : url,
+                    method : 'GET',
+                    data: {brand_name: brand_name},
+                    success: function (data) {
+                        if(data === 'already_exists'){
+                            console.log(data);
+                            toastr.info('This brand already exists on our platform, by continuing this process means you are aware of its existence');
+                        }
+                    }
+                })
+            });
+
+
         });
 
     </script>

@@ -161,14 +161,6 @@ class WalkinsController extends Controller
             return redirect()->back();
         }
 
-        if($request->hasFile('image_url')){
-            $image = $request->image_url;
-            $filename = $request->file('image_url')->getRealPath();
-            Cloudder::upload($filename, Cloudder::getPublicId());
-            $clouder = Cloudder::getResult();
-            $image_url = encrypt($clouder['url']);
-        }
-
         if($request->hasFile('company_logo')){
             /*handling uploading the image*/
             $featured = $request->company_logo;
@@ -231,12 +223,15 @@ class WalkinsController extends Controller
         //check if the brand exists in the brands table and if not create the brand in the brands table and attach the client in the brand_client table.
         $checkIfBrandExists = Utilities::switch_db('api')->select("SELECT id, `name` from brands where slug = '$brand_slug'");
         if(count($checkIfBrandExists) === 0){
+            $brand_logo = $request->file('image_url');
+            $image_url = Utilities::uploadBrandImageToCloudinary($brand_logo);
             $insertIntoBrands = Utilities::switch_db('api')->table('brands')->insert([
                'id' => $unique,
                'name' => $request->brand_name,
                'image_url' => $image_url,
                 'industry_code' => $request->industry,
-                'sub_industry_code' => $request->sub_industry
+                'sub_industry_code' => $request->sub_industry,
+                'slug' => $brand_slug
             ]);
 
             $insertIntoBrandClient = Utilities::switch_db('api')->table('brand_client')->insert([
@@ -339,5 +334,6 @@ class WalkinsController extends Controller
             ->with('industries', $industries)
             ->with('sub_industries', $sub_inds);
     }
+
 
 }
