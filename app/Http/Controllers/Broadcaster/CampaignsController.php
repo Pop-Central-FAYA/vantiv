@@ -107,8 +107,8 @@ class CampaignsController extends Controller
     {
         $brand_id = request()->brand;
         $brand = Utilities::switch_db('api')->select("SELECT * from brands where id = '$brand_id'");
-        $industry_id = $brand[0]->industry_id;
-        $sub_industry_id = $brand[0]->sub_industry_id;
+        $industry_id = $brand[0]->industry_code;
+        $sub_industry_id = $brand[0]->sub_industry_code;
         $industry = Utilities::switch_db('api')->select("SELECT * from sectors where sector_code = '$industry_id'");
         $sub_industry = Utilities::switch_db('api')->select("SELECT * from subSectors where sub_sector_code = '$sub_industry_id'");
         if($industry && $sub_industry){

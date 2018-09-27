@@ -40,7 +40,7 @@ class ClientsController extends Controller
             'first_name' => 'required',
             'last_name' => 'required',
             'email' => 'required|email',
-            'phone' => 'required|phone_number',
+            'phone' => 'required',
             'brand_name' => 'required',
             'image_url' => 'required|image',
             'company_name' => 'required',

@@ -226,14 +226,14 @@
             <div class="clearfix">
                 <div class="input_wrap column col_7{{ $errors->has('brand_name') ? ' has-error' : '' }}">
                     <label class="small_faint">Brand Name</label>
-                    <input type="text" name="brand_name" value=""  placeholder="e.g Coca Cola">
+                    <input type="text" name="brand_name" class="brands_name" id="brands_name" placeholder="e.g Coca Cola">
                     @if($errors->has('brand_name'))
                         <strong>
                             <span class="error-block" style="color: red;">{{ $errors->first('brand_name') }}</span>
                         </strong>
                     @endif
                 </div>
-                <div class='column col_5 file_select align_center pt3{{ $errors->has('brand_logo') ? ' has-error' : '' }}'>
+                <div class='column col_5 file_select align_center pt3{{ $errors->has('brand_logo') ? ' has-error' : '' }}' style="height: 70px;">
                     <input type="file" id="file" name="brand_logo" />
                     <span class="small_faint block_disp mb3">Brand Logo</span>
                     @if($errors->has('brand_logo'))
@@ -285,7 +285,7 @@
                 <div class="clearfix">
                     <div class="input_wrap column col_7{{ $errors->has('brand_name') ? ' has-error' : '' }}">
                         <label class="small_faint">Brand Name</label>
-                        <input type="text" name="brand_name" value="{{ $all_brand['brand'] }}"  placeholder="e.g Coca Cola">
+                        <input type="text" name="brand_name" class="brands_update" id="brands_name_update" value="{{ $all_brand['brand'] }}"  placeholder="e.g Coca Cola">
                         @if($errors->has('brand_name'))
                             <strong>
                                 <span class="error-block" style="color: red;">{{ $errors->first('brand_name') }}</span>
@@ -650,6 +650,24 @@
                     }
                 });
             });
+
+            $(".brands_name").keyup(function () {
+                var brand_name = $("input#brands_name").val();
+                console.log(brand_name);
+                var url = '/check-brand-existence';
+                $.ajax({
+                    url : url,
+                    method : 'GET',
+                    data: {brand_name: brand_name},
+                    success: function (data) {
+                        console.log(data);
+                        if(data === 'already_exists'){
+                            toastr.info('This brand already exists on our platform, by continuing this process means you are aware of its existence');
+                        }
+                    }
+                })
+            });
+
         });
     </script>
 @stop

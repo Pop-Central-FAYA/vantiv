@@ -309,9 +309,7 @@ class Utilities {
     {
         $walkins = Utilities::switch_db('api')->select("SELECT * from walkIns where id = '$client_id'");
         $user_id = $walkins[0]->user_id;
-        $walkins_update_logo = '';
         if($request->hasFile('company_logo')){
-            $image = $request->company_logo;
             $filename = $request->file('company_logo')->getRealPath();
             Cloudder::upload($filename, Cloudder::getPublicId());
             $clouder = Cloudder::getResult();
@@ -370,23 +368,24 @@ class Utilities {
 
     public static function getClientsBrands($id, $broadcaster_id)
     {
-        $walkin_brands = Utilities::switch_db('api')->select("SELECT * from brands where walkin_id = '$id'");
+        $walkin_brands = Utilities::getBrandsForWalkins($id);
         $brands = [];
         foreach ($walkin_brands as $walkin_brand){
-            $campaigns = Utilities::switch_db('api')->select("SELECT * from campaignDetails where brand = '$walkin_brand->id' and broadcaster = '$broadcaster_id'");
+            $campaigns = Utilities::switch_db('api')->select("SELECT * from campaignDetails where brand = '$walkin_brand->id' and walkins_id = '$walkin_brand->client_walkins_id' and broadcaster = '$broadcaster_id'");
             $last_count_campaign = count($campaigns) - 1;
-            $pay = Utilities::switch_db('api')->select("SELECT SUM(total) as total from payments where campaign_id IN (SELECT campaign_id from campaignDetails where brand = '$walkin_brand->id' and broadcaster = '$broadcaster_id')");
+            $pay = Utilities::switch_db('api')->select("SELECT SUM(total) as total from payments where campaign_id IN (SELECT campaign_id from campaignDetails where brand = '$walkin_brand->id' and walkins_id = '$walkin_brand->client_walkins_id' and broadcaster = '$broadcaster_id')");
             $brands[] = [
                 'id' => $walkin_brand->id,
+                'client_id' => $walkin_brand->client_walkins_id,
                 'brand' => $walkin_brand->name,
-                'date' => $walkin_brand->time_created,
+                'date' => $walkin_brand->created_at,
                 'count_brand' => count($walkin_brands),
                 'campaigns' => count($campaigns),
                 'image_url' => $walkin_brand->image_url,
                 'last_campaign' => $campaigns ? $campaigns[$last_count_campaign]->name : 'none',
                 'total' => number_format($pay[0]->total,2),
-                'industry_id' => $walkin_brand->industry_id,
-                'sub_industry_id' => $walkin_brand->sub_industry_id,
+                'industry_id' => $walkin_brand->industry_code,
+                'sub_industry_id' => $walkin_brand->sub_industry_code,
             ];
         }
 
@@ -447,12 +446,12 @@ class Utilities {
 
     public static function getBrandsForWalkins($walkin_id)
     {
-        return Utilities::switch_db('api')->select("SELECT * from brands WHERE walkin_id = '$walkin_id'");
+        return Utilities::switch_db('api')->select("SELECT b.*, b_c.client_id as agency_broadcaster, b_c.brands_client as client_walkins_id FROM brand_client as b_c INNER JOIN brands as b ON b.id = b_c.brand_id where brands_client = '$walkin_id'");
     }
 
     public static function getBrands($client_id)
     {
-        return Utilities::switch_db('api')->select("SELECT b.* FROM brand_client as b_c INNER JOIN brands as b ON b.id = b_c.brand_id where client_id = '$client_id'");
+        return Utilities::switch_db('api')->select("SELECT b.*, b_c.client_id as broadcaster_agency_id, b_c.brands_client as client_walkins_id FROM brand_client as b_c INNER JOIN brands as b ON b.id = b_c.brand_id where client_id = '$client_id'");
     }
 
     public static function getBroadcasterDetails($broadcaster_id)
@@ -892,6 +891,14 @@ class Utilities {
         $campaign_date = json_encode($all_campaign_date_graph);
 
         return (['campaign_payment' => $campaign_payment, 'campaign_date' => $campaign_date]);
+    }
+
+    public static function uploadBrandImageToCloudinary($brand_logo)
+    {
+        $filename = $brand_logo->getRealPath();
+        Cloudder::upload($filename, Cloudder::getPublicId());
+        $clouder = Cloudder::getResult();
+        return encrypt($clouder['url']);
     }
 
 

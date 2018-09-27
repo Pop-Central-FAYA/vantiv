@@ -18,7 +18,7 @@ class DiscountController extends Controller
         $agencies = Utilities::switch_db('reports')->select("SELECT u.id as user_id, a_g.id as agency_id, CONCAT(u.firstname,' ', u.lastname) as name
                                                                 FROM agents as a_g INNER JOIN users as u ON u.id = a_g.user_id");
 
-        $brands = Api::get_brands($broadcaster_id);
+        $brands = Utilities::getBrands($broadcaster_id);
 
         $agency_discounts = Api::get_agency_discounts($types['Agency'], $broadcaster_id);
         $brand_discounts = Api::get_brand_discounts($types['Brands'], $broadcaster_id);
