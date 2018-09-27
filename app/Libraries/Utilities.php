@@ -393,7 +393,7 @@ class Utilities {
         return $brands;
     }
 
-    public static function numberOfAdslotOccurrence($adslot_id, $start_date, $end_date)
+    public static function spreadDateInCampaign($start_date, $end_date)
     {
         $format = 'Y-m-d';
         $start  = new \DateTime($start_date);
@@ -406,8 +406,14 @@ class Utilities {
             $start->modify(($invert ? '-' : '+') . '1 day');
             $dates[] = $start->format($format);
         }
-        $adslot_array = [];
 
+        return $dates;
+    }
+
+    public static function numberOfAdslotOccurrence($adslot_id, $start_date, $end_date)
+    {
+        $adslot_array = [];
+        $dates = Utilities::spreadDateInCampaign($start_date, $end_date);
         foreach ($dates as $index => $date){
             $date_name = date('l', strtotime($date));
             $date_id = Utilities::switch_db('api')->select("SELECT * from days where `day` = '$date_name'");
@@ -570,15 +576,41 @@ class Utilities {
         }
     }
 
+    public static function getRateCardIdBetweenStartAndEndDates($start_date, $end_date, $broadcaster_id)
+    {
+        $day_id = [];
+        $ratecards_array = [];
+        $campaign_dates = Utilities::spreadDateInCampaign($start_date, $end_date);
+        foreach ($campaign_dates as $campaign_date){
+            $date_name = date('l', strtotime($campaign_date));
+            $date_id = Utilities::switch_db('api')->select("SELECT * from days where `day` = '$date_name'");
+            $day_id[] = $date_id[0]->id;
+        }
+        $day_id_imploded = "'".implode("','" ,$day_id)."'";
+
+        $ratecards =  Utilities::switch_db('api')->select("SELECT id from rateCards where day IN ($day_id_imploded) AND broadcaster = '$broadcaster_id'");
+        foreach ($ratecards as $ratecard){
+            $ratecards_array[] = $ratecard->id;
+        }
+
+        return $ratecards_array;
+
+    }
+
     public static function adslotFilter($step1, $broadcaster_id, $agency_id)
     {
         $day_parts = "'".implode("','" ,$step1->dayparts)."'";
         $region = "'".implode("','", $step1->region)."'";
         $target_audience = "'".implode("','", $step1->target_audience)."'";
+
+        $ratecards = Utilities::getRateCardIdBetweenStartAndEndDates($step1->start_date, $step1->end_date, $broadcaster_id);
+
+        $ratecards_imploded = "'".implode("','", $ratecards)."'";
+
         if($agency_id){
             $ads_broad = [];
             $channel = "'".implode("','", $step1->channel)."'";
-            $adslots = Utilities::switch_db('api')->select("SELECT broadcaster, COUNT(broadcaster) as all_slots FROM adslots where min_age >= $step1->min_age AND max_age <= $step1->max_age AND target_audience IN ($target_audience) AND day_parts IN ($day_parts) AND region IN ($region) AND is_available = 0 AND channels IN ($channel) group by broadcaster");
+            $adslots = Utilities::switch_db('api')->select("SELECT broadcaster, COUNT(broadcaster) as all_slots FROM adslots where min_age >= $step1->min_age AND max_age <= $step1->max_age AND target_audience IN ($target_audience) AND day_parts IN ($day_parts) AND region IN ($region) AND rate_card IN ($ratecards_imploded) AND is_available = 0 AND channels IN ($channel) group by broadcaster");
             foreach ($adslots as $adslot)
             {
                 $broad = Utilities::switch_db('api')->select("SELECT * from broadcasters where id = '$adslot->broadcaster'");
@@ -592,7 +624,7 @@ class Utilities {
         }else{
             $broadcaster_details = Utilities::getBroadcasterDetails($broadcaster_id);
             $channel = $broadcaster_details[0]->channel_id;
-            $adslots = Utilities::switch_db('api')->select("SELECT broadcaster, COUNT(broadcaster) as all_slots FROM adslots where min_age >= $step1->min_age AND max_age <= $step1->max_age AND target_audience IN ($target_audience) AND day_parts IN ($day_parts) AND region IN ($region) AND is_available = 0 AND channels = '$channel' and broadcaster = '$broadcaster_id'");
+            $adslots = Utilities::switch_db('api')->select("SELECT broadcaster, COUNT(broadcaster) as all_slots FROM adslots where min_age >= $step1->min_age AND max_age <= $step1->max_age AND target_audience IN ($target_audience) AND day_parts IN ($day_parts) AND region IN ($region) AND rate_card IN ($ratecards_imploded) AND is_available = 0 AND channels = '$channel' and broadcaster = '$broadcaster_id'");
             $ads_broad = [
                 'broadcaster' => $adslots[0]->broadcaster,
                 'count_adslot' => $adslots[0]->all_slots,
@@ -650,12 +682,15 @@ class Utilities {
         $region = "'".implode("','", $step1->region)."'";
         $target_audience = "'".implode("','", $step1->target_audience)."'";
         $all_adslots = Utilities::getAllAvailableSlots($step1, $broadcaster_id);
+        $ratecards = Utilities::getRateCardIdBetweenStartAndEndDates($step1->start_date, $step1->end_date, $broadcaster_id);
+        $ratecards_imploded = "'".implode("','", $ratecards)."'";
+
         $ratecards = Utilities::switch_db('api')->select("SELECT d.day, h.time_range, r.id FROM rateCards as r JOIN days as d ON d.id = r.day 
                                                                 JOIN hourlyRanges as h ON h.id = r.hourly_range_id where r.broadcaster = '$broadcaster_id'
                                                                 AND r.id IN (SELECT rate_card FROM adslots where min_age >= $step1->min_age
                                                                 AND max_age <= $step1->max_age
                                                                 AND target_audience IN ($target_audience)
-                                                                AND day_parts IN ($day_parts) AND region IN ($region)
+                                                                AND day_parts IN ($day_parts) AND region IN ($region) AND rate_card IN ($ratecards_imploded)
                                                                 AND is_available = 0 AND broadcaster = '$broadcaster_id')");
 
         foreach ($ratecards as $ratecard){
