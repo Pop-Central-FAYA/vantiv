@@ -171,7 +171,7 @@
 
             <div class="input_wrap{{ $errors->has('phone') ? ' has-error' : '' }}">
                 <label class="small_faint">Phone Number</label>
-                <input type="text" name="phone" placeholder="234** **** ****">
+                <input type="text" name="phone" id="phone_number_verify" placeholder="234** **** ****">
                 @if($errors->has('phone'))
                     <strong>
                         <span class="error-block" style="color: red;">{{ $errors->first('phone') }}</span>
@@ -213,7 +213,7 @@
             </div>
 
             <div class="align_right">
-                <input type="submit" value="Create Client" class="btn uppercased update">
+                <input type="submit" disabled id="submit_walkins" value="Create Client" class="btn uppercased update">
             </div>
 
         </form>
@@ -362,6 +362,22 @@
                     }
                 })
             });
+
+            $("#phone_number_verify").keyup(function () {
+                var phone_number = $("#phone_number_verify").val();
+                if(phone_number.length == 11 || phone_number.length == 7){
+                    $("#submit_walkins").prop('disabled', false);
+                    toastr.success('Phone number length is valid');
+                }
+                if(phone_number.length > 7 && phone_number.length < 11){
+                    $("#submit_walkins").prop('disabled', true);
+                    toastr.error('Phone number length is invalid');
+                }
+                if(phone_number.length >11){
+                    $("#submit_walkins").prop('disabled', true);
+                    toastr.error('Phone number length is invalid');
+                }
+            })
 
 
         });
