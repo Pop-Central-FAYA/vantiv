@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Vanguard\Libraries\Api;
 use Vanguard\Libraries\Utilities;
 use JD\Cloudder\Facades\Cloudder;
+use Vanguard\Models\Brand;
 
 
 class BrandsController extends Controller
@@ -23,16 +24,32 @@ class BrandsController extends Controller
     public function index()
     {
         $broadcaster_id = Session::get('broadcaster_id');
+        $agency_id = Session::get('agency_id');
+        if($broadcaster_id){
+            $broadcaster_agency_id = $broadcaster_id;
+        }else{
+            $broadcaster_agency_id = $agency_id;
+        }
         $industries = Utilities::switch_db('api')->select("SELECT * FROM sectors");
         $sub_inds = Utilities::switch_db('api')->select("SELECT sub.id, sub.sector_id, sub.name, sub.sub_sector_code from subSectors as sub, sectors as s where sub.sector_id = s.sector_code");
-        $all_brands = Utilities::getBrands($broadcaster_id);
+        $all_brands = Utilities::getBrands($broadcaster_agency_id);
         $brands = [];
 
         foreach ($all_brands as $all_brand){
-            $campaigns = Utilities::switch_db('api')->select("SELECT * from campaignDetails WHERE brand = '$all_brand->id' AND walkins_id = '$all_brand->client_walkins_id'");
+            if($broadcaster_id){
+                $campaigns = Utilities::switch_db('api')->select("SELECT * from campaignDetails WHERE brand = '$all_brand->id' AND walkins_id = '$all_brand->client_walkins_id'");
+            }else{
+                $campaigns = Utilities::switch_db('api')->select("SELECT *  from campaignDetails WHERE brand = '$all_brand->id' AND walkins_id = '$all_brand->client_walkins_id' GROUP BY campaign_id");
+            }
             $last_count_campaign = count($campaigns) - 1;
-            $pay = Utilities::switch_db('api')->select("SELECT SUM(total) as total from payments where campaign_id IN (SELECT campaign_id from campaignDetails where 
+            if($broadcaster_id){
+                $pay = Utilities::switch_db('api')->select("SELECT SUM(total) as total from payments where campaign_id IN (SELECT campaign_id from campaignDetails where 
                                                             brand = '$all_brand->id' and walkins_id = '$all_brand->client_walkins_id')");
+            }else{
+                $pay = Utilities::switch_db('api')->select("SELECT SUM(total) as total from payments where campaign_id IN (SELECT campaign_id from campaignDetails where 
+                                                              brand = '$all_brand->id' GROUP BY campaign_id)");
+            }
+
             $brands[] = [
                 'id' => $all_brand->id,
                 'brand' => $all_brand->name,
@@ -54,7 +71,11 @@ class BrandsController extends Controller
         $currentPageSearchResults = $col->slice(($currentPage - 1) * $perPage, $perPage)->all();
         $entries = new LengthAwarePaginator($currentPageSearchResults, count($col), $perPage);
         $entries->setPath('brands');
-        return view('broadcaster_module.brands.index')->with('all_brands', $entries)->with('industries', $industries)->with('sub_industries', $sub_inds);
+        if($broadcaster_id){
+            return view('broadcaster_module.brands.index')->with('all_brands', $entries)->with('industries', $industries)->with('sub_industries', $sub_inds);
+        }else{
+            return view('agency.campaigns.brands.index')->with('all_brands', $entries)->with('industries', $industries)->with('sub_industries', $sub_inds);
+        }
 
     }
 
@@ -100,10 +121,18 @@ class BrandsController extends Controller
     {
         $broadcaster_id = Session::get('broadcaster_id');
 
+        $agency_id = Session::get('agency_id');
+
+        if($broadcaster_id){
+            $broadcaster_agency_id = $broadcaster_id;
+        }else{
+            $broadcaster_agency_id = $agency_id;
+        }
+
         $brand_slug = Utilities::formatString($request->brand_name);
         $unique = uniqid();
         $check_brand = Utilities::switch_db('api')->select("SELECT b.* from brand_client as b_c INNER JOIN brands as b ON b.id = b_c.brand_id 
-                                                                WHERE b.slug = '$brand_slug' AND client_id = '$broadcaster_id'");
+                                                                WHERE b.slug = '$brand_slug' AND client_id = '$broadcaster_agency_id'");
         if(count($check_brand) > 0) {
             Session::flash('error', 'Brands already exists');
             return redirect()->back();
@@ -114,31 +143,35 @@ class BrandsController extends Controller
         if(count($checkIfBrandExists) === 0){
             $brand_logo = $request->file('brand_logo');
             $image_url = Utilities::uploadBrandImageToCloudinary($brand_logo);
-            $insertIntoBrands = Utilities::switch_db('api')->table('brands')->insert([
-                'id' => $unique,
-                'name' => $request->brand_name,
-                'image_url' => $image_url,
-                'industry_code' => $request->industry,
-                'sub_industry_code' => $request->sub_industry,
-                'slug' => $brand_slug
-            ]);
+            $brand = new Brand();
+            $brand->id = $unique;
+            $brand->name = $request->brand_name;
+            $brand->image_url = $image_url;
+            $brand->industry_code = $request->industry;
+            $brand->sub_industry_code = $request->sub_industry;
+            $brand->slug = $brand_slug;
+            $brand->save();
 
             $insertIntoBrandClient = Utilities::switch_db('api')->table('brand_client')->insert([
                 'brand_id' => $unique,
-                'client_id' => $broadcaster_id,
+                'client_id' => $broadcaster_agency_id,
                 'brands_client' => $request->walkin_id,
             ]);
         }else{
             $insertIntoBrandClient = Utilities::switch_db('api')->table('brand_client')->insert([
                 'brand_id' => $checkIfBrandExists[0]->id,
-                'client_id' => $broadcaster_id,
+                'client_id' => $broadcaster_agency_id,
                 'brands_client' => $request->walkin_id,
             ]);
         }
 
         if ($insertIntoBrandClient) {
             Session::flash('success', 'Brands created successfully');
-            return redirect()->route('brand.all');
+            if($broadcaster_id){
+                return redirect()->route('brand.all');
+            }else{
+                return redirect()->route('agency.brand.all');
+            }
         } else {
             Session::flash('error', 'There was a problem creating this brand');
             return redirect()->back();
@@ -153,54 +186,61 @@ class BrandsController extends Controller
             'brand_name' => 'required|regex:/^[a-zA-Z- ]+$/',
         ]);
 
+        $broadcaster_id = Session::get('broadcaster_id');
+
+        $agency_id = Session::get('agency_id');
+
+        if($broadcaster_id){
+            $broadcaster_agency_id = $broadcaster_id;
+        }else{
+            $broadcaster_agency_id = $agency_id;
+        }
+
         $brand_slug = Utilities::formatString($request->brand_name);
         $user_agent = $_SERVER['HTTP_USER_AGENT'];
         $description = 'Brand '.$request->brand_name .' Updated by '.Session::get('broadcaster_id');
         $ip = request()->ip();
-        $brands = Utilities::switch_db('api')->select("SELECT * from brands WHERE id = '$id'");
-        $broadcaster_id = Session::get('broadcaster_id');
+        $brands = Brand::where('id', $id)->first();
 
-        if($brands[0]->slug != $brand_slug){
+        if($brands->slug != $brand_slug){
             $check_brand = Utilities::switch_db('api')->select("SELECT b.* from brand_client as b_c INNER JOIN brands as b ON b.id = b_c.brand_id 
-                                                                WHERE b.slug = '$brand_slug' AND client_id = '$broadcaster_id'");
+                                                                WHERE b.slug = '$brand_slug' AND client_id = '$broadcaster_agency_id'");
             if(count($check_brand) > 0) {
                 Session::flash('error', 'Brands already exists');
                 return redirect()->back();
             }else{
                 if($request->has('brand_logo')){
                     $image_path = Utilities::uploadBrandImageToCloudinary($request->brand_logo);
-                    $update_brand = Utilities::switch_db('api')->update("UPDATE brands SET image_url = '$image_path' WHERE id = '$id'");
-
+                    $brands->image_url = $image_path;
+                    $brands->save();
                 }
+                $brands->name = $request->brand_name;
+                $brands->sub_industry_code = $request->sub_industry;
+                $brands->slug = $brand_slug;
+                $brands->save();
 
-                $update_brand = Utilities::switch_db('api')->update("UPDATE brands SET name = '$request->brand_name', sub_industry_code = '$request->sub_industry', slug = '$brand_slug' WHERE id = '$id'");
 
-                if($update_brand == true) {
-                    $user_activity = Api::saveActivity(Session::get('broadcaster_id'), $description, $ip, $user_agent);
-                    Session::flash('success', 'Brands updated successfully');
-                    return redirect()->back();
-                }else{
-                    Session::flash('info', 'Brands not updated');
-                    return redirect()->back();
-                }
+                $user_activity = Api::saveActivity($broadcaster_agency_id, $description, $ip, $user_agent);
+                Session::flash('success', 'Brands updated successfully');
+                return redirect()->back();
+
             }
         }else{
             if($request->hasFile('brand_logo')){
                 $image_path = Utilities::uploadBrandImageToCloudinary($request->brand_logo);
-                $update_brand = Utilities::switch_db('api')->update("UPDATE brands SET image_url = '$image_path' WHERE id = '$id'");
+                $brands->image_url = $image_path;
+                $brands->save();
 
             }
 
-            $update_brand = Utilities::switch_db('api')->update("UPDATE brands SET name = '$request->brand_name', sub_industry_code = '$request->sub_industry', slug = '$brand_slug' WHERE id = '$id'");
+            $brands->name = $request->brand_name;
+            $brands->sub_industry_code = $request->sub_industry;
+            $brands->slug = $brand_slug;
+            $brands->save();
 
-            if($update_brand == true) {
-                $user_activity = Api::saveActivity(Session::get('broadcaster_id'), $description, $ip, $user_agent);
-                Session::flash('success', 'Brands updated successfully');
-                return redirect()->back();
-            }else{
-                Session::flash('info', 'Brands not updated');
-                return redirect()->back();
-            }
+            $user_activity = Api::saveActivity($broadcaster_agency_id, $description, $ip, $user_agent);
+            Session::flash('success', 'Brands updated successfully');
+            return redirect()->back();
         }
 
     }
@@ -213,15 +253,10 @@ class BrandsController extends Controller
      */
     public function delete($id)
     {
-        $brand = Utilities::switch_db('api')->update("UPDATE brands set status = 1 WHERE id = '$id'");
-        if($brand)
-        {
-            Session::flash('success', 'Brands Deleted Successfully');
-            return redirect()->back();
-        }else{
-            Session::flash('error', 'There was a problem deleting this brand');
-            return redirect()->back();
-        }
+        $brand = Brand::where('id', $id)->first();
+        $brand->status = 1;
+        Session::flash('success', 'Brands Deleted Successfully');
+        return redirect()->back();
     }
 
     public function getBrandsWithClients($id)

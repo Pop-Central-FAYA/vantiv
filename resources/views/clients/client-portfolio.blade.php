@@ -86,7 +86,7 @@
 
                     <div class="column col_4">
                         <span class="small_faint uppercased weight_medium">Brands</span>
-                        <h3>{{ $brand_this_month[0]->brand }}</h3>
+                        <h3>{{ count($brands) }}</h3>
 
                         <a href="" class="weight_medium small_font view_brands">View Brands</a>
                     </div>
@@ -105,7 +105,7 @@
 
                     <div class="column col_4">
                         <span class="small_faint uppercased weight_medium">Brands</span>
-                        <h3>{{ $brand_this_month[0]->brand }}</h3>
+                        <h3>{{ count($brands) }}</h3>
 
                         <a href="" class="weight_medium small_font view_brands">View Brands</a>
                     </div>
@@ -235,7 +235,7 @@
     {{--modal for adding up brands--}}
     <div class="modal_contain" id="new_brand">
         <h2 class="sub_header mb4">New Brand</h2>
-        <form action="{{ route('agency.brand.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('brand.store') }}" method="POST" enctype="multipart/form-data">
             {{ csrf_field() }}
             <div class="clearfix">
                 <div class="input_wrap column col_7{{ $errors->has('brand_name') ? ' has-error' : '' }}">
@@ -247,7 +247,7 @@
                         </strong>
                     @endif
                 </div>
-                <div class='column col_5 file_select align_center pt3{{ $errors->has('brand_logo') ? ' has-error' : '' }}'>
+                <div class='column col_5 file_select align_center pt3{{ $errors->has('brand_logo') ? ' has-error' : '' }}' style="height: 70px;">
                     <input type="file" id="file" name="brand_logo" />
                     <span class="small_faint block_disp mb3">Brand Logo</span>
                     @if($errors->has('brand_logo'))
@@ -294,7 +294,7 @@
     @foreach($all_brands as $all_brand)
         <div class="modal_contain" id="brand{{ $all_brand['id'] }}">
         <h2 class="sub_header mb4">Edit Brand : {{ $all_brand['brand'] }}</h2>
-        <form action="{{ route('agency.brands.update', ['id' => $all_brand['id']]) }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('brands.update', ['id' => $all_brand['id']]) }}" method="POST" enctype="multipart/form-data">
             {{ csrf_field() }}
             <div class="clearfix">
                 <div class="input_wrap column col_7{{ $errors->has('brand_name') ? ' has-error' : '' }}">
@@ -663,6 +663,22 @@
 
                     }
                 });
+            });
+
+            $(".brands_name").keyup(function () {
+                var brand_name = $("input#brands_name").val();
+                var url = '/check-brand-existence';
+                $.ajax({
+                    url : url,
+                    method : 'GET',
+                    data: {brand_name: brand_name},
+                    success: function (data) {
+                        if(data === 'already_exists'){
+                            console.log(data);
+                            toastr.info('This brand already exists on our platform, by continuing this process means you are aware of its existence');
+                        }
+                    }
+                })
             });
         });
     </script>

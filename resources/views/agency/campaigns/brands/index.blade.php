@@ -64,7 +64,7 @@
     @foreach($all_brands as $all_brand)
         <div class="modal_contain" id="brand{{ $all_brand['id'] }}">
             <h2 class="sub_header mb4">Edit Brand : {{ $all_brand['brand'] }}</h2>
-            <form action="{{ route('agency.brands.update', ['id' => $all_brand['id']]) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('brands.update', ['id' => $all_brand['id']]) }}" method="POST" enctype="multipart/form-data">
                 {{ csrf_field() }}
                 <div class="clearfix">
                     <div class="input_wrap column col_7{{ $errors->has('brand_name') ? ' has-error' : '' }}">
@@ -114,15 +114,13 @@
                     <div class="select_wrap">
                         <select name="sub_industry" id="sub_industry">
                             @foreach($sub_industries as $sub_industry)
-                                @foreach($sub_industry as $sub_in)
-                                    @if($sub_in->sub_sector_code === $all_brand['sub_industry_id'])
-                                        <option value="{{ $sub_in->sub_sector_code }}"
-                                                @if($sub_in->sub_sector_code === $all_brand['sub_industry_id'])
-                                                selected
-                                                @endif
-                                        >{{ $sub_in->name }}</option>
-                                    @endif
-                                @endforeach
+                                @if($sub_industry->sub_sector_code === $all_brand['sub_industry_id'])
+                                    <option value="{{ $sub_industry->sub_sector_code }}"
+                                            @if($sub_industry->sub_sector_code === $all_brand['sub_industry_id'])
+                                            selected
+                                            @endif
+                                    >{{ $sub_industry->name }}</option>
+                                @endif
                             @endforeach
                         </select>
                     </div>

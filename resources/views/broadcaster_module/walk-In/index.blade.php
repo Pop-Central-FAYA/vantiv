@@ -115,7 +115,7 @@
             <div class="clearfix">
                 <div class="input_wrap column col_7{{ $errors->has('brand_name') ? ' has-error' : '' }}">
                     <label class="small_faint">Walk-In Brand</label>
-                    <input type="text" name="brand_name" class="brands_name" id="brands_name" value=""  placeholder="e.g Coke">
+                    <input type="text" name="brand_name" class="brands_name" id="brands_name" value=""  placeholder="e.g Coca Cola">
                     @if($errors->has('brand_name'))
                         <strong>
                             <span class="error-block" style="color: red;">{{ $errors->first('brand_name') }}</span>

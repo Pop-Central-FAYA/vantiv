@@ -7,6 +7,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use JD\Cloudder\Facades\Cloudder;
 use Vanguard\Http\Requests\StoreWalkins;
+use Vanguard\Models\Brand;
 use Yajra\DataTables\DataTables;
 use Vanguard\Libraries\Utilities;
 use Session;
@@ -222,17 +223,18 @@ class WalkinsController extends Controller
 
         //check if the brand exists in the brands table and if not create the brand in the brands table and attach the client in the brand_client table.
         $checkIfBrandExists = Utilities::switch_db('api')->select("SELECT id, `name` from brands where slug = '$brand_slug'");
+
         if(count($checkIfBrandExists) === 0){
             $brand_logo = $request->file('image_url');
             $image_url = Utilities::uploadBrandImageToCloudinary($brand_logo);
-            $insertIntoBrands = Utilities::switch_db('api')->table('brands')->insert([
-               'id' => $unique,
-               'name' => $request->brand_name,
-               'image_url' => $image_url,
-                'industry_code' => $request->industry,
-                'sub_industry_code' => $request->sub_industry,
-                'slug' => $brand_slug
-            ]);
+            $brand = new Brand();
+            $brand->id = $unique;
+            $brand->name = $request->brand_name;
+            $brand->image_url = $image_url;
+            $brand->industry_code = $request->industry;
+            $brand->sub_industry_code = $request->sub_industry;
+            $brand->slug = $brand_slug;
+            $brand->save();
 
             $insertIntoBrandClient = Utilities::switch_db('api')->table('brand_client')->insert([
                'brand_id' => $unique,
