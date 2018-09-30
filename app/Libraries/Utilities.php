@@ -371,9 +371,11 @@ class Utilities {
         $walkin_brands = Utilities::getBrandsForWalkins($id);
         $brands = [];
         foreach ($walkin_brands as $walkin_brand){
-            $campaigns = Utilities::switch_db('api')->select("SELECT * from campaignDetails where brand = '$walkin_brand->id' and walkins_id = '$walkin_brand->client_walkins_id' and broadcaster = '$broadcaster_id'");
+            $campaigns = Utilities::switch_db('api')->select("SELECT * from campaignDetails where brand = '$walkin_brand->id' and walkins_id = '$walkin_brand->client_walkins_id'
+                                                                and broadcaster = '$broadcaster_id'");
             $last_count_campaign = count($campaigns) - 1;
-            $pay = Utilities::switch_db('api')->select("SELECT SUM(total) as total from payments where campaign_id IN (SELECT campaign_id from campaignDetails where brand = '$walkin_brand->id' and walkins_id = '$walkin_brand->client_walkins_id' and broadcaster = '$broadcaster_id')");
+            $pay = Utilities::switch_db('api')->select("SELECT SUM(total) as total from payments where campaign_id IN (SELECT campaign_id from campaignDetails where 
+                                                            brand = '$walkin_brand->id' and walkins_id = '$walkin_brand->client_walkins_id' and broadcaster = '$broadcaster_id')");
             $brands[] = [
                 'id' => $walkin_brand->id,
                 'client_id' => $walkin_brand->client_walkins_id,
@@ -446,12 +448,17 @@ class Utilities {
 
     public static function getBrandsForWalkins($walkin_id)
     {
-        return Utilities::switch_db('api')->select("SELECT b.*, b_c.client_id as agency_broadcaster, b_c.brands_client as client_walkins_id FROM brand_client as b_c INNER JOIN brands as b ON b.id = b_c.brand_id where brands_client = '$walkin_id'");
+        return Utilities::switch_db('api')->select("SELECT b.*, b_c.client_id as agency_broadcaster, b_c.brands_client as client_walkins_id FROM brand_client as b_c INNER JOIN brands as b ON b.id = b_c.brand_id where b_c.brands_client = '$walkin_id'");
     }
 
     public static function getBrands($client_id)
     {
-        return Utilities::switch_db('api')->select("SELECT b.*, b_c.client_id as broadcaster_agency_id, b_c.brands_client as client_walkins_id FROM brand_client as b_c INNER JOIN brands as b ON b.id = b_c.brand_id where client_id = '$client_id'");
+        return Utilities::switch_db('api')->select("SELECT b.*, b_c.client_id as broadcaster_agency_id, b_c.brands_client as client_walkins_id FROM brand_client as b_c INNER JOIN brands as b ON b.id = b_c.brand_id where b_c.client_id = '$client_id'");
+    }
+
+    public static function singleBrand($id, $client_id)
+    {
+        return Utilities::switch_db('api')->select("SELECT b.*, b_c.client_id as broadcaster_agency_id, b_c.brands_client as client_walkins_id FROM brand_client as b_c INNER JOIN brands as b ON b.id = b_c.brand_id where b.id = '$id' AND brands_client = '$client_id'");
     }
 
     public static function getBroadcasterDetails($broadcaster_id)
@@ -575,7 +582,7 @@ class Utilities {
         }
     }
 
-    public static function getRateCardIdBetweenStartAndEndDates($start_date, $end_date, $broadcaster_id)
+    public static function getRateCardIdBetweenStartAndEndDates($start_date, $end_date)
     {
         $day_id = [];
         $ratecards_array = [];
@@ -587,7 +594,8 @@ class Utilities {
         }
         $day_id_imploded = "'".implode("','" ,$day_id)."'";
 
-        $ratecards =  Utilities::switch_db('api')->select("SELECT id from rateCards where day IN ($day_id_imploded) AND broadcaster = '$broadcaster_id'");
+        $ratecards =  Utilities::switch_db('api')->select("SELECT id from rateCards where day IN ($day_id_imploded) ");
+
         foreach ($ratecards as $ratecard){
             $ratecards_array[] = $ratecard->id;
         }
@@ -602,7 +610,7 @@ class Utilities {
         $region = "'".implode("','", $step1->region)."'";
         $target_audience = "'".implode("','", $step1->target_audience)."'";
 
-        $ratecards = Utilities::getRateCardIdBetweenStartAndEndDates($step1->start_date, $step1->end_date, $broadcaster_id);
+        $ratecards = Utilities::getRateCardIdBetweenStartAndEndDates($step1->start_date, $step1->end_date);
 
         $ratecards_imploded = "'".implode("','", $ratecards)."'";
 

@@ -4,6 +4,7 @@ namespace Vanguard\Http\Controllers;
 
 use Hamcrest\Util;
 use Session;
+use Vanguard\Models\Brand;
 use Vanguard\Role;
 use Vanguard\Country;
 use Vanguard\Libraries\Api;
@@ -47,20 +48,13 @@ class ClientsController extends Controller
             'company_logo' => 'required|image',
         ]);
 
-        $brand = Utilities::formatString($request->brand_name);
+        $brand_slug = Utilities::formatString($request->brand_name);
         $unique = uniqid();
-        $ckeck_brand = Utilities::switch_db('api')->select("SELECT name from brands WHERE `name` = '$brand'");
-        if(count($ckeck_brand) > 0) {
+        $check_brand = Utilities::switch_db('api')->select("SELECT b.* from brand_client as b_c INNER JOIN brands as b ON b.id = b_c.brand_id 
+                                                                WHERE b.slug = '$brand_slug' AND client_id = '$agency_id'");
+        if(count($check_brand) > 0) {
             Session::flash('error', 'Brands already exists');
             return redirect()->back();
-        }
-
-        if($request->hasFile('image_url')){
-            $image = $request->image_url;
-            $filename = $request->file('image_url')->getRealPath();
-            Cloudder::upload($filename, Cloudder::getPublicId());
-            $clouder = Cloudder::getResult();
-            $image_url = encrypt($clouder['url']);
         }
 
         if($request->hasFile('company_logo')){
@@ -122,9 +116,34 @@ class ClientsController extends Controller
             'company_logo' => $company_image
         ]);
 
-        $insertBrands = Utilities::switch_db('api')->insert("INSERT into brands (id, `name`, image_url, walkin_id, broadcaster_agency, industry_id, sub_industry_id) VALUES ('$unique', '$brand', '$image_url', '$client_id', '$agency_id', '$request->industry', '$request->sub_industry')");
+        $checkIfBrandExists = Utilities::switch_db('api')->select("SELECT id, `name` from brands where slug = '$brand_slug'");
 
-        if ($userInsert && $walkinInsert && $insertBrands) {
+        if(count($checkIfBrandExists) === 0){
+            $brand_logo = $request->file('image_url');
+            $image_url = Utilities::uploadBrandImageToCloudinary($brand_logo);
+            $brand = new Brand();
+            $brand->id = $unique;
+            $brand->name = $request->brand_name;
+            $brand->image_url = $image_url;
+            $brand->industry_code = $request->industry;
+            $brand->sub_industry_code = $request->sub_industry;
+            $brand->slug = $brand_slug;
+            $brand->save();
+
+            $insertIntoBrandClient = Utilities::switch_db('api')->table('brand_client')->insert([
+                'brand_id' => $unique,
+                'client_id' => $agency_id,
+                'brands_client' => $client_id,
+            ]);
+        }else{
+            $insertIntoBrandClient = Utilities::switch_db('api')->table('brand_client')->insert([
+                'brand_id' => $checkIfBrandExists[0]->id,
+                'client_id' => $agency_id,
+                'brands_client' => $client_id,
+            ]);
+        }
+
+        if ($userInsert && $walkinInsert && $insertIntoBrandClient) {
             $save_activity = Api::saveActivity($agency_id, $description, $ip, $user_agent);
             Session::flash('success', 'Client created successfully');
             return redirect()->route('clients.list');
@@ -141,13 +160,16 @@ class ClientsController extends Controller
     {
         $agency_id = \Session::get('agency_id');
 
-        $clients = Utilities::switch_db('api')->select("SELECT w.user_id, w.id, u.id as user_det_id, u.firstname, u.lastname, u.phone_number, w.location, w.company_logo, w.company_name, w.time_created, u.email, w.image_url from walkIns as w, users as u where u.id = w.user_id and agency_id = '$agency_id'");
+        $clients = Utilities::switch_db('api')->select("SELECT w.user_id, w.id, u.id as user_det_id, u.firstname, u.lastname, u.phone_number, w.location, 
+                                                            w.company_logo, w.company_name, w.time_created, u.email, w.image_url from walkIns as w 
+                                                            INNER JOIN users as u ON u.id = w.user_id where agency_id = '$agency_id'");
 
         $client_data = [];
 
         foreach ($clients as $client) {
 
-            $campaigns = Utilities::switch_db('api')->select("SELECT count(id) as total_campaigns from campaigns where id IN (SELECT campaign_id from campaignDetails where user_id = '$client->user_id')");
+            $campaigns = Utilities::switch_db('api')->select("SELECT count(id) as total_campaigns from campaigns where id IN 
+                                                                (SELECT campaign_id from campaignDetails where user_id = '$client->user_id')");
 
             $last_camp_date = Utilities::switch_db('api')->select("SELECT time_created from campaignDetails where user_id = '$client->user_id' ORDER BY time_created DESC LIMIT 1");
             if ($last_camp_date) {
@@ -156,7 +178,7 @@ class ClientsController extends Controller
                 $date = 0;
             }
 
-            $brs = Utilities::switch_db('api')->select("SELECT * from brands where walkin_id = '$client->id'");
+            $brs = Utilities::getBrandsForWalkins($client->id);
 
             $today = date("Y-m-d");
 
@@ -164,7 +186,8 @@ class ClientsController extends Controller
 
             $inactive_campaign = Utilities::switch_db('api')->select("SELECT * from campaignDetails where user_id = '$client->user_id' AND stop_date < '$today' GROUP BY campaign_id ");
 
-            $payments = Utilities::switch_db('api')->select("SELECT SUM(total) as total from payments WHERE campaign_id IN (SELECT campaign_id from campaignDetails WHERE user_id = '$client->user_id' GROUP BY campaign_id)");
+            $payments = Utilities::switch_db('api')->select("SELECT SUM(total) as total from payments WHERE campaign_id IN 
+                                                                  (SELECT campaign_id from campaignDetails WHERE user_id = '$client->user_id' GROUP BY campaign_id)");
 
             $client_data[] = [
                 'client_id' => $client->id,
@@ -213,7 +236,7 @@ class ClientsController extends Controller
 
         $all_campaign_this_month = Utilities::switch_db('api')->select("SELECT * from campaignDetails WHERE user_id = '$user_id' AND adslots > 0  GROUP BY campaign_id ORDER BY time_created DESC");
 
-        $brand_this_month = Utilities::switch_db('api')->select("SELECT count(id) as brand from brands where walkin_id = '$client_id' ");
+        $brands = Utilities::getBrandsForWalkins($client_id);
 
         $total = Utilities::switch_db('api')->select("SELECT SUM(total) as total from payments where campaign_id IN (SELECT campaign_id from campaignDetails where user_id = '$user_id' GROUP BY campaign_id) ");
 
@@ -244,7 +267,7 @@ class ClientsController extends Controller
             ->with('campaign_payment', $campaign_payment)
             ->with('campaign_date', $campaign_date)
             ->with('total_this_month', $total)
-            ->with('brand_this_month', $brand_this_month)
+            ->with('brands', $brands)
             ->with('all_campaign_this_month', $all_campaign_this_month)
             ->with('industries', $industries)
             ->with('sub_industries', $sub_inds);
@@ -254,7 +277,11 @@ class ClientsController extends Controller
     public function getCampaignData($user_id)
     {
         $campaigns = [];
-        $all_campaign = Utilities::switch_db('api')->select("SELECT c_d.campaign_id, c_d.name, c_d.product, c_d.start_date, c_d.stop_date, c_d.adslots, c.campaign_reference, p.total, b.name as brands from campaignDetails as c_d, campaigns as c, payments as p, brands as b WHERE c_d.user_id = '$user_id' AND p.campaign_id = c_d.campaign_id AND c_d.campaign_id = c.id AND b.id = c_d.brand AND c_d.adslots > 0 GROUP BY c_d.campaign_id ORDER BY c_d.time_created DESC");
+        $all_campaign = Utilities::switch_db('api')->select("SELECT c_d.campaign_id, c_d.name, c_d.product, c_d.start_date, c_d.stop_date, c_d.adslots, c.campaign_reference, p.total, b.name as brands 
+                                                              from campaignDetails as c_d INNER JOIN campaigns as c ON c.id = c_d.campaign_id 
+                                                              INNER JOIN payments as p ON p.campaign_id = c_d.campaign_id 
+                                                              INNER JOIN brands as b ON b.id = c_d.brand WHERE c_d.user_id = '$user_id' 
+                                                              AND c_d.adslots > 0 GROUP BY c_d.campaign_id ORDER BY c_d.time_created DESC");
         foreach ($all_campaign as $cam)
         {
             $today = date("Y-m-d");
@@ -289,23 +316,25 @@ class ClientsController extends Controller
 
     public function getClientBrands($id)
     {
-        $brs = Utilities::switch_db('api')->select("SELECT * from brands where walkin_id = '$id'");
+        $client_brands = Utilities::getBrandsForWalkins($id);
         $brands = [];
-        foreach ($brs as $br){
-            $campaigns = Utilities::switch_db('api')->select("SELECT count(id) as total_campaign from campaigns WHERE id IN (SELECT campaign_id from campaignDetails WHERE brand = '$br->id' GROUP BY campaign_id)");
-            $last_campaign = Utilities::switch_db('api')->select("SELECT * from campaignDetails where brand = '$br->id' GROUP BY campaign_id ORDER BY time_created DESC LIMIT 1");
-            $pay = Utilities::switch_db('api')->select("SELECT SUM(total) as total from payments where campaign_id IN (SELECT campaign_id from campaignDetails where brand = '$br->id' GROUP BY campaign_id)");
+        foreach ($client_brands as $client_brand){
+            $campaigns = Utilities::switch_db('api')->select("SELECT * from campaignDetails WHERE brand = '$client_brand->id' 
+                                                                  AND walkins_id = '$client_brand->client_walkins_id' GROUP BY campaign_id");
+            $last_count_campaign = count($campaigns) - 1;
+            $pay = Utilities::switch_db('api')->select("SELECT SUM(total) as total from payments where campaign_id IN (SELECT campaign_id from campaignDetails where brand = '$client_brand->id'
+                                                          AND walkins_id = '$client_brand->client_walkins_id' GROUP BY campaign_id)");
             $brands[] = [
-                'id' => $br->id,
-                'brand' => $br->name,
-                'date' => $br->time_created,
-                'count_brand' => count($brs),
-                'campaigns' => $campaigns ? $campaigns[0]->total_campaign : 0,
-                'image_url' => $br->image_url,
-                'last_campaign' => $last_campaign ? $last_campaign[0]->name : 'none',
+                'id' => $client_brand->id,
+                'brand' => $client_brand->name,
+                'date' => $client_brand->created_at,
+                'count_brand' => count($client_brands),
+                'campaigns' => count($campaigns),
+                'image_url' => $client_brand->image_url,
+                'last_campaign' => $campaigns ? $campaigns[$last_count_campaign]->name : 'none',
                 'total' => number_format($pay[0]->total,2),
-                'industry_id' => $br->industry_id,
-                'sub_industry_id' => $br->sub_industry_id,
+                'industry_id' => $client_brand->industry_code,
+                'sub_industry_id' => $client_brand->sub_industry_code,
             ];
         }
         if(count($brands) === 0){
@@ -327,13 +356,18 @@ class ClientsController extends Controller
         $month_total = [];
         $month_date = [];
 
-        $all_campaign_this_month = Utilities::switch_db('api')->select("SELECT * from campaignDetails WHERE user_id = '$user_id' AND adslots > 0 AND time_created BETWEEN '$start_date' AND '$stop_date' GROUP BY campaign_id ORDER BY time_created DESC");
+        $all_campaign_this_month = Utilities::switch_db('api')->select("SELECT * from campaignDetails WHERE user_id = '$user_id' AND adslots > 0 AND time_created BETWEEN 
+                                                                            '$start_date' AND '$stop_date' GROUP BY campaign_id ORDER BY time_created DESC");
 
-        $total_this_month = Utilities::switch_db('api')->select("SELECT SUM(total) as total from payments where campaign_id IN (SELECT campaign_id from campaignDetails where user_id = '$user_id' GROUP BY campaign_id) AND time_created BETWEEN '$start_date' AND '$stop_date'");
+        $total_this_month = Utilities::switch_db('api')->select("SELECT SUM(total) as total from payments where campaign_id IN 
+                                                                  (SELECT campaign_id from campaignDetails where user_id = '$user_id' 
+                                                                  GROUP BY campaign_id) AND time_created BETWEEN '$start_date' AND '$stop_date'");
 
-        $brand_this_month = Utilities::switch_db('api')->select("SELECT * from brands where walkin_id = '$client_id' AND time_created BETWEEN '$start_date' AND '$stop_date' ");
+        $brands = Utilities::switch_db('api')->select("SELECT b.* from brands as b INNER JOIN brand_client as b_c ON b_c.brand_id = b.id 
+                                                                  where b_c.brands_client = '$client_id' AND b.created_at BETWEEN '$start_date' AND '$stop_date' ");
 
-        $all_camps = Utilities::switch_db('api')->select("SELECT * FROM campaigns where time_created BETWEEN '$start_date' AND '$stop_date' AND id IN (SELECT campaign_id from campaignDetails where user_id = '$user_id' GROUP BY campaign_id)");
+        $all_camps = Utilities::switch_db('api')->select("SELECT * FROM campaigns where time_created BETWEEN '$start_date' AND '$stop_date' AND id IN 
+                                                            (SELECT campaign_id from campaignDetails where user_id = '$user_id' GROUP BY campaign_id)");
 
         foreach ($all_camps as $all_camp){
             $pay = Utilities::switch_db('api')->select("SELECT * from payments where campaign_id = '$all_camp->id' AND time_created = '$all_camp->time_created'");
@@ -343,7 +377,7 @@ class ClientsController extends Controller
         }
 
 
-        return response()->json(['all_campaign' => $all_campaign_this_month, 'all_total' => number_format($total_this_month[0]->total,2), 'all_brand' => $brand_this_month, 'monthly_total' => $month_total, 'monthly_date' => $month_date]);
+        return response()->json(['all_campaign' => $all_campaign_this_month, 'all_total' => number_format($total_this_month[0]->total,2), 'all_brand' => $brands, 'monthly_total' => $month_total, 'monthly_date' => $month_date]);
 
     }
 
@@ -360,7 +394,8 @@ class ClientsController extends Controller
 
         $total_this_year = Utilities::switch_db('api')->select("SELECT SUM(total) as total from payments where campaign_id IN (SELECT campaign_id from campaignDetails where user_id = '$user_id' GROUP BY campaign_id) AND DATE_FORMAT(time_created, '%Y') = '$date'");
 
-        $brand_this_month = Utilities::switch_db('api')->select("SELECT * from brands where walkin_id = '$client_id' AND DATE_FORMAT(time_created, '%Y') = '$date' ");
+        $brands = Utilities::switch_db('api')->select("SELECT b.* from brands as b INNER JOIN brand_client as b_c ON b_c.brand_id = b.id 
+                                                                  where b_c.brands_client = '$client_id' AND DATE_FORMAT(b.created_at, '%Y') = '$date' ");
 
         $all_camps = Utilities::switch_db('api')->select("SELECT * FROM campaigns where DATE_FORMAT(time_created, '%Y') = '$date' AND id IN (SELECT campaign_id from campaignDetails where user_id = '$user_id' GROUP BY campaign_id)");
 
@@ -370,7 +405,7 @@ class ClientsController extends Controller
             $year_date[] = date('Y-m-d', strtotime($all_camp->time_created));
         }
 
-        return response()->json(['all_campaign' => $all_campaign_this_year, 'all_total' => number_format($total_this_year[0]->total,2), 'all_brand' => $brand_this_month, 'monthly_total' => $year_total, 'monthly_date' => $year_date]);
+        return response()->json(['all_campaign' => $all_campaign_this_year, 'all_total' => number_format($total_this_year[0]->total,2), 'all_brand' => $brands, 'monthly_total' => $year_total, 'monthly_date' => $year_date]);
     }
 
     public function brandCampaign($id, $client_id)
@@ -382,8 +417,8 @@ class ClientsController extends Controller
         $user_details = Utilities::switch_db('api')->select("SELECT * FROM users where id = '$user_id'");
 
 
-        $this_brand = Utilities::switch_db('api')->select("SELECT * FROM brands where id = '$id'");
-        $all_campaigns = Utilities::switch_db('api')->select("SELECT * FROM campaignDetails where brand = '$id' GROUP BY campaign_id");
+        $this_brand = Utilities::singleBrand($id, $client_id);
+        $all_campaigns = Utilities::switch_db('api')->select("SELECT * FROM campaignDetails where brand = '$id' AND walkins_id = '$client_id' GROUP BY campaign_id");
         foreach ($all_campaigns as $cam)
         {
             $mpo = Utilities::switch_db('api')->select("SELECT * FROM mpoDetails where mpo_id = (SELECT id from mpos where campaign_id = '$cam->campaign_id') LIMIT 1");

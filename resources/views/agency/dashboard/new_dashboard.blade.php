@@ -37,7 +37,7 @@
 
             <div class="column col_3">
                 <span class="weight_medium small_faint uppercased">All Brands</span>
-                <h3><a href="{{ route('agency.brand.all') }}">{{ count($all_brands) }}</a></h3>
+                <h3><a href="{{ route('brand.all') }}">{{ count($all_brands) }}</a></h3>
             </div>
         </div>
 
