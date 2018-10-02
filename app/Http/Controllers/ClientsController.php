@@ -4,6 +4,7 @@ namespace Vanguard\Http\Controllers;
 
 use Hamcrest\Util;
 use Session;
+use Vanguard\Http\Requests\WalkinStoreRequest;
 use Vanguard\Models\Brand;
 use Vanguard\Role;
 use Vanguard\Country;
@@ -22,142 +23,10 @@ use Yajra\DataTables\DataTables;
 
 class ClientsController extends Controller
 {
-    public function index()
-    {
-
-    }
-
-    public function create(Request $request)
-    {
-
-        $user_agent = $_SERVER['HTTP_USER_AGENT'];
-        $description = 'Client '.$request->first_name.' '. $request->last_name.' with brand '.$request->brand_name.' Created by '.Session::get('agency_id');
-        $ip = request()->ip();
-        $client_id = uniqid();
-        $agency_id = Session::get('agency_id');
-        $role_id = Utilities::switch_db('reports')->select("SELECT id FROM roles WHERE name = 'agency_client'");
-
-        $this->validate($request, [
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'email' => 'required|email',
-            'phone' => 'required',
-            'brand_name' => 'required',
-            'image_url' => 'required|image',
-            'company_name' => 'required',
-            'company_logo' => 'required|image',
-        ]);
-
-        $brand_slug = Utilities::formatString($request->brand_name);
-        $unique = uniqid();
-        $check_brand = Utilities::switch_db('api')->select("SELECT b.* from brand_client as b_c INNER JOIN brands as b ON b.id = b_c.brand_id 
-                                                                WHERE b.slug = '$brand_slug' AND client_id = '$agency_id'");
-        if(count($check_brand) > 0) {
-            Session::flash('error', 'Brands already exists');
-            return redirect()->back();
-        }
-
-        if($request->hasFile('company_logo')){
-            /*handling uploading the image*/
-            $featured = $request->company_logo;
-            $featured_new_name = time().$featured->getClientOriginalName();
-            /*moving the image to public/uploads/post*/
-            $featured->move('company_logo', $featured_new_name);
-
-            $company_image = encrypt('company_logo/'.$featured_new_name);
-        }
-
-        $userInsert = DB::table('users')->insert([
-            'email' => $request->email,
-            'username' => $request->username,
-            'password' => bcrypt('password'),
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'phone' => $request->phone,
-            'country_id' => $request->country_id,
-            'status' => 'Active',
-        ]);
-
-        if ($userInsert) {
-            $user_id = \DB::select("SELECT id from users WHERE email = '$request->email'");
-        }else{
-            $deleteUser = DB::delete("DELETE FROM users where email = '$request->email'");
-        }
-
-        $role_user = DB::table('role_user')->insert([
-            'user_id' => $user_id[0]->id,
-            'role_id' => 5
-        ]);
-
-        $userApiInsert = Utilities::switch_db('reports')->table('users')->insert([
-            'id' => uniqid(),
-            'role_id' => $role_id[0]->id,
-            'email' => $request->email,
-            'token' => '',
-            'password' => bcrypt('password'),
-            'firstname' => $request->first_name,
-            'lastname' => $request->last_name,
-            'phone_number' => $request->phone,
-            'user_type' => 4,
-            'status' => 1
-        ]);
-
-        $apiUserDetails = Utilities::switch_db('api')->select("SELECT * FROM users where email = '$request->email'");
-
-        $walkinInsert = Utilities::switch_db('reports')->table('walkIns')->insert([
-            'id' => $client_id,
-            'user_id' => $apiUserDetails[0]->id,
-            'broadcaster_id' => $request->broadcaster_id,
-            'client_type_id' => $request->client_type_id,
-            'location' => $request->address,
-            'agency_id' => $agency_id,
-            'nationality' => 566,
-            'company_name' => $request->company_name,
-            'company_logo' => $company_image
-        ]);
-
-        $checkIfBrandExists = Utilities::switch_db('api')->select("SELECT id, `name` from brands where slug = '$brand_slug'");
-
-        if(count($checkIfBrandExists) === 0){
-            $brand_logo = $request->file('image_url');
-            $image_url = Utilities::uploadBrandImageToCloudinary($brand_logo);
-            $brand = new Brand();
-            $brand->id = $unique;
-            $brand->name = $request->brand_name;
-            $brand->image_url = $image_url;
-            $brand->industry_code = $request->industry;
-            $brand->sub_industry_code = $request->sub_industry;
-            $brand->slug = $brand_slug;
-            $brand->save();
-
-            $insertIntoBrandClient = Utilities::switch_db('api')->table('brand_client')->insert([
-                'brand_id' => $unique,
-                'client_id' => $agency_id,
-                'brands_client' => $client_id,
-            ]);
-        }else{
-            $insertIntoBrandClient = Utilities::switch_db('api')->table('brand_client')->insert([
-                'brand_id' => $checkIfBrandExists[0]->id,
-                'client_id' => $agency_id,
-                'brands_client' => $client_id,
-            ]);
-        }
-
-        if ($userInsert && $walkinInsert && $insertIntoBrandClient) {
-            $save_activity = Api::saveActivity($agency_id, $description, $ip, $user_agent);
-            Session::flash('success', 'Client created successfully');
-            return redirect()->route('clients.list');
-
-        } else {
-            Session::flash('error', 'Error occured while creating this client');
-            return redirect()->back();
-        }
-
-
-    }
 
     public function clients()
     {
+
         $agency_id = \Session::get('agency_id');
 
         $clients = Utilities::switch_db('api')->select("SELECT w.user_id, w.id, u.id as user_det_id, u.firstname, u.lastname, u.phone_number, w.location, 
@@ -458,25 +327,5 @@ class ClientsController extends Controller
         return view('clients.client_brand', compact('this_brand', 'campaigns', 'user_details', 'client_id', 'client'));
     }
 
-    public function updateClients(Request $request, $client_id)
-    {
-        $this->validate($request, [
-            'company_name' => 'required',
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'phone' => 'required',
-            'address' => 'required'
-        ]);
-
-        $result = Utilities::updateClients($request, $client_id);
-
-        if($result === "success"){
-            Session::flash('success', 'Client profile updated successfully');
-            return redirect()->back();
-        }else{
-            Session::flash('error', 'An error occured while submitting your request');
-            return redirect()->back();
-        }
-    }
 
 }

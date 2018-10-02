@@ -143,20 +143,13 @@ class BrandsController extends Controller
         }
 
         //check if the brand exists in the brands table and if not create the brand in the brands table and attach the client in the brand_client table.
-
-        $checkIfBrandExists = Utilities::switch_db('api')->select("SELECT id, `name` from brands where slug = '$brand_slug'");
-        if(count($checkIfBrandExists) === 0){
+        $checkIfBrandExists = Brand::where('slug', $brand_slug)->first();
+        if(!$checkIfBrandExists){
             $brand_logo = $request->file('brand_logo');
             $image_url = Utilities::uploadBrandImageToCloudinary($brand_logo);
             $brand = new Brand();
             try {
-                $brand->id = $unique;
-                $brand->name = $request->brand_name;
-                $brand->image_url = $image_url;
-                $brand->industry_code = $request->industry;
-                $brand->sub_industry_code = $request->sub_industry;
-                $brand->slug = $brand_slug;
-                $brand->save();
+                Utilities::storeBrands($brand, $request, $unique, $image_url, $brand_slug);
 
             }catch (\Exception $e){
                 $api_db->rollback();
@@ -164,13 +157,17 @@ class BrandsController extends Controller
                 return redirect()->back();
             }
 
+            try{
+                Utilities::storeBrandClient($unique, $broadcaster_agency_id, $request->walkin_id);
+            }catch (\Exception $e){
+                $api_db->rollback();
+                Session::flash('error', 'There was a problem creating this walk-In');
+                return redirect()->back();
+            }
+
         }else{
             try {
-                $insertIntoBrandClient = Utilities::switch_db('api')->table('brand_client')->insert([
-                    'brand_id' => $unique,
-                    'client_id' => $broadcaster_agency_id,
-                    'brands_client' => $request->walkin_id,
-                ]);
+                Utilities::storeBrandClient($checkIfBrandExists->id, $broadcaster_agency_id, $request->walkin_id);
 
             }catch (\Exception $e){
                 $api_db->rollback();

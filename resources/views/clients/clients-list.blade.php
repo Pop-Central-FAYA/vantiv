@@ -88,7 +88,7 @@
 
     <div class="modal_contain" id="new_client">
         <h2 class="sub_header mb4">New Client</h2>
-        <form action="{{ route('clients.create') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('walkins.store') }}" method="POST" enctype="multipart/form-data">
             {{ csrf_field() }}
             <div class="clearfix">
                 <div class="input_wrap column col_7{{ $errors->has('company_name') ? ' has-error' : '' }}">
@@ -222,7 +222,7 @@
     @foreach($clients as $client)
         <div class="modal_contain" id="edit_client{{ $client['client_id'] }}">
         <h2 class="sub_header mb4">Edit Client : {{ $client['company_name'] }}</h2>
-        <form action="{{ route('agency.client.update', ['client_id' => $client['client_id']]) }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('walkins.update', ['client_id' => $client['client_id']]) }}" method="POST" enctype="multipart/form-data">
             {{ csrf_field() }}
             <div class="clearfix">
                 <div class="input_wrap column col_7{{ $errors->has('company_name') ? ' has-error' : '' }}">
