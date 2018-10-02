@@ -3,6 +3,7 @@
 namespace Vanguard\Http\Controllers\Agency;
 
 use Illuminate\Http\Request;
+use Monolog\Processor\UidProcessor;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Libraries\Api;
 use Vanguard\Libraries\Utilities;
@@ -92,15 +93,11 @@ class WalletsController extends Controller
     public function create()
     {
         $agency_id = \Session::get('agency_id');
-        if($agency_id != null){
-            $user_id = $agency_id;
-            $agent_user_id = Utilities::switch_db('api')->select("SELECT user_id from agents where id = '$user_id'");
-            $user = $agent_user_id[0]->user_id;
-            $user_det = Utilities::switch_db('api')->select("SELECT * from users where id = '$user'");
-        }else{
-            $user_id = Session::get('advertiser_id');
-            $user_det = Utilities::switch_db('api')->select("SELECT * from users where id = (SELECT user_id from advertisers where id = '$user_id')");
-        }
+        $user_id = $agency_id;
+        $agent_user_id = Utilities::switch_db('api')->select("SELECT user_id from agents where id = '$user_id'");
+        $user = $agent_user_id[0]->user_id;
+        $user_det = Utilities::switch_db('api')->select("SELECT * from users where id = '$user'");
+
         $wallets = Utilities::switch_db('api')->select("SELECT SUM(current_balance) as balance from wallets where user_id = '$user_id'");
 
         return view('wallets.create')->with('wallet', $wallets)->with('user_det', $user_det)->with('agency_id', $agency_id)->with('advertiser_id', Session::get('advertiser_id'))->with('user_id', $user_id);
@@ -110,14 +107,9 @@ class WalletsController extends Controller
     {
 
         $agency_id = \Session::get('agency_id');
-        if($agency_id != null){
-            $user_id = $agency_id;
-        }else{
-            $user_id = Session::get('advertiser_id');
-        }
         $insert = [
             'id' => uniqid(),
-            'user_id' => $user_id,
+            'user_id' => $agency_id,
             'reference' => $request->reference,
             'amount' => $request->amount,
             'status' => 'PENDING',
@@ -136,20 +128,27 @@ class WalletsController extends Controller
             $reference = $response['data']['reference'];
             $ip_address = $response['data']['ip_address'];
             $fees = $response['data']['fees'];
-            $user_id = $user_id;
+            $user_id = $agency_id;
             $type = 'FUND WALLET';
 
-            $update_transaction = Utilities::switch_db('api')->select("UPDATE transactions SET card_type = '$card', status = 'SUCCESSFUL', ip_address = '$ip_address', fees = '$fees', `type` = '$type', message = '$message' WHERE reference = '$reference'");
+            $update_transaction = Utilities::switch_db('api')->select("UPDATE transactions SET card_type = '$card', status = 'SUCCESSFUL', ip_address = '$ip_address', 
+                                                                          fees = '$fees', `type` = '$type', message = '$message' WHERE reference = '$reference'");
 
             if ($transaction) {
                 $user_agent = $_SERVER['HTTP_USER_AGENT'];
                 $description = 'Wallet credited with '.$amount.' by '.$user_id;
                 $ip = request()->ip();
                 $user_activity = Api::saveActivity($user_id, $description, $ip, $user_agent);
-                $this->updateWallet($amount);
-                $msg = 'Your wallet has been funded with NGN'. $amount;
-                Session::flash('success', $msg);
-                return redirect()->back();
+                $update_wallet = $this->updateWallet($amount);
+                if($update_wallet === 'success'){
+                    $msg = 'Your wallet has been funded with NGN'. $amount;
+                    Session::flash('success', $msg);
+                    return redirect()->back();
+                }else{
+                    Session::flash('error', 'Sorry, something went wrong! Please contact the Administrator or Bank.');
+                    return redirect()->back();
+                }
+
             }
 
         } else {
@@ -163,50 +162,70 @@ class WalletsController extends Controller
     public function updateWallet($amount = 0)
     {
         $agency_id = \Session::get('agency_id');
-        if($agency_id != null){
-            $user_id = $agency_id;
-        }else{
-            $user_id = Session::get('advertiser_id');
-        }
+        $wallet = Utilities::switch_db('api')->select("SELECT * from wallets where user_id = '$agency_id'");
 
-        $wallet = Utilities::switch_db('api')->select("SELECT * from wallets where user_id = '$user_id'");
+        Utilities::switch_db('api')->beginTransaction();
 
         if($wallet){
             $prev_balance = $wallet[0]->current_balance;
             $current_balance = $amount + $prev_balance;
-            $update_wallet = Utilities::switch_db('api')->select("UPDATE wallets set prev_balance = '$prev_balance', current_balance = '$current_balance' WHERE user_id = '$user_id'");
+            try {
+                $update_wallet = Utilities::switch_db('api')->select("UPDATE wallets set prev_balance = '$prev_balance', current_balance = '$current_balance' WHERE user_id = '$agency_id'");
+            }catch(\Exception $e) {
+                Utilities::switch_db('api')->rollback();
+                return 'error';
+            }
 
             $prev_bal = $wallet[0]->current_balance;
             $insert_history = [
                 'id' => uniqid(),
-                'user_id' => $user_id,
+                'user_id' => $agency_id,
                 'amount' => $amount,
                 'prev_balance' => $prev_bal,
                 'current_balance' => $amount + $prev_bal,
                 'status' => 1,
             ];
-            $add_walletHistory = Utilities::switch_db('api')->table('walletHistories')->insert($insert_history);
+            try {
+                $add_walletHistory = Utilities::switch_db('api')->table('walletHistories')->insert($insert_history);
+            }catch (\Exception $e){
+                Utilities::switch_db('api')->rollback();
+                return 'error';
+            }
+
+
         } else {
             $wallet =
                 [
                     'id' => uniqid(),
-                    'user_id' => $user_id,
+                    'user_id' => $agency_id,
                     'prev_balance' => 0,
                     'current_balance' => $amount
                 ];
-
-            $insert_wallets = Utilities::switch_db('api')->table('wallets')->insert($wallet);
+            try {
+                $insert_wallets = Utilities::switch_db('api')->table('wallets')->insert($wallet);
+            }catch (\Exception $e) {
+                Utilities::switch_db('api')->rollback();
+                return 'error';
+            }
             $prev_bal = 0;
             $insert_history = [
                 'id' => uniqid(),
-                'user_id' => $user_id,
+                'user_id' => $agency_id,
                 'amount' => $amount,
                 'prev_balance' => $prev_bal,
                 'current_balance' => $amount + $prev_bal,
                 'status' => 1,
             ];
-            $add_walletHistory = Utilities::switch_db('api')->table('walletHistories')->insert($insert_history);
+            try {
+                $add_walletHistory = Utilities::switch_db('api')->table('walletHistories')->insert($insert_history);
+            }catch (\Exception $e) {
+                Utilities::switch_db('api')->rollback();
+                return 'error';
+            }
         }
+
+        Utilities::switch_db('api')->commit();
+        return 'success';
     }
 
     protected function query_api_transaction_verify($reference)

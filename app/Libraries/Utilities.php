@@ -909,5 +909,146 @@ class Utilities {
         return encrypt($clouder['url']);
     }
 
+    public static function campaignDetailsInformations($first, $campaign_id, $id, $now, $ads, $group_data, $agency_id, $walkin_id, $broadcaster_id, $broadcaster_details, $query)
+    {
+        return [
+            'id' => uniqid(),
+            'campaign_id' => $campaign_id,
+            'user_id' => $id,
+            'channel' => $agency_id ? "'". implode("','" ,$first->channel) . "'" : "'". $broadcaster_details[0]->channel_id . "'",
+            'brand' => $first->brand,
+            'start_date' => date('Y-m-d', strtotime($first->start_date)),
+            'stop_date' => date('Y-m-d', strtotime($first->end_date)),
+            'name' => $first->campaign_name,
+            'product' => $first->product,
+            'day_parts' => "'". implode("','" ,$first->dayparts) . "'",
+            'target_audience' => "'". implode("','" ,$first->target_audience) . "'",
+            'region' => "'". implode("','" ,$first->region) . "'",
+            'min_age' => (integer)$first->min_age,
+            'max_age' => (integer)$first->max_age,
+            'industry' => $first->industry,
+            'adslots' => $agency_id ? $group_data->total_slot : count($query),
+            'walkins_id' => $walkin_id[0]->id,
+            'time_created' => date('Y-m-d H:i:s', $now),
+            'time_modified' => date('Y-m-d H:i:s', $now),
+            'adslots_id' => "'". implode("','" ,$ads) . "'",
+            'agency' => $agency_id ? $agency_id : '',
+            'agency_broadcaster' => $agency_id ? $group_data->broadcaster_id : '',
+            'broadcaster' => $agency_id ? $group_data->broadcaster_id : $broadcaster_id,
+            'sub_industry' => $first->sub_industry,
+        ];
+    }
+
+    public static function campaignInformation($campaign_id, $campaign_reference, $now)
+    {
+        return [
+            'id' => $campaign_id,
+            'time_created' => date('Y-m-d H:i:s', $now),
+            'time_modified' => date('Y-m-d H:i:s', $now),
+            'campaign_reference' => $campaign_reference
+        ];
+    }
+
+    public static function campaignFileInformation($camp_id, $query, $id, $now, $agency_id, $broadcaster_id)
+    {
+        return [
+            'id' => uniqid(),
+            'campaign_id' => $camp_id[0]->id,
+            'file_name' => $query->file_name,
+            'file_url' => $query->file,
+            'adslot' => $query->adslot_id,
+            'user_id' => $id,
+            'file_code' => Utilities::generateReference(),
+            'time_created' => date('Y-m-d H:i:s', $now),
+            'time_modified' => date('Y-m-d H:i:s', $now),
+            'agency_id' => $agency_id,
+            'agency_broadcaster' => $query->broadcaster_id,
+            'time_picked' => $query->time,
+            'broadcaster_id' => $agency_id ? $query->broadcaster_id : $broadcaster_id,
+            'public_id' => $query->public_id,
+            'format' => $query->format
+        ];
+    }
+
+    public static function campaignPaymentInformation($pay_id, $camp_id, $request, $now, $first)
+    {
+        return [
+            'id' => $pay_id,
+            'campaign_id' => $camp_id[0]->id,
+            'campaign_reference' => $camp_id[0]->campaign_reference,
+            'total' => $request->total,
+            'time_created' => date('Y-m-d H:i:s', $now),
+            'time_modified' => date('Y-m-d H:i:s', $now),
+            'campaign_budget' => $first->campaign_budget
+        ];
+    }
+
+    public static function campaignPaymentDetailsInformation($pay_id, $request, $group_data, $walkin_id, $now, $agency_id, $first, $calc, $broadcaster_id)
+    {
+        return [
+            'id' => uniqid(),
+            'payment_id' => $pay_id,
+            'payment_method' => $request->payment,
+            'amount' => $agency_id ? (integer) $group_data->total : (integer) $calc[0]->total_price,
+            'walkins_id' => $walkin_id[0]->id,
+            'time_created' => date('Y-m-d H:i:s', $now),
+            'time_modified' => date('Y-m-d H:i:s', $now),
+            'agency_id' => $agency_id ? $agency_id : '',
+            'agency_broadcaster' => $agency_id ? $group_data->broadcaster_id : '',
+            'broadcaster' => $agency_id ? $group_data->broadcaster_id : $broadcaster_id,
+            'campaign_budget' => $first->campaign_budget
+        ];
+    }
+
+    public static function campaignInvoiceInformation($invoice_id, $camp_id, $invoice_number, $payment_id)
+    {
+        return [
+            'id' => $invoice_id,
+            'campaign_id' => $camp_id[0]->id,
+            'campaign_reference' => $camp_id[0]->campaign_reference,
+            'invoice_number' => $invoice_number,
+            'payment_id' => $payment_id[0]->id,
+        ];
+    }
+
+    public static function campaignInvoiceDetailsInformation($invoice_id, $id, $invoice_number, $group_data, $walkin_id, $agency_id, $broadcaster_id)
+    {
+        return [
+            'id' => uniqid(),
+            'invoice_id' => $invoice_id,
+            'user_id' => $id,
+            'invoice_number' => $invoice_number,
+            'actual_amount_paid' => (integer)$group_data->total,
+            'refunded_amount' => 0,
+            'walkins_id' => $walkin_id[0]->id,
+            'agency_id' => $agency_id ? $agency_id : '',
+            'agency_broadcaster' => $agency_id ? $group_data->broadcaster_id : '',
+            'broadcaster_id' => $agency_id ? $group_data->broadcaster_id : $broadcaster_id,
+        ];
+    }
+
+    public static function campaignMpoInformation($mpo_id, $camp_id, $invoice_number)
+    {
+        return [
+            'id' => $mpo_id,
+            'campaign_id' => $camp_id[0]->id,
+            'campaign_reference' => $camp_id[0]->campaign_reference,
+            'invoice_number' => $invoice_number,
+        ];
+    }
+
+    public static function campaignMpoDetailsInformation($mpo_id, $agency_id, $group_data, $broadcaster_id)
+    {
+        return [
+            'id' => uniqid(),
+            'mpo_id' => $mpo_id,
+            'discount' => 0,
+            'agency_id' => $agency_id ? $agency_id : '',
+            'agency_broadcaster' => $agency_id ? $group_data->broadcaster_id : '',
+            'broadcaster_id' => $agency_id ? $group_data->broadcaster_id : $broadcaster_id,
+        ];
+
+    }
+
 
 }

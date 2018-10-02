@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Monolog\Processor\UidProcessor;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Libraries\Api;
 use Vanguard\Libraries\Utilities;
@@ -300,16 +301,18 @@ class CampaignsController extends Controller
     {
         $agency_id = Session::get('agency_id');
         $first = Session::get('first_step');
-        $query = \DB::select("SELECT * FROM carts WHERE user_id = '$id' AND agency_id = '$agency_id'");
+        $api_db = Utilities::switch_db('api');
+        $local_db = Utilities::switch_db('local');
+        $queries = $local_db->select("SELECT * FROM carts WHERE user_id = '$id' AND agency_id = '$agency_id'");
         $ads = [];
 
         $user_id = $id;
 
-        foreach ($query as $q) {
-            $ads[] = $q->adslot_id;
+        foreach ($queries as $query) {
+            $ads[] = $query->adslot_id;
         }
-        $data = \DB::select("SELECT * from uploads WHERE user_id = '$id'");
-        $group_datas = \DB::select("SELECT SUM(total_price) as total, COUNT(id) as total_slot, broadcaster_id from carts where user_id = '$id' and agency_id = '$agency_id' GROUP BY broadcaster_id");
+        $data = $local_db->select("SELECT * from uploads WHERE user_id = '$id'");
+        $group_datas = $local_db->select("SELECT SUM(total_price) as total, COUNT(id) as total_slot, broadcaster_id from carts where user_id = '$id' and agency_id = '$agency_id' GROUP BY broadcaster_id");
 
         $request->all();
         $new_q = [];
@@ -321,51 +324,19 @@ class CampaignsController extends Controller
         $invDets = [];
         $mpo = [];
         $mpoDet = [];
-        $i = 0;
-
         $campaign_id = uniqid();
         $pay_id = uniqid();
         $invoice_id = uniqid();
         $mpo_id = uniqid();
         $campaign_reference = Utilities::generateReference();
         $invoice_number = Utilities::generateReference();
-        $walkin_id = Utilities::switch_db('api')->select("SELECT id from walkIns where user_id = '$id'");
+        $walkin_id = $api_db->select("SELECT id from walkIns where user_id = '$id'");
         $now = strtotime(Carbon::now('Africa/Lagos'));
 
-        $camp[] = [
-            'id' => $campaign_id,
-            'time_created' => date('Y-m-d H:i:s', $now),
-            'time_modified' => date('Y-m-d H:i:s', $now),
-            'campaign_reference' => $campaign_reference
-        ];
+        $camp[] = Utilities::campaignInformation($campaign_id, $campaign_reference, $now);
 
         foreach ($group_datas as $group_data){
-            $campDets[] = [
-                'id' => uniqid(),
-                'campaign_id' => $campaign_id,
-                'user_id' => $id,
-                'channel' => "'". implode("','" ,$first->channel) . "'",
-                'brand' => $first->brand,
-                'start_date' => date('Y-m-d', strtotime($first->start_date)),
-                'stop_date' => date('Y-m-d', strtotime($first->end_date)),
-                'name' => $first->campaign_name,
-                'product' => $first->product,
-                'day_parts' => "'". implode("','" ,$first->dayparts) . "'",
-                'target_audience' => "'". implode("','" ,$first->target_audience) . "'",
-                'region' => "'". implode("','" ,$first->region) . "'",
-                'min_age' => (integer)$first->min_age,
-                'max_age' => (integer)$first->max_age,
-                'industry' => $first->industry,
-                'adslots' => $group_data->total_slot,
-                'walkins_id' => $walkin_id[0]->id,
-                'time_created' => date('Y-m-d H:i:s', $now),
-                'time_modified' => date('Y-m-d H:i:s', $now),
-                'adslots_id' => "'". implode("','" ,$ads) . "'",
-                'agency' => $agency_id,
-                'agency_broadcaster' => $group_data->broadcaster_id,
-                'broadcaster' => $group_data->broadcaster_id,
-                'sub_industry' => $first->sub_industry,
-            ];
+            $campDets[] = Utilities::campaignDetailsInformations($first, $campaign_id, $id, $now, $ads, $group_data, $agency_id, $walkin_id, null, null, $queries);
 
             $check_time_adslots = Utilities::fetchTimeInCart($id, $group_data->broadcaster_id);
             foreach ($check_time_adslots as $check_time_adslot){
@@ -377,171 +348,162 @@ class CampaignsController extends Controller
             }
         }
 
-        $save_campaign = Utilities::switch_db('api')->table('campaigns')->insert($camp);
-        $save_campaign_details = Utilities::switch_db('api')->table('campaignDetails')->insert($campDets);
+        $api_db->beginTransaction();
+        $local_db->beginTransaction();
 
-        if($save_campaign && $save_campaign_details){
-            $camp_id = Utilities::switch_db('api')->select("SELECT * from campaigns WHERE id='$campaign_id'");
-            foreach($query as $q)
-            {
-                $new_q[] = [
-                    'id' => uniqid(),
-                    'campaign_id' => $camp_id[0]->id,
-                    'file_name' => $q->file_name,
-                    'file_url' => $q->file,
-                    'adslot' => $q->adslot_id,
-                    'user_id' => $id,
-                    'file_code' => Utilities::generateReference(),
-                    'time_created' => date('Y-m-d H:i:s', $now),
-                    'time_modified' => date('Y-m-d H:i:s', $now),
-                    'agency_id' => $agency_id,
-                    'agency_broadcaster' => $q->broadcaster_id,
-                    'time_picked' => $q->time,
-                    'broadcaster_id' => $q->broadcaster_id,
-                    'public_id' => $q->public_id,
-                    'format' => $q->format
-                ];
-            }
-
-            $pay[] = [
-                'id' => $pay_id,
-                'campaign_id' => $camp_id[0]->id,
-                'campaign_reference' => $camp_id[0]->campaign_reference,
-                'total' => $request->total,
-                'time_created' => date('Y-m-d H:i:s', $now),
-                'time_modified' => date('Y-m-d H:i:s', $now),
-                'campaign_budget' => $first->campaign_budget
-            ];
-
-            foreach ($group_datas as $group_data){
-                $payDets[] = [
-                    'id' => uniqid(),
-                    'payment_id' => $pay_id,
-                    'payment_method' => $request->payment,
-                    'amount' => (integer) $group_data->total,
-                    'walkins_id' => $walkin_id[0]->id,
-                    'time_created' => date('Y-m-d H:i:s', $now),
-                    'time_modified' => date('Y-m-d H:i:s', $now),
-                    'agency_id' => $agency_id,
-                    'agency_broadcaster' => $group_data->broadcaster_id,
-                    'broadcaster' => $group_data->broadcaster_id,
-                    'campaign_budget' => $first->campaign_budget
-                ];
-            }
-
-            $save_payment = Utilities::switch_db('api')->table('payments')->insert($pay);
-
-            $save_payment_details = Utilities::switch_db('api')->table('paymentDetails')->insert($payDets);
-
-            $save_file = Utilities::switch_db('api')->table('files')->insert($new_q);
-
-            if ($save_payment && $save_file && $save_payment_details) {
-
-                $payment_id = Utilities::switch_db('api')->select("SELECT id from payments WHERE id='$pay_id'");
-
-                $invoice[] = [
-                    'id' => $invoice_id,
-                    'campaign_id' => $camp_id[0]->id,
-                    'campaign_reference' => $camp_id[0]->campaign_reference,
-                    'invoice_number' => $invoice_number,
-                    'payment_id' => $payment_id[0]->id,
-                ];
-
-                foreach ($group_datas as $group_data) {
-                    $invDets[] = [
-                        'id' => uniqid(),
-                        'invoice_id' => $invoice_id,
-                        'user_id' => $id,
-                        'invoice_number' => $invoice_number,
-                        'actual_amount_paid' => (integer)$group_data->total,
-                        'refunded_amount' => 0,
-                        'walkins_id' => $walkin_id[0]->id,
-                        'agency_id' => $agency_id,
-                        'agency_broadcaster' => $group_data->broadcaster_id,
-                        'broadcaster_id' => $group_data->broadcaster_id,
-
-                    ];
-                }
-
-                $mpo[] = [
-                    'id' => $mpo_id,
-                    'campaign_id' => $camp_id[0]->id,
-                    'campaign_reference' => $camp_id[0]->campaign_reference,
-                    'invoice_number' => $invoice_number,
-                ];
-
-                foreach ($group_datas as $group_data) {
-                    $mpoDet[] = [
-                        'id' => uniqid(),
-                        'mpo_id' => $mpo_id,
-                        'discount' => 0,
-                        'agency_id' => $agency_id,
-                        'agency_broadcaster' => $group_data->broadcaster_id,
-                        'broadcaster_id' => $group_data->broadcaster_id,
-                    ];
-                }
-
-                $save_invoice = Utilities::switch_db('api')->table('invoices')->insert($invoice);
-
-                $save_invoice_details = Utilities::switch_db('api')->table('invoiceDetails')->insert($invDets);
-
-                $save_mpo = Utilities::switch_db('api')->table('mpos')->insert($mpo);
-
-                $save_mpo_details = Utilities::switch_db('api')->table('mpoDetails')->insert($mpoDet);
-
-                if ($save_invoice && $save_mpo && $save_invoice_details && $save_mpo_details) {
-                    foreach ($query as $q) {
-                        //inserting the position into the adslot_fileposition table
-                        if(!empty($q->filePosition_id)){
-                            $file_pos_id = uniqid();
-                            $insert_position = Utilities::switch_db('api')->update("UPDATE adslot_filePositions set select_status = 1 WHERE adslot_id = '$q->adslot_id' ");
-                        }
-                        $get_slots = Utilities::switch_db('api')->select("SELECT * from adslots WHERE id = '$q->adslot_id'");
-                        $slots_id = $get_slots[0]->id;
-                        $time_difference = (integer)$get_slots[0]->time_difference;
-                        $time_used = (integer)$get_slots[0]->time_used;
-                        $time = (integer)$q->time;
-                        $new_time_used = $time_used + $time;
-                        if ($time_difference === $new_time_used) {
-                            $slot_status = 1;
-                        } else {
-                            $slot_status = 0;
-                        }
-                        $update_slot = Utilities::switch_db('api')->update("UPDATE adslots SET time_used = '$new_time_used', is_available = '$slot_status' WHERE id = '$slots_id'");
-                    }
-
-                    $del_cart = \DB::delete("DELETE FROM carts WHERE user_id = '$user_id' AND agency_id = '$agency_id'");
-                    $del_uplaods = \DB::delete("DELETE FROM uploads WHERE user_id = '$user_id'");
-                    $user_agent = $_SERVER['HTTP_USER_AGENT'];
-                    $description = 'Campaign '.$first->campaign_name.' created successfully by '.Session::get('agency_id');
-                    $ip = request()->ip();
-                    $user_activity = Api::saveActivity($agency_id, $description, $ip, $user_agent);
-                    Session::forget('first_step');
-                    Session::flash('success', 'Campaign created successfully');
-                    return redirect()->route('dashboard');
-
-                }else{
-                    $delete_invoice = Utilities::switch_db('api')->delete("DELETE from invoices where id = '$invoice_id'");
-                    $delete_invoice_details = Utilities::switch_db('api')->delete("DELETE from invoiceDetails where invoice_id = '$invoice_id'");
-                    $delete_mpo = Utilities::switch_db('api')->delete("DELETE from mpos where id = '$mpo_id'");
-                    $delete_mpo_details = Utilities::switch_db('api')->delete("DELETE * from mpoDetails where mpo_id = '$mpo_id'");
-                    Session::flash('error', 'Could not create this campaign');
-                    return redirect()->back();
-                }
-            }else{
-                $delete_pay = Utilities::switch_db('api')->delete("DELETE from payments where id = '$pay_id'");
-                $delete_pay_details = Utilities::switch_db('api')->delete("DELETE from paymentDetails where payment_id = '$pay_id'");
-                $delete_files = Utilities::switch_db('api')->delete("DELETE from files where campaign_id = '$campaign_id'");
-                Session::flash('error', 'Could not create this campaign');
-                return redirect()->back();
-            }
-
-        } else {
-            $delete_camp = Utilities::switch_db('api')->delete("DELETE from campaigns where id = '$campaign_id'");
-            $delete_camp_details = Utilities::switch_db('api')->delete("DELETE from campaignDetails where campaign_id = '$campaign_id'");
-            Session::flash('error', 'Could not create this campaign');
+        try {
+            $save_campaign = Utilities::switch_db('api')->table('campaigns')->insert($camp);
+        }catch(\Exception $e){
+            $api_db->rollback();
+            $message = $e->getMessage();
+            Session::flash('error', $message);
             return redirect()->back();
         }
+
+        try {
+            $save_campaign_details = Utilities::switch_db('api')->table('campaignDetails')->insert($campDets);
+        }catch (\Exception $e){
+            $api_db->rollback();
+            $message = $e->getMessage();
+            Session::flash('error', $message);
+            return redirect()->back();
+        }
+
+
+        $camp_id = $api_db->select("SELECT * from campaigns WHERE id='$campaign_id'");
+        foreach($queries as $query)
+        {
+            $new_q[] = Utilities::campaignFileInformation($camp_id, $query, $id, $now, $agency_id, null);
+        }
+
+        $pay[] = Utilities::campaignPaymentInformation($pay_id, $camp_id, $request, $now, $first);
+
+        foreach ($group_datas as $group_data){
+            $payDets[] = Utilities::campaignPaymentDetailsInformation($pay_id, $request, $group_data, $walkin_id, $now, $agency_id, $first, null, null);
+        }
+
+        try{
+            $save_payment = Utilities::switch_db('api')->table('payments')->insert($pay);
+        }catch (\Exception $e){
+            $api_db->rollback();
+            $message = $e->getMessage();
+            Session::flash('error', $message);
+            return redirect()->back();
+        }
+
+        try {
+            $save_payment_details = Utilities::switch_db('api')->table('paymentDetails')->insert($payDets);
+        }catch (\Exception $e){
+            $api_db->rollback();
+            $message = $e->getMessage();
+            Session::flash('error', $message);
+            return redirect()->back();
+        }
+
+        try {
+            $save_file = Utilities::switch_db('api')->table('files')->insert($new_q);
+        }catch(\Exception $e){
+            $api_db->rollback();
+            $message = $e->getMessage();
+            Session::flash('error', $message);
+            return redirect()->back();
+        }
+
+        $payment_id = Utilities::switch_db('api')->select("SELECT id from payments WHERE id='$pay_id'");
+
+        $invoice[] = Utilities::campaignInvoiceInformation($invoice_id, $camp_id, $invoice_number, $payment_id);
+
+        foreach ($group_datas as $group_data) {
+            $invDets[] = Utilities::campaignInvoiceDetailsInformation($invoice_id, $id, $invoice_number, $group_data, $walkin_id, $agency_id, null);
+        }
+
+        $mpo[] = Utilities::campaignMpoInformation($mpo_id, $camp_id, $invoice_number);
+
+        foreach ($group_datas as $group_data) {
+            $mpoDet[] = Utilities::campaignMpoDetailsInformation($mpo_id, $agency_id, $group_data, null);
+        }
+
+        try {
+            $save_invoice = Utilities::switch_db('api')->table('invoices')->insert($invoice);
+        }catch(\Exception $e){
+            $api_db->rollback();
+            $message = $e->getMessage();
+            Session::flash('error', $message);
+            return redirect()->back();
+        }
+
+        try {
+            $save_invoice_details = Utilities::switch_db('api')->table('invoiceDetails')->insert($invDets);
+        }catch(\Exception $e){
+            $api_db->rollback();
+            $message = $e->getMessage();
+            Session::flash('error', $message);
+            return redirect()->back();
+        }
+
+        try {
+            $save_mpo = Utilities::switch_db('api')->table('mpos')->insert($mpo);
+        }catch(\Exception $e){
+            $api_db->rollback();
+            $message = $e->getMessage();
+            Session::flash('error', $message);
+            return redirect()->back();
+        }
+
+        try {
+            $save_mpo_details = Utilities::switch_db('api')->table('mpoDetails')->insert($mpoDet);
+        }catch(\Exception $e){
+            $api_db->rollback();
+            $message = $e->getMessage();
+            Session::flash('error', $message);
+            return redirect()->back();
+        }
+
+        foreach ($queries as $query) {
+            //inserting the position into the adslot_fileposition table
+            try {
+                if(!empty($query->filePosition_id)){
+                    $file_pos_id = uniqid();
+                    $insert_position = Utilities::switch_db('api')->update("UPDATE adslot_filePositions set select_status = 1 WHERE adslot_id = '$query->adslot_id' ");
+                }
+            }catch (\Exception $e){
+                $api_db->rollback();
+                $message = $e->getMessage();
+                Session::flash('error', $message);
+                return redirect()->back();
+            }
+            $get_slots = Utilities::switch_db('api')->select("SELECT * from adslots WHERE id = '$query->adslot_id'");
+            $slots_id = $get_slots[0]->id;
+            $time_difference = (integer)$get_slots[0]->time_difference;
+            $time_used = (integer)$get_slots[0]->time_used;
+            $time = (integer)$query->time;
+            $new_time_used = $time_used + $time;
+            if ($time_difference === $new_time_used) {
+                $slot_status = 1;
+            } else {
+                $slot_status = 0;
+            }
+            try {
+                $update_slot = Utilities::switch_db('api')->update("UPDATE adslots SET time_used = '$new_time_used', is_available = '$slot_status' WHERE id = '$slots_id'");
+            }catch (\Exception $e){
+                $api_db->rollback();
+                $message = $e->getMessage();
+                Session::flash('error', $message);
+                return redirect()->back();
+            }
+        }
+
+        $del_cart = \DB::delete("DELETE FROM carts WHERE user_id = '$user_id' AND agency_id = '$agency_id'");
+        $del_uplaods = \DB::delete("DELETE FROM uploads WHERE user_id = '$user_id'");
+        $user_agent = $_SERVER['HTTP_USER_AGENT'];
+        $description = 'Campaign '.$first->campaign_name.' created successfully by '.Session::get('agency_id');
+        $ip = request()->ip();
+        $user_activity = Api::saveActivity($agency_id, $description, $ip, $user_agent);
+        $api_db->commit();
+        $local_db->commit();
+        Session::forget('first_step');
+        Session::flash('success', 'Campaign created successfully');
+        return redirect()->route('dashboard');
 
     }
 
