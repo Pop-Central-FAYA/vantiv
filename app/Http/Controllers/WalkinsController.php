@@ -162,16 +162,6 @@ class WalkinsController extends Controller
             return redirect()->back();
         }
 
-        if($request->hasFile('company_logo')){
-            /*handling uploading the image*/
-            $featured = $request->company_logo;
-            $featured_new_name = time().$featured->getClientOriginalName();
-            /*moving the image to public/uploads/post*/
-            $featured->move('company_logo', $featured_new_name);
-
-            $company_image = encrypt('company_logo/'.$featured_new_name);
-        }
-
         $userInsert = DB::table('users')->insert([
             'email' => $request->email,
             'username' => $request->username,
@@ -208,6 +198,16 @@ class WalkinsController extends Controller
         ]);
 
         $apiUserDetails = Utilities::switch_db('api')->select("SELECT * FROM users where email = '$request->email'");
+
+        if($request->hasFile('company_logo')){
+            /*handling uploading the image*/
+            $featured = $request->company_logo;
+            $featured_new_name = time().$featured->getClientOriginalName();
+            /*moving the image to public/uploads/post*/
+            $featured->move('company_logo', $featured_new_name);
+
+            $company_image = encrypt('company_logo/'.$featured_new_name);
+        }
 
         $walkinInsert = Utilities::switch_db('api')->table('walkIns')->insert([
             'id' => $client_id,

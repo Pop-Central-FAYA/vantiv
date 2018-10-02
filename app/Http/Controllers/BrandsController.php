@@ -129,9 +129,13 @@ class BrandsController extends Controller
             $broadcaster_agency_id = $agency_id;
         }
 
+        $api_db = Utilities::switch_db('api');
+
+        $api_db->beginTransaction();
+
         $brand_slug = Utilities::formatString($request->brand_name);
         $unique = uniqid();
-        $check_brand = Utilities::switch_db('api')->select("SELECT b.* from brand_client as b_c INNER JOIN brands as b ON b.id = b_c.brand_id 
+        $check_brand = $api_db->select("SELECT b.* from brand_client as b_c INNER JOIN brands as b ON b.id = b_c.brand_id 
                                                                 WHERE b.slug = '$brand_slug' AND client_id = '$broadcaster_agency_id'");
         if(count($check_brand) > 0) {
             Session::flash('error', 'Brands already exists');
@@ -139,44 +143,51 @@ class BrandsController extends Controller
         }
 
         //check if the brand exists in the brands table and if not create the brand in the brands table and attach the client in the brand_client table.
+
         $checkIfBrandExists = Utilities::switch_db('api')->select("SELECT id, `name` from brands where slug = '$brand_slug'");
         if(count($checkIfBrandExists) === 0){
             $brand_logo = $request->file('brand_logo');
             $image_url = Utilities::uploadBrandImageToCloudinary($brand_logo);
             $brand = new Brand();
-            $brand->id = $unique;
-            $brand->name = $request->brand_name;
-            $brand->image_url = $image_url;
-            $brand->industry_code = $request->industry;
-            $brand->sub_industry_code = $request->sub_industry;
-            $brand->slug = $brand_slug;
-            $brand->save();
+            try {
+                $brand->id = $unique;
+                $brand->name = $request->brand_name;
+                $brand->image_url = $image_url;
+                $brand->industry_code = $request->industry;
+                $brand->sub_industry_code = $request->sub_industry;
+                $brand->slug = $brand_slug;
+                $brand->save();
 
-            $insertIntoBrandClient = Utilities::switch_db('api')->table('brand_client')->insert([
-                'brand_id' => $unique,
-                'client_id' => $broadcaster_agency_id,
-                'brands_client' => $request->walkin_id,
-            ]);
-        }else{
-            $insertIntoBrandClient = Utilities::switch_db('api')->table('brand_client')->insert([
-                'brand_id' => $checkIfBrandExists[0]->id,
-                'client_id' => $broadcaster_agency_id,
-                'brands_client' => $request->walkin_id,
-            ]);
-        }
-
-        if ($insertIntoBrandClient) {
-            Session::flash('success', 'Brands created successfully');
-            if($broadcaster_id){
-                return redirect()->route('brand.all');
-            }else{
-                return redirect()->route('agency.brand.all');
+            }catch (\Exception $e){
+                $api_db->rollback();
+                Session::flash('error', 'There was a problem creating this brand');
+                return redirect()->back();
             }
-        } else {
-            Session::flash('error', 'There was a problem creating this brand');
-            return redirect()->back();
+
+        }else{
+            try {
+                $insertIntoBrandClient = Utilities::switch_db('api')->table('brand_client')->insert([
+                    'brand_id' => $unique,
+                    'client_id' => $broadcaster_agency_id,
+                    'brands_client' => $request->walkin_id,
+                ]);
+
+            }catch (\Exception $e){
+                $api_db->rollback();
+                Session::flash('error', 'There was a problem creating this brand');
+                return redirect()->back();
+            }
         }
 
+        Session::flash('success', 'Brands created successfully');
+        
+        $api_db->commit();
+
+        if($broadcaster_id){
+            return redirect()->route('brand.all');
+        }else{
+            return redirect()->route('agency.brand.all');
+        }
 
     }
 
@@ -196,6 +207,10 @@ class BrandsController extends Controller
             $broadcaster_agency_id = $agency_id;
         }
 
+        $api_db = Utilities::switch_db('api');
+
+        $api_db->beginTransaction();
+
         $brand_slug = Utilities::formatString($request->brand_name);
         $user_agent = $_SERVER['HTTP_USER_AGENT'];
         $description = 'Brand '.$request->brand_name .' Updated by '.Session::get('broadcaster_id');
@@ -203,45 +218,59 @@ class BrandsController extends Controller
         $brands = Brand::where('id', $id)->first();
 
         if($brands->slug != $brand_slug){
-            $check_brand = Utilities::switch_db('api')->select("SELECT b.* from brand_client as b_c INNER JOIN brands as b ON b.id = b_c.brand_id 
+            $check_brand = $api_db->select("SELECT b.* from brand_client as b_c INNER JOIN brands as b ON b.id = b_c.brand_id 
                                                                 WHERE b.slug = '$brand_slug' AND client_id = '$broadcaster_agency_id'");
             if(count($check_brand) > 0) {
                 Session::flash('error', 'Brands already exists');
                 return redirect()->back();
             }else{
-                if($request->has('brand_logo')){
+                try {
+                    if($request->has('brand_logo')){
+                        $image_path = Utilities::uploadBrandImageToCloudinary($request->brand_logo);
+                        $brands->image_url = $image_path;
+                        $brands->save();
+                    }
+                    $brands->name = $request->brand_name;
+                    $brands->sub_industry_code = $request->sub_industry;
+                    $brands->slug = $brand_slug;
+                    $brands->save();
+
+                }catch (\Exception $e){
+                    $api_db->rollback();
+                    Session::flash('error', 'There was problem updating your brand');
+                    return redirect()->back();
+                }
+
+                $user_activity = Api::saveActivity($broadcaster_agency_id, $description, $ip, $user_agent);
+
+            }
+        }else{
+            try {
+                if($request->hasFile('brand_logo')){
                     $image_path = Utilities::uploadBrandImageToCloudinary($request->brand_logo);
                     $brands->image_url = $image_path;
                     $brands->save();
+
                 }
+
                 $brands->name = $request->brand_name;
                 $brands->sub_industry_code = $request->sub_industry;
                 $brands->slug = $brand_slug;
                 $brands->save();
 
-
-                $user_activity = Api::saveActivity($broadcaster_agency_id, $description, $ip, $user_agent);
-                Session::flash('success', 'Brands updated successfully');
+            }catch (\Exception $e){
+                $api_db->rollback();
+                Session::flash('error', 'There was problem updating your brand');
                 return redirect()->back();
-
             }
-        }else{
-            if($request->hasFile('brand_logo')){
-                $image_path = Utilities::uploadBrandImageToCloudinary($request->brand_logo);
-                $brands->image_url = $image_path;
-                $brands->save();
-
-            }
-
-            $brands->name = $request->brand_name;
-            $brands->sub_industry_code = $request->sub_industry;
-            $brands->slug = $brand_slug;
-            $brands->save();
 
             $user_activity = Api::saveActivity($broadcaster_agency_id, $description, $ip, $user_agent);
-            Session::flash('success', 'Brands updated successfully');
-            return redirect()->back();
+
         }
+
+        $api_db->commit();
+        Session::flash('success', 'Brands updated successfully');
+        return redirect()->back();
 
     }
 
