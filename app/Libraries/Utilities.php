@@ -1011,14 +1011,14 @@ class Utilities {
         ];
     }
 
-    public static function campaignInvoiceDetailsInformation($invoice_id, $id, $invoice_number, $group_data, $walkin_id, $agency_id, $broadcaster_id)
+    public static function campaignInvoiceDetailsInformation($invoice_id, $id, $invoice_number, $group_data, $walkin_id, $agency_id, $broadcaster_id, $calc)
     {
         return [
             'id' => uniqid(),
             'invoice_id' => $invoice_id,
             'user_id' => $id,
             'invoice_number' => $invoice_number,
-            'actual_amount_paid' => (integer)$group_data->total,
+            'actual_amount_paid' => $agency_id ? (integer)$group_data->total : (integer) $calc[0]->total_price,
             'refunded_amount' => 0,
             'walkins_id' => $walkin_id[0]->id,
             'agency_id' => $agency_id ? $agency_id : '',

@@ -540,7 +540,7 @@ class CampaignsController extends Controller
 
         $invoice[] = Utilities::campaignInvoiceInformation($invoice_id, $camp_id, $invoice_number, $payment_id);
 
-        $invoiceDetails[] = Utilities::campaignInvoiceDetailsInformation($invoice_id, $id, $invoice_number, null, $walkin_id, null, $broadcaster_id);
+        $invoiceDetails[] = Utilities::campaignInvoiceDetailsInformation($invoice_id, $id, $invoice_number, null, $walkin_id, null, $broadcaster_id, $calc);
 
         $mpo[] = Utilities::campaignMpoInformation($mpo_id, $camp_id, $invoice_number);
 
