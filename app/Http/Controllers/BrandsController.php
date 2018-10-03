@@ -343,8 +343,8 @@ class BrandsController extends Controller
     public function checkBrandExistsWithSameInformation(Request $request)
     {
         $brand_slug = Utilities::formatString($request->brand_name);
-        $checkIfBrandExists = Utilities::switch_db('api')->select("SELECT id, `name` from brands where slug = '$brand_slug'");
-        if(count($checkIfBrandExists) === 1){
+        $checkIfBrandExists = Brand::where('slug', $brand_slug)->first();
+        if($checkIfBrandExists){
             return 'already_exists';
         }
     }

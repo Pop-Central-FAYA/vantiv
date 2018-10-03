@@ -4,6 +4,7 @@ namespace Vanguard\Libraries;
 
 use Illuminate\Support\Facades\DB;
 use JD\Cloudder\Facades\Cloudder;
+use Vanguard\Models\BrandClient;
 
 class Utilities {
 
@@ -1003,13 +1004,14 @@ class Utilities {
 
     }
 
-    public static function storeBrandClient($brand_id, $broadcaster_agency_id, $client_id)
+    public static function storeBrandClient($brand_id, $broadcaster_agency_id, $client_id, $agency)
     {
-        return Utilities::switch_db('api')->table('brand_client')->insert([
-            'brand_id' => $brand_id,
-            'client_id' => $broadcaster_agency_id,
-            'brands_client' => $client_id,
-        ]);
+        $brand_client = new BrandClient();
+        $brand_client->brand_id = $brand_id;
+        $brand_client->media_buyer = $agency ? 'Agency' : 'Broadcaster';
+        $brand_client->media_buyer_id = $broadcaster_agency_id;
+        $brand_client->client_id = $client_id;
+        $brand_client->save();
     }
 
 
