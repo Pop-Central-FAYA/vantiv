@@ -446,19 +446,22 @@ class Utilities {
         return Utilities::switch_db('api')->select("SELECT * from walkIns where broadcaster_id = '$broadcaster_id'");
     }
 
-    public static function getBrandsForWalkins($walkin_id)
+    public static function getBrandsForWalkins($client_id)
     {
-        return Utilities::switch_db('api')->select("SELECT b.*, b_c.client_id as agency_broadcaster, b_c.brands_client as client_walkins_id FROM brand_client as b_c INNER JOIN brands as b ON b.id = b_c.brand_id where b_c.brands_client = '$walkin_id'");
+        return Utilities::switch_db('api')->select("SELECT b.*, b_c.media_buyer_id as agency_broadcaster, b_c.client_id as client_walkins_id 
+                                                        FROM brand_client as b_c INNER JOIN brands as b ON b.id = b_c.brand_id where b_c.client_id = '$client_id'");
     }
 
-    public static function getBrands($client_id)
+    public static function getBrands($media_buyer_id)
     {
-        return Utilities::switch_db('api')->select("SELECT b.*, b_c.client_id as broadcaster_agency_id, b_c.brands_client as client_walkins_id FROM brand_client as b_c INNER JOIN brands as b ON b.id = b_c.brand_id where b_c.client_id = '$client_id'");
+        return Utilities::switch_db('api')->select("SELECT b.*, b_c.media_buyer_id as broadcaster_agency_id, b_c.client_id as client_walkins_id 
+                                                        FROM brand_client as b_c INNER JOIN brands as b ON b.id = b_c.brand_id where b_c.media_buyer_id = '$media_buyer_id'");
     }
 
     public static function singleBrand($id, $client_id)
     {
-        return Utilities::switch_db('api')->select("SELECT b.*, b_c.client_id as broadcaster_agency_id, b_c.brands_client as client_walkins_id FROM brand_client as b_c INNER JOIN brands as b ON b.id = b_c.brand_id where b.id = '$id' AND brands_client = '$client_id'");
+        return Utilities::switch_db('api')->select("SELECT b.*, b_c.media_buyer_id as broadcaster_agency_id, b_c.client_id as client_walkins_id 
+                                                  FROM brand_client as b_c INNER JOIN brands as b ON b.id = b_c.brand_id where b.id = '$id' AND b_c.client_id = '$client_id'");
     }
 
     public static function getBroadcasterDetails($broadcaster_id)

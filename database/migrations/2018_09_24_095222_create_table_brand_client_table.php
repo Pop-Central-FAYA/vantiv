@@ -16,8 +16,9 @@ class CreateTableBrandClientTable extends Migration
         Schema::create('brand_client', function (Blueprint $table) {
             $table->integer('id');
             $table->string('brand_id');
+            $table->string('media_buyer');
+            $table->string('media_buyer_id');
             $table->string('client_id');
-            $table->string('brands_client');
             $table->timestamps();
         });
     }
