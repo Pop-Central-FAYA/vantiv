@@ -82,23 +82,39 @@ class AdslotController extends Controller
         $ratecard_array = $this->rateCardArray($rate_card_id, $user_id, $broadcaster_id, $request);
 
         $adslot_array = $this->adslotsArray($rate_card_id, $request, $broadcaster_id, $broadcaster_details);
-
-        $save_rate = Utilities::switch_db('api')->table('rateCards')->insert($ratecard_array);
-        $save_adslot = Utilities::switch_db('api')->table('adslots')->insert($adslot_array);
-
-        if($save_rate && $save_adslot){
-            $select_adslots = Utilities::switch_db('api')->select("SELECT id from adslots where rate_card = '$rate_card_id'");
-            $price_array = $this->priceArray($select_adslots, $request);
-            $save_price = Utilities::switch_db('api')->table('adslotPrices')->insert($price_array);
-        }
-
-        if($save_adslot && $save_price && $save_rate){
-            Session::flash('success', 'Adslot created successfully...');
-            return redirect()->route('adslot.all');
-        }else{
-            Session::flash('error', 'Error creating adslots, please try again');
+        Utilities::switch_db('api')->beginTransaction();
+        try {
+            $save_rate = Utilities::switch_db('api')->table('rateCards')->insert($ratecard_array);
+        }catch (\Exception $e) {
+            Utilities::switch_db('api')->rollback();
+            $message = $e->getMessage();
+            Session::flash('error', $message);
             return redirect()->back();
         }
+
+        try {
+            $save_adslot = Utilities::switch_db('api')->table('adslots')->insert($adslot_array);
+        }catch (\Exception $e) {
+            Utilities::switch_db('api')->rollback();
+            $message = $e->getMessage();
+            Session::flash('error', $message);
+            return redirect()->back();
+        }
+
+        $select_adslots = Utilities::switch_db('api')->select("SELECT id from adslots where rate_card = '$rate_card_id'");
+        $price_array = $this->priceArray($select_adslots, $request);
+        try {
+            $save_price = Utilities::switch_db('api')->table('adslotPrices')->insert($price_array);
+        }catch (\Exception $e) {
+            Utilities::switch_db('api')->rollback();
+            $message = $e->getMessage();
+            Session::flash('error', $message);
+            return redirect()->back();
+        }
+
+        Utilities::switch_db('api')->commit();
+        Session::flash('success', 'Adslot created successfully...');
+        return redirect()->route('adslot.all');
 
     }
 

@@ -154,6 +154,7 @@
                 serverSide: true,
                 processing: true,
                 "searching": false,
+                aaSorting: [],
                 buttons: [
                     'copy', 'csv', 'excel', 'pdf', 'print'
                 ],
