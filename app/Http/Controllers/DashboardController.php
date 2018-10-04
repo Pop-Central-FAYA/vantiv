@@ -148,14 +148,14 @@ class DashboardController extends Controller
                 if($request->has('start_date') && $request->has('stop_date')) {
                     $start_date = $request->start_date;
                     $stop_date = $request->stop_date;
-                    $all_campaigns = Utilities::switch_db('api')->select("SELECT c_d.adslots_id, c_d.stop_date, c_d.start_date, c_d.time_created, c_d.product, c_d.name, c_d.campaign_id, 
+                    $all_campaigns = Utilities::switch_db('api')->select("SELECT c_d.adslots_id, c_d.stop_date, c_d.status, c_d.start_date, c_d.time_created, c_d.product, c_d.name, c_d.campaign_id, 
                                                                             p.total, b.name as brand_name, c.campaign_reference from campaignDetails as c_d 
                                                                             INNER JOIN payments as p ON p.campaign_id = c_d.campaign_id 
                                                                             INNER JOIN campaigns as c ON c.id = c_d.campaign_id
                                                                             INNER JOIN brands as b ON b.id = c_d.brand where  c_d.agency = '$agency_id' and c_d.adslots  > 0 and 
                                                                             c_d.stop_date > '$start_date' and c_d.stop_date > '$stop_date' GROUP BY c_d.campaign_id ORDER BY c_d.time_created DESC");
                 }else{
-                    $all_campaigns = Utilities::switch_db('api')->select("SELECT c_d.adslots_id, c_d.stop_date, c_d.start_date, c_d.time_created, c_d.product, c_d.name, c_d.campaign_id, 
+                    $all_campaigns = Utilities::switch_db('api')->select("SELECT c_d.adslots_id, c_d.stop_date, c_d.status, c_d.start_date, c_d.time_created, c_d.product, c_d.name, c_d.campaign_id, 
                                                                              p.total, b.name as brand_name, c.campaign_reference from campaignDetails as c_d
                                                                               INNER JOIN payments as p ON p.campaign_id = c_d.campaign_id
                                                                                INNER JOIN campaigns as c ON c.id = c_d.campaign_id 
@@ -166,9 +166,20 @@ class DashboardController extends Controller
                 if($request->has('start_date') && $request->has('stop_date')) {
                     $start_date = $request->start_date;
                     $stop_date = $request->stop_date;
-                    $all_campaigns = Utilities::switch_db('api')->select("SELECT c_d.adslots_id, c_d.stop_date, c_d.start_date, c_d.time_created, c_d.product, c_d.name, c_d.campaign_id, p.total, b.name as brand_name, c.campaign_reference from campaignDetails as c_d, payments as p, campaigns as c, brands as b where c.id = c_d.campaign_id and p.campaign_id = c_d.campaign_id and c_d.brand = b.id and c_d.broadcaster = '$broadcaster_id' and c_d.adslots  > 0 and c_d.stop_date > '$start_date' and c_d.stop_date > '$stop_date' ORDER BY c_d.time_created DESC");
+                    $all_campaigns = Utilities::switch_db('api')->select("SELECT c_d.adslots_id, c_d.stop_date, c_d.status, c_d.start_date, c_d.time_created, c_d.product, c_d.name, c_d.campaign_id, 
+                                                                            p.total, b.name as brand_name, c.campaign_reference from campaignDetails as c_d 
+                                                                            INNER JOIN payments as p ON p.campaign_id = c_d.campaign_id 
+                                                                            INNER JOIN campaigns as c ON c.id = c_d.campaign_id 
+                                                                            INNER JOIN brands as b ON b.id = c_d.brand 
+                                                                            where c_d.broadcaster = '$broadcaster_id' and c_d.adslots  > 0 and c_d.stop_date > '$start_date' and 
+                                                                            c_d.stop_date > '$stop_date' ORDER BY c_d.time_created DESC");
                 }else{
-                    $all_campaigns = Utilities::switch_db('api')->select("SELECT c_d.adslots_id, c_d.stop_date, c_d.start_date, c_d.time_created, c_d.product, c_d.name, c_d.campaign_id, p.total, b.name as brand_name, c.campaign_reference from campaignDetails as c_d, payments as p, campaigns as c, brands as b where c.id = c_d.campaign_id and p.campaign_id = c_d.campaign_id and c_d.brand = b.id and c_d.broadcaster = '$broadcaster_id' and c_d.adslots  > 0 ORDER BY c_d.time_created DESC");
+                    $all_campaigns = Utilities::switch_db('api')->select("SELECT c_d.adslots_id, c_d.stop_date, c_d.status, c_d.start_date, c_d.time_created, c_d.product, c_d.name, c_d.campaign_id, p.total, 
+                                                                            b.name as brand_name, c.campaign_reference from campaignDetails as c_d 
+                                                                            INNER JOIN payments as p ON p.campaign_id = c_d.campaign_id 
+                                                                            INNER JOIN campaigns as c ON c.id = c_d.campaign_id
+                                                                            INNER JOIN brands as b ON b.id = c_d.brand where c_d.broadcaster = '$broadcaster_id' and 
+                                                                            c_d.adslots  > 0 ORDER BY c_d.time_created DESC");
                 }
             }
 
@@ -184,12 +195,16 @@ class DashboardController extends Controller
                 }
             })
             ->editColumn('status', function ($campaigns_datatables){
-                if($campaigns_datatables['status'] === "Finished"){
-                    return '<span class="span_state status_danger">Finished</span>';
-                }elseif ($campaigns_datatables['status'] === "Active"){
-                    return '<span class="span_state status_success">Active</span>';
-                }else{
+                if($campaigns_datatables['status'] === "on_hold"){
+                    return '<span class="span_state status_on_hold">On Hold</span>';
+                }elseif ($campaigns_datatables['status'] === "pending"){
                     return '<span class="span_state status_pending">Pending</span>';
+                }elseif ($campaigns_datatables['status'] === 'expired'){
+                    return '<span class="span_state status_danger">Finished</span>';
+                }elseif($campaigns_datatables['status'] === 'active') {
+                    return '<span class="span_state status_success">Active</span>';
+                }else {
+                    return '<span class="span_state status_danger">File Errors</span>';
                 }
             })
             ->rawColumns(['status' => 'status', 'name' => 'name'])
@@ -209,11 +224,7 @@ class DashboardController extends Controller
 
         foreach ($camp_vol as $ca) {
             $c_vol[] = $ca->volume;
-        }
-
-        foreach ($camp_vol as $ca) {
-            $month = ($ca->month);
-            $c_month[] = $month;
+            $c_month[] = $ca->month;
         }
 
         $c_volume = json_encode($c_vol);

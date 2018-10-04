@@ -5,7 +5,8 @@ namespace Vanguard\Http\Controllers;
 use Vanguard\Libraries\Api;
 use Illuminate\Http\Request;
 use Vanguard\Libraries\Utilities;
-use Vanguard\Models\FileIssues;
+use Vanguard\Models\File;
+use Vanguard\Models\RejectionReason;
 use Yajra\DataTables\DataTables;
 
 class MpoController extends Controller
@@ -66,8 +67,9 @@ class MpoController extends Controller
         $mpos = Utilities::switch_db('api')->select("SELECT m_d.mpo_id, m_d.is_mpo_accepted, m_d.agency_id, m.campaign_id from mpoDetails as m_d 
                                                         INNER JOIN mpos as m ON m.id = m_d.mpo_id where m_d.broadcaster_id = '$broadcaster_id' and m_d.mpo_id = '$mpo_id' ");
         $mpo_data = $this->getMpoCollection($mpos, $broadcaster_id);
-        $file_issues = FileIssues::all();
-        return view('broadcaster_module.mpos.action', compact('mpo_data', 'file_issues'));
+        $reject_reasons = RejectionReason::all();
+
+        return view('broadcaster_module.mpos.action', compact('mpo_data', 'reject_reasons'));
     }
 
     public function update_file($is_file_accepted, $file_code, $rejection_reason, $campaign_id, $mpo_id)

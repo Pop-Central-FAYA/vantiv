@@ -44,6 +44,7 @@
                     <th>Action</th>
                     <th>Reason</th>
                     <th>Reason for Rejection</th>
+                    <th>Recomendation</th>
                     <th>Action</th>
                 </tr>
                 </thead>
@@ -64,7 +65,7 @@
                             @endif
                         </td>
                         <td>
-                            <select id="is_file_accepted{{ $file->file_code }}" class="jide form-control" data-disappear="{{ $file->file_code }}">
+                            <select id="is_file_accepted{{ $file->file_code }}" class="jide form-control " data-disappear="{{ $file->file_code }}">
                                 <option value="null">Select Status</option>
                                 <option value="1">Approve</option>
                                 <option value="2">Reject</option>
@@ -75,12 +76,15 @@
                         </td>
                         <input type="hidden" name="file_code" id="file_code" value="{{ $file->file_code }}">
                         <td>
-                            <select name="rejection_reason" class="reason_default form-control" id="reason{{ $file->file_code }}">
+                            <select name="rejection_reason" class="reason_default form-control rejection_reason" id="reason{{ $file->file_code }}" multiple>
                                 <option value="null">Select Reason</option>
-                                @foreach($file_issues as $file_issue)
-                                    <option value="{{ $file_issue->id }}">{{ $file_issue->name }}</option>
+                                @foreach($reject_reasons as $reject_reason)
+                                    <option value="{{ $reject_reason->id }}">{{ $reject_reason->name }}</option>
                                 @endforeach
                             </select>
+                        </td>
+                        <td>
+                            <textarea name="recommendations" id="recommendations" class="recommendation_default" cols="30" rows="10"></textarea>
                         </td>
                         <td>
                             <button class="update_file update{{ $file->file_code }} btn btn-primary"
@@ -108,29 +112,21 @@
 @stop
 
 @section('scripts')
-    <script src="https://code.highcharts.com/highcharts.js"></script>
-    <script src="https://code.highcharts.com/highcharts-3d.js"></script>
-    <script src="https://code.highcharts.com/modules/exporting.js"></script>
-    <script src="https://code.highcharts.com/modules/export-data.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
-    {{--<script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>--}}
-    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/dataTables.buttons.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.flash.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.html5.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.print.min.js"></script>
-    <script src="https://unpkg.com/flatpickr"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
     {{--datatables--}}
     <script>
 
         $(document).ready(function( $ ) {
 
+            $('.rejection_reason').select2({
+                maximumSelectionLength: 2
+            });
 
             $('#flash-file-message').hide()
 
             $('.reason_default').prop('disabled', true);
+
+            $('.recommendation_default').prop('disabled', true);
 
             $("body").delegate('.jide', 'change', function (e) {
                 $(".load").css({
@@ -215,5 +211,9 @@
 
         } );
     </script>
+@stop
+
+@section('styles')
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
 @stop
 

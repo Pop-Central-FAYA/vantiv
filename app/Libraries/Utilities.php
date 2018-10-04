@@ -532,13 +532,6 @@ class Utilities {
         {
             $start_date = strtotime($all_campaign->start_date);
             $stop_date = strtotime($all_campaign->stop_date);
-            if($today > $start_date && $today > $stop_date){
-                $status = 'Finished';
-            }elseif ($today >= $start_date && $today <= $stop_date){
-                $status = 'Active';
-            }else{
-                $status = 'Pending';
-            }
 
             $campaigns[] = [
                 'id' => $all_campaign->campaign_reference,
@@ -551,7 +544,7 @@ class Utilities {
                 'end_date' => date('Y-m-d', $stop_date),
                 'adslots' => count((explode(',', $all_campaign->adslots_id))),
                 'budget' => number_format($all_campaign->total, 2),
-                'status' => $status
+                'status' => $all_campaign->status
             ];
         }
 
@@ -1157,6 +1150,13 @@ class Utilities {
         $brand_client->client_id = $client_id;
         $brand_client->save();
     }
+
+
+//
+//$rejected_files = Utilities::switch_db('api')->select("SELECT f.*, r.name as rejection_reasons, r_r_c.name as reason_category from files as f
+//                                                                  INNER JOIN file_rejection_reason as f_r_r on f_r_r.file_id = f.id
+//                                                                  INNER JOIN rejection_reasons as r ON r.id = f_r_r.rejection_reason_id
+//                                                                  INNER JOIN rejection_reason_categories as r_r_c ON r_r_c.id = r.rejection_reason_category_id ");
 
 
 }

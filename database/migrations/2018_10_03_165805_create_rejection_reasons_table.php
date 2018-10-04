@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateFileIssuesTable extends Migration
+class CreateRejectionReasonsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,9 @@ class CreateFileIssuesTable extends Migration
      */
     public function up()
     {
-        Schema::create('file_issues', function (Blueprint $table) {
+        Schema::create('rejection_reasons', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('rejection_reason_category_id');
             $table->string('name');
             $table->timestamps();
         });
@@ -27,6 +28,6 @@ class CreateFileIssuesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('file_issues');
+        Schema::dropIfExists('rejection_reasons');
     }
 }
