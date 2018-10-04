@@ -4,6 +4,7 @@ namespace Vanguard\Libraries;
 
 use Illuminate\Support\Facades\DB;
 use JD\Cloudder\Facades\Cloudder;
+use Vanguard\Models\BrandClient;
 
 class Utilities {
 
@@ -307,27 +308,45 @@ class Utilities {
 
     public static function updateClients($request, $client_id)
     {
-        $walkins = Utilities::switch_db('api')->select("SELECT * from walkIns where id = '$client_id'");
+        $api_db = Utilities::switch_db('api');
+        $local_db = Utilities::switch_db('local');
+
+        $walkins = $api_db->select("SELECT * from walkIns where id = '$client_id'");
         $user_id = $walkins[0]->user_id;
         if($request->hasFile('company_logo')){
             $filename = $request->file('company_logo')->getRealPath();
             Cloudder::upload($filename, Cloudder::getPublicId());
             $clouder = Cloudder::getResult();
             $image_url = encrypt($clouder['url']);
-            $walkins_update_logo = Utilities::switch_db('api')->update("UPDATE walkIns set company_logo = '$image_url' where id = '$client_id'");
+            $walkins_update_logo = $api_db->update("UPDATE walkIns set company_logo = '$image_url' where id = '$client_id'");
         }
 
-        $walkins_update = Utilities::switch_db('api')->update("UPDATE walkIns set location = '$request->address', company_name = '$request->company_name' where id = '$client_id'");
-
-        $api_user_update = Utilities::switch_db('api')->update("UPDATE users set firstname = '$request->first_name', lastname = '$request->last_name', phone_number = '$request->phone' where id = '$user_id'");
-
-        $local_db_update = DB::update("UPDATE users set first_name = '$request->first_name', last_name = '$request->last_name', phone = '$request->phone' where email = '$request->email'");
-
-        if($api_user_update || $walkins_update || $local_db_update ){
-            return "success";
-        }else{
-            return "error";
+        try {
+            $walkins_update = $api_db->update("UPDATE walkIns set location = '$request->address', company_name = '$request->company_name' where id = '$client_id'");
+        }catch (\Exception $e) {
+            $api_db->rollback();
+            return 'error';
         }
+
+        try {
+            $api_user_update = $api_db->update("UPDATE users set firstname = '$request->first_name', lastname = '$request->last_name', 
+                                                                      phone_number = '$request->phone' where id = '$user_id'");
+        }catch (\Exception $e){
+            $api_db->rollback();
+            return 'error';
+        }
+
+        try {
+            $local_db_update = $local_db->update("UPDATE users set first_name = '$request->first_name', last_name = '$request->last_name', phone = '$request->phone' where email = '$request->email'");
+        }catch (\Exception $e) {
+            $local_db->rollback();
+            return 'error';
+        }
+
+        $api_db->commit();
+        $local_db->commit();
+        return 'success';
+
     }
 
     public static function getClientCampaignData($user_id, $broadcaster_id)
@@ -1051,6 +1070,92 @@ class Utilities {
             'broadcaster_id' => $agency_id ? $group_data->broadcaster_id : $broadcaster_id,
         ];
 
+    }
+
+    public static function insertIntoUsersLocalDb($request)
+    {
+        return DB::table('users')->insert([
+            'email' => $request->email,
+            'username' => $request->username,
+            'password' => bcrypt('password'),
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'phone' => $request->phone,
+            'country_id' => $request->country_id,
+            'status' => 'Inactive',
+        ]);
+    }
+
+    public static function insertRolesInLocalDb($user_id)
+    {
+        return DB::table('role_user')->insert([
+            'user_id' => $user_id,
+            'role_id' => 5
+        ]);
+    }
+
+    public static function insertIntoUsersApiDB($request, $role_id)
+    {
+        return Utilities::switch_db('api')->table('users')->insert([
+            'id' => uniqid(),
+            'role_id' => $role_id,
+            'email' => $request->email,
+            'token' => '',
+            'password' => bcrypt('password'),
+            'firstname' => $request->first_name,
+            'lastname' => $request->last_name,
+            'phone_number' => $request->phone,
+            'user_type' => 4,
+            'status' => 1
+        ]);
+    }
+
+    public static function insertIntoWalkinsApiDB($client_id, $user_id, $broadcaster_id, $request, $company_image, $agency_id)
+    {
+        return Utilities::switch_db('api')->table('walkIns')->insert([
+            'id' => $client_id,
+            'user_id' => $user_id,
+            'broadcaster_id' => $agency_id ? $request->broadcaster_id : $broadcaster_id,
+            'client_type_id' => $request->client_type_id,
+            'location' => $request->address,
+            'agency_id' => $agency_id ? $agency_id : '',
+            'nationality' => 566,
+            'company_name' => $request->company_name,
+            'company_logo' => $company_image
+        ]);
+    }
+
+    public static function uploadCompanyLogoToOurServer($request)
+    {
+        /*handling uploading the image*/
+        $featured = $request->company_logo;
+        $featured_new_name = time().$featured->getClientOriginalName();
+        /*moving the image to public/uploads/post*/
+        $featured->move('company_logo', $featured_new_name);
+
+        return encrypt('company_logo/'.$featured_new_name);
+    }
+
+    public static function storeBrands($brand, $request, $unique, $image_url, $brand_slug)
+    {
+        $brand->id = $unique;
+        $brand->name = $request->brand_name;
+        $brand->image_url = $image_url;
+        $brand->industry_code = $request->industry;
+        $brand->sub_industry_code = $request->sub_industry;
+        $brand->slug = $brand_slug;
+        return $brand->save();
+
+    }
+
+    public static function storeBrandClient($brand_id, $broadcaster_agency_id, $client_id, $agency)
+    {
+        $brand_client = new BrandClient();
+        $brand_client->brand_id = $brand_id;
+        $brand_client->media_buyer = $agency ? 'Agency' : 'Broadcaster';
+        $brand_client->media_buyer_id = $broadcaster_agency_id;
+        $brand_client->client_id = $client_id;
+        $brand_client->save();
     }
 
 
