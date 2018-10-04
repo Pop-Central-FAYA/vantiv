@@ -77,9 +77,9 @@
                         <td>
                             <select name="rejection_reason" class="reason_default form-control" id="reason{{ $file->file_code }}">
                                 <option value="null">Select Reason</option>
-                                <option value="Inappropriate Adslot">Inappropriate Adslot</option>
-                                <option value="Inappropriate Content">Inappropriate Content</option>
-                                <option value="File does not fit in this slot">File does not fit in this slot</option>
+                                @foreach($file_issues as $file_issue)
+                                    <option value="{{ $file_issue->id }}">{{ $file_issue->name }}</option>
+                                @endforeach
                             </select>
                         </td>
                         <td>

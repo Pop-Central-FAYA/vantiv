@@ -155,6 +155,11 @@ Class Api
         return $files;
     }
 
+    public static function getRejectedFiles($campaign_id, $broadcaster)
+    {
+        return Utilities::switch_db('api')->select("SELECT * FROM files WHERE campaign_id = '$campaign_id' AND is_file_accepted != 1 AND rejection_reason != '' AND broadcaster_id = '$broadcaster'");
+    }
+
     public static function countClients($agency_id)
     {
         $client = Utilities::switch_db('api')->select("SELECT * from walkIns where agency_id = '$agency_id'");

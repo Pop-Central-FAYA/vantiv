@@ -109,4 +109,22 @@ class CronjobController extends Controller
         }
     }
 
+    public function logExpiredCampaignStatus()
+    {
+        $today_date = date("Y-m-d");
+        $campaigns = Utilities::switch_db('api')->select("SELECT id, status FROM campaignDetails where status != 'expired' && status = 'active' AND stop_date < '$today_date'");
+        foreach ($campaigns as $campaign){
+            Utilities::switch_db('api')->update("UPDATE campaignDetails SET status = 'expired' WHERE id = '$campaign->id'");
+        }
+    }
+
+    public function logActiveCampaignStatus()
+    {
+        $today_date = date("Y-m-d");
+        $campaigns = Utilities::switch_db('api')->select("SELECT id, status FROM campaignDetails where status != 'active' && status != 'expired' AND start_date <= '$today_date'");
+        foreach ($campaigns as $campaign){
+            Utilities::switch_db('api')->update("UPDATE campaignDetails SET status = 'active' WHERE id = '$campaign->id'");
+        }
+    }
+
 }
