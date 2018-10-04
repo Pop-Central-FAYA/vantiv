@@ -189,9 +189,17 @@ class DashboardController extends Controller
         return $dataTables->collection($campaigns_datatables)
             ->addColumn('name', function ($campaigns_datatables) {
                 if(Session::has('agency_id')){
-                    return '<a href="'.route('agency.campaign.details', ['id' => $campaigns_datatables['campaign_id']]).'">'.$campaigns_datatables['name'].'</a>';
+                    if($campaigns_datatables['status'] === 'on_hold'){
+                        return '<a href="'.route('broadcaster.campaign.hold').'">'.$campaigns_datatables['name'].'</a>';
+                    }else{
+                        return '<a href="'.route('agency.campaign.details', ['id' => $campaigns_datatables['campaign_id']]).'">'.$campaigns_datatables['name'].'</a>';
+                    }
                 }else if(Session::has('broadcaster_id')){
-                    return '<a href="'.route('broadcaster.campaign.details', ['id' => $campaigns_datatables['campaign_id']]).'">'.$campaigns_datatables['name'].'</a>';
+                    if($campaigns_datatables['status'] === 'on_hold'){
+                        return '<a href="'.route('broadcaster.campaign.hold').'">'.$campaigns_datatables['name'].'</a>';
+                    }else{
+                        return '<a href="'.route('broadcaster.campaign.details', ['id' => $campaigns_datatables['campaign_id']]).'">'.$campaigns_datatables['name'].'</a>';
+                    }
                 }
             })
             ->editColumn('status', function ($campaigns_datatables){
@@ -241,14 +249,25 @@ class DashboardController extends Controller
 //            all_brands
         $all_brands = Utilities::getBrands($broadcaster);
 
-        $active_campaigns = Utilities::switch_db('api')->select("SELECT * FROM campaignDetails where broadcaster = '$broadcaster' AND start_date <= '$today_date' AND stop_date > '$today_date' ");
+        $active_campaigns = Utilities::switch_db('api')->select("SELECT c_d.adslots_id, c_d.stop_date, c_d.status, c_d.start_date, c_d.time_created, c_d.product, c_d.name, c_d.campaign_id, p.total, b.name as brand_name, 
+                                                                      c.campaign_reference from campaignDetails as c_d LEFT JOIN payments as p ON p.campaign_id = c_d.campaign_id 
+                                                                       LEFT JOIN campaigns as c ON c.id = c_d.campaign_id LEFT JOIN brands as b ON b.id = c_d.brand where  c_d.broadcaster = '$broadcaster' 
+                                                                       and c_d.status = 'active' and c_d.adslots  > 0 ORDER BY c_d.time_created DESC");
 
         $broadcaster_info = Utilities::switch_db('api')->select("SELECT * from broadcasters where id = '$broadcaster'");
 
-        $pending_mpos = Utilities::switch_db('api')->select("SELECT * FROM mpoDetails where is_mpo_accepted = 0 and broadcaster_id = '$broadcaster'");
+        $pending_mpos = Utilities::switch_db('api')->select("SELECT m_d.mpo_id, m_d.is_mpo_accepted, m_d.agency_id, m.campaign_id from mpoDetails as m_d 
+                                                            INNER JOIN mpos as m ON m.id = m_d.mpo_id 
+                                                            INNER JOIN campaignDetails as c_d ON c_d.campaign_id = m.campaign_id AND c_d.broadcaster = m_d.broadcaster_id
+                                                            where m_d.broadcaster_id = '$broadcaster' and c_d.status = 'pending' OR c_d.status = 'file_error' AND
+                                                            m_d.is_mpo_accepted = 0 order by m_d.time_created desc");
+
+        $campaign_on_hold = Utilities::switch_db('api')->select("SELECT * FROM campaignDetails where status = 'on_hold' AND broadcaster = '$broadcaster'");
 
         return view('broadcaster_module.dashboard.campaign_management.dashboard')->with(['volume' => $c_volume, 'month' => $c_mon, 'broadcaster_info' => $broadcaster_info,
-                                                                                                'walkins' => $clients, 'pending_invoices' => $pending_invoices, 'brands' => $all_brands, 'active_campaigns' => $active_campaigns, 'pending_mpos' => $pending_mpos]);
+                                                                                                'walkins' => $clients, 'pending_invoices' => $pending_invoices,
+                                                                                                'brands' => $all_brands, 'active_campaigns' => $active_campaigns,
+                                                                                                'pending_mpos' => $pending_mpos, 'campaign_on_hold' => $campaign_on_hold]);
 
     }
 

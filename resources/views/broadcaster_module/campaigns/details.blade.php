@@ -74,7 +74,8 @@
 
 
         <!-- main charts -->
-        <div class="clearfix mb3">
+        @if($campaign_details['campaign_det']['status'] === 'active' || $campaign_details['campaign_det']['status'] === 'expired')
+            <div class="clearfix mb3">
 
             <div class="column col_8 the_frame main_campaign_chart">
 
@@ -129,7 +130,7 @@
             </div>
 
         </div>
-
+        @endif
         <!-- campaign details -->
         <div class="the_frame client_dets mb4">
 
@@ -138,7 +139,9 @@
                 <a href="#summary">Summary</a>
                 <a href="#slots">Ad Slots</a>
                 <a href="#files">Files</a>
-                <a href="#comp">Compliance</a>
+                @if($campaign_details['campaign_det']['status'] === 'active' || $campaign_details['campaign_det']['status'] === 'expired')
+                    <a href="#comp">Compliance</a>
+                @endif
             </div>
 
             {{--{{ dd($campaign_details) }}--}}

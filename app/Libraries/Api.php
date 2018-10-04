@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Session;
 use Ixudra\Curl\Facades\Curl;
 use Vanguard\ApiLog;
 use Vanguard\Http\Requests\Request;
+use Vanguard\Models\File;
 
 Class Api
 {
@@ -150,8 +151,7 @@ Class Api
 
     public static function getOutstandingFiles($campaign_id, $broadcaster)
     {
-        $files = Utilities::switch_db('reports')->select("SELECT * FROM files WHERE campaign_id = '$campaign_id' AND is_file_accepted <> 1 AND broadcaster_id = '$broadcaster'");
-
+        $files = File::where([['campaign_id', $campaign_id], ['is_file_accepted', '<>', 1], ['broadcaster_id', $broadcaster]])->get();
         return $files;
     }
 

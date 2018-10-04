@@ -51,13 +51,13 @@ class Utilities {
     {
         $file_details = [];
         if($broadcaster_id){
-            $campaign_details = Utilities::switch_db('api')->select("SELECT c_d.campaign_id, c_d.min_age, c_d.max_age, c_d.name as campaign_name, c_d.user_id, c_d.agency, c_d.product, 
+            $campaign_details = Utilities::switch_db('api')->select("SELECT c_d.campaign_id,c_d.status, c_d.min_age, c_d.max_age, c_d.name as campaign_name, c_d.user_id, c_d.agency, c_d.product, 
                                                                 c_d.Industry, c_d.sub_industry, c_d.broadcaster, c_d.start_date, c_d.stop_date, b.name as brand, c_d.channel, c_d.target_audience,
                                                                  c_d.region, b.name, p.total, p.id as payment_id from campaignDetails as c_d INNER JOIN brands as b ON b.id = c_d.brand
                                                                   INNER JOIN payments as p ON p.campaign_id = c_d.campaign_id where  
                                                                    c_d.campaign_id = '$id' and c_d.broadcaster = '$broadcaster_id'");
         }else if($agency_id){
-            $campaign_details = Utilities::switch_db('api')->select("SELECT c_d.campaign_id, c_d.min_age, c_d.max_age, c_d.name as campaign_name, c_d.user_id, c_d.agency, c_d.product, c_d.Industry, 
+            $campaign_details = Utilities::switch_db('api')->select("SELECT c_d.campaign_id, c_d.status, c_d.min_age, c_d.max_age, c_d.name as campaign_name, c_d.user_id, c_d.agency, c_d.product, c_d.Industry, 
                                                                         c_d.sub_industry, c_d.start_date, c_d.stop_date, b.name as brand, c_d.channel, c_d.target_audience, c_d.region, b.name, 
                                                                         p.total, p.id as payment_id from campaignDetails as c_d INNER JOIN brands as b ON b.id = c_d.brand
                                                                         INNER JOIN payments as p ON p.campaign_id = c_d.campaign_id where  c_d.campaign_id = '$id' GROUP BY c_d.campaign_id");
@@ -126,7 +126,8 @@ class Utilities {
             'phone' => $phone,
             'location' => $location,
             'age' => $campaign_details[0]->min_age .' - '.$campaign_details[0]->max_age,
-            'target_audience' => $target_audiences
+            'target_audience' => $target_audiences,
+            'status' => $campaign_details[0]->status
         ];
 
         $files = Utilities::switch_db('api')->select("SELECT f.id, f.user_id, f.broadcaster_id, f.file_url, f.time_picked, f.is_file_accepted, f.rejection_reason, f.file_name, f.format, a.from_to_time, a.min_age, a.max_age, d_p.day_parts, t.audience, r.region, h.time_range, d.day, b.brand from files as f, dayParts as d_p, adslots as a, targetAudiences as t, regions as r, days as d, hourlyRanges as h, rateCards as r_c, broadcasters as b where f.broadcaster_id = b.id and 
@@ -1150,13 +1151,6 @@ class Utilities {
         $brand_client->client_id = $client_id;
         $brand_client->save();
     }
-
-
-//
-//$rejected_files = Utilities::switch_db('api')->select("SELECT f.*, r.name as rejection_reasons, r_r_c.name as reason_category from files as f
-//                                                                  INNER JOIN file_rejection_reason as f_r_r on f_r_r.file_id = f.id
-//                                                                  INNER JOIN rejection_reasons as r ON r.id = f_r_r.rejection_reason_id
-//                                                                  INNER JOIN rejection_reason_categories as r_r_c ON r_r_c.id = r.rejection_reason_category_id ");
 
 
 }

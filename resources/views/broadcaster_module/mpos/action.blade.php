@@ -65,18 +65,20 @@
                             @endif
                         </td>
                         <td>
-                            <select id="is_file_accepted{{ $file->file_code }}" class="jide form-control " data-disappear="{{ $file->file_code }}">
+                            <select id="is_file_accepted{{ $file->file_code }}" class="jide form-control" @if(count($file->rejection_reasons) > 0) disabled @endif data-disappear="{{ $file->file_code }}">
                                 <option value="null">Select Status</option>
                                 <option value="1">Approve</option>
                                 <option value="2">Reject</option>
                             </select>
                         </td>
                         <td>
-                            {{ $file->rejection_reason }}
+                            @foreach($file->rejection_reasons as $rejection_reason)
+                                <p>{{ $rejection_reason->name }}</p>
+                            @endforeach
                         </td>
                         <input type="hidden" name="file_code" id="file_code" value="{{ $file->file_code }}">
                         <td>
-                            <select name="rejection_reason" class="reason_default form-control rejection_reason" id="reason{{ $file->file_code }}" multiple>
+                            <select name="rejection_reason[]" class="reason_default rejection_reason" style="width: 200px;" id="reason{{ $file->file_code }}" multiple>
                                 <option value="null">Select Reason</option>
                                 @foreach($reject_reasons as $reject_reason)
                                     <option value="{{ $reject_reason->id }}">{{ $reject_reason->name }}</option>
@@ -84,10 +86,10 @@
                             </select>
                         </td>
                         <td>
-                            <textarea name="recommendations" id="recommendations" class="recommendation_default" cols="30" rows="10"></textarea>
+                            <textarea name="recommendation" id="recommendations{{ $file->file_code }}" class="recommendation_default" cols="30" rows="10">{{ $file->recommendation }}</textarea>
                         </td>
                         <td>
-                            <button class="update_file update{{ $file->file_code }} btn btn-primary"
+                            <button @if(count($file->rejection_reasons) > 0) disabled style="pointer-events: none" @endif class="update_file update{{ $file->file_code }} btn btn-primary"
                                     name="status"
                                     data-broadcaster_id="{{ $file->broadcaster_id || $file->agency_broadcaster }}"
                                     data-campaign_id="{{ $file->campaign_id }}"
@@ -95,7 +97,7 @@
                                     data-token="{{ csrf_token() }}"
                                     data-mpo_id="{{ $mpo_data[0]['mpo_id'] }}"
                                     data-is_file_accepted="{{ $file->is_file_accepted }}"
-                                    data-rejection_reason="{{ $file->rejection_reason }}"
+                                    data-rejection_reason="{{ $file->rejection_reasons }}"
                             >
                                 Update
                             </button>
@@ -108,6 +110,7 @@
         </div>
 
     </div>
+
 
 @stop
 
@@ -136,6 +139,7 @@
                 var is_file_value = $(this).val()
                 if (is_file_value === '2') {
                     $('#reason'+url).prop('disabled', false);
+                    $('#recommendations'+url).prop('disabled', false);
                     $(".load").css({
                         opacity : 1
                     });
@@ -158,6 +162,7 @@
                 is_file_accepted = $("select#is_file_accepted"+file_code).val();
                 campaign_id = $(this).data("campaign_id");
                 mpo_id = $(this).data("mpo_id");
+                recommendation = $("#recommendations"+file_code).val();
 
                 if (rejection_reason === 'null' && is_file_accepted === 'null') {
                     toastr.error("File Status and Rejection reason can't be empty");
@@ -188,22 +193,22 @@
                         is_file_accepted: is_file_accepted,
                         rejection_reason: rejection_reason,
                         campaign_id: campaign_id,
-                        mpo_id : mpo_id
+                        mpo_id : mpo_id,
+                        recommendation: recommendation
                     },
                     success: function (data) {
                         $(".load").css({
                             opacity : 1
                         });
                         toastr.success(data.is_file_accepted, 'File Status Successfully Updated');
-                        $(".load").load(location.href + " .load");
+                        location.reload();
                     },
                     error: function () {
                         $(".load").css({
                             opacity : 1
                         });
                         toastr.error(data.is_file_accepted, 'File Status not Updated');
-                        $(".load").load(location.href + " .load");
-                        alert('not sent to server');
+                        location.reload();
                     }
                 });
 
