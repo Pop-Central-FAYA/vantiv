@@ -267,10 +267,8 @@
                         <tr>
                             <th>Day</th>
                             <th>Day Parts</th>
-                            <th>Target Audience</th>
                             <th>Region</th>
-                            <th>Min Age</th>
-                            <th>Max Age</th>
+                            <th>Media Channel</th>
                             <th>Hourly Range</th>
                         </tr>
 
@@ -278,10 +276,8 @@
                             <tr>
                                 <td>{{ $file_detail['day'] }}</td>
                                 <td>{{ $file_detail['day_part'] }}</td>
-                                <td>{{ $file_detail['target_audience'] }}</td>
                                 <td>{{ $file_detail['region'] }}</td>
-                                <td>{{ $file_detail['minimum_age'] }}</td>
-                                <td>{{ $file_detail['maximum_age'] }}</td>
+                                <td>{{ $file_detail['broadcast_station'] }}</td>
                                 <td>{{ $file_detail['hourly_range'] }}</td>
                             </tr>
                         @endforeach
@@ -297,6 +293,10 @@
                             <th>Files</th>
                             <th>Format</th>
                             <th>Description</th>
+                            <th>File Issue</th>
+                            <th>Recommendation</th>
+                            <th>Upload New File</th>
+                            <th>Action</th>
                         </tr>
 
                         @foreach($campaign_details['uploaded_files'] as $uploaded_file)
@@ -304,6 +304,22 @@
                                 <td><video src="{{ asset(decrypt($uploaded_file->file_url)) }}" width="150" height="100" controls></video></td>
                                 <td>{{ $uploaded_file->format ? $uploaded_file->format : '' }}</td>
                                 <td>{{  $uploaded_file->file_name ? str_limit($uploaded_file->file_name, 50) : '' }}</td>
+                                @if($uploaded_file->rejection_reasons)
+                                    <td>
+                                        @foreach($uploaded_file->rejection_reasons as $rejection_reason)
+                                            <p style="color: red">{{ $rejection_reason->name }}</p>
+                                        @endforeach
+                                    </td>
+                                    <td>
+                                        {{ $uploaded_file->recommendation }}
+                                    </td>
+                                    <td>
+                                        <input type="file" name="upload">
+                                    </td>
+                                    <td>
+                                        <button type="submit" class="btn btn-success">Update</button>
+                                    </td>
+                                @endif
                             </tr>
                         @endforeach
                     </table>

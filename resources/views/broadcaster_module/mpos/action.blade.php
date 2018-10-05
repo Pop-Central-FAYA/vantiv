@@ -122,7 +122,7 @@
         $(document).ready(function( $ ) {
 
             $('.rejection_reason').select2({
-                maximumSelectionLength: 2
+                maximumSelectionLength: 1
             });
 
             $('#flash-file-message').hide()

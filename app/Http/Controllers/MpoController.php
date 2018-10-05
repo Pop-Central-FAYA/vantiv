@@ -56,14 +56,14 @@ class MpoController extends Controller
             $mpos = Utilities::switch_db('api')->select("SELECT m_d.mpo_id, m_d.is_mpo_accepted, c_d.status as campaign_status m_d.agency_id, m.campaign_id from mpoDetails as m_d 
                                                             INNER JOIN mpos as m ON m.id = m_d.mpo_id 
                                                             INNER JOIN campaignDetails as c_d ON c_d.campaign_id = m.campaign_id AND c_d.broadcaster = m_d.broadcaster_id
-                                                            where m_d.broadcaster_id = '$broadcaster_id' and c_d.status = 'pending' OR c_d.status = 'file_error' AND
+                                                            where m_d.broadcaster_id = '$broadcaster_id' and c_d.status != 'on_hold' AND
                                                             c_d.broadcaster = '$broadcaster_id' AND
                                                             m_d.is_mpo_accepted = 0 and m_d.time_created between '$start_date' and '$stop_date' order by m_d.time_created desc");
         }else{
             $mpos = Utilities::switch_db('api')->select("SELECT m_d.mpo_id, m_d.is_mpo_accepted, c_d.status as campaign_status, m_d.agency_id, m.campaign_id from mpoDetails as m_d 
                                                             INNER JOIN mpos as m ON m.id = m_d.mpo_id 
                                                             INNER JOIN campaignDetails as c_d ON c_d.campaign_id = m.campaign_id AND c_d.broadcaster = m_d.broadcaster_id
-                                                            where m_d.broadcaster_id = '$broadcaster_id' and c_d.status = 'pending' OR c_d.status = 'file_error' AND
+                                                            where m_d.broadcaster_id = '$broadcaster_id' and c_d.status != 'on_hold' AND
                                                             c_d.broadcaster = '$broadcaster_id' AND
                                                             m_d.is_mpo_accepted = 0 order by m_d.time_created desc");
         }
@@ -102,20 +102,46 @@ class MpoController extends Controller
             }else if ($is_file_accepted !== 'null' && $rejection_reason !== 'null') {
                 $file_accepted = $is_file_accepted;
             }
+            Utilities::switch_db('api')->beginTransaction();
 
             $file = File::where('file_code', $file_code)->first();
             $file->is_file_accepted = $file_accepted;
             $file->recommendation = \request()->recommendation;
-            $file->save();
+            try {
+                $file->save();
+            }catch (\Exception $e) {
+                Utilities::switch_db('api')->rollback();
+            }
 
-            $file->rejection_reasons()->attach(\request()->rejection_reason);
+            try {
+                $file->rejection_reasons()->attach(\request()->rejection_reason);
+            }catch(\Exception $e) {
+                Utilities::switch_db('api')->rollback();
+            }
+
+
+            //log campaign details by changing the status to file_errors
+            $campaign_file_error = File::where('campaign_id', $campaign_id)->first();
+            if($campaign_file_error){
+                try {
+                    Utilities::switch_db('api')->update("UPDATE campaignDetails set status = 'file_errors' WHERE campaign_id = '$campaign_id'");
+                }catch(\Exception $e){
+                    Utilities::switch_db('api')->rollback();
+                }
+            }
 
             $check_files = Api::checkFilesForUpdatingMpos($campaign_id, $broadcaster_id);
 
             if($check_files == 0){
-                $update_mpo_details = Utilities::switch_db('api')->update("UPDATE mpoDetails set is_mpo_accepted = 1 where mpo_id = '$mpo_id' and broadcaster_id = '$broadcaster_id'");
+                try {
+                    $update_mpo_details = Utilities::switch_db('api')->update("UPDATE mpoDetails set is_mpo_accepted = 1 where mpo_id = '$mpo_id' and broadcaster_id = '$broadcaster_id'");
+                }catch (\Exception $e) {
+                    Utilities::switch_db('api')->rollback();
+                }
+
             }
 
+            Utilities::switch_db('api')->commit();
             //api call
 
             $insertStatus = [
@@ -201,8 +227,8 @@ class MpoController extends Controller
     {
         return $dataTables->collection($mpo_data)
             ->editColumn('status', function ($mpo_data){
-                if($mpo_data['campaign_status'] === 'active'){
-                    return '<span class="span_state status_success">Approved</span>';
+                if($mpo_data['is_mpo_accepted'] == 1){
+                    return '<span class="span_state status_success">All File Approved</span>';
                 }elseif($mpo_data['campaign_status'] == 'pending' || $mpo_data['campaign_status'] == 'file_error') {
                     return '<a href="'.route('mpo.action', ['mpo_id' => $mpo_data['mpo_id']]).'" class="span_state status_danger modal_mpo_click">In Progress</a>';
                 }else{

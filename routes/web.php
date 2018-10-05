@@ -190,6 +190,10 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/compliance-graph/filter/broadcaster', 'Broadcaster\CampaignsController@complianceFilter')->name('broadcaster.campaign_details.compliance');
 
         Route::get('/campaign-on-hold/data', 'Broadcaster\CampaignsController@getCampaignOnHold')->name('broadcaster.campaign.hold');
+
+        Route::post('/update-campaign/{campaign_id}', 'Broadcaster\CampaignsController@submitCampaignWithOtherPaymentOption')->name('broadcaster.campaign.update');
+
+        Route::post('/update-campaign/information/{campaign_id}', 'Broadcaster\CampaignsController@updateCampaignInformation')->name('broadcaster.campaign_information.update');
     });
 
     /*

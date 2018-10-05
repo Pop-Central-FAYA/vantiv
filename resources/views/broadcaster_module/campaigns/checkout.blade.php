@@ -95,50 +95,19 @@
     @endforeach
 
     <!-- payment modal -->
-    <div class="modal_contain payment_modal container_modal_pay" style="height: 600px;" id="payment">
+    <div class="modal_contain payment_modal container_modal_pay" id="payment">
         <h2 class="border_bottom align_center">Complete Purchase</h2>
 
         <div class="padd mb4 pt">
-            <h3 class="weight_medium uppercased">TOTAL: &#8358; {{ number_format($calc[0]->total_price, 2) }}</h3>
-            <p class="small_faint mb4"></p>
-
-            <p class="mb">Choose Payment Option</p>
             <form method="POST" action="{{ route('submit.campaign', ['id' => $id]) }}">
                 {{ csrf_field() }}
-
+                <h3 class="weight_medium uppercased">Your campaign will be created in the "ON HOLD" mode, please review and submit to the broadcaster in order to start processing</h3>
+                <p class="small_faint mb4"></p>
                 <input type="hidden" value="{{ $calc[0]->total_price }}" name="total"/>
+                <p><br></p>
                 <div class="mb4 create_payment">
-                    <li class="m-b">
-                        <input type="radio" name="pay" value="Cash" id="cash">
-                        <label class="weight_medium" for="cash">Cash</label>
-                    </li>
-
-                    <li class="m-b">
-                        <input type="radio" name="pay" value="Card" id="card">
-                        <label class="weight_medium" for="card">Card</label>
-                    </li>
-
-                    <li class="">
-                        <input type="radio" name="pay" value="Transfer" id="trans">
-                        <label class="weight_medium" for="trans">Transfer</label>
-                    </li>
-                    <br>
-                    <div class="column align_right card_transfer" style="display: none;">
+                    <div class="column align_right card_transfer" >
                         <button type="submit" class="btn uppercased _proceed">Proceed <span class=""></span></button>
-                    </div>
-                </div>
-            </form>
-            <form id="fund-form" role='form' action="{{ route('broadcaster.pay') }}" method="POST">
-                <div class="mb4 create_payment">
-                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                    <input id="amount" type="hidden" name="amount" readonly value="{{ $calc[0]->total_price }}" class="form-control">
-                    <input type="hidden" name="email" id="email" value="{{ $user[0]->email }}">
-                    <input type="hidden" name="name" id="name" value="{{ $user[0]->firstname .' '.$user[0]->lastname }}">
-                    <input type="hidden" name="phone_number" id="phone_number" value="{{ $user[0]->phone_number }}">
-                    <input type="hidden" name="reference" id="reference" value="" />
-                    <input type="hidden" name="user_id" value="{{ $id }}" />
-                    <div class="column align_right card_type" style="display: none;">
-                        <button type="button" onclick="payWithPaystack()" class="btn uppercased _proceed">Pay with your card</button>
                     </div>
                 </div>
             </form>
@@ -150,57 +119,6 @@
     <!-- end -->
 @stop
 
-@section('scripts')
-    <script src="https://js.paystack.co/v1/inline.js"></script>
-    <script>
-
-        $(document).ready(function() {
-
-            $('input[name=pay]').change(function(){
-                var value = $( 'input[name=pay]:checked' ).val();
-                if(value === 'Card'){
-                    $('.card_type').show();
-                    $('.card_transfer').hide();
-                }else{
-                    $(".card_transfer").show();
-                    $(".card_type").hide();
-                }
-            });
-        });
-
-        function payWithPaystack(){
-            $(".container_modal_pay").css({
-                opacity: 0.5
-            });
-            $("#payment").fadeOut(1000);
-            var handler = PaystackPop.setup({
-                key: "<?php echo getenv('PK_TEST_KEY'); ?>",
-                email: "<?php echo $user[0]->email; ?>",
-                amount: parseFloat(document.getElementById('amount').value * 100),
-                metadata: {
-                    custom_fields: [
-                        {
-                            display_name: "<?php echo $user[0]->firstname .' '.$user[0]->lastname; ?>",
-                            value: "<?php echo $user[0]->phone_number; ?>"
-                        }
-                    ]
-                },
-                callback: function(response){
-                    document.getElementById('reference').value = response.reference;
-                    document.getElementById('fund-form').submit();
-                },
-                onClose: function(){
-                    $(".container_modal_pay").css({
-                        opacity: 1
-                    });
-                    $("#payment").fadeIn(1000);
-                    // alert('window closed');
-                }
-            });
-            handler.openIframe();
-        }
-    </script>
-@stop
 
 
 

@@ -8,9 +8,11 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Input;
 use Cloudinary;
 use JD\Cloudder\Facades\Cloudder;
+use Vanguard\Http\Requests\CampaignInformationUpdateReqquest;
 use Vanguard\Libraries\Api;
 use Vanguard\Libraries\Maths;
 use Vanguard\Libraries\Utilities;
+use Vanguard\Models\File;
 use Yajra\Datatables\Datatables;
 use Carbon\Carbon;
 use Session;
@@ -344,8 +346,8 @@ class CampaignsController extends Controller
             $description = 'Campaign created by '.Session::get('broadcaster_id').' for '.$walkins;
             $ip = request()->ip();
             $user_activity = Api::saveActivity($walkins, $description, $ip, $user_agent);
-            Session::flash('success', 'Campaign created successfully');
-            return redirect()->route('bradcaster.campaign_management');
+            Session::flash('success', 'Campaign created successfully, please review the campaign and submit to broadcasters');
+            return redirect()->route('broadcaster.campaign.hold');
         }else{
             Session::flash('error', 'There was problem creating campaign');
             return redirect()->back();
@@ -358,89 +360,6 @@ class CampaignsController extends Controller
         $del = \DB::DELETE("DELETE FROM carts WHERE id = '$id'");
         Session::flash('success', 'Item deleted from cart successfully');
         return redirect()->back();
-    }
-
-    public function payCampaign(Request $request)
-    {
-
-        $insert = [
-            'id' => uniqid(),
-            'user_id' => $request->user_id,
-            'reference' => $request->reference,
-            'amount' => $request->amount,
-            'status' => 'PENDING',
-        ];
-
-        $transaction = Utilities::switch_db('api')->table('transactions')->insert($insert);
-
-        $response = $this->query_api_transaction_verify($request->reference);
-
-        if($response['status'] === true){
-
-            $amount = ($response['data']['amount']/100);
-            $card = $response['data']['authorization']['card_type'];
-            $status = $response['data']['status'];
-            $message = $response['message'];
-            $reference = $response['data']['reference'];
-            $ip_address = $response['data']['ip_address'];
-            $fees = $response['data']['fees'];
-            $user_id = $request->user_id;
-            $type = 'FUND WALLET';
-
-            $update_transaction = Utilities::switch_db('api')->select("UPDATE transactions SET card_type = '$card', status = 'SUCCESSFUL', ip_address = '$ip_address', fees = '$fees', `type` = '$type', message = '$message' WHERE reference = '$reference'");
-
-            if ($transaction) {
-                $req = [
-                    'payment' => 'card',
-                    'total' => $amount,
-                ];
-                $request = (object)$req;
-                $save_campaign = $this->saveCampaign($request, $user_id);;
-                if($save_campaign === 'success'){
-                    $user_agent = $_SERVER['HTTP_USER_AGENT'];
-                    $description = 'Payment of '.$amount.' to '.Session::get('broadcaster_id').' by '.$user_id.' For Campaign';
-                    $ip = request()->ip();
-                    $user_activity = Api::saveActivity($user_id, $description, $ip, $user_agent);
-
-                    $msg = 'Your payment of '. $amount.' is successful and campaign has been created ';
-                    Session::flash('success', $msg);
-                    return redirect()->route('bradcaster.campaign_management');
-                }else{
-                    Session::flash('error', 'There was problem creating campaign');
-                    return redirect()->back();
-                }
-
-            }
-
-        } else {
-            Session::flash('error', 'Sorry, something went wrong! Please contact the Administrator or Bank.');
-            return redirect()->back();
-        }
-
-
-    }
-
-    protected function query_api_transaction_verify($reference)
-    {
-        $result = array();
-        $url = 'https://api.paystack.co/transaction/verify/'.$reference;
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt(
-            $ch, CURLOPT_HTTPHEADER, [
-                'Authorization: Bearer '.getenv('PAYSTACK_SECRET_KEY').'']
-        );
-        $request = curl_exec($ch);
-        curl_close($ch);
-
-        if ($request) {
-            $result = json_decode($request, true);
-            return $result;
-        } else {
-            return false;
-        }
     }
 
     public function saveCampaign($request, $id)
@@ -512,7 +431,14 @@ class CampaignsController extends Controller
         $camp_id = Utilities::switch_db('api')->select("SELECT * from campaigns WHERE id='$campaign_id'");
         foreach($queries as $query)
         {
-            $new_q[] = Utilities::campaignFileInformation($camp_id, $query, $id, $now, null, $broadcaster_id);
+            $new_q = Utilities::campaignFileInformation($camp_id, $query, $id, $now, null, $broadcaster_id);
+            try {
+                File::create($new_q);
+            }catch (\Exception $e){
+                $api_db->rollback();
+                Session::flash('error', $e->getMessage());
+                return 'error';
+            }
         }
 
         $pay[] = Utilities::campaignPaymentInformation($pay_id, $camp_id, $request, $now, $first);
@@ -528,13 +454,6 @@ class CampaignsController extends Controller
 
         try{
             $save_payment_details = Utilities::switch_db('api')->table('paymentDetails')->insert($payDetails);
-        }catch(\Exception $e){
-            $api_db->rollback();
-            return 'error';
-        }
-
-        try{
-            $save_file = Utilities::switch_db('api')->table('files')->insert($new_q);
         }catch(\Exception $e){
             $api_db->rollback();
             return 'error';
@@ -785,12 +704,16 @@ class CampaignsController extends Controller
     public function getCampaignOnHold()
     {
         $broadcaster_id = Session::get('broadcaster_id');
-        $all_campaigns = Utilities::switch_db('api')->select("SELECT c_d.adslots_id, c_d.stop_date, c_d.status, c_d.start_date, c_d.time_created, c_d.product, c_d.name, c_d.campaign_id, p.total, b.name as brand_name, 
+        $all_campaigns = Utilities::switch_db('api')->select("SELECT c_d.adslots_id, c_d.stop_date, c_d.status, c_d.start_date, c_d.time_created, c_d.product, 
+                                                                        c_d.name, c_d.campaign_id, p.total, p.id as payment_id, b.name as brand_name, c_d.user_id as user_id,
+                                                                        CONCAT(u.firstname,' ', u.lastname) as full_name, u.phone_number, u.email as email,
                                                                       c.campaign_reference from campaignDetails as c_d LEFT JOIN payments as p ON p.campaign_id = c_d.campaign_id 
-                                                                       LEFT JOIN campaigns as c ON c.id = c_d.campaign_id LEFT JOIN brands as b ON b.id = c_d.brand where  c_d.broadcaster = '$broadcaster_id' 
+                                                                       LEFT JOIN campaigns as c ON c.id = c_d.campaign_id LEFT JOIN brands as b ON b.id = c_d.brand
+                                                                       INNER JOIN users as u ON u.id = c_d.user_id 
+                                                                       where  c_d.broadcaster = '$broadcaster_id' 
                                                                        and c_d.status = 'on_hold' and c_d.adslots  > 0 ORDER BY c_d.time_created DESC");
 
-        $campaigns = Utilities::getCampaignDatatables($all_campaigns);
+        $campaigns = Utilities::getCampaignDatatablesforCampaignOnHold($all_campaigns);
 
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
         $col = new Collection($campaigns);
@@ -800,6 +723,168 @@ class CampaignsController extends Controller
         $campaigns->setPath('data');
 
         return view('broadcaster_module.campaigns.campaign_onhold', compact('campaigns'));
+    }
+
+    public function updateCampaign($payment_method, $campaign_id)
+    {
+        $broadcaster_id = Session::get('broadcaster_id');
+        $api_db = Utilities::switch_db('api');
+        $single_campaign = $api_db->select("SELECT c_d.adslots_id, c_d.stop_date, c_d.status, c_d.start_date, c_d.time_created, c_d.product,
+                                                        c_d.name, c_d.campaign_id, p.total, p.id as payment_id, b.name as brand_name, c_d.user_id as user_id,
+                                                        CONCAT(u.firstname,' ', u.lastname) as full_name, u.phone_number, u.email as email,
+                                                      c.campaign_reference from campaignDetails as c_d INNER JOIN payments as p ON p.campaign_id = c_d.campaign_id 
+                                                       INNER JOIN campaigns as c ON c.id = c_d.campaign_id INNER JOIN brands as b ON b.id = c_d.brand
+                                                       INNER JOIN users as u ON u.id = c_d.user_id 
+                                                       where  c_d.broadcaster = '$broadcaster_id' 
+                                                       and c_d.campaign_id = '$campaign_id' and c_d.adslots  > 0 ORDER BY c_d.time_created DESC");
+
+        $campaign = Utilities::getCampaignDatatablesforCampaignOnHold($single_campaign);
+        $campaign_id = $campaign[0]['campaign_id'];
+        $payment_id = $campaign[0]['payment_id'];
+
+        $api_db->beginTransaction();
+        try {
+            $api_db->update("UPDATE campaignDetails set status = 'pending' WHERE campaign_id = '$campaign_id'");
+        }catch (\Exception $e){
+            $api_db->rollback();
+            return 'error';
+        }
+
+        try {
+            $api_db->update("UPDATE paymentDetails set payment_method = '$payment_method', payment_status = 1 where payment_id = '$payment_id'");
+        }catch (\Exception $e){
+            $api_db->rollback();
+            return 'error';
+        }
+
+        try {
+            $api_db->update("UPDATE invoiceDetails set status = 1 WHERE invoice_id = (SELECT id from invoices WHERE campaign_id = '$campaign_id')");
+        }catch (\Exception $e){
+            $api_db->rollback();
+            return 'error';
+        }
+
+        $api_db->commit();
+        return 'success';
+
+    }
+
+    public function submitCampaignWithOtherPaymentOption(Request $request, $campaign_id)
+    {
+        $save_campaign = $this->updateCampaign($request->pay, $campaign_id);
+        if($save_campaign === 'success'){
+            $user_agent = $_SERVER['HTTP_USER_AGENT'];
+            $description = 'Campaign created by '.Session::get('broadcaster_id').' for successfully';
+            $ip = request()->ip();
+            $user_activity = Api::saveActivity(Session::get('broadcaster_id'), $description, $ip, $user_agent);
+            Session::flash('success', 'Campaign created successfully, please review the campaign and submit to broadcasters');
+            return redirect()->route('bradcaster.campaign_management');
+        }else{
+            Session::flash('error', 'There was problem creating campaign');
+            return redirect()->back();
+        }
+    }
+
+    public function payCampaign(Request $request)
+    {
+
+        $insert = [
+            'id' => uniqid(),
+            'user_id' => $request->user_id,
+            'reference' => $request->reference,
+            'amount' => $request->total,
+            'status' => 'PENDING',
+        ];
+
+        $transaction = Utilities::switch_db('api')->table('transactions')->insert($insert);
+
+        $response = $this->query_api_transaction_verify($request->reference);
+
+        if($response['status'] === true){
+
+            $amount = ($response['data']['amount']/100);
+            $card = $response['data']['authorization']['card_type'];
+            $status = $response['data']['status'];
+            $message = $response['message'];
+            $reference = $response['data']['reference'];
+            $ip_address = $response['data']['ip_address'];
+            $fees = $response['data']['fees'];
+            $user_id = $request->user_id;
+            $type = 'PAID FOR CAMPAIGN';
+
+            Utilities::switch_db('api')->beginTransaction();
+            try{
+                $update_transaction = Utilities::switch_db('api')->select("UPDATE transactions SET card_type = '$card', status = 'SUCCESSFUL', ip_address = '$ip_address', 
+                                                                            fees = '$fees', `type` = '$type', message = '$message' WHERE reference = '$reference'");
+            }catch (\Exception $e){
+                Utilities::switch_db('api')->rollback();
+                Session::flash('error', $e->getMessage());
+                return redirect()->back();
+            }
+
+
+            if ($transaction) {
+                $req = [
+                    'payment' => 'Card',
+                    'total' => $amount,
+                    'campaign_id' => $request->campaign_id
+                ];
+                $request = (object)$req;
+                $save_campaign = $this->updateCampaign($request->payment, $request->campaign_id);
+                if($save_campaign === 'success'){
+                    Utilities::switch_db('api')->commit();
+                    $user_agent = $_SERVER['HTTP_USER_AGENT'];
+                    $description = 'Payment of '.$amount.' to '.Session::get('broadcaster_id').' by '.$user_id.' For Campaign';
+                    $ip = request()->ip();
+                    $user_activity = Api::saveActivity($user_id, $description, $ip, $user_agent);
+
+                    $msg = 'Your payment of '. $amount.' is successful and campaign has been submitted to the broadcaster(s) ';
+                    Session::flash('success', $msg);
+                    return redirect()->route('bradcaster.campaign_management');
+                }else{
+                    Session::flash('error', 'There was problem creating campaign');
+                    return redirect()->back();
+                }
+
+            }
+
+        } else {
+            Session::flash('error', 'Sorry, something went wrong! Please contact the Administrator or Bank.');
+            return redirect()->back();
+        }
+
+
+    }
+
+    public function updateCampaignInformation(CampaignInformationUpdateReqquest $request, $campaign_id)
+    {
+        Utilities::switch_db('api')->update("UPDATE campaignDetails set name = '$request->name', product = '$request->product' WHERE campaign_id = '$campaign_id'");
+
+        Session::flash('success', 'Campaign Information updated');
+        return redirect()->back();
+    }
+
+    protected function query_api_transaction_verify($reference)
+    {
+        $result = array();
+        $url = 'https://api.paystack.co/transaction/verify/'.$reference;
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt(
+            $ch, CURLOPT_HTTPHEADER, [
+                'Authorization: Bearer '.getenv('PAYSTACK_SECRET_KEY').'']
+        );
+        $request = curl_exec($ch);
+        curl_close($ch);
+
+        if ($request) {
+            $result = json_decode($request, true);
+            return $result;
+        } else {
+            return false;
+        }
     }
 
 
