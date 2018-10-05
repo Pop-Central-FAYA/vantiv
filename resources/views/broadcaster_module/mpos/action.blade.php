@@ -39,7 +39,8 @@
                 <thead>
                 <tr>
                     <th>Media</th>
-                    <th>Slot Picked</th>
+                    <th>Time Picked</th>
+                    <th>Adslots</th>
                     <th>Approval</th>
                     <th>Action</th>
                     <th>Reason</th>
@@ -55,6 +56,12 @@
                             <video width="150" controls><source src="{{ asset(decrypt($file->file_url)) }}"></video>
                         </td>
                         <td>{{ $file->time_picked }} seconds</td>
+                        <td>
+                            <p>{{ $file->get_adslot->get_rate_card->get_day->day }}</p>
+                            <p>{{ $file->get_adslot->day_part->day_parts }}</p>
+                            <p>{{ $file->get_adslot->get_rate_card->hourly_range->time_range }}</p>
+                            <p>{{ $file->get_adslot->from_to_time }}</p>
+                        </td>
                         <td>
                             @if ($file->is_file_accepted === 0)
                                 <span class="span_state status_pending">Pending</span>

@@ -2,6 +2,7 @@
 
 namespace Vanguard\Http\Controllers;
 
+use JD\Cloudder\Facades\Cloudder;
 use Vanguard\Libraries\Api;
 use Illuminate\Http\Request;
 use Vanguard\Libraries\Utilities;
@@ -248,6 +249,37 @@ class MpoController extends Controller
                                                             m_d.broadcaster_id = '$broadcaster_id' AND m_d.is_mpo_accepted = 0 order by m_d.time_created desc");
         $mpo_data = $this->getMpoCollection($mpo, $broadcaster_id);
         return view('mpos.rejected_files', compact('mpo_data'));
+    }
+
+    public function updateFiles(Request $request, $file_id)
+    {
+
+        $file = File::where('id', $file_id)->first();
+        $time_picked = (int)$file->time_picked;
+        if(((int)$request->f_du) > $time_picked){
+            $message = 'Your file duration cannot be more than '.$time_picked.' Seconds';
+            \Session::flash('error', $message);
+            return redirect()->back();
+        }
+
+        $expected_extensions = ['avi', 'mp3', 'mp4', 'mpeg4', 'ogg'];
+        if($request->hasFile('uploads')){
+            $file_extention = $request->file('uploads')->getClientOriginalExtension();
+            if(!in_array($file_extention,$expected_extensions)){
+                \Session::flash('error', 'File extension not valid');
+                return redirect()->back();
+            }
+        }
+
+        $filesUploads = $request->uploads;
+
+        $filename = $filesUploads->getRealPath();
+        Cloudder::uploadVideo($filename, Cloudder::getPublicId(),
+            array("resource_type" => "video"));
+        $clouder = Cloudder::getResult();
+        dd(encrypt($clouder));
+
+        dd((integer)$request->f_du, (integer)$file->time_picked);
     }
 
 }

@@ -291,8 +291,7 @@
                     <table>
                         <tr>
                             <th>Files</th>
-                            <th>Format</th>
-                            <th>Description</th>
+                            <th>Adslots</th>
                             <th>File Issue</th>
                             <th>Recommendation</th>
                             <th>Upload New File</th>
@@ -300,30 +299,51 @@
                         </tr>
 
                         @foreach($campaign_details['uploaded_files'] as $uploaded_file)
-                            <tr>
-                                <td><video src="{{ asset(decrypt($uploaded_file->file_url)) }}" width="150" height="100" controls></video></td>
-                                <td>{{ $uploaded_file->format ? $uploaded_file->format : '' }}</td>
-                                <td>{{  $uploaded_file->file_name ? str_limit($uploaded_file->file_name, 50) : '' }}</td>
-                                @if($uploaded_file->rejection_reasons)
+                            <form method="POST" action="{{ route('file.change', ['file_id' => $uploaded_file->id]) }}" enctype="multipart/form-data">
+                                {{ csrf_field() }}
+                                <tr>
+                                    <td><video src="{{ asset(decrypt($uploaded_file->file_url)) }}" width="150" height="100" controls></video></td>
                                     <td>
+                                        <p>{{ $uploaded_file->get_adslot->get_rate_card->get_day->day }}</p>
+                                        <p>{{ $uploaded_file->get_adslot->day_part->day_parts }}</p>
+                                        <p>{{ $uploaded_file->get_adslot->get_rate_card->hourly_range->time_range }}</p>
+                                        <p>{{ $uploaded_file->get_adslot->from_to_time }}</p>
+                                    </td>
+                                    @if($uploaded_file->rejection_reasons)
+                                        <td>
+                                            @foreach($uploaded_file->rejection_reasons as $rejection_reason)
+                                                <p style="color: red">{{ $rejection_reason->name }}</p>
+                                            @endforeach
+                                        </td>
+                                        <td>
+                                            {{ $uploaded_file->recommendation }}
+                                        </td>
                                         @foreach($uploaded_file->rejection_reasons as $rejection_reason)
-                                            <p style="color: red">{{ $rejection_reason->name }}</p>
+                                            @if($uploaded_file->id === $rejection_reason->pivot->file_id)
+                                                <td>
+                                                    <div class="{{ $errors->has('upload') ? ' has-error' : '' }}">
+                                                        <input type="file" class="form-control" id="fup" name="uploads">
+                                                        @if($errors->has('upload'))
+                                                            <span class="help-block">
+                                                                {{ $errors->first('upload') }}
+                                                            </span>
+                                                        @endif
+                                                    </div>
+                                                    <input type="hidden" name="f_du" id="f_du" size="5" />
+                                                </td>
+                                                <td>
+                                                    <button type="submit" class="btn btn-success">Update</button>
+                                                </td>
+                                            @endif
                                         @endforeach
-                                    </td>
-                                    <td>
-                                        {{ $uploaded_file->recommendation }}
-                                    </td>
-                                    <td>
-                                        <input type="file" name="upload">
-                                    </td>
-                                    <td>
-                                        <button type="submit" class="btn btn-success">Update</button>
-                                    </td>
-                                @endif
-                            </tr>
+                                    @endif
+                                </tr>
+                            </form>
                         @endforeach
                     </table>
                 </div>
+
+                <audio id="audio"></audio>
 
                 <!-- Complaince -->
                 <div class="tab_content" id="comp">
@@ -644,6 +664,26 @@
             cb(start, end);
 
         })
+
+        //register canplaythrough event to #audio element to can get duration
+        var f_duration =0;  //store duration
+        document.getElementById('audio').addEventListener('canplaythrough', function(e){
+            //add duration in the input field #f_du
+            f_duration = Math.round(e.currentTarget.duration);
+            document.getElementById('f_du').value = f_duration;
+            URL.revokeObjectURL(obUrl);
+        });
+
+        //when select a file, create an ObjectURL with the file and add it in the #audio element
+        var obUrl;
+        document.getElementById('fup').addEventListener('change', function(e){
+            var file = e.currentTarget.files[0];
+            //check file extension for audio/video type
+            if(file.name.match(/\.(avi|mp3|mp4|mpeg|ogg)$/i)){
+                obUrl = URL.createObjectURL(file);
+                document.getElementById('audio').setAttribute('src', obUrl);
+            }
+        });
 
     </script>
 @stop

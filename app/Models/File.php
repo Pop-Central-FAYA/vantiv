@@ -19,4 +19,9 @@ class File extends Model
     {
         return $this->belongsToMany(RejectionReason::class, 'file_rejection_reason','file_id', 'rejection_reason_id');
     }
+
+    public function get_adslot()
+    {
+        return $this->belongsTo(Adslot::class, 'adslot');
+    }
 }
