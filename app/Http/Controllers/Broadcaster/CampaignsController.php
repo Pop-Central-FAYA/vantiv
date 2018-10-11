@@ -593,7 +593,7 @@ class CampaignsController extends Controller
                                                                       c.campaign_reference from campaignDetails as c_d LEFT JOIN payments as p ON p.campaign_id = c_d.campaign_id 
                                                                        LEFT JOIN campaigns as c ON c.id = c_d.campaign_id LEFT JOIN brands as b ON b.id = c_d.brand
                                                                        INNER JOIN users as u ON u.id = c_d.user_id 
-                                                                       where  c_d.broadcaster = '$broadcaster_id' 
+                                                                       where  c_d.broadcaster = '$broadcaster_id' AND c_d.agency = ''
                                                                        and c_d.status = 'on_hold' and c_d.adslots  > 0 ORDER BY c_d.time_created DESC");
 
         $campaigns = Utilities::getCampaignDatatablesforCampaignOnHold($all_campaigns);
@@ -611,26 +611,22 @@ class CampaignsController extends Controller
     public function updateCampaign($payment_method, $campaign_id)
     {
         $broadcaster_id = Session::get('broadcaster_id');
-        $check_campaign_start_date = Utilities::checkIfCampaignStartDateHasReached($campaign_id, $broadcaster_id);
+        $check_campaign_start_date = Utilities::checkIfCampaignStartDateHasReached($campaign_id, $broadcaster_id, null);
         if($check_campaign_start_date == 'error'){
             Session::flash('error', 'Campaign cant be submitted because the start date has exceeded the current date');
             return redirect()->back();
         }
         $api_db = Utilities::switch_db('api');
-        $single_campaign = $api_db->select("SELECT c_d.adslots_id, c_d.stop_date, c_d.status, c_d.start_date, c_d.time_created, c_d.product,
-                                                        c_d.name, c_d.campaign_id, p.total, p.id as payment_id, b.name as brand_name, c_d.user_id as user_id,
-                                                        CONCAT(u.firstname,' ', u.lastname) as full_name, u.phone_number, u.email as email,
-                                                      c.campaign_reference from campaignDetails as c_d INNER JOIN payments as p ON p.campaign_id = c_d.campaign_id 
-                                                       INNER JOIN campaigns as c ON c.id = c_d.campaign_id INNER JOIN brands as b ON b.id = c_d.brand
-                                                       INNER JOIN users as u ON u.id = c_d.user_id 
-                                                       where  c_d.broadcaster = '$broadcaster_id' 
-                                                       and c_d.campaign_id = '$campaign_id' and c_d.adslots  > 0 ORDER BY c_d.time_created DESC");
+        $single_campaign = $api_db->select("SELECT c_d.campaign_id, p.id as payment_id from campaignDetails as c_d 
+                                            INNER JOIN payments as p ON p.campaign_id = c_d.campaign_id 
+                                            where  c_d.broadcaster = '$broadcaster_id' 
+                                            and c_d.campaign_id = '$campaign_id' and c_d.adslots  > 0 ORDER BY c_d.time_created DESC");
 
         $campaign_id = $single_campaign[0]->campaign_id;
         $payment_id = $single_campaign[0]->payment_id;
 
         try {
-            \DB::transaction(function () use ($api_db, $campaign_id, $payment_method, $payment_id) {
+            $api_db->transaction(function () use ($api_db, $campaign_id, $payment_method, $payment_id) {
                 $api_db->update("UPDATE campaignDetails set status = 'pending' WHERE campaign_id = '$campaign_id'");
                 $api_db->update("UPDATE paymentDetails set payment_method = '$payment_method', payment_status = 1 where payment_id = '$payment_id'");
                 $api_db->update("UPDATE invoiceDetails set status = 1 WHERE invoice_id = (SELECT id from invoices WHERE campaign_id = '$campaign_id')");
@@ -649,7 +645,7 @@ class CampaignsController extends Controller
             $description = 'Campaign created by '.Session::get('broadcaster_id').' for successfully';
             Api::saveActivity(Session::get('broadcaster_id'), $description);
             Session::flash('success', $this->campaign_success_message);
-            return redirect()->route('bradcaster.campaign_management');
+            return redirect()->route('broadcaster.campaign_management');
         }else{
             Session::flash('error', 'There was problem creating campaign');
             return redirect()->back();
@@ -718,7 +714,7 @@ class CampaignsController extends Controller
     public function updateCampaignInformation(CampaignInformationUpdateRequest $request, $campaign_id)
     {
         $broadcaster_id = Session::get('broadcaster_id');
-        $check_campaign_start_date = Utilities::checkIfCampaignStartDateHasReached($campaign_id, $broadcaster_id);
+        $check_campaign_start_date = Utilities::checkIfCampaignStartDateHasReached($campaign_id, $broadcaster_id, null);
         if($check_campaign_start_date == 'error'){
             Session::flash('error', 'Campaign cant be submitted because the start date has exceeded the current date');
             return redirect()->back();
@@ -734,7 +730,7 @@ class CampaignsController extends Controller
                                                                    $invoice_number, $mpo_id, $file_array, $pay, $payDetails, $invoice, $invoiceDetails, $mpo, $mpoDetails)
     {
         try {
-            \DB::transaction(function () use ($api_db, $campDetails, $camp, $queries, $id, $now, $broadcaster_id,
+            $api_db->transaction(function () use ($api_db, $campDetails, $camp, $queries, $id, $now, $broadcaster_id,
                 $pay_id, $request, $first, $walkin_id, $calc, $campaign_id, $invoice_id,
                 $invoice_number, $mpo_id, $file_array, $pay, $payDetails, $invoice, $invoiceDetails, $mpo, $mpoDetails) {
                 $api_db->table('campaignDetails')->insert($campDetails);
@@ -761,7 +757,7 @@ class CampaignsController extends Controller
                 foreach ($queries as $query){
                     if(!empty($query->filePosition_id)){
                         $api_db->update("UPDATE adslot_filePositions set select_status = 1 
-                                                                                    WHERE adslot_id = '$query->adslot_id' AND broadcaster_id = '$broadcaster_id'");
+                                        WHERE adslot_id = '$query->adslot_id' AND broadcaster_id = '$broadcaster_id'");
                     }
                     $get_slots = $api_db->select("SELECT * from adslots WHERE id = '$query->adslot_id'");
                     $slots_id = $get_slots[0]->id;

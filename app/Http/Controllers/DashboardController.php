@@ -51,6 +51,10 @@ class DashboardController extends Controller
 //            all_brands
             $all_brands = Utilities::getBrands($agency_id);
 
+            //count campaign on hold
+            $campaigns_on_hold = Utilities::switch_db('api')->select("SELECT id FROM campaignDetails WHERE agency = '$agency_id' 
+                                                                          AND status = 'on_hold' GROUP BY campaign_id");
+
             $active_campaigns = Utilities::switch_db('api')->select("SELECT * FROM campaignDetails where agency = '$agency_id' AND start_date <= '$today_date' AND stop_date > '$today_date' GROUP BY campaign_id");
 
             return view('agency.dashboard.new_dashboard')->with(['broadcaster' => $allBroadcasters,
@@ -65,7 +69,7 @@ class DashboardController extends Controller
                                                                     'active_radio' => $radio_rating['percentage_active'],
                                                                     'pending_radio' => $radio_rating['percentage_pending'],
                                                                     'finish_radio' => $radio_rating['percentage_finished'],
-                                                                    'agency_info' => $agency_details]);
+                                                                    'agency_info' => $agency_details, 'campaigns_on_hold' => $campaigns_on_hold]);
 
         }
     }
@@ -259,11 +263,12 @@ class DashboardController extends Controller
 
         $pending_mpos = Utilities::switch_db('api')->select("SELECT m_d.mpo_id, m_d.is_mpo_accepted, m_d.agency_id, m.campaign_id from mpoDetails as m_d 
                                                             INNER JOIN mpos as m ON m.id = m_d.mpo_id 
-                                                            INNER JOIN campaignDetails as c_d ON c_d.campaign_id = m.campaign_id AND c_d.broadcaster = m_d.broadcaster_id
+                                                            INNER JOIN campaignDetails as c_d ON c_d.campaign_id = m.campaign_id 
+                                                            AND c_d.broadcaster = m_d.broadcaster_id
                                                             where m_d.broadcaster_id = '$broadcaster' and c_d.status != 'on_hold' AND
                                                             m_d.is_mpo_accepted = 0 order by m_d.time_created desc");
 
-        $campaign_on_hold = Utilities::switch_db('api')->select("SELECT * FROM campaignDetails where status = 'on_hold' AND broadcaster = '$broadcaster'");
+        $campaign_on_hold = Utilities::switch_db('api')->select("SELECT id FROM campaignDetails where status = 'on_hold' AND broadcaster = '$broadcaster' AND agency = ''");
 
         return view('broadcaster_module.dashboard.campaign_management.dashboard')->with(['volume' => $c_volume, 'month' => $c_mon, 'broadcaster_info' => $broadcaster_info,
                                                                                                 'walkins' => $clients, 'pending_invoices' => $pending_invoices,

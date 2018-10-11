@@ -1054,7 +1054,8 @@ class Utilities {
             'time_picked' => $query->time,
             'broadcaster_id' => $agency_id ? $query->broadcaster_id : $broadcaster_id,
             'public_id' => $query->public_id,
-            'format' => $query->format
+            'format' => $query->format,
+            'status' => 'pending'
         ];
     }
 
@@ -1224,15 +1225,35 @@ class Utilities {
         $brand_client->save();
     }
 
-    public static function checkIfCampaignStartDateHasReached($campaign_id, $broadcaster_id)
+    public static function checkIfCampaignStartDateHasReached($campaign_id, $broadcaster_id, $agency_id)
     {
         $today = date('Y-m-d');
-        $campaign_start_date = Utilities::switch_db('api')->select("SELECT start_date from campaignDetails 
+        if($broadcaster_id){
+            $campaign_start_date = Utilities::switch_db('api')->select("SELECT start_date from campaignDetails 
                                                                         where campaign_id = '$campaign_id' 
                                                                         AND broadcaster = '$broadcaster_id'");
+        }else{
+            $campaign_start_date = Utilities::switch_db('api')->select("SELECT start_date from campaignDetails 
+                                                                        where campaign_id = '$campaign_id' 
+                                                                        AND agency = '$agency_id' GROUP BY campaign_id");
+        }
+
         if($today > $campaign_start_date[0]->start_date){
             return 'error';
         }
+    }
+
+    public static function transactionHistory($agency_id, $amount, $current_balance, $previous_balance)
+    {
+        return  [
+            'id' => uniqid(),
+            'user_id' => $agency_id,
+            'amount' => $amount,
+            'prev_balance' => $previous_balance,
+            'current_balance' => $current_balance,
+            'status' => 1,
+
+        ];
     }
 
 

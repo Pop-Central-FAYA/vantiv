@@ -401,6 +401,12 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/compliance-graph/filter', 'Agency\CampaignsController@complianceFilter')->name('campaign_details.compliance');
 
             Route::post('/update-budget', 'Agency\CampaignsController@updateBudget')->name('update.budget');
+
+            Route::get('/on-hold', 'Agency\CampaignsController@campaignsOnHold')->name('agency.campaigns_onhold');
+
+            Route::post('/submit-update/{campaign_id}', 'Agency\CampaignsController@submitCampaignForProcessing')->name('agency.campaign.update');
+
+            Route::post('/information-update/{campaign_id}', 'Agency\CampaignsController@updateAgencyCampaignInformation')->name('agency.campaign_information.update');
         });
 
         Route::get('/agency-dashboard/periodic-sales', 'DashboardController@filterByBroad')->name('agency.dashboard.broad');

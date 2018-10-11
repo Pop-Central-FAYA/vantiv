@@ -153,16 +153,15 @@ class WalletsController extends Controller
         $agency_id = \Session::get('agency_id');
         $wallet = Utilities::switch_db('api')->select("SELECT * from wallets where user_id = '$agency_id'");
 
-        Utilities::switch_db('api')->beginTransaction();
-
         if($wallet){
-            $prev_balance = $wallet[0]->current_balance;
-            $current_balance = $amount + $prev_balance;
-            $prev_bal = $wallet[0]->current_balance;
-            $insert_history = $this->transactionHistory($agency_id, $amount, $prev_bal);
+            $previous_balance = $wallet[0]->current_balance;
+            $current_balance = $amount + $previous_balance;
+            $insert_history = Utilities::transactionHistory($agency_id, $amount, $current_balance, $previous_balance);
+            $new_previous_balance = $insert_history['prev_balance'];
+            $new_current_balance = $insert_history['current_balance'];
             try {
-                \DB::transaction(function() use($prev_balance, $current_balance, $agency_id, $insert_history) {
-                    Utilities::switch_db('api')->select("UPDATE wallets set prev_balance = '$prev_balance', current_balance = '$current_balance' WHERE user_id = '$agency_id'");
+                Utilities::switch_db('api')->transaction(function() use($new_previous_balance, $new_current_balance, $agency_id, $insert_history) {
+                    Utilities::switch_db('api')->select("UPDATE wallets set prev_balance = '$new_previous_balance', current_balance = '$new_current_balance' WHERE user_id = '$agency_id'");
                     Utilities::switch_db('api')->table('walletHistories')->insert($insert_history);
                 });
             }catch(\Exception $e){
@@ -179,7 +178,7 @@ class WalletsController extends Controller
                 ];
             $insert_history = $this->transactionHistory($agency_id, $amount, 0);
             try {
-                \DB::transaction(function () use ($insert_history, $wallet) {
+                Utilities::switch_db('api')->transaction(function () use ($insert_history, $wallet) {
                     Utilities::switch_db('api')->table('wallets')->insert($wallet);
                     Utilities::switch_db('api')->table('walletHistories')->insert($insert_history);
                 });
@@ -191,16 +190,6 @@ class WalletsController extends Controller
         return 'success';
     }
 
-    public function transactionHistory($agency_id, $amount, $previous_balance)
-    {
-        return  [
-            'id' => uniqid(),
-            'user_id' => $agency_id,
-            'amount' => $amount,
-            'prev_balance' => $previous_balance,
-            'current_balance' => $amount + $previous_balance,
-            'status' => 1,
-        ];
-    }
+
 
 }
