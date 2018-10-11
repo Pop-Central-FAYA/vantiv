@@ -50,42 +50,44 @@
                 </tr>
                 </thead>
                 <tbody>
-                @foreach ($mpo_data[0]['files'] as $file)
-                    <tr id="row{{ $file->file_code }}">
+
+                @if($mpo_data[0]['files'] !== 0)
+                    @foreach ($mpo_data[0]['files'] as $mpo_file)
+                        <tr id="row{{ $mpo_file->file_code }}">
                         <td>
-                            <video width="150" controls><source src="{{ asset(decrypt($file->file_url)) }}"></video>
+                            <video width="150" controls><source src="{{ asset(decrypt($mpo_file->file_url)) }}"></video>
                         </td>
-                        <td>{{ $file->time_picked }} seconds</td>
+                        <td>{{ $mpo_file->time_picked }} seconds</td>
                         <td>
-                            <p>{{ $file->get_adslot->get_rate_card->get_day->day }}</p>
-                            <p>{{ $file->get_adslot->day_part->day_parts }}</p>
-                            <p>{{ $file->get_adslot->get_rate_card->hourly_range->time_range }}</p>
-                            <p>{{ $file->get_adslot->from_to_time }}</p>
+                            <p>{{ $mpo_file->get_adslot->get_rate_card->get_day->day }}</p>
+                            <p>{{ $mpo_file->get_adslot->day_part->day_parts }}</p>
+                            <p>{{ $mpo_file->get_adslot->get_rate_card->hourly_range->time_range }}</p>
+                            <p>{{ $mpo_file->get_adslot->from_to_time }}</p>
                         </td>
                         <td>
-                            @if ($file->is_file_accepted === 0)
+                            @if ($mpo_file->status === 'pending')
                                 <span class="span_state status_pending">Pending</span>
-                            @elseif ($file->is_file_accepted === 1)
+                            @elseif ($mpo_file->status === 'approved')
                                 <span class="span_state status_success">Approved</span>
-                            @elseif ($file->is_file_accepted === 2)
+                            @elseif ($mpo_file->status=== 'rejected')
                                 <span class="span_state status_danger">Rejected</span>
                             @endif
                         </td>
                         <td>
-                            <select id="is_file_accepted{{ $file->file_code }}" class="jide form-control" @if(count($file->rejection_reasons) > 0) disabled @endif data-disappear="{{ $file->file_code }}">
+                            <select id="status{{ $mpo_file->file_code }}" class="jide form-control" @if($mpo_file->status == 'rejected') disabled @endif data-disappear="{{ $mpo_file->file_code }}">
                                 <option value="null">Select Status</option>
-                                <option value="1">Approve</option>
-                                <option value="2">Reject</option>
+                                <option value="approved">Approve</option>
+                                <option value="rejected">Reject</option>
                             </select>
                         </td>
                         <td>
-                            @foreach($file->rejection_reasons as $rejection_reason)
-                                <p>{{ $rejection_reason->name }}</p>
-                            @endforeach
+                            @if($mpo_file->status === 'rejected')
+                                <p>{{ $mpo_file->adslot_reasons->last() ? $mpo_file->adslot_reasons->last()->rejection_reason->name : '' }}</p>
+                            @endif
                         </td>
-                        <input type="hidden" name="file_code" id="file_code" value="{{ $file->file_code }}">
+                        <input type="hidden" name="file_code" id="file_code" value="{{ $mpo_file->file_code }}">
                         <td>
-                            <select name="rejection_reason[]" class="reason_default rejection_reason" style="width: 200px;" id="reason{{ $file->file_code }}" multiple>
+                            <select name="rejection_reason[]" class="reason_default rejection_reason" style="width: 200px;" id="reason{{ $mpo_file->file_code }}" multiple>
                                 <option value="null">Select Reason</option>
                                 @foreach($reject_reasons as $reject_reason)
                                     <option value="{{ $reject_reason->id }}">{{ $reject_reason->name }}</option>
@@ -93,24 +95,28 @@
                             </select>
                         </td>
                         <td>
-                            <textarea name="recommendation" id="recommendations{{ $file->file_code }}" class="recommendation_default" cols="30" rows="10">{{ $file->recommendation }}</textarea>
+                            <textarea name="recommendation" id="recommendations{{ $mpo_file->file_code }}" class="recommendation_default" cols="30" rows="10">
+                                @if($mpo_file->status === 'rejected')
+                                    {{ $mpo_file->adslot_reasons->last() ? $mpo_file->adslot_reasons->last()->recommendation : '' }}
+                                @endif
+                            </textarea>
                         </td>
                         <td>
-                            <button @if(count($file->rejection_reasons) > 0) disabled style="pointer-events: none" @endif class="update_file update{{ $file->file_code }} btn btn-primary"
+                            <button @if($mpo_file->status == 'rejected') disabled style="pointer-events: none" @endif class="update_file update{{ $mpo_file->file_code }} btn btn-primary"
                                     name="status"
-                                    data-broadcaster_id="{{ $file->broadcaster_id || $file->agency_broadcaster }}"
-                                    data-campaign_id="{{ $file->campaign_id }}"
-                                    data-file_code="{{ $file->file_code }}"
+                                    data-broadcaster_id="{{ $mpo_file->broadcaster_id || $mpo_file->agency_broadcaster }}"
+                                    data-campaign_id="{{ $mpo_file->campaign_id }}"
+                                    data-file_code="{{ $mpo_file->file_code }}"
                                     data-token="{{ csrf_token() }}"
                                     data-mpo_id="{{ $mpo_data[0]['mpo_id'] }}"
-                                    data-is_file_accepted="{{ $file->is_file_accepted }}"
-                                    data-rejection_reason="{{ $file->rejection_reasons }}"
+                                    data-status="{{ $mpo_file->status }}"
                             >
                                 Update
                             </button>
                         </td>
                     </tr>
-                @endforeach
+                    @endforeach
+                @endif
                 </tbody>
             </table>
             <!-- end -->
@@ -132,7 +138,7 @@
                 maximumSelectionLength: 1
             });
 
-            $('#flash-file-message').hide()
+            $('#flash-file-message').hide();
 
             $('.reason_default').prop('disabled', true);
 
@@ -143,8 +149,8 @@
                     opacity : 0.2
                 });
                 var url = $(this).data('disappear');
-                var is_file_value = $(this).val()
-                if (is_file_value === '2') {
+                var file_status = $(this).val()
+                if (file_status === 'rejected') {
                     $('#reason'+url).prop('disabled', false);
                     $('#recommendations'+url).prop('disabled', false);
                     $(".load").css({
@@ -166,12 +172,12 @@
 
                 csrf = $(this).data("token");
                 rejection_reason = $("select#reason"+file_code).val();
-                is_file_accepted = $("select#is_file_accepted"+file_code).val();
+                file_status = $("select#status"+file_code).val();
                 campaign_id = $(this).data("campaign_id");
                 mpo_id = $(this).data("mpo_id");
                 recommendation = $("#recommendations"+file_code).val();
 
-                if (rejection_reason === 'null' && is_file_accepted === 'null') {
+                if (rejection_reason === null && file_status === 'null') {
                     toastr.error("File Status and Rejection reason can't be empty");
                     $(".load").css({
                         opacity : 1
@@ -179,7 +185,7 @@
                     return;
                 }
 
-                if (is_file_accepted === '2' && rejection_reason === 'null') {
+                if (file_status === 'rejected' && rejection_reason === null) {
                     toastr.error("Please choose a reason for rejecting this file");
                     $(".load").css({
                         opacity : 1
@@ -194,27 +200,36 @@
                 });
 
                 $.ajax({
-                    url: 'approve/' + is_file_accepted + '/' + file_code + '/' + rejection_reason + '/' + campaign_id + '/' + mpo_id,
+                    url: 'file-status/update/'  + file_code + '/'  + campaign_id + '/' + mpo_id,
                     method: "GET",
                     data: {
-                        is_file_accepted: is_file_accepted,
+                        status: file_status,
                         rejection_reason: rejection_reason,
                         campaign_id: campaign_id,
                         mpo_id : mpo_id,
                         recommendation: recommendation
                     },
                     success: function (data) {
-                        $(".load").css({
-                            opacity : 1
-                        });
-                        toastr.success(data.is_file_accepted, 'File Status Successfully Updated');
-                        location.reload();
+                        console.log(data);
+                        if(data.status === 'approved'){
+                            $(".load").css({
+                                opacity : 1
+                            });
+                            toastr.success(data.status, 'File Status Successfully Updated');
+                            location.reload();
+                        }else if(data.error === 'error'){
+                            $(".load").css({
+                                opacity : 1
+                            });
+                            toastr.error('An error occurred while performing your request');
+                            location.reload();
+                        }
                     },
                     error: function () {
                         $(".load").css({
                             opacity : 1
                         });
-                        toastr.error(data.is_file_accepted, 'File Status not Updated');
+                        toastr.error(data.status, 'File Status not Updated');
                         location.reload();
                     }
                 });

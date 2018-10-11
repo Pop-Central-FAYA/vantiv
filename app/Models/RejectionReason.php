@@ -20,4 +20,9 @@ class RejectionReason extends Model
     {
         return $this->belongsToMany(File::class, 'file_rejection_reason', 'rejection_reason_id', 'file_id');
     }
+
+    public function adslot_reasons()
+    {
+        return $this->hasMany(AdslotReason::class, 'rejection_reason_id', 'id');
+    }
 }

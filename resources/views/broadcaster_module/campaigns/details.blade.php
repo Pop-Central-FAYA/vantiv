@@ -292,10 +292,10 @@
                         <tr>
                             <th>Files</th>
                             <th>Adslots</th>
-                            <th>File Issue</th>
-                            <th>Recommendation</th>
-                            <th>Upload New File</th>
-                            <th>Action</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
                         </tr>
 
                         @foreach($campaign_details['uploaded_files'] as $uploaded_file)
@@ -309,33 +309,29 @@
                                         <p>{{ $uploaded_file->get_adslot->get_rate_card->hourly_range->time_range }}</p>
                                         <p>{{ $uploaded_file->get_adslot->from_to_time }}</p>
                                     </td>
-                                    @if($uploaded_file->rejection_reasons)
+                                    @if($uploaded_file->status === 'rejected')
                                         <td>
-                                            @foreach($uploaded_file->rejection_reasons as $rejection_reason)
-                                                <p style="color: red">{{ $rejection_reason->name }}</p>
-                                            @endforeach
+                                            <p style="color: red">{{ $uploaded_file->adslot_reasons()->orderBy('updated_at', 'desc')->first()->rejection_reason->name }}</p>
                                         </td>
                                         <td>
-                                            {{ $uploaded_file->recommendation }}
+                                            <p>{{ $uploaded_file->adslot_reasons()->orderBy('updated_at', 'desc')->first()->recommendation }}</p>
                                         </td>
-                                        @foreach($uploaded_file->rejection_reasons as $rejection_reason)
-                                            @if($uploaded_file->id === $rejection_reason->pivot->file_id)
-                                                <td>
-                                                    <div class="{{ $errors->has('upload') ? ' has-error' : '' }}">
-                                                        <input type="file" class="form-control" id="fup" name="uploads">
-                                                        @if($errors->has('upload'))
-                                                            <span class="help-block">
-                                                                {{ $errors->first('upload') }}
-                                                            </span>
-                                                        @endif
-                                                    </div>
-                                                    <input type="hidden" name="f_du" id="f_du" size="5" />
-                                                </td>
-                                                <td>
-                                                    <button type="submit" class="btn btn-success">Update</button>
-                                                </td>
-                                            @endif
-                                        @endforeach
+                                        @if($uploaded_file->id === $uploaded_file->rejection_reasons()->orderBy('updated_at', 'desc')->first()->pivot->file_id)
+                                            <td>
+                                                <div class="{{ $errors->has('upload') ? ' has-error' : '' }}">
+                                                    <input type="file" class="form-control" id="file_upload" name="uploads">
+                                                    @if($errors->has('upload'))
+                                                        <span class="help-block">
+                                                            {{ $errors->first('upload') }}
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                                <input type="hidden" name="file_duration" id="file_duration" size="5" />
+                                            </td>
+                                            <td>
+                                                <button type="submit" class="btn btn-success">Update</button>
+                                            </td>
+                                        @endif
                                     @endif
                                 </tr>
                             </form>
@@ -670,13 +666,13 @@
         document.getElementById('audio').addEventListener('canplaythrough', function(e){
             //add duration in the input field #f_du
             f_duration = Math.round(e.currentTarget.duration);
-            document.getElementById('f_du').value = f_duration;
+            document.getElementById('file_duration').value = f_duration;
             URL.revokeObjectURL(obUrl);
         });
 
         //when select a file, create an ObjectURL with the file and add it in the #audio element
         var obUrl;
-        document.getElementById('fup').addEventListener('change', function(e){
+        document.getElementById('file_upload').addEventListener('change', function(e){
             var file = e.currentTarget.files[0];
             //check file extension for audio/video type
             if(file.name.match(/\.(avi|mp3|mp4|mpeg|ogg)$/i)){

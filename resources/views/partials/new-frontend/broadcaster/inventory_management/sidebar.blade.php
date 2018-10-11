@@ -15,7 +15,7 @@
     </div>
 
     <div class="_nav_button">
-        <a href="{{ route('bradcaster.campaign_management') }}" class="btn full block_disp uppercased align_center _campaign_mgt">Campaign Management</a>
+        <a href="{{ route('broadcaster.campaign_management') }}" class="btn full block_disp uppercased align_center _campaign_mgt">Campaign Management</a>
     </div>
 
 </div>

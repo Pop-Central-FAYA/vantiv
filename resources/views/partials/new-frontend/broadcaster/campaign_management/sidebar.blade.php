@@ -7,7 +7,7 @@
 
     <div class="_nav">
         <ul>
-            <li class="campaign_icon {{ Request::is('campaign-management/dashboard') ? 'active' : ''  }}"><a href="{{ route('bradcaster.campaign_management') }}">Dashboard</a></li>
+            <li class="campaign_icon {{ Request::is('campaign-management/dashboard') ? 'active' : ''  }}"><a href="{{ route('broadcaster.campaign_management') }}">Dashboard</a></li>
             <li class="report_icon"><a href="">Reports</a></li>
 
             <li class="clients_icon {{ Request::is('walk-in') ? 'active' : '' || Request::is('walk-in/walk-in/details/*') ? 'active' : ''  }}"><a href="{{ route('walkins.all') }}">Walk-Ins</a></li>

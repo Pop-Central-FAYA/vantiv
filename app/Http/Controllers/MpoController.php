@@ -6,6 +6,7 @@ use JD\Cloudder\Facades\Cloudder;
 use Vanguard\Libraries\Api;
 use Illuminate\Http\Request;
 use Vanguard\Libraries\Utilities;
+use Vanguard\Models\AdslotReason;
 use Vanguard\Models\File;
 use Vanguard\Models\RejectionReason;
 use Yajra\DataTables\DataTables;
@@ -88,80 +89,56 @@ class MpoController extends Controller
         return view('broadcaster_module.mpos.action', compact('mpo_data', 'reject_reasons'));
     }
 
-    public function update_file($is_file_accepted, $file_code, $rejection_reason, $campaign_id, $mpo_id)
+    public function update_file($file_code, $campaign_id, $mpo_id)
     {
 
-        if (request()->ajax()) {
-            $broadcaster_id = \Session::get('broadcaster_id');
-//            $add = Api::addFile($file_code);
-
-            if ($is_file_accepted !== 'null' && $rejection_reason === 'null') {
-                $file_accepted = $is_file_accepted;
-                $file_rejection = null;
-            }else if ($is_file_accepted === 'null' && $rejection_reason !== 'null') {
-                $file_accepted = null;
-            }else if ($is_file_accepted !== 'null' && $rejection_reason !== 'null') {
-                $file_accepted = $is_file_accepted;
-            }
-            Utilities::switch_db('api')->beginTransaction();
-
-            $file = File::where('file_code', $file_code)->first();
-            $file->is_file_accepted = $file_accepted;
-            $file->recommendation = \request()->recommendation;
-            try {
-                $file->save();
-            }catch (\Exception $e) {
-                Utilities::switch_db('api')->rollback();
-            }
-
-            try {
-                $file->rejection_reasons()->attach(\request()->rejection_reason);
-            }catch(\Exception $e) {
-                Utilities::switch_db('api')->rollback();
-            }
-
-
-            //log campaign details by changing the status to file_errors
-            $campaign_file_error = File::where('campaign_id', $campaign_id)->first();
-            if($campaign_file_error){
-                try {
-                    Utilities::switch_db('api')->update("UPDATE campaignDetails set status = 'file_errors' WHERE campaign_id = '$campaign_id'");
-                }catch(\Exception $e){
-                    Utilities::switch_db('api')->rollback();
-                }
-            }
-
-            $check_files = Api::checkFilesForUpdatingMpos($campaign_id, $broadcaster_id);
-
-            if($check_files == 0){
-                try {
-                    $update_mpo_details = Utilities::switch_db('api')->update("UPDATE mpoDetails set is_mpo_accepted = 1 where mpo_id = '$mpo_id' and broadcaster_id = '$broadcaster_id'");
-                }catch (\Exception $e) {
-                    Utilities::switch_db('api')->rollback();
-                }
-
-            }
-
-            Utilities::switch_db('api')->commit();
-            //api call
-
-            $insertStatus = [
-                'id' => uniqid(),
-                'user_id' => \Session::get('broadcaster_id'),
-                'description' => $is_file_accepted == "1" ? 'Your file with file code '.$file_code. ' has been approved and pushed to the Adserver by '.\Session::get('broadcaster_id') : 'Your file with file code '.$file_code. ' has just been rejected by '.\Session::get('broadcaster_id'),
-                'ip_address' => request()->ip(),
-                'user_agent' => $_SERVER['HTTP_USER_AGENT'],
-            ];
-
-            $status = Utilities::switch_db('api')->table('status_logs')->insert($insertStatus);
-
+        $status = \request()->status;
+        $broadcaster_id = \Session::get('broadcaster_id');
+        $rejection_reasons = \request()->rejection_reason;
+        $recommendation = \request()->recommendation;
+        if($status === 'rejected' && $rejection_reasons === null){
             return response()->json([
-                'is_file_accepted' => 1
+                'error' => 'error'
             ]);
-
-        } else {
-            return;
         }
+
+//            $add = Api::addFile($file_code);
+        try {
+            \DB::transaction(function () use ($file_code, $status, $campaign_id, $broadcaster_id, $mpo_id, $rejection_reasons, $recommendation) {
+                $file = File::where('file_code', $file_code)->first();
+                $file->status = $status;
+
+                if($status == 'rejected'){
+                    foreach ($rejection_reasons as $rejection_reason){
+                        AdslotReason::create([
+                           'file_id' => $file->id,
+                           'rejection_reason_id' => (int)$rejection_reason,
+                            'user_id' => $broadcaster_id,
+                            'recommendation' => $recommendation
+                        ]);
+                    }
+                }
+                $file->save();
+                $check_for_rejected_files = File::where([['campaign_id', $campaign_id],['status', 'rejected']])->first();
+                if($check_for_rejected_files){
+                    Utilities::switch_db('api')->update("UPDATE campaignDetails set status = 'file_errors' WHERE campaign_id = '$campaign_id'");
+                }
+                $check_files = Api::approvedCampaignFiles($campaign_id, $broadcaster_id);
+                if($check_files['check_file_for_updating_mpo'] == 0){
+                    Utilities::switch_db('api')->update("UPDATE mpoDetails set is_mpo_accepted = 1 where mpo_id = '$mpo_id' and broadcaster_id = '$broadcaster_id'");
+                }
+                $description = $status == "approved" ? 'Your file with file code '.$file_code. ' has been approved ' : 'Your file with file code '.$file_code. ' has been rejected';
+                Api::saveActivity(\Session::get('broadcaster_id'), $description);
+            });
+        }catch (\Exception $e){
+            return response()->json([
+                'error' => 'error'
+            ]);
+        }
+
+        return response()->json([
+            'status' => 'approved'
+        ]);
 
     }
 
@@ -178,6 +155,7 @@ class MpoController extends Controller
                                                                   where c.campaign_id = '$mpo->campaign_id'");
             $payment_details = Api::fetchPayment($mpo->campaign_id, $broadcaster_id);
             $status = Api::approvedCampaignFiles($mpo->campaign_id, $broadcaster_id);
+            $outstanding_files = Api::getOutstandingFiles($mpo->campaign_id, $broadcaster_id);
 
             if (count($campaign) === 0) {
                 $product = 0;
@@ -196,9 +174,7 @@ class MpoController extends Controller
                 $amount = $payment_details[0]->amount;
             }
 
-            $outstanding_files = Api::getOutstandingFiles($mpo->campaign_id, $broadcaster_id);
-
-            if ($outstanding_files === 0) {
+            if (count($outstanding_files) === 0) {
                 $files = 0;
             } else {
                 $files = $outstanding_files;
@@ -213,7 +189,7 @@ class MpoController extends Controller
                 'name' => $name,
                 'brand' => $campaign[0]->brand_name,
                 'date_created' => $time,
-                'status' => $status,
+                'status' => $status['mpo_approval_status'],
                 'channel' => $broadcaster_name,
                 'files' => $files,
                 'campaign_status' => $mpo->campaign_status
@@ -272,14 +248,40 @@ class MpoController extends Controller
         }
 
         $filesUploads = $request->uploads;
+        try {
+            $filename = $filesUploads->getRealPath();
+            Cloudder::uploadVideo($filename, Cloudder::getPublicId());
+            $clouder = Cloudder::getResult();
+        }catch (\Exception $e){
+            \Session::flash('error', 'Your file could not be processed for uploads');
+            return redirect()->back();
+        }
 
-        $filename = $filesUploads->getRealPath();
-        Cloudder::uploadVideo($filename, Cloudder::getPublicId(),
-            array("resource_type" => "video"));
-        $clouder = Cloudder::getResult();
-        dd(encrypt($clouder));
+        try {
+            \DB::transaction(function () use ($file, $filesUploads, $clouder) {
+                $file->file_name = $filesUploads->getClientOriginalName();
+                $file->file_url = encrypt($clouder['url']);
+                $file->public_id = $clouder['public_id'];
+                $file->format = $clouder['format'];
+                $file->status = 'pending';
+                $file->save();
 
-        dd((integer)$request->f_du, (integer)$file->time_picked);
+                $campaign_file_error = File::where([['campaign_id', $file->campaign_id],['status', 'file_errors']])->first();
+                if(!$campaign_file_error){
+                    Utilities::switch_db('api')->update("UPDATE campaignDetails set status = 'pending' WHERE campaign_id = '$file->campaign_id'");
+                }
+
+
+            });
+        }catch (\Exception $e){
+            \Session::flash('error', 'An error occurred while performing your request');
+            return redirect()->back();
+        }
+
+        \Session::flash('success', 'File updated successfully');
+        return redirect()->back();
+
+
     }
 
 }

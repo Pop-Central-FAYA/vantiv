@@ -116,21 +116,21 @@
                         <input type="hidden" value="{{ $campaign['budget'] }}" name="total"/>
                         <div class="mb4 create_payment">
                             <li class="m-b">
-                                <input type="radio" name="pay" value="Cash" id="cash">
-                                <label class="weight_medium" for="cash">Cash</label>
+                                <input type="radio" name="payment_option" value="Cash" id="cash{{ $campaign['campaign_id'] }}">
+                                <label class="weight_medium" for="cash{{ $campaign['campaign_id'] }}">Cash</label>
                             </li>
 
                             <li class="m-b">
-                                <input type="radio" name="pay" value="Card" id="card">
-                                <label class="weight_medium" for="card">Card</label>
+                                <input type="radio" name="payment_option" value="Card" id="card{{ $campaign['campaign_id'] }}">
+                                <label class="weight_medium" for="card{{ $campaign['campaign_id'] }}">Card</label>
                             </li>
 
-                            <li class="">
-                                <input type="radio" name="pay" value="Transfer" id="trans">
-                                <label class="weight_medium" for="trans">Transfer</label>
+                            <li class="m-b">
+                                <input type="radio" name="payment_option" value="Transfer" id="trans{{ $campaign['campaign_id'] }}">
+                                <label class="weight_medium" for="trans{{ $campaign['campaign_id'] }}">Transfer</label>
                             </li>
                             <br>
-                            <div class="column align_right card_transfer" style="display: none;">
+                            <div class="column align_right cash_transfer" style="display: none;">
                                 <button type="submit" class="btn uppercased _proceed">Proceed <span class=""></span></button>
                             </div>
                         </div>
@@ -139,10 +139,10 @@
                         <div class="mb4 create_payment">
                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
                             <input id="amount{{ $campaign['campaign_id'] }}" type="hidden" name="amount" readonly value="{{ $campaign['budget'] }}" class="form-control">
-                            <input type="hidden" name="email" id="email" value="{{ $campaign['email'] }}">
+                            <input type="hidden" name="email" value="{{ $campaign['email'] }}">
                             <input type="hidden" name="total" value="{{ $campaign['total'] }}">
-                            <input type="hidden" name="name" id="name" value="{{ $campaign['full_name'] }}">
-                            <input type="hidden" name="phone_number" id="phone_number" value="{{ $campaign['phone_number'] }}">
+                            <input type="hidden" name="name"  value="{{ $campaign['full_name'] }}">
+                            <input type="hidden" name="phone_number" value="{{ $campaign['phone_number'] }}">
                             <input type="hidden" name="reference" id="reference{{ $campaign['campaign_id'] }}" value="" />
                             <input type="hidden" name="user_id" value="{{ $campaign['user_id'] }}" />
                             <input type="hidden" name="campaign_id" value="{{ $campaign['campaign_id'] }}">
@@ -173,53 +173,54 @@
 
         $(document).ready(function() {
 
-            $('input[name=pay]').change(function(){
-                var value = $( 'input[name=pay]:checked' ).val();
+            $('input[name=payment_option]').change(function(){
+                var value = $( 'input[name=payment_option]:checked' ).val();
                 if(value === 'Card'){
                     $('.card_type').show();
-                    $('.card_transfer').hide();
+                    $('.cash_transfer').hide();
                 }else{
-                    $(".card_transfer").show();
+                    $(".cash_transfer").show();
                     $(".card_type").hide();
                 }
             });
-        });
 
-        $(".pay_button").click(function () {
-            $(".container_modal_pay").css({
-                opacity: 0.5
+
+            $(".pay_button").click(function () {
+                $(".container_modal_pay").css({
+                    opacity: 0.5
+                });
+                var amount = $(this).data("amount");
+                var name = $(this).data("full_name");
+                var email = $(this).data("email");
+                var campaign_id = $(this).data("campaign_id");
+                var phone_number = $(this).data("phone_number");
+                $("#payment").fadeOut(1000);
+                var handler = PaystackPop.setup({
+                    key: "<?php echo getenv('PK_TEST_KEY'); ?>",
+                    email: email,
+                    amount: parseFloat(amount * 100),
+                    metadata: {
+                        custom_fields: [
+                            {
+                                display_name: name,
+                                value: phone_number
+                            }
+                        ]
+                    },
+                    callback: function(response){
+                        document.getElementById('reference'+campaign_id).value = response.reference;
+                        document.getElementById('fund-form'+campaign_id).submit();
+                    },
+                    onClose: function(){
+                        $(".container_modal_pay").css({
+                            opacity: 1
+                        });
+                        $("#payment").fadeIn(1000);
+                        // alert('window closed');
+                    }
+                });
+                handler.openIframe();
             });
-            var amount = $(this).data("amount");
-            var name = $(this).data("full_name");
-            var email = $(this).data("email");
-            var campaign_id = $(this).data("campaign_id");
-            var phone_number = $(this).data("phone_number");
-            $("#payment").fadeOut(1000);
-            var handler = PaystackPop.setup({
-                key: "<?php echo getenv('PK_TEST_KEY'); ?>",
-                email: email,
-                amount: parseFloat(amount * 100),
-                metadata: {
-                    custom_fields: [
-                        {
-                            display_name: name,
-                            value: phone_number
-                        }
-                    ]
-                },
-                callback: function(response){
-                    document.getElementById('reference'+campaign_id).value = response.reference;
-                    document.getElementById('fund-form'+campaign_id).submit();
-                },
-                onClose: function(){
-                    $(".container_modal_pay").css({
-                        opacity: 1
-                    });
-                    $("#payment").fadeIn(1000);
-                    // alert('window closed');
-                }
-            });
-            handler.openIframe();
         });
 
     </script>

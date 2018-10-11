@@ -133,8 +133,8 @@ class Utilities {
             'status' => $campaign_details[0]->status
         ];
 
-        $files = Utilities::switch_db('api')->select("SELECT f.id, f.user_id, f.broadcaster_id, f.file_url, f.time_picked, f.is_file_accepted, 
-                                                                f.rejection_reason, f.file_name, f.format, a.from_to_time, a.min_age, a.max_age, 
+        $files = Utilities::switch_db('api')->select("SELECT f.id, f.user_id, f.broadcaster_id, f.file_url, f.time_picked, f.status, 
+                                                                f.file_name, f.format, a.from_to_time, a.min_age, a.max_age, 
                                                                 d_p.day_parts, t.audience, r.region, h.time_range, d.day, b.brand from files as f, 
                                                                 dayParts as d_p, adslots as a, targetAudiences as t, regions as r, days as d, 
                                                                 hourlyRanges as h, rateCards as r_c, broadcasters as b where f.broadcaster_id = b.id and 
@@ -143,8 +143,8 @@ class Utilities {
                                                                 r_c.day = d.id and a.broadcaster = b.id and campaign_id = '$campaign_id'");
 
         if($broadcaster_id){
-            $files = Utilities::switch_db('api')->select("SELECT f.id, f.user_id, f.broadcaster_id, f.file_url, f.time_picked, f.is_file_accepted, 
-                                                              f.rejection_reason, f.file_name, f.format, a.from_to_time, a.min_age, a.max_age, d_p.day_parts, 
+            $files = Utilities::switch_db('api')->select("SELECT f.id, f.user_id, f.broadcaster_id, f.file_url, f.time_picked, f.status, 
+                                                              f.file_name, f.format, a.from_to_time, a.min_age, a.max_age, d_p.day_parts, 
                                                               t.audience, r.region, h.time_range, d.day, b.brand from files as f, dayParts as d_p, adslots as a, 
                                                               targetAudiences as t, regions as r, days as d, hourlyRanges as h, rateCards as r_c, broadcasters as b 
                                                               where f.broadcaster_id = b.id and f.adslot = a.id and a.day_parts = d_p.id and a.target_audience = t.id
@@ -170,8 +170,7 @@ class Utilities {
                 'broadcast_station' => $file->brand,
                 'file' => decrypt($file->file_url),
                 'slot_time' => $file->time_picked.' seconds',
-                'file_status' => $file->is_file_accepted,
-                'rejection_reason' => $file->rejection_reason,
+                'file_status' => $file->status,
                 'file_name' => $file->file_name,
                 'format' => $file->format ? $file->format : '',
             ];
@@ -1223,6 +1222,17 @@ class Utilities {
         $brand_client->media_buyer_id = $broadcaster_agency_id;
         $brand_client->client_id = $client_id;
         $brand_client->save();
+    }
+
+    public static function checkIfCampaignStartDateHasReached($campaign_id, $broadcaster_id)
+    {
+        $today = date('Y-m-d');
+        $campaign_start_date = Utilities::switch_db('api')->select("SELECT start_date from campaignDetails 
+                                                                        where campaign_id = '$campaign_id' 
+                                                                        AND broadcaster = '$broadcaster_id'");
+        if($today > $campaign_start_date[0]->start_date){
+            return 'error';
+        }
     }
 
 
