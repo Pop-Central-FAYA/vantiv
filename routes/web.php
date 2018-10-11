@@ -188,7 +188,15 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/compliance-graph/broadcaster', 'Broadcaster\CampaignsController@complianceGraph');
 
         Route::get('/compliance-graph/filter/broadcaster', 'Broadcaster\CampaignsController@complianceFilter')->name('broadcaster.campaign_details.compliance');
+
+        Route::get('/campaign-on-hold/data', 'Broadcaster\CampaignsController@getCampaignOnHold')->name('broadcaster.campaign.hold');
+
+        Route::post('/update-campaign/{campaign_id}', 'Broadcaster\CampaignsController@submitCampaignWithOtherPaymentOption')->name('broadcaster.campaign.update');
+
+        Route::post('/update-campaign/information/{campaign_id}', 'Broadcaster\CampaignsController@updateCampaignInformation')->name('broadcaster.campaign_information.update');
     });
+
+    Route::post('file-update/{file_id}', 'MpoController@updateFiles')->name('file.change');
 
     /*
      * Broadcaster User Management
@@ -285,7 +293,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/clients-dashboard', ['as' => 'agency.dashboard', 'uses' => 'DashboardController@clientDashboard']);
 
-    Route::get('/campaign-management/dashboard', 'DashboardController@campaignManagementDashbaord')->name('bradcaster.campaign_management');
+    Route::get('/campaign-management/dashboard', 'DashboardController@campaignManagementDashbaord')->name('broadcaster.campaign_management');
     Route::get('/inventory-management/dashboard', 'DashboardController@inventoryManagementDashboard')->name('broadcaster.inventory_management');
 
     /**
@@ -341,7 +349,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/pending/data', 'MpoController@pendingData');
         Route::get('pending', 'MpoController@pending_mpos')->name('pending-mpos');
         Route::get('/mpo-action/{mpo_id}', 'MpoController@mpoAction')->name('mpo.action');
-        Route::get('/mpo-action/approve/{is_file_accepted}/{file_code}/{rejection_reason}/{campaign_id}/{mpo_id}', ['as' => 'files.update', 'uses' => 'MpoController@update_file']);
+        Route::get('/mpo-action/file-status/update/{file_code}/{campaign_id}/{mpo_id}', ['as' => 'files.update', 'uses' => 'MpoController@update_file']);
         Route::get('/rejected-files/{mpo_id}', 'MpoController@rejectedFiles')->name('mpo.rejected_files');
     });
 
@@ -393,6 +401,12 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/compliance-graph/filter', 'Agency\CampaignsController@complianceFilter')->name('campaign_details.compliance');
 
             Route::post('/update-budget', 'Agency\CampaignsController@updateBudget')->name('update.budget');
+
+            Route::get('/on-hold', 'Agency\CampaignsController@campaignsOnHold')->name('agency.campaigns_onhold');
+
+            Route::post('/submit-update/{campaign_id}', 'Agency\CampaignsController@submitCampaignForProcessing')->name('agency.campaign.update');
+
+            Route::post('/information-update/{campaign_id}', 'Agency\CampaignsController@updateAgencyCampaignInformation')->name('agency.campaign_information.update');
         });
 
         Route::get('/agency-dashboard/periodic-sales', 'DashboardController@filterByBroad')->name('agency.dashboard.broad');

@@ -50,7 +50,6 @@
                     <th>Date Created</th>
                     <th>Budget</th>
                     <th>Status</th>
-                    <th>File Issues</th>
                 </tr>
                 </thead>
             </table>
@@ -108,7 +107,6 @@
                     {data: 'date_created', name: 'date_created'},
                     {data: 'budget', name: 'budget'},
                     {data: 'status', name: 'status'},
-                    {data: 'file_issues', name: 'file_issues'}
                 ],
             });
 

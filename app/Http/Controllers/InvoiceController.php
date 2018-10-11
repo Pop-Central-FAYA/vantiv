@@ -71,7 +71,7 @@ class InvoiceController extends Controller
                 if($invoice_campaign_details['status'] === 1){
                     return '<span class="span_state status_success">Approved</span></td>';
                 }else{
-                    return '<a href="#approve_invoice'.$invoice_campaign_details['id'].'" class="span_state status_pending modal_invoice_click">Pending</a>';
+                    return '<span class="span_state status_pending">Pending</span>';
                 }
             })->addColumn('view', function ($invoice_campaign_details){
                 return '<a href="#invoice'.$invoice_campaign_details['id'].'" class="modal_view_invoice_click">View</a>';
@@ -145,7 +145,7 @@ class InvoiceController extends Controller
                 if($invoice_campaign_details['status'] === 1){
                     return '<span class="span_state status_success">Approved</span></td>';
                 }else{
-                    return '<a href="#approve_invoice'.$invoice_campaign_details['id'].'" class="span_state status_pending modal_invoice_click">Pending</a>';
+                    return '<span class="span_state status_pending">Pending</span>';
                 }
             })->addColumn('view', function ($invoice_campaign_details){
                 return '<a href="#invoice'.$invoice_campaign_details['id'].'" class="modal_view_invoice_click">View</a>';
@@ -153,62 +153,6 @@ class InvoiceController extends Controller
             ->rawColumns(['status' => 'status', 'view' => 'view'])
             ->addIndexColumn()
             ->make(true);
-    }
-
-    public function approveInvoice($invoice_id)
-    {
-        $agency_id = Session::get('agency_id');
-
-        $invoice = Utilities::switch_db('reports')->select("SELECT SUM(actual_amount_paid) as actual_amount_paid, invoice_number, invoice_id FROM invoiceDetails WHERE invoice_id = '$invoice_id' LIMIT 1");
-        $amount = $invoice[0]->actual_amount_paid;
-
-        $user_agent = $_SERVER['HTTP_USER_AGENT'];
-        $description = 'Invoice with invoice number '.$invoice[0]->invoice_number.' has been approved by '.$agency_id.'';
-        $ip = request()->ip();
-
-        $wallet = Utilities::switch_db('reports')->select("SELECT * FROM wallets WHERE user_id = '$agency_id'");
-        $current_balance = $wallet[0]->current_balance;
-        $new_balance = $current_balance - $amount;
-
-        if ($current_balance < $amount) {
-            return redirect()->back()->with('error', 'Insufficient Balance in Wallet');
-        }
-
-        $transaction = Utilities::switch_db('reports')->table('transactions')->insert([
-            'id' => uniqid(),
-            'amount' => $amount,
-            'user_id' => $agency_id,
-            'reference' => $invoice[0]->invoice_id,
-            'ip_address' => request()->ip(),
-            'type' => 'DEBIT WALLET',
-            'message' => 'Debit successful'
-        ]);
-
-        $walletHistory = Utilities::switch_db('reports')->table('walletHistories')->insert([
-            'id' => uniqid(),
-            'user_id' => $agency_id,
-            'amount' => $amount,
-            'prev_balance' => $current_balance,
-            'status' => 1,
-            'current_balance' => $new_balance
-        ]);
-
-        $updateWallet = Utilities::switch_db('reports')->select("UPDATE wallets SET current_balance = '$new_balance', prev_balance = '$current_balance' WHERE user_id = '$agency_id'");
-
-        if ($transaction && $walletHistory && empty($updateWallet)) {
-
-            $update_invoice = Utilities::switch_db('reports')->select("UPDATE invoiceDetails SET status = 1 WHERE invoice_id = '$invoice_id'");
-
-            if (empty($update_invoice)) {
-                $save_activity = Api::saveActivity($agency_id, $description, $ip, $user_agent);
-                return redirect()->back()->with('success', 'Invoice Approved Successfully');
-            } else {
-                return redirect()->back()->with('error', 'Invoice not Approved Successfully');
-            }
-        } else {
-            return redirect()->back()->with('error', 'Error Approving Invoice');
-        }
-
     }
 
 

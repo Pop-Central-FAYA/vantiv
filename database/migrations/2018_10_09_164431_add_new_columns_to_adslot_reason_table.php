@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateFileIssuesTable extends Migration
+class AddNewColumnsToAdslotReasonTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,9 @@ class CreateFileIssuesTable extends Migration
      */
     public function up()
     {
-        Schema::create('file_issues', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('name');
-            $table->timestamps();
+        Schema::table('adslot_reason', function (Blueprint $table) {
+            $table->string('user_id');
+            $table->text('recommendation');
         });
     }
 
@@ -27,6 +26,8 @@ class CreateFileIssuesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('file_issues');
+        Schema::table('adslot_reason', function (Blueprint $table) {
+            $table->dropIfExists(['user_id', 'recommendation']);
+        });
     }
 }

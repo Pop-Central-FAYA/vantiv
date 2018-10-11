@@ -21,7 +21,7 @@
         <!-- main frame -->
         <div class="the_frame clearfix mb border_top_color">
 
-            <div class="margin_center col_7 clearfix pt4 create_fields">
+            <div class="margin_center col_7 clearfix pt4 create_fields container_modal_pay">
 
                 <!-- progress bar -->
                 <div class="create_gauge">
@@ -65,11 +65,15 @@
                 </div>
 
                 <div class="mb4 clearfix pt4 mb4">
-                    <div class="column col_6">
+                    <div class="column col_4">
                         <a href="{{ route('agency_campaign.step3_2', ['id' => $id]) }}" class="btn uppercased _white _go_back"><span class=""></span> Back</a>
                     </div>
-
-                    <div class="column col_6 align_right">
+                    @if((int)$wallet_balance[0]->current_balance < (int)$calc[0]->total_price)
+                        <div class="column col_4">
+                            <a href="#fund_wallet" class="btn modal_click small_btn"><span class="_plus"></span>Fund Wallet</a>
+                        </div>
+                    @endif
+                    <div class="column col_4 align_right">
                         <a href="#payment" class="btn uppercased _proceed modal_click">Proceed <span class=""></span></a>
                     </div>
                 </div>
@@ -102,26 +106,11 @@
             <h3 class="weight_medium uppercased">TOTAL: &#8358; {{ number_format($calc[0]->total_price, 2) }}</h3>
             <p class="small_faint mb4"></p>
 
-            <p class="mb">Choose Payment Option</p>
             <form method="POST" action="{{ route('agency_submit.campaign', ['id' => $id]) }}">
                 {{ csrf_field() }}
-
+                <h3 class="weight_medium uppercased">Your campaign will be created in the "ON HOLD" mode, please review and submit to the broadcaster in order to start processing</h3>
                 <input type="hidden" value="{{ $calc[0]->total_price }}" name="total"/>
                 <div class="mb4 create_payment">
-                    <li class="m-b">
-                        <input type="radio" name="p" value="Cash" id="cash">
-                        <label class="weight_medium" for="cash">Cash</label>
-                    </li>
-
-                    {{--<li class="m-b">--}}
-                        {{--<input type="radio" name="p" value="Cart" id="card">--}}
-                        {{--<label class="weight_medium" for="card">Card</label>--}}
-                    {{--</li>--}}
-
-                    <li class="">
-                        <input type="radio" name="p" value="Transfer" id="trans">
-                        <label class="weight_medium" for="trans">Transfer</label>
-                    </li>
                     <br>
                     <div class="column align_right">
                         <button type="submit" class="btn uppercased _proceed">Proceed <span class=""></span></button>
@@ -134,6 +123,68 @@
         <br>
     </div>
     <!-- end -->
+    {{--updating wallets--}}
+    <!-- fund wallet modal -->
+    <div class="modal_contain payment_wallet" id="fund_wallet">
+
+        <h2 class="sub_header mb4 align_center">Fund Wallet</h2>
+
+        <form id="fund-form" role='form' action="{{ route('pay') }}" method="POST">
+            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+            <script src="https://js.paystack.co/v1/inline.js"></script>
+            <div class="input_wrap">
+                <label class="small_faint uppercased weight_medium">Amount</label>
+                <input id="amount" type="number" name="amount" placeholder="Enter Amount">
+            </div>
+            <input type="hidden" name="email" id="email" value="{{ Auth::user()->email }}">
+            <input type="hidden" name="name" id="name" value="{{ Auth::user()->first_name .' '.Auth::user()->last_name }}">
+            <input type="hidden" name="phone_number" id="phone_number" value="{{ Auth::user()->phone }}">
+            <input type="hidden" name="reference" id="reference" value="" />
+            <input type="hidden" name="user_id" value="{{ $agency_id }}" />
+        </form>
+
+        <div class="mb4">
+            <input type="button" value="Fund Wallet" id="fund" onclick="payWithPaystack()" class="full btn uppercased">
+        </div>
+
+    </div>
+@stop
+
+@section('scripts')
+    <script>
+        // $(document).ready(function () {
+            function payWithPaystack(){
+                $(".container_modal_pay").css({
+                    opacity: 0.5
+                });
+                $(".payment_wallet").fadeOut(1000);
+                var handler = PaystackPop.setup({
+                    key: 'pk_test_9945d2a543e97e34d0401f1d926e79dc1716ccc7',
+                    email: "<?php echo Auth::user()->email; ?>",
+                    amount: parseFloat(document.getElementById('amount').value * 100),
+                    metadata: {
+                        custom_fields: [
+                            {
+                                display_name: "<?php echo Auth::user()->first_name .' '.Auth::user()->last_name; ?>",
+                                value: "<?php echo Auth::user()->phone; ?>"
+                            }
+                        ]
+                    },
+                    callback: function(response){
+                        document.getElementById('reference').value = response.reference;
+                        document.getElementById('fund-form').submit();
+                    },
+                    onClose: function(){
+                        $(".container_modal_pay").css({
+                            opacity: 1
+                        });
+                        $(".payment_wallet").fadeIn(1000);
+                    }
+                });
+                handler.openIframe();
+            }
+        // })
+    </script>
 @stop
 
 

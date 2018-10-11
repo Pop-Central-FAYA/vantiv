@@ -37,7 +37,7 @@
         <h2 class="m-b">Welcome Back {{ $broadcaster_info[0]->brand }}</h2>
         <p class="mb4">What would you like to do?</p>
 
-        <a href="{{ route('bradcaster.campaign_management') }}" class="m-b block_disp btn full ghost">Campaign Management</a>
+        <a href="{{ route('broadcaster.campaign_management') }}" class="m-b block_disp btn full ghost">Campaign Management</a>
         <a href="{{ route('broadcaster.inventory_management') }}" class="m-b block_disp btn full ghost">Inventory Management</a>
     </div>
 

@@ -5,6 +5,7 @@ namespace Vanguard\Libraries;
 use Illuminate\Support\Facades\DB;
 use JD\Cloudder\Facades\Cloudder;
 use Vanguard\Models\BrandClient;
+use Vanguard\Models\File;
 
 class Utilities {
 
@@ -51,14 +52,16 @@ class Utilities {
     {
         $file_details = [];
         if($broadcaster_id){
-            $campaign_details = Utilities::switch_db('api')->select("SELECT c_d.campaign_id, c_d.min_age, c_d.max_age, c_d.name as campaign_name, c_d.user_id, c_d.agency, c_d.product, 
-                                                                c_d.Industry, c_d.sub_industry, c_d.broadcaster, c_d.start_date, c_d.stop_date, b.name as brand, c_d.channel, c_d.target_audience,
+            $campaign_details = Utilities::switch_db('api')->select("SELECT c_d.campaign_id,c_d.status, c_d.min_age, c_d.max_age, c_d.name as campaign_name, 
+                                                                c_d.user_id, c_d.agency, c_d.product, c_d.Industry, c_d.sub_industry, c_d.broadcaster, c_d.start_date, 
+                                                                c_d.stop_date, b.name as brand, c_d.channel, c_d.target_audience,
                                                                  c_d.region, b.name, p.total, p.id as payment_id from campaignDetails as c_d INNER JOIN brands as b ON b.id = c_d.brand
                                                                   INNER JOIN payments as p ON p.campaign_id = c_d.campaign_id where  
                                                                    c_d.campaign_id = '$id' and c_d.broadcaster = '$broadcaster_id'");
         }else if($agency_id){
-            $campaign_details = Utilities::switch_db('api')->select("SELECT c_d.campaign_id, c_d.min_age, c_d.max_age, c_d.name as campaign_name, c_d.user_id, c_d.agency, c_d.product, c_d.Industry, 
-                                                                        c_d.sub_industry, c_d.start_date, c_d.stop_date, b.name as brand, c_d.channel, c_d.target_audience, c_d.region, b.name, 
+            $campaign_details = Utilities::switch_db('api')->select("SELECT c_d.campaign_id, c_d.status, c_d.min_age, c_d.max_age, c_d.name as campaign_name, c_d.user_id, 
+                                                                        c_d.agency, c_d.product, c_d.Industry, c_d.sub_industry, c_d.start_date, c_d.stop_date, b.name as brand, 
+                                                                        c_d.channel, c_d.target_audience, c_d.region, b.name, 
                                                                         p.total, p.id as payment_id from campaignDetails as c_d INNER JOIN brands as b ON b.id = c_d.brand
                                                                         INNER JOIN payments as p ON p.campaign_id = c_d.campaign_id where  c_d.campaign_id = '$id' GROUP BY c_d.campaign_id");
         }
@@ -126,16 +129,29 @@ class Utilities {
             'phone' => $phone,
             'location' => $location,
             'age' => $campaign_details[0]->min_age .' - '.$campaign_details[0]->max_age,
-            'target_audience' => $target_audiences
+            'target_audience' => $target_audiences,
+            'status' => $campaign_details[0]->status
         ];
 
-        $files = Utilities::switch_db('api')->select("SELECT f.id, f.user_id, f.broadcaster_id, f.file_url, f.time_picked, f.is_file_accepted, f.rejection_reason, f.file_name, f.format, a.from_to_time, a.min_age, a.max_age, d_p.day_parts, t.audience, r.region, h.time_range, d.day, b.brand from files as f, dayParts as d_p, adslots as a, targetAudiences as t, regions as r, days as d, hourlyRanges as h, rateCards as r_c, broadcasters as b where f.broadcaster_id = b.id and 
-                                                          f.adslot = a.id and a.day_parts = d_p.id and a.target_audience = t.id and a.region = r.id and a.rate_card = r_c.id and h.id = r_c.hourly_range_id and r_c.day = d.id and a.broadcaster = b.id and campaign_id = '$campaign_id'");
+        $files = Utilities::switch_db('api')->select("SELECT f.id, f.user_id, f.broadcaster_id, f.file_url, f.time_picked, f.status, 
+                                                                f.file_name, f.format, a.from_to_time, a.min_age, a.max_age, 
+                                                                d_p.day_parts, t.audience, r.region, h.time_range, d.day, b.brand from files as f, 
+                                                                dayParts as d_p, adslots as a, targetAudiences as t, regions as r, days as d, 
+                                                                hourlyRanges as h, rateCards as r_c, broadcasters as b where f.broadcaster_id = b.id and 
+                                                                f.adslot = a.id and a.day_parts = d_p.id and a.target_audience = t.id and 
+                                                                a.region = r.id and a.rate_card = r_c.id and h.id = r_c.hourly_range_id and 
+                                                                r_c.day = d.id and a.broadcaster = b.id and campaign_id = '$campaign_id'");
 
         if($broadcaster_id){
-            $files = Utilities::switch_db('api')->select("SELECT f.id, f.user_id, f.broadcaster_id, f.file_url, f.time_picked, f.is_file_accepted, f.rejection_reason, f.file_name, f.format, a.from_to_time, a.min_age, a.max_age, d_p.day_parts, t.audience, r.region, h.time_range, d.day, b.brand from files as f, dayParts as d_p, adslots as a, targetAudiences as t, regions as r, days as d, hourlyRanges as h, rateCards as r_c, broadcasters as b where f.broadcaster_id = b.id and 
-                                                          f.adslot = a.id and a.day_parts = d_p.id and a.target_audience = t.id and a.region = r.id and a.rate_card = r_c.id and h.id = r_c.hourly_range_id and r_c.day = d.id and a.broadcaster = b.id and campaign_id = '$campaign_id' and f.broadcaster_id = '$broadcaster_id'");
+            $files = Utilities::switch_db('api')->select("SELECT f.id, f.user_id, f.broadcaster_id, f.file_url, f.time_picked, f.status, 
+                                                              f.file_name, f.format, a.from_to_time, a.min_age, a.max_age, d_p.day_parts, 
+                                                              t.audience, r.region, h.time_range, d.day, b.brand from files as f, dayParts as d_p, adslots as a, 
+                                                              targetAudiences as t, regions as r, days as d, hourlyRanges as h, rateCards as r_c, broadcasters as b 
+                                                              where f.broadcaster_id = b.id and f.adslot = a.id and a.day_parts = d_p.id and a.target_audience = t.id
+                                                               and a.region = r.id and a.rate_card = r_c.id and h.id = r_c.hourly_range_id and r_c.day = d.id and 
+                                                               a.broadcaster = b.id and campaign_id = '$campaign_id' and f.broadcaster_id = '$broadcaster_id'");
         }
+
         foreach ($files as $file){
             $file_details[] = [
                 'file_id' => $file->id,
@@ -154,20 +170,21 @@ class Utilities {
                 'broadcast_station' => $file->brand,
                 'file' => decrypt($file->file_url),
                 'slot_time' => $file->time_picked.' seconds',
-                'file_status' => $file->is_file_accepted,
-                'rejection_reason' => $file->rejection_reason,
+                'file_status' => $file->status,
                 'file_name' => $file->file_name,
-                'format' => $file->format ? $file->format : ''
+                'format' => $file->format ? $file->format : '',
             ];
         }
 
         $compliance_reports = [];
         if($broadcaster_id){
-            $campaign_compliances = Utilities::switch_db('api')->select("SELECT c.time_created, c_c.channel, b.brand, a.from_to_time from compliances as c, campaignChannels as c_c, adslots as a, broadcasters as b where
-                                                                         c_c.id = c.channel and b.id = '$broadcaster_id' and c.broadcaster_id = '$broadcaster_id' and a.id = c.adslot_id and campaign_id = '$id'");
+            $campaign_compliances = Utilities::switch_db('api')->select("SELECT c.time_created, c_c.channel, b.brand, a.from_to_time from compliances as c, campaignChannels as c_c, 
+                                                                            adslots as a, broadcasters as b where c_c.id = c.channel and b.id = '$broadcaster_id' and 
+                                                                            c.broadcaster_id = '$broadcaster_id' and a.id = c.adslot_id and campaign_id = '$id'");
         }else if($agency_id){
-            $campaign_compliances = Utilities::switch_db('api')->select("SELECT c.time_created, c_c.channel, b.brand, a.from_to_time from compliances as c, campaignChannels as c_c, adslots as a, broadcasters as b where
-                                                                         c_c.id = c.channel and b.id = c.broadcaster_id and a.id = c.adslot_id and campaign_id = '$id'");
+            $campaign_compliances = Utilities::switch_db('api')->select("SELECT c.time_created, c_c.channel, b.brand, a.from_to_time from compliances as c, campaignChannels as c_c, 
+                                                                            adslots as a, broadcasters as b where c_c.id = c.channel and b.id = c.broadcaster_id and a.id = c.adslot_id
+                                                                             and campaign_id = '$id'");
         }
 
 
@@ -182,9 +199,10 @@ class Utilities {
         }
 
         if($broadcaster_id){
-            $uploaded_files = Utilities::switch_db('api')->select("SELECT * from files where campaign_id = '$id' and broadcaster_id = '$broadcaster_id' GROUP BY file_name");
+            $uploaded_files = File::where([['campaign_id', $campaign_id], ['broadcaster_id', $broadcaster_id]])->get();
         }else if($agency_id){
-            $uploaded_files = Utilities::switch_db('api')->select("SELECT * from files where campaign_id = '$id' GROUP BY file_name");
+            $uploaded_files = File::where('campaign_id', $campaign_id)->get();
+
         }
 
         return (['campaign_det' => $campaign_det, 'file_details' => $file_details, 'broadcasters' => $broadcasters, 'compliance_reports' => $compliance_reports, 'uploaded_files' => $uploaded_files]);
@@ -352,7 +370,10 @@ class Utilities {
     public static function getClientCampaignData($user_id, $broadcaster_id)
     {
         $campaigns = [];
-        $all_campaign = Utilities::switch_db('api')->select("SELECT c_d.campaign_id, c_d.name, c_d.product, c_d.start_date, c_d.stop_date, c_d.adslots, c.campaign_reference, p.total, b.name as brands from campaignDetails as c_d, campaigns as c, payments as p, brands as b WHERE c_d.user_id = '$user_id' AND p.campaign_id = c_d.campaign_id AND c_d.campaign_id = c.id AND b.id = c_d.brand AND c_d.adslots > 0 and c_d.broadcaster = '$broadcaster_id' ORDER BY c_d.time_created DESC");
+        $all_campaign = Utilities::switch_db('api')->select("SELECT c_d.campaign_id, c_d.name, c_d.product, c_d.start_date, c_d.stop_date, c_d.adslots, c.campaign_reference, p.total, 
+                                                                b.name as brands from campaignDetails as c_d, campaigns as c, payments as p, brands as b WHERE c_d.user_id = '$user_id' AND 
+                                                                p.campaign_id = c_d.campaign_id AND c_d.campaign_id = c.id AND b.id = c_d.brand AND c_d.adslots > 0 and 
+                                                                c_d.broadcaster = '$broadcaster_id' ORDER BY c_d.time_created DESC");
         foreach ($all_campaign as $cam)
         {
             $today = date("Y-m-d");
@@ -527,18 +548,10 @@ class Utilities {
     public static function getCampaignDatatables($all_campaigns)
     {
         $campaigns = [];
-        $today = strtotime(date("Y-m-d"));
         foreach ($all_campaigns as $all_campaign)
         {
             $start_date = strtotime($all_campaign->start_date);
             $stop_date = strtotime($all_campaign->stop_date);
-            if($today > $start_date && $today > $stop_date){
-                $status = 'Finished';
-            }elseif ($today >= $start_date && $today <= $stop_date){
-                $status = 'Active';
-            }else{
-                $status = 'Pending';
-            }
 
             $campaigns[] = [
                 'id' => $all_campaign->campaign_reference,
@@ -551,7 +564,40 @@ class Utilities {
                 'end_date' => date('Y-m-d', $stop_date),
                 'adslots' => count((explode(',', $all_campaign->adslots_id))),
                 'budget' => number_format($all_campaign->total, 2),
-                'status' => $status
+                'status' => $all_campaign->status
+            ];
+        }
+
+        return $campaigns;
+
+    }
+
+    public static function getCampaignDatatablesforCampaignOnHold($all_campaigns)
+    {
+        $campaigns = [];
+        foreach ($all_campaigns as $all_campaign)
+        {
+            $start_date = strtotime($all_campaign->start_date);
+            $stop_date = strtotime($all_campaign->stop_date);
+
+            $campaigns[] = [
+                'id' => $all_campaign->campaign_reference,
+                'campaign_id' => $all_campaign->campaign_id,
+                'name' => $all_campaign->name,
+                'brand' => ucfirst($all_campaign->brand_name),
+                'product' => $all_campaign->product,
+                'date_created' => date('M j, Y', strtotime($all_campaign->time_created)),
+                'start_date' => date('Y-m-d', $start_date),
+                'end_date' => date('Y-m-d', $stop_date),
+                'adslots' => count((explode(',', $all_campaign->adslots_id))),
+                'budget' => number_format($all_campaign->total, 2),
+                'status' => $all_campaign->status,
+                'full_name' => $all_campaign->full_name ? $all_campaign->full_name : '',
+                'email' => $all_campaign->email ? $all_campaign->email : '',
+                'user_id' => $all_campaign->user_id ? $all_campaign->user_id : '',
+                'phone_number' => $all_campaign->phone_number ? $all_campaign->phone_number : '',
+                'payment_id' => $all_campaign->payment_id,
+                'total' => (integer)$all_campaign->total
             ];
         }
 
@@ -639,7 +685,10 @@ class Utilities {
         if($agency_id){
             $ads_broad = [];
             $channel = "'".implode("','", $step1->channel)."'";
-            $adslots = Utilities::switch_db('api')->select("SELECT broadcaster, COUNT(broadcaster) as all_slots FROM adslots where min_age >= $step1->min_age AND max_age <= $step1->max_age AND target_audience IN ($target_audience) AND day_parts IN ($day_parts) AND region IN ($region) AND rate_card IN ($ratecards_imploded) AND is_available = 0 AND channels IN ($channel) group by broadcaster");
+            $adslots = Utilities::switch_db('api')->select("SELECT broadcaster, COUNT(broadcaster) as all_slots FROM adslots 
+                                                        where min_age >= $step1->min_age AND max_age <= $step1->max_age AND target_audience IN 
+                                                        ($target_audience) AND day_parts IN ($day_parts) AND region IN ($region) AND rate_card IN 
+                                                        ($ratecards_imploded) AND is_available = 0 AND channels IN ($channel) group by broadcaster");
             foreach ($adslots as $adslot)
             {
                 $broad = Utilities::switch_db('api')->select("SELECT * from broadcasters where id = '$adslot->broadcaster'");
@@ -653,7 +702,10 @@ class Utilities {
         }else{
             $broadcaster_details = Utilities::getBroadcasterDetails($broadcaster_id);
             $channel = $broadcaster_details[0]->channel_id;
-            $adslots = Utilities::switch_db('api')->select("SELECT broadcaster, COUNT(broadcaster) as all_slots FROM adslots where min_age >= $step1->min_age AND max_age <= $step1->max_age AND target_audience IN ($target_audience) AND day_parts IN ($day_parts) AND region IN ($region) AND rate_card IN ($ratecards_imploded) AND is_available = 0 AND channels = '$channel' and broadcaster = '$broadcaster_id'");
+            $adslots = Utilities::switch_db('api')->select("SELECT broadcaster, COUNT(broadcaster) as all_slots FROM adslots where min_age >= $step1->min_age AND 
+                                                                max_age <= $step1->max_age AND target_audience IN ($target_audience) AND day_parts IN ($day_parts) AND 
+                                                                region IN ($region) AND rate_card IN ($ratecards_imploded) AND is_available = 0 AND channels = '$channel' 
+                                                                and broadcaster = '$broadcaster_id'");
             $ads_broad = [
                 'broadcaster' => $adslots[0]->broadcaster,
                 'count_adslot' => $adslots[0]->all_slots,
@@ -785,19 +837,22 @@ class Utilities {
         $new_price = $new_price * $number_of_occurrence;
 
         //check if the fileposition is picked
-        $check_pos = Utilities::switch_db('api')->select("SELECT * from adslot_filePositions where broadcaster_id = '$broadcaster' AND adslot_id = '$adslot_id' AND filePosition_id = '$position'");
+        $check_pos = Utilities::switch_db('api')->select("SELECT * from adslot_filePositions where broadcaster_id = '$broadcaster' AND adslot_id = '$adslot_id'
+                                                              AND filePosition_id = '$position'");
         if(count($check_pos) === 1){
             return 'file_error';
         }
 
         if((int)$request->position != '') {
             $id = uniqid();
-            $insert_file = Utilities::switch_db('api')->insert("INSERT into adslot_filePositions (id, adslot_id,filePosition_id, status, select_status, broadcaster_id) VALUES ('$id', '$adslot_id', '$position', 1, 0, '$broadcaster')");
+            $insert_file = Utilities::switch_db('api')->insert("INSERT into adslot_filePositions (id, adslot_id,filePosition_id, status, select_status, broadcaster_id) 
+                                                                    VALUES ('$id', '$adslot_id', '$position', 1, 0, '$broadcaster')");
         }
 
 
         if($broadcaster_id){
-            $check = \DB::select("SELECT * from carts where adslot_id = '$adslot_id' and user_id = '$user' AND broadcaster_id = '$broadcaster' and filePosition_id = '$position' and filePosition_id != ''");
+            $check = \DB::select("SELECT * from carts where adslot_id = '$adslot_id' and user_id = '$user' AND broadcaster_id = '$broadcaster' and filePosition_id = '$position' 
+                                        and filePosition_id != ''");
             if(count($check) === 1){
                 return 'error';
             }
@@ -810,9 +865,12 @@ class Utilities {
             }
 
 
-            $insert = \DB::insert("INSERT INTO carts (user_id, broadcaster_id, price, ip_address, file, from_to_time, `time`, adslot_id, percentage, total_price, filePosition_id, status, file_name, public_id, format) VALUES ('$user','$broadcaster','$price','$ip','$file','$hourly_range','$time','$adslot_id', '$percentage', '$new_price', '$position', 1, '$file_name', '$public_id', '$file_format')");
+            $insert = \DB::insert("INSERT INTO carts (user_id, broadcaster_id, price, ip_address, file, from_to_time, `time`, adslot_id, percentage, total_price, 
+                                          filePosition_id, status, file_name, public_id, format) VALUES ('$user','$broadcaster','$price','$ip','$file','$hourly_range',
+                                            '$time','$adslot_id', '$percentage', '$new_price', '$position', 1, '$file_name', '$public_id', '$file_format')");
         }else{
-            $check = \DB::select("SELECT * from carts where adslot_id = '$adslot_id' and user_id = '$user' AND agency_id = '$agency_id' and filePosition_id = '$position' and filePosition_id != ''");
+            $check = \DB::select("SELECT * from carts where adslot_id = '$adslot_id' and user_id = '$user' AND agency_id = '$agency_id'
+                                        and filePosition_id = '$position' and filePosition_id != ''");
             if(count($check) === 1){
                 return 'error';
             }
@@ -825,7 +883,10 @@ class Utilities {
             }
 
 
-            $insert = \DB::insert("INSERT INTO carts (user_id, broadcaster_id, price, ip_address, file, from_to_time, `time`, adslot_id, percentage, total_price, filePosition_id, status, agency_id, file_name, public_id, format) VALUES ('$user','$broadcaster','$price','$ip','$file','$hourly_range','$time','$adslot_id', '$percentage', '$new_price', '$position', 1, '$agency_id', '$file_name', '$public_id', '$file_format')");
+            $insert = \DB::insert("INSERT INTO carts (user_id, broadcaster_id, price, ip_address, file, from_to_time, `time`, adslot_id, percentage, 
+                                          total_price, filePosition_id, status, agency_id, file_name, public_id, format) VALUES ('$user','$broadcaster','$price',
+                                            '$ip','$file','$hourly_range','$time','$adslot_id', '$percentage', '$new_price', '$position', 1, '$agency_id', 
+                                            '$file_name', '$public_id', '$file_format')");
         }
 
         return $insert;
@@ -845,10 +906,14 @@ class Utilities {
         $user = Utilities::switch_db('api')->select("SELECT * from users where id = '$id' ");
         if($agency_id){
             $calc = \DB::select("SELECT SUM(total_price) as total_price FROM carts WHERE user_id = '$id' and agency_id = '$agency_id'");
-            $query_carts = \DB::select("SELECT c.id, c.from_to_time, c.time, c.price, c.percentage, c.total_price, f.position, b.brand, b.image_url FROM carts as c LEFT JOIN api_db.filePositions as f ON c.filePosition_id = f.id LEFT JOIN api_db.broadcasters as b ON b.id = c.broadcaster_id WHERE c.user_id = '$id' AND c.agency_id = '$agency_id'");
+            $query_carts = \DB::select("SELECT c.id, c.from_to_time, c.time, c.price, c.percentage, c.total_price, f.position, b.brand, b.image_url FROM carts as c 
+                                              LEFT JOIN api_db.filePositions as f ON c.filePosition_id = f.id LEFT JOIN api_db.broadcasters as b ON b.id = c.broadcaster_id 
+                                              WHERE c.user_id = '$id' AND c.agency_id = '$agency_id'");
         }else{
             $calc = \DB::select("SELECT SUM(total_price) as total_price FROM carts WHERE user_id = '$id' and broadcaster_id = '$broadcaster_id'");
-            $query_carts = \DB::select("SELECT c.id, c.from_to_time, c.time, c.price, c.percentage, c.total_price, f.position, b.brand, b.image_url FROM carts as c LEFT JOIN api_db.filePositions as f ON c.filePosition_id = f.id LEFT JOIN api_db.broadcasters as b ON b.id = c.broadcaster_id WHERE c.user_id = '$id' AND c.broadcaster_id = '$broadcaster_id'");
+            $query_carts = \DB::select("SELECT c.id, c.from_to_time, c.time, c.price, c.percentage, c.total_price, f.position, b.brand, b.image_url FROM carts as c 
+                                              LEFT JOIN api_db.filePositions as f ON c.filePosition_id = f.id LEFT JOIN api_db.broadcasters as b ON b.id = c.broadcaster_id 
+                                              WHERE c.user_id = '$id' AND c.broadcaster_id = '$broadcaster_id'");
         }
         foreach ($query_carts as $query_cart){
             $query[] = [
@@ -958,6 +1023,7 @@ class Utilities {
             'agency_broadcaster' => $agency_id ? $group_data->broadcaster_id : '',
             'broadcaster' => $agency_id ? $group_data->broadcaster_id : $broadcaster_id,
             'sub_industry' => $first->sub_industry,
+            'status' => 'on_hold'
         ];
     }
 
@@ -981,14 +1047,15 @@ class Utilities {
             'adslot' => $query->adslot_id,
             'user_id' => $id,
             'file_code' => Utilities::generateReference(),
-            'time_created' => date('Y-m-d H:i:s', $now),
-            'time_modified' => date('Y-m-d H:i:s', $now),
+            'created_at' => date('Y-m-d H:i:s', $now),
+            'updated_at' => date('Y-m-d H:i:s', $now),
             'agency_id' => $agency_id,
             'agency_broadcaster' => $query->broadcaster_id,
             'time_picked' => $query->time,
             'broadcaster_id' => $agency_id ? $query->broadcaster_id : $broadcaster_id,
             'public_id' => $query->public_id,
-            'format' => $query->format
+            'format' => $query->format,
+            'status' => 'pending'
         ];
     }
 
@@ -1010,7 +1077,7 @@ class Utilities {
         return [
             'id' => uniqid(),
             'payment_id' => $pay_id,
-            'payment_method' => $request->payment,
+            'payment_method' => '',
             'amount' => $agency_id ? (integer) $group_data->total : (integer) $calc[0]->total_price,
             'walkins_id' => $walkin_id[0]->id,
             'time_created' => date('Y-m-d H:i:s', $now),
@@ -1156,6 +1223,37 @@ class Utilities {
         $brand_client->media_buyer_id = $broadcaster_agency_id;
         $brand_client->client_id = $client_id;
         $brand_client->save();
+    }
+
+    public static function checkIfCampaignStartDateHasReached($campaign_id, $broadcaster_id, $agency_id)
+    {
+        $today = date('Y-m-d');
+        if($broadcaster_id){
+            $campaign_start_date = Utilities::switch_db('api')->select("SELECT start_date from campaignDetails 
+                                                                        where campaign_id = '$campaign_id' 
+                                                                        AND broadcaster = '$broadcaster_id'");
+        }else{
+            $campaign_start_date = Utilities::switch_db('api')->select("SELECT start_date from campaignDetails 
+                                                                        where campaign_id = '$campaign_id' 
+                                                                        AND agency = '$agency_id' GROUP BY campaign_id");
+        }
+
+        if($today > $campaign_start_date[0]->start_date){
+            return 'error';
+        }
+    }
+
+    public static function transactionHistory($agency_id, $amount, $current_balance, $previous_balance)
+    {
+        return  [
+            'id' => uniqid(),
+            'user_id' => $agency_id,
+            'amount' => $amount,
+            'prev_balance' => $previous_balance,
+            'current_balance' => $current_balance,
+            'status' => 1,
+
+        ];
     }
 
 

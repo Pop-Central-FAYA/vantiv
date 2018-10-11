@@ -77,7 +77,8 @@
 
 
         <!-- main charts -->
-        <div class="clearfix mb3">
+        @if($campaign_details['campaign_det']['status'] === 'active' || $campaign_details['campaign_det']['status'] === 'expired')
+            <div class="clearfix mb3">
 
             <div class="column col_8 the_frame main_campaign_chart">
 
@@ -132,6 +133,7 @@
             </div>
 
         </div>
+        @endif
 
         <!-- campaign details -->
         <div class="the_frame client_dets mb4">
@@ -141,7 +143,9 @@
                 <a href="#summary">Summary</a>
                 <a href="#slots">Ad Slots</a>
                 <a href="#files">Files</a>
-                <a href="#comp">Compliance</a>
+                @if($campaign_details['campaign_det']['status'] === 'active' || $campaign_details['campaign_det']['status'] === 'expired')
+                    <a href="#comp">Compliance</a>
+                @endif
             </div>
 
             {{--{{ dd($campaign_details) }}--}}
@@ -267,10 +271,8 @@
                         <tr>
                             <th>Day</th>
                             <th>Day Parts</th>
-                            <th>Target Audience</th>
                             <th>Region</th>
-                            <th>Min Age</th>
-                            <th>Max Age</th>
+                            <th>Media Channel</th>
                             <th>Hourly Range</th>
                         </tr>
 
@@ -278,10 +280,8 @@
                             <tr>
                                 <td>{{ $file_detail['day'] }}</td>
                                 <td>{{ $file_detail['day_part'] }}</td>
-                                <td>{{ $file_detail['target_audience'] }}</td>
                                 <td>{{ $file_detail['region'] }}</td>
-                                <td>{{ $file_detail['minimum_age'] }}</td>
-                                <td>{{ $file_detail['maximum_age'] }}</td>
+                                <td>{{ $file_detail['broadcast_station'] }}</td>
                                 <td>{{ $file_detail['hourly_range'] }}</td>
                             </tr>
                         @endforeach
@@ -295,16 +295,50 @@
                     <table>
                         <tr>
                             <th>Files</th>
-                            <th>Format</th>
-                            <th>Description</th>
+                            <th>Adslots</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
                         </tr>
 
                         @foreach($campaign_details['uploaded_files'] as $uploaded_file)
-                            <tr>
-                                <td><video src="{{ asset(decrypt($uploaded_file->file_url)) }}" width="150" height="100" controls></video></td>
-                                <td>{{ $uploaded_file->format ? $uploaded_file->format : '' }}</td>
-                                <td>{{  $uploaded_file->file_name ? str_limit($uploaded_file->file_name, 50) : '' }}</td>
-                            </tr>
+                            <form method="POST" action="{{ route('file.change', ['file_id' => $uploaded_file->id]) }}" enctype="multipart/form-data">
+                                {{ csrf_field() }}
+                                <tr>
+                                    <td><video src="{{ asset(decrypt($uploaded_file->file_url)) }}" width="150" height="100" controls></video></td>
+                                    <td>
+                                        <p>{{ $uploaded_file->get_adslot->get_rate_card->get_day->day }}</p>
+                                        <p>{{ $uploaded_file->get_adslot->day_part->day_parts }}</p>
+                                        <p>{{ $uploaded_file->get_adslot->get_rate_card->hourly_range->time_range }}</p>
+                                        <p>{{ $uploaded_file->get_adslot->from_to_time }}</p>
+                                    </td>
+                                    @if($uploaded_file->status === 'rejected')
+                                        <td>
+                                            <p style="color: red">{{ $uploaded_file->adslot_reasons()->orderBy('updated_at', 'desc')->first()->rejection_reason->name }}</p>
+                                        </td>
+                                        <td>
+                                            <p>{{ $uploaded_file->adslot_reasons()->orderBy('updated_at', 'desc')->first()->recommendation }}</p>
+                                        </td>
+                                        @if($uploaded_file->id === $uploaded_file->rejection_reasons()->orderBy('updated_at', 'desc')->first()->pivot->file_id)
+                                            <td>
+                                                <div class="{{ $errors->has('upload') ? ' has-error' : '' }}">
+                                                    <input type="file" class="form-control" id="file_upload" name="uploads">
+                                                    @if($errors->has('upload'))
+                                                        <span class="help-block">
+                                                            {{ $errors->first('upload') }}
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                                <input type="hidden" name="file_duration" id="file_duration" size="5" />
+                                            </td>
+                                            <td>
+                                                <button type="submit" class="btn btn-success">Update</button>
+                                            </td>
+                                        @endif
+                                    @endif
+                                </tr>
+                            </form>
                         @endforeach
                     </table>
                 </div>

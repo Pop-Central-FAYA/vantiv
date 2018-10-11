@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Session;
 use Ixudra\Curl\Facades\Curl;
 use Vanguard\ApiLog;
 use Vanguard\Http\Requests\Request;
+use Vanguard\Models\File;
 
 Class Api
 {
@@ -150,14 +151,16 @@ Class Api
 
     public static function getOutstandingFiles($campaign_id, $broadcaster)
     {
-        $files = Utilities::switch_db('reports')->select("SELECT * FROM files WHERE campaign_id = '$campaign_id' AND is_file_accepted <> 1 AND broadcaster_id = '$broadcaster'");
-
-        return $files;
+        return File::where('campaign_id', $campaign_id)
+                    ->where('broadcaster_id', $broadcaster)
+                    ->where('status', 'pending')
+                    ->orWhere('status', 'rejected')
+                    ->get();
     }
 
     public static function getRejectedFiles($campaign_id, $broadcaster)
     {
-        return Utilities::switch_db('api')->select("SELECT * FROM files WHERE campaign_id = '$campaign_id' AND is_file_accepted != 1 AND rejection_reason != '' AND broadcaster_id = '$broadcaster'");
+        return File::where([['campaign_id', $campaign_id], ['status', 'rejected'], ['broadcaster_id', $broadcaster]])->get();
     }
 
     public static function countClients($agency_id)
@@ -221,8 +224,10 @@ Class Api
         return $invoice_campaign_details;
     }
 
-    public static function saveActivity($user_id, $description, $ip, $user_agent)
+    public static function saveActivity($user_id, $description)
     {
+        $ip = request()->ip();
+        $user_agent = $_SERVER['HTTP_USER_AGENT'];
         $store_activity = [
             'description' => $description,
             'user_id' => $user_id,
@@ -338,19 +343,18 @@ Class Api
 
     public static function approvedCampaignFiles($campaign_id, $broadcaster_id)
     {
-        $allFiles = Utilities::switch_db('reports')->select("SELECT * FROM files WHERE campaign_id = '$campaign_id' and broadcaster_id = '$broadcaster_id'");
+        $allFiles = File::where([
+           ['campaign_id', $campaign_id],
+           ['broadcaster_id', $broadcaster_id]
+        ])->get();
 
-        $approvedFiles = Utilities::switch_db('reports')->select("SELECT * FROM files WHERE campaign_id = '$campaign_id' AND is_file_accepted = 1 and broadcaster_id = '$broadcaster_id'");
+        $approvedFiles = File::where([
+           ['campaign_id', $campaign_id],
+           ['status', 'approved'],
+           ['broadcaster_id', $broadcaster_id]
+        ])->get();
 
-        return count($allFiles) === count($approvedFiles);
-    }
-
-    public static function checkFilesForUpdatingMpos($campaign_id, $broadcaster_id)
-    {
-        $allFiles = Utilities::switch_db('reports')->select("SELECT * FROM files WHERE campaign_id = '$campaign_id' and broadcaster_id = '$broadcaster_id'");
-        $approvedFiles = Utilities::switch_db('reports')->select("SELECT * FROM files WHERE campaign_id = '$campaign_id' AND broadcaster_id = '$broadcaster_id' AND is_file_accepted = 1");
-
-        return count($allFiles) - count($approvedFiles);
+        return (['mpo_approval_status' => count($allFiles) === count($approvedFiles), 'check_file_for_updating_mpo' => count($allFiles) - count($approvedFiles)]);
     }
 
 

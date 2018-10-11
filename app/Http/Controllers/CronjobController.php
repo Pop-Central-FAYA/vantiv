@@ -123,7 +123,11 @@ class CronjobController extends Controller
         $today_date = date("Y-m-d");
         $campaigns = Utilities::switch_db('api')->select("SELECT id, status FROM campaignDetails where status != 'active' && status != 'expired' AND start_date <= '$today_date'");
         foreach ($campaigns as $campaign){
-            Utilities::switch_db('api')->update("UPDATE campaignDetails SET status = 'active' WHERE id = '$campaign->id'");
+            $mpo_accepted = Utilities::switch_db('api')->select("SELECT id from mpoDetails where if_file_accepted = 1 AND mpo_id = 
+                                                                  (SELECT id from mpos where campaign_id = '$campaign->id')");
+            if($mpo_accepted){
+                Utilities::switch_db('api')->update("UPDATE campaignDetails SET status = 'active' WHERE id = '$campaign->id'");
+            }
         }
     }
 
