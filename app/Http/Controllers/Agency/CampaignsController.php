@@ -275,7 +275,6 @@ class CampaignsController extends Controller
             return redirect()->back();
         }
         $agency_id = Session::get('agency_id');
-        $user_details = Utilities::switch_db('api')->select("SELECT * FROM users where id = (SELECT user_id from agents WHERE id = '$agency_id')");
         $query = [];
         $first = Session::get('first_step');
         $checkout = Utilities::getCheckout($id, $first, $agency_id, null);
@@ -290,7 +289,6 @@ class CampaignsController extends Controller
             ->with('brand', $checkout['brands'])
             ->with('id', $id)
             ->with('wallet_balance', $wallet_balance)
-            ->with('user_det', $user_details)
             ->with('agency_id', $agency_id);
     }
 
