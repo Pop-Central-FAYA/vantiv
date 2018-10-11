@@ -13,10 +13,12 @@ services:
     environment:
       - MYSQL_HOST=database
       - APACHE_SERVER_NAME=alpine.docker.localhost
+      - CONTAINER_TIMEZONE=UTC
       - PHP_SHORT_OPEN_TAG=On
       - PHP_ERROR_REPORTING=E_ALL
       - PHP_DISPLAY_ERRORS=On
       - PHP_HTML_ERRORS=On
+      - PHP_DATE_TIMEZONE=UTC
       - PHP_XDEBUG_ENABLED=true
       - DB_HOST=database
       - DB_USERNAME=faya
@@ -26,7 +28,6 @@ services:
     cap_add:
       - SYS_TIME
       - SYS_NICE
-    command: composer install
 
   database:
     image: mysql:5.7
