@@ -171,6 +171,7 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        Vanguard\Providers\ProfileServiceProvider::class,
 
         /**
          * Third-Party Service Providers

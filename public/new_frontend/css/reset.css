@@ -303,6 +303,34 @@ td {
   text-transform: uppercase;
 }
 
+.btn-disable {
+  padding: 7px 30px 5px;
+  line-height: 2.5;
+  color: #fff;
+  cursor: not-allowed;
+  pointer-events: none;
+  background: #44C1C9;
+  -webkit-appearance: none;
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  border: 0;
+  font-size: 15px;
+
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+
+  -webkit-box-shadow: 9px 10px 20px 1px rgba(0,159,160,0.21);
+  -moz-box-shadow: 9px 10px 20px 1px rgba(0,159,160,0.21);
+  box-shadow: 9px 10px 20px 1px rgba(0,159,160,0.21);
+
+  position: relative;
+  display: inline-block;
+  text-transform: uppercase;
+}
+
+
+
 .btn.small_btn {
   padding: 3px 20px 0;
   font-size: 14px;
@@ -400,6 +428,13 @@ textarea {
   color: #FFAB00;
   background: rgba(255,171,0, 0.15);
 }
+
+.status_on_hold {
+  color: black;
+  background: rgb(255,255,0);
+}
+
+
 
 .file_select {
   border: 1px solid #ddd;

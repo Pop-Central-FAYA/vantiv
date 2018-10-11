@@ -3,11 +3,18 @@
 namespace Vanguard\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use JD\Cloudder\Facades\Cloudder;
 use Vanguard\Http\Requests\StoreWalkins;
+use Vanguard\Http\Requests\WalkinStoreRequest;
+use Vanguard\Http\Requests\WalkinUpdateRequest;
+use Vanguard\Models\Brand;
 use Yajra\DataTables\DataTables;
 use Vanguard\Libraries\Utilities;
 use Session;
+use Vanguard\Libraries\Api;
+use Illuminate\Support\Facades\DB;
 
 class WalkinsController extends Controller
 {
@@ -21,78 +28,92 @@ class WalkinsController extends Controller
     {
         $broadcaster_id = Session::get('broadcaster_id');
         $broadcaster_user = Session::get('broadcaster_user_id');
+        
         if($broadcaster_id){
-            $walkins = Utilities::switch_db('api')->select("SELECT * from users WHERE id IN (SELECT user_id from walkIns WHERE broadcaster_id = '$broadcaster_id')");
+            $clients = Utilities::switch_db('api')->select("SELECT w.user_id, w.id, u.id as user_det_id, u.firstname, u.lastname, u.phone_number, 
+                                                                w.location, w.company_logo, w.company_name, w.time_created, u.email, w.image_url from walkIns as w 
+                                                                INNER JOIN users as u ON u.id = w.user_id where w.broadcaster_id = '$broadcaster_id'");
         }else{
-            $walkins = Utilities::switch_db('api')->select("SELECT * from users WHERE id IN (SELECT user_id from walkIns WHERE agency_id = '$broadcaster_user')");
+            $clients = Utilities::switch_db('api')->select("SELECT w.user_id, w.id, u.id as user_det_id, u.firstname, u.lastname, u.phone_number, w.location, 
+                                                                w.company_logo, w.company_name, w.time_created, u.email, w.image_url from walkIns as w 
+                                                                INNER JOIN users as u ON u.id = w.user_id 
+                                                                where w.agency_id = '$broadcaster_user'");
         }
 
-        return view('walkins.index')->with('walkins', $walkins);
+        $client_data = $this->getClientDetails($clients, $broadcaster_id);
+
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $col = new Collection($client_data);
+        $perPage = 10;
+        $currentPageSearchResults = $col->slice(($currentPage - 1) * $perPage, $perPage)->all();
+        $entries = new LengthAwarePaginator($currentPageSearchResults, count($col), $perPage);
+        $entries->setPath('list');
+
+        $industries = Utilities::switch_db('api')->select("SELECT * FROM sectors");
+
+        return view('broadcaster_module.walk-In.index')->with('clients', $entries)->with('industries', $industries);
     }
 
-    public function walkinsData(DataTables $dataTables)
+    public function getClientDetails($clients, $broadcaster_id)
     {
-        $j = 1;
-        $broad_walkins = [];
-        $broadcaster_idd = '';
-        $broadcaster_id = Session::get('broadcaster_id');
-        $broadcaster_user = Session::get('broadcaster_user_id');
-        if($broadcaster_user){
-            $broadcaster_idddd = Utilities::switch_db('api')->select("SELECT broadcaster_id from broadcasterUsers where id = '$broadcaster_user'");
-            $broadcaster_idd = $broadcaster_idddd[0]->broadcaster_id;
-        }
-        if($broadcaster_id){
-            $walkins = Utilities::switch_db('api')->select("SELECT * from users WHERE id IN (SELECT user_id from walkIns WHERE broadcaster_id = '$broadcaster_id' AND status = 0) ORDER BY time_created DESC");
-        }else{
-            $walkins = Utilities::switch_db('api')->select("SELECT * from users WHERE id IN (SELECT user_id from walkIns WHERE agency_id = '$broadcaster_user' AND status = 0) ORDER BY time_created DESC");
-        }
+        $client_data = [];
 
-        foreach ($walkins as $walkin){
-            $broad_walkins[] = [
-                'id' => $j,
-                'full_name' => $walkin->firstname.' '.$walkin->lastname,
-                'email' => $walkin->email,
-                'phone' => $walkin->phone_number,
-                'user_id' => $walkin->id,
-                'broadcaster_id' => $broadcaster_idd ? $broadcaster_idd : '',
+        foreach ($clients as $client) {
+
+            $campaigns = Utilities::switch_db('api')->select("SELECT * from campaignDetails where user_id = '$client->user_id' and broadcaster = '$broadcaster_id'");
+            $last_count_campaign = count($campaigns) - 1;
+
+            $active_campaigns = [];
+
+            $inactive_campaigns = [];
+
+            $brs = Utilities::getBrandsForWalkins($client->id);
+
+            $today = date("Y-m-d");
+
+            foreach ($campaigns as $campaign){
+                if($campaign->stop_date > $today){
+                    $active_campaigns[] = $campaign;
+                }else{
+                    $inactive_campaigns[] = $campaign;
+                }
+            }
+
+            $payments = Utilities::switch_db('api')->select("SELECT SUM(total) as total from payments WHERE campaign_id IN 
+                                                              (SELECT campaign_id from campaignDetails WHERE user_id = '$client->user_id' and broadcaster = '$broadcaster_id')");
+
+            $client_data[] = [
+                'client_id' => $client->id,
+                'user_id' => $client->user_id,
+                'agency_client_id' => $client->user_det_id,
+                'image_url' => $client->image_url,
+                'num_campaign' => $campaigns ? count($campaigns) : 0,
+                'total' => $payments[0]->total,
+                'name' =>  $client->lastname . ' ' . $client->firstname,
+                'email' => $client->email,
+                'phone_number' => $client->phone_number,
+                'first_name' => $client->firstname,
+                'last_name' => $client->lastname,
+                'created_at' => $client->time_created,
+                'last_camp' => $campaigns ? $campaigns[$last_count_campaign]->time_created : 0,
+                'active_campaign' => count($active_campaigns),
+                'inactive_campaign' => count($inactive_campaigns),
+                'count_brands' => count($brs),
+                'company_name' => $client->company_name,
+                'company_logo' => $client->company_logo,
+                'location' => $client->location,
             ];
-            $j++;
         }
 
-        if(Session::get('broadcaster_id')) {
-            return $dataTables->collection($broad_walkins)
-                ->addColumn('campaign', function ($broad_walkins) {
-                    return '<a href="' . route('campaign.create2', $broad_walkins['user_id']) . '" class="btn btn-success btn-xs"> Create Campaign </a>';
-                })
-                ->addColumn('delete', function ($broad_walkins) {
-                    return '<button data-toggle="modal" data-target=".deleteModal' . $broad_walkins['user_id'] . '" class="btn btn-danger btn-xs" > Delete </button>    ';
-                })
-                ->rawColumns(['campaign' => 'campaign', 'delete' => 'delete'])->addIndexColumn()
-                ->make(true);
-        }else{
-            return $dataTables->collection($broad_walkins)
-                ->addColumn('campaign', function ($broad_walkins) {
-                    return '<a href="' . route('broadcaster_user.campaign.create1', ['walkins' => $broad_walkins['user_id'], 'broadcaster' => $broad_walkins['broadcaster_id'], 'broadcaster_user' => Session::get('broadcaster_user_id')]) . '" class="btn btn-success btn-xs"> Create Campaign </a>';
-                })
-                ->addColumn('delete', function ($broad_walkins) {
-                    return '<button data-toggle="modal" data-target=".deleteModal' . $broad_walkins['user_id'] . '" class="btn btn-danger btn-xs" > Delete </button>    ';
-                })
-                ->rawColumns(['campaign' => 'campaign', 'delete' => 'delete'])->addIndexColumn()
-                ->make(true);
-        }
-
+        return $client_data;
     }
+
 
     /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        $industries = Utilities::switch_db('api')->select("SELECT * from sectors");
-        return view('walkins.create', compact('industries'));
-    }
 
     public function getSubIndustry()
     {
@@ -113,84 +134,118 @@ class WalkinsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreWalkins $request)
+    public function store(WalkinStoreRequest $request)
     {
-        $user_id = uniqid();
-        $image_url = '';
+        $user_agent = $_SERVER['HTTP_USER_AGENT'];
+        $description = 'Client '.$request->first_name.' '. $request->last_name.' with brand '.$request->brand_name.' Created by '.Session::get('agency_id');
+        $ip = request()->ip();
+        $client_id = uniqid();
+        $api_db = Utilities::switch_db('api');
+        $local_db = Utilities::switch_db('local');
         $broadcaster_id = Session::get('broadcaster_id');
-        $broadcaster_user = Session::get('broadcaster_user_id');
-        $walkin_id = uniqid();
+        $agency_id = Session::get('agency_id');
         if($broadcaster_id){
-            $role_id = Utilities::switch_db('api')->select("SELECT role_id from users WHERE id = ( SELECT user_id from broadcasters WHERE id = '$broadcaster_id')");
+            $broadcaster_agency_id = $broadcaster_id;
+            $role_id = $api_db->select("SELECT role_id from users WHERE id = ( SELECT user_id from broadcasters WHERE id = '$broadcaster_id')");
         }else{
-            $role_id = Utilities::switch_db('api')->select("SELECT role_id from users WHERE id = ( SELECT user_id from broadcasterUsers WHERE id = '$broadcaster_user')");
+            $broadcaster_agency_id = $agency_id;
+            $role_id = Utilities::switch_db('reports')->select("SELECT id as role_id FROM roles WHERE name = 'agency_client'");
         }
 
-        $insert_user = [
-            'id' => $user_id,
-            'role_id' => $role_id[0]->role_id,
-            'email' => $request->email,
-            'password' => bcrypt('password'),
-            'firstname' => $request->first_name,
-            'lastname' => $request->last_name,
-            'phone_number' => $request->phone_number,
-            'user_type' => 5,
-
-        ];
-
-        if(!Session::get('broadcaster_id')){
-            $broadcaster = Utilities::switch_db('api')->select("SELECT broadcaster_id from broadcasterUsers where id = '$broadcaster_user'");
-            $broadcaster_id = $broadcaster[0]->broadcaster_id;
-        }
-
-        if(Session::get('broadcaster_id')) {
-            $insert_walkin = [
-                'id' => $walkin_id,
-                'broadcaster_id' => $broadcaster_id,
-                'user_id' => $user_id,
-                'client_type_id' => 1,
-            ];
-        }else{
-            $insert_walkin = [
-                'id' => $walkin_id,
-                'broadcaster_id' => $broadcaster_id,
-                'user_id' => $user_id,
-                'client_type_id' => 1,
-                'agency_id' => $broadcaster_user
-            ];
-        }
-
-        $check_user = Utilities::switch_db('api')->select("SELECT * from users where email = '$request->email'");
-        if(count($check_user) === 1){
-            Session::flash('error', 'Email address already exist');
-            return redirect()->back();
-        }
-
-        $brand = Utilities::formatString($request->brand_name);
+        $brand_slug = Utilities::formatString($request->brand_name);
         $unique = uniqid();
-        $ckeck_brand = Utilities::switch_db('api')->select("SELECT name from brands WHERE `name` = '$brand'");
-        if(count($ckeck_brand) > 0) {
+        $check_brand = $api_db->select("SELECT b.* from brand_client as b_c INNER JOIN brands as b ON b.id = b_c.brand_id 
+                                                                WHERE b.slug = '$brand_slug' AND client_id = '$broadcaster_agency_id'");
+
+        if(count($check_brand) > 0) {
             Session::flash('error', 'Brands already exists');
             return redirect()->back();
         }
 
-        if($request->hasFile('image_url')){
-            $image = $request->image_url;
-            $filename = realpath($image);
-            Cloudder::upload($filename, Cloudder::getPublicId(), ['height' => 200, 'width' => 200]);
-            $clouder = Cloudder::getResult();
-            $image_url = encrypt($clouder['url']);
+        $api_db->beginTransaction();
+        $local_db->beginTransaction();
+
+        try {
+            Utilities::insertIntoUsersLocalDb($request);
+        }catch (\Exception $e){
+            $local_db->rollback();
+            Session::flash('error', 'There was a problem creating this walk-In');
+            return redirect()->back();
         }
 
-//        dd($insert_user, $insert_walkin);
+        $user_id = \DB::select("SELECT id from users WHERE email = '$request->email'");
 
-        $saveUser = Utilities::switch_db('api')->table('users')->insert($insert_user);
-        $saveWalkins = Utilities::switch_db('api')->table('walkIns')->insert($insert_walkin);
-        $insert = Utilities::switch_db('api')->insert("INSERT into brands (id, `name`, image_url, walkin_id, broadcaster_agency, industry_id, sub_industry_id) VALUES ('$unique', '$brand', '$image_url', '$walkin_id', '$broadcaster_id', '$request->industry', '$request->sub_industry')");
+        try {
+            Utilities::insertRolesInLocalDb($user_id[0]->id);
+        }catch(\Exception $e) {
+            $local_db->rollback();
+            Session::flash('error', 'There was a problem creating this walk-In');
+            return redirect()->back();
+        }
 
-        if($saveUser && $saveWalkins && $insert){
-            Session::flash('success', 'Walk-In created successfully');
+
+        try {
+            Utilities::insertIntoUsersApiDB($request, $role_id[0]->role_id);
+        }catch(\Exception $e) {
+            $api_db->rollback();
+            Session::flash('error', 'There was a problem creating this walk-In');
+            return redirect()->back();
+        }
+
+        $apiUserDetails = Utilities::switch_db('api')->select("SELECT * FROM users where email = '$request->email'");
+
+        try {
+            if($request->hasFile('company_logo')){
+                $company_image = Utilities::uploadCompanyLogoToOurServer($request);
+            }
+            Utilities::insertIntoWalkinsApiDB($client_id, $apiUserDetails[0]->id, $broadcaster_id, $request, $company_image, $agency_id);
+        }catch (\Exception $e){
+            $api_db->rollback();
+            Session::flash('error', 'There was a problem creating this walk-In');
+            return redirect()->back();
+        }
+
+        //check if the brand exists in the brands table and if not create the brand in the brands table and attach the client in the brand_client table.
+        $checkIfBrandExists = Brand::where('slug', $brand_slug)->first();
+
+        if(!$checkIfBrandExists){
+            $brand_logo = $request->file('image_url');
+            $image_url = Utilities::uploadBrandImageToCloudinary($brand_logo);
+            $brand = new Brand();
+            try {
+                Utilities::storeBrands($brand, $request, $unique, $image_url, $brand_slug);
+            }catch (\Exception $e) {
+                $api_db->rollback();
+                Session::flash('error', 'There was a problem creating this walk-In');
+                return redirect()->back();
+            }
+
+            try{
+                Utilities::storeBrandClient($unique, $broadcaster_agency_id, $client_id);
+            }catch (\Exception $e){
+                $api_db->rollback();
+                Session::flash('error', 'There was a problem creating this walk-In');
+                return redirect()->back();
+            }
+        }else{
+            try {
+                Utilities::storeBrandClient($checkIfBrandExists->id, $broadcaster_agency_id, $client_id);
+            }catch (\Exception $e){
+                $api_db->rollback();
+                Session::flash('error', 'There was a problem creating this walk-In');
+                return redirect()->back();
+            }
+        }
+
+        $save_activity = Api::saveActivity($broadcaster_agency_id, $description, $ip, $user_agent);
+
+        $api_db->commit();
+        $local_db->commit();
+        Session::flash('success', 'Client created successfully');
+        if($broadcaster_id){
             return redirect()->route('walkins.all');
+        }else{
+            return redirect()->route('clients.list');
         }
 
     }
@@ -201,18 +256,68 @@ class WalkinsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function delete($id)
+    public function updateWalKins(WalkinUpdateRequest $request, $client_id)
     {
-//        $deleteUser = Utilities::switch_db('api')->delete("DELETE from users WHERE id = '$id'");
-        $deleteWalkins = Utilities::switch_db('api')->update("UPDATE walkIns set status = 1 where user_id = '$id'");
-        if($deleteWalkins){
-            Session::flash('success', 'Walk-In deleted successfully...');
+
+        $result = Utilities::updateClients($request, $client_id);
+
+        if($result === "success"){
+            Session::flash('success', 'Client profile updated successfully');
             return redirect()->back();
         }else{
-            Session::flash('error', 'Error deleting Walk-In...');
+            Session::flash('error', 'An error occurred while submitting your request');
+            return redirect()->back();
+        }
+    }
+
+    public function getDetails($client_id)
+    {
+        $broadcaster_id = Session::get('broadcaster_id');
+        $client = Utilities::switch_db('reports')->select("SELECT * FROM walkIns WHERE id = '$client_id'");
+
+        $user_id = $client[0]->user_id;
+
+        $all_campaigns = Utilities::getClientCampaignData($user_id, $broadcaster_id);
+
+        $all_brands = Utilities::getClientsBrands($client_id, $broadcaster_id);
+
+        if(count($all_brands) === 0){
+            Session::flash('info', 'You don`t have a brand on this client');
             return redirect()->back();
         }
 
+        $total = Utilities::switch_db('api')->select("SELECT SUM(total) as total from payments where campaign_id IN (SELECT campaign_id from campaignDetails where user_id = '$user_id' and broadcaster = '$broadcaster_id') ");
 
+        $campaigns = Utilities::switch_db('api')->select("SELECT c.campaign_id, c.adslots, c.time_created, c.product, p.total, c.time_created from campaignDetails as c 
+                                                              INNER JOIN payments as p ON p.campaign_id = c.campaign_id where c.user_id = '$user_id' and c.broadcaster = '$broadcaster_id'");
+
+        $user_camp = Utilities::clientscampaigns($campaigns);
+
+        $user_details = Utilities::switch_db('api')->select("SELECT * FROM users where id = '$user_id'");
+
+//        campaign vs time graph
+        $campaign_graph = Utilities::clientGraph($campaigns);
+        $campaign_payment = $campaign_graph['campaign_payment'];
+        $campaign_date = $campaign_graph['campaign_date'];
+
+        $industries = Utilities::switch_db('api')->select("SELECT * FROM sectors");
+
+        $sub_inds = Utilities::switch_db('api')->select("SELECT sub.id, sub.sector_id, sub.name, sub.sub_sector_code from subSectors as sub, sectors as s where sub.sector_id = s.sector_code");
+
+        return view('broadcaster_module.walk-In.details')->with('clients')
+            ->with('client_id', $client_id)
+            ->with('client', $client)
+            ->with('user_details', $user_details)
+            ->with('campaign', $user_camp)
+            ->with('all_campaigns', $all_campaigns)
+            ->with('all_brands', $all_brands)
+            ->with('total', $total)
+            ->with('campaign_payment', $campaign_payment)
+            ->with('campaign_date', $campaign_date)
+            ->with('total_spent', $total)
+            ->with('industries', $industries)
+            ->with('sub_industries', $sub_inds);
     }
+
+
 }

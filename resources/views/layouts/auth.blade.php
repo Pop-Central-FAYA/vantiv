@@ -42,7 +42,7 @@
 
 
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-<script type="text/javascript" src="{{ asset('jquery.simplemodjquery.simplemodal.1.4.4.min.js.min.js') }}"></script>
+{{--<script type="text/javascript" src="{{ asset('jquery.simplemodjquery.simplemodal.1.4.4.min.js.min.js') }}"></script>--}}
 <script type="text/javascript" src="{{ asset('new_frontend/js/script.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/js/as/login.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/js/as/login.js') }}"></script>

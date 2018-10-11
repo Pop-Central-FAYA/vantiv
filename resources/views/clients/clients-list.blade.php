@@ -71,7 +71,7 @@
                         <div class="more_more">
                             <a href="{{ route('client.show', ['id' => $client['client_id']]) }}">Details</a>
                             <a href="#edit_client{{ $client['client_id'] }}" class="modal_click">Edit</a>
-                            <a href="" class="color_red">Delete</a>
+                            {{--<a href="" class="color_red">Delete</a>--}}
                         </div>
                     </div>
 
@@ -88,7 +88,7 @@
 
     <div class="modal_contain" id="new_client">
         <h2 class="sub_header mb4">New Client</h2>
-        <form action="{{ route('clients.create') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('walkins.store') }}" method="POST" enctype="multipart/form-data">
             {{ csrf_field() }}
             <div class="clearfix">
                 <div class="input_wrap column col_7{{ $errors->has('company_name') ? ' has-error' : '' }}">
@@ -114,7 +114,7 @@
             <div class="clearfix">
                 <div class="input_wrap column col_7{{ $errors->has('brand_name') ? ' has-error' : '' }}">
                     <label class="small_faint">Client Brand</label>
-                    <input type="text" name="brand_name" value=""  placeholder="e.g Coke">
+                    <input type="text" name="brand_name" class="brands_name" id="brands_name" value=""  placeholder="e.g Coca Cola">
                     @if($errors->has('brand_name'))
                         <strong>
                             <span class="error-block" style="color: red;">{{ $errors->first('brand_name') }}</span>
@@ -170,7 +170,7 @@
 
             <div class="input_wrap{{ $errors->has('phone') ? ' has-error' : '' }}">
                 <label class="small_faint">Phone Number</label>
-                <input type="text" name="phone" placeholder="234** **** ****">
+                <input type="text" name="phone" id="phone_number_verify" placeholder="234** **** ****">
                 @if($errors->has('phone'))
                     <strong>
                         <span class="error-block" style="color: red;">{{ $errors->first('phone') }}</span>
@@ -212,7 +212,7 @@
             </div>
 
             <div class="align_right">
-                <input type="submit" value="Create Client" class="btn uppercased update">
+                <input type="submit" id="submit_walkins" disabled value="Create Client" class="btn uppercased update">
             </div>
 
         </form>
@@ -222,7 +222,7 @@
     @foreach($clients as $client)
         <div class="modal_contain" id="edit_client{{ $client['client_id'] }}">
         <h2 class="sub_header mb4">Edit Client : {{ $client['company_name'] }}</h2>
-        <form action="{{ route('agency.client.update', ['client_id' => $client['client_id']]) }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('walkins.update', ['client_id' => $client['client_id']]) }}" method="POST" enctype="multipart/form-data">
             {{ csrf_field() }}
             <div class="clearfix">
                 <div class="input_wrap column col_7{{ $errors->has('company_name') ? ' has-error' : '' }}">
@@ -345,6 +345,38 @@
                     }
                 });
             });
+
+            $(".brands_name").keyup(function () {
+                var brand_name = $("input#brands_name").val();
+                var url = '/check-brand-existence';
+                $.ajax({
+                    url : url,
+                    method : 'GET',
+                    data: {brand_name: brand_name},
+                    success: function (data) {
+                        if(data === 'already_exists'){
+                            console.log(data);
+                            toastr.info('This brand already exists on our platform, by continuing this process means you are aware of its existence');
+                        }
+                    }
+                })
+            });
+
+            $("#phone_number_verify").keyup(function () {
+                var phone_number = $("#phone_number_verify").val();
+                if(phone_number.length == 11 || phone_number.length == 7){
+                    $("#submit_walkins").prop('disabled', false);
+                    toastr.success('Phone number length is valid');
+                }
+                if(phone_number.length > 7 && phone_number.length < 11){
+                    $("#submit_walkins").prop('disabled', true);
+                    toastr.error('Phone number length is invalid');
+                }
+                if(phone_number.length >11){
+                    $("#submit_walkins").prop('disabled', true);
+                    toastr.error('Phone number length is invalid');
+                }
+            })
         });
 
     </script>

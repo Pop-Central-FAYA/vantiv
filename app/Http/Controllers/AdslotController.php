@@ -5,6 +5,7 @@ namespace Vanguard\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Vanguard\Http\Requests\StoreAdslotsRequests;
+use Vanguard\Http\Requests\UpdateAdslotsRequest;
 use Vanguard\Libraries\Api;
 use Vanguard\Libraries\Maths;
 use League\Flysystem\Exception;
@@ -23,303 +24,267 @@ class AdslotController extends Controller
     public function index()
     {
 
-        $broadcaster = Session::get('broadcaster_id');
-        $broadcaster_user = Session::get('broadcaster_user_id');
-        if(!Session::get('broadcaster_id')){
-            $broadcaster_id = Utilities::switch_db('api')->select("SELECT broadcaster_id from broadcasterUsers where id = '$broadcaster_user'");
-            $broadcaster = $broadcaster_id[0]->broadcaster_id;
-        }
-        $adslots = Utilities::switch_db('api')->select("SELECT * from adslots where broadcaster = '$broadcaster'");
-        $region = Utilities::switch_db('api')->select("SELECT * from regions");
-        $all_adslot = [];
-        $j = 1;
-        foreach ($adslots as $adslot){
-            $premium_prices = Utilities::switch_db('api')->select("SELECT * from adslotPercentages WHERE adslot_id = '$adslot->id'");
-            if(count($premium_prices) != 0){
-                $price_60 = $premium_prices[0]->price_60;
-                $price_45 = $premium_prices[0]->price_45;
-                $price_30 = $premium_prices[0]->price_30;
-                $price_15 = $premium_prices[0]->price_15;
-                $percentage = $premium_prices[0]->percentage;
-            }else{
-                $prices = Utilities::switch_db('api')->select("SELECT * from adslotPrices where adslot_id = '$adslot->id'");
-                $price_60 = $prices[0]->price_60;
-                $price_45 = $prices[0]->price_45;
-                $price_30 = $prices[0]->price_30;
-                $price_15 = $prices[0]->price_15;
-                $percentage = 0;
-            }
-            $day = Utilities::switch_db('api')->select("SELECT `day` as this_day from days where id IN(SELECT day from rateCards where id = '$adslot->rate_card')");
-            $all_adslot[] = [
-                's_n' => $j,
-                'id' => $adslot->id,
-                'day' => $day[0]->this_day,
-                'time_slot' => $adslot->from_to_time,
-                '60_seconds' => $price_60,
-                '45_seconds' => $price_45,
-                '30_seconds' => $price_30,
-                '15_seconds' => $price_15,
-                'percentage' => $percentage,
-            ];
-            $j++;
-        }
+        $broadcaster_id = Session::get('broadcaster_id');
+        $adslots = $this->getAdslotDetails($broadcaster_id, null);
+        return view('broadcaster_module.adslots.index')->with(['adslots' => $adslots, 'broadcaster' => $broadcaster_id]);
 
-        $broadcaster = Session::get('broadcaster_id');
-        if(Session::get('broadcaster_user_id')){
-            $br_user_id = Session::get('broadcaster_user_id');
-            $broadcaster_id = Utilities::switch_db('api')->select("SELECT broadcaster_id from broadcasterUsers where id = '$br_user_id'");
-            $broadcaster = $broadcaster_id[0]->broadcaster_id;
-        }
-        $all_positions = Utilities::switch_db('api')->select("SELECT * from filePositions where broadcaster_id = '$broadcaster' AND status = 0");
-        return view('adslot.index')->with('adslots', $all_adslot)->with('broadcaster', $broadcaster)->with('regions', $region)->with('all_positions', $all_positions);
+
     }
 
-    public function adslotData(DataTables $dataTables)
+    public function adslotData(DataTables $dataTables, Request $request)
     {
-        $broadcaster = Session::get('broadcaster_id');
-        $broadcaster_user = Session::get('broadcaster_user_id');
-        if(!Session::get('broadcaster_id')){
-            $broadcaster_id = Utilities::switch_db('api')->select("SELECT broadcaster_id from broadcasterUsers where id = '$broadcaster_user'");
-            $broadcaster = $broadcaster_id[0]->broadcaster_id;
-        }
-        $adslots = Utilities::switch_db('api')->select("SELECT * from adslots where broadcaster = '$broadcaster'");
-        $all_adslot = [];
-        $j = 1;
-        foreach ($adslots as $adslot){
-            $premium_prices = Utilities::switch_db('api')->select("SELECT * from adslotPercentages WHERE adslot_id = '$adslot->id'");
-            if(count($premium_prices) != 0){
-                $price_60 = '&#8358;'.number_format($premium_prices[0]->price_60,2);
-                $price_45 = '&#8358;'.number_format($premium_prices[0]->price_45,2);
-                $price_30 = '&#8358;'.number_format($premium_prices[0]->price_30,2);
-                $price_15 = '&#8358;'.number_format($premium_prices[0]->price_15,2);
-            }else{
-                $prices = Utilities::switch_db('api')->select("SELECT * from adslotPrices where adslot_id = '$adslot->id'");
-                $price_60 = '&#8358;'.number_format($prices[0]->price_60,2);
-                $price_45 = '&#8358;'.number_format($prices[0]->price_45,2);
-                $price_30 = '&#8358;'.number_format($prices[0]->price_30,2);
-                $price_15 = '&#8358;'.number_format($prices[0]->price_15,2);
-            }
+        $broadcaster_id = Session::get('broadcaster_id');
 
-            $rate = Utilities::switch_db('api')->select("SELECT * from rateCards where id = '$adslot->rate_card'");
+        $all_adslots = $this->getAdslotDetails($broadcaster_id, $request->days);
 
-            $day = Utilities::switch_db('api')->select("SELECT `day` as this_day from days where id = (SELECT `day` from rateCards where id = '$adslot->rate_card')");
-            $all_adslot[] = [
-                's_n' => $j,
-                'id' => $adslot->id,
-                'day' => $day[0]->this_day,
-                'time_slot' => $adslot->from_to_time,
-                '60_seconds' => $price_60,
-                '45_seconds' => $price_45,
-                '30_seconds' => $price_30,
-                '15_seconds' => $price_15,
-            ];
-            $j++;
-        }
-
-        if(Session::get('broadcaster_id')) {
-            return $dataTables->collection($all_adslot)
-                ->addColumn('edit', function ($all_adslot) {
-
-                    return '<button data-toggle="modal" data-target=".editModal' . $all_adslot['id'] . '" class="btn btn-primary btn-xs" > Edit </button>    ';
-
-                })
-                ->rawColumns(['edit' => 'edit'])->addIndexColumn()
-                ->make(true);
-        }else{
-            return $dataTables->collection($all_adslot)
-                ->make(true);
-        }
+        return $dataTables->collection($all_adslots)
+            ->addColumn('edit', function ($all_adslots) {
+                return '<a href="#edit_slot'.$all_adslots['id'].'" class="weight_medium modal_click">Edit</a>';
+            })
+            ->rawColumns(['edit' => 'edit'])->addIndexColumn()
+            ->make(true);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-        $day = Utilities::switch_db('api')->select("SELECT * from days");
-        $hourly = Utilities::switch_db('api')->select("SELECT * from hourlyRanges");
-        $region = Utilities::switch_db('api')->select("SELECT * from regions");
-        $target = Utilities::switch_db('api')->select("SELECT * from targetAudiences");
-        $daypart = Utilities::switch_db('api')->select("SELECT * from dayParts");
-        $channels = Utilities::switch_db('api')->select("SELECT * from campaignChannels");
-        return view('adslot.create')->with(['days' => $day, 'hours' => $hourly, 'regions' => $region, 'targets' => $target, 'channels' => $channels, 'day_parts' => $daypart]);
+        $preloaded_data = Utilities::getPreloadedData();
+        return view('broadcaster_module.adslots.create')->with(['days' => $preloaded_data['days'], 'hours' => $preloaded_data['hourly_ranges'],
+                                                                    'regions' => $preloaded_data['regions'], 'target_audiences' => $preloaded_data['target_audience'],
+                                                                    'channels' => $preloaded_data['channels'], 'day_parts' => $preloaded_data['day_parts']]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(StoreAdslotsRequests $request)
     {
-        $broadcaster = Session::get('broadcaster_id');
-        $user_id = Utilities::switch_db('api')->select("SELECT user_id from broadcasters where id = '$broadcaster'");
-        $rate_id = uniqid();
-        $adslot_id = uniqid();
-        $insert = [];
-        $price = [];
-        $time_check = [];
-        $h = 0; $i = 0; $j = 0; $k = 0; $l = 0; $m = 0; $n = 0; $o = 0; $p = 0; $q = 0;
-        $r = 0; $s = 0; $t = 0; $w = 0;
-        $ratecard = [
-            'id' => $rate_id,
-            'user_id' => $user_id[0]->user_id,
-            'broadcaster' => $broadcaster,
-            'day' => $request->days,
-            'hourly_range_id' => $request->hourly_range,
-        ];
-//        dd($request->all());
+
+        $broadcaster_id = Session::get('broadcaster_id');
+        $broadcaster_details = Utilities::getBroadcasterDetails($broadcaster_id);
+        $user_id = $broadcaster_details[0]->user_id;
+        $rate_card_id = uniqid();
+        $time_check = 0;
+
         for($x = 0; $x < count($request->from_time); $x++){
-            $diff = (strtotime($request->to_time[$x]) - strtotime($request->from_time[$x]));
-            $time_check[] = $diff;
+            $time_difference = (strtotime(Utilities::removeSpace($request->to_time[$x])) - strtotime(Utilities::removeSpace($request->from_time[$x])));
+            $time_check += $time_difference;
         }
 
-        if((array_sum($time_check)) > 720){
-            Session::flash('error', 'Your From To time summation must not exceed 12minutes');
+        if($time_check > 720){
+            Session::flash('error', 'You have exceeded the 12 minutes break for this hour');
             return redirect()->back();
         }
 
-        $save_rate = Utilities::switch_db('api')->table('rateCards')->insert($ratecard);
-
-        foreach ($request->from_time as $r){
-            $insert[] = [
-                'id' => uniqid(),
-                'rate_card' => $rate_id,
-                'target_audience' => $request->target_audience[$h++],
-                'day_parts' => $request->dayparts[$i++],
-                'region' => $request->region[$j++],
-                'from_to_time' => $request->from_time[$k++]. ' - ' .$request->to_time[$p++],
-                'min_age' => $request->min_age[$m++],
-                'max_age' => $request->max_age[$n++],
-                'broadcaster' => $broadcaster,
-                'is_available' => 0,
-                'time_difference' => (strtotime($request->to_time[$l++])) - (strtotime($request->from_time[$o++])),
-                'time_used' => 0,
-                'channels' => $request->channel,
-            ];
+        $check_ratecard = Utilities::checkRatecardExistence($broadcaster_id, $request->hourly_ranges, $request->days);
+        if($check_ratecard){
+            $message = 'Your time of '.(($time_check) / 60).' is above the allowed max of 12 minutes per hour';
+            Session::flash('error', $message);
+            return redirect()->back();
         }
 
-        $save_adslot = Utilities::switch_db('api')->table('adslots')->insert($insert);
-        $select_adslot = Utilities::switch_db('api')->select("SELECT id from adslots where rate_card = '$rate_id'");
+        $ratecard_array = $this->rateCardArray($rate_card_id, $user_id, $broadcaster_id, $request);
 
-        foreach ($select_adslot as $p){
-            $price[] = [
-                'id' => uniqid(),
-                'adslot_id' => $p->id,
-                'price_60' => $request->price_60[$w++],
-                'price_45' => $request->price_45[$q++],
-                'price_30' => $request->price_30[$t++],
-                'price_15' => $request->price_15[$s++],
-            ];
+        $adslot_array = $this->adslotsArray($rate_card_id, $request, $broadcaster_id, $broadcaster_details);
+        Utilities::switch_db('api')->beginTransaction();
+        try {
+            $save_rate = Utilities::switch_db('api')->table('rateCards')->insert($ratecard_array);
+        }catch (\Exception $e) {
+            Utilities::switch_db('api')->rollback();
+            $message = $e->getMessage();
+            Session::flash('error', $message);
+            return redirect()->back();
         }
 
-        $save_price = Utilities::switch_db('api')->table('adslotPrices')->insert($price);
-
-        if($save_adslot && $save_price && $save_rate){
-            Session::flash('success', 'Adslot created successfully...');
-            return back();
-        }else{
-            Session::flash('error', 'Error creating adslots, please try again');
-            return back();
+        try {
+            $save_adslot = Utilities::switch_db('api')->table('adslots')->insert($adslot_array);
+        }catch (\Exception $e) {
+            Utilities::switch_db('api')->rollback();
+            $message = $e->getMessage();
+            Session::flash('error', $message);
+            return redirect()->back();
         }
+
+        $select_adslots = Utilities::switch_db('api')->select("SELECT id from adslots where rate_card = '$rate_card_id'");
+        $price_array = $this->priceArray($select_adslots, $request);
+        try {
+            $save_price = Utilities::switch_db('api')->table('adslotPrices')->insert($price_array);
+        }catch (\Exception $e) {
+            Utilities::switch_db('api')->rollback();
+            $message = $e->getMessage();
+            Session::flash('error', $message);
+            return redirect()->back();
+        }
+
+        Utilities::switch_db('api')->commit();
+        Session::flash('success', 'Adslot created successfully...');
+        return redirect()->route('adslot.all');
 
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $broadcaster, $adslot)
+    public function update(UpdateAdslotsRequest $request, $adslot)
     {
-        $premium = [];
-        $this->validate($request, [
-            'time_60' => 'required',
-            'time_45' => 'required',
-            'time_30' => 'required',
-            'time_15' => 'required'
-        ]);
 
         if($request->premium_percent === ""){
             $adslotPrice = Utilities::switch_db('api')->update("UPDATE adslotPrices SET price_60 = '$request->time_60', price_45 = '$request->time_45', 
                                                                     price_30 = '$request->time_30', price_15 = '$request->time_15' WHERE adslot_id = '$adslot'");
             if($adslotPrice){
-                Session::flash('success', 'Prices updated for this slot');
-                return back();
+                return response()->json(['success' => 'prices_update']);
             }else{
-                Session::flash('error', 'Error updating adslot price');
-                return back();
+                return response()->json(['error_no_changes' => 'no_changes']);
             }
         }else{
             $selectAdslotPrice = Utilities::switch_db('api')->select("SELECT * from adslotPrices WHERE adslot_id = '$adslot'");
             if(((int)$request->premium_percent) === 0){
                 $deletePremium = Utilities::switch_db('api')->delete("DELETE from adslotPercentages where adslot_id = '$adslot'");
                 if($deletePremium){
-                    Session::flash('success', 'Percentage price deleted for this slot');
-                    return back();
+                    return response()->json(['success_price' => 'prices_update']);
+                }else{
+                    return response()->json(['error_percentage' => 'error_percentage']);
                 }
-                if($request->premium_percent === "0"){
-                    Session::flash('error', 'You cannot apply this percentage');
-                    return back();
-                }
-            }else{
-                $premium_60 = ($selectAdslotPrice[0]->price_60 + (((int)$request->premium_percent) / 100) * $selectAdslotPrice[0]->price_60);
-                $premium_45 = ($selectAdslotPrice[0]->price_45 + (((int)$request->premium_percent) / 100) * $selectAdslotPrice[0]->price_45);
-                $premium_30 = ($selectAdslotPrice[0]->price_30 + (((int)$request->premium_percent) / 100) * $selectAdslotPrice[0]->price_30);
-                $premium_15 = ($selectAdslotPrice[0]->price_15 + (((int)$request->premium_percent) / 100) * $selectAdslotPrice[0]->price_15);
             }
 
-            $premiumPrice = Utilities::switch_db('api')->select("SELECT * from adslotPercentages where adslot_id = '$adslot'");
+            $premiumPrice = $this->getAdslotPercentages($adslot);
+
             if(count($premiumPrice) === 0){
-                $premium[] = [
-                    'id' => uniqid(),
-                    'adslot_id' => $adslot,
-                    'price_60' => $premium_60,
-                    'price_45' => $premium_45,
-                    'price_30' => $premium_30,
-                    'price_15' => $premium_15,
-                    'percentage' => $request->premium_percent
-                ];
+
+                $premium = $this->premiumPrices($selectAdslotPrice, $request, $adslot);
 
                 $creatPremium = Utilities::switch_db('api')->table('adslotPercentages')->insert($premium);
+
                 if($creatPremium){
-                    Session::flash('success', 'Percentage applied to prices successfully...');
-                    return back();
+                    return response()->json(['success_percentage' => 'percentage_applied']);
                 }else{
-                    Session::flash('error', 'Error applying percentage to price');
-                    return back();
+                    return response()->json(['error_apply_percentage' => 'error_applying_percentage']);
                 }
             }else{
-                $updatePercentage = Utilities::switch_db('api')->update("UPDATE adslotPercentages SET price_60 = '$premium_60', price_45 = '$premium_45', 
-                                                                              price_30 = '$premium_30', price_15 = '$premium_15', percentage = '$request->premium_percent'");
-                if($updatePercentage){
-                    Session::flash('success', 'Prices updated with the new percentage...');
-                    return back();
-                }else{
-                    Session::flash('error', 'Error updating price with the new percentage...');
-                    return back();
-                }
+                return response()->json(['premium_exists' => 'premium_exists']);
             }
 
         }
     }
 
-    public function getAdslotByRegion($region_d)
+    public function getAdslotDetails($broadcaster_id, $day)
     {
-        //        api for adslot
-        $ratecard = Api::get_adslot_by_region($region_d);
-        $a = (json_decode($ratecard)->data);
-        $preload_ratecard = Api::get_ratecard_preloaded();
-        $load = $preload_ratecard->data;
-        $seconds = [60, 45, 39, 15];
-        $preload_ratecard = Api::get_ratecard_preloaded();
-        $load = $preload_ratecard->data;
-        return view('adslot.index')->with('ratecard', $a)->with('seconds', $seconds)->with('preload', $load);
+        $all_adslots = [];
+        if($day){
+            $adslots = Utilities::switch_db('api')->select("SELECT a.id,d.day,a.from_to_time, p_p.percentage,
+                                                            IF(a.id = p_p.adslot_id, p_p.price_60, p.price_60) as price_60,
+                                                            IF(a.id = p_p.adslot_id, p_p.price_45, p.price_45) as price_45,
+                                                            IF(a.id = p_p.adslot_id, p_p.price_30, p.price_30) as price_30,
+                                                            IF(a.id = p_p.adslot_id, p_p.price_15, p.price_15) as price_15
+                                                            from adslots as a 
+                                                            INNER JOIN adslotPrices as p ON p.adslot_id = a.id
+                                                            LEFT JOIN adslotPercentages as p_p ON p_p.adslot_id = a.id
+                                                             LEFT JOIN rateCards as r ON r.id = a.rate_card
+                                                             LEFT JOIN days as d ON d.id = r.day
+                                                             where a.broadcaster = '$broadcaster_id' and d.day LIKE '%$day%'");
+        }else{
+            $adslots = Utilities::switch_db('api')->select("SELECT a.id, a.from_to_time, d.day, p_p.percentage,
+                                                            IF(a.id = p_p.adslot_id, p_p.price_60, p.price_60) as price_60,
+                                                            IF(a.id = p_p.adslot_id, p_p.price_45, p.price_45) as price_45,
+                                                            IF(a.id = p_p.adslot_id, p_p.price_30, p.price_30) as price_30,
+                                                            IF(a.id = p_p.adslot_id, p_p.price_15, p.price_15) as price_15
+                                                            from adslots as a 
+                                                            INNER JOIN adslotPrices as p ON p.adslot_id = a.id
+                                                            LEFT JOIN adslotPercentages as p_p ON p_p.adslot_id = a.id
+                                                             LEFT JOIN rateCards as r ON r.id = a.rate_card
+                                                             LEFT JOIN days as d ON d.id = r.day
+                                                             where a.broadcaster = '$broadcaster_id'");
+        }
+
+        foreach ($adslots as $adslot){
+            $all_adslots[] = [
+                'id' => $adslot->id,
+                'day' => $adslot->day,
+                'time_slot' => $adslot->from_to_time,
+                '60_seconds' => $adslot->price_60,
+                '45_seconds' => $adslot->price_45,
+                '30_seconds' => $adslot->price_30,
+                '15_seconds' => $adslot->price_15,
+                'percentage' => $adslot->percentage
+            ];
+        }
+
+        return $all_adslots;
+    }
+
+    public function rateCardArray($rate_card_id, $user_id, $broadcaster_id, $request)
+    {
+        $ratecard_array = [
+            'id' => $rate_card_id,
+            'user_id' => $user_id,
+            'broadcaster' => $broadcaster_id,
+            'day' => $request->days,
+            'hourly_range_id' => $request->hourly_ranges,
+        ];
+
+        return $ratecard_array;
+    }
+
+    public function adslotsArray($rate_card_id, $request, $broadcaster_id, $broadcaster_details)
+    {
+        $adslot_array = [];
+        for ($i = 0; $i < count($request->regions); $i++){
+            $from_time = Utilities::removeSpace($request->from_time[$i]);
+            $to_time = Utilities::removeSpace($request->to_time[$i]);
+            $adslot_array[] = [
+                'id'=> uniqid(),
+                'rate_card' => $rate_card_id,
+                'target_audience' => $request->target_audiences[$i],
+                'day_parts' => $request->dayparts[$i],
+                'region' => $request->regions[$i],
+                'from_to_time' => $from_time. ' - '.$to_time,
+                'min_age' => $request->min_age[$i],
+                'max_age' => $request->max_age[$i],
+                'broadcaster' => $broadcaster_id,
+                'is_available' => 0,
+                'time_difference' => strtotime($from_time) - strtotime($to_time),
+                'time_used' => 0,
+                'channels' => $broadcaster_details[0]->channel_id,
+            ];
+        }
+
+        return $adslot_array;
+    }
+
+    public function priceArray($select_adslots, $request)
+    {
+        $price = [];
+        for ($j = 0; $j < count($select_adslots); $j++){
+            $price[] = [
+                'id' => uniqid(),
+                'adslot_id' => $select_adslots[$j]->id,
+                'price_60' => $request->price_60[$j],
+                'price_45' => $request->price_45[$j],
+                'price_30' => $request->price_30[$j],
+                'price_15' => $request->price_15[$j],
+            ];
+        }
+
+        return $price;
+    }
+
+    public function premiumPrices($selectAdslotPrice, $request, $adslot)
+    {
+        $premium_60 = ($selectAdslotPrice[0]->price_60 + (((int)$request->premium_percent) / 100) * $selectAdslotPrice[0]->price_60);
+        $premium_45 = ($selectAdslotPrice[0]->price_45 + (((int)$request->premium_percent) / 100) * $selectAdslotPrice[0]->price_45);
+        $premium_30 = ($selectAdslotPrice[0]->price_30 + (((int)$request->premium_percent) / 100) * $selectAdslotPrice[0]->price_30);
+        $premium_15 = ($selectAdslotPrice[0]->price_15 + (((int)$request->premium_percent) / 100) * $selectAdslotPrice[0]->price_15);
+
+        $premium = [
+            'id' => uniqid(),
+            'adslot_id' => $adslot,
+            'price_60' => $premium_60,
+            'price_45' => $premium_45,
+            'price_30' => $premium_30,
+            'price_15' => $premium_15,
+            'percentage' => $request->premium_percent
+        ];
+
+        return $premium;
+
+    }
+
+    public function getAdslotPercentages($adslot_id)
+    {
+        return Utilities::switch_db('api')->select("SELECT * from adslotPercentages where adslot_id = '$adslot_id'");
     }
 
 

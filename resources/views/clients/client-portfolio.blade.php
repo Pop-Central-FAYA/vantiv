@@ -54,11 +54,10 @@
 
         <!-- client charts -->
         <div class="the_frame mb client_charts content_month">
-            <form action="{{ route('client.month', ['client_id' => $client_id]) }}" id="client_month" method="get">
+            <form action="{{ route('client.date', ['client_id' => $client_id]) }}" id="client_month" method="get">
 
                 <div class="filters chart_filters border_bottom clearfix">
                     <div class="column col_6 date_filter">
-                        <a href="">1M</a>
                         <a id="yearly_client" href="{{ route('client.year', ['client_id' => $client_id]) }}">1Y</a>
                     </div>
 
@@ -87,7 +86,7 @@
 
                     <div class="column col_4">
                         <span class="small_faint uppercased weight_medium">Brands</span>
-                        <h3>{{ $brand_this_month[0]->brand }}</h3>
+                        <h3>{{ count($brands) }}</h3>
 
                         <a href="" class="weight_medium small_font view_brands">View Brands</a>
                     </div>
@@ -106,7 +105,7 @@
 
                     <div class="column col_4">
                         <span class="small_faint uppercased weight_medium">Brands</span>
-                        <h3>{{ $brand_this_month[0]->brand }}</h3>
+                        <h3>{{ count($brands) }}</h3>
 
                         <a href="" class="weight_medium small_font view_brands">View Brands</a>
                     </div>
@@ -236,7 +235,7 @@
     {{--modal for adding up brands--}}
     <div class="modal_contain" id="new_brand">
         <h2 class="sub_header mb4">New Brand</h2>
-        <form action="{{ route('agency.brand.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('brand.store') }}" method="POST" enctype="multipart/form-data">
             {{ csrf_field() }}
             <div class="clearfix">
                 <div class="input_wrap column col_7{{ $errors->has('brand_name') ? ' has-error' : '' }}">
@@ -248,7 +247,7 @@
                         </strong>
                     @endif
                 </div>
-                <div class='column col_5 file_select align_center pt3{{ $errors->has('brand_logo') ? ' has-error' : '' }}'>
+                <div class='column col_5 file_select align_center pt3{{ $errors->has('brand_logo') ? ' has-error' : '' }}' style="height: 70px;">
                     <input type="file" id="file" name="brand_logo" />
                     <span class="small_faint block_disp mb3">Brand Logo</span>
                     @if($errors->has('brand_logo'))
@@ -278,7 +277,7 @@
                 <label class="small_faint">Sub Industry</label>
 
                 <div class="select_wrap">
-                    <select name="sub_industry" id="sub_industry">
+                    <select name="sub_industry" class="sub_industry" id="sub_industry">
 
                     </select>
                 </div>
@@ -295,7 +294,7 @@
     @foreach($all_brands as $all_brand)
         <div class="modal_contain" id="brand{{ $all_brand['id'] }}">
         <h2 class="sub_header mb4">Edit Brand : {{ $all_brand['brand'] }}</h2>
-        <form action="{{ route('agency.brands.update', ['id' => $all_brand['id']]) }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('brands.update', ['id' => $all_brand['id']]) }}" method="POST" enctype="multipart/form-data">
             {{ csrf_field() }}
             <div class="clearfix">
                 <div class="input_wrap column col_7{{ $errors->has('brand_name') ? ' has-error' : '' }}">
@@ -343,17 +342,17 @@
                 <label class="small_faint">Sub Industry</label>
 
                 <div class="select_wrap">
-                    <select name="sub_industry" id="sub_industry">
+                    <select name="sub_industry" class="sub_industry" id="sub_industry">
                         @foreach($sub_industries as $sub_industry)
-                            @foreach($sub_industry as $sub_in)
-                                @if($sub_in->sub_sector_code === $all_brand['sub_industry_id'])
-                                    <option value="{{ $sub_in->sub_sector_code }}"
-                                    @if($sub_in->sub_sector_code === $all_brand['sub_industry_id'])
-                                        selected
-                                    @endif
-                                    >{{ $sub_in->name }}</option>
+
+                            @if($sub_industry->sub_sector_code === $all_brand['sub_industry_id'])
+                                <option value="{{ $sub_industry->sub_sector_code }}"
+                                @if($sub_industry->sub_sector_code === $all_brand['sub_industry_id'])
+                                    selected
                                 @endif
-                            @endforeach
+                                >{{ $sub_industry->name }}</option>
+                            @endif
+
                         @endforeach
                     </select>
                 </div>
@@ -374,8 +373,8 @@
     <script src="https://code.highcharts.com/modules/export-data.js"></script>
     <script src="https://unpkg.com/flatpickr"></script>
     <script>
-        <?php echo "var week_date = ".$week_date. ";\n"; ?>
-        <?php echo "var week_amount = ".$week_payment. ";\n"; ?>
+        <?php echo "var campaign_date = ".$campaign_date. ";\n"; ?>
+        <?php echo "var campaign_amount = ".$campaign_payment. ";\n"; ?>
         $(document).ready(function() {
 
             flatpickr(".flatpickr", {
@@ -388,7 +387,7 @@
                     type: 'area'
                 },
                 xAxis: {
-                    categories: week_date
+                    categories: campaign_date
                 },
                 title:{
                     text:''
@@ -431,7 +430,7 @@
                 series: [{
                     name: 'Total Budget',
                     color: '#00C4CA',
-                    data: week_amount,
+                    data: campaign_amount,
                 }]
             });
 
@@ -653,17 +652,33 @@
                             });
                             $('.update').attr("disabled", false);
 
-                            $('#sub_industry').empty();
+                            $('.sub_industry').empty();
 
-                            $('#sub_industry').append(' Please choose one');
+                            $('.sub_industry').append(' Please choose one');
 
                             $.each(data, function(index, title){
-                                $("#sub_industry").append('' + '<option value ="'+ title.sub_sector_code + '"  > ' + title.name + '  </option>');
+                                $(".sub_industry").append('' + '<option value ="'+ title.sub_sector_code + '"  > ' + title.name + '  </option>');
                             });
                         }
 
                     }
                 });
+            });
+
+            $(".brands_name").keyup(function () {
+                var brand_name = $("input#brands_name").val();
+                var url = '/check-brand-existence';
+                $.ajax({
+                    url : url,
+                    method : 'GET',
+                    data: {brand_name: brand_name},
+                    success: function (data) {
+                        if(data === 'already_exists'){
+                            console.log(data);
+                            toastr.info('This brand already exists on our platform, by continuing this process means you are aware of its existence');
+                        }
+                    }
+                })
             });
         });
     </script>

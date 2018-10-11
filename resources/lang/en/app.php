@@ -349,5 +349,12 @@ return [
 
     'create-client' => 'Create Client',
     'agency.signup' => 'Signup - Agency',
-    'advertiser-signup' => 'Signup - Advertiser'
+    'advertiser-signup' => 'Signup - Advertiser',
+
+    //discount
+    'agency' => 'agency',
+    'brands' => 'brands',
+    'time' => 'time',
+    'day_part' => 'day_part',
+    'price' => 'price'
 ];

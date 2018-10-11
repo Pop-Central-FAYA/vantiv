@@ -1,6 +1,7 @@
 <!--Container-End-->
 <script src="{{ asset('asset/plugins/jQuery/jquery-2.2.3.min.js') }}"></script>
-<script src="{{ asset('asset/bootstrap/js/bootstrap.min.js') }}"></script>
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 <!--chart-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
 

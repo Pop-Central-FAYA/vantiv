@@ -160,43 +160,43 @@ Route::group(['middleware' => 'auth'], function () {
     * Campaign
     */
     Route::group(['prefix' => 'campaign'], function(){
-        Route::get('/', 'CampaignsController@index')->name('campaign.all');
-        Route::get('/setup', 'CampaignsController@setup')->name('campaign.setup');
-        Route::get('/create', 'CampaignsController@create')->name('campaign.create');
-        Route::get('/create/{walkins}/step2', 'CampaignsController@createStep2')->name('campaign.create2');
-        Route::get('/create/{walkins}/step3', 'CampaignsController@createStep3')->name('campaign.create3');
-        Route::get('/create/{walkins}/step4', 'CampaignsController@createStep4')->name('campaign.create4');
-        Route::get('/create/{walkins}/step4/1', 'CampaignsController@createStep4_1')->name('campaign.create4_1');
-        Route::get('/create/{walkins}/step4/2', 'CampaignsController@createStep4_2')->name('campaign.create4_2');
-        Route::get('/create/{walkins}/step4/3', 'CampaignsController@createStep4_3')->name('campaign.create4_3');
-        Route::get('/create/{walkins}/step5', 'CampaignsController@createStep5')->name('campaign.create5');
-        Route::get('/upload/delete/{walkins}/{id}', 'CampaignsController@deleteUploads')->name('uploads.delete');
-        Route::get('/create/{walkins}/step6', 'CampaignsController@createStep6')->name('campaign.create6');
-        Route::get('/create/{walkins}/step7', 'CampaignsController@createStep7')->name('campaign.create7');
-        Route::get('/create/step8', 'CampaignsController@createStep8')->name('campaign.create8');
-        Route::get('/create/step9', 'CampaignsController@createStep9')->name('campaign.create9');
-        Route::post('/create/{walkins}/step2/store', 'CampaignsController@postStep2')->name('campaign.store2');
-        Route::post('/create/{walkins}/step3/store', 'CampaignsController@postStep3')->name('campaign.store3');
-        Route::post('/create/{walkins}/step4/store', 'CampaignsController@postStep4')->name('campaign.store4');
-        Route::post('/create/{walkins}/step4/1/store', 'CampaignsController@postStep4_1')->name('campaign.store4_1');
-        Route::post('/create/{walkins}/step4/2/store', 'CampaignsController@postStep4_2')->name('campaign.store4_2');
-        Route::post('/create/{walkins}/step4/3/store', 'CampaignsController@postStep4_3')->name('campaign.store4_3');
-        Route::post('/create/{walkins}/step5/uploads/store', 'CampaignsController@postStep5')->name('campaign.store5.uploads');
-        Route::post('/create/{walkins}/step6/store', 'CampaignsController@postStep6')->name('campaign.store6');
-        Route::get('/create/{walkins}/step7/get', 'CampaignsController@getStep7')->name('campaign.store7');
-        Route::post('/store/{walkins}', 'CampaignsController@store')->name('campaign.store');
-        Route::get('/add-to-cart', 'CampaignsController@postCart')->name('store.cart');
-        Route::get('/checkout/{walkins}', 'CampaignsController@getCheckout')->name('checkout');
-        Route::post('/submit-campaign/{walkins}', 'CampaignsController@postCampaign')->name('submit.campaign');
-        Route::get('/remove-campaigns/{id}', 'CampaignsController@removeCart')->name('cart.remove');
-        Route::post('/remove-media/{walkins}/{id}', 'CampaignsController@removeMedia')->name('uploads.remove');
+        Route::get('/active_campaigns', 'Broadcaster\CampaignsController@index')->name('campaign.all');
+        Route::get('/create', 'Broadcaster\CampaignsController@create')->name('campaign.create');
+        Route::post('/create/step1/store', 'Broadcaster\CampaignsController@postStep1')->name('campaign.store_1');
+        Route::get('/create/step2/{id}', 'Broadcaster\CampaignsController@createStep2')->name('campaign.create2');
+        Route::get('/create/step3/{id}', 'Broadcaster\CampaignsController@createStep3')->name('campaign.create3');
+        Route::get('/create/step3/store/{id}', 'Broadcaster\CampaignsController@postStep3')->name('campaign.store3');
+        Route::get('/create/step3_1/{id}', 'Broadcaster\CampaignsController@storeStep3_1')->name('campaign.create3_1');
+        Route::get('/create/step4/{id}/{broadcaster}', 'Broadcaster\CampaignsController@createStep4')->name('campaign.create4');
+        Route::get('/cart/store', 'Broadcaster\CampaignsController@postCart')->name('broadcaster_campaign.cart');
+        Route::get('/checkout/{id}', 'Broadcaster\CampaignsController@checkout')->name('broadcaster_campaign.checkout');
+        Route::post('/submit-campaign/{id}', 'Broadcaster\CampaignsController@postCampaign')->name('submit.campaign');
 
-        Route::post('/payment-process', 'CampaignsController@payCampaign')->name('broadcaster.pay');
+        Route::get('/remove-campaigns/{id}', 'Broadcaster\CampaignsController@removeCart')->name('cart.remove');
+        Route::post('/remove-media/{walkins}/{id}', 'Broadcaster\CampaignsController@removeMedia')->name('uploads.remove');
 
-        Route::get('/all-campaign/data', 'CampaignsController@getAllData');
+        Route::post('/payment-process', 'Broadcaster\CampaignsController@payCampaign')->name('broadcaster.pay');
 
-        Route::get('/campaign-details/{id}', 'CampaignsController@campaignDetails')->name('broadcaster.campaign.details');
+        Route::get('/all-campaign/data', 'Broadcaster\CampaignsController@getAllData');
+
+        Route::get('/campaign-details/{id}', 'Broadcaster\CampaignsController@campaignDetails')->name('broadcaster.campaign.details');
+
+        Route::get('/{user_id}', 'Broadcaster\CampaignsController@filterByUser');
+
+        Route::get('/media-channel/{campaign_id}', 'Broadcaster\CampaignsController@getMediaChannel');
+
+        Route::get('/compliance-graph/broadcaster', 'Broadcaster\CampaignsController@complianceGraph');
+
+        Route::get('/compliance-graph/filter/broadcaster', 'Broadcaster\CampaignsController@complianceFilter')->name('broadcaster.campaign_details.compliance');
+
+        Route::get('/campaign-on-hold/data', 'Broadcaster\CampaignsController@getCampaignOnHold')->name('broadcaster.campaign.hold');
+
+        Route::post('/update-campaign/{campaign_id}', 'Broadcaster\CampaignsController@submitCampaignWithOtherPaymentOption')->name('broadcaster.campaign.update');
+
+        Route::post('/update-campaign/information/{campaign_id}', 'Broadcaster\CampaignsController@updateCampaignInformation')->name('broadcaster.campaign_information.update');
     });
+
+    Route::post('file-update/{file_id}', 'MpoController@updateFiles')->name('file.change');
 
     /*
      * Broadcaster User Management
@@ -239,28 +239,31 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/high-days/all', 'BroadcasterUserReportsController@hpdaysData');
     });
 
-    Route::get('/brand/get-industry', 'CampaignsController@getIndustrySubIndustry');
-
-    /*
-     * WalkIns Management
-     */
+    Route::get('/brand/get-industry', 'Broadcaster\CampaignsController@getIndustrySubIndustry');
 
     Route::group(['prefix' => 'brands'], function () {
         Route::get('/', 'BrandsController@index')->name('brand.all');
         Route::get('/create', 'BrandsController@create')->name('brand.create');
         Route::post('/create/store', 'BrandsController@store')->name('brand.store');
-        Route::post('/brands/edit/{id}', 'BrandsController@update')->name('brands.update');
+        Route::post('/brands/update/{id}', 'BrandsController@update')->name('brands.update');
         Route::get('/brands/delete/{id}', 'BrandsController@delete')->name('brands.delete');
         Route::get('/search-brands', 'BrandsController@search')->name('broadcasters.brands.search');
+        Route::get('/details/{id}/{client_id}', 'BrandsController@getBrandDetails')->name('brand.details');
     });
+
+    Route::get('/check-brand-existence', 'BrandsController@checkBrandExistsWithSameInformation');
+
+    /*
+     * WalkIns Management
+     */
 
     Route::group(['prefix' => 'walk-in'], function () {
         Route::get('/', 'WalkinsController@index')->name('walkins.all');
-        Route::get('/all-walk-in/data', 'WalkinsController@walkinsData');
-        Route::get('/create', 'WalkinsController@create')->name('walkins.create');
+        Route::post('/update/{client_id}', 'WalkinsController@updateWalKins')->name('walkins.update');
         Route::post('/store', 'WalkinsController@store')->name('walkins.store');
         Route::get('/delete/{id}', 'WalkinsController@delete')->name('walkins.delete');
         Route::get('/brand', 'WalkinsController@getSubIndustry');
+        Route::get('/walk-in/details/{client_id}', 'WalkinsController@getDetails')->name('walkins.details');
     });
 
     /**
@@ -290,15 +293,18 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/clients-dashboard', ['as' => 'agency.dashboard', 'uses' => 'DashboardController@clientDashboard']);
 
+    Route::get('/campaign-management/dashboard', 'DashboardController@campaignManagementDashbaord')->name('broadcaster.campaign_management');
+    Route::get('/inventory-management/dashboard', 'DashboardController@inventoryManagementDashboard')->name('broadcaster.inventory_management');
+
     /**
      * Adslot
      */
     Route::group(['prefix' => '/adslot'], function () {
         Route::get('/', 'AdslotController@index')->name('adslot.all');
-        Route::get('/adslot-data', 'AdslotController@adslotData');
+        Route::get('/data', 'AdslotController@adslotData');
         Route::get('/create', 'AdslotController@create')->name('adslot.create');
         Route::post('/store', 'AdslotController@store')->name('adslot.store');
-        Route::post('/update/{broadcaster}/{adslot}', 'AdslotController@update')->name('adslot.update');
+        Route::post('/update/{adslot}', 'AdslotController@update')->name('adslot.update');
         Route::get('/{region_id}', 'AdslotController@getAdslotByRegion')->name('adslot.region');
     });
 
@@ -339,8 +345,12 @@ Route::group(['middleware' => 'auth'], function () {
     Route::group(['prefix' => 'mpos'], function () {
         Route::get('/pending_mpos_data', 'MpoController@pending_mpos_data');
         Route::get('all', 'MpoController@index')->name('all-mpos');
+        Route::get('/all-data', 'MpoController@getAllData');
+        Route::get('/pending/data', 'MpoController@pendingData');
         Route::get('pending', 'MpoController@pending_mpos')->name('pending-mpos');
-        Route::get('approve/{is_file_accepted}/{file_code}/{rejection_reason}', ['as' => 'files.update', 'uses' => 'MpoController@update_file']);
+        Route::get('/mpo-action/{mpo_id}', 'MpoController@mpoAction')->name('mpo.action');
+        Route::get('/mpo-action/file-status/update/{file_code}/{campaign_id}/{mpo_id}', ['as' => 'files.update', 'uses' => 'MpoController@update_file']);
+        Route::get('/rejected-files/{mpo_id}', 'MpoController@rejectedFiles')->name('mpo.rejected_files');
     });
 
     Route::group(['prefix' => 'reports'], function () {
@@ -391,6 +401,12 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/compliance-graph/filter', 'Agency\CampaignsController@complianceFilter')->name('campaign_details.compliance');
 
             Route::post('/update-budget', 'Agency\CampaignsController@updateBudget')->name('update.budget');
+
+            Route::get('/on-hold', 'Agency\CampaignsController@campaignsOnHold')->name('agency.campaigns_onhold');
+
+            Route::post('/submit-update/{campaign_id}', 'Agency\CampaignsController@submitCampaignForProcessing')->name('agency.campaign.update');
+
+            Route::post('/information-update/{campaign_id}', 'Agency\CampaignsController@updateAgencyCampaignInformation')->name('agency.campaign_information.update');
         });
 
         Route::get('/agency-dashboard/periodic-sales', 'DashboardController@filterByBroad')->name('agency.dashboard.broad');
@@ -405,7 +421,7 @@ Route::group(['middleware' => 'auth'], function () {
          * User Management
          */
 
-        Route::get('/user/manage', 'Agency\UserManagementController@index')->name('agency.use_management');
+        Route::get('/user/manage', 'Agency\UserManagementController@index')->name('agency.user_management');
 
 
         /**
@@ -418,7 +434,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/client/{client_id}', 'ClientsController@clientShow')->name('client.show');
             Route::get('/client/brand/{id}', 'ClientsController@getClientBrands')->name('client_brands');
             Route::get('/client/{client_id}/{user_id}', 'ClientsController@getCampaignData');
-            Route::get('/client-month/{client_id}', 'ClientsController@filterByMonth')->name('client.month');
+            Route::get('/client-month/{client_id}', 'ClientsController@filterByDate')->name('client.date');
             Route::get('/client-yearly/{client_id}', 'ClientsController@filterByYear')->name('client.year');
             Route::get('/client-brand/{id}/{client_id}', 'ClientsController@brandCampaign')->name('campaign.brand.client');
             Route::post('/update-client/{client_id}', 'ClientsController@updateClients')->name('agency.client.update');
@@ -456,15 +472,6 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/wallet/amount/pay', 'Agency\WalletsController@getPay')->name('amount.pay');
         Route::post('/pay', 'Agency\WalletsController@pay')->name('pay');
         Route::get('/get-wallet/data', 'Agency\WalletsController@getData');
-    });
-
-    Route::group(['prefix' => 'client-brands'], function () {
-        Route::get('/all-brands', 'ClientBrandsController@index')->name('agency.brand.all');
-        Route::get('/create-brand', 'ClientBrandsController@create')->name('agency.brand.create');
-        Route::post('/create/store', 'ClientBrandsController@store')->name('agency.brand.store');
-        Route::post('/brands/edit/{id}', 'ClientBrandsController@update')->name('agency.brands.update');
-        Route::get('/brands/delete/{id}', 'ClientBrandsController@delete')->name('agency.brands.delete');
-        Route::get('/search-result', 'ClientBrandsController@search')->name('brands.search.user');
     });
 
     Route::group(['prefix' => 'clients'], function () {
