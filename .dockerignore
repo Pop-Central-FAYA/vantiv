@@ -1,5 +1,6 @@
 .env
 .git
+dev/
 bootstrap/cache/*
 node_modules
 public/dist/*
@@ -12,3 +13,4 @@ storage/excels/*
 storage/debugbar/*
 vendor
 _ide_helper.php
+Makefile
