@@ -219,6 +219,8 @@ class WalkinsController extends Controller
                 return redirect()->back();
             }
 
+            Utilities::storeBrandClient($unique, $broadcaster_agency_id, $client_id);
+
             try{
                 Utilities::storeBrandClient($unique, $broadcaster_agency_id, $client_id);
             }catch (\Exception $e){
