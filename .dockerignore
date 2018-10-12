@@ -1,0 +1,16 @@
+.env
+.git
+dev/
+bootstrap/cache/*
+node_modules
+public/dist/*
+storage/app/*
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+storage/logs/*
+storage/excels/*
+storage/debugbar/*
+vendor
+_ide_helper.php
+Makefile

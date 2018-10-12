@@ -9,7 +9,7 @@
         <!-- heaser -->
     @include('partials.new-frontend.agency.header')
 
-        <!-- subheader -->
+    <!-- subheader -->
         <div class="sub_header clearfix mb pt">
             <div class="column col_6">
                 <h2 class="sub_header">Create New Campaign</h2>
@@ -48,34 +48,34 @@
                         <div class='align_center one_media broad_click @if($ads_broad['broadcaster'] === $broadcaster) active @endif'>
                             <input type="hidden" name="broadcaster" value="{{ $ads_broad['broadcaster'] }}" id="broadcaster">
                             <div><a href="{{ route('agency_campaign.step4', ['id' => $id, 'broadcaster' => $ads_broad['broadcaster']]) }}"><img src="{{ asset($ads_broad['logo'] ? decrypt($ads_broad['logo']) : '')  }}"></a></div>
-                            <span class="small_faint">{{ $ads_broad['broadcaster_brand'] }}</span>
+                            <span class="small_faint">{{ $ads_broad['boradcaster_brand'] }}</span>
                         </div>
                     @endforeach
                 </div>
 
-
+                {{--{{ dd($ratecards) }}--}}
                 <!-- time slots -->
                 <div class="time_slots">
                     <table>
                         @foreach($ratecards as $ratecard)
-                        <tr>
-                            <th>{{ $ratecard['day'] }}</th>
-                            <th>{{ $ratecard['hourly_range'] }}</th>
-                            @foreach($ratecard['adslot'] as $rating)
-                                <td>
-                                    <a href="#modal_slot{{ $rating->id }}" class="modal_click">
-                                    <input type="checkbox"
-                                           @foreach($cart as $carts)
-                                           @if($carts->adslot_id === $rating->id)
-                                           checked
-                                           @endif
-                                           @endforeach
+                            <tr>
+                                <th>{{ $ratecard['day'] }}</th>
+                                <th>{{ $ratecard['hourly_range'] }}</th>
+                                @foreach($ratecard['adslot'] as $rating)
+                                    <td>
+                                        <a href="#modal_slot{{ $rating->id }}" class="modal_click">
+                                            <input type="checkbox"
+                                                   @foreach($cart as $carts)
+                                                   @if($carts->adslot_id === $rating->id)
+                                                   checked
+                                                   @endif
+                                                   @endforeach
 
-                                           id="{{ $rating->id }}">
-                                    <label id="new_client{{ $rating->id }}" for="{{ $rating->id }}">{{ $rating->from_to_time }}</label></a>
-                                </td>
-                            @endforeach
-                        </tr>
+                                                   id="{{ $rating->id }}">
+                                            <label id="new_client{{ $rating->id }}" for="{{ $rating->id }}">{{ $rating->from_to_time }}</label></a>
+                                    </td>
+                                @endforeach
+                            </tr>
                         @endforeach
 
                     </table>
@@ -92,7 +92,7 @@
                         <p class="weight_medium">Total: &#8358; {{ $total_amount ? number_format($total_amount[0]->total, 2) : '0.00' }}</p>
                         <p class="small_font"> {{ $cart ? count($cart) : '0' }} ad slots selected</p>
                         <?php
-                            $percen_val = round((($total_amount ? $total_amount[0]->total : 0) / Session::get('first_step')->campaign_budget) * 100);
+                        $percen_val = round((($total_amount ? $total_amount[0]->total : 0) / Session::get('first_step')->campaign_budget) * 100);
                         ?>
                         <div class="w3-border">
                             <div class="w3-grey @if($percen_val > 80) danger @else success_p @endif" style="height:24px;width:{{ $percen_val }}%"></div>
@@ -136,20 +136,12 @@
             </form>
         </div>
 
-        {{--{{ dd($ratecards) }}--}}
-        @foreach($ratecards as $ratecard)
-            @foreach($ratecard['adslot'] as $rating)
+            @foreach($adslots as $rating)
+                {{--{{ dd($rating) }}--}}
                 <div class="modal_contain" style="width: 1000px;" id="modal_slot{{ $rating->id }}">
                     <h2 class="sub_header mb4">{{ $rating->from_to_time }} | {{ $rating->time_difference - $rating->time_used }} Seconds Available</h2></h2>
                     <form id="form_cart" action="{{ route('agency_campaign.cart') }}" method="GET">
                         {{ csrf_field() }}
-                        <?php
-                        $select_price = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT * from adslotPercentages where adslot_id = '$rating->id'");
-                        if(!$select_price){
-                            $select_price = \Vanguard\Libraries\Utilities::switch_db('api')->select("SELECT * from adslotPrices where adslot_id = '$rating->id'");
-                        }
-                        ?>
-
 
                         <table id="mod" class="table table-bordered table-striped">
                             <thead>
@@ -164,24 +156,22 @@
                             </tr>
                             </thead>
                             <tbody>
-
-                            <?php $j = 1; $i = 0; for($i = 0; $i < count($times); $i++){ ?>
+                            <?php $j = 1; for($i = 0; $i < count($times); $i++){ ?>
                             @if( ($rating->time_difference - $rating->time_used) >= $datas[$i]->time)
                                 <tr>
                                     @if($datas[$i]->uploads && $datas[$i]->channel === $rating->channels)
-
                                         <td>{{ $j }}</td>
                                         <td><div class="col-md-3"> <video width="150" controls><source src="{{ asset(decrypt($datas[$i]->uploads)) }}"></video> </div></td>
                                         <input type="hidden" name="file" class="file{{ $rating->id.$datas[$i]->id }}" value="{{ $datas[$i]->uploads }}">
                                         <td><div class="col-md-3"><span style="margin-left:15%"></span>{{ $datas[$i]->time }} Seconds</div></td>
                                         @if($datas[$i]->time === 15)
-                                            <td><div class="col-md-3">&#8358;{{ $select_price[0]->price_15 }}</div></td>
+                                            <td><div class="col-md-3">&#8358;{{ $rating->price_15 }}</div></td>
                                         @elseif($datas[$i]->time === 30)
-                                            <td><div class="col-md-3">&#8358;{{ $select_price[0]->price_30 }}</div></td>
+                                            <td><div class="col-md-3">&#8358;{{ $rating->price_30 }}</div></td>
                                         @elseif($datas[$i]->time === 45)
-                                            <td><div class="col-md-3">&#8358;{{ $select_price[0]->price_45 }}</div></td>
+                                            <td><div class="col-md-3">&#8358;{{ $rating->price_45 }}</div></td>
                                         @elseif($datas[$i]->time === 60)
-                                            <td><div class="col-md-3">&#8358;{{ $select_price[0]->price_60 }}</div></td>
+                                            <td><div class="col-md-3">&#8358;{{ $rating->price_60 }}</div></td>
                                         @endif
                                         <td>
                                             <select name="position" class="form-control" id="position{{ $rating->id.$datas[$i]->id }}">
@@ -208,20 +198,20 @@
                                                                                                         @foreach($cart as $ca)
                                                                                                         @if($ca->adslot_id === $rating->id)
                                                                                                         @if((int)$ca->time === (int)$datas[$i]->time)
-                                                                                                        disabled
+                                                                                                        class="btn-disable"
                                                                                                         @endif
                                                                                                         @endif
                                                                                                         @endforeach
                                                                                                         type="button"
                                                                                                         data-file_slot="{{ $rating->id.$datas[$i]->id }}"
                                                                                                         @if($datas[$i]->time === 15)
-                                                                                                        data-price="{{ $select_price[0]->price_15 }}"
+                                                                                                        data-price="{{ $rating->price_15 }}"
                                                                                                         @elseif($datas[$i]->time === 30)
-                                                                                                        data-price="{{ $select_price[0]->price_30 }}"
+                                                                                                        data-price="{{ $rating->price_30 }}"
                                                                                                         @elseif($datas[$i]->time === 45)
-                                                                                                        data-price="{{ $select_price[0]->price_45 }}"
+                                                                                                        data-price="{{ $rating->price_45 }}"
                                                                                                         @elseif($datas[$i]->time === 60)
-                                                                                                        data-price="{{ $select_price[0]->price_60 }}"
+                                                                                                        data-price="{{ $rating->price_60 }}"
                                                                                                         @endif
                                                                                                         data-adslot_id="{{ $rating->id }}"
                                                                                                         data-range="{{ $rating->from_to_time }}"
@@ -242,11 +232,9 @@
                             </tbody>
                         </table>
 
-
                     </form>
                 </div>
             @endforeach
-        @endforeach
 
     </div>
 @stop

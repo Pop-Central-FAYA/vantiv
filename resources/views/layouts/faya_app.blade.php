@@ -16,6 +16,11 @@
     <link href="{{ asset('new_frontend/css/reset.css') }}" rel="stylesheet">
     <link href="{{ asset('new_frontend/css/style.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.3/toastr.min.css" />
+    <style>
+        body {
+            overflow: auto;
+        }
+    </style>
     @yield('styles')
 
     <!--[if lt IE 9]>
@@ -28,9 +33,13 @@
 <body>
 
 <!-- side navigation -->
-    @include('partials.new-frontend.agency.sidebar')
+    @if(Session::has('agency_id'))
+        @include('partials.new-frontend.agency.sidebar')
+    @endif
 
     @yield('content')
+
+    @include('profile.index')
 
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
     <script type="text/javascript" src="{{ asset('new_frontend/js/jquery.simplemodal.1.4.4.min.js') }}"></script>
@@ -38,6 +47,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.3/toastr.min.js"></script>
     @yield('scripts')
     @include('toastr.toastr')
+
+    <script type="text/javascript">
+        (function() { var s = document.createElement("script"); s.type = "text/javascript"; s.async = true; s.src = '//api.usersnap.com/load/ec075f05-c488-417b-ba4e-beb5366a9c15.js';
+            var x = document.getElementsByTagName('script')[0]; x.parentNode.insertBefore(s, x); })();
+
+
+    </script>
 
 </body>
 

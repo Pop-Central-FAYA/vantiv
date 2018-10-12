@@ -48,12 +48,12 @@
                             <label class="small_faint">Clients</label>
 
                             <div class="select_wrap{{ $errors->has('clients') ? ' has-error' : '' }}">
-                                <select name="clients" id="clients" required>
+                                <select name="client" id="clients" required>
                                     <option>Select Client</option>
                                     @foreach($clients as $client)
                                         <option value="{{ $client->id }}"
                                         @if((Session::get('first_step')) != null)
-                                            @if($first_step->clients === $client->id))
+                                            @if($first_step->client === $client->id))
                                                 selected="selected"
                                             @endif
                                         @endif
@@ -61,8 +61,8 @@
                                     @endforeach
                                 </select>
 
-                                @if($errors->has('clients'))
-                                    <strong>{{ $errors->first('clients') }}</strong>
+                                @if($errors->has('client'))
+                                    <strong>{{ $errors->first('client') }}</strong>
                                 @endif
                             </div>
                         </div>

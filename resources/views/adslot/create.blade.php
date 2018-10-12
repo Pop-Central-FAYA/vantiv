@@ -106,7 +106,7 @@
                                                     }
                                                 ?>
                                             </script>
-                                            <select name="target_audience[]" class="form-control" id="">
+                                            <select name="target_audiences[]" class="form-control" id="">
                                                 @foreach($targets as $target)
                                                     <option value="{{ $target->id }}">{{ $target->audience }}</option>
                                                 @endforeach
@@ -203,6 +203,7 @@
                 });
                 big_html += '</select></td><td><input type="number" required name="min_age[]" placeholder="Min Age" class="form-control"></td><td><input type="number" required name="max_age[]" placeholder="Max Age" class="form-control"></td></tr>';
                 $("#dynamic_field").append(big_html);
+
             });
 
             $("body").delegate(".timepicker", "click", function() {

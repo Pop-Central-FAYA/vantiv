@@ -99,19 +99,19 @@ class AuthController extends Controller
             }
 
             return redirect()->to('login' . $to)
-                ->withErrors(trans('auth.failed'));
+                ->with('error', 'email and or password invalid');
         }
 
         $user = Auth::getProvider()->retrieveByCredentials($credentials);
 
         if ($user->isUnconfirmed()) {
             return redirect()->to('login' . $to)
-                ->withErrors(trans('app.please_confirm_your_email_first'));
+                ->with('error', 'Please confirm your account first');
         }
 
         if ($user->isBanned()) {
             return redirect()->to('login' . $to)
-                ->withErrors(trans('app.your_account_is_banned'));
+                ->with('error', 'Your account has been banned, please contact your administrator');
         }
 
         Auth::login($user, settings('remember_me') && $request->get('remember'));
