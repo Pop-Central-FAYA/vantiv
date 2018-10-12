@@ -99,19 +99,19 @@ class Handler extends ExceptionHandler
     public function sendMail(Exception $exception)
     {
 
-        try {
-
-            $e = FlattenException::create($exception);
-
-            $handler = new SymfonyExceptionHandler();
-
-            $html = $handler->getHtml($e);
-
-            $sendMail = \Mail::to('ridwan.busari@techadvance.ng')->send(new SendErrorMail($html));
-
-        }catch (Exception $ex){
-            dd($ex);
-        }
+//        try {
+//
+//            $e = FlattenException::create($exception);
+//
+//            $handler = new SymfonyExceptionHandler();
+//
+//            $html = $handler->getHtml($e);
+//
+//            $sendMail = \Mail::to('ridwan.busari@techadvance.ng')->send(new SendErrorMail($html));
+//
+//        }catch (Exception $ex){
+//            dd($ex);
+//        }
     }
 
 }
