@@ -13,9 +13,7 @@ class AddStatusToFilesTable extends Migration
      */
     public function up()
     {
-        Schema::table('files', function (Blueprint $table) {
-            $table->char('status', 10)->default('pending');
-        });
+        DB::statement("ALTER TABLE `files` MODIFY `status` char(10) not null default 'pending' ");
     }
 
     /**
