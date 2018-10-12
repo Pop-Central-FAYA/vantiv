@@ -8,6 +8,6 @@ class LogException
 
     public function add($error)
     {
-        file_put_contents( self::FILENAME, $error, FILE_APPEND);
+        file_put_contents( self::FILE_NAME, $error, FILE_APPEND);
     }
 }
