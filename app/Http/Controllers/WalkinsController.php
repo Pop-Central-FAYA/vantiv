@@ -206,7 +206,7 @@ class WalkinsController extends Controller
 
         //check if the brand exists in the brands table and if not create the brand in the brands table and attach the client in the brand_client table.
         $checkIfBrandExists = Brand::where('slug', $brand_slug)->first();
-
+        dd('hello');
         if(!$checkIfBrandExists){
             $brand_logo = $request->file('image_url');
             $image_url = Utilities::uploadBrandImageToCloudinary($brand_logo);
@@ -218,10 +218,6 @@ class WalkinsController extends Controller
                 Session::flash('error', 'There was a problem creating this walk-In');
                 return redirect()->back();
             }
-
-            dd('hello');
-
-            Utilities::storeBrandClient($unique, $broadcaster_agency_id, $client_id);
 
             try{
                 Utilities::storeBrandClient($unique, $broadcaster_agency_id, $client_id);
