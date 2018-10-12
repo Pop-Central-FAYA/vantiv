@@ -193,6 +193,7 @@ class WalkinsController extends Controller
 
         $apiUserDetails = Utilities::switch_db('api')->select("SELECT * FROM users where email = '$request->email'");
 
+        dd('hello');
         try {
             if($request->hasFile('company_logo')){
                 $company_image = Utilities::uploadCompanyLogoToOurServer($request);
@@ -206,7 +207,6 @@ class WalkinsController extends Controller
 
         //check if the brand exists in the brands table and if not create the brand in the brands table and attach the client in the brand_client table.
         $checkIfBrandExists = Brand::where('slug', $brand_slug)->first();
-        dd('hello');
         if(!$checkIfBrandExists){
             $brand_logo = $request->file('image_url');
             $image_url = Utilities::uploadBrandImageToCloudinary($brand_logo);
