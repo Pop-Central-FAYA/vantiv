@@ -12,6 +12,7 @@ use Vanguard\Libraries\Api;
 use Vanguard\Libraries\Utilities;
 use JD\Cloudder\Facades\Cloudder;
 use Vanguard\Models\Brand;
+use Vanguard\Models\BrandClient;
 
 
 class BrandsController extends Controller
