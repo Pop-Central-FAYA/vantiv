@@ -22,5 +22,5 @@ RUN rm -rf /app/vendor \
     && find /app/storage/framework -type f -delete \
     && find /app/storage/logs -type f -delete \
     && find /app/storage/debugbar -type f -delete \
-    && chmod -R 777 /app/bootstrap/cache
+    && chmod -R 777 /app/bootstrap/cache \
     && chmod -R 777 /app/storage/
