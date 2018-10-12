@@ -183,7 +183,6 @@ class WalkinsController extends Controller
             return redirect()->back();
         }
 
-
         try {
             Utilities::insertIntoUsersApiDB($request, $role_id[0]->role_id);
         }catch(\Exception $e) {
@@ -227,6 +226,7 @@ class WalkinsController extends Controller
                 Session::flash('error', 'There was a problem creating this walk-In');
                 return redirect()->back();
             }
+
         }else{
             try {
                 Utilities::storeBrandClient($checkIfBrandExists->id, $broadcaster_agency_id, $client_id);
