@@ -109,13 +109,16 @@ class Handler extends ExceptionHandler
 
             $handler = new SymfonyExceptionHandler();
 
-            $html = $handler->getHtml($e);
+            $html = $handler->getContent($e);
 
-            $sendMail = \Mail::to('ridwan.busari@techadvance.ng')->send(new SendErrorMail($html));
+            $logger->add($html);
+
+//            $sendMail = \Mail::to('ridwan.busari@techadvance.ng')->send(new SendErrorMail($html));
 
         }catch (Exception $ex){
             $error = $ex->getMessage();
             $logger->add($error);
+
         }
     }
 

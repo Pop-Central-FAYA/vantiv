@@ -4,7 +4,7 @@ namespace Vanguard\Libraries;
 
 class LogException
 {
-    const FILE_NAME = '/exception_logs/exceptionLogs.txt';
+    const FILE_NAME = '/tmp/laravel.log';
 
     public function add($error)
     {
