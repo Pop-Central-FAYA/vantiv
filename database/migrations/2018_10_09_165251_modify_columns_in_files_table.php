@@ -15,9 +15,14 @@ class ModifyColumnsInFilesTable extends Migration
     {
         //this migration removes start_date, end_date, recommendation, rejection_reason from files table
         if(Schema::hasColumn('start_date', 'end_date', 'recommendation', 'rejection_reason', 'is_file_accepted', 'status')){
-            Schema::table('files', function (Blueprint $table) {
-                $table->dropColumn(['start_date', 'end_date', 'recommendation', 'rejection_reason', 'is_file_accepted', 'status']);
-            });
+            DB::statement('ALTER TABLE `files` 
+                                DROP COLUMN start_date,
+                                DROP COLUMN end_date,
+                                DROP COLUMN recommendation,
+                                DROP COLUMN rejection_reason,
+                                DROP COLUMN is_file_accepted,
+                                DROP COLUMN status');
+
         }
 
     }
