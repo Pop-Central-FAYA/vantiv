@@ -136,7 +136,7 @@ class WalkinsController extends Controller
      */
     public function store(WalkinStoreRequest $request)
     {
-	
+
         $user_agent = $_SERVER['HTTP_USER_AGENT'];
         $description = 'Client '.$request->first_name.' '. $request->last_name.' with brand '.$request->brand_name.' Created by '.Session::get('agency_id');
         $ip = request()->ip();
@@ -194,7 +194,6 @@ class WalkinsController extends Controller
 
         $apiUserDetails = Utilities::switch_db('api')->select("SELECT * FROM users where email = '$request->email'");
 
-       
         try {
             if($request->hasFile('company_logo')){
                 $company_image = Utilities::uploadCompanyLogoToOurServer($request);
