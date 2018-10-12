@@ -192,8 +192,6 @@ class WalkinsController extends Controller
         }
 
         $apiUserDetails = Utilities::switch_db('api')->select("SELECT * FROM users where email = '$request->email'");
-
-        dd('hello');
         try {
             if($request->hasFile('company_logo')){
                 $company_image = Utilities::uploadCompanyLogoToOurServer($request);
