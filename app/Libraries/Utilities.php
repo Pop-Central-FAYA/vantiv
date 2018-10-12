@@ -1215,14 +1215,19 @@ class Utilities {
 
     }
 
-    public static function storeBrandClient($brand_id, $broadcaster_agency_id, $client_id, $agency)
+    public static function storeBrandClient($brand_id, $broadcaster_agency_id, $client_id)
     {
-        $brand_client = new BrandClient();
-        $brand_client->brand_id = $brand_id;
-        $brand_client->media_buyer = $agency ? 'Agency' : 'Broadcaster';
-        $brand_client->media_buyer_id = $broadcaster_agency_id;
-        $brand_client->client_id = $client_id;
-        $brand_client->save();
+        if(\Session::get('agency_id')){
+            $media_buyer = 'Agency';
+        }else{
+            $media_buyer = 'Broadcaster';
+        }
+        BrandClient::create([
+           'brand_id' => $brand_id,
+           'media_buyer' => $media_buyer,
+           'media_buyer_id' => $broadcaster_agency_id,
+           'client_id' => $client_id,
+        ]);
     }
 
     public static function checkIfCampaignStartDateHasReached($campaign_id, $broadcaster_id, $agency_id)

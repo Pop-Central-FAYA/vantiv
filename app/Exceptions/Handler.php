@@ -15,6 +15,7 @@ use Symfony\Component\Debug\ExceptionHandler as SymfonyExceptionHandler;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Mail;
+use Vanguard\Libraries\LogException;
 use Vanguard\Mail\SendErrorMail;
 
 class Handler extends ExceptionHandler
@@ -100,20 +101,25 @@ class Handler extends ExceptionHandler
 
     public function sendMail(Exception $exception)
     {
+        $logger = new LogException();
 
-//        try {
-//
-//            $e = FlattenException::create($exception);
-//
-//            $handler = new SymfonyExceptionHandler();
-//
-//            $html = $handler->getHtml($e);
-//
+        try {
+
+            $e = FlattenException::create($exception);
+
+            $handler = new SymfonyExceptionHandler();
+
+            $html = $handler->getContent($e);
+
+            $logger->add($html);
+
 //            $sendMail = \Mail::to('ridwan.busari@techadvance.ng')->send(new SendErrorMail($html));
-//
-//        }catch (Exception $ex){
-//            dd($ex);
-//        }
+
+        }catch (Exception $ex){
+            $error = $ex->getMessage();
+            $logger->add($error);
+
+        }
     }
 
 }
