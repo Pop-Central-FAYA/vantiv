@@ -28,15 +28,15 @@ class WalkinsController extends Controller
     {
         $broadcaster_id = Session::get('broadcaster_id');
         $broadcaster_user = Session::get('broadcaster_user_id');
-        
+
         if($broadcaster_id){
-            $clients = Utilities::switch_db('api')->select("SELECT w.user_id, w.id, u.id as user_det_id, u.firstname, u.lastname, u.phone_number, 
-                                                                w.location, w.company_logo, w.company_name, w.time_created, u.email, w.image_url from walkIns as w 
+            $clients = Utilities::switch_db('api')->select("SELECT w.user_id, w.id, u.id as user_det_id, u.firstname, u.lastname, u.phone_number,
+                                                                w.location, w.company_logo, w.company_name, w.time_created, u.email, w.image_url from walkIns as w
                                                                 INNER JOIN users as u ON u.id = w.user_id where w.broadcaster_id = '$broadcaster_id'");
         }else{
-            $clients = Utilities::switch_db('api')->select("SELECT w.user_id, w.id, u.id as user_det_id, u.firstname, u.lastname, u.phone_number, w.location, 
-                                                                w.company_logo, w.company_name, w.time_created, u.email, w.image_url from walkIns as w 
-                                                                INNER JOIN users as u ON u.id = w.user_id 
+            $clients = Utilities::switch_db('api')->select("SELECT w.user_id, w.id, u.id as user_det_id, u.firstname, u.lastname, u.phone_number, w.location,
+                                                                w.company_logo, w.company_name, w.time_created, u.email, w.image_url from walkIns as w
+                                                                INNER JOIN users as u ON u.id = w.user_id
                                                                 where w.agency_id = '$broadcaster_user'");
         }
 
@@ -79,7 +79,7 @@ class WalkinsController extends Controller
                 }
             }
 
-            $payments = Utilities::switch_db('api')->select("SELECT SUM(total) as total from payments WHERE campaign_id IN 
+            $payments = Utilities::switch_db('api')->select("SELECT SUM(total) as total from payments WHERE campaign_id IN
                                                               (SELECT campaign_id from campaignDetails WHERE user_id = '$client->user_id' and broadcaster = '$broadcaster_id')");
 
             $client_data[] = [
@@ -155,7 +155,7 @@ class WalkinsController extends Controller
 
         $brand_slug = Utilities::formatString($request->brand_name);
         $unique = uniqid();
-        $check_brand = $api_db->select("SELECT b.* from brand_client as b_c INNER JOIN brands as b ON b.id = b_c.brand_id 
+        $check_brand = $api_db->select("SELECT b.* from brand_client as b_c INNER JOIN brands as b ON b.id = b_c.brand_id
                                                                 WHERE b.slug = '$brand_slug' AND client_id = '$broadcaster_agency_id'");
 
         if(count($check_brand) > 0) {
@@ -288,7 +288,7 @@ class WalkinsController extends Controller
 
         $total = Utilities::switch_db('api')->select("SELECT SUM(total) as total from payments where campaign_id IN (SELECT campaign_id from campaignDetails where user_id = '$user_id' and broadcaster = '$broadcaster_id') ");
 
-        $campaigns = Utilities::switch_db('api')->select("SELECT c.campaign_id, c.adslots, c.time_created, c.product, p.total, c.time_created from campaignDetails as c 
+        $campaigns = Utilities::switch_db('api')->select("SELECT c.campaign_id, c.adslots, c.time_created, c.product, p.total, c.time_created from campaignDetails as c
                                                               INNER JOIN payments as p ON p.campaign_id = c.campaign_id where c.user_id = '$user_id' and c.broadcaster = '$broadcaster_id'");
 
         $user_camp = Utilities::clientscampaigns($campaigns);

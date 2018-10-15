@@ -23,8 +23,10 @@ services:
       - DB_HOST=database
       - DB_USERNAME=faya
       - DB_PASSWORD=faya
+      - MEDIA_BUCKET=faya-dev-us-east-1-media
     volumes:
-      - ./:/app
+      - $HOME/.aws:$HOME/.aws
+      # - ./:/app
     cap_add:
       - SYS_TIME
       - SYS_NICE
