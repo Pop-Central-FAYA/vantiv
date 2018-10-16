@@ -14,9 +14,6 @@ class AddStatusToFilesTable extends Migration
     public function up()
     {
         DB::statement("ALTER TABLE `files` MODIFY `status` char(10) not null default 'pending' ");
-
-        DB::statement("ALTER TABLE `files` CHANGE time_created created_at TIMESTAMP DEFAULT now(),
-					                              CHANGE time_modified updated_at TIMESTAMP DEFAULT now() ");
     }
 
     /**
