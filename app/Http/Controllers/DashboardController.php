@@ -194,7 +194,7 @@ class DashboardController extends Controller
             ->addColumn('name', function ($campaigns_datatables) {
                 if(Session::has('agency_id')){
                     if($campaigns_datatables['status'] === 'on_hold'){
-                        return '<a href="'.route('broadcaster.campaign.hold').'">'.$campaigns_datatables['name'].'</a>';
+                        return '<a href="'.route('agency.campaigns_onhold').'">'.$campaigns_datatables['name'].'</a>';
                     }else{
                         return '<a href="'.route('agency.campaign.details', ['id' => $campaigns_datatables['campaign_id']]).'">'.$campaigns_datatables['name'].'</a>';
                     }

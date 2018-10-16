@@ -369,7 +369,7 @@ class CampaignsController extends Controller
 
         Session::forget('first_step');
         Session::flash('success', $this->campaign_success_message);
-        return redirect()->route('dashboard');
+        return redirect()->route('agency.campaigns_onhold');
 
     }
 

@@ -22,7 +22,6 @@ class Paystack
 
         if ($request) {
             $result = json_decode($request, true);
-            dd($result);
             return $result;
         } else {
             return false;
