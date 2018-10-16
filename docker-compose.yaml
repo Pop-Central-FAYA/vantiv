@@ -26,7 +26,7 @@ services:
       - MEDIA_BUCKET=faya-dev-us-east-1-media
     volumes:
       - $HOME/.aws:$HOME/.aws
-      # - ./:/app
+      - ./:/app
     cap_add:
       - SYS_TIME
       - SYS_NICE
