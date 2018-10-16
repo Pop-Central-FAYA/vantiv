@@ -181,11 +181,7 @@ class BrandsController extends Controller
         
         $api_db->commit();
 
-        if($broadcaster_id){
-            return redirect()->route('brand.all');
-        }else{
-            return redirect()->route('agency.brand.all');
-        }
+        return redirect()->route('brand.all');
 
     }
 
