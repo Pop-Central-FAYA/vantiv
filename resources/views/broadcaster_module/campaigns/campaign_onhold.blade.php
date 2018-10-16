@@ -196,7 +196,7 @@
                 var phone_number = $(this).data("phone_number");
                 $("#payment").fadeOut(1000);
                 var handler = PaystackPop.setup({
-                    key: "<?php echo getenv('PK_TEST_KEY'); ?>",
+                    key: "<?php echo getenv('PAYSTACK_PUBLIC_KEY'); ?>",
                     email: email,
                     amount: parseFloat(amount * 100),
                     metadata: {
