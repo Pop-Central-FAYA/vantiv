@@ -55,7 +55,7 @@ class DashboardController extends Controller
             $campaigns_on_hold = Utilities::switch_db('api')->select("SELECT id FROM campaignDetails WHERE agency = '$agency_id' 
                                                                           AND status = 'on_hold' GROUP BY campaign_id");
 
-            $active_campaigns = Utilities::switch_db('api')->select("SELECT * FROM campaignDetails where agency = '$agency_id' AND start_date <= '$today_date' AND stop_date > '$today_date' GROUP BY campaign_id");
+            $active_campaigns = Utilities::switch_db('api')->select("SELECT * FROM campaignDetails where agency = '$agency_id' AND status = 'active' GROUP BY campaign_id");
 
             return view('agency.dashboard.new_dashboard')->with(['broadcaster' => $allBroadcasters,
                                                                     'active_campaigns' => $active_campaigns,

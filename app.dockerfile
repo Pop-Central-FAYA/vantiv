@@ -9,6 +9,9 @@ RUN apk add php7-fileinfo mysql-client
 RUN ln -sf /proc/self/fd/1 /var/log/apache2/access.log && \
     ln -sf /proc/self/fd/1 /var/log/apache2/error.log
 
+#Add curl to the docker
+RUN apk add curl
+
 COPY . /app
 COPY ./env.example /app/.env
 
