@@ -89,9 +89,9 @@
                 <label class="small_faint uppercased weight_medium">Amount</label>
                 <input id="amount" type="number" name="amount" placeholder="Enter Amount">
             </div>
-            <input type="hidden" name="email" id="email" value="{{ $user_det[0]->email }}">
-            <input type="hidden" name="name" id="name" value="{{ $user_det[0]->firstname .' '.$user_det[0]->lastname }}">
-            <input type="hidden" name="phone_number" id="phone_number" value="{{ $user_det[0]->phone_number }}">
+            <input type="hidden" name="email" id="email" value="{{ Auth::user()->email }}">
+            <input type="hidden" name="name" id="name" value="{{ Auth::user()->first_name .' '.Auth::user()->last_name }}">
+            <input type="hidden" name="phone_number" id="phone_number" value="{{ Auth::user()->phone }}">
             <input type="hidden" name="reference" id="reference" value="" />
             <input type="hidden" name="user_id" value="{{ $user_id }}" />
         </form>
@@ -122,13 +122,13 @@
             });
             var handler = PaystackPop.setup({
                 key: 'pk_test_9945d2a543e97e34d0401f1d926e79dc1716ccc7',
-                email: "<?php echo $user_det[0]->email; ?>",
+                email: "<?php echo Auth::user()->email; ?>",
                 amount: parseFloat(document.getElementById('amount').value * 100),
                 metadata: {
                     custom_fields: [
                         {
-                            display_name: "<?php echo $user_det[0]->firstname .' '.$user_det[0]->lastname; ?>",
-                            value: "<?php echo $user_det[0]->phone_number; ?>"
+                            display_name: "<?php echo Auth::user()->first_name .' '.Auth::user()->last_name; ?>",
+                            value: "<?php echo Auth::user()->phone; ?>"
                         }
                     ]
                 },
