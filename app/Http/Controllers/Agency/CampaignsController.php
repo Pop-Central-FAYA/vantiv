@@ -33,17 +33,16 @@ class CampaignsController extends Controller
         if($request->has('start_date') && $request->has('stop_date')) {
             $start_date = $request->start_date;
             $stop_date = $request->stop_date;
-            $all_campaigns = Utilities::switch_db('api')->select("SELECT c_d.adslots_id, c_d.stop_date, c_d.start_date, c_d.time_created, c_d.product, c_d.name, c_d.campaign_id, p.total, 
+            $all_campaigns = Utilities::switch_db('api')->select("SELECT c_d.adslots_id, c_d.stop_date,c_d.status, c_d.start_date, c_d.time_created, c_d.product, c_d.name, c_d.campaign_id, p.total, 
                                                                       b.name as brand_name, c.campaign_reference from campaignDetails as c_d LEFT JOIN payments as p ON c_d.campaign_id = p.campaign_id 
                                                                       LEFT JOIN campaigns as c ON c_d.campaign_id = c.id LEFT JOIN brands as b ON c_d.brand = b.id where c_d.agency = '$agency_id' 
-                                                                      and c_d.start_date <= '$today_date' and c_d.stop_date > '$today_date' and c_d.stop_date > '$start_date' and c_d.stop_date > '$stop_date' 
+                                                                      and c_d.status = 'active' and c_d.stop_date > '$stop_date' 
                                                                       and c_d.adslots  > 0 GROUP BY c_d.campaign_id ORDER BY c_d.time_created DESC");
         }else {
-            $all_campaigns = Utilities::switch_db('api')->select("SELECT c_d.adslots_id, c_d.stop_date, c_d.start_date, c_d.time_created, c_d.product, c_d.name, c_d.campaign_id, p.total, 
+            $all_campaigns = Utilities::switch_db('api')->select("SELECT c_d.adslots_id, c_d.stop_date, c_d.status, c_d.start_date, c_d.time_created, c_d.product, c_d.name, c_d.campaign_id, p.total, 
                                                                       b.name as brand_name, c.campaign_reference from campaignDetails as c_d LEFT JOIN payments as p ON p.campaign_id = c_d.campaign_id 
                                                                       LEFT JOIN campaigns as c ON c.id = c_d.campaign_id LEFT JOIN brands as b ON b.id = c_d.brand where c_d.agency = '$agency_id' 
-                                                                      AND c.id = c_d.campaign_id and p.campaign_id = c_d.campaign_id and c_d.brand = b.id and c_d.start_date <= '$today_date' and 
-                                                                      c_d.stop_date > '$today_date' and c_d.adslots  > 0 GROUP BY c_d.campaign_id ORDER BY c_d.time_created DESC");
+                                                                      AND c.id = c_d.campaign_id and p.campaign_id = c_d.campaign_id and c_d.brand = b.id and c_d.status = 'active' and c_d.adslots  > 0 GROUP BY c_d.campaign_id ORDER BY c_d.time_created DESC");
         }
 
         $campaigns = Utilities::getCampaignDatatables($all_campaigns);
@@ -370,7 +369,7 @@ class CampaignsController extends Controller
 
         Session::forget('first_step');
         Session::flash('success', $this->campaign_success_message);
-        return redirect()->route('dashboard');
+        return redirect()->route('agency.campaigns_onhold');
 
     }
 

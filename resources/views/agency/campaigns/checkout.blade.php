@@ -159,7 +159,7 @@
                 });
                 $(".payment_wallet").fadeOut(1000);
                 var handler = PaystackPop.setup({
-                    key: 'pk_test_9945d2a543e97e34d0401f1d926e79dc1716ccc7',
+                    key: "<?php echo getenv('PAYSTACK_PUBLIC_KEY'); ?>",
                     email: "<?php echo Auth::user()->email; ?>",
                     amount: parseFloat(document.getElementById('amount').value * 100),
                     metadata: {
