@@ -332,13 +332,16 @@ class DashboardController extends Controller
     public function getPeriodicSalesReport($broadcaster_id)
     {
         $total_month = [];
-        $adslots = [];
         $months = [];
         $adslot_monthly = [];
         $periodic = Utilities::switch_db('api')->select("SELECT count(id) as tot_camp, SUM(adslots) as adslot, time_created as days from campaignDetails WHERE status != 'on_hold' AND
                                                               broadcaster = '$broadcaster_id' GROUP BY DATE_FORMAT(time_created, '%Y-%m') ");
-        $price = Utilities::switch_db('api')->select("SELECT SUM(amount) as total_price, time_created as days from paymentDetails WHERE payment_status = 1 AND broadcaster = '$broadcaster_id' GROUP BY DATE_FORMAT(time_created, '%Y-%m') ");
 
+        $price = Utilities::switch_db('api')->select("SELECT SUM(amount) AS total_price, time_created AS days FROM paymentDetails 
+                                                          WHERE payment_status = 1 AND broadcaster = '$broadcaster_id' 
+                                                          GROUP BY DATE_FORMAT(time_created, '%Y-%m') 
+                                                          ");
+//        dd($price);
         for ($i = 0; $i < count($periodic); $i++) {
             $months[] = date('M, Y', strtotime($periodic[$i]->days));
             $total_month[] = $price[$i]->total_price;
