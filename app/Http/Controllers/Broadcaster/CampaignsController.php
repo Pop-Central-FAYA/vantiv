@@ -412,9 +412,13 @@ class CampaignsController extends Controller
             }
         }
 
-        $this->storeCampaignsPaymentsFilesMposPayments($api_db, $campDetails, $camp, $queries, $id, $now, $broadcaster_id,
-            $pay_id, $request, $first, $walkin_id, $calc, $campaign_id, $invoice_id,
-            $invoice_number, $mpo_id, $file_array, $pay, $payDetails, $invoice, $invoiceDetails, $mpo, $mpoDetails);
+        try {
+            $this->storeCampaignsPaymentsFilesMposPayments($api_db, $campDetails, $camp, $queries, $id, $now, $broadcaster_id,
+                $pay_id, $request, $first, $walkin_id, $calc, $campaign_id, $invoice_id,
+                $invoice_number, $mpo_id, $file_array, $pay, $payDetails, $invoice, $invoiceDetails, $mpo, $mpoDetails);
+        }catch (\Exception $e) {
+            return 'error';
+        }
 
         Session::forget('first_step');
         return 'success';
@@ -729,55 +733,53 @@ class CampaignsController extends Controller
                                                                    $pay_id, $request, $first, $walkin_id, $calc, $campaign_id, $invoice_id,
                                                                    $invoice_number, $mpo_id, $file_array, $pay, $payDetails, $invoice, $invoiceDetails, $mpo, $mpoDetails)
     {
-        try {
-            $api_db->transaction(function () use ($api_db, $campDetails, $camp, $queries, $id, $now, $broadcaster_id,
-                $pay_id, $request, $first, $walkin_id, $calc, $campaign_id, $invoice_id,
-                $invoice_number, $mpo_id, $file_array, $pay, $payDetails, $invoice, $invoiceDetails, $mpo, $mpoDetails) {
-                $api_db->table('campaignDetails')->insert($campDetails);
-                $api_db->table('campaigns')->insert($camp);
-                $campaign_details = Utilities::switch_db('api')->select("SELECT * from campaigns WHERE id='$campaign_id'");
-                foreach($queries as $query)
-                {
-                    $file_array = Utilities::campaignFileInformation($campaign_details, $query, $id, $now, null, $broadcaster_id);
-                    File::create($file_array);
+
+        $api_db->transaction(function () use ($api_db, $campDetails, $camp, $queries, $id, $now, $broadcaster_id,
+        $pay_id, $request, $first, $walkin_id, $calc, $campaign_id, $invoice_id,
+        $invoice_number, $mpo_id, $file_array, $pay, $payDetails, $invoice, $invoiceDetails, $mpo, $mpoDetails) {
+            $api_db->table('campaignDetails')->insert($campDetails);
+            $api_db->table('campaigns')->insert($camp);
+            $campaign_details = Utilities::switch_db('api')->select("SELECT * from campaigns WHERE id='$campaign_id'");
+            foreach($queries as $query)
+            {
+                $file_array = Utilities::campaignFileInformation($campaign_details, $query, $id, $now, null, $broadcaster_id);
+                File::create($file_array);
+            }
+            $pay[] = Utilities::campaignPaymentInformation($pay_id, $campaign_details, $request, $now, $first);
+            $payDetails[] = Utilities::campaignPaymentDetailsInformation($pay_id, $request, null, $walkin_id, $now, null, $first, $calc, $broadcaster_id);
+            $api_db->table('payments')->insert($pay);
+            $api_db->table('paymentDetails')->insert($payDetails);
+            $payment_id = $api_db->select("SELECT id from payments WHERE id='$pay_id'");
+            $invoice[] = Utilities::campaignInvoiceInformation($invoice_id, $campaign_details, $invoice_number, $payment_id);
+            $invoiceDetails[] = Utilities::campaignInvoiceDetailsInformation($invoice_id, $id, $invoice_number, null, $walkin_id, null, $broadcaster_id, $calc);
+            $api_db->table('invoices')->insert($invoice);
+            $api_db->table('invoiceDetails')->insert($invoiceDetails);
+            $mpo[] = Utilities::campaignMpoInformation($mpo_id, $campaign_details, $invoice_number);
+            $mpoDetails[] = Utilities::campaignMpoDetailsInformation($mpo_id, null, null, $broadcaster_id);
+            $api_db->table('mpos')->insert($mpo);
+            $api_db->table('mpoDetails')->insert($mpoDetails);
+            foreach ($queries as $query){
+                if(!empty($query->filePosition_id)){
+                    $api_db->update("UPDATE adslot_filePositions set select_status = 1 
+                                    WHERE adslot_id = '$query->adslot_id' AND broadcaster_id = '$broadcaster_id'");
                 }
-                $pay[] = Utilities::campaignPaymentInformation($pay_id, $campaign_details, $request, $now, $first);
-                $payDetails[] = Utilities::campaignPaymentDetailsInformation($pay_id, $request, null, $walkin_id, $now, null, $first, $calc, $broadcaster_id);
-                $api_db->table('payments')->insert($pay);
-                $api_db->table('paymentDetails')->insert($payDetails);
-                $payment_id = $api_db->select("SELECT id from payments WHERE id='$pay_id'");
-                $invoice[] = Utilities::campaignInvoiceInformation($invoice_id, $campaign_details, $invoice_number, $payment_id);
-                $invoiceDetails[] = Utilities::campaignInvoiceDetailsInformation($invoice_id, $id, $invoice_number, null, $walkin_id, null, $broadcaster_id, $calc);
-                $api_db->table('invoices')->insert($invoice);
-                $api_db->table('invoiceDetails')->insert($invoiceDetails);
-                $mpo[] = Utilities::campaignMpoInformation($mpo_id, $campaign_details, $invoice_number);
-                $mpoDetails[] = Utilities::campaignMpoDetailsInformation($mpo_id, null, null, $broadcaster_id);
-                $api_db->table('mpos')->insert($mpo);
-                $api_db->table('mpoDetails')->insert($mpoDetails);
-                foreach ($queries as $query){
-                    if(!empty($query->filePosition_id)){
-                        $api_db->update("UPDATE adslot_filePositions set select_status = 1 
-                                        WHERE adslot_id = '$query->adslot_id' AND broadcaster_id = '$broadcaster_id'");
-                    }
-                    $get_slots = $api_db->select("SELECT * from adslots WHERE id = '$query->adslot_id'");
-                    $slots_id = $get_slots[0]->id;
-                    $time_difference = $get_slots[0]->time_difference;
-                    $time_used = $get_slots[0]->time_used;
-                    $time = $query->time;
-                    $new_time_used = $time_used + $time;
-                    if($time_difference === $new_time_used){
-                        $slot_status = 1;
-                    }else{
-                        $slot_status = 0;
-                    }
-                    $api_db->update("UPDATE adslots SET time_used = '$new_time_used', is_available = '$slot_status' WHERE id = '$slots_id'");
+                $get_slots = $api_db->select("SELECT * from adslots WHERE id = '$query->adslot_id'");
+                $slots_id = $get_slots[0]->id;
+                $time_difference = $get_slots[0]->time_difference;
+                $time_used = $get_slots[0]->time_used;
+                $time = $query->time;
+                $new_time_used = $time_used + $time;
+                if($time_difference === $new_time_used){
+                    $slot_status = 1;
+                }else{
+                    $slot_status = 0;
                 }
-                \DB::delete("DELETE FROM carts WHERE user_id = '$id'");
-                \DB::delete("DELETE FROM uploads WHERE user_id = '$id'");
-            });
-        }catch (\Exception $e) {
-            return 'error';
-        }
+                $api_db->update("UPDATE adslots SET time_used = '$new_time_used', is_available = '$slot_status' WHERE id = '$slots_id'");
+            }
+            \DB::delete("DELETE FROM carts WHERE user_id = '$id'");
+            \DB::delete("DELETE FROM uploads WHERE user_id = '$id'");
+        });
+
     }
 
 }
