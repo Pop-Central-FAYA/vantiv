@@ -11,8 +11,9 @@ class File extends Model
     protected $primaryKey = 'id';
     protected $keyType = 'string';
 
+
     protected $fillable = ['id', 'user_id', 'campaign_id', 'adslot', 'broadcaster_id', 'file_name', 'file_url', 'file_code','inventory_status', 'created_at',
-                            'modified_at', 'status', 'agency_id', 'agency_broadcaster', 'time_picked', 'airbox_status', 'position_id', 'public_id', 'format'];
+                            'updated_at', 'status', 'agency_id', 'agency_broadcaster', 'time_picked', 'airbox_status', 'position_id', 'public_id', 'format'];
 
     public function rejection_reasons()
     {
