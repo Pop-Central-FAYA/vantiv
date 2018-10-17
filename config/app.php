@@ -36,7 +36,7 @@ return [
     |
     */
 
-    'env' => env('APP_ENV', 'production'),
+    'env' => env('APP_ENV', 'prod'),
 
     /*
     |--------------------------------------------------------------------------
@@ -192,6 +192,7 @@ return [
         Pbmedia\LaravelFFMpeg\FFMpegServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
         JD\Cloudder\CloudderServiceProvider::class,
+        Fideloper\Proxy\TrustedProxyServiceProvider::class,
 
 
         /*
