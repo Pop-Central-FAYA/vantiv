@@ -3,6 +3,7 @@
 namespace Vanguard\Providers;
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\App;
 use Vanguard\Repositories\Activity\ActivityRepository;
 use Vanguard\Repositories\Activity\EloquentActivity;
 use Vanguard\Repositories\Country\CountryRepository;
@@ -38,6 +39,15 @@ class AppServiceProvider extends ServiceProvider
         Validator::replacer('phone_number', function($message, $attribute, $rule, $parameters) {
             return str_replace(':attribute',$attribute, 'This is not a valid nigerian phone number');
         });
+
+        //switching between production and develop environment
+        if (App::environment('dev')) {
+            env('APP_DEBUG', true);
+        }
+
+        if (App::environment('prod')) {
+            env('APP_DEBUG', false);
+        }
     }
 
     /**

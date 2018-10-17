@@ -48,12 +48,12 @@
     @yield('scripts')
     @include('toastr.toastr')
 
-    <script type="text/javascript">
-        (function() { var s = document.createElement("script"); s.type = "text/javascript"; s.async = true; s.src = '//api.usersnap.com/load/ec075f05-c488-417b-ba4e-beb5366a9c15.js';
-            var x = document.getElementsByTagName('script')[0]; x.parentNode.insertBefore(s, x); })();
-
-
-    </script>
+    @if(getenv('APP_ENV') == 'dev')
+        <script type="text/javascript">
+            (function() { var s = document.createElement("script"); s.type = "text/javascript"; s.async = true; s.src = '//api.usersnap.com/load/f5ed7009-22d9-45c3-b9c6-0efbccd07d3c.js';
+                var x = document.getElementsByTagName('script')[0]; x.parentNode.insertBefore(s, x); })();
+        </script>
+    @endif
 
 </body>
 
