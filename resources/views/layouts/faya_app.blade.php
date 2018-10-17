@@ -48,7 +48,7 @@
     @yield('scripts')
     @include('toastr.toastr')
 
-    @if(getenv('APP_ENV') == 'dev')
+    @if(App::environment('dev'))
         <script type="text/javascript">
             (function() { var s = document.createElement("script"); s.type = "text/javascript"; s.async = true; s.src = '//api.usersnap.com/load/f5ed7009-22d9-45c3-b9c6-0efbccd07d3c.js';
                 var x = document.getElementsByTagName('script')[0]; x.parentNode.insertBefore(s, x); })();
