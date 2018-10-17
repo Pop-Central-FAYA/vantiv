@@ -16,7 +16,9 @@ class Kernel extends HttpKernel
     protected $middleware = [
         \Vanguard\Http\Middleware\VerifyInstallation::class,
         \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
+        \Fideloper\Proxy\TrustProxies::class
     ];
+
     /**
      * The application's route middleware groups.
      *
