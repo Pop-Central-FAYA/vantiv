@@ -41,11 +41,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         //switching between production and develop environment
-        if (App::environment('dev')) {
-            env('APP_DEBUG', true);
-        }
-
-        if (App::environment('prod')) {
+        if (App::environment(['prod', 'dev'])) {
             env('APP_DEBUG', false);
         }
     }
