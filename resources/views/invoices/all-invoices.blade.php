@@ -30,7 +30,6 @@
                         <th>Date</th>
                         <th>Amount</th>
                         <th>Status</th>
-                        <th>View</th>
                     </tr>
                 </thead>
 
@@ -53,12 +52,6 @@
                     <button type="submit" class="btn">Continue</button>
                 </div>
             </form>
-        </div>
-
-        {{--modal for viewing invoices--}}
-        <div class="modal_contain" id="invoice{{ $invoice['id'] }}">
-
-            <h3>Invoice Details for {{ $invoice['campaign_name'] }}</h3>
         </div>
     @endforeach
 
@@ -118,12 +111,6 @@
                 return false;
             });
 
-            $("body").delegate(".modal_view_invoice_click", "click", function() {
-                var href = $(this).attr("href");
-                $(href).modal();
-                return false;
-            })
-
             var Datefilter =  $('.invoice').DataTable({
                 dom: 'Bfrtip',
                 paging: true,
@@ -148,8 +135,7 @@
                     {data: 'name', name: 'name'},
                     {data: 'date', name: 'date'},
                     {data: 'actual_amount_paid', name: 'actual_amount_paid'},
-                    {data: 'status', name: 'status'},
-                    {data: 'view', name: 'view'}
+                    {data: 'status', name: 'status'}
                 ],
                 "createdRow": function( row, data, dataIndex ) {
 

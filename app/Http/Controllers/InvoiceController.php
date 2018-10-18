@@ -73,10 +73,8 @@ class InvoiceController extends Controller
                 }else{
                     return '<span class="span_state status_pending">Pending</span>';
                 }
-            })->addColumn('view', function ($invoice_campaign_details){
-                return '<a href="#invoice'.$invoice_campaign_details['id'].'" class="modal_view_invoice_click">View</a>';
             })
-            ->rawColumns(['status' => 'status', 'view' => 'view'])
+            ->rawColumns(['status' => 'status'])
             ->addIndexColumn()
             ->make(true);
     }
