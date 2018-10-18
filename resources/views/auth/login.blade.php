@@ -35,8 +35,6 @@
         <input type="submit" value="Log into your account" class= "btn full">
 
 
-        <p class="align_center pt">Don't have an account? <a href="" class="">Sign Up</a></p>
-
     </form>
 @stop
 
