@@ -36,7 +36,8 @@ class BroadcasterAuthController extends Controller
                 $filename = realpath($image);
                 Cloudder::upload($filename, Cloudder::getPublicId(), ['height' => 200, 'width' => 200]);
                 $clouder = Cloudder::getResult();
-                $image_path = encrypt($clouder['url']);
+                // $image_path = encrypt($clouder['url']);
+                $image_path = encrypt($clouder['secure_url']);
             }
 
             $full_name = $request->first_name . ' ' . $request->last_name;
@@ -155,7 +156,8 @@ class BroadcasterAuthController extends Controller
             $filename = realpath($image);
             Cloudder::upload($filename, Cloudder::getPublicId(), ['height' => 200, 'width' => 200]);
             $clouder = Cloudder::getResult();
-            $image_path = encrypt($clouder['url']);
+            // $image_path = encrypt($clouder['url']);
+            $image_path = encrypt($clouder['secure_url']);
         }
 
         $userInsert = DB::table('users')->insert([

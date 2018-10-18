@@ -13,7 +13,7 @@ use Yajra\DataTables\DataTables;
 
 class MpoController extends Controller
 {
-    
+
     public function index()
     {
         return view('broadcaster_module.mpos.index');
@@ -26,13 +26,13 @@ class MpoController extends Controller
             $start_date = $request->start_date;
             $stop_date = $request->stop_date;
             $mpos = Utilities::switch_db('api')->select("SELECT m_d.mpo_id, m_d.is_mpo_accepted, c_d.status as campaign_status, m_d.agency_id, m.campaign_id from mpoDetails as m_d
-                                                            INNER JOIN mpos as m ON m.id = m_d.mpo_id 
+                                                            INNER JOIN mpos as m ON m.id = m_d.mpo_id
                                                             INNER JOIN campaignDetails as c_d ON c_d.campaign_id = m.campaign_id AND c_d.broadcaster = m_d.broadcaster_id
-                                                            where m_d.broadcaster_id = '$broadcaster_id' and c_d.status != 'on_hold' OR c_d.status = 'file_error' AND 
+                                                            where m_d.broadcaster_id = '$broadcaster_id' and c_d.status != 'on_hold' OR c_d.status = 'file_error' AND
                                                             and m_d.time_created between '$start_date' and '$stop_date' AND c_d.broadcaster = '$broadcaster_id' order by m_d.time_created desc");
         }else{
-            $mpos = Utilities::switch_db('api')->select("SELECT m_d.mpo_id, m_d.is_mpo_accepted, c_d.status as campaign_status, m_d.agency_id, m.campaign_id from mpoDetails as m_d 
-                                                            INNER JOIN mpos as m ON m.id = m_d.mpo_id 
+            $mpos = Utilities::switch_db('api')->select("SELECT m_d.mpo_id, m_d.is_mpo_accepted, c_d.status as campaign_status, m_d.agency_id, m.campaign_id from mpoDetails as m_d
+                                                            INNER JOIN mpos as m ON m.id = m_d.mpo_id
                                                             INNER JOIN campaignDetails as c_d ON c_d.campaign_id = m.campaign_id AND c_d.broadcaster = m_d.broadcaster_id
                                                             where m_d.broadcaster_id = '$broadcaster_id' and c_d.status != 'on_hold' OR c_d.status = 'file_error'
                                                             AND c_d.broadcaster = '$broadcaster_id'
@@ -55,15 +55,15 @@ class MpoController extends Controller
         if($request->has('start_date') && $request->has('stop_date')) {
             $start_date = $request->start_date;
             $stop_date = $request->stop_date;
-            $mpos = Utilities::switch_db('api')->select("SELECT m_d.mpo_id, m_d.is_mpo_accepted, c_d.status as campaign_status m_d.agency_id, m.campaign_id from mpoDetails as m_d 
-                                                            INNER JOIN mpos as m ON m.id = m_d.mpo_id 
+            $mpos = Utilities::switch_db('api')->select("SELECT m_d.mpo_id, m_d.is_mpo_accepted, c_d.status as campaign_status m_d.agency_id, m.campaign_id from mpoDetails as m_d
+                                                            INNER JOIN mpos as m ON m.id = m_d.mpo_id
                                                             INNER JOIN campaignDetails as c_d ON c_d.campaign_id = m.campaign_id AND c_d.broadcaster = m_d.broadcaster_id
                                                             where m_d.broadcaster_id = '$broadcaster_id' and c_d.status != 'on_hold' AND
                                                             c_d.broadcaster = '$broadcaster_id' AND
                                                             m_d.is_mpo_accepted = 0 and m_d.time_created between '$start_date' and '$stop_date' order by m_d.time_created desc");
         }else{
-            $mpos = Utilities::switch_db('api')->select("SELECT m_d.mpo_id, m_d.is_mpo_accepted, c_d.status as campaign_status, m_d.agency_id, m.campaign_id from mpoDetails as m_d 
-                                                            INNER JOIN mpos as m ON m.id = m_d.mpo_id 
+            $mpos = Utilities::switch_db('api')->select("SELECT m_d.mpo_id, m_d.is_mpo_accepted, c_d.status as campaign_status, m_d.agency_id, m.campaign_id from mpoDetails as m_d
+                                                            INNER JOIN mpos as m ON m.id = m_d.mpo_id
                                                             INNER JOIN campaignDetails as c_d ON c_d.campaign_id = m.campaign_id AND c_d.broadcaster = m_d.broadcaster_id
                                                             where m_d.broadcaster_id = '$broadcaster_id' and c_d.status != 'on_hold' AND
                                                             c_d.broadcaster = '$broadcaster_id' AND
@@ -78,8 +78,8 @@ class MpoController extends Controller
     public function mpoAction($mpo_id)
     {
         $broadcaster_id = \Session::get('broadcaster_id');
-        $mpos = Utilities::switch_db('api')->select("SELECT m_d.mpo_id, m_d.is_mpo_accepted, c_d.status as campaign_status, m_d.agency_id, m.campaign_id from mpoDetails as m_d 
-                                                        INNER JOIN mpos as m ON m.id = m_d.mpo_id 
+        $mpos = Utilities::switch_db('api')->select("SELECT m_d.mpo_id, m_d.is_mpo_accepted, c_d.status as campaign_status, m_d.agency_id, m.campaign_id from mpoDetails as m_d
+                                                        INNER JOIN mpos as m ON m.id = m_d.mpo_id
                                                         INNER JOIN campaignDetails as c_d ON c_d.campaign_id = m.campaign_id AND c_d.broadcaster = m_d.broadcaster_id
                                                         where m_d.broadcaster_id = '$broadcaster_id' and m_d.mpo_id = '$mpo_id' AND c_d.broadcaster = '$broadcaster_id'
                                                         and c_d.status = 'pending' OR c_d.status = 'file_error'");
@@ -150,8 +150,8 @@ class MpoController extends Controller
 
         foreach ($mpos as $mpo) {
             $n = 1;
-            $campaign = Utilities::switch_db('api')->select("SELECT c.name, c.product, c.time_created, b.name as brand_name, i.invoice_number from campaignDetails as c 
-                                                                  INNER JOIN brands as b ON c.brand = b.id JOIN invoices as i ON i.campaign_id = c.campaign_id 
+            $campaign = Utilities::switch_db('api')->select("SELECT c.name, c.product, c.time_created, b.name as brand_name, i.invoice_number from campaignDetails as c
+                                                                  INNER JOIN brands as b ON c.brand = b.id JOIN invoices as i ON i.campaign_id = c.campaign_id
                                                                   where c.campaign_id = '$mpo->campaign_id'");
             $payment_details = Api::fetchPayment($mpo->campaign_id, $broadcaster_id);
             $status = Api::approvedCampaignFiles($mpo->campaign_id, $broadcaster_id);
@@ -220,8 +220,8 @@ class MpoController extends Controller
     public function rejectedFiles($mpo_id)
     {
         $broadcaster_id = \Session::get('broadcaster_id');
-        $mpo = Utilities::switch_db('api')->select("SELECT m_d.mpo_id, m_d.is_mpo_accepted, m_d.agency_id, m.campaign_id from mpoDetails as m_d 
-                                                            INNER JOIN mpos as m ON m.id = m_d.mpo_id where m_d.mpo_id = '$mpo_id' and 
+        $mpo = Utilities::switch_db('api')->select("SELECT m_d.mpo_id, m_d.is_mpo_accepted, m_d.agency_id, m.campaign_id from mpoDetails as m_d
+                                                            INNER JOIN mpos as m ON m.id = m_d.mpo_id where m_d.mpo_id = '$mpo_id' and
                                                             m_d.broadcaster_id = '$broadcaster_id' AND m_d.is_mpo_accepted = 0 order by m_d.time_created desc");
         $mpo_data = $this->getMpoCollection($mpo, $broadcaster_id);
         return view('mpos.rejected_files', compact('mpo_data'));
@@ -260,7 +260,8 @@ class MpoController extends Controller
         try {
             \DB::transaction(function () use ($file, $filesUploads, $clouder) {
                 $file->file_name = $filesUploads->getClientOriginalName();
-                $file->file_url = encrypt($clouder['url']);
+                // $file->file_url = encrypt($clouder['url']);
+                $file->file_url = encrypt($clouder['secure_url']);
                 $file->public_id = $clouder['public_id'];
                 $file->format = $clouder['format'];
                 $file->status = 'pending';

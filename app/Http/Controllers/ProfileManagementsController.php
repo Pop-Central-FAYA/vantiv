@@ -76,16 +76,16 @@ class ProfileManagementsController extends Controller
         }
         try {
             Utilities::switch_db('api')->transaction(function () use ($request, $broadcaster_id, $u_id) {
-                DB::update("UPDATE users SET first_name = '$request->first_name', 
-                                                    last_name = '$request->last_name', 
-                                                    address = '$request->address', 
-                                                    username = '$request->username' 
+                DB::update("UPDATE users SET first_name = '$request->first_name',
+                                                    last_name = '$request->last_name',
+                                                    address = '$request->address',
+                                                    username = '$request->username'
                                                 WHERE id = '$u_id'");
-                Utilities::switch_db('api')->update("UPDATE users SET  firstname = '$request->first_name', 
-                                                                            lastname = '$request->last_name', 
-                                                                            phone_number = '$request->phone' 
+                Utilities::switch_db('api')->update("UPDATE users SET  firstname = '$request->first_name',
+                                                                            lastname = '$request->last_name',
+                                                                            phone_number = '$request->phone'
                                                                       WHERE id = (SELECT user_id from broadcasters where id = '$broadcaster_id') ");
-                Utilities::switch_db('api')->update("UPDATE broadcasters SET nationality = '$request->country_id', 
+                Utilities::switch_db('api')->update("UPDATE broadcasters SET nationality = '$request->country_id',
                                                                                   location = '$request->location' where id = '$broadcaster_id'");
 
             });
@@ -110,18 +110,18 @@ class ProfileManagementsController extends Controller
 
         try {
                 Utilities::switch_db('api')->transaction(function () use ($request, $u_id, $agency_id) {
-                $a = DB::update("UPDATE users SET  first_name = '$request->first_name', 
-                                                    last_name = '$request->last_name', 
-                                                    address = '$request->address', 
-                                                    username = '$request->username' 
+                $a = DB::update("UPDATE users SET  first_name = '$request->first_name',
+                                                    last_name = '$request->last_name',
+                                                    address = '$request->address',
+                                                    username = '$request->username'
                                                 WHERE id = '$u_id'");
-                $b = Utilities::switch_db('api')->update("UPDATE users SET firstname = '$request->first_name', 
-                                                                          lastname = '$request->last_name', 
-                                                                          phone_number = '$request->phone' 
-                                                                      WHERE 
+                $b = Utilities::switch_db('api')->update("UPDATE users SET firstname = '$request->first_name',
+                                                                          lastname = '$request->last_name',
+                                                                          phone_number = '$request->phone'
+                                                                      WHERE
                                                                         id = (SELECT user_id from agents where id = '$agency_id') ");
-                $c = Utilities::switch_db('api')->update("UPDATE agents SET nationality = '$request->country_id', 
-                                                                           location = '$request->location' 
+                $c = Utilities::switch_db('api')->update("UPDATE agents SET nationality = '$request->country_id',
+                                                                           location = '$request->location'
                                                                        WHERE id = '$agency_id'");
             });
         }catch (\Exception $e){
@@ -141,7 +141,8 @@ class ProfileManagementsController extends Controller
         $filename = realpath($image);
         Cloudder::upload($filename, Cloudder::getPublicId(), ['height' => 200, 'width' => 200]);
         $clouder = Cloudder::getResult();
-        $image_path = encrypt($clouder['url']);
+        // $image_path = encrypt($clouder['url']);
+        $image_path = encrypt($clouder['secure_url']);
 
         return $image_path;
     }
