@@ -9,6 +9,8 @@ use JD\Cloudder\Facades\Cloudder;
 use Vanguard\Http\Requests\StoreWalkins;
 use Vanguard\Http\Requests\WalkinStoreRequest;
 use Vanguard\Http\Requests\WalkinUpdateRequest;
+use Vanguard\Libraries\Amazon;
+use Vanguard\Libraries\AmazonS3;
 use Vanguard\Models\Brand;
 use Yajra\DataTables\DataTables;
 use Vanguard\Libraries\Utilities;
@@ -39,6 +41,10 @@ class WalkinsController extends Controller
                                                                 INNER JOIN users as u ON u.id = w.user_id
                                                                 where w.agency_id = '$broadcaster_user'");
         }
+
+        $presigned_url = AmazonS3::generatePreSignedUrl();
+        dd($presigned_url);
+
 
         $client_data = $this->getClientDetails($clients, $broadcaster_id);
 
