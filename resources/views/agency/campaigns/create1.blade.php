@@ -301,11 +301,11 @@
                         @endif
                     </div>
                     <div class="mb4 clearfix pt4 mb4">
-                        <div class="column col_6">
+                        <!-- <div class="column col_6">
                             <a  class="btn uppercased _proceed modal_click">Upload Media Plan </a>
-                        </div>
+                        </div> -->
 
-                        <div class="column col_6 align_right">
+                        <div class="column col_12 align_right">
                             <button type="submit"  class="btn uppercased ">Proceed <span class=""></span></button>
                         </div>
                     </div>
