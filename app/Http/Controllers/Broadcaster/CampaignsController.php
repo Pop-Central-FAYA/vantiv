@@ -47,14 +47,14 @@ class CampaignsController extends Controller
         if($request->has('start_date') && $request->has('stop_date')) {
             $start_date = $request->start_date;
             $stop_date = $request->stop_date;
-            $all_campaigns = Utilities::switch_db('api')->select("SELECT c_d.adslots_id, c_d.stop_date, c_d.status, c_d.start_date, c_d.time_created, c_d.product, c_d.name, c_d.campaign_id, p.total, b.name as brand_name, 
-                                                                      c.campaign_reference from campaignDetails as c_d LEFT JOIN payments as p ON p.campaign_id = c_d.campaign_id LEFT JOIN campaigns as c ON c.id = c_d.campaign_id 
-                                                                      LEFT JOIN brands as b ON b.id = c_d.brand where  c_d.broadcaster = '$broadcaster_id' and c_d.start_date <= '$today_date' and c_d.stop_date > '$today_date' 
+            $all_campaigns = Utilities::switch_db('api')->select("SELECT c_d.adslots_id, c_d.stop_date, c_d.status, c_d.start_date, c_d.time_created, c_d.product, c_d.name, c_d.campaign_id, p.total, b.name as brand_name,
+                                                                      c.campaign_reference from campaignDetails as c_d LEFT JOIN payments as p ON p.campaign_id = c_d.campaign_id LEFT JOIN campaigns as c ON c.id = c_d.campaign_id
+                                                                      LEFT JOIN brands as b ON b.id = c_d.brand where  c_d.broadcaster = '$broadcaster_id' and c_d.start_date <= '$today_date' and c_d.stop_date > '$today_date'
                                                                       and c_d.status = 'active' and c_d.adslots  > 0 ORDER BY c_d.time_created DESC");
         }else {
-            $all_campaigns = Utilities::switch_db('api')->select("SELECT c_d.adslots_id, c_d.stop_date, c_d.status, c_d.start_date, c_d.time_created, c_d.product, c_d.name, c_d.campaign_id, p.total, b.name as brand_name, 
-                                                                      c.campaign_reference from campaignDetails as c_d LEFT JOIN payments as p ON p.campaign_id = c_d.campaign_id 
-                                                                       LEFT JOIN campaigns as c ON c.id = c_d.campaign_id LEFT JOIN brands as b ON b.id = c_d.brand where  c_d.broadcaster = '$broadcaster_id' 
+            $all_campaigns = Utilities::switch_db('api')->select("SELECT c_d.adslots_id, c_d.stop_date, c_d.status, c_d.start_date, c_d.time_created, c_d.product, c_d.name, c_d.campaign_id, p.total, b.name as brand_name,
+                                                                      c.campaign_reference from campaignDetails as c_d LEFT JOIN payments as p ON p.campaign_id = c_d.campaign_id
+                                                                       LEFT JOIN campaigns as c ON c.id = c_d.campaign_id LEFT JOIN brands as b ON b.id = c_d.brand where  c_d.broadcaster = '$broadcaster_id'
                                                                        and c_d.status = 'active' and c_d.adslots  > 0 ORDER BY c_d.time_created DESC");
         }
 
@@ -591,12 +591,12 @@ class CampaignsController extends Controller
     public function getCampaignOnHold()
     {
         $broadcaster_id = Session::get('broadcaster_id');
-        $all_campaigns = Utilities::switch_db('api')->select("SELECT c_d.adslots_id, c_d.stop_date, c_d.status, c_d.start_date, c_d.time_created, c_d.product, 
+        $all_campaigns = Utilities::switch_db('api')->select("SELECT c_d.adslots_id, c_d.stop_date, c_d.status, c_d.start_date, c_d.time_created, c_d.product,
                                                                         c_d.name, c_d.campaign_id, p.total, p.id as payment_id, b.name as brand_name, c_d.user_id as user_id,
                                                                         CONCAT(u.firstname,' ', u.lastname) as full_name, u.phone_number, u.email as email,
-                                                                      c.campaign_reference from campaignDetails as c_d LEFT JOIN payments as p ON p.campaign_id = c_d.campaign_id 
+                                                                      c.campaign_reference from campaignDetails as c_d LEFT JOIN payments as p ON p.campaign_id = c_d.campaign_id
                                                                        LEFT JOIN campaigns as c ON c.id = c_d.campaign_id LEFT JOIN brands as b ON b.id = c_d.brand
-                                                                       INNER JOIN users as u ON u.id = c_d.user_id 
+                                                                       INNER JOIN users as u ON u.id = c_d.user_id
                                                                        where  c_d.broadcaster = '$broadcaster_id' AND c_d.agency = ''
                                                                        and c_d.status = 'on_hold' and c_d.adslots  > 0 ORDER BY c_d.time_created DESC");
 
@@ -621,9 +621,9 @@ class CampaignsController extends Controller
             return redirect()->back();
         }
         $api_db = Utilities::switch_db('api');
-        $single_campaign = $api_db->select("SELECT c_d.campaign_id, p.id as payment_id from campaignDetails as c_d 
-                                            INNER JOIN payments as p ON p.campaign_id = c_d.campaign_id 
-                                            where  c_d.broadcaster = '$broadcaster_id' 
+        $single_campaign = $api_db->select("SELECT c_d.campaign_id, p.id as payment_id from campaignDetails as c_d
+                                            INNER JOIN payments as p ON p.campaign_id = c_d.campaign_id
+                                            where  c_d.broadcaster = '$broadcaster_id'
                                             and c_d.campaign_id = '$campaign_id' and c_d.adslots  > 0 ORDER BY c_d.time_created DESC");
 
         $campaign_id = $single_campaign[0]->campaign_id;
@@ -691,7 +691,7 @@ class CampaignsController extends Controller
 
             try {
                 Utilities::switch_db('api')->transaction(function () use($card, $ip_address, $fees, $type, $message, $reference, $request, $amount, $user_id) {
-                    Utilities::switch_db('api')->select("UPDATE transactions SET card_type = '$card', status = 'SUCCESSFUL', ip_address = '$ip_address', 
+                    Utilities::switch_db('api')->select("UPDATE transactions SET card_type = '$card', status = 'SUCCESSFUL', ip_address = '$ip_address',
                                                                     fees = '$fees', `type` = '$type', message = '$message' WHERE reference = '$reference'");
                     $save_campaign = $this->updateCampaign($request->payment, $request->campaign_id);
                     if($save_campaign === 'success') {
@@ -760,7 +760,7 @@ class CampaignsController extends Controller
             $api_db->table('mpoDetails')->insert($mpoDetails);
             foreach ($queries as $query){
                 if(!empty($query->filePosition_id)){
-                    $api_db->update("UPDATE adslot_filePositions set select_status = 1 
+                    $api_db->update("UPDATE adslot_filePositions set select_status = 1
                                     WHERE adslot_id = '$query->adslot_id' AND broadcaster_id = '$broadcaster_id'");
                 }
                 $get_slots = $api_db->select("SELECT * from adslots WHERE id = '$query->adslot_id'");
@@ -779,6 +779,15 @@ class CampaignsController extends Controller
             \DB::delete("DELETE FROM carts WHERE user_id = '$id'");
             \DB::delete("DELETE FROM uploads WHERE user_id = '$id'");
         });
+
+    }
+
+    /**
+     * I hate this, we need to resolve
+     */
+    private function formatImageUrl($image_url)
+    {
+        return encrypt(Utilities::convertCloudinaryHttpToHttps(decrypt($image_url)));
 
     }
 

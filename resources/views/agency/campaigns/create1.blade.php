@@ -334,7 +334,7 @@
             $('#target_aud').select2({
                 placeholder: "Please select Target Audience"
             });
-            
+
             // fetch all brands when a clientSis selected
             $('body').delegate('#clients','change', function(e){
                 var clients = $("#clients").val();

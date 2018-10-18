@@ -241,7 +241,8 @@ class BroadcasterUserCampaignsController extends Controller
                 $filename = realpath($filesUploaded);
                 Cloudder::uploadVideo($filename);
                 $clouder = Cloudder::getResult();
-                $file_gan_gan = encrypt($clouder['url']);
+                // $file_gan_gan = encrypt($clouder['url']);
+                $file_gan_gan = encrypt($clouder['secure_url']);
 
                 $insert_upload = \DB::table('uploads')->insert([
                     'user_id' => $walkins,
@@ -311,10 +312,10 @@ class BroadcasterUserCampaignsController extends Controller
         $region = "". implode("','", $step1->region) ."";
         $adslots_count = Utilities::switch_db('api')->select("SELECT * FROM adslots where min_age >= $step1->min_age AND channels='$step1->channel' AND  max_age <= $step1->max_age AND target_audience = '$step1->target_audience' AND day_parts IN ('$day_parts') AND region IN ('$region') AND is_available = 0 AND broadcaster = '$broadcaster'");
         $result = count($adslots_count);
-        $ratecards = Utilities::switch_db('api')->select("SELECT * from rateCards WHERE id IN (SELECT rate_card FROM adslots where min_age >= $step1->min_age 
-                                                            AND max_age <= $step1->max_age 
-                                                            AND target_audience = '$step1->target_audience' 
-                                                            AND day_parts IN ('$day_parts') AND region IN ('$region') 
+        $ratecards = Utilities::switch_db('api')->select("SELECT * from rateCards WHERE id IN (SELECT rate_card FROM adslots where min_age >= $step1->min_age
+                                                            AND max_age <= $step1->max_age
+                                                            AND target_audience = '$step1->target_audience'
+                                                            AND day_parts IN ('$day_parts') AND region IN ('$region')
                                                             AND is_available = 0 AND broadcaster = '$broadcaster')");
 
         foreach ($ratecards as $ratecard){

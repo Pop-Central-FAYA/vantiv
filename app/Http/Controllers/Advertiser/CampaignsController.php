@@ -246,7 +246,8 @@ class CampaignsController extends Controller
                 $filename = realpath($filesUploaded);
                 Cloudder::uploadVideo($filename);
                 $clouder = Cloudder::getResult();
-                $file_gan_gan = encrypt($clouder['url']);
+                // $file_gan_gan = encrypt($clouder['url']);
+                $file_gan_gan = encrypt($clouder['secure_url']);
 
                 $insert_upload = \DB::table('uploads')->insert([
                     'user_id' => $id,
@@ -358,6 +359,8 @@ class CampaignsController extends Controller
         $data = \DB::select("SELECT * from uploads WHERE user_id = '$id'");
         $cart = \DB::select("SELECT * from carts WHERE user_id = '$id'");
         $broadcaster_logo = Utilities::switch_db('api')->select("SELECT image_url from broadcasters where id = '$broadcaster'");
+        $broadcaster_logo = $this->formatImageUrl($broadcaster_logo);
+
         $positions = Utilities::switch_db('api')->select("SELECT * from filePositions where broadcaster_id = '$broadcaster'");
 
         $adslots_broadcasters = Utilities::switch_db('api')->select("SELECT broadcaster, COUNT(broadcaster) as all_slots FROM adslots where min_age >= $step1->min_age AND max_age <= $step1->max_age AND target_audience = '$step1->target_audience' AND day_parts IN ('$day_parts') AND region IN ('$region') AND is_available = 0 AND channels = '$step1->channel' group by broadcaster");
@@ -458,7 +461,7 @@ class CampaignsController extends Controller
                 'percentage' => $query_cart->percentage,
                 'position' => $position ? $position[0]->position : 'No Position',
                 'total_price' => $query_cart->total_price,
-                'broadcaster_logo' => $broadcaster_logo[0]->image_url
+                'broadcaster_logo' => $this->formatImageUrl($broadcaster_logo[0]->image_url)
             ];
         }
         return view('advertisers.campaigns.checkout')->with('first_session', $first)
@@ -730,6 +733,15 @@ class CampaignsController extends Controller
     {
         $campaign_details = Utilities::campaignDetails($id);
         return view('advertisers.campaigns.campaign_details', compact('campaign_details'));
+    }
+
+    /**
+     * I hate this, we need to resolve
+     */
+    private function formatImageUrl($image_url)
+    {
+        return encrypt(Utilities::convertCloudinaryHttpToHttps(decrypt($image_url)));
+
     }
 
 
