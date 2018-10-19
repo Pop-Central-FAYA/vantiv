@@ -524,8 +524,8 @@ class Utilities {
         $targetAudiences = Utilities::switch_db('api')->select("SELECT * from targetAudiences");
         $regions = Utilities::switch_db('api')->select("SELECT * from regions");
         $day_parts = Utilities::switch_db('api')->select("SELECT * from dayParts");
-        $industries = Utilities::switch_db('api')->select("SELECT * from sectors");
-        $subindustries = Utilities::switch_db('api')->select("select * from subSectors");
+        $industries = Utilities::switch_db('api')->select("SELECT * FROM sectors ORDER BY `name` ASC");
+        $subindustries = Utilities::switch_db('api')->select("SELECT * FROM subSectors ORDER BY `name` ASC");
         $channels = Utilities::switch_db('api')->select("SELECT * from campaignChannels");
         $days = Utilities::switch_db('api')->select("SELECT * from days");
         $hourly_ranges = Utilities::switch_db('api')->select("SELECT * from hourlyRanges");
