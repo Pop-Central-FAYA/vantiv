@@ -9,7 +9,7 @@ use JD\Cloudder\Facades\Cloudder;
 use Vanguard\Http\Requests\StoreWalkins;
 use Vanguard\Http\Requests\WalkinStoreRequest;
 use Vanguard\Http\Requests\WalkinUpdateRequest;
-use Vanguard\Libraries\Amazon;
+// use Vanguard\Libraries\Amazon;
 use Vanguard\Libraries\AmazonS3;
 use Vanguard\Models\Brand;
 use Yajra\DataTables\DataTables;

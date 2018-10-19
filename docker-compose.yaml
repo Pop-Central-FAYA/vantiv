@@ -11,6 +11,8 @@ services:
     ports:
       - "9000:80"
     environment:
+      - HOME=/home
+      - AWS_REGION=us-east-1
       - MYSQL_HOST=database
       - APACHE_SERVER_NAME=alpine.docker.localhost
       - CONTAINER_TIMEZONE=UTC
@@ -25,7 +27,7 @@ services:
       - DB_PASSWORD=faya
       - MEDIA_BUCKET=faya-dev-us-east-1-media
     volumes:
-      - $HOME/.aws:$HOME/.aws
+      - $HOME/.aws:/home/.aws
       - ./:/app
     cap_add:
       - SYS_TIME
