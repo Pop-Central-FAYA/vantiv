@@ -49,7 +49,10 @@ class WalkinsController extends Controller
         $entries = new LengthAwarePaginator($currentPageSearchResults, count($col), $perPage);
         $entries->setPath('list');
 
-        $industries = Utilities::switch_db('api')->select("SELECT * FROM sectors");
+        $industries = Utilities::switch_db('api')->select("
+            SELECT * FROM sectors
+            ORDER BY `name` ASC
+        ");
 
         return view('broadcaster_module.walk-In.index')->with('clients', $entries)->with('industries', $industries);
     }
@@ -120,7 +123,11 @@ class WalkinsController extends Controller
     {
         $industry = request()->industry;
 
-        $sud_industry = Utilities::switch_db('api')->select("SELECT * from subSectors where sector_id = '$industry'");
+        $sud_industry = Utilities::switch_db('api')->select("
+            SELECT * FROM subSectors
+            WHERE sector_id = '$industry'
+            ORDER BY `name` ASC
+        ");
 
         if(count($sud_industry) > 0){
             return $sud_industry;
@@ -303,7 +310,10 @@ class WalkinsController extends Controller
         $campaign_payment = $campaign_graph['campaign_payment'];
         $campaign_date = $campaign_graph['campaign_date'];
 
-        $industries = Utilities::switch_db('api')->select("SELECT * FROM sectors");
+        $industries = Utilities::switch_db('api')->select("
+            SELECT * FROM sectors
+            ORDER BY `name` ASC
+        ");
 
         $sub_inds = Utilities::switch_db('api')->select("SELECT sub.id, sub.sector_id, sub.name, sub.sub_sector_code from subSectors as sub, sectors as s where sub.sector_id = s.sector_code");
 
