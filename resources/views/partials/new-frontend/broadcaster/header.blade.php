@@ -1,14 +1,7 @@
 
 <div class="header mb3 clearfix">
-    <div class="col_4 header_search column">
-        @if(Request::is('agency/clients/*'))
-            <form method="get" action="#">
-                @endif
-                <input type="text" placeholder="Search">
-            </form>
-    </div>
 
-    <div class="user_dets p-t col_8 column align_right">
+    <div class="user_dets p-t col_12 column align_right">
 
         <div class="user_acct right align_left">
 
