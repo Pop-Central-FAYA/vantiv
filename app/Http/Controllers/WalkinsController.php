@@ -42,10 +42,6 @@ class WalkinsController extends Controller
                                                                 where w.agency_id = '$broadcaster_user'");
         }
 
-        $presigned_url = AmazonS3::generatePreSignedUrl();
-        dd($presigned_url);
-
-
         $client_data = $this->getClientDetails($clients, $broadcaster_id);
 
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
@@ -108,7 +104,7 @@ class WalkinsController extends Controller
                 'inactive_campaign' => count($inactive_campaigns),
                 'count_brands' => count($brs),
                 'company_name' => $client->company_name,
-                'company_logo' => encrypt(Utilities::convertCloudinaryHttpToHttps(decrypt($client->company_logo))),
+                'company_logo' => Utilities::returnImageWhenNotEncrypted($client->company_logo),
                 'location' => $client->location,
             ];
         }
@@ -143,7 +139,6 @@ class WalkinsController extends Controller
      */
     public function store(WalkinStoreRequest $request)
     {
-
         $user_agent = $_SERVER['HTTP_USER_AGENT'];
         $description = 'Client '.$request->first_name.' '. $request->last_name.' with brand '.$request->brand_name.' Created by '.Session::get('agency_id');
         $ip = request()->ip();
@@ -202,9 +197,7 @@ class WalkinsController extends Controller
         $apiUserDetails = Utilities::switch_db('api')->select("SELECT * FROM users where email = '$request->email'");
 
         try {
-            if($request->hasFile('company_logo')){
-                $company_image = Utilities::uploadCompanyLogoToOurServer($request);
-            }
+            $company_image = $request->company_logo;
             Utilities::insertIntoWalkinsApiDB($client_id, $apiUserDetails[0]->id, $broadcaster_id, $request, $company_image, $agency_id);
         }catch (\Exception $e){
             $api_db->rollback();
@@ -216,7 +209,7 @@ class WalkinsController extends Controller
         $checkIfBrandExists = Brand::where('slug', $brand_slug)->first();
         if(!$checkIfBrandExists){
             $brand_logo = $request->file('image_url');
-            $image_url = Utilities::uploadBrandImageToCloudinary($brand_logo);
+            $image_url = $request->image_url;
             $brand = new Brand();
             try {
                 Utilities::storeBrands($brand, $request, $unique, $image_url, $brand_slug);
@@ -265,7 +258,6 @@ class WalkinsController extends Controller
      */
     public function updateWalKins(WalkinUpdateRequest $request, $client_id)
     {
-
         $result = Utilities::updateClients($request, $client_id);
 
         if($result === "success"){
@@ -335,7 +327,7 @@ class WalkinsController extends Controller
      */
     private function convertImageUrls($client)
     {
-        $client->company_logo = encrypt(Utilities::convertCloudinaryHttpToHttps(decrypt($client->company_logo)));
-        $client->image_url = Utilities::convertCloudinaryHttpToHttps($client->image_url);
+        $client->company_logo = Utilities::returnImageWhenNotEncrypted($client->company_logo);
+        $client->image_url = Utilities::returnImageWhenNotEncrypted($client->image_url);
     }
 }

@@ -331,13 +331,8 @@ class Utilities {
 
         $walkins = $api_db->select("SELECT * from walkIns where id = '$client_id'");
         $user_id = $walkins[0]->user_id;
-        if($request->hasFile('company_logo')){
-            $filename = $request->file('company_logo')->getRealPath();
-            Cloudder::upload($filename, Cloudder::getPublicId());
-            $clouder = Cloudder::getResult();
-            // $image_url = encrypt($clouder['url']);
-            $image_url = encrypt($clouder['secure_url']);
-            $walkins_update_logo = $api_db->update("UPDATE walkIns set company_logo = '$image_url' where id = '$client_id'");
+        if($request->company_logo){
+            $walkins_update_logo = $api_db->update("UPDATE walkIns set company_logo = '$request->company_logo' where id = '$client_id'");
         }
 
         try {
@@ -424,7 +419,7 @@ class Utilities {
                 'date' => $walkin_brand->created_at,
                 'count_brand' => count($walkin_brands),
                 'campaigns' => count($campaigns),
-                'image_url' => $walkin_brand->image_url,
+                'image_url' => Utilities::returnImageWhenNotEncrypted($walkin_brand->image_url),
                 'last_campaign' => $campaigns ? $campaigns[$last_count_campaign]->name : 'none',
                 'total' => number_format($pay[0]->total,2),
                 'industry_id' => $walkin_brand->industry_code,
@@ -492,7 +487,7 @@ class Utilities {
         $brand_list = Utilities::switch_db('api')->select("SELECT b.*, b_c.media_buyer_id as agency_broadcaster, b_c.client_id as client_walkins_id
                                                         FROM brand_client as b_c INNER JOIN brands as b ON b.id = b_c.brand_id where b_c.client_id = '$client_id'");
         foreach ($brand_list as $brand) {
-            $brand->image_url = encrypt(Utilities::convertCloudinaryHttpToHttps(decrypt($brand->image_url)));
+            $brand->image_url = Utilities::returnImageWhenNotEncrypted(($brand->image_url));
         }
         return $brand_list;
     }
@@ -1279,6 +1274,15 @@ class Utilities {
             return str_replace("http://","https://",$image_url);
         }
         return $image_url;
+    }
+
+    public static function returnImageWhenNotEncrypted($image)
+    {
+        try {
+            return Utilities::convertCloudinaryHttpToHttps(decrypt($image));
+        }catch (\Exception $e){
+            return $image;
+        }
     }
 
 }

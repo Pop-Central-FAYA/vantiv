@@ -6,3 +6,4 @@ html/web.config
 .idea
 .env
 dev
+get-pip.py

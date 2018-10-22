@@ -28,7 +28,7 @@
                     <p class="small_faint">{{ $client[0]->location }}</p>
                 </div>
 
-                <span class="client_ava right"><img src="{{ $client[0]->company_logo ? asset(decrypt($client[0]->company_logo)) : '' }}"></span>
+                <span class="client_ava right"><img src="{{ $client[0]->company_logo ? asset($client[0]->company_logo) : '' }}"></span>
             </div>
 
             <div class="clearfix client_personal">
@@ -186,7 +186,7 @@
                         @foreach($all_brands as $all_brand)
                             <div class="_table_item the_frame clearfix">
                                 <div class="padd column col_4">
-                                    <span class="client_ava"><img src="{{ $all_brand['image_url'] ? asset(decrypt($all_brand['image_url'])) : '' }}"></span>
+                                    <span class="client_ava"><img src="{{ $all_brand['image_url'] ? asset($all_brand['image_url']) : '' }}"></span>
                                     <p>{{ ucfirst($all_brand['brand']) }}</p>
                                     <span class="small_faint">Added {{ date('M j, Y', strtotime($all_brand['date'])) }}</span>
                                 </div>

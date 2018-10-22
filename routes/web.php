@@ -266,6 +266,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/walk-in/details/{client_id}', 'WalkinsController@getDetails')->name('walkins.details');
     });
 
+    Route::get('/presigned-url', 'S3Controller@getPresignedUrl');
+
     /**
      * Sectors
      */
