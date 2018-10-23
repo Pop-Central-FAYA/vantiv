@@ -76,7 +76,7 @@ class ClientsController extends Controller
                 'inactive_campaign' => $inactive_campaign ? count($inactive_campaign) : '0',
                 'count_brands' => count($brs),
                 'company_name' => $client->company_name,
-                'company_logo' => $client->company_logo,
+                'company_logo' => Utilities::returnImageWhenNotEncrypted($client->company_logo),
                 'location' => $client->location,
             ];
         }

@@ -57,7 +57,7 @@ class BrandsController extends Controller
                 'date' => $all_brand->created_at,
                 'count_brand' => count($all_brands),
                 'campaigns' => count($campaigns),
-                'image_url' => $all_brand->image_url,
+                'image_url' => Utilities::returnImageWhenNotEncrypted($all_brand->image_url),
                 'last_campaign' => $campaigns ? $campaigns[$last_count_campaign]->name : 'none',
                 'total' => number_format($pay[0]->total,2),
                 'industry_id' => $all_brand->industry_code,
@@ -146,11 +146,9 @@ class BrandsController extends Controller
         //check if the brand exists in the brands table and if not create the brand in the brands table and attach the client in the brand_client table.
         $checkIfBrandExists = Brand::where('slug', $brand_slug)->first();
         if(!$checkIfBrandExists){
-            $brand_logo = $request->file('brand_logo');
-            $image_url = Utilities::uploadBrandImageToCloudinary($brand_logo);
             $brand = new Brand();
             try {
-                Utilities::storeBrands($brand, $request, $unique, $image_url, $brand_slug);
+                Utilities::storeBrands($brand, $request, $unique, $request->image_url, $brand_slug);
 
             }catch (\Exception $e){
                 $api_db->rollback();
@@ -219,9 +217,8 @@ class BrandsController extends Controller
                 return redirect()->back();
             }else{
                 try {
-                    if($request->has('brand_logo')){
-                        $image_path = Utilities::uploadBrandImageToCloudinary($request->brand_logo);
-                        $brands->image_url = $image_path;
+                    if($request->image_url){
+                        $brands->image_url = $request->image_url;
                         $brands->save();
                     }
                     $brands->name = $request->brand_name;
@@ -240,13 +237,10 @@ class BrandsController extends Controller
             }
         }else{
             try {
-                if($request->hasFile('brand_logo')){
-                    $image_path = Utilities::uploadBrandImageToCloudinary($request->brand_logo);
-                    $brands->image_url = $image_path;
+                if($request->image_url){
+                    $brands->image_url = $request->image_url;
                     $brands->save();
-
                 }
-
                 $brands->name = $request->brand_name;
                 $brands->sub_industry_code = $request->sub_industry;
                 $brands->slug = $brand_slug;

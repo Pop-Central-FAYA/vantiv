@@ -226,21 +226,28 @@
             <div class="clearfix">
                 <div class="input_wrap column col_7{{ $errors->has('brand_name') ? ' has-error' : '' }}">
                     <label class="small_faint">Brand Name</label>
-                    <input type="text" name="brand_name" class="brands_name" id="brands_name" placeholder="e.g Coca Cola">
+                    <input type="text" required name="brand_name" class="brands_name" id="brands_name" placeholder="e.g Coca Cola">
                     @if($errors->has('brand_name'))
                         <strong>
                             <span class="error-block" style="color: red;">{{ $errors->first('brand_name') }}</span>
                         </strong>
                     @endif
                 </div>
-                <div class='column col_5 file_select align_center pt3{{ $errors->has('brand_logo') ? ' has-error' : '' }}' style="height: 70px;">
-                    <input type="file" id="file" name="brand_logo" />
+                <div class='column col_5 brand_upload_button file_select align_center pt3{{ $errors->has('brand_logo') ? ' has-error' : '' }}' style="height: 70px;">
+                    <input type="file" class="brand_logo" />
                     <span class="small_faint block_disp mb3">Brand Logo</span>
                     @if($errors->has('brand_logo'))
                         <strong>
                             <span class="error-block" style="color: red;">{{ $errors->first('brand_logo') }}</span>
                         </strong>
                     @endif
+                </div>
+                <input type="hidden" name="image_url" required class="brand_logo_url">
+                <div class='column col_5 brand_uploaded_image align_center pt3' style="display: none;">
+
+                </div>
+                <div class="upload_new_brand" style="font-size: 12px; padding-left: 250px; display: none;">
+                    <input class="brand_logo upload_new_brand" name="brand_logo" type="file">
                 </div>
             </div>
 
@@ -250,7 +257,7 @@
                 <label class="small_faint">Industry</label>
 
                 <div class="select_wrap">
-                    <select name="industry" id="industry">
+                    <select name="industry" required id="industry">
                         <option value="">Select Industry</option>
                         @foreach($industries as $industry)
                             <option value="{{ $industry->sector_code }}">{{ $industry->name }}</option>
@@ -263,7 +270,7 @@
                 <label class="small_faint">Sub Industry</label>
 
                 <div class="select_wrap">
-                    <select name="sub_industry" class="sub_industry" id="sub_industry">
+                    <select name="sub_industry" required class="sub_industry" id="sub_industry">
 
                     </select>
                 </div>
@@ -285,21 +292,22 @@
                 <div class="clearfix">
                     <div class="input_wrap column col_7{{ $errors->has('brand_name') ? ' has-error' : '' }}">
                         <label class="small_faint">Brand Name</label>
-                        <input type="text" name="brand_name" class="brands_update" id="brands_name_update" value="{{ $all_brand['brand'] }}"  placeholder="e.g Coca Cola">
+                        <input type="text" name="brand_name" required class="brands_update" id="brands_name_update" value="{{ $all_brand['brand'] }}"  placeholder="e.g Coca Cola">
                         @if($errors->has('brand_name'))
                             <strong>
                                 <span class="error-block" style="color: red;">{{ $errors->first('brand_name') }}</span>
                             </strong>
                         @endif
                     </div>
-                    <div class='column col_5 file_select align_center pt3{{ $errors->has('brand_logo') ? ' has-error' : '' }}' style="height: 70px;">
-                        <input type="file" id="file" name="brand_logo" />
-                        <span class="small_faint block_disp mb3">Brand Logo</span>
-                        @if($errors->has('brand_logo'))
-                            <strong>
-                                <span class="error-block" style="color: red;">{{ $errors->first('brand_logo') }}</span>
-                            </strong>
-                        @endif
+                    <div class='column col_5 brand_upload_button align_center pt3{{ $errors->has('brand_logo') ? ' has-error' : '' }}' style="height: 70px;">
+                        <img src="{{ asset($all_brand['image_url']) }}" style="width: 100px; height: 100px; padding: 0 0 11px; margin-right: auto; margin-left: auto; margin-top: -65px;">
+                    </div>
+                    <input type="hidden" name="image_url" required class="brand_logo_url">
+                    <div class='column col_5 brand_uploaded_image align_center pt3' style="display: none;">
+
+                    </div>
+                    <div class="upload_new_brand" style="font-size: 12px; padding-left: 250px; padding-bottom: 10px;">
+                        <input class="brand_logo upload_new_brand" type="file">
                     </div>
                 </div>
 
@@ -309,7 +317,7 @@
                     <label class="small_faint">Industry</label>
 
                     <div class="select_wrap">
-                        <select name="industry" id="industry">
+                        <select name="industry" required >
                             <option value="">Select Industry</option>
                             @foreach($industries as $industry)
                                 @if($industry->sector_code === $all_brand['industry_id'])
@@ -328,7 +336,7 @@
                     <label class="small_faint">Sub Industry</label>
 
                     <div class="select_wrap">
-                        <select name="sub_industry" class="sub_industry" id="sub_industry">
+                        <select name="sub_industry" required class="sub_industry">
                             @foreach($sub_industries as $sub_industry)
 
                                 @if($sub_industry->sub_sector_code === $all_brand['sub_industry_id'])
@@ -638,12 +646,12 @@
                             });
                             $('.update').attr("disabled", false);
 
-                            $('.sub_industry').empty();
+                            $('#sub_industry').empty();
 
-                            $('.sub_industry').append(' Please choose one');
+                            $('#sub_industry').append(' Please choose one');
 
                             $.each(data, function(index, title){
-                                $(".sub_industry").append('' + '<option value ="'+ title.sub_sector_code + '"  > ' + title.name + '  </option>');
+                                $("#sub_industry").append('' + '<option value ="'+ title.sub_sector_code + '"  > ' + title.name + '  </option>');
                             });
                         }
 
@@ -666,6 +674,73 @@
                         }
                     }
                 })
+            });
+
+            $(".brand_logo").on('change', function () {
+                var url = '/presigned-url';
+                for (var file, i = 0; i < this.files.length; i++) {
+                    file = this.files[i];
+                    if(file.name && !file.name.match(/.(gif|jpeg|jpg|png|svg)$/i)) {
+                        toastr.error('Only Images are allowed');
+                        return;
+                    }
+                    $.ajax({
+                        url : url,
+                        type : "GET",
+                        cache : false,
+                        data: {filename : file.name, folder: 'brand-images/'},
+                        success: function (data) {
+                            console.log(data);
+                            $.ajax({
+                                xhr: function() {
+                                    var xhr = new window.XMLHttpRequest();
+                                    xhr.upload.addEventListener("progress", function(evt) {
+                                        if (evt.lengthComputable) {
+                                            var percentComplete = evt.loaded / evt.total;
+                                            percentComplete = parseInt(percentComplete * 100);
+                                            var big_html = '<div class="progress-bar" role="progressbar" aria-valuenow="'+percentComplete+'"'+
+                                                'aria-valuemin="0" aria-valuemax="100" style="width:'+percentComplete+'%">'+
+                                                '<span class="sr-only">'+percentComplete+'% Complete</span>'+
+                                                '</div>';
+                                            $('.progress').html(big_html);
+                                            if (percentComplete === 100) {
+                                                $('.progress').fadeOut(1000);
+
+                                            }
+
+                                        }
+                                    }, false);
+
+                                    return xhr;
+                                },
+                                url : data,
+                                type : "PUT",
+                                data : file,
+                                dataType : "text",
+                                cache : false,
+                                contentType : file.type,
+                                processData : false,
+                            })
+                                .done(function(){
+                                    toastr.success('Your upload was successful');
+                                    var uploadedUrl = 'https:'+data.split('?')[0].substr(6);
+                                    $(".brand_logo_url").val(uploadedUrl);
+                                    $(".brand_upload_button").hide();
+                                    $(".brand_uploaded_image").show();
+                                    $(".upload_new_brand").show();
+                                    $(".brand_uploaded_image").html('<img src="'+uploadedUrl+'" style="width: 100px;\n' +
+                                        '    height: 100px;\n' +
+                                        '    padding: 0 0 11px;\n' +
+                                        '    margin-right: auto;\n' +
+                                        '    margin-left: auto;\n' +
+                                        '    margin-top: -45px; " >');
+                                })
+                                .fail(function(){
+                                    toastr.error('An error occurred, please try again ');
+                                })
+                        }
+                    })
+                }
             });
 
         });

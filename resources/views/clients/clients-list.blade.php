@@ -54,7 +54,7 @@
             @foreach($clients as $client)
             <div class="_table_item the_frame clearfix">
                 <div class="padd column col_4">
-                    <span class="client_ava"><img src="{{ $client['company_logo'] ? asset(decrypt($client['company_logo'])) : '' }}"></span>
+                    <span class="client_ava"><img src="{{ $client['company_logo'] ? asset($client['company_logo']) : '' }}"></span>
                     <p>{{ $client['company_name'] }}</p>
                     <span class="small_faint">Added {{ date('M j, Y h:ia', strtotime($client['created_at'])) }}</span>
                 </div>
@@ -85,7 +85,6 @@
     </div>
 
     <!-- new client modal -->
-
     <div class="modal_contain" id="new_client">
         <h2 class="sub_header mb4">New Client</h2>
         <form action="{{ route('walkins.store') }}" method="POST" enctype="multipart/form-data">
@@ -93,15 +92,15 @@
             <div class="clearfix">
                 <div class="input_wrap column col_7{{ $errors->has('company_name') ? ' has-error' : '' }}">
                     <label class="small_faint">Company Name</label>
-                    <input type="text" name="company_name" value=""  placeholder="e.g Coca Cola">
+                    <input type="text" name="company_name" required  placeholder="e.g Coca Cola">
                     @if($errors->has('company_name'))
                         <strong>
                             <span class="error-block" style="color: red;">{{ $errors->first('company_name') }}</span>
                         </strong>
                     @endif
                 </div>
-                <div class='column col_5 file_select align_center pt3{{ $errors->has('company_logo') ? ' has-error' : '' }}'>
-                    <input type="file" id="file" name="company_logo" />
+                <div class='column col_5 file_select company_upload_button align_center pt3{{ $errors->has('company_logo') ? ' has-error' : '' }}'>
+                    <input type="file" required class="company_logo" />
                     <span class="small_faint block_disp mb3">Company Logo</span>
                     @if($errors->has('company_logo'))
                         <strong>
@@ -109,26 +108,40 @@
                         </strong>
                     @endif
                 </div>
+                <input type="hidden" name="company_logo" required class="company_logo_url">
+                <div class='column col_5 company_uploaded_image align_center pt3' style="display: none;">
+
+                </div>
+                <div class="upload_new" style="font-size: 12px; padding-left: 250px; padding-bottom: 10px; display: none;">
+                    <input class="company_logo upload_new" name="company_logo" type="file">
+                </div>
             </div>
 
             <div class="clearfix">
                 <div class="input_wrap column col_7{{ $errors->has('brand_name') ? ' has-error' : '' }}">
                     <label class="small_faint">Client Brand</label>
-                    <input type="text" name="brand_name" class="brands_name" id="brands_name" value=""  placeholder="e.g Coca Cola">
+                    <input type="text" name="brand_name" required class="brands_name" id="brands_name" value=""  placeholder="e.g Coca Cola">
                     @if($errors->has('brand_name'))
                         <strong>
                             <span class="error-block" style="color: red;">{{ $errors->first('brand_name') }}</span>
                         </strong>
                     @endif
                 </div>
-                <div class='column col_5 file_select align_center pt3{{ $errors->has('image_url') ? ' has-error' : '' }}'>
-                    <input type="file" id="file" name="image_url" />
+                <div class='column col_5 file_select align_center brand_upload_button pt3{{ $errors->has('image_url') ? ' has-error' : '' }}'>
+                    <input type="file" required class="brand_logo" />
                     <span class="small_faint block_disp mb3">Brand Logo</span>
                     @if($errors->has('image_url'))
                         <strong>
                             <span class="error-block" style="color: red;">{{ $errors->first('image_url') }}</span>
                         </strong>
                     @endif
+                </div>
+                <input type="hidden" name="image_url" required id="brand_logo_url">
+                <div class='column col_5 brand_uploaded_image align_center pt3' style="display: none;">
+
+                </div>
+                <div class="upload_new_brand" style="font-size: 12px; padding-left: 250px; padding-bottom: 10px; display: none;">
+                    <input class="brand_logo upload_new_brand" name="brand_logo" type="file">
                 </div>
             </div>
 
@@ -138,7 +151,7 @@
 
             <div class="input_wrap{{ $errors->has('email') ? ' has-error' : '' }}">
                 <label class="small_faint">Email</label>
-                <input type="email" name="email" placeholder="name@example.com">
+                <input type="email" required name="email" placeholder="name@example.com">
                 @if($errors->has('email'))
                     <strong>
                         <span class="error-block" style="color: red;">{{ $errors->first('email') }}</span>
@@ -149,7 +162,7 @@
             <div class="clearfix mb">
                 <div class="input_wrap col_6 column{{ $errors->has('first_name') ? ' has-error' : '' }}">
                     <label class="small_faint">First Name</label>
-                    <input type="text" id="first_name" name="first_name" placeholder="Enter First Name">
+                    <input type="text" required id="first_name" name="first_name" placeholder="Enter First Name">
                     @if($errors->has('first_name'))
                         <strong>
                             <span class="error-block" style="color: red;">{{ $errors->first('first_name') }}</span>
@@ -159,7 +172,7 @@
 
                 <div class="input_wrap col_6 column{{ $errors->has('last_name') ? ' has-error' : '' }}">
                     <label class="small_faint">Last Name</label>
-                    <input type="text" id="last_name" name="last_name" placeholder="Enter Last Name">
+                    <input type="text" required id="last_name" name="last_name" placeholder="Enter Last Name">
                     @if($errors->has('last_name'))
                         <strong>
                             <span class="error-block" style="color: red;">{{ $errors->first('last_name') }}</span>
@@ -170,7 +183,7 @@
 
             <div class="input_wrap{{ $errors->has('phone') ? ' has-error' : '' }}">
                 <label class="small_faint">Phone Number</label>
-                <input type="text" name="phone" id="phone_number_verify" placeholder="234** **** ****">
+                <input type="text" required name="phone" id="phone_number_verify" placeholder="234** **** ****">
                 @if($errors->has('phone'))
                     <strong>
                         <span class="error-block" style="color: red;">{{ $errors->first('phone') }}</span>
@@ -180,7 +193,7 @@
 
             <div class="input_wrap{{ $errors->has('address') ? ' has-error' : '' }}">
                 <label class="small_faint">Address</label>
-                <input type="text" name="address" placeholder="Enter Address">
+                <input type="text" required name="address" placeholder="Enter Address">
                 @if($errors->has('address'))
                     <strong>
                         <span class="error-block" style="color: red;">{{ $errors->first('address') }}</span>
@@ -192,7 +205,7 @@
                 <label class="small_faint">Industry</label>
 
                 <div class="select_wrap">
-                    <select name="industry" id="industry">
+                    <select name="industry" required id="industry">
                         <option value="">Select Industry</option>
                         @foreach($industries as $industry)
                             <option value="{{ $industry->sector_code }}">{{ $industry->name }}</option>
@@ -205,7 +218,7 @@
                 <label class="small_faint">Sub Industry</label>
 
                 <div class="select_wrap">
-                    <select name="sub_industry" id="sub_industry">
+                    <select name="sub_industry" required id="sub_industry">
 
                     </select>
                 </div>
@@ -219,90 +232,95 @@
     </div>
 
     {{--modal for editing a client--}}
+    {{--modal for editing a client--}}
     @foreach($clients as $client)
         <div class="modal_contain" id="edit_client{{ $client['client_id'] }}">
-        <h2 class="sub_header mb4">Edit Client : {{ $client['company_name'] }}</h2>
-        <form action="{{ route('walkins.update', ['client_id' => $client['client_id']]) }}" method="POST" enctype="multipart/form-data">
-            {{ csrf_field() }}
-            <div class="clearfix">
-                <div class="input_wrap column col_7{{ $errors->has('company_name') ? ' has-error' : '' }}">
-                    <label class="small_faint">Company Name</label>
-                    <input type="text" name="company_name" value="{{ $client['company_name'] }}"  placeholder="e.g Coca Cola">
-                    @if($errors->has('company_name'))
-                        <strong>
-                            <span class="error-block" style="color: red;">{{ $errors->first('company_name') }}</span>
-                        </strong>
-                    @endif
-                </div>
-                <div class='column col_5 file_select align_center pt3{{ $errors->has('company_logo') ? ' has-error' : '' }}' style="height: 70px;">
-                    <input type="file" id="file" name="company_logo" />
-                    <span class="small_faint block_disp mb3">Company Logo</span>
-                    @if($errors->has('company_logo'))
-                        <strong>
-                            <span class="error-block" style="color: red;">{{ $errors->first('company_logo') }}</span>
-                        </strong>
-                    @endif
-                </div>
-            </div>
+            <h2 class="sub_header mb4">Edit Walk-In : {{ $client['company_name'] }}</h2>
+            <div class="progress">
 
-            <div class="input_wrap{{ $errors->has('email') ? ' has-error' : '' }}">
-                <label class="small_faint">Email</label>
-                <input type="email" name="email" readonly value="{{ $client['email'] }}" placeholder="name@example.com">
-                @if($errors->has('email'))
-                    <strong>
-                        <span class="error-block" style="color: red;">{{ $errors->first('email') }}</span>
-                    </strong>
-                @endif
-            </div>
+            </div><br>
+            <form action="{{ route('walkins.update', ['client_id' => $client['client_id']]) }}" method="POST" enctype="multipart/form-data">
+                {{ csrf_field() }}
+                <div class="clearfix">
+                    <div class="input_wrap column col_7{{ $errors->has('company_name') ? ' has-error' : '' }}">
+                        <label class="small_faint">Company Name</label>
+                        <input type="text" required name="company_name" value="{{ $client['company_name'] }}"  placeholder="e.g Coca Cola">
+                        @if($errors->has('company_name'))
+                            <strong>
+                                <span class="error-block" style="color: red;">{{ $errors->first('company_name') }}</span>
+                            </strong>
+                        @endif
+                    </div>
+                    <div class='column col_5 company_upload_button align_center pt3{{ $errors->has('company_logo') ? ' has-error' : '' }}'>
+                        <img src="{{ asset($client['company_logo']) }}" style="width: 100px; height: 100px; padding: 0 0 11px; margin-right: auto; margin-left: auto; margin-top: -65px;">
+                    </div>
+                    <input type="hidden" name="company_logo" required class="company_logo_url">
+                    <div class='column col_5 company_uploaded_image align_center pt3' style="display: none;">
 
-            <div class="clearfix mb">
-                <div class="input_wrap col_6 column{{ $errors->has('first_name') ? ' has-error' : '' }}">
-                    <label class="small_faint">First Name</label>
-                    <input type="text" id="first_name" name="first_name" value="{{ $client['first_name'] }}" placeholder="Enter First Name">
-                    @if($errors->has('first_name'))
+                    </div>
+                    <div class="upload_new" style="font-size: 12px; padding-left: 250px; padding-bottom: 10px; ">
+                        <input class="company_logo upload_new" type="file">
+                    </div>
+                </div>
+
+                <div class="input_wrap{{ $errors->has('email') ? ' has-error' : '' }}">
+                    <label class="small_faint">Email</label>
+                    <input type="email" required name="email" readonly value="{{ $client['email'] }}" placeholder="name@example.com">
+                    @if($errors->has('email'))
                         <strong>
-                            <span class="error-block" style="color: red;">{{ $errors->first('first_name') }}</span>
+                            <span class="error-block" style="color: red;">{{ $errors->first('email') }}</span>
                         </strong>
                     @endif
                 </div>
 
-                <div class="input_wrap col_6 column{{ $errors->has('last_name') ? ' has-error' : '' }}">
-                    <label class="small_faint">Last Name</label>
-                    <input type="text" id="last_name" name="last_name" value="{{ $client['last_name'] }}" placeholder="Enter Last Name">
-                    @if($errors->has('last_name'))
+                <div class="clearfix mb">
+                    <div class="input_wrap col_6 column{{ $errors->has('first_name') ? ' has-error' : '' }}">
+                        <label class="small_faint">First Name</label>
+                        <input type="text" required name="first_name" value="{{ $client['first_name'] }}" placeholder="Enter First Name">
+                        @if($errors->has('first_name'))
+                            <strong>
+                                <span class="error-block" style="color: red;">{{ $errors->first('first_name') }}</span>
+                            </strong>
+                        @endif
+                    </div>
+
+                    <div class="input_wrap col_6 column{{ $errors->has('last_name') ? ' has-error' : '' }}">
+                        <label class="small_faint">Last Name</label>
+                        <input type="text" required name="last_name" value="{{ $client['last_name'] }}" placeholder="Enter Last Name">
+                        @if($errors->has('last_name'))
+                            <strong>
+                                <span class="error-block" style="color: red;">{{ $errors->first('last_name') }}</span>
+                            </strong>
+                        @endif
+                    </div>
+                </div>
+
+                <div class="input_wrap{{ $errors->has('phone') ? ' has-error' : '' }}">
+                    <label class="small_faint">Phone Number</label>
+                    <input type="text" required name="phone" value="{{ $client['phone_number'] }}" placeholder="*** **** ****">
+                    @if($errors->has('phone'))
                         <strong>
-                            <span class="error-block" style="color: red;">{{ $errors->first('last_name') }}</span>
+                            <span class="error-block" style="color: red;">{{ $errors->first('phone') }}</span>
                         </strong>
                     @endif
                 </div>
-            </div>
 
-            <div class="input_wrap{{ $errors->has('phone') ? ' has-error' : '' }}">
-                <label class="small_faint">Phone Number</label>
-                <input type="text" name="phone" value="{{ $client['phone_number'] }}" placeholder="234** **** ****">
-                @if($errors->has('phone'))
-                    <strong>
-                        <span class="error-block" style="color: red;">{{ $errors->first('phone') }}</span>
-                    </strong>
-                @endif
-            </div>
+                <div class="input_wrap{{ $errors->has('address') ? ' has-error' : '' }}">
+                    <label class="small_faint">Address</label>
+                    <input type="text" required name="address" value="{{ $client['location'] }}" placeholder="Enter Address">
+                    @if($errors->has('address'))
+                        <strong>
+                            <span class="error-block" style="color: red;">{{ $errors->first('address') }}</span>
+                        </strong>
+                    @endif
+                </div>
 
-            <div class="input_wrap{{ $errors->has('address') ? ' has-error' : '' }}">
-                <label class="small_faint">Address</label>
-                <input type="text" name="address" value="{{ $client['location'] }}" placeholder="Enter Address">
-                @if($errors->has('address'))
-                    <strong>
-                        <span class="error-block" style="color: red;">{{ $errors->first('address') }}</span>
-                    </strong>
-                @endif
-            </div>
+                <div class="align_right">
+                    <input type="submit" value="Update Client" class="btn uppercased update">
+                </div>
 
-            <div class="align_right">
-                <input type="submit" value="Update Client" class="btn uppercased update">
-            </div>
-
-        </form>
-    </div>
+            </form>
+        </div>
     @endforeach
 @stop
 
@@ -373,10 +391,144 @@
                     toastr.error('Phone number length is invalid');
                 }
                 if(phone_number.length >11){
-                    $("#submit_walkins").prop('disabled', true);
+                    $("#submit_walkins").prop('disabled', false);
                     toastr.error('Phone number length is invalid');
                 }
             })
+
+            $(".company_logo").on('change', function () {
+                var url = '/presigned-url';
+                for (var file, i = 0; i < this.files.length; i++) {
+                    file = this.files[i];
+                    if(file.name && !file.name.match(/.(gif|jpeg|jpg|png|svg)$/i)) {
+                        toastr.error('Only Images are allowed');
+                        return;
+                    }
+                    $.ajax({
+                        url : url,
+                        type : "GET",
+                        cache : false,
+                        data: {filename : file.name, folder: 'client-images/'},
+                        success: function (data) {
+                            console.log(data);
+                            $.ajax({
+                                xhr: function() {
+                                    var xhr = new window.XMLHttpRequest();
+                                    xhr.upload.addEventListener("progress", function(evt) {
+                                        if (evt.lengthComputable) {
+                                            var percentComplete = evt.loaded / evt.total;
+                                            percentComplete = parseInt(percentComplete * 100);
+                                            var big_html = '<div class="progress-bar" role="progressbar" aria-valuenow="'+percentComplete+'"'+
+                                                'aria-valuemin="0" aria-valuemax="100" style="width:'+percentComplete+'%">'+
+                                                '<span class="sr-only">'+percentComplete+'% Complete</span>'+
+                                                '</div>';
+                                            $('.progress').html(big_html);
+                                            if (percentComplete === 100) {
+                                                $('.progress').fadeOut(1000);
+
+                                            }
+
+                                        }
+                                    }, false);
+
+                                    return xhr;
+                                },
+                                url : data,
+                                type : "PUT",
+                                data : file,
+                                dataType : "text",
+                                cache : false,
+                                contentType : file.type,
+                                processData : false,
+                            })
+                                .done(function(){
+                                    toastr.success('Your upload was successful');
+                                    var uploadedUrl = 'https:'+data.split('?')[0].substr(6);
+                                    $(".company_logo_url").val(uploadedUrl);
+                                    $(".company_upload_button").hide();
+                                    $(".company_uploaded_image").show();
+                                    $(".upload_new").show();
+                                    $(".company_uploaded_image").html('<img src="'+uploadedUrl+'" style="width: 100px;\n' +
+                                        '    height: 100px;\n' +
+                                        '    padding: 0 0 11px;\n' +
+                                        '    margin-right: auto;\n' +
+                                        '    margin-left: auto;\n' +
+                                        '    margin-top: -57px; " >');
+                                })
+                                .fail(function(){
+                                    toastr.error('An error occurred, please try again ');
+                                })
+                        }
+                    })
+                }
+            });
+
+            $(".brand_logo").on('change', function () {
+                var url = '/presigned-url';
+                for (var file, i = 0; i < this.files.length; i++) {
+                    file = this.files[i];
+                    if(file.name && !file.name.match(/.(gif|jpeg|jpg|png|svg)$/i)) {
+                        toastr.error('Only Images are allowed');
+                        return;
+                    }
+                    $.ajax({
+                        url : url,
+                        type : "GET",
+                        cache : false,
+                        data: {filename : file.name, folder: 'brand-images/'},
+                        success: function (data) {
+                            console.log(data);
+                            $.ajax({
+                                xhr: function() {
+                                    var xhr = new window.XMLHttpRequest();
+                                    xhr.upload.addEventListener("progress", function(evt) {
+                                        if (evt.lengthComputable) {
+                                            var percentComplete = evt.loaded / evt.total;
+                                            percentComplete = parseInt(percentComplete * 100);
+                                            var big_html = '<div class="progress-bar" role="progressbar" aria-valuenow="'+percentComplete+'"'+
+                                                'aria-valuemin="0" aria-valuemax="100" style="width:'+percentComplete+'%">'+
+                                                '<span class="sr-only">'+percentComplete+'% Complete</span>'+
+                                                '</div>';
+                                            $('.progress').html(big_html);
+                                            if (percentComplete === 100) {
+                                                $('.progress').fadeOut(1000);
+
+                                            }
+
+                                        }
+                                    }, false);
+
+                                    return xhr;
+                                },
+                                url : data,
+                                type : "PUT",
+                                data : file,
+                                dataType : "text",
+                                cache : false,
+                                contentType : file.type,
+                                processData : false,
+                            })
+                                .done(function(){
+                                    toastr.success('Your upload was successful');
+                                    var uploadedUrl = 'https:'+data.split('?')[0].substr(6);
+                                    $("#brand_logo_url").val(uploadedUrl);
+                                    $(".brand_upload_button").hide();
+                                    $(".brand_uploaded_image").show();
+                                    $(".upload_new_brand").show();
+                                    $(".brand_uploaded_image").html('<img src="'+uploadedUrl+'" style="width: 100px;\n' +
+                                        '    height: 100px;\n' +
+                                        '    padding: 0 0 11px;\n' +
+                                        '    margin-right: auto;\n' +
+                                        '    margin-left: auto;\n' +
+                                        '    margin-top: -40px; " >');
+                                })
+                                .fail(function(){
+                                    toastr.error('An error occurred, please try again ');
+                                })
+                        }
+                    })
+                }
+            });
         });
 
     </script>
