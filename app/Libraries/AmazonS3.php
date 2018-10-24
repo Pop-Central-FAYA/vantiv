@@ -3,11 +3,13 @@
 namespace Vanguard\Libraries;
 
 use \Aws\S3\S3Client;
+use phpDocumentor\Reflection\Types\Self_;
 
 Class AmazonS3
 {
     const ENV_REGION = 'AWS_REGION';
     const EXPIRATION = '+60 minutes';
+    const S3_BUCKET = 'MEDIA_BUCKET';
 
     public static function generatePreSignedUrl($filename, $folder)
     {
@@ -17,9 +19,8 @@ Class AmazonS3
             'version' => '2006-03-01'
         ));
 
-        $bucket = AmazonS3::getBucket();
         $cmd = $s3Client->getCommand('PutObject', [
-            'Bucket' => $bucket,
+            'Bucket' => getenv(self::S3_BUCKET),
             'Key'    => $folder.$filename,
         ]);
         $request = $s3Client->createPresignedRequest($cmd, self::EXPIRATION);
@@ -35,24 +36,12 @@ Class AmazonS3
             'version' => '2006-03-01'
         ));
 
-        $bucket = AmazonS3::getBucket();
-
         $result = $s3Client->putObject(array(
-            'Bucket'     => $bucket,
+            'Bucket'     => getenv(self::S3_BUCKET),
             'Key'        => $slug,
             'SourceFile' => $pathToFile,
         ));
         return $result['ObjectURL'];
     }
 
-    private static function getBucket()
-    {
-        if(\App::environment(['dev', 'local'])){
-            $bucket = getenv('AWS_DEV_BUCKET_NAME');
-        }else{
-            $bucket = getenv('AWS_PROD_BUCKET_NAME');
-        }
-
-        return $bucket;
-    }
 }
