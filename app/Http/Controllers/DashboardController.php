@@ -283,7 +283,6 @@ class DashboardController extends Controller
     public function getBrandImagesFromCloudinaryToS3()
     {
         $brands = Brand::where('image_url', 'NOT LIKE', 'https%')->get();
-//        $brands = Utilities::switch_db('api')->select("SELECT * from walkIns where company_logo NOT LIKE 'https%'");
         foreach ($brands as $brand){
             $brand_id = $brand->id;
             try {

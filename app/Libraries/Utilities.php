@@ -419,7 +419,7 @@ class Utilities {
                 'date' => $walkin_brand->created_at,
                 'count_brand' => count($walkin_brands),
                 'campaigns' => count($campaigns),
-                'image_url' => Utilities::returnImageWhenNotEncrypted($walkin_brand->image_url),
+                'image_url' => $walkin_brand->image_url,
                 'last_campaign' => $campaigns ? $campaigns[$last_count_campaign]->name : 'none',
                 'total' => number_format($pay[0]->total,2),
                 'industry_id' => $walkin_brand->industry_code,
@@ -486,9 +486,6 @@ class Utilities {
     {
         $brand_list = Utilities::switch_db('api')->select("SELECT b.*, b_c.media_buyer_id as agency_broadcaster, b_c.client_id as client_walkins_id
                                                         FROM brand_client as b_c INNER JOIN brands as b ON b.id = b_c.brand_id where b_c.client_id = '$client_id'");
-        foreach ($brand_list as $brand) {
-            $brand->image_url = Utilities::returnImageWhenNotEncrypted(($brand->image_url));
-        }
         return $brand_list;
     }
 
@@ -950,7 +947,7 @@ class Utilities {
             'location' => $api_agent[0]->location,
             'nationality' => $api_agent[0]->nationality,
             'username' => $local_user[0]->username,
-            'image' => $api_agent[0]->image_url ? Utilities::convertCloudinaryHttpToHttps(decrypt($api_agent[0]->image_url)) : ''
+            'image' => $api_agent[0]->image_url ? $api_agent[0]->image_url : ''
         ];
 
         return $user_details;
@@ -1262,27 +1259,5 @@ class Utilities {
         ];
     }
 
-    /**
-     * This is to compensate for the fact that we are saving cloudinary uploaded images as http
-     * instead of https, when we move to s3, this should no longer be an issue
-     * @param  [type]
-     * @return [type]
-     */
-    public static function convertCloudinaryHttpToHttps($image_url)
-    {
-        if ($image_url) {
-            return str_replace("http://","https://",$image_url);
-        }
-        return $image_url;
-    }
-
-    public static function returnImageWhenNotEncrypted($image)
-    {
-        try {
-            return Utilities::convertCloudinaryHttpToHttps(decrypt($image));
-        }catch (\Exception $e){
-            return $image;
-        }
-    }
 
 }

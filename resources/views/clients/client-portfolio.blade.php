@@ -26,7 +26,7 @@
                     <p class="small_faint">{{ $client[0]->location }}</p>
                 </div>
 
-                <span class="client_ava right"><img src="{{ $client[0]->company_logo ? asset(\Vanguard\Libraries\Utilities::returnImageWhenNotEncrypted($client[0]->company_logo)) : '' }}"></span>
+                <span class="client_ava right"><img src="{{ $client[0]->company_logo ? $client[0]->company_logo : '' }}"></span>
             </div>
 
             <div class="clearfix client_personal">

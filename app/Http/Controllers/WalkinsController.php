@@ -84,13 +84,11 @@ class WalkinsController extends Controller
             $payments = Utilities::switch_db('api')->select("SELECT SUM(total) as total from payments WHERE campaign_id IN
                                                               (SELECT campaign_id from campaignDetails WHERE user_id = '$client->user_id' and broadcaster = '$broadcaster_id')");
 
-            $this->convertImageUrls($client);
-
             $client_data[] = [
                 'client_id' => $client->id,
                 'user_id' => $client->user_id,
                 'agency_client_id' => $client->user_det_id,
-                'image_url' => Utilities::convertCloudinaryHttpToHttps($client->image_url),
+                'image_url' => $client->image_url,
                 'num_campaign' => $campaigns ? count($campaigns) : 0,
                 'total' => $payments[0]->total,
                 'name' =>  $client->lastname . ' ' . $client->firstname,
@@ -104,7 +102,7 @@ class WalkinsController extends Controller
                 'inactive_campaign' => count($inactive_campaigns),
                 'count_brands' => count($brs),
                 'company_name' => $client->company_name,
-                'company_logo' => Utilities::returnImageWhenNotEncrypted($client->company_logo),
+                'company_logo' => $client->company_logo,
                 'location' => $client->location,
             ];
         }
@@ -274,8 +272,6 @@ class WalkinsController extends Controller
         $broadcaster_id = Session::get('broadcaster_id');
         $client = Utilities::switch_db('reports')->select("SELECT * FROM walkIns WHERE id = '$client_id'");
 
-        $this->convertImageUrls($client[0]);
-
         $user_id = $client[0]->user_id;
 
         $all_campaigns = Utilities::getClientCampaignData($user_id, $broadcaster_id);
@@ -320,14 +316,4 @@ class WalkinsController extends Controller
             ->with('sub_industries', $sub_inds);
     }
 
-    /**
-     * I am not a fan of this, this is only until we start using https by default everywhere
-     * @param  [type]
-     * @return [type]
-     */
-    private function convertImageUrls($client)
-    {
-        $client->company_logo = Utilities::returnImageWhenNotEncrypted($client->company_logo);
-        $client->image_url = Utilities::returnImageWhenNotEncrypted($client->image_url);
-    }
 }
