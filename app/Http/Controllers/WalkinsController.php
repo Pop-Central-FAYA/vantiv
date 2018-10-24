@@ -9,6 +9,8 @@ use JD\Cloudder\Facades\Cloudder;
 use Vanguard\Http\Requests\StoreWalkins;
 use Vanguard\Http\Requests\WalkinStoreRequest;
 use Vanguard\Http\Requests\WalkinUpdateRequest;
+// use Vanguard\Libraries\Amazon;
+use Vanguard\Libraries\AmazonS3;
 use Vanguard\Models\Brand;
 use Yajra\DataTables\DataTables;
 use Vanguard\Libraries\Utilities;
@@ -85,13 +87,11 @@ class WalkinsController extends Controller
             $payments = Utilities::switch_db('api')->select("SELECT SUM(total) as total from payments WHERE campaign_id IN
                                                               (SELECT campaign_id from campaignDetails WHERE user_id = '$client->user_id' and broadcaster = '$broadcaster_id')");
 
-            $this->convertImageUrls($client);
-
             $client_data[] = [
                 'client_id' => $client->id,
                 'user_id' => $client->user_id,
                 'agency_client_id' => $client->user_det_id,
-                'image_url' => Utilities::convertCloudinaryHttpToHttps($client->image_url),
+                'image_url' => $client->image_url,
                 'num_campaign' => $campaigns ? count($campaigns) : 0,
                 'total' => $payments[0]->total,
                 'name' =>  $client->lastname . ' ' . $client->firstname,
@@ -105,7 +105,7 @@ class WalkinsController extends Controller
                 'inactive_campaign' => count($inactive_campaigns),
                 'count_brands' => count($brs),
                 'company_name' => $client->company_name,
-                'company_logo' => encrypt(Utilities::convertCloudinaryHttpToHttps(decrypt($client->company_logo))),
+                'company_logo' => $client->company_logo,
                 'location' => $client->location,
             ];
         }
@@ -144,7 +144,6 @@ class WalkinsController extends Controller
      */
     public function store(WalkinStoreRequest $request)
     {
-
         $user_agent = $_SERVER['HTTP_USER_AGENT'];
         $description = 'Client '.$request->first_name.' '. $request->last_name.' with brand '.$request->brand_name.' Created by '.Session::get('agency_id');
         $ip = request()->ip();
@@ -203,9 +202,7 @@ class WalkinsController extends Controller
         $apiUserDetails = Utilities::switch_db('api')->select("SELECT * FROM users where email = '$request->email'");
 
         try {
-            if($request->hasFile('company_logo')){
-                $company_image = Utilities::uploadCompanyLogoToOurServer($request);
-            }
+            $company_image = $request->company_logo;
             Utilities::insertIntoWalkinsApiDB($client_id, $apiUserDetails[0]->id, $broadcaster_id, $request, $company_image, $agency_id);
         }catch (\Exception $e){
             $api_db->rollback();
@@ -217,7 +214,7 @@ class WalkinsController extends Controller
         $checkIfBrandExists = Brand::where('slug', $brand_slug)->first();
         if(!$checkIfBrandExists){
             $brand_logo = $request->file('image_url');
-            $image_url = Utilities::uploadBrandImageToCloudinary($brand_logo);
+            $image_url = $request->image_url;
             $brand = new Brand();
             try {
                 Utilities::storeBrands($brand, $request, $unique, $image_url, $brand_slug);
@@ -266,7 +263,6 @@ class WalkinsController extends Controller
      */
     public function updateWalKins(WalkinUpdateRequest $request, $client_id)
     {
-
         $result = Utilities::updateClients($request, $client_id);
 
         if($result === "success"){
@@ -282,8 +278,6 @@ class WalkinsController extends Controller
     {
         $broadcaster_id = Session::get('broadcaster_id');
         $client = Utilities::switch_db('reports')->select("SELECT * FROM walkIns WHERE id = '$client_id'");
-
-        $this->convertImageUrls($client[0]);
 
         $user_id = $client[0]->user_id;
 
@@ -332,14 +326,4 @@ class WalkinsController extends Controller
             ->with('sub_industries', $sub_inds);
     }
 
-    /**
-     * I am not a fan of this, this is only until we start using https by default everywhere
-     * @param  [type]
-     * @return [type]
-     */
-    private function convertImageUrls($client)
-    {
-        $client->company_logo = encrypt(Utilities::convertCloudinaryHttpToHttps(decrypt($client->company_logo)));
-        $client->image_url = Utilities::convertCloudinaryHttpToHttps($client->image_url);
-    }
 }

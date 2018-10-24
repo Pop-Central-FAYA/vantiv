@@ -29,9 +29,9 @@ class WalkinStoreRequest extends FormRequest
             'email' => 'required|email',
             'phone' => 'required',
             'brand_name' => 'required',
-            'image_url' => 'required|image',
+            'image_url' => 'required',
             'company_name' => 'required',
-            'company_logo' => 'required|image',
+            'company_logo' => 'required',
         ];
     }
 }

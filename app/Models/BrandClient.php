@@ -8,5 +8,5 @@ class BrandClient extends Model
 {
     protected $table = 'brand_client';
     protected $connection = 'api_db';
-    protected $fillable = ['brand_id', 'client_id', 'media_buyer', 'media_buyer_id'];
+    protected $fillable = ['id', 'brand_id', 'client_id', 'media_buyer', 'media_buyer_id'];
 }

@@ -28,7 +28,7 @@
             @foreach($all_brands as $all_brand)
                 <div class="_table_item the_frame clearfix">
                     <div class="padd column col_4">
-                        <span class="client_ava"><img src="{{ $all_brand['image_url'] ? asset(decrypt($all_brand['image_url'])) : '' }}"></span>
+                        <span class="client_ava"><img src="{{ $all_brand['image_url'] ? asset($all_brand['image_url']) : '' }}"></span>
                         <p>{{ ucfirst($all_brand['brand']) }}</p>
                         <span class="small_faint">Added {{ date('M j, Y', strtotime($all_brand['date'])) }}</span>
                     </div>
@@ -76,14 +76,15 @@
                             </strong>
                         @endif
                     </div>
-                    <div class='column col_5 file_select align_center pt3{{ $errors->has('brand_logo') ? ' has-error' : '' }}' style="height: 70px;">
-                        <input type="file" id="file" name="brand_logo" />
-                        <span class="small_faint block_disp mb3">Brand Logo</span>
-                        @if($errors->has('brand_logo'))
-                            <strong>
-                                <span class="error-block" style="color: red;">{{ $errors->first('brand_logo') }}</span>
-                            </strong>
-                        @endif
+                    <div class='column col_5 brand_upload_button align_center pt3{{ $errors->has('brand_logo') ? ' has-error' : '' }}' style="height: 70px;">
+                        <img src="{{ asset($all_brand['image_url']) }}" style="width: 100px; height: 100px; padding: 0 0 11px; margin-right: auto; margin-left: auto; margin-top: -65px;">
+                    </div>
+                    <input type="hidden" name="image_url" required class="brand_logo_url">
+                    <div class='column col_5 brand_uploaded_image align_center pt3' style="display: none;">
+
+                    </div>
+                    <div class="upload_new_brand" style="font-size: 12px; padding-left: 250px; padding-bottom: 10px;">
+                        <input class="brand_logo upload_new_brand" type="file">
                     </div>
                 </div>
 
@@ -133,4 +134,77 @@
             </form>
         </div>
     @endforeach
+@stop
+
+@section('scripts')
+    <script>
+        $(document).ready(function () {
+            $(".brand_logo").on('change', function () {
+                var url = '/presigned-url';
+                for (var file, i = 0; i < this.files.length; i++) {
+                    file = this.files[i];
+                    if(file.name && !file.name.match(/.(gif|jpeg|jpg|png|svg)$/i)) {
+                        toastr.error('Only Images are allowed');
+                        return;
+                    }
+                    $.ajax({
+                        url : url,
+                        type : "GET",
+                        cache : false,
+                        data: {filename : file.name, folder: 'brand-images/'},
+                        success: function (data) {
+                            console.log(data);
+                            $.ajax({
+                                xhr: function() {
+                                    var xhr = new window.XMLHttpRequest();
+                                    xhr.upload.addEventListener("progress", function(evt) {
+                                        if (evt.lengthComputable) {
+                                            var percentComplete = evt.loaded / evt.total;
+                                            percentComplete = parseInt(percentComplete * 100);
+                                            var big_html = '<div class="progress-bar" role="progressbar" aria-valuenow="'+percentComplete+'"'+
+                                                'aria-valuemin="0" aria-valuemax="100" style="width:'+percentComplete+'%">'+
+                                                '<span class="sr-only">'+percentComplete+'% Complete</span>'+
+                                                '</div>';
+                                            $('.progress').html(big_html);
+                                            if (percentComplete === 100) {
+                                                $('.progress').fadeOut(1000);
+
+                                            }
+
+                                        }
+                                    }, false);
+
+                                    return xhr;
+                                },
+                                url : data,
+                                type : "PUT",
+                                data : file,
+                                dataType : "text",
+                                cache : false,
+                                contentType : file.type,
+                                processData : false,
+                            })
+                                .done(function(){
+                                    toastr.success('Your upload was successful');
+                                    var uploadedUrl = 'https:'+data.split('?')[0].substr(6);
+                                    $(".brand_logo_url").val(uploadedUrl);
+                                    $(".brand_upload_button").hide();
+                                    $(".brand_uploaded_image").show();
+                                    $(".upload_new_brand").show();
+                                    $(".brand_uploaded_image").html('<img src="'+uploadedUrl+'" style="width: 100px;\n' +
+                                        '    height: 100px;\n' +
+                                        '    padding: 0 0 11px;\n' +
+                                        '    margin-right: auto;\n' +
+                                        '    margin-left: auto;\n' +
+                                        '    margin-top: -27px; " >');
+                                })
+                                .fail(function(){
+                                    toastr.error('An error occurred, please try again ');
+                                })
+                        }
+                    })
+                }
+            });
+        })
+    </script>
 @stop

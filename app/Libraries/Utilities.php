@@ -331,13 +331,8 @@ class Utilities {
 
         $walkins = $api_db->select("SELECT * from walkIns where id = '$client_id'");
         $user_id = $walkins[0]->user_id;
-        if($request->hasFile('company_logo')){
-            $filename = $request->file('company_logo')->getRealPath();
-            Cloudder::upload($filename, Cloudder::getPublicId());
-            $clouder = Cloudder::getResult();
-            // $image_url = encrypt($clouder['url']);
-            $image_url = encrypt($clouder['secure_url']);
-            $walkins_update_logo = $api_db->update("UPDATE walkIns set company_logo = '$image_url' where id = '$client_id'");
+        if($request->company_logo){
+            $walkins_update_logo = $api_db->update("UPDATE walkIns set company_logo = '$request->company_logo' where id = '$client_id'");
         }
 
         try {
@@ -491,9 +486,6 @@ class Utilities {
     {
         $brand_list = Utilities::switch_db('api')->select("SELECT b.*, b_c.media_buyer_id as agency_broadcaster, b_c.client_id as client_walkins_id
                                                         FROM brand_client as b_c INNER JOIN brands as b ON b.id = b_c.brand_id where b_c.client_id = '$client_id'");
-        foreach ($brand_list as $brand) {
-            $brand->image_url = encrypt(Utilities::convertCloudinaryHttpToHttps(decrypt($brand->image_url)));
-        }
         return $brand_list;
     }
 
@@ -955,7 +947,7 @@ class Utilities {
             'location' => $api_agent[0]->location,
             'nationality' => $api_agent[0]->nationality,
             'username' => $local_user[0]->username,
-            'image' => $api_agent[0]->image_url ? Utilities::convertCloudinaryHttpToHttps(decrypt($api_agent[0]->image_url)) : ''
+            'image' => $api_agent[0]->image_url ? $api_agent[0]->image_url : ''
         ];
 
         return $user_details;
@@ -1267,18 +1259,5 @@ class Utilities {
         ];
     }
 
-    /**
-     * This is to compensate for the fact that we are saving cloudinary uploaded images as http
-     * instead of https, when we move to s3, this should no longer be an issue
-     * @param  [type]
-     * @return [type]
-     */
-    public static function convertCloudinaryHttpToHttps($image_url)
-    {
-        if ($image_url) {
-            return str_replace("http://","https://",$image_url);
-        }
-        return $image_url;
-    }
 
 }
