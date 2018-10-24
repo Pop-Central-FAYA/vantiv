@@ -2,10 +2,13 @@
 
 namespace Vanguard\Http\Controllers;
 
+use Curl\Curl;
 use Hamcrest\Util;
 use Illuminate\Http\Request;
+use Vanguard\Libraries\AmazonS3;
 use Vanguard\Libraries\Api;
 use Vanguard\Libraries\Utilities;
+use Vanguard\Models\Brand;
 use Vanguard\Repositories\Activity\ActivityRepository;
 use Vanguard\Repositories\User\UserRepository;
 use Vanguard\Support\Enum\UserStatus;
@@ -13,6 +16,8 @@ use Auth;
 use Carbon\Carbon;
 use Session;
 use Yajra\DataTables\DataTables;
+use Illuminate\Contracts\Encryption\DecryptException;
+
 
 class DashboardController extends Controller
 {
@@ -29,7 +34,6 @@ class DashboardController extends Controller
             return view('broadcaster_module.landing_page', compact('broadcaster_info'));
 
         } else if ($role->role_id === 4) {
-
             //agency dashboard
             $allBroadcasters = Utilities::switch_db('api')->select("SELECT * from broadcasters");
             $agency_id = Session::get('agency_id');
@@ -226,8 +230,83 @@ class DashboardController extends Controller
 
     }
 
+    public function downloadFiles($url, $new_file_name)
+    {
+        $destination_directory = "/tmp/".$new_file_name;
+        $ci = curl_init();
+
+        $fp = fopen($destination_directory, "x+"); // Destination location
+        curl_setopt_array( $ci, array(
+            CURLOPT_URL => $url,
+            CURLOPT_TIMEOUT => 3600,
+            CURLOPT_FILE => $fp
+        ));
+        $contents = curl_exec($ci); // Returns '1' if successful
+        curl_close($ci);
+        fclose($fp);
+        return $destination_directory;
+
+    }
+
+    public function updateClinetsTable($client_id, $new_s3_url)
+    {
+        $update_walkIns = Utilities::switch_db('api')->update("UPDATE walkIns set company_logo = '$new_s3_url' where id = '$client_id'");
+    }
+
+    public function updateBrandsTable($brand_id, $new_s3_url)
+    {
+        $brand = Brand::where('id', $brand_id)->first();
+        $brand->image_url = $new_s3_url;
+        $brand->save();
+    }
+
+    public function getClientImageFromCloudinaryToS3()
+    {
+        $clients = Utilities::switch_db('api')->select("SELECT * from walkIns where company_logo NOT LIKE 'https%'");
+        foreach ($clients as $client){
+            $client_id = $client->id;
+            try {
+                $decrypted_image_url = decrypt($client->company_logo);
+                $explode_image_url = explode('.', $decrypted_image_url);
+                $key = 'client-images/'.$client->id.'.'.end($explode_image_url);
+                $new_file_name = $client->id.'.'.end($explode_image_url);
+                $destination_file_name = $this->downloadFiles($decrypted_image_url, $new_file_name);
+                $new_s3_url = AmazonS3::uploadToS3FromPath($destination_file_name, $key);
+                $this->updateClinetsTable($client_id, $new_s3_url);
+                unlink($destination_file_name);
+            }catch (\Exception $e){
+                dd($e);
+            }
+        }
+    }
+
+    public function getBrandImagesFromCloudinaryToS3()
+    {
+        $brands = Brand::where('image_url', 'NOT LIKE', 'https%')->get();
+//        $brands = Utilities::switch_db('api')->select("SELECT * from walkIns where company_logo NOT LIKE 'https%'");
+        foreach ($brands as $brand){
+            $brand_id = $brand->id;
+            try {
+                $decrypted_image_url = decrypt($brand->image_url);
+                $explode_image_url = explode('.', $decrypted_image_url);
+                $key = 'client-images/'.$brand->id.'.'.end($explode_image_url);
+                $new_file_name = $brand->id.'.'.end($explode_image_url);
+                $destination_file_name = $this->downloadFiles($decrypted_image_url, $new_file_name);
+                $new_s3_url = AmazonS3::uploadToS3FromPath($destination_file_name, $key);
+                $this->updateBrandsTable($brand_id, $new_s3_url);
+                unlink($destination_file_name);
+            }catch (\Exception $e){
+                dd($e);
+            }
+        }
+    }
+
+
     public function campaignManagementDashbaord()
     {
+        $this->getClientImageFromCloudinaryToS3();
+        $this->getBrandImagesFromCloudinaryToS3();
+
         $broadcaster = Session::get('broadcaster_id');
         //total volume of campaigns
         $camp_vol = Utilities::switch_db('api')->select("SELECT COUNT(id) as volume, DATE_FORMAT(time_created, '%M, %Y') as `month` from campaignDetails where status != 'on_hold' AND

@@ -17,12 +17,7 @@ Class AmazonS3
             'version' => '2006-03-01'
         ));
 
-        if(\App::environment(['dev', 'local'])){
-            $bucket = getenv('AWS_DEV_BUCKET_NAME');
-        }else{
-            $bucket = getenv('AWS_PROD_BUCKET_NAME');
-        }
-
+        $bucket = AmazonS3::getBucket();
         $cmd = $s3Client->getCommand('PutObject', [
             'Bucket' => $bucket,
             'Key'    => $folder.$filename,
@@ -31,5 +26,33 @@ Class AmazonS3
         $presignedUrlPut = strval($request->getUri());
         return $presignedUrlPut;
 
+    }
+
+    public static function uploadToS3FromPath($pathToFile, $slug)
+    {
+        $s3Client = S3Client::factory(array(
+            'region' => getenv(self::ENV_REGION),
+            'version' => '2006-03-01'
+        ));
+
+        $bucket = AmazonS3::getBucket();
+
+        $result = $s3Client->putObject(array(
+            'Bucket'     => $bucket,
+            'Key'        => $slug,
+            'SourceFile' => $pathToFile,
+        ));
+        return $result['ObjectURL'];
+    }
+
+    private static function getBucket()
+    {
+        if(\App::environment(['dev', 'local'])){
+            $bucket = getenv('AWS_DEV_BUCKET_NAME');
+        }else{
+            $bucket = getenv('AWS_PROD_BUCKET_NAME');
+        }
+
+        return $bucket;
     }
 }
