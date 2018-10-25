@@ -168,7 +168,7 @@ class Utilities {
                 'hourly_range' => $file->time_range,
                 'day' => $file->day,
                 'broadcast_station' => $file->brand,
-                'file' => decrypt($file->file_url),
+                'file' => $file->file_url,
                 'slot_time' => $file->time_picked.' seconds',
                 'file_status' => $file->status,
                 'file_name' => $file->file_name,
@@ -725,7 +725,7 @@ class Utilities {
         if(count($check_file) > 4){
             return response()->json(['error_number' => 'error_number']);
         }
-        $image_url = encrypt(request()->image_url);
+        $image_url = request()->image_url;
         $time = request()->time_picked;
         $channel = request()->channel;
         $format = request()->file_format;
@@ -830,6 +830,7 @@ class Utilities {
         $start_date = date('Y-m-d', strtotime($first->start_date));
         $end_date = date('Y-m-d', strtotime($first->end_date));
         $number_of_occurrence = Utilities::numberOfAdslotOccurrence($adslot_id, $start_date, $end_date);
+        $now = date('Y-m-d', strtotime(Carbon::now('Africa/Lagos')));
 
         $new_price = $new_price * $number_of_occurrence;
 
@@ -863,8 +864,8 @@ class Utilities {
 
 
             $insert = \DB::insert("INSERT INTO carts (user_id, broadcaster_id, price, ip_address, file, from_to_time, `time`, adslot_id, percentage, total_price,
-                                          filePosition_id, status, file_name, public_id, format) VALUES ('$user','$broadcaster','$price','$ip','$file','$hourly_range',
-                                            '$time','$adslot_id', '$percentage', '$new_price', '$position', 1, '$file_name', '$public_id', '$file_format')");
+                                          filePosition_id, status, file_name, public_id, format, created_at) VALUES ('$user','$broadcaster','$price','$ip','$file','$hourly_range',
+                                            '$time','$adslot_id', '$percentage', '$new_price', '$position', 1, '$file_name', '$public_id', '$file_format', '$now')");
         }else{
             $check = \DB::select("SELECT * from carts where adslot_id = '$adslot_id' and user_id = '$user' AND agency_id = '$agency_id'
                                         and filePosition_id = '$position' and filePosition_id != ''");
@@ -985,14 +986,6 @@ class Utilities {
         return (['campaign_payment' => $campaign_payment, 'campaign_date' => $campaign_date]);
     }
 
-    public static function uploadBrandImageToCloudinary($brand_logo)
-    {
-        $filename = $brand_logo->getRealPath();
-        Cloudder::upload($filename, Cloudder::getPublicId());
-        $clouder = Cloudder::getResult();
-        // return encrypt($clouder['url']);
-        return encrypt($clouder['secure_url']);
-    }
 
     public static function campaignDetailsInformations($first, $campaign_id, $id, $now, $ads, $group_data, $agency_id, $walkin_id, $broadcaster_id, $broadcaster_details, $query)
     {
@@ -1190,17 +1183,6 @@ class Utilities {
         ]);
     }
 
-    public static function uploadCompanyLogoToOurServer($request)
-    {
-        /*handling uploading the image*/
-        $featured = $request->company_logo;
-        $featured_new_name = time().$featured->getClientOriginalName();
-        /*moving the image to public/uploads/post*/
-        $featured->move('company_logo', $featured_new_name);
-
-        return encrypt('company_logo/'.$featured_new_name);
-    }
-
     public static function storeBrands($brand, $request, $unique, $image_url, $brand_slug)
     {
         $brand->id = $unique;
@@ -1258,6 +1240,15 @@ class Utilities {
 
         ];
     }
+
+    public static function convertCloudinaryHttpToHttps($image_url)
+    {
+        if ($image_url) {
+            return str_replace("http://","https://",$image_url);
+        }
+        return $image_url;
+    }
+
 
 
 }

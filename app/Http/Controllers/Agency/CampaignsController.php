@@ -88,10 +88,6 @@ class CampaignsController extends Controller
         $channels = Utilities::switch_db('api')->select("SELECT * from campaignChannels where channel = 'TV'");
 
         Api::validateCampaign();
-        ## REMOVE ONCE WE START SAVING IN HTTP
-        foreach ($walkins as $walk_in) {
-            $walk_in->company_logo = $this->formatImageUrl($walk_in->company_logo);
-        }
 
         return view('agency.campaigns.create1')->with('industries', $preloaded_data['industries'])
             ->with('channels', $channels)

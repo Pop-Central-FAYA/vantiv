@@ -9,6 +9,7 @@ use Vanguard\Libraries\AmazonS3;
 use Vanguard\Libraries\Api;
 use Vanguard\Libraries\Utilities;
 use Vanguard\Models\Brand;
+use Vanguard\Models\File;
 use Vanguard\Repositories\Activity\ActivityRepository;
 use Vanguard\Repositories\User\UserRepository;
 use Vanguard\Support\Enum\UserStatus;
@@ -260,6 +261,13 @@ class DashboardController extends Controller
         $brand->save();
     }
 
+    public function updateFilesTable($file_id, $new_s3_url)
+    {
+        $file = File::where('id', $file_id)->first();
+        $file->file_url = $new_s3_url;
+        $file->save();
+    }
+
     public function getClientImageFromCloudinaryToS3()
     {
         $clients = Utilities::switch_db('api')->select("SELECT * from walkIns where company_logo NOT LIKE 'https%'");
@@ -300,11 +308,34 @@ class DashboardController extends Controller
         }
     }
 
+    public function getCampaignVideosFromCloudinaryToS3()
+    {
+        $campaign_files = File::where('file_url', 'NOT LIKE', 'https%')->get();
+        foreach ($campaign_files as $campaign_file){
+            $file_id = $campaign_file->id;
+            try {
+                $decrypted_file_url = decrypt($campaign_file->file_url);
+                $explode_file_url = explode('.', $decrypted_file_url);
+                $key = 'campaign-tv-contents/'.$campaign_file->id.'.'.end($explode_file_url);
+                $new_file_name = $campaign_file->id.'.'.end($explode_file_url);
+                $destination_file_name = $this->downloadFiles($decrypted_file_url, $new_file_name);
+                $new_s3_url = AmazonS3::uploadToS3FromPath($destination_file_name, $key);
+                $this->updateFilesTable($file_id, $new_s3_url);
+                unlink($destination_file_name);
+            }catch (\Exception $e){
+                dd($e);
+            }
+        }
+    }
+
+
+
 
     public function campaignManagementDashbaord()
     {
         $this->getClientImageFromCloudinaryToS3();
         $this->getBrandImagesFromCloudinaryToS3();
+        $this->getCampaignVideosFromCloudinaryToS3();
 
         $broadcaster = Session::get('broadcaster_id');
         //total volume of campaigns

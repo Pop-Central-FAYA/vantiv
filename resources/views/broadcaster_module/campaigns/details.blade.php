@@ -302,7 +302,7 @@
                             <form method="POST" action="{{ route('file.change', ['file_id' => $uploaded_file->id]) }}" enctype="multipart/form-data">
                                 {{ csrf_field() }}
                                 <tr>
-                                    <td><video src="{{ asset(decrypt($uploaded_file->file_url)) }}" width="150" height="100" controls></video></td>
+                                    <td><video src="{{ asset($uploaded_file->file_url) }}" width="150" height="100" controls></video></td>
                                     <td>
                                         <p>{{ $uploaded_file->get_adslot->get_rate_card->get_day->day }}</p>
                                         <p>{{ $uploaded_file->get_adslot->day_part->day_parts }}</p>

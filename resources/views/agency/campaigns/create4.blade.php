@@ -161,7 +161,7 @@
                                 <tr>
                                     @if($datas[$i]->uploads && $datas[$i]->channel === $rating->channels)
                                         <td>{{ $j }}</td>
-                                        <td><div class="col-md-3"> <video width="150" controls><source src="{{ asset(decrypt($datas[$i]->uploads)) }}"></video> </div></td>
+                                        <td><div class="col-md-3"> <video width="150" controls><source src="{{ asset($datas[$i]->uploads) }}"></video> </div></td>
                                         <input type="hidden" name="file" class="file{{ $rating->id.$datas[$i]->id }}" value="{{ $datas[$i]->uploads }}">
                                         <td><div class="col-md-3"><span style="margin-left:15%"></span>{{ $datas[$i]->time }} Seconds</div></td>
                                         @if($datas[$i]->time === 15)

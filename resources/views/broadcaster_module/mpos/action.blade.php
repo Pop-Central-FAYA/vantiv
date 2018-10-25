@@ -55,7 +55,7 @@
                     @foreach ($mpo_data[0]['files'] as $mpo_file)
                         <tr id="row{{ $mpo_file->file_code }}">
                         <td>
-                            <video width="150" controls><source src="{{ asset(decrypt($mpo_file->file_url)) }}"></video>
+                            <video width="150" controls><source src="{{ asset($mpo_file->file_url) }}"></video>
                         </td>
                         <td>{{ $mpo_file->time_picked }} seconds</td>
                         <td>
@@ -177,7 +177,7 @@
                 mpo_id = $(this).data("mpo_id");
                 recommendation = $("#recommendations"+file_code).val();
 
-                if (rejection_reason === null && file_status === 'null') {
+                if (rejection_reason === null || file_status === 'null') {
                     toastr.error("File Status and Rejection reason can't be empty");
                     $(".load").css({
                         opacity : 1
@@ -185,7 +185,7 @@
                     return;
                 }
 
-                if (file_status === 'rejected' && rejection_reason === null) {
+                if (file_status === 'rejected' && rejection_reason[0] === "null") {
                     toastr.error("Please choose a reason for rejecting this file");
                     $(".load").css({
                         opacity : 1

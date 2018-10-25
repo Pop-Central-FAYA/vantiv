@@ -16,7 +16,7 @@
                 <div class="clearfix mb">
                     <div class="column col_4">
                         @if($all_file->uploads)
-                            <video width="150" height="150" controls><source src="{{ asset(decrypt($all_file->uploads)) }}"></video>
+                            <video width="150" height="150" controls><source src="{{ asset($all_file->uploads) }}"></video>
                         @else
                             <img src="{{ asset('new_assets/images/logo.png') }}" alt="">
                         @endif
