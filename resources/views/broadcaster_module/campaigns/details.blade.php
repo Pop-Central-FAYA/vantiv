@@ -288,9 +288,6 @@
                 {{--files--}}
                 <div class="tab_content" id="files">
                     <!-- filter -->
-                    <div class="progress">
-
-                    </div><br>
                     <table>
                         <tr>
                             <th>Files</th>
@@ -320,8 +317,11 @@
                                         </td>
                                         @if($uploaded_file->id === $uploaded_file->rejection_reasons()->orderBy('updated_at', 'desc')->first()->pivot->file_id)
                                             <td>
+                                                <div class="progress{{ $uploaded_file->id }}">
+
+                                                </div><br>
                                                 <div class="{{ $errors->has('upload') ? ' has-error' : '' }}">
-                                                    <input type="file" class="form-control file_content" data-file_id="{{ $uploaded_file->id }}" id="file_upload" name="uploads">
+                                                    <input type="file" class="form-control file_content" data-file_id="{{ $uploaded_file->id }}" data-time_slot="{{ $uploaded_file->time_picked }}" id="file_upload" name="uploads">
                                                     @if($errors->has('upload'))
                                                         <span class="help-block">
                                                             {{ $errors->first('upload') }}
@@ -667,34 +667,20 @@
 
         })
 
-        //register canplaythrough event to #audio element to can get duration
-        var f_duration =0;  //store duration
-        document.getElementById('audio').addEventListener('canplaythrough', function(e){
-            //add duration in the input field #f_du
-            f_duration = Math.round(e.currentTarget.duration);
-            document.getElementById('file_duration').value = f_duration;
-            URL.revokeObjectURL(obUrl);
-        });
-
-        //when select a file, create an ObjectURL with the file and add it in the #audio element
-        var obUrl;
-        document.getElementById('file_upload').addEventListener('change', function(e){
-            var file = e.currentTarget.files[0];
-            //check file extension for audio/video type
-            if(file.name.match(/\.(avi|mp3|mp4|mpeg|ogg)$/i)){
-                obUrl = URL.createObjectURL(file);
-                document.getElementById('audio').setAttribute('src', obUrl);
-            }
-        });
 
         $(".file_content").on('change', function () {
             var url = '/presigned-url';
+            var time_slots_string = $(this).data('time_slot');
+            var time_slot = parseInt(time_slots_string);
+            var reader = new FileReader();
+
             for (var file, i = 0; i < this.files.length; i++) {
                 file = this.files[i];
                 if(file.name && !file.name.match(/.(mp4|mkv|avi|flv|vob)$/i)) {
                     toastr.error('Invalid Video format');
                     return;
                 }
+
                 var file_id = $(this).data("file_id");
                 var splitedName = file.name.split(".");
                 var video_format = splitedName[splitedName.length - 1];
@@ -716,7 +702,7 @@
                                             'aria-valuemin="0" aria-valuemax="100" style="width:'+percentComplete+'%">'+
                                             '<span class="sr-only">'+percentComplete+'% Complete</span>'+
                                             '</div>';
-                                        $('.progress').html(big_html);
+                                        $('.progress'+file_id).html(big_html);
                                         if (percentComplete === 100) {
                                             $('.progress').fadeOut(1000);
                                         }
@@ -735,7 +721,7 @@
                             processData : false,
                         })
                             .done(function(){
-                                toastr.success('Your upload was successful, please select the right time slot for your content and click on the submit button to complete your upload');
+                                toastr.success('Your upload was successful, please hit the submit button to update your mpo');
                                 var uploadedUrl = 'https:'+data.split('?')[0].substr(6);
                                 var vid_show = '<video width="200" height="200" controls>\n' +
                                     '  <source src="'+uploadedUrl+'" type="video/mp4">\n' +
@@ -750,28 +736,35 @@
                                     var url1 = $("#form-data"+file_id).attr('action');
                                     var time_slot = parseInt(time_slots_string);
                                     var file_duration = parseInt(file_duration_string);
-                                    if(time_slot >= file_duration){
-                                        $.ajax({
-                                            url: url1,
-                                            method: "GET",
-                                            data: {'file_url' : uploadedUrl, 'file_name' : file.name, 'file_format' : video_format},
-                                            success: function(result){
-                                                if(result.error === 'error'){
-                                                    toastr.error('You are trying to upload a file of '+file_duration+' seconds into a '+time_slot+' seconds slot');
-                                                    return;
-                                                }else if(result.success === 'success'){
-                                                    toastr.success('Your upload for '+time_slot+' seconds was successful');
-                                                    location.reload();
+                                    reader.onload = function(e) {
+                                        var videoElement = document.createElement('video');
+                                        videoElement.src = e.target.result;
+                                        var timer = setInterval(function () {
+                                            if (videoElement.readyState === 4){
+                                                if(Math.round(videoElement.duration) > time_slot){
+                                                    toastr.error('You are trying to upload a file of '+Math.round(videoElement.duration)+' seconds into a '+time_slot+' seconds slot');
+                                                }else{
+                                                    $.ajax({
+                                                        url: url1,
+                                                        method: "GET",
+                                                        data: {'file_url' : uploadedUrl, 'file_name' : file.name, 'file_format' : video_format},
+                                                        success: function(result){
+                                                            if(result.error === 'error'){
+                                                                toastr.error('An error occurred, please try again');
+                                                                return;
+                                                            }else if(result.success === 'success'){
+                                                                toastr.success('Your upload for '+time_slot+' seconds was successful');
+                                                                location.reload();
+                                                            }
+                                                            $(".tv_campaign_proceed").prop('disabled', false);
+                                                        }
+                                                    })
                                                 }
-                                                $(".tv_campaign_proceed").prop('disabled', false);
+                                                clearInterval(timer);
                                             }
                                         })
-
-                                    }else{
-
-                                        toastr.error('You are trying to upload a file of '+file_duration+' seconds into a '+time_slot+'seconds slot');
-                                    }
-
+                                    };
+                                    reader.readAsDataURL(file);
                                 });
                             })
                             .fail(function(){
