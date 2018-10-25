@@ -56,7 +56,7 @@
                                 @endif
                                 <td>{{ $campaign['status'] }}</td>
                                 <td><a href="#mpo{{ $campaign['camp_id'] }}" class="modal_mpo">View MPO</a></td>
-                                <td><a href="#invoice{{ $campaign['camp_id'] }}" class="modal_invoice">View Invoice</a></td>
+                                <!-- <td><a href="#invoice{{ $campaign['camp_id'] }}" class="modal_invoice">View Invoice</a></td> -->
                             </tr>
                         @endforeach
 
