@@ -230,41 +230,13 @@ class MpoController extends Controller
 
     public function updateFiles(Request $request, $file_id)
     {
-        dd($request->all());
         $file = File::where('id', $file_id)->first();
-        $time_picked = (int)$file->time_picked;
-        if(((int)$request->f_du) > $time_picked){
-            $message = 'Your file duration cannot be more than '.$time_picked.' Seconds';
-            \Session::flash('error', $message);
-            return redirect()->back();
-        }
-
-        $expected_extensions = ['avi', 'mp3', 'mp4', 'mpeg4', 'ogg'];
-        $file_extention = $request->file('content_uploads')->getClientOriginalExtension();
-        if(!in_array($file_extention,$expected_extensions)){
-            \Session::flash('error', 'File extension not valid');
-            return redirect()->back();
-        }
-
-        $folder = $request->folder;
-        $filesUploads = $request->file('content_uploads');
-        dd($filesUploads);
-        $filename = $filesUploads->getClientOriginalName();
-        $key = $folder.$filename;
-        try {
-            $file_content = file_get_contents($request->file('content_uploads'));
-            $result = AmazonS3::uploadToS3FromPath($file_content, $key);
-        }catch (\Exception $e){
-            dd($e);
-            \Session::flash('error', 'Your file could not be processed for uploads');
-            return redirect()->back();
-        }
 
         try {
-            \DB::transaction(function () use ($file,$filename, $result, $file_extention) {
-                $file->file_name = $filename;
-                $file->file_url = $result;
-                $file->format = $file_extention;
+            \DB::transaction(function () use ($file,$request) {
+                $file->file_name = $request->file_name;
+                $file->file_url = $request->file_url;
+                $file->format = $request->file_format;
                 $file->status = 'pending';
                 $file->save();
 
@@ -276,12 +248,10 @@ class MpoController extends Controller
 
             });
         }catch (\Exception $e){
-            \Session::flash('error', 'An error occurred while performing your request');
-            return redirect()->back();
+            return response()->json(['error' => 'error']);
         }
 
-        \Session::flash('success', 'File updated successfully');
-        return redirect()->back();
+        return response()->json(['success' => 'success']);
 
     }
 

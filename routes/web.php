@@ -196,7 +196,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/update-campaign/information/{campaign_id}', 'Broadcaster\CampaignsController@updateCampaignInformation')->name('broadcaster.campaign_information.update');
     });
 
-    Route::post('file-update/{file_id}', 'MpoController@updateFiles')->name('file.change');
+    Route::get('file-update/{file_id}', 'MpoController@updateFiles')->name('file.change');
 
     /*
      * Broadcaster User Management

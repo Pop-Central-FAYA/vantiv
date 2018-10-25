@@ -177,7 +177,7 @@
                 mpo_id = $(this).data("mpo_id");
                 recommendation = $("#recommendations"+file_code).val();
 
-                if (rejection_reason === null || file_status === 'null') {
+                if (rejection_reason === null && file_status === 'null') {
                     toastr.error("File Status and Rejection reason can't be empty");
                     $(".load").css({
                         opacity : 1
@@ -210,7 +210,6 @@
                         recommendation: recommendation
                     },
                     success: function (data) {
-                        console.log(data);
                         if(data.status === 'approved'){
                             $(".load").css({
                                 opacity : 1

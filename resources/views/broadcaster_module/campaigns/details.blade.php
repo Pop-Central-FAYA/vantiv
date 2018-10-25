@@ -288,6 +288,9 @@
                 {{--files--}}
                 <div class="tab_content" id="files">
                     <!-- filter -->
+                    <div class="progress">
+
+                    </div><br>
                     <table>
                         <tr>
                             <th>Files</th>
@@ -297,9 +300,8 @@
                             <th></th>
                             <th></th>
                         </tr>
-
                         @foreach($campaign_details['uploaded_files'] as $uploaded_file)
-                            <form method="POST" action="{{ route('file.change', ['file_id' => $uploaded_file->id]) }}" enctype="multipart/form-data">
+                            <form method="GET" action="{{ route('file.change', ['file_id' => $uploaded_file->id]) }}" id="form-data{{ $uploaded_file->id }}" enctype="multipart/form-data">
                                 {{ csrf_field() }}
                                 <tr>
                                     <td><video src="{{ asset($uploaded_file->file_url) }}" width="150" height="100" controls></video></td>
@@ -319,17 +321,22 @@
                                         @if($uploaded_file->id === $uploaded_file->rejection_reasons()->orderBy('updated_at', 'desc')->first()->pivot->file_id)
                                             <td>
                                                 <div class="{{ $errors->has('upload') ? ' has-error' : '' }}">
-                                                    <input type="file" class="form-control" id="file_upload" name="uploads">
+                                                    <input type="file" class="form-control file_content" data-file_id="{{ $uploaded_file->id }}" id="file_upload" name="uploads">
                                                     @if($errors->has('upload'))
                                                         <span class="help-block">
                                                             {{ $errors->first('upload') }}
                                                         </span>
                                                     @endif
                                                 </div>
-                                                <input type="hidden" name="file_duration" id="file_duration" size="5" />
+                                                <input type="hidden" name="file_duration" class="file_duration" id="file_duration" size="5" />
                                             </td>
                                             <td>
-                                                <button type="submit" class="btn btn-success">Update</button>
+                                                <div class="gallery{{ $uploaded_file->id }}">
+
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <button type="button" data-time_slot="{{ $uploaded_file->time_picked }}" class="update_mpo btn btn-success">Update</button>
                                             </td>
                                         @endif
                                     @endif
@@ -590,7 +597,6 @@
                         url: url,
                         data: { campaign_id : campaign_id,start_date: start_date, stop_date: stop_date, media_channel: media_channel },
                         success: function (data) {
-                            console.log(data);
                             var small_html = '<p>'+ data.percentage_compliance +'</p>'
                             $(".add_reports").html(small_html);
                             Highcharts.chart('container', {
@@ -678,6 +684,101 @@
             if(file.name.match(/\.(avi|mp3|mp4|mpeg|ogg)$/i)){
                 obUrl = URL.createObjectURL(file);
                 document.getElementById('audio').setAttribute('src', obUrl);
+            }
+        });
+
+        $(".file_content").on('change', function () {
+            var url = '/presigned-url';
+            for (var file, i = 0; i < this.files.length; i++) {
+                file = this.files[i];
+                if(file.name && !file.name.match(/.(mp4|mkv|avi|flv|vob)$/i)) {
+                    toastr.error('Invalid Video format');
+                    return;
+                }
+                var file_id = $(this).data("file_id");
+                var splitedName = file.name.split(".");
+                var video_format = splitedName[splitedName.length - 1];
+                $(".tv_campaign_proceed").prop('disabled', true);
+                $.ajax({
+                    url : url,
+                    type : "GET",
+                    cache : false,
+                    data: {filename : file.name, folder: 'campaign-tv-contents/'},
+                    success: function (data) {
+                        $.ajax({
+                            xhr: function() {
+                                var xhr = new window.XMLHttpRequest();
+                                xhr.upload.addEventListener("progress", function(evt) {
+                                    if (evt.lengthComputable) {
+                                        var percentComplete = evt.loaded / evt.total;
+                                        percentComplete = parseInt(percentComplete * 100);
+                                        var big_html = '<div class="progress-bar" role="progressbar" aria-valuenow="'+percentComplete+'"'+
+                                            'aria-valuemin="0" aria-valuemax="100" style="width:'+percentComplete+'%">'+
+                                            '<span class="sr-only">'+percentComplete+'% Complete</span>'+
+                                            '</div>';
+                                        $('.progress').html(big_html);
+                                        if (percentComplete === 100) {
+                                            $('.progress').fadeOut(1000);
+                                        }
+
+                                    }
+                                }, false);
+
+                                return xhr;
+                            },
+                            url : data,
+                            type : "PUT",
+                            data : file,
+                            dataType : "text",
+                            cache : false,
+                            contentType : file.type,
+                            processData : false,
+                        })
+                            .done(function(){
+                                toastr.success('Your upload was successful, please select the right time slot for your content and click on the submit button to complete your upload');
+                                var uploadedUrl = 'https:'+data.split('?')[0].substr(6);
+                                var vid_show = '<video width="200" height="200" controls>\n' +
+                                    '  <source src="'+uploadedUrl+'" type="video/mp4">\n' +
+                                    '</video>' ;
+                                $(".gallery"+file_id).html(vid_show);
+                                var user_id = "";
+                                var channel = 'nzrm6hchjats36';
+
+                                $(".update_mpo").click(function () {
+                                    var time_slots_string = $(this).data('time_slot');
+                                    var file_duration_string = $(".file_duration").val();
+                                    var url1 = $("#form-data"+file_id).attr('action');
+                                    var time_slot = parseInt(time_slots_string);
+                                    var file_duration = parseInt(file_duration_string);
+                                    if(time_slot >= file_duration){
+                                        $.ajax({
+                                            url: url1,
+                                            method: "GET",
+                                            data: {'file_url' : uploadedUrl, 'file_name' : file.name, 'file_format' : video_format},
+                                            success: function(result){
+                                                if(result.error === 'error'){
+                                                    toastr.error('You are trying to upload a file of '+file_duration+' seconds into a '+time_slot+' seconds slot');
+                                                    return;
+                                                }else if(result.success === 'success'){
+                                                    toastr.success('Your upload for '+time_slot+' seconds was successful');
+                                                    location.reload();
+                                                }
+                                                $(".tv_campaign_proceed").prop('disabled', false);
+                                            }
+                                        })
+
+                                    }else{
+
+                                        toastr.error('You are trying to upload a file of '+file_duration+' seconds into a '+time_slot+'seconds slot');
+                                    }
+
+                                });
+                            })
+                            .fail(function(){
+                                toastr.error('An error occurred, please try again ');
+                            })
+                    }
+                })
             }
         });
 
