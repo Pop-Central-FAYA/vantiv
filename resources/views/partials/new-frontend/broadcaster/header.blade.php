@@ -21,7 +21,6 @@
         </div>
 
 
-        <span class="notif_icon"></span>
         <p class="right padd">{{ Auth::user()->username }}</p>
 
     </div>
