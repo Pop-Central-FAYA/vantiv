@@ -2,6 +2,7 @@
 
 namespace Vanguard\Libraries;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use JD\Cloudder\Facades\Cloudder;
 use Vanguard\Models\BrandClient;
