@@ -153,10 +153,8 @@ Class Api
     {
         return File::where('campaign_id', $campaign_id)
                     ->where('broadcaster_id', $broadcaster)
-                    ->where(function ($query) {
-                        $query->where('status', 'pending')
-                              ->orWhere('status', 'rejected');
-                    })->get();
+                    ->whereIn('status', array('pending', 'rejected'))
+                    ->get();
 
     }
 

@@ -694,7 +694,7 @@ class Utilities {
                     'broadcaster' => $adslot->broadcaster,
                     'count_adslot' => $adslot->all_slots,
                     'boradcaster_brand' => $broad[0]->brand,
-                    'logo' => encrypt(Utilities::convertCloudinaryHttpToHttps(decrypt($broad[0]->image_url))),
+                    'logo' => $broad[0]->image_url,
                 ];
             }
         }else{
@@ -708,7 +708,7 @@ class Utilities {
                 'broadcaster' => $adslots[0]->broadcaster,
                 'count_adslot' => $adslots[0]->all_slots,
                 'bradcaster_brand' => $broadcaster_details[0]->brand,
-                'logo' => encrypt(Utilities::convertCloudinaryHttpToHttps(decrypt($broadcaster_details[0]->image_url)))
+                'logo' => $broadcaster_details[0]->image_url
             ];
         }
 
@@ -1241,15 +1241,5 @@ class Utilities {
 
         ];
     }
-
-    public static function convertCloudinaryHttpToHttps($image_url)
-    {
-        if ($image_url) {
-            return str_replace("http://","https://",$image_url);
-        }
-        return $image_url;
-    }
-
-
 
 }

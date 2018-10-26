@@ -47,7 +47,7 @@
                     @foreach($ads_broads as $ads_broad)
                         <div class='align_center one_media broad_click @if($ads_broad['broadcaster'] === $broadcaster) active @endif'>
                             <input type="hidden" name="broadcaster" value="{{ $ads_broad['broadcaster'] }}" id="broadcaster">
-                            <div><a href="{{ route('agency_campaign.step4', ['id' => $id, 'broadcaster' => $ads_broad['broadcaster']]) }}"><img src="{{ asset($ads_broad['logo'] ? decrypt($ads_broad['logo']) : '')  }}"></a></div>
+                            <div><a href="{{ route('agency_campaign.step4', ['id' => $id, 'broadcaster' => $ads_broad['broadcaster']]) }}"><img src="{{ asset($ads_broad['logo'] ? $ads_broad['logo'] : '')  }}"></a></div>
                             <span class="small_faint">{{ $ads_broad['boradcaster_brand'] }}</span>
                         </div>
                     @endforeach

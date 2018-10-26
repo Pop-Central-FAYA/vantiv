@@ -47,7 +47,7 @@
                         <p><h2>No Adslot found for this criteria, please go back</h2></p>
                     @else
                         <div class='align_center one_media'>
-                            <div><img src="{{ asset($adslots['logo'] ? decrypt($adslots['logo']) : '') }}"></div>
+                            <div><img src="{{ asset($adslots['logo'] ? $adslots['logo'] : '') }}"></div>
                             <span class="small_faint"></span>
                             <p><br></p>
                             <p><br></p>
