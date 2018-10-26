@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
 
 class CreateBrandsTable extends Migration
 {
@@ -13,9 +14,13 @@ class CreateBrandsTable extends Migration
      */
     public function up()
     {
-        DB::statement("RENAME TABLE `brands` TO `brand_old`");
+        $db_connection = Schema::connection('api_db');
 
-        Schema::create('brands', function (Blueprint $table) {
+        if ($db_connection->hasTable('brands')) {
+            $db_connection->rename('brands', "brand_old");
+        }
+
+        $db_connection->create('brands', function (Blueprint $table) {
             $table->string('id');
             $table->string('name');
             $table->text('image_url');
@@ -25,7 +30,12 @@ class CreateBrandsTable extends Migration
             $table->timestamps();
         });
 
-        DB::statement("INSERT INTO brands (id, `name`, image_url, industry_code, sub_industry_code, slug, created_at, updated_at) SELECT id, `name`, image_url, industry_id, sub_industry_id, md5(`name`), time_created, time_modified FROM brand_old");
+        if ($db_connection->hasTable('brand_old')) {
+            DB::connection('api_db')->statement("
+                INSERT INTO brands (id, `name`, image_url, industry_code, sub_industry_code, slug, created_at, updated_at)
+                SELECT id, `name`, image_url, industry_id, sub_industry_id, md5(`name`), time_created, time_modified FROM brand_old");
+        }
+
     }
 
     /**
@@ -35,6 +45,12 @@ class CreateBrandsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('brands');
+        $db_connection = Schema::connection('api_db');
+
+        $db_connection->dropIfExists('brands');
+
+        if ($db_connection->hasTable('brand_old')) {
+            $db_connection->rename('brand_old', "brands");
+        }
     }
 }
