@@ -46,7 +46,7 @@
                     @else
                         @foreach($adslots as $adslot)
                             <div class='align_center one_media'>
-                                <div><img src="{{ asset($adslot['logo'] ? decrypt($adslot['logo']) : '') }}"></div>
+                                <div><img src="{{ asset($adslot['logo'] ? $adslot['logo'] : '') }}"></div>
                                 <span class="small_faint"></span>
                                 <p><br></p>
                                 <p><br></p>

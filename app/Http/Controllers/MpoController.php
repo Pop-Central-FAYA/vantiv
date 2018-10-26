@@ -3,6 +3,7 @@
 namespace Vanguard\Http\Controllers;
 
 use JD\Cloudder\Facades\Cloudder;
+use Vanguard\Libraries\AmazonS3;
 use Vanguard\Libraries\Api;
 use Illuminate\Http\Request;
 use Vanguard\Libraries\Utilities;
@@ -79,10 +80,10 @@ class MpoController extends Controller
     {
         $broadcaster_id = \Session::get('broadcaster_id');
         $mpos = Utilities::switch_db('api')->select("SELECT m_d.mpo_id, m_d.is_mpo_accepted, c_d.status as campaign_status, m_d.agency_id, m.campaign_id from mpoDetails as m_d
-                                                        INNER JOIN mpos as m ON m.id = m_d.mpo_id
-                                                        INNER JOIN campaignDetails as c_d ON c_d.campaign_id = m.campaign_id AND c_d.broadcaster = m_d.broadcaster_id
-                                                        where m_d.broadcaster_id = '$broadcaster_id' and m_d.mpo_id = '$mpo_id' AND c_d.broadcaster = '$broadcaster_id'
-                                                        and c_d.status = 'pending' OR c_d.status = 'file_error'");
+                                                         INNER JOIN mpos as m ON m.id = m_d.mpo_id and m_d.mpo_id = '$mpo_id'
+                                                         INNER JOIN campaignDetails as c_d ON c_d.campaign_id = m.campaign_id AND c_d.broadcaster = m_d.broadcaster_id
+                                                         where m_d.broadcaster_id = '$broadcaster_id' AND c_d.broadcaster = '$broadcaster_id'
+                                                         and c_d.status = 'pending' OR c_d.status = 'file_error'");
         $mpo_data = $this->getMpoCollection($mpos, $broadcaster_id);
         $reject_reasons = RejectionReason::all();
 
@@ -149,7 +150,7 @@ class MpoController extends Controller
         $broadcaster_name = $broadcaster_det[0]->brand;
 
         foreach ($mpos as $mpo) {
-            $n = 1;
+
             $campaign = Utilities::switch_db('api')->select("SELECT c.name, c.product, c.time_created, b.name as brand_name, i.invoice_number from campaignDetails as c
                                                                   INNER JOIN brands as b ON c.brand = b.id JOIN invoices as i ON i.campaign_id = c.campaign_id
                                                                   where c.campaign_id = '$mpo->campaign_id'");
@@ -229,41 +230,13 @@ class MpoController extends Controller
 
     public function updateFiles(Request $request, $file_id)
     {
-
         $file = File::where('id', $file_id)->first();
-        $time_picked = (int)$file->time_picked;
-        if(((int)$request->f_du) > $time_picked){
-            $message = 'Your file duration cannot be more than '.$time_picked.' Seconds';
-            \Session::flash('error', $message);
-            return redirect()->back();
-        }
-
-        $expected_extensions = ['avi', 'mp3', 'mp4', 'mpeg4', 'ogg'];
-        if($request->hasFile('uploads')){
-            $file_extention = $request->file('uploads')->getClientOriginalExtension();
-            if(!in_array($file_extention,$expected_extensions)){
-                \Session::flash('error', 'File extension not valid');
-                return redirect()->back();
-            }
-        }
-
-        $filesUploads = $request->uploads;
-        try {
-            $filename = $filesUploads->getRealPath();
-            Cloudder::uploadVideo($filename, Cloudder::getPublicId());
-            $clouder = Cloudder::getResult();
-        }catch (\Exception $e){
-            \Session::flash('error', 'Your file could not be processed for uploads');
-            return redirect()->back();
-        }
 
         try {
-            \DB::transaction(function () use ($file, $filesUploads, $clouder) {
-                $file->file_name = $filesUploads->getClientOriginalName();
-                // $file->file_url = encrypt($clouder['url']);
-                $file->file_url = encrypt($clouder['secure_url']);
-                $file->public_id = $clouder['public_id'];
-                $file->format = $clouder['format'];
+            \DB::transaction(function () use ($file,$request) {
+                $file->file_name = $request->file_name;
+                $file->file_url = $request->file_url;
+                $file->format = $request->file_format;
                 $file->status = 'pending';
                 $file->save();
 
@@ -275,13 +248,10 @@ class MpoController extends Controller
 
             });
         }catch (\Exception $e){
-            \Session::flash('error', 'An error occurred while performing your request');
-            return redirect()->back();
+            return response()->json(['error' => 'error']);
         }
 
-        \Session::flash('success', 'File updated successfully');
-        return redirect()->back();
-
+        return response()->json(['success' => 'success']);
 
     }
 

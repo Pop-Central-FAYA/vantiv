@@ -153,9 +153,9 @@ Class Api
     {
         return File::where('campaign_id', $campaign_id)
                     ->where('broadcaster_id', $broadcaster)
-                    ->where('status', 'pending')
-                    ->orWhere('status', 'rejected')
+                    ->whereIn('status', array('pending', 'rejected'))
                     ->get();
+
     }
 
     public static function getRejectedFiles($campaign_id, $broadcaster)
@@ -306,7 +306,7 @@ Class Api
 
         $start_date = date('Y-m-d', strtotime($campsign_details[0]->start_date));
 
-        $url = decrypt($check_file[0]->file_url);
+        $url = $check_file[0]->file_url;
 
         $explode = explode('.', $url);
         $extension = end($explode);

@@ -11,13 +11,21 @@ Class AmazonS3
     const EXPIRATION = '+60 minutes';
     const S3_BUCKET = 'MEDIA_BUCKET';
 
-    public static function generatePreSignedUrl($filename, $folder)
+    private static function createNewS3Client()
     {
-        $filename = uniqid().'-'.$filename;
         $s3Client = S3Client::factory(array(
             'region' => getenv(self::ENV_REGION),
             'version' => '2006-03-01'
         ));
+
+        return $s3Client;
+    }
+
+    public static function generatePreSignedUrl($filename, $folder)
+    {
+        $filename = uniqid().'-'.$filename;
+
+        $s3Client = AmazonS3::createNewS3Client();
 
         $cmd = $s3Client->getCommand('PutObject', [
             'Bucket' => getenv(self::S3_BUCKET),
@@ -31,10 +39,7 @@ Class AmazonS3
 
     public static function uploadToS3FromPath($pathToFile, $slug)
     {
-        $s3Client = S3Client::factory(array(
-            'region' => getenv(self::ENV_REGION),
-            'version' => '2006-03-01'
-        ));
+        $s3Client = AmazonS3::createNewS3Client();
 
         $result = $s3Client->putObject(array(
             'Bucket'     => getenv(self::S3_BUCKET),

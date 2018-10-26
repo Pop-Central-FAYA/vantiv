@@ -47,7 +47,7 @@
                     @foreach($ads_broads as $ads_broad)
                         <div class='align_center one_media broad_click @if($ads_broad['broadcaster'] === $broadcaster) active @endif'>
                             <input type="hidden" name="broadcaster" value="{{ $ads_broad['broadcaster'] }}" id="broadcaster">
-                            <div><a href="{{ route('agency_campaign.step4', ['id' => $id, 'broadcaster' => $ads_broad['broadcaster']]) }}"><img src="{{ asset($ads_broad['logo'] ? decrypt($ads_broad['logo']) : '')  }}"></a></div>
+                            <div><a href="{{ route('agency_campaign.step4', ['id' => $id, 'broadcaster' => $ads_broad['broadcaster']]) }}"><img src="{{ asset($ads_broad['logo'] ? $ads_broad['logo'] : '')  }}"></a></div>
                             <span class="small_faint">{{ $ads_broad['boradcaster_brand'] }}</span>
                         </div>
                     @endforeach
@@ -161,7 +161,7 @@
                                 <tr>
                                     @if($datas[$i]->uploads && $datas[$i]->channel === $rating->channels)
                                         <td>{{ $j }}</td>
-                                        <td><div class="col-md-3"> <video width="150" controls><source src="{{ asset(decrypt($datas[$i]->uploads)) }}"></video> </div></td>
+                                        <td><div class="col-md-3"> <video width="150" controls><source src="{{ asset($datas[$i]->uploads) }}"></video> </div></td>
                                         <input type="hidden" name="file" class="file{{ $rating->id.$datas[$i]->id }}" value="{{ $datas[$i]->uploads }}">
                                         <td><div class="col-md-3"><span style="margin-left:15%"></span>{{ $datas[$i]->time }} Seconds</div></td>
                                         @if($datas[$i]->time === 15)

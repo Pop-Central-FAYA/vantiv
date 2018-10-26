@@ -414,7 +414,6 @@
                         cache : false,
                         data: {filename : file.name, folder: 'client-images/'},
                         success: function (data) {
-                            console.log(data);
                             $.ajax({
                                 xhr: function() {
                                     var xhr = new window.XMLHttpRequest();
