@@ -66,5 +66,7 @@ clean-run:
 fresh-run: clean-run run-local
 ### Need to do more work for this to update
 
+fresh-run-no-build: clean-run
+	docker-compose up -d
 # update-service: push-image ## Update the service after pushing
 # 	@if [ -z $(env) ]; then echo "env variable is not set" && exit 1; else echo "env=$(env)"; fi

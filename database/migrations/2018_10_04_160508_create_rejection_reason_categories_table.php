@@ -13,7 +13,7 @@ class CreateRejectionReasonCategoriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('rejection_reason_categories', function (Blueprint $table) {
+        Schema::connection('api_db')->create('rejection_reason_categories', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
             $table->timestamps();
@@ -27,6 +27,6 @@ class CreateRejectionReasonCategoriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('rejection_reason_categories');
+        Schema::connection('api_db')->dropIfExists('rejection_reason_categories');
     }
 }

@@ -13,8 +13,23 @@ class AlterFileDateColumn extends Migration
      */
     public function up()
     {
-        DB::statement("ALTER TABLE `files` CHANGE time_created created_at TIMESTAMP DEFAULT now(),
-					                              CHANGE time_modified updated_at TIMESTAMP DEFAULT now() ");
+        DB::connection('api_db')->statement("
+            ALTER TABLE `files`
+                CHANGE time_created created_at TIMESTAMP DEFAULT now(),
+                CHANGE time_modified updated_at TIMESTAMP DEFAULT now()
+            "
+        );
+    }
+
+    public function down()
+    {
+
+        DB::connection('api_db')->statement("
+            ALTER TABLE `files`
+                CHANGE created_at time_created TIMESTAMP,
+                CHANGE updated_at time_modified TIMESTAMP
+            "
+        );
     }
 
 }

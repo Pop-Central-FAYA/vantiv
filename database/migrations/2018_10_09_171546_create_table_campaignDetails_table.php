@@ -13,7 +13,9 @@ class CreateTableCampaignDetailsTable extends Migration
      */
     public function up()
     {
-        DB::statement('ALTER TABLE `campaignDetails` MODIFY `status` char(10)');
+        DB::connection('api_db')->statement("
+            ALTER TABLE `campaignDetails` MODIFY `status` CHAR(10)"
+        );
     }
 
     /**

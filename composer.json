@@ -32,7 +32,9 @@
         "fabpot/goutte": "^3.2",
         "doctrine/dbal": "^2.8",
         "fideloper/proxy": "^3.3",
-        "aws/aws-sdk-php": "^3.69"
+        "aws/aws-sdk-php": "^3.69",
+        "laravel/tinker": "^1.0",
+        "jeremykenedy/laravel-users": "1.4.0"
     },
     "require-dev": {
         "symfony/css-selector": "~3.0",

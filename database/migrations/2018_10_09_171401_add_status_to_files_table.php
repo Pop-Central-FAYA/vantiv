@@ -13,7 +13,9 @@ class AddStatusToFilesTable extends Migration
      */
     public function up()
     {
-        DB::statement("ALTER TABLE `files` MODIFY `status` char(10) not null default 'pending' ");
+        DB::connection('api_db')->statement("
+            ALTER TABLE `files` MODIFY `status` CHAR(10) NOT NULL DEFAULT 'pending'"
+        );
     }
 
     /**
@@ -23,8 +25,8 @@ class AddStatusToFilesTable extends Migration
      */
     public function down()
     {
-        Schema::table('files', function (Blueprint $table) {
-            $table->dropColumn('status');
-        });
+        DB::connection('api_db')->statement("
+            ALTER TABLE `files` MODIFY `status` TINYINT(4) NOT NULL DEFAULT '1'"
+        );
     }
 }
