@@ -140,7 +140,7 @@ class ProfileManagementsController extends Controller
 
         $image = $request->image_url;
         $filename = realpath($image);
-        $key = 'profile-images/'.$image->getClientOriginalName();
+        $key = 'profile-images/'.uniqid().'-'.$image->getClientOriginalName();
         $image_url = AmazonS3::uploadToS3FromPath($filename, $key);
         return $image_url;
     }
