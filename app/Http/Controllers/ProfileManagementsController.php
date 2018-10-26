@@ -3,6 +3,7 @@
 namespace Vanguard\Http\Controllers;
 
 use Vanguard\Http\Requests\ProfileUpdateRequest;
+use Vanguard\Libraries\AmazonS3;
 use Vanguard\Libraries\Api;
 use Vanguard\Libraries\Utilities;
 use Auth;
@@ -139,12 +140,9 @@ class ProfileManagementsController extends Controller
 
         $image = $request->image_url;
         $filename = realpath($image);
-        Cloudder::upload($filename, Cloudder::getPublicId(), ['height' => 200, 'width' => 200]);
-        $clouder = Cloudder::getResult();
-        // $image_path = encrypt($clouder['url']);
-        $image_path = encrypt($clouder['secure_url']);
-
-        return $image_path;
+        $key = 'profile-images/'.$image->getClientOriginalName();
+        $image_url = AmazonS3::uploadToS3FromPath($filename, $key);
+        return $image_url;
     }
 
     public function validatePassword($request, $u_id)

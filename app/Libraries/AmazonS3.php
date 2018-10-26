@@ -46,7 +46,6 @@ Class AmazonS3
             'Key'        => $slug,
             'SourceFile' => $pathToFile,
         ));
-        dd($result);
         return $result['ObjectURL'];
     }
 
