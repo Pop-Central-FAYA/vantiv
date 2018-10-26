@@ -57,7 +57,7 @@ class BrandsController extends Controller
                 'date' => $all_brand->created_at,
                 'count_brand' => count($all_brands),
                 'campaigns' => count($campaigns),
-                'image_url' => Utilities::returnImageWhenNotEncrypted($all_brand->image_url),
+                'image_url' => $all_brand->image_url,
                 'last_campaign' => $campaigns ? $campaigns[$last_count_campaign]->name : 'none',
                 'total' => number_format($pay[0]->total,2),
                 'industry_id' => $all_brand->industry_code,
