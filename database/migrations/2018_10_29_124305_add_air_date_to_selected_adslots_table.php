@@ -14,7 +14,7 @@ class AddAirDateToSelectedAdslotsTable extends Migration
     public function up()
     {
         Schema::table('selected_adslots', function (Blueprint $table) {
-            $table->timestamp('air_date');
+            $table->date('air_date');
         });
     }
 

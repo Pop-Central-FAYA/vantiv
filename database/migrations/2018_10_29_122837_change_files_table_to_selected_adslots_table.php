@@ -17,4 +17,11 @@ class ChangeFilesTableToSelectedAdslotsTable extends Migration
         }
     }
 
+    public function down()
+    {
+        if(Schema::hasTable('selected_adslots')){
+            Schema::rename('selected_adslots', 'files');
+        }
+    }
+
 }

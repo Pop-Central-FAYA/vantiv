@@ -19,4 +19,12 @@ class ChangeFileIdToSelectedAdslotIdInAdslotReasonTable extends Migration
         });
     }
 
+    public function down()
+    {
+        Schema::table('adslot_reason', function($table)
+        {
+            $table->renameColumn('selected_adslot_id', 'file_id');
+        });
+    }
+
 }
