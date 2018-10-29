@@ -322,7 +322,7 @@
                                         <td>
                                             <p>{{ $uploaded_file->adslot_reasons()->orderBy('updated_at', 'desc')->first()->recommendation }}</p>
                                         </td>
-                                        @if($uploaded_file->id === $uploaded_file->rejection_reasons()->orderBy('updated_at', 'desc')->first()->pivot->file_id)
+                                        @if($uploaded_file->id === $uploaded_file->rejection_reasons()->orderBy('updated_at', 'desc')->first()->pivot->selected_adslot_id)
                                             <td>
                                                 <div class="progress{{ $uploaded_file->id }}">
 

@@ -16,9 +16,9 @@ class RejectionReason extends Model
         return $this->belongsTo(RejectionReasonCategory::class);
     }
 
-    public function files()
+    public function selected_adslots()
     {
-        return $this->belongsToMany(File::class, 'file_rejection_reason', 'rejection_reason_id', 'file_id');
+        return $this->belongsToMany(SelectedAdslot::class, 'file_rejection_reason', 'rejection_reason_id', 'selected_adslot_id');
     }
 
     public function adslot_reasons()

@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use JD\Cloudder\Facades\Cloudder;
 use Vanguard\Models\BrandClient;
-use Vanguard\Models\File;
+use Vanguard\Models\SelectedAdslot;
 
 class Utilities {
 
@@ -136,7 +136,7 @@ class Utilities {
 
         $files = Utilities::switch_db('api')->select("SELECT f.id, f.user_id, f.broadcaster_id, f.file_url, f.time_picked, f.status,
                                                                 f.file_name, f.format, a.from_to_time, a.min_age, a.max_age,
-                                                                d_p.day_parts, t.audience, r.region, h.time_range, d.day, b.brand from files as f,
+                                                                d_p.day_parts, t.audience, r.region, h.time_range, d.day, b.brand from selected_adslots as f,
                                                                 dayParts as d_p, adslots as a, targetAudiences as t, regions as r, days as d,
                                                                 hourlyRanges as h, rateCards as r_c, broadcasters as b where f.broadcaster_id = b.id and
                                                                 f.adslot = a.id and a.day_parts = d_p.id and a.target_audience = t.id and
@@ -146,7 +146,7 @@ class Utilities {
         if($broadcaster_id){
             $files = Utilities::switch_db('api')->select("SELECT f.id, f.user_id, f.broadcaster_id, f.file_url, f.time_picked, f.status,
                                                               f.file_name, f.format, a.from_to_time, a.min_age, a.max_age, d_p.day_parts,
-                                                              t.audience, r.region, h.time_range, d.day, b.brand from files as f, dayParts as d_p, adslots as a,
+                                                              t.audience, r.region, h.time_range, d.day, b.brand from selected_adslots as f, dayParts as d_p, adslots as a,
                                                               targetAudiences as t, regions as r, days as d, hourlyRanges as h, rateCards as r_c, broadcasters as b
                                                               where f.broadcaster_id = b.id and f.adslot = a.id and a.day_parts = d_p.id and a.target_audience = t.id
                                                                and a.region = r.id and a.rate_card = r_c.id and h.id = r_c.hourly_range_id and r_c.day = d.id and
@@ -200,9 +200,9 @@ class Utilities {
         }
 
         if($broadcaster_id){
-            $uploaded_files = File::where([['campaign_id', $campaign_id], ['broadcaster_id', $broadcaster_id]])->get();
+            $uploaded_files = SelectedAdslot::where([['campaign_id', $campaign_id], ['broadcaster_id', $broadcaster_id]])->get();
         }else if($agency_id){
-            $uploaded_files = File::where('campaign_id', $campaign_id)->get();
+            $uploaded_files = SelectedAdslot::where('campaign_id', $campaign_id)->get();
 
         }
 

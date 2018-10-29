@@ -8,7 +8,7 @@ use Vanguard\Libraries\Api;
 use Illuminate\Http\Request;
 use Vanguard\Libraries\Utilities;
 use Vanguard\Models\AdslotReason;
-use Vanguard\Models\File;
+use Vanguard\Models\SelectedAdslot;
 use Vanguard\Models\RejectionReason;
 use Yajra\DataTables\DataTables;
 
@@ -106,21 +106,21 @@ class MpoController extends Controller
 //            $add = Api::addFile($file_code);
         try {
             \DB::transaction(function () use ($file_code, $status, $campaign_id, $broadcaster_id, $mpo_id, $rejection_reasons, $recommendation) {
-                $file = File::where('file_code', $file_code)->first();
-                $file->status = $status;
+                $file = SelectedAdslot::where('file_code', $file_code)->first();
 
                 if($status == 'rejected'){
                     foreach ($rejection_reasons as $rejection_reason){
                         AdslotReason::create([
-                           'file_id' => $file->id,
+                           'selected_adslot_id' => $file->id,
                            'rejection_reason_id' => (int)$rejection_reason,
                             'user_id' => $broadcaster_id,
                             'recommendation' => $recommendation
                         ]);
                     }
                 }
+                $file->status = $status;
                 $file->save();
-                $check_for_rejected_files = File::where([['campaign_id', $campaign_id],['status', 'rejected']])->first();
+                $check_for_rejected_files = SelectedAdslot::where([['campaign_id', $campaign_id],['status', 'rejected']])->first();
                 if($check_for_rejected_files){
                     Utilities::switch_db('api')->update("UPDATE campaignDetails set status = 'file_errors' WHERE campaign_id = '$campaign_id'");
                 }
@@ -230,7 +230,7 @@ class MpoController extends Controller
 
     public function updateFiles(Request $request, $file_id)
     {
-        $file = File::where('id', $file_id)->first();
+        $file = SelectedAdslot::where('id', $file_id)->first();
 
         try {
             \DB::transaction(function () use ($file,$request) {
@@ -240,7 +240,7 @@ class MpoController extends Controller
                 $file->status = 'pending';
                 $file->save();
 
-                $campaign_file_error = File::where([['campaign_id', $file->campaign_id],['status', 'file_errors']])->first();
+                $campaign_file_error = SelectedAdslot::where([['campaign_id', $file->campaign_id],['status', 'file_errors']])->first();
                 if(!$campaign_file_error){
                     Utilities::switch_db('api')->update("UPDATE campaignDetails set status = 'pending' WHERE campaign_id = '$file->campaign_id'");
                 }

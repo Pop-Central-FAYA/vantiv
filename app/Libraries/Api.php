@@ -2,12 +2,8 @@
 
 namespace Vanguard\Libraries;
 
-use Hamcrest\Util;
 use Illuminate\Support\Facades\Session;
-use Ixudra\Curl\Facades\Curl;
-use Vanguard\ApiLog;
-use Vanguard\Http\Requests\Request;
-use Vanguard\Models\File;
+use Vanguard\Models\SelectedAdslot;
 
 Class Api
 {
@@ -144,14 +140,14 @@ Class Api
 
     public static function getCampaignFiles($campaign_id)
     {
-        $files = Utilities::switch_db('reports')->select("SELECT * FROM files WHERE campaign_id = '$campaign_id'");
+        $files = SelectedAdslot::where('campaign_id', $campaign_id)->get();
 
         return $files;
     }
 
     public static function getOutstandingFiles($campaign_id, $broadcaster)
     {
-        return File::where('campaign_id', $campaign_id)
+        return SelectedAdslot::where('campaign_id', $campaign_id)
                     ->where('broadcaster_id', $broadcaster)
                     ->whereIn('status', array('pending', 'rejected'))
                     ->get();
@@ -160,7 +156,7 @@ Class Api
 
     public static function getRejectedFiles($campaign_id, $broadcaster)
     {
-        return File::where([['campaign_id', $campaign_id], ['status', 'rejected'], ['broadcaster_id', $broadcaster]])->get();
+        return SelectedAdslot::where([['campaign_id', $campaign_id], ['status', 'rejected'], ['broadcaster_id', $broadcaster]])->get();
     }
 
     public static function countClients($agency_id)
@@ -240,7 +236,7 @@ Class Api
 
     public static function countFiles($advertiser_id)
     {
-        $files = Utilities::switch_db('api')->select("SELECT * FROM files where agency_id = '$advertiser_id'");
+        $files = SelectedAdslot::where('agency_id', $advertiser_id)->get();
         return count($files);
     }
 
@@ -252,7 +248,7 @@ Class Api
         foreach ($campaigns as $campaign){
                 $adslots = Utilities::switch_db('api')->select("SELECT * from adslots where id IN ($campaign->adslots_id) ORDER BY time_created DESC");
                 foreach ($adslots as $adslot){
-                    $files = Utilities::switch_db('api')->select("SELECT * from files where adslot = '$adslot->id' AND campaign_id = '$campaign->campaign_id'");
+                    $files = SelectedAdslot::where([['adslot', $adslot->id], ['campaign_id', $campaign->campaign_id]])->get();
                     $adslot_arrays[] = [
                         'file' => $files,
                     ];
@@ -286,15 +282,15 @@ Class Api
 
         $broadcaster = Session::get('broadcaster_id');
 
-        $check_file = Utilities::switch_db('api')->select("SELECT * from files where file_code = '$id'");
+        $check_file = SelectedAdslot::where('file_code', $id)->first();
 
-        if($check_file[0]->airbox_status === 1){
+        if($check_file->airbox_status === 1){
             return response()->json(['file_code' => $id], 200);
         }
 
-        $adslot_id = $check_file[0]->adslot;
+        $adslot_id = $check_file->adslot;
 
-        $campaign_id = $check_file[0]->campaign_id;
+        $campaign_id = $check_file->campaign_id;
 
         $campsign_details = Utilities::switch_db('api')->select("SELECT * from campaignDetails where campaign_id = '$campaign_id' and broadcaster = '$broadcaster'");
 
@@ -306,36 +302,38 @@ Class Api
 
         $start_date = date('Y-m-d', strtotime($campsign_details[0]->start_date));
 
-        $url = $check_file[0]->file_url;
+        $url = $check_file->file_url;
 
-        $explode = explode('.', $url);
-        $extension = end($explode);
+        try {
+            $explode = explode('.', $url);
+            $extension = end($explode);
 
-        $destination_file = "/media/ridwan/RIDWAN/Files/".$check_file[0]->file_code.".".$extension;
+            $destination_file = "/media/ridwan/RIDWAN/Files/".$check_file->file_code.".".$extension;
 
-        $ci = curl_init();
+            $ci = curl_init();
 
-        $fp = fopen($destination_file, "x+"); // Destination location
-        curl_setopt_array( $ci, array(
-            CURLOPT_URL => $url,
-            CURLOPT_TIMEOUT => 3600,
-            CURLOPT_FILE => $fp
-        ));
-        $contents = curl_exec($ci); // Returns '1' if successful
-        curl_close($ci);
-        fclose($fp);
+            $fp = fopen($destination_file, "x+"); // Destination location
+            curl_setopt_array( $ci, array(
+                CURLOPT_URL => $url,
+                CURLOPT_TIMEOUT => 3600,
+                CURLOPT_FILE => $fp
+            ));
+            $contents = curl_exec($ci); // Returns '1' if successful
+            curl_close($ci);
+            fclose($fp);
 
-        $destination_xml = "/media/ridwan/RIDWAN/Playlists/".$check_file[0]->file_code.".xml";
-        $xml = '<?xml version="1.0" encoding="utf-8"?>
-                <PBPlaylist id="'.$check_file[0]->file_code.'"><ITEM id="'.$check_file[0]->file_code.'" type="video_clip" file="H:/Files/'.$check_file[0]->file_code.".".$extension.'" outp="'.$check_file[0]->time_picked.'" duration="'.$check_file[0]->time_picked.'" isdynamicmedia="true" title="Test"/></PBPlaylist>';
+            $destination_xml = "/media/ridwan/RIDWAN/Playlists/".$check_file->file_code.".xml";
+            $xml = '<?xml version="1.0" encoding="utf-8"?>
+                <PBPlaylist id="'.$check_file->file_code.'"><ITEM id="'.$check_file->file_code.'" 
+                type="video_clip" file="H:/Files/'.$check_file->file_code.".".$extension.'" outp="'.$check_file->time_picked.'"
+                 duration="'.$check_file->time_picked.'" isdynamicmedia="true" title="Test"/></PBPlaylist>';
 
-        file_put_contents($destination_xml, $xml);
+            file_put_contents($destination_xml, $xml);
 
-        $update_file = Utilities::switch_db('api')->update("UPDATE files set airbox_status = 1 WHERE file_code = '$id'");
-
-        if($update_file){
+            $check_file->airbox_status = 1;
+            $check_file->save();
             return $id;
-        }else{
+        }catch(\Exception $e){
             return response()->json(['error' => 'Error Occured'], 500);
         }
 
@@ -343,12 +341,12 @@ Class Api
 
     public static function approvedCampaignFiles($campaign_id, $broadcaster_id)
     {
-        $allFiles = File::where([
+        $allFiles = SelectedAdslot::where([
            ['campaign_id', $campaign_id],
            ['broadcaster_id', $broadcaster_id]
         ])->get();
 
-        $approvedFiles = File::where([
+        $approvedFiles = SelectedAdslot::where([
            ['campaign_id', $campaign_id],
            ['status', 'approved'],
            ['broadcaster_id', $broadcaster_id]
