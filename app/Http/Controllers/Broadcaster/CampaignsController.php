@@ -14,7 +14,7 @@ use Vanguard\Libraries\Api;
 use Vanguard\Libraries\Maths;
 use Vanguard\Libraries\Paystack;
 use Vanguard\Libraries\Utilities;
-use Vanguard\Models\File;
+use Vanguard\Models\SelectedAdslot;
 use Yajra\Datatables\Datatables;
 use Carbon\Carbon;
 use Session;
@@ -739,7 +739,7 @@ class CampaignsController extends Controller
             foreach($queries as $query)
             {
                 $file_array = Utilities::campaignFileInformation($campaign_details, $query, $id, $now, null, $broadcaster_id);
-                File::create($file_array);
+                SelectedAdslot::create($file_array);
             }
             $pay[] = Utilities::campaignPaymentInformation($pay_id, $campaign_details, $request, $now, $first);
             $payDetails[] = Utilities::campaignPaymentDetailsInformation($pay_id, $request, null, $walkin_id, $now, null, $first, $calc, $broadcaster_id);

@@ -13,7 +13,7 @@ class Adslot extends Model
 
     public function files()
     {
-        return $this->hasMany(File::class);
+        return $this->hasMany(SelectedAdslot::class);
     }
 
     public function get_rate_card()

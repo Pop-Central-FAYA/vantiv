@@ -11,7 +11,7 @@ use Vanguard\Http\Controllers\Controller;
 use Vanguard\Http\Requests\CampaignInformationUpdateRequest;
 use Vanguard\Libraries\Api;
 use Vanguard\Libraries\Utilities;
-use Vanguard\Models\File;
+use Vanguard\Models\SelectedAdslot;
 use Yajra\DataTables\DataTables;
 use Session;
 
@@ -267,10 +267,16 @@ class CampaignsController extends Controller
         $first = Session::get('first_step');
         $agency_id = Session::get('agency_id');
         $insert = Utilities::storeCart($request, $first, $agency_id, null);
-        if($insert){
-            return response()->json(['success' => 'success']);
-        }else{
+        if($insert === 'file_error'){
+            return response()->json(['file_error' => 'file_error']);
+        }elseif($insert === 'budget_exceed_error'){
+            return response()->json(['budget_exceed_error' => 'budget_exceed_error']);
+        }elseif($insert === 'error'){
+            return response()->json(['error' => 'error']);
+        }elseif(!$insert){
             return response()->json(['failure' => 'failure']);
+        }else{
+            return response()->json(['success' => 'success']);
         }
     }
 
@@ -635,7 +641,7 @@ class CampaignsController extends Controller
                 $campaign_details = Utilities::switch_db('api')->select("SELECT * from campaigns WHERE id='$campaign_id'");
                 foreach($queries as $query)
                 {
-                    File::create(Utilities::campaignFileInformation($campaign_details, $query, $id, $now, $agency_id, null));
+                    SelectedAdslot::create(Utilities::campaignFileInformation($campaign_details, $query, $id, $now, $agency_id, null));
                 }
                 $payments[] = Utilities::campaignPaymentInformation($pay_id, $campaign_details, $request, $now, $first);
                 foreach ($group_data as $group_datum){

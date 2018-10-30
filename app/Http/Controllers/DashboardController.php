@@ -9,7 +9,7 @@ use Vanguard\Libraries\AmazonS3;
 use Vanguard\Libraries\Api;
 use Vanguard\Libraries\Utilities;
 use Vanguard\Models\Brand;
-use Vanguard\Models\File;
+use Vanguard\Models\SelectedAdslot;
 use Vanguard\Repositories\Activity\ActivityRepository;
 use Vanguard\Repositories\User\UserRepository;
 use Vanguard\Support\Enum\UserStatus;

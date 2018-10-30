@@ -13,9 +13,11 @@ class AddStatusToFilesTable extends Migration
      */
     public function up()
     {
-        DB::connection('api_db')->statement("
+        if(Schema::hasTable('files')){
+            DB::connection('api_db')->statement("
             ALTER TABLE `files` MODIFY `status` CHAR(10) NOT NULL DEFAULT 'pending'"
-        );
+            );
+        }
     }
 
     /**
