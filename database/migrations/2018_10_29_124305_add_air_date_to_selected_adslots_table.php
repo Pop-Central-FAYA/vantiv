@@ -26,7 +26,7 @@ class AddAirDateToSelectedAdslotsTable extends Migration
     public function down()
     {
         Schema::table('selected_adslots', function (Blueprint $table) {
-            $table->dropIfExists('air_date');
+            $table->dropColumn('air_date');
         });
     }
 }
