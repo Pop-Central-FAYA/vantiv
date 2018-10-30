@@ -790,7 +790,7 @@ class CampaignsController extends Controller
                 $api_db->update("UPDATE adslots SET time_used = '$new_time_used', is_available = '$slot_status' WHERE id = '$slots_id'");
             }
             \DB::delete("DELETE FROM carts WHERE user_id = '$id'");
-            \DB::delete("DELETE FROM uploads WHERE user_id = '$id'");
+            Upload::where('user_id', $id)->delete();
         });
 
     }

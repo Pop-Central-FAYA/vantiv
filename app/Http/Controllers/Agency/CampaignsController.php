@@ -12,6 +12,7 @@ use Vanguard\Http\Requests\CampaignInformationUpdateRequest;
 use Vanguard\Libraries\Api;
 use Vanguard\Libraries\Utilities;
 use Vanguard\Models\SelectedAdslot;
+use Vanguard\Models\Upload;
 use Yajra\DataTables\DataTables;
 use Session;
 
@@ -159,7 +160,10 @@ class CampaignsController extends Controller
     public function getStep3($id)
     {
         $agency_id = Session::get('agency_id');
-        $delete_uploads_without_files = \DB::delete("DELETE from uploads where user_id = '$id' AND time = 0");
+        Upload::where([
+            ['user_id', $id],
+            ['time', 0]
+        ])->delete();
 
         $step1 = Session::get('first_step');
 
@@ -182,8 +186,16 @@ class CampaignsController extends Controller
 
     public function postStep3($id)
     {
-        $uploads = Utilities::uploadMedia();
-        return response()->json(['success' => 'success']);
+        $upload = Utilities::uploadMedia();
+        if($upload === 'error'){
+            return response()->json(['error' => 'error']);
+        }elseif($upload === 'error_number'){
+            return response()->json(['error_number' => 'error_number']);
+        }elseif($upload === 'error_check_image'){
+            return response()->json(['error_check_image' => 'error_check_image']);
+        }elseif($upload === 'success'){
+            return response()->json(['success' => 'success']);
+        }
     }
 
     public function getStep3_1($id)
@@ -196,7 +208,10 @@ class CampaignsController extends Controller
         $first_step = Session::get('first_step');
         foreach($first_step->channel as $channel){
             $channel_name = Utilities::switch_db('api')->select("SELECT * FROM campaignChannels where id = '$channel'");
-            $get_uploaded_files = \DB::select("SELECT * from uploads where user_id = '$id' AND channel = '$channel'");
+            $get_uploaded_files = Upload::where([
+                ['user_id', $id],
+                ['channel', $channel]
+            ])->get();
             $count_files = count($get_uploaded_files);
             if($count_files === 0){
                 $msg = 'You have not uploaded any file(s) for '.$channel_name[0]->channel;
@@ -205,7 +220,7 @@ class CampaignsController extends Controller
             }else{
                 $remaining_file = 4 - $count_files;
                 for ($i = 0; $i < $remaining_file; $i++){
-                    $insert_upload = \DB::table('uploads')->insert([
+                    Upload::create([
                         'user_id' => $id,
                         'time' => 00,
                         'channel' => $channel
@@ -247,7 +262,7 @@ class CampaignsController extends Controller
 
         $time = [15, 30, 45, 60];
 
-        $data = \DB::select("SELECT * from uploads WHERE user_id = '$id'");
+        $uploads_data = Upload::where('user_id', $id)->get();
         $cart = \DB::select("SELECT * from carts WHERE user_id = '$id'");
         $total_cart = \DB::select("SELECT SUM(total_price) as total from carts where user_id = '$id'");
         $positions = Utilities::switch_db('api')->select("SELECT * from filePositions where broadcaster_id = '$broadcaster'");
@@ -259,7 +274,16 @@ class CampaignsController extends Controller
         $entries = new LengthAwarePaginator($currentPageSearchResults, count($col), $perPage);
         $entries->setPath('/agency/campaigns/campaign/step4/'.$id.'/'.$broadcaster);
 
-        return view('agency.campaigns.create4')->with('ratecards', $entries)->with('total_amount', $total_cart)->with('ads_broads', $ads_broad)->with('cart', $cart)->with('datas', $data)->with('times', $time)->with('id', $id)->with('broadcaster', $broadcaster)->with('positions', $positions)->with('adslots', $adslots);
+        return view('agency.campaigns.create4')->with('ratecards', $entries)
+                                                    ->with('total_amount', $total_cart)
+                                                    ->with('ads_broads', $ads_broad)
+                                                    ->with('cart', $cart)
+                                                    ->with('uploaded_data', $uploads_data)
+                                                    ->with('times', $time)
+                                                    ->with('id', $id)
+                                                    ->with('broadcaster', $broadcaster)
+                                                    ->with('positions', $positions)
+                                                    ->with('adslots', $adslots);
     }
 
     public function postCart(Request $request)
@@ -682,7 +706,7 @@ class CampaignsController extends Controller
                     }
                     Utilities::switch_db('api')->update("UPDATE adslots SET time_used = '$new_time_used', is_available = '$slot_status' WHERE id = '$slots_id'");
                     \DB::delete("DELETE FROM carts WHERE user_id = '$user_id' AND agency_id = '$agency_id'");
-                    \DB::delete("DELETE FROM uploads WHERE user_id = '$user_id'");
+                    Upload::where('user_id', $user_id)->delete();
                     $description = 'Campaign '.$first->campaign_name.' created successfully by '.Session::get('agency_id');
                     Api::saveActivity($agency_id, $description);
                 }
