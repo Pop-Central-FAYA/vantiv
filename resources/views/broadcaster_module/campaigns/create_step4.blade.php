@@ -146,31 +146,31 @@
                         </thead>
                         <tbody>
                         <?php $j = 1; for($i = 0; $i < count($times); $i++){ ?>
-                        @if( ($rating->time_difference - $rating->time_used) >= $datas[$i]->time)
+                        @if( ($rating->time_difference - $rating->time_used) >= $uploaded_data[$i]->time)
                             <tr>
-                                @if($datas[$i]->uploads && $datas[$i]->channel === $rating->channels)
+                                @if($uploaded_data[$i]->file_url && $uploaded_data[$i]->channel === $rating->channels)
                                     <td>{{ $j }}</td>
-                                    <td><div class="col-md-3"> <video width="150" controls><source src="{{ asset($datas[$i]->uploads) }}"></video> </div></td>
-                                    <input type="hidden" name="file" class="file{{ $rating->id.$datas[$i]->id }}" value="{{ $datas[$i]->uploads }}">
-                                    <td><div class="col-md-3"><span style="margin-left:15%"></span>{{ $datas[$i]->time }} Seconds</div></td>
-                                    @if($datas[$i]->time === 15)
+                                    <td><div class="col-md-3"> <video width="150" controls><source src="{{ asset($uploaded_data[$i]->file_url) }}"></video> </div></td>
+                                    <input type="hidden" name="file" class="file{{ $rating->id.$uploaded_data[$i]->id }}" value="{{ $uploaded_data[$i]->file_url }}">
+                                    <td><div class="col-md-3"><span style="margin-left:15%"></span>{{ $uploaded_data[$i]->time }} Seconds</div></td>
+                                    @if($uploaded_data[$i]->time === 15)
                                         <td><div class="col-md-3">&#8358;{{ $rating->price_15 }}</div></td>
-                                    @elseif($datas[$i]->time === 30)
+                                    @elseif($uploaded_data[$i]->time === 30)
                                         <td><div class="col-md-3">&#8358;{{ $rating->price_30 }}</div></td>
-                                    @elseif($datas[$i]->time === 45)
+                                    @elseif($uploaded_data[$i]->time === 45)
                                         <td><div class="col-md-3">&#8358;{{ $rating->price_45 }}</div></td>
-                                    @elseif($datas[$i]->time === 60)
+                                    @elseif($uploaded_data[$i]->time === 60)
                                         <td><div class="col-md-3">&#8358;{{ $rating->price_60 }}</div></td>
                                     @endif
                                     <td>
-                                        <select name="position" class="form-control" id="position{{ $rating->id.$datas[$i]->id }}">
+                                        <select name="position" class="form-control" id="position{{ $rating->id.$uploaded_data[$i]->id }}">
                                             <option value="">No Position</option>
                                             @if(count($positions) > 0)
                                                 @foreach($positions as $position)
                                                     <option value="{{ $position->id }}"
                                                             @foreach($cart as $ca)
                                                                 @if($ca->adslot_id === $rating->id)
-                                                                    @if((int)$ca->time === (int)$datas[$i]->time)
+                                                                    @if((int)$ca->time === (int)$uploaded_data[$i]->time)
                                                                         @if($ca->filePosition_id === $position->id)
                                                                             selected
                                                                         @endif
@@ -183,33 +183,33 @@
                                         </select>
                                     </td>
 
-                                    <td class="pick_button{{ $rating->id.$datas[$i]->id }}"><button id="button{{ $rating->id.$datas[$i]->id }}"
+                                    <td class="pick_button{{ $rating->id.$uploaded_data[$i]->id }}"><button id="button{{ $rating->id.$uploaded_data[$i]->id }}"
                                                                                                     @foreach($cart as $ca)
                                                                                                         @if($ca->adslot_id === $rating->id)
-                                                                                                            @if((int)$ca->time === (int)$datas[$i]->time)
+                                                                                                            @if((int)$ca->time === (int)$uploaded_data[$i]->time)
                                                                                                                 class="btn-disable"
                                                                                                             @endif
                                                                                                         @endif
                                                                                                     @endforeach
                                                                                                     type="button"
-                                                                                                    data-file_slot="{{ $rating->id.$datas[$i]->id }}"
-                                                                                                    @if($datas[$i]->time === 15)
+                                                                                                    data-file_slot="{{ $rating->id.$uploaded_data[$i]->id }}"
+                                                                                                    @if($uploaded_data[$i]->time === 15)
                                                                                                         data-price="{{ $rating->price_15 }}"
-                                                                                                    @elseif($datas[$i]->time === 30)
+                                                                                                    @elseif($uploaded_data[$i]->time === 30)
                                                                                                         data-price="{{ $rating->price_30 }}"
-                                                                                                    @elseif($datas[$i]->time === 45)
+                                                                                                    @elseif($uploaded_data[$i]->time === 45)
                                                                                                         data-price="{{ $rating->price_45 }}"
-                                                                                                    @elseif($datas[$i]->time === 60)
+                                                                                                    @elseif($uploaded_data[$i]->time === 60)
                                                                                                         data-price="{{ $rating->price_60 }}"
                                                                                                     @endif
                                                                                                     data-adslot_id="{{ $rating->id }}"
                                                                                                     data-range="{{ $rating->from_to_time }}"
-                                                                                                    data-time="{{ $datas[$i]->time }}"
+                                                                                                    data-time="{{ $uploaded_data[$i]->time }}"
                                                                                                     data-walkin="{{ $id }}"
-                                                                                                    data-file="{{ $datas[$i]->uploads }}"
-                                                                                                    data-file_name="{{ $datas[$i]->file_name }}"
-                                                                                                    data-file_code="{{ $datas[$i]->file_code }}"
-                                                                                                    data-file_format="{{ $datas[$i]->format }}"
+                                                                                                    data-file="{{ $uploaded_data[$i]->file_url }}"
+                                                                                                    data-file_name="{{ $uploaded_data[$i]->file_name }}"
+                                                                                                    data-file_code="{{ $uploaded_data[$i]->file_code }}"
+                                                                                                    data-file_format="{{ $uploaded_data[$i]->format }}"
                                                                                                     data-broadcaster="{{ $broadcaster }}"
                                                                                                     data-target="bs-example-modal-lg{{ $rating->id }}"
                                                                                                     class="btn btn-success btn-xs saveCart">select</button></td>

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use JD\Cloudder\Facades\Cloudder;
 use Vanguard\Models\BrandClient;
 use Vanguard\Models\SelectedAdslot;
+use Vanguard\Models\Upload;
 
 class Utilities {
 
@@ -717,40 +718,43 @@ class Utilities {
 
     public static function uploadMedia()
     {
-        $id = request()->user_id;
+        $user_id = request()->user_id;
+
         if(round((integer)request()->duration) > (integer)request()->time_picked){
-            return response()->json(['error' => 'error']);
+            return 'error';
         }
 
-        $check_file = \DB::select("SELECT * from uploads where user_id = '$id'");
+        $check_file = Upload::where('user_id', $user_id)->get();
         if(count($check_file) > 4){
-            return response()->json(['error_number' => 'error_number']);
+            return 'error_number';
         }
-        $image_url = request()->image_url;
+        $file_url = request()->file_url;
         $time = request()->time_picked;
         $channel = request()->channel;
         $format = request()->file_format;
 
-        if (request()->image_url) {
+        if (request()->file_url) {
 
-            $check_image = \DB::select("SELECT * from uploads where time = '$time' AND channel = '$channel' AND user_id = '$id'");
+            $check_file = Upload::where([
+                ['time', $time],
+                ['channel', $channel],
+                ['user_id', $user_id]
+            ])->first();
 
-            if(count($check_image) === 1){
-                return response()->json(['error_check_image' => 'error_check_image']);
+            if($check_file){
+                return 'error_check_image';
             }
 
-            $insert_upload = \DB::table('uploads')->insert([
-                'user_id' => $id,
+            Upload::create([
+                'user_id' => $user_id,
                 'time' => $time,
-                'uploads' => $image_url,
+                'file_url' => $file_url,
                 'file_name' => $time.'_'.$format.'_'.request()->file_name,
-                'file_code' => request()->public_id,
                 'channel' => $channel,
                 'format' => $format
             ]);
 
             return 'success';
-
         }
     }
 
@@ -761,7 +765,7 @@ class Utilities {
         $region = "'".implode("','", $step1->region)."'";
         $target_audience = "'".implode("','", $step1->target_audience)."'";
         $all_adslots = Utilities::getAllAvailableSlots($step1, $broadcaster_id);
-        $ratecards = Utilities::getRateCardIdBetweenStartAndEndDates($step1->start_date, $step1->end_date, $broadcaster_id);
+        $ratecards = Utilities::getRateCardIdBetweenStartAndEndDates($step1->start_date, $step1->end_date);
         $ratecards_imploded = "'".implode("','", $ratecards)."'";
 
         $ratecards = Utilities::switch_db('api')->select("SELECT d.day, h.time_range, r.id FROM rateCards as r JOIN days as d ON d.id = r.day

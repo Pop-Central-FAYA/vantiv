@@ -15,6 +15,7 @@ use Vanguard\Libraries\Maths;
 use Vanguard\Libraries\Paystack;
 use Vanguard\Libraries\Utilities;
 use Vanguard\Models\SelectedAdslot;
+use Vanguard\Models\Upload;
 use Yajra\Datatables\Datatables;
 use Carbon\Carbon;
 use Session;
@@ -183,7 +184,10 @@ class CampaignsController extends Controller
     public function createStep3($id)
     {
         $broadcaster_id = Session::get('broadcaster_id');
-        $delete_uploads_without_files = \DB::delete("DELETE from uploads where user_id = '$id' AND time = 0");
+        Upload::where([
+            ['user_id', $id],
+            ['time', 0]
+        ])->delete();
 
         $first_step = Session::get('first_step');
 
@@ -206,8 +210,16 @@ class CampaignsController extends Controller
 
     public function postStep3($id)
     {
-        $uploads = Utilities::uploadMedia();
-        return response()->json(['success' => 'success']);
+        $upload = Utilities::uploadMedia();
+        if($upload === 'error'){
+            return response()->json(['error' => 'error']);
+        }elseif($upload === 'error_number'){
+            return response()->json(['error_number' => 'error_number']);
+        }elseif($upload === 'error_check_image'){
+            return response()->json(['error_check_image' => 'error_check_image']);
+        }elseif($upload === 'success'){
+            return response()->json(['success' => 'success']);
+        }
     }
 
     public function storeStep3_1($id)
@@ -216,7 +228,10 @@ class CampaignsController extends Controller
         $broadcaster_details = Utilities::getBroadcasterDetails($broadcaster_id);
         $channel = $broadcaster_details[0]->channel_id;
         $channel_name = Utilities::switch_db('api')->select("SELECT * FROM campaignChannels where id = '$channel'");
-        $get_uploaded_files = \DB::select("SELECT * from uploads where user_id = '$id' AND channel = '$channel'");
+        $get_uploaded_files = Upload::where([
+            ['user_id', $id],
+            ['channel', $channel]
+        ])->get();
         $count_files = count($get_uploaded_files);
         if($count_files === 0){
             $msg = 'You have not uploaded any file(s) for '.$channel_name[0]->channel;
@@ -225,7 +240,7 @@ class CampaignsController extends Controller
         }else{
             $remaining_file = 4 - $count_files;
             for ($i = 0; $i < $remaining_file; $i++){
-                $insert_upload = \DB::table('uploads')->insert([
+                Upload::create([
                     'user_id' => $id,
                     'time' => 00,
                     'channel' => $channel
@@ -255,8 +270,7 @@ class CampaignsController extends Controller
         $ads_broad = Utilities::adslotFilter($step1, $broadcaster, null);
 
         $time = [15, 30, 45, 60];
-
-        $data = \DB::select("SELECT * from uploads WHERE user_id = '$id'");
+        $uploads_data = Upload::where('user_id', $id)->get();
         $cart = \DB::select("SELECT * from carts WHERE user_id = '$id'");
         $total_cart = \DB::select("SELECT SUM(total_price) as total from carts where user_id = '$id'");
         $broadcaster_logo = $ads_broad['logo'];
@@ -274,7 +288,7 @@ class CampaignsController extends Controller
         $entries->setPath('/agency/campaigns/campaign/step4/'.$id.'/'.$broadcaster);
 
         return view('broadcaster_module.campaigns.create_step4')->with('ratecards', $entries)->with('total_amount', $total_cart)->with('ads_broads', $ads_broad)
-            ->with('cart', $cart)->with('datas', $data)->with('times', $time)->with('id', $id)
+            ->with('cart', $cart)->with('uploaded_data', $uploads_data)->with('times', $time)->with('id', $id)
             ->with('broadcaster', $broadcaster)->with('broadcaster_logo', $broadcaster_logo)->with('positions', $positions)->with('ratings', $adslots);
     }
 
@@ -306,7 +320,7 @@ class CampaignsController extends Controller
             Session::flash('error', 'Your cart is empty...');
             return redirect()->back();
         }
-        $query = [];
+
         $first = Session::get('first_step');
         $checkout = Utilities::getCheckout($id, $first, null, $broadcaster_id);
 
@@ -325,7 +339,10 @@ class CampaignsController extends Controller
 
     public function removeMedia($walkins, $id)
     {
-        $deleteUploads = \DB::delete("DELETE from uploads WHERE id = '$id' AND user_id = '$walkins'");
+        $deleteUploads = Upload::where([
+            ['id', $id],
+            ['user_id', $walkins]
+        ])->delete();
         if($deleteUploads){
             Session::flash('success', 'File deleted successfully...');
             return back();

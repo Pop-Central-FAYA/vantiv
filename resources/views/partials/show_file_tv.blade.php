@@ -5,7 +5,10 @@
     }else{
         $user_id = $walkins;
     }
-    $all_files = DB::select("SELECT * from uploads where user_id = '$user_id' AND channel = 'nzrm6hchjats36'");
+    $all_files = \Vanguard\Models\Upload::where([
+        ['user_id', $user_id],
+        ['channel', 'nzrm6hchjats36']
+    ])->get();
 
 ?>
 @if($all_files)
@@ -15,8 +18,8 @@
                 {{ csrf_field() }}
                 <div class="clearfix mb">
                     <div class="column col_4">
-                        @if($all_file->uploads)
-                            <video width="150" height="150" controls><source src="{{ asset($all_file->uploads) }}"></video>
+                        @if($all_file->file_url)
+                            <video width="150" height="150" controls><source src="{{ asset($all_file->file_url) }}"></video>
                         @else
                             <img src="{{ asset('new_assets/images/logo.png') }}" alt="">
                         @endif
