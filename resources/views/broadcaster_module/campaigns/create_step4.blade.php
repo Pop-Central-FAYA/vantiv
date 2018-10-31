@@ -57,8 +57,8 @@
                                     <td>
                                         <a href="#modal_slot{{ $rating->id }}" class="modal_click">
                                             <input type="checkbox"
-                                                   @foreach($cart as $carts)
-                                                   @if($carts->adslot_id === $rating->id)
+                                                   @foreach($preselected_adslots as $preselected_adslot)
+                                                   @if($preselected_adslot->adslot_id === $rating->id)
                                                    checked
                                                    @endif
                                                    @endforeach
@@ -82,15 +82,15 @@
 
                     <div class="align_center column col_4">
                         <p class="weight_medium">Total: &#8358; {{ $total_amount ? number_format($total_amount[0]->total, 2) : '0.00' }}</p>
-                        <p class="small_font"> {{ $cart ? count($cart) : '0' }} ad slots selected</p>
+                        <p class="small_font"> {{ $preselected_adslots ? count($preselected_adslots) : '0' }} ad slots selected</p>
                         <?php
-                        $percen_val = round((($total_amount ? $total_amount[0]->total : 0) / Session::get('first_step')->campaign_budget) * 100);
+                        $percentage_value = round((($total_amount ? $total_amount[0]->total : 0) / Session::get('first_step')->campaign_budget) * 100);
                         ?>
                         <div class="w3-border">
-                            <div class="w3-grey @if($percen_val > 80) danger @else success_p @endif" style="height:24px;width:{{ $percen_val }}%"></div>
+                            <div class="w3-grey @if($percentage_value > 80) danger @else success_p @endif" style="height:24px;width:{{ $percentage_value }}%"></div>
                         </div>
                         <br>
-                        @if($percen_val > 80)
+                        @if($percentage_value > 80)
                             <div class="budget_div">
                                 <a href="#budget" class="btn modal_click small_btn">Increase Budget</a>
                             </div>
@@ -168,10 +168,10 @@
                                             @if(count($positions) > 0)
                                                 @foreach($positions as $position)
                                                     <option value="{{ $position->id }}"
-                                                            @foreach($cart as $ca)
-                                                                @if($ca->adslot_id === $rating->id)
-                                                                    @if((int)$ca->time === (int)$uploaded_data[$i]->time)
-                                                                        @if($ca->filePosition_id === $position->id)
+                                                            @foreach($preselected_adslots as $preselected_adslot)
+                                                                @if($preselected_adslot->adslot_id === $rating->id)
+                                                                    @if((int)$preselected_adslot->time === (int)$uploaded_data[$i]->time)
+                                                                        @if($preselected_adslot->filePosition_id === $position->id)
                                                                             selected
                                                                         @endif
                                                                     @endif
@@ -184,9 +184,9 @@
                                     </td>
 
                                     <td class="pick_button{{ $rating->id.$uploaded_data[$i]->id }}"><button id="button{{ $rating->id.$uploaded_data[$i]->id }}"
-                                                                                                    @foreach($cart as $ca)
-                                                                                                        @if($ca->adslot_id === $rating->id)
-                                                                                                            @if((int)$ca->time === (int)$uploaded_data[$i]->time)
+                                                                                                    @foreach($preselected_adslots as $preselected_adslot)
+                                                                                                        @if($preselected_adslot->adslot_id === $rating->id)
+                                                                                                            @if((int)$preselected_adslot->time === (int)$uploaded_data[$i]->time)
                                                                                                                 class="btn-disable"
                                                                                                             @endif
                                                                                                         @endif

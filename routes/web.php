@@ -168,7 +168,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/create/step3/store/{id}', 'Broadcaster\CampaignsController@postStep3')->name('campaign.store3');
         Route::get('/create/step3_1/{id}', 'Broadcaster\CampaignsController@storeStep3_1')->name('campaign.create3_1');
         Route::get('/create/step4/{id}/{broadcaster}', 'Broadcaster\CampaignsController@createStep4')->name('campaign.create4');
-        Route::get('/cart/store', 'Broadcaster\CampaignsController@postCart')->name('broadcaster_campaign.cart');
+        Route::get('/cart/store', 'Broadcaster\CampaignsController@postPreselectedAdslot')->name('broadcaster_campaign.cart');
         Route::get('/checkout/{id}', 'Broadcaster\CampaignsController@checkout')->name('broadcaster_campaign.checkout');
         Route::post('/submit-campaign/{id}', 'Broadcaster\CampaignsController@postCampaign')->name('submit.campaign');
 

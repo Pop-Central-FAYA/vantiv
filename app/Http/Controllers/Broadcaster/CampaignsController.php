@@ -14,6 +14,7 @@ use Vanguard\Libraries\Api;
 use Vanguard\Libraries\Maths;
 use Vanguard\Libraries\Paystack;
 use Vanguard\Libraries\Utilities;
+use Vanguard\Models\PreselectedAdslot;
 use Vanguard\Models\SelectedAdslot;
 use Vanguard\Models\Upload;
 use Yajra\Datatables\Datatables;
@@ -271,8 +272,8 @@ class CampaignsController extends Controller
 
         $time = [15, 30, 45, 60];
         $uploads_data = Upload::where('user_id', $id)->get();
-        $cart = \DB::select("SELECT * from carts WHERE user_id = '$id'");
-        $total_cart = \DB::select("SELECT SUM(total_price) as total from carts where user_id = '$id'");
+        $preselected_adslots = PreselectedAdslot::where('user_id', $id)->get();
+        $total_price_preselected_adslot = Utilities::switch_db('api')->select("SELECT SUM(total_price) as total from preselected_adslots where user_id = '$id'");
         $broadcaster_logo = $ads_broad['logo'];
         $positions = Utilities::switch_db('api')->select("SELECT * from filePositions where broadcaster_id = '$broadcaster'");
 
@@ -287,12 +288,12 @@ class CampaignsController extends Controller
         $entries = new LengthAwarePaginator($currentPageSearchResults, count($col), $perPage);
         $entries->setPath('/agency/campaigns/campaign/step4/'.$id.'/'.$broadcaster);
 
-        return view('broadcaster_module.campaigns.create_step4')->with('ratecards', $entries)->with('total_amount', $total_cart)->with('ads_broads', $ads_broad)
-            ->with('cart', $cart)->with('uploaded_data', $uploads_data)->with('times', $time)->with('id', $id)
+        return view('broadcaster_module.campaigns.create_step4')->with('ratecards', $entries)->with('total_amount', $total_price_preselected_adslot)->with('ads_broads', $ads_broad)
+            ->with('preselected_adslots', $preselected_adslots)->with('uploaded_data', $uploads_data)->with('times', $time)->with('id', $id)
             ->with('broadcaster', $broadcaster)->with('broadcaster_logo', $broadcaster_logo)->with('positions', $positions)->with('ratings', $adslots);
     }
 
-    public function postCart(Request $request)
+    public function postPreselectedAdslot(Request $request)
     {
         $first = Session::get('first_step');
         $broadcaster_id = Session::get('broadcaster_id');
@@ -314,9 +315,8 @@ class CampaignsController extends Controller
     public function checkout($id)
     {
         $broadcaster_id = Session::get('broadcaster_id');
-
-        $check_cart = \DB::select("SELECT * from carts where user_id = '$id'");
-        if(count($check_cart) === 0){
+        $check_preselected_adslot = PreselectedAdslot::where('user_id', $id)->get();
+        if(count($check_preselected_adslot) === 0){
             Session::flash('error', 'Your cart is empty...');
             return redirect()->back();
         }
@@ -330,7 +330,7 @@ class CampaignsController extends Controller
             ->with('day_part', $checkout['day_parts'])
             ->with('region', $checkout['regions'])
             ->with('target', $checkout['targets'])
-            ->with('queries', $checkout['queries'])
+            ->with('preselected_adslot_arrays', $checkout['preselected_adslot_arrays'])
             ->with('brand', $checkout['brands'])
             ->with('id', $id)
             ->with('user', $checkout['user'])
@@ -371,7 +371,7 @@ class CampaignsController extends Controller
 
     public function removeCart($id)
     {
-        $del = \DB::DELETE("DELETE FROM carts WHERE id = '$id'");
+        PreselectedAdslot::where('id', $id)->delete();
         Session::flash('success', 'Item deleted from cart successfully');
         return redirect()->back();
     }
@@ -384,12 +384,14 @@ class CampaignsController extends Controller
         $api_db = Utilities::switch_db('api');
         $local_db = Utilities::switch_db('local');
         $first = Session::get('first_step');
-        $queries = $local_db->select("SELECT * FROM carts WHERE user_id = '$id' AND broadcaster_id = '$broadcaster_id'");
+        $preselected_adslots = PreselectedAdslot::where([
+            ['user_id', $id],
+            ['broadcaster_id', $broadcaster_id]
+        ])->get();
         $ads = [];
-
-        foreach ($queries as $query)
+        foreach ($preselected_adslots as $preselected_adslot)
         {
-            $ads[] = $query->adslot_id;
+            $ads[] = $preselected_adslot->adslot_id;
         }
 
         $file_array = [];
@@ -412,9 +414,10 @@ class CampaignsController extends Controller
 
         $camp[] = Utilities::campaignInformation($campaign_id, $campaign_reference, $now);
 
-        $calc = $local_db->select("SELECT SUM(total_price) as total_price FROM carts WHERE user_id = '$id' GROUP BY broadcaster_id");
+        $calc = Utilities::switch_db('api')->select("SELECT SUM(total_price) as total_price FROM preselected_adslots WHERE user_id = '$id' GROUP BY broadcaster_id");
 
-        $campDetails[] = Utilities::campaignDetailsInformations($first, $campaign_id, $id, $now, $ads, null, null, $walkin_id, $broadcaster_id, $broadcaster_details, $queries);
+        $campDetails[] = Utilities::campaignDetailsInformations($first, $campaign_id, $id, $now, $ads, null, null,
+                                                                $walkin_id, $broadcaster_id, $broadcaster_details, $preselected_adslots);
 
         $check_time_adslots = Utilities::fetchTimeInCart($id, $broadcaster_id);
         foreach ($check_time_adslots as $check_time_adslot){
@@ -426,10 +429,11 @@ class CampaignsController extends Controller
         }
 
         try {
-            $this->storeCampaignsPaymentsFilesMposPayments($api_db, $campDetails, $camp, $queries, $id, $now, $broadcaster_id,
+            $this->storeCampaignsPaymentsFilesMposPayments($api_db, $campDetails, $camp, $preselected_adslots, $id, $now, $broadcaster_id,
                 $pay_id, $request, $first, $walkin_id, $calc, $campaign_id, $invoice_id,
                 $invoice_number, $mpo_id, $file_array, $pay, $payDetails, $invoice, $invoiceDetails, $mpo, $mpoDetails);
         }catch (\Exception $e) {
+            return $e;
             return 'error';
         }
 
@@ -742,20 +746,20 @@ class CampaignsController extends Controller
         return redirect()->back();
     }
 
-    public static function storeCampaignsPaymentsFilesMposPayments($api_db, $campDetails, $camp, $queries, $id, $now, $broadcaster_id,
+    public static function storeCampaignsPaymentsFilesMposPayments($api_db, $campDetails, $camp, $preselected_adslots, $id, $now, $broadcaster_id,
                                                                    $pay_id, $request, $first, $walkin_id, $calc, $campaign_id, $invoice_id,
                                                                    $invoice_number, $mpo_id, $file_array, $pay, $payDetails, $invoice, $invoiceDetails, $mpo, $mpoDetails)
     {
 
-        $api_db->transaction(function () use ($api_db, $campDetails, $camp, $queries, $id, $now, $broadcaster_id,
+        $api_db->transaction(function () use ($api_db, $campDetails, $camp, $preselected_adslots, $id, $now, $broadcaster_id,
         $pay_id, $request, $first, $walkin_id, $calc, $campaign_id, $invoice_id,
         $invoice_number, $mpo_id, $file_array, $pay, $payDetails, $invoice, $invoiceDetails, $mpo, $mpoDetails) {
             $api_db->table('campaignDetails')->insert($campDetails);
             $api_db->table('campaigns')->insert($camp);
             $campaign_details = Utilities::switch_db('api')->select("SELECT * from campaigns WHERE id='$campaign_id'");
-            foreach($queries as $query)
+            foreach($preselected_adslots as $preselected_adslot)
             {
-                $file_array = Utilities::campaignFileInformation($campaign_details, $query, $id, $now, null, $broadcaster_id);
+                $file_array = Utilities::campaignFileInformation($campaign_details, $preselected_adslot, $id, $now, null, $broadcaster_id);
                 SelectedAdslot::create($file_array);
             }
             $pay[] = Utilities::campaignPaymentInformation($pay_id, $campaign_details, $request, $now, $first);
@@ -771,16 +775,16 @@ class CampaignsController extends Controller
             $mpoDetails[] = Utilities::campaignMpoDetailsInformation($mpo_id, null, null, $broadcaster_id);
             $api_db->table('mpos')->insert($mpo);
             $api_db->table('mpoDetails')->insert($mpoDetails);
-            foreach ($queries as $query){
-                if(!empty($query->filePosition_id)){
+            foreach ($preselected_adslots as $preselected_adslot){
+                if(!empty($preselected_adslot->filePosition_id)){
                     $api_db->update("UPDATE adslot_filePositions set select_status = 1
-                                    WHERE adslot_id = '$query->adslot_id' AND broadcaster_id = '$broadcaster_id'");
+                                    WHERE adslot_id = '$preselected_adslot->adslot_id' AND broadcaster_id = '$broadcaster_id'");
                 }
-                $get_slots = $api_db->select("SELECT * from adslots WHERE id = '$query->adslot_id'");
+                $get_slots = $api_db->select("SELECT * from adslots WHERE id = '$preselected_adslot->adslot_id'");
                 $slots_id = $get_slots[0]->id;
                 $time_difference = $get_slots[0]->time_difference;
                 $time_used = $get_slots[0]->time_used;
-                $time = $query->time;
+                $time = $preselected_adslot->time;
                 $new_time_used = $time_used + $time;
                 if($time_difference === $new_time_used){
                     $slot_status = 1;
@@ -789,18 +793,9 @@ class CampaignsController extends Controller
                 }
                 $api_db->update("UPDATE adslots SET time_used = '$new_time_used', is_available = '$slot_status' WHERE id = '$slots_id'");
             }
-            \DB::delete("DELETE FROM carts WHERE user_id = '$id'");
+            PreselectedAdslot::where('user_id', $id)->delete();
             Upload::where('user_id', $id)->delete();
         });
-
-    }
-
-    /**
-     * I hate this, we need to resolve
-     */
-    private function formatImageUrl($image_url)
-    {
-        return encrypt(Utilities::convertCloudinaryHttpToHttps(decrypt($image_url)));
 
     }
 

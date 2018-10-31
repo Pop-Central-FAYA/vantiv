@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use JD\Cloudder\Facades\Cloudder;
 use Vanguard\Models\BrandClient;
+use Vanguard\Models\PreselectedAdslot;
 use Vanguard\Models\SelectedAdslot;
 use Vanguard\Models\Upload;
 
@@ -821,10 +822,10 @@ class Utilities {
         $percentage = $percentage_new_price['percentage'];
 
         $price = $request->price;
-        $file = $request->file;
+        $file_url = $request->file;
         $time = $request->time;
         $hourly_range = $request->range;
-        $user = $request->walkins;
+        $user_id = $request->walkins;
         $adslot_id = $request->adslot_id;
         $position = $request->position;
         $file_name = $request->file_name;
@@ -854,42 +855,75 @@ class Utilities {
 
 
         if($broadcaster_id){
-            $check = \DB::select("SELECT * from carts where adslot_id = '$adslot_id' and user_id = '$user' AND broadcaster_id = '$broadcaster' and filePosition_id = '$position'
-                                        and filePosition_id != ''");
-            if(count($check) === 1){
+            $check_for_occurence_in_cart = PreselectedAdslot::where([
+                ['adslot_id', $adslot_id],
+                ['user_id', $user_id],
+                ['broadcaster_id', $broadcaster],
+                ['filePosition_id', $position],
+                ['filePosition_id', '<>', '']
+            ])->get();
+
+            if(count($check_for_occurence_in_cart) === 1){
                 return 'error';
             }
 
             //check if the budget has not been reached
-            $check_cart = \DB::select("SELECT SUM(total_price) as total from carts where user_id = '$user' AND broadcaster_id = '$broadcaster'");
+            $check_cart = Utilities::switch_db('api')->select("SELECT SUM(total_price) as total from preselected_adslots where user_id = '$user_id' AND broadcaster_id = '$broadcaster'");
             $new_total = (integer)$new_price + $check_cart[0]->total;
             if((integer)$new_total > (integer)$first->campaign_budget){
                 return 'budget_exceed_error';
             }
 
-
-            $insert = \DB::insert("INSERT INTO carts (user_id, broadcaster_id, price, ip_address, file, from_to_time, `time`, adslot_id, percentage, total_price,
-                                          filePosition_id, status, file_name, public_id, format, created_at) VALUES ('$user','$broadcaster','$price','$ip','$file','$hourly_range',
-                                            '$time','$adslot_id', '$percentage', '$new_price', '$position', 1, '$file_name', '$public_id', '$file_format', '$now')");
+            $insert = PreselectedAdslot::create([
+                'user_id' => $user_id,
+                'broadcaster_id' => $broadcaster,
+                'price' => $price,
+                'file_url' => $file_url,
+                'from_to_time' => $hourly_range,
+                'time' => $time,
+                'adslot_id' => $adslot_id,
+                'percentage' => $percentage,
+                'total_price' => $new_price,
+                'filePosition_id' => $position,
+                'file_name' => $file_name,
+                'format' => $file_format
+            ]);
         }else{
-            $check = \DB::select("SELECT * from carts where adslot_id = '$adslot_id' and user_id = '$user' AND agency_id = '$agency_id'
-                                        and filePosition_id = '$position' and filePosition_id != ''");
-            if(count($check) === 1){
+            $check_for_occurence_in_cart = PreselectedAdslot::where([
+                ['adslot_id', $adslot_id],
+                ['user_id', $user_id],
+                ['agency_id', $agency_id],
+                ['filePosition_id', $position],
+                ['filePosition_id', '<>', '']
+            ])->get();
+
+            if(count($check_for_occurence_in_cart) === 1){
                 return 'error';
             }
 
             //check if the budget has not been reached
-            $check_cart = \DB::select("SELECT SUM(total_price) as total from carts where user_id = '$user' AND agency_id = '$agency_id'");
+            $check_cart = Utilities::switch_db('api')->select("SELECT SUM(total_price) as total from preselected_adslots where user_id = '$user_id' AND broadcaster_id = '$broadcaster'");
             $new_total = (integer)$new_price + $check_cart[0]->total;
             if((integer)$new_total > (integer)$first->campaign_budget){
                 return 'budget_exceed_error';
             }
 
+            $insert = PreselectedAdslot::create([
+               'user_id' => $user_id,
+               'broadcaster_id' => $broadcaster,
+               'price' => $price,
+               'file_url' => $file_url,
+               'from_to_time' => $hourly_range,
+               'time' => $time,
+               'adslot_id' => $adslot_id,
+               'percentage' => $percentage,
+               'total_price' => $new_price,
+               'filePosition_id' => $position,
+               'agency_id' => $agency_id,
+               'file_name' => $file_name,
+               'format' => $file_format
+            ]);
 
-            $insert = \DB::insert("INSERT INTO carts (user_id, broadcaster_id, price, ip_address, file, from_to_time, `time`, adslot_id, percentage,
-                                          total_price, filePosition_id, status, agency_id, file_name, public_id, format) VALUES ('$user','$broadcaster','$price',
-                                            '$ip','$file','$hourly_range','$time','$adslot_id', '$percentage', '$new_price', '$position', 1, '$agency_id',
-                                            '$file_name', '$public_id', '$file_format')");
         }
 
         return $insert;
@@ -898,7 +932,7 @@ class Utilities {
 
     public static function getCheckout($id, $first, $agency_id, $broadcaster_id)
     {
-        $query = [];
+        $preselected_adslots_array = [];
         $day_parts = implode("','" ,$first->dayparts);
         $region = implode("','", $first->region);
         $target_audience = implode(",", $first->target_audience);
@@ -908,31 +942,31 @@ class Utilities {
         $regions = Utilities::switch_db('api')->select("SELECT region from regions where id IN ('$region') ");
         $user = Utilities::switch_db('api')->select("SELECT * from users where id = '$id' ");
         if($agency_id){
-            $calc = \DB::select("SELECT SUM(total_price) as total_price FROM carts WHERE user_id = '$id' and agency_id = '$agency_id'");
-            $query_carts = \DB::select("SELECT c.id, c.from_to_time, c.time, c.price, c.percentage, c.total_price, f.position, b.brand, b.image_url FROM carts as c
-                                              LEFT JOIN api_db.filePositions as f ON c.filePosition_id = f.id LEFT JOIN api_db.broadcasters as b ON b.id = c.broadcaster_id
-                                              WHERE c.user_id = '$id' AND c.agency_id = '$agency_id'");
+            $calc = Utilities::switch_db('api')->select("SELECT SUM(total_price) as total_price FROM preselected_adslots WHERE user_id = '$id' and agency_id = '$agency_id'");
+            $query_preselected_adslots = Utilities::switch_db('api')->select("SELECT c.id, c.from_to_time, c.time, c.price, c.percentage, c.total_price, f.position, b.brand, b.image_url FROM preselected_adslots as c
+                                                                  LEFT JOIN api_db.filePositions as f ON c.filePosition_id = f.id LEFT JOIN api_db.broadcasters as b ON b.id = c.broadcaster_id
+                                                                  WHERE c.user_id = '$id' AND c.agency_id = '$agency_id'");
         }else{
-            $calc = \DB::select("SELECT SUM(total_price) as total_price FROM carts WHERE user_id = '$id' and broadcaster_id = '$broadcaster_id'");
-            $query_carts = \DB::select("SELECT c.id, c.from_to_time, c.time, c.price, c.percentage, c.total_price, f.position, b.brand, b.image_url FROM carts as c
-                                              LEFT JOIN api_db.filePositions as f ON c.filePosition_id = f.id LEFT JOIN api_db.broadcasters as b ON b.id = c.broadcaster_id
-                                              WHERE c.user_id = '$id' AND c.broadcaster_id = '$broadcaster_id'");
+            $calc = Utilities::switch_db('api')->select("SELECT SUM(total_price) as total_price FROM preselected_adslots WHERE user_id = '$id' and broadcaster_id = '$broadcaster_id'");
+            $query_preselected_adslots = Utilities::switch_db('api')->select("SELECT c.id, c.from_to_time, c.time, c.price, c.percentage, c.total_price, f.position, b.brand, b.image_url FROM preselected_adslots as c
+                                                                    LEFT JOIN api_db.filePositions as f ON c.filePosition_id = f.id LEFT JOIN api_db.broadcasters as b ON b.id = c.broadcaster_id
+                                                                    WHERE c.user_id = '$id' AND c.broadcaster_id = '$broadcaster_id'");
         }
-        foreach ($query_carts as $query_cart){
-            $query[] = [
-                'id' => $query_cart->id,
-                'from_to_time' => $query_cart->from_to_time,
-                'time' => $query_cart->time,
-                'price' => $query_cart->price,
-                'percentage' => $query_cart->percentage,
-                'position' => $query_cart->position === null ? 'No Position' : $query_cart->position,
-                'total_price' => $query_cart->total_price,
-                'broadcaster_logo' => $query_cart->image_url,
-                'broadcaster_brand' => $query_cart->brand,
-            ];
+        foreach ($query_preselected_adslots as $query_preselected_adslot){
+            $preselected_adslots_array[] = [
+                                'id' => $query_preselected_adslot->id,
+                                'from_to_time' => $query_preselected_adslot->from_to_time,
+                                'time' => $query_preselected_adslot->time,
+                                'price' => $query_preselected_adslot->price,
+                                'percentage' => $query_preselected_adslot->percentage,
+                                'position' => $query_preselected_adslot->position === null ? 'No Position' : $query_preselected_adslot->position,
+                                'total_price' => $query_preselected_adslot->total_price,
+                                'broadcaster_logo' => $query_preselected_adslot->image_url,
+                                'broadcaster_brand' => $query_preselected_adslot->brand,
+                            ];
         }
 
-        return (['calc' => $calc, 'brands' => $brands, 'queries' => $query, 'day_parts' => $day_partss, 'targets' => $targets, 'regions' => $regions, 'user' => $user]);
+        return (['calc' => $calc, 'brands' => $brands, 'preselected_adslot_arrays' => $preselected_adslots_array, 'day_parts' => $day_partss, 'targets' => $targets, 'regions' => $regions, 'user' => $user]);
 
     }
 
@@ -992,7 +1026,7 @@ class Utilities {
     }
 
 
-    public static function campaignDetailsInformations($first, $campaign_id, $id, $now, $ads, $group_data, $agency_id, $walkin_id, $broadcaster_id, $broadcaster_details, $query)
+    public static function campaignDetailsInformations($first, $campaign_id, $id, $now, $ads, $group_data, $agency_id, $walkin_id, $broadcaster_id, $broadcaster_details, $preselected_adslots)
     {
         return [
             'id' => uniqid(),
@@ -1010,7 +1044,7 @@ class Utilities {
             'min_age' => (integer)$first->min_age,
             'max_age' => (integer)$first->max_age,
             'industry' => $first->industry,
-            'adslots' => $agency_id ? $group_data->total_slot : count($query),
+            'adslots' => $agency_id ? $group_data->total_slot : count($preselected_adslots),
             'walkins_id' => $walkin_id[0]->id,
             'time_created' => date('Y-m-d H:i:s', $now),
             'time_modified' => date('Y-m-d H:i:s', $now),
@@ -1033,24 +1067,24 @@ class Utilities {
         ];
     }
 
-    public static function campaignFileInformation($camp_id, $query, $id, $now, $agency_id, $broadcaster_id)
+    public static function campaignFileInformation($camp_id, $preselected_adslot, $id, $now, $agency_id, $broadcaster_id)
     {
         return [
             'id' => uniqid(),
             'campaign_id' => $camp_id[0]->id,
-            'file_name' => $query->file_name,
-            'file_url' => $query->file,
-            'adslot' => $query->adslot_id,
+            'file_name' => $preselected_adslot->file_name,
+            'file_url' => $preselected_adslot->file_url,
+            'adslot' => $preselected_adslot->adslot_id,
             'user_id' => $id,
             'file_code' => Utilities::generateReference(),
             'created_at' => date('Y-m-d H:i:s', $now),
             'updated_at' => date('Y-m-d H:i:s', $now),
             'agency_id' => $agency_id,
-            'agency_broadcaster' => $query->broadcaster_id,
-            'time_picked' => $query->time,
-            'broadcaster_id' => $agency_id ? $query->broadcaster_id : $broadcaster_id,
-            'public_id' => $query->public_id,
-            'format' => $query->format,
+            'agency_broadcaster' => $preselected_adslot->broadcaster_id,
+            'time_picked' => $preselected_adslot->time,
+            'broadcaster_id' => $agency_id ? $preselected_adslot->broadcaster_id : $broadcaster_id,
+            'public_id' => '',
+            'format' => $preselected_adslot->format,
             'status' => 'pending'
         ];
     }
