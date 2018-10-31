@@ -389,7 +389,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/camaigns/uploads/delete/{upload_id}/{id}', 'Agency\CampaignsController@deleteUpload')->name('agency.uploads.delete');
             Route::get('/review-uploads/{id}/{broadcaster}', 'Agency\CampaignsController@reviewUploads')->name('agency_campaign.review_uploads');
             Route::get('/campaign/step4/{id}/{broadcaster}', 'Agency\CampaignsController@getStep4')->name('agency_campaign.step4');
-            Route::get('/campaigns/cart/store', 'Agency\CampaignsController@postCart')->name('agency_campaign.cart');
+            Route::get('/campaigns/cart/store', 'Agency\CampaignsController@postPreselectedAdslot')->name('agency_campaign.cart');
             Route::get('/campaign/checkout/{id}', 'Agency\CampaignsController@checkout')->name('agency_campaign.checkout');
             Route::get('/cart/remove/{id}', 'Agency\CampaignsController@removeCart')->name('agency_cart.remove');
             Route::post('/campaign/submit/{id}', 'Agency\CampaignsController@postCampaign')->name('agency_submit.campaign');

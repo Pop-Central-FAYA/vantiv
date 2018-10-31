@@ -11,6 +11,7 @@ use Vanguard\Http\Controllers\Controller;
 use Vanguard\Http\Requests\CampaignInformationUpdateRequest;
 use Vanguard\Libraries\Api;
 use Vanguard\Libraries\Utilities;
+use Vanguard\Models\PreselectedAdslot;
 use Vanguard\Models\SelectedAdslot;
 use Vanguard\Models\Upload;
 use Yajra\DataTables\DataTables;
@@ -66,14 +67,6 @@ class CampaignsController extends Controller
             ->addIndexColumn()
             ->make(true);
 
-    }
-
-    /**
-     * I hate this, we need to resolve
-     */
-    private function formatImageUrl($image_url)
-    {
-        return encrypt(Utilities::convertCloudinaryHttpToHttps(decrypt($image_url)));
     }
 
     public function getStep1()
@@ -263,8 +256,8 @@ class CampaignsController extends Controller
         $time = [15, 30, 45, 60];
 
         $uploads_data = Upload::where('user_id', $id)->get();
-        $cart = \DB::select("SELECT * from carts WHERE user_id = '$id'");
-        $total_cart = \DB::select("SELECT SUM(total_price) as total from carts where user_id = '$id'");
+        $preselected_adslots = PreselectedAdslot::where('user_id', $id)->get();
+        $total_price_preselected_adslot = Utilities::switch_db('api')->select("SELECT SUM(total_price) as total from preselected_adslots where user_id = '$id'");
         $positions = Utilities::switch_db('api')->select("SELECT * from filePositions where broadcaster_id = '$broadcaster'");
 
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
@@ -275,9 +268,9 @@ class CampaignsController extends Controller
         $entries->setPath('/agency/campaigns/campaign/step4/'.$id.'/'.$broadcaster);
 
         return view('agency.campaigns.create4')->with('ratecards', $entries)
-                                                    ->with('total_amount', $total_cart)
+                                                    ->with('total_amount', $total_price_preselected_adslot)
                                                     ->with('ads_broads', $ads_broad)
-                                                    ->with('cart', $cart)
+                                                    ->with('preselected_adslots', $preselected_adslots)
                                                     ->with('uploaded_data', $uploads_data)
                                                     ->with('times', $time)
                                                     ->with('id', $id)
@@ -286,7 +279,7 @@ class CampaignsController extends Controller
                                                     ->with('adslots', $adslots);
     }
 
-    public function postCart(Request $request)
+    public function postPreselectedAdslot(Request $request)
     {
         $first = Session::get('first_step');
         $agency_id = Session::get('agency_id');
@@ -306,13 +299,12 @@ class CampaignsController extends Controller
 
     public function checkout($id)
     {
-        $check_cart = \DB::select("SELECT * from carts where user_id = '$id'");
-        if(count($check_cart) === 0){
+        $check_preselected_adslot = PreselectedAdslot::where('user_id', $id)->get();
+        if(count($check_preselected_adslot) === 0){
             Session::flash('error', 'Your cart is empty...');
             return redirect()->back();
         }
         $agency_id = Session::get('agency_id');
-        $query = [];
         $first = Session::get('first_step');
         $checkout = Utilities::getCheckout($id, $first, $agency_id, null);
         $wallet_balance = Utilities::switch_db('api')->select("SELECT current_balance FROM wallets where user_id = '$agency_id'");
@@ -322,7 +314,7 @@ class CampaignsController extends Controller
             ->with('day_part', $checkout['day_parts'])
             ->with('region', $checkout['regions'])
             ->with('target', $checkout['targets'])
-            ->with('queries', $checkout['queries'])
+            ->with('preselected_adslot_arrays', $checkout['preselected_adslot_arrays'])
             ->with('brand', $checkout['brands'])
             ->with('id', $id)
             ->with('wallet_balance', $wallet_balance)
@@ -331,7 +323,7 @@ class CampaignsController extends Controller
 
     public function removeCart($id)
     {
-        $del = \DB::select("DELETE FROM carts WHERE id = '$id'");
+        PreselectedAdslot::where('id', $id)->delete();
         Session::flash('success', 'Item deleted from cart successfully');
         return redirect()->back();
     }
@@ -349,16 +341,19 @@ class CampaignsController extends Controller
         $first = Session::get('first_step');
         $api_db = Utilities::switch_db('api');
         $local_db = Utilities::switch_db('local');
-        $queries = $local_db->select("SELECT * FROM carts WHERE user_id = '$id' AND agency_id = '$agency_id'");
+        $preselected_adslots = PreselectedAdslot::where([
+            ['user_id', $id],
+            ['agency_id', $agency_id]
+        ])->get();
         $ads = [];
 
         $user_id = $id;
 
-        foreach ($queries as $query) {
-            $ads[] = $query->adslot_id;
+        foreach ($preselected_adslots as $preselected_adslot) {
+            $ads[] = $preselected_adslot->adslot_id;
         }
-        $data = $local_db->select("SELECT * from uploads WHERE user_id = '$id'");
-        $group_data = $local_db->select("SELECT SUM(total_price) AS total, COUNT(id) AS total_slot, broadcaster_id FROM carts
+        //come back here
+        $group_data = $api_db->select("SELECT SUM(total_price) AS total, COUNT(id) AS total_slot, broadcaster_id FROM preselected_adslots
                                           WHERE user_id = '$id' AND agency_id = '$agency_id' GROUP BY broadcaster_id");
 
         $request->all();
@@ -384,7 +379,7 @@ class CampaignsController extends Controller
 
         foreach ($group_data as $group_datum){
             $campaignDetails[] = Utilities::campaignDetailsInformations($first, $campaign_id, $id, $now, $ads, $group_datum, $agency_id, $walkin_id,
-                                                                null, null, $queries);
+                                                                null, null, $preselected_adslots);
             $check_time_adslots = Utilities::fetchTimeInCart($id, $group_datum->broadcaster_id);
             foreach ($check_time_adslots as $check_time_adslot){
                 if($check_time_adslot['initial_time_left'] < $check_time_adslot['time_bought']){
@@ -396,7 +391,7 @@ class CampaignsController extends Controller
             }
         }
 
-        $save_campaign = $this->storeCampaignsPaymentsFilesMposPayments($campaigns, $campaignDetails, $campaign_id, $queries, $id, $now, $agency_id, $saveFiles,
+        $save_campaign = $this->storeCampaignsPaymentsFilesMposPayments($campaigns, $campaignDetails, $campaign_id, $preselected_adslots, $id, $now, $agency_id, $saveFiles,
             $payments, $pay_id, $request, $first, $group_data, $walkin_id, $paymentDetails, $invoice_id,
             $invoice_number, $invoice, $invoiceDetails, $mpo, $mpo_id, $mpoDetails, $user_id);
 
@@ -652,20 +647,20 @@ class CampaignsController extends Controller
         return back();
     }
 
-    public function storeCampaignsPaymentsFilesMposPayments($campaigns, $campaignDetails, $campaign_id, $queries, $id, $now, $agency_id, $saveFiles,
+    public function storeCampaignsPaymentsFilesMposPayments($campaigns, $campaignDetails, $campaign_id, $preselected_adslots, $id, $now, $agency_id, $saveFiles,
                                                             $payments, $pay_id, $request, $first, $group_data, $walkin_id, $paymentDetails, $invoice_id,
                                                             $invoice_number, $invoice, $invoiceDetails, $mpo, $mpo_id, $mpoDetails, $user_id)
     {
         try {
-            Utilities::switch_db('api')->transaction(function () use($campaigns, $campaignDetails, $campaign_id, $queries, $id, $now, $agency_id, $saveFiles,
+            Utilities::switch_db('api')->transaction(function () use($campaigns, $campaignDetails, $campaign_id, $preselected_adslots, $id, $now, $agency_id, $saveFiles,
                 $payments, $pay_id, $request, $first, $group_data, $walkin_id, $paymentDetails, $invoice_id,
                 $invoice_number, $invoice, $invoiceDetails, $mpo, $mpo_id, $mpoDetails, $user_id) {
                 Utilities::switch_db('api')->table('campaigns')->insert($campaigns);
                 Utilities::switch_db('api')->table('campaignDetails')->insert($campaignDetails);
                 $campaign_details = Utilities::switch_db('api')->select("SELECT * from campaigns WHERE id='$campaign_id'");
-                foreach($queries as $query)
+                foreach($preselected_adslots as $preselected_adslot)
                 {
-                    SelectedAdslot::create(Utilities::campaignFileInformation($campaign_details, $query, $id, $now, $agency_id, null));
+                    SelectedAdslot::create(Utilities::campaignFileInformation($campaign_details, $preselected_adslot, $id, $now, $agency_id, null));
                 }
                 $payments[] = Utilities::campaignPaymentInformation($pay_id, $campaign_details, $request, $now, $first);
                 foreach ($group_data as $group_datum){
@@ -688,16 +683,16 @@ class CampaignsController extends Controller
                 Utilities::switch_db('api')->table('invoiceDetails')->insert($invoiceDetails);
                 Utilities::switch_db('api')->table('mpos')->insert($mpo);
                 Utilities::switch_db('api')->table('mpoDetails')->insert($mpoDetails);
-                foreach ($queries as $query) {
-                    if (!empty($query->filePosition_id)) {
-                        Utilities::switch_db('api')->update("UPDATE adslot_filePositions set select_status = 1 WHERE adslot_id = '$query->adslot_id' ");
+                foreach ($preselected_adslots as $preselected_adslot) {
+                    if (!empty($preselected_adslot->filePosition_id)) {
+                        Utilities::switch_db('api')->update("UPDATE adslot_filePositions set select_status = 1 WHERE adslot_id = '$preselected_adslot->adslot_id' ");
                     }
 
-                    $get_slots = Utilities::switch_db('api')->select("SELECT * from adslots WHERE id = '$query->adslot_id'");
+                    $get_slots = Utilities::switch_db('api')->select("SELECT * from adslots WHERE id = '$preselected_adslot->adslot_id'");
                     $slots_id = $get_slots[0]->id;
                     $time_difference = (integer)$get_slots[0]->time_difference;
                     $time_used = (integer)$get_slots[0]->time_used;
-                    $time = (integer)$query->time;
+                    $time = (integer)$preselected_adslot->time;
                     $new_time_used = $time_used + $time;
                     if ($time_difference === $new_time_used) {
                         $slot_status = 1;
@@ -705,7 +700,10 @@ class CampaignsController extends Controller
                         $slot_status = 0;
                     }
                     Utilities::switch_db('api')->update("UPDATE adslots SET time_used = '$new_time_used', is_available = '$slot_status' WHERE id = '$slots_id'");
-                    \DB::delete("DELETE FROM carts WHERE user_id = '$user_id' AND agency_id = '$agency_id'");
+                    PreselectedAdslot::where([
+                        ['user_id', $user_id],
+                        ['agency_id', $agency_id]
+                    ])->delete();
                     Upload::where('user_id', $user_id)->delete();
                     $description = 'Campaign '.$first->campaign_name.' created successfully by '.Session::get('agency_id');
                     Api::saveActivity($agency_id, $description);
