@@ -108,7 +108,8 @@
 
                             <div class=" align_center _block_one">
                                 <p class="small_faint">Radio Content</p><br>
-                                <form method="GET" action="{{ route('campaign.store3', ['id' => $id]) }}" id="form-data" enctype="multipart/form-data">
+                                <form method="GET" action="{{ route('campaign.store3', ['id' => $id]) }}" id="form-data" >
+                                    {{ csrf_field() }}
                                     <div class="dashed_upload file_select mb">
                                         <input type="file" name="file" class="cloudinary_fileupload_radio" >
                                         <p class="small_faint">Drag files to upload</p>
@@ -265,13 +266,13 @@
                                         var file_duration = $(".file_duration").val();
                                         var url1 = $("#form-data").attr('action');
                                         var time_slot = parseInt(time_slots_string);
-
                                         if(time_slot >= file_duration){
                                             $.ajax({
                                                 url: url1,
                                                 method: "GET",
-                                                data: {'time_picked' : time_slot, 'duration' : file_duration, 'image_url' : uploadedUrl, 'file_name' : file.name, 'user_id' : user_id, 'channel' : channel, 'file_format' : video_format},
+                                                data: {'time_picked' : time_slot, 'duration' : file_duration, 'file_url' : uploadedUrl, 'file_name' : file.name, 'user_id' : user_id, 'channel' : channel, 'file_format' : video_format},
                                                 success: function(result){
+                                                    console.log(result);
                                                     if(result.error === 'error'){
                                                         toastr.error('You are trying to upload a file of '+file_duration+' seconds into a '+time_slot+' seconds slot');
                                                         return;
@@ -298,98 +299,12 @@
                                 })
                                 .fail(function(){
                                     toastr.error('An error occurred, please try again ');
+                                    location.reload();
                                 })
                         }
                     })
                 }
             });
-
-            $("body").delegate('#time','change', function() {
-                $(".image_show_upload").show();
-            });
-
-            //audio upload
-            $('.cloudinary_fileupload_radio').unsigned_cloudinary_upload(unsignedUploadPreset,{
-                    acceptFileTypes: /(\.|\/)(mp3|wav|aiff|aac|wma|ogg)$/i
-                },
-                {
-                    cloud_name: cloudName,
-                    tags: 'browser_uploads',
-                }, {
-                    multiple: false
-                }
-            )
-                .bind('cloudinarydone', function(e, data) {
-                    // console.log(data.loaded: ${data.loaded},data.total: ${data.total})
-                })
-                .bind('fileuploadprogress', function(e, data) {
-                    // console.log(fileuploadprogress data.loaded: ${data.loaded},data.total: ${data.total});
-                })
-                .bind('cloudinaryprogress', function(e, data) {
-                    var maths = Math.round((data.loaded * 100.0) / data.total);
-                    var big_html = '<div class="progress-bar" role="progressbar" aria-valuenow="'+maths+'"'+
-                        'aria-valuemin="0" aria-valuemax="100" style="width:'+maths+'%">'+
-                        '<span class="sr-only">'+maths+'% Complete</span>'+
-                        '</div>';
-                    $('.progress-radio').html(big_html);
-                    // console.log(cloudinaryprogress data.loaded: ${data.loaded},data.total: ${data.total});
-                })
-                .bind('cloudinarydone', function(e, data) {
-
-                    if (data.files.error){
-                        alert(data.files[0].error);
-                        return;
-                    }
-
-                    toastr.success('You are one step closer, please select the right timeslot for your content and hit the submit button to complete your upload');
-                    $(".progress").hide();
-                    var vid_show = '<audio controls>\n' +
-                        '  <source src="'+data.result.secure_url+'" >\n' +
-                        '</audio>' ;
-                    $(".gallery_radio").html(vid_show);
-                    var user_id = "<?php echo $id; ?>";
-                    var channel = 'nzrm64hjatseog6';
-
-                    $("#button_submit_radio").click(function () {
-                        var time_slotss = $("#time_radio").val();
-                        var url1 = $("#form-data").attr('action');
-                        var time_slot = parseInt(time_slotss);
-                        if(data.result.format === "mp3" || data.result.format === "wav" || data.result.format === "aiff" || data.result.format === "aac" || data.result.format === "wma" || data.result.format === "ogg"){
-                            if(time_slot >= Math.round(data.result.duration)){
-                                $.ajax({
-                                    url: url1,
-                                    method: "GET",
-                                    data: {'time_picked' : time_slot, 'duration' : data.result.duration, 'image_url' : data.result.secure_url, 'file_name' : data.result.original_filename, 'user_id' : user_id, 'public_id' : data.result.public_id, 'channel' : channel, 'file_format' : data.result.format},
-                                    success: function(result){
-                                        if(result.error === 'error'){
-                                            toastr.error('You are trying to upload a file of '+data.result.duration+' seconds into a '+time_slot+' seconds slot');
-                                            return;
-                                        }else if(result.error_number === 'error_number'){
-                                            toastr.error('You have reached the maximum number of files that can be uploaded, please hit the proceed button');
-                                            return;
-                                        }else if(result.error_check_image === 'error_check_image'){
-                                            toastr.error('You cannt upload this content more than once');
-                                            return;
-                                        }else if(result.success === 'success'){
-                                            toastr.success('Your upload for '+time_slot+' seconds was successful');
-                                            location.reload();
-                                        }
-                                    }
-                                })
-
-                            }else{
-
-                                toastr.error('You are trying to upload a file of '+data.result.duration+' seconds into a '+time_slot+'seconds slot');
-                            }
-                        }else{
-                            toastr.error('We only accept mp3, wav, aiff, aac, wma, ogg for this upload')
-                            return;
-                        }
-
-                    });
-
-                });
-
 
         });
 

@@ -45,15 +45,15 @@
                         <th>Total</th>
                         <th></th>
                     </tr>
-                    @foreach($queries as $query)
+                    @foreach($preselected_adslot_arrays as $preselected_adslot_array)
                         <tr>
-                            <td>{{ $query['from_to_time'] }}</td>
-                            <td>{{ $query['time'] }} seconds</td>
-                            <td>&#8358; {{ number_format($query['price'], 2) }}</td>
-                            <td>{{ $query['percentage'] }}%</td>
-                            <td>{{ $query['position'] }}</td>
-                            <td>&#8358; {{ number_format($query['total_price'], 2) }}</td>
-                            <td><a href="#delete_cart{{ $query['id'] }}" class="color_red close_red modal_click"><span class="_icon"></span> Remove</a></td>
+                            <td>{{ $preselected_adslot_array['from_to_time'] }}</td>
+                            <td>{{ $preselected_adslot_array['time'] }} seconds</td>
+                            <td>&#8358; {{ number_format($preselected_adslot_array['price'], 2) }}</td>
+                            <td>{{ $preselected_adslot_array['percentage'] }}%</td>
+                            <td>{{ $preselected_adslot_array['position'] }}</td>
+                            <td>&#8358; {{ number_format($preselected_adslot_array['total_price'], 2) }}</td>
+                            <td><a href="#delete_cart{{ $preselected_adslot_array['id'] }}" class="color_red close_red modal_click"><span class="_icon"></span> Remove</a></td>
                         </tr>
                     @endforeach
                 </table>
@@ -81,14 +81,14 @@
     </div>
 
     <!-- are you sure modal -->
-    @foreach($queries as $query)
-        <div class="modal_contain" id="delete_cart{{ $query['id'] }}">
+    @foreach($preselected_adslot_arrays as $preselected_adslot_array)
+        <div class="modal_contain" id="delete_cart{{ $preselected_adslot_array['id'] }}">
             <div class="wallet_placer margin_center mb3"></div>
 
             <p class="align_center margin_center col_10 mb4">Are you sure you want to delete this item ?</p>
 
             <div class="align_right">
-                <a href="{{ route('cart.remove', ['id' => $query['id']]) }}" class="btn">Delete</a>
+                <a href="{{ route('cart.remove', ['id' => $preselected_adslot_array['id']]) }}" class="btn">Delete</a>
             </div>
 
         </div>
