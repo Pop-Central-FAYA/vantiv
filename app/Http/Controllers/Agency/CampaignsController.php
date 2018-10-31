@@ -10,6 +10,7 @@ use Monolog\Processor\UidProcessor;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Http\Requests\CampaignInformationUpdateRequest;
 use Vanguard\Libraries\Api;
+use Vanguard\Libraries\AvailableBroadcasterAdslotService;
 use Vanguard\Libraries\Utilities;
 use Vanguard\Models\PreselectedAdslot;
 use Vanguard\Models\SelectedAdslot;
@@ -232,10 +233,12 @@ class CampaignsController extends Controller
         $agency_id = Session::get('agency_id');
         $first_step = Session::get('first_step');
         $ads_broad = Utilities::adslotFilter($first_step, null, $agency_id );
-        return view('agency.campaigns.create3_2')->with('adslot_search_results', $ads_broad)->with('id', $id);
+        $campaign_date_by_week = AvailableBroadcasterAdslotService::groupCampaignDateByWeek($first_step->start_date, $first_step->end_date);
+        $campaign_dates_for_first_week = array_first($campaign_date_by_week);
+        return view('agency.campaigns.create3_2')->with('adslot_search_results', $ads_broad)->with('id', $id)->with('campaign_dates_for_first_week', $campaign_dates_for_first_week);
     }
 
-    public function getStep4($id, $broadcaster)
+    public function getStep4_DateByWeek($id, $broadcaster, $start_date, $end_date)
     {
         ini_set('memory_limit','512M');
         $step1 = Session::get('first_step');
@@ -246,12 +249,15 @@ class CampaignsController extends Controller
             return back();
         }
 
-        $ratecards = Utilities::getRateCards($step1, $broadcaster);
+        $ratecards = Utilities::getRateCardsFilterByWeek($step1, $broadcaster, $start_date, $end_date);
 
         $r = $ratecards['rate_card'];
+
         $adslots = $ratecards['adslot'];
 
         $ads_broad = Utilities::adslotFilter($step1, null, $agency_id);
+
+        $campaign_dates_by_week = AvailableBroadcasterAdslotService::groupCampaignDateByWeek($step1->start_date, $step1->end_date);
 
         $time = [15, 30, 45, 60];
 
@@ -259,6 +265,57 @@ class CampaignsController extends Controller
         $preselected_adslots = PreselectedAdslot::where('user_id', $id)->get();
         $total_price_preselected_adslot = Utilities::switch_db('api')->select("SELECT SUM(total_price) as total from preselected_adslots where user_id = '$id'");
         $positions = Utilities::switch_db('api')->select("SELECT * from filePositions where broadcaster_id = '$broadcaster'");
+
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $col = new Collection($r);
+        $perPage = 100;
+        $currentPageSearchResults = $col->slice(($currentPage - 1) * $perPage, $perPage)->all();
+        $entries = new LengthAwarePaginator($currentPageSearchResults, count($col), $perPage);
+        $entries->setPath('/agency/campaigns/campaign/step4/'.$id.'/'.$broadcaster);
+
+        return view('agency.campaigns.create4')->with('ratecards', $entries)
+            ->with('total_amount', $total_price_preselected_adslot)
+            ->with('ads_broads', $ads_broad)
+            ->with('preselected_adslots', $preselected_adslots)
+            ->with('uploaded_data', $uploads_data)
+            ->with('times', $time)
+            ->with('id', $id)
+            ->with('broadcaster', $broadcaster)
+            ->with('positions', $positions)
+            ->with('adslots', $adslots)
+            ->with('campaign_dates_by_week', $campaign_dates_by_week);
+    }
+
+    public function getStep4($id, $broadcaster, $start_date, $end_date)
+    {
+        ini_set('memory_limit','512M');
+        $step1 = Session::get('first_step');
+        $agency_id = Session::get('agency_id');
+        $result_check = Utilities::checkRequestSession($step1);
+        if($result_check === 'data_lost'){
+            Session::flash('error', 'Data lost, please go back and select your filter criteria');
+            return back();
+        }
+
+        $ratecards = Utilities::getRateCards($step1, $broadcaster, $start_date, $end_date);
+
+        $r = $ratecards['rate_card'];
+
+        $adslots = $ratecards['adslot'];
+
+        $ads_broad = Utilities::adslotFilter($step1, null, $agency_id);
+
+        $campaign_dates_by_week = AvailableBroadcasterAdslotService::groupCampaignDateByWeek($step1->start_date, $step1->end_date);
+
+        $time = [15, 30, 45, 60];
+
+        $uploads_data = Upload::where('user_id', $id)->get();
+        $preselected_adslots = PreselectedAdslot::where('user_id', $id)->get();
+        $total_price_preselected_adslot = Utilities::switch_db('api')->select("SELECT SUM(total_price) as total from preselected_adslots where user_id = '$id'");
+        $positions = Utilities::switch_db('api')->select("SELECT * from filePositions where broadcaster_id = '$broadcaster'");
+
+        $campaign_date_by_week = AvailableBroadcasterAdslotService::groupCampaignDateByWeek($step1->start_date, $step1->end_date);
+        $campaign_dates_for_first_week = array_first($campaign_date_by_week);
 
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
         $col = new Collection($r);
@@ -276,7 +333,9 @@ class CampaignsController extends Controller
                                                     ->with('id', $id)
                                                     ->with('broadcaster', $broadcaster)
                                                     ->with('positions', $positions)
-                                                    ->with('adslots', $adslots);
+                                                    ->with('adslots', $adslots)
+                                                    ->with('campaign_dates_by_week', $campaign_dates_by_week)
+                                                    ->with('campaign_dates_for_first_week', $campaign_dates_for_first_week);
     }
 
     public function postPreselectedAdslot(Request $request)
@@ -309,12 +368,20 @@ class CampaignsController extends Controller
         $checkout = Utilities::getCheckout($id, $first, $agency_id, null);
         $wallet_balance = Utilities::switch_db('api')->select("SELECT current_balance FROM wallets where user_id = '$agency_id'");
 
+        //add pagination
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $col = new Collection($checkout['preselected_adslot_arrays']);
+        $perPage = 10;
+        $currentPageSearchResults = $col->slice(($currentPage - 1) * $perPage, $perPage)->all();
+        $entries = new LengthAwarePaginator($currentPageSearchResults, count($col), $perPage);
+        $entries->setPath($id);
+
         return view('agency.campaigns.checkout')->with('first_session', $first)
             ->with('calc', $checkout['calc'])
             ->with('day_part', $checkout['day_parts'])
             ->with('region', $checkout['regions'])
             ->with('target', $checkout['targets'])
-            ->with('preselected_adslot_arrays', $checkout['preselected_adslot_arrays'])
+            ->with('preselected_adslot_arrays', $entries)
             ->with('brand', $checkout['brands'])
             ->with('id', $id)
             ->with('wallet_balance', $wallet_balance)

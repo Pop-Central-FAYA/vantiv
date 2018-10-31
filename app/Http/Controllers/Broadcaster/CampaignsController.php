@@ -11,6 +11,7 @@ use JD\Cloudder\Facades\Cloudder;
 use Vanguard\Http\Requests\CampaignInformationUpdateRequest;
 use Vanguard\Libraries\AmazonS3;
 use Vanguard\Libraries\Api;
+use Vanguard\Libraries\AvailableBroadcasterAdslotService;
 use Vanguard\Libraries\Maths;
 use Vanguard\Libraries\Paystack;
 use Vanguard\Libraries\Utilities;
@@ -269,6 +270,10 @@ class CampaignsController extends Controller
         }
 
         $ads_broad = Utilities::adslotFilter($step1, $broadcaster, null);
+
+        $campaign_dates_by_week = AvailableBroadcasterAdslotService::groupCampaignDateByWeek($step1->start_date, $step1->end_date);
+
+        dd($campaign_dates_by_week);
 
         $time = [15, 30, 45, 60];
         $uploads_data = Upload::where('user_id', $id)->get();

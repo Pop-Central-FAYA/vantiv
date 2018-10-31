@@ -759,14 +759,16 @@ class Utilities {
         }
     }
 
-    public static function getRateCards($step1, $broadcaster_id)
+    public static function getRateCards($step1, $broadcaster_id, $start_date, $end_date)
     {
 
         $day_parts = "'".implode("','" ,$step1->dayparts)."'";
         $region = "'".implode("','", $step1->region)."'";
         $target_audience = "'".implode("','", $step1->target_audience)."'";
         $all_adslots = Utilities::getAllAvailableSlots($step1, $broadcaster_id);
-        $ratecards = Utilities::getRateCardIdBetweenStartAndEndDates($step1->start_date, $step1->end_date);
+        $campaign_date_by_week = AvailableBroadcasterAdslotService::groupCampaignDateByWeek($start_date, $end_date);
+        $campaign_dates_for_first_week = array_first($campaign_date_by_week);
+        $ratecards = Utilities::getRateCardIdBetweenStartAndEndDates($campaign_dates_for_first_week[0], end($campaign_dates_for_first_week));
         $ratecards_imploded = "'".implode("','", $ratecards)."'";
 
         $ratecards = Utilities::switch_db('api')->select("SELECT d.day, h.time_range, r.id FROM rateCards as r JOIN days as d ON d.id = r.day
@@ -777,6 +779,8 @@ class Utilities {
                                                                 AND day_parts IN ($day_parts) AND region IN ($region) AND rate_card IN ($ratecards_imploded)
                                                                 AND is_available = 0 AND broadcaster = '$broadcaster_id')");
 
+        $getWeekDaysFromCampaignDate = AvailableBroadcasterAdslotService::getWeekdaysFromGroupedCampaignDates($start_date, $end_date);
+        $first_week_days = array_first($getWeekDaysFromCampaignDate);
         foreach ($ratecards as $ratecard){
             $adslots = Utilities::filterAdslots(json_decode(json_encode($all_adslots), true), $ratecard->id);;
             $rate_card[] = [
@@ -784,6 +788,9 @@ class Utilities {
                 'hourly_range' => $ratecard->time_range,
                 'day' => $ratecard->day,
                 'adslot' => $adslots,
+                'start_date' => $campaign_dates_for_first_week[0],
+                'end_date' => end($campaign_dates_for_first_week),
+                'actual_date' => $first_week_days[$ratecard->day]
             ];
         }
         return ['rate_card' => $rate_card, 'adslot' => $all_adslots];
@@ -829,16 +836,9 @@ class Utilities {
         $adslot_id = $request->adslot_id;
         $position = $request->position;
         $file_name = $request->file_name;
-        $public_id = $request->file_code;
         $broadcaster = $request->broadcaster;
         $file_format = $request->file_format;
-        $ip = \Request::ip();
-        $start_date = date('Y-m-d', strtotime($first->start_date));
-        $end_date = date('Y-m-d', strtotime($first->end_date));
-        $number_of_occurrence = Utilities::numberOfAdslotOccurrence($adslot_id, $start_date, $end_date);
-        $now = date('Y-m-d', strtotime(Carbon::now('Africa/Lagos')));
-
-        $new_price = $new_price * $number_of_occurrence;
+        $air_date = $request->air_date;
 
         //check if the fileposition is picked
         $check_pos = Utilities::switch_db('api')->select("SELECT * from adslot_filePositions where broadcaster_id = '$broadcaster' AND adslot_id = '$adslot_id'
@@ -886,7 +886,8 @@ class Utilities {
                 'total_price' => $new_price,
                 'filePosition_id' => $position,
                 'file_name' => $file_name,
-                'format' => $file_format
+                'format' => $file_format,
+                'air_date' => $air_date
             ]);
         }else{
             $check_for_occurence_in_cart = PreselectedAdslot::where([
@@ -921,7 +922,8 @@ class Utilities {
                'filePosition_id' => $position,
                'agency_id' => $agency_id,
                'file_name' => $file_name,
-               'format' => $file_format
+               'format' => $file_format,
+                'air_date' => $air_date
             ]);
 
         }
@@ -943,12 +945,12 @@ class Utilities {
         $user = Utilities::switch_db('api')->select("SELECT * from users where id = '$id' ");
         if($agency_id){
             $calc = Utilities::switch_db('api')->select("SELECT SUM(total_price) as total_price FROM preselected_adslots WHERE user_id = '$id' and agency_id = '$agency_id'");
-            $query_preselected_adslots = Utilities::switch_db('api')->select("SELECT c.id, c.from_to_time, c.time, c.price, c.percentage, c.total_price, f.position, b.brand, b.image_url FROM preselected_adslots as c
+            $query_preselected_adslots = Utilities::switch_db('api')->select("SELECT c.id, c.from_to_time, c.time, c.price, c.percentage, c.total_price,c.air_date, f.position, b.brand, b.image_url FROM preselected_adslots as c
                                                                   LEFT JOIN api_db.filePositions as f ON c.filePosition_id = f.id LEFT JOIN api_db.broadcasters as b ON b.id = c.broadcaster_id
                                                                   WHERE c.user_id = '$id' AND c.agency_id = '$agency_id'");
         }else{
             $calc = Utilities::switch_db('api')->select("SELECT SUM(total_price) as total_price FROM preselected_adslots WHERE user_id = '$id' and broadcaster_id = '$broadcaster_id'");
-            $query_preselected_adslots = Utilities::switch_db('api')->select("SELECT c.id, c.from_to_time, c.time, c.price, c.percentage, c.total_price, f.position, b.brand, b.image_url FROM preselected_adslots as c
+            $query_preselected_adslots = Utilities::switch_db('api')->select("SELECT c.id, c.from_to_time, c.time, c.price, c.percentage, c.total_price,c.air_date, f.position, b.brand, b.image_url FROM preselected_adslots as c
                                                                     LEFT JOIN api_db.filePositions as f ON c.filePosition_id = f.id LEFT JOIN api_db.broadcasters as b ON b.id = c.broadcaster_id
                                                                     WHERE c.user_id = '$id' AND c.broadcaster_id = '$broadcaster_id'");
         }
@@ -963,6 +965,7 @@ class Utilities {
                                 'total_price' => $query_preselected_adslot->total_price,
                                 'broadcaster_logo' => $query_preselected_adslot->image_url,
                                 'broadcaster_brand' => $query_preselected_adslot->brand,
+                                'air_date' => $query_preselected_adslot->air_date
                             ];
         }
 
@@ -1085,7 +1088,8 @@ class Utilities {
             'broadcaster_id' => $agency_id ? $preselected_adslot->broadcaster_id : $broadcaster_id,
             'public_id' => '',
             'format' => $preselected_adslot->format,
-            'status' => 'pending'
+            'status' => 'pending',
+            'air_date' => $preselected_adslot->air_date
         ];
     }
 

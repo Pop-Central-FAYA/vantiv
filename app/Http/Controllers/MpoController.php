@@ -2,6 +2,8 @@
 
 namespace Vanguard\Http\Controllers;
 
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use JD\Cloudder\Facades\Cloudder;
 use Vanguard\Libraries\AmazonS3;
 use Vanguard\Libraries\Api;
@@ -87,7 +89,16 @@ class MpoController extends Controller
         $mpo_data = $this->getMpoCollection($mpos, $broadcaster_id);
         $reject_reasons = RejectionReason::all();
 
-        return view('broadcaster_module.mpos.action', compact('mpo_data', 'reject_reasons'));
+        $mpo_data_files = $mpo_data[0]['files'];
+
+        //add pagination
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $col = new Collection($mpo_data_files);
+        $perPage = 5;
+        $currentPageSearchResults = $col->slice(($currentPage - 1) * $perPage, $perPage)->all();
+        $mpo_data_files = new LengthAwarePaginator($currentPageSearchResults, count($col), $perPage);
+        $mpo_data_files->setPath($mpo_id);
+        return view('broadcaster_module.mpos.action', compact('mpo_data', 'reject_reasons', 'mpo_data_files'));
     }
 
     public function update_file($file_code, $campaign_id, $mpo_id)
