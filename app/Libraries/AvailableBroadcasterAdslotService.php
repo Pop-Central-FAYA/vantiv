@@ -2,54 +2,39 @@
 
 namespace Vanguard\Libraries;
 
+use Carbon\Carbon;
+use Carbon\CarbonPeriod;
+
 Class AvailableBroadcasterAdslotService
 {
-    public function getAvailableBroadcasterAdslot()
-    {
-
-    }
-
     public static function getActualDates($start_date, $end_date)
     {
-        $format = 'Y-m-d';
-        $start  = new \DateTime($start_date);
-        $end    = new \DateTime($end_date);
-        $invert = $start > $end;
-
-        $dates = array();
-        $dates[] = $start->format($format);
-        while ($start != $end) {
-            $start->modify(($invert ? '-' : '+') . '1 day');
-            $dates[] = $start->format($format);
+        $dates = [];
+        $period = CarbonPeriod::create($start_date, $end_date);
+        foreach ($period as $date) {
+            $dates[] =  $date->format('Y-m-d');
         }
-
         return $dates;
     }
 
     public static function groupCampaignDateByWeek($start_date, $end_date)
     {
         $actual_campaign_dates = AvailableBroadcasterAdslotService::getActualDates($start_date, $end_date);
-
         $byWeek = array();
         foreach ($actual_campaign_dates as $actual_campaign_date) {
             $date = \DateTime::createFromFormat('Y-m-d', $actual_campaign_date);
-
-            $firstDayOfWeek = 1; // Sunday
-
+            $firstDayOfWeek = 1; //Monday
             $difference = ($firstDayOfWeek - $date->format('N'));
             if ($difference > 0) {
                 $difference -= 7;
             }
             $date->modify("$difference days");
             $week = $date->format('W');
-
             if(!isset($byWeek[$week])){
                 $byWeek[$week] = [];
             }
-
             $byWeek[$week][] = $actual_campaign_date;
         }
-
         return $byWeek;
     }
 
@@ -61,7 +46,7 @@ Class AvailableBroadcasterAdslotService
         foreach ($actual_campaign_dates as $actual_campaign_date) {
             $date = \DateTime::createFromFormat('Y-m-d', $actual_campaign_date);
 
-            $firstDayOfWeek = 1; // Sunday
+            $firstDayOfWeek = 1; //Monday
 
             $difference = ($firstDayOfWeek - $date->format('N'));
             if ($difference > 0) {
