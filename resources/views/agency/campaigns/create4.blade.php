@@ -64,7 +64,7 @@
                                         <td>
                                             <a href="{{ route('agency_campaign.step4', ['id' => $id, 'broadcaster' => $broadcaster, 'start_date' => $campaign_by_week[0], 'end_date' => end($campaign_by_week)]) }}">
                                                 <input type="checkbox" @if($ratecards[0]['start_date'] === $campaign_by_week[0]) checked @endif id="">
-                                                <label id="new_client" for="week_1">Week {{ $j }} <br> {{ date('F, jS', strtotime($campaign_by_week[0])) .'-' . date('F, jS', strtotime(end($campaign_by_week))) }}</label></a>
+                                                <label id="new_client" for="week_1">Week {{ $j }} </label></a>
                                         </td>
                                     </tr>
                                     <?php $j++; ?>
