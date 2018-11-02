@@ -256,7 +256,7 @@ class CampaignsController extends Controller
         $campaign_dates_for_first_week = array_first($campaign_date_by_week);
 
         return redirect()->route('campaign.create4', ['id' => $id, 'broadcaster' => $broadcaster_id,
-                                                            'start_date' => $campaign_dates_for_first_week[0],
+                                                            'start_date' => current($campaign_dates_for_first_week),
                                                             'end_date' => end($campaign_dates_for_first_week)]);
     }
 

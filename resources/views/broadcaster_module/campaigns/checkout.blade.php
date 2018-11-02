@@ -68,7 +68,7 @@
 
                 <div class="mb4 clearfix pt4 mb4">
                     <div class="column col_6">
-                        <a href="{{ route('campaign.create4', ['id' => $id, 'broadcaster' => $broadcaster, 'start_date' => $campaign_dates_for_first_week[0], 'end_date' => end($campaign_dates_for_first_week)]) }}" class="btn uppercased _white _go_back"><span class=""></span> Back</a>
+                        <a href="{{ route('campaign.create4', ['id' => $id, 'broadcaster' => $broadcaster, 'start_date' => current($campaign_dates_for_first_week), 'end_date' => end($campaign_dates_for_first_week)]) }}" class="btn uppercased _white _go_back"><span class=""></span> Back</a>
                     </div>
 
                     <div class="column col_6 align_right">

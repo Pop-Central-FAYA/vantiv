@@ -51,7 +51,7 @@
                 </thead>
                 <tbody>
 
-                @unless (count($mpo_data_files))
+                @if($count_mpo_data_files > 0)
                     @foreach ($mpo_data_files as $mpo_file)
                         <tr id="row{{ $mpo_file->file_code }}">
                         <td>
@@ -116,7 +116,7 @@
                         </td>
                     </tr>
                     @endforeach
-                @endunless
+                @endif
                 </tbody>
             </table>
 

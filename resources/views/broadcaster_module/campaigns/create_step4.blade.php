@@ -55,8 +55,8 @@
                                 @foreach($campaign_dates_by_week as $campaign_by_week)
                                     <tr>
                                         <td>
-                                            <a href="{{ route('campaign.create4', ['id' => $id, 'broadcaster' => $broadcaster, 'start_date' => $campaign_by_week[0], 'end_date' => end($campaign_by_week)]) }}">
-                                                <input type="checkbox" @if($ratecards[0]['start_date'] === $campaign_by_week[0]) checked @endif id="">
+                                            <a href="{{ route('campaign.create4', ['id' => $id, 'broadcaster' => $broadcaster, 'start_date' => current($campaign_by_week), 'end_date' => end($campaign_by_week)]) }}">
+                                                <input type="checkbox" @if($ratecards[0]['start_date'] === current($campaign_by_week)) checked @endif id="">
                                                 <label id="new_client" for="week_1">Week {{ $j }} </label></a>
                                         </td>
                                     </tr>

@@ -768,7 +768,7 @@ class Utilities {
         $all_adslots = Utilities::getAllAvailableSlots($step1, $broadcaster_id);
         $campaign_date_by_week = AvailableBroadcasterAdslotService::groupCampaignDateByWeek($start_date, $end_date);
         $campaign_dates_for_first_week = array_first($campaign_date_by_week);
-        $ratecards = Utilities::getRateCardIdBetweenStartAndEndDates($campaign_dates_for_first_week[0], end($campaign_dates_for_first_week));
+        $ratecards = Utilities::getRateCardIdBetweenStartAndEndDates(current($campaign_dates_for_first_week), end($campaign_dates_for_first_week));
         $ratecards_imploded = "'".implode("','", $ratecards)."'";
 
         $ratecards = Utilities::switch_db('api')->select("SELECT d.day, h.time_range, r.id FROM rateCards as r JOIN days as d ON d.id = r.day
@@ -779,7 +779,7 @@ class Utilities {
                                                                 AND day_parts IN ($day_parts) AND region IN ($region) AND rate_card IN ($ratecards_imploded)
                                                                 AND is_available = 0 AND broadcaster = '$broadcaster_id')");
 
-        $getWeekDaysFromCampaignDate = AvailableBroadcasterAdslotService::getWeekdaysFromGroupedCampaignDates($start_date, $end_date);
+        $getWeekDaysFromCampaignDate = AvailableBroadcasterAdslotService::groupCampaignDateByWeek($start_date, $end_date);
         $first_week_days = array_first($getWeekDaysFromCampaignDate);
         foreach ($ratecards as $ratecard){
             $adslots = Utilities::filterAdslots(json_decode(json_encode($all_adslots), true), $ratecard->id);;
@@ -788,7 +788,7 @@ class Utilities {
                 'hourly_range' => $ratecard->time_range,
                 'day' => $ratecard->day,
                 'adslot' => $adslots,
-                'start_date' => $campaign_dates_for_first_week[0],
+                'start_date' => current($campaign_dates_for_first_week),
                 'end_date' => end($campaign_dates_for_first_week),
                 'actual_date' => $first_week_days[$ratecard->day]
             ];
