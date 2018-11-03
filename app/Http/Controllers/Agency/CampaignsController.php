@@ -10,7 +10,7 @@ use Monolog\Processor\UidProcessor;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Http\Requests\CampaignInformationUpdateRequest;
 use Vanguard\Libraries\Api;
-use Vanguard\Libraries\AvailableBroadcasterAdslotService;
+use Vanguard\Libraries\campaignDate;
 use Vanguard\Libraries\Utilities;
 use Vanguard\Models\PreselectedAdslot;
 use Vanguard\Models\SelectedAdslot;
@@ -233,7 +233,7 @@ class CampaignsController extends Controller
         $agency_id = Session::get('agency_id');
         $first_step = Session::get('first_step');
         $ads_broad = Utilities::adslotFilter($first_step, null, $agency_id );
-        $campaign_date_by_week = AvailableBroadcasterAdslotService::groupCampaignDateByWeek($first_step->start_date, $first_step->end_date);
+        $campaign_date_by_week = CampaignDate::groupCampaignDateByWeek($first_step->start_date, $first_step->end_date);
         $campaign_dates_for_first_week = array_first($campaign_date_by_week);
         return view('agency.campaigns.create3_2')->with('adslot_search_results', $ads_broad)->with('id', $id)->with('campaign_dates_for_first_week', $campaign_dates_for_first_week);
     }
@@ -257,7 +257,7 @@ class CampaignsController extends Controller
 
         $ads_broad = Utilities::adslotFilter($step1, null, $agency_id);
 
-        $campaign_dates_by_week = AvailableBroadcasterAdslotService::groupCampaignDateByWeek($step1->start_date, $step1->end_date);
+        $campaign_dates_by_week = campaignDate::groupCampaignDateByWeek($step1->start_date, $step1->end_date);
 
         $time = [15, 30, 45, 60];
 
@@ -266,7 +266,7 @@ class CampaignsController extends Controller
         $total_price_preselected_adslot = Utilities::switch_db('api')->select("SELECT SUM(total_price) as total from preselected_adslots where user_id = '$id'");
         $positions = Utilities::switch_db('api')->select("SELECT * from filePositions where broadcaster_id = '$broadcaster'");
 
-        $campaign_date_by_week = AvailableBroadcasterAdslotService::groupCampaignDateByWeek($step1->start_date, $step1->end_date);
+        $campaign_date_by_week = campaignDate::groupCampaignDateByWeek($step1->start_date, $step1->end_date);
         $campaign_dates_for_first_week = array_first($campaign_date_by_week);
 
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
