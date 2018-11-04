@@ -6,11 +6,10 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
-use Monolog\Processor\UidProcessor;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Http\Requests\CampaignInformationUpdateRequest;
 use Vanguard\Libraries\Api;
-use Vanguard\Libraries\campaignDate;
+use Vanguard\Libraries\CampaignDate;
 use Vanguard\Libraries\Utilities;
 use Vanguard\Models\PreselectedAdslot;
 use Vanguard\Models\SelectedAdslot;
@@ -21,6 +20,14 @@ use Session;
 class CampaignsController extends Controller
 {
     private $campaign_success_message = 'Campaign created successfully, please review and submit';
+    private $campaign_dates, $utilities;
+
+    public function __construct(CampaignDate $campaignDate, Utilities $utilities)
+    {
+        $this->campaign_dates = $campaignDate;
+        $this->utilities = $utilities;
+    }
+
     public function index()
     {
         return view('agency.campaigns.active_campaign');
@@ -233,8 +240,7 @@ class CampaignsController extends Controller
         $agency_id = Session::get('agency_id');
         $first_step = Session::get('first_step');
         $ads_broad = Utilities::adslotFilter($first_step, null, $agency_id );
-        $campaign_date_by_week = CampaignDate::groupCampaignDateByWeek($first_step->start_date, $first_step->end_date);
-        $campaign_dates_for_first_week = array_first($campaign_date_by_week);
+        $campaign_dates_for_first_week = $this->campaign_dates->getFirstWeek($first_step->start_date, $first_step->end_date);
         return view('agency.campaigns.create3_2')->with('adslot_search_results', $ads_broad)->with('id', $id)->with('campaign_dates_for_first_week', $campaign_dates_for_first_week);
     }
 
@@ -249,7 +255,7 @@ class CampaignsController extends Controller
             return back();
         }
 
-        $ratecards = Utilities::getRateCards($step1, $broadcaster, $start_date, $end_date);
+        $ratecards = $this->utilities->getRateCards($step1, $broadcaster, $start_date, $end_date);
 
         $r = $ratecards['rate_card'];
 
@@ -257,7 +263,10 @@ class CampaignsController extends Controller
 
         $ads_broad = Utilities::adslotFilter($step1, null, $agency_id);
 
-        $campaign_dates_by_week = campaignDate::groupCampaignDateByWeek($step1->start_date, $step1->end_date);
+        $campaign_dates_by_week_with_start_end_date = $this->utilities->getStartAndEndDateWithTheWeek($step1->start_date, $step1->end_date);
+
+        $first_week = $this->campaign_dates->getFirstWeek($step1->start_date, $step1->end_date);
+        $start_and_end_date_in_first_week = $this->campaign_dates->getStartAndEndDateForFirstWeek($first_week);
 
         $time = [15, 30, 45, 60];
 
@@ -265,9 +274,6 @@ class CampaignsController extends Controller
         $preselected_adslots = PreselectedAdslot::where('user_id', $id)->get();
         $total_price_preselected_adslot = Utilities::switch_db('api')->select("SELECT SUM(total_price) as total from preselected_adslots where user_id = '$id'");
         $positions = Utilities::switch_db('api')->select("SELECT * from filePositions where broadcaster_id = '$broadcaster'");
-
-        $campaign_date_by_week = campaignDate::groupCampaignDateByWeek($step1->start_date, $step1->end_date);
-        $campaign_dates_for_first_week = array_first($campaign_date_by_week);
 
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
         $col = new Collection($r);
@@ -286,8 +292,8 @@ class CampaignsController extends Controller
                                                     ->with('broadcaster', $broadcaster)
                                                     ->with('positions', $positions)
                                                     ->with('adslots', $adslots)
-                                                    ->with('campaign_dates_by_week', $campaign_dates_by_week)
-                                                    ->with('campaign_dates_for_first_week', $campaign_dates_for_first_week);
+                                                    ->with('campaign_dates_by_week', $campaign_dates_by_week_with_start_end_date)
+                                                    ->with('start_and_end_date_in_first_week', $start_and_end_date_in_first_week);
     }
 
     public function postPreselectedAdslot(Request $request)

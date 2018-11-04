@@ -158,7 +158,7 @@
                 <form id="form_cart" action="{{ route('broadcaster_campaign.cart') }}" method="GET">
                     {{ csrf_field() }}
                     @foreach($ratecards as $ratecard)
-                        @if($ratecard['id'] === $rating->rate_card)
+                        @if($ratecard['day_id'] === $rating->day)
                             <input type="hidden" name="air_date" id="air_date{{ $rating->id }}" value="{{ $ratecard['actual_date'] }}">
                         @endif
                     @endforeach

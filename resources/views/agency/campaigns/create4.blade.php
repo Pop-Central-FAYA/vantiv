@@ -46,7 +46,11 @@
                     @foreach($ads_broads as $ads_broad)
                         <div class='align_center one_media broad_click @if($ads_broad['broadcaster'] === $broadcaster) active @endif'>
                             <input type="hidden" name="broadcaster" value="{{ $ads_broad['broadcaster'] }}" id="broadcaster">
-                            <div><a href="{{ route('agency_campaign.step4', ['id' => $id, 'broadcaster' => $ads_broad['broadcaster'], 'start_date' => current($campaign_dates_for_first_week), 'end_date' => end($campaign_dates_for_first_week)]) }}"><img src="{{ asset($ads_broad['logo'] ? $ads_broad['logo'] : '')  }}"></a></div>
+                            <div><a href="{{ route('agency_campaign.step4', ['id' => $id, 'broadcaster' => $ads_broad['broadcaster'],
+                                                                            'start_date' => $start_and_end_date_in_first_week['start_date_of_the_week'],
+                                                                            'end_date' => $start_and_end_date_in_first_week['end_date_of_the_week']]) }}">
+                                    <img src="{{ asset($ads_broad['logo'] ? $ads_broad['logo'] : '')  }}">
+                                </a></div>
                             <span class="small_faint">{{ $ads_broad['boradcaster_brand'] }}</span>
                         </div>
                     @endforeach
@@ -62,8 +66,8 @@
                                 @foreach($campaign_dates_by_week as $campaign_by_week)
                                     <tr>
                                         <td>
-                                            <a href="{{ route('agency_campaign.step4', ['id' => $id, 'broadcaster' => $broadcaster, 'start_date' => current($campaign_by_week), 'end_date' => end($campaign_by_week)]) }}">
-                                                <input type="checkbox" @if($ratecards[0]['start_date'] === current($campaign_by_week)) checked @endif id="">
+                                            <a href="{{ route('agency_campaign.step4', ['id' => $id, 'broadcaster' => $broadcaster, 'start_date' => $campaign_by_week['start_date'], 'end_date' => $campaign_by_week['end_date']]) }}">
+                                                <input type="checkbox" @if($ratecards[0]['start_date'] === $campaign_by_week['start_date']) checked @endif id="">
                                                 <label id="new_client" for="week_1">Week {{ $j }} </label></a>
                                         </td>
                                     </tr>
@@ -159,13 +163,14 @@
                 </div>
             </form>
         </div>
+
         @foreach($adslots as $rating)
             <div class="modal_contain" style="width: 1000px;" id="modal_slot{{ $rating->id }}">
                 <h2 class="sub_header mb4">{{ $rating->from_to_time }} | {{ $rating->time_difference - $rating->time_used }} Seconds Available</h2></h2>
                 <form id="form_cart" action="{{ route('agency_campaign.cart') }}" method="GET">
                     {{ csrf_field() }}
                     @foreach($ratecards as $ratecard)
-                        @if($ratecard['id'] === $rating->rate_card)
+                        @if($ratecard['day_id'] === $rating->day)
                             <input type="hidden" name="air_date" id="air_date{{ $rating->id }}" value="{{ $ratecard['actual_date'] }}">
                         @endif
                     @endforeach

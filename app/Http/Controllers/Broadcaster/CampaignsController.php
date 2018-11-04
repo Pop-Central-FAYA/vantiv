@@ -283,16 +283,7 @@ class CampaignsController extends Controller
 
         $ads_broad = Utilities::adslotFilter($step1, $broadcaster, null);
 
-        $campaign_date_by_weeks = $this->campaign_date->groupCampaignDateByWeek($step1->start_date, $step1->end_date);
-        $campaign_dates_by_week_with_start_end_date = [];
-        foreach ($campaign_date_by_weeks as $campaign_date_by_week){
-            $start_and_end_date_of_the_week = $this->campaign_date->getStartAndEndDateForFirstWeek($campaign_date_by_week);
-            $campaign_dates_by_week_with_start_end_date[] = [
-                'date_by_week' => $campaign_date_by_week,
-                'start_date' => $start_and_end_date_of_the_week['start_date_of_the_week'],
-                'end_date' => $start_and_end_date_of_the_week['end_date_of_the_week'],
-            ];
-        }
+        $campaign_dates_by_week_with_start_end_date = $this->utilities->getStartAndEndDateWithTheWeek($step1->start_date, $step1->end_date);
 
         $time = [15, 30, 45, 60];
         $uploads_data = Upload::where('user_id', $id)->get();

@@ -542,12 +542,13 @@ class Utilities {
         $region = "'".implode("','", $step1->region)."'";
         $target_audience = "'".implode("','", $step1->target_audience)."'";
         $channel = $broadcaster_details[0]->channel_id;
-        $adslots =  Utilities::switch_db('api')->select("SELECT a.*, IF(a.id = p_p.adslot_id,p_p.price_60,p.price_60) as price_60, IF(a.id = p_p.adslot_id,p_p.price_45,p.price_45) as price_45,
+        $adslots =  Utilities::switch_db('api')->select("SELECT a.*,r.day, IF(a.id = p_p.adslot_id,p_p.price_60,p.price_60) as price_60, IF(a.id = p_p.adslot_id,p_p.price_45,p.price_45) as price_45,
                                                                          IF(a.id = p_p.adslot_id,p_p.price_30,p.price_30) as price_30, IF(a.id = p_p.adslot_id,p_p.price_15,p.price_15) as price_15 from adslots as a
                                                                          JOIN adslotPrices as p ON a.id = p.adslot_id
-                                                                          LEFT JOIN adslotPercentages as p_p ON a.id = p_p.adslot_id
-                                                                          where a.min_age >= $step1->min_age AND a.max_age <= $step1->max_age AND a.target_audience IN ($target_audience) AND a.day_parts IN ($day_parts)
-                                                                           AND a.region IN ($region) AND a.is_available = 0 AND a.channels = '$channel' and a.broadcaster = '$broadcaster_id'");
+                                                                         JOIN rateCards as r ON a.rate_card = r.id
+                                                                         LEFT JOIN adslotPercentages as p_p ON a.id = p_p.adslot_id
+                                                                         where a.min_age >= $step1->min_age AND a.max_age <= $step1->max_age AND a.target_audience IN ($target_audience) AND a.day_parts IN ($day_parts)
+                                                                         AND a.region IN ($region) AND a.is_available = 0 AND a.channels = '$channel' and a.broadcaster = '$broadcaster_id'");
         return $adslots;
 
     }
@@ -779,20 +780,19 @@ class Utilities {
                                                                         $campaign_dates_in_first_week['end_date_of_the_week']);
         $ratecards_imploded = "'".implode("','", $ratecards)."'";
 
-        $ratecards = Utilities::switch_db('api')->select("SELECT d.day, h.time_range, r.id FROM rateCards as r JOIN days as d ON d.id = r.day
-                                                                JOIN hourlyRanges as h ON h.id = r.hourly_range_id where r.broadcaster = '$broadcaster_id'
+        $ratecards = Utilities::switch_db('api')->select("SELECT d.day, r.day as day_id, r.id FROM rateCards as r 
+                                                                JOIN days as d ON d.id = r.day
                                                                 AND r.id IN (SELECT rate_card FROM adslots where min_age >= $step1->min_age
                                                                 AND max_age <= $step1->max_age
                                                                 AND target_audience IN ($target_audience)
                                                                 AND day_parts IN ($day_parts) AND region IN ($region) AND rate_card IN ($ratecards_imploded)
-                                                                AND is_available = 0 AND broadcaster = '$broadcaster_id')");
-
+                                                                AND is_available = 0 AND broadcaster = '$broadcaster_id') GROUP BY r.day");
         foreach ($ratecards as $ratecard){
-            $adslots = Utilities::filterAdslots(json_decode(json_encode($all_adslots), true), $ratecard->id);;
+            $adslots = Utilities::filterAdslots(json_decode(json_encode($all_adslots), true), $ratecard->day_id);
             $rate_card[] = [
                 'id' => $ratecard->id,
-                'hourly_range' => $ratecard->time_range,
                 'day' => $ratecard->day,
+                'day_id' => $ratecard->day_id,
                 'adslot' => $adslots,
                 'start_date' => $campaign_dates_in_first_week['start_date_of_the_week'],
                 'end_date' => $campaign_dates_in_first_week['end_date_of_the_week'],
@@ -802,11 +802,11 @@ class Utilities {
         return ['rate_card' => $rate_card, 'adslot' => $all_adslots];
     }
 
-    public static function filterAdslots($adslots, $rate_card)
+    public static function filterAdslots($adslots, $day)
     {
         $matches = array();
         foreach($adslots as $adslot){
-            if($adslot['rate_card'] === $rate_card)
+            if($adslot['day'] === $day)
                 $matches[] = (object)$adslot;
         }
 
@@ -1288,6 +1288,22 @@ class Utilities {
             'status' => 1,
 
         ];
+    }
+
+    public function getStartAndEndDateWithTheWeek($start_date, $end_date)
+    {
+        $campaign_date_by_weeks = $this->campaign_dates->groupCampaignDateByWeek($start_date, $end_date);
+        $campaign_dates_by_week_with_start_end_date = [];
+        foreach ($campaign_date_by_weeks as $campaign_date_by_week){
+            $start_and_end_date_of_the_week = $this->campaign_dates->getStartAndEndDateForFirstWeek($campaign_date_by_week);
+            $campaign_dates_by_week_with_start_end_date[] = [
+                'date_by_week' => $campaign_date_by_week,
+                'start_date' => $start_and_end_date_of_the_week['start_date_of_the_week'],
+                'end_date' => $start_and_end_date_of_the_week['end_date_of_the_week'],
+            ];
+        }
+
+        return $campaign_dates_by_week_with_start_end_date;
     }
 
 }
