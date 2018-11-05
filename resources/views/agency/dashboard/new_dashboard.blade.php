@@ -57,7 +57,7 @@
                 </div>
                 <p class="align_center">TV</p>
 
-                <div id="tv" style="height: 150px"></div>
+                <div id="tv" class="_pie_chart" style="height: 150px"></div>
 
                 <ul>
                     <li class="pie_legend active"><span class="weight_medium">{{ round($active) }}%</span> Active</li>
@@ -73,12 +73,12 @@
                 </div>
                 <p class="align_center">Radio</p>
 
-                <div id="radio" style="height: 150px"></div>
+                <div class="_pie_chart" style="height: 150px"></div>
 
                 <ul>
-                    <li class="pie_legend active"><span class="weight_medium">{{ round($active_radio) }}%</span> Active</li>
-                    <li class="pie_legend pending"><span class="weight_medium">{{ round($pending_radio) }}%</span> Pending</li>
-                    <li class="pie_legend finished"><span class="weight_medium">{{ round($finish_radio) }}%</span> Finished</li>
+                    <li class="pie_legend active"><span class="weight_medium">0%</span> Active</li>
+                    <li class="pie_legend pending"><span class="weight_medium">0%</span> Pending</li>
+                    <li class="pie_legend finished"><span class="weight_medium">0%</span> Finished</li>
                 </ul>
             </div>
             <!-- newspaper -->
@@ -88,7 +88,7 @@
                 </div>
                 <p class="align_center">Newspaper</p>
 
-                <div class="_pie_chart"></div>
+                <div class="_pie_chart" style="height: 150px"></div>
 
                 <ul>
                     <li class="pie_legend active"><span class="weight_medium">0%</span> Active</li>
@@ -104,7 +104,7 @@
                 </div>
                 <p class="align_center">OOH</p>
 
-                <div class="_pie_chart"></div>
+                <div class="_pie_chart" style="height: 150px"></div>
 
                 <ul>
                     <li class="pie_legend active"><span class="weight_medium">0%</span> Active</li>
@@ -120,7 +120,7 @@
                 </div>
                 <p class="align_center">Desktop</p>
 
-                <div class="_pie_chart"></div>
+                <div class="_pie_chart" style="height: 150px"></div>
 
                 <ul>
                     <li class="pie_legend active"><span class="weight_medium">0%</span> Active</li>
@@ -136,7 +136,7 @@
                 </div>
                 <p class="align_center">Mobile</p>
 
-                <div class="_pie_chart"></div>
+                <div class="_pie_chart" style="height: 150px"></div>
 
                 <ul>
                     <li class="pie_legend active"><span class="weight_medium">0%</span> Active</li>
