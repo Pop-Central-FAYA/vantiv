@@ -83,7 +83,11 @@ class DashboardController extends Controller
     {
         $agency_media_channels = [];
 
-        $campaigns = Utilities::switch_db('api')->select("SELECT * from campaignDetails where broadcaster IN (SELECT b.id from broadcasters as b, campaignChannels as c where b.channel_id = c.id AND c.channel = '$channel')");
+        $agency_id = Session::get('agency_id');
+
+        $campaigns = Utilities::switch_db('api')->select("SELECT * from campaignDetails where broadcaster IN 
+                                                      (SELECT b.id from broadcasters as b, campaignChannels as c where b.channel_id = c.id AND c.channel = '$channel')
+                                                      AND agency = '$agency_id'");
 
         foreach ($campaigns as $campaign){
             $channels = Utilities::switch_db('api')->select("SELECT * from campaignChannels where id IN ($campaign->channel) AND channel = '$channel' ");
