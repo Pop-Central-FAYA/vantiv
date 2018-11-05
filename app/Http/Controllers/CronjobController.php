@@ -82,6 +82,7 @@ class CronjobController extends Controller
 
     public function validateCampaign()
     {
+        $today_date = date("Y-m-d");
         $campaigns = Utilities::switch_db('api')->select("SELECT * from campaignDetails WHERE campaign_status = 0 AND stop_date < current_date GROUP BY campaign_id");
         $adslot_arrays = [];
         foreach ($campaigns as $campaign){
@@ -105,7 +106,7 @@ class CronjobController extends Controller
         }
 
         foreach ($campaigns as $campaign){
-            $update_campaign = Utilities::switch_db('api')->update("UPDATE campaignDetails set campaign_status = 1 where campaign_id = '$campaign->campaign_id' AND stop_date < current_date ");
+            $update_campaign = Utilities::switch_db('api')->update("UPDATE campaignDetails set campaign_status = 1 where campaign_id = '$campaign->campaign_id' AND stop_date < '$today_date' ");
         }
     }
 
