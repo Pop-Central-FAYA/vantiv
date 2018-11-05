@@ -176,7 +176,7 @@ class WalletsController extends Controller
                     'prev_balance' => 0,
                     'current_balance' => $amount
                 ];
-            $insert_history = $this->transactionHistory($agency_id, $amount, 0);
+            $insert_history = Utilities::transactionHistory($agency_id, $amount, $amount, 0);
             try {
                 Utilities::switch_db('api')->transaction(function () use ($insert_history, $wallet) {
                     Utilities::switch_db('api')->table('wallets')->insert($wallet);
