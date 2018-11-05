@@ -30,4 +30,15 @@ class SelectedAdslot extends Model
     {
         return $this->hasMany(AdslotReason::class, 'selected_adslot_id', 'id');
     }
+
+    /**
+     * We need to hash the file for uniqueness sake.
+     * This should probably be stored in the table itself
+     * @return [type] [description]
+     */
+    public function getFileHashAttribute()
+    {
+        return md5("{$this->campaign_id}-{$this->file_url}");
+    }
+
 }

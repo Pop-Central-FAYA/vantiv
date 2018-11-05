@@ -172,6 +172,7 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
         Vanguard\Providers\ProfileServiceProvider::class,
+        Laravel\Tinker\TinkerServiceProvider::class,
 
         /**
          * Third-Party Service Providers
