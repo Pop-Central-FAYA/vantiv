@@ -20,30 +20,31 @@
 
         <!-- main stats -->
         <div class="the_stats the_frame clearfix mb4">
-            <div class="column col_2">
+            <div class="column col_3">
                 <span class="weight_medium small_faint uppercased">Active Campaigns</span>
                 <h3><a href="{{ route('agency.campaign.all') }}">{{ count($active_campaigns) }}</a></h3>
-            </div>
-
-            <div class="column col_2">
-                <span class="weight_medium small_faint uppercased">All Clients</span>
-                <h3><a href="{{ route('clients.list') }}">{{ count($clients) }}</a></h3>
-            </div>
-
-            <div class="column col_3">
-                <span class="weight_medium small_faint uppercased">Pending Invoices</span>
-                <h3><a href="{{ route('invoices.pending') }}" style="color: red;">{{ count($pending_invoices) }}</a></h3>
-            </div>
-
-            <div class="column col_2">
-                <span class="weight_medium small_faint uppercased">All Brands</span>
-                <h3><a href="{{ route('brand.all') }}">{{ count($all_brands) }}</a></h3>
             </div>
 
             <div class="column col_3">
                 <span class="weight_medium small_faint uppercased">Campaigns On Hold</span>
                 <h3><a href="{{ route('agency.campaigns_onhold') }}" style="color: red;">{{ count($campaigns_on_hold) }}</a></h3>
             </div>
+
+            <div class="column col_3">
+                <span class="weight_medium small_faint uppercased">All Clients</span>
+                <h3><a href="{{ route('clients.list') }}">{{ count($clients) }}</a></h3>
+            </div>
+
+            <!-- <div class="column col_3">
+                <span class="weight_medium small_faint uppercased">Pending Invoices</span>
+                <h3><a href="{{ route('invoices.pending') }}" style="color: red;">{{ count($pending_invoices) }}</a></h3>
+            </div> -->
+
+            <div class="column col_3">
+                <span class="weight_medium small_faint uppercased">All Brands</span>
+                <h3><a href="{{ route('brand.all') }}">{{ count($all_brands) }}</a></h3>
+            </div>
+
         </div>
 
 
