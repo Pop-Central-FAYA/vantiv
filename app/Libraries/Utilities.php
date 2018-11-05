@@ -243,7 +243,7 @@ class Utilities {
     public static function fetchTimeInCart($id, $broadcaster)
     {
         $times = [];
-        $cart_check = \DB::select("SELECT SUM(time) as time_sum, adslot_id from carts WHERE user_id = '$id' GROUP BY adslot_id");
+        $cart_check = Utilities::switch_db('api')->select("SELECT SUM(time) as time_sum, adslot_id from preselected_adslots WHERE user_id = '$id' GROUP BY adslot_id");
         foreach($cart_check as $q){
             $check_adslot_space = Utilities::switch_db('api')->select("SELECT * from adslots where id = '$q->adslot_id'");
             $time_left = (integer)$check_adslot_space[0]->time_difference - (integer)$check_adslot_space[0]->time_used;
@@ -615,12 +615,18 @@ class Utilities {
 
     public static function deleteCartsUploadsfilePosition($user_id, $broadcaster_id, $agency_id)
     {
-        $del_uplaods = \DB::delete("DELETE FROM uploads WHERE user_id = '$user_id'");
+        $del_uplaods = Upload::where('user_id', $user_id)->delete();
         $del_file_position = Utilities::switch_db('api')->delete("DELETE FROM adslot_filePositions where select_status = 0");
         if($broadcaster_id){
-            $del_cart = \DB::delete("DELETE FROM carts WHERE user_id = '$user_id' AND broadcaster_id = '$broadcaster_id'");
+            $del_cart = PreselectedAdslot::where([
+                ['user_id', $user_id],
+                ['broadcaster_id', $broadcaster_id]
+            ])->delete();
         }else{
-            $del_cart = \DB::delete("DELETE FROM carts WHERE user_id = '$user_id' AND agency_id = '$agency_id'");
+            $del_cart = PreselectedAdslot::where([
+                ['user_id', $user_id],
+                ['agency_id', $broadcaster_id]
+            ])->delete();
         }
 
         return;
