@@ -71,8 +71,10 @@
                         <a href="{{ route('agency_campaign.step3_2', ['id' => $id]) }}" class="btn uppercased _white _go_back"><span class=""></span> Back</a>
                     </div>
                     <div class="column col_4">
+                        @if($wallet_balance)
                         @if((int)$wallet_balance[0]->current_balance < (int)$calc[0]->total_price)
                             <a href="#fund_wallet" class="btn modal_click small_btn"><span class="_plus"></span>Fund Wallet</a>
+                        @endif
                         @endif
                     </div>
                     <div class="column col_4 align_right">
