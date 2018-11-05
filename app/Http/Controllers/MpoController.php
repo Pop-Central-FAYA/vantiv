@@ -13,6 +13,7 @@ use Vanguard\Models\AdslotReason;
 use Vanguard\Models\SelectedAdslot;
 use Vanguard\Models\RejectionReason;
 use Yajra\DataTables\DataTables;
+use Vanguard\Services\BroadcasterPlayout\CreatePlayout;
 
 class MpoController extends Controller
 {
@@ -138,6 +139,10 @@ class MpoController extends Controller
                 $check_files = Api::approvedCampaignFiles($campaign_id, $broadcaster_id);
                 if($check_files['check_file_for_updating_mpo'] == 0){
                     Utilities::switch_db('api')->update("UPDATE mpoDetails set is_mpo_accepted = 1 where mpo_id = '$mpo_id' and broadcaster_id = '$broadcaster_id'");
+
+                    //The mpo has been approved, so let us create the playout
+                    $playout_creator = new CreatePlayout($campaign_id, $mpo_id);
+                    $playout_creator->run();
                 }
                 $description = $status == "approved" ? 'Your file with file code '.$file_code. ' has been approved ' : 'Your file with file code '.$file_code. ' has been rejected';
                 Api::saveActivity(\Session::get('broadcaster_id'), $description);
