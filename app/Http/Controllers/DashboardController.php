@@ -141,9 +141,9 @@ class DashboardController extends Controller
         $total_campaigns_tv = count($agency_media_channels);
 
         //percentage values
-        $percentage_active = ($total_for_active / $total_campaigns_tv) * 100;
-        $percentage_finished = ($total_finished / $total_campaigns_tv) * 100;
-        $percentage_pending = ($total_pending / $total_campaigns_tv) * 100;
+        $percentage_active = $total_for_active != 0 ? ($total_for_active / $total_campaigns_tv) * 100 : 0;
+        $percentage_finished = $total_finished != 0 ? ($total_finished / $total_campaigns_tv) * 100 : 0;
+        $percentage_pending = $total_pending !=0 ? ($total_pending / $total_campaigns_tv) * 100 : 0;
 
         return (['percentage_active' => $percentage_active, 'percentage_finished' => $percentage_finished, 'percentage_pending' => $percentage_pending]);
     }
