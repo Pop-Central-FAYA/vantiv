@@ -297,6 +297,7 @@
                             <th>Files</th>
                             <th>Adslots</th>
                             <th>Channel</th>
+                            <th>Air Date</th>
                             <th></th>
                             <th></th>
                             <th></th>
@@ -315,6 +316,7 @@
                                         <p>{{ $uploaded_file->get_adslot->from_to_time }}</p>
                                     </td>
                                     <td>{{ \Vanguard\Libraries\Utilities::getBroadcasterDetails($uploaded_file->broadcaster_id)[0]->brand }}</td>
+                                    <td>{{ date('l, jS F, Y', strtotime($uploaded_file->air_date)) }}</td>
                                     @if($uploaded_file->status === 'rejected')
                                         <td>
                                             <p style="color: red">{{ $uploaded_file->adslot_reasons()->orderBy('updated_at', 'desc')->first()->rejection_reason->name }}</p>

@@ -167,7 +167,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/create/step3/{id}', 'Broadcaster\CampaignsController@createStep3')->name('campaign.create3');
         Route::get('/create/step3/store/{id}', 'Broadcaster\CampaignsController@postStep3')->name('campaign.store3');
         Route::get('/create/step3_1/{id}', 'Broadcaster\CampaignsController@storeStep3_1')->name('campaign.create3_1');
-        Route::get('/create/step4/{id}/{broadcaster}', 'Broadcaster\CampaignsController@createStep4')->name('campaign.create4');
+        Route::get('/create/step4/{id}/{broadcaster}/{start_date}/{end_date}', 'Broadcaster\CampaignsController@createStep4')->name('campaign.create4');
         Route::get('/cart/store', 'Broadcaster\CampaignsController@postPreselectedAdslot')->name('broadcaster_campaign.cart');
         Route::get('/checkout/{id}', 'Broadcaster\CampaignsController@checkout')->name('broadcaster_campaign.checkout');
         Route::post('/submit-campaign/{id}', 'Broadcaster\CampaignsController@postCampaign')->name('submit.campaign');
@@ -217,7 +217,7 @@ Route::group(['middleware' => 'auth'], function () {
        Route::get('/create/{walkins}/{broadcaster}/{broadcaster_user}/step3', 'BroadcasterUserCampaignsController@createStep3')->name('broadcaster.user.campaign.step3');
        Route::post('/create/{walkins}/{broadcaster}/{broadcaster_user}/step3/store', 'BroadcasterUserCampaignsController@postStore3')->name('broadcaster.user.campaign.store3');
        Route::post('/create/{walkins}/{broadcaster}/{broadcaster_user}/step3_1/store', 'BroadcasterUserCampaignsController@postStore3_1')->name('broadcaster.user.campaign.store3_1');
-       Route::get('/create/{walkins}/{broadcaster}/{broadcaster_user}/step4', 'BroadcasterUserCampaignsController@createStep4')->name('broadcaster.user.campaign.create4');
+       Route::get('/create/{walkins}/{broadcaster}/{broadcaster_user}/step4/{start_date}/{end_date}', 'BroadcasterUserCampaignsController@createStep4')->name('broadcaster.user.campaign.create4');
        Route::get('/create/{walkins}/{broadcaster}/{broadcaster_user}/step5', 'BroadcasterUserCampaignsController@createStep5')->name('broadcaster.user.campaign.store5');
        Route::get('/checkout/{walkins}/{broadcaster}/{broadcaster_user}', 'BroadcasterUserCampaignsController@getCheckout')->name('broadcaster.user.checkout');
        Route::post('/submit/{walkins}/{broadcaster}/{broadcaster_user}', 'BroadcasterUserCampaignsController@submitCampaign')->name('broadcaster.user.submit.campaign');
@@ -388,11 +388,12 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/campaign/step3/store/new-uploads/{id}/{broadcaster}', 'Agency\CampaignsController@postNewUploads')->name('new.upload');
             Route::get('/camaigns/uploads/delete/{upload_id}/{id}', 'Agency\CampaignsController@deleteUpload')->name('agency.uploads.delete');
             Route::get('/review-uploads/{id}/{broadcaster}', 'Agency\CampaignsController@reviewUploads')->name('agency_campaign.review_uploads');
-            Route::get('/campaign/step4/{id}/{broadcaster}', 'Agency\CampaignsController@getStep4')->name('agency_campaign.step4');
+            Route::get('/campaign/step4/{id}/{broadcaster}/{start_date}/{end_date}', 'Agency\CampaignsController@getStep4')->name('agency_campaign.step4');
             Route::get('/campaigns/cart/store', 'Agency\CampaignsController@postPreselectedAdslot')->name('agency_campaign.cart');
             Route::get('/campaign/checkout/{id}', 'Agency\CampaignsController@checkout')->name('agency_campaign.checkout');
             Route::get('/cart/remove/{id}', 'Agency\CampaignsController@removeCart')->name('agency_cart.remove');
             Route::post('/campaign/submit/{id}', 'Agency\CampaignsController@postCampaign')->name('agency_submit.campaign');
+
 
             Route::get('/campaign-details/{id}', 'Agency\CampaignsController@getDetails')->name('agency.campaign.details');
             Route::get('/mpo-details/{id}', 'Agency\CampaignsController@mpoDetails')->name('agency.mpo.details');

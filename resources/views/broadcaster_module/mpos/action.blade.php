@@ -51,8 +51,8 @@
                 </thead>
                 <tbody>
 
-                @if($mpo_data[0]['files'] !== 0)
-                    @foreach ($mpo_data[0]['files'] as $mpo_file)
+                @if($count_mpo_data_files > 0)
+                    @foreach ($mpo_data_files as $mpo_file)
                         <tr id="row{{ $mpo_file->file_code }}">
                         <td>
                             <video width="150" controls><source src="{{ asset($mpo_file->file_url) }}"></video>
@@ -119,6 +119,10 @@
                 @endif
                 </tbody>
             </table>
+
+            <p><br></p>
+        {{ $mpo_data_files->links('pagination.general') }}
+            <p><br></p>
             <!-- end -->
         </div>
 

@@ -43,34 +43,59 @@
                     </div>
                 </div>
 
-
-                <!-- media houses -->
-
                 <!-- time slots -->
-                <div class="time_slots">
-                    <table>
-                        @foreach($ratecards as $ratecard)
-                            <tr>
-                                <th>{{ $ratecard['day'] }}</th>
-                                <th>{{ $ratecard['hourly_range'] }}</th>
-                                @foreach($ratecard['adslot'] as $rating)
-                                    <td>
-                                        <a href="#modal_slot{{ $rating->id }}" class="modal_click">
-                                            <input type="checkbox"
-                                                   @foreach($preselected_adslots as $preselected_adslot)
-                                                   @if($preselected_adslot->adslot_id === $rating->id)
-                                                   checked
-                                                   @endif
-                                                   @endforeach
-
-                                                   id="{{ $rating->id }}">
-                                            <label id="new_client{{ $rating->id }}" for="{{ $rating->id }}">{{ $rating->from_to_time }}</label></a>
-                                    </td>
+                <div class="media_houses mb3 clearfix">
+                    <div class="align_center col_2" style="float:left">
+                        <div class="time_slots">
+                            <table>
+                                <?php $j = 1; ?>
+                                @foreach($campaign_dates_by_week as $campaign_by_week)
+                                    <tr>
+                                        <td>
+                                            <a href="{{ route('campaign.create4', ['id' => $id, 'broadcaster' => $broadcaster, 'start_date' => $campaign_by_week['start_date'], 'end_date' => $campaign_by_week['end_date']]) }}">
+                                                <input type="checkbox" @if($ratecards[0]['start_date'] === $campaign_by_week['start_date']) checked @endif id="">
+                                                <label id="new_client" for="week_1">Week {{ $j }} </label></a>
+                                        </td>
+                                    </tr>
+                                    <?php $j++; ?>
                                 @endforeach
-                            </tr>
-                        @endforeach
+                            </table>
+                        </div>
+                    </div>
+                    <div class="align_center col_12 " >
+                        <div class="time_slots">
+                            <table>
+                                <thead>
+                                <tr>
+                                    @foreach($ratecards as $ratecard)
+                                        <th>{{ $ratecard['day'] }} <br> {{ $ratecard['actual_date'] }}</th>
+                                    @endforeach
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    @foreach($ratecards as $ratecard)
+                                        <td>
+                                            @foreach($ratecard['adslot'] as $rating)
+                                                <a href="#modal_slot{{ $rating->id }}" class="modal_click">
+                                                    <input type="checkbox"
+                                                           @foreach($preselected_adslots as $preselected_adslot)
+                                                           @if($preselected_adslot->adslot_id === $rating->id && $preselected_adslot->air_date === $ratecard['actual_date'])
+                                                           checked
+                                                           @endif
+                                                           @endforeach
 
-                    </table>
+                                                           id="{{ $rating->id }}">
+                                                    <label id="new_client{{ $rating->id }}" for="{{ $rating->id }}">{{ $rating->from_to_time }}</label></a>
+                                                <br>
+                                            @endforeach
+                                        </td>
+                                    @endforeach
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
 
 
@@ -109,7 +134,6 @@
             <div class="wallet_placer margin_center mb3"></div>
             <form method="POST" class="selsec" action="{{ route('update.budget') }}">
                 {{ csrf_field() }}
-
                 <div class="clearfix mb3">
                     <div class="input_wrap{{ $errors->has('campaign_budget') ? ' has-error' : '' }}">
                         <label class="small_faint">Campaign Budget</label>
@@ -133,6 +157,11 @@
                 <h2 class="sub_header mb4">{{ $rating->from_to_time }} | {{ $rating->time_difference - $rating->time_used }} Seconds Available</h2></h2>
                 <form id="form_cart" action="{{ route('broadcaster_campaign.cart') }}" method="GET">
                     {{ csrf_field() }}
+                    @foreach($ratecards as $ratecard)
+                        @if($ratecard['day_id'] === $rating->day)
+                            <input type="hidden" name="air_date" id="air_date{{ $rating->id }}" value="{{ $ratecard['actual_date'] }}">
+                        @endif
+                    @endforeach
                     <table id="mod" class="table table-bordered table-striped">
                         <thead>
                         <tr>
@@ -168,14 +197,16 @@
                                             @if(count($positions) > 0)
                                                 @foreach($positions as $position)
                                                     <option value="{{ $position->id }}"
-                                                            @foreach($preselected_adslots as $preselected_adslot)
-                                                                @if($preselected_adslot->adslot_id === $rating->id)
-                                                                    @if((int)$preselected_adslot->time === (int)$uploaded_data[$i]->time)
-                                                                        @if($preselected_adslot->filePosition_id === $position->id)
-                                                                            selected
+                                                            @foreach($ratecards as $ratecard)
+                                                                @foreach($preselected_adslots as $preselected_adslot)
+                                                                    @if($preselected_adslot->adslot_id === $rating->id && $preselected_adslot->air_date == $ratecard['actual_date'])
+                                                                        @if((int)$preselected_adslot->time === (int)$uploaded_data[$i]->time)
+                                                                            @if($preselected_adslot->filePosition_id === $position->id)
+                                                                                selected
+                                                                            @endif
                                                                         @endif
                                                                     @endif
-                                                                @endif
+                                                                @endforeach
                                                             @endforeach
                                                     >{{ $position->position }}</option>
                                                 @endforeach
@@ -184,13 +215,15 @@
                                     </td>
 
                                     <td class="pick_button{{ $rating->id.$uploaded_data[$i]->id }}"><button id="button{{ $rating->id.$uploaded_data[$i]->id }}"
-                                                                                                    @foreach($preselected_adslots as $preselected_adslot)
-                                                                                                        @if($preselected_adslot->adslot_id === $rating->id)
-                                                                                                            @if((int)$preselected_adslot->time === (int)$uploaded_data[$i]->time)
-                                                                                                                class="btn-disable"
-                                                                                                            @endif
-                                                                                                        @endif
-                                                                                                    @endforeach
+                                                                                                            @foreach($ratecards as $ratecard)
+                                                                                                                @foreach($preselected_adslots as $preselected_adslot)
+                                                                                                                    @if($preselected_adslot->adslot_id === $rating->id && $preselected_adslot->air_date === $ratecard['actual_date'])
+                                                                                                                        @if((int)$preselected_adslot->time === (int)$uploaded_data[$i]->time)
+                                                                                                                            class="btn-disable"
+                                                                                                                        @endif
+                                                                                                                    @endif
+                                                                                                                @endforeach
+                                                                                                            @endforeach
                                                                                                     type="button"
                                                                                                     data-file_slot="{{ $rating->id.$uploaded_data[$i]->id }}"
                                                                                                     @if($uploaded_data[$i]->time === 15)
@@ -249,6 +282,7 @@
             var file_code = $(this).data('file_code');
             var file_format = $(this).data('file_format');
             var broadcaster = $(this).data("broadcaster");
+            var air_date = $("#air_date"+adslot_id).val();
             var target = $(this).data('target');
             $(".saveCart").attr('disabled', true);
 
@@ -266,6 +300,7 @@
                     time: time,
                     position: position,
                     walkins: walkins,
+                    air_date: air_date,
                     file_format: file_format,
                     '_token': $('input[name=_token]').val()
                 },

@@ -21,7 +21,7 @@
         <!-- main frame -->
         <div class="the_frame clearfix mb border_top_color">
 
-            <div class="margin_center col_7 clearfix pt4 create_fields container_modal_pay">
+            <div class="margin_center col_10 clearfix pt4 create_fields container_modal_pay">
 
                 <!-- progress bar -->
                 <div class="create_gauge">
@@ -42,6 +42,7 @@
                         <th>Surge</th>
                         <th>Position</th>
                         <th>Total</th>
+                        <th>Air Date</th>
                         <th></th>
                     </tr>
                     @foreach($preselected_adslot_arrays as $preselected_adslot_array)
@@ -53,6 +54,7 @@
                             <td>{{ $preselected_adslot_array['percentage'] }}%</td>
                             <td>{{ $preselected_adslot_array['position'] }}</td>
                             <td>&#8358; {{ number_format($preselected_adslot_array['total_price'], 2) }}</td>
+                            <td>{{ date('l, jS F, Y', strtotime($preselected_adslot_array['air_date'])) }}</td>
                             <td><a href="#delete_cart{{ $preselected_adslot_array['id'] }}" class="color_red close_red modal_click"><span class="_icon"></span> Remove</a></td>
                         </tr>
                     @endforeach
@@ -68,16 +70,18 @@
                     <div class="column col_4">
                         <a href="{{ route('agency_campaign.step3_2', ['id' => $id]) }}" class="btn uppercased _white _go_back"><span class=""></span> Back</a>
                     </div>
-                    @if((int)$wallet_balance[0]->current_balance < (int)$calc[0]->total_price)
-                        <div class="column col_4">
+                    <div class="column col_4">
+                        @if((int)$wallet_balance[0]->current_balance < (int)$calc[0]->total_price)
                             <a href="#fund_wallet" class="btn modal_click small_btn"><span class="_plus"></span>Fund Wallet</a>
-                        </div>
-                    @endif
+                        @endif
+                    </div>
                     <div class="column col_4 align_right">
                         <a href="#payment" class="btn uppercased _proceed modal_click">Proceed <span class=""></span></a>
                     </div>
                 </div>
 
+                <p><br></p>
+                {{ $preselected_adslot_arrays->links('pagination.general') }}
             </div>
         </div>
         <!-- main frame end -->

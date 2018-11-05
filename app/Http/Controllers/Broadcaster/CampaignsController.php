@@ -5,13 +5,9 @@ namespace Vanguard\Http\Controllers\Broadcaster;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Input;
-use Cloudinary;
-use JD\Cloudder\Facades\Cloudder;
 use Vanguard\Http\Requests\CampaignInformationUpdateRequest;
-use Vanguard\Libraries\AmazonS3;
 use Vanguard\Libraries\Api;
-use Vanguard\Libraries\Maths;
+use Vanguard\Libraries\CampaignDate;
 use Vanguard\Libraries\Paystack;
 use Vanguard\Libraries\Utilities;
 use Vanguard\Models\PreselectedAdslot;
@@ -25,6 +21,15 @@ use Vanguard\Http\Controllers\Controller;
 
 class CampaignsController extends Controller
 {
+    protected $campaign_date;
+    protected $utilities;
+
+    public function __construct(CampaignDate $campaignDate, Utilities $utilities)
+    {
+        $this->campaign_date = $campaignDate;
+        $this->utilities = $utilities;
+    }
+
     private $campaign_success_message = 'Campaign created successfully, please review and submit';
 
     public function setup()
@@ -225,6 +230,7 @@ class CampaignsController extends Controller
 
     public function storeStep3_1($id)
     {
+        $first_step = Session::get('first_step');
         $broadcaster_id = Session::get('broadcaster_id');
         $broadcaster_details = Utilities::getBroadcasterDetails($broadcaster_id);
         $channel = $broadcaster_details[0]->channel_id;
@@ -250,12 +256,19 @@ class CampaignsController extends Controller
 
         }
 
-        return redirect()->route('campaign.create4', ['id' => $id, 'broadcaster' => $broadcaster_id]);
+        $first_week = $this->campaign_date->getFirstWeek($first_step->start_date, $first_step->end_date);
 
+        $campaign_start_end_date_of_the_week = $this->campaign_date->getStartAndEndDateForFirstWeek($first_week);
+
+        return redirect()->route('campaign.create4', ['id' => $id, 'broadcaster' => $broadcaster_id,
+                                                            'start_date' => $campaign_start_end_date_of_the_week['start_date_of_the_week'],
+                                                            'end_date' => $campaign_start_end_date_of_the_week['end_date_of_the_week']
+                                                            ]);
     }
 
-    public function createStep4($id, $broadcaster)
+    public function createStep4($id, $broadcaster, $start_date, $end_date)
     {
+
         ini_set('memory_limit','512M');
 
         $step1 = Session::get('first_step');
@@ -270,6 +283,8 @@ class CampaignsController extends Controller
 
         $ads_broad = Utilities::adslotFilter($step1, $broadcaster, null);
 
+        $campaign_dates_by_week_with_start_end_date = $this->utilities->getStartAndEndDateWithTheWeek($step1->start_date, $step1->end_date);
+
         $time = [15, 30, 45, 60];
         $uploads_data = Upload::where('user_id', $id)->get();
         $preselected_adslots = PreselectedAdslot::where('user_id', $id)->get();
@@ -277,9 +292,12 @@ class CampaignsController extends Controller
         $broadcaster_logo = $ads_broad['logo'];
         $positions = Utilities::switch_db('api')->select("SELECT * from filePositions where broadcaster_id = '$broadcaster'");
 
-        $rate_card = Utilities::getRatecards($step1, $broadcaster);
+        $rate_card = $this->utilities->getRateCards($step1, $broadcaster, $start_date, $end_date);
 
         $adslots = $rate_card['adslot'];
+
+//        $campaign_date_by_week = campaignDate::groupCampaignDateByWeek($step1->start_date, $step1->end_date);
+//        $campaign_dates_for_first_week = array_first($campaign_date_by_week);
 
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
         $col = new Collection($rate_card['rate_card']);
@@ -288,9 +306,18 @@ class CampaignsController extends Controller
         $entries = new LengthAwarePaginator($currentPageSearchResults, count($col), $perPage);
         $entries->setPath('/agency/campaigns/campaign/step4/'.$id.'/'.$broadcaster);
 
-        return view('broadcaster_module.campaigns.create_step4')->with('ratecards', $entries)->with('total_amount', $total_price_preselected_adslot)->with('ads_broads', $ads_broad)
-            ->with('preselected_adslots', $preselected_adslots)->with('uploaded_data', $uploads_data)->with('times', $time)->with('id', $id)
-            ->with('broadcaster', $broadcaster)->with('broadcaster_logo', $broadcaster_logo)->with('positions', $positions)->with('ratings', $adslots);
+        return view('broadcaster_module.campaigns.create_step4')->with('ratecards', $entries)
+                                                                      ->with('total_amount', $total_price_preselected_adslot)
+                                                                      ->with('ads_broads', $ads_broad)
+                                                                      ->with('preselected_adslots', $preselected_adslots)
+                                                                      ->with('uploaded_data', $uploads_data)
+                                                                      ->with('times', $time)
+                                                                      ->with('id', $id)
+                                                                      ->with('broadcaster', $broadcaster)
+                                                                      ->with('broadcaster_logo', $broadcaster_logo)
+                                                                      ->with('positions', $positions)
+                                                                      ->with('ratings', $adslots)
+                                                                      ->with('campaign_dates_by_week', $campaign_dates_by_week_with_start_end_date);
     }
 
     public function postPreselectedAdslot(Request $request)
@@ -324,17 +351,28 @@ class CampaignsController extends Controller
         $first = Session::get('first_step');
         $checkout = Utilities::getCheckout($id, $first, null, $broadcaster_id);
 
+        $campaign_date_by_week = $this->campaign_date->groupCampaignDateByWeek($first->start_date, $first->end_date);
+        $campaign_dates_for_first_week = array_first($campaign_date_by_week);
+
+        //add pagination
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $col = new Collection($checkout['preselected_adslot_arrays']);
+        $perPage = 10;
+        $currentPageSearchResults = $col->slice(($currentPage - 1) * $perPage, $perPage)->all();
+        $entries = new LengthAwarePaginator($currentPageSearchResults, count($col), $perPage);
+        $entries->setPath($id);
 
         return view('broadcaster_module.campaigns.checkout')->with('first_session', $first)
             ->with('calc', $checkout['calc'])
             ->with('day_part', $checkout['day_parts'])
             ->with('region', $checkout['regions'])
             ->with('target', $checkout['targets'])
-            ->with('preselected_adslot_arrays', $checkout['preselected_adslot_arrays'])
+            ->with('preselected_adslot_arrays', $entries)
             ->with('brand', $checkout['brands'])
             ->with('id', $id)
             ->with('user', $checkout['user'])
-            ->with('broadcaster', $broadcaster_id);
+            ->with('broadcaster', $broadcaster_id)
+            ->with('campaign_dates_for_first_week', $campaign_dates_for_first_week);
     }
 
     public function removeMedia($walkins, $id)
