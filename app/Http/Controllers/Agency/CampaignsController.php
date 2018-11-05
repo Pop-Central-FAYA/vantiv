@@ -358,6 +358,11 @@ class CampaignsController extends Controller
         $agency_id = Session::get('agency_id');
         //check if he agency's wallet can cater for the campaign
         $wallet_balance = Utilities::switch_db('api')->select("SELECT current_balance FROM wallets where user_id = '$agency_id'");
+        if(!$wallet_balance){
+            Session::flash('error', 'Please Fund your wallet');
+            return redirect()->back();
+        }
+
         if((int)$wallet_balance[0]->current_balance < (int)$request->total){
             Session::flash('error', 'Insufficient fund, please fund your wallet to complete campaign creation');
             return redirect()->back();
