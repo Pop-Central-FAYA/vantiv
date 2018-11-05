@@ -255,6 +255,10 @@ class CampaignsController extends Controller
             return back();
         }
 
+        $time_breaks = Utilities::switch_db('api')->select("SELECT a.from_to_time, a.id as adslot_id, r.day as day_id from adslots as a 
+                                                              INNER JOIN rateCards as r ON r.id = a.rate_card
+                                                              where a.broadcaster = '$broadcaster'");
+
         $ratecards = $this->utilities->getRateCards($step1, $broadcaster, $start_date, $end_date);
 
         $r = $ratecards['rate_card'];
@@ -293,7 +297,8 @@ class CampaignsController extends Controller
                                                     ->with('positions', $positions)
                                                     ->with('adslots', $adslots)
                                                     ->with('campaign_dates_by_week', $campaign_dates_by_week_with_start_end_date)
-                                                    ->with('start_and_end_date_in_first_week', $start_and_end_date_in_first_week);
+                                                    ->with('start_and_end_date_in_first_week', $start_and_end_date_in_first_week)
+                                                    ->with('time_breaks', $time_breaks);
     }
 
     public function postPreselectedAdslot(Request $request)

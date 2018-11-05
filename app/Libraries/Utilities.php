@@ -542,16 +542,18 @@ class Utilities {
         $region = "'".implode("','", $step1->region)."'";
         $target_audience = "'".implode("','", $step1->target_audience)."'";
         $channel = $broadcaster_details[0]->channel_id;
-        $adslots =  Utilities::switch_db('api')->select("SELECT a.*,r.day, IF(a.id = p_p.adslot_id,p_p.price_60,p.price_60) as price_60, IF(a.id = p_p.adslot_id,p_p.price_45,p.price_45) as price_45,
+        $adslots =  Utilities::switch_db('api')->select("SELECT a.*,r.day as day_id, IF(a.id = p_p.adslot_id,p_p.price_60,p.price_60) as price_60, IF(a.id = p_p.adslot_id,p_p.price_45,p.price_45) as price_45,
                                                                          IF(a.id = p_p.adslot_id,p_p.price_30,p.price_30) as price_30, IF(a.id = p_p.adslot_id,p_p.price_15,p.price_15) as price_15 from adslots as a
                                                                          JOIN adslotPrices as p ON a.id = p.adslot_id
                                                                          JOIN rateCards as r ON a.rate_card = r.id
                                                                          LEFT JOIN adslotPercentages as p_p ON a.id = p_p.adslot_id
                                                                          where a.min_age >= $step1->min_age AND a.max_age <= $step1->max_age AND a.target_audience IN ($target_audience) AND a.day_parts IN ($day_parts)
                                                                          AND a.region IN ($region) AND a.is_available = 0 AND a.channels = '$channel' and a.broadcaster = '$broadcaster_id'");
+
         return $adslots;
 
     }
+
 
     public static function getCampaignDatatables($all_campaigns)
     {
@@ -780,10 +782,13 @@ class Utilities {
         $region = "'".implode("','", $step1->region)."'";
         $target_audience = "'".implode("','", $step1->target_audience)."'";
         $all_adslots = Utilities::getAllAvailableSlots($step1, $broadcaster_id);
+        $adslots_inventory = Utilities::fecthAllAdslotsForBroadcaster($broadcaster_id);
         $first_week_days = $this->campaign_dates->getFirstWeek($start_date, $end_date);
         $campaign_dates_in_first_week = $this->campaign_dates->getStartAndEndDateForFirstWeek($first_week_days);
         $ratecards = Utilities::getRateCardIdBetweenStartAndEndDates($campaign_dates_in_first_week['start_date_of_the_week'],
                                                                         $campaign_dates_in_first_week['end_date_of_the_week']);
+        $all_adslots_for_broadcaster = Utilities::fecthAllAdslotsForBroadcaster($broadcaster_id);
+        $array_of_filtered_and_unfiltered = Utilities::differentiateArray($all_adslots_for_broadcaster, $all_adslots);
         $ratecards_imploded = "'".implode("','", $ratecards)."'";
 
         $ratecards = Utilities::switch_db('api')->select("SELECT d.day, r.day as day_id, r.id FROM rateCards as r 
@@ -800,6 +805,7 @@ class Utilities {
                 'day' => $ratecard->day,
                 'day_id' => $ratecard->day_id,
                 'adslot' => $adslots,
+                'array_filtered_unfiltered' => $array_of_filtered_and_unfiltered,
                 'start_date' => $campaign_dates_in_first_week['start_date_of_the_week'],
                 'end_date' => $campaign_dates_in_first_week['end_date_of_the_week'],
                 'actual_date' => $first_week_days[$ratecard->day]
@@ -808,16 +814,47 @@ class Utilities {
         return ['rate_card' => $rate_card, 'adslot' => $all_adslots];
     }
 
+    public static function differentiateArray($big_array, $small_array)
+    {
+        $new_unfiltered_array = [];
+        $new_filtered_array = [];
+        foreach ($big_array as $unfiltered){
+            $new_unfiltered_array[$unfiltered->adslot_id][] = $unfiltered;
+        }
+
+        foreach ($small_array as $filtered_array){
+            $new_filtered_array[$filtered_array->id][] = $filtered_array;
+        }
+
+        $new_array = [];
+        foreach ($new_unfiltered_array as $key => $value){
+            if(array_key_exists($key, $new_filtered_array)){
+                $new_array[] = $new_filtered_array[$key];
+            }else{
+                $new_array[] = $value;
+            }
+
+        }
+
+        return $new_array;
+    }
+
+    public static function fecthAllAdslotsForBroadcaster($broadcaster)
+    {
+        $broadcasters_adslots = Utilities::switch_db('api')->select("SELECT a.from_to_time, a.id as adslot_id, r.day as day_id from adslots as a 
+                                                              INNER JOIN rateCards as r ON r.id = a.rate_card
+                                                              where a.broadcaster = '$broadcaster'");
+        return $broadcasters_adslots;
+    }
+
     public static function filterAdslots($adslots, $day)
     {
         $matches = array();
         foreach($adslots as $adslot){
-            if($adslot['day'] === $day)
+            if($adslot['day_id'] === $day)
                 $matches[] = (object)$adslot;
         }
-
         return $matches;
-
     }
 
     public static function getPositionPriceAndPercent($request)

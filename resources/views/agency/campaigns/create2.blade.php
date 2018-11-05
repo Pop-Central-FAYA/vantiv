@@ -65,7 +65,7 @@
                     </div>
 
                     <div class="align_center column col_4">
-
+                        <p><br></p>
                     </div>
                     @if(!empty($adslots))
                         <div class="column col_4 align_right">
