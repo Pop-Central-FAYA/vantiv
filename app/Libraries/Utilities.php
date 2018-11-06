@@ -570,7 +570,7 @@ class Utilities {
                 'brand' => ucfirst($all_campaign->brand_name),
                 'product' => $all_campaign->product,
                 'date_created' => date('M j, Y', strtotime($all_campaign->time_created)),
-                'start_date' => date('Y-m-d', $start_date),
+                'start_date' => date('M j, Y', $start_date),
                 'end_date' => date('Y-m-d', $stop_date),
                 'adslots' => count((explode(',', $all_campaign->adslots_id))),
                 'budget' => number_format($all_campaign->total, 2),

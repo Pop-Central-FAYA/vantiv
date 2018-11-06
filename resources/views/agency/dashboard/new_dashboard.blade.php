@@ -173,10 +173,10 @@
             <table class="display dashboard_campaigns">
                 <thead>
                 <tr>
-                    <th>ID</th>
                     <th>Name</th>
                     <th>Brand</th>
                     <th>Date Created</th>
+                    <th>Start Date</th>
                     <th>Budget</th>
                     <th>Ad Slots</th>
                     <th>Status</th>
@@ -300,10 +300,10 @@
                     }
                 },
                 columns: [
-                    {data: 'id', name: 'id'},
                     {data: 'name', name: 'name'},
                     {data: 'brand', name: 'brand'},
                     {data: 'date_created', name: 'date_created'},
+                    {data: 'start_date', name: 'start_date'},
                     {data: 'budget', name: 'budget'},
                     {data: 'adslots', name: 'adslots'},
                     {data: 'status', name: 'status'},
