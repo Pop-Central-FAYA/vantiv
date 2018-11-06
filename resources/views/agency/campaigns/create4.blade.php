@@ -89,7 +89,7 @@
                                 <tbody>
                                 <tr>
                                     @foreach($ratecards as $ratecard)
-                                        <td>
+                                        <td style="font-size: 10px;">
                                             @foreach($ratecard['array_filtered_unfiltered'] as $rating)
                                                 @if($rating[0]->day_id === $ratecard['day_id'])
                                                     @if(isset($rating[0]->region))
