@@ -58,8 +58,8 @@
                 <p><br></p>
 
                 <!-- time slots -->
-                <div class="media_houses mb3 clearfix">
-                    <div class="align_center col_2" style="float:left">
+                <div class="media_houses mb3 clearfix" style="margin-top: -20px;">
+                    <div class="align_center col_2" style="float:left; width: 120px;">
                         <div class="time_slots">
                             <table>
                                 <?php $j = 1; ?>
@@ -76,13 +76,13 @@
                             </table>
                         </div>
                     </div>
-                    <div class="align_center col_10 " >
+                    <div class="align_center col_12 " >
                         <div class="time_slots">
                             <table>
                                 <thead>
                                 <tr>
                                     @foreach($ratecards as $ratecard)
-                                        <th>{{ $ratecard['day'] }} <br> {{ $ratecard['actual_date'] }}</th>
+                                        <th style="text-align: center;">{{ $ratecard['day'] }} <br> {{ $ratecard['actual_date'] }}</th>
                                     @endforeach
                                 </tr>
                                 </thead>
@@ -106,7 +106,7 @@
                                                     @else
                                                             <input class="not-active" type="checkbox"
                                                                    id="">
-                                                            <label style="color: red; border-color: red;" id="new_client" for="">{{ $rating[0]->from_to_time }}</label>
+                                                            <label style="color: white; border-color: grey; background-color: grey; pointer-events: none;" id="new_client" for="">{{ $rating[0]->from_to_time }}</label>
                                                         <br>
                                                     @endif
                                                 @endif
@@ -383,6 +383,10 @@
         }
         .success_p {
             background-color: green!important;
+        }
+        .time_slots {
+            height: 400px;
+            !important;
         }
     </style>
 @stop

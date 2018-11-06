@@ -58,7 +58,7 @@
 
                 <div class="mb4 clearfix pt4 mb4">
                     <div class="column col_6">
-                        {{--<a href="{{ route('agency_campaign.step3', ['id' => $id]) }}" class="btn uppercased _white _go_back"><span class=""></span> Back</a>--}}
+                        <a href="{{ route('agency_campaign.step3', ['id' => $id]) }}" class="btn uppercased _white _go_back"><span class=""></span> Back</a>
                     </div>
                 </div>
 
