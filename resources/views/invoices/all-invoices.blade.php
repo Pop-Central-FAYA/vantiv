@@ -23,7 +23,6 @@
             <table class="invoice">
                 <thead>
                     <tr>
-                        <th>S/N</th>
                         <th>Invoice Number</th>
                         <th>Campaign Name</th>
                         <th>Client</th>
@@ -129,7 +128,6 @@
                     }
                 },
                 columns: [
-                    {data: 's_n', name: 's_n'},
                     {data: 'invoice_number', name: 'invoice_number'},
                     {data: 'campaign_name', name: 'campaign_name'},
                     {data: 'name', name: 'name'},
