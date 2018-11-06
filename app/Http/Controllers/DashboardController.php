@@ -97,6 +97,7 @@ class DashboardController extends Controller
                 'end_date' => $campaign->stop_date,
                 'channel' => $channels[0]->channel,
                 'channel_id' => $channels[0]->id,
+                'campaign_status' => $campaign->status
             ];
 
         }
@@ -111,7 +112,7 @@ class DashboardController extends Controller
         $pending_campaigns = [];
         $today = date("Y-m-d");
         foreach ($agency_media_channels as $agency_media_channel){
-            if($today > $agency_media_channel['end_date']){
+            if($agency_media_channel['campaign_status'] === 'expired'){
                 $finished_campaigns[] = [
                     'campaign_id' => $agency_media_channel['campaign_id'],
                     'start_date' => $agency_media_channel['start_date'],
@@ -119,7 +120,7 @@ class DashboardController extends Controller
                     'channel' => $agency_media_channel['channel'],
                     'channel_id' => $agency_media_channel['channel_id'],
                 ];
-            }else if($today < $agency_media_channel['start_date']){
+            }else if($agency_media_channel['campaign_status'] === 'pending'){
                 $pending_campaigns[] = [
                     'campaign_id' => $agency_media_channel['campaign_id'],
                     'start_date' => $agency_media_channel['start_date'],
