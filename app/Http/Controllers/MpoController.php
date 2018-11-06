@@ -89,6 +89,10 @@ class MpoController extends Controller
                                                          and c_d.status = 'pending' OR c_d.status = 'file_error'");
         $mpo_data = $this->getMpoCollection($mpos, $broadcaster_id);
         $reject_reasons = RejectionReason::all();
+        if(count($mpo_data) == 0){
+            \Session::flash('success', 'All files approved and the cmpaign is now active');
+            return redirect()->route('all-mpos');
+        }
         $count_mpo_data_files = count((array)$mpo_data[0]['files'][0]);
         $mpo_data_files = $mpo_data[0]['files'];
 
@@ -139,6 +143,14 @@ class MpoController extends Controller
                 $check_files = Api::approvedCampaignFiles($campaign_id, $broadcaster_id);
                 if($check_files['check_file_for_updating_mpo'] == 0){
                     Utilities::switch_db('api')->update("UPDATE mpoDetails set is_mpo_accepted = 1 where mpo_id = '$mpo_id' and broadcaster_id = '$broadcaster_id'");
+
+                    //change the status of the campaign if campaign date is the current date
+                    $today_date = date("Y-m-d");
+                    $update_campaign_status = Utilities::switch_db('api')->update("UPDATE campaignDetails 
+                                                                                        SET status = 'active' 
+                                                                                        WHERE start_date = '$today_date' 
+                                                                                        AND campaign_id = '$campaign_id' 
+                                                                                        AND broadcaster = '$broadcaster_id'");
 
                     //The mpo has been approved, so let us create the playout
                     $playout_creator = new CreatePlayout($campaign_id, $mpo_id);
