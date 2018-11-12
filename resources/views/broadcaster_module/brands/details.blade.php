@@ -16,7 +16,7 @@
         <div class="sub_header clearfix mb pt">
             <div class="column col_6">
                 <h2 class="sub_header">Clients</h2>
-                <p class="bread small_font"><a href="{{ route('walkins.details', ['id' => $client_id]) }}">{{ $client[0]->company_name }}</a> &raquo; <a href="{{ route('brand.all') }}">Brand</a> &raquo; <span class="weight_medium">{{ $this_brand[0]->name }}</span></p>
+                <p class="bread small_font"><a href="{{ route('walkins.details', ['id' => $client_id]) }}">{{ $client[0]->company_name }}</a> &raquo; <span class="weight_medium">{{ $this_brand[0]->name }}</span></p>
             </div>
         </div>
 
@@ -31,21 +31,17 @@
                     @else
                         <table>
                             <tr>
-                                <th><input type="checkbox"></th>
                                 <th>ID</th>
                                 <th>Name</th>
                                 <th>Date</th>
                                 <th>Budget</th>
                                 <th>Amount Spent</th>
-                                <th>Media Plan</th>
-                                <th>Status</th>
-                                <th></th>
-                                <th></th>
+                                <th>MPO Status</th>
+                                <th>Campaign Status</th>
                             </tr>
 
                             @foreach($campaigns as $campaign)
                                 <tr>
-                                    <th><input type="checkbox"></th>
                                     <td>{{ $campaign['id'] }}</td>
                                     <td>{{ $campaign['name'] }}</td>
                                     <td>{{ $campaign['date_created'] }}</td>
@@ -57,8 +53,6 @@
                                         <td class="weight_medium" style="color: red;">Pending</td>
                                     @endif
                                     <td>{{ $campaign['status'] }}</td>
-                                    <td><a href="#mpo{{ $campaign['camp_id'] }}" class="modal_mpo">View MPO</a></td>
-                                    <td><a href="#invoice{{ $campaign['camp_id'] }}" class="modal_invoice">View Invoice</a></td>
                                 </tr>
                             @endforeach
 

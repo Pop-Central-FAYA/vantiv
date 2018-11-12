@@ -296,9 +296,6 @@ class CampaignsController extends Controller
 
         $adslots = $rate_card['adslot'];
 
-//        $campaign_date_by_week = campaignDate::groupCampaignDateByWeek($step1->start_date, $step1->end_date);
-//        $campaign_dates_for_first_week = array_first($campaign_date_by_week);
-
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
         $col = new Collection($rate_card['rate_card']);
         $perPage = 100;

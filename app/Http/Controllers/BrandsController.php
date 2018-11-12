@@ -292,38 +292,29 @@ class BrandsController extends Controller
         $user_details = Utilities::switch_db('api')->select("SELECT * FROM users where id = '$user_id'");
 
         $this_brand = Utilities::switch_db('api')->select("SELECT * FROM brands where id = '$id'");
-        $all_campaigns = Utilities::switch_db('api')->select("SELECT c_d.campaign_id, c_d.name, b.name as brand_name, p.total, c_d.product, c_d.time_created, c_d.start_date, 
+        $all_campaigns = Utilities::switch_db('api')->select("SELECT c_d.campaign_id, c_d.status, c_d.name, b.name as brand_name, p.total, c_d.product, c_d.time_created, c_d.start_date, 
                                                                 c_d.stop_date, c_d.adslots, c.campaign_reference FROM campaignDetails as c_d
                                                                 INNER JOIN campaigns as c ON c.id = c_d.campaign_id 
                                                                 INNER JOIN brands as b ON c_d.brand = b.id
                                                                 INNER JOIN payments as p ON p.campaign_id = c_d.campaign_id 
                                                                 where c_d.brand = '$id' and b.id = '$id' and c_d.broadcaster = '$broadcaster_id' and c_d.walkins_id = '$client_id'");
 
-        foreach ($all_campaigns as $cam)
+        foreach ($all_campaigns as $campaign)
         {
-            $mpo = Utilities::switch_db('api')->select("SELECT * FROM mpoDetails where mpo_id = (SELECT id from mpos where campaign_id = '$cam->campaign_id') LIMIT 1");
-            $today = date("Y-m-d");
-            if(strtotime($today) > strtotime($cam->start_date) && strtotime($today) > strtotime($cam->stop_date)){
-                $status = 'Expired';
-            }elseif (strtotime($today) >= strtotime($cam->start_date) && strtotime($today) <= strtotime($cam->stop_date)){
-                $status = 'Active';
-            }else{
-                $status = 'pending';
-            }
-
+            $mpo = Utilities::switch_db('api')->select("SELECT * FROM mpoDetails where mpo_id = (SELECT id from mpos where campaign_id = '$campaign->campaign_id') LIMIT 1");
             $campaigns[] = [
-                'id' => $cam->campaign_reference,
-                'camp_id' => $cam->campaign_id,
-                'name' => $cam->name,
-                'brand' => $cam->brand_name,
-                'product' => $cam->product,
-                'date_created' => date('Y/m/d',strtotime($cam->time_created)),
-                'start_date' => date('Y-m-d', strtotime($cam->start_date)),
-                'end_date' => date('Y-m-d', strtotime($cam->stop_date)),
-                'adslots' => $cam->adslots,
-                'budget' => number_format($cam->total, 2),
+                'id' => $campaign->campaign_reference,
+                'camp_id' => $campaign->campaign_id,
+                'name' => $campaign->name,
+                'brand' => $campaign->brand_name,
+                'product' => $campaign->product,
+                'date_created' => date('Y/m/d',strtotime($campaign->time_created)),
+                'start_date' => date('Y-m-d', strtotime($campaign->start_date)),
+                'end_date' => date('Y-m-d', strtotime($campaign->stop_date)),
+                'adslots' => $campaign->adslots,
+                'budget' => number_format($campaign->total, 2),
                 'compliance' => '0%',
-                'status' => $status,
+                'status' => ucfirst($campaign->status),
                 'mpo_status' => $mpo[0]->is_mpo_accepted
             ];
         }
