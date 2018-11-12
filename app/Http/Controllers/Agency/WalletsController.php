@@ -26,11 +26,11 @@ class WalletsController extends Controller
         $user_det = Utilities::switch_db('api')->select("SELECT * from users where id = '$user'");
 
         $wallets = Utilities::switch_db('api')->select("SELECT SUM(current_balance) as balance from wallets where user_id = '$agency_id'");
-        $wallet_history = Utilities::switch_db('api')->select("SELECT * from walletHistories where user_id = '$agency_id'");
-        $transaction = Utilities::switch_db('api')->select("SELECT * from transactions WHERE user_id = '$agency_id' ORDER BY time_created DESC ");
+        $wallet_histories = Utilities::switch_db('api')->select("SELECT * from walletHistories where user_id = '$agency_id'");
+        $transactions = Utilities::switch_db('api')->select("SELECT * from transactions WHERE user_id = '$agency_id' ORDER BY time_created DESC ");
 
-        return view('wallets.wallet_statement')->with('wallet', $wallets)->with('user_det', $user_det)->with('user_id', $agency_id)->with('history', $wallet_history)
-                                        ->with('transactions', $transaction)->with(['agency_id' => $agency_id, 'advertiser_id' => Session::get('advertiser_id')]);
+        return view('wallets.wallet_statement')->with('wallet', $wallets)->with('user_det', $user_det)->with('user_id', $agency_id)->with('history', $wallet_histories)
+                                        ->with('transactions', $transactions)->with(['agency_id' => $agency_id, 'advertiser_id' => Session::get('advertiser_id')]);
     }
 
     public function getData(Datatables $datatables, Request $request)
@@ -40,40 +40,74 @@ class WalletsController extends Controller
         if($request->has('start_date') && $request->has('stop_date')){
             $start_date = $request->start_date;
             $stop_date = $request->stop_date;
-            $trans = Utilities::switch_db('api')->select("SELECT * from transactions where user_id = '$agency_id' AND time_created BETWEEN '$start_date' AND '$stop_date' ORDER BY time_created desc");
+            $transactions = Utilities::switch_db('api')->select("SELECT * from transactions where user_id = '$agency_id' 
+                                                                    AND status != 'PENDING' AND time_created BETWEEN '$start_date' 
+                                                                    AND '$stop_date' ORDER BY time_created desc");
 
             $j = 1;
-            $transaction = [];
+            $all_transactions = [];
 
-            foreach ($trans as $trans) {
-                $transaction[] = [
+            foreach ($transactions as $transaction) {
+                $all_transactions[] = [
                     'id' => $j,
-                    'reference' => strtoupper($trans->reference),
-                    'type' => strtolower($trans->type),
-                    'amount' => '&#8358;'.number_format($trans->amount, 2),
-                    'date' => date('d/m/Y', strtotime($trans->time_created))
+                    'reference' => strtoupper($transaction->reference),
+                    'type' => $transaction->type,
+                    'amount' => $transaction->amount,
+                    'date' => date('d/m/Y', strtotime($transaction->time_created)),
+//                    'returning_balance' => $transaction
                 ];
                 $j++;
             }
-            return $datatables->collection($transaction)
+            return $datatables->collection($all_transactions)
+                ->editColumn('type', function ($all_transactions) {
+                    if($all_transactions['type'] === 'FUND WALLET'){
+                        return '<span class="span_state status_success">Credit</span>';
+                    }else{
+                        return '<span class="span_state status_danger">Debit</span>';
+                    }
+                })
+                ->editColumn('amount', function ($all_transactions) {
+                    if($all_transactions['type'] === 'FUND WALLET'){
+                        return '<span class="span_state status_success">&#8358;'. number_format($all_transactions['amount'], 2) .'</span>';
+                    }else{
+                        return '<span class="span_state status_danger">&#8358;'. number_format($all_transactions['amount'], 2) .'</span>';
+                    }
+                })
+                ->rawColumns(['type' => 'type', 'amount' => 'amount'])
                 ->make(true);
         }
 
-        $trans = Utilities::switch_db('api')->select("SELECT * from transactions where user_id = '$agency_id' ORDER BY time_created desc");
+        $transactions = Utilities::switch_db('api')->select("SELECT * from transactions where user_id = '$agency_id' ORDER BY time_created desc");
         $j = 1;
-        $transaction = [];
+        $all_transactions = [];
 
-        foreach ($trans as $trans) {
-            $transaction[] = [
+        foreach ($transactions as $transaction) {
+            $all_transactions[] = [
                 'id' => $j,
-                'reference' => strtoupper($trans->reference),
-                'type' => strtolower($trans->type),
-                'amount' => '&#8358;'.number_format($trans->amount, 2),
-                'date' => date('d/m/Y', strtotime($trans->time_created))
+                'reference' => strtoupper($transaction->reference),
+                'type' => $transaction->type,
+                'amount' => $transaction->amount,
+                'date' => date('d/m/Y', strtotime($transaction->time_created)),
+//                'returning_balance' =>  $transaction
             ];
             $j++;
         }
-        return $datatables->collection($transaction)
+        return $datatables->collection($all_transactions)
+            ->editColumn('type', function ($all_transactions) {
+                if($all_transactions['type'] === 'FUND WALLET'){
+                    return '<span class="span_state status_success">Credit</span>';
+                }else {
+                    return '<span class="span_state status_danger">Debit</span>';
+                }
+            })
+            ->editColumn('amount', function ($all_transactions) {
+                if($all_transactions['type'] === 'FUND WALLET'){
+                    return '<span class="span_state status_success">&#8358;'. number_format($all_transactions['amount'], 2) .'</span>';
+                }else{
+                    return '<span class="span_state status_danger">&#8358;'. number_format($all_transactions['amount'], 2) .'</span>';
+                }
+            })
+            ->rawColumns(['type' => 'type', 'amount' => 'amount'])
             ->make(true);
     }
 
