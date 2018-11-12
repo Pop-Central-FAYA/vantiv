@@ -280,7 +280,7 @@
                         <ul>
                             @foreach($regions as $region)
                                 <li class="col_4 column m-b">
-                                    <input name="region[]" value="{{ $region->id }}"
+                                    <input name="region[]" value="{{ $region->id }}" data-region="{{ $region->id }}"
                                            @if((Session::get('first_step')) != null)
                                                @foreach($first_step->region as $checked_region)
                                                    @if($checked_region === $region->id)
@@ -288,7 +288,7 @@
                                                    @endif
                                                @endforeach
                                            @endif
-                                           type="checkbox" id='{{ $region->id }}'>
+                                           type="checkbox" class="checkbox_region" id='{{ $region->id }}'>
                                     <label for="{{ $region->id }}">{{ $region->region }}</label>
                                 </li>
                             @endforeach
@@ -333,6 +333,18 @@
             //placeholder for target audienct
             $('#target_aud').select2({
                 placeholder: "Please select Target Audience"
+            });
+
+            $(".checkbox_region").click( function (){
+                var checkbox_region = $(this).data("region");
+                var $inputs = $('.checkbox_region');
+                if(checkbox_region === "naem6hqwjhjatseog8" && $(this).is(':checked')){
+                    $(".checkbox_region").prop('checked', false);
+                    $("#naem6hqwjhjatseog8").prop('checked', true);
+                    $inputs.not(this).prop('disabled',true);
+                }else{
+                    $(".checkbox_region").prop('disabled', false);
+                }
             });
 
             // fetch all brands when a clientSis selected
