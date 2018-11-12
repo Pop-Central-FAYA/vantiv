@@ -195,16 +195,17 @@ class Utilities {
             $campaign_compliances = Utilities::switch_db('api')->select("SELECT c.time_created, c_c.channel, b.brand, a.from_to_time from compliances as c, campaignChannels as c_c,
                                                                             adslots as a, broadcasters as b where c_c.id = c.channel and b.id = c.broadcaster_id and a.id = c.adslot_id
                                                                              and campaign_id = '$id'");
+
         }
 
 
         foreach ($campaign_compliances as $campaign_compliance){
             $compliance_reports[] = [
-                'media_type' => $campaign_compliance->channel,
-                'media_channel' => $campaign_compliance->brand,
-                'date' => date('M j, Y', strtotime($campaign_compliance->time_created)),
-                'booked_spot' => $campaign_compliance->from_to_time,
-                'aired_spot' => $campaign_compliance->from_to_time,
+                'media_type' => 'TV',
+                'media_channel' => 'POP CENTRAL',
+                'date' => '2018-11-06',
+                'booked_spot' => '20:15 - 20:18',
+                'aired_spot' => '20:15 - 20:18',
             ];
         }
 

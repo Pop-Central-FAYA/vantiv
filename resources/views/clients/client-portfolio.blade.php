@@ -88,7 +88,7 @@
                         <span class="small_faint uppercased weight_medium">Brands</span>
                         <h3>{{ count($brands) }}</h3>
 
-                        <a href="" class="weight_medium small_font view_brands">View Brands</a>
+                        {{--<a href="" class="weight_medium small_font view_brands">View Brands</a>--}}
                     </div>
                 </div>
 
@@ -146,7 +146,7 @@
                         </tr>
                         @foreach($all_campaigns as $all_campaign)
                             <tr>
-                                <td>243</td>
+                                <td>{{ $all_campaign['id'] }}</td>
                                 <td><a href="{{ route('agency.campaign.details', ['id' => $all_campaign['camp_id']]) }}">{{ $all_campaign['name'] }}</a></td>
                                 <td>{{ ucfirst($all_campaign['brand']) }}</td>
                                 <td>{{ $all_campaign['product'] }}</td>

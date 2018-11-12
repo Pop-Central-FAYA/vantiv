@@ -157,7 +157,7 @@
                     </div>
 
                     <div class="column col_6 align_right">
-                        <a href="{{ route('agency_campaign.store3_1', ['id' => $id]) }}" class="btn uppercased _proceed modal_click">Proceed <span class=""></span></a>
+                        <a href="{{ route('agency_campaign.store3_1', ['id' => $id]) }}" id="proceed_button" class="btn uppercased _proceed">Proceed <span class=""></span></a>
                     </div>
                 </div>
 
@@ -251,60 +251,60 @@
                                 contentType : file.type,
                                 processData : false,
                             })
-                                .done(function(){
-                                    toastr.success('Your upload was successful, please select the right time slot for your content and click on the submit button to complete your upload');
-                                    var uploadedUrl = 'https:'+data.split('?')[0].substr(6);
-                                    var vid_show = '<video width="350" height="300" controls>\n' +
-                                        '  <source src="'+uploadedUrl+'" type="video/mp4">\n' +
-                                        '</video>' ;
-                                    $(".gallery").html(vid_show);
-                                    var user_id = "<?php echo $id; ?>";
-                                    var channel = 'nzrm6hchjats36';
+                            .done(function(){
+                                toastr.success('Your upload was successful, please select the right time slot for your content and click on the submit button to complete your upload');
+                                var uploadedUrl = 'https:'+data.split('?')[0].substr(6);
+                                var vid_show = '<video width="350" height="300" controls>\n' +
+                                    '  <source src="'+uploadedUrl+'" type="video/mp4">\n' +
+                                    '</video>' ;
+                                $(".gallery").html(vid_show);
+                                var user_id = "<?php echo $id; ?>";
+                                var channel = 'nzrm6hchjats36';
+                                $("#proceed_button").hide();
 
-                                    $("#button_submit").click(function () {
-                                        var time_slots_string = $("#time").val();
-                                        var file_duration_get = $(".file_duration").val();
-                                        var url1 = $("#form-data").attr('action');
-                                        var time_slot = parseInt(time_slots_string);
-                                        var file_duration = parseInt(file_duration_get);
-                                        if(time_slot >= file_duration){
-                                            $.ajax({
-                                                url: url1,
-                                                method: "GET",
-                                                data: {'time_picked' : time_slot, 'duration' : file_duration, 'file_url' : uploadedUrl, 'file_name' : file.name, 'user_id' : user_id, 'channel' : channel, 'file_format' : video_format},
-                                                success: function(result){
-                                                    if(result.error === 'error'){
-                                                        toastr.error('You are trying to upload a file of '+file_duration+' seconds into a '+time_slot+' seconds slot');
-                                                        return;
-                                                    }else if(result.error_number === 'error_number'){
-                                                        toastr.error('You have reached the maximum number of files that can be uploaded, please hit the proceed button');
-                                                        return;
-                                                    }else if(result.error_check_image === 'error_check_image'){
-                                                        toastr.error('You cannot upload this content more than once');
-                                                        return;
-                                                    }else if(result.success === 'success'){
-                                                        toastr.success('Your upload for '+time_slot+' seconds was successful');
-                                                        location.reload();
-                                                    }
-                                                    $(".tv_campaign_proceed").prop('disabled', false);
+                                $("#button_submit").click(function () {
+                                    var time_slots_string = $("#time").val();
+                                    var file_duration_get = $(".file_duration").val();
+                                    var url1 = $("#form-data").attr('action');
+                                    var time_slot = parseInt(time_slots_string);
+                                    var file_duration = parseInt(file_duration_get);
+                                    if(time_slot >= file_duration){
+                                        $.ajax({
+                                            url: url1,
+                                            method: "GET",
+                                            data: {'time_picked' : time_slot, 'duration' : file_duration, 'file_url' : uploadedUrl, 'file_name' : file.name, 'user_id' : user_id, 'channel' : channel, 'file_format' : video_format},
+                                            success: function(result){
+                                                if(result.error === 'error'){
+                                                    toastr.error('You are trying to upload a file of '+file_duration+' seconds into a '+time_slot+' seconds slot');
+                                                    return;
+                                                }else if(result.error_number === 'error_number'){
+                                                    toastr.error('You have reached the maximum number of files that can be uploaded, please hit the proceed button');
+                                                    return;
+                                                }else if(result.error_check_image === 'error_check_image'){
+                                                    toastr.error('You cannot upload this content more than once');
+                                                    return;
+                                                }else if(result.success === 'success'){
+                                                    toastr.success('Your upload for '+time_slot+' seconds was successful');
+                                                    location.reload();
                                                 }
-                                            })
 
-                                        }else{
+                                            }
+                                        })
 
-                                            toastr.error('You are trying to upload a file of '+file_duration+' seconds into a '+time_slot+'seconds slot');
-                                        }
+                                    }else{
 
-                                    });
-                                })
-                                .fail(function(){
-                                    toastr.error('An error occurred, please try again ');
-                                })
+                                        toastr.error('You are trying to upload a file of '+file_duration+' seconds into a '+time_slot+'seconds slot');
+                                    }
+
+                                });
+                            })
+                            .fail(function(){
+                                toastr.error('An error occurred, please try again ');
+                            })
                         }
                     })
                 }
             });
-
 
         });
 
