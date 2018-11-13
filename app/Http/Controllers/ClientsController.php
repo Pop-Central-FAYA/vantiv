@@ -294,38 +294,25 @@ class ClientsController extends Controller
 
         $this_brand = Utilities::singleBrand($id, $client_id);
         $all_campaigns = Utilities::switch_db('api')->select("SELECT * FROM campaignDetails where brand = '$id' AND walkins_id = '$client_id' GROUP BY campaign_id");
-        foreach ($all_campaigns as $cam)
+        foreach ($all_campaigns as $campaign)
         {
-            $mpo = Utilities::switch_db('api')->select("SELECT * FROM mpoDetails where mpo_id = (SELECT id from mpos where campaign_id = '$cam->campaign_id') LIMIT 1");
-            $campaign_reference = Utilities::switch_db('api')->select("SELECT * from campaigns where id = '$cam->campaign_id'");
-            $today = date("Y-m-d");
-            if(strtotime($today) > strtotime($cam->start_date) && strtotime($today) > strtotime($cam->stop_date)){
-                $status = 'Expired';
-            }elseif (strtotime($today) >= strtotime($cam->start_date) && strtotime($today) <= strtotime($cam->stop_date)){
-                $status = 'Active';
-            }else{
-                $now = strtotime($today);
-                $your_date = strtotime($cam->start_date);
-                $datediff = $your_date - $now;
-                $new_day =  round($datediff / (60 * 60 * 24));
-                $status = 'pending';
-            }
-
-            $brand = Utilities::switch_db('api')->select("SELECT `name` as brand_name from brands where id = '$cam->brand'");
-            $pay = Utilities::switch_db('api')->select("SELECT total from payments where campaign_id = '$cam->campaign_id'");
+            $mpo = Utilities::switch_db('api')->select("SELECT * FROM mpoDetails where mpo_id = (SELECT id from mpos where campaign_id = '$campaign->campaign_id') LIMIT 1");
+            $campaign_reference = Utilities::switch_db('api')->select("SELECT * from campaigns where id = '$campaign->campaign_id'");
+            $brand = Utilities::switch_db('api')->select("SELECT `name` as brand_name from brands where id = '$campaign->brand'");
+            $pay = Utilities::switch_db('api')->select("SELECT total from payments where campaign_id = '$campaign->campaign_id'");
             $campaigns[] = [
                 'id' => $campaign_reference[0]->campaign_reference,
-                'camp_id' => $cam->campaign_id,
-                'name' => $cam->name,
+                'camp_id' => $campaign->campaign_id,
+                'name' => $campaign->name,
                 'brand' => $brand[0]->brand_name,
-                'product' => $cam->product,
-                'date_created' => date('Y/m/d',strtotime($cam->time_created)),
-                'start_date' => date('Y-m-d', strtotime($cam->start_date)),
-                'end_date' => date('Y-m-d', strtotime($cam->stop_date)),
-                'adslots' => $cam->adslots,
+                'product' => $campaign->product,
+                'date_created' => date('Y/m/d',strtotime($campaign->time_created)),
+                'start_date' => date('Y-m-d', strtotime($campaign->start_date)),
+                'end_date' => date('Y-m-d', strtotime($campaign->stop_date)),
+                'adslots' => $campaign->adslots,
                 'budget' => number_format($pay[0]->total, 2),
                 'compliance' => '0%',
-                'status' => $status,
+                'status' => ucfirst($campaign->status),
                 'mpo_status' => $mpo[0]->is_mpo_accepted
             ];
         }

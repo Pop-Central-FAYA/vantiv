@@ -1,4 +1,4 @@
-@extends('layouts.faya_app')
+    @extends('layouts.faya_app')
 
 @section('title')
     <title>FAYA | Wallet</title>
@@ -64,6 +64,7 @@
                                 <th>Amount</th>
                                 <th>Transaction Ref.</th>
                                 <th>Type</th>
+                                {{--<th>Returning Balance</th>--}}
                             </tr>
                         </thead>
 
@@ -170,7 +171,7 @@
                     {data: 'amount', name: 'amount'},
                     {data: 'reference', name: 'reference'},
                     {data: 'type', name: 'type'},
-
+                    // {data: 'returning_balance', name: 'returning_balance'}
                 ],
 
             });

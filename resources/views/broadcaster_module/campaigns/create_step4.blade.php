@@ -68,26 +68,34 @@
                                 <thead>
                                 <tr>
                                     @foreach($ratecards as $ratecard)
-                                        <th>{{ $ratecard['day'] }} <br> {{ $ratecard['actual_date'] }}</th>
+                                        <th style="text-align: center;">{{ $ratecard['day'] }} <br> {{ $ratecard['actual_date'] }}</th>
                                     @endforeach
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr>
                                     @foreach($ratecards as $ratecard)
-                                        <td>
-                                            @foreach($ratecard['adslot'] as $rating)
-                                                <a href="#modal_slot{{ $rating->id }}" class="modal_click">
-                                                    <input type="checkbox"
-                                                           @foreach($preselected_adslots as $preselected_adslot)
-                                                           @if($preselected_adslot->adslot_id === $rating->id && $preselected_adslot->air_date === $ratecard['actual_date'])
-                                                           checked
-                                                           @endif
-                                                           @endforeach
-
-                                                           id="{{ $rating->id }}">
-                                                    <label id="new_client{{ $rating->id }}" for="{{ $rating->id }}">{{ $rating->from_to_time }}</label></a>
-                                                <br>
+                                        <td style="font-size: 10px;">
+                                            @foreach($ratecard['array_filtered_unfiltered'] as $rating)
+                                                @if($rating[0]->day_id === $ratecard['day_id'])
+                                                    @if(isset($rating[0]->region))
+                                                        <a href="#modal_slot{{ $rating[0]->id }}" class="modal_click">
+                                                            <input type="checkbox"
+                                                                   @foreach($preselected_adslots as $preselected_adslot)
+                                                                   @if($preselected_adslot->adslot_id === $rating[0]->id && $preselected_adslot->air_date === $ratecard['actual_date'])
+                                                                   checked
+                                                                   @endif
+                                                                   @endforeach
+                                                                   id="{{ $rating[0]->id }}">
+                                                            <label id="new_client{{ $rating[0]->id }}" for="{{ $rating[0]->id }}">{{ $rating[0]->from_to_time }}</label></a>
+                                                        <br>
+                                                    @else
+                                                        <input class="not-active" type="checkbox"
+                                                               id="">
+                                                        <label style="color: white; border-color: grey; background-color: grey; pointer-events: none;" id="new_client" for="">{{ $rating[0]->from_to_time }}</label>
+                                                        <br>
+                                                    @endif
+                                                @endif
                                             @endforeach
                                         </td>
                                     @endforeach
@@ -158,7 +166,7 @@
                 <form id="form_cart" action="{{ route('broadcaster_campaign.cart') }}" method="GET">
                     {{ csrf_field() }}
                     @foreach($ratecards as $ratecard)
-                        @if($ratecard['day_id'] === $rating->day)
+                        @if($ratecard['day_id'] === $rating->day_id)
                             <input type="hidden" name="air_date" id="air_date{{ $rating->id }}" value="{{ $ratecard['actual_date'] }}">
                         @endif
                     @endforeach

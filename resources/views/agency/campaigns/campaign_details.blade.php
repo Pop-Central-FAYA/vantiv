@@ -398,7 +398,7 @@
                             <th>Date</th>
                             <th>Booked Spot</th>
                             <th>Aired Spot</th>
-                            <th>View Playtimes</th>
+                            {{--<th>View Playtimes</th>--}}
                         </tr>
 
                         @foreach($campaign_details['compliance_reports'] as $compliance_report)

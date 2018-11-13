@@ -89,7 +89,7 @@
                         <span class="small_faint uppercased weight_medium">Brands</span>
                         <h3>{{ count($all_brands) }}</h3>
 
-                        <a href="" class="weight_medium small_font view_brands">View Brands</a>
+                        {{--<a href="" class="weight_medium small_font view_brands">View Brands</a>--}}
                     </div>
                 </div>
 
