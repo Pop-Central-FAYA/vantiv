@@ -268,6 +268,11 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/presigned-url', 'S3Controller@getPresignedUrl');
 
+    /*
+     * Compliance summary
+     */
+    Route::get('/compliance/view-summary/{campaign_id}', 'Compliance\ComplianceController@downloadSummary')->name('compliance.download.summary');
+
     /**
      * Sectors
      */

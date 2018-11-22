@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use JD\Cloudder\Facades\Cloudder;
 use Vanguard\Models\BrandClient;
+use Vanguard\Models\BroadcasterPlayout;
 use Vanguard\Models\PreselectedAdslot;
 use Vanguard\Models\SelectedAdslot;
 use Vanguard\Models\Upload;
@@ -186,28 +187,8 @@ class Utilities {
             ];
         }
 
-        $compliance_reports = [];
-        if($broadcaster_id){
-            $campaign_compliances = Utilities::switch_db('api')->select("SELECT c.time_created, c_c.channel, b.brand, a.from_to_time from compliances as c, campaignChannels as c_c,
-                                                                            adslots as a, broadcasters as b where c_c.id = c.channel and b.id = '$broadcaster_id' and
-                                                                            c.broadcaster_id = '$broadcaster_id' and a.id = c.adslot_id and campaign_id = '$id'");
-        }else if($agency_id){
-            $campaign_compliances = Utilities::switch_db('api')->select("SELECT c.time_created, c_c.channel, b.brand, a.from_to_time from compliances as c, campaignChannels as c_c,
-                                                                            adslots as a, broadcasters as b where c_c.id = c.channel and b.id = c.broadcaster_id and a.id = c.adslot_id
-                                                                             and campaign_id = '$id'");
-
-        }
-
-
-        foreach ($campaign_compliances as $campaign_compliance){
-            $compliance_reports[] = [
-                'media_type' => 'TV',
-                'media_channel' => 'POP CENTRAL',
-                'date' => '2018-11-06',
-                'booked_spot' => '20:15 - 20:18',
-                'aired_spot' => '20:15 - 20:18',
-            ];
-        }
+        //query builder to get compliance
+        $compliances = Utilities::getComplianceLog($broadcaster_id, $campaign_details[0]->campaign_id);
 
         if($broadcaster_id){
             $uploaded_files = SelectedAdslot::where([['campaign_id', $campaign_id], ['broadcaster_id', $broadcaster_id]])->get();
@@ -216,8 +197,41 @@ class Utilities {
 
         }
 
-        return (['campaign_det' => $campaign_det, 'file_details' => $file_details, 'broadcasters' => $broadcasters, 'compliance_reports' => $compliance_reports, 'uploaded_files' => $uploaded_files]);
+        return (['campaign_det' => $campaign_det, 'file_details' => $file_details, 'broadcasters' => $broadcasters, 'compliance_reports' => $compliances, 'uploaded_files' => $uploaded_files]);
 
+    }
+
+    public static function getComplianceLog($broadcaster_id, $campaign_id)
+    {
+        if($broadcaster_id){
+            $compliances = Utilities::switch_db('api')->table('broadcaster_playouts')
+                ->join('broadcasters', 'broadcaster_playouts.broadcaster_id', '=', 'broadcasters.id')
+                ->join('selected_adslots', 'broadcaster_playouts.selected_adslot_id', '=', 'selected_adslots.id')
+                ->join('mpos', 'broadcaster_playouts.mpo_detail_id', '=', 'mpos.id')
+                ->select('broadcasters.id AS broadcaster_id','broadcasters.brand AS broadcaster_station',
+                    'selected_adslots.file_name AS asset_name','selected_adslots.time_picked AS duration',
+                    'broadcaster_playouts.status AS compliance_status', 'broadcaster_playouts.played_at AS played_date',
+                    'mpos.campaign_id AS campaign_id', 'selected_adslots.air_date AS schedule_date',
+                    'broadcaster_playouts.air_between AS schedule_spot')
+                ->where([
+                    ['broadcaster_playouts.broadcaster_id', $broadcaster_id],
+                    ['mpos.campaign_id', $campaign_id]
+                ])
+                ->get();
+        }else{
+            $compliances = Utilities::switch_db('api')->table('broadcaster_playouts')
+                ->join('broadcasters', 'broadcaster_playouts.broadcaster_id', '=', 'broadcasters.id')
+                ->join('selected_adslots', 'broadcaster_playouts.selected_adslot_id', '=', 'selected_adslots.id')
+                ->join('mpos', 'broadcaster_playouts.mpo_detail_id', '=', 'mpos.id')
+                ->select('broadcasters.id AS broadcaster_id','broadcasters.brand AS broadcaster_station',
+                    'selected_adslots.file_name AS asset_name','selected_adslots.time_picked AS duration',
+                    'broadcaster_playouts.status AS compliance_status', 'broadcaster_playouts.played_at AS played_date',
+                    'mpos.campaign_id AS campaign_id', 'selected_adslots.air_date AS schedule_date',
+                    'broadcaster_playouts.air_between AS schedule_spot')
+                ->where('mpos.campaign_id', $campaign_id)
+                ->get();
+        }
+        return $compliances;
     }
 
     public static function array_flatten($array) {
