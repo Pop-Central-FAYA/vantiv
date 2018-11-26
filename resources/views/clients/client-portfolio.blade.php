@@ -174,15 +174,7 @@
                     <div class="similar_table p_t">
                         <div class="filters clearfix mb">
                             <div class="right col_6 clearfix">
-                                <div class="col_7 column">
-                                    <div class="header_search">
-                                        <form>
-                                            <input type="text" placeholder="Search...">
-                                        </form>
-                                    </div>
-                                </div>
-
-                                <div class="col_5 column">
+                                <div class="col_12 column align_right">
                                     <a href="#new_brand" class="btn small_btn modal_click"><span class="_plus"></span> New Brand</a>
                                 </div>
                             </div>

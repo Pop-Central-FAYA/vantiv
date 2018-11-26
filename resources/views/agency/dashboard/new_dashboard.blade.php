@@ -151,8 +151,11 @@
         <div class="the_frame client_dets mb4">
 
             <div class="filters border_bottom clearfix">
-                <div class="column col_8 p-t">
+                <div class="column col_4 p-t">
                     <p class="uppercased weight_medium">All Campaigns</p>
+                </div>
+                <div class="column col_4 clearfix">
+                    <input type="text" name="key_search" placeholder="Enter Key Word..." class="key_search">
                 </div>
                 <div class="column col_4 clearfix">
                     <div class="col_5 column">
@@ -167,6 +170,7 @@
                         <button type="button" id="dashboard_filter_campaign" class="btn small_btn">Filter</button>
                     </div>
                 </div>
+
             </div>
 
             <!-- campaigns table -->
@@ -204,6 +208,7 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.html5.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.print.min.js"></script>
+    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/fixedheader/3.1.2/js/dataTables.fixedHeader.min.js"></script>
     <script src="https://unpkg.com/flatpickr"></script>
     <script>
         <?php echo "var tv_active = ".round($active) . ";\n"; ?>
@@ -309,12 +314,15 @@
                     {data: 'status', name: 'status'},
 
                 ],
-
             });
 
             $('#dashboard_filter_campaign').on('click', function() {
                 Datefilter.draw();
             });
+
+            $('.key_search').on('keyup', function(){
+                Datefilter.search($(this).val()).draw() ;
+            })
         } );
     </script>
 @stop
@@ -324,6 +332,7 @@
     <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.5.1/css/buttons.dataTables.min.css" type="text/css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedheader/3.1.2/css/fixedHeader.dataTables.min.css">
     <style>
         .dataTables_filter {
             display: none;

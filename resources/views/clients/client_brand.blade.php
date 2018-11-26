@@ -31,8 +31,7 @@
                         <tr>
                             <th>ID</th>
                             <th>Name</th>
-                            <th>Date</th>
-                            <th>Budget</th>
+                            <th>Start Date</th>
                             <th>Amount Spent</th>
                             <th>MPO Status</th>
                             <th>Campaign Status</th>
@@ -42,8 +41,7 @@
                             <tr>
                                 <td>{{ $campaign['id'] }}</td>
                                 <td>{{ $campaign['name'] }}</td>
-                                <td>{{ $campaign['date_created'] }}</td>
-                                <td>&#8358; {{ $campaign['budget'] }}</td>
+                                <td>{{ $campaign['start_date'] }}</td>
                                 <td>&#8358; {{ $campaign['budget'] }}</td>
                                 @if($campaign['mpo_status'] === 1)
                                     <td class="color_base weight_medium">Approved</td>
