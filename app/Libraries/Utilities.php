@@ -62,20 +62,28 @@ class Utilities {
     {
         $file_details = [];
         if($broadcaster_id){
-            $campaign_details = Utilities::switch_db('api')->select("SELECT c_d.campaign_id,c_d.status, c_d.min_age, c_d.max_age, c_d.name as campaign_name,
-                                                                c_d.user_id, c_d.agency, c_d.product, c_d.Industry, c_d.sub_industry, c_d.broadcaster, c_d.start_date,
-                                                                c_d.stop_date, b.name as brand, c_d.channel, c_d.target_audience,
-                                                                 c_d.region, b.name, p.total, p.id as payment_id from campaignDetails as c_d INNER JOIN brands as b ON b.id = c_d.brand
-                                                                  INNER JOIN payments as p ON p.campaign_id = c_d.campaign_id where
-                                                                   c_d.campaign_id = '$id' and c_d.broadcaster = '$broadcaster_id'");
+            $campaign_details = Utilities::switch_db('api')->select("SELECT c_d.campaign_id,c_d.status, c_d.min_age, 
+                                                                          c_d.max_age, c_d.name AS campaign_name,
+                                                                          c_d.user_id, c_d.agency, c_d.product, c_d.Industry, 
+                                                                          c_d.sub_industry, c_d.broadcaster, c_d.start_date,
+                                                                          c_d.stop_date, b.name AS brand, c_d.channel, c_d.target_audience,
+                                                                          c_d.region, b.name, p.total, p.id AS payment_id 
+                                                                          FROM campaignDetails AS c_d 
+                                                                          INNER JOIN brands AS b ON b.id = c_d.brand
+                                                                          INNER JOIN payments AS p ON p.campaign_id = c_d.campaign_id 
+                                                                          WHERE c_d.campaign_id = '$id' AND c_d.broadcaster = '$broadcaster_id'");
         }else if($agency_id){
-            $campaign_details = Utilities::switch_db('api')->select("SELECT c_d.campaign_id, c_d.status, c_d.min_age, c_d.max_age, c_d.name as campaign_name, c_d.user_id,
-                                                                        c_d.agency, c_d.product, c_d.Industry, c_d.sub_industry, c_d.start_date, c_d.stop_date, b.name as brand,
-                                                                        c_d.channel, c_d.target_audience, c_d.region, b.name,
-                                                                        p.total, p.id as payment_id from campaignDetails as c_d INNER JOIN brands as b ON b.id = c_d.brand
-                                                                        INNER JOIN payments as p ON p.campaign_id = c_d.campaign_id where  c_d.campaign_id = '$id' GROUP BY c_d.campaign_id");
+            $campaign_details = Utilities::switch_db('api')->select("SELECT c_d.campaign_id, c_d.status, c_d.min_age, 
+                                                                          c_d.max_age, c_d.name as campaign_name, c_d.user_id,
+                                                                          c_d.agency, c_d.product, c_d.Industry, c_d.sub_industry, 
+                                                                          c_d.start_date, c_d.stop_date, b.name AS brand,
+                                                                          c_d.channel, c_d.target_audience, c_d.region, b.name,
+                                                                          p.total, p.id AS payment_id 
+                                                                          FROM campaignDetails AS c_d 
+                                                                          INNER JOIN brands AS b ON b.id = c_d.brand
+                                                                          INNER JOIN payments AS p ON p.campaign_id = c_d.campaign_id 
+                                                                          WHERE  c_d.campaign_id = '$id' GROUP BY c_d.campaign_id");
         }
-
         $campaign_id = $campaign_details[0]->campaign_id;
         $channel = $campaign_details[0]->channel;
         $location_ids = $campaign_details[0]->region;
@@ -83,7 +91,10 @@ class Utilities {
         $location = Utilities::switch_db('api')->select("SELECT * FROM regions where id IN ($location_ids) ");
         if($broadcaster_id){
             $broadcaster_campaign_id = $campaign_details[0]->broadcaster;
-            $channel = Utilities::switch_db('api')->select("SELECT * from campaignChannels where id IN (SELECT channel_id from broadcasters where id = '$broadcaster_campaign_id') ");
+            $channel = Utilities::switch_db('api')->select("SELECT * from campaignChannels 
+                                                                WHERE id 
+                                                                IN (SELECT channel_id from broadcasters where id = '$broadcaster_campaign_id') 
+                                                                ");
 
         }else if($agency_id){
             $channel = Utilities::switch_db('api')->select("SELECT * from campaignChannels where id IN ($channel) ");
@@ -93,19 +104,23 @@ class Utilities {
             $broadcaster_campaign_id = $campaign_details[0]->broadcaster;
             $broadcasters = Utilities::switch_db('api')->select("SELECT * FROM broadcasters where id = '$broadcaster_campaign_id'");
         }else if($agency_id){
-            $broadcasters = Utilities::switch_db('api')->select("SELECT * FROM broadcasters where id IN (SELECT broadcaster from campaignDetails where campaign_id = '$id')");
+            $broadcasters = Utilities::switch_db('api')->select("SELECT * FROM broadcasters 
+                                                                      WHERE id 
+                                                                      IN (SELECT broadcaster from campaignDetails where campaign_id = '$id')
+                                                                      ");
         }
         $payment_id = $campaign_details[0]->payment_id;
         $user_id = $campaign_details[0]->user_id;
         if($broadcaster_id){
-            $campaign_details_broad = Utilities::switch_db('api')->select("SELECT amount as total from paymentDetails where payment_id = '$payment_id' and broadcaster = '$broadcaster_id'");
+            $campaign_details_broad = Utilities::switch_db('api')->select("SELECT amount AS total FROM paymentDetails 
+                                                                                WHERE payment_id = '$payment_id' 
+                                                                                AND broadcaster = '$broadcaster_id'");
         }
 
-        $company_info = Utilities::switch_db('api')->select("SELECT * from walkIns where user_id = '$user_id'");
+        $company_info = Utilities::switch_db('api')->select("SELECT * FROM walkIns WHERE user_id = '$user_id'");
         $company_name = $company_info[0]->company_name ? $company_info[0]->company_name : '';
-        $user_broad = Utilities::switch_db('api')->select("SELECT * from users where id = '$user_id' ");
-        $user_agency = DB::select("SELECT * from users where id = '$user_id' ");
-        $user_advertiser = Utilities::switch_db('api')->select("SELECT * from users where id = (SELECT user_id from advertisers WHERE id = '$user_id')");
+        $user_broad = Utilities::switch_db('api')->select("SELECT * FROM users WHERE id = '$user_id' ");
+        $user_agency = DB::select("SELECT * FROM users WHERE id = '$user_id' ");
         if($user_broad){
             $name = $user_broad[0]->firstname .' '.$user_broad[0]->lastname;
             $email = $user_broad[0]->email;
@@ -115,10 +130,6 @@ class Utilities {
             $email = $user_agency[0]->email;
             $phone = $user_agency[0]->phone;
             #
-        }else{
-            $name = $user_advertiser[0]->firstname .' '.$user_advertiser[0]->lastname;
-            $email = $user_advertiser[0]->email;
-            $phone = $user_advertiser[0]->phone_number;
         }
 
         $campaign_det = [
@@ -140,7 +151,8 @@ class Utilities {
             'location' => $location,
             'age' => $campaign_details[0]->min_age .' - '.$campaign_details[0]->max_age,
             'target_audience' => $target_audiences,
-            'status' => $campaign_details[0]->status
+            'status' => $campaign_details[0]->status,
+            'agency_id' => $campaign_details[0]->agency
         ];
 
         $files = Utilities::switch_db('api')->select("SELECT f.id, f.user_id, f.broadcaster_id, f.file_url, f.time_picked, f.status,

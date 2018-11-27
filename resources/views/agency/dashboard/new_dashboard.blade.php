@@ -179,7 +179,6 @@
                 <tr>
                     <th>Name</th>
                     <th>Brand</th>
-                    <th>Date Created</th>
                     <th>Start Date</th>
                     <th>Budget</th>
                     <th>Ad Slots</th>
@@ -307,7 +306,6 @@
                 columns: [
                     {data: 'name', name: 'name'},
                     {data: 'brand', name: 'brand'},
-                    {data: 'date_created', name: 'date_created'},
                     {data: 'start_date', name: 'start_date'},
                     {data: 'budget', name: 'budget'},
                     {data: 'adslots', name: 'adslots'},

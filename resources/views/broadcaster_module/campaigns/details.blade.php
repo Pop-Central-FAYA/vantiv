@@ -24,22 +24,34 @@
         <div class="the_frame clearfix mb">
 
             <div class="clearfix client_personal campaign_filter">
-                <div class="column col_3">
-                    <span class="small_faint">Client</span>
+                @if($campaign_details['campaign_det']['agency_id'])
+                    <div class="column col_3">
+                        <span class="small_faint">Client</span>
 
-                    <div class="select_wrap">
-                        <select name="client" id="client">
-                            @foreach($all_clients as $all_client)
-                                <option value="{{ $all_client->user_id }}"
-                                        @if($all_client->user_id === $campaign_details['campaign_det']['company_user_id'])
-                                        selected
-                                        @endif
-                                >{{ $all_client->company_name ? $all_client->company_name : '' }}</option>
-                            @endforeach
-                        </select>
+                        <div class="select_wrap">
+                            <select name="client">
+                                    <option
+                                    >{{ $campaign_details['campaign_det']['brand'] }}</option>
+                            </select>
+                        </div>
                     </div>
-                </div>
+                @else
+                    <div class="column col_3">
+                        <span class="small_faint">Client</span>
 
+                        <div class="select_wrap">
+                            <select name="client" id="client">
+                                @foreach($all_clients as $all_client)
+                                    <option value="{{ $all_client->user_id }}"
+                                            @if($all_client->user_id === $campaign_details['campaign_det']['company_user_id'])
+                                            selected
+                                            @endif
+                                    >{{ $all_client->company_name ? $all_client->company_name : '' }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                @endif
                 <div class="column col_3">
                     <span class="small_faint">Campaign Name</span>
                     <div class="show_this"></div>
@@ -231,37 +243,7 @@
                 <!-- Ad slots -->
                 <div class="tab_content" id="slots">
                     <!-- filter -->
-                    <div class="filters border_bottom clearfix">
-                        <div class="column col_8 date_filter">
-                            <a href="" class="active">ALL</a>
-                            <a href="">M</a>
-                            <a href="">T</a>
-                            <a href="">W</a>
-                            <a href="">T</a>
-                            <a href="">F</a>
-                            <a href="">S</a>
-                            <a href="">S</a>
-                        </div>
 
-                        <div class="column col_4 clearfix">
-                            <div class="col_8 column">
-                                <div class="header_search">
-                                    <form>
-                                        <input type="text" placeholder="Search...">
-                                    </form>
-                                </div>
-                            </div>
-
-                            <div class="col_4 column">
-                                <div class="select_wrap">
-                                    <select>
-                                        <option>All Time</option>
-                                        <option>This Month</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
                     <table>
                         <tr>
@@ -351,37 +333,7 @@
                 <!-- Complaince -->
                 <div class="tab_content" id="comp">
                     <!-- filter -->
-                    <div class="filters border_bottom clearfix">
-                        <div class="column col_8 date_filter">
-                            <a href="" class="active">ALL</a>
-                            <a href="">M</a>
-                            <a href="">T</a>
-                            <a href="">W</a>
-                            <a href="">T</a>
-                            <a href="">F</a>
-                            <a href="">S</a>
-                            <a href="">S</a>
-                        </div>
 
-                        <div class="column col_4 clearfix">
-                            <div class="col_8 column">
-                                <div class="header_search">
-                                    <form>
-                                        <input type="text" placeholder="Search...">
-                                    </form>
-                                </div>
-                            </div>
-
-                            <div class="col_4 column">
-                                <div class="select_wrap">
-                                    <select>
-                                        <option>All Time</option>
-                                        <option>This Month</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     <!-- end -->
 
                     <table>
