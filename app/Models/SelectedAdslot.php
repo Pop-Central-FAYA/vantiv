@@ -61,16 +61,16 @@ class SelectedAdslot extends Model
     public function countAiredSlots ($adslot_id, $campaign_id)
     {
         $status = BroadcasterPlayoutStatus::PLAYED;
-        $count_aired_spots = Utilities::switch_db('api')->select("SELECT * from broadcaster_playouts 
-                                                      WHERE selected_adslot_id 
-                                                      IN 
-                                                        (
-                                                          SELECT id FROM selected_adslots
-                                                          WHERE adslot = '$adslot_id' AND campaign_id = '$campaign_id'
-                                                        )
-                                                      AND status = '$status'
-                                                
-                                                      ");
+
+        $count_aired_spots = Utilities::switch_db('api')->table('broadcaster_playouts')
+                                                        ->join('selected_adslots', function ($join) use ($adslot_id, $campaign_id) {
+                                                             $join->on('selected_adslots.id', '=', 'broadcaster_playouts.selected_adslot_id');
+                                                             $join->on('selected_adslots.campaign_id', '=', \DB::raw("'".$campaign_id."'"));
+                                                             $join->on('selected_adslots.adslot', '=', \DB::raw("'".$adslot_id."'"));
+                                                        })
+                                                        ->select('broadcaster_playouts.id')
+                                                        ->where('broadcaster_playouts.status', $status)
+                                                        ->get();
         return count($count_aired_spots);
     }
 

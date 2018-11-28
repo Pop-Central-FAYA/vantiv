@@ -17,18 +17,12 @@ class ComplianceController extends Controller
                                     WHERE campaign_id = '$campaign_id'
                                 ");
 
-        if($broadcaster_id){
-            $schedule_slots = SelectedAdslot::where([
-                    ['campaign_id', $campaign_id],
-                    ['broadcaster_id', $broadcaster_id]
-                ])
-                ->groupBy('adslot')
-                ->get();
-        }else{
-            $schedule_slots = SelectedAdslot::where('campaign_id', $campaign_id)
-                ->groupBy('adslot')
-                ->get();
-        }
+        $schedule_slots = SelectedAdslot::where('campaign_id', $campaign_id)
+            ->when($broadcaster_id, function ($query) use ($broadcaster_id) {
+                $query->where('broadcaster_id', $broadcaster_id);
+            })
+            ->groupBy('adslot')
+            ->get();
 
         $compliance_reports = [];
         foreach ($schedule_slots as $schedule_slot){
