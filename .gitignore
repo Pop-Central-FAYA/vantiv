@@ -8,3 +8,5 @@ html/web.config
 dev
 get-pip.py
 .DS_Store
+storage/.DS_Store
+storage/excels
