@@ -203,35 +203,22 @@ class Utilities {
 
     public static function getComplianceLog($broadcaster_id, $campaign_id)
     {
-        if($broadcaster_id){
-            $compliances = Utilities::switch_db('api')->table('broadcaster_playouts')
-                ->join('broadcasters', 'broadcaster_playouts.broadcaster_id', '=', 'broadcasters.id')
-                ->join('selected_adslots', 'broadcaster_playouts.selected_adslot_id', '=', 'selected_adslots.id')
-                ->join('mpos', 'broadcaster_playouts.mpo_detail_id', '=', 'mpos.id')
-                ->select('broadcasters.id AS broadcaster_id','broadcasters.brand AS broadcaster_station',
-                    'selected_adslots.file_name AS asset_name','selected_adslots.time_picked AS duration',
-                    'broadcaster_playouts.status AS compliance_status', 'broadcaster_playouts.played_at AS played_date',
-                    'mpos.campaign_id AS campaign_id', 'selected_adslots.air_date AS schedule_date',
-                    'broadcaster_playouts.air_between AS schedule_spot')
-                ->where([
-                    ['broadcaster_playouts.broadcaster_id', $broadcaster_id],
-                    ['mpos.campaign_id', $campaign_id]
-                ])
-                ->get();
-        }else{
-            $compliances = Utilities::switch_db('api')->table('broadcaster_playouts')
-                ->join('broadcasters', 'broadcaster_playouts.broadcaster_id', '=', 'broadcasters.id')
-                ->join('selected_adslots', 'broadcaster_playouts.selected_adslot_id', '=', 'selected_adslots.id')
-                ->join('mpos', 'broadcaster_playouts.mpo_detail_id', '=', 'mpos.id')
-                ->select('broadcasters.id AS broadcaster_id','broadcasters.brand AS broadcaster_station',
-                    'selected_adslots.file_name AS asset_name','selected_adslots.time_picked AS duration',
-                    'broadcaster_playouts.status AS compliance_status', 'broadcaster_playouts.played_at AS played_date',
-                    'mpos.campaign_id AS campaign_id', 'selected_adslots.air_date AS schedule_date',
-                    'broadcaster_playouts.air_between AS schedule_spot')
-                ->where('mpos.campaign_id', $campaign_id)
-                ->get();
-        }
-        return $compliances;
+
+        return Utilities::switch_db('api')->table('broadcaster_playouts')
+            ->join('broadcasters', 'broadcaster_playouts.broadcaster_id', '=', 'broadcasters.id')
+            ->join('selected_adslots', 'broadcaster_playouts.selected_adslot_id', '=', 'selected_adslots.id')
+            ->join('mpos', 'broadcaster_playouts.mpo_detail_id', '=', 'mpos.id')
+            ->select('broadcasters.id AS broadcaster_id','broadcasters.brand AS broadcaster_station',
+                'selected_adslots.file_name AS asset_name','selected_adslots.time_picked AS duration',
+                'broadcaster_playouts.status AS compliance_status', 'broadcaster_playouts.played_at AS played_date',
+                'mpos.campaign_id AS campaign_id', 'selected_adslots.air_date AS schedule_date',
+                'broadcaster_playouts.air_between AS schedule_spot')
+            ->when($broadcaster_id, function($query) use ($broadcaster_id) {
+                return $query->where('broadcaster_playouts.broadcaster_id', $broadcaster_id);
+            })
+            ->where('mpos.campaign_id', $campaign_id)
+            ->get();
+
     }
 
     public static function array_flatten($array) {

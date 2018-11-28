@@ -564,8 +564,7 @@ class CampaignsController extends Controller
 
         $compliances = $this->getDateAndCampaignCompliances($campaign_id, $start_date, $stop_date, $broadcaster_id);
         $formatted_compliances = $this->formatToGraphFormat($compliances['compliance_data'], $campaign_id);
-        dd($compliances);
-
+        //dd($compliances);
         foreach ($formatted_compliances['formatted_compliances'] as $compliance){
             if($compliance['stack'] === 'TV'){
                 $color = '#5281FE';
@@ -591,7 +590,6 @@ class CampaignsController extends Controller
         $played = BroadcasterPlayoutStatus::PLAYED;
         $all_compliances_data = [];
         $compliances = Utilities::switch_db('api')->table('broadcaster_playouts')
-                        ->join('mpos', 'broadcaster_playouts.mpo_detail_id', '=', 'mpos.id')
                         ->join('selected_adslots', 'broadcaster_playouts.selected_adslot_id', '=', 'selected_adslots.id')
                         ->join('broadcasters', 'broadcaster_playouts.broadcaster_id', '=', 'broadcasters.id')
                         ->join('campaignChannels', 'broadcasters.channel_id', '=', 'campaignChannels.id')
@@ -601,13 +599,14 @@ class CampaignsController extends Controller
                                 'selected_adslots.campaign_id AS campaign_id', 'adslotPrices.price_60 AS 60',
                                 'adslotPrices.price_45 AS 45', 'adslotPrices.price_30 AS 30', 'adslotPrices.price_15 AS 15')
                         ->where([
-                            ['mpos.campaign_id', $campaign_id],
+                            ['selected_adslots.campaign_id', $campaign_id],
                             ['broadcaster_playouts.broadcaster_id', $broadcaster_id],
                             ['broadcaster_playouts.status', $played]
                         ])
                         ->whereBetween('broadcaster_playouts.played_at', array($start_date, $stop_date))
-                        ->groupBy('broadcaster_playouts.played_at', 'broadcaster_playouts.broadcaster_id')
+                        ->groupBy( 'broadcaster_playouts.broadcaster_id')
                         ->get();
+        //dd($compliances);
     }
 
     public function formatToGraphFormat($compliances, $campaign_id)
