@@ -54,8 +54,8 @@ class SelectedAdslot extends Model
                                     ['campaign_id', $campaign_id],
                                     ['adslot', $adslot_id]
                                 ])
-                                ->get();
-        return count($schedule_adslot);
+                                ->count();
+        return $schedule_adslot;
     }
 
     public function countAiredSlots ($adslot_id, $campaign_id)
@@ -63,15 +63,15 @@ class SelectedAdslot extends Model
         $status = BroadcasterPlayoutStatus::PLAYED;
 
         $count_aired_spots = Utilities::switch_db('api')->table('broadcaster_playouts')
-                                                        ->join('selected_adslots', function ($join) use ($adslot_id, $campaign_id) {
-                                                             $join->on('selected_adslots.id', '=', 'broadcaster_playouts.selected_adslot_id');
-                                                             $join->on('selected_adslots.campaign_id', '=', \DB::raw("'".$campaign_id."'"));
-                                                             $join->on('selected_adslots.adslot', '=', \DB::raw("'".$adslot_id."'"));
-                                                        })
-                                                        ->select('broadcaster_playouts.id')
-                                                        ->where('broadcaster_playouts.status', $status)
-                                                        ->get();
-        return count($count_aired_spots);
+                                                            ->join('selected_adslots', function ($join) use($campaign_id, $adslot_id) {
+                                                                   $join->on('selected_adslots.id', '=', 'broadcaster_playouts.selected_adslot_id')
+                                                                        ->WHERE('selected_adslots.campaign_id', $campaign_id)
+                                                                        ->WHERE('selected_adslots.adslot', $adslot_id);
+                                                            })
+                                                            ->select('broadcaster_playouts.id')
+                                                            ->where('broadcaster_playouts.status', $status)
+                                                            ->count();
+        return $count_aired_spots;
     }
 
 }
