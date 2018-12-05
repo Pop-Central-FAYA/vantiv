@@ -183,12 +183,10 @@ return [
         Laravel\Socialite\SocialiteServiceProvider::class,
         Vanguard\Providers\HtmlServiceProvider::class,
         Webpatser\Countries\CountriesServiceProvider::class,
-        Intervention\Image\ImageServiceProvider::class,
         Vanguard\Providers\EntrustServiceProvider::class,
         anlutro\LaravelSettings\ServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
-        Pbmedia\LaravelFFMpeg\FFMpegServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
         Fideloper\Proxy\TrustedProxyServiceProvider::class,
 

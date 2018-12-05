@@ -2,22 +2,11 @@
 
 namespace Vanguard\Http\Controllers;
 
-use Curl\Curl;
-use Hamcrest\Util;
 use Illuminate\Http\Request;
-use Vanguard\Libraries\AmazonS3;
-use Vanguard\Libraries\Api;
 use Vanguard\Libraries\Utilities;
-use Vanguard\Models\Brand;
-use Vanguard\Models\SelectedAdslot;
-use Vanguard\Repositories\Activity\ActivityRepository;
-use Vanguard\Repositories\User\UserRepository;
-use Vanguard\Support\Enum\UserStatus;
 use Auth;
-use Carbon\Carbon;
 use Session;
 use Yajra\DataTables\DataTables;
-use Illuminate\Contracts\Encryption\DecryptException;
 
 
 class DashboardController extends Controller

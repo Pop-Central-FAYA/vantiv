@@ -5,8 +5,8 @@ namespace Vanguard\Services\Upload;
 use Vanguard\User;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Http\Request;
-use Intervention\Image\ImageManager;
 use Symfony\Component\HttpFoundation\File\File;
+use Intervention\Image\ImageManager;
 
 class UserAvatarManager
 {
