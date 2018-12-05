@@ -186,13 +186,10 @@ return [
         Intervention\Image\ImageServiceProvider::class,
         Vanguard\Providers\EntrustServiceProvider::class,
         anlutro\LaravelSettings\ServiceProvider::class,
-        Ixudra\Curl\CurlServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
-        Unicodeveloper\Paystack\PaystackServiceProvider::class,
         Pbmedia\LaravelFFMpeg\FFMpegServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
-        JD\Cloudder\CloudderServiceProvider::class,
         Fideloper\Proxy\TrustedProxyServiceProvider::class,
 
 
@@ -205,7 +202,6 @@ return [
         Vanguard\Providers\EventServiceProvider::class,
         Vanguard\Providers\RouteServiceProvider::class,
         Vanguard\Services\Auth\TwoFactor\AuthyServiceProvider::class,
-        JD\Cloudder\CloudderServiceProvider::class
 
     ],
 
@@ -256,7 +252,6 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View'      => Illuminate\Support\Facades\View::class,
         'Notification' => Illuminate\Support\Facades\Notification::class,
-        'FFMpeg' => Pbmedia\LaravelFFMpeg\FFMpegFacade::class,
 
         'JsValidator' => Proengsoft\JsValidation\Facades\JsValidatorFacade::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
@@ -266,13 +261,8 @@ return [
         'Image' => Intervention\Image\Facades\Image::class,
         'Entrust' => Zizaco\Entrust\EntrustFacade::class,
         'Settings' => anlutro\LaravelSettings\Facade::class,
-        'Authy' => Vanguard\Services\Auth\TwoFactor\Facade::class,
-        'Curl' => Ixudra\Curl\Facades\Curl::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
-        'Paystack' => Unicodeveloper\Paystack\Facades\Paystack::class,
-        'Image' => Intervention\Image\Facades\Image::class,
-        'Cloudder' => JD\Cloudder\Facades\Cloudder::class
 
     ],
 
