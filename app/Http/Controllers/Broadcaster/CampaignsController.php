@@ -8,8 +8,10 @@ use Illuminate\Support\Collection;
 use Vanguard\Http\Requests\CampaignInformationUpdateRequest;
 use Vanguard\Libraries\Api;
 use Vanguard\Libraries\CampaignDate;
+use Vanguard\Libraries\Enum\BroadcasterPlayoutStatus;
 use Vanguard\Libraries\Paystack;
 use Vanguard\Libraries\Utilities;
+use Vanguard\Models\BroadcasterPlayout;
 use Vanguard\Models\PreselectedAdslot;
 use Vanguard\Models\SelectedAdslot;
 use Vanguard\Models\Upload;
@@ -562,7 +564,7 @@ class CampaignsController extends Controller
 
         $compliances = $this->getDateAndCampaignCompliances($campaign_id, $start_date, $stop_date, $broadcaster_id);
         $formatted_compliances = $this->formatToGraphFormat($compliances['compliance_data'], $campaign_id);
-
+        //dd($compliances);
         foreach ($formatted_compliances['formatted_compliances'] as $compliance){
             if($compliance['stack'] === 'TV'){
                 $color = '#5281FE';
@@ -585,28 +587,26 @@ class CampaignsController extends Controller
     public function getDateAndCampaignCompliances($campaign_id, $start_date, $stop_date, $broadcaster_id)
     {
         $dates = [];
+        $played = BroadcasterPlayoutStatus::PLAYED;
         $all_compliances_data = [];
-        $date_compliances = Utilities::switch_db('api')->select("SELECT time_created from compliances where campaign_id = '$campaign_id'
-                                                                    AND DATE_FORMAT(time_created, '%Y-%m-%d') BETWEEN '$start_date' AND '$stop_date' and broadcaster_id = '$broadcaster_id'
-                                                                    GROUP BY DATE_FORMAT(time_created, '%Y-%m-%d') ");
-        foreach ($date_compliances as $date_compliance){
-            $date_created = date('Y-m-d', strtotime($date_compliance->time_created));
-            //this query results to a multidimensional array
-            $compliances = Utilities::switch_db('api')->select("SELECT IF(c.amount_spent IS NOT NULL, sum(c.amount_spent), 0) as amount,
-                                                                              c.broadcaster_id, c.campaign_id, date_format(c.time_created, '%Y-%m-%d') as `time`,
-                                                                               b.brand, c_c.channel as stack, c.channel from compliances as c INNER JOIN
-                                                                               broadcasters as b ON b.id = c.broadcaster_id
-                                                                               INNER JOIN campaignChannels as c_c ON c_c.id = c.channel where c.broadcaster_id = '$broadcaster_id'
-                                                                               and b.id = '$broadcaster_id' and c.broadcaster_id = '$broadcaster_id'
-                                                                               and c.campaign_id = '$campaign_id' and date_format(c.time_created, '%Y-%m-%d') = '$date_created' ");
-
-            $all_compliances_data[] = [$compliances];
-            $dates[] = [date('Y-m-d', strtotime($date_compliance->time_created))];
-        }
-
-        $flatened_compliances = array_flatten($all_compliances_data);
-
-        return (['dates' => $dates, 'compliance_data' => $flatened_compliances]);
+        $compliances = Utilities::switch_db('api')->table('broadcaster_playouts')
+                        ->join('selected_adslots', 'broadcaster_playouts.selected_adslot_id', '=', 'selected_adslots.id')
+                        ->join('broadcasters', 'broadcaster_playouts.broadcaster_id', '=', 'broadcasters.id')
+                        ->join('campaignChannels', 'broadcasters.channel_id', '=', 'campaignChannels.id')
+                        ->join('adslotPrices', 'selected_adslots.adslot', '=', 'adslotPrices.adslot_id')
+                        ->select('broadcaster_playouts.played_at AS aired_date', 'campaignChannels.channel AS channel',
+                                'broadcasters.brand AS station', 'selected_adslots.id AS selected_adslot_id',
+                                'selected_adslots.campaign_id AS campaign_id', 'adslotPrices.price_60 AS 60',
+                                'adslotPrices.price_45 AS 45', 'adslotPrices.price_30 AS 30', 'adslotPrices.price_15 AS 15')
+                        ->where([
+                            ['selected_adslots.campaign_id', $campaign_id],
+                            ['broadcaster_playouts.broadcaster_id', $broadcaster_id],
+                            ['broadcaster_playouts.status', $played]
+                        ])
+                        ->whereBetween('broadcaster_playouts.played_at', array($start_date, $stop_date))
+                        ->groupBy( 'broadcaster_playouts.broadcaster_id')
+                        ->get();
+        //dd($compliances);
     }
 
     public function formatToGraphFormat($compliances, $campaign_id)

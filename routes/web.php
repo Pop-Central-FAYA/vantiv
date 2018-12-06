@@ -181,6 +181,30 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/presigned-url', 'S3Controller@getPresignedUrl');
 
     /*
+     * Compliance summary
+     */
+    Route::get('/compliance/view-summary/{campaign_id}', 'Compliance\ComplianceController@downloadSummary')->name('compliance.download.summary');
+
+    /**
+     * Sectors
+     */
+
+    Route::get('sectors', ['as' => 'sector.index', 'uses' => 'SectorController@index']);
+
+    Route::get('sector/create', ['as' => 'sector.create', 'uses' => 'SectorController@create'
+    ]);
+
+    Route::post('sector/store', ['as' => 'sector.store', 'uses' => 'SectorController@store']);
+
+    Route::delete('sector/{sector}', ['as' => 'sector.delete', 'uses' => 'SectorController@delete']);
+
+    /**
+     * DayParts
+     */
+
+    Route::resource('dayparts', 'DayPartController');
+
+    /*
      * User Dashboard
      */
 

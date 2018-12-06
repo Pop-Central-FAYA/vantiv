@@ -364,46 +364,34 @@
                         </div>
 
                         <div class="column col_4 clearfix">
-                            <div class="col_8 column">
-                                <div class="header_search">
-                                    <form>
-                                        <input type="text" placeholder="Search...">
-                                    </form>
-                                </div>
-                            </div>
 
-                            <div class="col_4 column">
-                                <div class="select_wrap">
-                                    <select>
-                                        <option>All Time</option>
-                                        <option>This Month</option>
-                                    </select>
-                                </div>
+                            <div class="col_10 column">
+                                <a href="{{ route('compliance.download.summary', ['campaign_id' => $campaign_details['campaign_det']['campaign_id']]) }}" class="btn small_btn">View Summary</a>
                             </div>
                         </div>
                     </div>
                     <!-- end -->
-
                     <table>
                         <tr>
-                            <th>Media Type</th>
-                            <th>Media Channel</th>
-                            <th>Date</th>
-                            <th>Booked Spot</th>
-                            <th>Aired Spot</th>
-                            <th>View Playtimes</th>
+                            <th>Scheduled Date</th>
+                            <th>Station</th>
+                            <th>Schedule Spot</th>
+                            <th>Time Aired</th>
+                            <th>Duration</th>
+                            <th>File Name</th>
                         </tr>
 
                         @foreach($campaign_details['compliance_reports'] as $compliance_report)
                             <tr>
-                                <td>{{ $compliance_report['media_type'] }}</td>
+                                <td>{{ date('M j, Y', strtotime($compliance_report->schedule_date)) }}</td>
                                 <td>
-                                    {{ $compliance_report['media_channel'] }}
+                                    {{ $compliance_report->broadcaster_station }}
                                 </td>
-                                <td>{{ $compliance_report['date'] }}</td>
-                                <td>{{ $compliance_report['booked_spot'] }}</td>
-                                <td>{{ $compliance_report['aired_spot'] }}</td>
-                                <td><a href="" class="weight_medium">View Media</a></td>
+                                <td>{{ $compliance_report->schedule_spot }}</td>
+                                <td>{{ $compliance_report->compliance_status == \Vanguard\Libraries\Enum\BroadcasterPlayoutStatus::PLAYED ?
+                                 date('H:i:s', strtotime($compliance_report->played_date)) : '00:00:00' }}</td>
+                                <td>{{ $compliance_report->duration }}</td>
+                                <td>{{ $compliance_report->asset_name }}</td>
                             </tr>
                         @endforeach
                     </table>
