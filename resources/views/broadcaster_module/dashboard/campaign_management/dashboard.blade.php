@@ -148,11 +148,13 @@
             });
 
             var Datefilter =  $('.dashboard_campaigns').DataTable({
-                dom: 'Bfrtip',
+                dom: 'Blfrtip',
                 paging: true,
                 serverSide: true,
                 processing: true,
                 "searching": false,
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                oLanguage: { sLengthMenu: "_MENU_", },
                 aaSorting: [],
                 ajax: {
                     url: '/agency/dashboard/campaigns',

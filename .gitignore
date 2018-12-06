@@ -1,7 +1,7 @@
 .env
 vendor
 temp
-tmpp
+tmp
 html/web.config
 .idea
 .env
