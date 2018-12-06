@@ -208,10 +208,6 @@ class AuthController extends Controller
             $this->clearLoginAttempts($request);
         }
 
-        if (settings('2fa.enabled') && Authy::isEnabled($user)) {
-            return $this->logoutAndRedirectToTokenPage($request, $user);
-        }
-
         $this->users->update($user->id, ['last_login' => Carbon::now()]);
 
         event(new LoggedIn($user));
