@@ -158,7 +158,7 @@
             });
 
             var Datefilter =  $('.dashboard_campaigns').DataTable({
-                dom: 'Bfrtip',
+                dom: 'Blfrtip',
                 paging: true,
                 serverSide: true,
                 processing: true,

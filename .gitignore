@@ -1,10 +1,12 @@
 .env
 vendor
 temp
-tmpp
+tmp
 html/web.config
 .idea
 .env
 dev
 get-pip.py
 .DS_Store
+storage/.DS_Store
+storage/excels

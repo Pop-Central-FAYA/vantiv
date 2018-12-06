@@ -332,24 +332,25 @@
 
                     <table>
                         <tr>
-                            <th>Media Type</th>
-                            <th>Media Channel</th>
-                            <th>Date</th>
-                            <th>Booked Spot</th>
-                            <th>Aired Spot</th>
-                            {{--<th>View Playtimes</th>--}}
+                            <th>Scheduled Date</th>
+                            <th>Station</th>
+                            <th>Schedule Spot</th>
+                            <th>Time Aired</th>
+                            <th>Duration</th>
+                            <th>File Name</th>
                         </tr>
 
                         @foreach($campaign_details['compliance_reports'] as $compliance_report)
                             <tr>
-                                <td>{{ $compliance_report['media_type'] }}</td>
+                                <td>{{ date('M j, Y', strtotime($compliance_report->schedule_date)) }}</td>
                                 <td>
-                                    {{ $compliance_report['media_channel'] }}
+                                    {{ $compliance_report->broadcaster_station }}
                                 </td>
-                                <td>{{ $compliance_report['date'] }}</td>
-                                <td>{{ $compliance_report['booked_spot'] }}</td>
-                                <td>{{ $compliance_report['aired_spot'] }}</td>
-                                <td><a href="" class="weight_medium">View Media</a></td>
+                                <td>{{ $compliance_report->schedule_spot }}</td>
+                                <td>{{ $compliance_report->compliance_status == \Vanguard\Libraries\Enum\BroadcasterPlayoutStatus::PLAYED ?
+                                 date('H:i:s', strtotime($compliance_report->played_date)) : '00:00:00' }}</td>
+                                <td>{{ $compliance_report->duration }}</td>
+                                <td>{{ $compliance_report->asset_name }}</td>
                             </tr>
                         @endforeach
                     </table>

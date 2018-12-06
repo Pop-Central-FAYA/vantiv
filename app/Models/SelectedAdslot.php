@@ -3,6 +3,8 @@
 namespace Vanguard\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Vanguard\Libraries\Enum\BroadcasterPlayoutStatus;
+use Vanguard\Libraries\Utilities;
 
 class SelectedAdslot extends Model
 {
@@ -39,6 +41,37 @@ class SelectedAdslot extends Model
     public function getFileHashAttribute()
     {
         return md5("{$this->campaign_id}-{$this->file_url}");
+    }
+
+    public function broadcaster_playouts()
+    {
+        return $this->hasMany(BroadcasterPlayout::class);
+    }
+
+    public function countTotalSchedule($campaign_id, $adslot_id)
+    {
+        $schedule_adslot =  SelectedAdslot::where([
+                                    ['campaign_id', $campaign_id],
+                                    ['adslot', $adslot_id]
+                                ])
+                                ->count();
+        return $schedule_adslot;
+    }
+
+    public function countAiredSlots ($adslot_id, $campaign_id)
+    {
+        $status = BroadcasterPlayoutStatus::PLAYED;
+
+        $count_aired_spots = Utilities::switch_db('api')->table('broadcaster_playouts')
+                                                            ->join('selected_adslots', function ($join) use($campaign_id, $adslot_id) {
+                                                                   $join->on('selected_adslots.id', '=', 'broadcaster_playouts.selected_adslot_id')
+                                                                        ->WHERE('selected_adslots.campaign_id', $campaign_id)
+                                                                        ->WHERE('selected_adslots.adslot', $adslot_id);
+                                                            })
+                                                            ->select('broadcaster_playouts.id')
+                                                            ->where('broadcaster_playouts.status', $status)
+                                                            ->count();
+        return $count_aired_spots;
     }
 
 }
