@@ -22,8 +22,11 @@
         <div class="the_frame client_dets mb4">
 
             <div class="filters border_bottom clearfix">
-                <div class="column col_8 p-t">
+                <div class="column col_4 p-t">
                     <p class="uppercased weight_medium">All Active Campaigns</p>
+                </div>
+                <div class="column col_4 clearfix">
+                    <input type="text" name="key_search" placeholder="Enter Key Word..." class="key_search">
                 </div>
                 <div class="column col_4 clearfix">
                     <div class="col_5 column">
@@ -44,10 +47,9 @@
             <table class="display dashboard_campaigns">
                 <thead>
                 <tr>
-                    <th>ID</th>
                     <th>Name</th>
                     <th>Brand</th>
-                    <th>Date Created</th>
+                    <th>Start Date</th>
                     <th>Budget</th>
                     <th>Ad Slots</th>
                     <th>Status</th>
@@ -86,7 +88,6 @@
                 paging: true,
                 serverSide: true,
                 processing: true,
-                "searching": false,
                 buttons: [
                     'copy', 'csv', 'excel', 'pdf', 'print'
                 ],
@@ -98,10 +99,9 @@
                     }
                 },
                 columns: [
-                    {data: 'id', name: 'id'},
                     {data: 'name', name: 'name'},
                     {data: 'brand', name: 'brand'},
-                    {data: 'date_created', name: 'date_created'},
+                    {data: 'start_date', name: 'start_date'},
                     {data: 'budget', name: 'budget'},
                     {data: 'adslots', name: 'adslots'},
                     {data: 'status', name: 'status'},
@@ -111,6 +111,10 @@
             $('#dashboard_filter_campaign').on('click', function() {
                 Datefilter.draw();
             });
+
+            $('.key_search').on('keyup', function(){
+                Datefilter.search($(this).val()).draw() ;
+            })
         } );
     </script>
 @stop
@@ -121,7 +125,12 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.5.1/css/buttons.dataTables.min.css" type="text/css"/>
     <style>
         .highcharts-grid path { display: none;}
+
         .highcharts-legend {
+            display: none;
+        }
+
+        .dataTables_filter {
             display: none;
         }
 

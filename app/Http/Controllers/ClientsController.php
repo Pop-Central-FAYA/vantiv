@@ -159,18 +159,6 @@ class ClientsController extends Controller
                                                               AND c_d.adslots > 0 GROUP BY c_d.campaign_id ORDER BY c_d.time_created DESC");
         foreach ($all_campaign as $cam)
         {
-            $today = date("Y-m-d");
-            if(strtotime($today) > strtotime($cam->start_date) && strtotime($today) > strtotime($cam->stop_date)){
-                $status = 'expired';
-            }elseif (strtotime($today) >= strtotime($cam->start_date) && strtotime($today) <= strtotime($cam->stop_date)){
-                $status = 'active';
-            }else{
-                $now = strtotime($today);
-                $your_date = strtotime($cam->start_date);
-                $datediff = $your_date - $now;
-                $new_day =  round($datediff / (60 * 60 * 24));
-                $status = 'pending';
-            }
             $campaigns[] = [
                 'id' => $cam->campaign_reference,
                 'camp_id' => $cam->campaign_id,
@@ -182,7 +170,7 @@ class ClientsController extends Controller
                 'adslots' => $cam->adslots,
                 'budget' => number_format($cam->total, 2),
                 'compliance' => '0%',
-                'status' => $status
+                'status' => $cam->status
             ];
         }
 

@@ -144,50 +144,45 @@ class DashboardController extends Controller
 
     public function dashboardCampaigns(DataTables $dataTables, Request $request)
     {
-            //campaigns
-            $agency_id = Session::get('agency_id');
-            $broadcaster_id = Session::get('broadcaster_id');
-            if($agency_id){
-                if($request->has('start_date') && $request->has('stop_date')) {
-                    $start_date = $request->start_date;
-                    $stop_date = $request->stop_date;
-                    $all_campaigns = Utilities::switch_db('api')->select("SELECT c_d.adslots_id, c_d.stop_date, c_d.status, c_d.start_date, c_d.time_created, c_d.product, c_d.name, c_d.campaign_id, 
-                                                                            p.total, b.name as brand_name, c.campaign_reference from campaignDetails as c_d 
-                                                                            INNER JOIN payments as p ON p.campaign_id = c_d.campaign_id 
-                                                                            INNER JOIN campaigns as c ON c.id = c_d.campaign_id
-                                                                            INNER JOIN brands as b ON b.id = c_d.brand where  c_d.agency = '$agency_id' and c_d.adslots  > 0 and 
-                                                                            c_d.stop_date > '$start_date' and c_d.stop_date > '$stop_date' GROUP BY c_d.campaign_id ORDER BY c_d.time_created DESC");
+        //campaigns
+        $agency_id = Session::get('agency_id');
+        $broadcaster_id = Session::get('broadcaster_id');
+        if($request->has('start_date') && $request->has('stop_date')) {
+            $start_date = $request->start_date;
+            $stop_date = $request->stop_date;
+        }else{
+            $start_date = '2000-01-01';
+            $stop_date = '2070-01-01';
+        }
+
+        if($agency_id){
+            $all_campaigns = Utilities::switch_db('api')->select("SELECT c_d.adslots_id, c_d.stop_date, c_d.status, 
+                                                                    c_d.start_date, c_d.time_created, c_d.product, 
+                                                                    c_d.name, c_d.campaign_id, 
+                                                                    p.total, b.name AS brand_name, c.campaign_reference 
+                                                                    FROM campaignDetails AS c_d 
+                                                                    INNER JOIN payments AS p ON p.campaign_id = c_d.campaign_id 
+                                                                    INNER JOIN campaigns AS c ON c.id = c_d.campaign_id
+                                                                    INNER JOIN brands AS b ON b.id = c_d.brand 
+                                                                    WHERE  c_d.agency = '$agency_id' AND c_d.adslots  > 0 AND 
+                                                                    c_d.start_date BETWEEN '$start_date' and '$stop_date' 
+                                                                    GROUP BY c_d.campaign_id ORDER BY c_d.time_created DESC");
+
+        }else if($broadcaster_id){
+            if($request->has('filter_user')){
+                if($request->filter_user == 'agency'){
+                    $all_campaigns = $this->filterCampaignDashboardByAgency($broadcaster_id);
+                }else if($request->filter_user == 'broadcaster'){
+                    $all_campaigns = $this->filterCampaignDashboardByWalkins($broadcaster_id);
                 }else{
-                    $all_campaigns = Utilities::switch_db('api')->select("SELECT c_d.adslots_id, c_d.stop_date, c_d.status, c_d.start_date, c_d.time_created, c_d.product, c_d.name, c_d.campaign_id, 
-                                                                             p.total, b.name as brand_name, c.campaign_reference from campaignDetails as c_d
-                                                                              INNER JOIN payments as p ON p.campaign_id = c_d.campaign_id
-                                                                               INNER JOIN campaigns as c ON c.id = c_d.campaign_id 
-                                                                               INNER JOIN brands as b ON b.id = c_d.brand where  c_d.agency = '$agency_id' and 
-                                                                               c_d.adslots  > 0 GROUP BY c_d.campaign_id ORDER BY c_d.time_created DESC");
+                    $all_campaigns = $this->broadcasterCampaignDashboard($broadcaster_id, $start_date, $stop_date);
                 }
-            }else if($broadcaster_id){
-                if($request->has('start_date') && $request->has('stop_date')) {
-                    $start_date = $request->start_date;
-                    $stop_date = $request->stop_date;
-                    $all_campaigns = Utilities::switch_db('api')->select("SELECT c_d.adslots_id, c_d.stop_date, c_d.status, c_d.start_date, c_d.time_created, c_d.product, c_d.name, c_d.campaign_id, 
-                                                                            p.total, b.name as brand_name, c.campaign_reference from campaignDetails as c_d 
-                                                                            INNER JOIN payments as p ON p.campaign_id = c_d.campaign_id 
-                                                                            INNER JOIN campaigns as c ON c.id = c_d.campaign_id 
-                                                                            INNER JOIN brands as b ON b.id = c_d.brand 
-                                                                            where c_d.broadcaster = '$broadcaster_id' and c_d.adslots  > 0 and c_d.stop_date > '$start_date' and 
-                                                                            c_d.stop_date > '$stop_date' ORDER BY c_d.time_created DESC");
-                }else{
-                    $all_campaigns = Utilities::switch_db('api')->select("SELECT c_d.adslots_id, c_d.stop_date, c_d.status, c_d.start_date, c_d.time_created, c_d.product, c_d.name, c_d.campaign_id, p.total, 
-                                                                            b.name as brand_name, c.campaign_reference from campaignDetails as c_d 
-                                                                            INNER JOIN payments as p ON p.campaign_id = c_d.campaign_id 
-                                                                            INNER JOIN campaigns as c ON c.id = c_d.campaign_id
-                                                                            INNER JOIN brands as b ON b.id = c_d.brand where c_d.broadcaster = '$broadcaster_id' and 
-                                                                            c_d.adslots  > 0 ORDER BY c_d.time_created DESC");
-                }
+            }else{
+                $all_campaigns = $this->broadcasterCampaignDashboard($broadcaster_id, $start_date, $stop_date);
             }
+        }
 
-            $campaigns_datatables = Utilities::getCampaignDatatables($all_campaigns);
-
+        $campaigns_datatables = Utilities::getCampaignDatatables($all_campaigns);
 
         return $dataTables->collection($campaigns_datatables)
             ->addColumn('name', function ($campaigns_datatables) {
@@ -221,8 +216,53 @@ class DashboardController extends Controller
             ->rawColumns(['status' => 'status', 'name' => 'name'])
             ->addIndexColumn()
             ->make(true);
+    }
 
+    public function filterCampaignDashboardByAgency($broadcaster_id)
+    {
+        return Utilities::switch_db('api')->select("SELECT c_d.adslots_id, c_d.stop_date, c_d.status, 
+                                                          c_d.start_date, c_d.time_created, c_d.product, c_d.name, 
+                                                          c_d.campaign_id, p.total, b.name AS brand_name, 
+                                                          c.campaign_reference 
+                                                          FROM campaignDetails AS c_d 
+                                                          INNER JOIN payments AS p ON p.campaign_id = c_d.campaign_id 
+                                                          INNER JOIN campaigns AS c ON c.id = c_d.campaign_id 
+                                                          INNER JOIN brands AS b ON b.id = c_d.brand 
+                                                          WHERE c_d.agency_broadcaster = '$broadcaster_id'
+                                                          AND c_d.adslots  > 0
+                                                          ORDER BY c_d.time_created DESC");
+    }
 
+    public function filterCampaignDashboardByWalkins($broadcaster_id)
+    {
+        return Utilities::switch_db('api')->select("SELECT c_d.adslots_id, c_d.stop_date, c_d.status, 
+                                                          c_d.start_date, c_d.time_created, c_d.product, c_d.name, 
+                                                          c_d.campaign_id, p.total, b.name AS brand_name, 
+                                                          c.campaign_reference 
+                                                          FROM campaignDetails AS c_d 
+                                                          INNER JOIN payments AS p ON p.campaign_id = c_d.campaign_id 
+                                                          INNER JOIN campaigns AS c ON c.id = c_d.campaign_id 
+                                                          INNER JOIN brands AS b ON b.id = c_d.brand 
+                                                          WHERE (c_d.broadcaster = '$broadcaster_id'
+                                                          AND c_d.agency = '')
+                                                          AND c_d.adslots  > 0 
+                                                          ORDER BY c_d.time_created DESC");
+    }
+
+    public function broadcasterCampaignDashboard($broadcaster_id, $start_date, $stop_date)
+    {
+        return Utilities::switch_db('api')->select("SELECT c_d.adslots_id, c_d.stop_date, c_d.status, 
+                                                                      c_d.start_date, c_d.time_created, c_d.product, c_d.name, 
+                                                                      c_d.campaign_id, p.total, b.name AS brand_name, 
+                                                                      c.campaign_reference 
+                                                                      FROM campaignDetails AS c_d 
+                                                                      INNER JOIN payments AS p ON p.campaign_id = c_d.campaign_id 
+                                                                      INNER JOIN campaigns AS c ON c.id = c_d.campaign_id 
+                                                                      INNER JOIN brands AS b ON b.id = c_d.brand 
+                                                                      WHERE c_d.broadcaster = '$broadcaster_id' 
+                                                                      AND c_d.adslots  > 0 AND 
+                                                                      c_d.start_date BETWEEN '$start_date' AND '$stop_date' 
+                                                                      ORDER BY c_d.time_created DESC");
     }
 
     public function campaignManagementDashbaord()

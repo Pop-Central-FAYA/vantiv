@@ -20,8 +20,11 @@
         <div class="the_frame client_dets mb4">
 
             <div class="filters border_bottom clearfix">
-                <div class="column col_8 p-t">
+                <div class="column col_4 p-t">
                     <p class="uppercased weight_medium">All Active Campaigns</p>
+                </div>
+                <div class="column col_4 clearfix">
+                    <input type="text" name="key_search" placeholder="Enter Key Word..." class="key_search">
                 </div>
                 <div class="column col_4 clearfix">
                     <div class="col_5 column">
@@ -42,10 +45,9 @@
             <table class="display dashboard_campaigns">
                 <thead>
                 <tr>
-                    <th>ID</th>
                     <th>Name</th>
                     <th>Brand</th>
-                    <th>Date Created</th>
+                    <th>Start Date</th>
                     <th>Budget</th>
                     <th>Ad Slots</th>
                     <th>Status</th>
@@ -95,10 +97,9 @@
                     }
                 },
                 columns: [
-                    {data: 'id', name: 'id'},
                     {data: 'name', name: 'name'},
                     {data: 'brand', name: 'brand'},
-                    {data: 'date_created', name: 'date_created'},
+                    {data: 'start_date', name: 'start_date'},
                     {data: 'budget', name: 'budget'},
                     {data: 'adslots', name: 'adslots'},
                     {data: 'status', name: 'status'},
@@ -108,6 +109,9 @@
             $('#dashboard_filter_campaign').on('click', function() {
                 Datefilter.draw();
             });
+            $('.key_search').on('keyup', function(){
+                Datefilter.search($(this).val()).draw() ;
+            })
         } );
     </script>
 @stop
@@ -117,4 +121,36 @@
     <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.5.1/css/buttons.dataTables.min.css" type="text/css"/>
+    <style>
+        .dataTables_filter {
+            display: none;
+        }
+
+        #DataTables_Table_0_wrapper .dt-buttons button {
+            line-height: 2.5;
+            color: #fff;
+            cursor: pointer;
+            background: #44C1C9;
+            -webkit-appearance: none;
+            font-family: "Roboto", sans-serif;
+            font-weight: 500;
+            border: 0;
+            padding: 3px 20px 0;
+            font-size: 14px;
+
+            -webkit-border-radius: 2px;
+            -moz-border-radius: 2px;
+            border-radius: 2px;
+
+            -webkit-box-shadow: 9px 10px 20px 1px rgba(0,159,160,0.21);
+            -moz-box-shadow: 9px 10px 20px 1px rgba(0,159,160,0.21);
+            box-shadow: 9px 10px 20px 1px rgba(0,159,160,0.21);
+
+            position: relative;
+            display: inline-block;
+            text-transform: uppercase;
+        !important;
+        }
+    </style>
+
 @stop

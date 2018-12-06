@@ -133,7 +133,7 @@
                         @foreach($all_campaigns as $all_campaign)
                             <tr>
                                 <td>243</td>
-                                <td><a href="{{ route('agency.campaign.details', ['id' => $all_campaign['camp_id']]) }}">{{ $all_campaign['name'] }}</a></td>
+                                <td><a href="{{ route('broadcaster.campaign.details', ['id' => $all_campaign['camp_id']]) }}">{{ $all_campaign['name'] }}</a></td>
                                 <td>{{ ucfirst($all_campaign['brand']) }}</td>
                                 <td>{{ $all_campaign['product'] }}</td>
                                 <td>{{ $all_campaign['start_date'] }}</td>
@@ -160,15 +160,9 @@
                     <div class="similar_table p_t">
                         <div class="filters clearfix mb">
                             <div class="right col_6 clearfix">
-                                <div class="col_7 column">
-                                    <div class="header_search">
-                                        <form>
-                                            <input type="text" placeholder="Search...">
-                                        </form>
-                                    </div>
-                                </div>
 
-                                <div class="col_5 column">
+
+                                <div class="col_12 column align_right">
                                     <a href="#new_brand" class="btn small_btn modal_click"><span class="_plus"></span> New Brand</a>
                                 </div>
                             </div>

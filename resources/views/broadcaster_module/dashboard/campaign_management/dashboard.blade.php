@@ -20,7 +20,7 @@
         @include('partials.new-frontend.broadcaster.campaign_management.sidebar')
         <!-- main stats -->
         <div class="the_stats the_frame clearfix mb4">
-            <div class="column col_2">
+            <div class="column col_3">
                 <span class="weight_medium small_faint uppercased">Active Campaigns</span>
                 <h3><a href="{{ route('campaign.all') }}">{{ count($active_campaigns) }}</a></h3>
             </div>
@@ -35,7 +35,7 @@
                 <h3><a href="{{ route('pending-mpos') }}" style="color: red;">{{ count($pending_mpos) }}</a></h3>
             </div>
 
-            <div class="column col_3">
+            <div class="column col_2">
                 <span class="weight_medium small_faint uppercased">All Brands</span>
                 <h3><a href="{{ route('brand.all') }}">{{ count($brands) }}</a></h3>
             </div>
@@ -60,8 +60,18 @@
         <div class="the_frame client_dets mb4">
 
             <div class="filters border_bottom clearfix">
-                <div class="column col_8 p-t">
+                <div class="column col_2 p-t">
                     <p class="uppercased weight_medium">All Campaigns</p>
+                </div>
+                <div class="column select_wrap col_3 clearfix">
+                    <select name="filter_user" class="filter_user" id="filter_user">
+                        <option value="">All Campaigns</option>
+                        <option value="agency">Agency Campaigns</option>
+                        <option value="broadcaster">Walk-In Campaigns</option>
+                    </select>
+                </div>
+                <div class="column col_3 clearfix">
+                    <input type="text" name="key_search" placeholder="Enter Key Word..." class="key_search">
                 </div>
                 <div class="column col_4 clearfix">
                     <div class="col_5 column">
@@ -85,7 +95,7 @@
                     <th>ID</th>
                     <th>Name</th>
                     <th>Brand</th>
-                    <th>Date Created</th>
+                    <th>Start Date</th>
                     <th>Budget</th>
                     <th>Ad Slots</th>
                     <th>Status</th>
@@ -115,8 +125,8 @@
 
     <script>
         //Bar chart for Total Volume of Campaigns
-            <?php echo "var campaign_volume = ".$volume . ";\n"; ?>
-            <?php echo "var campaign_month = ".$month . ";\n"; ?>
+        <?php echo "var campaign_volume = ".$volume . ";\n"; ?>
+        <?php echo "var campaign_month = ".$month . ";\n"; ?>
         var chart = Highcharts.chart('containerTotal', {
 
             title: {
@@ -152,22 +162,20 @@
                 paging: true,
                 serverSide: true,
                 processing: true,
-                "searching": false,
-                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-                oLanguage: { sLengthMenu: "_MENU_", },
                 aaSorting: [],
                 ajax: {
                     url: '/agency/dashboard/campaigns',
                     data: function (d) {
                         d.start_date = $('input[name=start_date]').val();
                         d.stop_date = $('input[name=stop_date]').val();
+                        d.filter_user = $('#filter_user').val();
                     }
                 },
                 columns: [
                     {data: 'id', name: 'id'},
                     {data: 'name', name: 'name'},
                     {data: 'brand', name: 'brand'},
-                    {data: 'date_created', name: 'date_created'},
+                    {data: 'start_date', name: 'start_date'},
                     {data: 'budget', name: 'budget'},
                     {data: 'adslots', name: 'adslots'},
                     {data: 'status', name: 'status'},
@@ -177,6 +185,14 @@
             });
 
             $('#dashboard_filter_campaign').on('click', function() {
+                Datefilter.draw();
+            });
+
+            $('.key_search').on('keyup', function(){
+                Datefilter.search($(this).val()).draw() ;
+            })
+
+            $('#filter_user').on('change', function() {
                 Datefilter.draw();
             });
         } );
@@ -191,6 +207,10 @@
     <style>
         .highcharts-grid path { display: none;}
         .highcharts-legend {
+            display: none;
+        }
+
+        .dataTables_filter {
             display: none;
         }
 

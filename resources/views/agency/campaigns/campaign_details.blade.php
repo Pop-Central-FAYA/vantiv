@@ -156,12 +156,12 @@
                 <div class="tab_content col_10 campaign_summary" id="summary">
 
                     <div class="clearfix mb">
-                        <div class="column col_6">
+                        <div class="column col_4">
                             <span class="weight_medium small_faint">Campaign</span>
                             <p class="weight_medium">{{ $campaign_details['campaign_det']['campaign_name'] }}</p>
                         </div>
 
-                        <div class="column col_6">
+                        <div class="column col_4">
                             <span class="weight_medium small_faint">Budget</span>
                             <p class="weight_medium">N{{ $campaign_details['campaign_det']['campaign_cost'] }}</p>
                         </div>
@@ -235,37 +235,7 @@
                 <!-- Ad slots -->
                 <div class="tab_content" id="slots">
                     <!-- filter -->
-                    <div class="filters border_bottom clearfix">
-                        <div class="column col_8 date_filter">
-                            <a href="" class="active">ALL</a>
-                            <a href="">M</a>
-                            <a href="">T</a>
-                            <a href="">W</a>
-                            <a href="">T</a>
-                            <a href="">F</a>
-                            <a href="">S</a>
-                            <a href="">S</a>
-                        </div>
 
-                        <div class="column col_4 clearfix">
-                            <div class="col_8 column">
-                                <div class="header_search">
-                                    <form>
-                                        <input type="text" placeholder="Search...">
-                                    </form>
-                                </div>
-                            </div>
-
-                            <div class="col_4 column">
-                                <div class="select_wrap">
-                                    <select>
-                                        <option>All Time</option>
-                                        <option>This Month</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
                     <table>
                         <tr>
@@ -358,24 +328,6 @@
                 <!-- Complaince -->
                 <div class="tab_content" id="comp">
                     <!-- filter -->
-                    <div class="filters border_bottom clearfix">
-                        <div class="column col_8 date_filter">
-                            <a href="" class="active">ALL</a>
-                            <a href="">M</a>
-                            <a href="">T</a>
-                            <a href="">W</a>
-                            <a href="">T</a>
-                            <a href="">F</a>
-                            <a href="">S</a>
-                            <a href="">S</a>
-                        </div>
-
-                        <div class="column col_4 clearfix">
-                            <div class="col_10 column">
-                                <a href="{{ route('compliance.download.summary', ['campaign_id' => $campaign_details['campaign_det']['campaign_id']]) }}" class="btn small_btn">View Summary</a>
-                            </div>
-                        </div>
-                    </div>
                     <!-- end -->
 
                     <table>
