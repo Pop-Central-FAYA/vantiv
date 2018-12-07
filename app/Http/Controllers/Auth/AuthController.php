@@ -2,42 +2,22 @@
 
 namespace Vanguard\Http\Controllers\Auth;
 
-use Illuminate\Contracts\Session\Session;
 use Vanguard\Events\User\LoggedIn;
 use Vanguard\Events\User\LoggedOut;
-use Vanguard\Events\User\Registered;
 use Vanguard\Http\Requests\Auth\LoginRequest;
-use Vanguard\Http\Requests\Auth\RegisterRequest;
-use Vanguard\Libraries\Api;
 use Vanguard\Libraries\Utilities;
 use Vanguard\Mail\PasswordChanger;
-use Vanguard\Mailers\UserMailer;
-use Vanguard\Repositories\Role\RoleRepository;
 use Vanguard\Repositories\User\UserRepository;
 use Vanguard\Services\Auth\TwoFactor\Contracts\Authenticatable;
-use Vanguard\Support\Enum\UserStatus;
 use Auth;
-use Authy;
 use Carbon\Carbon;
 use Illuminate\Cache\RateLimiter;
 use Illuminate\Http\Request;
 use Vanguard\Http\Controllers\Controller;
-use Lang;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Validator;
-//use Session;
 
 
 class AuthController extends Controller
 {
-    /**
-     * @var UserRepository
-     */
-//    private $users;
-//
-//    private $api_private_key = "nzrm64jtj9srsjab";
-//    private $url = "https://faya-staging.herokuapp.com/api/v1/";
-
 
     /**
      * Create a new authentication controller instance.
@@ -122,73 +102,22 @@ class AuthController extends Controller
             Auth::logout();
         }
 
-
-
         $username = Auth::user()->email;
 
         $password = bcrypt($request->password);
         $role = \DB::table('role_user')->where('user_id', Auth::user()->id)->first();
         if ($role->role_id === 3) {
             session()->forget('agency_id');
-            session()->forget('advertiser_id');
-            session()->forget('broadcaster_user_id');
-            session()->forget('admin_id');
-            session()->forget('client_id');
             $user_details = Utilities::switch_db('api')->select("SELECT * FROM users WHERE email = '$username' LIMIT 1");
             $user_id = $user_details[0]->id;
             $broadcaster_details = Utilities::switch_db('api')->select("SELECT * FROM broadcasters WHERE user_id = '$user_id'");
             session(['broadcaster_id' => $broadcaster_details[0]->id]);
         } elseif ($role->role_id === 4) {
             session()->forget('broadcaster_id');
-            session()->forget('advertiser_id');
-            session()->forget('broadcaster_user_id');
-            session()->forget('admin_id');
-            session()->forget('client_id');
             $user_details = Utilities::switch_db('api')->select("SELECT * FROM users WHERE email = '$username' LIMIT 1");
             $user_id = $user_details[0]->id;
             $agency_details = Utilities::switch_db('api')->select("SELECT * FROM agents WHERE user_id = '$user_id'");
             session(['agency_id' => $agency_details[0]->id]);
-        } elseif ($role->role_id === 6) {
-            session()->forget('agency_id');
-            session()->forget('broadcaster_id');
-            session()->forget('broadcaster_user_id');
-            session()->forget('admin_id');
-            session()->forget('client_id');
-            $user_details = Utilities::switch_db('api')->select("SELECT * FROM users WHERE email = '$username' LIMIT 1");
-            $user_id = $user_details[0]->id;
-            $advertiser_details = Utilities::switch_db('api')->select("SELECT * FROM advertisers WHERE user_id = '$user_id'");
-            session(['advertiser_id' => $advertiser_details[0]->id]);
-        } elseif ($role->role_id === 7){
-            session()->forget('agency_id');
-            session()->forget('broadcaster_id');
-            session()->forget('advertiser_id');
-            session()->forget('admin_id');
-            session()->forget('client_id');
-            $user_details = Utilities::switch_db('api')->select("SELECT * FROM users WHERE email = '$username' LIMIT 1");
-            $user_id = $user_details[0]->id;
-            $broadcaster_user_details = Utilities::switch_db('api')->select("SELECT * FROM broadcasterUsers WHERE user_id = '$user_id'");
-            session(['broadcaster_user_id' => $broadcaster_user_details[0]->id]);
-        } elseif($role->role_id === 1){
-            session()->forget('agency_id');
-            session()->forget('broadcaster_id');
-            session()->forget('advertiser_id');
-            session()->forget('broadcaster_user_id');
-            session()->forget('client_id');
-            $user_details = Utilities::switch_db('api')->select("SELECT * from users WHERE email = '$username' LIMIT 1");
-            $user_id = $user_details[0]->id;
-            $admin_id = Utilities::switch_db('api')->select("SELECT * FROM admins where user_id = '$user_id'");
-            session(['admin_id' => $admin_id[0]->id]);
-
-        }elseif($role->role_id === 5){
-            session()->forget('agency_id');
-            session()->forget('broadcaster_id');
-            session()->forget('advertiser_id');
-            session()->forget('broadcaster_user_id');
-            session()->forget('admin_id');
-            $user_details = Utilities::switch_db('api')->select("SELECT * from users where email = '$username' LIMIT 1");
-            $user_id = $user_details[0]->id;
-            $client_id = Utilities::switch_db('api')->select("SELECT * FROM walkIns where user_id = '$user_id'");
-            session(['client_id' => $client_id[0]->id]);
         }
 
         return $this->handleUserWasAuthenticated($request, $throttles, $user);
@@ -228,37 +157,6 @@ class AuthController extends Controller
         return redirect()->route('auth.token');
     }
 
-    public function getToken()
-    {
-        return session('auth.2fa.id') ? view('auth.token') : redirect('login');
-    }
-
-    public function postToken(Request $request)
-    {
-        $this->validate($request, ['token' => 'required']);
-
-        if (! session('auth.2fa.id')) {
-            return redirect('login');
-        }
-
-        $user = $this->users->find(
-            $request->session()->pull('auth.2fa.id')
-        );
-
-        if ( ! $user) {
-            throw new NotFoundHttpException;
-        }
-
-        if (! Authy::tokenIsValid($user, $request->token)) {
-            return redirect()->to('login')->withErrors(trans('app.2fa_token_invalid'));
-        }
-
-        Auth::login($user);
-
-        event(new LoggedIn($user));
-
-        return redirect()->intended('/');
-    }
 
     /**
      * Get the needed authorization credentials from the request.
@@ -420,80 +318,6 @@ class AuthController extends Controller
     }
 
     /**
-     * Show the application registration form.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function getRegister()
-    {
-        $socialProviders = config('auth.social.providers');
-
-        return view('auth.register', compact('socialProviders'));
-    }
-
-    /**
-     * Handle a registration request for the application.
-     *
-     * @param RegisterRequest $request
-     * @param UserMailer $mailer
-     * @return \Illuminate\Http\Response
-     */
-    public function postRegister(RegisterRequest $request, UserMailer $mailer, RoleRepository $roles)
-    {
-        // Determine user status. User's status will be set to UNCONFIRMED
-        // if he has to confirm his email or to ACTIVE if email confirmation is not required
-        $status = settings('reg_email_confirmation')
-            ? UserStatus::UNCONFIRMED
-            : UserStatus::ACTIVE;
-
-        // Add the user to database
-        $user = $this->users->create(array_merge(
-            $request->only('email', 'username', 'password'),
-            ['status' => $status]
-        ));
-
-        $this->users->updateSocialNetworks($user->id, []);
-
-        $role = $roles->findByName('User');
-        $this->users->setRole($user->id, $role->id);
-
-        // Check if email confirmation is required,
-        // and if it does, send confirmation email to the user.
-        if (settings('reg_email_confirmation')) {
-            $this->sendConfirmationEmail($mailer, $user);
-            $message = trans('app.account_create_confirm_email');
-        } else {
-            $message = trans('app.account_created_login');
-        }
-
-        event(new Registered($user));
-
-        return redirect('login')->with('success', $message);
-    }
-
-    /**
-     * Confirm user's email.
-     *
-     * @param $token
-     * @return $this
-     */
-    public function confirmEmail($token)
-    {
-        if ($user = $this->users->findByConfirmationToken($token)) {
-            $this->users->update($user->id, [
-                'status' => UserStatus::ACTIVE,
-                'confirmation_token' => null
-            ]);
-
-            return redirect()->to('login')
-                ->withSuccess(trans('app.email_confirmed_can_login'));
-        }
-
-        return redirect()->to('login')
-            ->withErrors(trans('app.wrong_confirmation_token'));
-    }
-
-    /**
      * Validate if provided parameter is valid email.
      *
      * @param $param
@@ -501,22 +325,12 @@ class AuthController extends Controller
      */
     private function isEmail($param)
     {
-        return ! Validator::make(
+        return ! \Validator::make(
             ['email' => $param],
             ['email' => 'email']
         )->fails();
     }
 
-    /**
-     * @param UserMailer $mailer
-     * @param $user
-     */
-    private function sendConfirmationEmail(UserMailer $mailer, $user)
-    {
-        $token = str_random(60);
-        $this->users->update($user->id, ['confirmation_token' => $token]);
-        $mailer->sendConfirmationEmail($user, $token);
-    }
 
     public function verifyToken($token)
     {
@@ -542,7 +356,7 @@ class AuthController extends Controller
     public function processForgetPassword(Request $request)
     {
         $this->validate($request, [
-           'email' => 'email|required',
+            'email' => 'email|required',
         ]);
 
         $user_local = \DB::select("SELECT * from users where email = '$request->email'");
@@ -563,7 +377,7 @@ class AuthController extends Controller
         }
     }
 
-    public function processChangePassword($token)
+    public function getChangePassword($token)
     {
         $user_id = decrypt($token);
         $user_details_local = \DB::select("SELECT * from users where id = '$user_id'");
@@ -574,11 +388,11 @@ class AuthController extends Controller
 
     }
 
-    public function processGhangePassword(Request $request, $id_local, $id_api)
+    public function processChangePassword(Request $request, $id_local, $id_api)
     {
         $this->validate($request, [
-           'password' => 'required|min:6',
-           're_password' => 'required|same:password|min:6'
+            'password' => 'required|min:6',
+            're_password' => 'required|same:password|min:6'
         ]);
 
         $password = bcrypt($request->password);
