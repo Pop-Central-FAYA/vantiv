@@ -52,26 +52,24 @@ class CampaignsController extends Controller
     {
         //campaigns
         $broadcaster_id = Session::get('broadcaster_id');
-
         if($request->has('start_date') && $request->has('stop_date')) {
             $start_date = $request->start_date;
             $stop_date = $request->stop_date;
-            $all_campaigns = Utilities::switch_db('api')->select("SELECT c_d.adslots_id, c_d.stop_date, c_d.status, 
-                                                                      c_d.start_date, c_d.time_created, c_d.product, 
-                                                                      c_d.name, c_d.campaign_id, p.total, b.name AS brand_name,
-                                                                      c.campaign_reference FROM campaignDetails AS c_d 
-                                                                      LEFT JOIN payments AS p ON p.campaign_id = c_d.campaign_id 
-                                                                      LEFT JOIN campaigns AS c ON c.id = c_d.campaign_id
-                                                                      LEFT JOIN brands AS b ON b.id = c_d.brand 
-                                                                      WHERE  c_d.broadcaster = '$broadcaster_id' 
-                                                                      AND c_d.start_date between '$start_date' AND '$stop_date' 
-                                                                      AND c_d.status = 'active' AND c_d.adslots  > 0 
-                                                                      ORDER BY c_d.time_created DESC");
-        }else {
-            $all_campaigns = Utilities::switch_db('api')->select("SELECT c_d.adslots_id, c_d.stop_date, c_d.status, c_d.start_date, c_d.time_created, c_d.product, c_d.name, c_d.campaign_id, p.total, b.name as brand_name,
-                                                                      c.campaign_reference from campaignDetails as c_d LEFT JOIN payments as p ON p.campaign_id = c_d.campaign_id
-                                                                       LEFT JOIN campaigns as c ON c.id = c_d.campaign_id LEFT JOIN brands as b ON b.id = c_d.brand where  c_d.broadcaster = '$broadcaster_id'
-                                                                       and c_d.status = 'active' and c_d.adslots  > 0 ORDER BY c_d.time_created DESC");
+        }else{
+            $start_date = '2000-01-01';
+            $stop_date = '2070-01-01';
+        }
+
+        if($request->has('filter_user')){
+            if($request->filter_user == 'agency'){
+                $all_campaigns = $this->filterByAgencyCampaigns($broadcaster_id);
+            }else if($request->filter_user == 'broadcaster'){
+                $all_campaigns = $this->filterByWalkinsCampaign($broadcaster_id);
+            }else{
+                $all_campaigns = $this->allCampaigns($broadcaster_id, $start_date, $stop_date);
+            }
+        }else{
+            $all_campaigns = $this->allCampaigns($broadcaster_id, $start_date, $stop_date);
         }
 
         $campaigns = Utilities::getCampaignDatatables($all_campaigns);
@@ -98,6 +96,50 @@ class CampaignsController extends Controller
             ->make(true);
 
 
+    }
+
+    public function filterByAgencyCampaigns($broadcaster_id)
+    {
+        return Utilities::switch_db('api')->select("SELECT c_d.adslots_id, c_d.stop_date, c_d.status, 
+                                                              c_d.start_date, c_d.time_created, c_d.product, 
+                                                              c_d.name, c_d.campaign_id, p.total, b.name AS brand_name,
+                                                              c.campaign_reference FROM campaignDetails AS c_d 
+                                                              LEFT JOIN payments AS p ON p.campaign_id = c_d.campaign_id 
+                                                              LEFT JOIN campaigns AS c ON c.id = c_d.campaign_id
+                                                              LEFT JOIN brands AS b ON b.id = c_d.brand 
+                                                              WHERE c_d.agency_broadcaster = '$broadcaster_id' 
+                                                              AND c_d.status = 'active' AND c_d.adslots  > 0 
+                                                              ORDER BY c_d.time_created DESC");
+    }
+
+    public function filterByWalkinsCampaign($broadcaster_id)
+    {
+        return Utilities::switch_db('api')->select("SELECT c_d.adslots_id, c_d.stop_date, c_d.status, 
+                                                              c_d.start_date, c_d.time_created, c_d.product, 
+                                                              c_d.name, c_d.campaign_id, p.total, b.name AS brand_name,
+                                                              c.campaign_reference FROM campaignDetails AS c_d 
+                                                              LEFT JOIN payments AS p ON p.campaign_id = c_d.campaign_id 
+                                                              LEFT JOIN campaigns AS c ON c.id = c_d.campaign_id
+                                                              LEFT JOIN brands AS b ON b.id = c_d.brand 
+                                                              WHERE (c_d.broadcaster = '$broadcaster_id'
+                                                              AND c_d.agency = '')
+                                                              AND c_d.status = 'active' AND c_d.adslots  > 0 
+                                                              ORDER BY c_d.time_created DESC");
+    }
+
+    public function allCampaigns($broadcaster_id, $start_date, $stop_date)
+    {
+        return Utilities::switch_db('api')->select("SELECT c_d.adslots_id, c_d.stop_date, c_d.status, 
+                                                              c_d.start_date, c_d.time_created, c_d.product, 
+                                                              c_d.name, c_d.campaign_id, p.total, b.name AS brand_name,
+                                                              c.campaign_reference FROM campaignDetails AS c_d 
+                                                              LEFT JOIN payments AS p ON p.campaign_id = c_d.campaign_id 
+                                                              LEFT JOIN campaigns AS c ON c.id = c_d.campaign_id
+                                                              LEFT JOIN brands AS b ON b.id = c_d.brand 
+                                                              WHERE  c_d.broadcaster = '$broadcaster_id' 
+                                                              AND c_d.start_date between '$start_date' AND '$stop_date' 
+                                                              AND c_d.status = 'active' AND c_d.adslots  > 0 
+                                                              ORDER BY c_d.time_created DESC");
     }
 
     /**

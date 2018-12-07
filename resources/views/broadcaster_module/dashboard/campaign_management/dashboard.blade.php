@@ -157,12 +157,15 @@
                 altInput: true,
             });
 
-            var Datefilter =  $('.dashboard_campaigns').DataTable({
+            var campaignFilter =  $('.dashboard_campaigns').DataTable({
                 dom: 'Blfrtip',
                 paging: true,
                 serverSide: true,
                 processing: true,
                 aaSorting: [],
+                oLanguage: {
+                    sLengthMenu: "_MENU_"
+                },
                 ajax: {
                     url: '/agency/dashboard/campaigns',
                     data: function (d) {
@@ -185,15 +188,15 @@
             });
 
             $('#dashboard_filter_campaign').on('click', function() {
-                Datefilter.draw();
+                campaignFilter.draw();
             });
 
             $('.key_search').on('keyup', function(){
-                Datefilter.search($(this).val()).draw() ;
+                campaignFilter.search($(this).val()).draw() ;
             })
 
             $('#filter_user').on('change', function() {
-                Datefilter.draw();
+                campaignFilter.draw();
             });
         } );
     </script>
