@@ -156,46 +156,38 @@
                 <div class="tab_content col_10 campaign_summary" id="summary">
 
                     <div class="clearfix mb">
-                        <div class="column col_4">
+                        <div class="column col_3">
                             <span class="weight_medium small_faint">Campaign</span>
                             <p class="weight_medium">{{ $campaign_details['campaign_det']['campaign_name'] }}</p>
                         </div>
-
-                        <div class="column col_4">
-                            <span class="weight_medium small_faint">Budget</span>
-                            <p class="weight_medium">N{{ $campaign_details['campaign_det']['campaign_cost'] }}</p>
-                        </div>
-                    </div>
-
-                    <div class="clearfix mb">
-                        <div class="column col_4">
-                            <span class="small_faint">Client</span>
-                            <p class="weight_medium">{{ $campaign_details['campaign_det']['company_name'] }}</p>
-                        </div>
-
-                        <div class="column col_4">
+                        <div class="column col_3">
                             <span class="small_faint">Start Date</span>
                             <p class="weight_medium">{{ $campaign_details['campaign_det']['start_date'] }}</p>
                         </div>
-
-                        <div class="column col_4">
+                        <div class="column col_3">
+                            <span class="small_faint">Client</span>
+                            <p class="weight_medium">{{ $campaign_details['campaign_det']['company_name'] }}</p>
+                        </div>
+                        <div class="column col_3">
                             <span class="small_faint">Media Type</span>
                             @foreach($campaign_details['campaign_det']['channel'] as $channel) <p class="weight_medium"> {{ $channel->channel }} </p> @endforeach
                         </div>
                     </div>
 
-                    <div class="clearfix mb3">
-                        <div class="column col_4">
-                            <span class="small_faint">Brand</span>
-                            <p class="weight_medium">{{ ucfirst($campaign_details['campaign_det']['brand']) }}</p>
+                    <div class="clearfix mb">
+                        <div class="column col_3">
+                            <span class="weight_medium small_faint">Budget</span>
+                            <p class="weight_medium">N{{ $campaign_details['campaign_det']['campaign_cost'] }}</p>
                         </div>
-
-                        <div class="column col_4">
+                        <div class="column col_3">
                             <span class="small_faint">End Date</span>
                             <p class="weight_medium">{{ $campaign_details['campaign_det']['end_date'] }}</p>
                         </div>
-
-                        <div class="column col_4">
+                        <div class="column col_3">
+                            <span class="small_faint">Brand</span>
+                            <p class="weight_medium">{{ ucfirst($campaign_details['campaign_det']['brand']) }}</p>
+                        </div>
+                        <div class="column col_3">
                             <span class="small_faint">Media Channel</span>
                             @foreach($campaign_details['broadcasters'] as $broadcaster)
                                 <p class="weight_medium">{{ $broadcaster->brand }}</p>
@@ -204,16 +196,8 @@
                     </div>
 
                     <div class="clearfix mb">
-                        <div class="column col_4">
-                            <span class="small_faint">Target Information</span>
-                            <div>
-                                <p class="weight_medium"><span class="small_faint">GRP</span> - </p>
-                                <p class="weight_medium"><span class="small_faint">Weight</span> - </p>
-                                <p class="weight_medium"><span class="small_faint">Reach</span> - </p>
-                            </div>
-                        </div>
 
-                        <div class="column col_4">
+                        <div class="column col_3">
                             <span class="small_faint">Market</span>
                             <div>
                                 <p class="weight_medium"><span class="small_faint">Location</span> - @foreach($campaign_details['campaign_det']['location'] as $location) {{ $location->region.',' }} @endforeach</p>
@@ -222,7 +206,7 @@
                             </div>
                         </div>
 
-                        <div class="column col_4">
+                        <div class="column col_3">
                             <span class="small_faint">LSM</span>
                             <p class="weight_medium">A, B, C1, C2</p>
                         </div>
