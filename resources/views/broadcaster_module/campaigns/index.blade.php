@@ -22,10 +22,17 @@
         <div class="the_frame client_dets mb4">
 
             <div class="filters border_bottom clearfix">
-                <div class="column col_4 p-t">
-                    <p class="uppercased weight_medium">All Active Campaigns</p>
+                <div class="column col_2 p-t">
+                    <p class="uppercased weight_medium">All Campaigns</p>
                 </div>
-                <div class="column col_4 clearfix">
+                <div class="column select_wrap col_3 clearfix">
+                    <select name="filter_user" class="filter_user" id="filter_user">
+                        <option value="">All Campaigns</option>
+                        <option value="agency">Agency Campaigns</option>
+                        <option value="broadcaster">Walk-In Campaigns</option>
+                    </select>
+                </div>
+                <div class="column col_3 clearfix">
                     <input type="text" name="key_search" placeholder="Enter Key Word..." class="key_search">
                 </div>
                 <div class="column col_4 clearfix">
@@ -83,19 +90,25 @@
             flatpickr(".flatpickr", {
                 altInput: true,
             });
-            var Datefilter =  $('.dashboard_campaigns').DataTable({
-                dom: 'Bfrtip',
+            var campaignFilter =  $('.dashboard_campaigns').DataTable({
+                dom: 'Blfrtip',
                 paging: true,
                 serverSide: true,
                 processing: true,
+                aaSorting: [],
+                aLengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
                 buttons: [
                     'copy', 'csv', 'excel', 'pdf', 'print'
                 ],
+                oLanguage: {
+                    sLengthMenu: "_MENU_"
+                },
                 ajax: {
                     url: '/campaign/all-campaign/data',
                     data: function (d) {
                         d.start_date = $('input[name=start_date]').val();
                         d.stop_date = $('input[name=stop_date]').val();
+                        d.filter_user = $('#filter_user').val();
                     }
                 },
                 columns: [
@@ -109,12 +122,16 @@
             });
 
             $('#dashboard_filter_campaign').on('click', function() {
-                Datefilter.draw();
+                campaignFilter.draw();
             });
 
             $('.key_search').on('keyup', function(){
-                Datefilter.search($(this).val()).draw() ;
-            })
+                campaignFilter.search($(this).val()).draw() ;
+            });
+
+            $('#filter_user').on('change', function() {
+                campaignFilter.draw();
+            });
         } );
     </script>
 @stop

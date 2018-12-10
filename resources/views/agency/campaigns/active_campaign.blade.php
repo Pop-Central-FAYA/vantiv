@@ -82,10 +82,12 @@
                 altInput: true,
             });
             var Datefilter =  $('.dashboard_campaigns').DataTable({
-                dom: 'Bfrtip',
+                dom: 'Blfrtip',
                 paging: true,
                 serverSide: true,
                 processing: true,
+                lengthMenu : [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                oLanguage: { sLengthMenu: "_MENU_", },
                 buttons: [
                     'copy', 'csv', 'excel', 'pdf', 'print'
                 ],
