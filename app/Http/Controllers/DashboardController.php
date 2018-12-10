@@ -147,7 +147,7 @@ class DashboardController extends Controller
         //campaigns
         $agency_id = Session::get('agency_id');
         $broadcaster_id = Session::get('broadcaster_id');
-        if($request->has('start_date') && $request->has('stop_date')) {
+        if($request->start_date && $request->stop_date) {
             $start_date = $request->start_date;
             $stop_date = $request->stop_date;
         }else{
@@ -169,7 +169,7 @@ class DashboardController extends Controller
                                                                     GROUP BY c_d.campaign_id ORDER BY c_d.time_created DESC");
 
         }else if($broadcaster_id){
-            if($request->has('filter_user')){
+            if($request->filter_user){
                 if($request->filter_user == 'agency'){
                     $all_campaigns = $this->filterCampaignDashboardByAgency($broadcaster_id);
                 }else if($request->filter_user == 'broadcaster'){

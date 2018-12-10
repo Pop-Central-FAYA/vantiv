@@ -21,12 +21,4 @@ class SecondsController extends Controller
         return view('seconds.index')->with('time', $api);
     }
 
-//    public function discount()
-//    {
-//        $api_discount = Api::get_discount_type();
-//        $api_get = json_decode($api_discount);
-//        $api = $api_get->data;
-//        dd($api);
-//    }
-
 }

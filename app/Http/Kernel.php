@@ -14,7 +14,7 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $middleware = [
-        \Vanguard\Http\Middleware\VerifyInstallation::class,
+        Middleware\VerifyInstallation::class,
         \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
         \Fideloper\Proxy\TrustProxies::class
     ];
