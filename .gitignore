@@ -20,4 +20,6 @@ env.example
 tests/Feature/ExampleTest.php
 tests/Unit/ExampleTest.php
 database/factories/UserFactory.php
+Unit
+Feature
 
