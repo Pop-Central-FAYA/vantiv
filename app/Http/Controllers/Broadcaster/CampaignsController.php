@@ -52,7 +52,7 @@ class CampaignsController extends Controller
     {
         //campaigns
         $broadcaster_id = Session::get('broadcaster_id');
-        if($request->has('start_date') && $request->has('stop_date')) {
+        if($request->start_date && $request->stop_date) {
             $start_date = $request->start_date;
             $stop_date = $request->stop_date;
         }else{
@@ -60,7 +60,7 @@ class CampaignsController extends Controller
             $stop_date = '2070-01-01';
         }
 
-        if($request->has('filter_user')){
+        if($request->filter_user){
             if($request->filter_user == 'agency'){
                 $all_campaigns = $this->filterByAgencyCampaigns($broadcaster_id);
             }else if($request->filter_user == 'broadcaster'){

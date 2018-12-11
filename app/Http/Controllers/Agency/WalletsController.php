@@ -37,7 +37,7 @@ class WalletsController extends Controller
     {
         $agency_id = \Session::get('agency_id');
 
-        if($request->has('start_date') && $request->has('stop_date')){
+        if($request->start_date && $request->stop_date){
             $start_date = $request->start_date;
             $stop_date = $request->stop_date;
             $transactions = Utilities::switch_db('api')->select("SELECT * from transactions where user_id = '$agency_id' 

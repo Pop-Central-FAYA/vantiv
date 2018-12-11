@@ -150,4 +150,8 @@ return [
 
     'secure' => false,
 
+    'http_only' => true,
+
+    'same_site' => null,
+
 ];

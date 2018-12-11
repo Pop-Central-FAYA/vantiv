@@ -40,7 +40,7 @@ class CampaignsController extends Controller
         $agency_id = Session::get('agency_id');
         $today_date = date("Y-m-d");
 
-        if($request->has('start_date') && $request->has('stop_date')) {
+        if($request->start_date && $request->stop_date) {
             $start_date = $request->start_date;
             $stop_date = $request->stop_date;
             $all_campaigns = Utilities::switch_db('api')->select("SELECT c_d.adslots_id, c_d.stop_date,c_d.status, c_d.start_date, 

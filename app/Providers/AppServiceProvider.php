@@ -55,14 +55,8 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->singleton(UserRepository::class, EloquentUser::class);
         $this->app->singleton(ActivityRepository::class, EloquentActivity::class);
-        $this->app->singleton(RoleRepository::class, EloquentRole::class);
-        $this->app->singleton(PermissionRepository::class, EloquentPermission::class);
-        $this->app->singleton(SessionRepository::class, DbSession::class);
-        $this->app->singleton(CountryRepository::class, EloquentCountry::class);
 
         if ($this->app->environment('local')) {
-            $this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
-            $this->app->register(\Barryvdh\Debugbar\ServiceProvider::class);
-        }
+            $this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);        }
     }
 }

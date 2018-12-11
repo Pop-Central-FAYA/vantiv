@@ -66,12 +66,12 @@ class ProfileManagementsController extends Controller
 
     public function updateBroadcaster($request, $broadcaster_id, $u_id)
     {
-        if($request->hasFile('image_url')){
+        if($request->image_url){
             $image_path = $this->uploadImage($request);
             $update_client = Utilities::switch_db('api')->select("UPDATE broadcasters set image_url = '$image_path' where id = '$broadcaster_id'");
         }
 
-        if($request->has('password')){
+        if($request->password){
             $password = $this->validatePassword($request, $u_id);
             $update_api = Utilities::switch_db('api')->select("UPDATE users set password = '$password' where id = (SELECT user_id from broadcasters where id = '$broadcaster_id')");
         }
@@ -99,12 +99,12 @@ class ProfileManagementsController extends Controller
     public function updateAgency($request, $agency_id, $u_id)
     {
 
-        if($request->hasFile('image_url')){
+        if($request->image_url){
             $image_path = $this->uploadImage($request);
             $update_client = Utilities::switch_db('api')->select("UPDATE agents set image_url = '$image_path' where id = '$agency_id'");
         }
 
-        if($request->has('password')){
+        if($request->password){
             $password = $this->validatePassword($request, $u_id);
             $update_api = Utilities::switch_db('api')->select("UPDATE users set password = '$password' where id = (SELECT user_id from agents where id = '$agency_id')");
         }

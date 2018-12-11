@@ -26,7 +26,7 @@ class MpoController extends Controller
     public function getAllData(Request $request, DataTables $dataTables)
     {
         $broadcaster_id = \Session::get('broadcaster_id');
-        if($request->has('start_date') && $request->has('stop_date')) {
+        if($request->start_date && $request->stop_date) {
             $start_date = $request->start_date;
             $stop_date = $request->stop_date;
             $mpos = Utilities::switch_db('api')->select("SELECT m_d.mpo_id, m_d.is_mpo_accepted, c_d.status as campaign_status, m_d.agency_id, m.campaign_id from mpoDetails as m_d
@@ -56,7 +56,7 @@ class MpoController extends Controller
     public function pendingData(Request $request, DataTables $dataTables)
     {
         $broadcaster_id = \Session::get('broadcaster_id');
-        if($request->has('start_date') && $request->has('stop_date')) {
+        if($request->start_date && $request->stop_date) {
             $start_date = $request->start_date;
             $stop_date = $request->stop_date;
             $mpos = Utilities::switch_db('api')->select("SELECT m_d.mpo_id, m_d.is_mpo_accepted, c_d.status as campaign_status m_d.agency_id, m.campaign_id from mpoDetails as m_d

@@ -152,7 +152,7 @@ class ClientsController extends Controller
     public function getCampaignData($user_id)
     {
         $campaigns = [];
-        $all_campaign = Utilities::switch_db('api')->select("SELECT c_d.campaign_id, c_d.name, c_d.product, c_d.start_date, c_d.stop_date, c_d.adslots, c.campaign_reference, p.total, b.name as brands
+        $all_campaign = Utilities::switch_db('api')->select("SELECT c_d.campaign_id, c_d.status, c_d.name, c_d.product, c_d.start_date, c_d.stop_date, c_d.adslots, c.campaign_reference, p.total, b.name as brands
                                                               from campaignDetails as c_d INNER JOIN campaigns as c ON c.id = c_d.campaign_id
                                                               INNER JOIN payments as p ON p.campaign_id = c_d.campaign_id
                                                               INNER JOIN brands as b ON b.id = c_d.brand WHERE c_d.user_id = '$user_id'
@@ -216,31 +216,34 @@ class ClientsController extends Controller
         $start_date = date('Y-m-d', strtotime(request()->start_date));
         $stop_date = date('Y-m-d', strtotime(request()->stop_date));
 
-        $month_total = [];
-        $month_date = [];
+        $filtered_total = [];
+        $filtered_date = [];
 
-        $all_campaign_this_month = Utilities::switch_db('api')->select("SELECT * from campaignDetails WHERE user_id = '$user_id' AND adslots > 0 AND time_created BETWEEN
+        $filtered_campaigns = Utilities::switch_db('api')->select("SELECT * from campaignDetails WHERE user_id = '$user_id' AND adslots > 0 AND time_created BETWEEN
                                                                             '$start_date' AND '$stop_date' GROUP BY campaign_id ORDER BY time_created DESC");
 
-        $total_this_month = Utilities::switch_db('api')->select("SELECT SUM(total) as total from payments where campaign_id IN
+        $filtered_total_amount = Utilities::switch_db('api')->select("SELECT SUM(total) as total from payments where campaign_id IN
                                                                   (SELECT campaign_id from campaignDetails where user_id = '$user_id'
                                                                   GROUP BY campaign_id) AND time_created BETWEEN '$start_date' AND '$stop_date'");
 
-        $brands = Utilities::switch_db('api')->select("SELECT b.* from brands as b INNER JOIN brand_client as b_c ON b_c.brand_id = b.id
-                                                                  where b_c.brands_client = '$client_id' AND b.created_at BETWEEN '$start_date' AND '$stop_date' ");
+        $filtered_brands = Utilities::switch_db('api')->select("SELECT b.* from brands as b INNER JOIN brand_client as b_c ON b_c.brand_id = b.id
+                                                                  where b_c.client_id = '$client_id' AND b.created_at BETWEEN '$start_date' AND '$stop_date' ");
 
-        $all_camps = Utilities::switch_db('api')->select("SELECT * FROM campaigns where time_created BETWEEN '$start_date' AND '$stop_date' AND id IN
+        $all_campaigns = Utilities::switch_db('api')->select("SELECT * FROM campaigns where time_created BETWEEN '$start_date' AND '$stop_date' AND id IN
                                                             (SELECT campaign_id from campaignDetails where user_id = '$user_id' GROUP BY campaign_id)");
 
-        foreach ($all_camps as $all_camp){
-            $pay = Utilities::switch_db('api')->select("SELECT * from payments where campaign_id = '$all_camp->id' AND time_created = '$all_camp->time_created'");
-            $month_total[] = $pay[0]->total;
-            $month_date[] = date('Y-m-d', strtotime($all_camp->time_created));
+        foreach ($all_campaigns as $all_campaign){
+            $payments = Utilities::switch_db('api')->select("SELECT * from payments where campaign_id = '$all_campaign->id' AND time_created = '$all_campaign->time_created'");
+            $filtered_total[] = $payments[0]->total;
+            $filtered_date[] = date('Y-m-d', strtotime($all_campaign->time_created));
 
         }
 
-
-        return response()->json(['all_campaign' => $all_campaign_this_month, 'all_total' => number_format($total_this_month[0]->total,2), 'all_brand' => $brands, 'monthly_total' => $month_total, 'monthly_date' => $month_date]);
+        return response()->json(['all_campaign' => $filtered_campaigns,
+                                'all_total' => number_format($filtered_total_amount[0]->total,2),
+                                'all_brand' => $filtered_brands,
+                                'monthly_total' => $filtered_total,
+                                'monthly_date' => $filtered_date]);
 
     }
 
@@ -258,7 +261,7 @@ class ClientsController extends Controller
         $total_this_year = Utilities::switch_db('api')->select("SELECT SUM(total) as total from payments where campaign_id IN (SELECT campaign_id from campaignDetails where user_id = '$user_id' GROUP BY campaign_id) AND DATE_FORMAT(time_created, '%Y') = '$date'");
 
         $brands = Utilities::switch_db('api')->select("SELECT b.* from brands as b INNER JOIN brand_client as b_c ON b_c.brand_id = b.id
-                                                                  where b_c.brands_client = '$client_id' AND DATE_FORMAT(b.created_at, '%Y') = '$date' ");
+                                                                  where b_c.client_id = '$client_id' AND DATE_FORMAT(b.created_at, '%Y') = '$date' ");
 
         $all_camps = Utilities::switch_db('api')->select("SELECT * FROM campaigns where DATE_FORMAT(time_created, '%Y') = '$date' AND id IN (SELECT campaign_id from campaignDetails where user_id = '$user_id' GROUP BY campaign_id)");
 

@@ -10,3 +10,16 @@ get-pip.py
 .DS_Store
 storage/.DS_Store
 storage/excels
+.editorconfig
+.gitattributes
+resources/assets
+resources/js
+resources/sass
+yarn-error.log
+env.example
+tests/Feature/ExampleTest.php
+tests/Unit/ExampleTest.php
+database/factories/UserFactory.php
+Unit
+Feature
+
