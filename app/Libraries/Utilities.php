@@ -567,7 +567,7 @@ class Utilities {
     }
 
 
-    public static function getCampaignDatatables($all_campaigns)
+    public function getCampaignDatatables($all_campaigns)
     {
         $campaigns = [];
         foreach ($all_campaigns as $all_campaign)
