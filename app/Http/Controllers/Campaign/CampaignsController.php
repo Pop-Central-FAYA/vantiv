@@ -7,6 +7,7 @@ use Session;
 use Illuminate\Http\Request;
 use Vanguard\Libraries\Utilities;
 use Vanguard\Services\Campaign\AllCampaignService;
+use Vanguard\Services\PreloadedData;
 use Yajra\DataTables\DataTables;
 
 class CampaignsController extends Controller
@@ -41,8 +42,12 @@ class CampaignsController extends Controller
     public function campaignGeneralInformation()
     {
         $broadcaster_id = Session::get('broadcaster_id');
+        $preloaded_data = new PreloadedData();
         if($broadcaster_id){
-
+            return view('broadcaster_module.campaigns.create_step1')
+                    ->with('industries', $preloaded_data->getSectors())
+                    ->with('day_parts', $preloaded_data->getDayParts())
+                    ->with('sub_industries', $preloaded_data->getSubsectors());
         }else{
 
         }

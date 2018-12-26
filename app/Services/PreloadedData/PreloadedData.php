@@ -40,4 +40,14 @@ class PreloadedData
     {
         return HourlyRange::all();
     }
+
+    public function getTargetAudiences()
+    {
+
+    }
+
+    public function getRegions()
+    {
+
+    }
 }
