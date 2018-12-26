@@ -37,4 +37,19 @@ class CampaignsController extends Controller
         $campaigns = new AllCampaignService($request, $this->utilities, $this->dataTables, $broadcaster_id, $agency_id, $dashboard = false);
         return $campaigns->run();
     }
+
+    public function campaignGeneralInformation()
+    {
+        $broadcaster_id = Session::get('broadcaster_id');
+        if($broadcaster_id){
+
+        }else{
+
+        }
+    }
+
+    public function storeCampaignGeneralInformation()
+    {
+
+    }
 }
