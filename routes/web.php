@@ -97,12 +97,13 @@ Route::group(['middleware' => 'auth'], function () {
        Route::get('/delete/{id}', 'AdminDayPartsController@delete')->name('admin.daypart.delete');
     });
 
-
     /*
     * Campaign
     */
     Route::group(['prefix' => 'campaign'], function(){
-        Route::get('/active_campaigns', 'Broadcaster\CampaignsController@index')->name('campaign.all');
+        Route::get('/active-campaigns', 'Campaign\CampaignsController@allActiveCampaigns')->name('campaign.all');
+        Route::get('/all-active-campaigns/data', 'Campaign\CampaignsController@allActiveCampaignsData');
+
         Route::get('/create', 'Broadcaster\CampaignsController@create')->name('campaign.create');
         Route::post('/create/step1/store', 'Broadcaster\CampaignsController@postStep1')->name('campaign.store_1');
         Route::get('/create/step2/{id}', 'Broadcaster\CampaignsController@createStep2')->name('campaign.create2');
@@ -118,8 +119,6 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/remove-media/{walkins}/{id}', 'Broadcaster\CampaignsController@removeMedia')->name('uploads.remove');
 
         Route::post('/payment-process', 'Broadcaster\CampaignsController@payCampaign')->name('broadcaster.pay');
-
-        Route::get('/all-campaign/data', 'Broadcaster\CampaignsController@getAllData');
 
         Route::get('/campaign-details/{id}', 'Broadcaster\CampaignsController@campaignDetails')->name('broadcaster.campaign.details');
 

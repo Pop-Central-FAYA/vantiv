@@ -92,7 +92,7 @@
                     'copy', 'csv', 'excel', 'pdf', 'print'
                 ],
                 ajax: {
-                    url: '/agency/campaigns/all-campaign/data',
+                    url: '/campaign/all-active-campaigns/data',
                     data: function (d) {
                         d.start_date = $('input[name=start_date]').val();
                         d.stop_date = $('input[name=stop_date]').val();
