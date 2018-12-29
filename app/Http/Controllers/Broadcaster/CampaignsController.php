@@ -97,16 +97,7 @@ class CampaignsController extends Controller
         $broadcaster_id = Session::get('broadcaster_id');
 
         $result = Utilities::sessionizedRequest($request, $broadcaster_id, null);
-        if($result === 'error_negative'){
-            Session::flash('error', 'The minimum or maximum age cannot have a negative value');
-            return back();
-        }elseif ($result === 'error_age'){
-            Session::flash('error', 'The minimum age cannot be greater than the maximum age');
-            return back();
-        }elseif ($result === 'error_date'){
-            Session::flash('error', 'Start Date cannot be greater than End Date');
-            return redirect()->back();
-        }
+
         return redirect()->route('campaign.create2', ['id' => $result])
             ->with('step_1', Session::get('first_step'))
             ->with('id', $result);

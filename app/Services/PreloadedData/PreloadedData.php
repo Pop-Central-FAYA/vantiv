@@ -1,13 +1,15 @@
 <?php
 
-namespace Vanguard\Services;
+namespace Vanguard\Services\PreloadedData;
 
 use Vanguard\Models\CampaignChannel;
 use Vanguard\Models\Day;
 use Vanguard\Models\DayPart;
 use Vanguard\Models\HourlyRange;
+use Vanguard\Models\Region;
 use Vanguard\Models\Sector;
 use Vanguard\Models\SubSector;
+use Vanguard\Models\TargetAudience;
 
 class PreloadedData
 {
@@ -43,11 +45,11 @@ class PreloadedData
 
     public function getTargetAudiences()
     {
-
+        return TargetAudience::all();
     }
 
     public function getRegions()
     {
-
+        return Region::all();
     }
 }
