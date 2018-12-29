@@ -139,6 +139,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/update-campaign/information/{campaign_id}', 'Broadcaster\CampaignsController@updateCampaignInformation')->name('broadcaster.campaign_information.update');
     });
 
+    Route::get('/brand/get-industry', 'Campaign\CampaignsController@getBrandsIndustryAndSubIndustry');
+
     Route::get('file-update/{file_id}', 'MpoController@updateFiles')->name('file.change');
 
     /*
@@ -151,8 +153,6 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/user/create/store', 'BroadcasterAuthController@postBroadcasterUser')->name('broadcaster.post.user');
         Route::get('/user/delete/{id}', 'BroadcasterAuthController@deleteBroadcasterUser')->name('broadcaster_user.delete');
     });
-
-    Route::get('/brand/get-industry', 'Broadcaster\CampaignsController@getIndustrySubIndustry');
 
     Route::group(['prefix' => 'brands'], function () {
         Route::get('/', 'BrandsController@index')->name('brand.all');

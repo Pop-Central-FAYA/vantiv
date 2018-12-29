@@ -431,8 +431,8 @@
                                     opacity: 1
                                 });
 
-                                $("#industry").val(data.industry[0].name);
-                                $("#sub_industry").val(data.sub_industry[0].name);
+                                $("#industry").val(data.industry.name);
+                                $("#sub_industry").val(data.sub_industry.name);
                             }
 
                         }

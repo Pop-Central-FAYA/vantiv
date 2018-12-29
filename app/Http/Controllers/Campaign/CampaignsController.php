@@ -12,6 +12,7 @@ use Vanguard\Services\Campaign\StoreCampaignGeneralInformation;
 use Vanguard\Services\Client\AllClient;
 use Vanguard\Services\Campaign\AllCampaign;
 use Vanguard\Services\Client\ClientBrand;
+use Vanguard\Services\Industry\IndustryAndSubindustry;
 use Vanguard\Services\PreloadedData\PreloadedData;
 use Yajra\DataTables\DataTables;
 
@@ -101,6 +102,13 @@ class CampaignsController extends Controller
         return redirect()->route('campaign.advert_slot', ['id' => $user_id])
                         ->with('id', $user_id)
                         ->with('campaign_general_information', Session::get('campaign_general_information'));
+    }
+
+    public function getBrandsIndustryAndSubIndustry()
+    {
+        $brand_industry_subindustry = new IndustryAndSubindustry(request()->brand);
+        $brand_industry_subindustry = $brand_industry_subindustry->getBrandIndustryAndSubIndustry();
+        return response()->json($brand_industry_subindustry);
     }
 
     public function getAdSlotResult()
