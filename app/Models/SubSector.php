@@ -18,4 +18,9 @@ class SubSector extends Model
     protected $fillable = [
         'id', 'name', 'sector_id', 'sub_sector_code', 'status'
     ];
+
+    public function sector()
+    {
+        return $this->belongsTo(Sector::class, 'sector_code');
+    }
 }
