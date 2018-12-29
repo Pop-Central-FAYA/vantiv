@@ -103,10 +103,12 @@ Route::group(['middleware' => 'auth'], function () {
     Route::group(['prefix' => 'campaign'], function(){
         Route::get('/active-campaigns', 'Campaign\CampaignsController@allActiveCampaigns')->name('campaign.all');
         Route::get('/all-active-campaigns/data', 'Campaign\CampaignsController@allActiveCampaignsData');
+        Route::get('/campaign-general-information', 'Campaign\CampaignsController@campaignGeneralInformation')->name('campaign.get_campaign_general_information');
+        Route::post('/campaign-general-information/store', 'Campaign\CampaignsController@storeCampaignGeneralInformation')->name('campaign.store_campaign_general_information');
+        Route::get('/advert-slot/result/{id}', 'Campaign\CampaignsController@getAdSlotResult')->name('campaign.advert_slot');
 
-        Route::get('/create', 'Broadcaster\CampaignsController@create')->name('campaign.create');
-        Route::post('/create/step1/store', 'Broadcaster\CampaignsController@postStep1')->name('campaign.store_1');
-        Route::get('/create/step2/{id}', 'Broadcaster\CampaignsController@createStep2')->name('campaign.create2');
+
+
         Route::get('/create/step3/{id}', 'Broadcaster\CampaignsController@createStep3')->name('campaign.create3');
         Route::get('/create/step3/store/{id}', 'Broadcaster\CampaignsController@postStep3')->name('campaign.store3');
         Route::get('/create/step3_1/{id}', 'Broadcaster\CampaignsController@storeStep3_1')->name('campaign.create3_1');

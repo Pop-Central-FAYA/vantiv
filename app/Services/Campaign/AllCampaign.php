@@ -5,7 +5,7 @@ namespace Vanguard\Services\Campaign;
 use Vanguard\Libraries\Enum\CampaignStatus;
 use Vanguard\Libraries\Utilities;
 
-class AllCampaignService
+class AllCampaign
 {
     protected $broadcaster_id;
     protected $agency_id;
