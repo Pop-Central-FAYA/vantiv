@@ -7,6 +7,8 @@ use Session;
 use Illuminate\Http\Request;
 use Vanguard\Http\Requests\Campaigns\CampaignGeneralInformationRequest;
 use Vanguard\Libraries\Utilities;
+use Vanguard\Services\Adslot\AdslotFilterResult;
+use Vanguard\Services\Broadcaster\BroadcasterDetails;
 use Vanguard\Services\Campaign\DeleteTemporaryUpload;
 use Vanguard\Services\Campaign\StoreCampaignGeneralInformation;
 use Vanguard\Services\Client\AllClient;
@@ -26,6 +28,8 @@ class CampaignsController extends Controller
     const AGE_ERROR_MESSAGE = 'The minimum age cannot be greater than the maximum age';
 
     const DATE_ERROR_MESSAGE = 'Start Date cannot be greater than End Date';
+
+    const CAMPAIGN_INFROMATION_SESSION_DATA_LOSS = 'Data lost, please go back and select your filter criteria';
 
     public function __construct(Utilities $utilities, DataTables $dataTables)
     {
@@ -72,6 +76,7 @@ class CampaignsController extends Controller
                 ->with('clients', $clients)
                 ->with('targets', $preloaded_data->getTargetAudiences())
                 ->with('campaign_general_information', $campaign_general_information)
+                ->with('channels', $preloaded_data->getCampaignChannels())
                 ->with('sub_industries', $preloaded_data->getSubsectors());
 
     }
@@ -80,7 +85,6 @@ class CampaignsController extends Controller
     {
         $broadcaster_id = Session::get('broadcaster_id');
         $agency_id = Session::get('agency_id');
-
         if($request->min_age < 0 || $request->max_age < 0){
             Session::flash('error', self::NEGATIVE_AGE_MESSAGE);
             return back();
@@ -91,14 +95,10 @@ class CampaignsController extends Controller
             Session::flash('error', self::DATE_ERROR_MESSAGE);
             return redirect()->back();
         }
-
         $campaign_general_information = new StoreCampaignGeneralInformation($request);
-
         $user_id = $campaign_general_information->run();
-
         $delete_temporary_uploads = new DeleteTemporaryUpload($broadcaster_id, $agency_id, $user_id);
         $delete_temporary_uploads->run();
-
         return redirect()->route('campaign.advert_slot', ['id' => $user_id])
                         ->with('id', $user_id)
                         ->with('campaign_general_information', Session::get('campaign_general_information'));
@@ -111,8 +111,21 @@ class CampaignsController extends Controller
         return response()->json($brand_industry_subindustry);
     }
 
-    public function getAdSlotResult()
+    public function getAdSlotResult($id)
     {
+        $broadcaster_id = \Session::get('broadcaster_id');
+        $agency_id = Session::get('agency_id');
+        $campaign_general_information = Session::get('campaign_general_information');
+        $check_campaign_information = $this->utilities->checkCampaignInformationSessionActiveness($campaign_general_information);
+        if($check_campaign_information === 'data_lost'){
+            Session::flash('error', self::CAMPAIGN_INFROMATION_SESSION_DATA_LOSS);
+            return back();
+        }
+        $adslots_filter_result = new AdslotFilterResult($campaign_general_information, $broadcaster_id, $agency_id);
+        $adslots_filter_result = $adslots_filter_result->adslotFilterResult();
+        return view('campaigns.advert_slot_result')
+                    ->with('adslots_filter_result', $adslots_filter_result)
+                    ->with('id', $id);
 
     }
 }

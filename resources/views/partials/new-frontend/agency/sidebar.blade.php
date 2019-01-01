@@ -16,7 +16,7 @@
     </div>
 
     <div class="_nav_button">
-        <a href="{{ route('agency_campaign.step1') }}" class="btn full block_disp uppercased align_center"><span class="_plus"></span>New Campaign</a>
+        <a href="{{ route('campaign.get_campaign_general_information') }}" class="btn full block_disp uppercased align_center"><span class="_plus"></span>New Campaign</a>
     </div>
 
 </div>

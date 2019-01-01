@@ -671,9 +671,9 @@ class Utilities {
         return $user_id;
     }
 
-    public static function checkRequestSession($request_session)
+    public function checkCampaignInformationSessionActiveness($campaign_general_information)
     {
-        if(!$request_session){
+        if(!$campaign_general_information){
             return 'data_lost';
         }
     }
