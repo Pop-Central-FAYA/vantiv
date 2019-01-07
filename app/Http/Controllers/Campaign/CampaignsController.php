@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 use Vanguard\Http\Requests\Campaigns\CampaignGeneralInformationRequest;
 use Vanguard\Libraries\Utilities;
 use Vanguard\Services\Adslot\AdslotFilterResult;
-use Vanguard\Services\Broadcaster\BroadcasterDetails;
 use Vanguard\Services\Campaign\DeleteTemporaryUpload;
 use Vanguard\Services\Campaign\StoreCampaignGeneralInformation;
 use Vanguard\Services\Client\AllClient;
@@ -61,7 +60,7 @@ class CampaignsController extends Controller
         $agency_id = Session::get('agency_id');
         $preloaded_data = new PreloadedData();
         $client_brand = '';
-        $campaign_general_information = Session::get('campaign_general_information');
+        $campaign_general_information = Session::get('campaign_information');
         if($campaign_general_information){
             $client_brand = new ClientBrand($campaign_general_information->client);
             $client_brand = $client_brand->run();
@@ -100,8 +99,7 @@ class CampaignsController extends Controller
         $delete_temporary_uploads = new DeleteTemporaryUpload($broadcaster_id, $agency_id, $user_id);
         $delete_temporary_uploads->run();
         return redirect()->route('campaign.advert_slot', ['id' => $user_id])
-                        ->with('id', $user_id)
-                        ->with('campaign_general_information', Session::get('campaign_general_information'));
+                        ->with('id', $user_id);
     }
 
     public function getBrandsIndustryAndSubIndustry()
@@ -113,9 +111,9 @@ class CampaignsController extends Controller
 
     public function getAdSlotResult($id)
     {
-        $broadcaster_id = \Session::get('broadcaster_id');
+        $broadcaster_id = Session::get('broadcaster_id');
         $agency_id = Session::get('agency_id');
-        $campaign_general_information = Session::get('campaign_general_information');
+        $campaign_general_information = Session::get('campaign_information');
         $check_campaign_information = $this->utilities->checkCampaignInformationSessionActiveness($campaign_general_information);
         if($check_campaign_information === 'data_lost'){
             Session::flash('error', self::CAMPAIGN_INFROMATION_SESSION_DATA_LOSS);

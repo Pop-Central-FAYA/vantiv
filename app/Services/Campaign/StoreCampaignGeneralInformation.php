@@ -26,7 +26,7 @@ class StoreCampaignGeneralInformation
 
         $campaign_general_information = ((object) $this->request->all());
 
-        session(['campaign_general_information' => $campaign_general_information]);
+        session(['campaign_information' => $campaign_general_information]);
 
         return $client_details->id;
     }

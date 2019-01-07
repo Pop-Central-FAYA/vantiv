@@ -57,7 +57,7 @@
                                     <option>Select Client</option>
                                     @foreach($clients as $client)
                                         <option value="{{ $client->id }}"
-                                                @if((Session::get('campaign_general_information')) != null)
+                                                @if((Session::get('campaign_information')) != null)
                                                 @if($campaign_general_information->client === $client->id))
                                                 selected="selected"
                                             @endif
@@ -76,7 +76,7 @@
                             <label class="small_faint">Brands</label>
 
                             <div class="select_wrap brand_select{{ $errors->has('brand') ? ' has-error' : '' }}">
-                                @if((Session::get('campaign_general_information')) != null)
+                                @if((Session::get('campaign_information')) != null)
                                     <select name="brand" id="brand">
                                         @foreach($brands as $brand)
                                             <option value="{{ $brand->id }}"
@@ -99,7 +99,7 @@
                     <div class="clearfix mb">
                         <div class="input_wrap column col_6{{ $errors->has('industry') ? ' has-error' : '' }}">
                             <label class="small_faint">Industry</label>
-                            <input type="text" name="industry" id="industry" @if((Session::get('campaign_general_information')) != null) value="{{ $campaign_general_information->industry }}" @endif readonly placeholder="Industry...">
+                            <input type="text" name="industry" id="industry" @if((Session::get('campaign_information')) != null) value="{{ $campaign_general_information->industry }}" @endif readonly placeholder="Industry...">
 
                             @if($errors->has('industry'))
                                 <strong>{{ $errors->first('industry') }}</strong>
@@ -108,7 +108,7 @@
 
                         <div class="input_wrap column col_6{{ $errors->has('sub_industry') ? ' has-error' : '' }}">
                             <label class="small_faint">Sub Industry</label>
-                            <input type="text" name="sub_industry" @if((Session::get('campaign_general_information')) != null) value="{{ $campaign_general_information->sub_industry }}" @endif id="sub_industry" readonly placeholder="Sub-Industry...">
+                            <input type="text" name="sub_industry" @if((Session::get('campaign_information')) != null) value="{{ $campaign_general_information->sub_industry }}" @endif id="sub_industry" readonly placeholder="Sub-Industry...">
 
                             @if($errors->has('sub_industry'))
                                 <strong>
@@ -121,7 +121,7 @@
                     <div class="clearfix mb3">
                         <div class="input_wrap{{ $errors->has('campaign_name') ? ' has-error' : '' }}">
                             <label class="small_faint">Campaign Name</label>
-                            <input type="text" required @if((Session::get('campaign_general_information')) != null) value="{{ $campaign_general_information->campaign_name }}" @endif name="campaign_name" placeholder="Campaign Name">
+                            <input type="text" required @if((Session::get('campaign_information')) != null) value="{{ $campaign_general_information->campaign_name }}" @endif name="campaign_name" placeholder="Campaign Name">
 
                             @if($errors->has('campaign_name'))
                                 <strong>
@@ -132,7 +132,7 @@
 
                         <div class="input_wrap{{ $errors->has('campaign_budget') ? ' has-error' : '' }}">
                             <label class="small_faint">Campaign Budget</label>
-                            <input type="number" required @if((Session::get('campaign_general_information')) != null) value="{{ $campaign_general_information->campaign_budget }}" @endif name="campaign_budget" placeholder="Campaign Budget">
+                            <input type="number" required @if((Session::get('campaign_information')) != null) value="{{ $campaign_general_information->campaign_budget }}" @endif name="campaign_budget" placeholder="Campaign Budget">
 
                             @if($errors->has('campaign_budget'))
                                 <strong>
@@ -143,7 +143,7 @@
 
                         <div class="input_wrap{{ $errors->has('product') ? ' has-error' : '' }}">
                             <label class="small_faint">Product</label>
-                            <input type="text" required name="product" @if((Session::get('campaign_general_information')) != null) value="{{ $campaign_general_information->product }}" @endif placeholder="Product">
+                            <input type="text" required name="product" @if((Session::get('campaign_information')) != null) value="{{ $campaign_general_information->product }}" @endif placeholder="Product">
 
                             @if($errors->has('product'))
                                 <strong>
@@ -156,7 +156,7 @@
                     <div class="clearfix mb3">
                         <div class="input_wrap column col_6{{ $errors->has('start_date') ? ' has-error' : '' }}">
                             <label class="small_faint">Start Date</label>
-                            <input type="text" required class="flatpickr" @if((Session::get('campaign_general_information')) != null) value="{{ $campaign_general_information->start_date }}" @endif name="start_date" placeholder="Select Date">
+                            <input type="text" required class="flatpickr" @if((Session::get('campaign_information')) != null) value="{{ $campaign_general_information->start_date }}" @endif name="start_date" placeholder="Select Date">
                             @if($errors->has('start_date'))
                                 <strong>
                                     <span class="help-block">{{ $errors->first('start_date') }}</span>
@@ -166,7 +166,7 @@
 
                         <div class="input_wrap column col_6{{ $errors->has('end_date') ? ' has-error' : '' }}">
                             <label class="small_faint">End Date</label>
-                            <input type="text" required class="flatpickr" name="end_date" @if((Session::get('campaign_general_information')) != null) value="{{ $campaign_general_information->end_date }}" @endif placeholder="Select Date">
+                            <input type="text" required class="flatpickr" name="end_date" @if((Session::get('campaign_information')) != null) value="{{ $campaign_general_information->end_date }}" @endif placeholder="Select Date">
 
                             @if($errors->has('end_date'))
                                 <strong>
@@ -183,7 +183,7 @@
                                 @foreach($channels as $channel)
                                     <li class="col_4 column m-b">
                                         <input name="channel[]" value="{{ $channel->id }}"
-                                               @if((Session::get('campaign_general_information')) != null)
+                                               @if((Session::get('campaign_information')) != null)
                                                @foreach($campaign_general_information->channel as $checked_channel)
                                                @if($checked_channel === $channel->id)
                                                checked
@@ -211,7 +211,7 @@
                             @foreach($day_parts as $day_part)
                                 <li class="col_4 column m-b">
                                     <input name="dayparts[]" value="{{ $day_part->id }}"
-                                           @if((Session::get('campaign_general_information')) != null)
+                                           @if((Session::get('campaign_information')) != null)
                                            @foreach($campaign_general_information->dayparts as $checked_dayparts)
                                            @if($checked_dayparts === $day_part->id)
                                            checked
@@ -238,7 +238,7 @@
                                 <option value=""></option>
                                 @foreach($targets as $target)
                                     <option value="{{ $target->id }}"
-                                            @if((Session::get('campaign_general_information')) != null)
+                                            @if((Session::get('campaign_information')) != null)
                                             @foreach($campaign_general_information->target_audience as $selected_audience)
                                             @if($selected_audience === $target->id)
                                             selected
@@ -260,7 +260,7 @@
                     <div class="clearfix mb">
                         <div class="input_wrap column col_6{{  $errors->has('min_age') ? ' has-error' : '' }}">
                             <label class="small_faint">Min. Age</label>
-                            <input type="number" required name="min_age" @if((Session::get('campaign_general_information')) != null) value="{{ $campaign_general_information->min_age }}" @endif placeholder="Minimum Age">
+                            <input type="number" required name="min_age" @if((Session::get('campaign_information')) != null) value="{{ $campaign_general_information->min_age }}" @endif placeholder="Minimum Age">
 
                             @if($errors->has('min_age'))
                                 <strong>
@@ -271,7 +271,7 @@
 
                         <div class="input_wrap column col_6{{ $errors->has('max_age') ? ' has-error' : '' }}">
                             <label class="small_faint">Max. Age</label>
-                            <input type="number" required name="max_age" @if((Session::get('campaign_general_information')) != null) value="{{ $campaign_general_information->max_age }}" @endif placeholder="Maximum Age">
+                            <input type="number" required name="max_age" @if((Session::get('campaign_information')) != null) value="{{ $campaign_general_information->max_age }}" @endif placeholder="Maximum Age">
                             @if($errors->has('max_age'))
                                 <strong>
                                     <span class="help-block">{{ $errors->first('max_age') }}</span>
@@ -288,7 +288,7 @@
                             @foreach($regions as $region)
                                 <li class="col_4 column m-b">
                                     <input name="region[]" value="{{ $region->id }}" data-region="{{ $region->id }}"
-                                           @if((Session::get('campaign_general_information')) != null)
+                                           @if((Session::get('campaign_information')) != null)
                                            @foreach($campaign_general_information->region as $checked_region)
                                            @if($checked_region === $region->id)
                                            checked
