@@ -665,8 +665,8 @@ class Utilities {
             return 'error_date';
         }
 
-        $step1_req = ((object) $request->all());
-        session(['first_step' => $step1_req]);
+        //$step1_req = ((object) $request->all());
+        //session(['first_step' => $step1_req]);
 
         return $user_id;
     }

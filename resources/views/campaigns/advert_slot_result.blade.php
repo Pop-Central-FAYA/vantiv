@@ -20,8 +20,6 @@
                 <h2 class="sub_header">Adslots Filter Information</h2>
             </div>
         </div>
-
-
         <!-- main frame -->
         <div class="the_frame clearfix mb border_top_color">
 
@@ -66,7 +64,7 @@
                 <!-- proceed buttons -->
                 <div class="mb4 clearfix pt4 mb4">
                     <div class="column col_4">
-                        <a href="" class="btn uppercased _white _go_back"><span class=""></span> Back</a>
+                        <a href="{{ route('campaign.get_campaign_general_information') }}" class="btn uppercased _white _go_back"><span class=""></span> Back</a>
                     </div>
 
                     <div class="align_center column col_4">
