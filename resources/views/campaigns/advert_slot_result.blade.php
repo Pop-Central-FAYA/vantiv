@@ -72,7 +72,7 @@
                     </div>
                     @if(!empty($adslots_filter_result))
                         <div class="column col_4 align_right">
-                            <a href="" class="btn uppercased _proceed modal_click">Proceed <span class=""></span></a>
+                            <a href="{{ route('campaign.get_media_content', ['id' => $id]) }}" class="btn uppercased _proceed modal_click">Proceed <span class=""></span></a>
                         </div>
                     @endif
                 </div>

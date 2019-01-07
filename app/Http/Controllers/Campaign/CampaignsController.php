@@ -8,8 +8,11 @@ use Illuminate\Http\Request;
 use Vanguard\Http\Requests\Campaigns\CampaignGeneralInformationRequest;
 use Vanguard\Libraries\Utilities;
 use Vanguard\Services\Adslot\AdslotFilterResult;
+use Vanguard\Services\Broadcaster\BroadcasterDetails;
 use Vanguard\Services\Campaign\DeleteTemporaryUpload;
 use Vanguard\Services\Campaign\StoreCampaignGeneralInformation;
+use Vanguard\Services\CampaignChannels\Radio;
+use Vanguard\Services\CampaignChannels\Tv;
 use Vanguard\Services\Client\AllClient;
 use Vanguard\Services\Campaign\AllCampaign;
 use Vanguard\Services\Client\ClientBrand;
@@ -29,6 +32,10 @@ class CampaignsController extends Controller
     const DATE_ERROR_MESSAGE = 'Start Date cannot be greater than End Date';
 
     const CAMPAIGN_INFROMATION_SESSION_DATA_LOSS = 'Data lost, please go back and select your filter criteria';
+
+    const EMPTY_ADSLOT_RESULT_FROM_FILTER = 'You have no matches for the criteria selected, please go back and adjust the values';
+
+    const FIRST_CHANNEL_ERROR = 'An error occurred in getting the media channels';
 
     public function __construct(Utilities $utilities, DataTables $dataTables)
     {
@@ -111,6 +118,11 @@ class CampaignsController extends Controller
 
     public function getAdSlotResult($id)
     {
+        /**
+         * Might wanna come back and refactor this method so as to extract the broadcaster_id,
+         * agency_id, campaign_general_information into the constructor and also put the check_campaign_information
+         * and the if block into another method
+         */
         $broadcaster_id = Session::get('broadcaster_id');
         $agency_id = Session::get('agency_id');
         $campaign_general_information = Session::get('campaign_information');
@@ -126,4 +138,49 @@ class CampaignsController extends Controller
                     ->with('id', $id);
 
     }
+
+    public function getMediaContent($id)
+    {
+        /**
+         * Might wanna come back and refactor this method so as to extract the broadcaster_id,
+         * agency_id, campaign_general_information into the constructor and also put the check_campaign_information
+         * and the if block into another method
+         */
+        $broadcaster_id = Session::get('broadcaster_id');
+        $agency_id = Session::get('agency_id');
+        $campaign_general_information = Session::get('campaign_information');
+        $check_campaign_information = $this->utilities->checkCampaignInformationSessionActiveness($campaign_general_information);
+        if($check_campaign_information === 'data_lost'){
+            Session::flash('error', self::CAMPAIGN_INFROMATION_SESSION_DATA_LOSS);
+            return back();
+        }
+        $adslots_filter_result = new AdslotFilterResult($campaign_general_information, $broadcaster_id, $agency_id);
+        $adslots_filter_result = $adslots_filter_result->adslotFilterResult();
+        if(count($adslots_filter_result) === 0){
+            Session::flash('error', self::EMPTY_ADSLOT_RESULT_FROM_FILTER);
+            return redirect()->back();
+        }
+        $broadcaster_details = new BroadcasterDetails($broadcaster_id);
+        $broadcaster_details = $broadcaster_details->getBroadcasterDetails();
+
+        $first_channel = new Radio();
+        $first_channel = $first_channel->getRadio();
+
+        $second_channel = new Tv();
+        $second_channel = $second_channel->getTv();
+
+        //going by defensive programming
+        if($first_channel->channel != 'Radio' && $second_channel->channel != 'TV'){
+            Session::flash('error', self::FIRST_CHANNEL_ERROR);
+            return redirect()->back();
+        }
+
+        return view('campaigns.media_content')
+                    ->with('id', $id)
+                    ->with('broadcaster_details', $broadcaster_id ? $broadcaster_details : '')
+                    ->with('radio', $first_channel)
+                    ->with('tv', $second_channel)
+                    ->with('campaign_general_information', $campaign_general_information);
+    }
+
 }
