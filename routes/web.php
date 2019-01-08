@@ -106,11 +106,10 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/campaign-general-information', 'Campaign\CampaignsController@campaignGeneralInformation')->name('campaign.get_campaign_general_information');
         Route::post('/campaign-general-information/store', 'Campaign\CampaignsController@storeCampaignGeneralInformation')->name('campaign.store_campaign_general_information');
         Route::get('/advert-slot/result/{id}', 'Campaign\CampaignsController@getAdSlotResult')->name('campaign.advert_slot');
+        Route::get('/media-content/{id}', 'Campaign\CampaignsController@getMediaContent')->name('campaign.get_media_content');
+        Route::get('/media-content/store/{id}', 'Campaign\CampaignsController@storeMediaContent')->name('campaign.store_media_content');
+        Route::post('/remove-media-content/{client_id}/{upload_id}', 'Campaign\CampaignsController@removeMediaContent')->name('uploads.remove');
 
-
-
-        Route::get('/create/step3/{id}', 'Broadcaster\CampaignsController@createStep3')->name('campaign.create3');
-        Route::get('/create/step3/store/{id}', 'Broadcaster\CampaignsController@postStep3')->name('campaign.store3');
         Route::get('/create/step3_1/{id}', 'Broadcaster\CampaignsController@storeStep3_1')->name('campaign.create3_1');
         Route::get('/create/step4/{id}/{broadcaster}/{start_date}/{end_date}', 'Broadcaster\CampaignsController@createStep4')->name('campaign.create4');
         Route::get('/cart/store', 'Broadcaster\CampaignsController@postPreselectedAdslot')->name('broadcaster_campaign.cart');
@@ -118,7 +117,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/submit-campaign/{id}', 'Broadcaster\CampaignsController@postCampaign')->name('submit.campaign');
 
         Route::get('/remove-campaigns/{id}', 'Broadcaster\CampaignsController@removeCart')->name('cart.remove');
-        Route::post('/remove-media/{walkins}/{id}', 'Broadcaster\CampaignsController@removeMedia')->name('uploads.remove');
+
 
         Route::post('/payment-process', 'Broadcaster\CampaignsController@payCampaign')->name('broadcaster.pay');
 
