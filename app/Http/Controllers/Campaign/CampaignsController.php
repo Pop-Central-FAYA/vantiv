@@ -155,9 +155,9 @@ class CampaignsController extends Controller
         $broadcaster_details = new BroadcasterDetails($broadcaster_id);
         $broadcaster_details = $broadcaster_details->getBroadcasterDetails();
 
-        $tv_details_and_uploads = $this->getTvDetailsAndUploads($id);
+        $tv_details_and_uploads = $this->utilities->getTvDetailsAndUploads($id);
 
-        $radio_details_and_uploads = $this->getRadioDetailsAndUploads($id);
+        $radio_details_and_uploads = $this->utilities->getRadioDetailsAndUploads($id);
 
         //going by defensive programming
         if($radio_details_and_uploads['radio']->channel != 'Radio' && $tv_details_and_uploads['tv']->channel != 'TV'){
@@ -203,22 +203,5 @@ class CampaignsController extends Controller
         }
     }
 
-    public function getTvDetailsAndUploads($user_id)
-    {
-        $tv = new Tv();
-        $tv = $tv->getTv();
-        $upload_details = new MediaUploadDetails($user_id, $tv->id);
-        $upload_details = $upload_details->uploadDetails();
-        return ['tv' => $tv, 'tv_upload_details' => $upload_details];
-    }
-
-    public function getRadioDetailsAndUploads($user_id)
-    {
-        $radio = new Radio();
-        $radio = $radio->getRadio();
-        $upload_details = new MediaUploadDetails($user_id, $radio->id);
-        $upload_details = $upload_details->uploadDetails();
-        return ['radio' => $radio, 'radio_upload_details' => $upload_details];
-    }
 
 }
