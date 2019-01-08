@@ -8,6 +8,9 @@ use Vanguard\Models\BroadcasterPlayout;
 use Vanguard\Models\PreselectedAdslot;
 use Vanguard\Models\SelectedAdslot;
 use Vanguard\Models\Upload;
+use Vanguard\Services\CampaignChannels\Radio;
+use Vanguard\Services\CampaignChannels\Tv;
+use Vanguard\Services\Upload\MediaUploadDetails;
 
 class Utilities {
 
@@ -1359,6 +1362,24 @@ class Utilities {
         }
 
         return $campaign_dates_by_week_with_start_end_date;
+    }
+
+    public function getTvDetailsAndUploads($user_id)
+    {
+        $tv = new Tv();
+        $tv = $tv->getTv();
+        $upload_details = new MediaUploadDetails($user_id, $tv->id);
+        $upload_details = $upload_details->uploadDetails();
+        return ['tv' => $tv, 'tv_upload_details' => $upload_details];
+    }
+
+    public function getRadioDetailsAndUploads($user_id)
+    {
+        $radio = new Radio();
+        $radio = $radio->getRadio();
+        $upload_details = new MediaUploadDetails($user_id, $radio->id);
+        $upload_details = $upload_details->uploadDetails();
+        return ['radio' => $radio, 'radio_upload_details' => $upload_details];
     }
 
 }
