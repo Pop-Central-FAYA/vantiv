@@ -42,7 +42,7 @@
 
 
             <div class="_block_two align_center gallery">
-                {{--@include('partials.show_file_tv')--}}
+                @include('campaigns.includes.show_tv_files')
             </div>
         </div>
     @else
@@ -85,7 +85,7 @@
             </div>
 
             <div class="_block_two align_center gallery_radio">
-                {{--@include('partials.show_file_radio')--}}
+                @include('campaigns.includes.show_radio_files')
             </div>
         </div>
     @endif
