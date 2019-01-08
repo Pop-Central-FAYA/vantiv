@@ -6,6 +6,7 @@ use Vanguard\Http\Controllers\Controller;
 use Session;
 use Illuminate\Http\Request;
 use Vanguard\Http\Requests\Campaigns\CampaignGeneralInformationRequest;
+use Vanguard\Libraries\Enum\ClassMessages;
 use Vanguard\Libraries\Utilities;
 use Vanguard\Services\Adslot\AdslotFilterResult;
 use Vanguard\Services\Broadcaster\BroadcasterDetails;
@@ -26,22 +27,6 @@ class CampaignsController extends Controller
 {
     protected $utilities;
     protected $dataTables;
-
-    const NEGATIVE_AGE_MESSAGE = 'The minimum or maximum age cannot have a negative value';
-
-    const AGE_ERROR_MESSAGE = 'The minimum age cannot be greater than the maximum age';
-
-    const DATE_ERROR_MESSAGE = 'Start Date cannot be greater than End Date';
-
-    const CAMPAIGN_INFROMATION_SESSION_DATA_LOSS = 'Data lost, please go back and select your filter criteria';
-
-    const EMPTY_ADSLOT_RESULT_FROM_FILTER = 'You have no matches for the criteria selected, please go back and adjust the values';
-
-    const FIRST_CHANNEL_ERROR = 'An error occurred in getting the media channels';
-
-    const FILE_DELETE_SUCCESS_MESSAGE = 'File deleted successfully...';
-
-    const FILE_DELETE_ERROR_MESSAGE = 'Error deleting file...';
 
     public function __construct(Utilities $utilities, DataTables $dataTables)
     {
@@ -98,13 +83,13 @@ class CampaignsController extends Controller
         $broadcaster_id = Session::get('broadcaster_id');
         $agency_id = Session::get('agency_id');
         if($request->min_age < 0 || $request->max_age < 0){
-            Session::flash('error', self::NEGATIVE_AGE_MESSAGE);
+            Session::flash('error', ClassMessages::NEGATIVE_AGE_MESSAGE);
             return back();
         }elseif ($request->min_age > $request->max_age){
-            Session::flash('error', self::AGE_ERROR_MESSAGE);
+            Session::flash('error', ClassMessages::AGE_ERROR_MESSAGE);
             return back();
         }elseif (strtotime($request->end_date) < strtotime($request->start_date)){
-            Session::flash('error', self::DATE_ERROR_MESSAGE);
+            Session::flash('error', ClassMessages::DATE_ERROR_MESSAGE);
             return redirect()->back();
         }
         $campaign_general_information = new StoreCampaignGeneralInformation($request);
@@ -134,7 +119,7 @@ class CampaignsController extends Controller
         $campaign_general_information = Session::get('campaign_information');
         $check_campaign_information = $this->utilities->checkCampaignInformationSessionActiveness($campaign_general_information);
         if($check_campaign_information === 'data_lost'){
-            Session::flash('error', self::CAMPAIGN_INFROMATION_SESSION_DATA_LOSS);
+            Session::flash('error', ClassMessages::CAMPAIGN_INFROMATION_SESSION_DATA_LOSS);
             return back();
         }
         $adslots_filter_result = new AdslotFilterResult($campaign_general_information, $broadcaster_id, $agency_id);
@@ -157,13 +142,13 @@ class CampaignsController extends Controller
         $campaign_general_information = Session::get('campaign_information');
         $check_campaign_information = $this->utilities->checkCampaignInformationSessionActiveness($campaign_general_information);
         if($check_campaign_information === 'data_lost'){
-            Session::flash('error', self::CAMPAIGN_INFROMATION_SESSION_DATA_LOSS);
+            Session::flash('error', ClassMessages::CAMPAIGN_INFROMATION_SESSION_DATA_LOSS);
             return back();
         }
         $adslots_filter_result = new AdslotFilterResult($campaign_general_information, $broadcaster_id, $agency_id);
         $adslots_filter_result = $adslots_filter_result->adslotFilterResult();
         if(count($adslots_filter_result) === 0){
-            Session::flash('error', self::EMPTY_ADSLOT_RESULT_FROM_FILTER);
+            Session::flash('error', ClassMessages::EMPTY_ADSLOT_RESULT_FROM_FILTER);
             return redirect()->back();
         }
 
@@ -176,7 +161,7 @@ class CampaignsController extends Controller
 
         //going by defensive programming
         if($radio_details_and_uploads['radio']->channel != 'Radio' && $tv_details_and_uploads['tv']->channel != 'TV'){
-            Session::flash('error', self::FIRST_CHANNEL_ERROR);
+            Session::flash('error', ClassMessages::FIRST_CHANNEL_ERROR);
             return redirect()->back();
         }
 
@@ -210,10 +195,10 @@ class CampaignsController extends Controller
         $delete_media = new MediaUploadProcessing('',$client_id, $upload_id);
         $delete_media = $delete_media->deleteUploadedMedia();
         if($delete_media == 'success'){
-            Session::flash('success', self::FILE_DELETE_SUCCESS_MESSAGE);
+            Session::flash('success', ClassMessages::FILE_DELETE_SUCCESS_MESSAGE);
             return back();
         }else{
-            Session::flash('error', self::FILE_DELETE_ERROR_MESSAGE);
+            Session::flash('error', ClassMessages::FILE_DELETE_ERROR_MESSAGE);
             return back();
         }
     }
