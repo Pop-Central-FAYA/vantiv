@@ -26,7 +26,7 @@
         <!-- main frame -->
         <div class="the_frame clearfix mb border_top_color">
 
-            <div class="margin_center col_7 clearfix pt4 create_fields">
+            <div class="margin_center col_9 clearfix pt4 create_fields">
 
                 <div class="create_gauge clearfix">
                     <div class="_progress active">
@@ -119,7 +119,7 @@
                 }
             });
 
-            //Uploading video content
+            //Uploading video content for tv
             $(".tv_content").on('change', function () {
                 var url = '/presigned-url';
                 for (var file, i = 0; i < this.files.length; i++) {
@@ -130,42 +130,48 @@
                     }
                     var splitedName = file.name.split(".");
                     var video_format = splitedName[splitedName.length - 1];
+                    var channel = "<?php echo $tv->id ?>";
                     $(".tv_campaign_proceed").prop('disabled', true);
-                    $.ajax({
-                        url : url,
-                        type : "GET",
-                        cache : false,
-                        data: {filename : file.name, folder: 'campaign-tv-contents/'},
-                        success: function (data) {
-                            $.ajax({
-                                xhr: function() {
-                                    var xhr = new window.XMLHttpRequest();
-                                    xhr.upload.addEventListener("progress", function(evt) {
-                                        if (evt.lengthComputable) {
-                                            var percentComplete = evt.loaded / evt.total;
-                                            percentComplete = parseInt(percentComplete * 100);
-                                            var big_html = '<div class="progress-bar" role="progressbar" aria-valuenow="'+percentComplete+'"'+
-                                                'aria-valuemin="0" aria-valuemax="100" style="width:'+percentComplete+'%">'+
-                                                '<span class="sr-only">'+percentComplete+'% Complete</span>'+
-                                                '</div>';
-                                            $('.progress').html(big_html);
-                                            if (percentComplete === 100) {
-                                                $('.progress').fadeOut(1000);
-                                            }
+                    processUploads(file, 'campaign-tv-contents', channel, url, video_format);
+                }
+            });
 
+            function processUploads (file, folder_name, channel, url, video_format) {
+                $.ajax({
+                    url : url,
+                    type : "GET",
+                    cache : false,
+                    data: {filename : file.name, folder: 'campaign-tv-contents/'},
+                    success: function (data) {
+                        $.ajax({
+                            xhr: function() {
+                                var xhr = new window.XMLHttpRequest();
+                                xhr.upload.addEventListener("progress", function(evt) {
+                                    if (evt.lengthComputable) {
+                                        var percentComplete = evt.loaded / evt.total;
+                                        percentComplete = parseInt(percentComplete * 100);
+                                        var big_html = '<div class="progress-bar" role="progressbar" aria-valuenow="'+percentComplete+'"'+
+                                            'aria-valuemin="0" aria-valuemax="100" style="width:'+percentComplete+'%">'+
+                                            '<span class="sr-only">'+percentComplete+'% Complete</span>'+
+                                            '</div>';
+                                        $('.progress').html(big_html);
+                                        if (percentComplete === 100) {
+                                            $('.progress').fadeOut(1000);
                                         }
-                                    }, false);
 
-                                    return xhr;
-                                },
-                                url : data,
-                                type : "PUT",
-                                data : file,
-                                dataType : "text",
-                                cache : false,
-                                contentType : file.type,
-                                processData : false,
-                            })
+                                    }
+                                }, false);
+
+                                return xhr;
+                            },
+                            url : data,
+                            type : "PUT",
+                            data : file,
+                            dataType : "text",
+                            cache : false,
+                            contentType : file.type,
+                            processData : false,
+                        })
                             .done(function(){
                                 toastr.success('Your upload was successful, please select the right time slot for your content and click on the submit button to complete your upload');
                                 var uploadedUrl = 'https:'+data.split('?')[0].substr(6);
@@ -187,7 +193,7 @@
                                             method: "GET",
                                             data: {'time_picked' : time_slot, 'duration' : file_duration, 'file_url' : uploadedUrl, 'file_name' : file.name, 'user_id' : user_id, 'channel' : channel, 'file_format' : video_format},
                                             success: function(result){
-                                                console.log(result);
+                                                //console.log(result);
                                                 if(result.error === 'error'){
                                                     toastr.error('You are trying to upload a file of '+file_duration+' seconds into a '+time_slot+' seconds slot');
                                                     return;
@@ -215,10 +221,9 @@
                                 toastr.error('An error occurred, please try again ');
                                 location.reload();
                             })
-                        }
-                    })
-                }
-            });
+                    }
+                })
+            }
 
         });
 

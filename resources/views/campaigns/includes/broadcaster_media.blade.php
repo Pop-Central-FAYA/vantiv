@@ -2,7 +2,7 @@
     <div class="upload_block clearfix">
         <div class=" align_center _block_one">
             <p class="small_faint">TV Content</p><br>
-            <form method="GET" action="{{ route('campaign.store3', ['id' => $id]) }}" id="form-data" enctype="multipart/form-data">
+            <form method="GET" action="{{ route('campaign.store_media_content', ['id' => $id]) }}" id="form-data" enctype="multipart/form-data">
                 <div class="dashed_upload file_select mb">
                     <input type="file" name="file" id="file_upload" class="tv_content file_upload" >
                     <p class="small_faint">Drag files to upload</p>
@@ -37,14 +37,14 @@
         </div>
 
         <div class="_block_two align_center gallery">
-            {{--@include('partials.show_file_tv')--}}
+            @include('campaigns.includes.show_tv_files')
         </div>
     </div>
 @else
     <div class="upload_block clearfix">
         <div class=" align_center _block_one">
             <p class="small_faint">Radio Content</p><br>
-            <form method="GET" action="{{ route('campaign.store3', ['id' => $id]) }}" id="form-data" >
+            <form method="GET" action="{{ route('campaign.store_media_content', ['id' => $id]) }}" id="form-data" >
                 {{ csrf_field() }}
                 <div class="dashed_upload file_select mb">
                     <input type="file" name="file" class="cloudinary_fileupload_radio" >
@@ -79,7 +79,7 @@
         </div>
 
         <div class="_block_two align_center gallery_radio">
-            {{--@include('partials.show_file_radio')--}}
+            @include('campaigns.includes.show_radio_files')
         </div>
     </div>
 @endif

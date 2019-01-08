@@ -18,6 +18,8 @@ use Vanguard\Services\Campaign\AllCampaign;
 use Vanguard\Services\Client\ClientBrand;
 use Vanguard\Services\Industry\IndustryAndSubindustry;
 use Vanguard\Services\PreloadedData\PreloadedData;
+use Vanguard\Services\Upload\MediaUploadDetails;
+use Vanguard\Services\Upload\MediaUploadProcessing;
 use Yajra\DataTables\DataTables;
 
 class CampaignsController extends Controller
@@ -36,6 +38,10 @@ class CampaignsController extends Controller
     const EMPTY_ADSLOT_RESULT_FROM_FILTER = 'You have no matches for the criteria selected, please go back and adjust the values';
 
     const FIRST_CHANNEL_ERROR = 'An error occurred in getting the media channels';
+
+    const FILE_DELETE_SUCCESS_MESSAGE = 'File deleted successfully...';
+
+    const FILE_DELETE_ERROR_MESSAGE = 'Error deleting file...';
 
     public function __construct(Utilities $utilities, DataTables $dataTables)
     {
@@ -160,17 +166,16 @@ class CampaignsController extends Controller
             Session::flash('error', self::EMPTY_ADSLOT_RESULT_FROM_FILTER);
             return redirect()->back();
         }
+
         $broadcaster_details = new BroadcasterDetails($broadcaster_id);
         $broadcaster_details = $broadcaster_details->getBroadcasterDetails();
 
-        $first_channel = new Radio();
-        $first_channel = $first_channel->getRadio();
+        $tv_details_and_uploads = $this->getTvDetailsAndUploads($id);
 
-        $second_channel = new Tv();
-        $second_channel = $second_channel->getTv();
+        $radio_details_and_uploads = $this->getRadioDetailsAndUploads($id);
 
         //going by defensive programming
-        if($first_channel->channel != 'Radio' && $second_channel->channel != 'TV'){
+        if($radio_details_and_uploads['radio']->channel != 'Radio' && $tv_details_and_uploads['tv']->channel != 'TV'){
             Session::flash('error', self::FIRST_CHANNEL_ERROR);
             return redirect()->back();
         }
@@ -178,9 +183,57 @@ class CampaignsController extends Controller
         return view('campaigns.media_content')
                     ->with('id', $id)
                     ->with('broadcaster_details', $broadcaster_id ? $broadcaster_details : '')
-                    ->with('radio', $first_channel)
-                    ->with('tv', $second_channel)
+                    ->with('radio', $radio_details_and_uploads['radio'])
+                    ->with('tv', $tv_details_and_uploads['tv'])
+                    ->with('tv_uploads', $tv_details_and_uploads['tv_upload_details'])
+                    ->with('radio_uploads', $radio_details_and_uploads['radio_upload_details'])
                     ->with('campaign_general_information', $campaign_general_information);
+    }
+
+    public function storeMediaContent($id)
+    {
+        $media_upload = new MediaUploadProcessing(request(), '', '');
+        $media_upload = $media_upload->run();
+        if($media_upload === 'error'){
+            return response()->json(['error' => 'error']);
+        }elseif($media_upload === 'error_number'){
+            return response()->json(['error_number' => 'error_number']);
+        }elseif($media_upload === 'error_check_image'){
+            return response()->json(['error_check_image' => 'error_check_image']);
+        }elseif($media_upload === 'success'){
+            return response()->json(['success' => 'success']);
+        }
+    }
+
+    public function removeMediaContent($client_id, $upload_id)
+    {
+        $delete_media = new MediaUploadProcessing('',$client_id, $upload_id);
+        $delete_media = $delete_media->deleteUploadedMedia();
+        if($delete_media == 'success'){
+            Session::flash('success', self::FILE_DELETE_SUCCESS_MESSAGE);
+            return back();
+        }else{
+            Session::flash('error', self::FILE_DELETE_ERROR_MESSAGE);
+            return back();
+        }
+    }
+
+    public function getTvDetailsAndUploads($user_id)
+    {
+        $tv = new Tv();
+        $tv = $tv->getTv();
+        $upload_details = new MediaUploadDetails($user_id, $tv->id);
+        $upload_details = $upload_details->uploadDetails();
+        return ['tv' => $tv, 'tv_upload_details' => $upload_details];
+    }
+
+    public function getRadioDetailsAndUploads($user_id)
+    {
+        $radio = new Radio();
+        $radio = $radio->getRadio();
+        $upload_details = new MediaUploadDetails($user_id, $radio->id);
+        $upload_details = $upload_details->uploadDetails();
+        return ['radio' => $radio, 'radio_upload_details' => $upload_details];
     }
 
 }
