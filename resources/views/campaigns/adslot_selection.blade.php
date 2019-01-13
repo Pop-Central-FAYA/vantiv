@@ -133,7 +133,7 @@
                     </div>
 
                     <div class="column col_4 align_right">
-                        <a href="{{ route('broadcaster_campaign.checkout', ['id' => $id]) }}" class="btn uppercased _proceed ">Proceed <span class=""></span></a>
+                        <a href="{{ route('campaign.checkout', ['id' => $id]) }}" class="btn uppercased _proceed ">Proceed <span class=""></span></a>
                     </div>
                 </div>
 

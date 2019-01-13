@@ -292,13 +292,10 @@ class CampaignsController extends Controller
         $entries = new LengthAwarePaginator($currentPageSearchResults, count($col), $perPage);
         $entries->setPath($id);
 
-        return view('broadcaster_module.campaigns.checkout')->with('first_session', $first)
+        return view('broadcaster_module.campaigns.checkout')
+            ->with('first_session', $first)
             ->with('calc', $checkout['calc'])
-            ->with('day_part', $checkout['day_parts'])
-            ->with('region', $checkout['regions'])
-            ->with('target', $checkout['targets'])
             ->with('preselected_adslot_arrays', $entries)
-            ->with('brand', $checkout['brands'])
             ->with('id', $id)
             ->with('user', $checkout['user'])
             ->with('broadcaster', $broadcaster_id)
