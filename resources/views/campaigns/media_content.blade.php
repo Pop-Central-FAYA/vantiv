@@ -72,10 +72,15 @@
                     <div class="column col_6">
                         <a href="{{ route('campaign.advert_slot', ['id' => $id]) }}" class="btn uppercased _white _go_back"><span class=""></span> Back</a>
                     </div>
-
-                    <div class="column col_6 align_right">
-                        <a href="" class="btn uppercased _proceed tv_campaign_proceed" id="proceed_button">Proceed <span class=""></span></a>
-                    </div>
+                    @if(Session::get('agency_id'))
+                        <div class="column col_6 align_right">
+                            <a href="{{ route('campaign.broadcaster_select', ['id' => $id ]) }}" class="btn uppercased _proceed tv_campaign_proceed" id="proceed_button">Proceed <span class=""></span></a>
+                        </div>
+                    @else
+                        <div class="column col_6 align_right">
+                            <a href="{{ route('campaign.adslot_preprocess', ['id' => $id ]) }}" class="btn uppercased _proceed tv_campaign_proceed" id="proceed_button">Proceed <span class=""></span></a>
+                        </div>
+                    @endif
                 </div>
 
             </div>

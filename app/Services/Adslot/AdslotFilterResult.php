@@ -12,12 +12,16 @@ class AdslotFilterResult
     protected $campaign_general_information;
     protected $broadcaster_id;
     protected $agency_id;
+    protected $start_date;
+    protected $end_date;
 
-    public function __construct($campaign_general_information, $broadcaster_id, $agency_id)
+    public function __construct($campaign_general_information, $broadcaster_id, $agency_id, $start_date, $end_date)
     {
         $this->campaign_general_information = $campaign_general_information;
         $this->broadcaster_id = $broadcaster_id;
         $this->agency_id = $agency_id;
+        $this->start_date = $start_date;
+        $this->end_date = $end_date;
     }
 
     public function run()
@@ -89,12 +93,9 @@ class AdslotFilterResult
 
     public function getDatesInbetweenCampaign()
     {
-        $start_date = $this->campaign_general_information->start_date;
-        $end_date = $this->campaign_general_information->end_date;
-
         $campaign_dates = [];
 
-        $date_period = CarbonPeriod::create($start_date, $end_date);
+        $date_period = CarbonPeriod::create($this->start_date, $this->end_date);
 
         foreach ($date_period as $date){
             $campaign_dates[] = $date->format('Y-m-d');
@@ -103,4 +104,5 @@ class AdslotFilterResult
         return $campaign_dates;
 
     }
+
 }

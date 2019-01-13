@@ -7,9 +7,12 @@
 @section('content')
     <div class="main_contain">
         <!-- heaser -->
-    @include('partials.new-frontend.broadcaster.header')
-
-    @include('partials.new-frontend.broadcaster.campaign_management.sidebar')
+    @if(Session::get('broadcaster_id'))
+        @include('partials.new-frontend.broadcaster.header')
+        @include('partials.new-frontend.broadcaster.campaign_management.sidebar')
+    @else
+        @include('partials.new-frontend.agency.header')
+    @endif
 
     <!-- subheader -->
         <div class="sub_header clearfix mb pt">
@@ -206,16 +209,16 @@
                                                 @foreach($positions as $position)
                                                     <option value="{{ $position->id }}"
                                                             @foreach($ratecards as $ratecard)
-                                                                @foreach($preselected_adslots as $preselected_adslot)
-                                                                    @if($preselected_adslot->adslot_id === $rating->id && $preselected_adslot->air_date == $ratecard['actual_date'])
-                                                                        @if((int)$preselected_adslot->time === (int)$uploaded_datum->time)
-                                                                            @if($preselected_adslot->filePosition_id === $position->id)
-                                                                                selected
-                                                                            @endif
-                                                                        @endif
-                                                                    @endif
-                                                                @endforeach
-                                                            @endforeach
+                                                            @foreach($preselected_adslots as $preselected_adslot)
+                                                            @if($preselected_adslot->adslot_id === $rating->id && $preselected_adslot->air_date == $ratecard['actual_date'])
+                                                            @if((int)$preselected_adslot->time === (int)$uploaded_datum->time)
+                                                            @if($preselected_adslot->filePosition_id === $position->id)
+                                                            selected
+                                                        @endif
+                                                        @endif
+                                                        @endif
+                                                        @endforeach
+                                                        @endforeach
                                                     >{{ $position->position }}</option>
                                                 @endforeach
                                             @endif
@@ -223,36 +226,36 @@
                                     </td>
 
                                     <td class="pick_button{{ $rating->id.$uploaded_datum->id }}"><button id="button{{ $rating->id.$uploaded_datum->id }}"
-                                                                                                            @foreach($ratecards as $ratecard)
-                                                                                                                @foreach($preselected_adslots as $preselected_adslot)
-                                                                                                                    @if($preselected_adslot->adslot_id === $rating->id && $preselected_adslot->air_date === $ratecard['actual_date'])
-                                                                                                                        @if((int)$preselected_adslot->time === (int)$uploaded_datum->time)
-                                                                                                                            class="btn-disable"
-                                                                                                                        @endif
-                                                                                                                    @endif
-                                                                                                                @endforeach
-                                                                                                            @endforeach
-                                                                                                    type="button"
-                                                                                                    data-file_slot="{{ $rating->id.$uploaded_datum->id }}"
-                                                                                                    @if($uploaded_datum->time === 15)
-                                                                                                        data-price="{{ $rating->price_15 }}"
-                                                                                                    @elseif($uploaded_datum->time === 30)
-                                                                                                        data-price="{{ $rating->price_30 }}"
-                                                                                                    @elseif($uploaded_datum->time === 45)
-                                                                                                        data-price="{{ $rating->price_45 }}"
-                                                                                                    @elseif($uploaded_datum->time === 60)
-                                                                                                        data-price="{{ $rating->price_60 }}"
-                                                                                                    @endif
-                                                                                                    data-adslot_id="{{ $rating->id }}"
-                                                                                                    data-range="{{ $rating->from_to_time }}"
-                                                                                                    data-time="{{ $uploaded_datum->time }}"
-                                                                                                    data-walkin="{{ $id }}"
-                                                                                                    data-file="{{ $uploaded_datum->file_url }}"
-                                                                                                    data-file_name="{{ $uploaded_datum->file_name }}"
-                                                                                                    data-file_format="{{ $uploaded_datum->format }}"
-                                                                                                    data-broadcaster="{{ $broadcaster }}"
-                                                                                                    data-target="bs-example-modal-lg{{ $rating->id }}"
-                                                                                                    class="btn btn-success btn-xs saveCart">select</button></td>
+                                                                                                         @foreach($ratecards as $ratecard)
+                                                                                                         @foreach($preselected_adslots as $preselected_adslot)
+                                                                                                         @if($preselected_adslot->adslot_id === $rating->id && $preselected_adslot->air_date === $ratecard['actual_date'])
+                                                                                                         @if((int)$preselected_adslot->time === (int)$uploaded_datum->time)
+                                                                                                         class="btn-disable"
+                                                                                                         @endif
+                                                                                                         @endif
+                                                                                                         @endforeach
+                                                                                                         @endforeach
+                                                                                                         type="button"
+                                                                                                         data-file_slot="{{ $rating->id.$uploaded_datum->id }}"
+                                                                                                         @if($uploaded_datum->time === 15)
+                                                                                                         data-price="{{ $rating->price_15 }}"
+                                                                                                         @elseif($uploaded_datum->time === 30)
+                                                                                                         data-price="{{ $rating->price_30 }}"
+                                                                                                         @elseif($uploaded_datum->time === 45)
+                                                                                                         data-price="{{ $rating->price_45 }}"
+                                                                                                         @elseif($uploaded_datum->time === 60)
+                                                                                                         data-price="{{ $rating->price_60 }}"
+                                                                                                         @endif
+                                                                                                         data-adslot_id="{{ $rating->id }}"
+                                                                                                         data-range="{{ $rating->from_to_time }}"
+                                                                                                         data-time="{{ $uploaded_datum->time }}"
+                                                                                                         data-walkin="{{ $id }}"
+                                                                                                         data-file="{{ $uploaded_datum->file_url }}"
+                                                                                                         data-file_name="{{ $uploaded_datum->file_name }}"
+                                                                                                         data-file_format="{{ $uploaded_datum->format }}"
+                                                                                                         data-broadcaster="{{ $broadcaster }}"
+                                                                                                         data-target="bs-example-modal-lg{{ $rating->id }}"
+                                                                                                         class="btn btn-success btn-xs saveCart">select</button></td>
 
                                 @endif
                             </tr>
@@ -289,7 +292,6 @@
             var file_format = $(this).data('file_format');
             var broadcaster = $(this).data("broadcaster");
             var air_date = $("#air_date"+adslot_id).val();
-            var target = $(this).data('target');
             $(".saveCart").attr('disabled', true);
 
             $.ajax({

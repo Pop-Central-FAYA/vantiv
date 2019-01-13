@@ -8,6 +8,7 @@ use Vanguard\Models\BroadcasterPlayout;
 use Vanguard\Models\PreselectedAdslot;
 use Vanguard\Models\SelectedAdslot;
 use Vanguard\Models\Upload;
+use Vanguard\Services\Broadcaster\BroadcasterDetails;
 use Vanguard\Services\CampaignChannels\Radio;
 use Vanguard\Services\CampaignChannels\Tv;
 use Vanguard\Services\Upload\MediaUploadDetails;
@@ -526,9 +527,11 @@ class Utilities {
                                                   FROM brand_client as b_c INNER JOIN brands as b ON b.id = b_c.brand_id where b.id = '$id' AND b_c.client_id = '$client_id'");
     }
 
-    public static function getBroadcasterDetails($broadcaster_id)
+    public function getBroadcasterDetails($broadcaster_id)
     {
-        return Utilities::switch_db('api')->select("SELECT * from broadcasters where id = '$broadcaster_id'");
+        $broadcaster_details = new BroadcasterDetails($broadcaster_id);
+        $broadcaster_details = $broadcaster_details->getBroadcasterDetails();
+        return $broadcaster_details;
     }
 
     public static function getWalkInsDetails($id)
@@ -748,48 +751,6 @@ class Utilities {
         return $ads_broad;
     }
 
-    public static function uploadMedia()
-    {
-        $user_id = request()->user_id;
-
-        if(round((integer)request()->duration) > (integer)request()->time_picked){
-            return 'error';
-        }
-
-        $check_file = Upload::where('user_id', $user_id)->get();
-        if(count($check_file) > 4){
-            return 'error_number';
-        }
-        $file_url = request()->file_url;
-        $time = request()->time_picked;
-        $channel = request()->channel;
-        $format = request()->file_format;
-
-        if (request()->file_url) {
-
-            $check_file = Upload::where([
-                ['time', $time],
-                ['channel', $channel],
-                ['user_id', $user_id]
-            ])->first();
-
-            if($check_file){
-                return 'error_check_image';
-            }
-
-            Upload::create([
-                'user_id' => $user_id,
-                'time' => $time,
-                'file_url' => $file_url,
-                'file_name' => $time.'_'.$format.'_'.request()->file_name,
-                'channel' => $channel,
-                'format' => $format
-            ]);
-
-            return 'success';
-        }
-    }
-
     public function getRateCards($step1, $broadcaster_id, $start_date, $end_date)
     {
 
@@ -797,7 +758,6 @@ class Utilities {
         $region = "'".implode("','", $step1->region)."'";
         $target_audience = "'".implode("','", $step1->target_audience)."'";
         $all_adslots = Utilities::getAllAvailableSlots($step1, $broadcaster_id);
-        $adslots_inventory = Utilities::fecthAllAdslotsForBroadcaster($broadcaster_id);
         $first_week_days = $this->campaign_dates->getFirstWeek($start_date, $end_date);
         $campaign_dates_in_first_week = $this->campaign_dates->getStartAndEndDateForFirstWeek($first_week_days);
         $ratecards = Utilities::getRateCardIdBetweenStartAndEndDates($campaign_dates_in_first_week['start_date_of_the_week'],
@@ -829,7 +789,7 @@ class Utilities {
         return ['rate_card' => $rate_card, 'adslot' => $all_adslots];
     }
 
-    public static function differentiateArray($big_array, $small_array)
+    public function differentiateArray($big_array, $small_array)
     {
         $new_unfiltered_array = [];
         $new_filtered_array = [];
@@ -1368,18 +1328,20 @@ class Utilities {
     {
         $tv = new Tv();
         $tv = $tv->getTv();
-        $upload_details = new MediaUploadDetails($user_id, $tv->id);
-        $upload_details = $upload_details->uploadDetails();
-        return ['tv' => $tv, 'tv_upload_details' => $upload_details];
+        return ['tv' => $tv, 'tv_upload_details' => $this->getMediaUploadDetails($user_id, $tv->id)];
     }
 
     public function getRadioDetailsAndUploads($user_id)
     {
         $radio = new Radio();
         $radio = $radio->getRadio();
-        $upload_details = new MediaUploadDetails($user_id, $radio->id);
-        $upload_details = $upload_details->uploadDetails();
-        return ['radio' => $radio, 'radio_upload_details' => $upload_details];
+        return ['radio' => $radio, 'radio_upload_details' => $this->getMediaUploadDetails($user_id, $radio->id)];
+    }
+
+    public function getMediaUploadDetails($user_id, $channel_id)
+    {
+        $upload_details = new MediaUploadDetails($user_id, $channel_id);
+        return $upload_details->uploadDetails();
     }
 
 }

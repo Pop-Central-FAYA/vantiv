@@ -109,6 +109,11 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/media-content/{id}', 'Campaign\CampaignsController@getMediaContent')->name('campaign.get_media_content');
         Route::get('/media-content/store/{id}', 'Campaign\CampaignsController@storeMediaContent')->name('campaign.store_media_content');
         Route::post('/remove-media-content/{client_id}/{upload_id}', 'Campaign\CampaignsController@removeMediaContent')->name('uploads.remove');
+        Route::get('/adslot-selection/pre-process/{id}', 'Campaign\CampaignsController@preProcessAdslot')->name('campaign.adslot_preprocess');
+        Route::get('/adslot-selection/{id}/{broadcaster}/{start_date}/{end_date}', 'Campaign\CampaignsController@getAdslotSelection')->name('campaign.adslot_selection');
+        Route::get('/preselected-adslot/store/{id}', 'Campaign\CampaignsController@postPreselectedAdslot')->name('campaign.store_preselected_adslot');
+        Route::get('/broadcaster-selection/{id}', 'Campaign\CampaignsController@selectBroadcaster')->name('campaign.broadcaster_select');
+
 
         Route::get('/create/step3_1/{id}', 'Broadcaster\CampaignsController@storeStep3_1')->name('campaign.create3_1');
         Route::get('/create/step4/{id}/{broadcaster}/{start_date}/{end_date}', 'Broadcaster\CampaignsController@createStep4')->name('campaign.create4');
