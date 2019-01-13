@@ -2,7 +2,7 @@
 
 namespace Vanguard\Services\Upload;
 
-use Vanguard\Models\Upload;
+use Vanguard\Libraries\Utilities;
 
 class MediaUploadDetails
 {
@@ -17,9 +17,13 @@ class MediaUploadDetails
 
     public function uploadDetails()
     {
-        return Upload::where([
-            ['user_id', $this->user_id],
-            ['channel', $this->channel_id]
-        ])->get();
+        return Utilities::switch_db('api')->table('uploads')
+                            ->when($this->user_id, function ($query) {
+                                return $query->where('user_id', $this->user_id);
+                            })
+                            ->when($this->channel_id, function($query) {
+                                return $query->where('channel', $this->channel_id);
+                            })
+                            ->get();
     }
 }

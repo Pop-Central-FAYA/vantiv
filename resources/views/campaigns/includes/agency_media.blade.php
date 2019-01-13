@@ -4,7 +4,7 @@
 
             <div class=" align_center _block_one">
                 <p class="small_faint">TV Content</p><br>
-                <form method="GET" action="{{ route('agency_campaign.store3', ['id' => $id]) }}" id="form-data" enctype="multipart/form-data">
+                <form method="GET" action="{{ route('campaign.store_media_content', ['id' => $id]) }}" id="form-data" enctype="multipart/form-data">
                     <div class="dashed_upload file_select mb">
                         <input type="file" name="file" id="file_upload" class="tv_content" >
                         <p class="small_faint">Drag files to upload</p>
@@ -50,7 +50,7 @@
 
             <div class=" align_center _block_one">
                 <p class="small_faint">Radio Content</p><br>
-                <form method="GET" action="{{ route('agency_campaign.store3', ['id' => $id]) }}" id="form-data" enctype="multipart/form-data">
+                <form method="GET" action="{{ route('campaign.store_media_content', ['id' => $id]) }}" id="form-data" enctype="multipart/form-data">
                     <div class="dashed_upload file_select mb">
                         <input type="file" name="file" class="cloudinary_fileupload_radio" >
                         <p class="small_faint">Drag files to upload</p>
