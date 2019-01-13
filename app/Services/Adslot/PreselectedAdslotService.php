@@ -86,21 +86,73 @@ class PreselectedAdslotService
 
     public function compareCampaignBudgetWithTotalSpent($adslot_prices)
     {
-        $total_price = $this->sumTotalPriceByBroadcaster();
+        $total_price = $this->sumTotalPriceByMediaBuyer();
         $new_total_price = (integer)$adslot_prices['new_price'] + $total_price;
         if((integer)$new_total_price > (integer)$this->campaign_general_information->campaign_budget){
             return 'budget_exceed_error';
         }
     }
 
-    public function sumTotalPriceByBroadcaster()
+    public function sumTotalPriceByMediaBuyer()
     {
         return Utilities::switch_db('api')->table('preselected_adslots')
-                                            ->where([
-                                                ['user_id', $this->user_id],
-                                                ['broadcaster_id', $this->broadcaster_id]
-                                            ])
+                                            ->when($this->broadcaster_id, function ($query) {
+                                                return $query->where([
+                                                    ['user_id', $this->user_id],
+                                                    ['broadcaster_id', $this->broadcaster_id]
+                                                ]);
+                                            })
+                                            ->when($this->agency_id, function ($query) {
+                                                return $query->where([
+                                                    ['user_id', $this->user_id],
+                                                    ['agency_id', $this->agency_id]
+                                                ]);
+                                            })
                                             ->sum('total_price');
 
+    }
+
+    public function preselectedAdslotDetails()
+    {
+        return Utilities::switch_db('api')->table('preselected_adslots')
+                        ->leftJoin('filePositions', 'filePositions.id', '=', 'preselected_adslots.filePosition_id')
+                        ->join('broadcasters', 'broadcasters.id', '=', 'preselected_adslots.broadcaster_id')
+                        ->select('preselected_adslots.id', 'preselected_adslots.from_to_time', 'preselected_adslots.time',
+                            'preselected_adslots.price', 'preselected_adslots.percentage', 'preselected_adslots.total_price',
+                            'preselected_adslots.air_date', 'filePositions.position', 'broadcasters.brand', 'broadcasters.image_url'
+                        )
+                        ->where('preselected_adslots.user_id', $this->user_id)
+                        ->when($this->broadcaster_id, function ($query) {
+                            return $query->where('preselected_adslots.broadcaster_id', $this->broadcaster_id);
+                        })
+                        ->when($this->agency_id, function($query) {
+                            return $query->where('preselected_adslots.agency_id', $this->agency_id);
+                        })
+                        ->get();
+    }
+
+    public function runPreselectedAdslotDetails()
+    {
+        $preselected_adslot_details = [];
+        foreach ($this->preselectedAdslotDetails() as $preselectedAdslotDetail){
+            $preselected_adslot_details[] = [
+                'id' => $preselectedAdslotDetail->id,
+                'from_to_time' => $preselectedAdslotDetail->from_to_time,
+                'time' => $preselectedAdslotDetail->time,
+                'price' => $preselectedAdslotDetail->price,
+                'percentage' => $preselectedAdslotDetail->percentage,
+                'position' => $preselectedAdslotDetail->position === null ? 'No Position' : $preselectedAdslotDetail->position,
+                'total_price' => $preselectedAdslotDetail->total_price,
+                'broadcaster_logo' => $preselectedAdslotDetail->image_url,
+                'broadcaster_brand' => $preselectedAdslotDetail->brand,
+                'air_date' => $preselectedAdslotDetail->air_date
+            ];
+        }
+        return $preselected_adslot_details;
+    }
+
+    public function countPreselectedAdslot()
+    {
+        return count($this->getPreselectedSlots());
     }
 }

@@ -19,4 +19,8 @@ class ClassMessages
     const FILE_DELETE_SUCCESS_MESSAGE = 'File deleted successfully...';
 
     const FILE_DELETE_ERROR_MESSAGE = 'Error deleting file...';
+
+    const EMPTY_CART_MESSAGE = 'Your cart is empty';
+
+    const REMOVE_PRESELECTED_ADSLOT = 'Adslot removed successfully';
 }

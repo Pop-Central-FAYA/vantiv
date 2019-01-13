@@ -11,9 +11,11 @@ use Vanguard\Http\Requests\Campaigns\CampaignGeneralInformationRequest;
 use Vanguard\Libraries\CampaignDate;
 use Vanguard\Libraries\Enum\ClassMessages;
 use Vanguard\Libraries\Utilities;
+use Vanguard\Models\PreselectedAdslot;
 use Vanguard\Services\Adslot\AdslotFilterResult;
 use Vanguard\Services\Adslot\PreselectedAdslotService;
 use Vanguard\Services\Adslot\RatecardService;
+use Vanguard\Services\Brands\BrandDetails;
 use Vanguard\Services\Campaign\DeleteTemporaryUpload;
 use Vanguard\Services\Campaign\StoreCampaignGeneralInformation;
 use Vanguard\Services\Client\AllClient;
@@ -23,6 +25,7 @@ use Vanguard\Services\FilePosition\Fileposition;
 use Vanguard\Services\Industry\IndustryAndSubindustry;
 use Vanguard\Services\PreloadedData\PreloadedData;
 use Vanguard\Services\Upload\MediaUploadProcessing;
+use Vanguard\Services\Wallet\WelletService;
 use Yajra\DataTables\DataTables;
 
 class CampaignsController extends Controller
@@ -268,6 +271,50 @@ class CampaignsController extends Controller
                     ->with('campaign_first_week', $campaign_first_week);
     }
 
+    public function checkout($id)
+    {
+        $check_campaign_information = $this->utilities->checkCampaignInformationSessionActiveness($this->campaign_general_information);
+        if($check_campaign_information === 'data_lost'){
+            Session::flash('error', ClassMessages::CAMPAIGN_INFROMATION_SESSION_DATA_LOSS);
+            return back();
+        }
+
+        $preselected_adslot_object = new PreselectedAdslotService($id, $this->broadcaster_id,$this->agency_id, null, null);
+        $count_preselected_adslot = $preselected_adslot_object->countPreselectedAdslot();
+        if($count_preselected_adslot == 0){
+            Session::flash('error', ClassMessages::EMPTY_CART_MESSAGE);
+            return redirect()->back();
+        }
+        $campaign_weeks = $this->campaign_date->groupCampaignDateByWeek($this->campaign_general_information->start_date,
+                                                                        $this->campaign_general_information->end_date);
+        $first_week = array_first($campaign_weeks);
+
+        $wallet = new WelletService($this->agency_id);
+
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $col = new Collection($preselected_adslot_object->runPreselectedAdslotDetails());
+        $perPage = 10;
+        $currentPageSearchResults = $col->slice(($currentPage - 1) * $perPage, $perPage)->all();
+        $entries = new LengthAwarePaginator($currentPageSearchResults, count($col), $perPage);
+        $entries->setPath($id);
+
+        return view('campaigns.checkout')
+                ->with('total_spent', $preselected_adslot_object->sumTotalPriceByMediaBuyer())
+                ->with('preselected_adslot_arrays', $entries)
+                ->with('id', $id)
+                ->with('broadcaster', $this->broadcaster_id)
+                ->with('campaign_dates_for_first_week', $first_week)
+                ->with('wallet_balance', $wallet->getCurrentBalance());
+
+    }
+
+    public function removePreselectedAdslot($id)
+    {
+        PreselectedAdslot::where('id', $id)->delete();
+        Session::flash('success', ClassMessages::REMOVE_PRESELECTED_ADSLOT);
+        return redirect()->back();
+    }
+
     public function adslotResultDetails()
     {
         $adslots_filter_result = new AdslotFilterResult($this->campaign_general_information, $this->broadcaster_id,
@@ -275,4 +322,5 @@ class CampaignsController extends Controller
         $adslots_filter_result = $adslots_filter_result->adslotFilterResult();
         return $adslots_filter_result;
     }
+
 }
