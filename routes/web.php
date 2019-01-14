@@ -115,7 +115,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/broadcaster-selection/{id}', 'Campaign\CampaignsController@selectBroadcaster')->name('campaign.broadcaster_select');
         Route::get('/checkout/{id}', 'Campaign\CampaignsController@checkout')->name('campaign.checkout');
         Route::get('/preselected-adslot/remove/{id}', 'Campaign\CampaignsController@removePreselectedAdslot')->name('preselected_adslot.remove');
-
+        Route::post('/campaign-onhold/{id}', 'Campaign\CampaignsController@postCampaignOnHold')->name('campaign.post_onhold');
 
         Route::get('/create/step3_1/{id}', 'Broadcaster\CampaignsController@storeStep3_1')->name('campaign.create3_1');
         Route::get('/create/step4/{id}/{broadcaster}/{start_date}/{end_date}', 'Broadcaster\CampaignsController@createStep4')->name('campaign.create4');

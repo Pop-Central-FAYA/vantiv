@@ -20,7 +20,7 @@ class StoreCampaignGeneralInformation
 
     public function storeCampaignGeneralInformationInSession()
     {
-        $client_details = new ClientDetails($this->request->client);
+        $client_details = new ClientDetails($this->request->client, null);
 
         $client_details = $client_details->run();
 
@@ -28,6 +28,6 @@ class StoreCampaignGeneralInformation
 
         session(['campaign_information' => $campaign_general_information]);
 
-        return $client_details->id;
+        return $client_details->user_id;
     }
 }

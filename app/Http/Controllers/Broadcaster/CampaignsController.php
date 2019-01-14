@@ -359,6 +359,7 @@ class CampaignsController extends Controller
             $ads[] = $preselected_adslot->adslot_id;
         }
 
+
         $file_array = [];
         $pay = [];
         $payDetails = [];
@@ -398,7 +399,6 @@ class CampaignsController extends Controller
                 $pay_id, $request, $first, $walkin_id, $calc, $campaign_id, $invoice_id,
                 $invoice_number, $mpo_id, $file_array, $pay, $payDetails, $invoice, $invoiceDetails, $mpo, $mpoDetails);
         }catch (\Exception $e) {
-            return $e;
             return 'error';
         }
 

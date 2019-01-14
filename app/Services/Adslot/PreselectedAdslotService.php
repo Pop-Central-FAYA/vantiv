@@ -151,6 +151,25 @@ class PreselectedAdslotService
         return $preselected_adslot_details;
     }
 
+    public function getAdslotIdFromPreselectedAdslot()
+    {
+        $adslot_ids = [];
+        $preselected_adslots = $this->getPreselectedSlots();
+        foreach ($preselected_adslots as $preselected_adslot){
+            $adslot_ids[] = $preselected_adslot->adslot_id;
+        }
+        return $adslot_ids;
+    }
+
+    public function sumTotalPriceGroupedByBroadcaster()
+    {
+        return Utilities::switch_db('api')->table('preselected_adslots')
+            ->where('user_id', $this->user_id)
+            ->groupBy('broadcaster_id')
+            ->sum('total_price');
+
+    }
+
     public function countPreselectedAdslot()
     {
         return count($this->getPreselectedSlots());

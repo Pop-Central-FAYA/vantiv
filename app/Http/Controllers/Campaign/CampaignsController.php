@@ -2,6 +2,7 @@
 
 namespace Vanguard\Http\Controllers\Campaign;
 
+use Carbon\Carbon;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Vanguard\Http\Controllers\Controller;
@@ -11,16 +12,25 @@ use Vanguard\Http\Requests\Campaigns\CampaignGeneralInformationRequest;
 use Vanguard\Libraries\CampaignDate;
 use Vanguard\Libraries\Enum\ClassMessages;
 use Vanguard\Libraries\Utilities;
+use Vanguard\Models\Payment;
 use Vanguard\Models\PreselectedAdslot;
 use Vanguard\Services\Adslot\AdslotFilterResult;
 use Vanguard\Services\Adslot\PreselectedAdslotService;
 use Vanguard\Services\Adslot\RatecardService;
-use Vanguard\Services\Brands\BrandDetails;
+use Vanguard\Services\Broadcaster\BroadcasterDetails;
 use Vanguard\Services\Campaign\DeleteTemporaryUpload;
+use Vanguard\Services\Campaign\StoreCampaign;
+use Vanguard\Services\Campaign\StoreCampaignDetails;
 use Vanguard\Services\Campaign\StoreCampaignGeneralInformation;
+use Vanguard\Services\Campaign\StoreInvoice;
+use Vanguard\Services\Campaign\storeMpo;
+use Vanguard\Services\Campaign\StoreMpoDetails;
+use Vanguard\Services\Campaign\StorePayment;
+use Vanguard\Services\Campaign\StoreSelectedAdslot;
 use Vanguard\Services\Client\AllClient;
 use Vanguard\Services\Campaign\AllCampaign;
 use Vanguard\Services\Client\ClientBrand;
+use Vanguard\Services\Client\ClientDetails;
 use Vanguard\Services\FilePosition\Fileposition;
 use Vanguard\Services\Industry\IndustryAndSubindustry;
 use Vanguard\Services\PreloadedData\PreloadedData;
@@ -313,6 +323,62 @@ class CampaignsController extends Controller
         PreselectedAdslot::where('id', $id)->delete();
         Session::flash('success', ClassMessages::REMOVE_PRESELECTED_ADSLOT);
         return redirect()->back();
+    }
+
+    public function postCampaignOnHold(Request $request, $user_id)
+    {
+        $preselected_adslot_object = new PreselectedAdslotService($user_id, $this->broadcaster_id, $this->agency_id,
+                                                        null,null);
+        $client_details_object = new ClientDetails(null, $user_id);
+        $preselected_adslots = $preselected_adslot_object->getPreselectedSlots();
+        $adslot_ids = $preselected_adslot_object->getAdslotIdFromPreselectedAdslot();
+        $count_adslots = $preselected_adslot_object->countPreselectedAdslot();
+        $client_details = $client_details_object->run();
+        $total_spent = $preselected_adslot_object->sumTotalPriceGroupedByBroadcaster();
+        $campaign_id = uniqid();
+        $mpo_id = uniqid();
+        $payment_id = uniqid();
+        $invoice_id = uniqid();
+        $campaign_reference = Utilities::generateReference();
+        $invoice_number = Utilities::generateReference();
+        $now = strtotime(Carbon::now('Africa/Lagos'));
+        $broadcaster_details = new BroadcasterDetails($this->broadcaster_id);
+        $broadcaster_details = $broadcaster_details->getBroadcasterDetails();
+
+        $store_campaign = new StoreCampaign($campaign_id, $now, $campaign_reference);
+        $store_mpo = new storeMpo($mpo_id, $campaign_id, $invoice_number, $campaign_reference);
+        $store_invoice = new StoreInvoice($invoice_id, $campaign_id, $campaign_reference, $payment_id, $invoice_number);
+        $store_payment = new StorePayment($payment_id, $campaign_id, $request->total, $now, $campaign_reference, $this->campaign_general_information->budget);
+        if($this->broadcaster_id){
+            $store_campaign->storeCampaign();
+            $campaign_details = new StoreCampaignDetails($campaign_id, $user_id, $this->broadcaster_id, $this->agency_id,
+                $this->campaign_general_information, $client_details->id,
+                $broadcaster_details, $now, $adslot_ids);
+            $campaign_details->storeCampaingDetails();
+            foreach ($preselected_adslots as $preselected_adslot){
+                $selected_adslot = new StoreSelectedAdslot($campaign_id, $preselected_adslot, $user_id, $now, $this->agency_id, $this->broadcaster_id);
+                $selected_adslot->storeSelectedAdslot();
+            }
+            $store_mpo->storeMpo();
+            $store_invoice->storeInvoice();
+            $store_payment->storePayment();
+
+        }else{
+
+        }
+        $mpo_details = new StoreMpoDetails();
+    }
+
+    public function storeBroadcasterCampaignsInformation($campaign_id, $user_id, $client_details, $broadcaster_details, $now, $adslot_ids, $campaign)
+    {
+        $campaign_details = new StoreCampaignDetails($campaign_id, $user_id, $this->broadcaster_id, $this->agency_id,
+            $this->campaign_general_information, $client_details->id,
+            $broadcaster_details, $now, $adslot_ids);
+    }
+
+    public function storeAgencyCampaignInformation()
+    {
+
     }
 
     public function adslotResultDetails()

@@ -1084,7 +1084,7 @@ class Utilities {
         ];
     }
 
-    public static function campaignInformation($campaign_id, $campaign_reference, $now)
+    public function campaignInformation($campaign_id, $campaign_reference, $now)
     {
         return [
             'id' => $campaign_id,

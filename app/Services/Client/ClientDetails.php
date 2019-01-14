@@ -2,19 +2,28 @@
 
 namespace Vanguard\Services\Client;
 
-use Vanguard\Models\WalkIns;
+use Vanguard\Libraries\Utilities;
 
 class ClientDetails
 {
-    private $client_id;
+    public $id;
+    public $client_id;
 
-    public function __construct($client_id)
+    public function __construct($id, $client_id)
     {
+        $this->id = $id;
         $this->client_id = $client_id;
     }
 
     public function run()
     {
-        return WalkIns::where('id', $this->client_id)->first();
+        return Utilities::switch_db('api')->table('walkIns')
+                            ->when($this->id, function($query) {
+                                return $query->where('id', $this->id);
+                            })
+                            ->when($this->client_id, function($query) {
+                                return $query->where('user_id', $this->client_id);
+                            })
+                            ->first();
     }
 }
