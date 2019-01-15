@@ -32,7 +32,7 @@ class StoreSelectedAdslot
         $selected_adslot->campaign_id = $this->campaign_id;
         $selected_adslot->file_name = $this->preselected_adlsots->file_name;
         $selected_adslot->file_url = $this->preselected_adlsots->file_url;
-        $selected_adslot->adslot = $this->preselected_adlsots->adslot;
+        $selected_adslot->adslot = $this->preselected_adlsots->adslot_id;
         $selected_adslot->user_id = $this->user_id;
         $selected_adslot->file_code = Utilities::generateReference();
         $selected_adslot->created_at = date('Y-m-d H:i:s', $this->now);

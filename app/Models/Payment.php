@@ -18,4 +18,6 @@ class Payment extends Model
     protected $fillable = [
         'id', 'campaign_id', 'campaign_reference', 'total', 'status', 'campaign_budget'
     ];
+
+    public $timestamps = false;
 }

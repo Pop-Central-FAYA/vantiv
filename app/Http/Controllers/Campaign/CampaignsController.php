@@ -9,10 +9,11 @@ use Vanguard\Http\Controllers\Controller;
 use Session;
 use Illuminate\Http\Request;
 use Vanguard\Http\Requests\Campaigns\CampaignGeneralInformationRequest;
+use Vanguard\Libraries\Api;
 use Vanguard\Libraries\CampaignDate;
 use Vanguard\Libraries\Enum\ClassMessages;
 use Vanguard\Libraries\Utilities;
-use Vanguard\Models\Payment;
+use Vanguard\Models\Adslot;
 use Vanguard\Models\PreselectedAdslot;
 use Vanguard\Services\Adslot\AdslotFilterResult;
 use Vanguard\Services\Adslot\PreselectedAdslotService;
@@ -33,6 +34,7 @@ use Vanguard\Services\Client\AllClient;
 use Vanguard\Services\Campaign\AllCampaign;
 use Vanguard\Services\Client\ClientBrand;
 use Vanguard\Services\Client\ClientDetails;
+use Vanguard\Services\FilePosition\AdslotFilePositionService;
 use Vanguard\Services\FilePosition\Fileposition;
 use Vanguard\Services\Industry\IndustryAndSubindustry;
 use Vanguard\Services\PreloadedData\PreloadedData;
@@ -151,7 +153,6 @@ class CampaignsController extends Controller
             Session::flash('error', ClassMessages::EMPTY_ADSLOT_RESULT_FROM_FILTER);
             return redirect()->back();
         }
-
         $tv_details_and_uploads = $this->utilities->getTvDetailsAndUploads($id);
         $radio_details_and_uploads = $this->utilities->getRadioDetailsAndUploads($id);
         //going by defensive programming
@@ -159,7 +160,6 @@ class CampaignsController extends Controller
             Session::flash('error', ClassMessages::FIRST_CHANNEL_ERROR);
             return redirect()->back();
         }
-
         return view('campaigns.media_content')
                     ->with('id', $id)
                     ->with('broadcaster_details', $this->broadcaster_id ? $this->utilities->getBroadcasterDetails($this->broadcaster_id) : '')
@@ -327,6 +327,21 @@ class CampaignsController extends Controller
         return redirect()->back();
     }
 
+    Public function postCampaign(Request $request, $user_id)
+    {
+        $save_campaign = $this->postCampaignOnHold($request, $user_id);
+        if($save_campaign === 'success'){
+            $description = 'Campaign created by '.Session::get('broadcaster_id').' for '.$user_id;
+            Api::saveActivity($user_id, $description);
+            Session::flash('success', ClassMessages::CAMPAIGN_SUCCESS_MESSAGE);
+            return redirect()->route('broadcaster.campaign.hold');
+        }else{
+            Session::flash('error', 'There was problem creating campaign');
+            return redirect()->back();
+        }
+
+    }
+
     public function postCampaignOnHold(Request $request, $user_id)
     {
         $preselected_adslot_object = new PreselectedAdslotService($user_id, $this->broadcaster_id, $this->agency_id,
@@ -350,15 +365,16 @@ class CampaignsController extends Controller
         $store_campaign = new StoreCampaign($campaign_id, $now, $campaign_reference);
         $store_mpo = new storeMpo($mpo_id, $campaign_id, $invoice_number, $campaign_reference);
         $store_invoice = new StoreInvoice($invoice_id, $campaign_id, $campaign_reference, $payment_id, $invoice_number);
-        $store_payment = new StorePayment($payment_id, $campaign_id, $request->total, $now, $campaign_reference, $this->campaign_general_information->budget);
+        $store_payment = new StorePayment($payment_id, $campaign_id, $request->total, $now, $campaign_reference, $this->campaign_general_information->campaign_budget);
 
         if($this->broadcaster_id){
             $post_campaign_bank = $this->collectInformationNeeded($store_campaign, $store_mpo, $store_invoice, $store_payment, $preselected_adslots,
                                                                 $campaign_id, $invoice_id, $mpo_id, $payment_id, $invoice_number, $adslot_ids, $total_spent);
             try{
                 $this->storeBroadcasterCampaignsInformation($post_campaign_bank, $user_id, $client_details, $broadcaster_details, $now);
+                return 'success';
             }catch (\Exception $exception){
-                dd($exception);
+                return 'error';
             }
 
         }else{
@@ -368,7 +384,7 @@ class CampaignsController extends Controller
 
     public function storeBroadcasterCampaignsInformation($post_campaign_bank, $user_id, $client_details, $broadcaster_details, $now)
     {
-        \DB::transaction(function () use($post_campaign_bank, $user_id, $client_details, $broadcaster_details, $now) {
+        Utilities::switch_db('api')->transaction(function () use($post_campaign_bank, $user_id, $client_details, $broadcaster_details, $now) {
             $post_campaign_bank['store_campaign']->storeCampaign();
             $post_campaign_bank['store_mpo']->storeMpo();
             $post_campaign_bank['store_invoice']->storeInvoice();
@@ -390,6 +406,7 @@ class CampaignsController extends Controller
             $store_invoice_details->storeInvoiceDetails();
             $store_mpo_details = new StoreMpoDetails($post_campaign_bank['mpo_id'], $this->broadcaster_id, $this->agency_id);
             $store_mpo_details->storeMpoDetails();
+            $this->updateAdslotAndFilePositions($post_campaign_bank['preselected_adslots']);
         });
     }
 
@@ -423,6 +440,29 @@ class CampaignsController extends Controller
                     'adslot_ids' => $adslot_ids,
                     'total_spent' => $total_spent
                 ];
+    }
+
+    public function updateAdslotAndFilePositions($preselected_adslots)
+    {
+        foreach ($preselected_adslots as $preselected_adslot){
+            if(!empty($preselected_adslot->filePosition_id)){
+                $adslot_file_position = new AdslotFilePositionService($preselected_adslot->adslot_id, $this->broadcaster_id);
+                $adslot_file_position->updateAdslotFilePosition();
+            }
+            $get_slots = Adslot::where('id', $preselected_adslot->adslot_id)->first();
+            $time_difference = $get_slots->time_difference;
+            $time_used = $get_slots->time_used;
+            $time = $preselected_adslot->time;
+            $new_time_used = $time_used + $time;
+            if($time_difference === $new_time_used){
+                $slot_status = 1;
+            }else{
+                $slot_status = 0;
+            }
+            $get_slots->time_used = $new_time_used;
+            $get_slots->is_available = $slot_status;
+            $get_slots->save();
+        }
     }
 
 }

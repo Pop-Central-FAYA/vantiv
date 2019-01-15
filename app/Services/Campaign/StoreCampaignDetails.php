@@ -32,7 +32,6 @@ class StoreCampaignDetails
 
     public function storeCampaingDetails()
     {
-
         $campaign_details = new CampaignDetail();
         $campaign_details->id = uniqid();
         $campaign_details->campaign_id = $this->campaign_id;
@@ -41,7 +40,7 @@ class StoreCampaignDetails
         $campaign_details->brand = $this->campaign_general_information->brand;
         $campaign_details->start_date = date('Y-m-d', strtotime($this->campaign_general_information->start_date));
         $campaign_details->stop_date = date('Y-m-d', strtotime($this->campaign_general_information->end_date));
-        $campaign_details->name = $this->campaign_general_information->name;
+        $campaign_details->name = $this->campaign_general_information->campaign_name;
         $campaign_details->product = $this->campaign_general_information->product;
         $campaign_details->day_parts = "'". implode("','" ,$this->campaign_general_information->dayparts) . "'";
         $campaign_details->target_audience =  "'". implode("','" ,$this->campaign_general_information->target_audience) . "'";

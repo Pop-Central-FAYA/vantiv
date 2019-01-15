@@ -23,4 +23,6 @@ class ClassMessages
     const EMPTY_CART_MESSAGE = 'Your cart is empty';
 
     const REMOVE_PRESELECTED_ADSLOT = 'Adslot removed successfully';
+
+    const CAMPAIGN_SUCCESS_MESSAGE = 'Campaign created successfully, please review and submit';
 }

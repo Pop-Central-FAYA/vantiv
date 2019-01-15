@@ -19,4 +19,6 @@ class MpoDetail extends Model
         'id', 'mpo_id', 'broadcaster_id', 'is_mpo_accepted', 'discount', 'status',
         'agency_id', 'agency_broadcaster'
     ];
+
+    public $timestamps = false;
 }

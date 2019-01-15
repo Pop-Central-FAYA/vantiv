@@ -22,4 +22,6 @@ class CampaignDetail extends Model
         'sub_industry','adslots', 'region', 'walkins_id', 'adslots_id',
         'agency', 'agency_broadcaster', 'campaign_id'
     ];
+
+    public $timestamps = false;
 }
