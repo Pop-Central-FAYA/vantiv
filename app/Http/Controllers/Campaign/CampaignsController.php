@@ -15,6 +15,7 @@ use Vanguard\Libraries\Enum\ClassMessages;
 use Vanguard\Libraries\Utilities;
 use Vanguard\Models\Adslot;
 use Vanguard\Models\PreselectedAdslot;
+use Vanguard\Models\Upload;
 use Vanguard\Services\Adslot\AdslotFilterResult;
 use Vanguard\Services\Adslot\PreselectedAdslotService;
 use Vanguard\Services\Adslot\RatecardService;
@@ -349,7 +350,6 @@ class CampaignsController extends Controller
         $client_details_object = new ClientDetails(null, $user_id);
         $preselected_adslots = $preselected_adslot_object->getPreselectedSlots();
         $adslot_ids = $preselected_adslot_object->getAdslotIdFromPreselectedAdslot();
-        $count_adslots = $preselected_adslot_object->countPreselectedAdslot();
         $client_details = $client_details_object->run();
         $total_spent = $preselected_adslot_object->sumTotalPriceGroupedByBroadcaster();
         $campaign_id = uniqid();
@@ -372,10 +372,11 @@ class CampaignsController extends Controller
                                                                 $campaign_id, $invoice_id, $mpo_id, $payment_id, $invoice_number, $adslot_ids, $total_spent);
             try{
                 $this->storeBroadcasterCampaignsInformation($post_campaign_bank, $user_id, $client_details, $broadcaster_details, $now);
-                return 'success';
             }catch (\Exception $exception){
                 return 'error';
             }
+            Session::forget('campaign_information');
+            return 'success';
 
         }else{
 
@@ -407,6 +408,8 @@ class CampaignsController extends Controller
             $store_mpo_details = new StoreMpoDetails($post_campaign_bank['mpo_id'], $this->broadcaster_id, $this->agency_id);
             $store_mpo_details->storeMpoDetails();
             $this->updateAdslotAndFilePositions($post_campaign_bank['preselected_adslots']);
+            PreselectedAdslot::where('user_id', $user_id)->delete();
+            Upload::where('user_id', $user_id)->delete();
         });
     }
 
