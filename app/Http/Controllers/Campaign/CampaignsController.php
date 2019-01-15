@@ -23,9 +23,11 @@ use Vanguard\Services\Campaign\StoreCampaign;
 use Vanguard\Services\Campaign\StoreCampaignDetails;
 use Vanguard\Services\Campaign\StoreCampaignGeneralInformation;
 use Vanguard\Services\Campaign\StoreInvoice;
+use Vanguard\Services\Campaign\StoreInvoiceDetails;
 use Vanguard\Services\Campaign\storeMpo;
 use Vanguard\Services\Campaign\StoreMpoDetails;
 use Vanguard\Services\Campaign\StorePayment;
+use Vanguard\Services\Campaign\StorePaymentDetails;
 use Vanguard\Services\Campaign\StoreSelectedAdslot;
 use Vanguard\Services\Client\AllClient;
 use Vanguard\Services\Campaign\AllCampaign;
@@ -349,31 +351,46 @@ class CampaignsController extends Controller
         $store_mpo = new storeMpo($mpo_id, $campaign_id, $invoice_number, $campaign_reference);
         $store_invoice = new StoreInvoice($invoice_id, $campaign_id, $campaign_reference, $payment_id, $invoice_number);
         $store_payment = new StorePayment($payment_id, $campaign_id, $request->total, $now, $campaign_reference, $this->campaign_general_information->budget);
+
         if($this->broadcaster_id){
-            $store_campaign->storeCampaign();
-            $campaign_details = new StoreCampaignDetails($campaign_id, $user_id, $this->broadcaster_id, $this->agency_id,
-                $this->campaign_general_information, $client_details->id,
-                $broadcaster_details, $now, $adslot_ids);
-            $campaign_details->storeCampaingDetails();
-            foreach ($preselected_adslots as $preselected_adslot){
-                $selected_adslot = new StoreSelectedAdslot($campaign_id, $preselected_adslot, $user_id, $now, $this->agency_id, $this->broadcaster_id);
-                $selected_adslot->storeSelectedAdslot();
+            $post_campaign_bank = $this->collectInformationNeeded($store_campaign, $store_mpo, $store_invoice, $store_payment, $preselected_adslots,
+                                                                $campaign_id, $invoice_id, $mpo_id, $payment_id, $invoice_number, $adslot_ids, $total_spent);
+            try{
+                $this->storeBroadcasterCampaignsInformation($post_campaign_bank, $user_id, $client_details, $broadcaster_details, $now);
+            }catch (\Exception $exception){
+                dd($exception);
             }
-            $store_mpo->storeMpo();
-            $store_invoice->storeInvoice();
-            $store_payment->storePayment();
 
         }else{
 
         }
-        $mpo_details = new StoreMpoDetails();
     }
 
-    public function storeBroadcasterCampaignsInformation($campaign_id, $user_id, $client_details, $broadcaster_details, $now, $adslot_ids, $campaign)
+    public function storeBroadcasterCampaignsInformation($post_campaign_bank, $user_id, $client_details, $broadcaster_details, $now)
     {
-        $campaign_details = new StoreCampaignDetails($campaign_id, $user_id, $this->broadcaster_id, $this->agency_id,
-            $this->campaign_general_information, $client_details->id,
-            $broadcaster_details, $now, $adslot_ids);
+        \DB::transaction(function () use($post_campaign_bank, $user_id, $client_details, $broadcaster_details, $now) {
+            $post_campaign_bank['store_campaign']->storeCampaign();
+            $post_campaign_bank['store_mpo']->storeMpo();
+            $post_campaign_bank['store_invoice']->storeInvoice();
+            $post_campaign_bank['store_payment']->storePayment();
+            $campaign_details = new StoreCampaignDetails($post_campaign_bank['campaign_id'], $user_id, $this->broadcaster_id, $this->agency_id,
+                $this->campaign_general_information, $client_details->id,
+                $broadcaster_details, $now, $post_campaign_bank['adslot_ids']);
+            $campaign_details->storeCampaingDetails();
+            foreach ($post_campaign_bank['preselected_adslots'] as $preselected_adslot){
+                $selected_adslot = new StoreSelectedAdslot($post_campaign_bank['campaign_id'], $preselected_adslot, $user_id, $now,
+                    $this->agency_id, $this->broadcaster_id);
+                $selected_adslot->storeSelectedAdslot();
+            }
+            $store_payment_details = new StorePaymentDetails($post_campaign_bank['payment_id'], $this->broadcaster_id, $this->agency_id,$client_details->id,
+                $this->campaign_general_information->campaign_budget,$post_campaign_bank['total_spent'], $now);
+            $store_payment_details->storePaymentDetails();
+            $store_invoice_details = new StoreInvoiceDetails($post_campaign_bank['invoice_id'], $post_campaign_bank['invoice_number'],
+                $this->broadcaster_id,$this->agency_id, $user_id, $client_details->id, $post_campaign_bank['total_spent']);
+            $store_invoice_details->storeInvoiceDetails();
+            $store_mpo_details = new StoreMpoDetails($post_campaign_bank['mpo_id'], $this->broadcaster_id, $this->agency_id);
+            $store_mpo_details->storeMpoDetails();
+        });
     }
 
     public function storeAgencyCampaignInformation()
@@ -387,6 +404,25 @@ class CampaignsController extends Controller
             $this->agency_id, $this->campaign_general_information->start_date, $this->campaign_general_information->end_date);
         $adslots_filter_result = $adslots_filter_result->adslotFilterResult();
         return $adslots_filter_result;
+    }
+
+    public function collectInformationNeeded($store_campaign,$store_mpo,$store_invoice,$store_payment,$preselected_adslots,$campaign_id,$invoice_id,$mpo_id,
+                                             $payment_id,$invoice_number,$adslot_ids,$total_spent)
+    {
+        return $post_campaign_bank = [
+                    'store_campaign' => $store_campaign,
+                    'store_mpo' => $store_mpo,
+                    'store_invoice' => $store_invoice,
+                    'store_payment' => $store_payment,
+                    'preselected_adslots' => $preselected_adslots,
+                    'campaign_id' => $campaign_id,
+                    'invoice_id' => $invoice_id,
+                    'mpo_id' => $mpo_id,
+                    'payment_id' => $payment_id,
+                    'invoice_number' => $invoice_number,
+                    'adslot_ids' => $adslot_ids,
+                    'total_spent' => $total_spent
+                ];
     }
 
 }
