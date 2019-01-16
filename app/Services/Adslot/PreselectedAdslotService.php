@@ -193,4 +193,14 @@ class PreselectedAdslotService
                         ->get();
 
     }
+
+    public function groupSumDurationByAdslotId()
+    {
+        return Utilities::switch_db('api')->table('preselected_adslots')
+                            ->select('adslot_id')
+                            ->selectRaw('SUM(time) AS summed_time')
+                            ->where('user_id', $this->user_id)
+                            ->groupBy('adslot_id')
+                            ->get();
+    }
 }

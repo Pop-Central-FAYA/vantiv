@@ -404,7 +404,7 @@ class CampaignsController extends Controller
         $store_payment = new StorePayment($payment_id, $campaign_id, $total_spent, $now, $campaign_reference, $this->campaign_general_information->campaign_budget);
         $post_campaign_bank = $this->collectInformationNeeded($store_campaign, $store_mpo, $store_invoice, $store_payment, $preselected_adslots,
             $campaign_id, $invoice_id, $mpo_id, $payment_id, $invoice_number, $adslot_ids, $total_spent, $user_id, $campaign_reference);
-        $check_time_adslots = Utilities::fetchTimeInCart($user_id, $this->broadcaster_id);
+        $check_time_adslots = $this->fetchTimeRemainders($user_id, $this->broadcaster_id);
         foreach ($check_time_adslots as $check_time_adslot){
             if($check_time_adslot['initial_time_left'] < $check_time_adslot['time_bought']){
                 $msg = 'You cannot proceed with the campaign creation because '.$check_time_adslot['from_to_time'].' for '.$check_time_adslot['broadcaster_name'].' isn`t available again';
@@ -466,7 +466,7 @@ class CampaignsController extends Controller
             return redirect()->back();
         }
         foreach ($preselected_adslot_groups as $preselected_adslot_group){
-            $check_time_adslots = Utilities::fetchTimeInCart($user_id, $preselected_adslot_group->broadcaster_id);
+            $check_time_adslots = $this->fetchTimeRemainders($user_id, $preselected_adslot_group->broadcaster_id);
             foreach ($check_time_adslots as $check_time_adslot){
                 if($check_time_adslot['initial_time_left'] < $check_time_adslot['time_bought']){
                     $msg = 'You cannot proceed with the campaign creation because '.$check_time_adslot['from_to_time'].' for
@@ -577,6 +577,28 @@ class CampaignsController extends Controller
             $get_slots->is_available = $slot_status;
             $get_slots->save();
         }
+    }
+
+    public function fetchTimeRemainders($user_id, $broadcaster_id)
+    {
+        $time_remainders = [];
+        $preselected_adslots = new PreselectedAdslotService($user_id, null, null, null, null);
+        $preselected_adslo_times = $preselected_adslots->groupSumDurationByAdslotId();
+        $broadcaster_details_object = new BroadcasterDetails($broadcaster_id);
+        foreach($preselected_adslo_times as $preselected_adslo_time){
+            $check_adslot_space = Adslot::where('id', $preselected_adslo_time->adslot_id)->first();
+            $time_left = (integer)$check_adslot_space->time_difference - (integer)$check_adslot_space->time_used;
+            $broadcaster_details = $broadcaster_details_object->getBroadcasterDetails();
+            $time_remainders[] = [
+                'initial_time_left' => $time_left,
+                'time_bought' => $preselected_adslo_time->summed_time,
+                'adslot_id' => $preselected_adslo_time->adslot_id,
+                'broadcaster_name' => $broadcaster_details->brand,
+                'from_to_time' => $check_adslot_space->from_to_time,
+            ];
+        }
+
+        return $time_remainders;
     }
 
 }
