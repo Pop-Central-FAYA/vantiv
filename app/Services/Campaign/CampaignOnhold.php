@@ -35,7 +35,7 @@ class CampaignOnhold
                         ])
                         ->when($this->broadcaster_id, function($query) {
                             return $query->where([
-                                ['campaignDetails.broadcaster_id', $this->broadcaster_id],
+                                ['campaignDetails.broadcaster', $this->broadcaster_id],
                                 ['campaignDetails.agency', '']
                             ]);
                         })

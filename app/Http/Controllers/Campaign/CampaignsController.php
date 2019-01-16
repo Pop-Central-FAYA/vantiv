@@ -339,7 +339,7 @@ class CampaignsController extends Controller
             if($this->broadcaster_id){
                 return redirect()->route('broadcaster.campaign.hold');
             }else{
-                return redirect()->route('agency.campaign.hold');
+                return redirect()->route('agency.campaigns.hold');
             }
         }else{
             Session::flash('error', ClassMessages::CAMPAIGN_ERROR_MESSAGE);
@@ -397,7 +397,7 @@ class CampaignsController extends Controller
         $adslot_ids = $preselected_adslot_object->getAdslotIdFromPreselectedAdslot();
         $total_spent = $preselected_adslot_object->sumTotalPriceGroupedByBroadcaster();
         $broadcaster_details = new BroadcasterDetails($this->broadcaster_id);
-        $broadcaster_details = $broadcaster_details->getDetailsOfBroadcaster();
+        $broadcaster_details = $broadcaster_details->getBroadcasterDetails();
         $store_campaign = new StoreCampaign($campaign_id, $now, $campaign_reference);
         $store_mpo = new storeMpo($mpo_id, $campaign_id, $invoice_number, $campaign_reference);
         $store_invoice = new StoreInvoice($invoice_id, $campaign_id, $campaign_reference, $payment_id, $invoice_number);
@@ -481,7 +481,7 @@ class CampaignsController extends Controller
         try{
             $this->storeAgencyCampaignInformation($campaign_data_bank, $now, $preselected_adslot_groups, $client_details);
         }catch (\Exception $exception){
-            dd($exception);
+            return 'error';
         }
 
     }
