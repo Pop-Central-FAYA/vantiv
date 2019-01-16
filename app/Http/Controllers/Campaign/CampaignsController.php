@@ -20,6 +20,7 @@ use Vanguard\Services\Adslot\AdslotFilterResult;
 use Vanguard\Services\Adslot\PreselectedAdslotService;
 use Vanguard\Services\Adslot\RatecardService;
 use Vanguard\Services\Broadcaster\BroadcasterDetails;
+use Vanguard\Services\Campaign\CampaignOnhold;
 use Vanguard\Services\Campaign\DeleteTemporaryUpload;
 use Vanguard\Services\Campaign\StoreCampaign;
 use Vanguard\Services\Campaign\StoreCampaignDetails;
@@ -335,12 +336,34 @@ class CampaignsController extends Controller
             $description = 'Campaign created by '.Session::get('broadcaster_id').' for '.$user_id;
             Api::saveActivity($user_id, $description);
             Session::flash('success', ClassMessages::CAMPAIGN_SUCCESS_MESSAGE);
-            return redirect()->route('broadcaster.campaign.hold');
+            if($this->broadcaster_id){
+                return redirect()->route('broadcaster.campaign.hold');
+            }else{
+                return redirect()->route('agency.campaign.hold');
+            }
         }else{
             Session::flash('error', ClassMessages::CAMPAIGN_ERROR_MESSAGE);
             return redirect()->back();
         }
 
+    }
+
+    public function getCampaignOnHold()
+    {
+        $campaigns_onhold = new CampaignOnhold($this->broadcaster_id, $this->agency_id);
+        $campaigns_onhold = $campaigns_onhold->getCampaignsOnhold();
+        $campaigns = Utilities::getCampaignDatatablesforCampaignOnHold($campaigns_onhold);
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $col = new Collection($campaigns);
+        $perPage = 10;
+        $currentPageSearchResults = $col->slice(($currentPage - 1) * $perPage, $perPage)->all();
+        $campaigns = new LengthAwarePaginator($currentPageSearchResults, count($col), $perPage);
+        $campaigns->setPath('data');
+        if($this->broadcaster_id){
+            return view('campaigns.broadcaster.campaign_onhold', compact('campaigns'));
+        }else{
+            return view('campaigns.agency.campaign_onhold', compact('campaigns'));
+        }
     }
 
     public function postCampaignOnHold($user_id)
@@ -361,7 +384,6 @@ class CampaignsController extends Controller
             $this->agencyCampaignOnHold($campaign_id, $mpo_id, $payment_id, $invoice_id, $campaign_reference,
                                             $invoice_number, $now, $user_id, $client_details);
         }
-        dd('success');
         Session::forget('campaign_information');
         return 'success';
 

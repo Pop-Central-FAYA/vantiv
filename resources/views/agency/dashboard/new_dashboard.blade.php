@@ -27,7 +27,7 @@
 
             <div class="column col_3">
                 <span class="weight_medium small_faint uppercased">Campaigns On Hold</span>
-                <h3><a href="{{ route('agency.campaigns_onhold') }}" style="color: red;">{{ count($campaigns_on_hold) }}</a></h3>
+                <h3><a href="{{ route('agency.campaigns.hold') }}" style="color: red;">{{ count($campaigns_on_hold) }}</a></h3>
             </div>
 
             <div class="column col_3">

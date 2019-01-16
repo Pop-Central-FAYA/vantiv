@@ -116,6 +116,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/checkout/{id}', 'Campaign\CampaignsController@checkout')->name('campaign.checkout');
         Route::get('/preselected-adslot/remove/{id}', 'Campaign\CampaignsController@removePreselectedAdslot')->name('preselected_adslot.remove');
         Route::post('/campaign-onhold/{id}', 'Campaign\CampaignsController@postCampaign')->name('campaign.post_onhold');
+        Route::get('/campaign-on-hold/broadcaster/data', 'Campaign\CampaignsController@getCampaignOnHold')->name('broadcaster.campaign.hold');
+        Route::get('/campaign-on-hold/agency/data', 'Campaign\CampaignsController@getCampaignOnHold')->name('agency.campaigns.hold');
 
         Route::get('/create/step3_1/{id}', 'Broadcaster\CampaignsController@storeStep3_1')->name('campaign.create3_1');
         Route::get('/create/step4/{id}/{broadcaster}/{start_date}/{end_date}', 'Broadcaster\CampaignsController@createStep4')->name('campaign.create4');
@@ -136,7 +138,6 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::get('/compliance-graph/filter/broadcaster', 'Broadcaster\CampaignsController@complianceFilter')->name('broadcaster.campaign_details.compliance');
 
-        Route::get('/campaign-on-hold/data', 'Broadcaster\CampaignsController@getCampaignOnHold')->name('broadcaster.campaign.hold');
 
         Route::post('/update-campaign/{campaign_id}', 'Broadcaster\CampaignsController@submitCampaignWithOtherPaymentOption')->name('broadcaster.campaign.update');
 
@@ -327,7 +328,7 @@ Route::group(['middleware' => 'auth'], function () {
 
             Route::post('/update-budget', 'Agency\CampaignsController@updateBudget')->name('update.budget');
 
-            Route::get('/on-hold', 'Agency\CampaignsController@campaignsOnHold')->name('agency.campaigns_onhold');
+
 
             Route::post('/submit-update/{campaign_id}', 'Agency\CampaignsController@submitCampaignForProcessing')->name('agency.campaign.update');
 
