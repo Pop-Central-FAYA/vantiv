@@ -23,4 +23,12 @@ class ClassMessages
     const EMPTY_CART_MESSAGE = 'Your cart is empty';
 
     const REMOVE_PRESELECTED_ADSLOT = 'Adslot removed successfully';
+
+    const CAMPAIGN_SUCCESS_MESSAGE = 'Campaign created successfully, please review and submit';
+
+    const CAMPAIGN_ERROR_MESSAGE = 'There was problem creating campaign';
+
+    const WALLET_NOT_EXIST = 'Wallet does not exist for this agency';
+
+    const INSUFFICIENT_FUND = 'Insufficient fund, please fund your wallet to complete campaign creation';
 }

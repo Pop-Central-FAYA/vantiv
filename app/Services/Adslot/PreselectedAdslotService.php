@@ -31,6 +31,12 @@ class PreselectedAdslotService
                                     ->when($this->request && $this->request->adslot_id, function ($query) {
                                         return $query->where('adslot_id', $this->request->adslot_id);
                                     })
+                                    ->when(!$this->request && $this->broadcaster_id, function($query) {
+                                        return $query->where('broadcaster_id', $this->broadcaster_id);
+                                    })
+                                    ->when(!$this->request && $this->agency_id, function($query) {
+                                        return $query->where('agency_id', $this->agency_id);
+                                    })
                                     ->when($this->request && $this->broadcaster_id, function($query) {
                                         return $query->where('broadcaster_id', $this->broadcaster_id);
                                     })
@@ -151,8 +157,50 @@ class PreselectedAdslotService
         return $preselected_adslot_details;
     }
 
+    public function getAdslotIdFromPreselectedAdslot()
+    {
+        $adslot_ids = [];
+        $preselected_adslots = $this->getPreselectedSlots();
+        foreach ($preselected_adslots as $preselected_adslot){
+            $adslot_ids[] = $preselected_adslot->adslot_id;
+        }
+        return $adslot_ids;
+    }
+
+    public function sumTotalPriceGroupedByBroadcaster()
+    {
+        return Utilities::switch_db('api')->table('preselected_adslots')
+            ->where('user_id', $this->user_id)
+            ->groupBy('broadcaster_id')
+            ->sum('total_price');
+
+    }
+
     public function countPreselectedAdslot()
     {
         return count($this->getPreselectedSlots());
+    }
+
+    public function groupPreselectedAdslotByBoradscaster()
+    {
+        return Utilities::switch_db('api')->table('preselected_adslots')
+                        ->selectRaw('SUM(total_price) AS total, COUNT(id) AS total_slot, broadcaster_id')
+                        ->where([
+                            ['user_id', $this->user_id],
+                            ['agency_id', $this->agency_id]
+                        ])
+                        ->groupBy('broadcaster_id')
+                        ->get();
+
+    }
+
+    public function groupSumDurationByAdslotId()
+    {
+        return Utilities::switch_db('api')->table('preselected_adslots')
+                            ->select('adslot_id')
+                            ->selectRaw('SUM(time) AS summed_time')
+                            ->where('user_id', $this->user_id)
+                            ->groupBy('adslot_id')
+                            ->get();
     }
 }

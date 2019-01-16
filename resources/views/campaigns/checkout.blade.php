@@ -74,6 +74,7 @@
                         <div class="column col_4">
                             <a href="{{ route('campaign.adslot_selection', ['id' => $id, 'broadcaster' => $broadcaster, 'start_date' => current($campaign_dates_for_first_week), 'end_date' => end($campaign_dates_for_first_week)]) }}" class="btn uppercased _white _go_back"><span class=""></span> Back</a>
                         </div>
+
                     @else
                         <div class="column col_4">
                             <a href="{{ route('campaign.broadcaster_select', ['id' => $id]) }}" class="btn uppercased _white _go_back"><span class=""></span> Back</a>
@@ -117,7 +118,7 @@
         <h2 class="border_bottom align_center">Complete Purchase</h2>
 
         <div class="padd mb4 pt">
-            <form method="POST" action="{{ route('submit.campaign', ['id' => $id]) }}">
+            <form method="POST" action="{{ route('campaign.post_onhold', ['id' => $id]) }}">
                 {{ csrf_field() }}
                 <h3 class="weight_medium uppercased">Your campaign will be created in the "ON HOLD" mode, please review and submit to the broadcaster in order to start processing</h3>
                 <p class="small_faint mb4"></p>

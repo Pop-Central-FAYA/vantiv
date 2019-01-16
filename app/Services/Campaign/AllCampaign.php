@@ -46,7 +46,7 @@ class AllCampaign
                     }
                 }else{
                     if($campaigns['status'] === 'on_hold'){
-                        return '<a href="'.route('agency.campaigns_onhold').'">'.$campaigns['name'].'</a>';
+                        return '<a href="'.route('agency.campaigns.hold').'">'.$campaigns['name'].'</a>';
                     }else{
                         return '<a href="'.route('agency.campaign.details', ['id' => $campaigns['campaign_id']]).'">'.$campaigns['name'].'</a>';
                     }

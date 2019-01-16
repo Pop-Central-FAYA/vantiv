@@ -18,4 +18,6 @@ class Mpo extends Model
     protected $fillable = [
         'id', 'campaign_id', 'campaign_reference', 'invoice_number', 'status'
     ];
+
+    public $timestamps = false;
 }

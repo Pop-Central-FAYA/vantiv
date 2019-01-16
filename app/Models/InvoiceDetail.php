@@ -19,4 +19,6 @@ class InvoiceDetail extends Model
         'id', 'invoice_id', 'user_id', 'broadcaster_id', 'invoice_number', 'actual_amount_paid',
         'refunded_amount', 'status', 'walkins_id', 'agency_id', 'agency_broadcaster'
     ];
+
+    public $timestamps = false;
 }

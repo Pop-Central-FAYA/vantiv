@@ -18,4 +18,5 @@ class Campaign extends Model
     protected $fillable = [
         'id', 'campaign_status', 'reference'
     ];
+    public $timestamps = false;
 }

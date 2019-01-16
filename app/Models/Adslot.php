@@ -11,6 +11,8 @@ class Adslot extends Model
     protected $primaryKey = 'id';
     protected $keyType = 'string';
 
+    public $timestamps = false;
+
     public function files()
     {
         return $this->hasMany(SelectedAdslot::class);

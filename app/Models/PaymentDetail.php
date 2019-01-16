@@ -19,4 +19,6 @@ class PaymentDetail extends Model
         'id', 'payment_id', 'payment_method', 'amount', 'payment_status', 'status',
         'broadcaster', 'walkins_id', 'agency_id', 'agency_broadcaster', 'campaign_budget'
     ];
+
+    public $timestamps = false;
 }

@@ -338,6 +338,7 @@ class CampaignsController extends Controller
         foreach ($preselected_adslots as $preselected_adslot) {
             $ads[] = $preselected_adslot->adslot_id;
         }
+
         //come back here
         $group_data = $api_db->select("SELECT SUM(total_price) AS total, COUNT(id) AS total_slot, broadcaster_id FROM preselected_adslots
                                           WHERE user_id = '$id' AND agency_id = '$agency_id' GROUP BY broadcaster_id");

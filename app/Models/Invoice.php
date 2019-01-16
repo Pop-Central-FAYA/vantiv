@@ -18,4 +18,6 @@ class Invoice extends Model
     protected $fillable = [
         'id', 'campaign_id', 'campaign_reference', 'invoice_number', 'status', 'payment_id'
     ];
+
+    public $timestamps = false;
 }
