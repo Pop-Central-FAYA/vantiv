@@ -527,7 +527,12 @@ class Utilities {
                                                   FROM brand_client as b_c INNER JOIN brands as b ON b.id = b_c.brand_id where b.id = '$id' AND b_c.client_id = '$client_id'");
     }
 
-    public function getBroadcasterDetails($broadcaster_id)
+    public static function getBroadcasterDetails($broadcaster_id)
+    {
+        return Utilities::switch_db('api')->select("SELECT * from broadcasters where id = '$broadcaster_id'");
+    }
+
+    public function getDetailsOfBroadcaster($broadcaster_id)
     {
         $broadcaster_details = new BroadcasterDetails($broadcaster_id);
         $broadcaster_details = $broadcaster_details->getBroadcasterDetails();

@@ -29,5 +29,7 @@ class StoreInvoice
         $invoice->campaign_reference = $this->campaign_reference;
         $invoice->invoice_number = $this->invoice_number;
         $invoice->payment_id = $this->payment_id;
+        $invoice->save();
+        return $invoice;
     }
 }

@@ -163,7 +163,7 @@ class CampaignsController extends Controller
         }
         return view('campaigns.media_content')
                     ->with('id', $id)
-                    ->with('broadcaster_details', $this->broadcaster_id ? $this->utilities->getBroadcasterDetails($this->broadcaster_id) : '')
+                    ->with('broadcaster_details', $this->broadcaster_id ? $this->utilities->getDetailsOfBroadcaster($this->broadcaster_id) : '')
                     ->with('radio', $radio_details_and_uploads['radio'])
                     ->with('tv', $tv_details_and_uploads['tv'])
                     ->with('tv_uploads', $tv_details_and_uploads['tv_upload_details'])
@@ -218,7 +218,7 @@ class CampaignsController extends Controller
         }
         $preselected_slots_service = new PreselectedAdslotService($id, null, null, null, null);
         $file_position_service = new Fileposition($broadcaster_id);
-        $broadcaster_details = $this->utilities->getBroadcasterDetails($broadcaster_id);
+        $broadcaster_details = $this->utilities->getDetailsOfBroadcaster($broadcaster_id);
         $campaign_week = $this->utilities->getStartAndEndDateWithTheWeek($this->campaign_general_information->start_date,
                                                                         $this->campaign_general_information->end_date);
         $media_details = $this->utilities->getMediaUploadDetails($id, null);
@@ -233,7 +233,7 @@ class CampaignsController extends Controller
         $perPage = 100;
         $currentPageSearchResults = $col->slice(($currentPage - 1) * $perPage, $perPage)->all();
         $entries = new LengthAwarePaginator($currentPageSearchResults, count($col), $perPage);
-        $entries->setPath('/agency/campaigns/campaign/step4/'.$id.'/'.$this->broadcaster_id);
+        $entries->setPath('/campaign/adslot-selection/'.$id.'/'.$this->broadcaster_id);
 
         return view('campaigns.adslot_selection')
             ->with('ratecards', $entries)
@@ -328,30 +328,23 @@ class CampaignsController extends Controller
         return redirect()->back();
     }
 
-    Public function postCampaign(Request $request, $user_id)
+    Public function postCampaign($user_id)
     {
-        $save_campaign = $this->postCampaignOnHold($request, $user_id);
+        $save_campaign = $this->postCampaignOnHold($user_id);
         if($save_campaign === 'success'){
             $description = 'Campaign created by '.Session::get('broadcaster_id').' for '.$user_id;
             Api::saveActivity($user_id, $description);
             Session::flash('success', ClassMessages::CAMPAIGN_SUCCESS_MESSAGE);
             return redirect()->route('broadcaster.campaign.hold');
         }else{
-            Session::flash('error', 'There was problem creating campaign');
+            Session::flash('error', ClassMessages::CAMPAIGN_ERROR_MESSAGE);
             return redirect()->back();
         }
 
     }
 
-    public function postCampaignOnHold(Request $request, $user_id)
+    public function postCampaignOnHold($user_id)
     {
-        $preselected_adslot_object = new PreselectedAdslotService($user_id, $this->broadcaster_id, $this->agency_id,
-                                                        null,null);
-        $client_details_object = new ClientDetails(null, $user_id);
-        $preselected_adslots = $preselected_adslot_object->getPreselectedSlots();
-        $adslot_ids = $preselected_adslot_object->getAdslotIdFromPreselectedAdslot();
-        $client_details = $client_details_object->run();
-        $total_spent = $preselected_adslot_object->sumTotalPriceGroupedByBroadcaster();
         $campaign_id = uniqid();
         $mpo_id = uniqid();
         $payment_id = uniqid();
@@ -359,63 +352,157 @@ class CampaignsController extends Controller
         $campaign_reference = Utilities::generateReference();
         $invoice_number = Utilities::generateReference();
         $now = strtotime(Carbon::now('Africa/Lagos'));
-        $broadcaster_details = new BroadcasterDetails($this->broadcaster_id);
-        $broadcaster_details = $broadcaster_details->getBroadcasterDetails();
+        $client_details_object = new ClientDetails(null, $user_id);
+        $client_details = $client_details_object->run();
+        if($this->broadcaster_id){
+            $this->broadcasterCampaignOnHold($campaign_id, $mpo_id, $payment_id, $invoice_id, $campaign_reference,
+                                                $invoice_number, $now, $user_id, $client_details);
+        }else{
+            $this->agencyCampaignOnHold($campaign_id, $mpo_id, $payment_id, $invoice_id, $campaign_reference,
+                                            $invoice_number, $now, $user_id, $client_details);
+        }
+        dd('success');
+        Session::forget('campaign_information');
+        return 'success';
 
+    }
+
+    public function broadcasterCampaignOnHold($campaign_id, $mpo_id, $payment_id, $invoice_id, $campaign_reference, $invoice_number, $now, $user_id, $client_details)
+    {
+        $preselected_adslot_object = new PreselectedAdslotService($user_id, $this->broadcaster_id, null,
+            null,null);
+        $preselected_adslots = $preselected_adslot_object->getPreselectedSlots();
+        $adslot_ids = $preselected_adslot_object->getAdslotIdFromPreselectedAdslot();
+        $total_spent = $preselected_adslot_object->sumTotalPriceGroupedByBroadcaster();
+        $broadcaster_details = new BroadcasterDetails($this->broadcaster_id);
+        $broadcaster_details = $broadcaster_details->getDetailsOfBroadcaster();
         $store_campaign = new StoreCampaign($campaign_id, $now, $campaign_reference);
         $store_mpo = new storeMpo($mpo_id, $campaign_id, $invoice_number, $campaign_reference);
         $store_invoice = new StoreInvoice($invoice_id, $campaign_id, $campaign_reference, $payment_id, $invoice_number);
-        $store_payment = new StorePayment($payment_id, $campaign_id, $request->total, $now, $campaign_reference, $this->campaign_general_information->campaign_budget);
-
-        if($this->broadcaster_id){
-            $post_campaign_bank = $this->collectInformationNeeded($store_campaign, $store_mpo, $store_invoice, $store_payment, $preselected_adslots,
-                                                                $campaign_id, $invoice_id, $mpo_id, $payment_id, $invoice_number, $adslot_ids, $total_spent);
-            try{
-                $this->storeBroadcasterCampaignsInformation($post_campaign_bank, $user_id, $client_details, $broadcaster_details, $now);
-            }catch (\Exception $exception){
-                return 'error';
+        $store_payment = new StorePayment($payment_id, $campaign_id, $total_spent, $now, $campaign_reference, $this->campaign_general_information->campaign_budget);
+        $post_campaign_bank = $this->collectInformationNeeded($store_campaign, $store_mpo, $store_invoice, $store_payment, $preselected_adslots,
+            $campaign_id, $invoice_id, $mpo_id, $payment_id, $invoice_number, $adslot_ids, $total_spent, $user_id, $campaign_reference);
+        $check_time_adslots = Utilities::fetchTimeInCart($user_id, $this->broadcaster_id);
+        foreach ($check_time_adslots as $check_time_adslot){
+            if($check_time_adslot['initial_time_left'] < $check_time_adslot['time_bought']){
+                $msg = 'You cannot proceed with the campaign creation because '.$check_time_adslot['from_to_time'].' for '.$check_time_adslot['broadcaster_name'].' isn`t available again';
+                \Session::flash('info', $msg);
+                return back();
             }
-            Session::forget('campaign_information');
-            return 'success';
-
-        }else{
-
+        }
+        try{
+            $this->storeBroadcasterCampaignsInformation($post_campaign_bank,$client_details,$broadcaster_details,$now);
+        }catch (\Exception $exception){
+            return 'error';
         }
     }
 
-    public function storeBroadcasterCampaignsInformation($post_campaign_bank, $user_id, $client_details, $broadcaster_details, $now)
+    public function storeBroadcasterCampaignsInformation($post_campaign_bank, $client_details, $broadcaster_details, $now)
     {
-        Utilities::switch_db('api')->transaction(function () use($post_campaign_bank, $user_id, $client_details, $broadcaster_details, $now) {
+        Utilities::switch_db('api')->transaction(function () use($post_campaign_bank, $client_details, $broadcaster_details, $now) {
             $post_campaign_bank['store_campaign']->storeCampaign();
             $post_campaign_bank['store_mpo']->storeMpo();
             $post_campaign_bank['store_invoice']->storeInvoice();
             $post_campaign_bank['store_payment']->storePayment();
-            $campaign_details = new StoreCampaignDetails($post_campaign_bank['campaign_id'], $user_id, $this->broadcaster_id, $this->agency_id,
-                $this->campaign_general_information, $client_details->id,
-                $broadcaster_details, $now, $post_campaign_bank['adslot_ids']);
+            $campaign_details = new StoreCampaignDetails($post_campaign_bank['campaign_id'], $post_campaign_bank['user_id'], $this->broadcaster_id, null,
+                $this->campaign_general_information, $client_details->id,$broadcaster_details->channel_id, $now, $post_campaign_bank['adslot_ids'],null);
             $campaign_details->storeCampaingDetails();
             foreach ($post_campaign_bank['preselected_adslots'] as $preselected_adslot){
-                $selected_adslot = new StoreSelectedAdslot($post_campaign_bank['campaign_id'], $preselected_adslot, $user_id, $now,
-                    $this->agency_id, $this->broadcaster_id);
+                $selected_adslot = new StoreSelectedAdslot($post_campaign_bank['campaign_id'], $preselected_adslot, $post_campaign_bank['user_id'], $now,
+                    null, $this->broadcaster_id);
                 $selected_adslot->storeSelectedAdslot();
             }
-            $store_payment_details = new StorePaymentDetails($post_campaign_bank['payment_id'], $this->broadcaster_id, $this->agency_id,$client_details->id,
-                $this->campaign_general_information->campaign_budget,$post_campaign_bank['total_spent'], $now);
+            $store_payment_details = new StorePaymentDetails($post_campaign_bank['payment_id'], $this->broadcaster_id, null,$client_details->id,
+                $this->campaign_general_information->campaign_budget,$post_campaign_bank['total_spent'], $now, null);
             $store_payment_details->storePaymentDetails();
             $store_invoice_details = new StoreInvoiceDetails($post_campaign_bank['invoice_id'], $post_campaign_bank['invoice_number'],
-                $this->broadcaster_id,$this->agency_id, $user_id, $client_details->id, $post_campaign_bank['total_spent']);
+                $this->broadcaster_id,$this->agency_id, $post_campaign_bank['user_id'], $client_details->id, $post_campaign_bank['total_spent'], null);
             $store_invoice_details->storeInvoiceDetails();
-            $store_mpo_details = new StoreMpoDetails($post_campaign_bank['mpo_id'], $this->broadcaster_id, $this->agency_id);
+            $store_mpo_details = new StoreMpoDetails($post_campaign_bank['mpo_id'], $this->broadcaster_id, null, null);
             $store_mpo_details->storeMpoDetails();
             $this->updateAdslotAndFilePositions($post_campaign_bank['preselected_adslots']);
-            PreselectedAdslot::where('user_id', $user_id)->delete();
-            Upload::where('user_id', $user_id)->delete();
+            PreselectedAdslot::where('user_id', $post_campaign_bank['user_id'])->delete();
+            Upload::where('user_id', $post_campaign_bank['user_id'])->delete();
         });
     }
 
-    public function storeAgencyCampaignInformation()
+    public function agencyCampaignOnHold($campaign_id, $mpo_id, $payment_id, $invoice_id, $campaign_reference, $invoice_number, $now, $user_id, $client_details)
     {
+        $preselected_adslots_object = new PreselectedAdslotService($user_id, null, $this->agency_id, null, null);
+        $preselected_adslots = $preselected_adslots_object->getPreselectedSlots();
+        $adslot_ids = $preselected_adslots_object->getAdslotIdFromPreselectedAdslot();
+        $preselected_adslot_groups = $preselected_adslots_object->groupPreselectedAdslotByBoradscaster();
+        $total_spent = $preselected_adslots_object->sumTotalPriceGroupedByBroadcaster();
+        $wallet = new WelletService($this->agency_id);
+        $wallet = $wallet->getCurrentBalance();
+        if(!$wallet){
+            Session::flash('error', ClassMessages::WALLET_NOT_EXIST);
+            return redirect()->back();
+        }
+        if((int)$wallet->current_balance < (int)$total_spent){
+            Session::flash('error', ClassMessages::INSUFFICIENT_FUND);
+            return redirect()->back();
+        }
+        foreach ($preselected_adslot_groups as $preselected_adslot_group){
+            $check_time_adslots = Utilities::fetchTimeInCart($user_id, $preselected_adslot_group->broadcaster_id);
+            foreach ($check_time_adslots as $check_time_adslot){
+                if($check_time_adslot['initial_time_left'] < $check_time_adslot['time_bought']){
+                    $msg = 'You cannot proceed with the campaign creation because '.$check_time_adslot['from_to_time'].' for
+                            '.$check_time_adslot['broadcaster_name'].' isn`t available again';
+                    \Session::flash('info', $msg);
+                    return back();
+                }
+            }
+        }
+        $campaign_data_bank = $this->collectInformationNeeded(null,null,null,null,$preselected_adslots,
+            $campaign_id, $invoice_id, $mpo_id, $payment_id, $invoice_number, $adslot_ids, $total_spent, $user_id,$campaign_reference);
+        try{
+            $this->storeAgencyCampaignInformation($campaign_data_bank, $now, $preselected_adslot_groups, $client_details);
+        }catch (\Exception $exception){
+            dd($exception);
+        }
 
+    }
+
+    public function storeAgencyCampaignInformation($campaign_data_bank, $now, $preselected_adslot_groups, $client_details)
+    {
+        Utilities::switch_db('api')->transaction(function () use($campaign_data_bank, $now, $preselected_adslot_groups, $client_details) {
+            $store_campaign = new StoreCampaign($campaign_data_bank['campaign_id'], $now, $campaign_data_bank['campaign_reference']);
+            $store_campaign->storeCampaign();
+            $store_payments = new StorePayment($campaign_data_bank['payment_id'], $campaign_data_bank['campaign_id'], $campaign_data_bank['total_spent'],
+                $now, $campaign_data_bank['campaign_reference'], $this->campaign_general_information->campaign_budget);
+            $store_payments->storePayment();
+            $store_mpo = new storeMpo($campaign_data_bank['mpo_id'], $campaign_data_bank['campaign_id'], $campaign_data_bank['invoice_number'],
+                $campaign_data_bank['campaign_reference']);
+            $store_mpo->storeMpo();
+            $store_invoice = new StoreInvoice($campaign_data_bank['invoice_id'], $campaign_data_bank['campaign_id'], $campaign_data_bank['campaign_reference'],
+                $campaign_data_bank['payment_id'], $campaign_data_bank['invoice_number']);
+            $store_invoice->storeInvoice();
+            foreach ($campaign_data_bank['preselected_adslots'] as $preselected_adslot){
+                $selected_adslots = new StoreSelectedAdslot($campaign_data_bank['campaign_id'], $preselected_adslot, $campaign_data_bank['user_id'],
+                    $now, $this->agency_id, null);
+                $selected_adslots->storeSelectedAdslot();
+            }
+            foreach ($preselected_adslot_groups as $preselected_adslot_group){
+                $store_campaign_details = new StoreCampaignDetails($campaign_data_bank['campaign_id'], $campaign_data_bank['user_id'], null, $this->agency_id,
+                    $this->campaign_general_information, $client_details->id, null, $now, $campaign_data_bank['adslot_ids'], $preselected_adslot_group);
+                $store_campaign_details->storeCampaingDetails();
+
+                $store_payment_details = new StorePaymentDetails($campaign_data_bank['payment_id'], null, $this->agency_id, $client_details->id,
+                    $this->campaign_general_information->campaign_budget, $campaign_data_bank['total_spent'], $now, $preselected_adslot_group);
+                $store_payment_details->storePaymentDetails();
+
+                $store_invoice_details = new StoreInvoiceDetails($campaign_data_bank['invoice_id'], $campaign_data_bank['invoice_number'], null,
+                    $this->agency_id, $campaign_data_bank['user_id'], $client_details->id, $campaign_data_bank['total_spent'], $preselected_adslot_group);
+                $store_invoice_details->storeInvoiceDetails();
+
+                $store_mpo_details = new StoreMpoDetails($campaign_data_bank['mpo_id'], null, $this->agency_id, $preselected_adslot_group);
+                $store_mpo_details->storeMpoDetails();
+            }
+            $this->updateAdslotAndFilePositions($campaign_data_bank['preselected_adslots']);
+            PreselectedAdslot::where('user_id', $campaign_data_bank['user_id'])->delete();
+            Upload::where('user_id', $campaign_data_bank['user_id'])->delete();
+        });
     }
 
     public function adslotResultDetails()
@@ -427,7 +514,7 @@ class CampaignsController extends Controller
     }
 
     public function collectInformationNeeded($store_campaign,$store_mpo,$store_invoice,$store_payment,$preselected_adslots,$campaign_id,$invoice_id,$mpo_id,
-                                             $payment_id,$invoice_number,$adslot_ids,$total_spent)
+                                             $payment_id,$invoice_number,$adslot_ids,$total_spent, $user_id, $campaign_reference)
     {
         return $post_campaign_bank = [
                     'store_campaign' => $store_campaign,
@@ -441,7 +528,9 @@ class CampaignsController extends Controller
                     'payment_id' => $payment_id,
                     'invoice_number' => $invoice_number,
                     'adslot_ids' => $adslot_ids,
-                    'total_spent' => $total_spent
+                    'total_spent' => $total_spent,
+                    'user_id' => $user_id,
+                    'campaign_reference' => $campaign_reference
                 ];
     }
 
@@ -449,7 +538,7 @@ class CampaignsController extends Controller
     {
         foreach ($preselected_adslots as $preselected_adslot){
             if(!empty($preselected_adslot->filePosition_id)){
-                $adslot_file_position = new AdslotFilePositionService($preselected_adslot->adslot_id, $this->broadcaster_id);
+                $adslot_file_position = new AdslotFilePositionService($preselected_adslot->adslot_id);
                 $adslot_file_position->updateAdslotFilePosition();
             }
             $get_slots = Adslot::where('id', $preselected_adslot->adslot_id)->first();

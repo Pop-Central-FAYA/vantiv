@@ -13,11 +13,12 @@ class StoreCampaignDetails
     protected $agency_id;
     protected $campaign_general_information;
     protected $client_id;
-    protected $broadcaster_details;
+    protected $broadcaster_channel;
     protected $now;
     protected $adslots_ids;
+    protected $preselected_adslot_group;
 
-    public function __construct($campaign_id, $user_id, $broadcaster_id, $agency_id, $campaign_general_information, $client_id, $broadcaster_details, $now, $adslots_ids)
+    public function __construct($campaign_id, $user_id, $broadcaster_id, $agency_id, $campaign_general_information, $client_id, $broadcaster_channel, $now, $adslots_ids, $preselected_adslot_group)
     {
         $this->campaign_id = $campaign_id;
         $this->user_id = $user_id;
@@ -25,9 +26,10 @@ class StoreCampaignDetails
         $this->agency_id = $agency_id;
         $this->campaign_general_information = $campaign_general_information;
         $this->client_id = $client_id;
-        $this->broadcaster_details = $broadcaster_details;
+        $this->broadcaster_channel = $broadcaster_channel;
         $this->now = $now;
         $this->adslots_ids = $adslots_ids;
+        $this->preselected_adslot_group = $preselected_adslot_group;
     }
 
     public function storeCampaingDetails()
@@ -36,7 +38,7 @@ class StoreCampaignDetails
         $campaign_details->id = uniqid();
         $campaign_details->campaign_id = $this->campaign_id;
         $campaign_details->user_id = $this->user_id;
-        $campaign_details->channel = $this->agency_id ? "'". implode("','" ,$this->campaign_general_information->channel) . "'" : "'". $this->broadcaster_details->channel_id . "'";
+        $campaign_details->channel = $this->agency_id ? "'". implode("','" ,$this->campaign_general_information->channel) . "'" : "'". $this->broadcaster_channel . "'";
         $campaign_details->brand = $this->campaign_general_information->brand;
         $campaign_details->start_date = date('Y-m-d', strtotime($this->campaign_general_information->start_date));
         $campaign_details->stop_date = date('Y-m-d', strtotime($this->campaign_general_information->end_date));
@@ -48,14 +50,14 @@ class StoreCampaignDetails
         $campaign_details->min_age = (int)$this->campaign_general_information->min_age;
         $campaign_details->max_age = (int)$this->campaign_general_information->max_age;
         $campaign_details->industry = $this->campaign_general_information->industry;
-        $campaign_details->adslots = count($this->adslots_ids);
+        $campaign_details->adslots = $this->agency_id ? $this->preselected_adslot_group->total_slot : count($this->adslots_ids);
         $campaign_details->walkins_id = $this->client_id;
         $campaign_details->time_created = date('Y-m-d H:i:s', $this->now);
         $campaign_details->time_modified = date('Y-m-d H:i:s', $this->now);
         $campaign_details->adslots_id = "'". implode("','" ,$this->adslots_ids) . "'";
         $campaign_details->agency = $this->agency_id ? $this->agency_id : '';
-        $campaign_details->agency_broadcaster = '';
-        $campaign_details->broadcaster = $this->broadcaster_id;
+        $campaign_details->agency_broadcaster = $this->agency_id ? $this->preselected_adslot_group->broadcaster_id : '';
+        $campaign_details->broadcaster = $this->agency_id ? $this->preselected_adslot_group->broadcaster_id : $this->broadcaster_id;
         $campaign_details->sub_industry = $this->campaign_general_information->sub_industry;
         $campaign_details->status = CampaignStatus::ON_HOLD;
         $campaign_details->save();
