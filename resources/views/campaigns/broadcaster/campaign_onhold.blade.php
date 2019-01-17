@@ -110,7 +110,7 @@
                     <p class="small_faint mb4"></p>
 
                     <p class="mb">Choose Payment Option</p>
-                    <form method="POST" action="{{ route('broadcaster.campaign.update', ['campaign_id' => $campaign['campaign_id']]) }}">
+                    <form method="POST" action="{{ route('campaign.submit.other_payment', ['campaign_id' => $campaign['campaign_id']]) }}">
                         {{ csrf_field() }}
 
                         <input type="hidden" value="{{ $campaign['budget'] }}" name="total"/>

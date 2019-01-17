@@ -34,7 +34,7 @@ class StoreInvoiceDetails
         $invoice_details->invoice_id = $this->invoice_id;
         $invoice_details->user_id = $this->user_id;
         $invoice_details->invoice_number = $this->invoice_number;
-        $invoice_details->actual_amount_paid = $this->broadcaster_id ? $this->preselected_adslot_group->total : $this->total_spent;
+        $invoice_details->actual_amount_paid = $this->agency_id ? $this->preselected_adslot_group->total : $this->total_spent;
         $invoice_details->refunded_amount = 0;
         $invoice_details->walkins_id = $this->client_id;
         $invoice_details->agency_id = $this->agency_id ? $this->agency_id : '';

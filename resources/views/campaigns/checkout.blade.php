@@ -118,7 +118,7 @@
         <h2 class="border_bottom align_center">Complete Purchase</h2>
 
         <div class="padd mb4 pt">
-            <form method="POST" action="{{ route('campaign.post_onhold', ['id' => $id]) }}">
+            <form method="POST" action="{{ route('campaign.post_hold', ['id' => $id]) }}">
                 {{ csrf_field() }}
                 <h3 class="weight_medium uppercased">Your campaign will be created in the "ON HOLD" mode, please review and submit to the broadcaster in order to start processing</h3>
                 <p class="small_faint mb4"></p>

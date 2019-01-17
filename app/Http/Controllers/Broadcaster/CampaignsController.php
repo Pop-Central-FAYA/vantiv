@@ -654,7 +654,6 @@ class CampaignsController extends Controller
 
             $amount = ($response['data']['amount']/100);
             $card = $response['data']['authorization']['card_type'];
-            $status = $response['data']['status'];
             $message = $response['message'];
             $reference = $response['data']['reference'];
             $ip_address = $response['data']['ip_address'];

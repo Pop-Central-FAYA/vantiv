@@ -17,6 +17,6 @@ class AdslotFilePositionService
     {
         return Utilities::switch_db('api')->table('adslot_filePositions')
                             ->where('adslot_id', $this->adslot_id)
-                            ->update(['select_status', 1]);
+                            ->update(['select_status' => 1]);
     }
 }

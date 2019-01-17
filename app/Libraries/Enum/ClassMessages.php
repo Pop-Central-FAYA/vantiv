@@ -31,4 +31,6 @@ class ClassMessages
     const WALLET_NOT_EXIST = 'Wallet does not exist for this agency';
 
     const INSUFFICIENT_FUND = 'Insufficient fund, please fund your wallet to complete campaign creation';
+
+    const START_DATE_ERROR = 'Campaign cant be submitted because the start date has exceeded the current date';
 }
