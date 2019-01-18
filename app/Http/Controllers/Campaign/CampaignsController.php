@@ -15,13 +15,17 @@ use Vanguard\Libraries\Enum\ClassMessages;
 use Vanguard\Libraries\Utilities;
 use Vanguard\Models\Adslot;
 use Vanguard\Models\PreselectedAdslot;
+use Vanguard\Models\Transaction;
 use Vanguard\Models\Upload;
 use Vanguard\Services\Adslot\AdslotFilterResult;
 use Vanguard\Services\Adslot\PreselectedAdslotService;
 use Vanguard\Services\Adslot\RatecardService;
 use Vanguard\Services\Broadcaster\BroadcasterDetails;
+use Vanguard\Services\Campaign\CampaignCardPayment;
+use Vanguard\Services\Campaign\CampaignExtras;
 use Vanguard\Services\Campaign\CampaignOnhold;
 use Vanguard\Services\Campaign\DeleteTemporaryUpload;
+use Vanguard\Services\Campaign\SingleCampaign;
 use Vanguard\Services\Campaign\StoreCampaign;
 use Vanguard\Services\Campaign\StoreCampaignDetails;
 use Vanguard\Services\Campaign\StoreCampaignGeneralInformation;
@@ -32,6 +36,10 @@ use Vanguard\Services\Campaign\StoreMpoDetails;
 use Vanguard\Services\Campaign\StorePayment;
 use Vanguard\Services\Campaign\StorePaymentDetails;
 use Vanguard\Services\Campaign\StoreSelectedAdslot;
+use Vanguard\Services\Campaign\UpdateCampaignDetails;
+use Vanguard\Services\Campaign\UpdateCampaignFromHoldState;
+use Vanguard\Services\Campaign\UpdateInvoiceDetails;
+use Vanguard\Services\Campaign\UpdatePaymentDetails;
 use Vanguard\Services\Client\AllClient;
 use Vanguard\Services\Campaign\AllCampaign;
 use Vanguard\Services\Client\ClientBrand;
@@ -41,6 +49,8 @@ use Vanguard\Services\FilePosition\Fileposition;
 use Vanguard\Services\Industry\IndustryAndSubindustry;
 use Vanguard\Services\PreloadedData\PreloadedData;
 use Vanguard\Services\Upload\MediaUploadProcessing;
+use Vanguard\Services\Wallet\CreateWalletHistory;
+use Vanguard\Services\Wallet\UpdateWallet;
 use Vanguard\Services\Wallet\WelletService;
 use Yajra\DataTables\DataTables;
 
@@ -329,7 +339,7 @@ class CampaignsController extends Controller
         return redirect()->back();
     }
 
-    Public function postCampaign($user_id)
+    public function postCampaign($user_id)
     {
         $save_campaign = $this->postCampaignOnHold($user_id);
         if($save_campaign === 'success'){
@@ -389,6 +399,93 @@ class CampaignsController extends Controller
 
     }
 
+    public function submitWithCardPaymentOption(Request $request)
+    {
+        $campaign_extras = new CampaignExtras($campaign_id, $this->broadcaster_id, $this->agency_id);
+        $check_start_date = $campaign_extras->checkStartDateAgainstCurrentDate();
+        if($check_start_date == 'error'){
+            Session::flash('error', ClassMessages::START_DATE_ERROR);
+            return redirect()->back();
+        }        $payment_method = 'Card';
+        $save_campaign_with_card_option = new CampaignCardPayment($request->user_id, $request->reference, $request->total, $request->campaign_id,
+                                                $payment_method, $this->broadcaster_id, $this->agency_id);
+        $save_campaign = $save_campaign_with_card_option->processCampaignWithPaystack();
+        if($save_campaign === 'success'){
+            $description = 'Campaign created by '.Session::get('broadcaster_id').' for successfully';
+            Api::saveActivity(Session::get('broadcaster_id'), $description);
+            Session::flash('success', ClassMessages::CAMPAIGN_SUBMIT_TO_BROADCASTER_SUCCESS);
+            return redirect()->route('broadcaster.campaign_management');
+        }else{
+            Session::flash('error', ClassMessages::CAMPAIGN_SUBMIT_TO_BROADCASTER_ERROR);
+            return redirect()->back();
+        }
+    }
+
+    public function submitWithOtherPaymentOption(Request $request, $campaign_id)
+    {
+        $campaign_extras = new CampaignExtras($campaign_id, $this->broadcaster_id, $this->agency_id);
+        $check_start_date = $campaign_extras->checkStartDateAgainstCurrentDate();
+        if($check_start_date == 'error'){
+            Session::flash('error', ClassMessages::START_DATE_ERROR);
+            return redirect()->back();
+        }        $update_campaign_from_hold_state = new UpdateCampaignFromHoldState($campaign_id, $request->payment_option, $this->broadcaster_id, $this->agency_id);
+        $save_campaign = $update_campaign_from_hold_state->updateCampaignInformation();
+        if($save_campaign === 'success'){
+            $description = 'Campaign created by '.Session::get('broadcaster_id').' for successfully';
+            Api::saveActivity(Session::get('broadcaster_id'), $description);
+            Session::flash('success', ClassMessages::CAMPAIGN_SUBMIT_TO_BROADCASTER_SUCCESS);
+            return redirect()->route('broadcaster.campaign_management');
+        }else{
+            Session::flash('error', ClassMessages::CAMPAIGN_ERROR_MESSAGE);
+            return redirect()->back();
+        }
+    }
+
+    public function submitAgencyCampaign($campaign_id)
+    {
+        $campaign_extras = new CampaignExtras($campaign_id, $this->broadcaster_id, $this->agency_id);
+        $check_start_date = $campaign_extras->checkStartDateAgainstCurrentDate();
+        if($check_start_date == 'error'){
+            Session::flash('error', ClassMessages::START_DATE_ERROR);
+            return redirect()->back();
+        }        $wallet_balance_service = new WelletService($this->agency_id);
+        $wallet_balance = $wallet_balance_service->getCurrentBalance();
+        $single_campaign = new SingleCampaign($campaign_id, null, $this->agency_id);
+        $single_campaign = $single_campaign->getSingleCampaign();
+        if($wallet_balance->current_balance < $single_campaign->total){
+            Session::flash('error', ClassMessages::INSUFFICIENT_FUND);
+            return redirect()->back();
+        }
+        $wallet_new_balance = $wallet_balance->current_balance - $single_campaign->total;
+        $payment_method = ClassMessages::WALLET_PAYMENT_METHOD;
+        $update_campaign_from_hold_state = new UpdateCampaignFromHoldState($campaign_id, $payment_method, null, $this->agency_id);
+        try{
+            Utilities::switch_db('api')->transaction(function () use ($update_campaign_from_hold_state, $single_campaign, $wallet_new_balance, $wallet_balance) {
+                $update_campaign_from_hold_state->updateCampaignInformation();
+                $transaction = new Transaction();
+                $transaction->id = uniqid();
+                $transaction->amount = $single_campaign->total;
+                $transaction->user_id = $this->agency_id;
+                $transaction->reference = $single_campaign->invoice_id;
+                $transaction->ip_address = request()->ip();
+                $transaction->type = ClassMessages::DEBIT_TRANSACTION_TYPE;
+                $transaction->message = ClassMessages::DEBIT_MESSAGE;
+                $transaction->save();
+
+                $wallet_histories = new CreateWalletHistory($this->agency_id, $single_campaign->total, $wallet_new_balance, $wallet_balance->current_balance);
+                $wallet_histories->createHistory();
+
+                $update_wallet = new UpdateWallet($this->agency_id, $wallet_balance->current_balance, $wallet_new_balance);
+                $update_wallet->updateWallet();
+            });
+        }catch (\Exception $exception){
+            Session::flash('error', ClassMessages::CAMPAIGN_SUBMIT_TO_BROADCASTER_ERROR);
+            return redirect()->back();
+        }
+        Session::flash('success', ClassMessages::CAMPAIGN_SUBMIT_TO_BROADCASTER_SUCCESS);
+        return redirect()->route('dashboard');
+    }
+
     public function broadcasterCampaignOnHold($campaign_id, $mpo_id, $payment_id, $invoice_id, $campaign_reference, $invoice_number, $now, $user_id, $client_details)
     {
         $preselected_adslot_object = new PreselectedAdslotService($user_id, $this->broadcaster_id, null,
@@ -413,7 +510,13 @@ class CampaignsController extends Controller
             }
         }
         try{
-            $this->storeBroadcasterCampaignsInformation($post_campaign_bank,$client_details,$broadcaster_details,$now);
+            Utilities::switch_db('api')->transaction(function () use($post_campaign_bank, $client_details, $broadcaster_details, $now) {
+                $post_campaign_bank['store_campaign']->storeCampaign();
+                $post_campaign_bank['store_mpo']->storeMpo();
+                $post_campaign_bank['store_invoice']->storeInvoice();
+                $post_campaign_bank['store_payment']->storePayment();
+                $this->storeBroadcasterCampaignsInformation($post_campaign_bank,$client_details,$broadcaster_details,$now);
+            });
         }catch (\Exception $exception){
             return 'error';
         }
@@ -421,31 +524,25 @@ class CampaignsController extends Controller
 
     public function storeBroadcasterCampaignsInformation($post_campaign_bank, $client_details, $broadcaster_details, $now)
     {
-        Utilities::switch_db('api')->transaction(function () use($post_campaign_bank, $client_details, $broadcaster_details, $now) {
-            $post_campaign_bank['store_campaign']->storeCampaign();
-            $post_campaign_bank['store_mpo']->storeMpo();
-            $post_campaign_bank['store_invoice']->storeInvoice();
-            $post_campaign_bank['store_payment']->storePayment();
-            $campaign_details = new StoreCampaignDetails($post_campaign_bank['campaign_id'], $post_campaign_bank['user_id'], $this->broadcaster_id, null,
-                $this->campaign_general_information, $client_details->id,$broadcaster_details->channel_id, $now, $post_campaign_bank['adslot_ids'],null);
-            $campaign_details->storeCampaingDetails();
-            foreach ($post_campaign_bank['preselected_adslots'] as $preselected_adslot){
-                $selected_adslot = new StoreSelectedAdslot($post_campaign_bank['campaign_id'], $preselected_adslot, $post_campaign_bank['user_id'], $now,
-                    null, $this->broadcaster_id);
-                $selected_adslot->storeSelectedAdslot();
-            }
-            $store_payment_details = new StorePaymentDetails($post_campaign_bank['payment_id'], $this->broadcaster_id, null,$client_details->id,
-                $this->campaign_general_information->campaign_budget,$post_campaign_bank['total_spent'], $now, null);
-            $store_payment_details->storePaymentDetails();
-            $store_invoice_details = new StoreInvoiceDetails($post_campaign_bank['invoice_id'], $post_campaign_bank['invoice_number'],
-                $this->broadcaster_id,$this->agency_id, $post_campaign_bank['user_id'], $client_details->id, $post_campaign_bank['total_spent'], null);
-            $store_invoice_details->storeInvoiceDetails();
-            $store_mpo_details = new StoreMpoDetails($post_campaign_bank['mpo_id'], $this->broadcaster_id, null, null);
-            $store_mpo_details->storeMpoDetails();
-            $this->updateAdslotAndFilePositions($post_campaign_bank['preselected_adslots']);
-            PreselectedAdslot::where('user_id', $post_campaign_bank['user_id'])->delete();
-            Upload::where('user_id', $post_campaign_bank['user_id'])->delete();
-        });
+        $campaign_details = new StoreCampaignDetails($post_campaign_bank['campaign_id'], $post_campaign_bank['user_id'], $this->broadcaster_id, null,
+            $this->campaign_general_information, $client_details->id,$broadcaster_details->channel_id, $now, $post_campaign_bank['adslot_ids'],null);
+        $campaign_details->storeCampaingDetails();
+        foreach ($post_campaign_bank['preselected_adslots'] as $preselected_adslot){
+            $selected_adslot = new StoreSelectedAdslot($post_campaign_bank['campaign_id'], $preselected_adslot, $post_campaign_bank['user_id'], $now,
+                null, $this->broadcaster_id);
+            $selected_adslot->storeSelectedAdslot();
+        }
+        $store_payment_details = new StorePaymentDetails($post_campaign_bank['payment_id'], $this->broadcaster_id, null,$client_details->id,
+            $this->campaign_general_information->campaign_budget,$post_campaign_bank['total_spent'], $now, null);
+        $store_payment_details->storePaymentDetails();
+        $store_invoice_details = new StoreInvoiceDetails($post_campaign_bank['invoice_id'], $post_campaign_bank['invoice_number'],
+            $this->broadcaster_id,$this->agency_id, $post_campaign_bank['user_id'], $client_details->id, $post_campaign_bank['total_spent'], null);
+        $store_invoice_details->storeInvoiceDetails();
+        $store_mpo_details = new StoreMpoDetails($post_campaign_bank['mpo_id'], $this->broadcaster_id, null, null);
+        $store_mpo_details->storeMpoDetails();
+        $this->updateAdslotAndFilePositions($post_campaign_bank['preselected_adslots']);
+        PreselectedAdslot::where('user_id', $post_campaign_bank['user_id'])->delete();
+        Upload::where('user_id', $post_campaign_bank['user_id'])->delete();
     }
 
     public function agencyCampaignOnHold($campaign_id, $mpo_id, $payment_id, $invoice_id, $campaign_reference, $invoice_number, $now, $user_id, $client_details)

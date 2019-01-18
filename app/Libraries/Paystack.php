@@ -2,8 +2,6 @@
 
 namespace Vanguard\Libraries;
 
-use Ixudra\Curl\Facades\Curl;
-
 class Paystack
 {
     public static function query_api_transaction_verify($reference)

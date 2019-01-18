@@ -9,4 +9,10 @@ class CampaignStatus
     const ON_HOLD = 'on_hold';
 
     const PENDING = 'pending';
+
+    const PAYMENT_PENDING = 'PENDING';
+
+    const PAYMENT_SUCCESS = 'SUCCESSFUL';
+
+    const TRANSACTION_TYPE = 'PAID FOR CAMPAIGN';
 }

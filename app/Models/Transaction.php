@@ -4,9 +4,9 @@ namespace Vanguard\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Wallet extends Model
+class Transaction extends Model
 {
-    protected $table = 'wallets';
+    protected $table = 'transactions';
     protected $connection = 'api_db';
     protected $primaryKey = 'id';
     protected $keyType = 'string';
@@ -16,7 +16,7 @@ class Wallet extends Model
     ];
 
     protected $fillable = [
-        'id', 'user_id', 'current_balance', 'status', 'prev_balance'
+        'id', 'amount', 'user_id', 'reference', 'ip_address', 'type', 'card_type', 'status', 'fees', 'message'
     ];
 
     public $timestamps = false;
