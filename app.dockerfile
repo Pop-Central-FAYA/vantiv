@@ -21,7 +21,6 @@ RUN rm -rf /app/vendor \
     && composer install \
     && find /app/bootstrap/cache -type f -delete \
     && find /app/storage/app -type f -delete \
-    && find /app/storage/excels -type f -delete \
     && find /app/storage/framework -type f -delete \
     && find /app/storage/logs -type f -delete \
     && find /app/storage/debugbar -type f -delete \
