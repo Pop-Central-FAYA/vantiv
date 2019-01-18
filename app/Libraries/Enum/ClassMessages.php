@@ -33,4 +33,15 @@ class ClassMessages
     const INSUFFICIENT_FUND = 'Insufficient fund, please fund your wallet to complete campaign creation';
 
     const START_DATE_ERROR = 'Campaign cant be submitted because the start date has exceeded the current date';
+
+    const DEBIT_MESSAGE = 'Debit successful';
+
+    const DEBIT_TRANSACTION_TYPE = 'DEBIT WALLET';
+
+    const WALLET_PAYMENT_METHOD = 'WALLET_PAYMENT';
+
+    const CAMPAIGN_SUBMIT_TO_BROADCASTER_ERROR = 'There was an error submitting this campaign to the broadcaster(s)';
+
+    const CAMPAIGN_SUBMIT_TO_BROADCASTER_SUCCESS = 'Campaign submitted to broadcaster(s) successfully';
+
 }

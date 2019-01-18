@@ -120,6 +120,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/campaign-on-hold/agency/data', 'Campaign\CampaignsController@getCampaignOnHold')->name('agency.campaigns.hold');
         Route::post('/submit-to-broadcasters/{campaign_id}', 'Campaign\CampaignsController@submitWithOtherPaymentOption')->name('campaign.submit.other_payment');
         Route::post('/payment-process', 'Campaign\CampaignsController@submitWithCardPaymentOption')->name('broadcaster.pay');
+        Route::post('/submit-to-broadcasters/agency/{campaign_id}', 'Campaign\CampaignsController@submitAgencyCampaign')->name('agency.campaign.update');
 
 
         Route::get('/create/step3_1/{id}', 'Broadcaster\CampaignsController@storeStep3_1')->name('campaign.create3_1');
@@ -330,7 +331,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 
 
-            Route::post('/submit-update/{campaign_id}', 'Agency\CampaignsController@submitCampaignForProcessing')->name('agency.campaign.update');
+
 
             Route::post('/information-update/{campaign_id}', 'Agency\CampaignsController@updateAgencyCampaignInformation')->name('agency.campaign_information.update');
         });

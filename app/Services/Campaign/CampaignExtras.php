@@ -21,7 +21,7 @@ class CampaignExtras
     {
         $start_date = $this->fetchCampaignStartDate();
         $today = date('Y-m-d');
-        if($today > $start_date){
+        if($today > $start_date->start_date){
             return 'error';
         }
         return;

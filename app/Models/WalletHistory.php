@@ -18,4 +18,6 @@ class WalletHistory extends Model
     protected $fillable = [
         'id', 'user_id', 'amount', 'prev_balance', 'status', 'current_balance'
     ];
+
+    public $timestamps = false;
 }
