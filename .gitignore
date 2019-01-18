@@ -10,7 +10,6 @@ get-pip.py
 .DS_Store
 storage/.DS_Store
 storage/excels
-storage/logs
 .editorconfig
 .gitattributes
 resources/assets
