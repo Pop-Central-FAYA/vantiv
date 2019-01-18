@@ -13,7 +13,7 @@ RUN ln -sf /proc/self/fd/1 /var/log/apache2/access.log && \
 RUN apk add curl
 
 COPY . /app
-COPY ./env.example /app/.env
+COPY ./.env.example /app/.env
 
 # Delete some folders that might have been copied over
 RUN rm -rf /app/vendor \
