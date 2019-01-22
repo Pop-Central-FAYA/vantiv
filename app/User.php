@@ -34,7 +34,7 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'username', 'first_name', 'last_name', 'phone', 'avatar',
+        'id', 'email', 'password', 'firstname', 'lastname', 'phone_number', 'avatar',
         'address', 'country_id', 'birthday', 'last_login', 'confirmation_token', 'status',
         'group_id', 'remember_token'
     ];
