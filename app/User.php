@@ -15,6 +15,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable implements TwoFactorAuthenticatableContract
 {
+    protected $connection = 'api_db';
+    protected $primaryKey = 'id';
+    protected $keyType = 'string';
+
+
     use TwoFactorAuthenticatable, CanResetPassword, PresentableTrait, AuthorizationUserTrait, Notifiable;
 
     protected $presenter = UserPresenter::class;
