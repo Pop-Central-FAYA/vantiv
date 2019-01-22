@@ -22,4 +22,4 @@ tests/Unit/ExampleTest.php
 database/factories/UserFactory.php
 Unit
 Feature
-
+storage/logs/
