@@ -35,24 +35,6 @@ $factory->define(Vanguard\User::class, function (Faker\Generator $faker, array $
     ];
 });
 
-$factory->define(Vanguard\Role::class, function (Faker\Generator $faker) {
-    return [
-        'name' => str_random(5),
-        'display_name' => implode(" ", $faker->words(2)),
-        'description' => substr($faker->paragraph, 0, 255),
-        'removable' => true,
-    ];
-});
-
-$factory->define(Vanguard\Permission::class, function (Faker\Generator $faker) {
-    return [
-        'name' => str_random(5),
-        'display_name' => implode(" ", $faker->words(2)),
-        'description' => substr($faker->paragraph, 0, 255),
-        'removable' => true
-    ];
-});
-
 $factory->define(Activity::class, function (Faker\Generator $faker, array $attrs) {
 
     $userId = isset($attrs['user_id'])
