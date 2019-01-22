@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddConfirmationTokenToUsersTable extends Migration
+class RenameUsersTableToUserOld extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class AddConfirmationTokenToUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('confirmation_token');
-        });
+        if(Schema::hasTable('users')){
+            Schema::rename('users', 'user_old');
+        }
     }
 
     /**
@@ -25,8 +25,8 @@ class AddConfirmationTokenToUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('confirmation_token');
-        });
+        if(Schema::hasTable('user_old')){
+            Schema::rename('user_old', 'users');
+        }
     }
 }

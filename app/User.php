@@ -19,6 +19,7 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract
 
     protected $presenter = UserPresenter::class;
 
+
     /**
      * The database table used by the model.
      *
@@ -34,7 +35,7 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract
      * @var array
      */
     protected $fillable = [
-        'id', 'email', 'password', 'firstname', 'lastname', 'phone_number', 'avatar',
+        'name', 'email', 'password', 'username', 'first_name', 'last_name', 'phone', 'avatar',
         'address', 'country_id', 'birthday', 'last_login', 'confirmation_token', 'status',
         'group_id', 'remember_token'
     ];
@@ -57,6 +58,18 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract
         $this->attributes['password'] = bcrypt($value);
     }
 
+    public function setBirthdayAttribute($value)
+    {
+        $this->attributes['birthday'] = trim($value) ?: null;
+    }
+
+    public function gravatar()
+    {
+        $hash = hash('md5', strtolower(trim($this->attributes['email'])));
+
+        return sprintf("//www.gravatar.com/avatar/%s", $hash);
+    }
+
     public function isUnconfirmed()
     {
         return $this->status == UserStatus::UNCONFIRMED;
@@ -72,10 +85,21 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract
         return $this->status == UserStatus::BANNED;
     }
 
+    public function socialNetworks()
+    {
+        return $this->hasOne(UserSocialNetworks::class, 'user_id');
+    }
+
+    public function country()
+    {
+        return $this->belongsTo(Country::class, 'country_id');
+    }
+
     public function activities()
     {
         return $this->hasMany(Activity::class, 'user_id');
     }
+
 
     /**
      * Get the connection of the entity.
