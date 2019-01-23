@@ -24,6 +24,7 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract
 
     protected $presenter = UserPresenter::class;
 
+
     /**
      * The database table used by the model.
      *
@@ -103,6 +104,7 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract
     {
         return $this->hasMany(Activity::class, 'user_id');
     }
+
 
     /**
      * Get the connection of the entity.
