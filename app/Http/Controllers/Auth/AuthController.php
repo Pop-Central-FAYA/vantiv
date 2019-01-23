@@ -5,8 +5,13 @@ namespace Vanguard\Http\Controllers\Auth;
 use Vanguard\Events\User\LoggedIn;
 use Vanguard\Events\User\LoggedOut;
 use Vanguard\Http\Requests\Auth\LoginRequest;
+use Vanguard\Http\Requests\User\PasswordChangeRequest;
+use Vanguard\Libraries\Enum\ClassMessages;
+use Vanguard\Libraries\Enum\UserStatus;
 use Vanguard\Libraries\Utilities;
 use Vanguard\Mail\PasswordChanger;
+use Vanguard\Models\Agency;
+use Vanguard\Models\Broadcaster;
 use Vanguard\Repositories\User\UserRepository;
 use Vanguard\Services\Auth\TwoFactor\Contracts\Authenticatable;
 use Auth;
@@ -14,6 +19,7 @@ use Carbon\Carbon;
 use Illuminate\Cache\RateLimiter;
 use Illuminate\Http\Request;
 use Vanguard\Http\Controllers\Controller;
+use Vanguard\User;
 
 
 class AuthController extends Controller
@@ -52,7 +58,7 @@ class AuthController extends Controller
     public function postLogin(Request $request)
     {
         if(empty($request->email) || empty($request->password)){
-            return redirect()->back()->with('error', 'email and or password cannot be empty');
+            return redirect()->back()->with('error', ClassMessages::EMAIL_PASSWORD_EMPTY);
         }
 
         // In case that request throttling is enabled, we have to check if user can perform this request.
@@ -79,45 +85,36 @@ class AuthController extends Controller
             }
 
             return redirect()->to('login' . $to)
-                ->with('error', 'email and or password invalid');
+                ->with('error', ClassMessages::INVALID_EMAIL_PASSWORD);
         }
 
         $user = Auth::getProvider()->retrieveByCredentials($credentials);
 
         if ($user->isUnconfirmed()) {
             return redirect()->to('login' . $to)
-                ->with('error', 'Please confirm your account first');
+                ->with('error', ClassMessages::EMAIL_CONFIRMATION);
         }
 
         if ($user->isBanned()) {
             return redirect()->to('login' . $to)
-                ->with('error', 'Your account has been banned, please contact your administrator');
+                ->with('error', ClassMessages::BANNED_ACCOUNT);
         }
 
         Auth::login($user, settings('remember_me') && $request->get('remember'));
 
-        $user_identity = Utilities::checkForActivation(Auth::user()->id);
-
-        if($user_identity === 'Unconfirmed' || $user_identity === ''){
+        if(Auth::user()->status === 'Unconfirmed' || Auth::user()->status === ''){
             Auth::logout();
         }
 
-        $username = Auth::user()->email;
-
-        $password = bcrypt($request->password);
-        $role = \DB::table('role_user')->where('user_id', Auth::user()->id)->first();
-        if ($role->role_id === 3) {
+        //temporary fix for getting the kind of user that wants to login
+        $broadcaster_details = Broadcaster::where('user_id', Auth::user()->id)->first();
+        $agency_details = Agency::where('user_id', Auth::user()->id)->first();
+        if($broadcaster_details){
             session()->forget('agency_id');
-            $user_details = Utilities::switch_db('api')->select("SELECT * FROM users WHERE email = '$username' LIMIT 1");
-            $user_id = $user_details[0]->id;
-            $broadcaster_details = Utilities::switch_db('api')->select("SELECT * FROM broadcasters WHERE user_id = '$user_id'");
-            session(['broadcaster_id' => $broadcaster_details[0]->id]);
-        } elseif ($role->role_id === 4) {
+            session(['broadcaster_id' => $broadcaster_details->id]);
+        }elseif($agency_details){
             session()->forget('broadcaster_id');
-            $user_details = Utilities::switch_db('api')->select("SELECT * FROM users WHERE email = '$username' LIMIT 1");
-            $user_id = $user_details[0]->id;
-            $agency_details = Utilities::switch_db('api')->select("SELECT * FROM agents WHERE user_id = '$user_id'");
-            session(['agency_id' => $agency_details[0]->id]);
+            session(['agency_id' => $agency_details->id]);
         }
 
         return $this->handleUserWasAuthenticated($request, $throttles, $user);
@@ -336,16 +333,17 @@ class AuthController extends Controller
 
     public function verifyToken($token)
     {
-        $user = \DB::select("SELECT * from users where confirmation_token = '$token'");
-        if($user && $user[0]->status === 'Unconfirmed'){
-            $update_user = \DB::update("UPDATE users set status = 'Active' where confirmation_token = '$token'");
-            \Session::flash('success', 'Your email has been verified, you can now proceed to login with your credentials');
+        $user = User::where('confirmation_token', $token)->first();
+        if($user->status === UserStatus::UNCONFIRMED){
+            $user->status = UserStatus::ACTIVE;
+            $user->save();
+            \Session::flash('success', ClassMessages::EMAIL_VERIFIED);
             return redirect()->route('login');
-        }elseif($user && $user[0]->status === 'Active'){
-            \Session::flash('info', 'You have already verified your email, please proceed to login...');
+        }elseif($user->status === UserStatus::ACTIVE){
+            \Session::flash('info', ClassMessages::EMAIL_ALREADY_VERIFIED);
             return redirect()->route('login');
         }elseif(!$user){
-            \Session::flash('error', 'Wrong activation code...');
+            \Session::flash('error', ClassMessages::WRONG_ACTIVATION);
             return redirect()->route('login');
         }
     }
@@ -361,20 +359,19 @@ class AuthController extends Controller
             'email' => 'email|required',
         ]);
 
-        $user_local = \DB::select("SELECT * from users where email = '$request->email'");
-        $user_api = Utilities::switch_db('api')->select("SELECT * from users where email = '$request->email'");
-        if($user_local && $user_api){
+        $user = User::where('email', $request->email)->first();
+        if($user){
 
-            $token = encrypt($user_local[0]->id);
+            $token = encrypt($user->id);
 
-            $send_mail = \Mail::to($user_local[0]->email)->send(new PasswordChanger($token));
+            $send_mail = \Mail::to($user->email)->send(new PasswordChanger($token));
 
-            \Session::flash('success', 'Please follow the link sent to your email');
+            \Session::flash('success', ClassMessages::VERIFICATION_LINK);
             return redirect()->back();
 
         }else{
 
-            \Session::flash('error', 'Email not found on our application');
+            \Session::flash('error', ClassMessages::EMAIL_NOT_FOUND);
             return redirect()->back();
         }
     }
@@ -382,30 +379,26 @@ class AuthController extends Controller
     public function getChangePassword($token)
     {
         $user_id = decrypt($token);
-        $user_details_local = \DB::select("SELECT * from users where id = '$user_id'");
-        $email = $user_details_local[0]->email;
-        $user_details_api = Utilities::switch_db('api')->select("SELECT * from users where email = '$email'");
+        $user = User::where('id', $user_id)->first();
 
-        return view('auth.password.change_password', compact('user_details_local', 'user_details_api'));
+        return view('auth.password.change_password', compact('user'));
 
     }
 
-    public function processChangePassword(Request $request, $id_local, $id_api)
+    public function processChangePassword(PasswordChangeRequest $request, $user_id)
     {
-        $this->validate($request, [
-            'password' => 'required|min:6',
-            're_password' => 'required|same:password|min:6'
-        ]);
 
         $password = bcrypt($request->password);
 
-        $user_local_update = \DB::update("UPDATE users set password = '$password' WHERE id = '$id_local'");
-        $upser_api_update = Utilities::switch_db('api')->update("UPDATE users set password = '$password' WHERE id = '$id_api'");
+        $user = User::where('id', $user_id)->first();
+        $user->password = $password;
+        $user->save();
 
-        if($user_local_update && $upser_api_update){
-            return redirect()->route('login')->with('success', 'You have successfully changed your password, please proceed to login');
+        if($user){
+            return redirect()->route('login')->with('success', ClassMessages::PASSWORD_CHANGED);
         }else{
-            return redirect()->back()->withErrors('Error occurred while processing your request, please try again');
+            return redirect()->back()->withErrors(ClassMessages::PROCESSING_ERROR);
         }
     }
+
 }

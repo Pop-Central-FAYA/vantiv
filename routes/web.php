@@ -24,7 +24,7 @@ Route::get('logout', [
 Route::get('/forget-password', 'Auth\AuthController@getForgetPassword')->name('password.forgot');
 Route::post('/forget-password/process', 'Auth\AuthController@processForgetPassword')->name('forget_password.process');
 Route::get('/proceed/password-change/{token}','Auth\AuthController@getChangePassword');
-Route::post('/change-password/process/{id_local}/{id_api}','Auth\AuthController@processChangePassword')->name('change_password.process');
+Route::post('/change-password/process/{user_id}','Auth\AuthController@processChangePassword')->name('change_password.process');
 
 Route::get('/cron-job/compliance-report', 'CronjobController@getCompliance');
 

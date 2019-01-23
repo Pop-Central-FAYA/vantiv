@@ -250,12 +250,6 @@ class Utilities {
         return $result;
     }
 
-    public static function checkForActivation($user_id)
-    {
-        $user = DB::select("SELECT status from users where id = '$user_id'");
-        return $user[0]->status;
-    }
-
     public static function fetchTimeInCart($id, $broadcaster)
     {
         $times = [];
@@ -1006,23 +1000,6 @@ class Utilities {
     {
         $check_rate_card = Utilities::switch_db('api')->select("SELECT id from rateCards where broadcaster = '$broadcaster_id' AND day = '$day_id' AND hourly_range_id = '$hourly_range_id'");
         return $check_rate_card;
-    }
-
-    public static function getProfileDetails($api_user, $local_user,$api_agent)
-    {
-        $user_details = [
-            'first_name' => $api_user[0]->firstname,
-            'last_name' => $api_user[0]->lastname,
-            'phone' => $api_user[0]->phone_number,
-            'email' => $api_user[0]->email,
-            'address' => $local_user[0]->address,
-            'location' => $api_agent[0]->location,
-            'nationality' => $api_agent[0]->nationality,
-            'username' => $local_user[0]->username,
-            'image' => $api_agent[0]->image_url ? $api_agent[0]->image_url : ''
-        ];
-
-        return $user_details;
     }
 
     public static function clientscampaigns($campaigns)
