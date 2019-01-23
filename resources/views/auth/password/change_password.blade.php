@@ -11,7 +11,7 @@
 
         @include('partials/messages')
 
-        <form role="form" action="{{ route('change_password.process', ['id_local' => $user_details_local[0]->id, 'id_api' => $user_details_api[0]->id]) }}" method="POST" id="login-form" autocomplete="off">
+        <form role="form" action="{{ route('change_password.process', ['user_id' => $user->id]) }}" method="POST" id="password-change-form" autocomplete="off">
             <input type="hidden" value="<?= csrf_token() ?>" name="_token">
 
             @if (Input::has('to'))
@@ -42,5 +42,5 @@
 
 @section('scripts')
     {!! HTML::script('assets/js/as/login.js') !!}
-    {!! JsValidator::formRequest('Vanguard\Http\Requests\Auth\LoginRequest', '#login-form') !!}
+    {!! JsValidator::formRequest('Vanguard\Http\Requests\User\PasswordChangeRequest', '#password-change-form') !!}
 @stop

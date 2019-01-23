@@ -3,6 +3,8 @@
 namespace Vanguard;
 
 use Illuminate\Notifications\Notifiable;
+use Vanguard\Models\Agency;
+use Vanguard\Models\Broadcaster;
 use Vanguard\Presenters\UserPresenter;
 use Vanguard\Services\Auth\TwoFactor\Authenticatable as TwoFactorAuthenticatable;
 use Vanguard\Services\Auth\TwoFactor\Contracts\Authenticatable as TwoFactorAuthenticatableContract;
@@ -125,5 +127,17 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract
     public function resolveRouteBinding($value)
     {
         // TODO: Implement resolveRouteBinding() method.
+    }
+
+    //temporary and will be removed when the proper legal entity is implemented
+    public function broadcaster()
+    {
+        return $this->belongsTo(Broadcaster::class);
+    }
+
+    //temporary and will be removed when the proper legal entity is implemented
+    public function agent()
+    {
+        return $this->belongsTo(Agency::class);
     }
 }

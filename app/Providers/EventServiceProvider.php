@@ -3,8 +3,6 @@
 namespace Vanguard\Providers;
 
 use Vanguard\Events\User\Registered;
-use Vanguard\Listeners\PermissionEventsSubscriber;
-use Vanguard\Listeners\RoleEventsSubscriber;
 use Vanguard\Listeners\UserEventsSubscriber;
 use Vanguard\Listeners\UserWasRegisteredListener;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -30,8 +28,6 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $subscribe = [
         UserEventsSubscriber::class,
-        RoleEventsSubscriber::class,
-        PermissionEventsSubscriber::class
     ];
 
     /**

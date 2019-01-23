@@ -24,15 +24,14 @@ class DashboardController extends Controller
     public function index()
     {
         //Broadcaster Dashboard module
-        $role = \DB::table('role_user')->where('user_id', Auth::user()->id)->first();
-        if ($role->role_id === 3) {
-
+        $broadcaster_id = Session::get('broadcaster_id');
+        $agency_id = Session::get('agency_id');
+        if ($broadcaster_id) {
             //redirect user to the new landing page of the broadcaster.
-            $broadcaster = Session::get('broadcaster_id');
-            $broadcaster_info = Utilities::switch_db('api')->select("SELECT * from broadcasters where id = '$broadcaster'");
+            $broadcaster_info = Utilities::switch_db('api')->select("SELECT * from broadcasters where id = '$broadcaster_id'");
             return view('broadcaster_module.landing_page', compact('broadcaster_info'));
 
-        } else if ($role->role_id === 4) {
+        } else if ($agency_id) {
             //agency dashboard
             $allBroadcasters = Utilities::switch_db('api')->select("SELECT * from broadcasters");
             $agency_id = Session::get('agency_id');

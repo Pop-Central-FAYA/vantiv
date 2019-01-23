@@ -44,4 +44,26 @@ class ClassMessages
 
     const CAMPAIGN_SUBMIT_TO_BROADCASTER_SUCCESS = 'Campaign submitted to broadcaster(s) successfully';
 
+    const EMAIL_PASSWORD_EMPTY = 'email and or password cannot be empty';
+
+    const INVALID_EMAIL_PASSWORD = 'email and or password invalid';
+
+    const EMAIL_CONFIRMATION = 'Please confirm your account first';
+
+    const BANNED_ACCOUNT = 'Your account has been banned, please contact your administrator';
+
+    const EMAIL_VERIFIED = 'Your email has been verified, you can now proceed to login with your credentials';
+
+    const EMAIL_ALREADY_VERIFIED = 'You have already verified your email, please proceed to login...';
+
+    const VERIFICATION_LINK = 'Please follow the link sent to your email';
+
+    const PASSWORD_CHANGED = 'You have successfully changed your password, please proceed to login';
+
+    const PROCESSING_ERROR = 'Error occurred while processing your request, please try again';
+
+    const WRONG_ACTIVATION = 'Wrong activation code...';
+
+    const EMAIL_NOT_FOUND = 'Email not found on our application';
+
 }
