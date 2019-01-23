@@ -390,15 +390,15 @@ class AuthController extends Controller
 
         $password = bcrypt($request->password);
 
-        $user = User::where('id', $user_id)->first();
-        $user->password = $password;
-        $user->save();
-
-        if($user){
-            return redirect()->route('login')->with('success', ClassMessages::PASSWORD_CHANGED);
-        }else{
+        try{
+            $user = User::where('id', $user_id)->first();
+            $user->password = $password;
+            $user->save();
+        }catch (\Exception $exception){
             return redirect()->back()->withErrors(ClassMessages::PROCESSING_ERROR);
         }
+        return redirect()->route('login')->with('success', ClassMessages::PASSWORD_CHANGED);
+
     }
 
 }
