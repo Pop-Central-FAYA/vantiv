@@ -3,6 +3,7 @@
 namespace Vanguard;
 
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 use Vanguard\Models\Agency;
 use Vanguard\Models\Broadcaster;
 use Vanguard\Presenters\UserPresenter;
@@ -22,7 +23,7 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract
     protected $keyType = 'string';
 
 
-    use TwoFactorAuthenticatable, CanResetPassword, PresentableTrait, AuthorizationUserTrait, Notifiable;
+    use TwoFactorAuthenticatable, CanResetPassword, PresentableTrait, AuthorizationUserTrait, Notifiable, HasRoles;
 
     protected $presenter = UserPresenter::class;
 
