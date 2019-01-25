@@ -21,13 +21,17 @@ class CreateBrandsTable extends Migration
         }
 
         $db_connection->create('brands', function (Blueprint $table) {
-            $table->string('id');
+            $table->string('id', 25);
             $table->string('name');
             $table->text('image_url');
             $table->string('industry_code');
             $table->string('sub_industry_code');
             $table->string('slug');
             $table->timestamps();
+
+            $table->primary('id');
+            $table->index('created_at');
+            $table->index('updated_at');
         });
 
         if ($db_connection->hasTable('brand_old')) {

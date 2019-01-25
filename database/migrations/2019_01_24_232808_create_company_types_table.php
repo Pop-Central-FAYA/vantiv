@@ -14,9 +14,13 @@ class CreateCompanyTypesTable extends Migration
     public function up()
     {
         Schema::create('company_types', function (Blueprint $table) {
-            $table->string('id');
+            $table->string('id', 25);
             $table->string('name');
             $table->timestamps();
+
+            $table->primary('id');
+            $table->index('created_at');
+            $table->index('updated_at');
         });
     }
 
