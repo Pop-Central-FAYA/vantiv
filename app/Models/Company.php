@@ -3,6 +3,7 @@
 namespace Vanguard\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Vanguard\User;
 
 class Company extends Model
 {
@@ -20,5 +21,10 @@ class Company extends Model
     public function users()
     {
         return $this->hasMany(User::class);
+    }
+
+    public function company_type()
+    {
+        return $this->belongsTo(CompanyType::class);
     }
 }

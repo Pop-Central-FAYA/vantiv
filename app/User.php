@@ -10,7 +10,6 @@ use Vanguard\Presenters\UserPresenter;
 use Vanguard\Services\Auth\TwoFactor\Authenticatable as TwoFactorAuthenticatable;
 use Vanguard\Services\Auth\TwoFactor\Contracts\Authenticatable as TwoFactorAuthenticatableContract;
 use Vanguard\Services\Logging\UserActivity\Activity;
-use Vanguard\Support\Authorization\AuthorizationUserTrait;
 use Vanguard\Support\Enum\UserStatus;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Laracasts\Presenter\PresentableTrait;
@@ -23,7 +22,7 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract
     protected $keyType = 'string';
 
 
-    use TwoFactorAuthenticatable, CanResetPassword, PresentableTrait, AuthorizationUserTrait, Notifiable, HasRoles;
+    use TwoFactorAuthenticatable, CanResetPassword, PresentableTrait, Notifiable, HasRoles;
 
     protected $presenter = UserPresenter::class;
 

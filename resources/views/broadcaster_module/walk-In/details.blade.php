@@ -49,7 +49,7 @@
 
                 <div class="column col_3">
                     <span class="small_faint">Joined</span>
-                    <p class='weight_medium'>{{ date('M j, Y', strtotime($user_details[0]->time_created)) }}</p>
+                    <p class='weight_medium'>{{ date('M j, Y', strtotime($user_details[0]->created_at)) }}</p>
                 </div>
             </div>
         </div>
