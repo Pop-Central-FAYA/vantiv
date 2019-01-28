@@ -401,12 +401,13 @@ class CampaignsController extends Controller
 
     public function submitWithCardPaymentOption(Request $request)
     {
-        $campaign_extras = new CampaignExtras($campaign_id, $this->broadcaster_id, $this->agency_id);
+        $campaign_extras = new CampaignExtras($request->campaign_id, $this->broadcaster_id, $this->agency_id);
         $check_start_date = $campaign_extras->checkStartDateAgainstCurrentDate();
         if($check_start_date == 'error'){
             Session::flash('error', ClassMessages::START_DATE_ERROR);
             return redirect()->back();
-        }        $payment_method = 'Card';
+        }
+        $payment_method = 'Card';
         $save_campaign_with_card_option = new CampaignCardPayment($request->user_id, $request->reference, $request->total, $request->campaign_id,
                                                 $payment_method, $this->broadcaster_id, $this->agency_id);
         $save_campaign = $save_campaign_with_card_option->processCampaignWithPaystack();
