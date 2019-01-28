@@ -141,7 +141,7 @@
                             <div class="w3-grey @if($percentage_value > 80) danger @else success_p @endif" style="height:24px;width:{{ $percentage_value }}%"></div>
                         </div>
                         <br>
-                        @if($percentage_value > 80)
+                        @if($percentage_value == 0 || $percentage_value > 80)
                             <div class="budget_div">
                                 <a href="#budget" class="btn modal_click small_btn">Increase Budget</a>
                             </div>
@@ -158,12 +158,12 @@
 
         <div class="modal_contain" id="budget">
             <div class="wallet_placer margin_center mb3"></div>
-            <form method="POST" class="selsec" action="{{ route('update.budget') }}">
+            <form method="POST" class="selsec" action="{{ route('campaign_budget.update') }}">
                 {{ csrf_field() }}
                 <div class="clearfix mb3">
                     <div class="input_wrap{{ $errors->has('campaign_budget') ? ' has-error' : '' }}">
                         <label class="small_faint">Campaign Budget</label>
-                        <input type="number" required @if((Session::get('first_step')) != null) value="{{ (Session::get('first_step'))->campaign_budget }}" @endif name="campaign_budget" placeholder="Campaign Budget">
+                        <input type="number" required @if((Session::get('campaign_information')) != null) value="{{ (Session::get('campaign_information'))->campaign_budget }}" @endif name="campaign_budget" placeholder="Campaign Budget">
 
                         @if($errors->has('campaign_budget'))
                             <strong>

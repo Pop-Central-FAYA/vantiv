@@ -68,7 +68,10 @@ class PreselectedAdslotService
         if(count($this->getPreselectedSlots()) == 1){
             return 'error';
         }
-        $this->compareCampaignBudgetWithTotalSpent($adslot_prices);
+        $total_spent = $this->getRecurrentTotal($adslot_prices);
+        if($total_spent > (integer)$this->campaign_general_information->campaign_budget){
+            return 'budget_exceed_error';
+        }
         $preselected_adslot = new PreselectedAdslot();
         $preselected_adslot->user_id = $this->user_id;
         $preselected_adslot->broadcaster_id = $this->broadcaster_id;
@@ -90,13 +93,11 @@ class PreselectedAdslotService
         return 'success';
     }
 
-    public function compareCampaignBudgetWithTotalSpent($adslot_prices)
+    public function getRecurrentTotal($adslot_prices)
     {
         $total_price = $this->sumTotalPriceByMediaBuyer();
         $new_total_price = (integer)$adslot_prices['new_price'] + $total_price;
-        if((integer)$new_total_price > (integer)$this->campaign_general_information->campaign_budget){
-            return 'budget_exceed_error';
-        }
+        return $new_total_price;
     }
 
     public function sumTotalPriceByMediaBuyer()

@@ -714,4 +714,17 @@ class CampaignsController extends Controller
         return $time_remainders;
     }
 
+    public function updateBudget(Request $request)
+    {
+        $campaign_old_budget = Session::get('campaign_information')->campaign_budget;
+        if((int)$campaign_old_budget < (int)$request->campaign_budget){
+            Session::get('campaign_information')->campaign_budget = $request->campaign_budget;
+            Session::flash('success', ClassMessages::CAMPAIGN_BUDGET_UPDATE);
+            return back();
+        }else{
+            Session::get('error', ClassMessages::CAMPAIGN_BUDGET_ERROR);
+            return redirect()->back();
+        }
+    }
+
 }

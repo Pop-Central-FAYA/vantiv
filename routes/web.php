@@ -121,6 +121,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/submit-to-broadcasters/{campaign_id}', 'Campaign\CampaignsController@submitWithOtherPaymentOption')->name('campaign.submit.other_payment');
         Route::post('/payment-process', 'Campaign\CampaignsController@submitWithCardPaymentOption')->name('broadcaster.pay');
         Route::post('/submit-to-broadcasters/agency/{campaign_id}', 'Campaign\CampaignsController@submitAgencyCampaign')->name('agency.campaign.update');
+        Route::post('/update-campaign-budget', 'Campaign\CampaignsController@updateBudget')->name('campaign_budget.update');
+
 
 
         Route::get('/create/step3_1/{id}', 'Broadcaster\CampaignsController@storeStep3_1')->name('campaign.create3_1');
@@ -327,7 +329,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/compliance-graph', 'Agency\CampaignsController@complianceGraph');
             Route::get('/compliance-graph/filter', 'Agency\CampaignsController@complianceFilter')->name('campaign_details.compliance');
 
-            Route::post('/update-budget', 'Agency\CampaignsController@updateBudget')->name('update.budget');
+
 
 
 
