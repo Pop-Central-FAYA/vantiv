@@ -46,6 +46,22 @@
                     </div>
                 </div>
 
+                @if(Session::get('agency_id'))
+                    <div class="media_houses mb3 clearfix" style="margin-top: -30px;">
+                        @foreach($adslot_search_results as $adslot_search_result)
+                            <div class='align_center one_media broad_click @if($adslot_search_result->broadcaster == $broadcaster) active @endif'>
+                                <input type="hidden" name="broadcaster" value="{{ $adslot_search_result->broadcaster }}" id="broadcaster">
+                                <div><a href="{{ route('campaign.adslot_selection', ['id' => $id, 'broadcaster' => $adslot_search_result->broadcaster,'start_date' => $campaign_start_date,'end_date' => $campaign_end_date]) }}">
+                                        <img src="{{ asset($adslot_search_result->broadcaster_logo ? $adslot_search_result->broadcaster_logo : '') }}">
+                                    </a>
+                                </div>
+                                <span class="small_faint">{{ $adslot_search_result->broadcaster_brand }}</span>
+                            </div>
+                        @endforeach
+                    </div>
+                    <p><br></p>
+                @endif
+
                 <!-- time slots -->
                 <div class="media_houses mb3 clearfix">
                     <div class="align_center col_2" style="float:left">
