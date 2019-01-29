@@ -17,7 +17,7 @@ class CreateCompaniesTable extends Migration
             $table->string('id', 25);
             $table->string('name');
             $table->string('parent_company_id');
-            $table->string('address');
+            $table->string('address')->nullable();
             $table->string('channel_id');
             $table->text('logo');
             $table->timestamps();
