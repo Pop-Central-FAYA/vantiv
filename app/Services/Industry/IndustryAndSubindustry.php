@@ -18,7 +18,7 @@ class IndustryAndSubindustry
     //This method gets the indusrty and sub industry a brand belongs to
     public function getBrandIndustryAndSubIndustry()
     {
-        $brand = new BrandDetails($this->brand_id);
+        $brand = new BrandDetails($this->brand_id, null);
         $brand_details = $brand->getBrandDetails();
         $industry = Sector::where('sector_code', $brand_details->industry_code)->first();
         $sub_industry = SubSector::where('sub_sector_code', $brand_details->sub_industry_code)->first();

@@ -11,7 +11,14 @@ use Vanguard\Http\Requests\WalkinStoreRequest;
 use Vanguard\Http\Requests\WalkinUpdateRequest;
 // use Vanguard\Libraries\Amazon;
 use Vanguard\Libraries\AmazonS3;
+use Vanguard\Libraries\Enum\ClassMessages;
 use Vanguard\Models\Brand;
+use Vanguard\Services\Brands\BrandDetails;
+use Vanguard\Services\Brands\ClientBrand;
+use Vanguard\Services\Brands\CreateBrand;
+use Vanguard\Services\Brands\CreateBrandClient;
+use Vanguard\Services\User\CreateUser;
+use Vanguard\Services\Walkin\CreateWalkIns;
 use Yajra\DataTables\DataTables;
 use Vanguard\Libraries\Utilities;
 use Session;
@@ -21,6 +28,18 @@ use Illuminate\Support\Facades\DB;
 class WalkinsController extends Controller
 {
     //NB: agency_id is assumed to be the broadcaster user
+    private $broadcaster_id;
+    private $agency_id;
+
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            $this->broadcaster_id = Session::get('broadcaster_id');
+            $this->agency_id = Session::get('agency_id');
+            return $next($request);
+        });
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -29,18 +48,10 @@ class WalkinsController extends Controller
     public function index()
     {
         $broadcaster_id = Session::get('broadcaster_id');
-        $broadcaster_user = Session::get('broadcaster_user_id');
 
-        if($broadcaster_id){
-            $clients = Utilities::switch_db('api')->select("SELECT w.user_id, w.id, u.id as user_det_id, u.firstname, u.lastname, u.phone_number,
+        $clients = Utilities::switch_db('api')->select("SELECT w.user_id, w.id, u.id as user_det_id, u.firstname, u.lastname, u.phone_number,
                                                                 w.location, w.company_logo, w.company_name, w.time_created, u.email, w.image_url from walkIns as w
                                                                 INNER JOIN users as u ON u.id = w.user_id where w.broadcaster_id = '$broadcaster_id'");
-        }else{
-            $clients = Utilities::switch_db('api')->select("SELECT w.user_id, w.id, u.id as user_det_id, u.firstname, u.lastname, u.phone_number, w.location,
-                                                                w.company_logo, w.company_name, w.time_created, u.email, w.image_url from walkIns as w
-                                                                INNER JOIN users as u ON u.id = w.user_id
-                                                                where w.agency_id = '$broadcaster_user'");
-        }
 
         $client_data = $this->getClientDetails($clients, $broadcaster_id);
 
@@ -144,110 +155,46 @@ class WalkinsController extends Controller
      */
     public function store(WalkinStoreRequest $request)
     {
-        $user_agent = $_SERVER['HTTP_USER_AGENT'];
-        $description = 'Client '.$request->first_name.' '. $request->last_name.' with brand '.$request->brand_name.' Created by '.Session::get('agency_id');
-        $ip = request()->ip();
-        $client_id = uniqid();
-        $api_db = Utilities::switch_db('api');
-        $local_db = Utilities::switch_db('local');
-        $broadcaster_id = Session::get('broadcaster_id');
-        $agency_id = Session::get('agency_id');
-        if($broadcaster_id){
-            $broadcaster_agency_id = $broadcaster_id;
-            $role_id = $api_db->select("SELECT role_id from users WHERE id = ( SELECT user_id from broadcasters WHERE id = '$broadcaster_id')");
+        if($this->broadcaster_id){
+            $client_id = $this->broadcaster_id;
         }else{
-            $broadcaster_agency_id = $agency_id;
-            $role_id = Utilities::switch_db('reports')->select("SELECT id as role_id FROM roles WHERE name = 'agency_client'");
+            $client_id = $this->agency_id;
         }
-
         $brand_slug = Utilities::formatString($request->brand_name);
-        $unique = uniqid();
-        $check_brand = $api_db->select("SELECT b.* from brand_client as b_c INNER JOIN brands as b ON b.id = b_c.brand_id
-                                                                WHERE b.slug = '$brand_slug' AND client_id = '$broadcaster_agency_id'");
-
-        if(count($check_brand) > 0) {
-            Session::flash('error', 'Brands already exists');
+        $client_brands = new ClientBrand($brand_slug, $client_id);
+        if($client_brands->checkForBrandExistence() == 'brand_exist'){
+            Session::flash('error', ClassMessages::BRAND_ALREADY_EXIST);
             return redirect()->back();
         }
+        try{
+            Utilities::switch_db('api')->transaction(function () use($request, $brand_slug, $client_id) {
+                $user_service = new CreateUser($request->first_name,$request->last_name,$request->email, $request->username,
+                    $request->phone, '', 'walkins' );
+                $user = $user_service->createUser();
 
-        $api_db->beginTransaction();
-        $local_db->beginTransaction();
+                $walkin_service = new CreateWalkIns($user->id, $this->broadcaster_id, $this->agency_id, $request->company_logo,
+                    $request->client_type_id, $request->address,$request->company_name, $request->broadcaster_id);
+                $store_walkin = $walkin_service->createWalkIn();
 
-        try {
-            Utilities::insertIntoUsersLocalDb($request);
-        }catch (\Exception $e){
-            $local_db->rollback();
-            Session::flash('error', 'There was a problem creating this walk-In');
-            return redirect()->back();
+                $brands = new BrandDetails(null, $brand_slug);
+                $brand_details = $brands->getBrandDetails();
+                if(!$brand_details){
+                    $store_brand_service = new CreateBrand($request->brand_name, $request->company_logo, $request->industry,
+                        $request->sub_industry, $brand_slug);
+                    $store_brand = $store_brand_service->storeBrand();
+
+                    $store_brand_client_service = new CreateBrandClient($this->broadcaster_id,$store_brand->id,$client_id,$store_walkin->id);
+                    $store_brand_client = $store_brand_client_service->storeClientBrand();
+                }else{
+                    $store_brand_client_service = new CreateBrandClient($this->broadcaster_id,$brand_details->id,$client_id,$store_walkin->id);
+                    $store_brand_client = $store_brand_client_service->storeClientBrand();
+                }
+            });
+        }catch (\Exception $exception){
+            dd($exception);
         }
 
-        $user_id = \DB::select("SELECT id from users WHERE email = '$request->email'");
-
-        try {
-            Utilities::insertRolesInLocalDb($user_id[0]->id);
-        }catch(\Exception $e) {
-            $local_db->rollback();
-            Session::flash('error', 'There was a problem creating this walk-In');
-            return redirect()->back();
-        }
-
-        try {
-            Utilities::insertIntoUsersApiDB($request, $role_id[0]->role_id);
-        }catch(\Exception $e) {
-            $api_db->rollback();
-            Session::flash('error', 'There was a problem creating this walk-In');
-            return redirect()->back();
-        }
-
-        $apiUserDetails = Utilities::switch_db('api')->select("SELECT * FROM users where email = '$request->email'");
-
-        try {
-            $company_image = $request->company_logo;
-            Utilities::insertIntoWalkinsApiDB($client_id, $apiUserDetails[0]->id, $broadcaster_id, $request, $company_image, $agency_id);
-        }catch (\Exception $e){
-            $api_db->rollback();
-            Session::flash('error', 'There was a problem creating this walk-In');
-            return redirect()->back();
-        }
-
-        //check if the brand exists in the brands table and if not create the brand in the brands table and attach the client in the brand_client table.
-        $checkIfBrandExists = Brand::where('slug', $brand_slug)->first();
-        if(!$checkIfBrandExists){
-            $brand_logo = $request->file('image_url');
-            $image_url = $request->image_url;
-            $brand = new Brand();
-            try {
-                Utilities::storeBrands($brand, $request, $unique, $image_url, $brand_slug);
-            }catch (\Exception $e) {
-                $api_db->rollback();
-                Session::flash('error', 'There was a problem creating this walk-In');
-                return redirect()->back();
-            }
-
-            try{
-                Utilities::storeBrandClient($unique, $broadcaster_agency_id, $client_id);
-            }catch (\Exception $e){
-                $api_db->rollback();
-                Session::flash('error', 'There was a problem creating this walk-In');
-                return redirect()->back();
-            }
-
-        }else{
-            try {
-                Utilities::storeBrandClient($checkIfBrandExists->id, $broadcaster_agency_id, $client_id);
-            }catch (\Exception $e){
-                $api_db->rollback();
-                Session::flash('error', 'There was a problem creating this walk-In');
-                return redirect()->back();
-            }
-        }
-
-        $save_activity = Api::saveActivity($broadcaster_agency_id, $description, $ip, $user_agent);
-
-        $api_db->commit();
-        $local_db->commit();
-        Session::flash('success', 'Client created successfully');
-        if($broadcaster_id){
+        if($this->broadcaster_id){
             return redirect()->route('walkins.all');
         }else{
             return redirect()->route('clients.list');

@@ -1181,7 +1181,7 @@ class Utilities {
 
     public static function insertIntoUsersLocalDb($request)
     {
-        return DB::table('users')->insert([
+        return ([
             'email' => $request->email,
             'username' => $request->username,
             'password' => bcrypt('password'),
@@ -1204,17 +1204,17 @@ class Utilities {
     public static function insertIntoUsersApiDB($request, $role_id)
     {
         return Utilities::switch_db('api')->table('users')->insert([
-            'id' => uniqid(),
-            'role_id' => $role_id,
-            'email' => $request->email,
-            'token' => '',
-            'password' => bcrypt('password'),
-            'firstname' => $request->first_name,
-            'lastname' => $request->last_name,
-            'phone_number' => $request->phone,
-            'user_type' => 4,
-            'status' => 1
-        ]);
+                    'id' => uniqid(),
+                    'role_id' => $role_id,
+                    'email' => $request->email,
+                    'token' => '',
+                    'password' => bcrypt('password'),
+                    'firstname' => $request->first_name,
+                    'lastname' => $request->last_name,
+                    'phone_number' => $request->phone,
+                    'user_type' => 4,
+                    'status' => 1
+                ]);
     }
 
     public static function insertIntoWalkinsApiDB($client_id, $user_id, $broadcaster_id, $request, $company_image, $agency_id)

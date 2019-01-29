@@ -70,4 +70,6 @@ class ClassMessages
 
     const CAMPAIGN_BUDGET_ERROR = 'You cannot update the budget with an amount lower than the earlier';
 
+    const BRAND_ALREADY_EXIST = 'Brands already exists';
+
 }
