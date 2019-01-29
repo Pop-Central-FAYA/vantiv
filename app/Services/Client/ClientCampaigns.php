@@ -22,9 +22,9 @@ class ClientCampaigns
     {
         return Utilities::switch_db('api')->table('campaignDetails')
             ->when($this->broadcaster_id, function($query) {
-                return $query->where('broadcaster', $this->broadcaster_id);
+                return $query->where('campaignDetails.broadcaster', $this->broadcaster_id);
             })
-            ->where('user_id', $this->user_id);
+            ->where('campaignDetails.user_id', $this->user_id);
     }
 
     public function clientCampaigns()
@@ -52,6 +52,30 @@ class ClientCampaigns
     public function countAllClientCampaigns()
     {
         return count($this->clientCampaigns());
+    }
+
+    public function getComprehensiveDetails()
+    {
+        return $this->baseQuery()
+            ->join('payments', 'payments.campaign_id', '=', 'campaignDetails.campaign_id')
+            ->join('brands', 'brands.id', '=', 'campaignDetails.brand')
+            ->join('campaigns', 'campaigns.id', '=', 'campaignDetails.campaign_id')
+            ->select('campaignDetails.campaign_id', 'campaignDetails.name', 'campaignDetails.product',
+                'campaignDetails.start_date', 'campaignDetails.stop_date', 'campaignDetails.adslots',
+                'campaigns.campaign_reference','payments.total', 'brands.name AS brands', 'campaignDetails.time_created',
+                'brands.name AS brand', 'payments.campaign_budget AS budget', 'campaignDetails.status'
+                )
+            ->where('campaignDetails.adslots', '>', 0)
+            ->orderBy('campaignDetails.time_created', 'DESC')
+            ->get();
+
+    }
+
+    public function getClientTotalSpent()
+    {
+        return $this->baseQuery()
+            ->join('payments', 'payments.campaign_id', '=', 'campaignDetails.campaign_id')
+            ->sum('total');
     }
 
 }

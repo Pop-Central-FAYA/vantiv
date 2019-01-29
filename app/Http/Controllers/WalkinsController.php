@@ -7,6 +7,7 @@ use Illuminate\Support\Collection;
 use Vanguard\Http\Requests\WalkinStoreRequest;
 use Vanguard\Http\Requests\WalkinUpdateRequest;
 use Vanguard\Libraries\Enum\ClassMessages;
+use Vanguard\Services\Brands\BrandCampaigns;
 use Vanguard\Services\Brands\BrandDetails;
 use Vanguard\Services\Brands\ClientBrand;
 use Vanguard\Services\Brands\CreateBrand;
@@ -14,8 +15,11 @@ use Vanguard\Services\Brands\CreateBrandClient;
 use Vanguard\Services\Client\ClientCampaigns;
 use Vanguard\Services\Client\ClientDetails;
 use Vanguard\Services\Client\ClientTotalSpent;
+use Vanguard\Services\Industry\IndustryList;
+use Vanguard\Services\Industry\SubIndustryList;
 use Vanguard\Services\User\CreateUser;
 use Vanguard\Services\User\UpdateUser;
+use Vanguard\Services\User\UserDetails;
 use Vanguard\Services\Walkin\CreateWalkIns;
 use Vanguard\Libraries\Utilities;
 use Session;
@@ -195,54 +199,70 @@ class WalkinsController extends Controller
 
     public function getDetails($client_id)
     {
-        $broadcaster_id = Session::get('broadcaster_id');
-        $client = Utilities::switch_db('reports')->select("SELECT * FROM walkIns WHERE id = '$client_id'");
+        $client_details_service = new ClientDetails($client_id, null);
+        $client_details = $client_details_service->run();
 
-        $user_id = $client[0]->user_id;
+        $client_campaign_service = new ClientCampaigns($client_details->user_id, $this->broadcaster_id, null);
+        $client_campaigns = $client_campaign_service->getComprehensiveDetails();
 
-        $all_campaigns = Utilities::getClientCampaignData($user_id, $broadcaster_id);
+        $client_brands_service = new ClientBrands($client_id);
+        $client_brands = $client_brands_service->run();
 
-        $all_brands = Utilities::getClientsBrands($client_id, $broadcaster_id);
+        $brands = $this->getBrandDetails($client_brands);
 
-        if(count($all_brands) === 0){
-            Session::flash('info', 'You don`t have a brand on this client');
+        if(count($brands) === 0){
+            Session::flash('info', ClassMessages::EMPTY_BRAND_FOR_CLIENT);
             return redirect()->back();
         }
 
-        $total = Utilities::switch_db('api')->select("SELECT SUM(total) as total from payments where campaign_id IN (SELECT campaign_id from campaignDetails where user_id = '$user_id' and broadcaster = '$broadcaster_id') ");
+        $user_details = new UserDetails($client_details->user_id);
 
-        $campaigns = Utilities::switch_db('api')->select("SELECT c.campaign_id, c.adslots, c.time_created, c.product, p.total, c.time_created from campaignDetails as c
-                                                              INNER JOIN payments as p ON p.campaign_id = c.campaign_id where c.user_id = '$user_id' and c.broadcaster = '$broadcaster_id'");
+        $industries = new IndustryList();
 
-        $user_camp = Utilities::clientscampaigns($campaigns);
+        $sub_industries = new SubIndustryList();
 
-        $user_details = Utilities::switch_db('api')->select("SELECT * FROM users where id = '$user_id'");
-
-//        campaign vs time graph
-        $campaign_graph = Utilities::clientGraph($campaigns);
+        //        campaign vs time graph
+        $campaign_graph = Utilities::clientGraph($client_campaigns);
         $campaign_payment = $campaign_graph['campaign_payment'];
         $campaign_date = $campaign_graph['campaign_date'];
 
-        $industries = Utilities::switch_db('api')->select("
-            SELECT * FROM sectors
-            ORDER BY `name` ASC
-        ");
-
-        $sub_inds = Utilities::switch_db('api')->select("SELECT sub.id, sub.sector_id, sub.name, sub.sub_sector_code from subSectors as sub, sectors as s where sub.sector_id = s.sector_code");
-
         return view('broadcaster_module.walk-In.details')->with('clients')
             ->with('client_id', $client_id)
-            ->with('client', $client)
-            ->with('user_details', $user_details)
-            ->with('campaign', $user_camp)
-            ->with('all_campaigns', $all_campaigns)
-            ->with('all_brands', $all_brands)
-            ->with('total', $total)
+            ->with('user_details', $user_details->getUserDetails())
+            ->with('client', $client_details)
+            ->with('all_campaigns', $client_campaigns)
+            ->with('all_brands', $brands)
             ->with('campaign_payment', $campaign_payment)
             ->with('campaign_date', $campaign_date)
-            ->with('total_spent', $total)
-            ->with('industries', $industries)
-            ->with('sub_industries', $sub_inds);
+            ->with('total_spent', $client_campaign_service->getClientTotalSpent())
+            ->with('industries', $industries->industryList())
+            ->with('sub_industries', $sub_industries->getSubIndustryGroupByIndustry());
+
+
     }
+
+    public function getBrandDetails($client_brands)
+    {
+        $brands = [];
+        foreach ($client_brands as $client_brand){
+            $brand_campaigns_service = new BrandCampaigns($client_brand->id, $client_brand->client_walkins_id,
+                $this->broadcaster_id, $this->agency_id);
+            $brands[] = [
+                'id' => $client_brand->id,
+                'client_id' => $client_brand->client_walkins_id,
+                'brand' => $client_brand->name,
+                'date' => $client_brand->created_at,
+                'count_brand' => count($client_brands),
+                'campaigns' => $brand_campaigns_service->countAllBrandCampaigns(),
+                'image_url' => $client_brand->image_url,
+                'last_campaign' => $brand_campaigns_service->countAllBrandCampaigns() != 0 ? $brand_campaigns_service->getBrandLastCampaign()->name : 'none',
+                'total' => number_format($brand_campaigns_service->getBrandTotalSpent(),2),
+                'industry_id' => $client_brand->industry_code,
+                'sub_industry_id' => $client_brand->sub_industry_code,
+            ];
+        }
+        return $brands;
+    }
+
 
 }

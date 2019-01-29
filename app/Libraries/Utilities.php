@@ -388,11 +388,14 @@ class Utilities {
         $walkin_brands = Utilities::getBrandsForWalkins($id);
         $brands = [];
         foreach ($walkin_brands as $walkin_brand){
-            $campaigns = Utilities::switch_db('api')->select("SELECT * from campaignDetails where brand = '$walkin_brand->id' and walkins_id = '$walkin_brand->client_walkins_id'
+            $campaigns = Utilities::switch_db('api')->select("SELECT * from campaignDetails where 
+                                                        brand = '$walkin_brand->id' and walkins_id = '$walkin_brand->client_walkins_id'
                                                                 and broadcaster = '$broadcaster_id'");
             $last_count_campaign = count($campaigns) - 1;
-            $pay = Utilities::switch_db('api')->select("SELECT SUM(total) as total from payments where campaign_id IN (SELECT campaign_id from campaignDetails where
-                                                            brand = '$walkin_brand->id' and walkins_id = '$walkin_brand->client_walkins_id' and broadcaster = '$broadcaster_id')");
+            $pay = Utilities::switch_db('api')->select("SELECT SUM(total) as total from payments where campaign_id IN 
+                                                            (SELECT campaign_id from campaignDetails where
+                                                            brand = '$walkin_brand->id' and walkins_id = '$walkin_brand->client_walkins_id' 
+                                                            and broadcaster = '$broadcaster_id')");
             $brands[] = [
                 'id' => $walkin_brand->id,
                 'client_id' => $walkin_brand->client_walkins_id,
@@ -983,9 +986,9 @@ class Utilities {
         $all_campaign_total_graph = [];
         $all_campaign_date_graph = [];
 
-        foreach ($campaigns as $all_camp){
-            $all_campaign_total_graph[] = $all_camp->total;
-            $all_campaign_date_graph[] = date('Y-m-d', strtotime($all_camp->time_created));
+        foreach ($campaigns as $campaign){
+            $all_campaign_total_graph[] = $campaign->total;
+            $all_campaign_date_graph[] = date('Y-m-d', strtotime($campaign->time_created));
         }
 
 

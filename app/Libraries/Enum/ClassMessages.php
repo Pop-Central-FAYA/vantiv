@@ -78,4 +78,6 @@ class ClassMessages
 
     const UPDATE_WALKINS_SUCCESS = 'Client details updated successfully';
 
+    const EMPTY_BRAND_FOR_CLIENT = 'You don`t have a brand on this client';
+
 }
