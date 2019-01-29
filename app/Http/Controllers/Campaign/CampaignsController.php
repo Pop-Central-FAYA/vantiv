@@ -239,12 +239,21 @@ class CampaignsController extends Controller
         $rate_card_object = new RatecardService($this->campaign_general_information, $broadcaster_id,
                                                 $start_date,$end_date,$broadcaster_details);
         $rate_cards = $rate_card_object->run();
+
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
         $col = new Collection($rate_cards['rate_cards']);
         $perPage = 100;
         $currentPageSearchResults = $col->slice(($currentPage - 1) * $perPage, $perPage)->all();
         $entries = new LengthAwarePaginator($currentPageSearchResults, count($col), $perPage);
         $entries->setPath('/campaign/adslot-selection/'.$id.'/'.$this->broadcaster_id);
+
+        //when dealing with multiple broadcasters
+        $adslot_results = new AdslotFilterResult($this->campaign_general_information, $this->broadcaster_id, $this->agency_id,
+                                $this->campaign_general_information->start_date,$this->campaign_general_information->end_date);
+        $campaign_first_week = $this->campaign_date->getFirstWeek($this->campaign_general_information->start_date,
+                                $this->campaign_general_information->end_date);
+        $campaign_start_date = current($campaign_first_week);
+        $campaign_end_date = end($campaign_first_week);
 
         return view('campaigns.adslot_selection')
             ->with('ratecards', $entries)
@@ -256,7 +265,10 @@ class CampaignsController extends Controller
             ->with('positions', $file_positions)
             ->with('ratings', $rate_cards['adslots'])
             ->with('campaign_dates_by_week', $campaign_week)
-            ->with('campaign_general_information', $this->campaign_general_information);
+            ->with('campaign_general_information', $this->campaign_general_information)
+            ->with('adslot_search_results', $adslot_results->adslotFilterResult())
+            ->with('campaign_start_date', $campaign_start_date)
+            ->with('campaign_end_date', $campaign_end_date);
 
     }
 
@@ -289,10 +301,13 @@ class CampaignsController extends Controller
                                                 $this->campaign_general_information->start_date,$this->campaign_general_information->end_date);
         $campaign_first_week = $this->campaign_date->getFirstWeek($this->campaign_general_information->start_date,
                                                                     $this->campaign_general_information->end_date);
+        $start_date = current($campaign_first_week);
+        $end_date = end($campaign_first_week);
         return view('campaigns.broadcaster_select')
                     ->with('adslot_search_results', $adslot_results->adslotFilterResult())
                     ->with('id', $id)
-                    ->with('campaign_first_week', $campaign_first_week);
+                    ->with('start_date', $start_date)
+                    ->with('end_date', $end_date);
     }
 
     public function checkout($id)
@@ -307,7 +322,7 @@ class CampaignsController extends Controller
         $count_preselected_adslot = $preselected_adslot_object->countPreselectedAdslot();
         if($count_preselected_adslot == 0){
             Session::flash('error', ClassMessages::EMPTY_CART_MESSAGE);
-            return redirect()->back();
+            return redirect()->route('campaign.broadcaster_select', ['id' => $id]);
         }
         $campaign_weeks = $this->campaign_date->groupCampaignDateByWeek($this->campaign_general_information->start_date,
                                                                         $this->campaign_general_information->end_date);
@@ -401,12 +416,13 @@ class CampaignsController extends Controller
 
     public function submitWithCardPaymentOption(Request $request)
     {
-        $campaign_extras = new CampaignExtras($campaign_id, $this->broadcaster_id, $this->agency_id);
+        $campaign_extras = new CampaignExtras($request->campaign_id, $this->broadcaster_id, $this->agency_id);
         $check_start_date = $campaign_extras->checkStartDateAgainstCurrentDate();
         if($check_start_date == 'error'){
             Session::flash('error', ClassMessages::START_DATE_ERROR);
             return redirect()->back();
-        }        $payment_method = 'Card';
+        }
+        $payment_method = 'Card';
         $save_campaign_with_card_option = new CampaignCardPayment($request->user_id, $request->reference, $request->total, $request->campaign_id,
                                                 $payment_method, $this->broadcaster_id, $this->agency_id);
         $save_campaign = $save_campaign_with_card_option->processCampaignWithPaystack();
@@ -696,6 +712,19 @@ class CampaignsController extends Controller
         }
 
         return $time_remainders;
+    }
+
+    public function updateBudget(Request $request)
+    {
+        $campaign_old_budget = Session::get('campaign_information')->campaign_budget;
+        if((int)$campaign_old_budget < (int)$request->campaign_budget){
+            Session::get('campaign_information')->campaign_budget = $request->campaign_budget;
+            Session::flash('success', ClassMessages::CAMPAIGN_BUDGET_UPDATE);
+            return back();
+        }else{
+            Session::get('error', ClassMessages::CAMPAIGN_BUDGET_ERROR);
+            return redirect()->back();
+        }
     }
 
 }

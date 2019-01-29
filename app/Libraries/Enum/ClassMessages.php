@@ -66,4 +66,8 @@ class ClassMessages
 
     const EMAIL_NOT_FOUND = 'Email not found on our application';
 
+    const CAMPAIGN_BUDGET_UPDATE = 'Campaign Budget Updated';
+
+    const CAMPAIGN_BUDGET_ERROR = 'You cannot update the budget with an amount lower than the earlier';
+
 }
