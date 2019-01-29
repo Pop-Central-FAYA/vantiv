@@ -2,28 +2,23 @@
 
 namespace Vanguard\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
-use JD\Cloudder\Facades\Cloudder;
-use Vanguard\Http\Requests\StoreWalkins;
 use Vanguard\Http\Requests\WalkinStoreRequest;
 use Vanguard\Http\Requests\WalkinUpdateRequest;
-// use Vanguard\Libraries\Amazon;
-use Vanguard\Libraries\AmazonS3;
 use Vanguard\Libraries\Enum\ClassMessages;
-use Vanguard\Models\Brand;
 use Vanguard\Services\Brands\BrandDetails;
 use Vanguard\Services\Brands\ClientBrand;
 use Vanguard\Services\Brands\CreateBrand;
 use Vanguard\Services\Brands\CreateBrandClient;
+use Vanguard\Services\Client\ClientCampaigns;
+use Vanguard\Services\Client\ClientTotalSpent;
 use Vanguard\Services\User\CreateUser;
 use Vanguard\Services\Walkin\CreateWalkIns;
-use Yajra\DataTables\DataTables;
 use Vanguard\Libraries\Utilities;
 use Session;
-use Vanguard\Libraries\Api;
-use Illuminate\Support\Facades\DB;
+use Vanguard\Services\Walkin\WalkInLists;
+use Vanguard\Services\Client\ClientBrand as ClientBrands;
 
 class WalkinsController extends Controller
 {
@@ -47,13 +42,10 @@ class WalkinsController extends Controller
      */
     public function index()
     {
-        $broadcaster_id = Session::get('broadcaster_id');
+        $walkins_list_service = new WalkInLists($this->broadcaster_id, null);
+        $wlakins = $walkins_list_service->getWalkInList();
 
-        $clients = Utilities::switch_db('api')->select("SELECT w.user_id, w.id, u.id as user_det_id, u.firstname, u.lastname, u.phone_number,
-                                                                w.location, w.company_logo, w.company_name, w.time_created, u.email, w.image_url from walkIns as w
-                                                                INNER JOIN users as u ON u.id = w.user_id where w.broadcaster_id = '$broadcaster_id'");
-
-        $client_data = $this->getClientDetails($clients, $broadcaster_id);
+        $client_data = $this->getClientDetails($wlakins);
 
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
         $col = new Collection($client_data);
@@ -70,51 +62,32 @@ class WalkinsController extends Controller
         return view('broadcaster_module.walk-In.index')->with('clients', $entries)->with('industries', $industries);
     }
 
-    public function getClientDetails($clients, $broadcaster_id)
+    public function getClientDetails($clients)
     {
         $client_data = [];
 
         foreach ($clients as $client) {
-
-            $campaigns = Utilities::switch_db('api')->select("SELECT * from campaignDetails where user_id = '$client->user_id' and broadcaster = '$broadcaster_id'");
-            $last_count_campaign = count($campaigns) - 1;
-
-            $active_campaigns = [];
-
-            $inactive_campaigns = [];
-
-            $brs = Utilities::getBrandsForWalkins($client->id);
-
-            $today = date("Y-m-d");
-
-            foreach ($campaigns as $campaign){
-                if($campaign->stop_date > $today){
-                    $active_campaigns[] = $campaign;
-                }else{
-                    $inactive_campaigns[] = $campaign;
-                }
-            }
-
-            $payments = Utilities::switch_db('api')->select("SELECT SUM(total) as total from payments WHERE campaign_id IN
-                                                              (SELECT campaign_id from campaignDetails WHERE user_id = '$client->user_id' and broadcaster = '$broadcaster_id')");
-
+            $client_campaign_service = new ClientCampaigns($client->user_id, $this->broadcaster_id, $this->agency_id);
+            $client_brand_services = new ClientBrands($client->id);
+            $client_brand = $client_brand_services->run();
+            $total_spent = new ClientTotalSpent($client->user_id, $this->broadcaster_id, null);
             $client_data[] = [
                 'client_id' => $client->id,
                 'user_id' => $client->user_id,
-                'agency_client_id' => $client->user_det_id,
+                'agency_client_id' => $client->user_id,
                 'image_url' => $client->image_url,
-                'num_campaign' => $campaigns ? count($campaigns) : 0,
-                'total' => $payments[0]->total,
+                'num_campaign' => $client_campaign_service->countAllClientCampaigns(),
+                'total' => $total_spent->getClientTotalSpent(),
                 'name' =>  $client->lastname . ' ' . $client->firstname,
                 'email' => $client->email,
                 'phone_number' => $client->phone_number,
                 'first_name' => $client->firstname,
                 'last_name' => $client->lastname,
                 'created_at' => $client->time_created,
-                'last_camp' => $campaigns ? $campaigns[$last_count_campaign]->time_created : 0,
-                'active_campaign' => count($active_campaigns),
-                'inactive_campaign' => count($inactive_campaigns),
-                'count_brands' => count($brs),
+                'last_camp' => $client_campaign_service->countAllClientCampaigns() !== 0 ? $client_campaign_service->getLastCampaign()->time_created : 0,
+                'active_campaign' => $client_campaign_service->countActiveCampaigns(),
+                'inactive_campaign' => $client_campaign_service->countInactiveCampaigns(),
+                'count_brands' => count($client_brand),
                 'company_name' => $client->company_name,
                 'company_logo' => $client->company_logo,
                 'location' => $client->location,
