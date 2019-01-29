@@ -60,13 +60,9 @@ class WalkinsController extends Controller
         $currentPageSearchResults = $col->slice(($currentPage - 1) * $perPage, $perPage)->all();
         $entries = new LengthAwarePaginator($currentPageSearchResults, count($col), $perPage);
         $entries->setPath('list');
+        $industries = new IndustryList();
 
-        $industries = Utilities::switch_db('api')->select("
-            SELECT * FROM sectors
-            ORDER BY `name` ASC
-        ");
-
-        return view('broadcaster_module.walk-In.index')->with('clients', $entries)->with('industries', $industries);
+        return view('broadcaster_module.walk-In.index')->with('clients', $entries)->with('industries', $industries->industryList());
     }
 
     public function getClientDetails($clients)
