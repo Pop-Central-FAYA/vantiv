@@ -74,4 +74,8 @@ class ClassMessages
 
     const WALKIN_ERROR = 'There was an error creating the client, please contact administrator';
 
+    const UPDATE_WALKINS_ERROR = 'An error occured while updating the client';
+
+    const UPDATE_WALKINS_SUCCESS = 'Client details updated successfully';
+
 }

@@ -12,11 +12,14 @@ use Vanguard\Services\Brands\ClientBrand;
 use Vanguard\Services\Brands\CreateBrand;
 use Vanguard\Services\Brands\CreateBrandClient;
 use Vanguard\Services\Client\ClientCampaigns;
+use Vanguard\Services\Client\ClientDetails;
 use Vanguard\Services\Client\ClientTotalSpent;
 use Vanguard\Services\User\CreateUser;
+use Vanguard\Services\User\UpdateUser;
 use Vanguard\Services\Walkin\CreateWalkIns;
 use Vanguard\Libraries\Utilities;
 use Session;
+use Vanguard\Services\Walkin\UpdateWalkIns;
 use Vanguard\Services\Walkin\WalkInLists;
 use Vanguard\Services\Client\ClientBrand as ClientBrands;
 
@@ -120,12 +123,6 @@ class WalkinsController extends Controller
         }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(WalkinStoreRequest $request)
     {
         if($this->broadcaster_id){
@@ -176,23 +173,24 @@ class WalkinsController extends Controller
 
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function updateWalKins(WalkinUpdateRequest $request, $client_id)
     {
-        $result = Utilities::updateClients($request, $client_id);
-
-        if($result === "success"){
-            Session::flash('success', 'Client profile updated successfully');
-            return redirect()->back();
-        }else{
-            Session::flash('error', 'An error occurred while submitting your request');
+        $walkin_details_service = new ClientDetails($client_id, null);
+        $walkin_details = $walkin_details_service->run();
+        try{
+            Utilities::switch_db('api')->transaction(function () use ($walkin_details, $client_id, $request) {
+                $update_walkin_service = new UpdateWalkIns($request->company_logo, $request->company_name, $request->address, $client_id);
+                $update_walkin_service->updateWalkIns();
+                $update_user_service = new UpdateUser($walkin_details->user_id, $request->first_name, $request->last_name, $request->phone);
+                $update_user_service->updateUser();
+            });
+        }catch (\Exception $exception){
+            Session::flash('error', ClassMessages::UPDATE_WALKINS_ERROR);
             return redirect()->back();
         }
+
+        Session::flash('success', ClassMessages::UPDATE_WALKINS_SUCCESS);
+        return redirect()->back();
     }
 
     public function getDetails($client_id)
