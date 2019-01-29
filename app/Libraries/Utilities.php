@@ -344,45 +344,6 @@ class Utilities {
         return $reference;
     }
 
-    public static function updateClients($request, $client_id)
-    {
-        $api_db = Utilities::switch_db('api');
-        $local_db = Utilities::switch_db('local');
-
-        $walkins = $api_db->select("SELECT * from walkIns where id = '$client_id'");
-        $user_id = $walkins[0]->user_id;
-        if($request->company_logo){
-            $walkins_update_logo = $api_db->update("UPDATE walkIns set company_logo = '$request->company_logo' where id = '$client_id'");
-        }
-
-        try {
-            $walkins_update = $api_db->update("UPDATE walkIns set location = '$request->address', company_name = '$request->company_name' where id = '$client_id'");
-        }catch (\Exception $e) {
-            $api_db->rollback();
-            return 'error';
-        }
-
-        try {
-            $api_user_update = $api_db->update("UPDATE users set firstname = '$request->first_name', lastname = '$request->last_name',
-                                                                      phone_number = '$request->phone' where id = '$user_id'");
-        }catch (\Exception $e){
-            $api_db->rollback();
-            return 'error';
-        }
-
-        try {
-            $local_db_update = $local_db->update("UPDATE users set first_name = '$request->first_name', last_name = '$request->last_name', phone = '$request->phone' where email = '$request->email'");
-        }catch (\Exception $e) {
-            $local_db->rollback();
-            return 'error';
-        }
-
-        $api_db->commit();
-        $local_db->commit();
-        return 'success';
-
-    }
-
     public static function getClientCampaignData($user_id, $broadcaster_id)
     {
         $campaigns = [];
