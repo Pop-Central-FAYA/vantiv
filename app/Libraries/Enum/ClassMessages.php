@@ -72,4 +72,6 @@ class ClassMessages
 
     const BRAND_ALREADY_EXIST = 'Brands already exists';
 
+    const WALKIN_ERROR = 'There was an error creating the client, please contact administrator';
+
 }

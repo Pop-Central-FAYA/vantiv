@@ -157,14 +157,15 @@ class WalkinsController extends Controller
                     $store_brand = $store_brand_service->storeBrand();
 
                     $store_brand_client_service = new CreateBrandClient($this->broadcaster_id,$store_brand->id,$client_id,$store_walkin->id);
-                    $store_brand_client = $store_brand_client_service->storeClientBrand();
+                    $store_brand_client_service->storeClientBrand();
                 }else{
                     $store_brand_client_service = new CreateBrandClient($this->broadcaster_id,$brand_details->id,$client_id,$store_walkin->id);
-                    $store_brand_client = $store_brand_client_service->storeClientBrand();
+                    $store_brand_client_service->storeClientBrand();
                 }
             });
         }catch (\Exception $exception){
-            dd($exception);
+            Session::flash('error', ClassMessages::WALKIN_ERROR);
+            return redirect()->back();
         }
 
         if($this->broadcaster_id){

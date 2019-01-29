@@ -20,7 +20,7 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract
     protected $connection = 'api_db';
     protected $primaryKey = 'id';
     protected $keyType = 'string';
-
+    public $incrementing = false;
 
     use TwoFactorAuthenticatable, CanResetPassword, PresentableTrait, AuthorizationUserTrait, Notifiable;
 
@@ -42,7 +42,7 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'username', 'first_name', 'last_name', 'phone', 'avatar',
+        'id', 'name', 'email', 'password', 'username', 'first_name', 'last_name', 'phone', 'avatar',
         'address', 'country_id', 'birthday', 'last_login', 'confirmation_token', 'status',
         'group_id', 'remember_token'
     ];
