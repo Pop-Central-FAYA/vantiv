@@ -14,9 +14,8 @@ class AddIndexToSomeColumns extends Migration
     public function up()
     {
         Schema::table('brands', function (Blueprint $table) {
-            $table->string('id', 25)->change();
+            $table->string('id', 25)->primary()->change();
 
-            $table->primary('id');
             $table->index('created_at');
             $table->index('updated_at');
         });
@@ -24,30 +23,26 @@ class AddIndexToSomeColumns extends Migration
         Schema::table('rejection_reasons', function (Blueprint $table) {
             $table->string('rejection_reason_category_id', 25)->change();
 
-            $table->index(['created_at']);
-            $table->index(['updated_at']);
+            $table->index('rejection_reason_category_id', 'rejection_reasons_one');
+            $table->index('created_at', 'rejection_reasons_two');
+            $table->index('updated_at', 'rejection_reasons_three');
         });
 
         Schema::table('preselected_adslots', function (Blueprint $table) {
-            $table->string('user_id', 25)->change();
-            $table->string('broadcaster_id', 25)->change();
-            $table->string('adslot_id', 25)->change();
-            $table->string('agency_id', 25)->nullable()->change();
-            $table->string('filePosition_id', 25)->nullable()->change();
+            $table->string('user_id', 25)->index()->change();
+            $table->string('broadcaster_id', 25)->index()->change();
+            $table->string('adslot_id', 25)->index()->change();
+            $table->string('agency_id', 25)->index()->nullable()->change();
+            $table->string('filePosition_id', 25)->index()->nullable()->change();
 
-            $table->index('user_id');
-            $table->index('broadcaster_id');
-            $table->index('adslot_id');
-            $table->index('agency_id');
-            $table->index('filePosition_id');
             $table->index('created_at');
             $table->index('updated_at');
+
         });
 
         Schema::table('uploads', function (Blueprint $table) {
-            $table->string('user_id', 25)->change();
+            $table->string('user_id', 25)->index()->change();
 
-            $table->index('user_id');
             $table->index('created_at');
             $table->index('updated_at');
         });
