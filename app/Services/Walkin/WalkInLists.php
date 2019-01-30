@@ -26,6 +26,9 @@ class WalkInLists
                             ->when($this->broadcaster_id, function($query) {
                                 return $query->where('walkIns.broadcaster_id', $this->broadcaster_id);
                             })
+                            ->when($this->agency_id, function($query) {
+                                return $query->where('walkIns.agency_id', $this->agency_id);
+                            })
                             ->get();
     }
 }

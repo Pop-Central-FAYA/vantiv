@@ -357,8 +357,6 @@ Route::group(['middleware' => 'auth'], function () {
          * Clients
          */
         Route::group(['prefix' => 'clients'], function () {
-            Route::get('/', 'ClientsController@index')->name('clients.all');
-            Route::post('/create/store', 'ClientsController@create')->name('clients.create');
             Route::get('/list', 'ClientsController@clients')->name('clients.list');
             Route::get('/client/{client_id}', 'ClientsController@clientShow')->name('client.show');
             Route::get('/client/brand/{id}', 'ClientsController@getClientBrands')->name('client_brands');

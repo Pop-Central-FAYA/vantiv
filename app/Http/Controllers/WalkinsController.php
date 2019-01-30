@@ -49,7 +49,7 @@ class WalkinsController extends Controller
      */
     public function index()
     {
-        $walkins_list_service = new WalkInLists($this->broadcaster_id, null);
+        $walkins_list_service = new WalkInLists($this->broadcaster_id, $this->agency_id);
         $wlakins = $walkins_list_service->getWalkInList();
 
         $client_data = $this->getClientDetails($wlakins);
@@ -61,7 +61,6 @@ class WalkinsController extends Controller
         $entries = new LengthAwarePaginator($currentPageSearchResults, count($col), $perPage);
         $entries->setPath('list');
         $industries = new IndustryList();
-
         return view('broadcaster_module.walk-In.index')->with('clients', $entries)->with('industries', $industries->industryList());
     }
 

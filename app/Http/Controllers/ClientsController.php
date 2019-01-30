@@ -2,24 +2,10 @@
 
 namespace Vanguard\Http\Controllers;
 
-use Hamcrest\Util;
 use Session;
-use Vanguard\Http\Requests\WalkinStoreRequest;
-use Vanguard\Models\Brand;
-use Vanguard\Role;
-use Vanguard\Country;
-use Vanguard\Libraries\Api;
-use Illuminate\Http\Request;
-use JD\Cloudder\Facades\Cloudder;
 use Vanguard\Libraries\Utilities;
-use Illuminate\Support\Facades\DB;
-use Vanguard\Support\Enum\UserStatus;
-use Vanguard\Http\Requests\StoreClient;
-use Vanguard\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Vanguard\Repositories\Permission\PermissionRepository;
-use Yajra\DataTables\DataTables;
 
 class ClientsController extends Controller
 {
