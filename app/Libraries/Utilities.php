@@ -344,45 +344,6 @@ class Utilities {
         return $reference;
     }
 
-    public static function updateClients($request, $client_id)
-    {
-        $api_db = Utilities::switch_db('api');
-        $local_db = Utilities::switch_db('local');
-
-        $walkins = $api_db->select("SELECT * from walkIns where id = '$client_id'");
-        $user_id = $walkins[0]->user_id;
-        if($request->company_logo){
-            $walkins_update_logo = $api_db->update("UPDATE walkIns set company_logo = '$request->company_logo' where id = '$client_id'");
-        }
-
-        try {
-            $walkins_update = $api_db->update("UPDATE walkIns set location = '$request->address', company_name = '$request->company_name' where id = '$client_id'");
-        }catch (\Exception $e) {
-            $api_db->rollback();
-            return 'error';
-        }
-
-        try {
-            $api_user_update = $api_db->update("UPDATE users set firstname = '$request->first_name', lastname = '$request->last_name',
-                                                                      phone_number = '$request->phone' where id = '$user_id'");
-        }catch (\Exception $e){
-            $api_db->rollback();
-            return 'error';
-        }
-
-        try {
-            $local_db_update = $local_db->update("UPDATE users set first_name = '$request->first_name', last_name = '$request->last_name', phone = '$request->phone' where email = '$request->email'");
-        }catch (\Exception $e) {
-            $local_db->rollback();
-            return 'error';
-        }
-
-        $api_db->commit();
-        $local_db->commit();
-        return 'success';
-
-    }
-
     public static function getClientCampaignData($user_id, $broadcaster_id)
     {
         $campaigns = [];
@@ -427,11 +388,14 @@ class Utilities {
         $walkin_brands = Utilities::getBrandsForWalkins($id);
         $brands = [];
         foreach ($walkin_brands as $walkin_brand){
-            $campaigns = Utilities::switch_db('api')->select("SELECT * from campaignDetails where brand = '$walkin_brand->id' and walkins_id = '$walkin_brand->client_walkins_id'
+            $campaigns = Utilities::switch_db('api')->select("SELECT * from campaignDetails where 
+                                                        brand = '$walkin_brand->id' and walkins_id = '$walkin_brand->client_walkins_id'
                                                                 and broadcaster = '$broadcaster_id'");
             $last_count_campaign = count($campaigns) - 1;
-            $pay = Utilities::switch_db('api')->select("SELECT SUM(total) as total from payments where campaign_id IN (SELECT campaign_id from campaignDetails where
-                                                            brand = '$walkin_brand->id' and walkins_id = '$walkin_brand->client_walkins_id' and broadcaster = '$broadcaster_id')");
+            $pay = Utilities::switch_db('api')->select("SELECT SUM(total) as total from payments where campaign_id IN 
+                                                            (SELECT campaign_id from campaignDetails where
+                                                            brand = '$walkin_brand->id' and walkins_id = '$walkin_brand->client_walkins_id' 
+                                                            and broadcaster = '$broadcaster_id')");
             $brands[] = [
                 'id' => $walkin_brand->id,
                 'client_id' => $walkin_brand->client_walkins_id,
@@ -1022,9 +986,9 @@ class Utilities {
         $all_campaign_total_graph = [];
         $all_campaign_date_graph = [];
 
-        foreach ($campaigns as $all_camp){
-            $all_campaign_total_graph[] = $all_camp->total;
-            $all_campaign_date_graph[] = date('Y-m-d', strtotime($all_camp->time_created));
+        foreach ($campaigns as $campaign){
+            $all_campaign_total_graph[] = $campaign->total;
+            $all_campaign_date_graph[] = date('Y-m-d', strtotime($campaign->time_created));
         }
 
 
@@ -1181,7 +1145,7 @@ class Utilities {
 
     public static function insertIntoUsersLocalDb($request)
     {
-        return DB::table('users')->insert([
+        return ([
             'email' => $request->email,
             'username' => $request->username,
             'password' => bcrypt('password'),
@@ -1204,17 +1168,17 @@ class Utilities {
     public static function insertIntoUsersApiDB($request, $role_id)
     {
         return Utilities::switch_db('api')->table('users')->insert([
-            'id' => uniqid(),
-            'role_id' => $role_id,
-            'email' => $request->email,
-            'token' => '',
-            'password' => bcrypt('password'),
-            'firstname' => $request->first_name,
-            'lastname' => $request->last_name,
-            'phone_number' => $request->phone,
-            'user_type' => 4,
-            'status' => 1
-        ]);
+                    'id' => uniqid(),
+                    'role_id' => $role_id,
+                    'email' => $request->email,
+                    'token' => '',
+                    'password' => bcrypt('password'),
+                    'firstname' => $request->first_name,
+                    'lastname' => $request->last_name,
+                    'phone_number' => $request->phone,
+                    'user_type' => 4,
+                    'status' => 1
+                ]);
     }
 
     public static function insertIntoWalkinsApiDB($client_id, $user_id, $broadcaster_id, $request, $company_image, $agency_id)

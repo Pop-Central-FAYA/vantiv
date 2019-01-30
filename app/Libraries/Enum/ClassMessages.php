@@ -70,4 +70,14 @@ class ClassMessages
 
     const CAMPAIGN_BUDGET_ERROR = 'You cannot update the budget with an amount lower than the earlier';
 
+    const BRAND_ALREADY_EXIST = 'Brands already exists';
+
+    const WALKIN_ERROR = 'There was an error creating the client, please contact administrator';
+
+    const UPDATE_WALKINS_ERROR = 'An error occured while updating the client';
+
+    const UPDATE_WALKINS_SUCCESS = 'Client details updated successfully';
+
+    const EMPTY_BRAND_FOR_CLIENT = 'You don`t have a brand on this client';
+
 }
