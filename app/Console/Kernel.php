@@ -17,6 +17,7 @@ class Kernel extends ConsoleKernel
         'Vanguard\Console\Commands\ComplianceMimicReport',
         'Vanguard\Console\Commands\CreateParentCompany',
         'Vanguard\Console\Commands\CreateCompany',
+        'Vanguard\Console\Commands\CreateUser'
     ];
 
     /**
