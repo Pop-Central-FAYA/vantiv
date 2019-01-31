@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateParentCompaniesTable extends Migration
+class CreateCompanyUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,14 @@ class CreateParentCompaniesTable extends Migration
      */
     public function up()
     {
-        Schema::create('parent_companies', function (Blueprint $table) {
-            $table->string('id', 25);
-            $table->string('name');
+        Schema::create('company_users', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('company_id', 25);
+            $table->string('user_id', 25);
             $table->timestamps();
 
-            $table->primary('id');
+            $table->index('company_id');
+            $table->index('user_id');
             $table->index('created_at');
             $table->index('updated_at');
         });
@@ -31,6 +33,6 @@ class CreateParentCompaniesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('parent_companies');
+        Schema::dropIfExists('company_users');
     }
 }

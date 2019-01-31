@@ -16,7 +16,12 @@ class Company extends Base
 
     public function users()
     {
-        return $this->hasMany(User::class);
+        return $this->belongsToMany(User::class);
+    }
+
+    public function company_type()
+    {
+        return $this->belongsTo(CompanyType::class);
     }
 
     public function channels()

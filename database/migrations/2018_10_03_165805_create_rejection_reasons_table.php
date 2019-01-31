@@ -18,6 +18,10 @@ class CreateRejectionReasonsTable extends Migration
             $table->integer('rejection_reason_category_id');
             $table->string('name');
             $table->timestamps();
+
+            $table->index('rejection_reason_category_id');
+            $table->index('created_at');
+            $table->index('updated_at');
         });
     }
 

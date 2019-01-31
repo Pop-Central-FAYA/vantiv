@@ -3,13 +3,14 @@
 namespace Vanguard;
 
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 use Vanguard\Models\Agency;
 use Vanguard\Models\Broadcaster;
+use Vanguard\Models\Company;
 use Vanguard\Presenters\UserPresenter;
 use Vanguard\Services\Auth\TwoFactor\Authenticatable as TwoFactorAuthenticatable;
 use Vanguard\Services\Auth\TwoFactor\Contracts\Authenticatable as TwoFactorAuthenticatableContract;
 use Vanguard\Services\Logging\UserActivity\Activity;
-use Vanguard\Support\Authorization\AuthorizationUserTrait;
 use Vanguard\Support\Enum\UserStatus;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Laracasts\Presenter\PresentableTrait;
@@ -22,7 +23,7 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract
     protected $keyType = 'string';
     public $incrementing = false;
 
-    use TwoFactorAuthenticatable, CanResetPassword, PresentableTrait, AuthorizationUserTrait, Notifiable;
+    use TwoFactorAuthenticatable, CanResetPassword, PresentableTrait, Notifiable, HasRoles;
 
     protected $presenter = UserPresenter::class;
 
@@ -139,5 +140,10 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract
     public function agent()
     {
         return $this->belongsTo(Agency::class);
+    }
+
+    public function companies()
+    {
+        return $this->belongsToMany(Company::class);
     }
 }

@@ -8,7 +8,6 @@ use Vanguard\Http\Requests\Auth\LoginRequest;
 use Vanguard\Http\Requests\User\PasswordChangeRequest;
 use Vanguard\Libraries\Enum\ClassMessages;
 use Vanguard\Libraries\Enum\UserStatus;
-use Vanguard\Libraries\Utilities;
 use Vanguard\Mail\PasswordChanger;
 use Vanguard\Models\Agency;
 use Vanguard\Models\Broadcaster;
