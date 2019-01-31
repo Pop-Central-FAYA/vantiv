@@ -9,4 +9,6 @@ class UserStatus
     const ACTIVE = 'Active';
 
     const UNCONFIRMED = 'Unconfirmed';
+
+    const INACTIVE = 'Inactive';
 }

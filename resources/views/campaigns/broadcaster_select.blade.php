@@ -50,7 +50,7 @@
                     @foreach($adslot_search_results as $adslot_search_result)
                         <div class='align_center one_media broad_click'>
                             <input type="hidden" name="broadcaster" value="{{ $adslot_search_result->broadcaster }}" id="broadcaster">
-                            <div><a href="{{ route('campaign.adslot_selection', ['id' => $id, 'broadcaster' => $adslot_search_result->broadcaster,'start_date' => current($campaign_first_week),'end_date' => end($campaign_first_week)]) }}">
+                            <div><a href="{{ route('campaign.adslot_selection', ['id' => $id, 'broadcaster' => $adslot_search_result->broadcaster,'start_date' => $start_date,'end_date' => $end_date]) }}">
                                     <img src="{{ asset($adslot_search_result->broadcaster_logo ? $adslot_search_result->broadcaster_logo : '') }}">
                                 </a>
                             </div>

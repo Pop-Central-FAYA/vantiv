@@ -24,32 +24,32 @@
             <div class="border_bottom clearfix client_name">
                 <a href="{{ route('walkins.all') }}" class="back_icon block_disp left"></a>
                 <div class="left">
-                    <h2 class='sub_header'>{{ $client[0]->company_name }}</h2>
-                    <p class="small_faint">{{ $client[0]->location }}</p>
+                    <h2 class='sub_header'>{{ $client->company_name }}</h2>
+                    <p class="small_faint">{{ $client->location }}</p>
                 </div>
 
-                <span class="client_ava right"><img src="{{ $client[0]->company_logo ? asset($client[0]->company_logo) : '' }}"></span>
+                <span class="client_ava right"><img src="{{ $client->company_logo ? asset($client->company_logo) : '' }}"></span>
             </div>
 
             <div class="clearfix client_personal">
                 <div class="column col_3">
                     <span class="small_faint">Account Executive</span>
-                    <p class='weight_medium'>{{ $user_details[0]->firstname.' '.$user_details[0]->lastname }}</p>
+                    <p class='weight_medium'>{{ $user_details->firstname.' '.$user_details->lastname }}</p>
                 </div>
 
                 <div class="column col_3">
                     <span class="small_faint">Email</span>
-                    <p class='weight_medium'>{{ $user_details[0]->email }}</p>
+                    <p class='weight_medium'>{{ $user_details->email }}</p>
                 </div>
 
                 <div class="column col_3">
                     <span class="small_faint">Phone</span>
-                    <p class='weight_medium'>{{ $user_details[0]->phone_number }}</p>
+                    <p class='weight_medium'>{{ $user_details->phone_number }}</p>
                 </div>
 
                 <div class="column col_3">
                     <span class="small_faint">Joined</span>
-                    <p class='weight_medium'>{{ date('M j, Y', strtotime($user_details[0]->created_at)) }}</p>
+                    <p class='weight_medium'>{{ date('M j, Y', strtotime($user_details->created_at)) }}</p>
                 </div>
             </div>
         </div>
@@ -82,7 +82,7 @@
 
                     <div class="column col_4">
                         <span class="small_faint uppercased weight_medium">Total Spend</span>
-                        <h3>&#8358; {{ $total_spent ? number_format($total_spent[0]->total, 2) : 0 }}</h3>
+                        <h3>&#8358; {{ $total_spent ? number_format($total_spent, 2) : 0 }}</h3>
                     </div>
 
                     <div class="column col_4">
@@ -133,16 +133,16 @@
                         @foreach($all_campaigns as $all_campaign)
                             <tr>
                                 <td>243</td>
-                                <td><a href="{{ route('broadcaster.campaign.details', ['id' => $all_campaign['camp_id']]) }}">{{ $all_campaign['name'] }}</a></td>
-                                <td>{{ ucfirst($all_campaign['brand']) }}</td>
-                                <td>{{ $all_campaign['product'] }}</td>
-                                <td>{{ $all_campaign['start_date'] }}</td>
-                                <td>{{ $all_campaign['end_date'] }}</td>
-                                <td>&#8358;{{ $all_campaign['budget'] }}</td>
-                                <td>{{ $all_campaign['adslots'] }}</td>
-                                @if($all_campaign['status'] === 'active')
+                                <td><a href="{{ route('broadcaster.campaign.details', ['id' => $all_campaign->campaign_id]) }}">{{ $all_campaign->name }}</a></td>
+                                <td>{{ ucfirst($all_campaign->brand) }}</td>
+                                <td>{{ $all_campaign->product }}</td>
+                                <td>{{ $all_campaign->start_date }}</td>
+                                <td>{{ $all_campaign->stop_date }}</td>
+                                <td>&#8358;{{ $all_campaign->budget }}</td>
+                                <td>{{ $all_campaign->adslots }}</td>
+                                @if($all_campaign->status === 'active')
                                     <td><span class="span_state status_success">Active</span></td>
-                                @elseif($all_campaign['status'] === 'expired')
+                                @elseif($all_campaign->status === 'expired')
                                     <td><span class="span_state status_danger">Expired</span></td>
                                 @else
                                     <td><span class="span_state status_pending">Pending</span></td>

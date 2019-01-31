@@ -37,6 +37,7 @@ class CampaignExtras
                             ->when($this->agency_id, function ($query) {
                                 return $query->where('agency', $this->agency_id);
                             })
+                            ->where('campaign_id', $this->campaign_id)
                             ->first();
     }
 }

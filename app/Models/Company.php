@@ -2,14 +2,10 @@
 
 namespace Vanguard\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Vanguard\User;
 
-class Company extends Model
+class Company extends Base
 {
-    protected $connection = 'api_db';
     protected $primaryKey = 'id';
-    protected $keyType = 'string';
 
     protected $fillable = ['id', 'name', 'parent_company_id', 'address', 'channel_id', 'logo'];
 
@@ -26,5 +22,10 @@ class Company extends Model
     public function company_type()
     {
         return $this->belongsTo(CompanyType::class);
+    }
+
+    public function channels()
+    {
+        return $this->belongsToMany(CampaignChannel::class, 'channel_company', 'company_id', 'channel_id');
     }
 }

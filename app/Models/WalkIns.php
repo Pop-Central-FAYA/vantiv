@@ -2,14 +2,14 @@
 
 namespace Vanguard\Models;
 
-use Illuminate\Database\Eloquent\Model;
 
-class WalkIns extends Model
+class WalkIns extends Base
 {
     protected $table = 'walkIns';
     protected $connection = 'api_db';
     protected $primaryKey = 'id';
     protected $keyType = 'string';
+    public $timestamps = false;
 
     protected $dates = [
         'time_created', 'time_modified'

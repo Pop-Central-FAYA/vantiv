@@ -49,18 +49,22 @@
                         <th>Air Date</th>
                         <th></th>
                     </tr>
-                    @foreach($preselected_adslot_arrays as $preselected_adslot_array)
-                        <tr>
-                            <td>{{ $preselected_adslot_array['from_to_time'] }}</td>
-                            <td>{{ $preselected_adslot_array['time'] }} seconds</td>
-                            <td>&#8358; {{ number_format($preselected_adslot_array['price'], 2) }}</td>
-                            <td>{{ $preselected_adslot_array['percentage'] }}%</td>
-                            <td>{{ $preselected_adslot_array['position'] }}</td>
-                            <td>&#8358; {{ number_format($preselected_adslot_array['total_price'], 2) }}</td>
-                            <td>{{ date('l, jS F, Y', strtotime($preselected_adslot_array['air_date'])) }}</td>
-                            <td><a href="#delete_cart{{ $preselected_adslot_array['id'] }}" class="color_red close_red modal_click"><span class="_icon"></span> Remove</a></td>
-                        </tr>
-                    @endforeach
+                    @if(count($preselected_adslot_arrays) == 0)
+                        <p>Please go back and select some adslots</p>
+                    @else
+                        @foreach($preselected_adslot_arrays as $preselected_adslot_array)
+                            <tr>
+                                <td>{{ $preselected_adslot_array['from_to_time'] }}</td>
+                                <td>{{ $preselected_adslot_array['time'] }} seconds</td>
+                                <td>&#8358; {{ number_format($preselected_adslot_array['price'], 2) }}</td>
+                                <td>{{ $preselected_adslot_array['percentage'] }}%</td>
+                                <td>{{ $preselected_adslot_array['position'] }}</td>
+                                <td>&#8358; {{ number_format($preselected_adslot_array['total_price'], 2) }}</td>
+                                <td>{{ date('l, jS F, Y', strtotime($preselected_adslot_array['air_date'])) }}</td>
+                                <td><a href="#delete_cart{{ $preselected_adslot_array['id'] }}" class="color_red close_red modal_click"><span class="_icon"></span> Remove</a></td>
+                            </tr>
+                        @endforeach
+                    @endif
                 </table>
 
 
