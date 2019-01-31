@@ -18,4 +18,9 @@ class CampaignChannel extends Model
     protected $fillable = [
         'id', 'channel', 'status'
     ];
+
+    public function companies()
+    {
+        return $this->belongsToMany(Company::class, 'channel_company', 'channel_id', 'company_id');
+    }
 }
