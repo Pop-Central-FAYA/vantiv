@@ -14,7 +14,9 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         '\Vanguard\Console\Commands\ValidateCampaigns',
-        'Vanguard\Console\Commands\ComplianceMimicReport'
+        'Vanguard\Console\Commands\ComplianceMimicReport',
+        'Vanguard\Console\Commands\CreateParentCompany',
+        'Vanguard\Console\Commands\CreateCompany',
     ];
 
     /**
