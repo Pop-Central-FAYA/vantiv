@@ -4,7 +4,7 @@ namespace Vanguard\Libraries\Enum;
 
 class CompanyTypeName
 {
-    const BROADCASTER = 'Broadcaster';
+    const BROADCASTER = 'broadcaster';
 
-    const AGENCY = 'Agency';
+    const AGENCY = 'agency';
 }

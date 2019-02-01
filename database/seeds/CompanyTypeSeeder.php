@@ -14,11 +14,11 @@ class CompanyTypeSeeder extends Seeder
     {
         $company_type1 = [
                 'id' => uniqid(),
-                'name' => 'Broadcaster'
+                'name' => 'broadcaster'
             ];
         $company_type2 = [
                 'id' => uniqid(),
-                'name' => 'Agency'
+                'name' => 'agency'
             ];
 
 
