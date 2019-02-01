@@ -15,7 +15,6 @@ use Vanguard\Services\Logging\UserActivity\Activity;
 use Vanguard\Support\Enum\UserStatus;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Laracasts\Presenter\PresentableTrait;
-use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Vanguard\Http\Traits\ProvidesModelCacheKey;
@@ -27,7 +26,7 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract
     protected $keyType = 'string';
     public $incrementing = false;
 
-    use TwoFactorAuthenticatable, CanResetPassword, PresentableTrait, Notifiable, HasRoles, HasRelationships, ProvidesModelCacheKey;
+    use TwoFactorAuthenticatable, CanResetPassword, PresentableTrait, Notifiable, HasRoles, ProvidesModelCacheKey;
 
     protected $presenter = UserPresenter::class;
 
