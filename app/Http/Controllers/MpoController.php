@@ -174,8 +174,7 @@ class MpoController extends Controller
     public function getMpoCollection($mpos, $broadcaster_id)
     {
         $mpo_data = [];
-        $broadcaster_det = Utilities::switch_db('api')->select("SELECT * from broadcasters where id = '$broadcaster_id'");
-        $broadcaster_name = $broadcaster_det[0]->brand;
+        $broadcaster_name = \Auth::user()->companies->first()->name;
 
         foreach ($mpos as $mpo) {
 

@@ -28,8 +28,7 @@ class DashboardController extends Controller
         $agency_id = Session::get('agency_id');
         if ($broadcaster_id) {
             //redirect user to the new landing page of the broadcaster.
-            $broadcaster_info = Utilities::switch_db('api')->select("SELECT * from broadcasters where id = '$broadcaster_id'");
-            return view('broadcaster_module.landing_page', compact('broadcaster_info'));
+            return view('broadcaster_module.landing_page');
 
         } else if ($agency_id) {
             //agency dashboard
@@ -320,8 +319,7 @@ class DashboardController extends Controller
     public function getPeriodicPaidInvoices($broadcaster_id)
     {
         $invoice_array = [];
-        $broadcaster_det = Utilities::getBroadcasterDetails($broadcaster_id);
-        $broadcaster_name = $broadcaster_det[0]->brand;
+        $broadcaster_name = Auth::user()->companies->first()->name;
         $invoices = Utilities::switch_db('api')->select("SELECT i_d.*, i.campaign_id, c.name as campaign_name, c.campaign_id, DATE_FORMAT(c.stop_date, '%Y-%m-%d') as stop_date, 
                                                              b.name as brand_name from invoiceDetails as i_d INNER JOIN invoices as i ON i.id = i_d.invoice_id 
                                                             INNER JOIN campaignDetails as c ON c.campaign_id = i.campaign_id AND c.broadcaster = '$broadcaster_id' 

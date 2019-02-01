@@ -21,8 +21,7 @@ class WalletsController extends Controller
     public function index()
     {
         $agency_id = \Session::get('agency_id');
-        $agent_user_id = Utilities::switch_db('api')->select("SELECT user_id from agents where id = '$agency_id'");
-        $user = $agent_user_id[0]->user_id;
+        $user = \Auth::user()->id;
         $user_det = Utilities::switch_db('api')->select("SELECT * from users where id = '$user'");
 
         $wallets = Utilities::switch_db('api')->select("SELECT SUM(current_balance) as balance from wallets where user_id = '$agency_id'");

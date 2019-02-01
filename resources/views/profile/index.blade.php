@@ -56,31 +56,12 @@
                             <input type="text" type="text" required id="username"
                                    name="username" placeholder="@lang('app.username')" value="{{ $profile_user_details['username'] }}" >
                         </div>
-
-                        <div class="input_wrap column col_6">
-                            <label class="small_faint uppercased weight_medium">Location</label>
-                            <input type="text" required id="location"
-                                   name="location" placeholder="@lang('app.location')" value="{{ $profile_user_details['location'] }}" >
-                        </div>
                     </div>
 
                     <div class="clearfix mb4">
                         <div class="input_wrap column col_6">
                             <label class="small_faint uppercased weight_medium">Address</label>
                             <input type="text" required name="address" value="{{ $profile_user_details['address'] }}" placeholder="Address">
-                        </div>
-
-                        <div class="input_wrap column col_6">
-                            <label class="small_faint uppercased weight_medium">Nationality</label>
-                            <select name="country_id" required >
-                                @foreach ($countries as $country)
-                                    <option value="{{ $country->country_code }}"
-                                            @if($profile_user_details['nationality'] === $country->country_code)
-                                            selected
-                                            @endif
-                                    >{{ $country->name }}</option>
-                                @endforeach
-                            </select>
                         </div>
                     </div>
 

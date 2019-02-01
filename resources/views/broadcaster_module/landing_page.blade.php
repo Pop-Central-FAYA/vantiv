@@ -34,7 +34,7 @@
 <div class="auth_contain col_4 margin_center">
 
     <div class="align_center m-b">
-        <h2 class="m-b">Welcome Back {{ $broadcaster_info[0]->brand }}</h2>
+        <h2 class="m-b">Welcome Back {{ Auth::user()->companies->first()->name }}</h2>
         <p class="mb4">What would you like to do?</p>
 
         <a href="{{ route('broadcaster.campaign_management') }}" class="m-b block_disp btn full ghost">Campaign Management</a>

@@ -108,6 +108,10 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract
         return $this->hasMany(Activity::class, 'user_id');
     }
 
+    public function getCompanyTypeAttribute()
+    {
+        return $this->companies->first()->company_type->name;
+    }
 
     /**
      * Get the connection of the entity.
