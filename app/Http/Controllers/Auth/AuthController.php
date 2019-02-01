@@ -7,6 +7,7 @@ use Vanguard\Events\User\LoggedOut;
 use Vanguard\Http\Requests\Auth\LoginRequest;
 use Vanguard\Http\Requests\User\PasswordChangeRequest;
 use Vanguard\Libraries\Enum\ClassMessages;
+use Vanguard\Libraries\Enum\CompanyTypeName;
 use Vanguard\Libraries\Enum\UserStatus;
 use Vanguard\Mail\PasswordChanger;
 use Vanguard\Models\Agency;
@@ -105,15 +106,16 @@ class AuthController extends Controller
             Auth::logout();
         }
 
-        //temporary fix for getting the kind of user that wants to login
-        $broadcaster_details = Broadcaster::where('user_id', Auth::user()->id)->first();
-        $agency_details = Agency::where('user_id', Auth::user()->id)->first();
-        if($broadcaster_details){
-            session()->forget('agency_id');
-            session(['broadcaster_id' => $broadcaster_details->id]);
-        }elseif($agency_details){
-            session()->forget('broadcaster_id');
-            session(['agency_id' => $agency_details->id]);
+        if(Auth::user()->companies->count() == 1){
+            if(Auth::user()->cached_company_type->name == CompanyTypeName::BROADCASTER){
+                session()->forget('agency_id');
+                session(['broadcaster_id' => Auth::user()->companies->first()->id]);
+            }elseif(Auth::user()->cached_company_type->name == CompanyTypeName::AGENCY){
+                session()->forget('broadcaster_id');
+                session(['agency_id' => Auth::user()->companies->first()->id]);
+            }
+        }else{
+            // we might wanna consider a flow for user with more than one company
         }
 
         return $this->handleUserWasAuthenticated($request, $throttles, $user);

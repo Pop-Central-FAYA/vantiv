@@ -4,6 +4,7 @@ namespace Vanguard;
 
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
+use Vanguard\Libraries\Utilities;
 use Vanguard\Models\Agency;
 use Vanguard\Models\Broadcaster;
 use Vanguard\Models\Company;
@@ -14,7 +15,10 @@ use Vanguard\Services\Logging\UserActivity\Activity;
 use Vanguard\Support\Enum\UserStatus;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Laracasts\Presenter\PresentableTrait;
+use Staudenmeir\EloquentHasManyDeep\HasRelationships;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Vanguard\Http\Traits\ProvidesModelCacheKey;
 
 class User extends Authenticatable implements TwoFactorAuthenticatableContract
 {
@@ -23,7 +27,7 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract
     protected $keyType = 'string';
     public $incrementing = false;
 
-    use TwoFactorAuthenticatable, CanResetPassword, PresentableTrait, Notifiable, HasRoles;
+    use TwoFactorAuthenticatable, CanResetPassword, PresentableTrait, Notifiable, HasRoles, HasRelationships, ProvidesModelCacheKey;
 
     protected $presenter = UserPresenter::class;
 
@@ -108,6 +112,17 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract
         return $this->hasMany(Activity::class, 'user_id');
     }
 
+    public function getCachedCompanyTypeAttribute()
+    {
+        return Cache::remember($this->cacheKey() . ':comments_count', 15, function () {
+            return Utilities::switch_db('api')->table('company_types')
+                                ->join('companies', 'companies.company_type_id', '=', 'company_types.id')
+                                ->join('company_user', 'company_user.company_id', '=', 'companies.id')
+                                ->select('company_types.*')
+                                ->where('company_user.user_id', $this->id)
+                                ->first();
+        });
+    }
 
     /**
      * Get the connection of the entity.

@@ -22,7 +22,7 @@ class CreateUser
         $this->email = $email;
         $this->username = $username;
         $this->phone_number = $phone_number;
-        $this->password = bcrypt($password);
+        $this->password = $password;
         $this->registration_source = $registration_source;
     }
 
@@ -36,7 +36,7 @@ class CreateUser
         $user->id = uniqid(); //will come back and change when I finally figure out where the user model extends the base model class
         $user->email = $this->email;
         $user->username = $this->username;
-        $user->password = '';
+        $user->password = $this->password;
         $user->firstname = $this->firstname;
         $user->lastname = $this->lastname;
         $user->phone_number = $this->phone_number;

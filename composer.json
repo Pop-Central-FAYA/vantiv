@@ -30,7 +30,8 @@
         "laravel/tinker": "^1.0",
         "jeremykenedy/laravel-users": "1.4.0",
         "fideloper/proxy": "^4.0",
-        "spatie/laravel-permission": "^2.29"
+        "spatie/laravel-permission": "^2.29",
+        "staudenmeir/eloquent-has-many-deep": "^1.6"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",
