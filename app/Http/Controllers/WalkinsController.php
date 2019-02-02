@@ -180,7 +180,8 @@ class WalkinsController extends Controller
             Utilities::switch_db('api')->transaction(function () use ($walkin_details, $client_id, $request) {
                 $update_walkin_service = new UpdateWalkIns($request->company_logo, $request->company_name, $request->address, $client_id);
                 $update_walkin_service->updateWalkIns();
-                $update_user_service = new UpdateUser($walkin_details->user_id, $request->first_name, $request->last_name, $request->phone);
+                $update_user_service = new UpdateUser($walkin_details->user_id, $request->first_name, $request->last_name, $request->phone,
+                    null, null, null, 'walkins_update');
                 $update_user_service->updateUser();
             });
         }catch (\Exception $exception){

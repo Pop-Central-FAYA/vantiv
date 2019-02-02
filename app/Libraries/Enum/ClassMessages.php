@@ -80,4 +80,8 @@ class ClassMessages
 
     const EMPTY_BRAND_FOR_CLIENT = 'You don`t have a brand on this client';
 
+    const PROFILE_UPDATE_SUCCESS = 'Profile updated successfully';
+
+    const PROFILE_UPDATE_ERROR = 'An error occurred while updating your profile';
+
 }
