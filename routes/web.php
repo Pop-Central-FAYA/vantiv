@@ -38,6 +38,16 @@ Route::post('/admin/post', 'AdminAuthController@postRegister')->name('admin.post
 
 Route::group(['middleware' => 'auth'], function () {
 
+    Route::get('user/profile', [
+        'as' => 'user.profile',
+        'uses' => 'ProfileManagementsController@index'
+    ]);
+
+    Route::post('profile/details/update', [
+        'as' => 'profile.update.details',
+        'uses' => 'ProfileManagementsController@updateDetails'
+    ]);
+
     /*
      * Super Admin
      */
@@ -402,39 +412,6 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
 });
-
-/**
- * User Profile
- */
-
-
-Route::get('user/profile', [
-    'as' => 'user.profile',
-    'uses' => 'ProfileManagementsController@index'
-]);
-
-Route::post('profile/details/update', [
-    'as' => 'profile.update.details',
-    'uses' => 'ProfileManagementsController@updateDetails'
-]);
-
-
-
-/**
- * User Management
- */
-
-
-
-/**
- * Roles & Permissions
- */
-
-
-/**
- * Settings
- */
-
 
 /**
  * Activity Log

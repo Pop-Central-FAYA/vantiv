@@ -14,7 +14,7 @@
                 </p>
 
                 <div class="">
-                    <a href=".profile" class="modal_click color_dark">Profile</a>
+                    <a href="{{ route('user.profile') }}" class="color_dark">Profile</a>
                     <a href="{{ route('auth.logout') }}" class="color_red">Logout</a>
                 </div>
             </div>

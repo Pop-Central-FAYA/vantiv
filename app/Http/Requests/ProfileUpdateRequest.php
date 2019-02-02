@@ -28,9 +28,6 @@ class ProfileUpdateRequest extends FormRequest
             'last_name' => 'required',
             'phone' => 'required',
             'address' => 'required',
-            'country_id' => 'required',
-            'username' => 'required',
-            'location' => 'required',
         ];
     }
 }
