@@ -13,9 +13,7 @@ class CreateTableBrandClientTable extends Migration
      */
     public function up()
     {
-        $db_connection = Schema::connection('api_db');
-
-        $db_connection->create('brand_client', function (Blueprint $table) {
+        Schema::create('brand_client', function (Blueprint $table) {
             $table->increments('id');
             $table->string('brand_id');
             $table->string('media_buyer');
@@ -24,12 +22,12 @@ class CreateTableBrandClientTable extends Migration
             $table->timestamps();
         });
 
-        DB::connection('api_db')->statement(
+        DB::statement(
             "INSERT INTO brand_client (`brand_id`, `client_id`, `media_buyer_id`, `media_buyer`, `created_at`, `updated_at`)
             SELECT id, walkin_id AS client_id, broadcaster_agency AS media_buyer_id, 'Agency', time_created, time_modified FROM brand_old"
         );
 
-        DB::connection('api_db')->statement(
+        DB::statement(
             "UPDATE brand_client SET media_buyer = 'Broadcaster'
             WHERE media_buyer_id IN
             (
@@ -37,7 +35,7 @@ class CreateTableBrandClientTable extends Migration
             )"
         );
 
-        DB::connection('api_db')->statement(
+        DB::statement(
             "UPDATE brand_client SET media_buyer = 'Agency'
             WHERE media_buyer_id IN
             (
@@ -54,8 +52,7 @@ class CreateTableBrandClientTable extends Migration
      */
     public function down()
     {
-        $db_connection = Schema::connection('api_db');
-        $db_connection->dropIfExists('brand_client');
+        Schema::dropIfExists('brand_client');
     }
 }
 

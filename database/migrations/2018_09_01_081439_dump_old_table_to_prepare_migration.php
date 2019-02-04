@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddRemoveComplianceTable extends Migration
+class DumpOldTableToPrepareMigration extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,7 @@ class AddRemoveComplianceTable extends Migration
      */
     public function up()
     {
-        if(Schema::hasTable('compliances')){
-            Schema::drop('compliances');
-        }
+        DB::unprepared(file_get_contents('clean_default_db_for_test.sql'));
     }
 
 }
