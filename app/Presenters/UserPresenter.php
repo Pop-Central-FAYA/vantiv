@@ -10,7 +10,7 @@ class UserPresenter extends Presenter
 {
     public function name()
     {
-        return sprintf("%s %s", $this->entity->first_name, $this->entity->last_name);
+        return sprintf("%s %s", $this->entity->firstname, $this->entity->lastname);
     }
 
     public function nameOrEmail()
