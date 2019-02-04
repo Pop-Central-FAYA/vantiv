@@ -13,7 +13,7 @@ class AddNewColumnsToAdslotReasonTable extends Migration
      */
     public function up()
     {
-        Schema::connection('api_db')->table('adslot_reason', function (Blueprint $table) {
+        Schema::table('adslot_reason', function (Blueprint $table) {
             $table->string('user_id');
             $table->text('recommendation');
         });
@@ -26,7 +26,7 @@ class AddNewColumnsToAdslotReasonTable extends Migration
      */
     public function down()
     {
-        Schema::connection('api_db')->table('adslot_reason', function (Blueprint $table) {
+        Schema::table('adslot_reason', function (Blueprint $table) {
             $table->dropIfExists(['user_id', 'recommendation']);
         });
     }

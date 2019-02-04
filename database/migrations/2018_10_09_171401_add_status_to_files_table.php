@@ -14,7 +14,7 @@ class AddStatusToFilesTable extends Migration
     public function up()
     {
         if(Schema::hasTable('files')){
-            DB::connection('api_db')->statement("
+            DB::statement("
             ALTER TABLE `files` MODIFY `status` CHAR(10) NOT NULL DEFAULT 'pending'"
             );
         }
@@ -27,7 +27,7 @@ class AddStatusToFilesTable extends Migration
      */
     public function down()
     {
-        DB::connection('api_db')->statement("
+        DB::statement("
             ALTER TABLE `files` MODIFY `status` TINYINT(4) NOT NULL DEFAULT '1'"
         );
     }

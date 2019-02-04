@@ -13,7 +13,7 @@ class CreateRejectionReasonsTable extends Migration
      */
     public function up()
     {
-        Schema::connection('api_db')->create('rejection_reasons', function (Blueprint $table) {
+        Schema::create('rejection_reasons', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('rejection_reason_category_id');
             $table->string('name');
@@ -32,6 +32,6 @@ class CreateRejectionReasonsTable extends Migration
      */
     public function down()
     {
-        Schema::connection('api_db')->dropIfExists('rejection_reasons');
+        Schema::dropIfExists('rejection_reasons');
     }
 }
