@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'mysql'),
+    'default' => env('DB_CONNECTION', 'api_db'),
 
     /*
     |--------------------------------------------------------------------------
@@ -58,12 +58,12 @@ return [
             'strict'    => false
         ],
 
-        'mysql-2' => [
+        'faya-test' => [
             'driver'    => 'mysql',
             'engine'    => 'InnoDB',
             'host'      => env('DB_HOST', 'localhost'),
-            'database'  => env('DB_DATABASE', 'forge'),
-            'username'  => env('DB_USERNAME', 'forge'),
+            'database'  => env('DB_TEST_DATABASE', 'faya_test'),
+            'username'  => env('DB_USERNAME', 'root'),
             'password'  => env('DB_PASSWORD', ''),
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',

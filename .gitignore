@@ -17,10 +17,6 @@ resources/js
 resources/sass
 yarn-error.log
 env.example
-tests/Feature/ExampleTest.php
-tests/Unit/ExampleTest.php
 database/factories/UserFactory.php
-Unit
-Feature
 storage/logs/
 clean_default_db_for_test.sql
