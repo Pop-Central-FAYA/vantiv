@@ -3,11 +3,13 @@
 namespace Vanguard\Models;
 
 
+use Vanguard\User;
+
 class Company extends Base
 {
     protected $primaryKey = 'id';
 
-    protected $fillable = ['id', 'name', 'parent_company_id', 'address', 'channel_id', 'logo'];
+    protected $fillable = ['id', 'name', 'parent_company_id', 'address', 'logo'];
 
     public function parent_company()
     {

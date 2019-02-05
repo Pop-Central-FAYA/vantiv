@@ -13,7 +13,6 @@ namespace Vanguard\Models;
  * `protected $keyType = 'int';`
  */
 class Base extends \Illuminate\Database\Eloquent\Model {
-    protected $connection = 'api_db';
 
     public $incrementing = false;
     protected $keyType = 'string';
