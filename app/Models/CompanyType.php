@@ -2,11 +2,9 @@
 
 namespace Vanguard\Models;
 
-use Illuminate\Database\Eloquent\Model;
 
-class CompanyType extends Model
+class CompanyType extends Base
 {
-    protected $connection = 'api_db';
     protected $primaryKey = 'id';
     protected $keyType = 'string';
 
