@@ -15,7 +15,7 @@ class ParentCompanyTest extends TestCase
      *
      * @return void
      */
-    public function test_a_parent_company_can_have_companies()
+    public function test_a_parent_company_can_have_company()
     {
         $parent_company = factory(ParentCompany::class)->create();
         $companies = factory(Company::class)->create([
