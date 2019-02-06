@@ -19,6 +19,7 @@ use Carbon\Carbon;
 use Illuminate\Cache\RateLimiter;
 use Illuminate\Http\Request;
 use Vanguard\Http\Controllers\Controller;
+use Vanguard\Services\User\AuthenticatableUser;
 use Vanguard\User;
 
 
@@ -106,16 +107,12 @@ class AuthController extends Controller
             Auth::logout();
         }
 
-        if(Auth::user()->companies->count() == 1){
-            if(Auth::user()->company_type == CompanyTypeName::BROADCASTER){
-                session()->forget('agency_id');
-                session(['broadcaster_id' => Auth::user()->companies->first()->id]);
-            }elseif(Auth::user()->company_type == CompanyTypeName::AGENCY){
-                session()->forget('broadcaster_id');
-                session(['agency_id' => Auth::user()->companies->first()->id]);
-            }
-        }else{
-            // we might wanna consider a flow for user with more than one company
+        if(Auth::user()->company_type == CompanyTypeName::BROADCASTER){
+            session()->forget('agency_id');
+            session(['broadcaster_id' => Auth::user()->companies->first()->id]);
+        }elseif(Auth::user()->company_type == CompanyTypeName::AGENCY){
+            session()->forget('broadcaster_id');
+            session(['agency_id' => Auth::user()->companies->first()->id]);
         }
 
         return $this->handleUserWasAuthenticated($request, $throttles, $user);
