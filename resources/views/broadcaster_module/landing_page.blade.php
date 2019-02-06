@@ -34,7 +34,12 @@
 <div class="auth_contain col_4 margin_center">
 
     <div class="align_center m-b">
-        <h2 class="m-b">Welcome Back {{ Auth::user()->companies->first()->name }}</h2>
+        <h2 class="m-b">Welcome Back
+            @if(Auth::user()->companies()->count() > 1)
+                {{ Auth::user()->firstname }}
+            @else
+                {{ Auth::user()->companies->first()->name }}</h2>
+            @endif
         <p class="mb4">What would you like to do?</p>
 
         <a href="{{ route('broadcaster.campaign_management') }}" class="m-b block_disp btn full ghost">Campaign Management</a>
