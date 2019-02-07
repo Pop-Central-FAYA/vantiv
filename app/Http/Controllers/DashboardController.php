@@ -157,7 +157,7 @@ class DashboardController extends Controller
         //campaigns
         $agency_id = Session::get('agency_id');
         $broadcaster_id = Session::get('broadcaster_id');
-        $campaigns = new AllCampaign($request, $this->utilities, $this->dataTables, $broadcaster_id, $agency_id, $dashboard = true);
+        $campaigns = new AllCampaign($request, $broadcaster_id, $agency_id, $dashboard = true, Auth::user()->company_id);
         return $campaigns->run();
     }
 

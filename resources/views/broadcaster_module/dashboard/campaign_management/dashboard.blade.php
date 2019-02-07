@@ -103,6 +103,9 @@
                     <th>Budget</th>
                     <th>Ad Slots</th>
                     <th>Status</th>
+                    @if(Auth::user()->companies()->count() > 1)
+                        <th>Station</th>
+                    @endif
                 </tr>
                 </thead>
             </table>
@@ -132,6 +135,7 @@
         //Bar chart for Total Volume of Campaigns
         <?php echo "var campaign_volume = ".$volume . ";\n"; ?>
         <?php echo "var campaign_month = ".$month . ";\n"; ?>
+        <?php echo "var companies =".Auth::user()->companies()->count().";\n"; ?>
         var chart = Highcharts.chart('containerTotal', {
 
             title: {
@@ -178,18 +182,35 @@
                         d.filter_user = $('#filter_user').val();
                     }
                 },
-                columns: [
-                    {data: 'id', name: 'id'},
-                    {data: 'name', name: 'name'},
-                    {data: 'brand', name: 'brand'},
-                    {data: 'start_date', name: 'start_date'},
-                    {data: 'budget', name: 'budget'},
-                    {data: 'adslots', name: 'adslots'},
-                    {data: 'status', name: 'status'},
-
-                ],
+                columns: getColumns(),
 
             });
+
+            function getColumns()
+            {
+                if(companies > 1){
+                    return [
+                                    {data: 'id', name: 'id'},
+                                    {data: 'name', name: 'name'},
+                                    {data: 'brand', name: 'brand'},
+                                    {data: 'start_date', name: 'start_date'},
+                                    {data: 'budget', name: 'budget'},
+                                    {data: 'adslots', name: 'adslots'},
+                                    {data: 'status', name: 'status'},
+                                    {data: 'station', name: 'station'}
+                                ]
+                }else{
+                    return [
+                                    {data: 'id', name: 'id'},
+                                    {data: 'name', name: 'name'},
+                                    {data: 'brand', name: 'brand'},
+                                    {data: 'start_date', name: 'start_date'},
+                                    {data: 'budget', name: 'budget'},
+                                    {data: 'adslots', name: 'adslots'},
+                                    {data: 'status', name: 'status'},
+                                ]
+                }
+            }
 
             $('#dashboard_filter_campaign').on('click', function() {
                 campaignFilter.draw();
@@ -237,14 +258,15 @@
                     }]
                 });
             }
-
-            $.each(channels_with_details, function (index, value) {
-                if(value.channel_details.channel === 'TV'){
-                    channel_pie('tv', value.campaign_status_percentage.percentage_active,value.campaign_status_percentage.percentage_pending,value.campaign_status_percentage.percentage_finished)
-                }else if(value.channel_details.channel === 'Radio'){
-                    channel_pie('radio', value.campaign_status_percentage.percentage_active,value.campaign_status_percentage.percentage_pending,value.campaign_status_percentage.percentage_finished)
-                }
-            })
+            if(companies > 1) {
+                $.each(channels_with_details, function (index, value) {
+                    if (value.channel_details.channel === 'TV') {
+                        channel_pie('tv', value.campaign_status_percentage.percentage_active, value.campaign_status_percentage.percentage_pending, value.campaign_status_percentage.percentage_finished)
+                    } else if (value.channel_details.channel === 'Radio') {
+                        channel_pie('radio', value.campaign_status_percentage.percentage_active, value.campaign_status_percentage.percentage_pending, value.campaign_status_percentage.percentage_finished)
+                    }
+                })
+            }
         } );
     </script>
 
