@@ -15,4 +15,6 @@ class CampaignStatus
     const PAYMENT_SUCCESS = 'SUCCESSFUL';
 
     const TRANSACTION_TYPE = 'PAID FOR CAMPAIGN';
+
+    const FINISHED = 'expired';
 }

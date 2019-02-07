@@ -46,6 +46,10 @@
             </div>
         </div>
 
+        <!-- channel summary -->
+        @if(Auth::user()->companies()->count() > 1)
+            @include('broadcaster_module.dashboard.includes.company_channels')
+        @endif
 
         <!-- client charts -->
         <div class="clearfix">
@@ -124,6 +128,7 @@
     <script src="https://unpkg.com/flatpickr"></script>
 
     <script>
+        <?php echo "var channels_with_details =".json_encode($user_channel_with_other_details). ";\n";?>
         //Bar chart for Total Volume of Campaigns
         <?php echo "var campaign_volume = ".$volume . ";\n"; ?>
         <?php echo "var campaign_month = ".$month . ";\n"; ?>
@@ -150,7 +155,6 @@
             }]
 
         });
-
         $(document).ready(function( $ ) {
 
             flatpickr(".flatpickr", {
@@ -198,6 +202,49 @@
             $('#filter_user').on('change', function() {
                 campaignFilter.draw();
             });
+
+            function channel_pie(channel, percent_active, percent_pending, percent_finished){
+                Highcharts.chart(channel,{
+                    chart: {
+                        renderTo: 'container',
+                        type: 'pie',
+                        height: 150,
+                        width: 150
+                    },
+                    title: {
+                        text: ''
+                    },
+                    credits: {
+                        enabled: false
+                    },
+                    plotOptions: {
+                        pie: {
+                            allowPointSelect: false,
+                            dataLabels: {
+                                enabled: false,
+                                format: '{point.name}'
+                            }
+                        }
+                    },
+                    exporting: { enabled: false },
+                    series: [{
+                        innerSize: '30%',
+                        data: [
+                            {name: 'Active', y: percent_active, color: '#00C4CA'},
+                            {name: 'Pending', y: percent_pending, color: '#E89B0B' },
+                            {name: 'Finished', y: percent_finished, color: '#E8235F'}
+                        ]
+                    }]
+                });
+            }
+
+            $.each(channels_with_details, function (index, value) {
+                if(value.channel_details.channel === 'TV'){
+                    channel_pie('tv', value.campaign_status_percentage.percentage_active,value.campaign_status_percentage.percentage_pending,value.campaign_status_percentage.percentage_finished)
+                }else if(value.channel_details.channel === 'Radio'){
+                    channel_pie('radio', value.campaign_status_percentage.percentage_active,value.campaign_status_percentage.percentage_pending,value.campaign_status_percentage.percentage_finished)
+                }
+            })
         } );
     </script>
 

@@ -7,6 +7,9 @@ use Vanguard\Libraries\Utilities;
 use Auth;
 use Session;
 use Vanguard\Services\Campaign\AllCampaign;
+use Vanguard\Services\Campaign\CampaignStatusPercentage;
+use Vanguard\Services\CampaignChannels\CampaignChannels;
+use Vanguard\Services\Company\UserCompanyByChannel;
 use Yajra\DataTables\DataTables;
 
 
@@ -160,6 +163,7 @@ class DashboardController extends Controller
 
     public function campaignManagementDashbaord()
     {
+        //will definitely do some refactoring on a later task to fiy the raw sql shit
         $broadcaster = Session::get('broadcaster_id');
         //total volume of campaigns
         $camp_vol = Utilities::switch_db('api')->select("SELECT COUNT(id) as volume, DATE_FORMAT(time_created, '%M, %Y') as `month` from campaignDetails where status != 'on_hold' AND
@@ -202,10 +206,19 @@ class DashboardController extends Controller
 
         $campaign_on_hold = Utilities::switch_db('api')->select("SELECT id FROM campaignDetails where status = 'on_hold' AND broadcaster = '$broadcaster' AND agency = ''");
 
-        return view('broadcaster_module.dashboard.campaign_management.dashboard')->with(['volume' => $c_volume, 'month' => $c_mon, 'broadcaster_info' => $broadcaster_info,
-                                                                                                'walkins' => $clients, 'pending_invoices' => $pending_invoices,
-                                                                                                'brands' => $all_brands, 'active_campaigns' => $active_campaigns,
-                                                                                                'pending_mpos' => $pending_mpos, 'campaign_on_hold' => $campaign_on_hold]);
+        //get all the channel the user is tied
+        $user_channels_with_other_details = $this->getChannelWithOtherDetails(Auth::user()->user_company_channels);
+
+        return view('broadcaster_module.dashboard.campaign_management.dashboard')->with(['volume' => $c_volume,
+                                                                                        'month' => $c_mon,
+                                                                                        'broadcaster_info' => $broadcaster_info,
+                                                                                        'walkins' => $clients,
+                                                                                        'pending_invoices' => $pending_invoices,
+                                                                                        'brands' => $all_brands,
+                                                                                        'active_campaigns' => $active_campaigns,
+                                                                                        'pending_mpos' => $pending_mpos,
+                                                                                        'campaign_on_hold' => $campaign_on_hold,
+                                                                                        'user_channel_with_other_details' => $user_channels_with_other_details]);
 
     }
 
@@ -360,6 +373,28 @@ class DashboardController extends Controller
             }
 
             return $high_value_campaigns;
+    }
+
+    public function getChannelWithOtherDetails($channels_id)
+    {
+        $channels_with_other_details = [];
+        foreach ($channels_id as $channel_id){
+            $channels_details = new CampaignChannels($channel_id);
+            $user_companies = new UserCompanyByChannel($channel_id, Auth::user()->id);
+            $company_ids = $user_companies->getListOfCompanyIds();
+            $campaign_status_service = new CampaignStatusPercentage($company_ids);
+            $channels_with_other_details[] = [
+                'channel_details' => $channels_details->getCampaignChannelsDetails(),
+                'companies' => $user_companies->getListOfCompany(),
+                'companies_id' => $company_ids,
+                'campaign_status_percentage' => [
+                    'percentage_active' => $campaign_status_service->activePercentage(),
+                    'percentage_pending' => $campaign_status_service->pendingPercentage(),
+                    'percentage_finished' => $campaign_status_service->finishedPercentage()
+                ]
+            ];
+        }
+        return $channels_with_other_details;
     }
 
 

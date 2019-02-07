@@ -142,29 +142,31 @@
     <!-- end -->
     {{--updating wallets--}}
     <!-- fund wallet modal -->
-    <div class="modal_contain payment_wallet" id="fund_wallet">
+    @if(Session::get('agency_id'))
+        <div class="modal_contain payment_wallet" id="fund_wallet">
 
-        <h2 class="sub_header mb4 align_center">Fund Wallet</h2>
+            <h2 class="sub_header mb4 align_center">Fund Wallet</h2>
 
-        <form id="fund-form" role='form' action="{{ route('pay') }}" method="POST">
-            <input type="hidden" name="_token" value="{{ csrf_token() }}">
-            <script src="https://js.paystack.co/v1/inline.js"></script>
-            <div class="input_wrap">
-                <label class="small_faint uppercased weight_medium">Amount</label>
-                <input id="amount" type="number" name="amount" placeholder="Enter Amount">
+            <form id="fund-form" role='form' action="{{ route('pay') }}" method="POST">
+                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                <script src="https://js.paystack.co/v1/inline.js"></script>
+                <div class="input_wrap">
+                    <label class="small_faint uppercased weight_medium">Amount</label>
+                    <input id="amount" type="number" name="amount" placeholder="Enter Amount">
+                </div>
+                <input type="hidden" name="email" id="email" value="{{ Auth::user()->email }}">
+                <input type="hidden" name="name" id="name" value="{{ Auth::user()->first_name .' '.Auth::user()->last_name }}">
+                <input type="hidden" name="phone_number" id="phone_number" value="{{ Auth::user()->phone }}">
+                <input type="hidden" name="reference" id="reference" value="" />
+                <input type="hidden" name="user_id" value="{{ $agency_id }}" />
+            </form>
+
+            <div class="mb4">
+                <input type="button" value="Fund Wallet" id="fund" onclick="payWithPaystack()" class="full btn uppercased">
             </div>
-            <input type="hidden" name="email" id="email" value="{{ Auth::user()->email }}">
-            <input type="hidden" name="name" id="name" value="{{ Auth::user()->first_name .' '.Auth::user()->last_name }}">
-            <input type="hidden" name="phone_number" id="phone_number" value="{{ Auth::user()->phone }}">
-            <input type="hidden" name="reference" id="reference" value="" />
-            <input type="hidden" name="user_id" value="{{ $agency_id }}" />
-        </form>
 
-        <div class="mb4">
-            <input type="button" value="Fund Wallet" id="fund" onclick="payWithPaystack()" class="full btn uppercased">
         </div>
-
-    </div>
+    @endif
 @stop
 
 @section('scripts')

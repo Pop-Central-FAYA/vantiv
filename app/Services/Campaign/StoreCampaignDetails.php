@@ -60,6 +60,9 @@ class StoreCampaignDetails
         $campaign_details->broadcaster = $this->agency_id ? $this->preselected_adslot_group->broadcaster_id : $this->broadcaster_id;
         $campaign_details->sub_industry = $this->campaign_general_information->sub_industry;
         $campaign_details->status = CampaignStatus::ON_HOLD;
+        $campaign_details->created_by = \Auth::user()->id;
+        $campaign_details->belongs_to = $this->agency_id ? $this->agency_id : $this->broadcaster_id;
+        $campaign_details->launched_on = $this->agency_id ? $this->preselected_adslot_group->broadcaster_id : $this->broadcaster_id;
         $campaign_details->save();
         return $campaign_details;
     }
