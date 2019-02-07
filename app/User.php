@@ -112,6 +112,18 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract
         return $this->companies->first()->company_type->name;
     }
 
+    public function getUserCompanyChannelsAttribute()
+    {
+        $channels_id = [];
+        $user_companies = $this->companies;
+        foreach ($user_companies as $user_company){
+            if(!in_array($user_company->channels->first()->id, $channels_id)){
+                array_push($channels_id, $user_company->channels->first()->id);
+            }
+        }
+        return $channels_id;
+    }
+
     /**
      * Get the connection of the entity.
      *
