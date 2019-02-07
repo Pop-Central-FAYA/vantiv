@@ -87,7 +87,7 @@ class CampaignsController extends Controller
 
     public function allActiveCampaignsData(Request $request)
     {
-        $campaigns = new AllCampaign($request, $this->utilities, $this->dataTables, $this->broadcaster_id, $this->agency_id, $dashboard = false);
+        $campaigns = new AllCampaign($request, $this->broadcaster_id, $this->agency_id, $dashboard = false, null);
         return $campaigns->run();
     }
 

@@ -535,34 +535,6 @@ class Utilities {
 
     }
 
-
-    public function getCampaignDatatables($all_campaigns)
-    {
-        $campaigns = [];
-        foreach ($all_campaigns as $all_campaign)
-        {
-            $start_date = strtotime($all_campaign->start_date);
-            $stop_date = strtotime($all_campaign->stop_date);
-
-            $campaigns[] = [
-                'id' => $all_campaign->campaign_reference,
-                'campaign_id' => $all_campaign->campaign_id,
-                'name' => $all_campaign->name,
-                'brand' => ucfirst($all_campaign->brand_name),
-                'product' => $all_campaign->product,
-                'date_created' => date('M j, Y', strtotime($all_campaign->time_created)),
-                'start_date' => date('M j, Y', $start_date),
-                'end_date' => date('Y-m-d', $stop_date),
-                'adslots' => count((explode(',', $all_campaign->adslots_id))),
-                'budget' => number_format($all_campaign->total, 2),
-                'status' => $all_campaign->status
-            ];
-        }
-
-        return $campaigns;
-
-    }
-
     public static function getCampaignDatatablesforCampaignOnHold($all_campaigns)
     {
         $campaigns = [];
