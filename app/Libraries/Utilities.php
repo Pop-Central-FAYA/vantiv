@@ -5,10 +5,12 @@ namespace Vanguard\Libraries;
 use Illuminate\Support\Facades\DB;
 use Vanguard\Models\BrandClient;
 use Vanguard\Models\BroadcasterPlayout;
+use Vanguard\Models\Company;
 use Vanguard\Models\PreselectedAdslot;
 use Vanguard\Models\SelectedAdslot;
 use Vanguard\Models\Upload;
 use Vanguard\Services\Broadcaster\BroadcasterDetails;
+use Vanguard\Services\Campaign\CampaignDetailsService;
 use Vanguard\Services\CampaignChannels\Radio;
 use Vanguard\Services\CampaignChannels\Tv;
 use Vanguard\Services\Upload\MediaUploadDetails;
@@ -63,30 +65,10 @@ class Utilities {
 
     public static function campaignDetails($id, $broadcaster_id, $agency_id)
     {
+        //still have to come back here for refactoring, just to get this out of the way quickly for the time been
         $file_details = [];
-        if($broadcaster_id){
-            $campaign_details = Utilities::switch_db('api')->select("SELECT c_d.campaign_id,c_d.status, c_d.min_age, 
-                                                                          c_d.max_age, c_d.name AS campaign_name,
-                                                                          c_d.user_id, c_d.agency, c_d.product, c_d.Industry, 
-                                                                          c_d.sub_industry, c_d.broadcaster, c_d.start_date,
-                                                                          c_d.stop_date, b.name AS brand, c_d.channel, c_d.target_audience,
-                                                                          c_d.region, b.name, p.total, p.id AS payment_id 
-                                                                          FROM campaignDetails AS c_d 
-                                                                          INNER JOIN brands AS b ON b.id = c_d.brand
-                                                                          INNER JOIN payments AS p ON p.campaign_id = c_d.campaign_id 
-                                                                          WHERE c_d.campaign_id = '$id' AND c_d.broadcaster = '$broadcaster_id'");
-        }else if($agency_id){
-            $campaign_details = Utilities::switch_db('api')->select("SELECT c_d.campaign_id, c_d.status, c_d.min_age, 
-                                                                          c_d.max_age, c_d.name as campaign_name, c_d.user_id,
-                                                                          c_d.agency, c_d.product, c_d.Industry, c_d.sub_industry, 
-                                                                          c_d.start_date, c_d.stop_date, b.name AS brand,
-                                                                          c_d.channel, c_d.target_audience, c_d.region, b.name,
-                                                                          p.total, p.id AS payment_id 
-                                                                          FROM campaignDetails AS c_d 
-                                                                          INNER JOIN brands AS b ON b.id = c_d.brand
-                                                                          INNER JOIN payments AS p ON p.campaign_id = c_d.campaign_id 
-                                                                          WHERE  c_d.campaign_id = '$id' GROUP BY c_d.campaign_id");
-        }
+        $campaign_details_service = new CampaignDetailsService($id);
+        $campaign_details = $campaign_details_service->campaignDetails();
         $campaign_id = $campaign_details[0]->campaign_id;
         $channel = $campaign_details[0]->channel;
         $location_ids = $campaign_details[0]->region;
@@ -104,12 +86,11 @@ class Utilities {
         }
         $target_audiences = Utilities::switch_db('api')->select("SELECT * from targetAudiences where id IN ($target_id)");
         if($broadcaster_id){
-            $broadcaster_campaign_id = $campaign_details[0]->broadcaster;
-            $broadcasters = Utilities::switch_db('api')->select("SELECT * FROM broadcasters where id = '$broadcaster_campaign_id'");
+            $broadcaster = Company::where('id', $campaign_details[0]->launched_on)->get();
         }else if($agency_id){
-            $broadcasters = Utilities::switch_db('api')->select("SELECT * FROM broadcasters 
+            $broadcaster = Utilities::switch_db('api')->select("SELECT * FROM companies 
                                                                       WHERE id 
-                                                                      IN (SELECT broadcaster from campaignDetails where campaign_id = '$id')
+                                                                      IN (SELECT launched_on from campaignDetails where campaign_id = '$id')
                                                                       ");
         }
         $payment_id = $campaign_details[0]->payment_id;
@@ -137,9 +118,9 @@ class Utilities {
 
         $campaign_det = [
             'campaign_id' => $campaign_details[0]->campaign_id,
-            'campaign_name' => $campaign_details[0]->campaign_name,
+            'campaign_name' => $campaign_details[0]->name,
             'product_name' => $campaign_details[0]->product,
-            'brand' => $campaign_details[0]->brand,
+            'brand' => $campaign_details[0]->brand_name,
             'industry' => $campaign_details[0]->Industry,
             'sub_industry' => $campaign_details[0]->sub_industry,
             'channel' => $channel,
@@ -211,7 +192,7 @@ class Utilities {
 
         }
 
-        return (['campaign_det' => $campaign_det, 'file_details' => $file_details, 'broadcasters' => $broadcasters, 'compliance_reports' => $compliances, 'uploaded_files' => $uploaded_files]);
+        return (['campaign_det' => $campaign_det, 'file_details' => $file_details, 'broadcasters' => $broadcaster, 'compliance_reports' => $compliances, 'uploaded_files' => $uploaded_files]);
 
     }
 

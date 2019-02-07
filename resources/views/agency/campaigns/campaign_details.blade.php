@@ -190,7 +190,7 @@
                         <div class="column col_3">
                             <span class="small_faint">Media Channel</span>
                             @foreach($campaign_details['broadcasters'] as $broadcaster)
-                                <p class="weight_medium">{{ $broadcaster->brand }}</p>
+                                <p class="weight_medium">{{ $broadcaster->name }}</p>
                             @endforeach
                         </div>
                     </div>

@@ -158,7 +158,7 @@
                 <input type="hidden" name="name" id="name" value="{{ Auth::user()->first_name .' '.Auth::user()->last_name }}">
                 <input type="hidden" name="phone_number" id="phone_number" value="{{ Auth::user()->phone }}">
                 <input type="hidden" name="reference" id="reference" value="" />
-                <input type="hidden" name="user_id" value="{{ $agency_id }}" />
+                <input type="hidden" name="user_id" value="{{ Auth::user()->id }}" />
             </form>
 
             <div class="mb4">
