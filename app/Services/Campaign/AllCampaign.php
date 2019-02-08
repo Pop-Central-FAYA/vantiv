@@ -4,6 +4,7 @@ namespace Vanguard\Services\Campaign;
 
 use Vanguard\Libraries\Enum\CampaignStatus;
 use Vanguard\Services\Company\CompanyDetails;
+use Vanguard\Services\Traits\CampaignQueryTrait;
 use Yajra\DataTables\DataTables;
 
 class AllCampaign
@@ -14,6 +15,8 @@ class AllCampaign
     protected $dashboard;
     protected $company_ids;
 
+    use CampaignQueryTrait;
+
     public function __construct($request, $broadcaster_id, $agency_id, $dashboard, $company_ids)
     {
         $this->broadcaster_id = $broadcaster_id;
@@ -21,9 +24,6 @@ class AllCampaign
         $this->request = $request;
         $this->dashboard = $dashboard;
         $this->company_ids = $company_ids;
-        if($company_ids && \Auth::user()->companies()->count() > 1){
-            $this->broadcaster_id = null;
-        }
     }
 
     public function run()
@@ -84,41 +84,30 @@ class AllCampaign
 
     public function baseQuery()
     {
-        return \DB::table('campaignDetails')
-            ->join('campaigns', 'campaigns.id', '=', 'campaignDetails.campaign_id')
-            ->join('payments', 'payments.campaign_id', '=', 'campaignDetails.campaign_id')
-            ->join('brands', 'brands.id', '=', 'campaignDetails.brand')
-            ->select(   'campaignDetails.adslots_id',
-                'campaignDetails.stop_date',
-                'campaignDetails.start_date',
-                'campaignDetails.status',
-                'campaignDetails.time_created',
-                'campaignDetails.product',
-                'campaignDetails.name',
-                'campaignDetails.campaign_id',
-                'campaignDetails.launched_on',
-                'payments.total',
-                'brands.name AS brand_name',
-                'campaigns.campaign_reference'
-            )
-            ->when($this->request->start_date && $this->request->stop_date, function ($query) {
-                return $query->between('campaignDetails.start_date', $this->request->start_date,
-                    $this->request->stop_date);
-            });
+        return  $this->campaignBaseQuery()
+                ->when($this->request->start_date && $this->request->stop_date, function ($query) {
+                    return $query->between('campaignDetails.start_date', $this->request->start_date,
+                        $this->request->stop_date);
+                });
     }
 
     public function allCampaigns()
     {
+        if($this->company_ids && \Auth::user()->companies()->count() > 1){
+            $broadcaster_id = null;
+        }else{
+            $broadcaster_id = $this->broadcaster_id;
+        }
         return $this->baseQuery()
                                 ->when(!$this->dashboard, function($query){
                                     return $query->where('campaignDetails.status', CampaignStatus::ACTIVE_CAMPAIGN);
                                 })
-                                ->when($this->company_ids, function($query) {
+                                ->when($this->broadcaster_id && $this->company_ids, function($query) {
                                     return $query->whereIn('launched_on', $this->company_ids);
                                 })
-                                ->when($this->broadcaster_id, function($query) {
+                                ->when($broadcaster_id, function($query) use ($broadcaster_id) {
                                     return $query->where([
-                                        ['campaignDetails.broadcaster', $this->broadcaster_id],
+                                        ['campaignDetails.broadcaster', $broadcaster_id],
                                         ['campaignDetails.adslots', '>', 0]
                                     ]);
                                 })
@@ -136,17 +125,22 @@ class AllCampaign
 
     public function filterCampaigns()
     {
+        if($this->company_ids && \Auth::user()->companies()->count() > 1){
+            $broadcaster_id = null;
+        }else{
+            $broadcaster_id = $this->broadcaster_id;
+        }
         return $this->baseQuery()
                                 ->when(($this->request->filter_user == 'agency'), function ($query) {
                                     return $query->where('campaignDetails.agency_broadcaster', $this->broadcaster_id);
                                 })
-                                ->when(($this->request->filter_user == 'broadcaster'), function($query) {
+                                ->when(($this->request->filter_user == 'broadcaster'), function($query) use ($broadcaster_id) {
                                     $query->when($this->company_ids, function($inner_query) {
-                                                return $inner_query->whereIn('launched_on', $this->company_ids);
+                                                return $inner_query->whereIn('belongs_to', $this->company_ids);
                                             })
-                                        ->when($this->broadcaster_id, function ($inner_query) {
+                                        ->when($broadcaster_id, function ($inner_query) use ($broadcaster_id) {
                                             return $inner_query->where([
-                                                ['campaignDetails.broadcaster', $this->broadcaster_id],
+                                                ['campaignDetails.broadcaster', $broadcaster_id],
                                                 ['campaignDetails.agency', '']
                                             ]);
                                         });

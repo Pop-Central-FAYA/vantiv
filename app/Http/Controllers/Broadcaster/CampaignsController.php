@@ -466,7 +466,7 @@ class CampaignsController extends Controller
         }
         $campaign_price_data[] = [
             'color' => $color,
-            'name' => $campaign_details['broadcasters'][0]->brand,
+            'name' => $campaign_details['broadcasters'][0]->name,
             'data' => array($payments[0]->amount),
             'stack' => $campaign_details['campaign_det']['channel'][0]->channel
         ];

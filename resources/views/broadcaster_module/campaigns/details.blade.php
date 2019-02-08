@@ -78,7 +78,7 @@
                 <div class="column col_3 check_this">
                     <span class="small_faint block_disp">Media Channel</span>
                     <select name="media" id="media">
-                        <option class="" selected value="{{ $campaign_details['broadcasters'][0]->id }}">{{ $campaign_details['broadcasters'][0]->brand }}</option>
+                        <option class="" selected value="{{ $campaign_details['broadcasters'][0]->id }}">{{ $campaign_details['broadcasters'][0]->name }}</option>
                     </select>
                 </div>
             </div>
@@ -198,7 +198,7 @@
                         <div class="column col_3">
                             <span class="small_faint">Media Channel</span>
                             @foreach($campaign_details['broadcasters'] as $broadcaster)
-                                <p class="weight_medium">{{ $broadcaster->brand }}</p>
+                                <p class="weight_medium">{{ $broadcaster->name }}</p>
                             @endforeach
                         </div>
                     </div>
