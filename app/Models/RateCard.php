@@ -4,16 +4,21 @@ namespace Vanguard\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class RateCard extends Model
+class RateCard extends Base
 {
-    protected $connection = 'api_db';
     protected $table = 'rateCards';
     protected $primaryKey = 'id';
     protected $keyType = 'string';
 
+    protected $fillable = ['user_id', 'broadcaster', 'hourly_range_id', 'day', 'is_airing', 'status', 'company_id'];
+
+    public $timestamps = null;
+
+    protected $dates = ['time_created', 'time_modified'];
+
     public function adslots()
     {
-        return $this->hasMany(Adslot::class);
+        return $this->hasMany(Adslot::class, 'rate_card', 'id');
     }
 
     public function get_day()
