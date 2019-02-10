@@ -10,6 +10,7 @@ use Vanguard\Libraries\Api;
 use Vanguard\Libraries\Maths;
 use League\Flysystem\Exception;
 use Vanguard\Libraries\Utilities;
+use Vanguard\Services\Adslot\Adslotlist;
 use Yajra\DataTables\Contracts\DataTable;
 use Yajra\DataTables\DataTables;
 
@@ -23,23 +24,22 @@ class AdslotController extends Controller
      */
     public function index()
     {
-
-        $broadcaster_id = Session::get('broadcaster_id');
-        $adslots = $this->getAdslotDetails($broadcaster_id, null);
-        return view('broadcaster_module.adslots.index')->with(['adslots' => $adslots, 'broadcaster' => $broadcaster_id]);
+        $company_id = \Auth::user()->companies->first()->id;
+        $adslots_list_service = new Adslotlist($company_id, null);
+        $adslots = $adslots_list_service->adlotsLists();
+        return view('broadcaster_module.adslots.index')->with(['adslots' => $adslots, 'broadcaster' => $company_id]);
 
 
     }
 
     public function adslotData(DataTables $dataTables, Request $request)
     {
-        $broadcaster_id = Session::get('broadcaster_id');
-
-        $all_adslots = $this->getAdslotDetails($broadcaster_id, $request->days);
-
-        return $dataTables->collection($all_adslots)
-            ->addColumn('edit', function ($all_adslots) {
-                return '<a href="#edit_slot'.$all_adslots['id'].'" class="weight_medium modal_click">Edit</a>';
+        $company_id = \Auth::user()->companies->first()->id;
+        $adslots_list_service = new Adslotlist($company_id, $request->day);
+        $adslots = $adslots_list_service->adlotsLists();
+        return $dataTables->collection($adslots)
+            ->addColumn('edit', function ($adslots) {
+                return '<a href="#edit_slot'.$adslots['id'].'" class="weight_medium modal_click">Edit</a>';
             })
             ->rawColumns(['edit' => 'edit'])->addIndexColumn()
             ->make(true);
@@ -158,51 +158,6 @@ class AdslotController extends Controller
             }
 
         }
-    }
-
-    public function getAdslotDetails($broadcaster_id, $day)
-    {
-        $all_adslots = [];
-        if($day){
-            $adslots = Utilities::switch_db('api')->select("SELECT a.id,d.day,a.from_to_time, p_p.percentage,
-                                                            IF(a.id = p_p.adslot_id, p_p.price_60, p.price_60) as price_60,
-                                                            IF(a.id = p_p.adslot_id, p_p.price_45, p.price_45) as price_45,
-                                                            IF(a.id = p_p.adslot_id, p_p.price_30, p.price_30) as price_30,
-                                                            IF(a.id = p_p.adslot_id, p_p.price_15, p.price_15) as price_15
-                                                            from adslots as a 
-                                                            INNER JOIN adslotPrices as p ON p.adslot_id = a.id
-                                                            LEFT JOIN adslotPercentages as p_p ON p_p.adslot_id = a.id
-                                                             LEFT JOIN rateCards as r ON r.id = a.rate_card
-                                                             LEFT JOIN days as d ON d.id = r.day
-                                                             where a.broadcaster = '$broadcaster_id' and d.day LIKE '%$day%'");
-        }else{
-            $adslots = Utilities::switch_db('api')->select("SELECT a.id, a.from_to_time, d.day, p_p.percentage,
-                                                            IF(a.id = p_p.adslot_id, p_p.price_60, p.price_60) as price_60,
-                                                            IF(a.id = p_p.adslot_id, p_p.price_45, p.price_45) as price_45,
-                                                            IF(a.id = p_p.adslot_id, p_p.price_30, p.price_30) as price_30,
-                                                            IF(a.id = p_p.adslot_id, p_p.price_15, p.price_15) as price_15
-                                                            from adslots as a 
-                                                            INNER JOIN adslotPrices as p ON p.adslot_id = a.id
-                                                            LEFT JOIN adslotPercentages as p_p ON p_p.adslot_id = a.id
-                                                             LEFT JOIN rateCards as r ON r.id = a.rate_card
-                                                             LEFT JOIN days as d ON d.id = r.day
-                                                             where a.broadcaster = '$broadcaster_id'");
-        }
-
-        foreach ($adslots as $adslot){
-            $all_adslots[] = [
-                'id' => $adslot->id,
-                'day' => $adslot->day,
-                'time_slot' => $adslot->from_to_time,
-                '60_seconds' => $adslot->price_60,
-                '45_seconds' => $adslot->price_45,
-                '30_seconds' => $adslot->price_30,
-                '15_seconds' => $adslot->price_15,
-                'percentage' => $adslot->percentage
-            ];
-        }
-
-        return $all_adslots;
     }
 
     public function rateCardArray($rate_card_id, $user_id, $broadcaster_id, $request)
