@@ -483,20 +483,6 @@ class Utilities {
         return Utilities::switch_db('api')->select("SELECT * from walkIns where id = '$id'");
     }
 
-    public static function getPreloadedData()
-    {
-        $targetAudiences = Utilities::switch_db('api')->select("SELECT * from targetAudiences");
-        $regions = Utilities::switch_db('api')->select("SELECT * from regions");
-        $day_parts = Utilities::switch_db('api')->select("SELECT * from dayParts");
-        $industries = Utilities::switch_db('api')->select("SELECT * FROM sectors ORDER BY `name` ASC");
-        $subindustries = Utilities::switch_db('api')->select("SELECT * FROM subSectors ORDER BY `name` ASC");
-        $channels = Utilities::switch_db('api')->select("SELECT * from campaignChannels");
-        $days = Utilities::switch_db('api')->select("SELECT * from days");
-        $hourly_ranges = Utilities::switch_db('api')->select("SELECT * from hourlyRanges");
-
-        return (['hourly_ranges' => $hourly_ranges, 'days' => $days, 'regions' => $regions, 'target_audience' => $targetAudiences, 'day_parts' => $day_parts, 'industries' => $industries, 'subindustries' => $subindustries, 'channels' => $channels]);
-    }
-
     public static function getAllAvailableSlots($step1, $broadcaster_id)
     {
         $broadcaster_details = Utilities::getBroadcasterDetails($broadcaster_id);

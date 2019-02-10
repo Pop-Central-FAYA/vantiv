@@ -84,4 +84,12 @@ class ClassMessages
 
     const PROFILE_UPDATE_ERROR = 'An error occurred while updating your profile';
 
+    const ADSLOT_TIME_CHECK = 'You have exceeded the 12 minutes break for this hour';
+
+    const RATECARD_EXISTENCE = 'You already have a ratecard with the above day and hourly range';
+
+    const ADSLOT_SUCCESS = 'Adlsot created successfully';
+
+    const ADSLOT_ERROR = 'There was an error creating the slot';
+
 }

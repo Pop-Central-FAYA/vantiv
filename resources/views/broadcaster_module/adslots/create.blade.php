@@ -161,15 +161,15 @@
     <script type="text/javascript" src="{{ asset('new_frontend/js/wickedpicker.min.js') }}"></script>
     <script>
         <?php
-        if (is_array($target_audiences) and count($target_audiences) > 0) {
+        if (count($target_audiences) > 0) {
             echo "var target_audiences = " . json_encode($target_audiences) . ";\n";
         }
 
-        if (is_array($regions) and count($regions) > 0) {
+        if (count($regions) > 0) {
             echo "var regions = " . json_encode($regions) . ";\n";
         }
 
-        if (is_array($day_parts) and count($day_parts) > 0) {
+        if (count($day_parts) > 0) {
             echo "var day_parts = " . json_encode($day_parts) . ";\n";
         }
         ?>

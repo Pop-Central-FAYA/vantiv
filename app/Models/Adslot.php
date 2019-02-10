@@ -2,14 +2,17 @@
 
 namespace Vanguard\Models;
 
-use Illuminate\Database\Eloquent\Model;
 
-class Adslot extends Model
+class Adslot extends Base
 {
-    protected $connection = 'api_db';
     protected $table = 'adslots';
     protected $primaryKey = 'id';
     protected $keyType = 'string';
+
+    protected $fillable = ['rate_card', 'target_audience', 'day_parts', 'region', 'from_to_time', 'min_age', 'max_age',
+        'status', 'broadcaster', 'is_available', 'time_difference', 'time_used', 'channels', 'company_id'];
+
+    protected $dates = ['time_created', 'time_modified'];
 
     public $timestamps = false;
 
@@ -26,5 +29,10 @@ class Adslot extends Model
     public function day_part()
     {
         return $this->belongsTo(DayPart::class, 'day_parts');
+    }
+
+    public function rate_card()
+    {
+        return $this->belongsTo(RateCard::class);
     }
 }

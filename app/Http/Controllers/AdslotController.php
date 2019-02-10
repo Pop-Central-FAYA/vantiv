@@ -7,10 +7,17 @@ use Illuminate\Support\Facades\Session;
 use Vanguard\Http\Requests\StoreAdslotsRequests;
 use Vanguard\Http\Requests\UpdateAdslotsRequest;
 use Vanguard\Libraries\Api;
+use Vanguard\Libraries\Enum\ClassMessages;
 use Vanguard\Libraries\Maths;
 use League\Flysystem\Exception;
 use Vanguard\Libraries\Utilities;
 use Vanguard\Services\Adslot\Adslotlist;
+use Vanguard\Services\Adslot\StoreAdslot;
+use Vanguard\Services\Adslot\StoreAdslotPrice;
+use Vanguard\Services\Company\CompanyDetails;
+use Vanguard\Services\PreloadedData\PreloadedData;
+use Vanguard\Services\RateCard\RatecardExistenceCheck;
+use Vanguard\Services\RateCard\StoreRateCard;
 use Yajra\DataTables\Contracts\DataTable;
 use Yajra\DataTables\DataTables;
 
@@ -47,75 +54,54 @@ class AdslotController extends Controller
 
     public function create()
     {
-        $preloaded_data = Utilities::getPreloadedData();
-        return view('broadcaster_module.adslots.create')->with(['days' => $preloaded_data['days'], 'hours' => $preloaded_data['hourly_ranges'],
-                                                                    'regions' => $preloaded_data['regions'], 'target_audiences' => $preloaded_data['target_audience'],
-                                                                    'channels' => $preloaded_data['channels'], 'day_parts' => $preloaded_data['day_parts']]);
+        $preloaded_data = new PreloadedData();
+        return view('broadcaster_module.adslots.create')->with('days', $preloaded_data->getDays())
+                                                            ->with('hours', $preloaded_data->getHourlyRanges())
+                                                            ->with('regions', $preloaded_data->getRegions())
+                                                            ->with('target_audiences', $preloaded_data->getTargetAudiences())
+                                                            ->with('channels', $preloaded_data->getCampaignChannels())
+                                                            ->with('day_parts', $preloaded_data->getDayParts());
     }
 
     public function store(StoreAdslotsRequests $request)
     {
-
-        $broadcaster_id = Session::get('broadcaster_id');
-        $broadcaster_details = Utilities::getBroadcasterDetails($broadcaster_id);
-        $user_id = $broadcaster_details[0]->user_id;
-        $rate_card_id = uniqid();
-        $time_check = 0;
-
-        for($x = 0; $x < count($request->from_time); $x++){
-            $time_difference = (strtotime(Utilities::removeSpace($request->to_time[$x])) - strtotime(Utilities::removeSpace($request->from_time[$x])));
-            $time_check += $time_difference;
+        $company_id = \Auth::user()->companies->first()->id;
+        $company_details_service = new CompanyDetails($company_id);
+        $company_details = $company_details_service->getCompanyDetails();
+        $user_id = \Auth::user()->id;
+        $time_sum = $this->checkTotalTime($request->from_time, $request->to_time);
+        if($time_sum > 720){
+            Session::flash('error', ClassMessages::ADSLOT_TIME_CHECK);
+            return redirect()->back();
         }
-
-        if($time_check > 720){
-            Session::flash('error', 'You have exceeded the 12 minutes break for this hour');
+        $rate_cared_existence_service = new RatecardExistenceCheck($company_id, $request->hourly_ranges, $request->days);
+        if($rate_cared_existence_service->checkIfRatecardExists()){
+            Session::flash('error', ClassMessages::RATECARD_EXISTENCE);
             return redirect()->back();
         }
 
-        $check_ratecard = Utilities::checkRatecardExistence($broadcaster_id, $request->hourly_ranges, $request->days);
-        if($check_ratecard){
-            $message = 'Your time of '.(($time_check) / 60).' is above the allowed max of 12 minutes per hour';
-            Session::flash('error', $message);
+        try{
+            \DB::transaction(function() use ($user_id, $company_id, $request, $company_details) {
+                $rate_card_store_service = new StoreRateCard($user_id, $company_id, $request->days, $request->hourly_ranges);
+                $rate_card = $rate_card_store_service->storeRateCard();
+                for ($i = 0; $i < count($request->regions); $i++){
+                    $from_time = Utilities::removeSpace($request->from_time[$i]);
+                    $to_time = Utilities::removeSpace($request->to_time[$i]);
+                    $adslot_store_service = new StoreAdslot($rate_card->id,$request->target_audiences[$i],$request->dayparts[$i],
+                        $request->regions[$i],$from_time. ' - '.$to_time, $request->min_age[$i], $request->max_age[$i],
+                        $company_id, $this->timeDifference($from_time, $to_time),$company_details->channels->first()->id);
+                    $adslot = $adslot_store_service->storeAdslot();
+                    $store_adslot_price_service = new StoreAdslotPrice($adslot->id, $request->price_60[$i], $request->price_45[$i],
+                        $request->price_30[$i], $request->price_15[$i]);
+                    $store_adslot_price_service->storeAdslotPrice();
+                }
+            });
+        }catch (\Exception $exception){
+            Session::flash('error', ClassMessages::ADSLOT_ERROR);
             return redirect()->back();
         }
-
-        $ratecard_array = $this->rateCardArray($rate_card_id, $user_id, $broadcaster_id, $request);
-
-        $adslot_array = $this->adslotsArray($rate_card_id, $request, $broadcaster_id, $broadcaster_details);
-        Utilities::switch_db('api')->beginTransaction();
-        try {
-            $save_rate = Utilities::switch_db('api')->table('rateCards')->insert($ratecard_array);
-        }catch (\Exception $e) {
-            Utilities::switch_db('api')->rollback();
-            $message = $e->getMessage();
-            Session::flash('error', $message);
-            return redirect()->back();
-        }
-
-        try {
-            $save_adslot = Utilities::switch_db('api')->table('adslots')->insert($adslot_array);
-        }catch (\Exception $e) {
-            Utilities::switch_db('api')->rollback();
-            $message = $e->getMessage();
-            Session::flash('error', $message);
-            return redirect()->back();
-        }
-
-        $select_adslots = Utilities::switch_db('api')->select("SELECT id from adslots where rate_card = '$rate_card_id'");
-        $price_array = $this->priceArray($select_adslots, $request);
-        try {
-            $save_price = Utilities::switch_db('api')->table('adslotPrices')->insert($price_array);
-        }catch (\Exception $e) {
-            Utilities::switch_db('api')->rollback();
-            $message = $e->getMessage();
-            Session::flash('error', $message);
-            return redirect()->back();
-        }
-
-        Utilities::switch_db('api')->commit();
-        Session::flash('success', 'Adslot created successfully...');
+        Session::flash('success', ClassMessages::ADSLOT_SUCCESS);
         return redirect()->route('adslot.all');
-
     }
 
     public function update(UpdateAdslotsRequest $request, $adslot)
@@ -160,62 +146,6 @@ class AdslotController extends Controller
         }
     }
 
-    public function rateCardArray($rate_card_id, $user_id, $broadcaster_id, $request)
-    {
-        $ratecard_array = [
-            'id' => $rate_card_id,
-            'user_id' => $user_id,
-            'broadcaster' => $broadcaster_id,
-            'day' => $request->days,
-            'hourly_range_id' => $request->hourly_ranges,
-        ];
-
-        return $ratecard_array;
-    }
-
-    public function adslotsArray($rate_card_id, $request, $broadcaster_id, $broadcaster_details)
-    {
-        $adslot_array = [];
-        for ($i = 0; $i < count($request->regions); $i++){
-            $from_time = Utilities::removeSpace($request->from_time[$i]);
-            $to_time = Utilities::removeSpace($request->to_time[$i]);
-            $adslot_array[] = [
-                'id'=> uniqid(),
-                'rate_card' => $rate_card_id,
-                'target_audience' => $request->target_audiences[$i],
-                'day_parts' => $request->dayparts[$i],
-                'region' => $request->regions[$i],
-                'from_to_time' => $from_time. ' - '.$to_time,
-                'min_age' => $request->min_age[$i],
-                'max_age' => $request->max_age[$i],
-                'broadcaster' => $broadcaster_id,
-                'is_available' => 0,
-                'time_difference' => strtotime($from_time) - strtotime($to_time),
-                'time_used' => 0,
-                'channels' => $broadcaster_details[0]->channel_id,
-            ];
-        }
-
-        return $adslot_array;
-    }
-
-    public function priceArray($select_adslots, $request)
-    {
-        $price = [];
-        for ($j = 0; $j < count($select_adslots); $j++){
-            $price[] = [
-                'id' => uniqid(),
-                'adslot_id' => $select_adslots[$j]->id,
-                'price_60' => $request->price_60[$j],
-                'price_45' => $request->price_45[$j],
-                'price_30' => $request->price_30[$j],
-                'price_15' => $request->price_15[$j],
-            ];
-        }
-
-        return $price;
-    }
-
     public function premiumPrices($selectAdslotPrice, $request, $adslot)
     {
         $premium_60 = ($selectAdslotPrice[0]->price_60 + (((int)$request->premium_percent) / 100) * $selectAdslotPrice[0]->price_60);
@@ -240,6 +170,21 @@ class AdslotController extends Controller
     public function getAdslotPercentages($adslot_id)
     {
         return Utilities::switch_db('api')->select("SELECT * from adslotPercentages where adslot_id = '$adslot_id'");
+    }
+
+    public function checkTotalTime($from_time, $to_time)
+    {
+        $time_sum = 0;
+        for($x = 0; $x < count($from_time); $x++){
+            $time_difference = (strtotime(Utilities::removeSpace($to_time[$x])) - strtotime(Utilities::removeSpace($from_time[$x])));
+            $time_sum += $time_difference;
+        }
+        return $time_sum;
+    }
+
+    public function timeDifference($from_time, $to_time)
+    {
+        return (strtotime($to_time)-strtotime($from_time));
     }
 
 
