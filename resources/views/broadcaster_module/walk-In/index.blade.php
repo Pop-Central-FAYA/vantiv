@@ -44,18 +44,21 @@
         <div class="similar_table pt3">
             <!-- table header -->
             <div class="_table_header clearfix m-b">
-                <span class="small_faint block_disp padd column col_4">Basic Info</span>
+                <span class="small_faint block_disp padd column col_3">Basic Info</span>
                 <span class="small_faint block_disp column col_1">Brands</span>
                 <span class="small_faint block_disp column col_2">Total Spend</span>
                 <span class="small_faint block_disp column col_2">Active Campaigns</span>
                 <span class="small_faint block_disp column col_2">Inactive Campaigns</span>
+                @if(Auth::user()->companies->count() > 1)
+                    <span class="small_faint block_disp column col_1">Stations</span>
+                @endif
                 <span class="block_disp column col_1 color_trans">.</span>
             </div>
 
             <!-- table item -->
             @foreach($clients as $client)
                 <div class="_table_item the_frame clearfix">
-                    <div class="padd column col_4">
+                    <div class="padd column col_3">
                         <span class="client_ava"><img src="{{ $client['company_logo'] ? asset($client['company_logo']) : '' }}"></span>
                         <p>{{ $client['company_name'] }}</p>
                         <span class="small_faint">Added {{ date('M j, Y h:ia', strtotime($client['created_at'])) }}</span>
@@ -64,6 +67,9 @@
                     <div class="column col_2">&#8358; {{ number_format($client['total'],2) }}</div>
                     <div class="column col_2">{{ $client['active_campaign'] }}</div>
                     <div class="column col_2">{{ $client['inactive_campaign'] }}</div>
+                    @if(Auth::user()->companies->count() > 1)
+                        <div class="column col_1">{{ $client['company'] }}</div>
+                    @endif
                     <div class="column col_1">
 
                         <!-- more links -->

@@ -8,21 +8,22 @@ use Vanguard\Libraries\Utilities;
 class ClientCampaigns
 {
     protected $user_id;
-    protected $broadcaster_id;
-    protected $agency_id;
+    protected $company_id;
 
-    public function __construct($user_id, $broadcaster_id, $agency_id)
+    public function __construct($user_id, $company_id)
     {
-        $this->broadcaster_id = $broadcaster_id;
-        $this->agency_id = $agency_id;
+        $this->company_id = $company_id;
         $this->user_id = $user_id;
     }
 
     public function baseQuery()
     {
-        return Utilities::switch_db('api')->table('campaignDetails')
-            ->when($this->broadcaster_id, function($query) {
-                return $query->where('campaignDetails.broadcaster', $this->broadcaster_id);
+        return \DB::table('campaignDetails')
+            ->when(!is_array($this->company_id), function($query) {
+                return $query->where('campaignDetails.belongs_to', $this->company_id);
+            })
+            ->when(is_array($this->company_id), function ($query) {
+                return $query->whereIn('campaignDetails.belongs_to', $this->company_id);
             })
             ->where('campaignDetails.user_id', $this->user_id);
     }

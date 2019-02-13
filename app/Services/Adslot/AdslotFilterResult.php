@@ -3,23 +3,21 @@
 namespace Vanguard\Services\Adslot;
 
 use Carbon\CarbonPeriod;
+use Vanguard\Libraries\Enum\CompanyTypeName;
 use Vanguard\Libraries\Utilities;
 use Vanguard\Services\Broadcaster\BroadcasterDetails;
+use Vanguard\Services\Company\CompanyDetails;
 use Vanguard\Services\Day\DayDetails;
 
 class AdslotFilterResult
 {
     protected $campaign_general_information;
-    protected $broadcaster_id;
-    protected $agency_id;
     protected $start_date;
     protected $end_date;
 
-    public function __construct($campaign_general_information, $broadcaster_id, $agency_id, $start_date, $end_date)
+    public function __construct($campaign_general_information, $start_date, $end_date)
     {
         $this->campaign_general_information = $campaign_general_information;
-        $this->broadcaster_id = $broadcaster_id;
-        $this->agency_id = $agency_id;
         $this->start_date = $start_date;
         $this->end_date = $end_date;
     }
@@ -32,17 +30,12 @@ class AdslotFilterResult
     public function adslotFilterResult()
     {
         $ratecards = $this->getRatecardsBetweenCampaignDates();
-        $broadcaster_details = new BroadcasterDetails($this->broadcaster_id);
-        $broadcaster_details = $broadcaster_details->getBroadcasterDetails();
-        //Used DB raw to get the count of the id of the adslots that matches the criterias.
         $adslot_filter = Utilities::switch_db('api')->table('adslots')
-                                    ->join('broadcasters', 'broadcasters.id', '=', 'adslots.broadcaster')
-                                    ->select(
-                                                \DB::raw("COUNT(adslots.id) as total_slot"),
-                                                'adslots.broadcaster AS broadcaster',
-                                                'broadcasters.image_url AS broadcaster_logo',
-                                                'broadcasters.brand AS broadcaster_brand'
-                                        )
+                                    ->join('companies', 'companies.id', '=', 'adslots.company_id')
+                                    ->select('adslots.company_id AS broadcaster',
+                                                'companies.logo AS broadcaster_logo',
+                                                'companies.name AS broadcaster_brand')
+                                    ->selectRaw("COUNT(adslots.id) as total_slot")
                                     ->where([
                                         ['adslots.min_age','>=', $this->campaign_general_information->min_age],
                                         ['adslots.max_age','<=', $this->campaign_general_information->max_age],
@@ -52,15 +45,15 @@ class AdslotFilterResult
                                     ->whereIn('adslots.day_parts', $this->campaign_general_information->dayparts)
                                     ->whereIn('adslots.region', $this->campaign_general_information->region)
                                     ->whereIn('adslots.rate_card', $ratecards)
-                                    ->when($this->broadcaster_id, function($query) use ($broadcaster_details) {
+                                    ->when(\Auth::user()->company_type == CompanyTypeName::BROADCASTER, function($query) {
                                         return $query->where([
-                                                    ['adslots.broadcaster', $this->broadcaster_id],
-                                                    ['adslots.channels', $broadcaster_details->channel_id]
+                                                    ['adslots.company_id', \Auth::user()->companies->first()->id],
+                                                    ['adslots.channels', \Auth::user()->companies->first()->channels->first()->id]
                                                 ]);
                                     })
-                                    ->when($this->agency_id, function ($query) {
+                                    ->when(\Auth::user()->company_type == CompanyTypeName::AGENCY, function ($query) {
                                         return $query->whereIn('adslots.channels', $this->campaign_general_information->channel)
-                                                     ->groupBy('adslots.broadcaster');
+                                                     ->groupBy('adslots.company_id');
                                     })
                                     ->get();
         return $adslot_filter;

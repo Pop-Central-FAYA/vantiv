@@ -8,18 +8,18 @@ use Vanguard\Libraries\Utilities;
 class RatecardService
 {
     protected $campaign_general_information;
-    protected $broadcaster_id;
     protected $start_date;
     protected $end_date;
-    protected $broadcaster_details;
+    protected $channel_id;
+    protected $company_id;
 
-    public function __construct($campaign_general_information, $broadcaster_id, $start_date, $end_date, $broadcaster_details)
+    public function __construct($campaign_general_information, $start_date, $end_date, $channel_id, $company_id)
     {
         $this->campaign_general_information = $campaign_general_information;
-        $this->broadcaster_id = $broadcaster_id;
         $this->start_date = $start_date;
         $this->end_date = $end_date;
-        $this->broadcaster_details = $broadcaster_details;
+        $this->channel_id = $channel_id;
+        $this->company_id = $company_id;
     }
 
     public function run()
@@ -27,7 +27,7 @@ class RatecardService
         $new_rate_cards = [];
         $rate_cards = $this->getRateCards();
         foreach ($rate_cards['rate_cards'] as $rate_card){
-            $adslots = Utilities::filterAdslots(json_decode(json_encode($rate_cards['adslots_from_campaign_filter']), true), $rate_card->day_id);
+            $adslots = $this->filterAdslots(json_decode(json_encode($rate_cards['adslots_from_campaign_filter']), true), $rate_card->day_id);
             $new_rate_cards[] = [
                 'id' => $rate_card->id,
                 'day' => $rate_card->day,
@@ -49,14 +49,15 @@ class RatecardService
         $campaign_date_object = new CampaignDate();
         $days_in_first_week = $campaign_date_object->getFirstWeek($this->start_date, $this->end_date);
         $campaign_dates_in_first_week = $campaign_date_object->getStartAndEndDateForFirstWeek($days_in_first_week);
-        $adslot_filter_object = new AdslotFilterResult(null, null, null,
+        $adslot_filter_object = new AdslotFilterResult(null,
                                                         $campaign_dates_in_first_week['start_date_of_the_week'],
                                                         $campaign_dates_in_first_week['end_date_of_the_week']);
         $rate_card_ids = $adslot_filter_object->getRatecardsBetweenCampaignDates();
         $all_broadcaster_adslots = $this->getAllBroadcasterAdslots();
         $adslots_from_campaign_filter = $this->getAdslotsFromCampaignResult();
         $adslots_differences = $this->getAdslotDifference($all_broadcaster_adslots, $adslots_from_campaign_filter);
-        return ['rate_cards' => $this->getRateCardsGroupByDay($rate_card_ids),
+        return [
+                'rate_cards' => $this->getRateCardsGroupByDay($rate_card_ids),
                 'adslots_from_campaign_filter' => $adslots_from_campaign_filter,
                 'all_broadcaster_adslots' => $all_broadcaster_adslots,
                 'adslot_differences' => $adslots_differences,
@@ -72,7 +73,7 @@ class RatecardService
                                     ->select('adslots.id AS adslot_id','adslots.from_to_time',
                                                     'rateCards.day AS day_id'
                                     )
-                                    ->where('adslots.broadcaster', $this->broadcaster_id)
+                                    ->where('adslots.company_id', $this->company_id)
                                     ->get();
     }
 
@@ -96,8 +97,8 @@ class RatecardService
                                         ['adslots.min_age', '>=', $this->campaign_general_information->min_age],
                                         ['adslots.max_age', '<=', $this->campaign_general_information->max_age],
                                         ['adslots.is_available', 0],
-                                        ['adslots.channels', $this->broadcaster_details->channel_id],
-                                        ['adslots.broadcaster', $this->broadcaster_id]
+                                        ['adslots.channels', $this->channel_id],
+                                        ['adslots.company_id', $this->company_id]
                                     ])
                                     ->get();
     }
@@ -147,7 +148,7 @@ class RatecardService
                                             ->where([
                                                 ['adslots.min_age','>=', $this->campaign_general_information->min_age],
                                                 ['adslots.max_age','<=', $this->campaign_general_information->max_age],
-                                                ['adslots.broadcaster', $this->broadcaster_id]
+                                                ['adslots.company_id', $this->company_id]
                                             ])
                                             ->whereIn('adslots.target_audience', $this->campaign_general_information->target_audience)
                                             ->whereIn('adslots.day_parts', $this->campaign_general_information->dayparts)
@@ -157,5 +158,15 @@ class RatecardService
                                     ->select('days.day', 'rateCards.day AS day_id', 'rateCards.id')
                                     ->groupBy('rateCards.day')
                                     ->get();
+    }
+
+    public function filterAdslots($adslots, $day)
+    {
+        $matches = array();
+        foreach($adslots as $adslot){
+            if($adslot['day_id'] === $day)
+                $matches[] = (object)$adslot;
+        }
+        return $matches;
     }
 }

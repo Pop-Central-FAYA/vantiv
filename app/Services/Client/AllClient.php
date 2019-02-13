@@ -2,17 +2,15 @@
 
 namespace Vanguard\Services\Client;
 
-use Vanguard\Libraries\Utilities;
+use Vanguard\Models\WalkIns;
 
 class AllClient
 {
-    protected $broadcaster_id;
-    protected $agency_id;
+    protected $company_id;
 
-    public function __construct($broadcaster_id, $agency_id)
+    public function __construct($company_id)
     {
-        $this->broadcaster_id = $broadcaster_id;
-        $this->agency_id = $agency_id;
+        $this->company_id = $company_id;
     }
 
     public function run()
@@ -22,13 +20,6 @@ class AllClient
 
     public function getAllClients()
     {
-        return Utilities::switch_db('api')->table('walkIns')
-                        ->when($this->broadcaster_id, function ($query) {
-                            return $query->where('broadcaster_id', $this->broadcaster_id);
-                        })
-                        ->when($this->agency_id, function($query) {
-                            return $query->where('agency_id', $this->agency_id);
-                        })
-                        ->get();
+        return WalkIns::where('company_id', $this->company_id)->get();
     }
 }

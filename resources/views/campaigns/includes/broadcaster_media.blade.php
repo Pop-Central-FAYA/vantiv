@@ -1,4 +1,4 @@
-@if($broadcaster_details && $broadcaster_details->channel_id === $tv->id)
+@if($broadcaster_details && $broadcaster_details->channels->first()->id === $tv->id)
     <div class="upload_block clearfix">
         <div class=" align_center _block_one">
             <p class="small_faint">TV Content</p><br>
@@ -77,7 +77,9 @@
                 </div>
             </form>
         </div>
-
+        <input type="hidden" name="file_duration" class="file_duration" id="file_duration" size="5" />
+        <audio id="audio"></audio>
+        <br>
         <div class="_block_two align_center gallery_radio">
             @include('campaigns.includes.show_radio_files')
         </div>

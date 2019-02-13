@@ -123,10 +123,10 @@ class PreselectedAdslotService
     {
         return Utilities::switch_db('api')->table('preselected_adslots')
                         ->leftJoin('filePositions', 'filePositions.id', '=', 'preselected_adslots.filePosition_id')
-                        ->join('broadcasters', 'broadcasters.id', '=', 'preselected_adslots.broadcaster_id')
+                        ->join('companies', 'companies.id', '=', 'preselected_adslots.broadcaster_id')
                         ->select('preselected_adslots.id', 'preselected_adslots.from_to_time', 'preselected_adslots.time',
                             'preselected_adslots.price', 'preselected_adslots.percentage', 'preselected_adslots.total_price',
-                            'preselected_adslots.air_date', 'filePositions.position', 'broadcasters.brand', 'broadcasters.image_url'
+                            'preselected_adslots.air_date', 'filePositions.position', 'companies.name AS brand', 'companies.logo AS image_url'
                         )
                         ->where('preselected_adslots.user_id', $this->user_id)
                         ->when($this->broadcaster_id, function ($query) {
@@ -170,9 +170,14 @@ class PreselectedAdslotService
 
     public function sumTotalPriceGroupedByBroadcaster()
     {
-        return Utilities::switch_db('api')->table('preselected_adslots')
+        return \DB::table('preselected_adslots')
             ->where('user_id', $this->user_id)
-            ->groupBy('broadcaster_id')
+            ->when($this->broadcaster_id, function ($query) {
+                return $query->groupBy('broadcaster_id');
+            })
+            ->when($this->agency_id, function($query) {
+                return $query->groupBy('agency_id');
+            })
             ->sum('total_price');
 
     }

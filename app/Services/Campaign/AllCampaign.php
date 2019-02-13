@@ -3,6 +3,7 @@
 namespace Vanguard\Services\Campaign;
 
 use Vanguard\Libraries\Enum\CampaignStatus;
+use Vanguard\Libraries\Enum\CompanyTypeName;
 use Vanguard\Services\Company\CompanyDetails;
 use Vanguard\Services\Traits\CampaignQueryTrait;
 use Yajra\DataTables\DataTables;
@@ -103,13 +104,16 @@ class AllCampaign
                                     return $query->where('campaignDetails.status', CampaignStatus::ACTIVE_CAMPAIGN);
                                 })
                                 ->when($this->broadcaster_id && $this->company_ids, function($query) {
-                                    return $query->whereIn('launched_on', $this->company_ids);
+                                    return $query->selectRaw("JSON_ARRAYAGG(campaignDetails.launched_on) AS station_id")
+                                                    ->whereIn('campaignDetails.launched_on', $this->company_ids)
+                                                    ->groupBy('campaignDetails.campaign_id');
                                 })
                                 ->when($broadcaster_id, function($query) use ($broadcaster_id) {
                                     return $query->where([
-                                        ['campaignDetails.broadcaster', $broadcaster_id],
-                                        ['campaignDetails.adslots', '>', 0]
-                                    ]);
+                                                    ['campaignDetails.broadcaster', $broadcaster_id],
+                                                    ['campaignDetails.adslots', '>', 0],
+                                                    ['paymentDetails.broadcaster', $this->broadcaster_id]
+                                                ]);
                                 })
                                 ->when($this->agency_id, function ($query) {
                                     return $query->where([
@@ -132,7 +136,10 @@ class AllCampaign
         }
         return $this->baseQuery()
                                 ->when(($this->request->filter_user == 'agency'), function ($query) {
-                                    return $query->where('campaignDetails.agency_broadcaster', $this->broadcaster_id);
+                                    return $query->where([
+                                        ['campaignDetails.agency_broadcaster', $this->broadcaster_id],
+                                        ['paymentDetails.broadcaster', $this->broadcaster_id]
+                                    ]);
                                 })
                                 ->when(($this->request->filter_user == 'broadcaster'), function($query) use ($broadcaster_id) {
                                     $query->when($this->company_ids, function($inner_query) {
@@ -141,7 +148,8 @@ class AllCampaign
                                         ->when($broadcaster_id, function ($inner_query) use ($broadcaster_id) {
                                             return $inner_query->where([
                                                 ['campaignDetails.broadcaster', $broadcaster_id],
-                                                ['campaignDetails.agency', '']
+                                                ['campaignDetails.agency', ''],
+                                                ['paymentDetails.broadcaster', $this->broadcaster_id]
                                             ]);
                                         });
                                 })
@@ -171,15 +179,27 @@ class AllCampaign
                 'date_created' => date('M j, Y', strtotime($all_campaign->time_created)),
                 'start_date' => date('M j, Y', $start_date),
                 'end_date' => date('Y-m-d', $stop_date),
-                'adslots' => count((explode(',', $all_campaign->adslots_id))),
-                'budget' => number_format($all_campaign->total, 2),
+                'adslots' => \Auth::user()->company_type == CompanyTypeName::AGENCY ? count((explode(',', $all_campaign->adslots_id))) : $all_campaign->total_slot,
+                'budget' => $this->totalSpentOnCampaign($all_campaign),
                 'status' => $all_campaign->status,
-                'station' => $company_details_service->getCompanyDetails()->name
+                'station' => \Auth::user()->company_type == CompanyTypeName::BROADCASTER ? $all_campaign->station_id : ''
             ];
         }
 
         return $campaigns;
 
+    }
+
+    public function totalSpentOnCampaign($all_campaign)
+    {
+        if(\Auth::user()->companies()->count() > 1 && \Auth::user()->company_type == CompanyTypeName::BROADCASTER){
+            $total = number_format($all_campaign->total, 2);
+        }elseif (\Auth::user()->company_type == CompanyTypeName::AGENCY){
+            $total = number_format($all_campaign->total, 2);
+        }else{
+            $total = number_format($all_campaign->individual_broadcaster_sum, 2);
+        }
+        return $total;
     }
 
 }
