@@ -14,8 +14,10 @@ class CreateWalkIns
     protected $address;
     protected $company_name;
     protected $broadcaster_id_from_request;
+    protected $company_id;
 
-    public function __construct($user_id, $broadcaster_id, $agency_id, $company_image, $client_type, $address, $company_name, $broadcaster_id_from_request)
+    public function __construct($user_id, $broadcaster_id, $agency_id, $company_image, $client_type, $address, $company_name,
+                                $broadcaster_id_from_request, $company_id)
     {
         $this->user_id = $user_id;
         $this->broadcaster_id = $broadcaster_id;
@@ -25,6 +27,7 @@ class CreateWalkIns
         $this->address = $address;
         $this->company_name = $company_name;
         $this->broadcaster_id_from_request = $broadcaster_id_from_request;
+        $this->company_id = $company_id;
     }
 
     public function createWalkIn()
@@ -37,6 +40,7 @@ class CreateWalkIns
         $walkin->agency_id = $this->agency_id ? $this->agency_id : '';
         $walkin->company_name = $this->company_name;
         $walkin->company_logo = $this->company_image;
+        $walkin->company_id = $this->company_id;
         $walkin->save();
         return $walkin;
     }

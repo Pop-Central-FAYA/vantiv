@@ -21,3 +21,4 @@ database/factories/UserFactory.php
 storage/logs/
 clean_default_db_for_test.sql
 database/migrations/2018_09_01_081439_dump_old_table_to_prepare_migration.php
+local_stuffs

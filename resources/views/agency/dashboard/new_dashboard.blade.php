@@ -312,7 +312,6 @@
                     {data: 'budget', name: 'budget'},
                     {data: 'adslots', name: 'adslots'},
                     {data: 'status', name: 'status'},
-
                 ],
             });
 
