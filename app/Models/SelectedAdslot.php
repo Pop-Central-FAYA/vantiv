@@ -74,4 +74,9 @@ class SelectedAdslot extends Model
         return $count_aired_spots;
     }
 
+    public function company()
+    {
+        return $this->belongsTo(Company::class, 'broadcaster_id', 'id');
+    }
+
 }

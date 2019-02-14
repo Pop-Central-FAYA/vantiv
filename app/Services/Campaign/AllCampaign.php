@@ -77,6 +77,7 @@ class AllCampaign
     public function fetchAllCampaigns()
     {
         if($this->request->filter_user){
+            //dd($this->filterCampaigns(), $this->broadcaster_id);
             return $this->filterCampaigns();
         }else{
             return $this->allCampaigns();
@@ -103,7 +104,7 @@ class AllCampaign
                                 ->when(!$this->dashboard, function($query){
                                     return $query->where('campaignDetails.status', CampaignStatus::ACTIVE_CAMPAIGN);
                                 })
-                                ->when($this->broadcaster_id && $this->company_ids, function($query) {
+                                ->when($this->broadcaster_id && is_array($this->company_ids), function($query) {
                                     return $query->selectRaw("JSON_ARRAYAGG(campaignDetails.launched_on) AS station_id")
                                                     ->whereIn('campaignDetails.launched_on', $this->company_ids)
                                                     ->groupBy('campaignDetails.campaign_id');
@@ -117,10 +118,10 @@ class AllCampaign
                                 })
                                 ->when($this->agency_id, function ($query) {
                                     return $query->where([
-                                            ['campaignDetails.agency', $this->agency_id],
-                                            ['campaignDetails.adslots', '>', 0]
-                                        ])
-                                        ->groupBy('campaignDetails.campaign_id');
+                                                    ['campaignDetails.agency', $this->agency_id],
+                                                    ['campaignDetails.adslots', '>', 0]
+                                                ])
+                                                ->groupBy('campaignDetails.campaign_id');
 
                                 })
                                 ->orderBy('campaignDetails.time_created', 'DESC')
@@ -136,29 +137,41 @@ class AllCampaign
         }
         return $this->baseQuery()
                                 ->when(($this->request->filter_user == 'agency'), function ($query) {
-                                    return $query->where([
-                                        ['campaignDetails.agency_broadcaster', $this->broadcaster_id],
-                                        ['paymentDetails.broadcaster', $this->broadcaster_id]
-                                    ]);
+                                    return $query->when(is_array($this->company_ids), function ($inner_query) {
+                                                    return $inner_query->selectRaw("JSON_ARRAYAGG(campaignDetails.launched_on) AS station_id")
+                                                                        ->whereIn('campaignDetails.agency_broadcaster', $this->company_ids)
+                                                                        ->whereIn('campaignDetails.launched_on', $this->company_ids)
+                                                                        ->groupBy('campaignDetails.campaign_id');
+                                                })
+                                                ->when(!is_array($this->company_ids), function ($inner_query) {
+                                                    return $inner_query->where([
+                                                                ['campaignDetails.agency_broadcaster', $this->broadcaster_id],
+                                                                ['paymentDetails.broadcaster', $this->broadcaster_id]
+                                                            ]);
+                                                });
                                 })
                                 ->when(($this->request->filter_user == 'broadcaster'), function($query) use ($broadcaster_id) {
-                                    $query->when($this->company_ids, function($inner_query) {
-                                                return $inner_query->whereIn('belongs_to', $this->company_ids);
+                                    return $query->when(is_array($this->company_ids), function($inner_query) {
+                                                return $inner_query->selectRaw("JSON_ARRAYAGG(campaignDetails.launched_on) AS station_id")
+                                                                    ->where('campaignDetails.agency', '')
+                                                                    ->whereIn('campaignDetails.belongs_to', $this->company_ids)
+                                                                    ->groupBy('campaignDetails.campaign_id');
                                             })
-                                        ->when($broadcaster_id, function ($inner_query) use ($broadcaster_id) {
-                                            return $inner_query->where([
-                                                ['campaignDetails.broadcaster', $broadcaster_id],
-                                                ['campaignDetails.agency', ''],
-                                                ['paymentDetails.broadcaster', $this->broadcaster_id]
-                                            ]);
-                                        });
+                                            ->when($broadcaster_id, function ($inner_query) use ($broadcaster_id) {
+                                                return $inner_query->where([
+                                                    ['campaignDetails.broadcaster', $broadcaster_id],
+                                                    ['campaignDetails.agency', ''],
+                                                    ['paymentDetails.broadcaster', $broadcaster_id]
+                                                ]);
+                                            });
                                 })
                                 ->when(\Request::is('campaign/active-campaigns'), function($query){
                                     return $query->where('campaignDetails.status', CampaignStatus::ACTIVE_CAMPAIGN);
                                 })
                                 ->where([
                                     ['campaignDetails.adslots', '>', 0]
-                                ])->orderBy('campaignDetails.time_created', 'DESC')
+                                ])
+                                ->orderBy('campaignDetails.time_created', 'DESC')
                                 ->get();
     }
 
@@ -179,10 +192,10 @@ class AllCampaign
                 'date_created' => date('M j, Y', strtotime($all_campaign->time_created)),
                 'start_date' => date('M j, Y', $start_date),
                 'end_date' => date('Y-m-d', $stop_date),
-                'adslots' => \Auth::user()->company_type == CompanyTypeName::AGENCY ? count((explode(',', $all_campaign->adslots_id))) : $all_campaign->total_slot,
+                'adslots' => $this->countAdslots($all_campaign),
                 'budget' => $this->totalSpentOnCampaign($all_campaign),
                 'status' => $all_campaign->status,
-                'station' => \Auth::user()->company_type == CompanyTypeName::BROADCASTER ? $all_campaign->station_id : ''
+                'station' => \Auth::user()->companies()->count() > 1 ? $this->getCompanyName($all_campaign->station_id) : ''
             ];
         }
 
@@ -200,6 +213,30 @@ class AllCampaign
             $total = number_format($all_campaign->individual_broadcaster_sum, 2);
         }
         return $total;
+    }
+
+    public function countAdslots($all_campaign)
+    {
+        if(\Auth::user()->companies()->count() > 1 && \Auth::user()->company_type == CompanyTypeName::BROADCASTER){
+            $count_adslots = count((explode(',', $all_campaign->adslots_id)));
+        }elseif (\Auth::user()->company_type == CompanyTypeName::AGENCY){
+            $count_adslots = count((explode(',', $all_campaign->adslots_id)));
+        }else{
+            $count_adslots = $all_campaign->adslots;
+        }
+        return $count_adslots;
+    }
+
+    public function getCompanyName($company_id)
+    {
+        $companies = \DB::table('companies')
+                        ->whereIn('id', json_decode($company_id))
+                        ->get();
+        $company_name = '';
+        foreach ($companies as $company){
+            $company_name .= $company->name.' ';
+        }
+        return $company_name;
     }
 
 }

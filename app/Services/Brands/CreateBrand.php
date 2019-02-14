@@ -28,7 +28,7 @@ class CreateBrand
         $brand->image_url = $this->brand_logo;
         $brand->industry_code = $this->industry;
         $brand->sub_industry_code = $this->sub_industry;
-        $brand->slug = $this->slug;
+        $brand->slug = str_slug($this->slug);
         $brand->save();
         return $brand;
     }

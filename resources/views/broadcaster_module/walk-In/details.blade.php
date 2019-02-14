@@ -17,6 +17,21 @@
             <div class="column col_6">
                 <h2 class="sub_header">Walk-In</h2>
             </div>
+            @if(Auth::user()->companies()->count() > 1)
+                <div class="column col_6">
+                    <select class="publishers" name="companies[]" id="publishers" multiple="multiple" >
+                        @foreach(Auth::user()->companies as $company)
+                            <option value="{{ $company->id }}"
+                            @foreach($publisher_ids as $publisher_id)
+                                @if($publisher_id == $company->id)
+                                    selected
+                                @endif
+                            @endforeach
+                            >{{ $company->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            @endif
         </div>
 
         <!-- main stats -->
@@ -60,7 +75,15 @@
 
                 <div class="filters chart_filters border_bottom clearfix">
                     <div class="column col_6 date_filter">
-                        <a id="yearly_client" href="{{ route('client.year', ['client_id' => $client_id]) }}">1Y</a>
+                        @if(Auth::user()->companies()->count() > 1)
+                            @foreach($publisher_logos as $logo)
+                                <div class="column col_2 date_filter">
+                                    <p><img src="{{ asset($logo) }}" style="height: 50px; width: 50px;" alt=""></p>
+                                </div>
+                            @endforeach
+                        @else
+                            <a id="yearly_client" href="{{ route('client.year', ['client_id' => $client_id]) }}">1Y</a>
+                        @endif
                     </div>
 
                     <div class="column col_2 m-b">
@@ -123,23 +146,21 @@
                             <th>ID</th>
                             <th>Name</th>
                             <th>Brand</th>
-                            <th>Product</th>
                             <th>Start Date</th>
                             <th>End Date</th>
-                            <th>Budget</th>
+                            <th>Total Spent</th>
                             <th>Ad Slots</th>
                             <th>Status</th>
                         </tr>
                         @foreach($all_campaigns as $all_campaign)
                             <tr>
-                                <td>243</td>
+                                <td>{{ $all_campaign->campaign_reference }}</td>
                                 <td><a href="{{ route('broadcaster.campaign.details', ['id' => $all_campaign->campaign_id]) }}">{{ $all_campaign->name }}</a></td>
                                 <td>{{ ucfirst($all_campaign->brand) }}</td>
-                                <td>{{ $all_campaign->product }}</td>
-                                <td>{{ $all_campaign->start_date }}</td>
-                                <td>{{ $all_campaign->stop_date }}</td>
-                                <td>&#8358;{{ $all_campaign->budget }}</td>
-                                <td>{{ $all_campaign->adslots }}</td>
+                                <td>{{ date('Y-m-d', strtotime($all_campaign->start_date)) }}</td>
+                                <td>{{ date('Y-m-d', strtotime($all_campaign->stop_date)) }}</td>
+                                <td>&#8358;{{ Auth::user()->companies()->count() > 1 ? $all_campaign->total : $all_campaign->individual_publisher_total }}</td>
+                                <td>{{ Auth::user()->companies()->count() > 1 ? count((explode(',', $all_campaign->adslots_id))) : $all_campaign->adslots }}</td>
                                 @if($all_campaign->status === 'active')
                                     <td><span class="span_state status_success">Active</span></td>
                                 @elseif($all_campaign->status === 'expired')
@@ -161,10 +182,11 @@
                         <div class="filters clearfix mb">
                             <div class="right col_6 clearfix">
 
-
-                                <div class="col_12 column align_right">
-                                    <a href="#new_brand" class="btn small_btn modal_click"><span class="_plus"></span> New Brand</a>
-                                </div>
+                                @if(Auth::user()->companies->count() == 1 && $client->company_id == Auth::user()->companies->first()->id)
+                                    <div class="col_12 column align_right">
+                                        <a href="#new_brand" class="btn small_btn modal_click"><span class="_plus"></span> New Brand</a>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                         <!-- table header -->
@@ -195,7 +217,9 @@
 
                                         <div class="more_more">
                                             <a href="{{ route('brand.details', ['id' => $all_brand['id'], 'client_id' => $client_id]) }}">Details</a>
-                                            <a href="#brand{{ $all_brand['id'] }}" class="modal_click">Edit</a>
+                                            @if(Auth::user()->companies->count() == 1 && $client->company_id == Auth::user()->companies->first()->id)
+                                                <a href="#brand{{ $all_brand['id'] }}" class="modal_click">Edit</a>
+                                            @endif
                                             {{--<a href="" class="color_red">Delete</a>--}}
                                         </div>
                                     </div>
@@ -360,10 +384,18 @@
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script src="https://code.highcharts.com/modules/export-data.js"></script>
     <script src="https://unpkg.com/flatpickr"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
     <script>
         <?php echo "var campaign_date = ".$campaign_date. ";\n"; ?>
         <?php echo "var campaign_amount = ".$campaign_payment. ";\n"; ?>
         $(document).ready(function() {
+
+            $('.publishers').select2();
+
+            $('body').delegate("#publishers", "change", function () {
+                var company_id = $(this).val();
+                console.log(company_id);
+            })
 
             flatpickr(".flatpickr", {
                 altInput: true,
@@ -743,6 +775,7 @@
 
 @section('styles')
     <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
     <style>
         .highcharts-grid path { display: none;}
     </style>

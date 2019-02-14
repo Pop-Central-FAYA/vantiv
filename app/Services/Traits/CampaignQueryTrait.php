@@ -9,7 +9,10 @@ trait CampaignQueryTrait
         return \DB::table('campaignDetails')
                 ->join('campaigns', 'campaigns.id', '=', 'campaignDetails.campaign_id')
                 ->join('payments', 'payments.campaign_id', '=', 'campaignDetails.campaign_id')
-                ->join('paymentDetails', 'paymentDetails.payment_id', '=', 'payments.id')
+                ->join('paymentDetails', function ($query){
+                    return $query->on('paymentDetails.payment_id', '=', 'payments.id')
+                                    ->on('paymentDetails.broadcaster', '=', 'campaignDetails.launched_on');
+                })
                 ->join('brands', 'brands.id', '=', 'campaignDetails.brand')
                 ->select('campaignDetails.adslots_id',
                     'campaignDetails.stop_date',
@@ -34,8 +37,9 @@ trait CampaignQueryTrait
                     'campaignDetails.target_audience',
                     'campaignDetails.region',
                     'campaignDetails.user_id',
-                    'paymentDetails.amount AS individual_broadcaster_sum'
-                )
-                ->selectRaw("SUM(campaignDetails.adslots) AS total_slot");
+                    'campaignDetails.channel',
+                    'paymentDetails.amount AS individual_broadcaster_sum',
+                    'campaignDetails.adslots'
+                );
     }
 }

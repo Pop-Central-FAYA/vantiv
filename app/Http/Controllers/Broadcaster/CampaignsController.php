@@ -436,13 +436,13 @@ class CampaignsController extends Controller
         $payments = Utilities::switch_db('api')->select("SELECT SUM(amount) as amount from paymentDetails where broadcaster ='$broadcaster_id'
                                                             AND payment_id = (SELECT id from payments where campaign_id = '$campaign_id')");
         $total_amount = Utilities::switch_db('api')->select("SELECT * from payments where campaign_id = '$campaign_id'");
-        if($campaign_details['campaign_det']['channel'][0]->channel === 'TV'){
+        if($campaign_details['campaign_det']['channel']->channel === 'TV'){
             $color = '#5281FE';
         }else{
             $color = '#00C4CA';
         }
         $media_mix_data[] = [
-            'name' => $campaign_details['campaign_det']['channel'][0]->channel,
+            'name' => $campaign_details['campaign_det']['channel']->channel,
             'y' => (integer)(($payments[0]->amount / $total_amount[0]->total) * 100),
             'color' => $color
         ];
@@ -458,8 +458,7 @@ class CampaignsController extends Controller
         $broadcaster_id = Session::get('broadcaster_id');
         $campaign_id = $campaign_details['campaign_det']['campaign_id'];
 
-        $payments = Utilities::switch_db('api')->select("SELECT amount from paymentDetails where broadcaster = '$broadcaster_id' AND payment_id IN (SELECT id FROM payments where campaign_id = '$campaign_id')");
-        if($campaign_details['campaign_det']['channel'][0]->channel === 'TV'){
+        if($campaign_details['campaign_det']['channel']->channel === 'TV'){
             $color = '#5281FE';
         }else{
             $color = '#00C4CA';
@@ -467,13 +466,21 @@ class CampaignsController extends Controller
         $campaign_price_data[] = [
             'color' => $color,
             'name' => $campaign_details['broadcasters'][0]->name,
-            'data' => array($payments[0]->amount),
-            'stack' => $campaign_details['campaign_det']['channel'][0]->channel
+            'data' => array($campaign_details['campaign_det']['total']),
+            'stack' => $campaign_details['campaign_det']['channel']->channel
         ];
 
-        $campaign_price_date = Utilities::switch_db('api')->select("SELECT time_created from campaignDetails where campaign_id = '$campaign_id' AND broadcaster = '$broadcaster_id' GROUP BY DATE_FORMAT(time_created, '%Y-%m-%d') ");
-
-        $date[] = [date('Y-m-d', strtotime($campaign_price_date[0]->time_created))];
+        if(\Auth::user()->companies()->count() == 1){
+            $campaign_price_date = Utilities::switch_db('api')->select("SELECT time_created from campaignDetails where campaign_id = '$campaign_id' AND broadcaster = '$broadcaster_id' GROUP BY DATE_FORMAT(time_created, '%Y-%m-%d') ");
+            $date[] = [date('Y-m-d', strtotime($campaign_price_date[0]->time_created))];
+        }else{
+            $campaign_price_date = \DB::table('campaignDetails')->select('time_created')
+                                    ->where('campaign_id', $campaign_id)
+                                    ->whereIn('launched_on', \Auth::user()->company_id)
+                                    ->groupBy(\DB::raw("DATE_FORMAT(time_created, '%Y-%m-%d')"))
+                                    ->get();
+            $date[] = [date('Y-m-d', strtotime($campaign_price_date[0]->time_created))];
+        }
 
         return json_encode(['campaign_price_data' => $campaign_price_data, 'date' => $date]);
 

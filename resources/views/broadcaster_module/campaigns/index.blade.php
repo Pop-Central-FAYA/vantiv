@@ -60,6 +60,9 @@
                     <th>Budget</th>
                     <th>Ad Slots</th>
                     <th>Status</th>
+                    @if(Auth::user()->companies()->count() > 1)
+                        <th>Station</th>
+                    @endif
                 </tr>
                 </thead>
             </table>
@@ -86,6 +89,8 @@
     <script src="https://unpkg.com/flatpickr"></script>
     {{--datatables--}}
     <script>
+        <?php echo "var companies =".Auth::user()->companies()->count().";\n"; ?>
+
         $(document).ready(function( $ ) {
             flatpickr(".flatpickr", {
                 altInput: true,
@@ -111,15 +116,32 @@
                         d.filter_user = $('#filter_user').val();
                     }
                 },
-                columns: [
-                    {data: 'name', name: 'name'},
-                    {data: 'brand', name: 'brand'},
-                    {data: 'start_date', name: 'start_date'},
-                    {data: 'budget', name: 'budget'},
-                    {data: 'adslots', name: 'adslots'},
-                    {data: 'status', name: 'status'},
-                ],
+                columns: getColumns(),
             });
+
+            function getColumns()
+            {
+                if(companies > 1){
+                    return [
+                        {data: 'name', name: 'name'},
+                        {data: 'brand', name: 'brand'},
+                        {data: 'start_date', name: 'start_date'},
+                        {data: 'budget', name: 'budget'},
+                        {data: 'adslots', name: 'adslots'},
+                        {data: 'status', name: 'status'},
+                        {data: 'station', name: 'station'}
+                    ]
+                }else{
+                    return [
+                        {data: 'name', name: 'name'},
+                        {data: 'brand', name: 'brand'},
+                        {data: 'start_date', name: 'start_date'},
+                        {data: 'budget', name: 'budget'},
+                        {data: 'adslots', name: 'adslots'},
+                        {data: 'status', name: 'status'},
+                    ]
+                }
+            }
 
             $('#dashboard_filter_campaign').on('click', function() {
                 campaignFilter.draw();

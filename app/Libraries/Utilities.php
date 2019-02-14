@@ -3,16 +3,20 @@
 namespace Vanguard\Libraries;
 
 use Illuminate\Support\Facades\DB;
+use Vanguard\Libraries\Enum\CompanyTypeName;
 use Vanguard\Models\BrandClient;
 use Vanguard\Models\BroadcasterPlayout;
+use Vanguard\Models\CampaignChannel;
 use Vanguard\Models\Company;
 use Vanguard\Models\PreselectedAdslot;
 use Vanguard\Models\SelectedAdslot;
 use Vanguard\Models\Upload;
 use Vanguard\Services\Broadcaster\BroadcasterDetails;
 use Vanguard\Services\Campaign\CampaignDetailsService;
+use Vanguard\Services\CampaignChannels\CampaignChannels;
 use Vanguard\Services\CampaignChannels\Radio;
 use Vanguard\Services\CampaignChannels\Tv;
+use Vanguard\Services\Company\CompanyDetails;
 use Vanguard\Services\Upload\MediaUploadDetails;
 
 class Utilities {
@@ -76,10 +80,10 @@ class Utilities {
         $location = Utilities::switch_db('api')->select("SELECT * FROM regions where id IN ($location_ids) ");
         if($broadcaster_id){
             $broadcaster_campaign_id = $campaign_details[0]->broadcaster;
-            $channel = Utilities::switch_db('api')->select("SELECT * from campaignChannels 
-                                                                WHERE id 
-                                                                IN (SELECT channel_id from broadcasters where id = '$broadcaster_campaign_id') 
-                                                                ");
+            $company_details_service = new CompanyDetails($broadcaster_campaign_id);
+            $company_details = $company_details_service->getCompanyDetails();
+            $channel_id = $company_details->channels->first()->id;
+            $channel = CampaignChannel::where('id', $channel_id)->first();
 
         }else if($agency_id){
             $channel = Utilities::switch_db('api')->select("SELECT * from campaignChannels where id IN ($channel) ");
@@ -95,10 +99,10 @@ class Utilities {
         }
         $payment_id = $campaign_details[0]->payment_id;
         $user_id = $campaign_details[0]->user_id;
-        if($broadcaster_id){
-            $campaign_details_broad = Utilities::switch_db('api')->select("SELECT amount AS total FROM paymentDetails 
-                                                                                WHERE payment_id = '$payment_id' 
-                                                                                AND broadcaster = '$broadcaster_id'");
+        if($broadcaster_id && \Auth::user()->companies()->count() == 1){
+            $campaign_total_sum = $campaign_details[0]->individual_broadcaster_sum;
+        }else{
+            $campaign_total_sum = $campaign_details[0]->total;
         }
 
         $company_info = Utilities::switch_db('api')->select("SELECT * FROM walkIns WHERE user_id = '$user_id'");
@@ -113,7 +117,6 @@ class Utilities {
             $name = $user_agency[0]->first_name .' '.$user_agency[0]->last_name;
             $email = $user_agency[0]->email;
             $phone = $user_agency[0]->phone;
-            #
         }
 
         $campaign_det = [
@@ -126,7 +129,8 @@ class Utilities {
             'channel' => $channel,
             'start_date' => date('Y-m-d', strtotime($campaign_details[0]->start_date)),
             'end_date' => date('Y-m-d', strtotime($campaign_details[0]->stop_date)),
-            'campaign_cost' => number_format($broadcaster_id ? $campaign_details_broad[0]->total : $campaign_details[0]->total, '2'),
+            'campaign_cost' => number_format($campaign_total_sum, '2'),
+            'total' => $campaign_total_sum,
             'walkIn_name' => $name,
             'company_name' => $company_name,
             'company_user_id' => $user_id,
@@ -911,7 +915,7 @@ class Utilities {
         foreach ($campaigns as $campaign){
             $user_camp[] = [
                 'product' => $campaign->product,
-                'num_of_slot' => $campaign->adslots,
+                'num_of_slot' => count((explode(',', $campaign->adslots_id))),
                 'payment' => $campaign->total,
                 'date' => $campaign->time_created
             ];
@@ -926,15 +930,26 @@ class Utilities {
         $all_campaign_date_graph = [];
 
         foreach ($campaigns as $campaign){
-            $all_campaign_total_graph[] = $campaign->total;
+            $all_campaign_total_graph[] = Utilities::totalSpentOnCampaign($campaign);
             $all_campaign_date_graph[] = date('Y-m-d', strtotime($campaign->time_created));
         }
-
 
         $campaign_payment = json_encode($all_campaign_total_graph);
         $campaign_date = json_encode($all_campaign_date_graph);
 
         return (['campaign_payment' => $campaign_payment, 'campaign_date' => $campaign_date]);
+    }
+
+    public static function totalSpentOnCampaign($all_campaign)
+    {
+        if(\Auth::user()->companies()->count() > 1 && \Auth::user()->company_type == CompanyTypeName::BROADCASTER){
+            $total = $all_campaign->total;
+        }elseif (\Auth::user()->company_type == CompanyTypeName::AGENCY){
+            $total = $all_campaign->total;
+        }else{
+            $total = $all_campaign->individual_publisher_total;
+        }
+        return $total;
     }
 
 

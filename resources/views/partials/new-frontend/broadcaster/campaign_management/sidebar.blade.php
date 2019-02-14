@@ -18,7 +18,9 @@
 
     <div class="_nav_button">
         <a href="{{ route('broadcaster.inventory_management') }}" class="btn full block_disp uppercased align_center _campaign_mgt">Inventory Management</a><p><br></p>
-        <a href="{{ route('campaign.get_campaign_general_information') }}" class="btn full block_disp uppercased align_center"><span class="_plus"></span>New Campaign</a>
+        @if(Auth::user()->companies->count() == 1)
+            <a href="{{ route('campaign.get_campaign_general_information') }}" class="btn full block_disp uppercased align_center"><span class="_plus"></span>New Campaign</a>
+        @endif
     </div>
 
 </div>

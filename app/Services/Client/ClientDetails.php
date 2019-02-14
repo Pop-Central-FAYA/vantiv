@@ -17,7 +17,7 @@ class ClientDetails
 
     public function run()
     {
-        return Utilities::switch_db('api')->table('walkIns')
+        return \DB::table('walkIns')
                             ->when($this->id, function($query) {
                                 return $query->where('id', $this->id);
                             })
