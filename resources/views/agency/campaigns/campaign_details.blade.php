@@ -60,7 +60,7 @@
                     <div class="select_wrap">
                         <select class="js-example-basic-multiple" name="channel" id="channel" multiple="multiple">
                             @foreach($campaign_details['campaign_det']['channel'] as $channel)
-                                <option @if($channel->id === 'nzrm64hjatseog6') class="radio" @else class="tv" @endif value="{{ $channel->id }}">{{ $channel->channel }}</option>
+                                <option value="{{ $channel->id }}">{{ $channel->channel }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -269,7 +269,7 @@
                                         <p>{{ $uploaded_file->get_adslot->get_rate_card->hourly_range->time_range }}</p>
                                         <p>{{ $uploaded_file->get_adslot->from_to_time }}</p>
                                     </td>
-                                    <td>{{ \Vanguard\Libraries\Utilities::getBroadcasterDetails($uploaded_file->broadcaster_id)[0]->brand }}</td>
+                                    <td>{{ $uploaded_file->company->name }}</td>
                                     <td>{{ date('l, jS F, Y', strtotime($uploaded_file->air_date)) }}</td>
                                     @if($uploaded_file->status === 'rejected')
                                         <td>

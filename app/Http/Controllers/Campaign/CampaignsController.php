@@ -84,7 +84,12 @@ class CampaignsController extends Controller
 
     public function allActiveCampaignsData(Request $request)
     {
-        $campaigns = new AllCampaign($request, $this->broadcaster_id, $this->agency_id, $dashboard = false, null);
+        if(\Auth::user()->companies()->count() > 1){
+            $company_id = \Auth::user()->company_id;
+        }else{
+            $company_id = \Auth::user()->companies->first()->id;
+        }
+        $campaigns = new AllCampaign($request, $this->broadcaster_id, $this->agency_id, $dashboard = false, $company_id);
         return $campaigns->run();
     }
 

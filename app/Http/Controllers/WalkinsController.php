@@ -14,7 +14,6 @@ use Vanguard\Services\Brands\CreateBrand;
 use Vanguard\Services\Brands\CreateBrandClient;
 use Vanguard\Services\Client\ClientCampaigns;
 use Vanguard\Services\Client\ClientDetails;
-use Vanguard\Services\Client\ClientTotalSpent;
 use Vanguard\Services\Industry\IndustryList;
 use Vanguard\Services\Industry\SubIndustryList;
 use Vanguard\Services\User\CreateUser;
@@ -49,17 +48,10 @@ class WalkinsController extends Controller
      */
     public function index()
     {
-        $user = \Auth::user();
-        if($user->companies()->count() < 1){
-            $company_id = $user->companies->first()->id;
-        }else{
-            $company_id = $user->company_id;
-        }
-        $walkins_list_service = new WalkInLists($this->getCompanyId());
+        $walkins_list_service = new WalkInLists(\Auth::user()->company_id);
         $walkins = $walkins_list_service->getWalkInList();
-        $client_data = $this->getClientDetails($walkins, $company_id);
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
-        $col = new Collection($client_data);
+        $col = new Collection($walkins);
         $perPage = 10;
         $currentPageSearchResults = $col->slice(($currentPage - 1) * $perPage, $perPage)->all();
         $entries = new LengthAwarePaginator($currentPageSearchResults, count($col), $perPage);
@@ -67,41 +59,6 @@ class WalkinsController extends Controller
         $industries = new IndustryList();
         return view('broadcaster_module.walk-In.index')->with('clients', $entries)->with('industries', $industries->industryList());
     }
-
-    public function getClientDetails($clients, $company_id)
-    {
-        $client_data = [];
-        foreach ($clients as $client) {
-            $client_campaign_service = new ClientCampaigns($client->user_id, $company_id);
-            $client_brand_services = new ClientBrands($client->id);
-            $client_brand = $client_brand_services->run();
-            $total_spent = new ClientTotalSpent($client->user_id, $company_id);
-            $client_data[] = [
-                'client_id' => $client->id,
-                'user_id' => $client->user_id,
-                'agency_client_id' => $client->user_id,
-                'image_url' => $client->image_url,
-                'num_campaign' => $client_campaign_service->countAllClientCampaigns(),
-                'total' => $total_spent->getClientTotalSpent(),
-                'name' =>  $client->lastname . ' ' . $client->firstname,
-                'email' => $client->email,
-                'phone_number' => $client->phone_number,
-                'first_name' => $client->firstname,
-                'last_name' => $client->lastname,
-                'created_at' => $client->time_created,
-                'last_camp' => $client_campaign_service->countAllClientCampaigns() !== 0 ? $client_campaign_service->getLastCampaign()->time_created : 0,
-                'active_campaign' => $client_campaign_service->countActiveCampaigns(),
-                'inactive_campaign' => $client_campaign_service->countInactiveCampaigns(),
-                'count_brands' => count($client_brand),
-                'company_name' => $client->company_name,
-                'company_logo' => $client->company_logo,
-                'location' => $client->location,
-                'company' => $client->company
-            ];
-        }
-        return $client_data;
-    }
-
 
     /**
      * Show the form for creating a new resource.
@@ -134,7 +91,7 @@ class WalkinsController extends Controller
             $client_id = $this->agency_id;
         }
         $company_id = \Auth::user()->companies->first()->id;
-        $brand_slug = Utilities::formatString($request->brand_name);
+        $brand_slug = str_slug($request->brand_name);
         $client_brands = new ClientBrand($brand_slug, $client_id);
         if($client_brands->checkForBrandExistence() == 'brand_exist'){
             Session::flash('error', ClassMessages::BRAND_ALREADY_EXIST);
@@ -202,36 +159,35 @@ class WalkinsController extends Controller
     {
         $user = \Auth::user();
         if($user->companies()->count() > 1){
-            $company_id = $user->companies->first()->id;
-        }else{
             $company_id = $user->company_id;
+
+        }else{
+            $company_id = $user->companies->first()->id;
         }
         $client_details_service = new ClientDetails($client_id, null);
         $client_details = $client_details_service->run();
-
-        $client_campaign_service = new ClientCampaigns($user->id, $company_id);
+        $client_campaign_service = new ClientCampaigns($client_details->id, $company_id);
         $client_campaigns = $client_campaign_service->getComprehensiveDetails();
-
         $client_brands_service = new ClientBrands($client_id);
         $client_brands = $client_brands_service->run();
-
         $brands = $this->getBrandDetails($client_brands);
-
         if(count($brands) === 0){
             Session::flash('info', ClassMessages::EMPTY_BRAND_FOR_CLIENT);
             return redirect()->back();
         }
-
         $user_details = new UserDetails($client_details->user_id);
-
         $industries = new IndustryList();
-
         $sub_industries = new SubIndustryList();
-
         //        campaign vs time graph
         $campaign_graph = Utilities::clientGraph($client_campaigns);
         $campaign_payment = $campaign_graph['campaign_payment'];
         $campaign_date = $campaign_graph['campaign_date'];
+
+        if($user->companies()->count() > 1){
+            $campaign_publishers = $client_campaign_service->getPublishers();
+            $campaign_publishers_logo = explode(',', $campaign_publishers[0]->company_logo);
+            $campaign_publishers_id = explode(',', $campaign_publishers[0]->company_id);
+        }
 
         return view('broadcaster_module.walk-In.details')->with('clients')
             ->with('client_id', $client_id)
@@ -243,9 +199,9 @@ class WalkinsController extends Controller
             ->with('campaign_date', $campaign_date)
             ->with('total_spent', $client_campaign_service->getClientTotalSpent())
             ->with('industries', $industries->industryList())
-            ->with('sub_industries', $sub_industries->getSubIndustryGroupByIndustry());
-
-
+            ->with('sub_industries', $sub_industries->getSubIndustryGroupByIndustry())
+            ->with('publisher_logos', \Auth::user()->companies()->count() > 1 ? $campaign_publishers_logo : '')
+            ->with('publisher_ids', \Auth::user()->companies()->count() > 1 ? $campaign_publishers_id : '');
     }
 
     public function getBrandDetails($client_brands)
@@ -269,16 +225,6 @@ class WalkinsController extends Controller
             ];
         }
         return $brands;
-    }
-
-    public function getCompanyId()
-    {
-        if(\Auth::user()->companies()->count() > 1){
-            $company_id = \Auth::user()->company_id;
-        }else{
-            $company_id = \Auth::user()->companies->first()->id;
-        }
-        return $company_id;
     }
 
 

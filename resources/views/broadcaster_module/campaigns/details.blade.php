@@ -71,7 +71,7 @@
                 <div class="column col_3">
                     <span class="small_faint block_disp">Media Type</span>
                     <select name="channel" id="channel" >
-                        <option class="{{ strtolower($campaign_details['campaign_det']['channel'][0]->channel) }}" selected value="{{ $campaign_details['campaign_det']['channel'][0]->id }}">{{ $campaign_details['campaign_det']['channel'][0]->channel }}</option>
+                        <option class="{{ strtolower($campaign_details['campaign_det']['channel']->channel) }}" selected value="{{ $campaign_details['campaign_det']['channel']->id }}">{{ $campaign_details['campaign_det']['channel']->channel }}</option>
                     </select>
                 </div>
 
@@ -178,7 +178,7 @@
                         </div>
                         <div class="column col_3">
                             <span class="small_faint">Media Type</span>
-                            @foreach($campaign_details['campaign_det']['channel'] as $channel) <p class="weight_medium"> {{ $channel->channel }} </p> @endforeach
+                             <p class="weight_medium"> {{ $campaign_details['campaign_det']['channel']->channel }} </p>
                         </div>
                     </div>
 

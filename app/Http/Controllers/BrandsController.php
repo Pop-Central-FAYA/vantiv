@@ -134,7 +134,7 @@ class BrandsController extends Controller
 
         $api_db->beginTransaction();
 
-        $brand_slug = Utilities::formatString($request->brand_name);
+        $brand_slug = str_slug($request->brand_name);
         $unique = uniqid();
         $check_brand = $api_db->select("SELECT b.* from brand_client as b_c INNER JOIN brands as b ON b.id = b_c.brand_id 
                                                                 WHERE b.slug = '$brand_slug' AND client_id = '$broadcaster_agency_id'");
@@ -203,7 +203,7 @@ class BrandsController extends Controller
 
         $api_db->beginTransaction();
 
-        $brand_slug = Utilities::formatString($request->brand_name);
+        $brand_slug = str_slug($request->brand_name);
         $user_agent = $_SERVER['HTTP_USER_AGENT'];
         $description = 'Brand '.$request->brand_name .' Updated by '.Session::get('broadcaster_id');
         $ip = request()->ip();
@@ -324,7 +324,7 @@ class BrandsController extends Controller
 
     public function checkBrandExistsWithSameInformation(Request $request)
     {
-        $brand_slug = Utilities::formatString($request->brand_name);
+        $brand_slug = str_slug($request->brand_name);
         $checkIfBrandExists = Brand::where('slug', $brand_slug)->first();
         if($checkIfBrandExists){
             return 'already_exists';

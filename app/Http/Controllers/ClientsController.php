@@ -98,7 +98,7 @@ class ClientsController extends Controller
 
         $total = Utilities::switch_db('api')->select("SELECT SUM(total) as total from payments where campaign_id IN (SELECT campaign_id from campaignDetails where user_id = '$user_id' GROUP BY campaign_id) ");
 
-        $campaigns = Utilities::switch_db('api')->select("SELECT c.campaign_id, c.adslots , c.time_created, c.product, p.total, c.time_created from campaignDetails as c, payments as p where c.user_id = '$user_id' and p.campaign_id = c.campaign_id GROUP BY c.campaign_id");
+        $campaigns = Utilities::switch_db('api')->select("SELECT c.campaign_id, c.adslots_id , c.time_created, c.product, p.total, c.time_created from campaignDetails as c, payments as p where c.user_id = '$user_id' and p.campaign_id = c.campaign_id GROUP BY c.campaign_id");
 
         $user_camp = Utilities::clientscampaigns($campaigns);
 
@@ -138,7 +138,7 @@ class ClientsController extends Controller
     public function getCampaignData($user_id)
     {
         $campaigns = [];
-        $all_campaign = Utilities::switch_db('api')->select("SELECT c_d.campaign_id, c_d.status, c_d.name, c_d.product, c_d.start_date, c_d.stop_date, c_d.adslots, c.campaign_reference, p.total, b.name as brands
+        $all_campaign = Utilities::switch_db('api')->select("SELECT c_d.campaign_id, c_d.status, c_d.name, c_d.product, c_d.start_date, c_d.stop_date, c_d.adslots_id, c.campaign_reference, p.total, b.name as brands
                                                               from campaignDetails as c_d INNER JOIN campaigns as c ON c.id = c_d.campaign_id
                                                               INNER JOIN payments as p ON p.campaign_id = c_d.campaign_id
                                                               INNER JOIN brands as b ON b.id = c_d.brand WHERE c_d.user_id = '$user_id'
@@ -153,7 +153,7 @@ class ClientsController extends Controller
                 'product' => $cam->product,
                 'start_date' => date('Y-m-d', strtotime($cam->start_date)),
                 'end_date' => date('Y-m-d', strtotime($cam->stop_date)),
-                'adslots' => $cam->adslots,
+                'adslots' => count((explode(',', $cam->adslots_id))),
                 'budget' => number_format($cam->total, 2),
                 'compliance' => '0%',
                 'status' => $cam->status

@@ -16,10 +16,11 @@
             <div class="column col_6">
                 <h2 class="sub_header">Walk-Ins</h2>
             </div>
-
-            <div class="column col_6 align_right">
-                <a href="#new_client" class="btn modal_click">New Walk-In</a>
-            </div>
+            @if(Auth::user()->companies->count() == 1)
+                <div class="column col_6 align_right">
+                    <a href="#new_client" class="btn modal_click">New Walk-In</a>
+                </div>
+            @endif
         </div>
 
         <!-- main stats -->
@@ -59,16 +60,16 @@
             @foreach($clients as $client)
                 <div class="_table_item the_frame clearfix">
                     <div class="padd column col_3">
-                        <span class="client_ava"><img src="{{ $client['company_logo'] ? asset($client['company_logo']) : '' }}"></span>
-                        <p>{{ $client['company_name'] }}</p>
-                        <span class="small_faint">Added {{ date('M j, Y h:ia', strtotime($client['created_at'])) }}</span>
+                        <span class="client_ava"><img src="{{ $client->company_logo ? asset($client->company_logo) : '' }}"></span>
+                        <p>{{ $client->walkins_company_name }}</p>
+                        <span class="small_faint">Added {{ date('M j, Y h:ia', strtotime($client->time_created)) }}</span>
                     </div>
-                    <div class="column col_1">{{ $client['count_brands'] }}</div>
-                    <div class="column col_2">&#8358; {{ number_format($client['total'],2) }}</div>
-                    <div class="column col_2">{{ $client['active_campaign'] }}</div>
-                    <div class="column col_2">{{ $client['inactive_campaign'] }}</div>
+                    <div class="column col_1">{{ $client->total_brand }}</div>
+                    <div class="column col_2">&#8358; {{ number_format($client->total_spent_so_far, 2) }}</div>
+                    <div class="column col_2">{{ $client->active_campaigns }}</div>
+                    <div class="column col_2">{{ $client->inactive_campaigns }}</div>
                     @if(Auth::user()->companies->count() > 1)
-                        <div class="column col_1">{{ $client['company'] }}</div>
+                        <div class="column col_1">{{ $client->publishers }}</div>
                     @endif
                     <div class="column col_1">
 
@@ -77,8 +78,10 @@
                             <span class="more_icon"></span>
 
                             <div class="more_more">
-                                <a href="{{ route('walkins.details', ['id' => $client['client_id']]) }}">Details</a>
-                                <a href="#edit_client{{ $client['client_id'] }}" class="modal_click">Edit</a>
+                                <a href="{{ route('walkins.details', ['id' => $client->client_id]) }}">Details</a>
+                                @if(Auth::user()->companies->count() == 1 && $client->walkin_creator == Auth::user()->companies->first()->id)
+                                    <a href="#edit_client{{ $client->client_id }}" class="modal_click">Edit</a>
+                                @endif
                                 {{--<a href="" class="color_red">Delete</a>--}}
                             </div>
                         </div>
@@ -90,7 +93,6 @@
         </div>
 
     </div>
-
     <!-- new client modal -->
 
     <div class="modal_contain" style="width: 800px;" id="new_client">
@@ -244,17 +246,17 @@
 
     {{--modal for editing a client--}}
     @foreach($clients as $client)
-        <div class="modal_contain" id="edit_client{{ $client['client_id'] }}">
-            <h2 class="sub_header mb4">Edit Walk-In : {{ $client['company_name'] }}</h2>
+        <div class="modal_contain" id="edit_client{{ $client->client_id }}">
+            <h2 class="sub_header mb4">Edit Walk-In : {{ $client->walkins_company_name }}</h2>
             <div class="progress">
 
             </div><br>
-            <form action="{{ route('walkins.update', ['client_id' => $client['client_id']]) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('walkins.update', ['client_id' => $client->client_id]) }}" method="POST" enctype="multipart/form-data">
                 {{ csrf_field() }}
                 <div class="clearfix">
                     <div class="input_wrap column col_7{{ $errors->has('company_name') ? ' has-error' : '' }}">
                         <label class="small_faint">Company Name</label>
-                        <input type="text" required name="company_name" value="{{ $client['company_name'] }}"  placeholder="e.g Coca Cola">
+                        <input type="text" required name="company_name" value="{{ $client->walkins_company_name }}"  placeholder="e.g Coca Cola">
                         @if($errors->has('company_name'))
                             <strong>
                                 <span class="error-block" style="color: red;">{{ $errors->first('company_name') }}</span>
@@ -262,7 +264,7 @@
                         @endif
                     </div>
                     <div class='column col_5 company_upload_button align_center pt3{{ $errors->has('company_logo') ? ' has-error' : '' }}'>
-                        <img src="{{ asset($client['company_logo']) }}" style="width: 100px; height: 100px; padding: 0 0 11px; margin-right: auto; margin-left: auto; margin-top: -65px;">
+                        <img src="{{ asset($client->company_logo) }}" style="width: 100px; height: 100px; padding: 0 0 11px; margin-right: auto; margin-left: auto; margin-top: -65px;">
                     </div>
                     <input type="hidden" name="company_logo" required class="company_logo_url">
                     <div class='column col_5 company_uploaded_image align_center pt3' style="display: none;">
@@ -275,7 +277,7 @@
 
                 <div class="input_wrap{{ $errors->has('email') ? ' has-error' : '' }}">
                     <label class="small_faint">Email</label>
-                    <input type="email" required name="email" readonly value="{{ $client['email'] }}" placeholder="name@example.com">
+                    <input type="email" required name="email" readonly value="{{ $client->email }}" placeholder="name@example.com">
                     @if($errors->has('email'))
                         <strong>
                             <span class="error-block" style="color: red;">{{ $errors->first('email') }}</span>
@@ -286,7 +288,7 @@
                 <div class="clearfix mb">
                     <div class="input_wrap col_6 column{{ $errors->has('first_name') ? ' has-error' : '' }}">
                         <label class="small_faint">First Name</label>
-                        <input type="text" required name="first_name" value="{{ $client['first_name'] }}" placeholder="Enter First Name">
+                        <input type="text" required name="first_name" value="{{ $client->firstname }}" placeholder="Enter First Name">
                         @if($errors->has('first_name'))
                             <strong>
                                 <span class="error-block" style="color: red;">{{ $errors->first('first_name') }}</span>
@@ -296,7 +298,7 @@
 
                     <div class="input_wrap col_6 column{{ $errors->has('last_name') ? ' has-error' : '' }}">
                         <label class="small_faint">Last Name</label>
-                        <input type="text" required name="last_name" value="{{ $client['last_name'] }}" placeholder="Enter Last Name">
+                        <input type="text" required name="last_name" value="{{ $client->lastname }}" placeholder="Enter Last Name">
                         @if($errors->has('last_name'))
                             <strong>
                                 <span class="error-block" style="color: red;">{{ $errors->first('last_name') }}</span>
@@ -307,7 +309,7 @@
 
                 <div class="input_wrap{{ $errors->has('phone') ? ' has-error' : '' }}">
                     <label class="small_faint">Phone Number</label>
-                    <input type="text" required name="phone" value="{{ $client['phone_number'] }}" placeholder="*** **** ****">
+                    <input type="text" required name="phone" value="{{ $client->phone_number }}" placeholder="*** **** ****">
                     @if($errors->has('phone'))
                         <strong>
                             <span class="error-block" style="color: red;">{{ $errors->first('phone') }}</span>
@@ -317,7 +319,7 @@
 
                 <div class="input_wrap{{ $errors->has('address') ? ' has-error' : '' }}">
                     <label class="small_faint">Address</label>
-                    <input type="text" required name="address" value="{{ $client['location'] }}" placeholder="Enter Address">
+                    <input type="text" required name="address" value="{{ $client->location }}" placeholder="Enter Address">
                     @if($errors->has('address'))
                         <strong>
                             <span class="error-block" style="color: red;">{{ $errors->first('address') }}</span>

@@ -11,6 +11,7 @@ use Vanguard\Http\Requests\CampaignInformationUpdateRequest;
 use Vanguard\Libraries\Api;
 use Vanguard\Libraries\CampaignDate;
 use Vanguard\Libraries\Utilities;
+use Vanguard\Models\Company;
 use Vanguard\Models\PreselectedAdslot;
 use Vanguard\Models\SelectedAdslot;
 use Vanguard\Models\Upload;
@@ -433,28 +434,26 @@ class CampaignsController extends Controller
         $channel = request()->channel;
         $broadcaster_retain = request()->media_channel;
 
-        if(!empty($broadcaster_retain)){
-            $formatted_broadcaster = "'".implode("','", $broadcaster_retain)."'";
-        }
-
-
-        $formatted_channel = $channel ? "'".implode("','", $channel)."'" : '';
         $all_channel = [];
         $retained_channel = [];
 
         if($channel){
-            $broadcasters = Utilities::switch_db('api')->select("SELECT * from broadcasters where channel_id IN ($formatted_channel)");
+            $broadcasters = \DB::table('companies')
+                                ->join('channel_company', 'channel_company.company_id', '=', 'companies.id')
+                                ->select('companies.*')
+                                ->whereIn('channel_company.channel_id', $channel)
+                                ->get();
             foreach ($broadcasters as $broadcaster){
                 $campaigns = Utilities::switch_db('api')->select("SELECT * from campaignDetails where broadcaster = '$broadcaster->id' AND campaign_id = '$campaign_id'");
                 $all_channel[] = [
                     'broadcaster_id' => $campaigns ? $broadcaster->id : '',
-                    'broadcaster' => $campaigns ? $broadcaster->brand : '',
+                    'broadcaster' => $campaigns ? $broadcaster->name : '',
                     'campaign_id' => $campaign_id ? $campaign_id : '',
                 ];
             }
 
             if(!empty($broadcaster_retain)){
-                $retained_broadcasters = Utilities::switch_db('api')->select("SELECT * from broadcasters where id IN ($formatted_broadcaster)");
+                $retained_broadcasters = Company::whereIn('id', $broadcaster_retain)->get();
                 foreach ($retained_broadcasters as $retained_broadcaster){
                     $campaigns_retained = Utilities::switch_db('api')->select("SELECT * from campaignDetails where broadcaster = '$retained_broadcaster->id' AND campaign_id = '$campaign_id'");
                     $retained_channel[] = [
@@ -498,7 +497,7 @@ class CampaignsController extends Controller
         $media_channels = request()->channel;
         if($media_channels){
             foreach ($media_channels as $media_channel){
-                $broadcaster = Utilities::switch_db('api')->select("SELECT * from broadcasters where id = '$media_channel'");
+                $broadcaster = Company::where('id', $media_channel)->first();
                 $campaigns = Utilities::switch_db('api')->select("SELECT * from campaignDetails where campaign_id = '$campaign_id' AND broadcaster = '$media_channel' ");
                 $channel_id = $campaigns[0]->channel;
                 $stack = Utilities::switch_db('api')->select("SELECT * from campaignChannels where id = (SELECT channel_id from broadcasters where id = '$media_channel')");
@@ -510,7 +509,7 @@ class CampaignsController extends Controller
                 }
                 $all_comp_data[] = [
                     'color' => $color,
-                    'name' => $broadcaster[0]->brand,
+                    'name' => $broadcaster->name,
                     'data' => array($payments[0]->amount),
                     'stack' => $stack[0]->channel
                 ];

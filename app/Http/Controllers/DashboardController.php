@@ -157,7 +157,12 @@ class DashboardController extends Controller
         //campaigns
         $agency_id = Session::get('agency_id');
         $broadcaster_id = Session::get('broadcaster_id');
-        $campaigns = new AllCampaign($request, $broadcaster_id, $agency_id, $dashboard = true, Auth::user()->company_id);
+        if(Auth::user()->companies()->count() > 1){
+            $company_id = Auth::user()->company_id;
+        }else{
+            $company_id = Auth::user()->companies->first()->id;
+        }
+        $campaigns = new AllCampaign($request, $broadcaster_id, $agency_id, $dashboard = true, $company_id);
         return $campaigns->run();
     }
 
@@ -388,9 +393,9 @@ class DashboardController extends Controller
                 'companies' => $user_companies->getListOfCompany(),
                 'companies_id' => $company_ids,
                 'campaign_status_percentage' => [
-                    'percentage_active' => $campaign_status_service->activePercentage(),
-                    'percentage_pending' => $campaign_status_service->pendingPercentage(),
-                    'percentage_finished' => $campaign_status_service->finishedPercentage()
+                    'percentage_active' => round($campaign_status_service->activePercentage()),
+                    'percentage_pending' => round($campaign_status_service->pendingPercentage()),
+                    'percentage_finished' => round($campaign_status_service->finishedPercentage())
                 ]
             ];
         }
