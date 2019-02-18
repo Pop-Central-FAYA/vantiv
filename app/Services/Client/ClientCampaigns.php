@@ -68,10 +68,11 @@ class ClientCampaigns
             })
             ->select('campaignDetails.campaign_id', 'campaignDetails.name', 'campaignDetails.product',
                 'campaignDetails.start_date', 'campaignDetails.stop_date', 'campaignDetails.adslots', 'campaignDetails.adslots_id',
-                'campaigns.campaign_reference','payments.total', 'brands.name AS brands', 'campaignDetails.time_created',
+                'campaigns.campaign_reference', 'brands.name AS brands', 'campaignDetails.time_created',
                 'brands.name AS brand', 'payments.campaign_budget AS budget', 'campaignDetails.status',
                 'paymentDetails.amount AS individual_publisher_total'
                 )
+            ->selectRaw("SUM(paymentDetails.amount) AS total")
             ->where('campaignDetails.adslots', '>', 0)
             ->orderBy('campaignDetails.time_created', 'DESC')
             ->when(is_array($this->company_id), function ($query) {
