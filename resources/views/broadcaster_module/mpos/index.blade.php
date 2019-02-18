@@ -50,6 +50,9 @@
                     <th>Date Created</th>
                     <th>Budget</th>
                     <th>Status</th>
+                    @if(Auth::user()->companies()->count() > 1)
+                        <th>Stations</th>
+                    @endif
                 </tr>
                 </thead>
             </table>
@@ -77,7 +80,7 @@
     <script src="https://unpkg.com/flatpickr"></script>
     {{--datatables--}}
     <script>
-
+        <?php echo "var companies =".Auth::user()->companies()->count().";\n"; ?>
         $(document).ready(function( $ ) {
 
             flatpickr(".flatpickr", {
@@ -100,19 +103,35 @@
                         d.stop_date = $('input[name=stop_date]').val();
                     }
                 },
-                columns: [
-                    {data: 'id', name: 'id'},
-                    {data: 'name', name: 'name'},
-                    {data: 'brand', name: 'brand'},
-                    {data: 'date_created', name: 'date_created'},
-                    {data: 'budget', name: 'budget'},
-                    {data: 'status', name: 'status'},
-                ],
+                columns: getColumns(),
             });
 
             $('#mpo_filters').on('click', function() {
                 Datefilter.draw();
             });
+            function getColumns()
+            {
+                if(companies > 1){
+                    return [
+                        {data: 'id', name: 'id'},
+                        {data: 'name', name: 'name'},
+                        {data: 'brand', name: 'brand'},
+                        {data: 'date_created', name: 'date_created'},
+                        {data: 'budget', name: 'budget'},
+                        {data: 'status', name: 'status'},
+                        {data: 'station', name: 'station'}
+                    ]
+                }else{
+                    return [
+                        {data: 'id', name: 'id'},
+                        {data: 'name', name: 'name'},
+                        {data: 'brand', name: 'brand'},
+                        {data: 'date_created', name: 'date_created'},
+                        {data: 'budget', name: 'budget'},
+                        {data: 'status', name: 'status'},
+                    ]
+                }
+            }
         } );
     </script>
 @stop
