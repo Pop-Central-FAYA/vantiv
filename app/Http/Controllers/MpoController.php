@@ -24,7 +24,7 @@ class MpoController extends Controller
     public function index()
     {
         $mpo_list_service = new MpoList($this->companyId(), null,null);
-        return view('broadcaster_module.mpos.index')->with('companies_id', $mpo_list_service->getMpoCompanyId());
+        return view('broadcaster_module.mpos.index')->with('companies_id', \Auth::user()->companies()->count() > 1 ? $mpo_list_service->getMpoCompanyId() : '');
     }
 
     public function getAllData(Request $request, DataTables $dataTables)

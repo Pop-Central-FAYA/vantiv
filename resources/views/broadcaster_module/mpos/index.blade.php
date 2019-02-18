@@ -85,7 +85,6 @@
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script src="https://code.highcharts.com/modules/export-data.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
-    {{--<script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>--}}
     <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/dataTables.buttons.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.flash.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
@@ -109,15 +108,18 @@
                         opacity: 0.1
                     });
                     var Datefilter =  $('.filter_mpo').DataTable({
-                        dom: 'Bfrtip',
+                        dom: 'Blfrtip',
                         paging: true,
                         serverSide: true,
                         processing: true,
-                        "searching": false,
                         aaSorting: [],
+                        aLengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
                         buttons: [
                             'copy', 'csv', 'excel', 'pdf', 'print'
                         ],
+                        oLanguage: {
+                            sLengthMenu: "_MENU_"
+                        },
                         ajax: {
                             url: '/mpo/filter',
                             data: function (d) {
@@ -142,15 +144,18 @@
             $(".filter_mpo").dataTable().fnDestroy();
 
             var Datefilter =  $('.default_mpo').DataTable({
-                dom: 'Bfrtip',
+                dom: 'Blfrtip',
                 paging: true,
                 serverSide: true,
                 processing: true,
-                "searching": false,
                 aaSorting: [],
+                aLengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
                 buttons: [
                     'copy', 'csv', 'excel', 'pdf', 'print'
                 ],
+                oLanguage: {
+                    sLengthMenu: "_MENU_"
+                },
                 ajax: {
                     url: '/mpos/all-data',
                     data: function (d) {
@@ -200,6 +205,10 @@
     <style>
         .highcharts-grid path { display: none;}
         .highcharts-legend {
+            display: none;
+        }
+
+        .dataTables_filter {
             display: none;
         }
 
