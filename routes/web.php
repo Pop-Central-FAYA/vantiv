@@ -199,6 +199,8 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/presigned-url', 'S3Controller@getPresignedUrl');
 
+    Route::get('/mpo/filter', 'MpoController@filterCompany');
+
     /*
      * Compliance summary
      */
