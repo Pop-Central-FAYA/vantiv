@@ -23,7 +23,8 @@ class MpoController extends Controller
 
     public function index()
     {
-        return view('broadcaster_module.mpos.index');
+        $mpo_list_service = new MpoList($this->companyId(), null,null);
+        return view('broadcaster_module.mpos.index')->with('companies_id', $mpo_list_service->getMpoCompanyId());
     }
 
     public function getAllData(Request $request, DataTables $dataTables)
@@ -35,6 +36,15 @@ class MpoController extends Controller
 
         $mpo_data = $this->getMpoCollection($mpos, $broadcaster_id);
 
+        return $this->mpoDatatablesCollection($dataTables, $mpo_data);
+    }
+
+    public function filterCompany(DataTables $dataTables)
+    {
+        $broadcaster_id = \Session::get('broadcaster_id');
+        $mpo_list_service = new MpoList(request()->channel_id, request()->start_date, request()->stop_date);
+        $mpos = $mpo_list_service->mpoList();
+        $mpo_data = $this->getMpoCollection($mpos, $broadcaster_id);
         return $this->mpoDatatablesCollection($dataTables, $mpo_data);
     }
 

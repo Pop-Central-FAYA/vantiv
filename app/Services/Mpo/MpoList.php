@@ -35,7 +35,7 @@ class MpoList
                                                 ->where('campaignDetails.launched_on', $this->company_id);
                                 })
                                 ->when($this->start_date && $this->end_date, function ($query) {
-                                    return $query->between('mpoDetails.time_created', $this->start_date, $this->end_date);
+                                    return $query->whereBetween('mpoDetails.time_created', array($this->start_date, $this->end_date));
                                 })
                                 ->where('campaignDetails.status', '!=', 'on_hold')
                                 ->orWhere('campaignDetails.status', '=', 'file_error')
@@ -54,12 +54,21 @@ class MpoList
                     ->where('campaignDetails.launched_on', $this->company_id);
             })
             ->when($this->start_date && $this->end_date, function ($query) {
-                return $query->between('mpoDetails.time_created', $this->start_date, $this->end_date);
+                return $query->whereBetween('mpoDetails.time_created', array($this->start_date, $this->end_date));
             })
             ->where('mpoDetails.is_mpo_accepted', 0)
             ->where('campaignDetails.status', '!=', 'on_hold')
             ->orWhere('campaignDetails.status', '=', 'file_error')
             ->orderBy('mpoDetails.time_created', 'DESC')
             ->get();
+    }
+
+    public function getMpoCompanyId()
+    {
+        return \DB::table('mpoDetails')
+                    ->selectRaw("GROUP_CONCAT(DISTINCT broadcaster_id) AS company_id")
+                    ->whereIn('broadcaster_id', $this->company_id)
+                    ->groupBy('broadcaster_id')
+                    ->get();
     }
 }

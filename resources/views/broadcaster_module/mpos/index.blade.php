@@ -17,6 +17,22 @@
             <div class="column col_6">
                 <h2 class="sub_header">All MPOS</h2>
             </div>
+
+            @if(Auth::user()->companies()->count() > 1)
+                <div class="column col_6">
+                    <select class="publishers" name="companies[]" id="publishers" multiple="multiple" >
+                        @foreach(Auth::user()->companies as $company)
+                            <option value="{{ $company->id }}"
+                                    @foreach($companies_id as $company_id)
+                                        @if($company_id->company_id == $company->id)
+                                            selected
+                                        @endif
+                                    @endforeach
+                            >{{ $company->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            @endif
         </div>
 
         <div class="the_frame client_dets mb4">
@@ -41,7 +57,7 @@
             </div>
 
             <!-- campaigns table -->
-            <table class="display dashboard_campaigns">
+            <table class="display default_mpo filter_mpo" id="default_mpo_table">
                 <thead>
                 <tr>
                     <th>ID</th>
@@ -77,16 +93,55 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.html5.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.print.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+
     <script src="https://unpkg.com/flatpickr"></script>
     {{--datatables--}}
     <script>
         <?php echo "var companies =".Auth::user()->companies()->count().";\n"; ?>
         $(document).ready(function( $ ) {
+            if(companies > 1){
+                $('.publishers').select2();
+                $('body').delegate("#publishers", "change", function () {
+                    $(".default_mpo").dataTable().fnDestroy();
+                    var channels = $("#publishers").val();
+                    $('.when_loading').css({
+                        opacity: 0.1
+                    });
+                    var Datefilter =  $('.filter_mpo').DataTable({
+                        dom: 'Bfrtip',
+                        paging: true,
+                        serverSide: true,
+                        processing: true,
+                        "searching": false,
+                        aaSorting: [],
+                        buttons: [
+                            'copy', 'csv', 'excel', 'pdf', 'print'
+                        ],
+                        ajax: {
+                            url: '/mpo/filter',
+                            data: function (d) {
+                                d.channel_id = channels;
+                                d.start_date = $('input[name=start_date]').val();
+                                d.stop_date = $('input[name=stop_date]').val();
+                            }
+                        },
+                        columns: getColumns(),
+                    });
+                    Datefilter.draw();
+                    $('#mpo_filters').on('click', function() {
+                        Datefilter.draw();
+                    });
+                })
+            }
 
             flatpickr(".flatpickr", {
                 altInput: true,
             });
-            var Datefilter =  $('.dashboard_campaigns').DataTable({
+
+            $(".filter_mpo").dataTable().fnDestroy();
+
+            var Datefilter =  $('.default_mpo').DataTable({
                 dom: 'Bfrtip',
                 paging: true,
                 serverSide: true,
@@ -109,6 +164,7 @@
             $('#mpo_filters').on('click', function() {
                 Datefilter.draw();
             });
+
             function getColumns()
             {
                 if(companies > 1){
@@ -140,6 +196,7 @@
     <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.5.1/css/buttons.dataTables.min.css" type="text/css"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
     <style>
         .highcharts-grid path { display: none;}
         .highcharts-legend {
