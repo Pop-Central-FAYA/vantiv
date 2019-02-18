@@ -4,19 +4,22 @@ namespace Vanguard\Http\Controllers;
 
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
-use JD\Cloudder\Facades\Cloudder;
-use Vanguard\Libraries\AmazonS3;
+use Vanguard\Http\Controllers\Traits\CompanyIdTrait;
 use Vanguard\Libraries\Api;
 use Illuminate\Http\Request;
 use Vanguard\Libraries\Utilities;
 use Vanguard\Models\AdslotReason;
 use Vanguard\Models\SelectedAdslot;
 use Vanguard\Models\RejectionReason;
+use Vanguard\Services\Company\CompanyDetails;
+use Vanguard\Services\Mpo\MpoDetails;
+use Vanguard\Services\Mpo\MpoList;
 use Yajra\DataTables\DataTables;
 use Vanguard\Services\BroadcasterPlayout\CreatePlayout;
 
 class MpoController extends Controller
 {
+    use CompanyIdTrait;
 
     public function index()
     {
@@ -26,22 +29,9 @@ class MpoController extends Controller
     public function getAllData(Request $request, DataTables $dataTables)
     {
         $broadcaster_id = \Session::get('broadcaster_id');
-        if($request->start_date && $request->stop_date) {
-            $start_date = $request->start_date;
-            $stop_date = $request->stop_date;
-            $mpos = Utilities::switch_db('api')->select("SELECT m_d.mpo_id, m_d.is_mpo_accepted, c_d.status as campaign_status, m_d.agency_id, m.campaign_id from mpoDetails as m_d
-                                                            INNER JOIN mpos as m ON m.id = m_d.mpo_id
-                                                            INNER JOIN campaignDetails as c_d ON c_d.campaign_id = m.campaign_id AND c_d.broadcaster = m_d.broadcaster_id
-                                                            where m_d.broadcaster_id = '$broadcaster_id' and c_d.status != 'on_hold' OR c_d.status = 'file_error' AND
-                                                            and m_d.time_created between '$start_date' and '$stop_date' AND c_d.broadcaster = '$broadcaster_id' order by m_d.time_created desc");
-        }else{
-            $mpos = Utilities::switch_db('api')->select("SELECT m_d.mpo_id, m_d.is_mpo_accepted, c_d.status as campaign_status, m_d.agency_id, m.campaign_id from mpoDetails as m_d
-                                                            INNER JOIN mpos as m ON m.id = m_d.mpo_id
-                                                            INNER JOIN campaignDetails as c_d ON c_d.campaign_id = m.campaign_id AND c_d.broadcaster = m_d.broadcaster_id
-                                                            where m_d.broadcaster_id = '$broadcaster_id' and c_d.status != 'on_hold' OR c_d.status = 'file_error'
-                                                            AND c_d.broadcaster = '$broadcaster_id'
-                                                            order by m_d.time_created desc");
-        }
+
+        $mpo_list_service = new MpoList($this->companyId(), $request->start_date, $request->stop_date);
+        $mpos = $mpo_list_service->mpoList();
 
         $mpo_data = $this->getMpoCollection($mpos, $broadcaster_id);
 
@@ -56,38 +46,16 @@ class MpoController extends Controller
     public function pendingData(Request $request, DataTables $dataTables)
     {
         $broadcaster_id = \Session::get('broadcaster_id');
-        if($request->start_date && $request->stop_date) {
-            $start_date = $request->start_date;
-            $stop_date = $request->stop_date;
-            $mpos = Utilities::switch_db('api')->select("SELECT m_d.mpo_id, m_d.is_mpo_accepted, c_d.status as campaign_status m_d.agency_id, m.campaign_id from mpoDetails as m_d
-                                                            INNER JOIN mpos as m ON m.id = m_d.mpo_id
-                                                            INNER JOIN campaignDetails as c_d ON c_d.campaign_id = m.campaign_id AND c_d.broadcaster = m_d.broadcaster_id
-                                                            where m_d.broadcaster_id = '$broadcaster_id' and c_d.status != 'on_hold' AND
-                                                            c_d.broadcaster = '$broadcaster_id' AND
-                                                            m_d.is_mpo_accepted = 0 and m_d.time_created between '$start_date' and '$stop_date' order by m_d.time_created desc");
-        }else{
-            $mpos = Utilities::switch_db('api')->select("SELECT m_d.mpo_id, m_d.is_mpo_accepted, c_d.status as campaign_status, m_d.agency_id, m.campaign_id from mpoDetails as m_d
-                                                            INNER JOIN mpos as m ON m.id = m_d.mpo_id
-                                                            INNER JOIN campaignDetails as c_d ON c_d.campaign_id = m.campaign_id AND c_d.broadcaster = m_d.broadcaster_id
-                                                            where m_d.broadcaster_id = '$broadcaster_id' and c_d.status != 'on_hold' AND
-                                                            c_d.broadcaster = '$broadcaster_id' AND
-                                                            m_d.is_mpo_accepted = 0 order by m_d.time_created desc");
-        }
-
-        $mpo_data = $this->getMpoCollection($mpos, $broadcaster_id);
-
+        $mpo_list_service = new MpoList($this->companyId(), $request->start_date, $request->stop_date);
+        $mpo_data = $this->getMpoCollection($mpo_list_service->pendingMpoList(), $broadcaster_id);
         return $this->mpoDatatablesCollection($dataTables, $mpo_data);
     }
 
     public function mpoAction($mpo_id)
     {
         $broadcaster_id = \Session::get('broadcaster_id');
-        $mpos = Utilities::switch_db('api')->select("SELECT m_d.mpo_id, m_d.is_mpo_accepted, c_d.status as campaign_status, m_d.agency_id, m.campaign_id from mpoDetails as m_d
-                                                         INNER JOIN mpos as m ON m.id = m_d.mpo_id and m_d.mpo_id = '$mpo_id'
-                                                         INNER JOIN campaignDetails as c_d ON c_d.campaign_id = m.campaign_id AND c_d.broadcaster = m_d.broadcaster_id
-                                                         where m_d.broadcaster_id = '$broadcaster_id' AND c_d.broadcaster = '$broadcaster_id'
-                                                         and c_d.status = 'pending' OR c_d.status = 'file_error'");
-        $mpo_data = $this->getMpoCollection($mpos, $broadcaster_id);
+        $mpo_details_service = new MpoDetails($mpo_id, $this->companyId());
+        $mpo_data = $this->getMpoCollection($mpo_details_service->getMpoDetails(), $broadcaster_id);
         $reject_reasons = RejectionReason::all();
         if(count($mpo_data) == 0){
             \Session::flash('success', 'All files approved and the cmpaign is now active');
@@ -174,33 +142,9 @@ class MpoController extends Controller
     public function getMpoCollection($mpos, $broadcaster_id)
     {
         $mpo_data = [];
-        $broadcaster_name = \Auth::user()->companies->first()->name;
-
         foreach ($mpos as $mpo) {
-
-            $campaign = Utilities::switch_db('api')->select("SELECT c.name, c.product, c.time_created, b.name as brand_name, i.invoice_number from campaignDetails as c
-                                                                  INNER JOIN brands as b ON c.brand = b.id JOIN invoices as i ON i.campaign_id = c.campaign_id
-                                                                  where c.campaign_id = '$mpo->campaign_id'");
-            $payment_details = Api::fetchPayment($mpo->campaign_id, $broadcaster_id);
             $status = Api::approvedCampaignFiles($mpo->campaign_id, $broadcaster_id);
             $outstanding_files = Api::getOutstandingFiles($mpo->campaign_id, $broadcaster_id);
-
-            if (count($campaign) === 0) {
-                $product = 0;
-                $name = 0;
-                $time = 0;
-            } else {
-                $product = $campaign[0]->product;
-                $name = $campaign[0]->name;
-                $time = date('Y-m-d', strtotime($campaign[0]->time_created));
-            }
-
-
-            if (count($payment_details) === 0) {
-                $amount = 0;
-            } else {
-                $amount = $payment_details[0]->amount;
-            }
 
             if (count($outstanding_files) === 0) {
                 $files = 0;
@@ -210,22 +154,29 @@ class MpoController extends Controller
 
             $mpo_data[] = [
                 'mpo_id' => $mpo->mpo_id,
-                'id' => $mpo->agency_id ? $campaign[0]->invoice_number.'v'.$broadcaster_name[0] : $campaign[0]->invoice_number,
+                'id' => $mpo->agency_id ? $mpo->invoice_number.'v'.$this->getCompanyName($broadcaster_id)->name : $mpo->invoice_number,
                 'is_mpo_accepted' => $mpo->is_mpo_accepted,
-                'product' => $product,
-                'budget' => $amount,
-                'name' => $name,
-                'brand' => $campaign[0]->brand_name,
-                'date_created' => $time,
+                'product' => $mpo->product,
+                'budget' => $mpo->amount,
+                'name' => $mpo->name,
+                'brand' => $mpo->brand_name,
+                'date_created' => date('Y-m-d', strtotime($mpo->date)),
                 'status' => $status['mpo_approval_status'],
-                'channel' => $broadcaster_name,
+                'channel' => $this->getCompanyName($broadcaster_id)->name,
                 'files' => $files,
-                'campaign_status' => $mpo->campaign_status
+                'campaign_status' => $mpo->campaign_status,
+                'station' => \Auth::user()->companies()->count() > 1 ? $this->getCompanyName($mpo->company_id)->name : ''
             ];
 
         }
 
         return $mpo_data;
+    }
+
+    public function getCompanyName($company_id)
+    {
+        $company_details_service = new CompanyDetails($company_id);
+        return $company_details_service->getCompanyDetails();
     }
 
     public static function mpoDatatablesCollection($dataTables, $mpo_data)
@@ -235,7 +186,11 @@ class MpoController extends Controller
                 if($mpo_data['is_mpo_accepted'] == 1){
                     return '<span class="span_state status_success">All File Approved</span>';
                 }elseif($mpo_data['campaign_status'] == 'pending' || $mpo_data['campaign_status'] == 'file_error') {
-                    return '<a href="'.route('mpo.action', ['mpo_id' => $mpo_data['mpo_id']]).'" class="span_state status_danger modal_mpo_click">In Progress</a>';
+                    if(\Auth::user()->companies()->count() > 1){
+                        return '<span class="span_state status_danger modal_mpo_click">In Progress</span>';
+                    }else{
+                        return '<a href="'.route('mpo.action', ['mpo_id' => $mpo_data['mpo_id']]).'" class="span_state status_danger modal_mpo_click">In Progress</a>';
+                    }
                 }else{
                     return '<span class="span_state status_pending">Expired</span>';
                 }

@@ -42,7 +42,9 @@
                     <th>Time Picked</th>
                     <th>Adslots</th>
                     <th>Approval</th>
-                    <th>Action</th>
+                    @if(Auth::user()->companies()->count() == 1)
+                        <th>Action</th>
+                    @endif
                     <th>Reason</th>
                     <th>Reason for Rejection</th>
                     <th>Recomendation</th>
@@ -86,6 +88,7 @@
                             @endif
                         </td>
                         <input type="hidden" name="file_code" id="file_code" value="{{ $mpo_file->file_code }}">
+                        @if(Auth::user()->companies()->count() == 1)
                         <td>
                             <select name="rejection_reason[]" class="reason_default rejection_reason" style="width: 200px;" id="reason{{ $mpo_file->file_code }}" multiple>
                                 <option value="null">Select Reason</option>
@@ -94,6 +97,7 @@
                                 @endforeach
                             </select>
                         </td>
+                        @endif
                         <td>
                             <textarea name="recommendation" id="recommendations{{ $mpo_file->file_code }}" class="recommendation_default" cols="30" rows="10">
                                 @if($mpo_file->status === 'rejected')
