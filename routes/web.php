@@ -194,7 +194,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/store', 'WalkinsController@store')->name('walkins.store');
         Route::get('/delete/{id}', 'WalkinsController@delete')->name('walkins.delete');
         Route::get('/brand', 'WalkinsController@getSubIndustry');
-        Route::get('/walk-in/details/{client_id}', 'WalkinsController@getDetails')->name('walkins.details');
+        Route::get('/details/{client_id}', 'WalkinsController@getDetails')->name('walkins.details');
     });
 
     Route::get('/presigned-url', 'S3Controller@getPresignedUrl');
@@ -301,6 +301,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/high-days/all', 'ReportController@hpdaysData');
     });
 
+    //route to filter client details by a company owner with multiple publishers
+    Route::get('/client-details/{client_id}', 'WalkinsController@filterByPublisher');
+
     //get all brands per walkins or clients
     Route::get('/client/get-brands/{id}', 'BrandsController@getBrandsWithClients');
 
@@ -338,12 +341,6 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/media-channel/{campaign_id}', 'Agency\CampaignsController@getMediaChannel');
             Route::get('/compliance-graph', 'Agency\CampaignsController@complianceGraph');
             Route::get('/compliance-graph/filter', 'Agency\CampaignsController@complianceFilter')->name('campaign_details.compliance');
-
-
-
-
-
-
 
             Route::post('/information-update/{campaign_id}', 'Agency\CampaignsController@updateAgencyCampaignInformation')->name('agency.campaign_information.update');
         });

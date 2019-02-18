@@ -11,7 +11,6 @@
 |
 */
 
-
 Route::get('/welcome', 'Api\DummyController@index');
 Route::get('/all-pushed-files', 'Api\DummyController@allFiles');
 Route::post('/add-file/{id}', 'Api\DummyController@addFile')->name('api.add.file');
@@ -25,3 +24,6 @@ Route::post('/playout-file/finished/{file_hash}', 'Api\Playout\FileController@up
 Route::get('/playout', 'Api\Playout\PlayoutController@getPlayouts');
 Route::post('/playout/placed/{playout_id}', 'Api\Playout\PlayoutController@updateAdPlaced');
 Route::post('/playout/played/{playout_id}', 'Api\Playout\PlayoutController@updateAdPlayed');
+
+##walin details endpoint
+//Route::get('/walk-in/details/{client_id}', 'WalkinsController@getApiDetails');

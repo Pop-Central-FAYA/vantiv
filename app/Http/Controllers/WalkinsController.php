@@ -4,6 +4,7 @@ namespace Vanguard\Http\Controllers;
 
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Vanguard\Http\Controllers\Traits\CompanyIdTrait;
 use Vanguard\Http\Requests\WalkinStoreRequest;
 use Vanguard\Http\Requests\WalkinUpdateRequest;
 use Vanguard\Libraries\Enum\ClassMessages;
@@ -31,6 +32,7 @@ class WalkinsController extends Controller
     //NB: agency_id is assumed to be the broadcaster user
     private $broadcaster_id;
     private $agency_id;
+    use CompanyIdTrait;
 
     public function __construct()
     {
@@ -157,24 +159,53 @@ class WalkinsController extends Controller
 
     public function getDetails($client_id)
     {
-        $user = \Auth::user();
-        if($user->companies()->count() > 1){
-            $company_id = $user->company_id;
-
-        }else{
-            $company_id = $user->companies->first()->id;
+        $client_details_data = $this->clientDetailsData($client_id, $this->companyId());
+        $brands = $this->getBrandDetails($client_details_data['all_brands'], $this->companyId());
+        if(count($brands) === 0){
+            Session::flash('info', ClassMessages::EMPTY_BRAND_FOR_CLIENT);
+            return redirect()->back();
         }
+
+        return view('broadcaster_module.walk-In.details')->with('clients')
+            ->with('client_id', $client_id)
+            ->with('user_details', $client_details_data['user_details']->getUserDetails())
+            ->with('client', $client_details_data['client'])
+            ->with('all_campaigns', $client_details_data['all_campaigns'])
+            ->with('all_brands', $brands)
+            ->with('campaign_payment', $client_details_data['campaign_payments'])
+            ->with('campaign_date', $client_details_data['campaign_date'])
+            ->with('total_spent', $client_details_data['client_campaign_service']->getClientTotalSpent())
+            ->with('industries', $client_details_data['industries']->industryList())
+            ->with('sub_industries', $client_details_data['sub_industries']->getSubIndustryGroupByIndustry())
+            ->with('publisher_logos', \Auth::user()->companies()->count() > 1 ? $client_details_data['publisher_logo'] : '')
+            ->with('publisher_ids', \Auth::user()->companies()->count() > 1 ? $client_details_data['publisher_id'] : '');
+    }
+
+    public function filterByPublisher($client_id)
+    {
+        $channel_id = request()->channel_id;
+        //$client_id = request()->client_id;
+        $client_details_data = $this->clientDetailsData($client_id, $channel_id);
+        $brands = $this->getBrandDetails($client_details_data['all_brands'], $channel_id);
+        if(count($brands) === 0){
+            return 'empty_brand';
+        }
+        return ['client_id' => $client_id, $channel_id, 'user_details' => $client_details_data['user_details']->getUserDetails(), 'client' => $client_details_data['client'],
+            'all_campaigns' => $client_details_data['all_campaigns'], 'all_brands' => $brands, 'campaign_payment' => $client_details_data['campaign_payments'],
+            'campaign_date' => $client_details_data['campaign_date'], 'total_spent' => $client_details_data['client_campaign_service']->getClientTotalSpent(),
+            'industries' => $client_details_data['industries']->industryList(), 'sub_industries' => $client_details_data['sub_industries']->getSubIndustryGroupByIndustry(),
+            'publisher_logos' => \Auth::user()->companies()->count() > 1 ? $client_details_data['publisher_logo'] : '',
+            'publisher_ids' => \Auth::user()->companies()->count() > 1 ? $client_details_data['publisher_id'] : ''];
+    }
+
+    public function clientDetailsData($client_id, $company_id)
+    {
         $client_details_service = new ClientDetails($client_id, null);
         $client_details = $client_details_service->run();
         $client_campaign_service = new ClientCampaigns($client_details->id, $company_id);
         $client_campaigns = $client_campaign_service->getComprehensiveDetails();
         $client_brands_service = new ClientBrands($client_id);
         $client_brands = $client_brands_service->run();
-        $brands = $this->getBrandDetails($client_brands);
-        if(count($brands) === 0){
-            Session::flash('info', ClassMessages::EMPTY_BRAND_FOR_CLIENT);
-            return redirect()->back();
-        }
         $user_details = new UserDetails($client_details->user_id);
         $industries = new IndustryList();
         $sub_industries = new SubIndustryList();
@@ -182,34 +213,26 @@ class WalkinsController extends Controller
         $campaign_graph = Utilities::clientGraph($client_campaigns);
         $campaign_payment = $campaign_graph['campaign_payment'];
         $campaign_date = $campaign_graph['campaign_date'];
-
-        if($user->companies()->count() > 1){
+        $campaign_publishers_logo = '';
+        $campaign_publishers_id = '';
+        if(\Auth::user()->companies()->count() > 1){
             $campaign_publishers = $client_campaign_service->getPublishers();
-            $campaign_publishers_logo = explode(',', $campaign_publishers[0]->company_logo);
-            $campaign_publishers_id = explode(',', $campaign_publishers[0]->company_id);
+            if(count($campaign_publishers) != 0){
+                $campaign_publishers_logo = explode(',', $campaign_publishers[0]->company_logo);
+                $campaign_publishers_id = explode(',', $campaign_publishers[0]->company_id);
+            }
         }
-
-        return view('broadcaster_module.walk-In.details')->with('clients')
-            ->with('client_id', $client_id)
-            ->with('user_details', $user_details->getUserDetails())
-            ->with('client', $client_details)
-            ->with('all_campaigns', $client_campaigns)
-            ->with('all_brands', $brands)
-            ->with('campaign_payment', $campaign_payment)
-            ->with('campaign_date', $campaign_date)
-            ->with('total_spent', $client_campaign_service->getClientTotalSpent())
-            ->with('industries', $industries->industryList())
-            ->with('sub_industries', $sub_industries->getSubIndustryGroupByIndustry())
-            ->with('publisher_logos', \Auth::user()->companies()->count() > 1 ? $campaign_publishers_logo : '')
-            ->with('publisher_ids', \Auth::user()->companies()->count() > 1 ? $campaign_publishers_id : '');
+        return ['user_details' => $user_details, 'client' => $client_details, 'all_campaigns' => $client_campaigns,
+            'all_brands' => $client_brands, 'campaign_payments' => $campaign_payment, 'campaign_date' => $campaign_date,
+            'client_campaign_service' => $client_campaign_service, 'industries' => $industries, 'sub_industries' => $sub_industries,
+            'publisher_logo' => $campaign_publishers_logo, 'publisher_id' => $campaign_publishers_id, 'client_details_service' => $client_details_service];
     }
 
-    public function getBrandDetails($client_brands)
+    public function getBrandDetails($client_brands, $company_id)
     {
         $brands = [];
         foreach ($client_brands as $client_brand){
-            $brand_campaigns_service = new BrandCampaigns($client_brand->id, $client_brand->client_walkins_id,
-                $this->broadcaster_id, $this->agency_id);
+            $brand_campaigns_service = new BrandCampaigns($client_brand->id, $client_brand->client_walkins_id, $company_id);
             $brands[] = [
                 'id' => $client_brand->id,
                 'client_id' => $client_brand->client_walkins_id,

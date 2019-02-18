@@ -35,7 +35,7 @@
         </div>
 
         <!-- main stats -->
-        <div class="the_frame clearfix mb ">
+        <div class="the_frame clearfix mb">
             <div class="border_bottom clearfix client_name">
                 <a href="{{ route('walkins.all') }}" class="back_icon block_disp left"></a>
                 <div class="left">
@@ -70,11 +70,10 @@
         </div>
 
         <!-- client charts -->
-        <div class="the_frame mb client_charts content_month">
+        <div class="the_frame mb client_charts content_month when_loading">
             <form action="{{ route('client.date', ['client_id' => $client_id]) }}" id="client_month" method="get">
-
                 <div class="filters chart_filters border_bottom clearfix">
-                    <div class="column col_6 date_filter">
+                    <div class="column col_6 date_filter" id="default_publisher_logo">
                         @if(Auth::user()->companies()->count() > 1)
                             @foreach($publisher_logos as $logo)
                                 <div class="column col_2 date_filter">
@@ -84,6 +83,9 @@
                         @else
                             <a id="yearly_client" href="{{ route('client.year', ['client_id' => $client_id]) }}">1Y</a>
                         @endif
+                    </div>
+                    <div class="column col_6 date_filter" id="filtered_publisher_logo" style="display: none">
+
                     </div>
 
                     <div class="column col_2 m-b">
@@ -98,28 +100,33 @@
                 </div>
 
                 <div class="the_stats clearfix mb border_bottom mb" id="this_box">
-                    <div class="active_fill column col_4">
+                    <div class="active_fill column col_4" id="default_campaign_count">
                         <span class="small_faint uppercased weight_medium">Total Campaigns</span>
                         <h3>{{ count($all_campaigns) }}</h3>
                     </div>
+                    <div class="active_fill column col_4" id="filtered_campaign_count" style="display: none;">
 
-                    <div class="column col_4">
+                    </div>
+
+                    <div class="column col_4" id="default_total_spent">
                         <span class="small_faint uppercased weight_medium">Total Spend</span>
                         <h3>&#8358; {{ $total_spent ? number_format($total_spent, 2) : 0 }}</h3>
                     </div>
+                    <div class="column col_4" id="filtered_total_spent" style="display: none;">
 
-                    <div class="column col_4">
+                    </div>
+                    <div class="column col_4" id="default_brand_count">
                         <span class="small_faint uppercased weight_medium">Brands</span>
                         <h3>{{ count($all_brands) }}</h3>
+                    </div>
+                    <div class="column col_4" id="filtered_brand_count" style="display: none;">
 
-                        {{--<a href="" class="weight_medium small_font view_brands">View Brands</a>--}}
                     </div>
                 </div>
 
                 <div class="the_stats clearfix mb border_bottom mb" id="show_this" style="display: none">
 
                 </div>
-
 
                 <div class="main_chart padd">
                     <p><br></p><br>
@@ -131,7 +138,7 @@
         </div>
 
 
-        <div class="the_frame client_dets mb4">
+        <div class="the_frame client_dets mb4 when_loading">
 
             <div class="tab_header m4 border_bottom clearfix">
                 <a href="#history">Campaign History</a>
@@ -139,8 +146,7 @@
             </div>
 
             <div class="tab_contain">
-                <div class="tab_content" id="history">
-
+                <div class="tab_content default_campaign_table" id="history">
                     <table>
                         <tr>
                             <th>ID</th>
@@ -157,8 +163,8 @@
                                 <td>{{ $all_campaign->campaign_reference }}</td>
                                 <td><a href="{{ route('broadcaster.campaign.details', ['id' => $all_campaign->campaign_id]) }}">{{ $all_campaign->name }}</a></td>
                                 <td>{{ ucfirst($all_campaign->brand) }}</td>
-                                <td>{{ date('Y-m-d', strtotime($all_campaign->start_date)) }}</td>
-                                <td>{{ date('Y-m-d', strtotime($all_campaign->stop_date)) }}</td>
+                                <td>{{ date('D M j Y', strtotime($all_campaign->start_date)) }}</td>
+                                <td>{{ date('D M j Y', strtotime($all_campaign->stop_date)) }}</td>
                                 <td>&#8358;{{ Auth::user()->companies()->count() > 1 ? $all_campaign->total : $all_campaign->individual_publisher_total }}</td>
                                 <td>{{ Auth::user()->companies()->count() > 1 ? count((explode(',', $all_campaign->adslots_id))) : $all_campaign->adslots }}</td>
                                 @if($all_campaign->status === 'active')
@@ -173,12 +179,14 @@
                     </table>
 
                 </div>
+                <div class="tab_content filtered_campaign_table" id="history">
+                    
+                </div>
                 <!-- end -->
 
                 <!-- brand -->
                 <div class="tab_content" id="brands">
-
-                    <div class="similar_table p_t">
+                    <div class="similar_table p_t" id="default_brand_table">
                         <div class="filters clearfix mb">
                             <div class="right col_6 clearfix">
 
@@ -229,7 +237,9 @@
                     @endforeach
                     <!-- table item end -->
                     </div>
+                    <div class="similar_table p_t" id="filtered_brand_table" style="display: none;">
 
+                    </div>
                 </div>
                 <!-- end -->
             </div>
@@ -385,74 +395,177 @@
     <script src="https://code.highcharts.com/modules/export-data.js"></script>
     <script src="https://unpkg.com/flatpickr"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+    <script src="{{ asset('new_frontend/js/jquery.number.min.js') }}"></script>
     <script>
-        <?php echo "var campaign_date = ".$campaign_date. ";\n"; ?>
-        <?php echo "var campaign_amount = ".$campaign_payment. ";\n"; ?>
+        <?php echo "var campaign_dates = ".$campaign_date. ";\n"; ?>
+        <?php echo "var campaign_amounts = ".$campaign_payment. ";\n"; ?>
+        <?php echo "var companies =".Auth::user()->companies()->count().";\n"; ?>
         $(document).ready(function() {
-
             $('.publishers').select2();
 
             $('body').delegate("#publishers", "change", function () {
-                var company_id = $(this).val();
-                console.log(company_id);
+                var channels = $("#publishers").val();
+                var client_id = "<?php echo $client_id; ?>";
+                $('.when_loading').css({
+                    opacity: 0.1
+                });
+                $.ajax({
+                    url: '/client-details/'+client_id,
+                    method: 'GET',
+                    data: { channel_id : channels, client_id : client_id },
+                    success: function (data) {
+                        $("#default_publisher_logo").remove();
+                        $("#filtered_publisher_logo").show();
+                        $("#filtered_publisher_logo").html(filterPublishersLogo(data.publisher_logos));
+                        $("#default_campaign_count").remove();
+                        $("#filtered_campaign_count").show();
+                        $("#filtered_campaign_count").html(filteredCampaignCount(data.all_campaigns));
+                        $("#default_total_spent").remove();
+                        $("#filtered_total_spent").show();
+                        $("#filtered_total_spent").html(filteredTotalSpent(data.total_spent));
+                        $("#default_brand_count").remove();
+                        $("#filtered_brand_count").show();
+                        $("#filtered_brand_count").html(filteredBrandCount(data.all_brands));
+                        chart('container', JSON.parse(data.campaign_date), JSON.parse(data.campaign_payment));
+                        $(".default_campaign_table").remove();
+                        $(".filtered_campaign_table").show();
+                        $(".filtered_campaign_table").html(filteredCampaigTable(data.all_campaigns));
+                        $("#default_brand_table").remove();
+                        $("#filtered_brand_table").show();
+                        $("#filtered_brand_table").html(filterBrandTable(data.all_brands));
+                        $('.when_loading').css({
+                            opacity: 1
+                        })
+                    }
+
+                })
             })
+
+            if(companies > 1) {
+
+                function filterPublishersLogo(publisher_logos)
+                {
+                    var pulisherSection = '';
+                    $.each(publisher_logos, function (index, value) {
+                        pulisherSection += '<div class="column col_2 date_filter">\n' +
+                            '<p><img src="' + value + '" style="height: 50px; width: 50px;" alt=""></p>\n' +
+                            ' </div>';
+                    })
+                    return pulisherSection;
+                }
+
+                function filteredCampaignCount(campaigns)
+                {
+                    var campaignCountSection = '';
+                    campaignCountSection += '<span class="small_faint uppercased weight_medium">Total Campaigns</span>\n' +
+                                        ' <h3>'+campaigns.length+'</h3>'
+                    return campaignCountSection;
+                }
+
+                function filteredTotalSpent(total_spent)
+                {
+                    var totalSpentSection = '';
+                    totalSpentSection += '<span class="small_faint uppercased weight_medium">Total Spend</span>\n' +
+                        '                        <h3>&#8358;'+ $.number(total_spent, 2) +' </h3>';
+                    return totalSpentSection;
+                }
+
+                function filteredBrandCount(brands)
+                {
+                    var filteredBrandSection = '';
+                    filteredBrandSection += '<span class="small_faint uppercased weight_medium">Brands</span>\n' +
+                        '                        <h3>'+ brands.length +'</h3>';
+                    return filteredBrandSection;
+                }
+                
+                function filteredCampaigTable(campaigns)
+                {
+                    var filteredCampaignTable = '';
+                    filteredCampaignTable += '<table>\n' +
+                        '                        <tr>\n' +
+                        '                            <th>ID</th>\n' +
+                        '                            <th>Name</th>\n' +
+                        '                            <th>Brand</th>\n' +
+                        '                            <th>Start Date</th>\n' +
+                        '                            <th>End Date</th>\n' +
+                        '                            <th>Total Spent</th>\n' +
+                        '                            <th>Ad Slots</th>\n' +
+                        '                            <th>Status</th>\n' +
+                        '                        </tr>';
+                    $.each(campaigns, function (index, value) {
+                        filteredCampaignTable += '<tr>\n' +
+                            '                                <td>'+ value.campaign_reference +'</td>\n' +
+                            '                                <td><a href="/campaign/campaign-details/'+value.campaign_id+'">'+ value.name +'</a></td>\n' +
+                            '                                <td>'+ value.brands +'</td>\n' +
+                            '                                <td>'+ (new Date(value.start_date)).toDateString() +'</td>\n' +
+                            '                                <td>'+ (new Date(value.stop_date)).toDateString() +'</td>\n' +
+                            '                                <td>&#8358;'+ $.number(value.total, 2) +'</td>\n' +
+                            '                                <td>'+ value.adslots_id.split(',').length +'</td>';
+                            if(value.status == 'active'){
+                                filteredCampaignTable += '<td><span class="span_state status_success">Active</span></td>'
+                            }else if(value.status == 'pending'){
+                                filteredCampaignTable += '<td><span class="span_state status_pending">Pending</span></td>'
+                            }else{
+                                filteredCampaignTable += '<td><span class="span_state status_expired">Expired</span></td>'
+                            }
+                            filteredCampaignTable+='</tr>';
+                    })
+                    filteredCampaignTable +='</table>';
+                    return filteredCampaignTable;
+                }
+
+                function filterBrandTable(brands)
+                {
+                    var filteredBrandTable = ''
+                    filteredBrandTable += '<div class="filters clearfix mb">\n' +
+                        '                            <div class="right col_6 clearfix">\n' +
+                        '\n' +
+                        '                            </div>\n' +
+                        '                        </div>\n' +
+                        '                        <!-- table header -->\n' +
+                        '                        <div class="_table_header clearfix m-b">\n' +
+                        '                            <span class="weight_medium small_faint block_disp column col_4 padd">Brand</span>\n' +
+                        '                            <span class="weight_medium small_faint block_disp column col_2">All Campaigns</span>\n' +
+                        '                            <span class="weight_medium small_faint block_disp column col_2">Total Expense</span>\n' +
+                        '                            <span class="weight_medium small_faint block_disp column col_3">Last Campaign</span>\n' +
+                        '                            <span class="weight_medium block_disp column col_1 color_trans">.</span>\n' +
+                        '                        </div>';
+                        $.each(brands, function (index, value) {
+                            filteredBrandTable += '<div class="_table_item the_frame clearfix">\n' +
+                                '                                <div class="padd column col_4">\n' +
+                                '                                    <span class="client_ava"><img src="'+value.image_url+'"></span>\n' +
+                                '                                    <p>'+value.brand+'</p>\n' +
+                                '                                    <span class="small_faint">Added '+ (new Date(value.date)).toDateString() +'</span>\n' +
+                                '                                </div>\n' +
+                                '                                <div class="column col_2">'+ value.campaigns +'</div>\n' +
+                                '                                <div class="column col_2">&#8358; '+ $.number(value.total,2) +' </div>\n' +
+                                '                                <div class="column col_3">'+ value.last_campaign +'</div>\n' +
+                                '                                <div class="column col_1">\n' +
+                                '                                <span class="more_icon">\n' +
+                                '                                    <!-- more links -->\n' +
+                                '                                    <div class="list_more">\n' +
+                                '                                        <span class="more_icon"></span>\n' +
+                                '\n' +
+                                '                                        <div class="more_more">\n' +
+                                '                                            <a href="/brands/details/'+value.id+'/'+value.client_id+'">Details</a>\n'
+                                '                                        </div>\n' +
+                                '                                    </div>\n' +
+                                '                                </span>\n' +
+                                '                                </div>\n' +
+                                '                            </div>'
+                        });
+                        return filteredBrandTable;
+                }
+
+            }
+
 
             flatpickr(".flatpickr", {
                 altInput: true,
             });
 
             //default chart
-            Highcharts.chart('container', {
-                chart: {
-                    type: 'area'
-                },
-                xAxis: {
-                    categories: campaign_date
-                },
-                title:{
-                    text:''
-                },
-                yAxis: {
-                    title: {
-                        text: ''
-                    },
-                    labels: {
-                        formatter: function () {
-                            return this.value / 1000 + 'k';
-                        }
-                    }
-                },
-                tooltip: {
-                    pointFormat: '<b>{series.name} {point.y:,.0f}</b><br/> '
-                },
-                plotOptions: {
-                    area: {
-                        pointStart: 0,
-                        marker: {
-                            enabled: false,
-                            symbol: 'circle',
-                            radius: 2,
-                            states: {
-                                hover: {
-                                    enabled: true
-                                }
-                            }
-                        }
-                    }
-                },
-                credits: {
-                    enabled: false
-                },
-                title:{
-                    text:''
-                },
-                exporting: { enabled: false },
-                series: [{
-                    name: 'Total Budget',
-                    color: '#00C4CA',
-                    data: campaign_amount,
-                }]
-            });
+            chart('container', campaign_dates, campaign_amounts);
 
             //filter by date
             $("#filterDate").click(function () {
@@ -494,56 +607,7 @@
                     $('#show_this').show();
                     $('#show_this').html(big_html);
 
-
-                    Highcharts.chart('container', {
-                        chart: {
-                            type: 'area'
-                        },
-                        xAxis: {
-                            categories: data.monthly_date
-                        },
-                        title:{
-                            text:''
-                        },
-                        yAxis: {
-                            title: {
-                                text: ''
-                            },
-                            labels: {
-                                formatter: function () {
-                                    return this.value / 1000 + 'k';
-                                }
-                            }
-                        },
-                        tooltip: {
-                            pointFormat: '<b>{series.name} {point.y:,.0f}</b><br/> '
-                        },
-                        plotOptions: {
-                            area: {
-                                pointStart: 0,
-                                marker: {
-                                    enabled: false,
-                                    symbol: 'circle',
-                                    radius: 2,
-                                    states: {
-                                        hover: {
-                                            enabled: true
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        credits: {
-                            enabled: false
-                        },
-                        exporting: { enabled: false },
-                        series: [{
-                            name: 'Total Budget',
-                            color: '#00C4CA',
-                            data: data.monthly_total,
-                        }]
-                    });
-
+                    chart('container', data.monthly_date, data.monthly_total);
 
                 })
             })
@@ -588,62 +652,66 @@
                     $("#default").removeClass('active');
                     $("#yearly_client").addClass('active');
 
-                    Highcharts.chart('container', {
-                        chart: {
-                            type: 'area'
-                        },
-                        xAxis: {
-                            categories: data.monthly_date
-                        },
-                        title:{
-                            text:''
-                        },
-                        yAxis: {
-                            title: {
-                                text: ''
-                            },
-                            labels: {
-                                formatter: function () {
-                                    return this.value / 1000 + 'k';
-                                }
-                            }
-                        },
-                        tooltip: {
-                            pointFormat: '<b>{series.name} {point.y:,.0f}</b><br/> '
-                        },
-                        plotOptions: {
-                            area: {
-                                pointStart: 0,
-                                marker: {
-                                    enabled: false,
-                                    symbol: 'circle',
-                                    radius: 2,
-                                    states: {
-                                        hover: {
-                                            enabled: true
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        credits: {
-                            enabled: false
-                        },
-                        title:{
-                            text:''
-                        },
-                        exporting: { enabled: false },
-                        series: [{
-                            name: 'Total Budget',
-                            color: '#00C4CA',
-                            data: data.monthly_total,
-                        }]
-                    });
-
+                    chart('container', data.monthly_date, data.monthly_total);
 
                 })
 
             })
+
+            //chart function
+            function chart(container, campaign_dates, campaign_amounts){
+                Highcharts.chart(container, {
+                    chart: {
+                        type: 'area'
+                    },
+                    xAxis: {
+                        categories: campaign_dates
+                    },
+                    title:{
+                        text:''
+                    },
+                    yAxis: {
+                        title: {
+                            text: ''
+                        },
+                        labels: {
+                            formatter: function () {
+                                return this.value / 1000 + 'k';
+                            }
+                        }
+                    },
+                    tooltip: {
+                        pointFormat: '<b>{series.name} {point.y:,.0f}</b><br/> '
+                    },
+                    plotOptions: {
+                        area: {
+                            pointStart: 0,
+                            marker: {
+                                enabled: false,
+                                symbol: 'circle',
+                                radius: 2,
+                                states: {
+                                    hover: {
+                                        enabled: true
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    credits: {
+                        enabled: false
+                    },
+                    title:{
+                        text:''
+                    },
+                    exporting: { enabled: false },
+                    series: [{
+                        name: 'Total Budget',
+                        color: '#00C4CA',
+                        data: campaign_amounts,
+                    }]
+                });
+            }
 
         });
 
@@ -687,14 +755,12 @@
 
             $(".brands_name").keyup(function () {
                 var brand_name = $("input#brands_name").val();
-                console.log(brand_name);
                 var url = '/check-brand-existence';
                 $.ajax({
                     url : url,
                     method : 'GET',
                     data: {brand_name: brand_name},
                     success: function (data) {
-                        console.log(data);
                         if(data === 'already_exists'){
                             toastr.info('This brand already exists on our platform, by continuing this process means you are aware of its existence');
                         }
@@ -716,7 +782,6 @@
                         cache : false,
                         data: {filename : file.name, folder: 'brand-images/'},
                         success: function (data) {
-                            console.log(data);
                             $.ajax({
                                 xhr: function() {
                                     var xhr = new window.XMLHttpRequest();
