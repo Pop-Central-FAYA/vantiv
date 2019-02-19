@@ -2,39 +2,49 @@
 
 namespace Vanguard\Http\Controllers;
 
+use Vanguard\Http\Controllers\Traits\CompanyIdTrait;
 use Vanguard\Libraries\Api;
 use Illuminate\Http\Request;
 use Vanguard\Libraries\Utilities;
+use Vanguard\Services\Brands\CompanyBrands;
+use Vanguard\Services\Company\CompanyList;
+use Vanguard\Services\Discount\BrandDiscountList;
+use Vanguard\Services\Discount\CompanyDiscountList;
+use Vanguard\Services\Discount\DayPartDiscountList;
+use Vanguard\Services\Discount\PriceDiscountList;
+use Vanguard\Services\Discount\TimeDiscountList;
+use Vanguard\Services\PreloadedData\PreloadedData;
 
 class DiscountController extends Controller
 {
+
+    use CompanyIdTrait;
+
     public function index()
     {
-        $broadcaster_id = \Session::get('broadcaster_id');
-        $hourly_ranges = Api::get_hourly_ranges();
-        $day_parts = Api::get_dayParts();
-        $types = Api::get_discountTypes();
+        $preloaded_data_service = new PreloadedData();
+        $types = $preloaded_data_service->getDiscountTypes();
+        $agencies_service = new CompanyList($this->companyId());
+        $brand_service = new CompanyBrands($this->companyId());
 
-        $agencies = Utilities::switch_db('reports')->select("SELECT u.id as user_id, a_g.id as agency_id, CONCAT(u.firstname,' ', u.lastname) as name
-                                                                FROM agents as a_g INNER JOIN users as u ON u.id = a_g.user_id");
+        $discount_company_list_service = new CompanyDiscountList($this->companyId(), $types['Agency']);
+        $discount_brand_list_service = new BrandDiscountList($this->companyId(), $types['Brands']);
+        $discount_time_list_service = new TimeDiscountList($this->companyId(), $types['Time']);
+        $discount_dayparts_service = new DayPartDiscountList($this->companyId(), $types['Day Part']);
+        $discount_price_service = new PriceDiscountList($this->companyId(), $types['Price']);
 
-        $brands = Utilities::getBrands($broadcaster_id);
+        return view('broadcaster_module.discounts.index')
+                        ->with('agency_discounts', $discount_company_list_service->getDiscountOfCompanyTypeAgency())
+                        ->with('brand_discounts', $discount_brand_list_service->getBrandDiscountList())
+                        ->with('time_discounts', $discount_time_list_service->getTimeDiscount())
+                        ->with('daypart_discounts', $discount_dayparts_service->getDayPartDiscountList())
+                        ->with('price_discounts', $discount_price_service->getPriceDiscountList())
+                        ->with('hourly_ranges', $preloaded_data_service->getHourlyRanges())
+                        ->with('day_parts', $preloaded_data_service->getDayParts())
+                        ->with('types', $preloaded_data_service->getDiscountTypes())
+                        ->with('agencies', $agencies_service->getCompanyListWithTypeAgency())
+                        ->with('brands', $brand_service->getBrandCreatedByCompany());
 
-        $agency_discounts = Api::get_agency_discounts($types['Agency'], $broadcaster_id);
-        $brand_discounts = Api::get_brand_discounts($types['Brands'], $broadcaster_id);
-        $time_discounts = Api::get_time_discounts($types['Time'], $broadcaster_id);
-        $daypart_discounts = Api::get_dayparts_discount($types['Day Part'], $broadcaster_id);
-        $price_discounts = Api::getPriceDiscount($types['Price'], $broadcaster_id);
-
-
-
-        return view('broadcaster_module.discounts.index',
-            compact(
-                'agency_discounts', 'brand_discounts', 'time_discounts',
-                'daypart_discounts', 'price_discounts', 'pslot_discounts',
-                'hourly_ranges','day_parts', 'types', 'agencies', 'brands'
-            )
-        );
     }
 
     public function store(Request $request)

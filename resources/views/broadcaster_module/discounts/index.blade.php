@@ -5,7 +5,11 @@
 @stop
 
 @section('content')
-    @include('partials.new-frontend.broadcaster.inventory_management.sidebar')
+    @if(Auth::user()->companies->count() == 1)
+        @include('partials.new-frontend.broadcaster.inventory_management.sidebar')
+    @else
+        @include('partials.new-frontend.broadcaster.campaign_management.sidebar')
+    @endif
 
     <!-- main container -->
     <div class="main_contain">
@@ -40,28 +44,16 @@
 
                     <!-- filter -->
                     <div class="filters clearfix">
-                        <div class="column col_7">
-                            <div class="header_search col_6">
-                                <form>
-                                    <input type="text" placeholder="Search...">
-                                </form>
-                            </div>
+                        <div class="column col_7 clearfix">
                         </div>
 
                         <div class="column col_5 clearfix">
-
+                            @if(Auth::user()->companies()->count() == 1)
                             <div class="col_6 right align_right">
                                 <a href="#new_discount_agency" class="btn small_btn modal_click"><span class="_plus"></span> New Discount</a>
                             </div>
+                            @endif
 
-                            <div class="right col_4">
-                                <div class="select_wrap">
-                                    <select>
-                                        <option>Filter</option>
-                                        <option>This Month</option>
-                                    </select>
-                                </div>
-                            </div>
 
                         </div>
 
@@ -77,6 +69,9 @@
                             <span class="small_faint block_disp column col_2">Discount Amount</span>
                             <span class="small_faint block_disp column col_2">Amount Start Date</span>
                             <span class="small_faint block_disp column col_2">Amount Stop Date</span>
+                            @if(Auth::user()->companies()->count() > 1)
+                                <span class="small_faint block_disp column col_1">Station</span>
+                            @endif
                             <span class="block_disp column col_1 color_trans">.</span>
                         </div>
 
@@ -90,19 +85,22 @@
                                 <div class="column col_2">{{ $agency_discount->value }}</div>
                                 <div class="column col_2"> {{ date('Y-m-d', strtotime($agency_discount->value_start_date)) }}</div>
                                 <div class="column col_2"> {{ date('Y-m-d', strtotime($agency_discount->value_stop_date)) }}</div>
-                                <div class="column col_1">
+                                @if(Auth::user()->companies()->count() > 1)
+                                    <div class="column col_1"> {{ (new \Vanguard\Services\Company\CompanyDetails($agency_discount->broadcaster))->getCompanyDetails()->name }} </div>
+                                @else
+                                    <div class="column col_1">
 
-                                    <!-- more links -->
-                                    <div class="list_more">
-                                        <span class="more_icon"></span>
-
-                                        <div class="more_more">
-                                            <a href="#edit_discount_agency{{ $agency_discount->id }}" class="modal_click">Edit</a>
-                                            <a href="#delete_discount_agency{{ $agency_discount->id }}" class="modal_click color_red">Delete</a>
+                                        <!-- more links -->
+                                        <div class="list_more">
+                                            <span class="more_icon"></span>
+                                            <div class="more_more">
+                                                <a href="#edit_discount_agency{{ $agency_discount->id }}" class="modal_click">Edit</a>
+                                                <a href="#delete_discount_agency{{ $agency_discount->id }}" class="modal_click color_red">Delete</a>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                </div>
+                                    </div>
+                                @endif
 
                             </div>
                         @endforeach
@@ -118,28 +116,16 @@
 
                     <!-- filter -->
                     <div class="filters clearfix">
-                        <div class="column col_7">
-                            <div class="header_search col_6">
-                                <form>
-                                    <input type="text" placeholder="Search...">
-                                </form>
-                            </div>
+
+                        <div class="column col_7 clearfix">
                         </div>
-
                         <div class="column col_5 clearfix">
-
+                            @if(Auth::user()->companies()->count() == 1)
                             <div class="col_6 right align_right">
                                 <a href="#new_discount_brand" class="btn small_btn modal_click"><span class="_plus"></span> New Discount</a>
                             </div>
+                            @endif
 
-                            <div class="right col_4">
-                                <div class="select_wrap">
-                                    <select>
-                                        <option>Filter</option>
-                                        <option>This Month</option>
-                                    </select>
-                                </div>
-                            </div>
 
                         </div>
 
@@ -156,6 +142,9 @@
                             <span class="small_faint block_disp column col_2">Discount Amount</span>
                             <span class="small_faint block_disp column col_2">Amount Start Date</span>
                             <span class="small_faint block_disp column col_2">Amount Stop Date</span>
+                            @if(Auth::user()->companies()->count() > 1)
+                                <span class="small_faint block_disp column col_1">Station</span>
+                            @endif
                             <span class="block_disp column col_1 color_trans">.</span>
                         </div>
 
@@ -169,12 +158,14 @@
                                 <div class="column col_2">{{ $brand_discount->value }}</div>
                                 <div class="column col_2"> {{ date('Y-m-d', strtotime($brand_discount->value_start_date)) }}</div>
                                 <div class="column col_2"> {{ date('Y-m-d', strtotime($brand_discount->value_stop_date)) }}</div>
+                                @if(Auth::user()->companies()->count() > 1)
+                                    <div class="column col_1"> {{ (new \Vanguard\Services\Company\CompanyDetails($brand_discount->broadcaster))->getCompanyDetails()->name }} </div>
+                                @else
                                 <div class="column col_1">
 
                                     <!-- more links -->
                                     <div class="list_more">
                                         <span class="more_icon"></span>
-
                                         <div class="more_more">
                                             <a href="#edit_discount_brand{{ $brand_discount->id }}" class="modal_click">Edit</a>
                                             <a href="#delete_discount_brand{{ $brand_discount->id }}" class="modal_click color_red">Delete</a>
@@ -182,7 +173,7 @@
                                     </div>
 
                                 </div>
-
+                                @endif
                             </div>
                     @endforeach
                     <!-- table item end -->
@@ -197,28 +188,14 @@
 
                     <!-- filter -->
                     <div class="filters clearfix">
-                        <div class="column col_7">
-                            <div class="header_search col_6">
-                                <form>
-                                    <input type="text" placeholder="Search...">
-                                </form>
-                            </div>
+                        <div class="column col_7 clearfix">
                         </div>
-
                         <div class="column col_5 clearfix">
-
+                            @if(Auth::user()->companies()->count() == 1)
                             <div class="col_6 right align_right">
                                 <a href="#new_discount_time" class="btn small_btn modal_click"><span class="_plus"></span> New Discount</a>
                             </div>
-
-                            <div class="right col_4">
-                                <div class="select_wrap">
-                                    <select>
-                                        <option>Filter</option>
-                                        <option>This Month</option>
-                                    </select>
-                                </div>
-                            </div>
+                            @endif
 
                         </div>
 
@@ -235,6 +212,9 @@
                             <span class="small_faint block_disp column col_2">Discount Amount</span>
                             <span class="small_faint block_disp column col_2">Amount Start Date</span>
                             <span class="small_faint block_disp column col_2">Amount Stop Date</span>
+                            @if(Auth::user()->companies()->count() > 1)
+                                <span class="small_faint block_disp column col_1">Station</span>
+                            @endif
                             <span class="block_disp column col_1 color_trans">.</span>
                         </div>
 
@@ -248,12 +228,14 @@
                                 <div class="column col_2">{{ $time_discount->value }}</div>
                                 <div class="column col_2"> {{ date('Y-m-d', strtotime($time_discount->value_start_date)) }}</div>
                                 <div class="column col_2"> {{ date('Y-m-d', strtotime($time_discount->value_stop_date)) }}</div>
+                                @if(Auth::user()->companies()->count() > 1)
+                                    <div class="column col_1"> {{ (new \Vanguard\Services\Company\CompanyDetails($time_discount->broadcaster))->getCompanyDetails()->name }} </div>
+                                @else
                                 <div class="column col_1">
 
                                     <!-- more links -->
                                     <div class="list_more">
                                         <span class="more_icon"></span>
-
                                         <div class="more_more">
                                             <a href="#edit_discount_time{{ $time_discount->id }}" class="modal_click">Edit</a>
                                             <a href="#delete_discount_time{{ $time_discount->id }}" class="modal_click color_red">Delete</a>
@@ -261,7 +243,7 @@
                                     </div>
 
                                 </div>
-
+                                @endif
                             </div>
                     @endforeach
                     <!-- table item end -->
@@ -276,28 +258,15 @@
 
                     <!-- filter -->
                     <div class="filters clearfix">
-                        <div class="column col_7">
-                            <div class="header_search col_6">
-                                <form>
-                                    <input type="text" placeholder="Search...">
-                                </form>
-                            </div>
+
+                        <div class="column col_7 clearfix">
                         </div>
-
                         <div class="column col_5 clearfix">
-
+                            @if(Auth::user()->companies()->count() == 1)
                             <div class="col_6 right align_right">
                                 <a href="#new_discount_day" class="btn small_btn modal_click"><span class="_plus"></span> New Discount</a>
                             </div>
-
-                            <div class="right col_4">
-                                <div class="select_wrap">
-                                    <select>
-                                        <option>Filter</option>
-                                        <option>This Month</option>
-                                    </select>
-                                </div>
-                            </div>
+                            @endif
 
                         </div>
 
@@ -314,6 +283,9 @@
                             <span class="small_faint block_disp column col_2">Discount Amount</span>
                             <span class="small_faint block_disp column col_2">Amount Start Date</span>
                             <span class="small_faint block_disp column col_2">Amount Stop Date</span>
+                            @if(Auth::user()->companies()->count() > 1)
+                                <span class="small_faint block_disp column col_1">Station</span>
+                            @endif
                             <span class="block_disp column col_1 color_trans">.</span>
                         </div>
 
@@ -327,12 +299,14 @@
                                 <div class="column col_2">{{ $daypart_discount->value }}</div>
                                 <div class="column col_2"> {{ date('Y-m-d', strtotime($daypart_discount->value_start_date)) }}</div>
                                 <div class="column col_2"> {{ date('Y-m-d', strtotime($daypart_discount->value_stop_date)) }}</div>
+                                @if(Auth::user()->companies()->count() > 1)
+                                    <div class="column col_1"> {{ (new \Vanguard\Services\Company\CompanyDetails($daypart_discount->broadcaster))->getCompanyDetails()->name }} </div>
+                                @else
                                 <div class="column col_1">
 
                                     <!-- more links -->
                                     <div class="list_more">
                                         <span class="more_icon"></span>
-
                                         <div class="more_more">
                                             <a href="#edit_discount_dayparts{{ $daypart_discount->id }}" class="modal_click">Edit</a>
                                             <a href="#delete_discount_daypart{{ $daypart_discount->id }}" class="modal_click color_red">Delete</a>
@@ -340,7 +314,7 @@
                                     </div>
 
                                 </div>
-
+                                @endif
                             </div>
                     @endforeach
                     <!-- table item end -->
@@ -355,28 +329,14 @@
 
                     <!-- filter -->
                     <div class="filters clearfix">
-                        <div class="column col_7">
-                            <div class="header_search col_6">
-                                <form>
-                                    <input type="text" placeholder="Search...">
-                                </form>
-                            </div>
+                        <div class="column col_7 clearfix">
                         </div>
-
                         <div class="column col_5 clearfix">
-
+                            @if(Auth::user()->companies()->count() == 1)
                             <div class="col_6 right align_right">
                                 <a href="#new_discount_price" class="btn small_btn modal_click"><span class="_plus"></span> New Discount</a>
                             </div>
-
-                            <div class="right col_4">
-                                <div class="select_wrap">
-                                    <select>
-                                        <option>Filter</option>
-                                        <option>This Month</option>
-                                    </select>
-                                </div>
-                            </div>
+                            @endif
 
                         </div>
 
@@ -393,6 +353,9 @@
                             <span class="small_faint block_disp column col_2">Discount Amount</span>
                             <span class="small_faint block_disp column col_2">Amount Start Date</span>
                             <span class="small_faint block_disp column col_2">Amount Stop Date</span>
+                            @if(Auth::user()->companies()->count() > 1)
+                                <span class="small_faint block_disp column col_1">Station</span>
+                            @endif
                             <span class="block_disp column col_1 color_trans">.</span>
                         </div>
 
@@ -406,12 +369,14 @@
                                 <div class="column col_2">{{ $price_discount->value }}</div>
                                 <div class="column col_2"> {{ date('Y-m-d', strtotime($price_discount->value_start_date)) }}</div>
                                 <div class="column col_2"> {{ date('Y-m-d', strtotime($price_discount->value_stop_date)) }}</div>
+                                @if(Auth::user()->companies()->count() > 1)
+                                    <div class="column col_1"> {{ (new \Vanguard\Services\Company\CompanyDetails($price_discount->broadcaster))->getCompanyDetails()->name }} </div>
+                                @else
                                 <div class="column col_1">
 
                                     <!-- more links -->
                                     <div class="list_more">
                                         <span class="more_icon"></span>
-
                                         <div class="more_more">
                                             <a href="#edit_discount_price{{ $price_discount->id }}" class="modal_click">Edit</a>
                                             <a href="#delete_discount_price{{ $price_discount->id }}" class="modal_click color_red">Delete</a>
@@ -419,9 +384,9 @@
                                     </div>
 
                                 </div>
-
+                                @endif
                             </div>
-                    @endforeach
+                        @endforeach
                     <!-- table item end -->
                     </div>
 
@@ -435,7 +400,7 @@
         </div>
 
 
-
+    @if(Auth::user()->companies()->count() == 1)
         <!-- end discount modal -->
         {{--add modal--}}
         @include('broadcaster_module.discounts.add_modal')
@@ -445,7 +410,7 @@
 
         {{--delete modal--}}
         @include('broadcaster_module.discounts.delete_modal')
-
+    @endif
 
 
     </div><!-- main contain -->

@@ -5,6 +5,7 @@ namespace Vanguard\Services\PreloadedData;
 use Vanguard\Models\CampaignChannel;
 use Vanguard\Models\Day;
 use Vanguard\Models\DayPart;
+use Vanguard\Models\DiscountType;
 use Vanguard\Models\HourlyRange;
 use Vanguard\Models\Region;
 use Vanguard\Models\Sector;
@@ -51,5 +52,17 @@ class PreloadedData
     public function getRegions()
     {
         return Region::all();
+    }
+
+    public function getDiscountTypes()
+    {
+        $discount_types = [];
+        $types =  DiscountType::all();
+        foreach ($types as $type){
+            $key = $type->value;
+            $discount_types[$key] = $type->id;
+        }
+
+        return $discount_types;
     }
 }
