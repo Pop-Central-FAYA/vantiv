@@ -100,7 +100,7 @@ class WalkinsController extends Controller
             return redirect()->back();
         }
         try{
-            Utilities::switch_db('api')->transaction(function () use($request, $brand_slug, $client_id, $company_id) {
+            \DB::transaction(function () use($request, $brand_slug, $client_id, $company_id) {
                 $user_service = new CreateUser($request->first_name,$request->last_name,$request->email, $request->username,
                     $request->phone, '', 'walkins' );
                 $user = $user_service->createUser();
@@ -141,7 +141,7 @@ class WalkinsController extends Controller
         $walkin_details_service = new ClientDetails($client_id, null);
         $walkin_details = $walkin_details_service->run();
         try{
-            Utilities::switch_db('api')->transaction(function () use ($walkin_details, $client_id, $request) {
+            \DB::transaction(function () use ($walkin_details, $client_id, $request) {
                 $update_walkin_service = new UpdateWalkIns($request->company_logo, $request->company_name, $request->address, $client_id);
                 $update_walkin_service->updateWalkIns();
                 $update_user_service = new UpdateUser($walkin_details->user_id, $request->first_name, $request->last_name, $request->phone,
