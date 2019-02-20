@@ -279,6 +279,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('discount/{discount}/update', ['as' => 'discount.update', 'uses' => 'DiscountController@update']);
     Route::get('discount/{discount}/delete', ['as' => 'discount.delete', 'uses' => 'DiscountController@destroy']);
 
+    Route::get('discount/filter', 'DiscountController@filterByPublisher');
+
     /**
      * MPOs
      */

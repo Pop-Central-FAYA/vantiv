@@ -17,7 +17,8 @@ class DayPartDiscountList
     {
         return \DB::table('discounts')
                     ->join('dayParts', 'dayParts.id', '=', 'discounts.discount_type_value')
-                    ->select('discounts.*', 'dayParts.day_parts AS day_part')
+                    ->join('companies', 'companies.id', '=', 'discounts.broadcaster')
+                    ->select('discounts.*', 'dayParts.day_parts AS day_part', 'companies.name AS station')
                     ->when(is_array($this->company_id), function($query) {
                         return $query->whereIn('discounts.broadcaster', $this->company_id);
                     })

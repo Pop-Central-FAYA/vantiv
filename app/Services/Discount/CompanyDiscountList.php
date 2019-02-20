@@ -19,7 +19,8 @@ class CompanyDiscountList
                     ->join('companies', 'companies.id', '=', 'discounts.discount_type_value')
                     ->join('company_user', 'company_user.company_id', '=', 'companies.id')
                     ->join('users', 'users.id', '=', 'company_user.user_id')
-                    ->select('discounts.*')
+                    ->join('companies AS c', 'c.id', '=', 'discounts.broadcaster')
+                    ->select('discounts.*', 'c.name AS station')
                     ->selectRaw("CONCAT(users.firstname,' ',users.lastname) AS name")
                     ->when(is_array($this->company_id), function ($query) {
                         return $query->whereIn('discounts.broadcaster', $this->company_id);

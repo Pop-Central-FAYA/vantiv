@@ -12,6 +12,7 @@ use Vanguard\Services\Discount\BrandDiscountList;
 use Vanguard\Services\Discount\CompanyDiscountList;
 use Vanguard\Services\Discount\DayPartDiscountList;
 use Vanguard\Services\Discount\PriceDiscountList;
+use Vanguard\Services\Discount\PublisherDiscountList;
 use Vanguard\Services\Discount\TimeDiscountList;
 use Vanguard\Services\PreloadedData\PreloadedData;
 
@@ -24,27 +25,55 @@ class DiscountController extends Controller
     {
         $preloaded_data_service = new PreloadedData();
         $types = $preloaded_data_service->getDiscountTypes();
-        $agencies_service = new CompanyList($this->companyId());
-        $brand_service = new CompanyBrands($this->companyId());
-
-        $discount_company_list_service = new CompanyDiscountList($this->companyId(), $types['Agency']);
-        $discount_brand_list_service = new BrandDiscountList($this->companyId(), $types['Brands']);
-        $discount_time_list_service = new TimeDiscountList($this->companyId(), $types['Time']);
-        $discount_dayparts_service = new DayPartDiscountList($this->companyId(), $types['Day Part']);
-        $discount_price_service = new PriceDiscountList($this->companyId(), $types['Price']);
-
+        $discount_data = $this->discountData($this->companyId(), $types);
         return view('broadcaster_module.discounts.index')
-                        ->with('agency_discounts', $discount_company_list_service->getDiscountOfCompanyTypeAgency())
-                        ->with('brand_discounts', $discount_brand_list_service->getBrandDiscountList())
-                        ->with('time_discounts', $discount_time_list_service->getTimeDiscount())
-                        ->with('daypart_discounts', $discount_dayparts_service->getDayPartDiscountList())
-                        ->with('price_discounts', $discount_price_service->getPriceDiscountList())
+                        ->with('agency_discounts', $discount_data['discount_company_list_service']->getDiscountOfCompanyTypeAgency())
+                        ->with('brand_discounts', $discount_data['discount_brand_list_service']->getBrandDiscountList())
+                        ->with('time_discounts', $discount_data['discount_time_list_service']->getTimeDiscount())
+                        ->with('daypart_discounts', $discount_data['discount_dayparts_service']->getDayPartDiscountList())
+                        ->with('price_discounts', $discount_data['discount_price_service']->getPriceDiscountList())
                         ->with('hourly_ranges', $preloaded_data_service->getHourlyRanges())
                         ->with('day_parts', $preloaded_data_service->getDayParts())
                         ->with('types', $preloaded_data_service->getDiscountTypes())
-                        ->with('agencies', $agencies_service->getCompanyListWithTypeAgency())
-                        ->with('brands', $brand_service->getBrandCreatedByCompany());
+                        ->with('agencies', $discount_data['agencies_service']->getCompanyListWithTypeAgency())
+                        ->with('brands', $discount_data['brand_service']->getBrandCreatedByCompany())
+                        ->with('publishers_id', \Auth::user()->companies()->count() > 1 ? $discount_data['publishers_discount_service']->getPublisherDiscounts() : '');
 
+    }
+
+    public function filterByPublisher()
+    {
+        $preloaded_data_service = new PreloadedData();
+        $types = $preloaded_data_service->getDiscountTypes();
+        $discount_data = $this->discountData(\request()->channel_id, $types);
+        return ['agency_discounts' => $discount_data['discount_company_list_service']->getDiscountOfCompanyTypeAgency(),
+                'brand_discounts' => $discount_data['discount_brand_list_service']->getBrandDiscountList(),
+                'time_discounts' => $discount_data['discount_time_list_service']->getTimeDiscount(),
+                'daypart_discounts' => $discount_data['discount_dayparts_service']->getDayPartDiscountList(),
+                'price_discounts' => $discount_data['discount_price_service']->getPriceDiscountList(),
+                'hourly_ranges' => $preloaded_data_service->getHourlyRanges(),
+                'day_parts' => $preloaded_data_service->getDayParts(),
+                'types' => $preloaded_data_service->getDiscountTypes(),
+                'agencies' => $discount_data['agencies_service']->getCompanyListWithTypeAgency(),
+                'brands' => $discount_data['brand_service']->getBrandCreatedByCompany(),
+                'publishers_id' => $discount_data['publishers_discount_service']->getPublisherDiscounts()
+            ];
+    }
+
+    public function discountData($company_id, $types)
+    {
+        $publishers_discount_service = new PublisherDiscountList($company_id);
+        $discount_company_list_service = new CompanyDiscountList($company_id, $types['Agency']);
+        $discount_brand_list_service = new BrandDiscountList($company_id, $types['Brands']);
+        $discount_time_list_service = new TimeDiscountList($company_id, $types['Time']);
+        $discount_dayparts_service = new DayPartDiscountList($company_id, $types['Day Part']);
+        $discount_price_service = new PriceDiscountList($company_id, $types['Price']);
+        $agencies_service = new CompanyList($this->companyId());
+        $brand_service = new CompanyBrands($this->companyId());
+        return ['publishers_discount_service' => $publishers_discount_service, 'discount_company_list_service' => $discount_company_list_service,
+            'discount_brand_list_service' => $discount_brand_list_service, 'discount_time_list_service' => $discount_time_list_service,
+            'discount_dayparts_service' => $discount_dayparts_service, 'discount_price_service' => $discount_price_service,
+            'agencies_service' => $agencies_service, 'brand_service' => $brand_service];
     }
 
     public function store(Request $request)

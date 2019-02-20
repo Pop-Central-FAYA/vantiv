@@ -17,7 +17,8 @@ class TimeDiscountList
     {
         return \DB::table('discounts')
                     ->join('hourlyRanges', 'hourlyRanges.id', '=', 'discounts.discount_type_value')
-                    ->select('discounts.*', 'hourlyRanges.time_range AS hourly_range')
+                    ->join('companies', 'companies.id', '=', 'discounts.broadcaster')
+                    ->select('discounts.*', 'hourlyRanges.time_range AS hourly_range', 'companies.name AS station')
                     ->when(is_array($this->company_id), function ($query) {
                         return $query->whereIn('discounts.broadcaster', $this->company_id);
                     })

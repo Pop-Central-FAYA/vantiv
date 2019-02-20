@@ -17,7 +17,8 @@ class BrandDiscountList
     {
         return \DB::table('discounts')
                     ->join('brands', 'brands.id', '=', 'discounts.discount_type_value')
-                    ->select('discounts.*', 'brands.name AS name')
+                    ->join('companies', 'companies.id', '=', 'discounts.broadcaster')
+                    ->select('discounts.*', 'brands.name AS name', 'companies.name AS station')
                     ->when(is_array($this->company_id), function ($query) {
                         return $query->whereIn('discounts.broadcaster', $this->company_id);
                     })
