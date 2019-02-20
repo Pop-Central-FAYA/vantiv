@@ -104,36 +104,38 @@
                 $('body').delegate("#publishers", "change", function () {
                     $(".default_mpo").dataTable().fnDestroy();
                     var channels = $("#publishers").val();
-                    $('.when_loading').css({
-                        opacity: 0.1
-                    });
-                    var Datefilter =  $('.filter_mpo').DataTable({
-                        dom: 'Blfrtip',
-                        paging: true,
-                        serverSide: true,
-                        processing: true,
-                        aaSorting: [],
-                        aLengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
-                        buttons: [
-                            'copy', 'csv', 'excel', 'pdf', 'print'
-                        ],
-                        oLanguage: {
-                            sLengthMenu: "_MENU_"
-                        },
-                        ajax: {
-                            url: '/mpo/filter',
-                            data: function (d) {
-                                d.channel_id = channels;
-                                d.start_date = $('input[name=start_date]').val();
-                                d.stop_date = $('input[name=stop_date]').val();
-                            }
-                        },
-                        columns: getColumns(),
-                    });
-                    Datefilter.draw();
-                    $('#mpo_filters').on('click', function() {
+                    if(channels != null){
+                        $('.when_loading').css({
+                            opacity: 0.1
+                        });
+                        var Datefilter =  $('.filter_mpo').DataTable({
+                            dom: 'Blfrtip',
+                            paging: true,
+                            serverSide: true,
+                            processing: true,
+                            aaSorting: [],
+                            aLengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+                            buttons: [
+                                'copy', 'csv', 'excel', 'pdf', 'print'
+                            ],
+                            oLanguage: {
+                                sLengthMenu: "_MENU_"
+                            },
+                            ajax: {
+                                url: '/mpo/filter',
+                                data: function (d) {
+                                    d.channel_id = channels;
+                                    d.start_date = $('input[name=start_date]').val();
+                                    d.stop_date = $('input[name=stop_date]').val();
+                                }
+                            },
+                            columns: getColumns(),
+                        });
                         Datefilter.draw();
-                    });
+                        $('#mpo_filters').on('click', function() {
+                            Datefilter.draw();
+                        });
+                    }
                 })
             }
 
