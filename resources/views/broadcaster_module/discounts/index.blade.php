@@ -21,12 +21,25 @@
             <div class="column col_6">
                 <h2 class="sub_header">Discounts</h2>
             </div>
+            @if(Auth::user()->companies()->count() > 1)
+                <div class="column col_6">
+                    <select class="publishers" name="companies[]" id="publishers" multiple="multiple" >
+                        @foreach(Auth::user()->companies as $company)
+                            <option value="{{ $company->id }}"
+                                    @foreach($publishers_id as $publisher_id)
+                                    @if($publisher_id->publisher_id == $company->id)
+                                    selected
+                                @endif
+                                @endforeach
+                            >{{ $company->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            @endif
         </div>
 
-
-
         <!-- campaign details -->
-        <div class="the_frame client_dets mb4">
+        <div class="the_frame client_dets mb4 when_loading">
 
             <!-- tab links -->
             <div class="tab_header m4 border_bottom clearfix">
@@ -41,25 +54,20 @@
 
                 <!-- sales reports -->
                 <div class="tab_content" id="agency">
-
                     <!-- filter -->
                     <div class="filters clearfix">
                         <div class="column col_7 clearfix">
                         </div>
-
                         <div class="column col_5 clearfix">
                             @if(Auth::user()->companies()->count() == 1)
                             <div class="col_6 right align_right">
                                 <a href="#new_discount_agency" class="btn small_btn modal_click"><span class="_plus"></span> New Discount</a>
                             </div>
                             @endif
-
-
                         </div>
-
                     </div>
                     <!-- end -->
-                    <div class="similar_table pt3">
+                    <div class="similar_table pt3" id="default_agency">
                         <!-- table header -->
                         <div class="_table_header clearfix m-b">
                             <span class="small_faint block_disp padd column col_2">Agency</span>
@@ -86,7 +94,7 @@
                                 <div class="column col_2"> {{ date('Y-m-d', strtotime($agency_discount->value_start_date)) }}</div>
                                 <div class="column col_2"> {{ date('Y-m-d', strtotime($agency_discount->value_stop_date)) }}</div>
                                 @if(Auth::user()->companies()->count() > 1)
-                                    <div class="column col_1"> {{ (new \Vanguard\Services\Company\CompanyDetails($agency_discount->broadcaster))->getCompanyDetails()->name }} </div>
+                                    <div class="column col_1"> {{ $agency_discount->station }} </div>
                                 @else
                                     <div class="column col_1">
 
@@ -104,13 +112,13 @@
 
                             </div>
                         @endforeach
-                    <!-- table item end -->
+                        <!-- table item end -->
                     </div>
+                    <div class="similar_table pt3" id="filtered_agency" style="display: none;">
 
+                    </div>
                 </div>
                 <!-- end -->
-
-
                 <!-- Brands -->
                 <div class="tab_content" id="brands">
 
@@ -132,7 +140,7 @@
                     </div>
                     <!-- end -->
 
-                    <div class="similar_table pt3">
+                    <div class="similar_table pt3" id="default_brand">
                         <!-- table header -->
                         <div class="_table_header clearfix m-b">
                             <span class="small_faint block_disp padd column col_2">Brand</span>
@@ -159,7 +167,7 @@
                                 <div class="column col_2"> {{ date('Y-m-d', strtotime($brand_discount->value_start_date)) }}</div>
                                 <div class="column col_2"> {{ date('Y-m-d', strtotime($brand_discount->value_stop_date)) }}</div>
                                 @if(Auth::user()->companies()->count() > 1)
-                                    <div class="column col_1"> {{ (new \Vanguard\Services\Company\CompanyDetails($brand_discount->broadcaster))->getCompanyDetails()->name }} </div>
+                                    <div class="column col_1"> {{ $brand_discount->station }} </div>
                                 @else
                                 <div class="column col_1">
 
@@ -179,10 +187,12 @@
                     <!-- table item end -->
                     </div>
 
+                    <div class="similar_table pt3" id="filtered_brand" style="display: none;">
+
+                    </div>
+
                 </div>
                 <!-- end -->
-
-
                 <!-- Time -->
                 <div class="tab_content" id="time">
 
@@ -202,7 +212,7 @@
                     </div>
                     <!-- end -->
 
-                    <div class="similar_table pt3">
+                    <div class="similar_table pt3" id="default_time">
                         <!-- table header -->
                         <div class="_table_header clearfix m-b">
                             <span class="small_faint block_disp padd column col_2">Agency</span>
@@ -229,7 +239,7 @@
                                 <div class="column col_2"> {{ date('Y-m-d', strtotime($time_discount->value_start_date)) }}</div>
                                 <div class="column col_2"> {{ date('Y-m-d', strtotime($time_discount->value_stop_date)) }}</div>
                                 @if(Auth::user()->companies()->count() > 1)
-                                    <div class="column col_1"> {{ (new \Vanguard\Services\Company\CompanyDetails($time_discount->broadcaster))->getCompanyDetails()->name }} </div>
+                                    <div class="column col_1"> {{ $time_discount->station }} </div>
                                 @else
                                 <div class="column col_1">
 
@@ -249,10 +259,12 @@
                     <!-- table item end -->
                     </div>
 
+                    <div class="similar_table pt3" id="filtered_time" style="display: none;">
+
+                    </div>
+
                 </div>
                 <!-- end -->
-
-
                 <!-- Day -->
                 <div class="tab_content clearfix" id="day">
 
@@ -273,7 +285,7 @@
                     </div>
                     <!-- end -->
 
-                    <div class="similar_table pt3">
+                    <div class="similar_table pt3" id="default_daypart">
                         <!-- table header -->
                         <div class="_table_header clearfix m-b">
                             <span class="small_faint block_disp padd column col_2">Day Parts</span>
@@ -300,7 +312,7 @@
                                 <div class="column col_2"> {{ date('Y-m-d', strtotime($daypart_discount->value_start_date)) }}</div>
                                 <div class="column col_2"> {{ date('Y-m-d', strtotime($daypart_discount->value_stop_date)) }}</div>
                                 @if(Auth::user()->companies()->count() > 1)
-                                    <div class="column col_1"> {{ (new \Vanguard\Services\Company\CompanyDetails($daypart_discount->broadcaster))->getCompanyDetails()->name }} </div>
+                                    <div class="column col_1"> {{ $daypart_discount->station }} </div>
                                 @else
                                 <div class="column col_1">
 
@@ -320,10 +332,12 @@
                     <!-- table item end -->
                     </div>
 
+                    <div class="similar_table pt3" id="filtered_daypart" style="display: none;">
+
+                    </div>
+
                 </div>
                 <!-- end -->
-
-
                 <!-- Price -->
                 <div class="tab_content" id="price">
 
@@ -343,7 +357,7 @@
                     </div>
                     <!-- end -->
 
-                    <div class="similar_table pt3">
+                    <div class="similar_table pt3" id="default_price">
                         <!-- table header -->
                         <div class="_table_header clearfix m-b">
                             <span class="small_faint block_disp padd column col_2">Price Range</span>
@@ -390,11 +404,12 @@
                     <!-- table item end -->
                     </div>
 
+                    <div class="similar_table pt3" id="filtered_price" style="display: none;">
+
+                    </div>
+
                 </div>
                 <!-- end -->
-
-
-
             </div>
 
         </div>
@@ -419,12 +434,203 @@
 
 @section('scripts')
     <script src="https://unpkg.com/flatpickr"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+
     <script>
+        <?php echo "var companies =".Auth::user()->companies()->count().";\n"; ?>
         $(document).ready(function () {
             flatpickr(".flatpickr", {
                 altInput: true,
             });
+            $('.publishers').select2();
+
+            $('body').delegate("#publishers", "change", function () {
+                var channels = $("#publishers").val();
+                if(channels != null){
+                    $('.when_loading').css({
+                        opacity: 0.1
+                    });
+                    $.ajax({
+                        url: '/discount/filter',
+                        method: 'GET',
+                        data: { channel_id : channels },
+                        success: function (data) {
+                            $("#default_agency").remove();
+                            $("#filtered_agency").show();
+                            $("#filtered_agency").html(agencies(data.agency_discounts));
+                            $("#default_brand").remove();
+                            $("#filtered_brand").show();
+                            $("#filtered_brand").html(brands(data.brand_discounts));
+                            $("#default_time").remove();
+                            $("#filtered_time").show();
+                            $("#filtered_time").html(time(data.time_discounts));
+                            $("#default_daypart").remove();
+                            $("#filtered_daypart").show();
+                            $("#filtered_daypart").html(dayParts(data.daypart_discounts));
+                            $("#default_price").remove();
+                            $("#filtered_price").show();
+                            $("#filtered_price").html(price(data.price_discounts));
+                            $('.when_loading').css({
+                                opacity: 1
+                            })
+                        }
+
+                    })
+                }
+            });
+
+            if(companies > 1){
+                function agencies (agency_discounts)
+                {
+                    var agency_discount_section = '';
+                    agency_discount_section += '<div class="_table_header clearfix m-b">\n' +
+                        '                            <span class="small_faint block_disp padd column col_2">Agency</span>\n' +
+                        '                            <span class="small_faint block_disp column col_1">% Discount</span>\n' +
+                        '                            <span class="small_faint block_disp column col_1">% Start Date</span>\n' +
+                        '                            <span class="small_faint block_disp column col_1">% Stop Date</span>\n' +
+                        '                            <span class="small_faint block_disp column col_2">Discount Amount</span>\n' +
+                        '                            <span class="small_faint block_disp column col_2">Amount Start Date</span>\n' +
+                        '                            <span class="small_faint block_disp column col_2">Amount Stop Date</span>\n' +
+                    '                                <span class="small_faint block_disp column col_1">Station</span>\n' +
+                        '                            <span class="block_disp column col_1 color_trans">.</span>\n' +
+                        '                        </div>';
+                    $.each(agency_discounts, function (index, value) {
+                        agency_discount_section += '<div class="_table_item the_frame clearfix">\n' +
+                            '                                <div class="column padd col_2">'+ value.name +'</div>\n' +
+                            '                                <div class="column col_1">'+ value.percent_value +'</div>\n' +
+                            '                                <div class="column col_1">'+ formatDate(value.percent_start_date) +'</div>\n' +
+                            '                                <div class="column col_1">'+ formatDate(value.percent_stop_date) +'</div>\n' +
+                            '                                <div class="column col_2">'+ value.value +'</div>\n' +
+                            '                                <div class="column col_2">'+ formatDate(value.value_start_date) +'</div>\n' +
+                            '                                <div class="column col_2">'+ formatDate(value.value_stop_date) +'</div>\n' +
+                        '                                    <div class="column col_1">'+ value.station +'</div>\n' +
+                            '                            </div>'
+                    })
+                    return agency_discount_section;
+                }
+
+                function brands(brand_discounts)
+                {
+                    var brand_discount_section = '';
+                    brand_discount_section += '<div class="_table_header clearfix m-b">\n' +
+                        '                            <span class="small_faint block_disp padd column col_2">Brand</span>\n' +
+                        '                            <span class="small_faint block_disp column col_1">% Discount</span>\n' +
+                        '                            <span class="small_faint block_disp column col_1">% Start Date</span>\n' +
+                        '                            <span class="small_faint block_disp column col_1">% Stop Date</span>\n' +
+                        '                            <span class="small_faint block_disp column col_2">Discount Amount</span>\n' +
+                        '                            <span class="small_faint block_disp column col_2">Amount Start Date</span>\n' +
+                        '                            <span class="small_faint block_disp column col_2">Amount Stop Date</span>\n' +
+                    '                                <span class="small_faint block_disp column col_1">Station</span>\n' +
+                        '                            <span class="block_disp column col_1 color_trans">.</span>\n' +
+                        '                        </div>';
+                    $.each(brand_discounts, function (index, value) {
+                        brand_discount_section += '<div class="_table_item the_frame clearfix">\n' +
+                            '                                <div class="column padd col_2">'+ value.name +'</div>\n' +
+                            '                                <div class="column col_1">'+ value.percent_value +'</div>\n' +
+                            '                                <div class="column col_1">'+ formatDate(value.percent_start_date) +'</div>\n' +
+                            '                                <div class="column col_1">'+ formatDate(value.percent_stop_date) +'</div>\n' +
+                            '                                <div class="column col_2">'+ value.value +'</div>\n' +
+                            '                                <div class="column col_2">'+ formatDate(value.value_start_date) +'</div>\n' +
+                            '                                <div class="column col_2">'+ formatDate(value.value_stop_date) +'</div>\n' +
+                        '                                    <div class="column col_1">'+ value.station +'</div>\n' +
+                            '                            </div>';
+                    })
+                    return brand_discount_section;
+                }
+
+                function time(time_discounts)
+                {
+                    var time_discount_section = '';
+                    time_discount_section += '<div class="_table_header clearfix m-b">\n' +
+                        '                            <span class="small_faint block_disp padd column col_2">Agency</span>\n' +
+                        '                            <span class="small_faint block_disp column col_1">% Discount</span>\n' +
+                        '                            <span class="small_faint block_disp column col_1">% Start Date</span>\n' +
+                        '                            <span class="small_faint block_disp column col_1">% Stop Date</span>\n' +
+                        '                            <span class="small_faint block_disp column col_2">Discount Amount</span>\n' +
+                        '                            <span class="small_faint block_disp column col_2">Amount Start Date</span>\n' +
+                        '                            <span class="small_faint block_disp column col_2">Amount Stop Date</span>\n' +
+                    '                                <span class="small_faint block_disp column col_1">Station</span>\n' +
+                        '                            <span class="block_disp column col_1 color_trans">.</span>\n' +
+                        '                        </div>';
+                    $.each(time_discounts, function (index, value) {
+                        time_discount_section += '<div class="_table_item the_frame clearfix">\n' +
+                            '                                <div class="column padd col_2">'+ value.hourly_range +'</div>\n' +
+                            '                                <div class="column col_1">'+ value.percent_value +'</div>\n' +
+                            '                                <div class="column col_1"> '+ formatDate(value.percent_start_date) +'</div>\n' +
+                            '                                <div class="column col_1"> '+ formatDate(value.percent_stop_date) +'</div>\n' +
+                            '                                <div class="column col_2">'+ value.value +'</div>\n' +
+                            '                                <div class="column col_2">'+ formatDate(value.value_start_date) +'</div>\n' +
+                            '                                <div class="column col_2">'+ formatDate(value.value_stop_date) +'</div>\n' +
+                        '                                    <div class="column col_1">'+ value.station +'</div>\n' +
+                            '                            </div>'
+                    })
+                    return time_discount_section;
+                }
+
+                function dayParts(daypart_discounts)
+                {
+                    var daypart_discount_section = '';
+                    daypart_discount_section += '<div class="_table_header clearfix m-b">\n' +
+                        '                            <span class="small_faint block_disp padd column col_2">Day Parts</span>\n' +
+                        '                            <span class="small_faint block_disp column col_1">% Discount</span>\n' +
+                        '                            <span class="small_faint block_disp column col_1">% Start Date</span>\n' +
+                        '                            <span class="small_faint block_disp column col_1">% Stop Date</span>\n' +
+                        '                            <span class="small_faint block_disp column col_2">Discount Amount</span>\n' +
+                        '                            <span class="small_faint block_disp column col_2">Amount Start Date</span>\n' +
+                        '                            <span class="small_faint block_disp column col_2">Amount Stop Date</span>\n' +
+                    '                                <span class="small_faint block_disp column col_1">Station</span>\n' +
+                        '                            <span class="block_disp column col_1 color_trans">.</span>\n' +
+                        '                        </div>';
+                    $.each(daypart_discounts, function (index, value) {
+                        daypart_discount_section += '<div class="_table_item the_frame clearfix">\n' +
+                            '                                <div class="column padd col_2">'+ value.day_part +'</div>\n' +
+                            '                                <div class="column col_1">'+ value.percent_value +'</div>\n' +
+                            '                                <div class="column col_1"> '+ formatDate(value.percent_start_date) +'</div>\n' +
+                            '                                <div class="column col_1"> '+ formatDate(value.percent_stop_date) +'</div>\n' +
+                            '                                <div class="column col_2">'+ value.value +'</div>\n' +
+                            '                                <div class="column col_2"> '+ formatDate(value.value_start_date) +'</div>\n' +
+                            '                                <div class="column col_2"> '+ formatDate(value.value_stop_date) +'</div>\n' +
+                        '                                    <div class="column col_1"> '+ value.station +'</div>\n' +
+                            '                            </div>';
+                    })
+                    return daypart_discount_section;
+                }
+
+                function price(price_discounts)
+                {
+                    var price_discount_section = '';
+                    price_discount_section += '<div class="_table_header clearfix m-b">\n' +
+                        '                            <span class="small_faint block_disp padd column col_2">Price Range</span>\n' +
+                        '                            <span class="small_faint block_disp column col_1">% Discount</span>\n' +
+                        '                            <span class="small_faint block_disp column col_1">% Start Date</span>\n' +
+                        '                            <span class="small_faint block_disp column col_1">% Stop Date</span>\n' +
+                        '                            <span class="small_faint block_disp column col_2">Discount Amount</span>\n' +
+                        '                            <span class="small_faint block_disp column col_2">Amount Start Date</span>\n' +
+                        '                            <span class="small_faint block_disp column col_2">Amount Stop Date</span>\n' +
+                    '                                <span class="small_faint block_disp column col_1">Station</span>\n' +
+                        '                            <span class="block_disp column col_1 color_trans">.</span>\n' +
+                        '                        </div>';
+                    $.each(price_discounts, function (index, value) {
+                        price_discount_section += '<div class="_table_item the_frame clearfix">\n' +
+                            '                                <div class="column padd col_2">'+ $.number(value.discount_type_value, 2)+' - '+ $.number(value.discount_type_sub_value, 2)+'</div>\n' +
+                            '                                <div class="column col_1">'+ value.percent_value +'</div>\n' +
+                            '                                <div class="column col_1"> '+ formatDate(value.percent_start_date) +'</div>\n' +
+                            '                                <div class="column col_1"> '+ formatDate(value.percent_stop_date) +'</div>\n' +
+                            '                                <div class="column col_2">'+ value.value +'</div>\n' +
+                            '                                <div class="column col_2"> '+ formatDate(value.value_start_date) +'</div>\n' +
+                            '                                <div class="column col_2"> '+ formatDate(value.value_stop_date) +'</div>\n' +
+                        '                                    <div class="column col_1"> '+ value.station +' </div>\n' +
+                            '                            </div>';
+                    });
+                    return price_discount_section;
+                }
+            }
         })
+
+        function formatDate(date){
+            var splited_date = date.split(' ');
+            return splited_date[0];
+        }
 
 
     </script>
@@ -432,6 +638,8 @@
 
 @section('styles')
     <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+
     <style>
         ._table_item > div:first-child {
             padding-top: 12px;

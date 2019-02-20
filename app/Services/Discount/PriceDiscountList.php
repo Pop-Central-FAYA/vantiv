@@ -16,16 +16,17 @@ class PriceDiscountList
     public function getPriceDiscountList()
     {
         return \DB::table('discounts')
-                    ->select('*')
+                    ->join('companies', 'companies.id', '=', 'discounts.broadcaster')
+                    ->select('discounts.*', 'companies.name AS station')
                     ->when(is_array($this->company_id), function ($query) {
-                        return $query->whereIn('broadcaster', $this->company_id);
+                        return $query->whereIn('discounts.broadcaster', $this->company_id);
                     })
                     ->when(!is_array($this->company_id), function ($query) {
-                        return $query->where('broadcaster', $this->company_id);
+                        return $query->where('discounts.broadcaster', $this->company_id);
                     })
                     ->where([
-                        ['discount_type', $this->discount_type],
-                        ['status', '1']
+                        ['discounts.discount_type', $this->discount_type],
+                        ['discounts.status', '1']
                     ])
                     ->get();
     }
