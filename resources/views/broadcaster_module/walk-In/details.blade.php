@@ -406,40 +406,42 @@
             $('body').delegate("#publishers", "change", function () {
                 var channels = $("#publishers").val();
                 var client_id = "<?php echo $client_id; ?>";
-                $('.when_loading').css({
-                    opacity: 0.1
-                });
-                $.ajax({
-                    url: '/client-details/'+client_id,
-                    method: 'GET',
-                    data: { channel_id : channels, client_id : client_id },
-                    success: function (data) {
-                        $("#default_publisher_logo").remove();
-                        $("#filtered_publisher_logo").show();
-                        $("#filtered_publisher_logo").html(filterPublishersLogo(data.publisher_logos));
-                        $("#default_campaign_count").remove();
-                        $("#filtered_campaign_count").show();
-                        $("#filtered_campaign_count").html(filteredCampaignCount(data.all_campaigns));
-                        $("#default_total_spent").remove();
-                        $("#filtered_total_spent").show();
-                        $("#filtered_total_spent").html(filteredTotalSpent(data.total_spent));
-                        $("#default_brand_count").remove();
-                        $("#filtered_brand_count").show();
-                        $("#filtered_brand_count").html(filteredBrandCount(data.all_brands));
-                        chart('container', JSON.parse(data.campaign_date), JSON.parse(data.campaign_payment));
-                        $(".default_campaign_table").remove();
-                        $(".filtered_campaign_table").show();
-                        $(".filtered_campaign_table").html(filteredCampaigTable(data.all_campaigns));
-                        $("#default_brand_table").remove();
-                        $("#filtered_brand_table").show();
-                        $("#filtered_brand_table").html(filterBrandTable(data.all_brands));
-                        $('.when_loading').css({
-                            opacity: 1
-                        })
-                    }
+                if(channels != null){
+                    $('.when_loading').css({
+                        opacity: 0.1
+                    });
+                    $.ajax({
+                        url: '/client-details/'+client_id,
+                        method: 'GET',
+                        data: { channel_id : channels, client_id : client_id },
+                        success: function (data) {
+                            $("#default_publisher_logo").remove();
+                            $("#filtered_publisher_logo").show();
+                            $("#filtered_publisher_logo").html(filterPublishersLogo(data.publisher_logos));
+                            $("#default_campaign_count").remove();
+                            $("#filtered_campaign_count").show();
+                            $("#filtered_campaign_count").html(filteredCampaignCount(data.all_campaigns));
+                            $("#default_total_spent").remove();
+                            $("#filtered_total_spent").show();
+                            $("#filtered_total_spent").html(filteredTotalSpent(data.total_spent));
+                            $("#default_brand_count").remove();
+                            $("#filtered_brand_count").show();
+                            $("#filtered_brand_count").html(filteredBrandCount(data.all_brands));
+                            chart('container', JSON.parse(data.campaign_date), JSON.parse(data.campaign_payment));
+                            $(".default_campaign_table").remove();
+                            $(".filtered_campaign_table").show();
+                            $(".filtered_campaign_table").html(filteredCampaigTable(data.all_campaigns));
+                            $("#default_brand_table").remove();
+                            $("#filtered_brand_table").show();
+                            $("#filtered_brand_table").html(filterBrandTable(data.all_brands));
+                            $('.when_loading').css({
+                                opacity: 1
+                            })
+                        }
 
-                })
-            })
+                    })
+                }
+            });
 
             if(companies > 1) {
 
