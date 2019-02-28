@@ -41,9 +41,12 @@
                 {{ Auth::user()->companies->first()->name }}</h2>
             @endif
         <p class="mb4">What would you like to do?</p>
-
-        <a href="{{ route('broadcaster.campaign_management') }}" class="m-b block_disp btn full ghost">Campaign Management</a>
-        <a href="{{ route('broadcaster.inventory_management') }}" class="m-b block_disp btn full ghost">Inventory Management</a>
+        @if(Auth::user()->companies()->count() > 1)
+            <a href="{{ route('broadcaster.campaign_management') }}" class="m-b block_disp btn full ghost">Continue to Dashboard</a>
+        @else
+            <a href="{{ route('broadcaster.campaign_management') }}" class="m-b block_disp btn full ghost">Campaign Management</a>
+            <a href="{{ route('broadcaster.inventory_management') }}" class="m-b block_disp btn full ghost">Inventory Management</a>
+        @endif
     </div>
 
 </div>
