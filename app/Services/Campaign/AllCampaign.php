@@ -10,18 +10,14 @@ use Yajra\DataTables\DataTables;
 
 class AllCampaign
 {
-    protected $broadcaster_id;
-    protected $agency_id;
     protected $request;
     protected $dashboard;
     protected $company_ids;
 
     use CampaignQueryTrait;
 
-    public function __construct($request, $broadcaster_id, $agency_id, $dashboard, $company_ids)
+    public function __construct($request, $dashboard, $company_ids)
     {
-        $this->broadcaster_id = $broadcaster_id;
-        $this->agency_id = $agency_id;
         $this->request = $request;
         $this->dashboard = $dashboard;
         $this->company_ids = $company_ids;
@@ -42,7 +38,7 @@ class AllCampaign
 
         return $datatables->collection($campaigns)
             ->addColumn('name', function ($campaigns) {
-                if($this->broadcaster_id){
+                if(\Auth::user()->company_type == CompanyTypeName::BROADCASTER){
                     if($campaigns['status'] === 'on_hold'){
                         return '<a href="'.route('broadcaster.campaign.hold').'">'.$campaigns['name'].'</a>';
                     }else{
@@ -77,7 +73,6 @@ class AllCampaign
     public function fetchAllCampaigns()
     {
         if($this->request->filter_user){
-            //dd($this->filterCampaigns(), $this->broadcaster_id);
             return $this->filterCampaigns();
         }else{
             return $this->allCampaigns();
@@ -95,30 +90,25 @@ class AllCampaign
 
     public function allCampaigns()
     {
-        if($this->company_ids && \Auth::user()->companies()->count() > 1){
-            $broadcaster_id = null;
-        }else{
-            $broadcaster_id = $this->broadcaster_id;
-        }
         return $this->baseQuery()
                                 ->when(!$this->dashboard, function($query){
                                     return $query->where('campaignDetails.status', CampaignStatus::ACTIVE_CAMPAIGN);
                                 })
-                                ->when($this->broadcaster_id && is_array($this->company_ids), function($query) {
+                                ->when(\Auth::user()->company_type == CompanyTypeName::BROADCASTER && is_array($this->company_ids), function($query) {
                                     return $query->selectRaw("JSON_ARRAYAGG(campaignDetails.launched_on) AS station_id")
                                                     ->whereIn('campaignDetails.launched_on', $this->company_ids)
                                                     ->groupBy('campaignDetails.campaign_id');
                                 })
-                                ->when($broadcaster_id, function($query) use ($broadcaster_id) {
+                                ->when(\Auth::user()->company_type == CompanyTypeName::BROADCASTER && !is_array($this->company_ids), function($query) {
                                     return $query->where([
-                                                    ['campaignDetails.broadcaster', $broadcaster_id],
+                                                    ['campaignDetails.broadcaster', $this->company_ids],
                                                     ['campaignDetails.adslots', '>', 0],
-                                                    ['paymentDetails.broadcaster', $this->broadcaster_id]
+                                                    ['paymentDetails.broadcaster', $this->company_ids]
                                                 ]);
                                 })
-                                ->when($this->agency_id, function ($query) {
+                                ->when(\Auth::user()->company_type == CompanyTypeName::AGENCY, function ($query) {
                                     return $query->where([
-                                                    ['campaignDetails.agency', $this->agency_id],
+                                                    ['campaignDetails.agency', $this->company_ids],
                                                     ['campaignDetails.adslots', '>', 0]
                                                 ])
                                                 ->groupBy('campaignDetails.campaign_id');
@@ -130,11 +120,6 @@ class AllCampaign
 
     public function filterCampaigns()
     {
-        if($this->company_ids && \Auth::user()->companies()->count() > 1){
-            $broadcaster_id = null;
-        }else{
-            $broadcaster_id = $this->broadcaster_id;
-        }
         return $this->baseQuery()
                                 ->when(($this->request->filter_user == 'agency'), function ($query) {
                                     return $query->when(is_array($this->company_ids), function ($inner_query) {
@@ -145,8 +130,8 @@ class AllCampaign
                                                 })
                                                 ->when(!is_array($this->company_ids), function ($inner_query) {
                                                     return $inner_query->where([
-                                                                ['campaignDetails.agency_broadcaster', $this->broadcaster_id],
-                                                                ['paymentDetails.broadcaster', $this->broadcaster_id]
+                                                                ['campaignDetails.agency_broadcaster', $this->company_ids],
+                                                                ['paymentDetails.broadcaster', $this->company_ids]
                                                             ]);
                                                 });
                                 })
@@ -157,11 +142,11 @@ class AllCampaign
                                                                     ->whereIn('campaignDetails.belongs_to', $this->company_ids)
                                                                     ->groupBy('campaignDetails.campaign_id');
                                             })
-                                            ->when($broadcaster_id, function ($inner_query) use ($broadcaster_id) {
+                                            ->when(!is_array($this->company_ids), function ($inner_query) {
                                                 return $inner_query->where([
-                                                    ['campaignDetails.broadcaster', $broadcaster_id],
+                                                    ['campaignDetails.broadcaster', $this->company_ids],
                                                     ['campaignDetails.agency', ''],
-                                                    ['paymentDetails.broadcaster', $broadcaster_id]
+                                                    ['paymentDetails.broadcaster', $this->company_ids]
                                                 ]);
                                             });
                                 })
