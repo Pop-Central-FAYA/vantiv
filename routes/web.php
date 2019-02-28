@@ -237,6 +237,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/inventory-management/dashboard', 'DashboardController@inventoryManagementDashboard')->name('broadcaster.inventory_management');
     Route::get('/campaign-management/filter-result', 'DashboardController@campaignManagementFilterResult');
     Route::get('/campaign-details/filter/company', 'DashboardController@filteredCampaignListTable');
+    Route::get('periodic-revenue/filter-year', 'DashboardController@filterPeriodicRevenueByYear');
 
     /**
      * Adslot

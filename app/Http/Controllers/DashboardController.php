@@ -19,6 +19,7 @@ use Vanguard\Services\Client\BroadcasterClient;
 use Vanguard\Services\Company\UserCompanyByChannel;
 use Vanguard\Services\Invoice\PendingInvoice;
 use Vanguard\Services\Mpo\MpoList;
+use Vanguard\Services\Traits\YearTrait;
 use Yajra\DataTables\DataTables;
 
 
@@ -28,6 +29,7 @@ class DashboardController extends Controller
     protected $dataTables;
 
     use CompanyIdTrait;
+    use YearTrait;
 
     public function __construct(Utilities $utilities, DataTables $dataTables)
     {
@@ -179,6 +181,7 @@ class DashboardController extends Controller
         $mpo_list_service = new MpoList($this->companyId(), null,null);
         $campaign_on_hold_service = new CampaignOnhold($this->companyId());
         $user_channels_with_other_details = $this->getChannelWithOtherDetails(Auth::user()->user_company_channels, $this->companyId());
+        $current_year = date('Y');
 
         return view('broadcaster_module.dashboard.campaign_management.dashboard')
                     ->with(['volume' => $total_volume_campaign_service->totalVolumeOfCampaign()['campaign_volumes'],
@@ -190,20 +193,23 @@ class DashboardController extends Controller
                             'pending_mpos' => $mpo_list_service->pendingMpoList(),
                             'campaign_on_hold' => $campaign_on_hold_service->getCampaignsOnhold(),
                             'user_channel_with_other_details' => $user_channels_with_other_details,
-                            'periodic_revenues' => Auth::user()->companies()->count() > 1 ? $this->periodicRevenueChart($this->companyId()) : '']);
+                            'periodic_revenues' => Auth::user()->companies()->count() > 1 ? $this->periodicRevenueChart($this->companyId(), $current_year) : '',
+                            'year_list' => Auth::user()->companies()->count() > 1 ? $this->getYearFrom2018() : '',
+                            'current_year' => $current_year]);
 
     }
 
     public function campaignManagementFilterResult()
     {
         $companies_id = \request()->channel_id;
+        $year = \request()->year;
         $company_client_service = new BroadcasterClient($companies_id);
         $pending_invoice_service = new PendingInvoice($companies_id);
         $client_brand_service = new CompanyBrands($companies_id);
         $campaign_status_service = new CampaignStatus($companies_id);
         $mpo_list_service = new MpoList($companies_id, null,null);
         $campaign_on_hold_service = new CampaignOnhold($companies_id);
-        $periodic_revenues = $this->periodicRevenueChart($companies_id);
+        $periodic_revenues = $this->periodicRevenueChart($companies_id, $year);
 
         return [
                 'walkIns' => $company_client_service->getCompanyClients(),
@@ -222,9 +228,17 @@ class DashboardController extends Controller
         return $campaigns->run();
     }
 
-    public function periodicRevenueChart($company_id)
+    public function periodicRevenueChart($company_id, $year)
     {
-        $campaign_chart_service = new PeriodicRevenueChart($company_id);
+        $campaign_chart_service = new PeriodicRevenueChart($company_id, $year);
+        return $campaign_chart_service->formatPeriodicChart();
+    }
+
+    public function filterPeriodicRevenueByYear()
+    {
+        $year = \request()->year;
+        $company_id = \request()->channel_id;
+        $campaign_chart_service = new PeriodicRevenueChart($company_id, $year);
         return $campaign_chart_service->formatPeriodicChart();
     }
 
