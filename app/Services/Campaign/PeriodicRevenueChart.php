@@ -2,10 +2,14 @@
 
 namespace Vanguard\Services\Campaign;
 
+use Vanguard\Services\Traits\MonthTrait;
+
 class PeriodicRevenueChart
 {
 
     protected $company_ids;
+
+    use MonthTrait;
 
     public function __construct($company_ids)
     {
@@ -29,31 +33,13 @@ class PeriodicRevenueChart
             ->get();
     }
 
-    public function monthLists()
-    {
-        return [
-            "January",
-            "February",
-            "March",
-            "April",
-            "May",
-            "June",
-            "July",
-            "August",
-            "September",
-            "October",
-            "November",
-            "December"
-        ];
-    }
-
     public function periodicRevenueLogic()
     {
 
         $revenue_array = $this->periodicRevenueQuery();
 
         $revenue_company_group = [];
-        $months = $this->monthLists();
+        $months = $this->monthList();
         foreach($revenue_array as $key=>$value){
             $value = (array)$value;
             if(!array_key_exists($value['company_id'],$revenue_company_group)){
@@ -95,6 +81,6 @@ class PeriodicRevenueChart
             ];
         }
         return ['formated_periodic_revenue_chart' => $formatted_revenue_chart,
-                'month_list' => $this->monthLists()];
+                'month_list' => $this->monthList()];
     }
 }
