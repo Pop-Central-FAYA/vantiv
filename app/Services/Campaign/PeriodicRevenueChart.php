@@ -8,12 +8,13 @@ class PeriodicRevenueChart
 {
 
     protected $company_ids;
-
+    protected $year;
     use MonthTrait;
 
-    public function __construct($company_ids)
+    public function __construct($company_ids, $year)
     {
         $this->company_ids = $company_ids;
+        $this->year = $year;
     }
 
     public function periodicRevenueQuery()
@@ -29,6 +30,7 @@ class PeriodicRevenueChart
             ->selectRaw("MONTHNAME(campaignDetails.time_created) AS month,
                                     SUM(paymentDetails.amount) AS total")
             ->whereIn('campaignDetails.launched_on', $this->company_ids)
+            ->whereYear('campaignDetails.time_created', $this->year)
             ->groupBy(\DB::raw("MONTHNAME(campaignDetails.time_created),YEAR(campaignDetails.time_created), campaignDetails.launched_on"))
             ->get();
     }

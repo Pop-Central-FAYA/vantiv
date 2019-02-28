@@ -75,11 +75,29 @@
 
         <!-- client charts -->
         @if(Auth::user()->companies()->count() > 1)
-            <div class="clearfix">
+            <div class="clearfix periodic_rev">
                 <h3><p>Periodic Revenue Chart</p></h3>
                 <br>
+                <div class="row">
+                    <div class="column col_3 clearfix">
+                        <select name="filter_year" class="filter_year" id="filter_year">
+                            @foreach($year_list as $year)
+                                <option
+                                    @if($current_year == $year)
+                                        selected
+                                    @endif
+                                    value="{{ $year }}">
+                                    {{ $year }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <br>
                 {{--Periodic revenue chart goes here--}}
-                <div id="periodicChart" style="min-width: 310px; height: 400px; margin: 0 auto">
+                <div class="row">
+                    <div id="periodicChart" style="min-width: 310px; height: 400px; margin: 0 auto">
+                </div>
             </div>
         @else
             <div class="clearfix">
@@ -171,6 +189,7 @@
         <?php echo "var companies =".Auth::user()->companies()->count().";\n"; ?>
         <?php echo "var months =".json_encode($periodic_revenues['month_list']).";\n"; ?>
         <?php echo "var periodic_revenue_data =".json_encode($periodic_revenues['formated_periodic_revenue_chart']).";\n"; ?>
+        <?php echo "var current_year =".$current_year.";\n"; ?>
 
         $(document).ready(function( $ ) {
 
@@ -283,9 +302,11 @@
                 });
 
                 $('.publishers').select2();
+
                 $('body').delegate("#publishers", "change", function () {
                     $(".dashboard_campaigns").dataTable().fnDestroy();
                     var channels = $("#publishers").val();
+                    var year = current_year;
                     if(channels != null){
                         $('body').css({
                             opacity : 0.1
@@ -306,6 +327,7 @@
                                     d.start_date = $('input[name=start_date]').val();
                                     d.stop_date = $('input[name=stop_date]').val();
                                     d.filter_user = $('#filter_user').val();
+                                    d.year = $('#filter_year').val();
                                 }
                             },
                             columns: getColumns(),
@@ -322,7 +344,7 @@
                         $.ajax({
                             url: '/campaign-management/filter-result',
                             method: 'GET',
-                            data: {channel_id: channels},
+                            data: {channel_id: channels, year: year},
                             success: function (data) {
                                 $("#campaign_count").remove();
                                 $("#filtered_campaign_count").show();
@@ -339,30 +361,41 @@
                                 $("#campaign_on_hold").remove();
                                 $("#filtered_campaign_on_hold").show();
                                 $("#filtered_campaign_on_hold").html(filterCampaignOnHoldCount(data.campaign_on_hold));
-                                Highcharts.chart('periodicChart', {
-                                    chart: {
-                                        type: 'column'
-                                    },
-                                    title: {
-                                        text: ''
-                                    },
-                                    xAxis: {
-                                        categories: data.periodic_revenues['month_list']
-                                    },
-                                    credits: {
-                                        enabled: false
-                                    },
-                                    exporting: {
-                                        enabled: false
-                                    },
-                                    series:data.periodic_revenues['formated_periodic_revenue_chart']
-                                });
+                                periodicRevenueChat(data.periodic_revenues['month_list'], data.periodic_revenues['formated_periodic_revenue_chart'])
+
                                 $('body').css({
                                     opacity : 1
                                 });
                             }
                         })
                     }
+                });
+
+                $('body').delegate('#filter_year', 'change', function () {
+                    var year = $('#filter_year').val();
+                    var channels = $("#publishers").val();
+                    $(".periodic_rev").css({
+                        opacity: 0.1
+                    });
+                    $.ajax({
+                        url: '/periodic-revenue/filter-year',
+                        method: 'GET',
+                        data: {channel_id: channels, year: year},
+                        success: function (data) {
+                            if(data.formated_periodic_revenue_chart.length != 0){
+                                periodicRevenueChat(data.month_list, data.formated_periodic_revenue_chart);
+                                $(".periodic_rev").css({
+                                    opacity: 1
+                                });
+                            }else{
+                                periodicRevenueChat(data.month_list, data.formated_periodic_revenue_chart);
+                                $(".periodic_rev").css({
+                                    opacity: 1
+                                });
+                                toastr.info('No data for the selected year');
+                            }
+                        }
+                    })
                 });
 
                 function filterActiveCampaignCount(campaigns)
@@ -404,24 +437,29 @@
                         '                <h3><a href="/campaign/campaign-on-hold/broadcaster/data" style="color: red;">'+campaign_onholds.length+'</a></h3>';
                     return filter_campaign_on_hold_section;
                 }
-                Highcharts.chart('periodicChart', {
-                    chart: {
-                        type: 'column'
-                    },
-                    title: {
-                        text: ''
-                    },
-                    xAxis: {
-                        categories: months
-                    },
-                    credits: {
-                        enabled: false
-                    },
-                    exporting: {
-                        enabled: false
-                    },
-                    series:periodic_revenue_data
-                });
+
+                periodicRevenueChat(months, periodic_revenue_data)
+
+                function periodicRevenueChat(month_list, periodic_revenue_data){
+                    Highcharts.chart('periodicChart', {
+                        chart: {
+                            type: 'column'
+                        },
+                        title: {
+                            text: ''
+                        },
+                        xAxis: {
+                            categories: month_list
+                        },
+                        credits: {
+                            enabled: false
+                        },
+                        exporting: {
+                            enabled: false
+                        },
+                        series: periodic_revenue_data
+                    });
+                }
 
              }else{
                 var chart = Highcharts.chart('containerTotal', {
