@@ -187,9 +187,11 @@
         <?php echo "var campaign_volume = ".$volume . ";\n"; ?>
         <?php echo "var campaign_month = ".$month . ";\n"; ?>
         <?php echo "var companies =".Auth::user()->companies()->count().";\n"; ?>
+        <?php if(Auth::user()->companies()->count() > 1){ ?>
         <?php echo "var months =".json_encode($periodic_revenues['month_list']).";\n"; ?>
         <?php echo "var periodic_revenue_data =".json_encode($periodic_revenues['formated_periodic_revenue_chart']).";\n"; ?>
         <?php echo "var current_year =".$current_year.";\n"; ?>
+        <?php } ?>
 
         $(document).ready(function( $ ) {
 
@@ -292,6 +294,7 @@
                     }]
                 });
             }
+
             if(companies > 1) {
                 $.each(channels_with_details, function (index, value) {
                     if (value.channel_details.channel === 'TV') {
