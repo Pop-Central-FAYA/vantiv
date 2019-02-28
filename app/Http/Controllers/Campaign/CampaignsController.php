@@ -8,6 +8,7 @@ use Illuminate\Support\Collection;
 use Vanguard\Http\Controllers\Controller;
 use Session;
 use Illuminate\Http\Request;
+use Vanguard\Http\Controllers\Traits\CompanyIdTrait;
 use Vanguard\Http\Requests\Campaigns\CampaignGeneralInformationRequest;
 use Vanguard\Libraries\Api;
 use Vanguard\Libraries\CampaignDate;
@@ -59,6 +60,7 @@ class CampaignsController extends Controller
     private $agency_id;
     private $campaign_general_information;
     protected $campaign_date;
+    use CompanyIdTrait;
 
     public function __construct(Utilities $utilities, DataTables $dataTables, CampaignDate $campaign_date)
     {
@@ -84,12 +86,7 @@ class CampaignsController extends Controller
 
     public function allActiveCampaignsData(Request $request)
     {
-        if(\Auth::user()->companies()->count() > 1){
-            $company_id = \Auth::user()->company_id;
-        }else{
-            $company_id = \Auth::user()->companies->first()->id;
-        }
-        $campaigns = new AllCampaign($request, $this->broadcaster_id, $this->agency_id, $dashboard = false, $company_id);
+        $campaigns = new AllCampaign($request, $dashboard = false, $this->companyId());
         return $campaigns->run();
     }
 
@@ -378,7 +375,7 @@ class CampaignsController extends Controller
 
     public function getCampaignOnHold()
     {
-        $campaigns_onhold = new CampaignOnhold($this->broadcaster_id, $this->agency_id);
+        $campaigns_onhold = new CampaignOnhold($this->companyId());
         $campaigns_onhold = $campaigns_onhold->getCampaignsOnhold();
         $campaigns = Utilities::getCampaignDatatablesforCampaignOnHold($campaigns_onhold);
         $currentPage = LengthAwarePaginator::resolveCurrentPage();

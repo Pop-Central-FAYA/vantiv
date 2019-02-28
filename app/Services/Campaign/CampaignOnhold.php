@@ -3,17 +3,16 @@
 namespace Vanguard\Services\Campaign;
 
 use Vanguard\Libraries\Enum\CampaignStatus;
+use Vanguard\Libraries\Enum\CompanyTypeName;
 use Vanguard\Libraries\Utilities;
 
 class CampaignOnhold
 {
-    protected $broadcaster_id;
-    protected $agency_id;
+    protected $company_id;
 
-    public function __construct($broadcaster_id, $agency_id)
+    public function __construct($company_id)
     {
-        $this->broadcaster_id = $broadcaster_id;
-        $this->agency_id = $agency_id;
+        $this->company_id = $company_id;
     }
 
     public function getCampaignsOnhold()
@@ -33,14 +32,18 @@ class CampaignOnhold
                             ['campaignDetails.status', CampaignStatus::ON_HOLD],
                             ['campaignDetails.adslots', '>', 0],
                         ])
-                        ->when($this->broadcaster_id, function($query) {
+                        ->when(!is_array($this->company_id) && \Auth::user()->company_type == CompanyTypeName::BROADCASTER, function($query) {
                             return $query->where([
-                                ['campaignDetails.broadcaster', $this->broadcaster_id],
+                                ['campaignDetails.broadcaster', $this->company_id],
                                 ['campaignDetails.agency', '']
                             ]);
                         })
-                        ->when($this->agency_id, function($query) {
-                            return $query->where('campaignDetails.agency', $this->agency_id)
+                        ->when(is_array($this->company_id) && \Auth::user()->company_type == CompanyTypeName::BROADCASTER, function($query){
+                            return $query->where('campaignDetails.agency', '')
+                                        ->whereIn('campaignDetails.launched_on', $this->company_id);
+                        })
+                        ->when(!is_array($this->company_id) && \Auth::user()->company_type == CompanyTypeName::AGENCY, function($query) {
+                            return $query->where('campaignDetails.agency', $this->company_id)
                                         ->groupBy('campaignDetails.campaign_id');
 
                         })

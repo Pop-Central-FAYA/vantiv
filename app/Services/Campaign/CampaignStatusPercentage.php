@@ -8,6 +8,7 @@ class CampaignStatusPercentage
 {
     protected $company_ids;
 
+
     public function __construct($company_ids)
     {
         $this->company_ids = $company_ids;
@@ -25,8 +26,9 @@ class CampaignStatusPercentage
     public function baseQuery()
     {
         return \DB::table('campaignDetails')
-                    ->whereIn('launched_on', $this->companyIdArray());
+            ->whereIn('launched_on', $this->companyIdArray());
     }
+
 
     public function getTotalCount()
     {

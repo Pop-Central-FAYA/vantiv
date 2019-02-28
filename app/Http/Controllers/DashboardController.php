@@ -3,13 +3,22 @@
 namespace Vanguard\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Vanguard\Http\Controllers\Traits\CompanyIdTrait;
 use Vanguard\Libraries\Utilities;
 use Auth;
 use Session;
+use Vanguard\Services\Brands\CompanyBrands;
 use Vanguard\Services\Campaign\AllCampaign;
+use Vanguard\Services\Campaign\PeriodicRevenueChart;
+use Vanguard\Services\Campaign\CampaignOnhold;
+use Vanguard\Services\Campaign\CampaignStatus;
 use Vanguard\Services\Campaign\CampaignStatusPercentage;
+use Vanguard\Services\Campaign\TotalVolumeCampaignChart;
 use Vanguard\Services\CampaignChannels\CampaignChannels;
+use Vanguard\Services\Client\BroadcasterClient;
 use Vanguard\Services\Company\UserCompanyByChannel;
+use Vanguard\Services\Invoice\PendingInvoice;
+use Vanguard\Services\Mpo\MpoList;
 use Yajra\DataTables\DataTables;
 
 
@@ -17,6 +26,8 @@ class DashboardController extends Controller
 {
     protected $utilities;
     protected $dataTables;
+
+    use CompanyIdTrait;
 
     public function __construct(Utilities $utilities, DataTables $dataTables)
     {
@@ -154,78 +165,69 @@ class DashboardController extends Controller
 
     public function dashboardCampaigns(Request $request)
     {
-        //campaigns
-        $agency_id = Session::get('agency_id');
-        $broadcaster_id = Session::get('broadcaster_id');
-        if(Auth::user()->companies()->count() > 1){
-            $company_id = Auth::user()->company_id;
-        }else{
-            $company_id = Auth::user()->companies->first()->id;
-        }
-        $campaigns = new AllCampaign($request, $broadcaster_id, $agency_id, $dashboard = true, $company_id);
+        $campaigns = new AllCampaign($request, $dashboard = true, $this->companyId());
         return $campaigns->run();
     }
 
     public function campaignManagementDashbaord()
     {
-        //will definitely do some refactoring on a later task to fiy the raw sql shit
-        $broadcaster = Session::get('broadcaster_id');
-        //total volume of campaigns
-        $camp_vol = Utilities::switch_db('api')->select("SELECT COUNT(id) as volume, DATE_FORMAT(time_created, '%M, %Y') as `month` from campaignDetails where status != 'on_hold' AND
-                                                            broadcaster = '$broadcaster' or agency_broadcaster = '$broadcaster' GROUP BY DATE_FORMAT(time_created, '%Y-%m') ");
-        $c_vol = [];
-        $c_month = [];
+        $total_volume_campaign_service = new TotalVolumeCampaignChart($this->companyId());
+        $company_client_service = new BroadcasterClient($this->companyId());
+        $pending_invoice_service = new PendingInvoice($this->companyId());
+        $client_brand_service = new CompanyBrands($this->companyId());
+        $campaign_status_service = new CampaignStatus($this->companyId());
+        $mpo_list_service = new MpoList($this->companyId(), null,null);
+        $campaign_on_hold_service = new CampaignOnhold($this->companyId());
+        $user_channels_with_other_details = $this->getChannelWithOtherDetails(Auth::user()->user_company_channels, $this->companyId());
 
-        foreach ($camp_vol as $ca) {
-            $c_vol[] = $ca->volume;
-            $c_month[] = $ca->month;
-        }
-
-        $c_volume = json_encode($c_vol);
-        $c_mon = json_encode($c_month);
-
-        $today_date = date("Y-m-d");
-
-//            all clients
-        $clients = Utilities::switch_db('reports')->select("SELECT * FROM walkIns WHERE broadcaster_id = '$broadcaster' ORDER BY time_created DESC");
-
-//            pending invoices
-        $pending_invoices = Utilities::switch_db('api')->select("SELECT * FROM invoiceDetails where broadcaster_id = '$broadcaster' AND status = 0 ");
-
-//            all_brands
-        $all_brands = Utilities::getBrands($broadcaster);
-
-        $active_campaigns = Utilities::switch_db('api')->select("SELECT c_d.adslots_id, c_d.stop_date, c_d.status, c_d.start_date, c_d.time_created, c_d.product, c_d.name, c_d.campaign_id, p.total, b.name as brand_name, 
-                                                                      c.campaign_reference from campaignDetails as c_d LEFT JOIN payments as p ON p.campaign_id = c_d.campaign_id 
-                                                                       LEFT JOIN campaigns as c ON c.id = c_d.campaign_id LEFT JOIN brands as b ON b.id = c_d.brand where  c_d.broadcaster = '$broadcaster' 
-                                                                       and c_d.status = 'active' and c_d.adslots  > 0 ORDER BY c_d.time_created DESC");
-
-        $broadcaster_info = Utilities::switch_db('api')->select("SELECT * from broadcasters where id = '$broadcaster'");
-
-        $pending_mpos = Utilities::switch_db('api')->select("SELECT m_d.mpo_id, m_d.is_mpo_accepted, m_d.agency_id, m.campaign_id from mpoDetails as m_d 
-                                                            INNER JOIN mpos as m ON m.id = m_d.mpo_id 
-                                                            INNER JOIN campaignDetails as c_d ON c_d.campaign_id = m.campaign_id 
-                                                            AND c_d.broadcaster = m_d.broadcaster_id
-                                                            where m_d.broadcaster_id = '$broadcaster' and c_d.status != 'on_hold' AND
-                                                            m_d.is_mpo_accepted = 0 order by m_d.time_created desc");
-
-        $campaign_on_hold = Utilities::switch_db('api')->select("SELECT id FROM campaignDetails where status = 'on_hold' AND broadcaster = '$broadcaster' AND agency = ''");
-
-        //get all the channel the user is tied
-        $user_channels_with_other_details = $this->getChannelWithOtherDetails(Auth::user()->user_company_channels);
-
-        return view('broadcaster_module.dashboard.campaign_management.dashboard')->with(['volume' => $c_volume,
-                                                                                        'month' => $c_mon,
-                                                                                        'broadcaster_info' => $broadcaster_info,
-                                                                                        'walkins' => $clients,
-                                                                                        'pending_invoices' => $pending_invoices,
-                                                                                        'brands' => $all_brands,
-                                                                                        'active_campaigns' => $active_campaigns,
-                                                                                        'pending_mpos' => $pending_mpos,
-                                                                                        'campaign_on_hold' => $campaign_on_hold,
-                                                                                        'user_channel_with_other_details' => $user_channels_with_other_details]);
+        return view('broadcaster_module.dashboard.campaign_management.dashboard')
+                    ->with(['volume' => $total_volume_campaign_service->totalVolumeOfCampaign()['campaign_volumes'],
+                            'month' => $total_volume_campaign_service->totalVolumeOfCampaign()['campaign_months'],
+                            'walkins' => $company_client_service->getCompanyClients(),
+                            'pending_invoices' => $pending_invoice_service->getPendingInvoice(),
+                            'brands' => $client_brand_service->getBrandCreatedByCompany(),
+                            'active_campaigns' => $campaign_status_service->getActiveCampaigns(),
+                            'pending_mpos' => $mpo_list_service->pendingMpoList(),
+                            'campaign_on_hold' => $campaign_on_hold_service->getCampaignsOnhold(),
+                            'user_channel_with_other_details' => $user_channels_with_other_details,
+                            'periodic_revenues' => Auth::user()->companies()->count() > 1 ? $this->periodicRevenueChart($this->companyId()) : '']);
 
     }
+
+    public function campaignManagementFilterResult()
+    {
+        $companies_id = \request()->channel_id;
+        $company_client_service = new BroadcasterClient($companies_id);
+        $pending_invoice_service = new PendingInvoice($companies_id);
+        $client_brand_service = new CompanyBrands($companies_id);
+        $campaign_status_service = new CampaignStatus($companies_id);
+        $mpo_list_service = new MpoList($companies_id, null,null);
+        $campaign_on_hold_service = new CampaignOnhold($companies_id);
+        $periodic_revenues = $this->periodicRevenueChart($companies_id);
+
+        return [
+                'walkIns' => $company_client_service->getCompanyClients(),
+                'pending_invoices' => $pending_invoice_service->getPendingInvoice(),
+                'brands' => $client_brand_service->getBrandCreatedByCompany(),
+                'active_campaigns' => $campaign_status_service->getActiveCampaigns(),
+                'pending_mpos' => $mpo_list_service->pendingMpoList(),
+                'campaign_on_hold' => $campaign_on_hold_service->getCampaignsOnhold(),
+                'periodic_revenues' => $periodic_revenues
+            ];
+    }
+
+    public function filteredCampaignListTable()
+    {
+        $campaigns = new AllCampaign(\request(), $dashboard = true, \request()->company_id);
+        return $campaigns->run();
+    }
+
+    public function periodicRevenueChart($company_id)
+    {
+        $campaign_chart_service = new PeriodicRevenueChart($company_id);
+        return $campaign_chart_service->formatPeriodicChart();
+    }
+
 
     public function inventoryManagementDashboard()
     {
@@ -291,7 +293,6 @@ class DashboardController extends Controller
                                                           WHERE payment_status = 1 AND broadcaster = '$broadcaster_id' 
                                                           GROUP BY DATE_FORMAT(time_created, '%Y-%m') 
                                                           ");
-//        dd($price);
         for ($i = 0; $i < count($periodic); $i++) {
             $months[] = date('M, Y', strtotime($periodic[$i]->days));
             $total_month[] = $price[$i]->total_price;
@@ -380,7 +381,7 @@ class DashboardController extends Controller
             return $high_value_campaigns;
     }
 
-    public function getChannelWithOtherDetails($channels_id)
+    public function getChannelWithOtherDetails($channels_id, $companies_id)
     {
         $channels_with_other_details = [];
         foreach ($channels_id as $channel_id){
@@ -399,6 +400,7 @@ class DashboardController extends Controller
                 ]
             ];
         }
+
         return $channels_with_other_details;
     }
 
