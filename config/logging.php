@@ -41,7 +41,7 @@ return [
         ],
         'dev' => [
             'driver' => 'stack',
-            'channels' => ['errorlog'],
+            'channels' => ['errorlog', 'slack'],
         ],
         'prod' => [
             'driver' => 'stack',
