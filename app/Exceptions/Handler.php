@@ -40,16 +40,16 @@ class Handler extends ExceptionHandler
      * @param  Exception  $e
      * @return void
      */
-    public function report(Exception $exception)
-    {
-        // For now do not send reports
+    // public function report(Exception $exception)
+    // {
+    //     // For now do not send reports
 
-        // if ($this->shouldReport($exception)) {
-        //     $this->sendMail($exception); // sends an email
-        // }
+    //     if ($this->shouldReport($exception)) {
+    //         $this->sendMail($exception); // sends an email
+    //     }
 
-        parent::report($exception);
-    }
+    //     parent::report($exception);
+    // }
 
     /**
      * Render an exception into an HTTP response.

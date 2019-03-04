@@ -16,6 +16,17 @@ COPY . /app
 COPY ./.env.example /app/.env
 
 # Delete some folders that might have been copied over
+# RUN rm -rf /app/vendor || true \
+#     && rm -rf /app/dev || true \
+#     && composer install \
+#     && find /app/bootstrap/cache -type f -delete || true \
+#     && find /app/storage/app -type f -delete || true \
+#     && find /app/storage/framework -type f -delete || true \
+#     && find /app/storage/logs -type f -delete || true \
+#     && find /app/storage/debugbar -type f -delete || true \
+#     && chmod -R 777 /app/bootstrap/cache \
+#     && chmod -R 777 /app/storage/ \
+#     && chmod -R 777 /app/public
 RUN rm -rf /app/vendor \
     && rm -rf /app/dev \
     && composer install \

@@ -16,7 +16,8 @@ return [
     |
     */
 
-    'default' => env('LOG_CHANNEL', 'stack'),
+    // 'default' => env('LOG_CHANNEL', 'local'),
+    'default' => env('APP_ENV', 'local'),
 
     /*
     |--------------------------------------------------------------------------
@@ -34,9 +35,17 @@ return [
     */
 
     'channels' => [
-        'stack' => [
+        'local' => [
             'driver' => 'stack',
-            'channels' => ['daily'],
+            'channels' => ['stderr', 'single']
+        ],
+        'dev' => [
+            'driver' => 'stack',
+            'channels' => ['errorlog'],
+        ],
+        'prod' => [
+            'driver' => 'stack',
+            'channels' => ['errorlog', 'slack'],
         ],
 
         'single' => [
@@ -57,7 +66,7 @@ return [
             'url' => env('LOG_SLACK_WEBHOOK_URL'),
             'username' => 'Laravel Log',
             'emoji' => ':boom:',
-            'level' => 'critical',
+            'level' => 'error',
         ],
 
         'papertrail' => [
