@@ -135,7 +135,7 @@ class AllCampaign
                                                             ]);
                                                 });
                                 })
-                                ->when(($this->request->filter_user == 'broadcaster'), function($query) use ($broadcaster_id) {
+                                ->when(($this->request->filter_user == 'broadcaster'), function($query) {
                                     return $query->when(is_array($this->company_ids), function($inner_query) {
                                                 return $inner_query->selectRaw("JSON_ARRAYAGG(campaignDetails.launched_on) AS station_id")
                                                                     ->where('campaignDetails.agency', '')
