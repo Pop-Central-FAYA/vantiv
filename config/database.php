@@ -75,7 +75,7 @@ return [
             'driver'    => 'mysql',
             'engine'    => 'InnoDB',
             'host'      => env('DB_HOST', 'localhost'),
-            'database'  => env('DB_REPORT_DATABASE', 'forge'),
+            'database'  => env('DB_DATABASE', 'api_db'),
             'username'  => env('DB_USERNAME', 'forge'),
             'password'  => env('DB_PASSWORD', ''),
             'charset'   => 'utf8',
