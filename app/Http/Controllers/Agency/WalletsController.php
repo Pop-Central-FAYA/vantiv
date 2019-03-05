@@ -53,6 +53,7 @@ class WalletsController extends Controller
                     'type' => $transaction->type,
                     'amount' => $transaction->amount,
                     'date' => date('d/m/Y', strtotime($transaction->time_created)),
+                    'status' => $transaction->status
 //                    'returning_balance' => $transaction
                 ];
                 $j++;
@@ -61,15 +62,19 @@ class WalletsController extends Controller
                 ->editColumn('type', function ($all_transactions) {
                     if($all_transactions['type'] === 'FUND WALLET'){
                         return '<span class="span_state status_success">Credit</span>';
-                    }else{
+                    }else if($all_transactions['type'] == 'DEBIT WALLET'){
                         return '<span class="span_state status_danger">Debit</span>';
+                    }else{
+                        return '<span class="span_state status_plain">No Status</span>';
                     }
                 })
                 ->editColumn('amount', function ($all_transactions) {
                     if($all_transactions['type'] === 'FUND WALLET'){
                         return '<span class="span_state status_success">&#8358;'. number_format($all_transactions['amount'], 2) .'</span>';
-                    }else{
+                    }else if($all_transactions['type'] == 'DEBIT WALLET'){
                         return '<span class="span_state status_danger">&#8358;'. number_format($all_transactions['amount'], 2) .'</span>';
+                    }else{
+                        return '<span class="span_state status_plain">&#8358;'. number_format($all_transactions['amount'], 2) .'</span>';
                     }
                 })
                 ->rawColumns(['type' => 'type', 'amount' => 'amount'])
@@ -87,6 +92,7 @@ class WalletsController extends Controller
                 'type' => $transaction->type,
                 'amount' => $transaction->amount,
                 'date' => date('d/m/Y', strtotime($transaction->time_created)),
+                'status' => $transaction->status
 //                'returning_balance' =>  $transaction
             ];
             $j++;
@@ -95,15 +101,19 @@ class WalletsController extends Controller
             ->editColumn('type', function ($all_transactions) {
                 if($all_transactions['type'] === 'FUND WALLET'){
                     return '<span class="span_state status_success">Credit</span>';
-                }else {
+                }else if($all_transactions['type'] == 'DEBIT WALLET'){
                     return '<span class="span_state status_danger">Debit</span>';
+                }else{
+                    return '<span class="span_state status_plain">No Status</span>';
                 }
             })
             ->editColumn('amount', function ($all_transactions) {
                 if($all_transactions['type'] === 'FUND WALLET'){
                     return '<span class="span_state status_success">&#8358;'. number_format($all_transactions['amount'], 2) .'</span>';
-                }else{
+                }else if($all_transactions['type'] == 'DEBIT WALLET'){
                     return '<span class="span_state status_danger">&#8358;'. number_format($all_transactions['amount'], 2) .'</span>';
+                }else{
+                    return '<span class="span_state status_plain">&#8358;'. number_format($all_transactions['amount'], 2) .'</span>';
                 }
             })
             ->rawColumns(['type' => 'type', 'amount' => 'amount'])

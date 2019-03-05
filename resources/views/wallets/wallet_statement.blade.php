@@ -64,6 +64,7 @@
                                 <th>Amount</th>
                                 <th>Transaction Ref.</th>
                                 <th>Type</th>
+                                <th>Status</th>
                                 {{--<th>Returning Balance</th>--}}
                             </tr>
                         </thead>
@@ -171,6 +172,7 @@
                     {data: 'amount', name: 'amount'},
                     {data: 'reference', name: 'reference'},
                     {data: 'type', name: 'type'},
+                    {data: 'status', name: 'status'}
                     // {data: 'returning_balance', name: 'returning_balance'}
                 ],
 
