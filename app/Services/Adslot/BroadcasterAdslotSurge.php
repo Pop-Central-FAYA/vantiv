@@ -31,6 +31,6 @@ class BroadcasterAdslotSurge
 
     public function getPercentageSurge()
     {
-        return FilePosition::where('id', $this->surge_position_id)->get();
+        return FilePosition::where('id', $this->surge_position_id)->first();
     }
 }
