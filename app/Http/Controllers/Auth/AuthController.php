@@ -385,12 +385,9 @@ class AuthController extends Controller
 
     public function processChangePassword(PasswordChangeRequest $request, $user_id)
     {
-
-        $password = bcrypt($request->password);
-
         try{
             $user = User::where('id', $user_id)->first();
-            $user->password = $password;
+            $user->password = $request->password;;
             $user->save();
         }catch (\Exception $exception){
             return redirect()->back()->withErrors(ClassMessages::PROCESSING_ERROR);

@@ -14,8 +14,15 @@
 
             <br>
 
-            <div class="auth_input">
+            <div class="auth_input{{ $errors->has('email') ? ' has-error' : '' }}">
                 <input type="email" name="email" id="username" placeholder="Email">
+                @if($errors->has('email'))
+                    <span class="help-block">
+                        <strong>
+                            {{ $errors->first('email') }}
+                        </strong>
+                    </span>
+                @endif
             </div>
         </div>
 
@@ -26,7 +33,4 @@
 
 @stop
 
-@section('scripts')
-    {!! JsValidator::formRequest('Vanguard\Http\Requests\Auth\LoginRequest', '#login-form') !!}
-@stop
 
