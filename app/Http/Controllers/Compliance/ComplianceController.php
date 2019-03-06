@@ -6,6 +6,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Libraries\Utilities;
 use Vanguard\Models\SelectedAdslot;
+use Vanguard\Services\Company\CompanyDetails;
 
 class ComplianceController extends Controller
 {
@@ -26,12 +27,12 @@ class ComplianceController extends Controller
 
         $compliance_reports = [];
         foreach ($schedule_slots as $schedule_slot){
-            $broadcaster = Utilities::getBroadcasterDetails($schedule_slot->broadcaster_id);
+            $broadcaster = new CompanyDetails($schedule_slot->broadcaster_id);
             $total_schedule_spot = $schedule_slot->countTotalSchedule($campaign_id, $schedule_slot->adslot);
             $total_campaign_to_time = $schedule_slot->countAiredSlots($schedule_slot->adslot, $campaign_id);
             $percent_compliance = $this->percentageCompliance($total_schedule_spot, $total_campaign_to_time);
             $compliance_reports[] = [
-                'Station' => $broadcaster[0]->brand,
+                'Station' => $broadcaster->getCompanyDetails()->name,
                 'Adslot Information' => $schedule_slot->get_adslot->get_rate_card->hourly_range->time_range,
                 'Total schedule spots' => $total_schedule_spot,
                 'Total campaign to time' => $total_campaign_to_time,

@@ -17,6 +17,7 @@ use Vanguard\Services\CampaignChannels\CampaignChannels;
 use Vanguard\Services\CampaignChannels\Radio;
 use Vanguard\Services\CampaignChannels\Tv;
 use Vanguard\Services\Company\CompanyDetails;
+use Vanguard\Services\Compliance\ComplianceLog;
 use Vanguard\Services\Upload\MediaUploadDetails;
 
 class Utilities {
@@ -187,7 +188,7 @@ class Utilities {
         }
 
         //query builder to get compliance
-        $compliances = Utilities::getComplianceLog($broadcaster_id, $campaign_details[0]->campaign_id);
+        $compliance_service = new ComplianceLog($broadcaster_id, $campaign_details[0]->campaign_id);
 
         if($broadcaster_id){
             $uploaded_files = SelectedAdslot::where([['campaign_id', $campaign_id], ['broadcaster_id', $broadcaster_id]])->get();
@@ -196,7 +197,8 @@ class Utilities {
 
         }
 
-        return (['campaign_det' => $campaign_det, 'file_details' => $file_details, 'broadcasters' => $broadcaster, 'compliance_reports' => $compliances, 'uploaded_files' => $uploaded_files]);
+        return (['campaign_det' => $campaign_det, 'file_details' => $file_details, 'broadcasters' => $broadcaster,
+                'compliance_reports' => $compliance_service->getComplianceLog(), 'uploaded_files' => $uploaded_files]);
 
     }
 
