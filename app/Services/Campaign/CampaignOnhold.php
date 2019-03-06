@@ -31,6 +31,7 @@ class CampaignOnhold
                         ->where([
                             ['campaignDetails.status', CampaignStatus::ON_HOLD],
                             ['campaignDetails.adslots', '>', 0],
+                            ['campaignDetails.created_by', \Auth::user()->id]
                         ])
                         ->when(!is_array($this->company_id) && \Auth::user()->company_type == CompanyTypeName::BROADCASTER, function($query) {
                             return $query->where([

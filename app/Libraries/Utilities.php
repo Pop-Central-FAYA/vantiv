@@ -453,15 +453,18 @@ class Utilities {
 
     public static function getBrandsForWalkins($client_id)
     {
+        $user_id = \Auth::user()->id;
         $brand_list = Utilities::switch_db('api')->select("SELECT b.*, b_c.media_buyer_id as agency_broadcaster, b_c.client_id as client_walkins_id
-                                                        FROM brand_client as b_c INNER JOIN brands as b ON b.id = b_c.brand_id where b_c.client_id = '$client_id'");
+                                                        FROM brand_client as b_c INNER JOIN brands as b ON b.id = b_c.brand_id where b_c.client_id = '$client_id' AND b_c.created_by = '$user_id'");
         return $brand_list;
     }
 
     public static function getBrands($media_buyer_id)
     {
+        $user_id = \Auth::user()->id;
         return Utilities::switch_db('api')->select("SELECT b.*, b_c.media_buyer_id as broadcaster_agency_id, b_c.client_id as client_walkins_id
-                                                        FROM brand_client as b_c INNER JOIN brands as b ON b.id = b_c.brand_id where b_c.media_buyer_id = '$media_buyer_id'");
+                                                                FROM brand_client as b_c INNER JOIN brands as b ON b.id = b_c.brand_id 
+                                                                where b_c.media_buyer_id = '$media_buyer_id' AND created_by = '$user_id'");
     }
 
     public static function singleBrand($id, $client_id)
@@ -1174,6 +1177,7 @@ class Utilities {
            'media_buyer' => $media_buyer,
            'media_buyer_id' => $broadcaster_agency_id,
            'client_id' => $client_id,
+            'created_by' => \Auth::user()->id
         ]);
     }
 

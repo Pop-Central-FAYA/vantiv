@@ -46,13 +46,19 @@ class PreselectedAdslotService
                                     ->when($this->request && $this->agency_id, function ($query) {
                                         return $query->where('agency_id', $this->agency_id);
                                     })
+                                    ->when(\Auth::user()->id, function ($query) {
+                                        return $query->where('created_by', \Auth::user()->id);
+                                    })
                                     ->get();
     }
 
     public function getSumPrice()
     {
         return Utilities::switch_db('api')->table('preselected_adslots')
-                                                ->where('user_id', $this->user_id)
+                                                ->where([
+                                                    ['user_id', $this->user_id],
+                                                    ['created_by', \Auth::user()->id]
+                                                ])
                                                 ->sum('total_price');
     }
 
@@ -87,6 +93,7 @@ class PreselectedAdslotService
         $preselected_adslot->format = $this->request->file_format;
         $preselected_adslot->air_date = $this->request->air_date;
         $preselected_adslot->agency_id = $this->agency_id ? $this->agency_id : '';
+        $preselected_adslot->created_by = \Auth::user()->id;
 
         $preselected_adslot->save();
 
@@ -103,6 +110,7 @@ class PreselectedAdslotService
     public function sumTotalPriceByMediaBuyer()
     {
         return Utilities::switch_db('api')->table('preselected_adslots')
+                                            ->where('created_by', \Auth::user()->id)
                                             ->when($this->broadcaster_id, function ($query) {
                                                 return $query->where([
                                                     ['user_id', $this->user_id],
@@ -131,6 +139,9 @@ class PreselectedAdslotService
                         ->where('preselected_adslots.user_id', $this->user_id)
                         ->when($this->broadcaster_id, function ($query) {
                             return $query->where('preselected_adslots.broadcaster_id', $this->broadcaster_id);
+                        })
+                        ->when(\Auth::user()->id, function ($query) {
+                            return $query->where('created_by', \Auth::user()->id);
                         })
                         ->when($this->agency_id, function($query) {
                             return $query->where('preselected_adslots.agency_id', $this->agency_id);
@@ -171,7 +182,10 @@ class PreselectedAdslotService
     public function sumTotalPriceGroupedByBroadcaster()
     {
         return \DB::table('preselected_adslots')
-            ->where('user_id', $this->user_id)
+            ->where([
+                ['user_id', $this->user_id],
+                ['created_by', \Auth::user()->id]
+            ])
             ->when($this->broadcaster_id, function ($query) {
                 return $query->groupBy('broadcaster_id');
             })
@@ -193,7 +207,8 @@ class PreselectedAdslotService
                         ->selectRaw('SUM(total_price) AS total, COUNT(id) AS total_slot, broadcaster_id')
                         ->where([
                             ['user_id', $this->user_id],
-                            ['agency_id', $this->agency_id]
+                            ['agency_id', $this->agency_id],
+                            ['created_by', \Auth::user()->id]
                         ])
                         ->groupBy('broadcaster_id')
                         ->get();
