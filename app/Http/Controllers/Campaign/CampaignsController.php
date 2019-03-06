@@ -349,7 +349,7 @@ class CampaignsController extends Controller
 
     public function removePreselectedAdslot($id)
     {
-        PreselectedAdslot::where('id', $id)->delete();
+        PreselectedAdslot::where([['id', $id], ['created', \Auth::user()->id]])->delete();
         Session::flash('success', ClassMessages::REMOVE_PRESELECTED_ADSLOT);
         return redirect()->back();
     }
@@ -580,7 +580,7 @@ class CampaignsController extends Controller
         $store_mpo_details = new StoreMpoDetails($post_campaign_bank['mpo_id'], $this->broadcaster_id, null, null);
         $store_mpo_details->storeMpoDetails();
         $this->updateAdslotAndFilePositions($post_campaign_bank['preselected_adslots']);
-        PreselectedAdslot::where('user_id', $post_campaign_bank['user_id'])->delete();
+        PreselectedAdslot::where([['user_id', $post_campaign_bank['user_id']],['created_by', \Auth::user()->id]])->delete();
         Upload::where('user_id', $post_campaign_bank['user_id'])->delete();
     }
 
@@ -655,8 +655,8 @@ class CampaignsController extends Controller
                 $store_mpo_details->storeMpoDetails();
             }
             $this->updateAdslotAndFilePositions($campaign_data_bank['preselected_adslots']);
-            PreselectedAdslot::where('user_id', $campaign_data_bank['user_id'])->delete();
-            Upload::where('user_id', $campaign_data_bank['user_id'])->delete();
+            PreselectedAdslot::where([['user_id', $campaign_data_bank['user_id']], ['created_by', \Auth::user()->id]])->delete();
+            Upload::where([['user_id', $campaign_data_bank['user_id']],['created_by', \Auth::user()->id]])->delete();
         });
     }
 

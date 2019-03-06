@@ -19,10 +19,16 @@ class MediaUploadDetails
     {
         return Utilities::switch_db('api')->table('uploads')
                             ->when($this->user_id, function ($query) {
-                                return $query->where('user_id', $this->user_id);
+                                return $query->where([
+                                    ['user_id', $this->user_id],
+                                    ['created_by', \Auth::user()->id]
+                                    ]);
                             })
                             ->when($this->channel_id, function($query) {
-                                return $query->where('channel', $this->channel_id);
+                                return $query->where([
+                                    ['channel', $this->channel_id],
+                                    ['created_by', \Auth::user()->id]
+                                ]);
                             })
                             ->get();
     }

@@ -48,7 +48,8 @@ class MediaUploadProcessing
         $upload = Upload::where([
             ['time', $this->request->time],
             ['channel', $this->request->channel],
-            ['user_id', $this->request->user_id]
+            ['user_id', $this->request->user_id],
+            ['created_by', \Auth::user()->id]
         ])
         ->first();
 
@@ -66,7 +67,8 @@ class MediaUploadProcessing
                     'file_url' => $this->request->file_url,
                     'file_name' => $this->request->time_picked.'_'.$this->request->file_format.'_'.$this->request->file_name,
                     'channel' => $this->request->channel,
-                    'format' => $this->request->file_format
+                    'format' => $this->request->file_format,
+                    'created_by' => \Auth::user()->id
                 ]);
     }
 
@@ -75,7 +77,8 @@ class MediaUploadProcessing
         try{
             Upload::where([
                 ['id', $this->upload_id],
-                ['user_id', $this->user_id]
+                ['user_id', $this->user_id],
+                ['created_by', \Auth::user()->id]
             ])->delete();
             return 'success';
         }catch (\Exception $exception){

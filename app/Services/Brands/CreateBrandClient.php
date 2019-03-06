@@ -26,6 +26,7 @@ class CreateBrandClient
         $brand_client->media_buyer = $this->broadcaster_id ? 'Broadcaster' : 'Agency';
         $brand_client->media_buyer_id = $this->media_buyer_id;
         $brand_client->client_id = $this->client_id;
+        $brand_client->created_by = \Auth::user()->id;
         $brand_client->save();
         return $brand_client;
     }
