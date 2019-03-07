@@ -15,6 +15,7 @@ use Vanguard\Models\Company;
 use Vanguard\Models\PreselectedAdslot;
 use Vanguard\Models\SelectedAdslot;
 use Vanguard\Models\Upload;
+use Vanguard\Services\Campaign\MediaMix;
 use Yajra\DataTables\DataTables;
 use Session;
 
@@ -433,57 +434,12 @@ class CampaignsController extends Controller
     {
         $channel = request()->channel;
         $broadcaster_retain = request()->media_channel;
-
-        $all_channel = [];
-        $retained_channel = [];
-
         if($channel){
-            $broadcasters = \DB::table('companies')
-                                ->join('channel_company', 'channel_company.company_id', '=', 'companies.id')
-                                ->select('companies.*')
-                                ->whereIn('channel_company.channel_id', $channel)
-                                ->get();
-            foreach ($broadcasters as $broadcaster){
-                $campaigns = Utilities::switch_db('api')->select("SELECT * from campaignDetails where broadcaster = '$broadcaster->id' AND campaign_id = '$campaign_id'");
-                $all_channel[] = [
-                    'broadcaster_id' => $campaigns ? $broadcaster->id : '',
-                    'broadcaster' => $campaigns ? $broadcaster->name : '',
-                    'campaign_id' => $campaign_id ? $campaign_id : '',
-                ];
-            }
+            $all_company_channels_service = new MediaMix($campaign_id, $channel, $broadcaster_retain);
 
-            if(!empty($broadcaster_retain)){
-                $retained_broadcasters = Company::whereIn('id', $broadcaster_retain)->get();
-                foreach ($retained_broadcasters as $retained_broadcaster){
-                    $campaigns_retained = Utilities::switch_db('api')->select("SELECT * from campaignDetails where broadcaster = '$retained_broadcaster->id' AND campaign_id = '$campaign_id'");
-                    $retained_channel[] = [
-                        'broadcaster_id' => $campaigns_retained ? $retained_broadcaster->id : '',
-                        'broadcaster' => $campaigns_retained ? $retained_broadcaster->brand : '',
-                        'campaign_id' => $campaigns_retained ? $campaign_id : '',
-                    ];
-                }
-            }
-
-            //media mix
-            $media_types = request()->channel;
-            $media_mix_datas = [];
-            foreach ($media_types as $media_type){
-                $channel = Utilities::switch_db('api')->select("SELECT * from campaignChannels where id = '$media_type'");
-                $payments = Utilities::switch_db('api')->select("SELECT SUM(amount) as amount from paymentDetails where broadcaster IN (SELECT id from broadcasters where channel_id = '$media_type') AND payment_id = (SELECT id from payments where campaign_id = '$campaign_id')");
-                $total_amount = Utilities::switch_db('api')->select("SELECT * from payments where campaign_id = '$campaign_id'");
-                if($channel[0]->channel === 'TV'){
-                    $color = '#5281FE';
-                }else{
-                    $color = '#00C4CA';
-                }
-                $media_mix_datas[] = [
-                    'name' => $channel[0]->channel,
-                    'y' => (integer)(($payments[0]->amount / $total_amount[0]->total) * 100),
-                    'color' => $color
-                ];
-            }
-
-            return response()->json(['all_channel' => $all_channel, 'media_mix' => $media_mix_datas, 'retained_channel' => $retained_channel]);
+            return response()->json(['all_channel' => $all_company_channels_service->getAllCompanyWithChannelInCampaign(),
+                                    'media_mix' => $all_company_channels_service->getMediaMixData(),
+                                    'retained_channel' => !empty($broadcaster_retain) ? $all_company_channels_service->getRetainedCompany() : null]);
         }else{
             return null;
         }
