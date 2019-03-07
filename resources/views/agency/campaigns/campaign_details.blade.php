@@ -337,6 +337,7 @@
                                 <td>{{ $compliance_report->asset_name }}</td>
                             </tr>
                         @endforeach
+                        <a href="{{ route('compliance.download.summary', ['campaign_id' => $campaign_details['campaign_det']['campaign_id']]) }}">Download Summary in Excel</a>
                     </table>
                 </div>
                 <!-- end -->
