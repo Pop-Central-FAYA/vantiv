@@ -17,6 +17,7 @@ use Vanguard\Models\Upload;
 use Vanguard\Services\Campaign\MediaMix;
 use Vanguard\Services\Campaign\CampaignBudgetGraph;
 use Session;
+use Vanguard\Services\Compliance\ComplianceGraph;
 
 class CampaignsController extends Controller
 {
@@ -459,100 +460,15 @@ class CampaignsController extends Controller
 
     public function complianceFilter()
     {
-        /**
-         * The compliance graph
-         *The first graph you see when you select media types and subsequest media channels attached on the campaign details page is just a summary of how the campaign budget is been spent on the different
-         *broadcasters and are grouped by the media types they belong to, in my case (TV, Radio for now)
-         *
-         * When the filter is then applied, it hits this method to fetch data from the compliances table.
-         */
-
-        $all_comp_data = [];
-        $compliance_datas = [];
         $campaign_id = request()->campaign_id;
         $start_date = date('Y-m-d', strtotime(request()->start_date));
         $stop_date = date('Y-m-d', strtotime(request()->stop_date));
-        $media_channel = request()->media_channel;
+        $publisher_id = request()->media_channel;
 
-        if($media_channel){
-            $broadcaster = "'".implode("','", $media_channel)."'";
-        }
+        $compliance_graph_service = new ComplianceGraph($campaign_id, $start_date, $stop_date, $publisher_id);
 
-        $dates = [];
-
-        //querying the compliances table get date
-        $date_compliances = Utilities::switch_db('api')->select("SELECT time_created from compliances where campaign_id = '$campaign_id' AND time_created BETWEEN '$start_date' AND '$stop_date' GROUP BY DATE_FORMAT(time_created, '%Y-%m-%d') ");
-        foreach ($date_compliances as $date_compliance){
-            $date_created = date('Y-m-d', strtotime($date_compliance->time_created));
-            //this query results to a multidimensional array
-            $compliances = Utilities::switch_db('api')->select("SELECT IF(c.amount_spent IS NOT NULL, sum(c.amount_spent), 0) as amount, c.broadcaster_id, c.campaign_id, date_format(c.time_created, '%Y-%m-%d') as time, b.brand, e.channel as stack, c.channel from compliances as c, broadcasters as b, campaignChannels as e where c.broadcaster_id = b.id and c.channel = e.id and c.broadcaster_id IN ($broadcaster) and c.campaign_id = '$campaign_id' and date_format(c.time_created, '%Y-%m-%d') = '$date_created' GROUP BY c.broadcaster_id");
-
-            $all_comp_data[] = $compliances;
-            $dates[] = [date('Y-m-d', strtotime($date_compliance->time_created))];
-        }
-
-        //array_flatten brings out all the arrays to form an array of objects
-        $flatened_comp = array_flatten($all_comp_data);
-
-        //returned back to array of arrays
-        $array = json_decode(json_encode($flatened_comp), true);
-
-        $final_arr = array();
-
-        //this group the array by broadcasters
-        foreach($array as $key=>$value){
-
-            if(!array_key_exists($value['broadcaster_id'],$final_arr)){
-                $final_arr[$value['broadcaster_id']] = $value;
-                unset($final_arr[$value['broadcaster_id']]['amount']);
-                $final_arr[$value['broadcaster_id']]['time_amount'] =array();
-                $final_arr[$value['broadcaster_id']]['amount'] =array();
-
-                array_push($final_arr[$value['broadcaster_id']]['time_amount'],$value['time']);
-                array_push($final_arr[$value['broadcaster_id']]['amount'],(integer)$value['amount']);
-            }else
-            {
-                array_push($final_arr[$value['broadcaster_id']]['time_amount'],$value['time']);
-                array_push($final_arr[$value['broadcaster_id']]['amount'],(integer)$value['amount']);
-            }
-        }
-
-        $array_values = array_values($final_arr);
-
-        foreach ($array_values as $array_value){
-            if($array_value['stack'] === 'TV'){
-                $color = '#5281FE';
-            }else{
-                $color = '#00C4CA';
-            }
-            $compliance_datas[] = [
-                'color' => $color,
-                'name' => $array_value['brand'],
-                'data' => $array_value['amount'],
-                'stack' => $array_value['stack']
-            ];
-        }
-
-        //media mix
-        $media_mix_datas = [];
-        $media_mixes = Utilities::switch_db('api')->select("SELECT SUM(amount_spent) as total_amount_spent, channel FROM compliances where campaign_id = '$campaign_id' AND time_created BETWEEN '$start_date' AND '$stop_date' AND broadcaster_id IN ($broadcaster) GROUP BY channel");
-        $total_amount = Utilities::switch_db('api')->select("SELECT * from payments where campaign_id = '$campaign_id'");
-        foreach ($media_mixes as $media_mix){
-            $channel = Utilities::switch_db('api')->select("SELECT * from campaignChannels where id = '$media_mix->channel'");
-            if($channel[0]->channel === 'TV'){
-                $color = '#5281FE';
-            }else{
-                $color = '#00C4CA';
-            }
-            $media_mix_datas[] = [
-                'name' => $channel[0]->channel,
-                'y' => (integer)(($media_mix->total_amount_spent / $total_amount[0]->total) * 100),
-                'color' => $color
-            ];
-        }
-
-
-        return response()->json(['date' => $dates, 'data' => $compliance_datas, 'media_mix' => $media_mix_datas]);
+        return response()->json(['date' => $compliance_graph_service->getComplianceDates(),
+                                'data' => $compliance_graph_service->formatDataForGraphCompatibility()]);
     }
 
     public function updateBudget(Request $request)
