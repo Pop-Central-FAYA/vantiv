@@ -11,12 +11,11 @@ use Vanguard\Http\Requests\CampaignInformationUpdateRequest;
 use Vanguard\Libraries\Api;
 use Vanguard\Libraries\CampaignDate;
 use Vanguard\Libraries\Utilities;
-use Vanguard\Models\Company;
 use Vanguard\Models\PreselectedAdslot;
 use Vanguard\Models\SelectedAdslot;
 use Vanguard\Models\Upload;
 use Vanguard\Services\Campaign\MediaMix;
-use Yajra\DataTables\DataTables;
+use Vanguard\Services\Campaign\CampaignBudgetGraph;
 use Session;
 
 class CampaignsController extends Controller
@@ -447,37 +446,11 @@ class CampaignsController extends Controller
 
     public function complianceGraph()
     {
-        $all_comp_data = [];
-        $date = [];
         $campaign_id = request()->campaign_id;
-        $media_channels = request()->channel;
-        if($media_channels){
-            foreach ($media_channels as $media_channel){
-                $broadcaster = Company::where('id', $media_channel)->first();
-                $campaigns = Utilities::switch_db('api')->select("SELECT * from campaignDetails where campaign_id = '$campaign_id' AND broadcaster = '$media_channel' ");
-                $channel_id = $campaigns[0]->channel;
-                $stack = Utilities::switch_db('api')->select("SELECT * from campaignChannels where id = (SELECT channel_id from broadcasters where id = '$media_channel')");
-                $payments = Utilities::switch_db('api')->select("SELECT amount from paymentDetails where broadcaster = '$media_channel' AND payment_id IN (SELECT id FROM payments where campaign_id = '$campaign_id')");
-                if($stack[0]->channel === 'TV'){
-                    $color = '#5281FE';
-                }else{
-                    $color = '#00C4CA';
-                }
-                $all_comp_data[] = [
-                    'color' => $color,
-                    'name' => $broadcaster->name,
-                    'data' => array($payments[0]->amount),
-                    'stack' => $stack[0]->channel
-                ];
-
-            }
-
-            $date_compliances = Utilities::switch_db('api')->select("SELECT time_created from campaignDetails where campaign_id = '$campaign_id' GROUP BY DATE_FORMAT(time_created, '%Y-%m-%d') ");
-            foreach ($date_compliances as $date_compliance){
-                $date[] = [date('Y-m-d', strtotime($date_compliance->time_created))];
-            }
-
-            return response()->json(['data' => $all_comp_data, 'date' => $date]);
+        $media_publishers = request()->channel;
+        if($media_publishers){
+            $compliance_graph_service = new CampaignBudgetGraph($campaign_id, $media_publishers);
+            return $compliance_graph_service->getCampaignBudgetData();
         }else{
             return null;
         }
