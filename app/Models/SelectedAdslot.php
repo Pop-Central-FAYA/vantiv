@@ -15,7 +15,8 @@ class SelectedAdslot extends Model
 
 
     protected $fillable = ['id', 'user_id', 'campaign_id', 'adslot', 'broadcaster_id', 'file_name', 'file_url', 'file_code','inventory_status', 'created_at',
-                            'updated_at', 'status', 'agency_id', 'agency_broadcaster', 'time_picked', 'airbox_status', 'position_id', 'public_id', 'format', 'air_date'];
+                            'updated_at', 'status', 'agency_id', 'agency_broadcaster', 'time_picked', 'airbox_status', 'position_id', 'public_id',
+                            'format', 'air_date', 'adslot_amount'];
 
     public function rejection_reasons()
     {
