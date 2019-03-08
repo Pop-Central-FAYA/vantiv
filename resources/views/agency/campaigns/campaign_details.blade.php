@@ -85,7 +85,7 @@
                 <!-- filter -->
                 <div class="filters clearfix compliance_load">
                     <div class="column col_7">
-                        <h4 class="small_faint 7ppercased weight_medium">Compliance</h4>
+                        <h4 class="small_faint 7ppercased weight_medium">Campaign Budget</h4>
                         <div class="small_faint weight_medium add_reports">
 
                         </div>
