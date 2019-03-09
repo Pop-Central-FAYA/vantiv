@@ -445,7 +445,7 @@ class CampaignsController extends Controller
         }
     }
 
-    public function complianceGraph()
+    public function campaignBudgetGraph()
     {
         $campaign_id = request()->campaign_id;
         $media_publishers = request()->channel;
@@ -458,7 +458,7 @@ class CampaignsController extends Controller
 
     }
 
-    public function complianceFilter()
+    public function complianceGraph()
     {
         $campaign_id = request()->campaign_id;
         $start_date = date('Y-m-d', strtotime(request()->start_date));

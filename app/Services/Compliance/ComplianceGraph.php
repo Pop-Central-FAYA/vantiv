@@ -117,9 +117,9 @@ class ComplianceGraph
         $compliance_data = [];
         foreach ($this->groupByPublishers() as $compliance){
             if($compliance['stack'] === 'TV'){
-                $color = '#5281FE';
+                $color = $this->barColors()->random();
             }else{
-                $color = '#00C4CA';
+                $color = $this->barColors()->random();
             }
             $compliance_data[] = [
                 'color' => $color,
@@ -129,5 +129,20 @@ class ComplianceGraph
             ];
         }
         return $compliance_data;
+    }
+
+    public function barColors()
+    {
+        return collect([
+                    '#4572A7',
+                    '#AA4643',
+                    '#89A54E',
+                    '#80699B',
+                    '#3D96AE',
+                    '#DB843D',
+                    '#92A8CD',
+                    '#A47D7C',
+                    '#B5CA92'
+                ]);
     }
 }
