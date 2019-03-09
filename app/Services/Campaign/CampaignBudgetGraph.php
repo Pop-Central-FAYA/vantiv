@@ -2,8 +2,11 @@
 
 namespace Vanguard\Services\Campaign;
 
+use Vanguard\Services\Traits\ChartColor;
+
 class CampaignBudgetGraph
 {
+    use ChartColor;
     protected $campaign_id;
     protected $media_publishers;
 
@@ -47,9 +50,9 @@ class CampaignBudgetGraph
         foreach ($this->media_publishers as $media_publisher){
             $compliance_details = $this->campaignBudgetGraphQueryForVerticalAxis($media_publisher);
             if($compliance_details[0]->channel === 'TV'){
-                $color = '#5281FE';
+                $color = $this->chartColors()->random();
             }else{
-                $color = '#00C4CA';
+                $color = $this->chartColors()->random();
             }
             $vertical_axis_data[] = [
                 'color' => $color,
