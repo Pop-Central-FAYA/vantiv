@@ -4,9 +4,11 @@ namespace Vanguard\Services\Campaign;
 
 use Vanguard\Models\CampaignChannel;
 use Vanguard\Models\Payment;
+use Vanguard\Services\Traits\ChartColor;
 
 class MediaMix
 {
+    use ChartColor;
     protected $campaign_id;
     protected $channel;
     protected $publisher_retained;
@@ -80,9 +82,9 @@ class MediaMix
                             ->sum('paymentDetails.amount');
             $total_amount = Payment::where('campaign_id', $this->campaign_id)->first();
             if($channel->channel === 'TV'){
-                $color = '#5281FE';
+                $color = $this->chartColors()->random();
             }else{
-                $color = '#00C4CA';
+                $color = $this->chartColors()->random();
             }
             $media_mix_datas[] = [
                 'name' => $channel->channel,

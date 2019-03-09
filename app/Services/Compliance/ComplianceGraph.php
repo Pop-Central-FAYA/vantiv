@@ -3,9 +3,11 @@
 namespace Vanguard\Services\Compliance;
 
 use Vanguard\Libraries\Enum\BroadcasterPlayoutStatus;
+use Vanguard\Services\Traits\ChartColor;
 
 class ComplianceGraph
 {
+    use ChartColor;
     protected $campaign_id;
     protected $start_date;
     protected $end_date;
@@ -117,9 +119,9 @@ class ComplianceGraph
         $compliance_data = [];
         foreach ($this->groupByPublishers() as $compliance){
             if($compliance['stack'] === 'TV'){
-                $color = $this->barColors()->random();
+                $color = $this->chartColors()->random();
             }else{
-                $color = $this->barColors()->random();
+                $color = $this->chartColors()->random();
             }
             $compliance_data[] = [
                 'color' => $color,
@@ -129,20 +131,5 @@ class ComplianceGraph
             ];
         }
         return $compliance_data;
-    }
-
-    public function barColors()
-    {
-        return collect([
-                    '#4572A7',
-                    '#AA4643',
-                    '#89A54E',
-                    '#80699B',
-                    '#3D96AE',
-                    '#DB843D',
-                    '#92A8CD',
-                    '#A47D7C',
-                    '#B5CA92'
-                ]);
     }
 }
