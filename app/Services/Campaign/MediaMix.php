@@ -46,6 +46,7 @@ class MediaMix
     {
         return \DB::table('companies')
                     ->join('campaignDetails', 'campaignDetails.launched_on', '=', 'companies.id')
+                    ->select('companies.name AS company_name', 'companies.id AS company_id')
                     ->where('campaignDetails.campaign_id', $this->campaign_id)
                     ->whereIn('companies.id', $this->publisher_retained)
                     ->get();
@@ -56,8 +57,8 @@ class MediaMix
         $retained_company = [];
         foreach ($this->getRetainedCompanyQuery() as $company){
             $retained_company[] = [
-                'broadcaster_id' => $company->id,
-                'broadcaster' => $company->name,
+                'broadcaster_id' => $company->company_id,
+                'broadcaster' => $company->company_name,
                 'campaign_id' => $this->campaign_id,
             ];
         }

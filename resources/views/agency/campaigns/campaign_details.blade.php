@@ -862,7 +862,6 @@
                         url: url,
                         data: { campaign_id : campaign_id,start_date: start_date, stop_date: stop_date, media_channel: media_channel },
                         success: function (data) {
-                            console.log(data);
                             var small_html = '<p>';
                             $.each(data.media_mix, function (index, value) {
                                 small_html += value.name+' : '+value.y+'% ';
