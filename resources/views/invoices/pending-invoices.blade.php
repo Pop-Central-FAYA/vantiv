@@ -40,28 +40,6 @@
 
     </div>
 
-    @foreach($all_invoices as $invoice)
-        {{--modal for approving invoices--}}
-        <div class="modal_contain" id="approve_invoice{{ $invoice['id'] }}">
-            <div class="wallet_placer margin_center mb3"></div>
-            <form method="POST" class="selsec" action="{{ route('invoices.update', ['invoice_id' => $invoice['id']]) }}">
-                {{ csrf_field() }}
-                <p class="align_center margin_center col_10 mb4">By approving, you agree the sum of <span class='color_base weight_medium'>&#8358; {{ $invoice['actual_amount_paid'] }}</span> be deducted from your wallet </p>
-
-                <div class="align_right">
-                    <span class="padd color_initial light_font" onclick="$.modal.close()">Cancel</span>
-                    <button type="submit" class="btn">Continue</button>
-                </div>
-            </form>
-        </div>
-
-        {{--modal for viewing invoices--}}
-        <div class="modal_contain" id="invoice{{ $invoice['id'] }}">
-
-            <h3>Invoice Details for {{ $invoice['campaign_name'] }}</h3>
-        </div>
-    @endforeach
-
 @stop
 
 @section('styles')
