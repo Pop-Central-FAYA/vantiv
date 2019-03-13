@@ -187,6 +187,7 @@ return [
         Yajra\DataTables\DataTablesServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
+        Barryvdh\DomPDF\ServiceProvider::class,
 
 
         /*
@@ -260,6 +261,7 @@ return [
         'Settings' => anlutro\LaravelSettings\Facade::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
+        'PDF' => Barryvdh\DomPDF\Facade::class,
 
     ],
 

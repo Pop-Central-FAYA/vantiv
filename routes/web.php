@@ -387,6 +387,8 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/pending/data', 'InvoiceController@pendingData');
             Route::get('/pending', 'InvoiceController@pending')->name('invoices.pending');
             Route::post('/{invoice_id}/update', 'InvoiceController@approveInvoice')->name('invoices.update');
+            Route::get('/details/{id}', 'InvoiceController@getInvoiceDetails')->name('invoice.details');
+            Route::get('/export/pdf/{id}', 'InvoiceController@exportToPDF')->name('invoice.export');
         });
 
         Route::group(['prefix' => 'wallets'], function(){
