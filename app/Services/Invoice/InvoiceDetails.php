@@ -2,6 +2,7 @@
 
 namespace Vanguard\Services\Invoice;
 
+use Riskihajar\Terbilang\Terbilang;
 use Vanguard\Services\Traits\InvoiceQueryTrait;
 
 class InvoiceDetails
@@ -137,9 +138,7 @@ class InvoiceDetails
 
     public function formatNetTotalToWord($net_total)
     {
-        $formatter = new \NumberFormatter("en", \NumberFormatter::SPELLOUT);
-        $formatter->setTextAttribute(\NumberFormatter::DEFAULT_RULESET, "%spellout-numbering-verbose");
-        return $formatter->format($net_total);
+        return \Riskihajar\Terbilang\Facades\Terbilang::make($net_total, ' Naira Only');
     }
 
 }

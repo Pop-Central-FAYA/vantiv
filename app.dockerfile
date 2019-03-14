@@ -3,7 +3,7 @@ MAINTAINER Joshua Adeyemi <joshua@fayamedia.com>
 
 WORKDIR /app
 
-RUN apk add php7-fileinfo mysql-client php7-intl
+RUN apk add php7-fileinfo mysql-client
 
 # This forces apache logs to redirect to stdout so they go through the docker logging
 RUN ln -sf /proc/self/fd/1 /var/log/apache2/access.log && \
