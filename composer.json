@@ -31,7 +31,8 @@
         "jeremykenedy/laravel-users": "1.4.0",
         "fideloper/proxy": "^4.0",
         "spatie/laravel-permission": "^2.29",
-        "barryvdh/laravel-dompdf": "^0.8.4"
+        "carlos-meneses/laravel-mpdf": "^2.1",
+        "riskihajar/terbilang": "^1.2"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",

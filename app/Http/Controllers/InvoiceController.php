@@ -2,11 +2,11 @@
 
 namespace Vanguard\Http\Controllers;
 
+use Meneses\LaravelMpdf\Facades\LaravelMpdf;
 use Vanguard\Http\Controllers\Traits\CompanyIdTrait;
 use Vanguard\Services\Invoice\InvoiceDetails;
 use Vanguard\Services\Invoice\InvoiceList;
 use Yajra\DataTables\DataTables;
-use Barryvdh\DomPDF\Facade as PDF;
 
 class InvoiceController extends Controller
 {
@@ -67,8 +67,8 @@ class InvoiceController extends Controller
     {
         $invoice_details_service = new InvoiceDetails($id);
         $invoice_details = $invoice_details_service->invoiceDetailsData();
-        $pdf = PDF::loadView('invoices.invoice_details_pdf', compact('invoice_details'));
-        return $pdf->download($invoice_details['campaign_name'].'pdf');
+        $pdf = LaravelMpdf::loadView('invoices.invoice_details_pdf', compact('invoice_details'));
+        return $pdf->stream($invoice_details['campaign_name'].'pdf');
     }
 
 }
