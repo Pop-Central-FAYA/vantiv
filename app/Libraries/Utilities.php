@@ -146,9 +146,9 @@ class Utilities {
 
         $files = Utilities::switch_db('api')->select("SELECT f.id, f.user_id, f.broadcaster_id, f.file_url, f.time_picked, f.status,
                                                                 f.file_name, f.format, a.from_to_time, a.min_age, a.max_age,
-                                                                d_p.day_parts, t.audience, r.region, h.time_range, d.day, b.brand from selected_adslots as f,
+                                                                d_p.day_parts, t.audience, r.region, h.time_range, d.day, b.name AS station_name from selected_adslots as f,
                                                                 dayParts as d_p, adslots as a, targetAudiences as t, regions as r, days as d,
-                                                                hourlyRanges as h, rateCards as r_c, broadcasters as b where f.broadcaster_id = b.id and
+                                                                hourlyRanges as h, rateCards as r_c, companies as b where f.broadcaster_id = b.id and
                                                                 f.adslot = a.id and a.day_parts = d_p.id and a.target_audience = t.id and
                                                                 a.region = r.id and a.rate_card = r_c.id and h.id = r_c.hourly_range_id and
                                                                 r_c.day = d.id and a.broadcaster = b.id and campaign_id = '$campaign_id'");
@@ -156,8 +156,8 @@ class Utilities {
         if($broadcaster_id){
             $files = Utilities::switch_db('api')->select("SELECT f.id, f.user_id, f.broadcaster_id, f.file_url, f.time_picked, f.status,
                                                               f.file_name, f.format, a.from_to_time, a.min_age, a.max_age, d_p.day_parts,
-                                                              t.audience, r.region, h.time_range, d.day, b.brand from selected_adslots as f, dayParts as d_p, adslots as a,
-                                                              targetAudiences as t, regions as r, days as d, hourlyRanges as h, rateCards as r_c, broadcasters as b
+                                                              t.audience, r.region, h.time_range, d.day, b.name AS station_name from selected_adslots as f, dayParts as d_p, adslots as a,
+                                                              targetAudiences as t, regions as r, days as d, hourlyRanges as h, rateCards as r_c, companies as b
                                                               where f.broadcaster_id = b.id and f.adslot = a.id and a.day_parts = d_p.id and a.target_audience = t.id
                                                                and a.region = r.id and a.rate_card = r_c.id and h.id = r_c.hourly_range_id and r_c.day = d.id and
                                                                a.broadcaster = b.id and campaign_id = '$campaign_id' and f.broadcaster_id = '$broadcaster_id'");
@@ -178,7 +178,7 @@ class Utilities {
                 'maximum_age' => $file->max_age,
                 'hourly_range' => $file->time_range,
                 'day' => $file->day,
-                'broadcast_station' => $file->brand,
+                'broadcast_station' => $file->station_name,
                 'file' => $file->file_url,
                 'slot_time' => $file->time_picked.' seconds',
                 'file_status' => $file->status,
