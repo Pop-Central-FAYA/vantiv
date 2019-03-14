@@ -19,6 +19,7 @@
 
 
         <!-- main stats -->
+        @if(!Auth::user()->hasRole('compliance'))
         <div class="the_stats the_frame clearfix mb4">
             <div class="column col_3">
                 <span class="weight_medium small_faint uppercased">Active Campaigns</span>
@@ -46,7 +47,7 @@
             </div>
 
         </div>
-
+        @endif
 
         <!-- client charts -->
         <div class="clearfix dashboard_pies">
