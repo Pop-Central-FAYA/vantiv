@@ -82,14 +82,14 @@ class PreselectedAdslotService
         $preselected_adslot->user_id = $this->user_id;
         $preselected_adslot->broadcaster_id = $this->broadcaster_id;
         $preselected_adslot->price = $this->request->price;
-        $preselected_adslot->file_url = $this->request->file;
+        $preselected_adslot->file_url = $this->request->file_url;
         $preselected_adslot->from_to_time = $this->request->range;
         $preselected_adslot->time = $this->request->time;
         $preselected_adslot->adslot_id = $this->request->adslot_id;
         $preselected_adslot->percentage = $adslot_prices['percentage'];
         $preselected_adslot->total_price = $adslot_prices['new_price'];
         $preselected_adslot->filePosition_id = $this->request->position;
-        $preselected_adslot->file_name = $this->request->file;
+        $preselected_adslot->file_name = $this->request->file_name;
         $preselected_adslot->format = $this->request->file_format;
         $preselected_adslot->air_date = $this->request->air_date;
         $preselected_adslot->agency_id = $this->agency_id ? $this->agency_id : '';

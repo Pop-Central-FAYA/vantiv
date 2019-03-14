@@ -266,7 +266,7 @@
                                                                                                          data-range="{{ $rating->from_to_time }}"
                                                                                                          data-time="{{ $uploaded_datum->time }}"
                                                                                                          data-walkin="{{ $id }}"
-                                                                                                         data-file="{{ $uploaded_datum->file_url }}"
+                                                                                                         data-file_url="{{ $uploaded_datum->file_url }}"
                                                                                                          data-file_name="{{ $uploaded_datum->file_name }}"
                                                                                                          data-file_format="{{ $uploaded_datum->format }}"
                                                                                                          data-broadcaster="{{ $broadcaster }}"
@@ -303,7 +303,7 @@
             var walkins = $(this).data('walkin');
             var url1 = $(".form_cart").attr("action");
             var position = $("select#position" + file_slot).val();
-            var file = $(this).data('file');
+            var file_url = $(this).data('file_url');
             var file_name = $(this).data('file_name');
             var file_format = $(this).data('file_format');
             var broadcaster = $(this).data("broadcaster");
@@ -316,7 +316,7 @@
                 data: {
                     price: price,
                     adslot_id: adslot_id,
-                    file: file,
+                    file_url: file_url,
                     file_name: file_name,
                     range: range,
                     broadcaster: broadcaster,
