@@ -783,7 +783,7 @@
 
                             }
 
-                            $('.highcharts-legend').hide();
+
                         }
                     });
 
@@ -947,9 +947,7 @@
     <style>
 
         .highcharts-grid path { display: none;}
-        .highcharts-legend {
-            display: none;
-        }
+
 
         .radio {
             background-color: #00C4CA !important;
