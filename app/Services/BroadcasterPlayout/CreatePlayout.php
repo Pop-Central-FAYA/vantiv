@@ -11,10 +11,11 @@ use Vanguard\Libraries\Utilities;
 
 // TODO: We need to sanitize the file name and also have a file hash which is unique to the file
 class CreatePlayout {
-
-    public function __construct($campaign_id, $mpo_details_id){
+    protected $company_id;
+    public function __construct($campaign_id, $mpo_details_id, $company_id){
         $this->campaign_id = $campaign_id;
         $this->mpo_details_id = $mpo_details_id;
+        $this->company_id = $company_id;
     }
 
 
@@ -35,7 +36,10 @@ class CreatePlayout {
     }
 
     protected function getAdslotsForMpo() {
-        return SelectedAdslot::where('campaign_id', $this->campaign_id)->get();
+        return SelectedAdslot::where([
+                ['campaign_id', $this->campaign_id],
+                ['broadcaster_id', $this->company_id]
+            ])->get();
     }
 
     /**
@@ -47,7 +51,6 @@ class CreatePlayout {
     protected function store($grouped) {
         $playout_files = [];
         foreach($grouped as $file_hash => $grouped_adslots) {
-
             $file = $grouped_adslots->first();
 
             $playout_file = new PlayoutFile();
