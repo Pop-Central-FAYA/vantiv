@@ -3,11 +3,13 @@
 namespace Vanguard\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Vanguard\Http\Controllers\Traits\CompanyIdTrait;
 use Vanguard\Libraries\Enum\BroadcasterPlayoutStatus;
 use Vanguard\Libraries\Utilities;
 
 class SelectedAdslot extends Model
 {
+    use CompanyIdTrait;
     protected $connection = 'api_db';
     protected $table = 'selected_adslots';
     protected $primaryKey = 'id';
@@ -41,7 +43,7 @@ class SelectedAdslot extends Model
      */
     public function getFileHashAttribute()
     {
-        return md5("{$this->campaign_id}-{$this->file_url}");
+        return md5("{$this->campaign_id}-{$this->file_url}-{$this->companyId()}");
     }
 
     public function broadcaster_playouts()

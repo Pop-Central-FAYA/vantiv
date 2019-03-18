@@ -86,7 +86,6 @@ class MpoController extends Controller
 
     public function update_file($file_code, $campaign_id, $mpo_id)
     {
-
         $status = \request()->status;
         $broadcaster_id = \Session::get('broadcaster_id');
         $rejection_reasons = \request()->rejection_reason;
@@ -97,7 +96,6 @@ class MpoController extends Controller
             ]);
         }
 
-//            $add = Api::addFile($file_code);
         try {
             \DB::transaction(function () use ($file_code, $status, $campaign_id, $broadcaster_id, $mpo_id, $rejection_reasons, $recommendation) {
                 $file = SelectedAdslot::where('file_code', $file_code)->first();
@@ -120,8 +118,8 @@ class MpoController extends Controller
                 }
                 $check_files = Api::approvedCampaignFiles($campaign_id, $broadcaster_id);
                 if($check_files['check_file_for_updating_mpo'] == 0){
-                    Utilities::switch_db('api')->update("UPDATE mpoDetails set is_mpo_accepted = 1 where mpo_id = '$mpo_id' and broadcaster_id = '$broadcaster_id'");
-
+                    $update = Utilities::switch_db('api')->update("UPDATE mpoDetails set is_mpo_accepted = 1 where 
+                                                                    mpo_id = '$mpo_id' and broadcaster_id = '$broadcaster_id'");
                     //change the status of the campaign if campaign date is the current date
                     $today_date = date("Y-m-d");
                     $update_campaign_status = Utilities::switch_db('api')->update("UPDATE campaignDetails 
@@ -131,7 +129,7 @@ class MpoController extends Controller
                                                                                         AND broadcaster = '$broadcaster_id'");
 
                     //The mpo has been approved, so let us create the playout
-                    $playout_creator = new CreatePlayout($campaign_id, $mpo_id);
+                    $playout_creator = new CreatePlayout($campaign_id, $mpo_id, $this->companyId());
                     $playout_creator->run();
                 }
                 $description = $status == "approved" ? 'Your file with file code '.$file_code. ' has been approved ' : 'Your file with file code '.$file_code. ' has been rejected';
