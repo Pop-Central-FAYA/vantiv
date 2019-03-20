@@ -83,8 +83,8 @@ class AllCampaign
     {
         return  $this->campaignBaseQuery()
                 ->when($this->request->start_date && $this->request->stop_date, function ($query) {
-                    return $query->between('campaignDetails.start_date', $this->request->start_date,
-                        $this->request->stop_date);
+                    return $query->whereBetween('campaignDetails.start_date', [$this->request->start_date,
+                        $this->request->stop_date]);
                 });
     }
 
