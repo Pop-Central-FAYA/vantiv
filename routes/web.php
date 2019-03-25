@@ -433,3 +433,8 @@ Route::get('activity/user/{user}/log', [
     'uses' => 'ActivityController@userActivity'
 ]);
 
+/**
+ * Media Plan
+ */
+Route::get('/media-plan', 'MediaPlan\MediaPlanController@index');
+
