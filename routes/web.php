@@ -433,3 +433,9 @@ Route::get('activity/user/{user}/log', [
     'uses' => 'ActivityController@userActivity'
 ]);
 
+
+
+Route::group(['prefix' => '/media-summary'], function() {
+    Route::get('/get-all/{media_plan_id}', 'CustomisePlan@getAll');
+});
+
