@@ -13,7 +13,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
         	CompanyTypeSeeder::class,
-        	LivingStandardMeasuresTableSeeder::class
+            CriteriasTableSeeder::class
         ]);
     }
 }

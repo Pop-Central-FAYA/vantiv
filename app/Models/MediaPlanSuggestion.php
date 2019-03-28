@@ -4,7 +4,19 @@ namespace Vanguard\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class MediaPlanSuggestion extends Model
+class MediaPlanSuggestion extends Base
 {
-    protected $fillable = ['media_plan_id', 'station', 'program', 'start_time', 'end_time', 'total_audience', 'total_spots', 'status'];
+	protected $table = 'media_plan_suggestions';
+    protected $primaryKey = 'id';
+    protected $keyType = 'string';
+
+    protected $fillable = ['media_plan_id', 'station', 'program', 'start_time', 'end_time', 'total_audience', 'day', 'media_type'];
+
+    /**
+     * Get audience associated with the MpsAudienceProgramActivity.
+     */
+    public function plan()
+    {
+        return $this->belongsTo('Vanguard\Models\MediaPlan','media_plan_id');
+    }
 }

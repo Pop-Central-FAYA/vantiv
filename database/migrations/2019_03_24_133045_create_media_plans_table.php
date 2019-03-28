@@ -14,22 +14,23 @@ class CreateMediaPlansTable extends Migration
     public function up()
     {
         Schema::create('media_plans', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('plan_id');
-            $table->string('campaign_name');
-            $table->string('product_name');
-            $table->enum('gender', ['Male', 'Female', 'Both']);
-            $table->string('client_name');
-            $table->string('brand_name');
+            $table->string('id')->index();
+            $table->string('campaign_name')->nullable();
+            $table->string('client_id')->reference('id')->on('walkIns')->nullable();
+            $table->string('brand_id')->reference('id')->on('brands')->nullable();
+            $table->string('product_name')->nullable();
+            $table->double('budget');
+            $table->enum('criteria_gender', ['Male', 'Female', 'Both'])->nullable();
+            $table->string('criteria_lsm')->nullable();
+            $table->string('criteria_social_class')->nullable();
+            $table->string('criteria_region')->nullable();
+            $table->string('criteria_state')->nullable();
+            $table->string('criteria_age_groups')->nullable();
+            $table->double('agency_commission')->default(0);
             $table->date('start_date');
             $table->date('end_date');
-            $table->double('total_budget');
-            $table->double('actual_spend');
-            $table->integer('total_target_reach');
-            $table->integer('actual_reach');
-            $table->string('lsms');
-            $table->string('regions');
-            $table->tinyInteger('status');
+            $table->string('planner_id')->reference('id')->on('users');
+            $table->enum('status', ['Pending', 'Aproved', 'Declined']);
             $table->timestamps();
         });
     }

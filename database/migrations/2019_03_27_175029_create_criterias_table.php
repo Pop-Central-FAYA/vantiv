@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateLivingStandardMeasuresTable extends Migration
+class CreateCriteriasTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class CreateLivingStandardMeasuresTable extends Migration
      */
     public function up()
     {
-        Schema::create('living_standard_measures', function (Blueprint $table) {
-            $table->increments('id');
-            $table->char('name');
+        Schema::create('criterias', function (Blueprint $table) {
+            $table->string('id')->index();
+            $table->string('name');
             $table->timestamps();
         });
     }
@@ -27,6 +27,6 @@ class CreateLivingStandardMeasuresTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('living_standard_measures');
+        Schema::dropIfExists('criterias');
     }
 }

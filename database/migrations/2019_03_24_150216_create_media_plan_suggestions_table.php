@@ -14,16 +14,15 @@ class CreateMediaPlanSuggestionsTable extends Migration
     public function up()
     {
         Schema::create('media_plan_suggestions', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('media_plan_id');
-            $table->foreign('media_plan_id')->references('id')->on('media_plans');
+            $table->string('id')->index();
+            $table->string('media_plan_id')->references('id')->on('media_plans');
+            $table->string('media_type');
             $table->string('station');
             $table->string('program');
+            $table->string('day');
             $table->time('start_time');
             $table->time('end_time');
             $table->integer('total_audience');
-            $table->integer('total_spots');
-            $table->tinyInteger('status');
             $table->timestamps();
         });
     }

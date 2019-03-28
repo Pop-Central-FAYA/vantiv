@@ -14,11 +14,14 @@ class CreateMpsAudiencesTable extends Migration
     public function up()
     {
         Schema::create('mps_audiences', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('exact_age');
+            $table->string('id')->index();
+            $table->string('external_user_id');
+            $table->integer('age');
             $table->enum('gender', ['Male', 'Female', 'Others']);
             $table->string('region');
-            $table->char('lsm');
+            $table->string('lsm');
+            $table->string('state');
+            $table->char('social_class');
             $table->timestamps();
         });
     }
