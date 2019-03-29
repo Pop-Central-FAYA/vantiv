@@ -17,6 +17,6 @@ class MpsAudienceProgramActivity extends Base
      */
     public function audience()
     {
-        return $this->belongsTo('Vanguard\Models\MspAudience','mps_audience_id');
+        return $this->belongsTo('Vanguard\Models\MpsAudience','mps_audience_id');
     }
 }

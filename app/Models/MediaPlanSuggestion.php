@@ -3,6 +3,7 @@
 namespace Vanguard\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Vanguard\Models\MediaPlan;
 
 class MediaPlanSuggestion extends Base
 {
@@ -17,6 +18,6 @@ class MediaPlanSuggestion extends Base
      */
     public function plan()
     {
-        return $this->belongsTo('Vanguard\Models\MediaPlan','media_plan_id');
+        return $this->belongsTo('MediaPlan::class');
     }
 }

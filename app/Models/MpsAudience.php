@@ -3,8 +3,9 @@
 namespace Vanguard\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Vanguard\Models\MpsAudienceProgramActivity;
 
-class MspAudience extends Base
+class MpsAudience extends Base
 {
 	protected $table = 'mps_audiences';
     protected $primaryKey = 'id';
@@ -17,6 +18,6 @@ class MspAudience extends Base
      */
     public function programActivities()
     {
-        return $this->hasMany('Vanguard\Models\MpsAudienceProgramActivity','id');
+        return $this->hasMany(MpsAudienceProgramActivity::class);
     }
 }

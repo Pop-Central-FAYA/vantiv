@@ -6,10 +6,10 @@ use Illuminate\Http\Request;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Models\WalkIns;
 use Vanguard\Models\MpsAudience;
+use Vanguard\Models\MpsAudienceProgramActivity;
 use Auth; use Validator;
 use Illuminate\Support\Collection;
 use Vanguard\Models\MediaPlan;
-use Vanguard\Models\MediaPlanChannel;
 use Vanguard\Models\MediaPlanSuggestion;
 use Vanguard\Models\Criteria;
 use Vanguard\Models\SubCriteria;
@@ -19,73 +19,14 @@ class MediaPlanController extends Controller
 {
     public function index($value='')
     {
-    	$criterias = [
-        	'regions' => [
-        		'NW', 'NE', 'NC', 'SW', 'SE', 'SS', 'Lagos'
-        	],
-        	'states' => [
-        		'Lagos', 'Kano', 'Kaduna', 'Kano', 'Abia', 'Anambra', 'Delta', 'Adamawa'
-        	],
-        	'genders' => [
-        		'Male', 'Female', 'Both'
-        	],
-        	'living_standard_measures' => [
-        		'LSM 1', 'LSM 2', 'LSM 3', 'LSM 4', 'LSM 5', 'LSM 6', 'LSM 7', 'LSM 8', 'LSM 9', 'LSM 10', 'LSM 11', 'LSM 12'
-        	],
-        	'social_classes' => [
-        		'A', 'B', 'C', 'D', 'E', 'F'
-        	]
-        ];
-
-        foreach ($criterias as $key => $criteria) {
-        	$newCriteria = Criteria::create(['name' => $key]);
-        	foreach ($criteria as $value) {
-        		SubCriteria::create([
-        			'criteria_id' => $newCriteria->id,
-        			'name' => $value
-        		]);
-        	}
-        }
-
-
-    	// print_r(WalkIns::get());
-
-    	// foreach ($criterias as $key => $value) {
-    	// 	print_r($value);
-    	// }
-
-    	// 'mps_audience_id', 'media_channel', 'station', 'program', 'start_time', 'end_time'
-    	// $bigArr = [
-    	// 	[
-    	// 		'mps_audience_id'=>'1', 'media_channel'=>'Tv', 'station'=>'super story', 'program' => 'NTA 2', 'start_time'=>'10:10', 'end_time'=>'10:40'
-	    // 	],
-	    // 	[
-    	// 		'mps_audience_id'=>'1', 'media_channel'=>'Tv', 'station'=>'super story', 'program' => 'NTA 2', 'start_time'=>'10:10', 'end_time'=>'10:50'
-	    // 	],
-	    // 	[
-    	// 		'mps_audience_id'=>'1', 'media_channel'=>'Tv', 'station'=>'super story', 'program' => 'NTA 2', 'start_time'=>'10:10', 'end_time'=>'10:40'
-	    // 	],
-	    // 	[
-    	// 		'mps_audience_id'=>'1', 'media_channel'=>'Radio', 'station'=>'Hubme', 'program' => 'NTA 4', 'start_time'=>'10:10', 'end_time'=>'10:40'
-	    // 	],
-	    // 	[
-    	// 		'mps_audience_id'=>'1', 'media_channel'=>'Radio', 'station'=>'Laugh Matters', 'program' => 'NTA 10', 'start_time'=>'10:10', 'end_time'=>'10:40'
-	    // 	]
-	    // ];
-
-	    // $result = $this->groupByProgramStationTimeBelt($bigArr, 4);
-	    // var_dump($result);
-	    // $count = $this->countByMediaChannel($result, 'Tv');
-	    // var_dump($count);
-	    // $totalAud = $this->totalAudienceFound($result);
-	    // var_dump($totalAud);
-	    // var_dump(Auth::id());
+    	
     }
 
     public function criteriaForm(Request $request)
     {
-    	$criterias = Criteria::with(['subCriterias'])->get();
+    	$criterias = Criteria::with(['subCriterias'])->groupBy('name')->get();
     	// return criterias array with the frontend view, in order to populate criteria inputs
+    	return view('agency.mediaPlan.create_plan')->with('criterias', $criterias);
     }
 
     /**
@@ -97,7 +38,6 @@ class MediaPlanController extends Controller
     protected function validateCriteriaForm(array $data)
     {
         $rules = [
-            'plan_name'=>'required|string',
             'start_date' => 'required|date|after_or_equal:today',
             'end_date' => 'required|date|after_or_equal:today',
             'region' => 'required|array',
@@ -105,7 +45,9 @@ class MediaPlanController extends Controller
             'gender' => 'required|string',
             'lsm' => 'required|array',
             'social_class' => 'required|array',
-            'target_age_groups' => 'required|array',
+            'age_groups' => 'required|array',
+            'agency_commission' => 'required|numeric',
+            'media_type' => 'required|string'
         ];
         return Validator::make($data, $rules,
             [
@@ -120,129 +62,119 @@ class MediaPlanController extends Controller
     	// validate request
     	$validation = $this->validateCriteriaForm($request->all());
     	if ($validation->fails()) {
-    		// var_dump($validator->errors());
+    		// var_dump($validation->errors()); return;
             return back()->withErrors($validation)->withInput();
     	}
 
-    	$gender = $request->gender;
-    	$region = $request->regions;
-    	$lsm = $request->lsm;
-    	$social_class = $request->social_class;
-    	$target_age_groups = $request->target_age_groups;
-    	$media_details = $request->media_details;
+    	$media_type = $request->media_type;
 
     	// Fetch mps audiences, programs, stations, time duration, based on criteria
-    	$query = MpsAudience::with(['programActivities'])
-					->when($gender, function ($query, $gender) {
-						if ($gender === "Both") {
-							return $query->whereNotNull('gender');
+	    $query = MpsAudienceProgramActivity::when($media_type, function ($query, $media_type)
+					{
+						if ($media_type === "Both") {
+							return $query->whereNotNull('media_type');
 						}
-	                    return $query->where('gender', $gender);
-	                })
-	                ->when($region, function ($query, $region) {
-						if ($region === "All") {
-							return $query->whereNotNull('region');
-						}
-	                    return $query->whereIn('region', $region);
-	                })
-	                ->when($media_details, function ($query, $media_details) {
-						$query->whereHas('programActivities', function ($query, $media_details) {
-		                	foreach ($media_details as $key => $value) {
-								$query->where('media_type', $value['media_type']);
+						return $query->where('media_type', $media_type);
+					})
+	     			->whereHas('audience', function ($query) use ($request)
+	     			{
+	     				$lsm = $request->lsm;
+	     				$social_class = $request->social_class;
+	     				$gender = $request->gender;
+	     				$region = $request->region;
+	     				$state = $request->state;
+	     				$age_groups = $request->age_groups;
+
+	     				$query->when($lsm, function ($query, $lsm)	{
+	     					$query->whereIn('lsm', $lsm);
+	     				});
+
+	     				$query->when($social_class, function ($query, $social_class)	{
+	     					$query->whereIn('social_class', $social_class);
+	     				});
+
+	     				$query->when($gender, function ($query, $gender)	{
+	     					if ($gender === "Both") {
+								$query->whereNotNull('gender');
 							}
-	                    });
-	                })
-	                ->when($target_age_groups, function ($query, $target_age_groups) {
-						foreach ($target_age_groups as $key => $value) {
-							$query->orWhere(function ($query, $value) {
-				                $query->where('age', '>=', $value['min'])
-				                      ->Where('age', '<=', $value['max']);
-				            });
-						}
-	                })
-	                ->whereIn('lsm', $lsm)
-	                ->whereIn('social_class', $social_class)
-	                ->get()
-	                ->pluck('programActivities');
+	     					$query->where('gender', $gender);
+	     				});
+
+	     				$query->when($region, function ($query, $region)	{
+	     					if ($region === "All") {
+								$query->whereNotNull('region');
+							}
+	     					$query->whereIn('region', $region);
+	     				});
+
+	     				$query->when($state, function ($query, $state)	{
+	     					if ($state === "All") {
+								$query->whereNotNull('state');
+							}
+	     					$query->whereIn('state', $state);
+	     				});
+
+	     				$query->when($age_groups, function ($query, $age_groups)	{
+	     					foreach ($age_groups as $range) {
+	     						$query->orWhere(function ($query) use ($range) {
+					                $query->where('age', '>=', $range['min'])
+					                      ->Where('age', '<=', $range['max']);
+					            });
+	     					}
+	     				});
+	     			})
+	     			->get();
 
 	    if (!$query) {
 	    	// faya did not find any result that matched filter criteria
+    		return view('agency.mediaPlan.display_suggestions')->with('criterias', $criterias);
 	    }
 
-	    /*
-	     * Group by stations, program and time belt
-	     * Count total audience for each grouped data
-	     * Sort data by total audience from highest to lowest
-	     * limit output by result limit set by planner
-	     */
-	    $result = $this->groupByProgramStationTimeBelt($query->toArray(), $request->result_limit);
+	    // group suggestions by station, program & time belt. Count total audience for each group
+	    $suggestions = $this->groupSuggestions($query);
+	    $suggestionsByStation = $this->groupSuggestionsByStation($query);
+	    // echo json_encode($suggestions); return;
 
-	    // store criteria with fayafound programs/stations details
-	    $this->storeMediaPlantoDB($request->all(), $result);
+	    // store planning criteria and suggestions
+	    $this->storeMediaPlantoDB($request, $suggestions);
 
 	    $fayaFound = [
-	    	'total_tv' => $this->countByMediaChannel($result, 'Tv'),
-	    	'total_radio' => $this->countByMediaChannel($result, 'Radio'),
-	    	'programs_stations' => $result,
-	    	'total_audiences' => $this->totalAudienceFound($result)
+	    	'total_tv' => $this->countByMediaType($suggestions, 'Tv'),
+	    	'total_radio' => $this->countByMediaType($suggestions, 'Radio'),
+	    	'programs_stations' => $suggestions,
+	    	'stations' => $suggestionsByStation,
+	    	'total_audiences' => $this->totalAudienceFound($suggestions)
 	    ];
 
+	    return view('agency.mediaPlan.display_suggestions')->with('fayaFound', $fayaFound);
     }
 
     public function storeMediaPlantoDB($criteriaForm, $suggestions)
     {
-    	$media_details = $criteriaForm->media_details;
-    	$total_budget = 0; $total_target_reach = 0;
-
-    	foreach ($media_details as $key => $value) {
-    		$total_budget += $value['budget'];
-    		$total_target_reach += $value['reach'];
-    	}
-
     	$newMediaPlan = MediaPlan::create([
-    		'plan_id' => uniqid(),
-    		'campaign_name' => $criteriaForm->campaign_name,
-    		'product_name' => $criteriaForm->product,
-    		'gender' => $criteriaForm->gender,
-    		'client_id' => $criteriaForm->client,
-    		'brand_id' => $criteriaForm->brand,
+    		'criteria_gender' => $criteriaForm->gender,
+    		'criteria_lsm' => serialize($criteriaForm->lsm),
+    		'criteria_social_class' => serialize($criteriaForm->social_class),
+    		'criteria_region' => serialize($criteriaForm->region),
+    		'criteria_state' => serialize($criteriaForm->state),
+    		'criteria_age_groups' => serialize($criteriaForm->age_groups),
+    		'agency_commission' => $criteriaForm->agency_commission,
     		'start_date' => $criteriaForm->start_date,
     		'end_date' => $criteriaForm->end_date,
-    		'target_age_groups' => serialize($criteriaForm->target_age_groups),
-    		'lsms' => serialize($criteriaForm->lsm),
-    		'regions' => serialize($criteriaForm->regions),
-    		'result_limit' => $criteriaForm->result_limit,
     		'planner_id' => Auth::id(),
-    		'status' => 0,
-    		'total_budget' => $total_budget,
-    		'actual_spend' => 0,
-    		'total_target_reach' => $total_target_reach,
-    		'actual_reach' => 0
+    		'status' => 'Pending'
     	]);
-
-    	foreach ($media_details as $key => $value) {
-    		$total_budget += $value['budget'];
-    		$total_target_reach += $value['reach'];
-    		MediaPlanChannel::create([
-    			'media_plan_id' => $newMediaPlan->id,
-    			'channel' => $value['channel'],
-    			'budget' => $value['budget'],
-    			'target_reach' => $value['target_reach'],
-    			'material_length' => serialize($value['material_length'])
-	    	]);
-    	}
 
     	foreach ($suggestions as $key => $suggestion) {
     		MediaPlanSuggestion::create([
     			'media_plan_id' => $newMediaPlan->id,
-    			'channel' => $suggestion['channel'],
-    			'station' => $suggestion['station'],
-    			'program' => $suggestion['program'],
-    			'start_time' => $suggestion['start_time'],
-    			'end_time' => $suggestion['end_time'],
-    			'total_audience' => $suggestion['total_audience'],
-    			'total_spots' => 0,
-    			'status' => 0,
+    			'media_type' => $suggestion->media_type,
+    			'station' => $suggestion->station,
+    			'program' => $suggestion->program,
+    			'day' => $suggestion->day,
+    			'start_time' => $suggestion->start_time,
+    			'end_time' => $suggestion->end_time,
+    			'total_audience' => $suggestion->audience
     		]);
     	}
     }
@@ -252,7 +184,7 @@ class MediaPlanController extends Controller
     	return round((strtotime($end_time) - strtotime($start_time)));
     }
 
-    public function groupByProgramStationTimeBelt($input, $limit=0) 
+    public function groupByProgramStationTimeBelt($input) 
     {
 		$output = Array();
 		foreach($input as $value) {
@@ -274,26 +206,40 @@ class MediaPlanController extends Controller
     		return $a['total_audience'] < $b['total_audience']?1:-1;
 		});
 
-		// limit output by result limit set by planner
-		if ($limit > 0) {
-			$output = array_slice($output, 0, $limit); 
-		}
-
 		return $output;
 	}
 
-	public function countByMediaChannel($input, $media_type='')
+	public function groupSuggestions($query)
 	{
-		$collection = collect($input);
+		$query = $query->groupBy(function ($item, $key) {
+		    return $item->station.'_'.$item->program.'_'.$item->start_time.'_'.$item->end_time;
+		});
+	    $query = $query->map(function($item, $key) {
+				        $count = count($item);
+				        $item = $item->first();
+				        $item->audience = $count;
+				        return $item;
+				    });
+		$query = $query->flatten();
+		$query = $query->sortByDesc('audience');
+		return $query;
+	}
+
+	public function groupSuggestionsByStation($query)
+	{
+		return $query->groupBy('station');
+	}
+
+	public function countByMediaType($collection, $media_type='')
+	{
 		$filtered = $collection->where('media_type', $media_type);
 		$filtered->all();
 		return $filtered->count();
 	}
 
-	public function totalAudienceFound($input)
+	public function totalAudienceFound($collection)
 	{
-		$collection = collect($input);
-		return $collection->sum('total_audience');
+		return $collection->sum('audience');
 	}
 
 }

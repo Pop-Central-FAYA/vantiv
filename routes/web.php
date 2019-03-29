@@ -406,6 +406,14 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/revenue/all-data', 'Agency\ReportsController@getRevenue');
 //                Route::get('/client-filter/campaign', 'Agency\ReportsController@filterCampaignClient')->name('filter.client');
         });
+
+        /**
+         * Media Planning
+         */
+        Route::group(['prefix' => 'media-plan'], function () {
+            Route::get('/create', 'MediaPlan\MediaPlanController@criteriaForm')->name('agency.media_plan.criteria_form');
+            Route::post('/create', 'MediaPlan\MediaPlanController@suggestPlan')->name('agency.media_plan.suggestPlan');
+        });
     });
 
     Route::group(['prefix' => 'wallets'], function(){

@@ -19,7 +19,7 @@ class CreateMediaPlansTable extends Migration
             $table->string('client_id')->reference('id')->on('walkIns')->nullable();
             $table->string('brand_id')->reference('id')->on('brands')->nullable();
             $table->string('product_name')->nullable();
-            $table->double('budget');
+            $table->double('budget')->default(0);
             $table->enum('criteria_gender', ['Male', 'Female', 'Both'])->nullable();
             $table->string('criteria_lsm')->nullable();
             $table->string('criteria_social_class')->nullable();
