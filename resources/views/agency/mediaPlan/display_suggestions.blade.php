@@ -17,7 +17,7 @@
     <!-- subheader -->
         <div class="sub_header clearfix mb pt">
             <div class="column col_6">
-                <h2 class="sub_header">Suggested stations &</h2>
+                <h2 class="sub_header">Suggested stations & programs</h2>
             </div>
         </div>
 
