@@ -441,16 +441,7 @@ Route::get('activity/user/{user}/log', [
     'uses' => 'ActivityController@userActivity'
 ]);
 
-<<<<<<< HEAD
-
-
-Route::group(['prefix' => '/media-summary'], function() {
-    Route::get('/get-all/{media_plan_id}', 'CustomisePlan@getAll');
-});
-=======
 /**
  * Media Plan
  */
 Route::get('/media-plan', 'MediaPlan\MediaPlanController@index');
->>>>>>> IN-2-media-planning-suggest-plan
-
