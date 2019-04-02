@@ -20,7 +20,13 @@ class MediaPlanController extends Controller
     public function index($value='')
     {
     	
+	}
+	
+	public function customisPlan()
+    {
+		return view('agency.mediaPlan.custom_plan');
     }
+
 
     public function criteriaForm(Request $request)
     {

@@ -410,9 +410,10 @@ Route::group(['middleware' => 'auth'], function () {
         /**
          * Media Planning
          */
-        Route::group(['prefix' => 'media-plan'], function () {
+        Route::group(['prefix' => '/media-plan'], function () {
             Route::get('/create', 'MediaPlan\MediaPlanController@criteriaForm')->name('agency.media_plan.criteria_form');
             Route::post('/create', 'MediaPlan\MediaPlanController@suggestPlan')->name('agency.media_plan.suggestPlan');
+            Route::get('/custom-plan', 'MediaPlan\MediaPlanController@customisPlan');
         });
     });
 
