@@ -31,13 +31,17 @@
         @include('partials.new-frontend.broadcaster.campaign_management.sidebar')
         <!-- main stats -->
         <div class="the_stats the_frame clearfix mb4">
-            <div class="column col_3" id="campaign_count">
-                <span class="weight_medium small_faint uppercased">Active Campaigns</span>
-                <h3><a href="{{ route('campaign.all') }}">{{ count($active_campaigns) }}</a></h3>
-            </div>
+            @if(Auth::user()->hasRole('ssp.super_admin') || Auth::user()->hasRole('ssp.admin') || Auth::user()->hasRole('ssp.scheduler') || Auth::user()->hasRole('ssp.media_buyer'))
+                <div class="column col_3" id="campaign_count">
+                    <span class="weight_medium small_faint uppercased">Active Campaigns</span>
+                    <h3><a href="{{ route('campaign.all') }}">{{ count($active_campaigns) }}</a></h3>
+                </div>
+
             <div class="column col_3" id="filtered_campaign_count" style="display: none;">
 
             </div>
+            @endif
+            @if(Auth::user()->hasRole('ssp.super_admin') || Auth::user()->hasRole('ssp.admin') || Auth::user()->hasRole('ssp.media_buyer'))
             <div class="column col_2" id="walkin_count">
                 <span class="weight_medium small_faint uppercased">All Walk-Ins</span>
                 <h3><a href="{{ route('walkins.all') }}">{{ count($walkins) }}</a></h3>
@@ -45,6 +49,8 @@
             <div class="column col_2" id="filtered_walkin_count" style="display: none;">
 
             </div>
+            @endif
+            @if(Auth::user()->hasRole('ssp.super_admin') || Auth::user()->hasRole('ssp.admin') || Auth::user()->hasRole('ssp.scheduler'))
             <div class="column col_2" id="pending_mpo_count">
                 <span class="weight_medium small_faint uppercased">Pending MPO's</span>
                 <h3><a href="{{ route('pending-mpos') }}" style="color: red;">{{ count($pending_mpos) }}</a></h3>
@@ -52,6 +58,8 @@
             <div class="column col_2" id="filtered_mpo_count" style="display: none;">
 
             </div>
+            @endif
+            @if(Auth::user()->hasRole('ssp.super_admin') || Auth::user()->hasRole('ssp.admin') || Auth::user()->hasRole('ssp.media_buyer'))
             <div class="column col_2" id="brand_count">
                 <span class="weight_medium small_faint uppercased">All Brands</span>
                 <h3><a href="{{ route('brand.all') }}">{{ count($brands) }}</a></h3>
@@ -59,6 +67,8 @@
             <div class="column col_2" id="filtered_brand_count" style="display: none;">
 
             </div>
+            @endif
+            @if(Auth::user()->hasRole('ssp.super_admin') || Auth::user()->hasRole('ssp.admin') || Auth::user()->hasRole('ssp.media_buyer'))
             <div class="column col_3" id="campaign_on_hold">
                 <span class="weight_medium small_faint uppercased">Campaigns on hold</span>
                 <h3><a href="{{ route('broadcaster.campaign.hold') }}" style="color: red;">{{ count($campaign_on_hold) }}</a></h3>
@@ -66,6 +76,7 @@
             <div class="column col_3" id="filtered_campaign_on_hold" style="display: none;">
 
             </div>
+            @endif
         </div>
 
         <!-- channel summary -->
