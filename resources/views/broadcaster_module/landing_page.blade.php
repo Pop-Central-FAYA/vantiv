@@ -44,8 +44,12 @@
         @if(Auth::user()->companies()->count() > 1)
             <a href="{{ route('broadcaster.campaign_management') }}" class="m-b block_disp btn full ghost">Continue to Dashboard</a>
         @else
-            <a href="{{ route('broadcaster.campaign_management') }}" class="m-b block_disp btn full ghost">Campaign Management</a>
-            <a href="{{ route('broadcaster.inventory_management') }}" class="m-b block_disp btn full ghost">Inventory Management</a>
+            @if(Auth::user()->hasRole('ssp.admin') || Auth::user()->hasRole('ssp.media_buyer') || Auth::user()->hasRole('ssp.scheduler'))
+                <a href="{{ route('broadcaster.campaign_management') }}" class="m-b block_disp btn full ghost">Campaign Management</a>
+            @endif
+            @if(Auth::user()->hasRole('ssp.admin'))
+                <a href="{{ route('broadcaster.inventory_management') }}" class="m-b block_disp btn full ghost">Inventory Management</a>
+            @endif
         @endif
     </div>
 
