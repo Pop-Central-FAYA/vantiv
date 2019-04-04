@@ -21,6 +21,7 @@ class CreateMediaPlansTable extends Migration
             $table->string('product_name')->nullable();
             $table->double('budget')->default(0);
             $table->enum('criteria_gender', ['Male', 'Female', 'Both'])->nullable();
+            $table->enum('media_type', ['Tv', 'Radio', 'All'])->nullable();
             $table->string('criteria_lsm')->nullable();
             $table->string('criteria_social_class')->nullable();
             $table->string('criteria_region')->nullable();
@@ -30,7 +31,7 @@ class CreateMediaPlansTable extends Migration
             $table->date('start_date');
             $table->date('end_date');
             $table->string('planner_id')->reference('id')->on('users');
-            $table->enum('status', ['Pending', 'Aproved', 'Declined']);
+            $table->enum('status', ['Initialized', 'Created', 'Pending', 'Approved', 'Declined']);
             $table->timestamps();
         });
     }

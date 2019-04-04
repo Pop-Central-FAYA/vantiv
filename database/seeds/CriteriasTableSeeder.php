@@ -30,7 +30,7 @@ class CriteriasTableSeeder extends Seeder
         		'A', 'B', 'C', 'D', 'E', 'F'
         	],
         	'media_types' => [
-        		'Tv', 'Radio', 'Both'
+        		'Tv', 'Radio', 'All'
         	]
         ];
 

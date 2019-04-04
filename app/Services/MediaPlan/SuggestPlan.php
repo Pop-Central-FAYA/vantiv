@@ -21,7 +21,7 @@ class SuggestPlan
         // Fetch mps audiences, programs, stations, time duration, based on criteria
         $query = MpsAudienceProgramActivity::when($media_type, function ($query, $media_type)
                     {
-                        if ($media_type === "Both") {
+                        if ($media_type === "All") {
                             return $query->whereNotNull('media_type');
                         }
                         return $query->where('media_type', $media_type);
