@@ -3,6 +3,7 @@
 namespace Vanguard\Http\Controllers\MediaPlan;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Models\Criteria;
 use Vanguard\Services\MediaPlan\validateCriteriaForm;
@@ -242,8 +243,46 @@ public function dates($start, $end) {
 public function CompletePlan(Request $request)
 {
 
+$programs_id = json_decode($request->get('data'));
+$programs_id = collect($programs_id);
+$programs_id = $this->groupById($programs_id);
+$alue = "";
+$lue = "";
 
-return response()->json(['token'=>$value]);
+foreach($programs_id as $key => $value){
+	
+	DB::table('media_plan_suggestions')
+	->where('id', $key)
+	->update(['material_length' => $value]);
+
+
+}
+
+
+return response()->json(['token'=>"gogogogo"]);
+
+
+}
+
+
+public function groupById($query)
+{
+
+	$result = $query->groupBy([
+		'id',
+		function ($item) {
+			return $item->material_length;
+		},
+	], $preserveKeys = true);
+	
+
+
+	return $result;
+}
+
+public function groupByDuration($query)
+{
+	return $query->groupBy('material_length');
 }
 
 

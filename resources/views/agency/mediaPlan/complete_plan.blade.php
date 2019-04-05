@@ -58,7 +58,7 @@
                                 <td id="btn"> {{ $value->start_time}}  {{ $value->end_time}}</td>
                                 <td id="btn"> {{ $value->program}}</td>
                                 <td>   <input type="number" value="0" id="ur15{{$value->id}}"  data_12="{{ $value->id}}" data_11="60" data_10="" data_9="" ></td>
-                                <td>   <input type="number" value="0" id="vd{{$value->id}}"  data_12="{{ $value->id}}" data_11="60" data_10="" data_9="" ></td>
+                                <td>   <input type="number" value="0" id="vd15{{$value->id}}"  data_12="{{ $value->id}}" data_11="60" data_10="" data_9="" ></td>
                                    
 
                                     @for ($i = 0; $i < count($fayaFound['dates']); $i++)
@@ -119,7 +119,7 @@
                                     <th>Unit Rate</th>
                                     <th>Volume Disc</th>
                                     @for ($i = 0; $i < count($fayaFound['dates']); $i++)
-                                    <th>{{ $fayaFound['dates'][$i] }}</th>
+                                    <th>{{ $fayaFound['labeldates'][$i] }}</th>
                                     @endfor
 
 
@@ -192,7 +192,7 @@
                                     <th>Unit Rate</th>
                                     <th>Volume Disc</th>
                                     @for ($i = 0; $i < count($fayaFound['dates']); $i++)
-                                    <th>{{ $fayaFound['dates'][$i] }}</th>
+                                    <th>{{ $fayaFound['labeldates'][$i] }}</th>
                                     @endfor
                                     </tr>
                                     </thead>     
@@ -264,8 +264,8 @@
                                     <th>Programme</th>
                                     <th>Unit Rate</th>
                                     <th>Volume Disc</th>
-                                    @for ($i = 0; $i < count($fayaFound['dates']); $i++)
-                                    <th>{{ $fayaFound['dates'][$i] }}</th>
+                                    @for ($i = 0; $i < count($fayaFound['labeldates']); $i++)
+                                    <th>{{ $fayaFound['labeldates'][$i] }}</th>
                                     @endfor
 
 
@@ -283,7 +283,7 @@
                                 <td>   <input type="number" value="0" id="vd60{{$value->id}}"  data_12="{{ $value->id}}" data_11="60" data_10="" data_9="" ></td>
                                     @for ($i = 0; $i < count($fayaFound['dates']); $i++)
                                         @if($fayaFound['days'][$i] == $value->day )
-                                            <td>   <input type="number" id="60{{$value->id}}" class="day_input"  data_12="{{ $value->id}}" data_11="60" data_10="{{$fayaFound['dates'][$i]}}" data_9="{{$fayaFound['days'][$i]}}" ></td>
+                                            <td>   <input type="number" id="60{{$value->id}}" class="day_input"  data_12="{{ $value->id}}" data_11="60" data_10="{{$fayaFound['dates'][$i]}}" data_9="{{$fayaFound['days'][$i]}}" data_8="" ></td>
                                         @else
                                             <td id=""><input type="number" placeholder="N/A" name="lname" disabled></td>    
                                         @endif
@@ -364,6 +364,8 @@ $(document).ready(function(){
    console.log("hate");
   $(".day_input").change(function(){
       
+
+
     var value_button = $(this).attr("data_12");
     var duration = $(this).attr("data_11");
     var date = $(this).attr("data_10");
@@ -371,9 +373,6 @@ $(document).ready(function(){
     var slot = $("#"+duration+value_button).val();
     var unit_rate = $("#ur"+duration+value_button).val();
     var volume_disc = $("#vd"+duration+value_button).val();
-
-
-     console.log("fhfhf"+unit_rate)
 if(plans.length > 0){
 for(var i = 0; i < plans.length; i++){
     if(plans[i].id == value_button && plans[i].date == date && plans[i].duration == duration){
@@ -400,7 +399,6 @@ for(var i = 0; i < plans.length; i++){
                     var product_name = $("#product_name").val();
                     var product_name = $("#product_name").val();
                     var plan_id = $("#plan_id").val();
-                    console.log(plan_id)
                      var body = {
                                 "_token": "{{ csrf_token() }}",
                                 "campaign_name":client_name,
@@ -414,10 +412,7 @@ for(var i = 0; i < plans.length; i++){
                         type: "POST",
                         dataType: 'json',
                         url: "/agency/media-plan/finish_plan",
-                        data: {
-                                "_token": "{{ csrf_token() }}",
-                                "data": JSON.stringify(plans)
-                            },
+                        data: body,
                             success:function(data){
 
                                  console.log(data)
