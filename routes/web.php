@@ -413,7 +413,10 @@ Route::group(['middleware' => 'auth'], function () {
         Route::group(['prefix' => '/media-plan'], function () {
             Route::get('/create', 'MediaPlan\MediaPlanController@criteriaForm')->name('agency.media_plan.criteria_form');
             Route::post('/create', 'MediaPlan\MediaPlanController@suggestPlan')->name('agency.media_plan.suggestPlan');
-            Route::get('/custom-plan', 'MediaPlan\MediaPlanController@customisPlan');
+            Route::get('/customise/{id}', 'MediaPlan\MediaPlanController@getSuggestPlanById');
+            Route::post('/select_plan', 'MediaPlan\MediaPlanController@SelectPlanPost');
+            Route::get('/createplan/{id}', 'MediaPlan\MediaPlanController@CreatePlan');
+            Route::post('/finish_plan', 'MediaPlan\MediaPlanController@CompletePlan');
         });
     });
 
@@ -445,4 +448,5 @@ Route::get('activity/user/{user}/log', [
 /**
  * Media Plan
  */
-Route::get('/media-plan', 'MediaPlan\MediaPlanController@index');
+Route::get('/media-plan1', 'MediaPlan\MediaPlanController@index');
+Route::get('/media-plan2', 'MediaPlan\MediaPlanController@index');

@@ -65,7 +65,7 @@
                             <label class="small_faint">Gender</label>
 
                             <div class="select_wrap {{ $errors->has('gender') ? ' has-error' : '' }}">
-                                <select name="gender" id="gender" required>
+                                <select name="gender" id="gender">
                                     <option>Select Target Gender</option>
                                     @foreach($criterias as $criteria)
                                         @if ($criteria->name == "genders")
@@ -93,7 +93,7 @@
                     <div class="clearfix mb3">
                         <div class="input_wrap column col_6{{ $errors->has('start_date') ? ' has-error' : '' }}">
                             <label class="small_faint">Start Date</label>
-                            <input type="text" required class="flatpickr" @if((Session::get('campaign_information')) != null) value="{{ $campaign_general_information->start_date }}" @endif name="start_date" placeholder="Select Date">
+                            <input type="text" required class="flatpickr" value="{{ old('start_date') }}" name="start_date" placeholder="Select Date">
                             @if($errors->has('start_date'))
                                 <strong>
                                     <span class="help-block">{{ $errors->first('start_date') }}</span>
@@ -103,7 +103,7 @@
 
                         <div class="input_wrap column col_6{{ $errors->has('end_date') ? ' has-error' : '' }}">
                             <label class="small_faint">End Date</label>
-                            <input type="text" required class="flatpickr" name="end_date" @if((Session::get('campaign_information')) != null) value="{{ $campaign_general_information->end_date }}" @endif placeholder="Select Date">
+                            <input type="text" required class="flatpickr" value="{{ old('end_date') }}" name="end_date" placeholder="Select Date">
 
                             @if($errors->has('end_date'))
                                 <strong>
@@ -119,7 +119,7 @@
                             <label class="small_faint">LSM</label>
 
                             <div class="select_wrap{{ $errors->has('lsm') ? ' has-error' : '' }}">
-                                <select class="js-example-basic-multiple" name="lsm[]" id="lsm" multiple="multiple" required>
+                                <select class="js-example-basic-multiple" name="lsm[]" id="lsm" multiple="multiple">
                                     <option>Select LSM</option>
                                     @foreach($criterias as $criteria)
                                         @if ($criteria->name == "living_standard_measures")
@@ -146,7 +146,7 @@
                             <label class="small_faint">Social Class</label>
 
                             <div class="select_wrap {{ $errors->has('gender') ? ' has-error' : '' }}">
-                                <select class="js-example-basic-multiple" name="social_class[]" id="social_class" multiple="multiple" required>
+                                <select class="js-example-basic-multiple" name="social_class[]" id="social_class" multiple="multiple">
                                     <option>Select Social Class</option>
                                     @foreach($criterias as $criteria)
                                         @if ($criteria->name == "social_classes")
@@ -174,7 +174,7 @@
                     <div class="clearfix mb">
                         <div class="input_wrap column col_6{{  $errors->has('min_age') ? ' has-error' : '' }}">
                             <label class="small_faint">Min. Age</label>
-                            <input type="number" name="age_groups[0][min]" placeholder="Minimum Age" required>
+                            <input type="number" name="age_groups[0][min]" placeholder="Minimum Age">
 
                             @if($errors->has('min_age'))
                                 <strong>
@@ -185,7 +185,7 @@
 
                         <div class="input_wrap column col_6{{ $errors->has('max_age') ? ' has-error' : '' }}">
                             <label class="small_faint">Max. Age</label>
-                            <input type="number" name="age_groups[0][max]" placeholder="Maximum Age" required>
+                            <input type="number" name="age_groups[0][max]" placeholder="Maximum Age">
                             @if($errors->has('max_age'))
                                 <strong>
                                     <span class="help-block">{{ $errors->first('max_age') }}</span>
@@ -199,7 +199,7 @@
                         <label class="small_faint">Region</label>
 
                         <div class="select_wrap{{ $errors->has('region') ? ' has-error' : '' }}">
-                            <select class="js-example-basic-multiple" id="region" name="region[]" multiple="multiple" >
+                            <select class="js-example-basic-multiple" id="region" name="region[]" multiple="multiple">
                                 <option value=""></option>
                                 @foreach($criterias as $criteria)
                                     @if ($criteria->name == "regions")
@@ -229,7 +229,7 @@
                         <label class="small_faint">State</label>
 
                         <div class="select_wrap{{ $errors->has('state') ? ' has-error' : '' }}">
-                            <select class="js-example-basic-multiple" id="state" name="state[]" multiple="multiple" >
+                            <select class="js-example-basic-multiple" id="state" name="state[]" multiple="multiple">
                                 <option value=""></option>
                                 @foreach($criterias as $criteria)
                                     @if ($criteria->name == "states")
@@ -258,7 +258,7 @@
                     <div class="clearfix mb3">
                         <div class="input_wrap column col_12{{ $errors->has('agency_commission') ? ' has-error' : '' }}">
                             <label class="small_faint">Agency Commission</label>
-                            <input type="number" required name="agency_commission" id="agency_commission" value="" placeholder="Enter Agency Commission">
+                            <input type="number" name="agency_commission" id="agency_commission" value="" placeholder="Enter Agency Commission">
                             @if($errors->has('agency_commission'))
                                 <strong>
                                     <span class="help-block">{{ $errors->first('agency_commission') }}</span>
