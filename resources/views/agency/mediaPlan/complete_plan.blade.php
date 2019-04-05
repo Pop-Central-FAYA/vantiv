@@ -312,11 +312,6 @@
 
    <div class="clearfix mb">
                         <div class="input_wrap column col_4">
-                            <label class="small_faint">Campaign Name</label>
-                            <input type="text" id="campaign_name" name="age_groups[0][min]" placeholder="Campaign Name">
-                        </div>
-
-                        <div class="input_wrap column col_4">
                             <label class="small_faint">Client Name</label>
                             <input type="text" id="client_name" name="age_groups[0][max]" placeholder="Client Name">
                            
@@ -393,15 +388,12 @@ for(var i = 0; i < plans.length; i++){
 
       	$("body").delegate(".show", "click", function() {
 
-
-                    var client_name = $("#campaign_name").val();
                     var client_name = $("#client_name").val();
                     var product_name = $("#product_name").val();
                     var product_name = $("#product_name").val();
                     var plan_id = $("#plan_id").val();
                      var body = {
                                 "_token": "{{ csrf_token() }}",
-                                "campaign_name":client_name,
                                 "client_name":client_name,
                                 "product_name" :product_name,
                                 "plan_id": plan_id,
@@ -417,7 +409,7 @@ for(var i = 0; i < plans.length; i++){
 
                                  console.log(data)
                           
-                                //swal("Success!", "Plans successfully selected!", "success");
+                                 swal("Success!", "Plans successfully selected!", "success");
                                
                             }
                            

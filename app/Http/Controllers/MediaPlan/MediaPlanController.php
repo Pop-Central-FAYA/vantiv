@@ -246,20 +246,25 @@ public function CompletePlan(Request $request)
 $programs_id = json_decode($request->get('data'));
 $programs_id = collect($programs_id);
 $programs_id = $this->groupById($programs_id);
-$alue = "";
-$lue = "";
 
-foreach($programs_id as $key => $value){
+$client_name = $request->get('client_name');
+$product_name = $request->get('product_name');
+$plan_id = $request->get('plan_id');
+
+/*foreach($programs_id as $key => $value){
 	
 	DB::table('media_plan_suggestions')
 	->where('id', $key)
 	->update(['material_length' => $value]);
 
 
-}
+}*/
 
+DB::table('media_plans')
+->where('id', $plan_id)
+->update(['client_id' => $client_name, 'product_name' => $product_name,]);
 
-return response()->json(['token'=>"gogogogo"]);
+return response()->json(['msg'=>$product_name, 'msgs'=>$plan_id, 'msge'=>$client_name]);
 
 
 }
