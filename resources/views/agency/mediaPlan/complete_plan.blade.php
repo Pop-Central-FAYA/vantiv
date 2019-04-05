@@ -388,7 +388,8 @@ for(var i = 0; i < plans.length; i++){
 
       	$("body").delegate(".show", "click", function() {
 
-                    var client_name = $("#client_name").val();
+
+                 var client_name = $("#client_name").val();
                     var product_name = $("#product_name").val();
                     var product_name = $("#product_name").val();
                     var plan_id = $("#plan_id").val();
@@ -407,11 +408,15 @@ for(var i = 0; i < plans.length; i++){
                         data: body,
                             success:function(data){
 
-                                 console.log(data)
-                          
-                                 swal("Success!", "Plans successfully selected!", "success");
-                               
+                                 swal("Success!", "Plans successfully selected!", "success")
+                                    .then((value) => {
+                                        location.href = '/';
+                                    });
                             }
+
+                              error: function() {
+                                    alert("some error");
+                                }
                            
                         });
                 

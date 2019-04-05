@@ -423,7 +423,7 @@
 			 var prog_id = $(this).data("programm")
 
 			 document.getElementById('ri'+prog_id).remove() 
-             
+
 			 $('#'+prog_id).prop('disabled', false);
 			 
 		  });
@@ -435,7 +435,7 @@
                     "_token": "{{ csrf_token() }}",
                     "data":plans
                 };
-                
+                $('.show').prop('disabled', true);                
 
                 var RequestData = JSON.stringify(requesData);
 
@@ -448,12 +448,17 @@
                                 "data": JSON.stringify(plans)
                             },
                             success:function(data){
-                          
-                                swal("Success!", "Plans successfully selected!", "success");
-                                setTimeout(() => {
-                                    location.href = '/agency/media-plan/createplan/'+fifthSegment;
-                                }, 2000);
+                        
+                                    swal("Success!", "Plans successfully selected!", "success")
+                                    .then((value) => {
+                                        location.href = '/agency/media-plan/createplan/'+fifthSegment;
+                                    });
+
                             }
+                            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                                    alert("some error");
+                                }
+
                            
                         });
                 

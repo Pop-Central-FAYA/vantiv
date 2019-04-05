@@ -155,12 +155,9 @@ class MediaPlanController extends Controller
 			DB::table('media_plan_suggestions')
             ->where('id', $program_id->program_id)
             ->update(['status' => 1]);
-
-
-				$value = $program_id->program_id;
 			}
 
-		return response()->json(['token'=>$value]);
+		return response()->json(['status'=>"success", 'message'=> "Plan Selected successfully" ]);
 		
 
 	}
@@ -251,14 +248,14 @@ $client_name = $request->get('client_name');
 $product_name = $request->get('product_name');
 $plan_id = $request->get('plan_id');
 
-/*foreach($programs_id as $key => $value){
+foreach($programs_id as $key => $value){
 	
 	DB::table('media_plan_suggestions')
 	->where('id', $key)
 	->update(['material_length' => $value]);
 
 
-}*/
+}
 
 DB::table('media_plans')
 ->where('id', $plan_id)
