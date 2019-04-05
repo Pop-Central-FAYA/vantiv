@@ -28,8 +28,10 @@ class StorePlanningSuggestions
             'agency_commission' => $this->criteriaForm->agency_commission,
             'start_date' => $this->criteriaForm->start_date,
             'end_date' => $this->criteriaForm->end_date,
+            'media_type' => $this->criteriaForm->media_type,
+            'campaign_name' => $this->criteriaForm->campaign_name,
             'planner_id' => Auth::id(),
-            'status' => 'Pending'
+            'status' => 'Suggested'
         ]);
 
         foreach ($this->suggestions as $key => $suggestion) {

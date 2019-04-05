@@ -9,19 +9,56 @@ use Vanguard\Services\MediaPlan\validateCriteriaForm;
 use Vanguard\Services\MediaPlan\SuggestPlan;
 use Vanguard\Services\MediaPlan\StorePlanningSuggestions;
 use Illuminate\Support\Facades\DB;
+use Vanguard\Services\MediaPlan\GetMediaPlans;
+use Session;
 
 class MediaPlanController extends Controller
 {
     public function index($value='')
     {
-    	
+    	//Broadcaster Dashboard module
+        $broadcaster_id = Session::get('broadcaster_id');
+        $agency_id = Session::get('agency_id');
+        if ($broadcaster_id) {
+            //redirect user to the new landing page of the broadcaster.
+            return view('broadcaster_module.landing_page');
+
+        } else if ($agency_id) {
+            $media_plan_service = new GetMediaPlans();
+            //count pending media plans
+            $count_pending_media_plans = $media_plan_service->pendingPlans();
+
+            //count approved media plans
+            $count_approved_media_plans = $media_plan_service->approvedPlans();
+
+            //count declined media plans
+            $count_declined_media_plans = $media_plan_service->declinedPlans();
+
+            return view('agency.mediaPlan.dashboard')
+                    ->with([
+	                    'count_pending_media_plans' => $count_pending_media_plans,
+	                    'count_approved_media_plans' => $count_approved_media_plans,
+	                    'count_declined_media_plans' => $count_declined_media_plans
+	                ]);
+        }	
 	}
 	
 	public function customisPlan()
     {
 		return view('agency.mediaPlan.custom_plan');
+    	
     }
 
+    public function getSuggestionsByPlanId($id='')
+    {
+    	return "got here";
+    }
+
+    public function dashboardMediaPlans(Request $request)
+    {
+        $media_plan_service = new GetMediaPlans();
+        return $media_plan_service->run();
+    }
 
     public function criteriaForm(Request $request)
     {

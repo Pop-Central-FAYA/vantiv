@@ -359,7 +359,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/campaign-details/{user_id}', 'Agency\CampaignsController@filterByUser');
 
         Route::get('/dashboard/campaigns', 'DashboardController@dashboardCampaigns');
-        
+
+        Route::get('/dashboard/media-plans', 'DashboardController@dashboardMediaPlans');
+
         /*
          * User Management
          */
@@ -410,7 +412,9 @@ Route::group(['middleware' => 'auth'], function () {
         /**
          * Media Planning
          */
-        Route::group(['prefix' => '/media-plan'], function () {
+        Route::group(['prefix' => 'media-plan'], function () {
+            Route::get('/', 'MediaPlan\MediaPlanController@index')->name('agency.media_plans');
+            Route::get('/dashboard/list', 'MediaPlan\MediaPlanController@dashboardMediaPlans');
             Route::get('/create', 'MediaPlan\MediaPlanController@criteriaForm')->name('agency.media_plan.criteria_form');
             Route::post('/create', 'MediaPlan\MediaPlanController@suggestPlan')->name('agency.media_plan.suggestPlan');
             Route::get('/customise/{id}', 'MediaPlan\MediaPlanController@getSuggestPlanById');

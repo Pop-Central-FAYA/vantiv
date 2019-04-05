@@ -13,7 +13,8 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
         	CompanyTypeSeeder::class,
-            CriteriasTableSeeder::class
+            CriteriasTableSeeder::class,
+            MpsTableSeeder::class
         ]);
     }
 }

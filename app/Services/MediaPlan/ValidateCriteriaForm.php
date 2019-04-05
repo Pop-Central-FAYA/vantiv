@@ -36,7 +36,8 @@ class validateCriteriaForm
             'social_class' => 'nullable|array',
             'age_groups' => 'nullable|array',
             'agency_commission' => 'nullable|numeric',
-            'media_type' => 'required|string'
+            'media_type' => 'required|string',
+            'campaign_name' => 'required|string',
         ];
         return Validator::make($data, $rules,
             [
