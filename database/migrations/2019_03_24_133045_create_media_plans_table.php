@@ -31,7 +31,7 @@ class CreateMediaPlansTable extends Migration
             $table->date('start_date');
             $table->date('end_date');
             $table->string('planner_id')->reference('id')->on('users');
-            $table->enum('status', ['Initialized', 'Created', 'Pending', 'Approved', 'Declined']);
+            $table->enum('status', ['Suggested', 'Selected', 'Pending', 'Approved', 'Declined']);
             $table->timestamps();
         });
     }

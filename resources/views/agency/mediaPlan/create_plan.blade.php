@@ -255,13 +255,26 @@
                     </div>
 
                     <!-- Agency commission -->
-                    <div class="clearfix mb3">
+                    <div class="clearfix">
                         <div class="input_wrap column col_12{{ $errors->has('agency_commission') ? ' has-error' : '' }}">
                             <label class="small_faint">Agency Commission</label>
                             <input type="number" name="agency_commission" id="agency_commission" value="" placeholder="Enter Agency Commission">
                             @if($errors->has('agency_commission'))
                                 <strong>
                                     <span class="help-block">{{ $errors->first('agency_commission') }}</span>
+                                </strong>
+                            @endif
+                        </div>
+                    </div>
+
+                    <!-- Campaign Name -->
+                    <div class="clearfix mb3">
+                        <div class="input_wrap column col_12{{ $errors->has('campaign_name') ? ' has-error' : '' }}">
+                            <label class="small_faint">Campaign Name</label>
+                            <input type="text" name="campaign_name" id="campaign_name" value="" placeholder="Enter Campaign Name">
+                            @if($errors->has('campaign_name'))
+                                <strong>
+                                    <span class="help-block">{{ $errors->first('campaign_name') }}</span>
                                 </strong>
                             @endif
                         </div>

@@ -36,12 +36,10 @@ class GetMediaPlans
             ->editColumn('status', function ($plans){
                 if($plans['status'] === "Approved"){
                     return '<span class="span_state status_success">Approved</span>';
-                }elseif ($plans['status'] === "Pending"){
+                }elseif ($plans['status'] === "Pending" OR $plans['status'] === "Suggested" OR $plans['status'] === "Selected"){
                     return '<span class="span_state status_pending">Pending</span>';
                 }elseif ($plans['status'] === 'Declined'){
                     return '<span class="span_state status_danger">Declined</span>';
-                }elseif ($plans['status'] === 'Created'){
-                    return '<span class="span_state status_danger">Pending</span>';
                 }else {
                     return '<span class="span_state status_danger">File Errors</span>';
                 }
@@ -53,7 +51,7 @@ class GetMediaPlans
 
     public function fetchAllMediaPlans()
     {
-        return MediaPlan::where('planner_id', Auth::id())->where('status', '!=', 'Initialized')->latest()->get();
+        return MediaPlan::where('planner_id', Auth::id())->latest()->get();
     }
 
     public function getMediaPlanDatatables($media_plans)
@@ -90,6 +88,6 @@ class GetMediaPlans
 
     public function pendingPlans()
     {
-        return MediaPlan::where('planner_id', Auth::id())->where('status', 'Pending')->orWhere('status', 'Created')->count();
+        return MediaPlan::where('planner_id', Auth::id())->whereIn('status', ['Pending','Suggested','Selected'])->count();
     }
 }
