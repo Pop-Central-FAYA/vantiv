@@ -9,7 +9,8 @@ dev
 get-pip.py
 .DS_Store
 storage/.DS_Store
-storage/excels
+storage/excels/
+storage/fonts/
 .editorconfig
 .gitattributes
 resources/assets
@@ -26,3 +27,8 @@ node_modules
 package.json
 js
 sass
+/vendor
+.env
+/public/.htaccess
+/storage
+storage/*.key
