@@ -16,10 +16,9 @@ services:
       - MYSQL_HOST=database
       - APACHE_SERVER_NAME=alpine.docker.localhost
       - CONTAINER_TIMEZONE=UTC
-      - PHP_SHORT_OPEN_TAG=On
       - PHP_ERROR_REPORTING=E_ALL
       - PHP_DISPLAY_ERRORS=On
-      - PHP_HTML_ERRORS=On
+      - PHP_DISPLAY_STARTUP_ERRORS=On
       - PHP_DATE_TIMEZONE=UTC
       - PHP_XDEBUG_ENABLED=true
       - DB_HOST=database

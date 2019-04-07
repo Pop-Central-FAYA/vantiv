@@ -1,8 +1,11 @@
+**/.git
+**/.DS_Store
+**/node_modules
 .env
 .git
 dev/
 bootstrap/cache/*
-node_modules
+node_modules/
 public/dist/*
 storage/app/*
 storage/framework/cache/*
@@ -11,6 +14,12 @@ storage/framework/views/*
 storage/logs/*
 storage/excels/*
 storage/debugbar/*
-vendor
+vendor/
 _ide_helper.php
 Makefile
+documentation
+local_stuffs
+.gitignore
+app.dockerfile
+DEPLOY.md
+docker-compose.yaml
