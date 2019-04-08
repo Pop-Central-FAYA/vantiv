@@ -92,7 +92,7 @@
 
                         <a href="{{ route('agency.media_plan.decline', ['id'=>$media_plan->id]) }}" class="btn block_disp uppercased align_center"><span class="_plus"></span>Decline Plan</a>
 
-                        <a href="{{ route('campaign.get_campaign_general_information') }}" class="btn block_disp uppercased align_center"><span class="_plus"></span>Export Plan</a>
+                        <a href="#" class="btn block_disp uppercased align_center"><span class="_plus"></span>Export Plan</a>
                     </div>
                 @endif
             </div>
