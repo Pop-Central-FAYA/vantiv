@@ -26,13 +26,9 @@
     </div>
 
     <div class="_nav_button">
+            <a href="{{ route('broadcaster.inventory_management') }}" class="btn full block_disp uppercased align_center _campaign_mgt">Inventory Management</a><p><br></p>
         @if(Auth::user()->companies->count() == 1)
-            @if(Auth::user()->hasRole('ssp.admin'))
-                <a href="{{ route('broadcaster.inventory_management') }}" class="btn full block_disp uppercased align_center _campaign_mgt">Inventory Management</a><p><br></p>
-            @endif
-            @if(Auth::user()->hasRole('ssp.media_buyer'))
-                <a href="{{ route('campaign.get_campaign_general_information') }}" class="btn full block_disp uppercased align_center"><span class="_plus"></span>New Campaign</a>
-            @endif
+            <a href="{{ route('campaign.get_campaign_general_information') }}" class="btn full block_disp uppercased align_center"><span class="_plus"></span>New Campaign</a>
         @endif
     </div>
 
