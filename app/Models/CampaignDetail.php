@@ -24,4 +24,9 @@ class CampaignDetail extends Model
     ];
 
     public $timestamps = false;
+
+    public function time_belt_transactions()
+    {
+        return $this->hasMany(TimeBeltTransaction::class);
+    }
 }

@@ -107,6 +107,42 @@ Route::group(['middleware' => 'auth'], function () {
        Route::get('/delete/{id}', 'AdminDayPartsController@delete')->name('admin.daypart.delete');
     });
 
+    /**
+     * Media Inventory
+     */
+    Route::group(['prefix' => 'program-management'], function () {
+       Route::get('/', 'Broadcaster\ProgramManagementController@index')->name('program.management.index');
+       Route::get('/data-table', 'Broadcaster\ProgramManagementController@formatToDataTable');
+       Route::get('/edit/{id}', 'Broadcaster\ProgramManagementController@edit')->name('program.management.edit');
+       Route::post('/update/{program_id}', 'Broadcaster\ProgramManagementController@update')->name('program.management.update');
+       Route::get('/details/{id}', 'Broadcaster\ProgramManagementController@edit')->name('program.management.details');
+       Route::get('/create', 'Broadcaster\ProgramManagementController@create')->name('program.management.create');
+       Route::post('/store', 'Broadcaster\ProgramManagementController@store')->name('program.management.store');
+       Route::get('/get-rate-card/{station_id}', 'Broadcaster\ProgramManagementController@fetRateCard');
+    });
+
+    /**
+     * Rate Card Management
+     */
+    Route::group(['prefix' => 'rate-card-management'], function () {
+        Route::get('/', 'Broadcaster\RateCardManagementController@index')->name('rate_card.management.index');
+        Route::get('/data-table', 'Broadcaster\RateCardManagementController@formatToDatatable');
+        Route::get('/create', 'Broadcaster\RateCardManagementController@create')->name('rate_card.management.create');
+        Route::post('/store', 'Broadcaster\RateCardManagementController@store')->name('rate_card.management.store');
+        Route::get('/edit/{rate_card_id}', 'Broadcaster\RateCardManagementController@edit')->name('rate_card.management.edit');
+        Route::post('/update/{rate_card_id}', 'Broadcaster\RateCardManagementController@update')->name('rate_card.management.update');
+        Route::get('/details/{rate_card_id}', 'Broadcaster\RateCardManagementController@details')->name('rate_card.management.details');
+    });
+
+    /**
+     * time belt management
+     */
+    Route::group(['prefix' => 'time-belt-management'], function () {
+       Route::get('/', 'Broadcaster\TimeBeltManagementController@index')->name('time.belt.management.index');
+       Route::get('/data-table', 'Broadcaster\TimeBeltManagementController@formatToDatatable');
+       Route::get('/details/{time_belt_id}', 'Broadcaster\TimeBeltManagementController@details')->name('time.belt.management.details');
+    });
+
     /*
     * Campaign
     */

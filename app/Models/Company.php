@@ -4,6 +4,7 @@ namespace Vanguard\Models;
 
 
 use Vanguard\User;
+use Vanguard\Models\Ratecard\Ratecard;
 
 class Company extends Base
 {
@@ -29,5 +30,20 @@ class Company extends Base
     public function channels()
     {
         return $this->belongsToMany(CampaignChannel::class, 'channel_company', 'company_id', 'channel_id');
+    }
+
+    public function rate_cards()
+    {
+        return $this->hasMany(Ratecard::class);
+    }
+
+    public function time_belts()
+    {
+        return $this->hasMany(TimeBelt::class);
+    }
+
+    public function media_programs()
+    {
+        return $this->hasMany(MediaProgram::class);
     }
 }
