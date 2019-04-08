@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateInventoryLogsTable extends Migration
+class CreateRatecardPrioritiesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,10 @@ class CreateInventoryLogsTable extends Migration
      */
     public function up()
     {
-        Schema::create('inventory_logs', function (Blueprint $table) {
+        Schema::create('ratecard_priorities', function (Blueprint $table) {
             $table->string('id', 25);
-            $table->string('program_id', 25)->index();
-            $table->timestamp('date_sold');
-            $table->integer('total_slot_available');
-            $table->integer('total_slot_sold');
+            $table->string('rate_card_type');
+            $table->integer('priority');
             $table->timestamps();
         });
     }
@@ -30,6 +28,6 @@ class CreateInventoryLogsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('inventory_logs');
+        Schema::dropIfExists('ratecard_priorities');
     }
 }

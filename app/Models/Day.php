@@ -2,14 +2,18 @@
 
 namespace Vanguard\Models;
 
-use Illuminate\Database\Eloquent\Model;
 
-class Day extends Model
+class Day extends Base
 {
-    protected $connection = 'api_db';
     protected $table = 'days';
     protected $primaryKey = 'id';
     protected $keyType = 'string';
+
+    protected $fillable = ['day'];
+
+    protected $dates = ['time_created', 'time_modified'];
+
+    public $timestamps = false;
 
     public function rate_card()
     {

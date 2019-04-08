@@ -19,7 +19,8 @@ class Kernel extends ConsoleKernel
         'Vanguard\Console\Commands\CreateCompany',
         'Vanguard\Console\Commands\CreateUser',
         'Vanguard\Console\Commands\CreateRole',
-        'Vanguard\Console\Commands\CreateRoleUser'
+        'Vanguard\Console\Commands\CreateRoleUser',
+        'Vanguard\Console\Commands\PopulateTimeBelt'
     ];
 
     /**
