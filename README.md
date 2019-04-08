@@ -50,7 +50,7 @@ The seed database is in the following location:
 If db schema changes, this will need to be updated for new users, so do a dump of your current __dev__ db., the following command should work.
 
 ```bash
-mysqldump --host=localhost --port=33061 -ufaya -pfaya --databases --add-drop-database --events --routines --triggers faya api_db | gzip > ./database/docker-entrypoint-initdb.d/02-full-faya.sql.gz
+mysqldump --host=127.0.0.1 --port=33061 -ufaya -pfaya --databases --add-drop-database --events --routines --triggers api_db | gzip > ./database/docker-entrypoint-initdb.d/02-full-faya.sql.gz
 ```
 Check that into version control and we are good to go
 
