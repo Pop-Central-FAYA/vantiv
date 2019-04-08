@@ -408,10 +408,10 @@ for(var i = 0; i < plans.length; i++){
                         data: body,
                             success:function(data){
                                     console.log(data)
-                                 /* swal("Success!", "Plans successfully selected!", "success")
+                                 swal("Success!", "Plans successfully selected!", "success")
                                     .then((value) => {
                                         location.href = '/';
-                                    }); */
+                                    });
                             },
 
                               error: function() {
