@@ -18,6 +18,6 @@ class MediaPlanSuggestion extends Base
      */
     public function plan()
     {
-        return $this->belongsTo('MediaPlan::class');
+        return $this->belongsTo(MediaPlan::class);
     }
 }

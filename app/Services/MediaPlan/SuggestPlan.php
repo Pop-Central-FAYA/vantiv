@@ -118,7 +118,7 @@ class SuggestPlan
     public function groupSuggestions($query)
     {
         $query = $query->groupBy(function ($item, $key) {
-            return $item->station.'_'.$item->program.'_'.$item->start_time.'_'.$item->end_time;
+            return $item->station.'_'.$item->program.'_'.$item->start_time.'_'.$item->end_time.'_'.$item->day;
         });
         $query = $query->map(function($item, $key) {
                         $count = count($item);

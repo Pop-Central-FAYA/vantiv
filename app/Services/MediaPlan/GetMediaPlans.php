@@ -27,8 +27,13 @@ class GetMediaPlans
 
         return $datatables->collection($plans)
             ->editColumn('campaign_name', function ($plans){
-                if($plans['campaign_name'] === null){
-                    return '<a href="#">Unknown</a>';
+                // 'Suggested','Selected','Pending','Approved','Declined'
+                if($plans['status'] === "Approved" OR $plans['status'] === "Pending"){
+                    return '<a href="'.route('agency.media_plan.summary', ['id'=>$plans['plan_id']]).'">'.$plans['campaign_name'].'</a>';
+                }elseif($plans['status'] === "Declined" && $plans['status'] === "Selected") {
+                    //redirect to the review suggested plan page
+                }elseif($plans['status'] === "Suggested") {
+                    //redirect to the select suggestions page
                 }else {
                     return '<a href="#">'.$plans['campaign_name'].'</a>';
                 }
