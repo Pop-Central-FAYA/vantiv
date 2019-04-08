@@ -32,8 +32,10 @@ class GetMediaPlans
                     return '<a href="'.route('agency.media_plan.summary', ['id'=>$plans['plan_id']]).'">'.$plans['campaign_name'].'</a>';
                 }elseif($plans['status'] === "Declined" && $plans['status'] === "Selected") {
                     //redirect to the review suggested plan page
+                    return '<a href="'.route('agency.media_plan.create', ['id'=>$plans['plan_id']]).'">'.$plans['campaign_name'].'</a>';
                 }elseif($plans['status'] === "Suggested") {
                     //redirect to the select suggestions page
+                    return '<a href="'.route('agency.media_plan.customize', ['id'=>$plans['plan_id']]).'">'.$plans['campaign_name'].'</a>';
                 }else {
                     return '<a href="#">'.$plans['campaign_name'].'</a>';
                 }
