@@ -407,12 +407,12 @@ for(var i = 0; i < plans.length; i++){
                         url: "/agency/media-plan/finish_plan",
                         data: body,
                             success:function(data){
-
-                                 swal("Success!", "Plans successfully selected!", "success")
+                                    console.log(data)
+                                 /* swal("Success!", "Plans successfully selected!", "success")
                                     .then((value) => {
                                         location.href = '/';
-                                    });
-                            }
+                                    }); */
+                            },
 
                               error: function() {
                                     alert("some error");

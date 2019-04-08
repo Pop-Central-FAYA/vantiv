@@ -97,7 +97,9 @@ class MediaPlanController extends Controller
 	public function getSuggestPlanById($id)
     {
 		$plans = DB::table('media_plan_suggestions')->where('media_plan_id', $id)->get();
-		
+		if(count($plans) == 0){
+			return redirect()->route("agency.media_plan.criteria_form");
+		}
 		$suggestions = $this->groupSuggestions($plans);
 		$suggestionsByStation = $this-> groupSuggestionsByStation($plans);
 
@@ -166,25 +168,31 @@ class MediaPlanController extends Controller
     {
 		$plans = DB::table('media_plan_suggestions')->where('media_plan_id', $id)->where('status', 1)->get();
 		$plans_details = DB::table('media_plans')->where('id', $id)->get();
-		
+
+		if(count($plans_details) == 0){
+			return redirect()->route("agency.media_plan.criteria_form");
+		}
+	
+		$fayaFound = [];
 		$suggestions = $this->groupSuggestions($plans);
 		$suggestionsByStation = $this-> groupSuggestionsByStation($plans);
 		$dates = $this->dates($plans_details[0]->start_date, $plans_details[0]->end_date);
-		 $labeldates = $this->labeldates($plans_details[0]->start_date, $plans_details[0]->end_date);
-		 $days = $this->days($plans_details[0]->start_date, $plans_details[0]->end_date);
+		$labeldates = $this->labeldates($plans_details[0]->start_date, $plans_details[0]->end_date);
+		$days = $this->days($plans_details[0]->start_date, $plans_details[0]->end_date);
 		$fayaFound = array(
-            'total_tv' => $this->countByMediaType($suggestions, 'Tv'),
+			'total_tv' => $this->countByMediaType($suggestions, 'Tv'),
 			'total_radio' => $this->countByMediaType($suggestions, 'Radio'),
 			'programs_stations' => $suggestions,
-            'stations' => $suggestionsByStation,
+			'stations' => $suggestionsByStation,
 			'total_audiences' => $this->totalAudienceFound($suggestions),
 			'plan_details' => $plans_details,
 			'dates' => $dates,
 			'labeldates' => $labeldates,
 			'days' => $days,
-        );
+		);
+
+	
 		return view('agency.mediaPlan.complete_plan')->with('fayaFound', $fayaFound);
-		//return $fayaFound;
 	
 	}
 
@@ -248,20 +256,21 @@ $client_name = $request->get('client_name');
 $product_name = $request->get('product_name');
 $plan_id = $request->get('plan_id');
 
+
+
 foreach($programs_id as $key => $value){
 	
 	DB::table('media_plan_suggestions')
 	->where('id', $key)
 	->update(['material_length' => $value]);
-
-
-}
+} 
 
 DB::table('media_plans')
 ->where('id', $plan_id)
 ->update(['client_id' => $client_name, 'product_name' => $product_name,]);
+ 
 
-return response()->json(['msg'=>$product_name, 'msgs'=>$plan_id, 'msge'=>$client_name]);
+return response()->json(['msg'=>"Good to go", 'msgs'=>$plan_id, 'msge'=>$client_name]);
 
 
 }
@@ -270,16 +279,13 @@ return response()->json(['msg'=>$product_name, 'msgs'=>$plan_id, 'msge'=>$client
 public function groupById($query)
 {
 
-	$result = $query->groupBy([
-		'id',
-		function ($item) {
-			return $item->material_length;
-		},
-	], $preserveKeys = true);
-	
+	$result = $query->groupBy(['id', 'material_length']);
+
 
 
 	return $result;
+
+
 }
 
 public function groupByDuration($query)
