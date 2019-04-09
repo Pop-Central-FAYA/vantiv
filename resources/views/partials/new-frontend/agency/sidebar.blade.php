@@ -18,11 +18,16 @@
             @if(Auth::user()->hasRole('finance') || Auth::user()->hasRole('admin'))
                 <li class="wallet_icon {{ Request::is('agency/wallets/*') ? 'active' :  Request::is('agency/wallets/wallet-statement') ? 'active' : ''  }}"><a href="{{ route('agency_wallet.statement') }}">Wallet</a></li>
             @endif
+            @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('finance') || Auth::user()->hasRole('compliance'))
+            <li class="campaign_icon {{ Request::is('/agency/media-plan') ? 'active' : ''  }}"><a href="{{ route('agency.media_plans') }}">Media Plans</a></li>
+            @endif
         <!-- <li class="settings_icon {{ Request::is('agency/user/manage') ? 'active' : '' }}"><a href="{{ route('agency.user_management') }}">User Management</a></li> -->
         </ul>
     </div>
     @if(Auth::user()->hasRole('admin'))
         <div class="_nav_button">
+            <a href="{{ route('agency.media_plan.criteria_form') }}" class="btn full block_disp uppercased align_center mb3"><span class="_plus"></span>New Media Plan</a>
+
             <a href="{{ route('campaign.get_campaign_general_information') }}" class="btn full block_disp uppercased align_center"><span class="_plus"></span>New Campaign</a>
         </div>
     @endif

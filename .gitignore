@@ -8,6 +8,7 @@ html/web.config
 dev
 get-pip.py
 .DS_Store
+public/.DS_Store
 storage/.DS_Store
 storage/excels/
 storage/fonts/
@@ -25,10 +26,9 @@ database/migrations/2018_09_01_081439_dump_old_table_to_prepare_migration.php
 local_stuffs
 node_modules
 package.json
-js
-sass
 /vendor
 .env
 /public/.htaccess
 /storage
 storage/*.key
+
