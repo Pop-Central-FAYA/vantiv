@@ -7,7 +7,7 @@ use Illuminate\Support\Collection;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Models\Criteria;
 use Vanguard\Models\MediaPlan;
-use Vanguard\Services\MediaPlan\validateCriteriaForm;
+use Vanguard\Services\MediaPlan\ValidateCriteriaForm;
 use Vanguard\Services\MediaPlan\SuggestPlan;
 use Vanguard\Services\MediaPlan\StorePlanningSuggestions;
 use Illuminate\Support\Facades\DB;
@@ -74,7 +74,7 @@ class MediaPlanController extends Controller
     public function suggestPlan(Request $request)
     {
     	// validate criteria form request
-    	$validateCriteriaFormService = new validateCriteriaForm($request->all());
+    	$validateCriteriaFormService = new ValidateCriteriaForm($request->all());
     	$validation = $validateCriteriaFormService->validateCriteria();
 
     	if ($validation->fails()) {
@@ -82,10 +82,9 @@ class MediaPlanController extends Controller
             return back()->withErrors($validation)->withInput();
     	}
     	// Fetch mps audiences, programs, stations, time duration, based on criteria
-    	$suggestPlanService = new suggestPlan($request);
+    	$suggestPlanService = new SuggestPlan($request);
     	$suggestions = $suggestPlanService->suggestPlan();
-
-    	if (count($suggestions['stations']) > 0) {
+		if (count($suggestions['stations']) > 0) {
     		// store planning criteria and suggestions
     		$storeSuggestionsService = new StorePlanningSuggestions($request, $suggestions['programs_stations']);
 			$newMediaPlan = $storeSuggestionsService->storePlanningSuggestions();
@@ -99,9 +98,6 @@ class MediaPlanController extends Controller
 				'MediaPlan\MediaPlanController@criteriaForm'
 			);
 		}
-
-		
-	
 	}
 	
 	public function getSuggestPlanById($id)
