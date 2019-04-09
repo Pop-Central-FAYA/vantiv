@@ -232,7 +232,7 @@ class MediaPlanController extends Controller
 		$fayaFound = array(
 			'total_tv' => $this->countByMediaType($suggestions, 'Tv'),
 			'total_radio' => $this->countByMediaType($suggestions, 'Radio'),
-			'programs_stations' => $suggestions,
+			'programs_stations' => $plans,
 			'stations' => $suggestionsByStation,
 			'total_audiences' => $this->totalAudienceFound($suggestions),
 			'plan_details' => $plans_details,
@@ -241,7 +241,7 @@ class MediaPlanController extends Controller
 			'days' => $days,
 		);
 
-	
+	//dd($fayaFound);
 		return view('agency.mediaPlan.complete_plan')->with('fayaFound', $fayaFound)
 													->with('clients', $clients);
 	

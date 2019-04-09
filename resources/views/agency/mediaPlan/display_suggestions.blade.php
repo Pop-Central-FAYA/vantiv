@@ -84,15 +84,21 @@
                                                 </thead>
                                                 </table>
                 @foreach($fayaFound['stations'] as $key => $Value)
+                        @php 
+                                $sum_audience = $Value->sum('total_audience'); 
+                        @endphp
+
                     <section class="accordion-group__accordion">
                         <header class="accordion-group__accordion-head">
                                     <table lass="display default_mpo filter_mpo" id="default_mpo_table">
                                             <tbody>
 
                                                     <tr  class="clickable">
-                                                            <td width="25%"><input type="checkbox"></td>
+                                                            <td width="25%"><input type="checkbox" /> </td>
                                                             <td width="25%">{{ $key }}</td>
-                                                            <td width="25%">890</td>
+                                                            <td width="25%">
+                                                            {{ $sum_audience}}
+                                                            </td>
                                                                  <td width="25%"><button class="btn small_btn accordion-group__accordion-btn"> Details </button> <!--<button class="btn small_btn"> Add </button>--> </td>
                                                     </tr>
                                                     </tbody>
@@ -115,6 +121,7 @@
                                                                      <tbody>
                                             
                                                                      @foreach($Value as $Programe)
+
                                             <tr>
                         <td id="stat{{ $Programe->id }}"> {{ $Programe->station }}</td>
                         <td id="day{{ $Programe->id }}"class="center">{{ $Programe ->day}} </td>
@@ -126,7 +133,6 @@
                             <button data-program="{{ $Programe->id }}" class="btn btn-info aBtn" data_15="first15" id="{{ $Programe->id }}" type="button">ADD</button>	
                         </td>
                     </tr>
-
                      @endforeach
                                             </tbody>                   
                                          </table>
@@ -325,6 +331,8 @@
                     });
                     $('.next').attr("disabled", true);
                     var url = '/brand/get-industry';
+
+                    
                     $.ajax({
                         url: url,
                         method: "GET",
@@ -439,6 +447,11 @@
 
                 var RequestData = JSON.stringify(requesData);
 
+
+                   if(plans.length == 0 ){
+                            swal("Select the staion you want to add");
+                            $('.show').prop('disabled', false);  
+                        }else{
                         $.ajax({
                             type: "POST",
                             dataType: 'json',
@@ -459,7 +472,7 @@
 
                            
                         });
-                
+                    }
                 
 			 console.log(plans)
 			
