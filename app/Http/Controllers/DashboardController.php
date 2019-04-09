@@ -16,9 +16,11 @@ use Vanguard\Services\Campaign\CampaignStatusPercentage;
 use Vanguard\Services\Campaign\TotalVolumeCampaignChart;
 use Vanguard\Services\CampaignChannels\CampaignChannels;
 use Vanguard\Services\Client\BroadcasterClient;
+use Vanguard\Services\Company\CompanyDetailsFromIdList;
 use Vanguard\Services\Company\UserCompanyByChannel;
 use Vanguard\Services\Invoice\PendingInvoice;
 use Vanguard\Services\Mpo\MpoList;
+use Vanguard\Services\Traits\ListDayTrait;
 use Vanguard\Services\Traits\YearTrait;
 use Yajra\DataTables\DataTables;
 
@@ -30,6 +32,7 @@ class DashboardController extends Controller
 
     use CompanyIdTrait;
     use YearTrait;
+    use ListDayTrait;
 
     public function __construct(Utilities $utilities, DataTables $dataTables)
     {
@@ -245,154 +248,14 @@ class DashboardController extends Controller
 
     public function inventoryManagementDashboard()
     {
-        $broadcaster = Session::get('broadcaster_id');
-        // high value customer
-        $high_value_customers = $this->getHighValueCustomer($broadcaster);
-
-        //paid invoices
-        $paid_invoices = $this->getPeriodicPaidInvoices($broadcaster);
-
-        //High performing Dayparts
-        $high_performing_dayparts = $this->getHighPerformingDayParts($broadcaster);
-
-        //high performing days
-        $performing_days_data = $this->getHighPerformingDays($broadcaster);
-
-        //periodic sales report
-        $periodic_sales = $this->getPeriodicSalesReport($broadcaster);
-
-        $adslot_monthly_count = json_encode($periodic_sales['adslot_monthly']);
-        $total_monthly_spend = json_encode($periodic_sales['total_month']);
-        $monthly_periods = json_encode($periodic_sales['months']);
-
-        return view('broadcaster_module.dashboard.inventory_management.dashboard')->with(['adslot_monthly_count' => $adslot_monthly_count, 'total_monthly_spend' => $total_monthly_spend,
-                                                                                                'monthly_periods' => $monthly_periods, 'performing_days_data' => $performing_days_data,
-                                                                                                'high_performing_dayparts' => $high_performing_dayparts, 'paid_invoices' => $paid_invoices,
-                                                                                                'high_value_customers' => $high_value_customers]);
-    }
-
-    public function getHighPerformingDays($broadcaster_id)
-    {
-        $days = Utilities::switch_db('api')->select("SELECT COUNT(id) as total_campaigns, DATE_FORMAT(time_created, '%a') as days 
-                                                            from campaignDetails where status != 'on_hold' AND broadcaster = '$broadcaster_id' AND day_parts != '' 
-                                                            GROUP BY DATE_FORMAT(time_created, '%a') desc LIMIT 7");
-
-        $day_names = [];
-
-        $total_campaign_amount = 0;
-        foreach ($days as $day) {
-            $total_campaign_amount += $day->total_campaigns;
+        $companies_service = new CompanyDetailsFromIdList($this->companyId());
+        if(is_array($this->companyId())){
+            $companies = $companies_service->getCompanyDetails();
+        }else{
+            $companies = '';
         }
-
-        foreach ($days as $day) {
-            $percentage_days = (($day->total_campaigns) / $total_campaign_amount) * 100;
-            $day_names[] = [
-                'name' => $day->days,
-                'y' => $percentage_days
-            ];
-        }
-
-        return json_encode($day_names);
-    }
-
-    public function getPeriodicSalesReport($broadcaster_id)
-    {
-        $total_month = [];
-        $months = [];
-        $adslot_monthly = [];
-        $periodic = Utilities::switch_db('api')->select("SELECT count(id) as tot_camp, SUM(adslots) as adslot, time_created as days from campaignDetails WHERE status != 'on_hold' AND
-                                                              broadcaster = '$broadcaster_id' GROUP BY DATE_FORMAT(time_created, '%Y-%m') ");
-
-        $price = Utilities::switch_db('api')->select("SELECT SUM(amount) AS total_price, time_created AS days FROM paymentDetails 
-                                                          WHERE payment_status = 1 AND broadcaster = '$broadcaster_id' 
-                                                          GROUP BY DATE_FORMAT(time_created, '%Y-%m') 
-                                                          ");
-        for ($i = 0; $i < count($periodic); $i++) {
-            $months[] = date('M, Y', strtotime($periodic[$i]->days));
-            $total_month[] = $price[$i]->total_price;
-            $adslot_monthly[] = (integer)$periodic[$i]->adslot;
-
-        }
-
-        return (['months' => $months, 'total_month' => $total_month, 'adslot_monthly' => $adslot_monthly]);
-    }
-
-    public function getHighPerformingDayParts($broadcaster_id)
-    {
-        $all_adslots_dayparts = [];
-        $all_daypart_names = [];
-        $adslot_ids = Utilities::switch_db('api')->select("SELECT adslots_id from campaignDetails where status != 'on_hold' AND broadcaster = '$broadcaster_id' ");
-        foreach ($adslot_ids as $adslot_id){
-            $adslot_dayparts_ids = Utilities::switch_db('api')->select("SELECT a.day_parts as id, d.day_parts as day_parts from adslots as a INNER JOIN dayParts
-                                                                            as d ON a.day_parts = d.id where a.id IN ($adslot_id->adslots_id)");
-            $all_adslots_dayparts[] = $adslot_dayparts_ids;
-        }
-
-        $daypart_ids = Utilities::array_flatten($all_adslots_dayparts);
-
-        $total = (count($daypart_ids));
-
-        $daypartArray = [];
-        foreach($daypart_ids as $daypart_name)
-        {
-            $daypartArray[$daypart_name->day_parts][] = $daypart_name;
-        }
-
-        foreach ($daypartArray as $key => $value){
-            $day_percent = ((count($value)) / $total) * 100;
-            $all_daypart_names[] = [
-                'name' => $key,
-                'y' => $day_percent,
-            ];
-        }
-
-        return  json_encode($all_daypart_names);
-    }
-
-    public function getPeriodicPaidInvoices($broadcaster_id)
-    {
-        $invoice_array = [];
-        $broadcaster_name = Auth::user()->companies->first()->name;
-        $invoices = Utilities::switch_db('api')->select("SELECT i_d.*, i.campaign_id, c.name as campaign_name, c.campaign_id, DATE_FORMAT(c.stop_date, '%Y-%m-%d') as stop_date, 
-                                                             b.name as brand_name from invoiceDetails as i_d INNER JOIN invoices as i ON i.id = i_d.invoice_id 
-                                                            INNER JOIN campaignDetails as c ON c.campaign_id = i.campaign_id AND c.broadcaster = '$broadcaster_id' 
-                                                            INNER JOIN brand_client as b_c ON b_c.client_id = i_d.walkins_id
-                                                            INNER JOIN brands as b ON b.id = b_c.brand_id  WHERE i_d.status = 1 AND
-                                                            i_d.broadcaster_id = '$broadcaster_id' ORDER BY i_d.time_created DESC LIMIT 10");
-
-        foreach ($invoices as $invoice) {
-            $invoice_array[] = [
-                'campaign_id' => $invoice->campaign_id,
-                'invoice_number' => $invoice->agency_id ? $invoice->invoice_number.'v'.$broadcaster_name[0] : $invoice->invoice_number,
-                'campaign_name' => $invoice->campaign_name,
-                'customer' => ucfirst($invoice->brand_name),
-                'date' => date('Y-m-d', strtotime($invoice->time_created)),
-                'date_due' => $invoice->stop_date,
-            ];
-        }
-
-        return (object) $invoice_array;
-    }
-
-    public function getHighValueCustomer($broadcaster_id)
-    {
-            $high_value_campaigns = [];
-            $payments = Utilities::switch_db('api')->select("SELECT SUM(p.amount) as total_price, p.walkins_id, b.name as brand_name from paymentDetails as p
-                                                                INNER JOIN brand_client as b_c ON b_c.client_id = p.walkins_id
-                                                                INNER JOIN brands as b ON b.id = b_c.brand_id 
-                                                                where p.payment_status = 1 AND p.broadcaster = '$broadcaster_id' GROUP BY p.walkins_id ORDER BY total_price DESC LIMIT 10");
-            foreach ($payments as $payment){
-                $campaign_count = Utilities::switch_db('api')->select("SELECT COUNT(id) as total_campaign_count, SUM(adslots) as total_adslots from campaignDetails where 
-                                                                          status != 'on_hold' AND walkins_id = '$payment->walkins_id' AND broadcaster = '$broadcaster_id'");
-                $high_value_campaigns[] = [
-                    'number_of_campaigns' => $campaign_count[0]->total_campaign_count,
-                    'total_adslots' => $campaign_count[0]->total_adslots,
-                    'customer_name' => ucfirst($payment->brand_name),
-                    'payment' => $payment->total_price,
-                ];
-            }
-
-            return $high_value_campaigns;
+        return view('broadcaster_module.dashboard.inventory_management.dashboard')->with('days', $this->listDays())
+                                                                                        ->with('companies', $companies);
     }
 
     public function getChannelWithOtherDetails($channels_id, $companies_id)
