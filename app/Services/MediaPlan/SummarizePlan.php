@@ -61,6 +61,9 @@ class SummarizePlan
             $dates = [];
 
             foreach ($value as $details) {
+                if ($details->slot === '') {
+                    $details->slot = 0;
+                }
                 $dates[$details->date] = $details->slot;
             }
 
