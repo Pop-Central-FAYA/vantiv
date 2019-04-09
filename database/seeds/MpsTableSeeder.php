@@ -29,6 +29,10 @@ class MpsTableSeeder extends Seeder
             ['media_type' => 'Radio', 'station' => 'Cool FM', 'program' => 'Above', 'day' => 'Tuesday', 'start_time' => '20:00', 'end_time' => '21:30']
         ];
 
+        # Delete the audience data before recreating
+        MpsAudienceProgramActivity::truncate();
+		MpsAudience::truncate();
+        
         foreach ($mps_audience as $audience) {
         	$audience = MpsAudience::create([
                 'external_user_id' => $audience['external_user_id'],
