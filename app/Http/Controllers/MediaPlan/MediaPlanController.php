@@ -88,12 +88,19 @@ class MediaPlanController extends Controller
     	if (count($suggestions['stations']) > 0) {
     		// store planning criteria and suggestions
     		$storeSuggestionsService = new StorePlanningSuggestions($request, $suggestions['programs_stations']);
-    		$newMediaPlan = $storeSuggestionsService->storePlanningSuggestions();
-    	}
+			$newMediaPlan = $storeSuggestionsService->storePlanningSuggestions();
+			return redirect()->action(
+				'MediaPlan\MediaPlanController@getSuggestPlanById', ['id' => $newMediaPlan->id]
+			);
+    	}else{
 
-		return redirect()->action(
-			'MediaPlan\MediaPlanController@getSuggestPlanById', ['id' => $newMediaPlan->id]
-		);
+			Session::flash('success', 'No Station meet your criterials');
+			return redirect()->action(
+				'MediaPlan\MediaPlanController@criteriaForm'
+			);
+		}
+
+		
 	
 	}
 	
