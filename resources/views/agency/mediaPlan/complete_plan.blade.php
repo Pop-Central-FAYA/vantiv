@@ -63,9 +63,9 @@
 
                                     @for ($i = 0; $i < count($fayaFound['dates']); $i++)
                                         @if($fayaFound['days'][$i] == $value->day )
-                                        <td>   <input type="text" id="15{{$value->id}}" class="day_input"  data_12="{{ $value->id}}" data_11="15" data_10="{{$fayaFound['dates'][$i]}}" data_9="{{$fayaFound['days'][$i]}}"></td>
+                                        <td>   <input type="number" id="15{{$value->id}}" class="day_input"  data_12="{{ $value->id}}" data_11="15" data_10="{{$fayaFound['dates'][$i]}}" data_9="{{$fayaFound['days'][$i]}}"></td>
                                         @else
-                                            <td id=""><input type="text" value="N/A" name="lname" disabled></td>    
+                                            <td id=""><input type="number" placeholder="N/A" name="lname" disabled></td>    
                                         @endif
                                     @endfor
 
@@ -139,9 +139,9 @@
 
                                     @for ($i = 0; $i < count($fayaFound['dates']); $i++)
                                         @if($fayaFound['days'][$i] == $value->day )
-                                        <td>   <input type="text" id="30{{$value->id}}" class="day_input"  data_12="{{ $value->id}}" data_11="30" data_10="{{$fayaFound['dates'][$i]}}" data_9="{{$fayaFound['days'][$i]}}"></td>
+                                        <td>   <input type="number" id="30{{$value->id}}" class="day_input"  data_12="{{ $value->id}}" data_11="30" data_10="{{$fayaFound['dates'][$i]}}" data_9="{{$fayaFound['days'][$i]}}"></td>
                                         @else
-                                            <td id=""><input type="text" value="N/A" name="lname" disabled></td>    
+                                            <td id=""><input type="number" placeholder="N/A" name="lname" disabled></td>    
                                         @endif
                                     @endfor
 
@@ -209,9 +209,9 @@
 
                                     @for ($i = 0; $i < count($fayaFound['dates']); $i++)
                                         @if($fayaFound['days'][$i] == $value->day )
-                                        <td>   <input type="text" id="45{{$value->id}}" class="day_input"  data_12="{{ $value->id}}" data_11="45" data_10="{{$fayaFound['dates'][$i]}}" data_9="{{$fayaFound['days'][$i]}}"></td>
+                                        <td>   <input type="number" id="45{{$value->id}}" class="day_input"  data_12="{{ $value->id}}" data_11="45" data_10="{{$fayaFound['dates'][$i]}}" data_9="{{$fayaFound['days'][$i]}}"></td>
                                         @else
-                                            <td id=""><input type="text" value="N/A" name="lname" disabled></td>    
+                                            <td id=""><input type="number" placeholder="N/A" name="lname" disabled></td>    
                                         @endif
                                     @endfor
 
@@ -311,9 +311,30 @@
 
 
    <div class="clearfix mb">
-                        <div class="input_wrap column col_4">
-                            <label class="small_faint">Client Name</label>
-                            <input type="text" id="client_name" name="age_groups[0][max]" placeholder="Client Name">
+
+   <div class="input_wrap column col_4">
+<div class="select_wrap{{ $errors->has('client') ? ' has-error' : '' }}">
+                                <select name="client" id="client_name"required>
+                                    <option>Select Client</option>
+                                    @foreach($clients as $client)
+                                        <option value="{{ $client->id }}"
+                                                @if((Session::get('campaign_information')) != null)
+                                                @if($campaign_general_information->client === $client->id))
+                                                selected="selected"
+                                            @endif
+                                            @endif
+                                        >{{ $client->company_name }}</option>
+                                    @endforeach
+                                </select>
+
+                                @if($errors->has('client'))
+                                    <strong>{{ $errors->first('client') }}</strong>
+                                @endif
+                            </div>
+
+
+
+                     
                            
                         </div>
 
@@ -355,14 +376,10 @@ $(document).ready(function(){
      var plans = [
   ];
   var url = window.location.href;
-                console.log(url);
+               
                 var trim = url.split('/');
-                console.log(trim);
+               
                 var fifthSegment = trim[6];
-                console.log(fifthSegment);
-
-
-   console.log("hate");
   $(".day_input").change(function(){
       
 
@@ -394,7 +411,7 @@ for(var i = 0; i < plans.length; i++){
 
       	$("body").delegate(".show", "click", function() {
 
-
+               $('.show').prop('disabled', true);  
                  var client_name = $("#client_name").val();
                     var product_name = $("#product_name").val();
                     var product_name = $("#product_name").val();
@@ -406,25 +423,45 @@ for(var i = 0; i < plans.length; i++){
                                 "plan_id": plan_id,
                                 "data": JSON.stringify(plans)
                               }
-
-                    $.ajax({
-                        type: "POST",
-                        dataType: 'json',
-                        url: "/agency/media-plan/finish_plan",
-                        data: body,
-                            success:function(data){
-                                    console.log(data)
-                                 swal("Success!", "Plans successfully selected!", "success")
-                                    .then((value) => {
-                                        location.href = '/agency/media-plan/summary/'+fifthSegment;
-                                    });
-                            },
-
-                              error: function() {
-                                    alert("some error");
-                                }
+                              console.log(plans.length )
+                        if(plans.length == 0 ){
+                            swal("input atleast one spot");
+                            $('.show').prop('disabled', false);  
+                        }else{
                            
-                        });
+                            if(client_name == "Select Client" && product_name == ""){
+                                swal("Select client and enter product name");
+                                $('.show').prop('disabled', false);  
+                            }else{
+                                
+                              $.ajax({
+                                        type: "POST",
+                                        dataType: 'json',
+                                        url: "/agency/media-plan/finish_plan",
+                                        data: body,
+                                            success:function(data){
+                                                    console.log(data)
+                                                swal("Success!", "Plans successfully selected!", "success")
+                                                    .then((value) => {
+                                                        location.href = '/agency/media-plan/summary/'+fifthSegment;
+                                                    });
+                                            },
+
+                                            error: function() {
+                                                    alert("some error");
+                                                    $('.show').prop('disabled', false);  
+                                                }
+                           
+                                   }); 
+
+
+
+                            }
+
+                        } 
+
+
+                
                 
 
            });

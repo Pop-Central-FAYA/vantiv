@@ -13,6 +13,7 @@ use Vanguard\Services\MediaPlan\StorePlanningSuggestions;
 use Illuminate\Support\Facades\DB;
 use Vanguard\Services\MediaPlan\GetMediaPlans;
 use Vanguard\Services\MediaPlan\SummarizePlan;
+use Vanguard\Services\Client\AllClient;
 use Session;
 
 class MediaPlanController extends Controller
@@ -207,6 +208,10 @@ class MediaPlanController extends Controller
 		$plans = DB::table('media_plan_suggestions')->where('media_plan_id', $id)->where('status', 1)->get();
 		$plans_details = DB::table('media_plans')->where('id', $id)->get();
 
+		$clients = new AllClient(\Auth::user()->companies->first()->id);
+        $clients = $clients->getAllClients();
+
+
 		if(count($plans_details) == 0){
 			return redirect()->route("agency.media_plan.criteria_form");
 		}
@@ -230,7 +235,8 @@ class MediaPlanController extends Controller
 		);
 
 	
-		return view('agency.mediaPlan.complete_plan')->with('fayaFound', $fayaFound);
+		return view('agency.mediaPlan.complete_plan')->with('fayaFound', $fayaFound)
+													->with('clients', $clients);
 	
 	}
 
