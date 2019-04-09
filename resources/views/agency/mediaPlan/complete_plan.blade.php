@@ -354,6 +354,12 @@
 $(document).ready(function(){
      var plans = [
   ];
+  var url = window.location.href;
+                console.log(url);
+                var trim = url.split('/');
+                console.log(trim);
+                var fifthSegment = trim[6];
+                console.log(fifthSegment);
 
 
    console.log("hate");
@@ -410,7 +416,7 @@ for(var i = 0; i < plans.length; i++){
                                     console.log(data)
                                  swal("Success!", "Plans successfully selected!", "success")
                                     .then((value) => {
-                                        location.href = '/';
+                                        location.href = '/agency/media-plan/summary/'+fifthSegment;
                                     });
                             },
 
