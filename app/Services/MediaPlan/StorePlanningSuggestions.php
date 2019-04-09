@@ -5,6 +5,9 @@ use Vanguard\Models\MediaPlan;
 use Vanguard\Models\MediaPlanSuggestion;
 use Auth;
 
+/**
+ * @todo Wrap these db writes in a transaction
+ */
 class StorePlanningSuggestions
 {
     protected $criteriaForm;
@@ -33,17 +36,16 @@ class StorePlanningSuggestions
             'planner_id' => Auth::id(),
             'status' => 'Suggested'
         ]);
-
         foreach ($this->suggestions as $key => $suggestion) {
             MediaPlanSuggestion::create([
                 'media_plan_id' => $newMediaPlan->id,
-                'media_type' => $suggestion->media_type,
-                'station' => $suggestion->station,
-                'program' => $suggestion->program,
-                'day' => $suggestion->day,
-                'start_time' => $suggestion->start_time,
-                'end_time' => $suggestion->end_time,
-                'total_audience' => $suggestion->audience
+                'media_type' => $suggestion['media_type'],
+                'station' => $suggestion['station'],
+                'program' => $suggestion['program'],
+                'day' => $suggestion['day'],
+                'start_time' => $suggestion['start_time'],
+                'end_time' => $suggestion['end_time'],
+                'total_audience' => $suggestion['audience']
             ]);
         }
 

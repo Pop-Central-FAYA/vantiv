@@ -15,7 +15,7 @@ class CriteriasTableSeeder extends Seeder
     {
         $criterias = [
         	'regions' => [
-        		'NW', 'NE', 'NC', 'SW', 'SE', 'SS', 'Lagos'
+        		'North-West', 'North-East (Jos)', 'North Central (Abuja)', 'South-West (Ibadan, Benin)', 'South-East (Onitsha, Aba)', 'South-South (Rivers)', 'Lagos'
         	],
         	'states' => [
         		'Lagos', 'Kano', 'Kaduna', 'Kano', 'Abia', 'Anambra', 'Delta', 'Adamawa'
@@ -24,7 +24,7 @@ class CriteriasTableSeeder extends Seeder
         		'Male', 'Female', 'Both'
         	],
         	'living_standard_measures' => [
-        		'LSM 1', 'LSM 2', 'LSM 3', 'LSM 4', 'LSM 5', 'LSM 6', 'LSM 7', 'LSM 8', 'LSM 9', 'LSM 10', 'LSM 11', 'LSM 12'
+        		'LSM 1 (E)', 'LSM 2 (E)', 'LSM 3 (D)', 'LSM 4 (D)', 'LSM 5 (D)', 'LSM 6 (C2)', 'LSM 7 (C2)', 'LSM 8 (C2)', 'LSM 9 (C1)', 'LSM 10 (C1)', 'LSM 11 (B)', 'LSM 12 (A)'
         	],
         	'social_classes' => [
         		'A', 'B', 'C', 'D', 'E', 'F'
@@ -33,6 +33,10 @@ class CriteriasTableSeeder extends Seeder
         		'Tv', 'Radio', 'All'
         	]
         ];
+
+		# Delete the criterias to recreate them
+		Criteria::truncate();
+		SubCriteria::truncate();
 
         foreach ($criterias as $key => $criteria) {
         	$newCriteria = Criteria::create(['name' => $key]);
