@@ -354,7 +354,7 @@
         });
     </script>
 
-     <script src="{{asset('js/aria-accordion.js')}}"></script>
+     <script src="{{asset('new_frontend/js/aria-accordion.js')}}"></script>
     <script>
       $(document).ready(function () {
         'use strict';
