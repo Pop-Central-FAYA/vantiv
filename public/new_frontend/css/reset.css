@@ -846,3 +846,76 @@ input:-webkit-autofill {
     -webkit-box-shadow: 0 0 0 1000px #f8f8f8 inset !important;
 }
 
+/* helpers */
+.right {
+  float: right !important;
+}
+.left {
+  float: left !important;
+}
+.mshadow {
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+/* Responsive table */
+.horiz-scroll {
+  overflow: auto;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+.table-scroll {
+	position:relative;
+  max-width: 100%;
+	margin:auto;
+	overflow:hidden;
+}
+.table-wrap {
+	width:100%;
+	overflow:auto;
+}
+.table-scroll table {
+	width: 100%;
+	margin: auto;
+	/* border-collapse: separate; */
+	 border-spacing: 1; 
+}
+.table-scroll th {
+  background: #fafafa;
+}
+.table-scroll td {
+  background:#fff;
+}
+.table-scroll th, .table-scroll td {
+	padding: 10px 10px;
+  width: 10px;
+	white-space:nowrap;
+	/* vertical-align:top; */
+}
+#last-fixed {
+  /*border-right: 1px solid grey;*/
+}
+.clone {
+	position:absolute;
+	top:0;
+	left:0;
+	pointer-events:none;
+}
+.clone th, .clone td {
+	visibility:hidden
+}
+.clone td, .clone th {
+	border-color:transparent
+}
+.clone tbody th {
+	visibility:visible;
+	color:red;
+}
+.clone .fixed-side {
+  /* border:1px solid #000; */
+	/* background:#eee; */
+	visibility:visible;
+}
+.clone thead, .clone tfoot{background:transparent;}
+/* custom */
+.revealer {
+  cursor: pointer;
+}
