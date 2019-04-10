@@ -926,6 +926,13 @@ input:-webkit-autofill {
   background: #CFD8DC !important;
   cursor: not-allowed;
 }
+.scroll-y {
+  max-height: 700px;
+  overflow-y: scroll;
+}
+.fixed-headers {
+  table-layout: fixed;
+}
 #back_btn {
   width: 25%;
   background: #607D8B !important;

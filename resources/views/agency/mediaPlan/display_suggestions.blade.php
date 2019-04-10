@@ -22,7 +22,7 @@
         </div>
 
         <!-- main frame -->
-        <div class="the_frame clearfix mb border_top_color load_stuff">
+{{--         <div class="the_frame clearfix mb border_top_color load_stuff">
 
             <div class="margin_center col_7 clearfix create_fields">
 
@@ -45,7 +45,7 @@
 
                 
             </div>
-        </div>
+        </div> --}}
         <!-- main frame end -->
 
 
@@ -57,7 +57,28 @@
                 <p class="uppercased weight_medium">Sugested Plans</p>
             </div>
         <div class="column col_4 clearfix">
-            <div class="col_5 column">
+            <div class="col_4 column">
+                <label for="days">Days</label>
+                <select name="" id="days">
+                    <option value="">Day One</option>
+                    <option value="">Day One</option>
+                </select>
+            </div>
+            <div class="col_4 column">
+                <label for="days">States</label>
+                <select name="" id="days">
+                    <option value="">Abia</option>
+                    <option value="">Adamawa</option>
+                </select>    
+            </div>
+            <div class="col_4 column">
+                <label for="days">Time</label>
+                <select name="" id="days">
+                    <option value="">15mins</option>
+                    <option value="">30mins</option>
+                </select>                    
+            </div>
+{{--             <div class="col_5 column">
                 <input type="text" name="start_date" class="flatpickr" placeholder="Start Date">
             </div>
 
@@ -67,22 +88,22 @@
 
             <div class="col_1 column">
                 <button type="button" id="mpo_filters" class="btn small_btn">Filter</button>
-            </div>
+            </div> --}}
         </div>
 </div>
 
 <!-- campaigns table -->
-<div class="accordion-group">
-<table lass="display default_mpo filter_mpo" id="default_mpo_table">
-                                            <thead>
-                                                    <tr>
-                                                        <th width="25%">All</th>
-                                                        <th width="25%">Station</th>
-                                                        <th width="25%">Audience</th>
-                                                             <th width="25%"> actions</th>
-                                                    </tr>
-                                                </thead>
-                                                </table>
+<div class="accordion-group scroll-y">
+    <table class="display default_mpo filter_mpo fixed_headers" id="default_mpo_table">
+        <thead>
+            <tr>
+                {{-- <th width="25%">All</th> --}}
+                <th>Station</th>
+                <th width="50%">Audience</th>
+                <th width="25%"> actions</th>
+            </tr>
+        </thead>
+    </table>
                 @foreach($fayaFound['stations'] as $key => $Value)
                         @php 
                                 $sum_audience = $Value->sum('total_audience'); 
@@ -90,19 +111,18 @@
 
                     <section class="accordion-group__accordion">
                         <header class="accordion-group__accordion-head">
-                                    <table lass="display default_mpo filter_mpo" id="default_mpo_table">
-                                            <tbody>
-
-                                                    <tr  class="clickable">
-                                                            <td width="25%"><input type="checkbox" /> </td>
-                                                            <td width="25%">{{ $key }}</td>
-                                                            <td width="25%">
-                                                            {{ $sum_audience}}
-                                                            </td>
-                                                                 <td width="25%"><button class="btn small_btn accordion-group__accordion-btn"> Details </button> <!--<button class="btn small_btn"> Add </button>--> </td>
-                                                    </tr>
-                                                    </tbody>
-                                                </table>
+                            <table lass="display default_mpo filter_mpo" id="default_mpo_table">
+                                <tbody>
+                                    <tr  class="clickable">
+                                        {{-- <td width="25%"><input type="checkbox" /> </td> --}}
+                                        <td width="25%">{{ $key }}</td>
+                                        <td>
+                                        {{ $sum_audience}}
+                                        </td>
+                                         <td width="25%"><button class="btn small_btn accordion-group__accordion-btn"> Details </button> <!--<button class="btn small_btn"> Add </button>--> </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </header>
                         <div class="accordion-group__accordion-panel">
                             <div class="accordion-group__accordion-content">
