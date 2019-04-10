@@ -17,6 +17,16 @@ class GetStationRatings
 
     const SUPPORTED_CRITERIA = array("age", "state", "social_class", "gender", "lsm", "region");
 
+    const DAY_CONVERSION = array(
+        "Mon" => "Monday",
+        "Tue" => "Tuesday",
+        "Wed" => "Wednesday",
+        "Thu" => "Thursday",
+        "Fri" => "Friday",
+        "Sat" => "Saturday",
+        "Sun" => "Sunday"
+    );
+
     /**
      * Demographics in this case should be an associative array of criteria such as:
      * {
@@ -151,7 +161,7 @@ class GetStationRatings
                 "station" => $station_name,
                 "state" => $timebelt->state,
                 "program" => $program,
-                "day" => $timebelt->day,
+                "day" => static::DAY_CONVERSION[$timebelt->day],
                 "start_time" => $timebelt->start_time,
                 "end_time" => $timebelt->end_time,
                 "audience" => $projected_audience
