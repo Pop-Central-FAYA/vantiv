@@ -13,7 +13,7 @@ use Vanguard\Services\MediaPlan\StorePlanningSuggestions;
 use Illuminate\Support\Facades\DB;
 use Vanguard\Services\MediaPlan\GetMediaPlans;
 use Vanguard\Services\MediaPlan\SummarizePlan;
-
+use Vanguard\Services\MediaPlan\GetSuggestedPlans;
 use Vanguard\Services\MediaPlan\ExportPlan;
 use Vanguard\Services\Client\AllClient;
 use Session;
