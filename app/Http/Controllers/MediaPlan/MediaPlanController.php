@@ -16,10 +16,11 @@ use Vanguard\Services\MediaPlan\SummarizePlan;
 use Vanguard\Services\MediaPlan\GetSuggestedPlans;
 use Vanguard\Services\Client\AllClient;
 use Session;
-use Validator;
+use Vanguard\Services\Traits\ListDayTrait;
 
 class MediaPlanController extends Controller
 {
+    use ListDayTrait;
     public function index($value='')
     {
     	//Broadcaster Dashboard module
@@ -314,7 +315,9 @@ class MediaPlanController extends Controller
 			'days' => $days,
 		);
 		return view('agency.mediaPlan.complete_plan')->with('fayaFound', $fayaFound)
-													->with('clients', $clients);
+													        ->with('clients', $clients)
+                                                            ->with('days', $this->listDays());
+	
 	}
 
 	public function days($start, $end)
