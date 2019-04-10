@@ -54,22 +54,23 @@ class SummarizePlan
     }
 
     public function customMaterialDurations($material_lengths)
-    {
+    {   
         $new_array = [];
-
-        foreach ($material_lengths as $key => $value) {
-            $dates = [];
-
-            foreach ($value as $details) {
-                if ($details->slot === '') {
-                    $details->slot = 0;
+        if ($material_lengths) {
+            foreach ($material_lengths as $key => $value) {
+                $dates = [];
+    
+                foreach ($value as $details) {
+                    if ($details->slot === '') {
+                        $details->slot = 0;
+                    }
+                    $dates[$details->date] = $details->slot;
                 }
-                $dates[$details->date] = $details->slot;
+    
+                $new_array[$key]['unit_rate'] = $value[0]->unit_rate;
+                $new_array[$key]['volume_disc'] = $value[0]->volume_disc;
+                $new_array[$key]['days'] = $dates;
             }
-
-            $new_array[$key]['unit_rate'] = $value[0]->unit_rate;
-            $new_array[$key]['volume_disc'] = $value[0]->volume_disc;
-            $new_array[$key]['days'] = $dates;
         }
         return json_decode(json_encode($new_array));
     }
