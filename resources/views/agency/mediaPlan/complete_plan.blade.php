@@ -380,12 +380,13 @@
 
     <br><br><br><br><br><br><br>
 
-
+    @include('agency.mediaPlan.includes.program-modal')
 </div>
 @stop
 
 @section('scripts')
 <script src="https://unpkg.com/flatpickr"></script>
+<script type="text/javascript" src="{{ asset('new_frontend/js/wickedpicker.min.js') }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -427,17 +428,36 @@
   });
 </script>
 <script>
+    <?php echo "var days =".json_encode($days).";\n"; ?>
+    $('#15SecRevealer').click(function() {
+        $('#15SecBox').toggle('medium');
+    })
+    $('#30SecRevealer').click(function() {
+        $('#30SecBox').toggle('medium');
+    })
+    $('#45SecRevealer').click(function() {
+        $('#45SecBox').toggle('medium');
+    })
+    $('#60SecRevealer').click(function() {
+        $('#60SecBox').toggle('medium');
+    })
     $(document).ready(function () {
+        $('#simplemodal-overlay').hide();
+        $('#15SecBox').hide();
+        $('#30SecBox').hide();
+        $('#45SecBox').hide();
+        $('#60SecBox').hide();
+
+        //
+        $("#default_mpo_table").clone(true).appendTo('#table-scroll').addClass('clone');
+        $("#default_mpo_table_30").clone(true).appendTo('#table-scroll-30').addClass('clone');
+        $("#default_mpo_table_45").clone(true).appendTo('#table-scroll-45').addClass('clone');
+        $("#default_mpo_table_60").clone(true).appendTo('#table-scroll-60').addClass('clone');
         var plans = [];
         var url = window.location.href;
-
         var trim = url.split('/');
-
         var fifthSegment = trim[6];
         $(".day_input").change(function () {
-
-
-
             var value_button = $(this).attr("data_12");
             var duration = $(this).attr("data_11");
             var date = $(this).attr("data_10");
@@ -452,7 +472,6 @@
                 }
               }
             }
-
             plans.push({
                 'id': value_button,
                 'material_length': duration,
@@ -462,14 +481,68 @@
                 'day': day,
                 'slot': slot
             });
+        });
 
+        var i = $("select .b").length;
+        var max = 12;
+        $.each(days, function (index, value) {
+            $('body').delegate("#add_more_"+value, 'click', function () {
+                event.preventDefault();
+                i++;
+                if (i >= max) {
+                    return false;
+                }
+                var big_html = '';
+                big_html += '<div class="remove_div'+i+value+'"><div class="clearfix m-b">\n' +
+                    '<div class="column col_2">\n' +
+                    '                                        <p>"</p>\n' +
+                    '                                    </div>'+
+                    '                            <div class="input_wrap column col_3">\n' +
+                    '                                <label class="small_faint">Start Time</label>\n' +
+                    '                                <input type="text" id="timepicker" name="start_time[]" class="timepicker_'+value+'"/>\n' +
+                    '                            </div>\n' +
+                    '<input type="hidden" name="days[]" value="'+value+'">\n' +
+                    '                            <div class="input_wrap column col_3">\n' +
+                    '                                <label class="small_faint">End Time</label>\n' +
+                    '                                <input type="text" id="timepicker" name="end_time[]" class="timepicker_'+value+'"/>\n' +
+                    '                            </div>\n' +
+                    '                           <div class="align_right mb3">\n' +
+                    '                              <a href="" id="remove'+i+'" data-button_id="'+i+'" style="color:red" class="uppercased color_initial remove">Remove</a>\n' +
+                    '                           </div></div>'+
+                    '                        </div>';
+                console.log(big_html);
+                $("#dynamic_field_"+value).append(big_html);
 
+            });
 
+            $("body").delegate(".remove", "click", function () {
+                event.preventDefault();
+                var button_id = $(this).data("button_id");
+                $(".remove_div"+button_id+value).remove();
 
+            });
+
+            $("body").delegate(".timepicker_"+value, "click", function() {
+                $('.timepicker_'+value).wickedpicker({
+
+                    // 12- or 24-hour format
+                    twentyFour: true,
+                    now: "00:00",
+                    // CSS classes
+                    upArrow: 'wickedpicker__controls__control-up',
+                    downArrow: 'wickedpicker__controls__control-down',
+                    close: 'wickedpicker__close',
+                    hoverState: 'hover-state',
+                    minutesInterval: 15,
+
+                    // title
+                    title: 'Pick Time'
+
+                });
+            })
         });
 
         $("body").delegate(".show", "click", function () {
-
             $('.show').prop('disabled', true);
             var client_name = $("#client_name").val();
             var product_name = $("#product_name").val();
@@ -499,7 +572,6 @@
                         url: "/agency/media-plan/finish_plan",
                         data: body,
                         success: function (data) {
-                            console.log(data)
                             swal("Success!", "Plans successfully selected!", "success")
                                 .then((value) => {
                                     location.href = '/agency/media-plan/summary/' +
@@ -523,4 +595,11 @@
 @section('styles')
 <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="{{ asset('new_frontend/css/wickedpicker.min.css') }}">
+<style>
+    .t_picker {
+        z-index: 100000 !important;
+        position: inherit;
+    }
+</style>
 @stop

@@ -9,7 +9,7 @@
             <li class="campaign_icon {{ Request::is('/') ? 'active' : ''  }}"><a href="{{ route('dashboard') }}">Dashboard</a></li>
             @endif
             <!-- <li class="report_icon"><a href="">Reports</a></li> -->
-            @if(Auth::user()->hasRole('admin'))
+            @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('media_planner'))
                 <li class="clients_icon {{ Request::is('agency/clients/*') ? 'active' : ''  }}"><a href="{{ route('clients.list') }}">Clients</a></li>
             @endif
             @if(Auth::user()->hasRole('finance') || Auth::user()->hasRole('admin') || Auth::user()->hasRole('compliance'))
@@ -24,11 +24,13 @@
         <!-- <li class="settings_icon {{ Request::is('agency/user/manage') ? 'active' : '' }}"><a href="{{ route('agency.user_management') }}">User Management</a></li> -->
         </ul>
     </div>
-    @if(Auth::user()->hasRole('admin'))
-        <div class="_nav_button">
-            <a href="{{ route('agency.media_plan.criteria_form') }}" class="btn full block_disp uppercased align_center mb3"><span class="_plus"></span>New Media Plan</a>
 
+    <div class="_nav_button">
+        @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('media_planner'))
+            <a href="{{ route('agency.media_plan.criteria_form') }}" class="btn full block_disp uppercased align_center mb3"><span class="_plus"></span>New Media Plan</a>
+        @endif
+        @if(Auth::user()->hasRole('admin'))
             <a href="{{ route('campaign.get_campaign_general_information') }}" class="btn full block_disp uppercased align_center"><span class="_plus"></span>New Campaign</a>
-        </div>
-    @endif
+        @endif
+    </div>
 </div>
