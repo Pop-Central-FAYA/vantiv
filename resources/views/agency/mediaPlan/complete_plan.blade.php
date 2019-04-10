@@ -17,7 +17,7 @@
     <!-- subheader -->
     <div class="sub_header clearfix mb pt">
         <div class="column col_6">
-            <h2 class="sub_header">Selected stations & programs</h2>
+            {{-- <h2 class="sub_header">Selected stations & programs</h2> --}}
         </div>
     </div>
 
@@ -53,8 +53,8 @@
                             <th class="fixed-side">Station</th>
                             <th class="fixed-side">Time belt</th>
                             <th class="fixed-side" id="last-fixed">Programme</th>
-                            <th>Unit Rate</th>
-                            <th>Volume Disc</th>
+                            <th class="fixed-side">Unit Rate</th>
+                            <th class="fixed-side">Volume Disc</th>
                             @for ($i = 0; $i < count($fayaFound['labeldates']); $i++)
                             <th>{{ $fayaFound['labeldates'][$i] }}</th>
                             @endfor
@@ -68,18 +68,21 @@
                             <td id="btn" class="fixed-side">{{ $value->station}}</td>
                             <td id="btn" class="fixed-side"> {{ $value->start_time}} {{ $value->end_time}}</td>
                             <td id="btn" class="fixed-side"> {{ $value->program}}</td>
-                            <td><input type="number" value="0" id="ur15{{$value->id}}" data_12="{{ $value->id}}"
-                                    data_11="60" data_10="" data_9=""></td>
-                            <td> <input type="number" value="0" id="vd15{{$value->id}}" data_12="{{ $value->id}}"
-                                    data_11="60" data_10="" data_9=""></td>
-    
+                            <td class="fixed-side">
+                              <input type="number" value="0" id="ur15{{$value->id}}" data_12="{{ $value->id}}"
+                                    data_11="60" data_10="" data_9="">
+                            </td>
+                            <td class="fixed-side"> 
+                              <input type="number" value="0" id="vd15{{$value->id}}" data_12="{{ $value->id}}"
+                                    data_11="60" data_10="" data_9="">
+                            </td>
     
                             @for ($i = 0; $i < count($fayaFound['dates']); $i++) @if($fayaFound['days'][$i]==$value->day )
                               <td> <input type="number" id="15{{$value->id}}" class="day_input" data_12="{{ $value->id}}"
                                       data_11="15" data_10="{{$fayaFound['dates'][$i]}}"
                                       data_9="{{$fayaFound['days'][$i]}}"></td>
                               @else
-                              <td id=""><input type="number" placeholder="N/A" name="lname" disabled></td>
+                              <td id=""><input class="disabled_input" type="number" placeholder="N/A" name="lname" disabled></td>
                               @endif
                             @endfor    
                         </tr>
@@ -150,7 +153,7 @@
                                       data_11="30" data_10="{{$fayaFound['dates'][$i]}}"
                                       data_9="{{$fayaFound['days'][$i]}}"></td>
                               @else
-                              <td id=""><input type="number" placeholder="N/A" name="lname" disabled></td>
+                              <td id=""><input class="disabled_input" type="number" placeholder="N/A" name="lname" disabled></td>
                               @endif
                               @endfor
 
@@ -223,11 +226,12 @@
 
 
                           @for ($i = 0; $i < count($fayaFound['dates']); $i++) @if($fayaFound['days'][$i]==$value->day )
-                              <td> <input type="number" id="45{{$value->id}}" class="day_input" data_12="{{ $value->id}}"
+                              <td>
+                                <input type="number" id="45{{$value->id}}" class="day_input" data_12="{{ $value->id}}"
                                       data_11="45" data_10="{{$fayaFound['dates'][$i]}}"
                                       data_9="{{$fayaFound['days'][$i]}}"></td>
                               @else
-                              <td id=""><input type="number" placeholder="N/A" name="lname" disabled></td>
+                              <td id=""><input class="disabled_input" type="number" placeholder="N/A" name="lname" disabled></td>
                               @endif
                               @endfor
                       </tr>
@@ -289,18 +293,23 @@
                           <td id="btn" class="fixed-side">{{ $value->station}}</td>
                           <td id="btn" class="fixed-side"> {{ $value->start_time}} {{ $value->end_time}}</td>
                           <td id="btn" class="fixed-side"> {{ $value->program}}</td>
-                          <td> <input type="number" value="0" id="ur60{{$value->id}}" data_12="{{ $value->id}}"
+                          <td>
+                            <input type="number" value="0" id="ur60{{$value->id}}" data_12="{{ $value->id}}"
                                   data_11="60" data_10="" data_9=""></td>
-                          <td> <input type="number" value="0" id="vd60{{$value->id}}" data_12="{{ $value->id}}"
-                                  data_11="60" data_10="" data_9=""></td>
-                          @for ($i = 0; $i < count($fayaFound['dates']); $i++) @if($fayaFound['days'][$i]==$value->day )
+                          <td>
+                            <input type="number" value="0" id="vd60{{$value->id}}" data_12="{{ $value->id}}"
+                                  data_11="60" data_10="" data_9="">
+                          </td>
+                          @for ($i = 0; $i < count($fayaFound['dates']); $i++) 
+                            @if($fayaFound['days'][$i]==$value->day )
                               <td> <input type="number" id="60{{$value->id}}" class="day_input" data_12="{{ $value->id}}"
                                       data_11="60" data_10="{{$fayaFound['dates'][$i]}}"
-                                      data_9="{{$fayaFound['days'][$i]}}" data_8=""></td>
-                              @else
-                              <td id=""><input type="number" placeholder="N/A" name="lname" disabled></td>
-                              @endif
-                              @endfor
+                                      data_9="{{$fayaFound['days'][$i]}}" data_8="">
+                              </td>
+                            @else
+                              <td id=""><input class="disabled_input" type="number" placeholder="N/A" name="lname" disabled></td>
+                            @endif
+                          @endfor
                       </tr>
 
                       @endforeach
@@ -316,52 +325,44 @@
 
 
     <div class="clearfix mb">
+      <div class="input_wrap column col_4">
+        <div class="select_wrap{{ $errors->has('client') ? ' has-error' : '' }}">
+          <label class="small_faint">Select Client</label>
+          <select name="client" id="client_name" required>
+              @foreach($clients as $client)
+              <option value="{{ $client->id }}" @if((Session::get('campaign_information')) !=null)
+                  @if($campaign_general_information->client === $client->id))
+                  selected="selected"
+                  @endif
+                  @endif
+                  >{{ $client->company_name }}</option>
+              @endforeach
+          </select>
 
-        <div class="input_wrap column col_4">
-            <div class="select_wrap{{ $errors->has('client') ? ' has-error' : '' }}">
-                <select name="client" id="client_name" required>
-                    <option>Select Client</option>
-                    @foreach($clients as $client)
-                    <option value="{{ $client->id }}" @if((Session::get('campaign_information')) !=null)
-                        @if($campaign_general_information->client === $client->id))
-                        selected="selected"
-                        @endif
-                        @endif
-                        >{{ $client->company_name }}</option>
-                    @endforeach
-                </select>
-
-                @if($errors->has('client'))
-                <strong>{{ $errors->first('client') }}</strong>
-                @endif
-            </div>
-
-
-
-
-
+          @if($errors->has('client'))
+          <strong>{{ $errors->first('client') }}</strong>
+          @endif
         </div>
+      </div>
 
 
-        <div class="input_wrap column col_4">
-            <label class="small_faint">Product name</label>
-            <input type="text" id="product_name" name="age_groups[0][max]" placeholder="Product name">
-            <input type="hidden" id="plan_id" value="{{$fayaFound['programs_stations'][0]->media_plan_id}}">
-
-        </div>
+      <div class="input_wrap column col_4">
+        <label class="small_faint">Product name</label>
+        <input type="text" id="product_name" name="age_groups[0][max]" placeholder="Product name">
+        <input type="hidden" id="plan_id" value="{{$fayaFound['programs_stations'][0]->media_plan_id}}">
+      </div>
     </div>
 
 
 
 
-    <div class="the_frame client_dets mb4">
-
-
-
-        <div class="col_4 column">
-            <button type="button" id="mpo_filters" class="btn small_btn show">Create Plan</button>
-        </div>
-
+    <div class="action_footer client_dets mb4 mt4">
+      <div class="col_6 column">
+        <button type="button" id="back_btn" class="btn small_btn show">Back</button>
+      </div>
+      <div class="col_6 column">
+        <button type="button" id="mpo_filters" class="btn small_btn right show">Create Plan</button>
+      </div>
     </div>
 
     <br><br><br><br><br><br><br>
@@ -491,18 +492,9 @@
                             alert("some error");
                             $('.show').prop('disabled', false);
                         }
-
                     });
-
-
-
                 }
-
             }
-
-
-
-
 
         });
     });
