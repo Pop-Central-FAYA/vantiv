@@ -13,9 +13,13 @@ use Vanguard\Services\MediaPlan\StorePlanningSuggestions;
 use Illuminate\Support\Facades\DB;
 use Vanguard\Services\MediaPlan\GetMediaPlans;
 use Vanguard\Services\MediaPlan\SummarizePlan;
-use Vanguard\Services\MediaPlan\GetSuggestedPlans;
+
+use Vanguard\Services\MediaPlan\ExportPlan;
 use Vanguard\Services\Client\AllClient;
 use Session;
+use Maatwebsite;
+use Maatwebsite\Excel\Facades\Excel;
+use Vanguard\Exports\MediaPlanExport;
 use Vanguard\Services\Traits\ListDayTrait;
 
 class MediaPlanController extends Controller
@@ -242,6 +246,32 @@ class MediaPlanController extends Controller
 
         return view('agency.mediaPlan.summary')->with('summary', $summaryData)
                 ->with('media_plan', $mediaPlan);
+    }
+
+    public function exportPlan($media_plan_id)
+    {
+        $mediaPlan = MediaPlan::with(['client'])->findorfail($media_plan_id);
+        $selectedSuggestions = $mediaPlan->suggestions->where('status', 1);
+
+        if (count($selectedSuggestions) === 0) {
+            // redirect to review suggestions page for user to select suggestions
+            return redirect()->route('agency.media_plan.create', ['id'=> $mediaPlan->id]);
+        }
+
+        $plan_start_date = $mediaPlan->start_date;
+        $plan_end_date = $mediaPlan->end_date;
+
+        $summary_service = new SummarizePlan($mediaPlan);
+        $media_plan_summary =  $summary_service->run();
+
+        $export_service = new ExportPlan($mediaPlan);
+        $media_plan_grouped_data = $export_service->run();
+        $monthly_weeks_table_header = json_encode($export_service->monthly_weeks_campaign_duration($plan_start_date, $plan_end_date));
+
+        return Excel::download(new MediaPlanExport($media_plan_summary, $media_plan_grouped_data, $monthly_weeks_table_header), 'mediaplan.xlsx');
+
+        // return $media_plan_grouped_data;
+        //display data in excel        
     }
 
     public function approvePlan($media_plan_id)

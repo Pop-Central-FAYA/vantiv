@@ -72,7 +72,7 @@
                     <th>Media Type</th>
                     <th>Start Date</th>
                     <th>End Date</th>
-                    <th>Budget</th>
+                    <!-- <th>Budget</th> -->
                     <th>Status</th>
                 </tr>
                 </thead>
@@ -124,7 +124,7 @@
                     {data: 'media_type', name: 'media_type'},
                     {data: 'start_date', name: 'start_date'},
                     {data: 'end_date', name: 'end_date'},
-                    {data: 'budget', name: 'budget'},
+                    // {data: 'budget', name: 'budget'},
                     {data: 'status', name: 'status'},
                 ],
             });

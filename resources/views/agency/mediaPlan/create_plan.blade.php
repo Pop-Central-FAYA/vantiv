@@ -39,17 +39,28 @@
 
                             <div class="select_wrap{{ $errors->has('media_type') ? ' has-error' : '' }}">
                                 <select name="media_type" id="media_type" required>
-                                    <option>Select Media Type</option>
+                                    <!-- <option>Select Media Type</option> -->
                                     @foreach($criterias as $criteria)
                                         @if ($criteria->name == "media_types")
                                             @foreach ($criteria->subCriterias as $media_types)
-                                            <option value="{{ $media_types->name }}"
+                                            @if ($media_types->name == "Tv")
+                                                <option value="{{ $media_types->name }}" selected 
                                                     @if((Session::get('campaign_information')) != null)
                                                     @if($campaign_general_information->client === $client->id))
                                                     selected="selected"
                                                 @endif
                                                 @endif
                                             >{{ $media_types->name }}</option>
+                                            @else
+                                                <option value="{{ $media_types->name }}" disabled 
+                                                    @if((Session::get('campaign_information')) != null)
+                                                    @if($campaign_general_information->client === $client->id))
+                                                    selected="selected"
+                                                @endif
+                                                @endif
+                                            >{{ $media_types->name }}</option>
+                                            @endif
+                                            
                                             @endforeach
                                         @endif
                                     @endforeach
@@ -90,7 +101,7 @@
                     </div>
 
                     <!-- start time & end time -->
-                    <div class="clearfix mb3">
+                    <div class="clearfix mb">
                         <div class="input_wrap column col_6{{ $errors->has('start_date') ? ' has-error' : '' }}">
                             <label class="small_faint">Start Date</label>
                             <input type="text" required class="flatpickr" value="{{ old('start_date') }}" name="start_date" placeholder="Select Date">
@@ -110,63 +121,6 @@
                                     <span class="help-block">{{ $errors->first('end_date') }}</span>
                                 </strong>
                             @endif
-                        </div>
-                    </div>
-
-                    <!-- LSM & social classes -->
-                    <div class="clearfix mb">
-                        <div class="input_wrap column col_6">
-                            <label class="small_faint">LSM</label>
-
-                            <div class="select_wrap{{ $errors->has('lsm') ? ' has-error' : '' }}">
-                                <select class="js-example-basic-multiple" name="lsm[]" id="lsm" multiple="multiple">
-                                    <option>Select LSM</option>
-                                    @foreach($criterias as $criteria)
-                                        @if ($criteria->name == "living_standard_measures")
-                                            @foreach ($criteria->subCriterias as $lsms)
-                                            <option value="{{ $lsms->name }}"
-                                                    @if((Session::get('campaign_information')) != null)
-                                                    @if($campaign_general_information->client === $lsms->name))
-                                                    selected="selected"
-                                                @endif
-                                                @endif
-                                            >{{ $lsms->name }}</option>
-                                            @endforeach
-                                        @endif
-                                    @endforeach
-                                </select>
-
-                                @if($errors->has('lsm'))
-                                    <strong>{{ $errors->first('lsm') }}</strong>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="input_wrap column col_6">
-                            <label class="small_faint">Social Class</label>
-
-                            <div class="select_wrap {{ $errors->has('gender') ? ' has-error' : '' }}">
-                                <select class="js-example-basic-multiple" name="social_class[]" id="social_class" multiple="multiple">
-                                    <option>Select Social Class</option>
-                                    @foreach($criterias as $criteria)
-                                        @if ($criteria->name == "social_classes")
-                                            @foreach ($criteria->subCriterias as $social_classes)
-                                            <option value="{{ $social_classes->name }}"
-                                                    @if((Session::get('campaign_information')) != null)
-                                                    @if($campaign_general_information->client === $social_classes->name))
-                                                    selected="selected"
-                                                @endif
-                                                @endif
-                                            >{{ $social_classes->name }}</option>
-                                            @endforeach
-                                        @endif
-                                    @endforeach
-                                </select>
-                                
-                                @if($errors->has('gender'))
-                                    <strong>{{ $errors->first('gender') }}</strong>
-                                @endif
-                            </div>
                         </div>
                     </div>
 
@@ -194,8 +148,97 @@
                         </div>
                     </div>
 
+                    <!-- LSM & social classes -->
+                    <div class="clearfix mb">
+                        <!-- <div class="input_wrap column col_6">
+                            <label class="small_faint">LSM</label>
+
+                            <div class="select_wrap{{ $errors->has('lsm') ? ' has-error' : '' }}">
+                                <select class="js-example-basic-multiple" name="lsm[]" id="lsm" multiple="multiple">
+                                    <option>Select LSM</option>
+                                    @foreach($criterias as $criteria)
+                                        @if ($criteria->name == "living_standard_measures")
+                                            @foreach ($criteria->subCriterias as $lsms)
+                                            <option value="{{ $lsms->name }}"
+                                                    @if((Session::get('campaign_information')) != null)
+                                                    @if($campaign_general_information->client === $lsms->name))
+                                                    selected="selected"
+                                                @endif
+                                                @endif
+                                            >{{ $lsms->name }}</option>
+                                            @endforeach
+                                        @endif
+                                    @endforeach
+                                </select>
+
+                                @if($errors->has('lsm'))
+                                    <strong>{{ $errors->first('lsm') }}</strong>
+                                @endif
+                            </div>
+                        </div> -->
+
+                        <div class="input_wrap column col_12">
+                            <label class="small_faint">Social Class</label>
+
+                            <div class="select_wrap {{ $errors->has('gender') ? ' has-error' : '' }}">
+                                <select class="js-example-basic-multiple" name="social_class[]" id="social_class" multiple="multiple">
+                                    <option>Select Social Class</option>
+                                    @foreach($criterias as $criteria)
+                                        @if ($criteria->name == "social_classes")
+                                            @foreach ($criteria->subCriterias as $social_classes)
+                                            <option value="{{ $social_classes->name }}"
+                                                    @if((Session::get('campaign_information')) != null)
+                                                    @if($campaign_general_information->client === $social_classes->name))
+                                                    selected="selected"
+                                                @endif
+                                                @endif
+                                            >{{ $social_classes->name }}</option>
+                                            @endforeach
+                                        @endif
+                                    @endforeach
+                                </select>
+                                
+                                @if($errors->has('gender'))
+                                    <strong>{{ $errors->first('gender') }}</strong>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- States -->
+                    <div class="clearfix mb">
+                        <div class="input_wrap">
+                            <label class="small_faint">State</label>
+
+                            <div class="select_wrap{{ $errors->has('state') ? ' has-error' : '' }}">
+                                <select class="js-example-basic-multiple" id="state" name="state[]" multiple="multiple">
+                                    <option value=""></option>
+                                    @foreach($criterias as $criteria)
+                                        @if ($criteria->name == "states")
+                                            @foreach ($criteria->subCriterias as $states)
+                                            <option value="{{ $states->name }}"
+                                                    @if((Session::get('campaign_information')) != null)
+                                                    @if($campaign_general_information->client === $states->name))
+                                                    selected="selected"
+                                                @endif
+                                                @endif
+                                            >{{ $states->name }}</option>
+                                            @endforeach
+                                        @endif
+                                    @endforeach
+                                </select>
+
+                                @if($errors->has('state'))
+                                    <strong>
+                                        <span class="help-block">{{ $errors->first('state') }}</span>
+                                    </strong>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Regions -->
-                    <div class="input_wrap">
+                    <!-- <div class="input_wrap">
                         <label class="small_faint">Region</label>
 
                         <div class="select_wrap{{ $errors->has('region') ? ' has-error' : '' }}">
@@ -222,40 +265,10 @@
                                 </strong>
                             @endif
                         </div>
-                    </div>
-
-                    <!-- States -->
-                    <div class="input_wrap">
-                        <label class="small_faint">State</label>
-
-                        <div class="select_wrap{{ $errors->has('state') ? ' has-error' : '' }}">
-                            <select class="js-example-basic-multiple" id="state" name="state[]" multiple="multiple">
-                                <option value=""></option>
-                                @foreach($criterias as $criteria)
-                                    @if ($criteria->name == "states")
-                                        @foreach ($criteria->subCriterias as $states)
-                                        <option value="{{ $states->name }}"
-                                                @if((Session::get('campaign_information')) != null)
-                                                @if($campaign_general_information->client === $states->name))
-                                                selected="selected"
-                                            @endif
-                                            @endif
-                                        >{{ $states->name }}</option>
-                                        @endforeach
-                                    @endif
-                                @endforeach
-                            </select>
-
-                            @if($errors->has('state'))
-                                <strong>
-                                    <span class="help-block">{{ $errors->first('state') }}</span>
-                                </strong>
-                            @endif
-                        </div>
-                    </div>
+                    </div> -->
 
                     <!-- Agency commission -->
-                    <div class="clearfix">
+                    <div class="clearfix mb">
                         <div class="input_wrap column col_12{{ $errors->has('agency_commission') ? ' has-error' : '' }}">
                             <label class="small_faint">Agency Commission</label>
                             <input type="number" name="agency_commission" id="agency_commission" value="" placeholder="Enter Agency Commission">
@@ -268,7 +281,7 @@
                     </div>
 
                     <!-- Campaign Name -->
-                    <div class="clearfix mb3">
+                    <div class="clearfix mb">
                         <div class="input_wrap column col_12{{ $errors->has('campaign_name') ? ' has-error' : '' }}">
                             <label class="small_faint">Campaign Name</label>
                             <input type="text" name="campaign_name" id="campaign_name" value="" placeholder="Enter Campaign Name">

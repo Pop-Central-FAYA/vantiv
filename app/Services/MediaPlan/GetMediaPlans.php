@@ -76,7 +76,7 @@ class GetMediaPlans
                 'start_date' => date('M j, Y', $start_date),
                 'end_date' => date('M j, Y', $end_date),
                 'media_type' => $plan->media_type,
-                'budget' => number_format($plan->budget, 2),
+                // 'budget' => number_format($plan->budget, 2),
                 'status' => $plan->status,
             ];
         }
