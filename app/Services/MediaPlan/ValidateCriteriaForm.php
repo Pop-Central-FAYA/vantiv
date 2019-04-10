@@ -3,7 +3,7 @@
 namespace Vanguard\Services\MediaPlan;
 use Validator;
 
-class validateCriteriaForm
+class ValidateCriteriaForm
 {
     protected $request;
 

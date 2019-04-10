@@ -143,43 +143,68 @@ class GetStationRatings
      * @todo Eventually we will want to return the grouping of timebelts by states (and also allow grouping by program etc)
      */
     protected function analyzeAndFormatResults($timebelt_query, $counts_by_state) {
-        $projected_counts = array();
-        $total_count = 0;
+        /**
+         * The results are calculated by states (for statistical accuracy etc)
+         * Stations and timebelts that happen to be in different states should now be combined into one
+         * But we should still keep a record of the states that were seen as that will be a part of the filtering
+         */
+        $working_map = collect(array());
+        $state_map = collect(array());
+
         foreach($timebelt_query as $timebelt) {
-            $num_respondents = $timebelt->num_respondents;
-            $state_total = $counts_by_state["states"][$timebelt->state]["population"];
-            $state_sample = $counts_by_state["states"][$timebelt->state]["sample"];
+            $item = $this->projectCounts($timebelt, $counts_by_state);
 
-            //This is a very basic projection
-            $projected_audience = round(($num_respondents * $state_total)/$state_sample);
-            $total_count += $projected_audience;
+            //some other to add the grouping of states and stations together
+            $state_map[$item["state"]] = true; // we want to end up with a unique list of states
 
-            $program = "Unknown Program";
-            $station_name = $this->formatStationName($timebelt);
-            $projected_counts[] = array(
-                "media_type" => "Tv", //Only tv is supported for now
-                "station" => $station_name,
-                "state" => $timebelt->state,
-                "program" => $program,
-                "day" => static::DAY_CONVERSION[$timebelt->day],
-                "start_time" => $timebelt->start_time,
-                "end_time" => $timebelt->end_time,
-                "audience" => $projected_audience
-            );
+            $audience_count = $item["audience"];
+            $key = $item["media_type"] . $item["station"] . $item["day"] . $item["start_time"];
+
+            if (isset($working_map[$key])) {
+                $station_rating = $working_map[$key];
+
+                // increment the station rating count
+                $station_rating["audience"] += $audience_count;
+
+                // also add this states audience count to the item (for filtering purposes)
+                // @todo fix this
+                $station_rating["state_counts"][$item["state"]] = $audience_count;
+                $item = $station_rating;
+            } else {
+                $item["state_counts"] = array($item["state"] => $audience_count);
+            }
+
+            $working_map[$key] = $item;
+
         }
-        // Sum the results by state (projection is done by state, since each states population is different
-        // but timebelt is the summation of all the counts across states)
+        return collect(array(
+            "projected_counts" => collect($working_map->values()),
+            "state_list" => $state_map->keys()
+        ));
+    }
 
+    private function projectCounts($timebelt, $counts_by_state) {
+        $num_respondents = $timebelt->num_respondents;
+        $state_total = $counts_by_state["states"][$timebelt->state]["population"];
+        $state_sample = $counts_by_state["states"][$timebelt->state]["sample"];
 
-        // Sort by Total Audience Descending
-        $collection = collect($projected_counts);
+        //This is a very basic projection
+        $projected_audience = round(($num_respondents * $state_total)/$state_sample);
+        // $total_count += $projected_audience;
 
-        return array(
-            'total_tv' => $total_count,
-            'programs_stations' => $collection->sortByDesc('total_audience')->toArray(),
-            'stations' => $collection->groupBy('station')->toArray(),
-            'total_audiences' => $total_count
+        $program = "Unknown Program";
+        $station_name = $this->formatStationName($timebelt);
+        $data = array(
+            "media_type" => "Tv", //Only tv is supported for now
+            "station" => $station_name,
+            "state" => $timebelt->state,
+            "program" => $program,
+            "day" => static::DAY_CONVERSION[$timebelt->day],
+            "start_time" => $timebelt->start_time,
+            "end_time" => $timebelt->end_time,
+            "audience" => $projected_audience
         );
+        return $data;
     }
 
     private function formatStationName($timebelt) {

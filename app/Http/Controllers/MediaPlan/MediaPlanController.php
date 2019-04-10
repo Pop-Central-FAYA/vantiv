@@ -13,8 +13,10 @@ use Vanguard\Services\MediaPlan\StorePlanningSuggestions;
 use Illuminate\Support\Facades\DB;
 use Vanguard\Services\MediaPlan\GetMediaPlans;
 use Vanguard\Services\MediaPlan\SummarizePlan;
+use Vanguard\Services\MediaPlan\GetSuggestedPlans;
 use Vanguard\Services\Client\AllClient;
 use Session;
+use Validator;
 
 class MediaPlanController extends Controller
 {
@@ -83,44 +85,111 @@ class MediaPlanController extends Controller
     	}
     	// Fetch mps audiences, programs, stations, time duration, based on criteria
     	$suggestPlanService = new SuggestPlan($request);
-    	$suggestions = $suggestPlanService->suggestPlan();
-		if (count($suggestions['stations']) > 0) {
+		$suggestions = $suggestPlanService->suggestPlan();
+		if ($suggestions->isNotEmpty()) {
     		// store planning criteria and suggestions
-    		$storeSuggestionsService = new StorePlanningSuggestions($request, $suggestions['programs_stations']);
+    		$storeSuggestionsService = new StorePlanningSuggestions($request, $suggestions);
 			$newMediaPlan = $storeSuggestionsService->storePlanningSuggestions();
 			return redirect()->action(
 				'MediaPlan\MediaPlanController@getSuggestPlanById', ['id' => $newMediaPlan->id]
 			);
     	}else{
-
-			Session::flash('success', 'No Station meet your criterials');
+			Session::flash('success', 'No results came back for your criteria');
 			return redirect()->action(
 				'MediaPlan\MediaPlanController@criteriaForm'
 			);
 		}
 	}
-	
+
+	/**
+	 * This is the page that returns the suggested plan. (When this page loads it should also load up the filter values)
+	 * @todo This is kinda inefficient right now because the states list is being regenerated each time, but it will do
+	 * @todo Fix tis and the one below (getSuggestPlansByIdAndFilters)
+	 */
 	public function getSuggestPlanById($id)
-    {
-		$plans = DB::table('media_plan_suggestions')->where('media_plan_id', $id)->get();
-		if(count($plans) == 0){
+	{
+		$suggestedPlansService = new GetSuggestedPlans($id, array());
+		$plans = $suggestedPlansService->get();
+		if (count($plans) == 0) {
 			return redirect()->route("agency.media_plan.criteria_form");
 		}
-		$suggestions = $this->groupSuggestions($plans);
-		$suggestionsByStation = $this-> groupSuggestionsByStation($plans);
-
-		$fayaFound = array(
-            'total_tv' => $this->countByMediaType($suggestions, 'Tv'),
-			'total_radio' => $this->countByMediaType($suggestions, 'Radio'),
-			'programs_stations' => $suggestions,
-            'stations' => $suggestionsByStation,
-            'total_audiences' => $this->totalAudienceFound($suggestions)
-        );
-		return view('agency.mediaPlan.display_suggestions')->with('fayaFound', $fayaFound);
-
-		//return $fayaFound;
-	
+		// also get the filter values list to use to render with the filter dropdowns
+		$filterValues = $this->getFilterFieldValues($id);
+		return view('agency.mediaPlan.display_suggestions')
+			->with('fayaFound', $plans)
+			->with('filterValues', $filterValues)
+			->with('selectedFilters', array());
 	}
+
+	/**
+	 * Get the ratings per filter (Not quite sure how to complete this)
+	 */
+	public function getSuggestPlanByIdAndFilters($id, $request)
+	{
+        // fix this
+		$filters = array();
+		if ($request->state) {
+			$filters['state'] = $request->state;
+		}
+		if ($request->day) {
+			$filters['day'] = $request->day;
+		}
+		if ($request->day_parts) {
+			$filters['day_parts'] = $request->day_parts;
+		}
+		$suggestedPlansService = new GetSuggestedPlans($id, $filters);
+		$plans = $suggestedPlansService->get();
+		if (count($plans) == 0) {
+			//display an error message that nothing matched the filters
+			//@todo reset the dropdowns that was chosen?
+			Session::flash('success', 'No results came back for your filters');
+		}
+		//refresh the page with the filtered data
+		//send back the actual filters (so the dropdown is rendered with them)
+		return view('agency.mediaPlan.display_suggestions')
+			->with('fayaFound', $plans)
+			->with('filterValues', $this->getFilterFieldValues($id))
+			->with('selectedFilters', $filters);;
+	}
+
+	/**
+     * Return the values that should be used to populate the filter fields
+     * i.e dayparts, and states (that were part of what was found)
+     * @todo not the biggest fan of how this is done, but it should work for now
+     */
+    protected function getFilterFieldValues($mediaPlanId) {
+		$state_list = array();
+		$saved_state_list = MediaPlan::find($mediaPlanId)->state_list;
+		if (strlen($saved_state_list) > 0) {
+			$state_list = json_decode($saved_state_list);
+		}
+        return array(
+            "day_parts" => collect(GetSuggestedPlans::DAYPARTS)->keys()->sort()->toArray(),
+            "state_list" => $state_list
+        );
+	}
+	
+	// public function getSuggestPlanById($id)
+    // {
+	// 	$plans = DB::table('media_plan_suggestions')->where('media_plan_id', $id)->get();
+	// 	if(count($plans) == 0){
+	// 		return redirect()->route("agency.media_plan.criteria_form");
+	// 	}
+	// 	$suggestions = $this->groupSuggestions($plans);
+	// 	$suggestionsByStation = $this-> groupSuggestionsByStation($plans);
+
+	// 	$fayaFound = array(
+    //         'total_tv' => $this->countByMediaType($suggestions, 'Tv'),
+	// 		'total_radio' => $this->countByMediaType($suggestions, 'Radio'),
+	// 		'programs_stations' => $suggestions,
+    //         'stations' => $suggestionsByStation,
+    //         'total_audiences' => $this->totalAudienceFound($suggestions)
+    //     );
+	// 	return view('agency.mediaPlan.display_suggestions')->with('fayaFound', $fayaFound);
+
+	// 	//return $fayaFound;
+	
+	// }
 	
 	public function groupSuggestions($query)
     {
@@ -147,7 +216,15 @@ class MediaPlanController extends Controller
     {
         return $collection->where('media_type', $media_type)->sum('audience');
     }
-
+	
+	/**
+	 * This is a function to filter suggestions and reload the page with the new filtered suggestions.
+	 * The filters are:
+	 * 1. day parts --> i.e Morning, Afternoon, Night etc
+	 * 2. days --> i.e Monday, Tuesday etc
+	 * 3. states --> i.e Abuja, Kaduna etc
+	 * If there are no filters, then the full media plan suggestions get returned (which is the default)
+	 */
     public function summary($media_plan_id)
     {
         $mediaPlan = MediaPlan::with(['client'])->findorfail($media_plan_id);
@@ -236,11 +313,8 @@ class MediaPlanController extends Controller
 			'labeldates' => $labeldates,
 			'days' => $days,
 		);
-
-	//dd($fayaFound);
 		return view('agency.mediaPlan.complete_plan')->with('fayaFound', $fayaFound)
 													->with('clients', $clients);
-	
 	}
 
 	public function days($start, $end)
