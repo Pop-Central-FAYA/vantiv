@@ -51,7 +51,7 @@
                     <thead>
                         <tr>
                             <th class="fixed-side">Station</th>
-                            <th class="fixed-side">Time belt</th>
+                            <th class="fixed-side">Time Belt</th>
                             <th class="fixed-side" id="last-fixed">Programme</th>
                             <th class="fixed-side">Unit Rate</th>
                             <th class="fixed-side">Volume Disc</th>
@@ -82,7 +82,7 @@
                                       data_11="15" data_10="{{$fayaFound['dates'][$i]}}"
                                       data_9="{{$fayaFound['days'][$i]}}"></td>
                               @else
-                              <td id=""><input class="disabled_input" type="number" placeholder="N/A" name="lname" disabled></td>
+                              <td id=""><input class="disabled_input" type="number" placeholder="" name="lname" disabled></td>
                               @endif
                             @endfor    
                         </tr>
@@ -142,20 +142,27 @@
                           <td id="btn" class="fixed-side">{{ $value->station}}</td>
                           <td id="btn" class="fixed-side"> {{ $value->start_time}} {{ $value->end_time}}</td>
                           <td id="btn" class="fixed-side"> {{ $value->program}}</td>
-                          <td> <input type="number" value="0" id="ur30{{$value->id}}" data_12="{{ $value->id}}"
-                                  data_11="60" data_10="" data_9=""></td>
-                          <td> <input type="number" value="0" id="vd30{{$value->id}}" data_12="{{ $value->id}}"
-                                  data_11="60" data_10="" data_9=""></td>
+                          <td>
+                            <input type="number" value="0" id="ur30{{$value->id}}" data_12="{{ $value->id}}"
+                                  data_11="60" data_10="" data_9="">
+                          </td>
+                          <td>
+                            <input type="number" value="0" id="vd30{{$value->id}}" data_12="{{ $value->id}}"
+                                  data_11="60" data_10="" data_9="">
+                          </td>
 
 
-                          @for ($i = 0; $i < count($fayaFound['dates']); $i++) @if($fayaFound['days'][$i]==$value->day )
-                              <td> <input type="number" id="30{{$value->id}}" class="day_input" data_12="{{ $value->id}}"
+                          @for ($i = 0; $i < count($fayaFound['dates']); $i++) 
+                            @if($fayaFound['days'][$i]==$value->day )
+                              <td> 
+                                <input type="number" id="30{{$value->id}}" class="day_input" data_12="{{ $value->id }}"
                                       data_11="30" data_10="{{$fayaFound['dates'][$i]}}"
-                                      data_9="{{$fayaFound['days'][$i]}}"></td>
+                                      data_9="{{$fayaFound['days'][$i]}}">
+                              </td>
                               @else
-                              <td id=""><input class="disabled_input" type="number" placeholder="N/A" name="lname" disabled></td>
-                              @endif
-                              @endfor
+                              <td id=""><input class="disabled_input" type="number" placeholder="" name="lname" disabled></td>
+                            @endif
+                          @endfor
 
 
 
@@ -208,8 +215,9 @@
                           <th class="fixed-side">Programme</th>
                           <th>Unit Rate</th>
                           <th>Volume Disc</th>
-                          @for ($i = 0; $i < count($fayaFound['dates']); $i++) <th>{{ $fayaFound['labeldates'][$i] }}</th>
-                              @endfor
+                          @for ($i = 0; $i < count($fayaFound['dates']); $i++)
+                            <th>{{ $fayaFound['labeldates'][$i] }}</th>
+                          @endfor
                       </tr>
                   </thead>
                   <tbody>
@@ -217,23 +225,28 @@
                       @foreach($fayaFound['programs_stations'] as $value)
                       <tr class="{{ $value->program}}">
                           <td id="btn" class="fixed-side">{{ $value->station}}</td>
-                          <td id="btn" class="fixed-side"> {{ $value->start_time}} {{ $value->end_time}}</td>
-                          <td id="btn" class="fixed-side"> {{ $value->program}}</td>
-                          <td> <input type="number" value="0" id="ur45{{$value->id}}" data_12="{{ $value->id}}"
-                                  data_11="60" data_10="" data_9=""></td>
+                          <td id="btn" class="fixed-side"> <span id="timeBeltStart">{{ $value->start_time }}</span> - 
+                            <span id="timeBeltEnd">{{ $value->end_time}}</span>
+                          </td>
+                          <td id="btn" class="fixed-side"> {{ $value->program}} </td>
+                          <td>
+                            <input type="number" value="0" id="ur45{{$value->id}}" data_12="{{ $value->id}}"
+                                  data_11="60" data_10="" data_9="">
+                          </td>
                           <td> <input type="number" value="0" id="vd45{{$value->id}}" data_12="{{ $value->id}}"
                                   data_11="60" data_10="" data_9=""></td>
 
 
-                          @for ($i = 0; $i < count($fayaFound['dates']); $i++) @if($fayaFound['days'][$i]==$value->day )
+                          @for ($i = 0; $i < count($fayaFound['dates']); $i++) 
+                            @if($fayaFound['days'][$i]==$value->day )
                               <td>
                                 <input type="number" id="45{{$value->id}}" class="day_input" data_12="{{ $value->id}}"
-                                      data_11="45" data_10="{{$fayaFound['dates'][$i]}}"
-                                      data_9="{{$fayaFound['days'][$i]}}"></td>
+                                  data_11="45" data_10="{{$fayaFound['dates'][$i]}}"
+                                  data_9="{{$fayaFound['days'][$i]}}"></td>
                               @else
-                              <td id=""><input class="disabled_input" type="number" placeholder="N/A" name="lname" disabled></td>
-                              @endif
-                              @endfor
+                              <td id=""><input class="disabled_input" type="number" placeholder="" name="lname" disabled></td>
+                            @endif
+                          @endfor
                       </tr>
 
                       @endforeach
@@ -307,7 +320,7 @@
                                       data_9="{{$fayaFound['days'][$i]}}" data_8="">
                               </td>
                             @else
-                              <td id=""><input class="disabled_input" type="number" placeholder="N/A" name="lname" disabled></td>
+                              <td id=""><input class="disabled_input" type="number" placeholder="" name="lname" disabled></td>
                             @endif
                           @endfor
                       </tr>
@@ -358,7 +371,7 @@
 
     <div class="action_footer client_dets mb4 mt4">
       <div class="col_6 column">
-        <button type="button" id="back_btn" class="btn small_btn show">Back</button>
+        <button type="button" id="back_btn" class="btn small_btn show" onclick="goBack()">Back</button>
       </div>
       <div class="col_6 column">
         <button type="button" id="mpo_filters" class="btn small_btn right show">Create Plan</button>
@@ -377,6 +390,16 @@
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script>
+  function goBack() {
+    window.history.back();
+  }
+  format TimeBelt(time) {
+    return time.substring(0, time.length - 3);
+  }
+  //  Format timebelt
+  // $('#timeBeltStart').text = "Hello";
+  $('#timeBeltStart').html("linkText")
+
   $('#15SecRevealer').click(function() {
     $('#15SecBox').toggle('medium');
   })
@@ -423,15 +446,11 @@
             var unit_rate = $("#ur" + duration + value_button).val();
             var volume_disc = $("#vd" + duration + value_button).val();
             if (plans.length > 0) {
-                for (var i = 0; i < plans.length; i++) {
-                    if (plans[i].id == value_button && plans[i].date == date && plans[i].duration ==
-                        duration) {
-
-                        plans.splice(i, 1)
-
-                    }
-
+              for (var i = 0; i < plans.length; i++) {
+                if (plans[i].id == value_button && plans[i].date == date && plans[i].duration == duration) {
+                  plans.splice(i, 1)
                 }
+              }
             }
 
             plans.push({
