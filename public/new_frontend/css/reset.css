@@ -66,13 +66,15 @@ canvas {
 }
 
 .mb3 {
-    margin-bottom: 30px;
+  margin-bottom: 30px;
 }
 
 .mb4 {
-    margin-bottom: 40px;
+  margin-bottom: 40px;
 }
-
+.mt4 {
+  margin-top: 40px;
+}
 .mbl {
   margin-left: 20px;
 }
@@ -137,9 +139,9 @@ canvas {
 }
 
 table {
-    width: 100%;
-    border-collapse: collapse;
-    border: 0;
+  width: 100%;
+  border-collapse: collapse;
+  border: 0;
 }
 
 tr {
@@ -915,7 +917,22 @@ input:-webkit-autofill {
 	visibility:visible;
 }
 .clone thead, .clone tfoot{background:transparent;}
+
 /* custom */
 .revealer {
   cursor: pointer;
 }
+.disabled_input {
+  background: #CFD8DC !important;
+  cursor: not-allowed;
+}
+#back_btn {
+  width: 25%;
+  background: #607D8B !important;
+  padding: 5px;
+}
+#mpo_filters {
+  padding: 5px 15px;
+  width: 30%;
+}
+
