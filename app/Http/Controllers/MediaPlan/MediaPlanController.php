@@ -322,14 +322,12 @@ class MediaPlanController extends Controller
 		$clients = new AllClient(\Auth::user()->companies->first()->id);
         $clients = $clients->getAllClients();
 
-
-		if(count($plans_details) == 0){
+		if(count($plans) == 0 || count($plans_details) == 0){
 			return redirect()->route("agency.media_plan.criteria_form");
 		}
-	
 		$fayaFound = [];
 		$suggestions = $this->groupSuggestions($plans);
-		$suggestionsByStation = $this-> groupSuggestionsByStation($plans);
+		$suggestionsByStation = $this->groupSuggestionsByStation($plans);
 		$dates = $this->dates($plans_details[0]->start_date, $plans_details[0]->end_date);
 		$labeldates = $this->labeldates($plans_details[0]->start_date, $plans_details[0]->end_date);
 		$days = $this->days($plans_details[0]->start_date, $plans_details[0]->end_date);
