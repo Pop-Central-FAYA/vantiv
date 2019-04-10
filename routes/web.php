@@ -460,6 +460,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/select_plan', 'MediaPlan\MediaPlanController@SelectPlanPost');
             Route::get('/createplan/{id}', 'MediaPlan\MediaPlanController@CreatePlan')->name('agency.media_plan.create');
             Route::post('/finish_plan', 'MediaPlan\MediaPlanController@CompletePlan');
+            Route::get('/export/{id}', 'MediaPlan\MediaPlanController@exportPlan')->name('agency.media_plan.export');
         });
     });
 
