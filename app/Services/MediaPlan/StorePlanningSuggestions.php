@@ -4,7 +4,7 @@ namespace Vanguard\Services\MediaPlan;
 use Vanguard\Models\MediaPlan;
 use Vanguard\Models\MediaPlanSuggestion;
 use Auth;
-
+use Illuminate\Support\Collection;
 /**
  * @todo Wrap these db writes in a transaction
  */
@@ -34,9 +34,10 @@ class StorePlanningSuggestions
             'media_type' => $this->criteriaForm->media_type,
             'campaign_name' => $this->criteriaForm->campaign_name,
             'planner_id' => Auth::id(),
-            'status' => 'Suggested'
+            'status' => 'Suggested',
+            'state_list' => json_encode($this->suggestions['state_list'])
         ]);
-        foreach ($this->suggestions as $key => $suggestion) {
+        foreach ($this->suggestions['projected_counts'] as $key => $suggestion) {
             MediaPlanSuggestion::create([
                 'media_plan_id' => $newMediaPlan->id,
                 'media_type' => $suggestion['media_type'],
@@ -45,10 +46,10 @@ class StorePlanningSuggestions
                 'day' => $suggestion['day'],
                 'start_time' => $suggestion['start_time'],
                 'end_time' => $suggestion['end_time'],
-                'total_audience' => $suggestion['audience']
+                'total_audience' => $suggestion['audience'],
+                'state_counts' => json_encode($suggestion['state_counts'])
             ]);
         }
-
         return $newMediaPlan;   
     }
 }
