@@ -21,76 +21,49 @@
             </div>
         </div>
 
-        <!-- main frame -->
-{{--         <div class="the_frame clearfix mb border_top_color load_stuff">
-
-            <div class="margin_center col_7 clearfix create_fields">
-
-                <div class="the_stats the_frame clearfix mb4">
-                    <div class="column col_4">
-                        <span class="weight_medium small_faint uppercased">TV </span>
-                        <h3><a href="{{ route('campaign.all') }}">{{ $fayaFound['total_tv'] }}</a></h3>
-                    </div>
-
-                    <div class="column col_4">
-                        <span class="weight_medium small_faint uppercased">Radio</span>
-                        <h3><a href="{{ route('agency.campaigns.hold') }}" style="color: red;">{{ $fayaFound['total_radio'] }}</a></h3>
-                    </div>
-
-                    <div class="column col_4">
-                        <span class="weight_medium small_faint uppercased">Total Audience</span>
-                        <h3><a href="{{ route('clients.list') }}">{{ $fayaFound['total_audiences'] }}</a></h3>
-                    </div>
-                </div>
-
-                
-            </div>
-        </div> --}}
-        <!-- main frame end -->
-
 
         
 <div class="the_frame client_dets mb4">
-
-<div class="filters border_bottom clearfix">
-            <div class="column col_8 p-t">
-                <p class="uppercased weight_medium">Available Stations and Times</p>
-            </div>
-        <div class="column col_4 clearfix">
-            <div class="col_4 column">
+    
+    <div class="filters border_bottom clearfix">
+        <div class="column col_6 p-t">
+            <p class="uppercased weight_medium mt2">Available Stations and Times</p>
+        </div>
+        <div class="column col_6 clearfix">
+            <div class="col_3 column">
                 <label for="days">Days</label>
                 <select name="" id="days">
-                    <option value="">Day One</option>
-                    <option value="">Day One</option>
+                    <option value="monday">Monday</option>
+                    <option value="tuesday">Tuesday</option>
+                    <option value="wednesday">Wednesday</option>
+                    <option value="thursday">Thursday</option>
+                    <option value="friday">Friday</option>
+                    <option value="saturday">Saturday</option>
+                    <option value="sunday">Sunday</option>
                 </select>
             </div>
-            <div class="col_4 column">
+            <div class="col_3 column">
                 <label for="days">States</label>
                 <select name="" id="days">
-                    <option value="">Abia</option>
-                    <option value="">Adamawa</option>
-                </select>    
+                    @foreach ($filterValues['state_list'] as $state)
+                    <option value="{{ $state }}">{{ $state }}</option>
+                    @endforeach
+                </select>
             </div>
-            <div class="col_4 column">
+            <div class="col_3 column">
                 <label for="days">Time</label>
                 <select name="" id="days">
-                    <option value="">15mins</option>
+                    @foreach($filterValues['day_parts'] as $day_part)
+                        <option value="{{ $day_part }}">{{ $day_part }}</option>
+                    @endforeach
                     <option value="">30mins</option>
                 </select>                    
             </div>
-{{--             <div class="col_5 column">
-                <input type="text" name="start_date" class="flatpickr" placeholder="Start Date">
+            <div class="col_3 column">
+                <button class="filter-btn" id="filter-btn"><i class="material-icons left">search</i>Filter</button>
             </div>
-
-            <div class="col_5 column">
-                <input type="text" name="stop_date" class="flatpickr" placeholder="End Date">
-            </div>
-
-            <div class="col_1 column">
-                <button type="button" id="mpo_filters" class="btn small_btn">Filter</button>
-            </div> --}}
         </div>
-</div>
+    </div>
 
 <!-- campaigns table -->
 <div class="accordion-group scroll-y">
@@ -100,7 +73,7 @@
                 {{-- <th width="25%">All</th> --}}
                 <th>Station</th>
                 <th width="50%">Audience</th>
-                <th width="25%"> actions</th>
+                {{-- <th width="25%"> </th> --}}
             </tr>
         </thead>
     </table>
@@ -115,12 +88,13 @@
                     <tbody class="accordion-group__accordion-btn">
                         <tr class="clickable">
                             {{-- <td width="25%"><input type="checkbox" /> </td> --}}
-                            <td width="25%">{{ $key }}</td>
-                            <td>
+                            <td width="">{{ $key }}</td>
+                            <td width="50%">
                             {{ $sum_audience}}
                             </td>
-                             <td width="25%">
-                                <button class="btn small_btn"> Details </button> <!--<button class="btn small_btn"> Add </button>--> </td>
+                            {{-- <td width="25%">
+                                <button class="btn small_btn"> Details </button>
+                            </td> --}}   
                         </tr>
                     </tbody>
                 </table>
@@ -180,7 +154,7 @@
             <p class="uppercased weight_medium">Selected Stations and Times</p>
         </div>
         <div class="column col_4 clearfix">
-            <div class="col_5 column">
+{{--             <div class="col_5 column">
                 <input type="text" name="start_date" class="flatpickr" placeholder="Start Date">
             </div>
 
@@ -190,7 +164,7 @@
 
             <div class="col_1 column">
                 <button type="button" id="" class="btn small_btn">Filter</button>
-            </div>
+            </div> --}}
         </div>
     </div>
 
@@ -199,9 +173,9 @@
         <thead>
             <tr>
                 <th>Station</th>
-                <th>Time belt</th>
-                <th>Day of the week</th>
-                <th>Programme</th>
+                <th>Time Belt</th>
+                <th>Day</th>
+                <th>Program</th>
                 <th>Audience</th>
                 <th>Actions </th>
               
@@ -462,7 +436,6 @@
 
                 var RequestData = JSON.stringify(requesData);
 
-
                    if(plans.length == 0 ){
                             swal("Select the staion you want to add");
                             $('.show').prop('disabled', false);  
@@ -514,9 +487,9 @@
                         inline: "nearest",
                         behaviour: "smooth"
                     }
-                    element.scrollIntoView(options);
+                    // element.scrollIntoView(options);
                     $(".where-it-is-going").append(new_html);
-                    document.getElementById("ri"+prog_id).classList.add('highlight');
+                    // document.getElementById("ri"+prog_id).classList.add('highlight');
             }
             
         })

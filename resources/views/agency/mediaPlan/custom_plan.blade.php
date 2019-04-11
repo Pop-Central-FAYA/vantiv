@@ -155,8 +155,7 @@ for ($x = 5; $x <= 8; $x++) {
 																			 <tbody>
                                
                                                     <?php 
-for ($x = 1; $x <= 4; $x++) {
-?>
+                                                    for ($x = 1; $x <= 4; $x++) {?>
 				
                                                     <tr>
 								<td id="statbtn_15<?php echo $x; ?>"> NTA </td>
@@ -172,7 +171,7 @@ for ($x = 1; $x <= 4; $x++) {
                             <?php }?>
 
 																		 
-												 </table>
+										</table>
 																 
 									</div>
 								</div>

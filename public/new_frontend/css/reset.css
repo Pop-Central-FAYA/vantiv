@@ -19,7 +19,7 @@ table, caption, tbody, tfoot, thead, tr, th, td, input, textarea, select, footer
   box-sizing: border-box;  
 }
 
-li, a { 
+li, a {
   list-style: none; 
   text-decoration: none;
   color: inherit;
@@ -74,6 +74,9 @@ canvas {
 }
 .mt4 {
   margin-top: 40px;
+}
+.mt2 {
+  margin-top: 20px;
 }
 .mbl {
   margin-left: 20px;
@@ -936,7 +939,7 @@ input:-webkit-autofill {
   cursor: not-allowed;
 }
 .scroll-y {
-  max-height: 700px;
+  max-height: 500px;
   overflow-y: scroll;
 }
 .fixed-headers {
@@ -952,6 +955,7 @@ input:-webkit-autofill {
   width: 25%;
   background: #607D8B !important;
   padding: 5px;
+  box-shadow: 9px 10px 20px 1px rgba(103,131,144,0.21)
 }
 #mpo_filters {
   padding: 5px 15px;
@@ -964,6 +968,18 @@ input:-webkit-autofill {
 .plus-btn {
   border: 0;
   border-radius: 5px;
+}
+#filter-btn {
+  margin-top: 23px;
+}
+.filter-btn {
+  padding: 4px;
+  width: 70%;
+  border: 0;
+  color: #fff;
+  font-size: 15px;
+  background: #607D8B;
+  border-radius: 3px;
 }
 .plus-btn:hover {
   box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
