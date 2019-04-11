@@ -17,7 +17,7 @@
     <!-- subheader -->
         <div class="sub_header clearfix mb pt">
             <div class="column col_6">
-                <h2 class="sub_header">Suggested stations & programs</h2>
+                <h2 class="sub_header">Stations and Programmes</h2>
             </div>
         </div>
 
@@ -54,7 +54,7 @@
 
 <div class="filters border_bottom clearfix">
             <div class="column col_8 p-t">
-                <p class="uppercased weight_medium">Sugested Plans</p>
+                <p class="uppercased weight_medium">Available Stations and Times</p>
             </div>
         <div class="column col_4 clearfix">
             <div class="col_4 column">
@@ -104,67 +104,65 @@
             </tr>
         </thead>
     </table>
-                @foreach($fayaFound['stations'] as $key => $Value)
-                        @php 
-                                $sum_audience = $Value->sum('total_audience'); 
-                        @endphp
+    @foreach($fayaFound['stations'] as $key => $Value)
+        @php 
+                $sum_audience = $Value->sum('total_audience'); 
+        @endphp
 
-                    <section class="accordion-group__accordion">
-                        <header class="accordion-group__accordion-head">
-                            <table lass="display default_mpo filter_mpo" id="default_mpo_table">
-                                <tbody>
-                                    <tr  class="clickable">
-                                        {{-- <td width="25%"><input type="checkbox" /> </td> --}}
-                                        <td width="25%">{{ $key }}</td>
-                                        <td>
-                                        {{ $sum_audience}}
-                                        </td>
-                                         <td width="25%"><button class="btn small_btn accordion-group__accordion-btn"> Details </button> <!--<button class="btn small_btn"> Add </button>--> </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </header>
-                        <div class="accordion-group__accordion-panel">
-                            <div class="accordion-group__accordion-content">
-                                    <table class="table table-hover">
-                                            <thead>
-                                        <tr>
-                                        <th>Station</th> 
-                                        <th>Day of the week</th>
-                                            <th>Time belt</th>
-                                           
-                                            <th>programe</th>
-                                                 <th>Audience</th>
-                                                 <th></th>
-                                        </tr>
-                                            </thead>
-                                                                     <tbody>
-                                            
-                                                                     @foreach($Value as $Programe)
+        <section class="accordion-group__accordion">
+            <header class="accordion-group__accordion-head">
+                <table lass="display default_mpo filter_mpo" id="default_mpo_table">
+                    <tbody>
+                        <tr class="clickable accordion-group__accordion-btn">
+                            {{-- <td width="25%"><input type="checkbox" /> </td> --}}
+                            <td width="25%">{{ $key }}</td>
+                            <td>
+                            {{ $sum_audience}}
+                            </td>
+                             <td width="25%">
+                                <button class="btn small_btn accordion-group__accordion-btn"> Details </button> <!--<button class="btn small_btn"> Add </button>--> </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </header>
+            <div class="accordion-group__accordion-panel">
+                <div class="accordion-group__accordion-content">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Station</th> 
+                                <th>Day</th>
+                                <th>Time Belt</th>
+                                <th>Program</th>
+                                <th>Audience</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                            @foreach($Value as $Programe)
 
-                                            <tr>
-                        <td id="stat{{ $Programe->id }}"> {{ $Programe->station }}</td>
-                        <td id="day{{ $Programe->id }}"class="center">{{ $Programe ->day}} </td>
-                        <td id="time{{ $Programe->id }}" class="center">{{ $Programe -> start_time}} - {{ $Programe -> end_time}}</td>
-                        
-                        <td id="prog{{ $Programe->id }}"class="center">{{ $Programe -> program }}</td>
-                        <td id="aud{{ $Programe->id }}"class="center">{{ $Programe ->total_audience}}</td>
-                            <td class="center">
-                            <button data-program="{{ $Programe->id }}" class="btn btn-info aBtn" data_15="first15" id="{{ $Programe->id }}" type="button">ADD</button>	
-                        </td>
-                    </tr>
-                     @endforeach
-                                            </tbody>                   
-                                         </table>
-                                                         
-                            </div>
-                        </div>
-                    </section>
-                  
-                    @endforeach
-
-
+                            <tr>
+                                <td id="stat{{ $Programe->id }}"> {{ $Programe->station }}</td>
+                                <td id="day{{ $Programe->id }}"class="center">{{ $Programe ->day}} </td>
+                                <td id="time{{ $Programe->id }}" class="center">{{ $Programe -> start_time}} - {{ $Programe -> end_time}}</td>
+                                
+                                <td id="prog{{ $Programe->id }}"class="center">{{ $Programe -> program }}</td>
+                                <td id="aud{{ $Programe->id }}"class="center">{{ $Programe ->total_audience}}</td>
+                                <td class="center">
+                                    <button data-program="{{ $Programe->id }}" class="btn btn-info aBtn" data_15="first15" id="{{ $Programe->id }}" type="button">ADD</button>	
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>                   
+                    </table>                        
                 </div>
+            </div>
+        </section>
+      
+        @endforeach
+
+    </div>
               
 
 <!-- end -->
@@ -177,10 +175,10 @@
 
 <div class="the_frame client_dets mb4">
 
-<div class="filters border_bottom clearfix">
-            <div class="column col_8 p-t">
-                <p class="uppercased weight_medium">Selected Plan</p>
-            </div>
+    <div class="filters border_bottom clearfix">
+        <div class="column col_8 p-t">
+            <p class="uppercased weight_medium">Selected Stations and Times</p>
+        </div>
         <div class="column col_4 clearfix">
             <div class="col_5 column">
                 <input type="text" name="start_date" class="flatpickr" placeholder="Start Date">
@@ -191,67 +189,64 @@
             </div>
 
             <div class="col_1 column">
-                <button type="button" id="mpo_filters" class="btn small_btn">Filter</button>
+                <button type="button" id="" class="btn small_btn">Filter</button>
             </div>
         </div>
-</div>
-
-<!-- campaigns table -->
-<table class="table table-striped table-bordered bootstrap-datatable">
-                <thead>
-                <tr>
-                    <th>Station</th>
-                    <th>Time belt</th>
-                    <th>Day of the week</th>
-                    <th>Programme</th>
-                    <th>Audience</th>
-                    <th>Actions </th>
-                  
-                </tr>
-            </thead>     
-                  <tbody class="where-it-is-going">
-                    
-                  </tbody>
-              </table>  
-
-<!--  end -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-</div>
-
-
-
-
-<div class="the_frame client_dets mb4">
-
-
-
-            <div class="col_4 column">
-                <button type="button" id="mpo_filters" class="btn small_btn show">Create Plan</button>
-            </div>
-       
-</div>
-<br><br><br><br><br><br><br>
-
-
     </div>
+
+    <!-- campaigns table -->
+    <table class="table table-striped table-bordered bootstrap-datatable" id="selectedProgTable">
+        <thead>
+            <tr>
+                <th>Station</th>
+                <th>Time belt</th>
+                <th>Day of the week</th>
+                <th>Programme</th>
+                <th>Audience</th>
+                <th>Actions </th>
+              
+            </tr>
+        </thead>     
+        <tbody class="where-it-is-going">
+            
+        </tbody>
+    </table>  
+
+    <!--  end -->
+
+</div>
+
+    <div class="action_footer client_dets mb4 mt4">
+      <div class="col_6 column">
+        <button type="button" id="back_btn" class="btn small_btn show" onclick="goBack()">Back</button>
+      </div>
+      <div class="col_6 column">
+        <button type="button" id="mpo_filters" class="btn small_btn right show">Create Plan</button>
+        <button type="button" id="save_progress" class="btn small_btn right show mr-2">Save</button>
+      </div>
+    </div>
+
+{{--     <div class="the_frame client_dets mb4">
+        <div class="col_4 column">
+            <button type="button" id="mpo_filters" class="btn small_btn show">Create Plan</button>
+        </div>  
+    </div> --}}
+
+    <br><br><br><br><br><br><br>
+
+</div>
 @stop
 
 @section('scripts')
     <script src="https://unpkg.com/flatpickr"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
     <script>
         $(document).ready(function () {
             //flatpickr
@@ -502,6 +497,8 @@
             function   movePlanByDuration(prog_id, plan_station, plan_programe, plan_time, plan_day, plan_aud){
                 
                  var new_html = "";
+                 let element = document.getElementById("selectedProgTable");
+
 				 new_html += '<tr  id="ri'+prog_id+'">'+
 				 '<td>'+plan_station+' </td>'+
                  '<td class="center">'+plan_time+'</td>'+
@@ -512,9 +509,14 @@
 					 '</td>'+
 					 '</td>'+
 					 '</tr>';
-                    
+                    let options = {
+                        block: "start",
+                        inline: "nearest",
+                        behaviour: "smooth"
+                    }
+                    element.scrollIntoView(options);
                     $(".where-it-is-going").append(new_html);
-					
+                    document.getElementById("ri"+prog_id).classList.add('highlight');
             }
             
         })

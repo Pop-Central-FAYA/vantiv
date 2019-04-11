@@ -849,6 +849,15 @@ input:-webkit-autofill {
 }
 
 /* helpers */
+.mr-4 {
+  margin-right: 40px;
+}
+.mr-2 {
+  margin-right: 20px;
+}
+.mr-3 {
+  margin-right: 30px;
+}
 .right {
   float: right !important;
 }
@@ -933,6 +942,12 @@ input:-webkit-autofill {
 .fixed-headers {
   table-layout: fixed;
 }
+.clickable {
+  cursor: pointer;
+}
+.clickable:hover {
+  background: #ECEFF1 !important;
+}
 #back_btn {
   width: 25%;
   background: #607D8B !important;
@@ -941,5 +956,22 @@ input:-webkit-autofill {
 #mpo_filters {
   padding: 5px 15px;
   width: 30%;
+}
+#save_progress {
+  padding: 5px 15px;
+  width: 30%;
+}
+/* animations */
+@keyframes highlight {
+  0% {
+    background: #ffff99 !important; /* lovely yellow colour */
+  }
+  100% {
+    background: none;
+  }
+}
+
+.highlight {
+  animation: highlight 5s;
 }
 
