@@ -176,28 +176,6 @@ class MediaPlanController extends Controller
         );
 	}
 	
-	// public function getSuggestPlanById($id)
-    // {
-	// 	$plans = DB::table('media_plan_suggestions')->where('media_plan_id', $id)->get();
-	// 	if(count($plans) == 0){
-	// 		return redirect()->route("agency.media_plan.criteria_form");
-	// 	}
-	// 	$suggestions = $this->groupSuggestions($plans);
-	// 	$suggestionsByStation = $this-> groupSuggestionsByStation($plans);
-
-	// 	$fayaFound = array(
-    //         'total_tv' => $this->countByMediaType($suggestions, 'Tv'),
-	// 		'total_radio' => $this->countByMediaType($suggestions, 'Radio'),
-	// 		'programs_stations' => $suggestions,
-    //         'stations' => $suggestionsByStation,
-    //         'total_audiences' => $this->totalAudienceFound($suggestions)
-    //     );
-	// 	return view('agency.mediaPlan.display_suggestions')->with('fayaFound', $fayaFound);
-
-	// 	//return $fayaFound;
-	
-	// }
-	
 	public function groupSuggestions($query)
     {
         $query = $query->groupBy(function ($item, $key) {
@@ -450,6 +428,37 @@ class MediaPlanController extends Controller
             return ['programs' => $store_media_plan_program, 'media_plan_suggestion_id' => $request->media_plan_suggestion_id];
         }else{
             return 'error';
+        }
+    }
+
+    public function generateRatingsPost(Request $request)
+    {
+
+        // validate criteria form request
+        $validateCriteriaFormService = new ValidateCriteriaForm($request->all());
+        $validation = $validateCriteriaFormService->validateCriteria();
+        if ($validation->fails()) {
+            Session::flash('error', 'Please make sure the required parameters are filled out');
+            return ['status'=>"error", 'message'=> "Please make sure the required parameters are filled out" ];
+        }
+        // Fetch mps audiences, programs, stations, time duration, based on criteria
+        $suggestPlanService = new SuggestPlan($request);
+        $suggestions = $suggestPlanService->suggestPlan();
+        if ($suggestions->isNotEmpty()) {
+            // store planning criteria and suggestions
+            $storeSuggestionsService = new StorePlanningSuggestions($request, $suggestions);
+            $newMediaPlan = $storeSuggestionsService->storePlanningSuggestions();
+            return [
+                'status'=>"success",
+                'message'=> "Ratings successfully generated, going to next page",
+                'redirect_url' => $newMediaPlan->id
+            ];
+        }else{
+            Session::flash('error', 'No results came back for your criteria');
+            return [
+                'status'=>"error",
+                'message'=> "No results came back for your criteria"
+            ];
         }
     }
 

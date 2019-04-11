@@ -452,7 +452,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/', 'MediaPlan\MediaPlanController@index')->name('agency.media_plans');
             Route::get('/dashboard/list', 'MediaPlan\MediaPlanController@dashboardMediaPlans');
             Route::get('/create', 'MediaPlan\MediaPlanController@criteriaForm')->name('agency.media_plan.criteria_form');
-            Route::post('/create', 'MediaPlan\MediaPlanController@suggestPlan')->name('agency.media_plan.suggestPlan');
+            Route::post('/create-plan', 'MediaPlan\MediaPlanController@generateRatingsPost')->name('agency.media_plan.suggestPlan');
             Route::get('/summary/{id}', 'MediaPlan\MediaPlanController@summary')->name('agency.media_plan.summary');
             Route::get('/approve/{id}', 'MediaPlan\MediaPlanController@approvePlan')->name('agency.media_plan.approve');
             Route::get('/decline/{id}', 'MediaPlan\MediaPlanController@declinePlan')->name('agency.media_plan.decline');

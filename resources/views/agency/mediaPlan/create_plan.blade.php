@@ -22,12 +22,10 @@
         </div>
 
         <!-- main frame -->
-        <div class="the_frame clearfix mb border_top_color load_stuff">
-
+        <div class="the_frame clearfix mb border_top_color load_this_div">
             <div class="margin_center col_7 clearfix create_fields">
-
-                <form method="POST" action="{{ route('agency.media_plan.suggestPlan') }}">
-                    {{ csrf_field() }}
+                <form method="POST" action="" id="criteria_form">
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     <div class="create_gauge">
                         <div class=""></div>
                     </div>
@@ -76,8 +74,7 @@
                             <label class="small_faint">Gender</label>
 
                             <div class="select_wrap {{ $errors->has('gender') ? ' has-error' : '' }}">
-                                <select name="gender" id="gender">
-                                    <option>Select Target Gender</option>
+                                <select class="js-example-basic-multiple" name="gender" id="gender">
                                     @foreach($criterias as $criteria)
                                         @if ($criteria->name == "genders")
                                             @foreach ($criteria->subCriterias as $genders)
@@ -104,7 +101,7 @@
                     <div class="clearfix mb">
                         <div class="input_wrap column col_6{{ $errors->has('start_date') ? ' has-error' : '' }}">
                             <label class="small_faint">Start Date</label>
-                            <input type="text" required class="flatpickr" value="{{ old('start_date') }}" name="start_date" placeholder="Select Date">
+                            <input type="text" id="start_date" required class="flatpickr" value="{{ old('start_date') }}" name="start_date" placeholder="Select Date">
                             @if($errors->has('start_date'))
                                 <strong>
                                     <span class="help-block">{{ $errors->first('start_date') }}</span>
@@ -114,7 +111,7 @@
 
                         <div class="input_wrap column col_6{{ $errors->has('end_date') ? ' has-error' : '' }}">
                             <label class="small_faint">End Date</label>
-                            <input type="text" required class="flatpickr" value="{{ old('end_date') }}" name="end_date" placeholder="Select Date">
+                            <input type="text" required class="flatpickr" id="end_date" value="{{ old('end_date') }}" name="end_date" placeholder="Select Date">
 
                             @if($errors->has('end_date'))
                                 <strong>
@@ -182,7 +179,6 @@
 
                             <div class="select_wrap {{ $errors->has('gender') ? ' has-error' : '' }}">
                                 <select class="js-example-basic-multiple" name="social_class[]" id="social_class" multiple="multiple">
-                                    <option>Select Social Class</option>
                                     @foreach($criterias as $criteria)
                                         @if ($criteria->name == "social_classes")
                                             @foreach ($criteria->subCriterias as $social_classes)
@@ -271,7 +267,7 @@
                     <div class="clearfix mb">
                         <div class="input_wrap column col_12{{ $errors->has('agency_commission') ? ' has-error' : '' }}">
                             <label class="small_faint">Agency Commission</label>
-                            <input type="number" name="agency_commission" id="agency_commission" value="" placeholder="Enter Agency Commission">
+                            <input type="number" name="agency_commission" id="agency_commission" placeholder="Enter Agency Commission">
                             @if($errors->has('agency_commission'))
                                 <strong>
                                     <span class="help-block">{{ $errors->first('agency_commission') }}</span>
@@ -284,7 +280,7 @@
                     <div class="clearfix mb">
                         <div class="input_wrap column col_12{{ $errors->has('campaign_name') ? ' has-error' : '' }}">
                             <label class="small_faint">Campaign Name</label>
-                            <input type="text" name="campaign_name" id="campaign_name" value="" placeholder="Enter Campaign Name">
+                            <input type="text" name="campaign_name" id="campaign_name" placeholder="Enter Campaign Name">
                             @if($errors->has('campaign_name'))
                                 <strong>
                                     <span class="help-block">{{ $errors->first('campaign_name') }}</span>
@@ -332,108 +328,66 @@
                 placeholder: "Please select social class"
             });
 
+            $('#gender').select2({
+                placeholder: "Select Target Gender"
+            });
+
             $('#state').select2({
                 placeholder: "Please select state"
             });
 
-            $(".checkbox_region").click( function (){
-                var checkbox_region = $(this).data("region");
-                var $inputs = $('.checkbox_region');
-                if(checkbox_region === "naem6hqwjhjatseog8" && $(this).is(':checked')){
-                    $(".checkbox_region").prop('checked', false);
-                    $("#naem6hqwjhjatseog8").prop('checked', true);
-                    $inputs.not(this).prop('disabled',true);
-                }else{
-                    $(".checkbox_region").prop('disabled', false);
+            $("#criteria_form").on('submit', function(e) {
+                event.preventDefault(e);
+                $('.load_this_div').css({
+                    opacity : 0.2
+                });
+                var start_date = $("#start_date").val();
+                var end_date = $("#end_date").val();
+                var campaign_name = $("#campaign_name").val();
+                if(start_date == '' && end_date == ''){
+                    toastr.error('Start date and End date are required');
+                    $('.load_this_div').css({
+                        opacity : 1
+                    });
+                    return;
                 }
-            });
-
-            // fetch all brands when a clientSis selected
-            $('body').delegate('#clients','change', function(e){
-                var clients = $("#clients").val();
-                if(clients != ''){
-                    $(".load_stuff").css({
-                        opacity: 0.3
+                if(campaign_name == ""){
+                    toastr.error('Campaign Name is required');
+                    $('.load_this_div').css({
+                        opacity : 1
                     });
-                    $("#industry").val('');
-                    $("#sub_industry").val('');
-                    var url = '/client/get-brands/'+clients;
-                    $.ajax({
-                        url: url,
-                        method: "GET",
-                        data: {clients: clients},
-                        success: function(data){
-                            if(data.brands){
-                                var big_html = '<select name="brand" id="brand">\n';
-                                if(data.brands != ''){
-                                    big_html += '<option value="">Select Brand</option>';
-                                    $.each(data.brands, function (index, value) {
-                                        big_html += '<option value="'+value.id+'">'+value.name+'</option>';
-                                    });
-                                    big_html += '</select>';
-                                    $(".brand_hide").hide();
-                                    $(".brand_select").show();
-                                    $(".brand_select").html(big_html);
-                                    $(".load_stuff").css({
-                                        opacity: 1
-                                    });
-                                }else{
-                                    big_html += '<option value="">Please Select a Client</option></section>';
-                                    $(".brand_hide").hide();
-                                    $(".brand_select").show();
-                                    $(".brand_select").html(big_html);
-                                    $(".load_stuff").css({
-                                        opacity: 1
-                                    });
-                                }
-                            }else{
-                                $(".load_stuff").css({
-                                    opacity: 1
-                                });
-                                toastr.error('An error occurred, please contact the administrator')
-                            }
-
-                        }
-                    });
-                }else{
-                    $("#industry").val('');
-                    $("#sub_industry").val('');
+                    return;
                 }
-            });
-
-            //fetch all industry and sub-industry attached to a brand
-            $('body').delegate('#brand','change', function(e) {
-                var brand = $("#brand").val();
-                if (brand != '') {
-                    $(".load_stuff").css({
-                        opacity: 0.5
+                if(new Date(start_date) > new Date(end_date)){
+                    toastr.error('Start date cannot be greater than end date');
+                    $('.load_this_div').css({
+                        opacity : 1
                     });
-                    $('.next').attr("disabled", true);
-                    var url = '/brand/get-industry';
+                    return;
+                }
+                var formdata = $("#criteria_form").serialize();
+                try {
                     $.ajax({
-                        url: url,
-                        method: "GET",
-                        data: {brand: brand},
+                        cache: false,
+                        type: "POST",
+                        url: '/agency/media-plan/create-plan',
+                        dataType: 'json',
+                        data: formdata,
                         success: function (data) {
-                            if (data.error === 'error') {
-                                $(".load_stuff").css({
-                                    opacity: 1
-                                });
-                                toastr.error('An error occured, please contact the administratot ')
+                            if (data.status == 'success') {
+                                toastr.success(data.message);
+                                location.href = '/agency/media-plan/customise/' + data.redirect_url;
                             } else {
-                                $(".load_stuff").css({
+                                toastr.error(data.message);
+                                $('.load_this_div').css({
                                     opacity: 1
                                 });
-
-                                $("#industry").val(data.industry.name);
-                                $("#sub_industry").val(data.sub_industry.name);
+                                return;
                             }
-
                         }
-                    });
-                } else {
-                    $("#industry").val('');
-                    $("#sub_industry").val('');
+                    })
+                }catch (e) {
+                    toastr.error('Oops, something went wrong with your request, contact administrator');
                 }
             });
         });
