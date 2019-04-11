@@ -13,6 +13,7 @@
 
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('new_frontend/img/favicon.ico') }}" />
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <link href="{{ asset('new_frontend/css/reset.css') }}" rel="stylesheet">
     <link href="{{ asset('new_frontend/css/style.css') }}" rel="stylesheet">

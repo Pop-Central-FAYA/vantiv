@@ -106,21 +106,21 @@
     </table>
     @foreach($fayaFound['stations'] as $key => $Value)
         @php 
-                $sum_audience = $Value->sum('total_audience'); 
+            $sum_audience = $Value->sum('total_audience'); 
         @endphp
 
         <section class="accordion-group__accordion">
             <header class="accordion-group__accordion-head">
                 <table lass="display default_mpo filter_mpo" id="default_mpo_table">
-                    <tbody>
-                        <tr class="clickable accordion-group__accordion-btn">
+                    <tbody class="accordion-group__accordion-btn">
+                        <tr class="clickable">
                             {{-- <td width="25%"><input type="checkbox" /> </td> --}}
                             <td width="25%">{{ $key }}</td>
                             <td>
                             {{ $sum_audience}}
                             </td>
                              <td width="25%">
-                                <button class="btn small_btn accordion-group__accordion-btn"> Details </button> <!--<button class="btn small_btn"> Add </button>--> </td>
+                                <button class="btn small_btn"> Details </button> <!--<button class="btn small_btn"> Add </button>--> </td>
                         </tr>
                     </tbody>
                 </table>
@@ -150,7 +150,7 @@
                                 <td id="prog{{ $Programe->id }}"class="center">{{ $Programe -> program }}</td>
                                 <td id="aud{{ $Programe->id }}"class="center">{{ $Programe ->total_audience}}</td>
                                 <td class="center">
-                                    <button data-program="{{ $Programe->id }}" class="btn btn-info aBtn" data_15="first15" id="{{ $Programe->id }}" type="button">ADD</button>	
+                                    <button data-program="{{ $Programe->id }}" class="plus-btn aBtn" data_15="first15" id="{{ $Programe->id }}" type="button"><i class="material-icons">add</i></button>	
                                 </td>
                             </tr>
                             @endforeach
@@ -505,7 +505,7 @@
                  '<td class="center">'+plan_day+'</td>'+
 				 '<td class="center">'+plan_programe+'</td>'+
 				 '<td class="center">'+plan_aud+'</td>'+
-					'<td class="center"><button data-programm="'+prog_id+'" class="btn btn-danger dBtn" data_15="first15" type="button">Remove</button>'+
+					'<td class="center"><button data-programm="'+prog_id+'" class="plus-btn dBtn" data_15="first15" type="button"><i class="material-icons" style="color: red">delete</i></button>'+
 					 '</td>'+
 					 '</td>'+
 					 '</tr>';
