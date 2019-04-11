@@ -155,8 +155,7 @@ for ($x = 5; $x <= 8; $x++) {
 																			 <tbody>
                                
                                                     <?php 
-for ($x = 1; $x <= 4; $x++) {
-?>
+                                                    for ($x = 1; $x <= 4; $x++) {?>
 				
                                                     <tr>
 								<td id="statbtn_15<?php echo $x; ?>"> NTA </td>
@@ -172,7 +171,7 @@ for ($x = 1; $x <= 4; $x++) {
                             <?php }?>
 
 																		 
-												 </table>
+										</table>
 																 
 									</div>
 								</div>
@@ -187,59 +186,46 @@ for ($x = 1; $x <= 4; $x++) {
 
 
 
-<div class="the_frame client_dets mb4">
+    <div class="the_frame client_dets mb4">
 
         <div class="filters border_bottom clearfix">
-                    <div class="column col_8 p-t">
-                        <p class="uppercased weight_medium">Selected Plan</p>
-                    </div>
-                <div class="column col_4 clearfix">
-                    <div class="col_5 column">
-                        <input type="text" name="start_date" class="flatpickr" placeholder="Start Date">
-                    </div>
-
-                    <div class="col_5 column">
-                        <input type="text" name="stop_date" class="flatpickr" placeholder="End Date">
-                    </div>
-
-                    <div class="col_1 column">
-                        <button type="button" id="mpo_filters" class="btn small_btn">Filter</button>
-                    </div>
+            <div class="column col_8 p-t">
+                <p class="uppercased weight_medium">Selected Plan</p>
+            </div>
+            <div class="column col_4 clearfix">
+                <div class="col_5 column">
+                    <input type="text" name="start_date" class="flatpickr" placeholder="Start Date">
                 </div>
+
+                <div class="col_5 column">
+                    <input type="text" name="stop_date" class="flatpickr" placeholder="End Date">
+                </div>
+
+                <div class="col_1 column">
+                    <button type="button" id="mpo_filters" class="btn small_btn">Filter</button>
+                </div>
+            </div>
         </div>
 
-        <!-- campaigns table -->
-        <table class="table table-striped table-bordered bootstrap-datatable">
-						<thead>
-						<tr>
-							<th>Station</th>
-                            <th>Time belt</th>
-							<th>Day of the week</th>
-							<th>Programme</th>
-							<th>Audience</th>
-							<th>Actions </th>
-						  
-						</tr>
-					</thead>     
-						  <tbody class="where-it-is-going">
-							
-						  </tbody>
-					  </table>  
+            <!-- campaigns table -->
+            <table class="table table-striped table-bordered bootstrap-datatable">
+        		<thead>
+        			<tr>
+        				<th>Station</th>
+                        <th>Time belt</th>
+        				<th>Day of the week</th>
+        				<th>Programme</th>
+        				<th>Audience</th>
+        				<th>Actions </th>
+        			  
+        			</tr>
+        		</thead>     
+        		<tbody class="where-it-is-going">
+        			
+        		</tbody>
+        	</table>  
 
-  <!--  end -->
-
-
-
-
-
-
-
-
-
-
-
-
-
+            <!--  end -->
     </div>
 
 @stop

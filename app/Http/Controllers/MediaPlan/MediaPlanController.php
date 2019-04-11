@@ -92,7 +92,7 @@ class MediaPlanController extends Controller
     	}
     	// Fetch mps audiences, programs, stations, time duration, based on criteria
     	$suggestPlanService = new SuggestPlan($request);
-		$suggestions = $suggestPlanService->suggestPlan();
+		  $suggestions = $suggestPlanService->suggestPlan();
 		if ($suggestions->isNotEmpty()) {
     		// store planning criteria and suggestions
     		$storeSuggestionsService = new StorePlanningSuggestions($request, $suggestions);
