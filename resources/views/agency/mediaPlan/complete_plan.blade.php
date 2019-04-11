@@ -23,7 +23,7 @@
 
 
 
-    <div class="the_frame client_dets mb4">
+    <div class="the_frame client_dets mb4 load_this_div">
 
         <div class="filters border_bottom clearfix">
             <div class="column col_8 p-t">
@@ -51,7 +51,8 @@
                     <thead>
                         <tr>
                             <th class="fixed-side">Station</th>
-                            <th class="fixed-side">Time Belt</th>
+                            <th class="fixed-side">Day</th>
+                            <th class="fixed-side">Time belt</th>
                             <th class="fixed-side" id="last-fixed">Programme</th>
                             <th class="fixed-side">Unit Rate</th>
                             <th class="fixed-side">Volume Disc</th>
@@ -66,17 +67,16 @@
                         @foreach($fayaFound['programs_stations'] as $value)
                         <tr class="{{ $value->program}}">
                             <td id="btn" class="fixed-side">{{ $value->station}}</td>
+                            <td id="btn" class="fixed-side">{{ $value->day}}</td>
                             <td id="btn" class="fixed-side"> {{ $value->start_time}} {{ $value->end_time}}</td>
-                            <td id="btn" class="fixed-side"> {{ $value->program}}</td>
-                            <td class="fixed-side">
-                              <input type="number" value="0" id="ur15{{$value->id}}" data_12="{{ $value->id}}"
-                                    data_11="60" data_10="" data_9="">
-                            </td>
-                            <td class="fixed-side"> 
-                              <input type="number" value="0" id="vd15{{$value->id}}" data_12="{{ $value->id}}"
-                                    data_11="60" data_10="" data_9="">
-                            </td>
-    
+
+                            <td id="btn" class="fixed-side update_program_{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->day.'_'.$value->station.'_'.$value->start_time)) }}">@if($value->program == 'Unknown Program') <a href="#program_modal_15{{ $value->id }}" class="modal_click">{{ $value->program}}</a> @else <a href="#edit_program_modal_15{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->day.'_'.$value->station.'_'.$value->start_time)) }}" class="modal_click">{{ $value->program}}</a> @endif</td>
+                            <td id="btn" class="fixed-side new_program_{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->day.'_'.$value->station.'_'.$value->start_time)) }}" style="display: none;"><a href="#program_modal_15{{ $value->id }}" class="modal_click"></a></td>
+                            <td><input type="number" value="0" id="ur15{{$value->id}}" data_12="{{ $value->id}}"
+                                    data_11="60" data_10="" data_9=""></td>
+                            <td> <input type="number" value="0" id="vd15{{$value->id}}" data_12="{{ $value->id}}"
+                                    data_11="60" data_10="" data_9=""></td>
+
                             @for ($i = 0; $i < count($fayaFound['dates']); $i++) @if($fayaFound['days'][$i]==$value->day )
                               <td> <input type="number" id="15{{$value->id}}" class="day_input" data_12="{{ $value->id}}"
                                       data_11="15" data_10="{{$fayaFound['dates'][$i]}}"
@@ -127,6 +127,7 @@
                   <thead>
                     <tr>
                       <th class="fixed-side">Station</th>
+                        <th class="fixed-side">Day</th>
                       <th class="fixed-side">Time belt</th>
                       <th class="fixed-side">Programme</th>
                       <th>Unit Rate</th>
@@ -140,22 +141,19 @@
                       @foreach($fayaFound['programs_stations'] as $value)
                       <tr class="{{ $value->program}}">
                           <td id="btn" class="fixed-side">{{ $value->station}}</td>
+                          <td id="btn" class="fixed-side">{{ $value->day}}</td>
                           <td id="btn" class="fixed-side"> {{ $value->start_time}} {{ $value->end_time}}</td>
-                          <td id="btn" class="fixed-side"> {{ $value->program}}</td>
-                          <td>
-                            <input type="number" value="0" id="ur30{{$value->id}}" data_12="{{ $value->id}}"
-                                  data_11="60" data_10="" data_9="">
-                          </td>
-                          <td>
-                            <input type="number" value="0" id="vd30{{$value->id}}" data_12="{{ $value->id}}"
-                                  data_11="60" data_10="" data_9="">
-                          </td>
+
+                          <td id="btn" class="fixed-side update_program_{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->day.'_'.$value->station.'_'.$value->start_time)) }}">@if($value->program == 'Unknown Program') <a href="#program_modal_15{{ $value->id }}" class="modal_click">{{ $value->program}}</a> @else <a href="#edit_program_modal_15{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->day.'_'.$value->station.'_'.$value->start_time)) }}" class="modal_click">{{ $value->program}}</a> @endif</td>
+                          <td id="btn" class="fixed-side new_program_{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->day.'_'.$value->station.'_'.$value->start_time)) }}" style="display: none;"></td>
+                          <td> <input type="number" value="0" id="ur30{{$value->id}}" data_12="{{ $value->id}}"
+                                  data_11="60" data_10="" data_9=""></td>
+                          <td> <input type="number" value="0" id="vd30{{$value->id}}" data_12="{{ $value->id}}"
+                                  data_11="60" data_10="" data_9=""></td>
 
 
-                          @for ($i = 0; $i < count($fayaFound['dates']); $i++) 
-                            @if($fayaFound['days'][$i]==$value->day )
-                              <td> 
-                                <input type="number" id="30{{$value->id}}" class="day_input" data_12="{{ $value->id }}"
+                          @for ($i = 0; $i < count($fayaFound['dates']); $i++) @if($fayaFound['days'][$i]==$value->day )
+                              <td> <input type="number" id="30{{$value->id}}" class="day_input" data_12="{{ $value->id}}"
                                       data_11="30" data_10="{{$fayaFound['dates'][$i]}}"
                                       data_9="{{$fayaFound['days'][$i]}}">
                               </td>
@@ -211,6 +209,7 @@
                   <thead>
                       <tr>
                           <th class="fixed-side">Station</th>
+                          <th class="fixed-side">Day</th>
                           <th class="fixed-side">Time belt</th>
                           <th class="fixed-side">Programme</th>
                           <th>Unit Rate</th>
@@ -225,14 +224,13 @@
                       @foreach($fayaFound['programs_stations'] as $value)
                       <tr class="{{ $value->program}}">
                           <td id="btn" class="fixed-side">{{ $value->station}}</td>
-                          <td id="btn" class="fixed-side"> <span id="timeBeltStart">{{ $value->start_time }}</span> - 
-                            <span id="timeBeltEnd">{{ $value->end_time}}</span>
-                          </td>
-                          <td id="btn" class="fixed-side"> {{ $value->program}} </td>
-                          <td>
-                            <input type="number" value="0" id="ur45{{$value->id}}" data_12="{{ $value->id}}"
-                                  data_11="60" data_10="" data_9="">
-                          </td>
+
+                          <td id="btn" class="fixed-side">{{ $value->day}}</td>
+                          <td id="btn" class="fixed-side"> {{ $value->start_time}} {{ $value->end_time}}</td>
+                          <td id="btn" class="fixed-side update_program_{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->day.'_'.$value->station.'_'.$value->start_time)) }}">@if($value->program == 'Unknown Program') <a href="#program_modal_15{{ $value->id }}" class="modal_click">{{ $value->program}}</a> @else <a href="#edit_program_modal_15{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->day.'_'.$value->station.'_'.$value->start_time)) }}" class="modal_click">{{ $value->program}}</a> @endif</td>
+                          <td id="btn" class="fixed-side new_program_{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->day.'_'.$value->station.'_'.$value->start_time)) }}" style="display: none;"></td>
+                          <td> <input type="number" value="0" id="ur45{{$value->id}}" data_12="{{ $value->id}}"
+                                  data_11="60" data_10="" data_9=""></td>
                           <td> <input type="number" value="0" id="vd45{{$value->id}}" data_12="{{ $value->id}}"
                                   data_11="60" data_10="" data_9=""></td>
 
@@ -289,6 +287,7 @@
                   <thead>
                     <tr>
                       <th class="fixed-side">Station</th>
+                        <th class="fixed-side">Day</th>
                       <th class="fixed-side">Time belt</th>
                       <th class="fixed-side">Programme</th>
                       <th>Unit Rate</th>
@@ -304,11 +303,15 @@
                       @foreach($fayaFound['programs_stations'] as $value)
                       <tr class="{{ $value->program}}">
                           <td id="btn" class="fixed-side">{{ $value->station}}</td>
+                          <td id="btn" class="fixed-side">{{ $value->day}}</td>
                           <td id="btn" class="fixed-side"> {{ $value->start_time}} {{ $value->end_time}}</td>
-                          <td id="btn" class="fixed-side"> {{ $value->program}}</td>
-                          <td>
-                            <input type="number" value="0" id="ur60{{$value->id}}" data_12="{{ $value->id}}"
+
+                          <td id="btn" class="fixed-side update_program_{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->day.'_'.$value->station.'_'.$value->start_time)) }}">@if($value->program == 'Unknown Program') <a href="#program_modal_15{{ $value->id }}" class="modal_click">{{ $value->program}}</a> @else <a href="#edit_program_modal_15{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->day.'_'.$value->station.'_'.$value->start_time)) }}" class="modal_click">{{ $value->program}}</a> @endif</td>
+                          <td id="btn" class="fixed-side new_program_{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->day.'_'.$value->station.'_'.$value->start_time)) }}" style="display: none;"></td>
+                          <td> <input type="number" value="0" id="ur60{{$value->id}}" data_12="{{ $value->id}}"
                                   data_11="60" data_10="" data_9=""></td>
+                          <td> <input type="number" value="0" id="vd60{{$value->id}}" data_12="{{ $value->id}}"
+
                           <td>
                             <input type="number" value="0" id="vd60{{$value->id}}" data_12="{{ $value->id}}"
                                   data_11="60" data_10="" data_9="">
@@ -381,6 +384,7 @@
     <br><br><br><br><br><br><br>
 
     @include('agency.mediaPlan.includes.program-modal')
+    @include('agency.mediaPlan.includes.update_program')
 </div>
 @stop
 
@@ -389,46 +393,20 @@
 <script type="text/javascript" src="{{ asset('new_frontend/js/wickedpicker.min.js') }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script>
   function goBack() {
     window.history.back();
   }
-  format TimeBelt(time) {
+  /*format TimeBelt(time) {
     return time.substring(0, time.length - 3);
-  }
-  //  Format timebelt
-  // $('#timeBeltStart').text = "Hello";
-  $('#timeBeltStart').html("linkText")
+  }*/
 
-  $('#15SecRevealer').click(function() {
-    $('#15SecBox').toggle('medium');
-  })
-  $('#30SecRevealer').click(function() {
-    $('#30SecBox').toggle('medium');
-  })
-  $('#45SecRevealer').click(function() {
-    $('#45SecBox').toggle('medium');
-  })
-  $('#60SecRevealer').click(function() {
-    $('#60SecBox').toggle('medium');
-  })
   // fixed scroll tabll
-  $(document).ready(function() {
-    $('#15SecBox').hide();
-    $('#30SecBox').hide();
-    $('#45SecBox').hide();
-    $('#60SecBox').hide();
-
-    // 
-    $("#default_mpo_table").clone(true).appendTo('#table-scroll').addClass('clone');
-    $("#default_mpo_table_30").clone(true).appendTo('#table-scroll-30').addClass('clone');
-    $("#default_mpo_table_45").clone(true).appendTo('#table-scroll-45').addClass('clone');
-    $("#default_mpo_table_60").clone(true).appendTo('#table-scroll-60').addClass('clone');
-  });
 </script>
 <script>
     <?php echo "var days =".json_encode($days).";\n"; ?>
+    <?php echo "var media_plans =".json_encode($fayaFound['programs_stations']).";\n"; ?>
+    <?php echo "var media_plan_programs =".json_encode($media_plans_programs).";\n"; ?>
     $('#15SecRevealer').click(function() {
         $('#15SecBox').toggle('medium');
     })
@@ -542,6 +520,97 @@
             })
         });
 
+        //data = $('form').serialize();
+        //submitting the form
+        $.each(media_plans, function (index, value) {
+            $("#submit_15"+value.id).on('submit', function(e) {
+                $('.load_this_div').css({
+                    opacity : 0.2
+                });
+                event.preventDefault(e);
+                var formdata = $("#submit_15"+value.id).serialize();
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url : '/agency/media-plan/store-programs',
+                    dataType: 'json',
+                    data: formdata,
+                    success: function (data) {
+                        if(data.programs){
+                            $.each(data.programs, function (data_index, data_value) {
+                                var un_val = convertToSlug(data_value.day+'_'+data_value.station+'_'+data_value.start_time);
+                                $('td.update_program_'+un_val).remove();
+                                $('td.new_program_'+un_val).append(data_value.program_name);
+                                $('td.new_program_'+un_val).show();
+                            });
+                            $.modal.close();
+                            $('.load_this_div').css({
+                                opacity : 1
+                            });
+                        }else{
+                            toastr.error('Cannot Create program');
+                            $('.load_this_div').css({
+                                opacity : 1
+                            });
+                        }
+                    }
+                })
+            });
+        });
+
+        $.each(media_plan_programs, function (index, value) {
+            $("#update_program"+value.id).on('submit', function(e) {
+                $('.load_this_div').css({
+                    opacity : 0.2
+                });
+                event.preventDefault(e);
+                var formdata = $("#update_program"+value.id).serialize();
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url : '/agency/media-plan/store-programs',
+                    dataType: 'json',
+                    data: formdata,
+                    success: function (data) {
+                        if(data.programs){
+                            $.each(data.programs, function (data_index, data_value) {
+                                var un_val = convertToSlug(data_value.day+'_'+data_value.station+'_'+data_value.start_time);
+                                $('td.update_program_'+un_val).remove();
+                                $('td.new_program_'+un_val).append(data_value.program_name);
+                                $('td.new_program_'+un_val).show();
+                            });
+                            $.modal.close();
+                            $('.load_this_div').css({
+                                opacity : 1
+                            });
+                        }else{
+                            toastr.error('Cannot Create program');
+                            $('.load_this_div').css({
+                                opacity : 1
+                            });
+                        }
+                    }
+                })
+            });
+        });
+
+        $("body").delegate(".remove_already", "click", function () {
+            event.preventDefault();
+            var button_id = $(this).data("button_id");
+            $(".remove_div_already_had_"+button_id).remove();
+
+        });
+
+        function convertToSlug(Text)
+        {
+            return Text
+                .toLowerCase()
+                .replace(/[^a-zA-Z0-9]+/g,'')
+                .replace(/ +/g,'-')
+                .replace('/:/g', '')
+                ;
+        }
+
         $("body").delegate(".show", "click", function () {
             $('.show').prop('disabled', true);
             var client_name = $("#client_name").val();
@@ -555,7 +624,6 @@
                 "plan_id": plan_id,
                 "data": JSON.stringify(plans)
             }
-            console.log(plans.length)
             if (plans.length == 0) {
                 swal("input atleast one spot");
                 $('.show').prop('disabled', false);
