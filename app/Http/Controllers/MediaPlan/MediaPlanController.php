@@ -7,6 +7,8 @@ use Illuminate\Support\Collection;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Models\Criteria;
 use Vanguard\Models\MediaPlan;
+use Vanguard\Models\MediaPlanProgram;
+use Vanguard\Services\Inventory\StoreMediaPlanProgram;
 use Vanguard\Services\MediaPlan\ValidateCriteriaForm;
 use Vanguard\Services\MediaPlan\SuggestPlan;
 use Vanguard\Services\MediaPlan\StorePlanningSuggestions;
@@ -342,9 +344,11 @@ class MediaPlanController extends Controller
 			'labeldates' => $labeldates,
 			'days' => $days,
 		);
+		$media_plans_programs = MediaPlanProgram::all();
 		return view('agency.mediaPlan.complete_plan')->with('fayaFound', $fayaFound)
 													        ->with('clients', $clients)
-                                                            ->with('days', $this->listDays());
+                                                            ->with('days', $this->listDays())
+                                                            ->with('media_plans_programs', $media_plans_programs);
 	
 	}
 
@@ -361,83 +365,92 @@ class MediaPlanController extends Controller
 			return $formattedDates;
 	}
 
+    public function labeldates($start, $end)
+     {
+        date_default_timezone_set('UTC');
 
-public function labeldates($start, $end)
- {
-	date_default_timezone_set('UTC');
+        $diff = strtotime($end) - strtotime($start);
 
-	$diff = strtotime($end) - strtotime($start);
+        $daysBetween = floor($diff/(60*60*24));
 
-	$daysBetween = floor($diff/(60*60*24));
+        $formattedDates = array();
+        for ($i = 0; $i <= $daysBetween; $i++) {
+            $tmpDate = date('Y-m-d', strtotime($start . " + $i days"));
+            $formattedDates[] = date('F d', strtotime($tmpDate));
+        }
+        return $formattedDates;
+    }
 
-	$formattedDates = array();
-	for ($i = 0; $i <= $daysBetween; $i++) {
-		$tmpDate = date('Y-m-d', strtotime($start . " + $i days"));
-		$formattedDates[] = date('F d', strtotime($tmpDate));
-	}    
-	return $formattedDates;
-}
+    public function dates($start, $end) {
+        date_default_timezone_set('UTC');
 
+        $diff = strtotime($end) - strtotime($start);
 
-public function dates($start, $end) {
-	date_default_timezone_set('UTC');
+        $daysBetween = floor($diff/(60*60*24));
 
-	$diff = strtotime($end) - strtotime($start);
-
-	$daysBetween = floor($diff/(60*60*24));
-
-	$formattedDates = array();
-	for ($i = 0; $i <= $daysBetween; $i++) {
-		$tmpDate = date('Y-m-d', strtotime($start . " + $i days"));
-		$formattedDates[] = date('Y-m-d', strtotime($tmpDate));
-	}    
-	return $formattedDates;
-}
+        $formattedDates = array();
+        for ($i = 0; $i <= $daysBetween; $i++) {
+            $tmpDate = date('Y-m-d', strtotime($start . " + $i days"));
+            $formattedDates[] = date('Y-m-d', strtotime($tmpDate));
+        }
+        return $formattedDates;
+    }
 
 
 
 
-public function CompletePlan(Request $request)
-{
-	$programs_id = json_decode($request->get('data'));
-	$programs_id = collect($programs_id);
-	$programs_id = $this->groupById($programs_id);
-	$client_name = $request->get('client_name');
-	$product_name = $request->get('product_name');
-	$plan_id = $request->get('plan_id');
-	foreach($programs_id as $key => $value){
-		DB::table('media_plan_suggestions')
-		->where('id', $key)
-		->update(['material_length' => $value]);
-	} 
+    public function CompletePlan(Request $request)
+    {
+        $programs_id = json_decode($request->get('data'));
+        $programs_id = collect($programs_id);
+        $programs_id = $this->groupById($programs_id);
+        $client_name = $request->get('client_name');
+        $product_name = $request->get('product_name');
+        $plan_id = $request->get('plan_id');
+        foreach($programs_id as $key => $value){
+            DB::table('media_plan_suggestions')
+            ->where('id', $key)
+            ->update(['material_length' => $value]);
+        }
 
-	DB::table('media_plans')
-	->where('id', $plan_id)
-	->update(['client_id' => $client_name, 'product_name' => $product_name,]);
-	
-
-	return response()->json(['msg'=>"Good to go", 'msgs'=>$programs_id]);
+        DB::table('media_plans')
+        ->where('id', $plan_id)
+        ->update(['client_id' => $client_name, 'product_name' => $product_name,]);
 
 
-}
+        return response()->json(['msg'=>"Good to go", 'msgs'=>$programs_id]);
 
 
-public function groupById($query)
-{
-
-	$result = $query->groupBy(['id', 'material_length']);
+    }
 
 
+    public function groupById($query)
+    {
 
-	return $result;
+        $result = $query->groupBy(['id', 'material_length']);
 
 
-}
 
-public function groupByDuration($query)
-{
-	return $query->groupBy('material_length');
-}
+        return $result;
 
+
+    }
+
+    public function groupByDuration($query)
+    {
+        return $query->groupBy('material_length');
+    }
+
+    public function storePrograms(Request $request)
+    {
+        $store_media_plan_program_service = new StoreMediaPlanProgram($request->days, $request->program_name,$request->station,
+                                                $request->start_time, $request->end_time);
+        $store_media_plan_program = $store_media_plan_program_service->storeMediaPlanProgram();
+        if($store_media_plan_program){
+            return ['programs' => $store_media_plan_program, 'media_plan_suggestion_id' => $request->media_plan_suggestion_id];
+        }else{
+            return 'error';
+        }
+    }
 
 }

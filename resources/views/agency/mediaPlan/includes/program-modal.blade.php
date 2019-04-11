@@ -1,8 +1,8 @@
 @foreach($fayaFound['programs_stations'] as $value)
     <div class="modal_contain" style="width: 1000px;" id="program_modal_15{{ $value->id }}">
-        <div class="the_frame clearfix mb border_top_color pt load_stuff">
-            <form action="{{ route('program.management.store') }}" method="post">
-                {{ csrf_field() }}
+        <div class="the_frame clearfix mb border_top_color pt load_this_div">
+            <form action="{{ route('media_plan.program.store') }}" method="post" id="submit_15{{ $value->id }}">
+                <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <div class="margin_center col_11 clearfix pt4 create_fields">
 
                     <div class="clearfix mb3">
@@ -22,6 +22,7 @@
                         </div>
                     </div>
 
+                    <input type="hidden" name="station" value="{{ $value->station }}">
                     <p class='m-b'>Time Belt</p>
                     <hr>
                     <p><br></p>
@@ -54,7 +55,7 @@
                     <!-- end -->
                     <!-- end -->
                     <div class="mb4 align_right pt">
-                        <input type="submit" value="Create Program" class="btn uppercased mb4">
+                        <input type="submit" value="Create Program" id="submit_15{{ $value->id }}" class="btn uppercased mb4">
                     </div>
 
                 </div>
@@ -64,7 +65,7 @@
 
     <div class="modal_contain" style="width: 1000px;" id="program_modal_30{{ $value->id }}">
         <div class="the_frame clearfix mb border_top_color pt load_stuff">
-            <form action="{{ route('program.management.store') }}" method="post">
+            <form action="{{ route('media_plan.program.store') }}" method="post">
                 {{ csrf_field() }}
                 <div class="margin_center col_11 clearfix pt4 create_fields">
 
@@ -127,7 +128,7 @@
 
     <div class="modal_contain" style="width: 1000px;" id="program_modal_45{{ $value->id }}">
         <div class="the_frame clearfix mb border_top_color pt load_stuff">
-            <form action="{{ route('program.management.store') }}" method="post">
+            <form action="{{ route('media_plan.program.store') }}" method="post">
                 {{ csrf_field() }}
                 <div class="margin_center col_11 clearfix pt4 create_fields">
 
@@ -190,7 +191,7 @@
 
     <div class="modal_contain" style="width: 1000px;" id="program_modal_60{{ $value->id }}">
         <div class="the_frame clearfix mb border_top_color pt load_stuff">
-            <form action="{{ route('program.management.store') }}" method="post">
+            <form action="{{ route('media_plan.program.store') }}" method="post">
                 {{ csrf_field() }}
                 <div class="margin_center col_11 clearfix pt4 create_fields">
 
