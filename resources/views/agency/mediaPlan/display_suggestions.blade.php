@@ -196,7 +196,7 @@
       </div>
       <div class="col_6 column">
         <button type="button" id="mpo_filters" class="btn small_btn right show">Create Plan</button>
-        <button type="button" id="save_progress" class="btn small_btn right show mr-2">Save</button>
+        <button type="button" id="save_progress" class="btn small_btn right save mr-2">Save</button>
       </div>
     </div>
 
@@ -427,18 +427,18 @@
 
 
 
-			$("body").delegate(".show", "click", function() {
+			$("body").delegate(".save", "click", function() {
                 var requesData = {
                     "_token": "{{ csrf_token() }}",
                     "data":plans
                 };
-                $('.show').prop('disabled', true);                
+                $('.save').prop('disabled', true);                
 
                 var RequestData = JSON.stringify(requesData);
 
                    if(plans.length == 0 ){
                             swal("Select the staion you want to add");
-                            $('.show').prop('disabled', false);  
+                            $('.save').prop('disabled', false);  
                         }else{
                         $.ajax({
                             type: "POST",
@@ -451,9 +451,56 @@
                             success:function(data){
                         
                                     swal("Success!", "Plans successfully selected!", "success")
-                                    .then((value) => {
+
+                            }
+                           
+
+                           
+                        });
+                    }
+                
+			 console.log(plans)
+			
+			 
+		  });
+            
+
+
+			$("body").delegate(".show", "click", function() {
+                var requesData = {
+                    "_token": "{{ csrf_token() }}",
+                    "data":plans
+                };
+                $('.show').prop('disabled', true);                
+
+                var RequestData = JSON.stringify(requesData);
+
+                   if(plans.length == 0 ){
+                       if ($('#where-it-is-going').length < 1) {
+                        toastr.error("Select the staion you want to add")
+
+                            $('.show').prop('disabled', false); 
+                     
+                            }else{
+                         location.href = '/agency/media-plan/createplan/'+fifthSegment;
+                            }
+                            
+                        }else{
+                        $.ajax({
+                            type: "POST",
+                            dataType: 'json',
+                            url: "/agency/media-plan/select_plan",
+                            data: {
+                                "_token": "{{ csrf_token() }}",
+                                "data": JSON.stringify(plans)
+                            },
+                            success:function(data){
+                        
+
+                                     toastr.success("Plans successfully selected!")
+                                    setTimeout(function() {
                                         location.href = '/agency/media-plan/createplan/'+fifthSegment;
-                                    });
+                                       }, 4000);
 
                             }
                            

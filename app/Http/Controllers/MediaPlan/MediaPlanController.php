@@ -122,7 +122,7 @@ class MediaPlanController extends Controller
 		if (count($plans) == 0) {
 			return redirect()->route("agency.media_plan.criteria_form");
 		}
-		// also get the filter values list to use to render with the filter dropdowns
+        // also get the filter values list to use to render with the filter dropdowns
 		$filterValues = $this->getFilterFieldValues($id);
 		return view('agency.mediaPlan.display_suggestions')
 			->with('fayaFound', $plans)
