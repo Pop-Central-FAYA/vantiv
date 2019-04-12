@@ -313,12 +313,14 @@ Route::group(['middleware' => 'auth'], function () {
     /**
      * Discounts
      */
-    Route::get('discounts', ['as' => 'discount.index', 'uses' => 'DiscountController@index']);
-    Route::post('discount/store', ['as' => 'discount.store', 'uses' => 'DiscountController@store']);
-    Route::post('discount/{discount}/update', ['as' => 'discount.update', 'uses' => 'DiscountController@update']);
-    Route::get('discount/{discount}/delete', ['as' => 'discount.delete', 'uses' => 'DiscountController@destroy']);
-
-    Route::get('discount/filter', 'DiscountController@filterByPublisher');
+    Route::group(['prefix' => 'discount'], function () {
+       Route::get('/', 'DiscountController@index')->name('discount.index');
+       Route::get('/data-table', 'DiscountController@dataTable');
+       Route::get('/create', 'DiscountController@create')->name('discount.create');
+       Route::get('/edit/{id}', 'DiscountController@edit')->name('discount.edit');
+       Route::post('/store', 'DiscountController@store')->name('discount.store');
+       Route::post('/update/{id}', 'DiscountController@update')->name('discount.update');
+    });
 
     /**
      * MPOs

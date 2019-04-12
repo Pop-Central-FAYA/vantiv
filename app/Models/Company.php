@@ -46,4 +46,9 @@ class Company extends Base
     {
         return $this->hasMany(MediaProgram::class);
     }
+
+    public function discounts()
+    {
+        return $this->hasMany(Discount::class);
+    }
 }

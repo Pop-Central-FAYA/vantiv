@@ -16,11 +16,6 @@
             @if(Auth::user()->hasRole('ssp.super_admin') || Auth::user()->hasRole('ssp.admin') || Auth::user()->hasRole('ssp.scheduler'))
                 <li class="invoice_icon {{ Request::is('mpos/*') ? 'active' : ''  }}"><a href="{{ route('all-mpos') }}">MPO</a></li>
             @endif
-            @if(Auth::user()->hasRole('ssp.super_admin') || Auth::user()->hasRole('ssp.admin'))
-                @if(Auth::user()->companies->count() > 1)
-                    <li class="discount_icon {{ Request::is('discounts') ? 'active' : ''  }}"><a href="{{ route('discount.index') }}">Discounts</a></li>
-                @endif
-            @endif
             <!-- <li class="settings_icon {{ Request::is('agency/user/manage') ? 'active' : '' }}"><a href="">User Management</a></li> -->
         </ul>
     </div>
