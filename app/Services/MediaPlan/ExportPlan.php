@@ -39,7 +39,7 @@ class ExportPlan
         foreach ($suggestions as $suggestion) {
             foreach ($suggestion->material_length as $key => $value) {
                 $gross_unit_rate = $value->unit_rate;
-                $volume_discount = 0;
+                $volume_discount = $value->volume_disc;
                 $value_less = $gross_unit_rate * ((100 - $volume_discount) / 100);
                 $net_unit_rate = $value_less * ((100 - $agency_commission) / 100);
                 $total_spots = $this->totalSpotsPerDuration($value->days);
@@ -51,7 +51,7 @@ class ExportPlan
                     'week_days' => $this->days_of_the_week($suggestion->day),
                     'media_type' => $suggestion->media_type,
                     'gross_unit_rate' => $gross_unit_rate,
-                    'volume_discount' => 0,
+                    'volume_discount' => $volume_discount,
                     'agency_commission' => $agency_commission,
                     'value_less' => $value_less,
                     'net_unit_rate' => $net_unit_rate,
@@ -67,7 +67,6 @@ class ExportPlan
         }
 
         return $this->groupByMediumMaterialLength($new_array);
-        // return json_decode($this->summaryGroupByMedium($summaryData));
     }
 
     public function groupByMediumMaterialLength($data)
