@@ -40,6 +40,11 @@ class GetSuggestedPlans
                 }
             })->get();
 
+            $selected_plans = DB::table("media_plan_suggestions")
+            ->select(DB::Raw("*, total_audience as audience"))
+            ->where("status", 1)->get();
+
+
         if ($plans->isEmpty()) {
             return array();
         }
@@ -50,7 +55,8 @@ class GetSuggestedPlans
             "total_radio" => 0,
             "total_audiences" => $total_audience,
             "programs_stations" => $plans->sortByDesc("total_audience"),
-            "stations" => $plans->groupBy("station")
+            "stations" => $plans->groupBy("station"),
+            "selected" => $selected_plans->sortByDesc("total_audience")
         );
         return $output;
     }
