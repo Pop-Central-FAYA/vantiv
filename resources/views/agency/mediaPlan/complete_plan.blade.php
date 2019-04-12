@@ -20,35 +20,33 @@
             {{-- <h2 class="sub_header">Selected stations & programs</h2> --}}
         </div>
     </div>
+    @foreach($default_material_length as $duration)
+        <div class="the_frame client_dets mb4 load_this_div">
 
-
-
-    <div class="the_frame client_dets mb4 load_this_div">
-
-        <div class="filters border_bottom clearfix">
-            <div class="column col_8 p-t">
-                <p class="uppercased weight_medium revealer" id="15SecRevealer">15 sec </p>
+            <div class="filters border_bottom clearfix">
+                <div class="column col_8 p-t">
+                    <p class="uppercased weight_medium revealer" id="{{ $duration }}SecRevealer">{{ $duration }} sec </p>
+                </div>
+                <div class="column col_4 p-t right">
+                    <div class="select_wrap">
+                        <select name="month" id="month">
+                            <option>Select Month</option>
+                            <option value="">January</option>
+                            <option value="">February</option>
+                            <option value="">March</option>
+                            <option value="">April</option>
+                            <option value="">May</option>
+                            <option value="">June</option>
+                        </select>
+                    </div>
+                </div>
             </div>
-            <div class="column col_4 p-t right">
-              <div class="select_wrap">
-                <select name="month" id="month">
-                    <option>Select Month</option>
-                    <option value="">January</option>
-                    <option value="">February</option>
-                    <option value="">March</option>
-                    <option value="">April</option>
-                    <option value="">May</option>
-                    <option value="">June</option>
-                </select>
-              </div>
-            </div>
-        </div>
 
-        <!-- campaigns table -->
-        <div id="table-scroll" class="table-scroll">
-            <div class="accordion-group table-wrap" id="15SecBox">
-                <table class="display default_mpo filter_mpo" id="default_mpo_table">
-                    <thead>
+            <!-- campaigns table -->
+            <div id="table-scroll" class="table-scroll_{{ $duration }}">
+                <div class="accordion-group table-wrap" id="{{ $duration }}SecBox">
+                    <table class="display default_mpo filter_mpo" id="default_mpo_table_{{ $duration }}">
+                        <thead>
                         <tr>
                             <th class="fixed-side">Station</th>
                             <th class="fixed-side">Day</th>
@@ -57,288 +55,54 @@
                             <th class="fixed-side">Unit Rate</th>
                             <th class="fixed-side">Volume Disc</th>
                             @for ($i = 0; $i < count($fayaFound['labeldates']); $i++)
-                            <th>{{ $fayaFound['labeldates'][$i] }}</th>
+                                <th>{{ $fayaFound['labeldates'][$i] }}</th>
                             @endfor
-    
+
                         </tr>
-                    </thead>
-                    <tbody>
-    
+                        </thead>
+                        <tbody>
+
                         @foreach($fayaFound['programs_stations'] as $value)
-                        <tr class="{{ $value->program}}">
-                            <td id="btn" class="fixed-side">{{ $value->station}}</td>
-                            <td id="btn" class="fixed-side">{{ $value->day}}</td>
-                            <td id="btn" class="fixed-side"> {{ $value->start_time}} {{ $value->end_time}}</td>
+                            <tr class="{{ $value->program}}">
+                                <td id="btn" class="fixed-side">{{ $value->station}}</td>
+                                <td id="btn" class="fixed-side">{{ $value->day}}</td>
+                                <td id="btn" class="fixed-side"> {{ $value->start_time}} {{ $value->end_time}}</td>
 
-                            <td id="btn" class="fixed-side update_program_{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->day.'_'.$value->station.'_'.$value->start_time)) }}">@if($value->program == 'Unknown Program') <a href="#program_modal_15{{ $value->id }}" class="modal_click">{{ $value->program}}</a> @else <a href="#edit_program_modal_15{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->day.'_'.$value->station.'_'.$value->start_time)) }}" class="modal_click">{{ $value->program}}</a> @endif</td>
-                            <td id="btn" class="fixed-side new_program_{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->day.'_'.$value->station.'_'.$value->start_time)) }}" style="display: none;"><a href="#program_modal_15{{ $value->id }}" class="modal_click"></a></td>
-                            <td><input type="number" value="0" id="ur15{{$value->id}}" data_12="{{ $value->id}}"
-                                    data_11="60" data_10="" data_9=""></td>
-                            <td> <input type="number" value="0" id="vd15{{$value->id}}" data_12="{{ $value->id}}"
-                                    data_11="60" data_10="" data_9=""></td>
+                                <td id="btn" class="fixed-side update_program_{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->day.'_'.$value->station.'_'.$value->start_time)) }}">
+                                    @if($value->program == 'Unknown Program')
+                                        <a href="#program_modal_{{ $duration }}{{ $value->id }}" class="modal_click">{{ $value->program}}</a>
+                                    @else
+                                        <a href="#edit_program_modal_{{ $duration }}{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->day.'_'.$value->station.'_'.$value->start_time)) }}" class="modal_click">
+                                            {{ $value->program}}
+                                        </a>
+                                    @endif</td>
+                                <td id="btn" class="fixed-side new_program_{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->day.'_'.$value->station.'_'.$value->start_time)) }}" style="display: none;">
+                                    <a href="#program_modal_{{ $duration }}{{ $value->id }}" class="modal_click"></a>
+                                </td>
+                                <td><input type="number" value="0" id="ur{{ $duration }}{{$value->id}}" data_12="{{ $value->id}}"
+                                           data_11="60" data_10="" data_9=""></td>
+                                <td> <input type="number" value="0" id="vd{{ $duration }}{{$value->id}}" data_12="{{ $value->id}}"
+                                            data_11="60" data_10="" data_9=""></td>
 
-                            @for ($i = 0; $i < count($fayaFound['dates']); $i++) @if($fayaFound['days'][$i]==$value->day )
-                              <td> <input type="number" id="15{{$value->id}}" class="day_input" data_12="{{ $value->id}}"
-                                      data_11="15" data_10="{{$fayaFound['dates'][$i]}}"
-                                      data_9="{{$fayaFound['days'][$i]}}"></td>
-                              @else
-                              <td id=""><input class="disabled_input" type="number" placeholder="" name="lname" disabled></td>
-                              @endif
-                            @endfor    
-                        </tr>
-    
+                                @for ($i = 0; $i < count($fayaFound['dates']); $i++) @if($fayaFound['days'][$i]==$value->day )
+                                    <td> <input type="number" id="{{ $duration }}{{$value->id}}" class="day_input" data_12="{{ $value->id}}"
+                                                data_11="15" data_10="{{$fayaFound['dates'][$i]}}"
+                                                data_9="{{$fayaFound['days'][$i]}}"></td>
+                                @else
+                                    <td id=""><input class="disabled_input" type="number" placeholder="" name="lname" disabled></td>
+                                @endif
+                                @endfor
+                            </tr>
+
                         @endforeach
-    
-                    </tbody>
-                </table>
-                <!-- end -->
+
+                        </tbody>
+                    </table>
+                    <!-- end -->
+                </div>
             </div>
         </div>
-    </div>
-
-
-
-    <div class="the_frame client_dets mb4">
-
-        <div class="filters border_bottom clearfix">
-            <div class="column col_8 p-t">
-                <p class="uppercased weight_medium revealer" id="30SecRevealer">30 sec </p>
-            </div>
-            <div class="column col_4 p-t right">
-              <div class="select_wrap">
-                <select name="month">
-                    <option>Select Month</option>
-                    <option value="">January</option>
-                    <option value="">February</option>
-                    <option value="">March</option>
-                    <option value="">April</option>
-                    <option value="">May</option>
-                    <option value="">June</option>
-                    <option value="">July</option>
-                </select>
-              </div>
-            </div>
-        </div>
-
-        <!-- campaigns table -->
-        <div id="table-scroll-30" class="table-scroll">
-          <div class="accordion-group table-wrap" id="30SecBox">
-              <table lass="display default_mpo filter_mpo" id="default_mpo_table_30">
-                  <thead>
-                    <tr>
-                      <th class="fixed-side">Station</th>
-                        <th class="fixed-side">Day</th>
-                      <th class="fixed-side">Time belt</th>
-                      <th class="fixed-side">Programme</th>
-                      <th>Unit Rate</th>
-                      <th>Volume Disc</th>
-                      @for ($i = 0; $i < count($fayaFound['dates']); $i++) <th>{{ $fayaFound['labeldates'][$i] }}</th>
-                          @endfor
-                    </tr>
-                  </thead>
-                  <tbody>
-
-                      @foreach($fayaFound['programs_stations'] as $value)
-                      <tr class="{{ $value->program}}">
-                          <td id="btn" class="fixed-side">{{ $value->station}}</td>
-                          <td id="btn" class="fixed-side">{{ $value->day}}</td>
-                          <td id="btn" class="fixed-side"> {{ $value->start_time}} {{ $value->end_time}}</td>
-
-                          <td id="btn" class="fixed-side update_program_{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->day.'_'.$value->station.'_'.$value->start_time)) }}">@if($value->program == 'Unknown Program') <a href="#program_modal_15{{ $value->id }}" class="modal_click">{{ $value->program}}</a> @else <a href="#edit_program_modal_15{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->day.'_'.$value->station.'_'.$value->start_time)) }}" class="modal_click">{{ $value->program}}</a> @endif</td>
-                          <td id="btn" class="fixed-side new_program_{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->day.'_'.$value->station.'_'.$value->start_time)) }}" style="display: none;"></td>
-                          <td> <input type="number" value="0" id="ur30{{$value->id}}" data_12="{{ $value->id}}"
-                                  data_11="60" data_10="" data_9=""></td>
-                          <td> <input type="number" value="0" id="vd30{{$value->id}}" data_12="{{ $value->id}}"
-                                  data_11="60" data_10="" data_9=""></td>
-
-
-                          @for ($i = 0; $i < count($fayaFound['dates']); $i++) @if($fayaFound['days'][$i]==$value->day )
-                              <td> <input type="number" id="30{{$value->id}}" class="day_input" data_12="{{ $value->id}}"
-                                      data_11="30" data_10="{{$fayaFound['dates'][$i]}}"
-                                      data_9="{{$fayaFound['days'][$i]}}">
-                              </td>
-                              @else
-                              <td id=""><input class="disabled_input" type="number" placeholder="" name="lname" disabled></td>
-                            @endif
-                          @endfor
-
-
-
-
-                      </tr>
-
-                      @endforeach
-
-                  </tbody>
-              </table>
-              <!-- end -->
-          </div>
-        </div>
-    </div>
-
-
-
-
-
-    <div class="the_frame client_dets mb4">
-
-        <div class="filters border_bottom clearfix">
-            <div class="column col_8 p-t">
-                <p class="uppercased weight_medium revealer" id="45SecRevealer">45 sec </p>
-            </div>
-            <div class="column col_4 p-t right">
-              <div class="select_wrap">
-                <select name="month">
-                    <option>Select Month</option>
-                    <option value="">January</option>
-                    <option value="">February</option>
-                    <option value="">March</option>
-                    <option value="">April</option>
-                    <option value="">May</option>
-                    <option value="">June</option>
-                    <option value="">July</option>
-                </select>
-              </div>
-            </div>
-        </div>
-
-        <!-- campaigns table -->
-        <div id="table-scroll-45" class="table-scroll">
-          <div class="accordion-group table-wrap" id="45SecBox">
-              <table lass="display default_mpo filter_mpo" id="default_mpo_table_45">
-                  <thead>
-                      <tr>
-                          <th class="fixed-side">Station</th>
-                          <th class="fixed-side">Day</th>
-                          <th class="fixed-side">Time belt</th>
-                          <th class="fixed-side">Programme</th>
-                          <th>Unit Rate</th>
-                          <th>Volume Disc</th>
-                          @for ($i = 0; $i < count($fayaFound['dates']); $i++)
-                            <th>{{ $fayaFound['labeldates'][$i] }}</th>
-                          @endfor
-                      </tr>
-                  </thead>
-                  <tbody>
-
-                      @foreach($fayaFound['programs_stations'] as $value)
-                      <tr class="{{ $value->program}}">
-                          <td id="btn" class="fixed-side">{{ $value->station}}</td>
-
-                          <td id="btn" class="fixed-side">{{ $value->day}}</td>
-                          <td id="btn" class="fixed-side"> {{ $value->start_time}} {{ $value->end_time}}</td>
-                          <td id="btn" class="fixed-side update_program_{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->day.'_'.$value->station.'_'.$value->start_time)) }}">@if($value->program == 'Unknown Program') <a href="#program_modal_15{{ $value->id }}" class="modal_click">{{ $value->program}}</a> @else <a href="#edit_program_modal_15{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->day.'_'.$value->station.'_'.$value->start_time)) }}" class="modal_click">{{ $value->program}}</a> @endif</td>
-                          <td id="btn" class="fixed-side new_program_{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->day.'_'.$value->station.'_'.$value->start_time)) }}" style="display: none;"></td>
-                          <td> <input type="number" value="0" id="ur45{{$value->id}}" data_12="{{ $value->id}}"
-                                  data_11="60" data_10="" data_9=""></td>
-                          <td> <input type="number" value="0" id="vd45{{$value->id}}" data_12="{{ $value->id}}"
-                                  data_11="60" data_10="" data_9=""></td>
-
-
-                          @for ($i = 0; $i < count($fayaFound['dates']); $i++) 
-                            @if($fayaFound['days'][$i]==$value->day )
-                              <td>
-                                <input type="number" id="45{{$value->id}}" class="day_input" data_12="{{ $value->id}}"
-                                  data_11="45" data_10="{{$fayaFound['dates'][$i]}}"
-                                  data_9="{{$fayaFound['days'][$i]}}"></td>
-                              @else
-                              <td id=""><input class="disabled_input" type="number" placeholder="" name="lname" disabled></td>
-                            @endif
-                          @endfor
-                      </tr>
-
-                      @endforeach
-
-                  </tbody>
-              </table>
-              <!-- end -->
-          </div>
-        </div>
-    </div>
-
-
-
-    <div class="the_frame client_dets mb4">
-
-        <div class="filters border_bottom clearfix">
-            <div class="column col_8 p-t">
-                <p class="uppercased weight_medium revealer" id="60SecRevealer">60 sec </p>
-            </div>
-            <div class="column col_4 p-t right">
-              <div class="select_wrap">
-                <select name="month">
-                    <option>Select Month</option>
-                    <option value="">January</option>
-                    <option value="">February</option>
-                    <option value="">March</option>
-                    <option value="">April</option>
-                    <option value="">May</option>
-                    <option value="">June</option>
-                    <option value="">July</option>
-                </select>
-              </div>
-            </div>
-        </div>
-
-        <!-- campaigns table -->
-        <div id="table-scroll-60" class="table-scroll">
-          <div class="accordion-group table-wrap" id="60SecBox">
-              <table lass="display default_mpo filter_mpo" id="default_mpo_table_60">
-                  <thead>
-                    <tr>
-                      <th class="fixed-side">Station</th>
-                        <th class="fixed-side">Day</th>
-                      <th class="fixed-side">Time belt</th>
-                      <th class="fixed-side">Programme</th>
-                      <th>Unit Rate</th>
-                      <th>Volume Disc</th>
-                      @for ($i = 0; $i < count($fayaFound['labeldates']); $i++) <th>{{ $fayaFound['labeldates'][$i] }}
-                          </th>
-                          @endfor
-
-                    </tr>
-                  </thead>
-                  <tbody>
-
-                      @foreach($fayaFound['programs_stations'] as $value)
-                      <tr class="{{ $value->program}}">
-                          <td id="btn" class="fixed-side">{{ $value->station}}</td>
-                          <td id="btn" class="fixed-side">{{ $value->day}}</td>
-                          <td id="btn" class="fixed-side"> {{ $value->start_time}} {{ $value->end_time}}</td>
-
-                          <td id="btn" class="fixed-side update_program_{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->day.'_'.$value->station.'_'.$value->start_time)) }}">@if($value->program == 'Unknown Program') <a href="#program_modal_15{{ $value->id }}" class="modal_click">{{ $value->program}}</a> @else <a href="#edit_program_modal_15{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->day.'_'.$value->station.'_'.$value->start_time)) }}" class="modal_click">{{ $value->program}}</a> @endif</td>
-                          <td id="btn" class="fixed-side new_program_{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->day.'_'.$value->station.'_'.$value->start_time)) }}" style="display: none;"></td>
-                          <td> <input type="number" value="0" id="ur60{{$value->id}}" data_12="{{ $value->id}}"
-                                  data_11="60" data_10="" data_9=""></td>
-                          <td> <input type="number" value="0" id="vd60{{$value->id}}" data_12="{{ $value->id}}"
-
-                          <td>
-                            <input type="number" value="0" id="vd60{{$value->id}}" data_12="{{ $value->id}}"
-                                  data_11="60" data_10="" data_9="">
-                          </td>
-                          @for ($i = 0; $i < count($fayaFound['dates']); $i++) 
-                            @if($fayaFound['days'][$i]==$value->day )
-                              <td> <input type="number" id="60{{$value->id}}" class="day_input" data_12="{{ $value->id}}"
-                                      data_11="60" data_10="{{$fayaFound['dates'][$i]}}"
-                                      data_9="{{$fayaFound['days'][$i]}}" data_8="">
-                              </td>
-                            @else
-                              <td id=""><input class="disabled_input" type="number" placeholder="" name="lname" disabled></td>
-                            @endif
-                          @endfor
-                      </tr>
-
-                      @endforeach
-
-                  </tbody>
-              </table>
-
-              <!-- end -->
-          </div>
-        </div>
-    </div>
-
-
+    @endforeach
 
     <div class="clearfix mb">
       <div class="input_wrap column col_4">
@@ -368,9 +132,6 @@
         <input type="hidden" id="plan_id" value="{{$fayaFound['programs_stations'][0]->media_plan_id}}">
       </div>
     </div>
-
-
-
 
     <div class="action_footer client_dets mb4 mt4">
       <div class="col_6 column">
@@ -407,30 +168,21 @@
     <?php echo "var days =".json_encode($days).";\n"; ?>
     <?php echo "var media_plans =".json_encode($fayaFound['programs_stations']).";\n"; ?>
     <?php echo "var media_plan_programs =".json_encode($media_plans_programs).";\n"; ?>
-    $('#15SecRevealer').click(function() {
-        $('#15SecBox').toggle('medium');
-    })
-    $('#30SecRevealer').click(function() {
-        $('#30SecBox').toggle('medium');
-    })
-    $('#45SecRevealer').click(function() {
-        $('#45SecBox').toggle('medium');
-    })
-    $('#60SecRevealer').click(function() {
-        $('#60SecBox').toggle('medium');
-    })
+    <?php echo "var durations =".json_encode($default_material_length).";\n"; ?>
+    $.each(durations, function (index, value) {
+        $('#'+value+'SecRevealer').click(function() {
+            $('#'+value+'SecBox').toggle('medium');
+        });
+    });
+
     $(document).ready(function () {
         $('#simplemodal-overlay').hide();
-        $('#15SecBox').hide();
-        $('#30SecBox').hide();
-        $('#45SecBox').hide();
-        $('#60SecBox').hide();
+        $.each(durations, function (index, value) {
+            $('#'+value+'SecBox').hide();
 
-        //
-        $("#default_mpo_table").clone(true).appendTo('#table-scroll').addClass('clone');
-        $("#default_mpo_table_30").clone(true).appendTo('#table-scroll-30').addClass('clone');
-        $("#default_mpo_table_45").clone(true).appendTo('#table-scroll-45').addClass('clone');
-        $("#default_mpo_table_60").clone(true).appendTo('#table-scroll-60').addClass('clone');
+            $("#default_mpo_table_"+value).clone(true).appendTo('#table-scroll_'+value).addClass('clone');
+        });
+
         var plans = [];
         var url = window.location.href;
         var trim = url.split('/');

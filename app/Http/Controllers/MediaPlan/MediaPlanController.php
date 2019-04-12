@@ -22,11 +22,13 @@ use Session;
 use Maatwebsite;
 use Maatwebsite\Excel\Facades\Excel;
 use Vanguard\Exports\MediaPlanExport;
+use Vanguard\Services\Traits\DefaultMaterialLength;
 use Vanguard\Services\Traits\ListDayTrait;
 
 class MediaPlanController extends Controller
 {
     use ListDayTrait;
+    use DefaultMaterialLength;
     public function index($value='')
     {
     	//Broadcaster Dashboard module
@@ -326,7 +328,8 @@ class MediaPlanController extends Controller
 		return view('agency.mediaPlan.complete_plan')->with('fayaFound', $fayaFound)
 													        ->with('clients', $clients)
                                                             ->with('days', $this->listDays())
-                                                            ->with('media_plans_programs', $media_plans_programs);
+                                                            ->with('media_plans_programs', $media_plans_programs)
+                                                            ->with('default_material_length', $this->getDefaultMaterialLength());
 	
 	}
 
