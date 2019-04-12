@@ -1,12 +1,8 @@
 <?php
 
-namespace Vanguard;
+namespace Vanguard\Models;
 
-
-use Illuminate\Database\Eloquent\Model;
-use Vanguard\CustomisePlan\MediaPlan;
-
-class MediaPlanSugestion extends Model
+class MediaPlanSuggestions extends Base
 {
     protected $table = 'media_plan_suggestions';
 

@@ -8,7 +8,10 @@ use Vanguard\Http\Controllers\Controller;
 use Vanguard\Models\Criteria;
 use Vanguard\Models\MediaPlan;
 use Vanguard\Models\MediaPlanProgram;
+use Vanguard\Models\MediaPlanProgramRating;
+use Vanguard\Models\MediaPlanSuggestion;
 use Vanguard\Services\Inventory\StoreMediaPlanProgram;
+use Vanguard\Services\MediaPlan\GetSuggestionListWithProgramRating;
 use Vanguard\Services\MediaPlan\ValidateCriteriaForm;
 use Vanguard\Services\MediaPlan\SuggestPlan;
 use Vanguard\Services\MediaPlan\StorePlanningSuggestions;
@@ -298,7 +301,8 @@ class MediaPlanController extends Controller
 	
 	public function CreatePlan($id)
     {
-		$plans = DB::table('media_plan_suggestions')->where('media_plan_id', $id)->where('status', 1)->get();
+        $get_suggestion_with_ratings = new GetSuggestionListWithProgramRating($id);
+        $plans = $get_suggestion_with_ratings->getMediaPlanSuggestionWithProgram();
 		$plans_details = DB::table('media_plans')->where('id', $id)->get();
 
 		$clients = new AllClient(\Auth::user()->companies->first()->id);
@@ -425,10 +429,14 @@ class MediaPlanController extends Controller
     public function storePrograms(Request $request)
     {
         $store_media_plan_program_service = new StoreMediaPlanProgram($request->days, $request->program_name,$request->station,
-                                                $request->start_time, $request->end_time);
+                                                $request->start_time, $request->end_time,$request->unit_rate, $request->duration);
         $store_media_plan_program = $store_media_plan_program_service->storeMediaPlanProgram();
+        $rating = MediaPlanProgramRating::where([
+            ['station', $request->station],
+            ['program_name', $request->program_name]
+        ])->get();
         if($store_media_plan_program){
-            return ['programs' => $store_media_plan_program, 'media_plan_suggestion_id' => $request->media_plan_suggestion_id];
+            return ['programs' => $store_media_plan_program['media_programs'], 'ratings' => $rating];
         }else{
             return 'error';
         }
