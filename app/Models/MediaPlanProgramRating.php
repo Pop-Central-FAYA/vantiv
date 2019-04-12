@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class MediaPlanProgramRating extends Model
 {
-    protected $fillable = ['media_plan_program_id', 'duration', 'price'];
+    protected $fillable = ['program_name', 'duration', 'price', 'station'];
 
     public function media_plan_program()
     {

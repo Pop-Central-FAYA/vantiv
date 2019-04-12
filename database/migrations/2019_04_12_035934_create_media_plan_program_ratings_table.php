@@ -15,9 +15,10 @@ class CreateMediaPlanProgramRatingsTable extends Migration
     {
         Schema::create('media_plan_program_ratings', function (Blueprint $table) {
             $table->string('id');
-            $table->string('media_plan_program_id', 25)->index();
+            $table->string('program_name')->index();
             $table->integer('duration');
             $table->integer('price');
+            $table->string('station')->index();
             $table->timestamps();
         });
     }

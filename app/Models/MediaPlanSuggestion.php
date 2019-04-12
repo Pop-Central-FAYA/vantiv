@@ -20,4 +20,9 @@ class MediaPlanSuggestion extends Base
     {
         return $this->belongsTo(MediaPlan::class);
     }
+
+    public function media_plan_suggestion_ratings()
+    {
+        return $this->hasMany(MediaPlanSuggestionRating::class);
+    }
 }
