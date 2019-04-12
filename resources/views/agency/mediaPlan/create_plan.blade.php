@@ -64,7 +64,7 @@
                                     @endforeach
                                 </select>
 
-                                @if($errors->has('client'))
+                                @if($errors->has('media_type'))
                                     <strong>{{ $errors->first('media_type') }}</strong>
                                 @endif
                             </div>
@@ -123,23 +123,23 @@
 
                     <!-- Target Age group -->
                     <div class="clearfix mb">
-                        <div class="input_wrap column col_6{{  $errors->has('min_age') ? ' has-error' : '' }}">
+                        <div class="input_wrap column col_6{{  $errors->has('age_groups') ? ' has-error' : '' }}">
                             <label class="small_faint">Min. Age</label>
                             <input type="number" name="age_groups[0][min]" placeholder="Minimum Age">
 
-                            @if($errors->has('min_age'))
+                            @if($errors->has('age_groups'))
                                 <strong>
-                                    <span class="help-block">{{ $errors->first('min_age') }}</span>
+                                    <span class="help-block">{{ $errors->first('age_groups') }}</span>
                                 </strong>
                             @endif
                         </div>
 
-                        <div class="input_wrap column col_6{{ $errors->has('max_age') ? ' has-error' : '' }}">
+                        <div class="input_wrap column col_6{{ $errors->has('age_groups') ? ' has-error' : '' }}">
                             <label class="small_faint">Max. Age</label>
                             <input type="number" name="age_groups[0][max]" placeholder="Maximum Age">
-                            @if($errors->has('max_age'))
+                            @if($errors->has('age_groups'))
                                 <strong>
-                                    <span class="help-block">{{ $errors->first('max_age') }}</span>
+                                    <span class="help-block">{{ $errors->first('age_groups') }}</span>
                                 </strong>
                             @endif
                         </div>
@@ -177,7 +177,7 @@
                         <div class="input_wrap column col_12">
                             <label class="small_faint">Social Class</label>
 
-                            <div class="select_wrap {{ $errors->has('gender') ? ' has-error' : '' }}">
+                            <div class="select_wrap {{ $errors->has('social_class') ? ' has-error' : '' }}">
                                 <select class="js-example-basic-multiple" name="social_class[]" id="social_class" multiple="multiple">
                                     @foreach($criterias as $criteria)
                                         @if ($criteria->name == "social_classes")
@@ -194,8 +194,8 @@
                                     @endforeach
                                 </select>
                                 
-                                @if($errors->has('gender'))
-                                    <strong>{{ $errors->first('gender') }}</strong>
+                                @if($errors->has('social_class'))
+                                    <strong>{{ $errors->first('social_class') }}</strong>
                                 @endif
                             </div>
                         </div>
@@ -267,7 +267,7 @@
                     <div class="clearfix mb">
                         <div class="input_wrap column col_12{{ $errors->has('agency_commission') ? ' has-error' : '' }}">
                             <label class="small_faint">Agency Commission</label>
-                            <input type="number" name="agency_commission" id="agency_commission" placeholder="Enter Agency Commission">
+                            <input type="number" name="agency_commission" id="agency_commission" value="{{ old('agency_commission') }}" placeholder="Enter Agency Commission">
                             @if($errors->has('agency_commission'))
                                 <strong>
                                     <span class="help-block">{{ $errors->first('agency_commission') }}</span>
@@ -280,7 +280,7 @@
                     <div class="clearfix mb">
                         <div class="input_wrap column col_12{{ $errors->has('campaign_name') ? ' has-error' : '' }}">
                             <label class="small_faint">Campaign Name</label>
-                            <input type="text" name="campaign_name" id="campaign_name" placeholder="Enter Campaign Name">
+                            <input type="text" name="campaign_name" id="campaign_name" value="{{ old('campaign_name') }}" placeholder="Enter Campaign Name">
                             @if($errors->has('campaign_name'))
                                 <strong>
                                     <span class="help-block">{{ $errors->first('campaign_name') }}</span>
@@ -344,14 +344,21 @@
                 var start_date = $("#start_date").val();
                 var end_date = $("#end_date").val();
                 var campaign_name = $("#campaign_name").val();
-                if(start_date == '' && end_date == ''){
+                if(start_date === '' && end_date === ''){
                     toastr.error('Start date and End date are required');
                     $('.load_this_div').css({
                         opacity : 1
                     });
                     return;
                 }
-                if(campaign_name == ""){
+                if(new Date(start_date) < new Date() || new Date(end_date) < new Date()){
+                    toastr.error('Start date and or End date cannot be lesser than Today´s date');
+                    $('.load_this_div').css({
+                        opacity : 1
+                    });
+                    return;
+                }
+                if(campaign_name === ""){
                     toastr.error('Campaign Name is required');
                     $('.load_this_div').css({
                         opacity : 1
@@ -366,29 +373,48 @@
                     return;
                 }
                 var formdata = $("#criteria_form").serialize();
-                try {
-                    $.ajax({
-                        cache: false,
-                        type: "POST",
-                        url: '/agency/media-plan/create-plan',
-                        dataType: 'json',
-                        data: formdata,
-                        success: function (data) {
-                            if (data.status == 'success') {
-                                toastr.success(data.message);
-                                location.href = '/agency/media-plan/customise/' + data.redirect_url;
-                            } else {
-                                toastr.error(data.message);
-                                $('.load_this_div').css({
-                                    opacity: 1
-                                });
-                                return;
-                            }
+                var weHaveSuccess = false;
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: '/agency/media-plan/create-plan',
+                    dataType: 'json',
+                    data: formdata,
+                    success: function (data) {
+                        if (data.status === 'success') {
+                            toastr.success(data.message);
+                            location.href = '/agency/media-plan/customise/' + data.redirect_url;
+                        } else {
+                            toastr.error(data.message);
+                            $('.load_this_div').css({
+                                opacity: 1
+                            });
+                            return;
                         }
-                    })
-                }catch (e) {
-                    toastr.error('Oops, something went wrong with your request, contact administrator');
-                }
+                        weHaveSuccess = true;
+                    },
+                    error : function (xhr) {
+                        if(xhr.status === 500){
+                            toastr.error('An unknown error has occurred, please try again');
+                            $('.load_this_div').css({
+                                opacity: 1
+                            });
+                            return;
+                        }else if(xhr.status === 503){
+                            toastr.error('The request took longer than expected, please try again');
+                            $('.load_this_div').css({
+                                opacity: 1
+                            });
+                            return;
+                        }else{
+                            toastr.error('An unknown error has occurred, please try again');
+                            $('.load_this_div').css({
+                                opacity: 1
+                            });
+                            return;
+                        }
+                    }
+                })
             });
         });
     </script>
