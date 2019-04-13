@@ -90,7 +90,7 @@
                             {{-- <td width="25%"><input type="checkbox" /> </td> --}}
                             <td width="">{{ $key }}</td>
                             <td width="50%">
-                            {{ $sum_audience}}
+                            {{ number_format($sum_audience) }}
                             </td>
                             {{-- <td width="25%">
                                 <button class="btn small_btn"> Details </button>
@@ -118,11 +118,11 @@
 
                             <tr>
                                 <td id="stat{{ $Programe->id }}"> {{ $Programe->station }}</td>
-                                <td id="day{{ $Programe->id }}"class="center">{{ $Programe ->day}} </td>
-                                <td id="time{{ $Programe->id }}" class="center">{{ $Programe -> start_time}} - {{ $Programe -> end_time}}</td>
+                                <td id="day{{ $Programe->id }}"class="center">{{ $Programe->day}} </td>
+                                <td id="time{{ $Programe->id }}" class="center">{{ substr($Programe->start_time,0,5) }} - {{ substr($Programe->end_time,0,5) }}</td>
                                 
-                                <td id="prog{{ $Programe->id }}"class="center">{{ $Programe -> program }}</td>
-                                <td id="aud{{ $Programe->id }}"class="center">{{ $Programe ->total_audience}}</td>
+                                <td id="prog{{ $Programe->id }}"class="center">{{ $Programe->program }}</td>
+                                <td id="aud{{ $Programe->id }}"class="center">{{ number_format($Programe->total_audience) }}</td>
                                 <td class="center">
                                     <button data-program="{{ $Programe->id }}" class="plus-btn aBtn" data_15="first15" id="{{ $Programe->id }}" type="button"><i class="material-icons">add</i></button>	
                                 </td>

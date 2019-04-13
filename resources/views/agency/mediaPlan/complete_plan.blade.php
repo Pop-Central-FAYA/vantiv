@@ -72,14 +72,14 @@
                                 <tr class="{{ $value->program}}">
                                     <td id="btn" class="fixed-side">{{ $value->station}}</td>
                                     <td id="btn" class="fixed-side">{{ $value->day}}</td>
-                                    <td id="btn" class="fixed-side"> {{ $value->start_time}} {{ $value->end_time}}</td>
+                                    <td id="btn" class="fixed-side"> {{ $value->start_time }} - {{ $value->end_time}}</td>
 
                                     <td id="btn" class="fixed-side update_program_{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->day.'_'.$value->station.'_'.$value->start_time)) }}">
                                         @if($value->program == 'Unknown Program')
-                                            <a href="#program_modal_{{ $duration }}{{ $value->id }}" class="modal_click">{{ $value->program}}</a>
+                                            <a href="#program_modal_{{ $duration }}{{ $value->id }}" class="modal_click">{{ $value->program }}</a>
                                         @else
                                             <a href="#edit_program_modal_{{ $duration }}{{ $value->id }}" class="modal_click">
-                                                {{ $value->program}}
+                                                {{ $value->program }}
                                             </a>
                                         @endif
                                     </td>
@@ -92,10 +92,12 @@
                                     </td>
                                     @foreach(json_decode($value->duration_lists) as $key => $duration_list)
                                         @if($duration_list == $duration)
-                                            <td><input type="number" readonly value="{{ json_decode($value->rate_lists)[$key] }}"
+                                            <td>
+                                                <input type="number" readonly value="{{ json_decode($value->rate_lists)[$key] }}"
                                                        class="update_rate_{{ $duration_list.'_'.json_decode($value->rate_lists)[$key] }}"
                                                        id="ur{{ $duration }}{{$value->id}}" data_12="{{ $value->id}}"
-                                                       data_11="60" data_10="" data_9=""></td>
+                                                       data_11="60" data_10="" data_9="">
+                                            </td>
                                         @endif
                                     @endforeach
 
