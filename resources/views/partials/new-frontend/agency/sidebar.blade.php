@@ -18,9 +18,6 @@
             @if(Auth::user()->hasRole('finance') || Auth::user()->hasRole('admin'))
                 <li class="wallet_icon {{ Request::is('agency/wallets/*') ? 'active' :  Request::is('agency/wallets/wallet-statement') ? 'active' : ''  }}"><a href="{{ route('agency_wallet.statement') }}">Wallet</a></li>
             @endif
-            @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('finance') || Auth::user()->hasRole('compliance'))
-            <li class="campaign_icon {{ Request::is('/agency/media-plan') ? 'active' : ''  }}"><a href="{{ route('agency.media_plans') }}">Media Plans</a></li>
-            @endif
         <!-- <li class="settings_icon {{ Request::is('agency/user/manage') ? 'active' : '' }}"><a href="{{ route('agency.user_management') }}">User Management</a></li> -->
         </ul>
     </div>
