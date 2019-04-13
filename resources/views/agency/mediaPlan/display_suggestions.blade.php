@@ -15,9 +15,6 @@
         @endif
    
 
-<button id="hide">Hide</button>
-<button id="show">Show</button>
-
     <!-- subheader -->
         <div class="sub_header clearfix mb pt">
             <div class="column col_6">
@@ -27,11 +24,28 @@
 
 
         <div>
+
 <div class="the_frame client_dets mb4">
     
     <div class="filters border_bottom clearfix">
         <div class="column col_6 p-t">
-            <p class="uppercased weight_medium mt2">Available Stations and Times</p>
+            <div class="column col_6">
+                <p class="uppercased weight_medium mt2">Available Stations and Times</p>
+            </div>
+            
+            <!-- <button id="hide">Hide</button>
+            <button id="show">Show</button> -->
+            <!-- <div class="the_stats the_frame column col_6 clearfix"> -->
+            <div class="column col_6 clearfix">
+                <div class="column col_3">
+                    <span class="weight_medium small_faint uppercased" id="view-table">Table</span>
+                </div>
+
+                <div class="column col_3">
+                    <span class="weight_medium small_faint uppercased" id="view-graph">Graph</span>
+                </div>
+            </div>
+
         </div>
         <div class="column col_6 clearfix">
             <div class="col_3 column">
@@ -70,7 +84,7 @@
     </div>
 
 <!-- campaigns table -->
-<div class="accordion-group scroll-y">
+<div id="timebelts-table" class="accordion-group scroll-y">
     <table class="display default_mpo filter_mpo fixed_headers" id="default_mpo_table">
         <thead>
             <tr>
@@ -154,7 +168,7 @@
 
   <div>
 
-<div class="the_frame client_dets mb4">
+<div id="timebelts-graph" class="the_frame client_dets mb4" style="display:none">
 
 <div class="filters border_bottom clearfix">
     <div class="column col_8 p-t">
@@ -458,6 +472,16 @@
     </script>
      <script type="text/javascript">
         $(document).ready(function() {
+            $('#view-table').on('click', function() {
+                $('#timebelts-graph').hide();
+                $('#timebelts-table').show();
+            });
+
+            $('#view-graph').on('click', function() {
+                $('#timebelts-table').hide();
+                $('#timebelts-graph').show();
+            });
+            
             var url = window.location.href;
                 var trim = url.split('/');
                 var fifthSegment = trim[6];
