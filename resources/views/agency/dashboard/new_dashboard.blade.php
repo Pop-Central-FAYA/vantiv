@@ -20,13 +20,13 @@
         <!-- TOGGLE CAMPAIGN DETAILS AND MEDIA PLAN DETAILS -->
         <!-- main stats -->
         @if(!Auth::user()->hasRole('compliance'))
-        <div class="the_stats the_frame clearfix mb4">
+        <div class="clearfix mb4">
             <div class="column col_6">
-                <span class="weight_medium small_faint uppercased" id="view-campaigns">Display All Campaigns</span>
+                <button id="view-campaigns"  class="btn full block_disp uppercased align_center">Display All Campaigns</button>
             </div>
 
             <div class="column col_6">
-                <span class="weight_medium small_faint uppercased" id="view-media-plans">Display All Media Plans</span>
+                <button id="view-media-plans"  class="btn full block_disp uppercased align_center">Display All Media Plans</button>
             </div>
         </div>
         @endif
@@ -370,9 +370,14 @@
     {{--datatables--}}
     <script>
         $(document).ready(function( $ ) {
+            // hide media plan dashboard on document ready
+            $('#media-plans-dashboard').hide();
+            $('#view-media-plans').addClass('inactive-dashboard-toggle-btn');
+
             flatpickr(".flatpickr", {
                 altInput: true,
             });
+            
             var Datefilter =  $('.dashboard_campaigns').DataTable({
                 dom: 'Blfrtip',
                 paging: true,
@@ -431,9 +436,6 @@
                 ],
             });
 
-            // hide media plan dashboard on document ready
-            $('#media-plans-dashboard').hide();
-
             $('#dashboard_filter_media_plans').on('click', function() {
                 mediaPlanfilter.draw();
             });
@@ -445,11 +447,15 @@
             $('#view-campaigns').on('click', function() {
                 $('#media-plans-dashboard').hide();
                 $('#campaigns-dashboard').show();
+                $('#view-campaigns').removeClass('inactive-dashboard-toggle-btn');
+                $('#view-media-plans').addClass('inactive-dashboard-toggle-btn');
             });
 
             $('#view-media-plans').on('click', function() {
                 $('#campaigns-dashboard').hide();
                 $('#media-plans-dashboard').show();
+                $('#view-campaigns').addClass('inactive-dashboard-toggle-btn');
+                $('#view-media-plans').removeClass('inactive-dashboard-toggle-btn');
             });
         } );
     </script>
@@ -462,6 +468,12 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.5.1/css/buttons.dataTables.min.css" type="text/css"/>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedheader/3.1.2/css/fixedHeader.dataTables.min.css">
     <style>
+        .inactive-dashboard-toggle-btn {
+            background: transparent !important;
+            border: 1px solid #44C1C9 !important;
+            color: #000 !important;
+        }
+
         .dataTables_filter {
             display: none;
         }
