@@ -103,7 +103,9 @@
                                     @endforeach
 
                                     <td>
-                                        <input type="number" value="0" id="vd{{ $duration }}{{$value->id}}" data_12="{{ $value->id}}" data_11="60" data_10="" data_9="">
+                                        <a href="#discount_modal_{{ $duration.'_'.$value->id }}" class="modal_click">
+                                            <input type="number" readonly value="0" id="vd{{ $duration }}{{$value->id}}" data_12="{{ $value->id}}" data_11="60" data_10="" data_9="">
+                                        </a>
                                     </td>
 
                                     @for ($i = 0; $i < count($fayaFound['dates']); $i++) @if($fayaFound['days'][$i]==$value->day )
@@ -119,6 +121,40 @@
                                     @endif
                                     @endfor
                                 </tr>
+
+                                {{--modal for discount--}}
+                                <div class="modal_contain" style="width: 1000px;" id="discount_modal_{{ $duration.'_'.$value->id }}">
+                                    <div class="the_frame clearfix mb border_top_color pt load_this_div">
+                                        <form action="{{ route('media_plan.volume_discount.store') }}" data-get_volume_id="{{ $duration.'_'.$value->id }}" class="submit_discount_form" method="post" id="submit_discount_{{ $duration.'_'.$value->id }}">
+                                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                            <div class="margin_center col_11 clearfix pt4 create_fields">
+
+                                                <div class="clearfix mb3">
+                                                    <div class="input_wrap column col_8 {{ $errors->has('discount') ? ' has-error' : '' }}">
+                                                        <label class="small_faint">Discount</label>
+                                                        <div class="">
+                                                            <input type="text" name="discount" required placeholder="Volume Discount">
+
+                                                            @if($errors->has('discount'))
+                                                                <strong>
+                                                                    <span class="help-block">
+                                                                        {{ $errors->first('discount') }}
+                                                                    </span>
+                                                                </strong>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <input type="hidden" name="station" value="{{ $value->station }}">
+                                                <div class="mb4 align_right pt">
+                                                    <input type="submit" value="Create Discount" id="submit_15{{ $value->id }}" class="btn uppercased mb4">
+                                                </div>
+
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
 
                             @endforeach
 
@@ -427,6 +463,59 @@
                         return;
                     }else{
                         toastr.error('An unknown error has occurred, please try again');
+                        $('.load_this_div').css({
+                            opacity: 1
+                        });
+                        return;
+                    }
+                },
+            })
+        });
+
+        $(".submit_discount_form").on('submit', function(e) {
+            $('.load_this_div').css({
+                opacity : 0.2
+            });
+            event.preventDefault(e);
+            var form_id = $(this).data('get_volume_id');
+            var formdata = $("#submit_discount_"+form_id).serialize();
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url : '/agency/media-plan/store-volume-discount',
+                dataType: 'json',
+                data: formdata,
+                success: function (data) {
+                    if(data.data){
+                        $("#refresh_this_stuff").load(location.href+" #refresh_this_stuff>*","");
+                        toastr.success('Volume Discount Added successful');
+                        $.modal.close();
+                        $('.load_this_div').css({
+                            opacity : 1
+                        });
+                        location.reload();
+                    }else{
+                        toastr.error('Cannot Add Volume Discount');
+                        $('.load_this_div').css({
+                            opacity : 1
+                        });
+                    }
+                },
+                error : function (xhr) {
+                    if(xhr.status === 500){
+                        toastr.error('An unknown error has occurred, please try again');
+                        $('.load_this_div').css({
+                            opacity: 1
+                        });
+                        return;
+                    }else if(xhr.status === 503){
+                        toastr.error('The request took longer than expected, please try again');
+                        $('.load_this_div').css({
+                            opacity: 1
+                        });
+                        return;
+                    }else{
+                        toastr.error('An unknown error has occurred, please try again nnn');
                         $('.load_this_div').css({
                             opacity: 1
                         });

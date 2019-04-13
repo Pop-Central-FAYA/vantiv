@@ -5,6 +5,7 @@ namespace Vanguard\Http\Controllers\MediaPlan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Vanguard\Http\Controllers\Controller;
+use Vanguard\Http\Controllers\Traits\CompanyIdTrait;
 use Vanguard\Models\Criteria;
 use Vanguard\Models\MediaPlan;
 use Vanguard\Models\MediaPlanProgram;
@@ -12,6 +13,7 @@ use Vanguard\Models\MediaPlanProgramRating;
 use Vanguard\Models\MediaPlanSuggestion;
 use Vanguard\Services\Inventory\StoreMediaPlanProgram;
 use Vanguard\Services\MediaPlan\GetSuggestionListWithProgramRating;
+use Vanguard\Services\MediaPlan\StoreMediaPlanVolumeDiscount;
 use Vanguard\Services\MediaPlan\ValidateCriteriaForm;
 use Vanguard\Services\MediaPlan\SuggestPlan;
 use Vanguard\Services\MediaPlan\StorePlanningSuggestions;
@@ -33,6 +35,8 @@ class MediaPlanController extends Controller
 {
     use ListDayTrait;
     use DefaultMaterialLength;
+    use CompanyIdTrait;
+
     public function index($value='')
     {
     	//Broadcaster Dashboard module
@@ -447,6 +451,17 @@ class MediaPlanController extends Controller
         ])->get();
         if($store_media_plan_program){
             return ['programs' => $store_media_plan_program['media_programs'], 'ratings' => $rating];
+        }else{
+            return 'error';
+        }
+    }
+
+    public function storeVolumeDiscount(Request $request)
+    {
+        $store_volume_discount_service = new StoreMediaPlanVolumeDiscount($request->discount, $request->station, $this->companyId());
+        $store_volume_discount = $store_volume_discount_service->storeMediaPlanDiscount();
+        if($store_volume_discount){
+            return ['data' => $store_volume_discount];
         }else{
             return 'error';
         }

@@ -464,6 +464,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/finish_plan', 'MediaPlan\MediaPlanController@CompletePlan');
             Route::get('/export/{id}', 'MediaPlan\MediaPlanController@exportPlan')->name('agency.media_plan.export');
             Route::post('/store-programs', 'MediaPlan\MediaPlanController@storePrograms')->name('media_plan.program.store');
+            Route::post('/store-volume-discount', 'MediaPlan\MediaPlanController@storeVolumeDiscount')->name('media_plan.volume_discount.store');
         });
     });
 
