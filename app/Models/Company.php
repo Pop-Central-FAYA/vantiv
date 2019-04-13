@@ -51,4 +51,9 @@ class Company extends Base
     {
         return $this->hasMany(Discount::class);
     }
+
+    public function media_plan_volume_discounts()
+    {
+        return $this->hasMany(MediaPlanVolumeDiscount::class);
+    }
 }
