@@ -104,7 +104,7 @@
 
                                     <td>
                                         <a href="#discount_modal_{{ $duration.'_'.$value->id }}" class="modal_click">
-                                            <input type="number" readonly value="0" id="vd{{ $duration }}{{$value->id}}" data_12="{{ $value->id}}" data_11="60" data_10="" data_9="">
+                                            <input type="number" readonly value="{{ $value->volume_discount }}" id="vd{{ $duration }}{{$value->id}}" data_12="{{ $value->id}}" data_11="60" data_10="" data_9="">
                                         </a>
                                     </td>
 
