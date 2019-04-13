@@ -21,7 +21,7 @@ class CriteriasTableSeeder extends Seeder
         		"Abia","Abuja","Adamawa","AkwaIbom","Anambra","Bauchi","Bayelsa","Benue","Borno","CrossRiver","Delta","Ebonyi","Edo","Ekiti","Enugu","Gombe","Imo","Jigawa","Kaduna","Kano","Katsina","Kebbi","Kogi","Kwara","Lagos","Nasarawa","Niger","Ogun","Ondo","Osun","Oyo","Plateau","Rivers","Sokoto","Taraba","Yobe", "Zamfara"
         	],
         	'genders' => [
-        		'Male', 'Female', 'Both'
+        		'Male', 'Female'
         	],
         	'living_standard_measures' => [
         		'LSM 1 (E)', 'LSM 2 (E)', 'LSM 3 (D)', 'LSM 4 (D)', 'LSM 5 (D)', 'LSM 6 (C2)', 'LSM 7 (C2)', 'LSM 8 (C2)', 'LSM 9 (C1)', 'LSM 10 (C1)', 'LSM 11 (B)', 'LSM 12 (A)'
