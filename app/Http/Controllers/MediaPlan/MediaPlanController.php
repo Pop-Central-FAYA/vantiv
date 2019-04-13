@@ -24,6 +24,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Vanguard\Exports\MediaPlanExport;
 use Vanguard\Services\Traits\DefaultMaterialLength;
 use Vanguard\Services\Traits\ListDayTrait;
+use Vanguard\Libraries\Utilities;
 
 class MediaPlanController extends Controller
 {
@@ -282,16 +283,28 @@ class MediaPlanController extends Controller
 
 	public function SelectPlanPost(Request $request)
     {
-		$programs_id = json_decode($request->get('data'));
-			$value = "";
-			foreach($programs_id as $program_id){
-				
-			DB::table('media_plan_suggestions')
-            ->where('id', $program_id->program_id)
-            ->update(['status' => 1]);
-			}
 
-		return response()->json(['status'=>"success", 'message'=> "Plan Selected successfully" ]);
+        $programs_id = json_decode($request->get('data'));
+         $media_plan_id = $request->get('mediaplan');
+            $value = "";
+            
+
+            try{
+                Utilities::switch_db('api')->transaction(function () use($programs_id, $media_plan_id, $value) {
+                   
+                    DB::table('media_plan_suggestions')
+                    ->where('media_plan_id', $media_plan_id)
+                    ->whereNotIn('id', $programs_id)
+                    ->update(['status' => 0, 'material_length' => $value]);
+                    DB::table('media_plan_suggestions')
+                    ->whereIn('id', $programs_id)
+                    ->update(['status' => 1]); 
+
+                });
+            }catch (\Exception $exception){
+                return response()->json(['status'=>'failed', 'message'=> "The current operation failed" ]);
+            }
+		return response()->json(['status'=>'Sucessfull', 'message'=> "Plan Selected successfully" ]);
 		
 
 	}
@@ -409,9 +422,6 @@ class MediaPlanController extends Controller
     {
 
         $result = $query->groupBy(['id', 'material_length']);
-
-
-
         return $result;
 
 
