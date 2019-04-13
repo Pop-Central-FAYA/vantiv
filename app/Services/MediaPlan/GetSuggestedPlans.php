@@ -39,9 +39,10 @@ class GetSuggestedPlans
                     }
                 }
             })->get();
-
+            $suggestionsGraph = $this-> groupForgraph($plans);
             $selected_plans = DB::table("media_plan_suggestions")
             ->select(DB::Raw("*, total_audience as audience"))
+            ->where("media_plan_id", $this->mediaPlanId)
             ->where("status", 1)->get();
 
 
@@ -56,8 +57,15 @@ class GetSuggestedPlans
             "total_audiences" => $total_audience,
             "programs_stations" => $plans->sortByDesc("total_audience"),
             "stations" => $plans->groupBy("station"),
-            "selected" => $selected_plans->sortByDesc("total_audience")
+            "selected" => $selected_plans->sortByDesc("total_audience"),
+            'total_graph' => $suggestionsGraph,
         );
         return $output;
     }
+    public function groupForgraph($query)
+	{
+		$result = $query->groupBy(['day', 'station']);
+		return $result;
+	}
+
 }
