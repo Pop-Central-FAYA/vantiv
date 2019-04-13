@@ -74,7 +74,6 @@
                     @foreach($filterValues['day_parts'] as $day_part)
                         <option value="{{ $day_part }}">{{ $day_part }}</option>
                     @endforeach
-                    <option value="">30mins</option>
                 </select>                    
             </div>
             <div class="col_3 column">
@@ -108,7 +107,7 @@
                             {{-- <td width="25%"><input type="checkbox" /> </td> --}}
                             <td width="">{{ $key }}</td>
                             <td width="50%">
-                            {{ $sum_audience}}
+                            {{ number_format($sum_audience) }}
                             </td>
                             {{-- <td width="25%">
                                 <button class="btn small_btn"> Details </button>
@@ -138,11 +137,11 @@
                             @php 
                                 $vid =$Programe->media_plan_id. $Programe->day. $Programe-> total_audience. str_replace(':', '', $Programe-> start_time) ;
                              @endphp
-                                <td id="stat{{ $vid }}"> <input type="hidden" id="unique{{ $vid }}" value="{{ $Programe ->id}}"  /> {{ $Programe->station }}</td>
-                                <td id="day{{ $vid }}"class="center">{{ $Programe ->day}} </td>
-                                <td id="time{{ $vid }}" class="center">{{ $Programe -> start_time}} - {{ $Programe -> end_time}}</td>
-                                <td id="prog{{ $vid }}"class="center">{{ $Programe -> program }}</td>
-                                <td id="aud{{$vid }}"class="center">{{ $Programe ->total_audience}}</td>
+                                <td id="stat{{ $vid }}"> <input type="hidden" id="unique{{ $vid }}" value="{{ $Programe->id}}"  /> {{ $Programe->station }}</td>
+                                <td id="day{{ $vid }}"class="center">{{ $Programe->day}} </td>
+                                <td id="time{{ $vid }}" class="center">{{ substr($Programe->start_time,0,5)}} - {{ substr($Programe->end_time,0,5)}}</td>
+                                <td id="prog{{ $vid }}"class="center">{{ $Programe->program }}</td>
+                                <td id="aud{{$vid }}"class="center">{{ number_format($Programe->total_audience)}}</td>
                                 <td class="center">
                                
                                     <button data-program="{{$vid}}" class="plus-btn aBtn" data_15="first15" id="{{$vid}}" type="button"><i class="material-icons">add</i></button>	
@@ -313,6 +312,9 @@
     <script>
         function goBack() {
             window.history.back();
+        }
+        function formatNumber(num) {
+          return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
         }
     </script>
     <script>
@@ -601,7 +603,6 @@
 			 
 		  });
 
-            
             function movePlanByDuration(prog_id, key, plan_station, plan_programe, plan_time, plan_day, plan_aud){
 
                 var ids = [];
@@ -611,7 +612,7 @@
                         ids.push(children[i].id); //get child id.
                     } 
                     ids.includes(key)
-                    if(ds.includes(key)){
+                    if(ids.includes(key)){
                         toastr.error("Already selected");
                         return;
                     }
