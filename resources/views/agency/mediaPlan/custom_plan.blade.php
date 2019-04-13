@@ -43,142 +43,136 @@
 
 <div class="the_frame client_dets mb4">
 
-        <div class="filters border_bottom clearfix">
-                    <div class="column col_8 p-t">
-                        <p class="uppercased weight_medium">Sugested Plans</p>
-                    </div>
-                <div class="column col_4 clearfix">
-                    <div class="col_5 column">
-                        <input type="text" name="start_date" class="flatpickr" placeholder="Start Date">
-                    </div>
-
-                    <div class="col_5 column">
-                        <input type="text" name="stop_date" class="flatpickr" placeholder="End Date">
-                    </div>
-
-                    <div class="col_1 column">
-                        <button type="button" id="mpo_filters" class="btn small_btn">Filter</button>
-                    </div>
-                </div>
+    <div class="filters border_bottom clearfix">
+        <div class="column col_8 p-t">
+            <p class="uppercased weight_medium">Sugested Plans</p>
         </div>
+        <div class="column col_4 clearfix">
+            <div class="col_5 column">
+                <input type="text" name="start_date" class="flatpickr" placeholder="Start Date">
+            </div>
 
-        <!-- campaigns table -->
-        <div class="accordion-group">
+            <div class="col_5 column">
+                <input type="text" name="stop_date" class="flatpickr" placeholder="End Date">
+            </div>
+
+            <div class="col_1 column">
+                <button type="button" id="mpo_filters" class="btn small_btn">Filter</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- campaigns table -->
+    <div class="accordion-group">
         <table lass="display default_mpo filter_mpo" id="default_mpo_table">
-													<thead>
-															<tr>
-																<th width="25%">All</th>
-																<th width="25%">Station</th>
-																<th width="25%">Audience</th>
-																	 <th width="25%"> actions</th>
-															</tr>
-														</thead>
-                                                        </table>
-							<section class="accordion-group__accordion">
-								<header class="accordion-group__accordion-head">
-											<table lass="display default_mpo filter_mpo" id="default_mpo_table">
-													<tbody>
+    		<thead>
+				<tr>
+					<th width="25%">All</th>
+					<th width="25%">Station</th>
+					<th width="25%">Audience</th>
+					<th width="25%"> actions</th>
+				</tr>
+			</thead>
+        </table>
+		<section class="accordion-group__accordion">
+			<header class="accordion-group__accordion-head">
+				<table lass="display default_mpo filter_mpo" id="default_mpo_table">
+					<tbody>
 
-															<tr  class="clickable">
-																	<td width="25%"><input type="checkbox"></td>
-																	<td width="25%">AIT</td>
-																	<td width="25%">434000</td>
-																		 <td width="25%"><button class="btn small_btn accordion-group__accordion-btn"> Details </button> <button class="btn small_btn"> Add </button> </td>
-															</tr>
-															</tbody>
-														</table>
-								</header>
-								<div class="accordion-group__accordion-panel">
-									<div class="accordion-group__accordion-content">
-											<table class="table table-hover">
-													<thead>
-												<tr>
-												<th>Station</th>
-													<th>Time belt</th>
-													<th>Day of the week</th>
-													<th>programe</th>
-														 <th>Audience</th>
-														 <th></th>
-												</tr>
-													</thead>
-																			 <tbody>
-													
-                                                                             <?php 
-for ($x = 5; $x <= 8; $x++) {
-?>
-				
-                            <tr>
-								<td id="statbtn_15<?php echo $x; ?>"> AIT </td>
-								<td id="timebtn_15<?php echo $x; ?>" class="center">21:30 - 13:00</td>
-								<td id="daybtn_15<?php echo $x; ?>"class="center">Thursday  </td>
-								<td id="progbtn_15<?php echo $x; ?>"class="center">Supper Story </td>
-								<td id="audbtn_15<?php echo $x; ?>"class="center">21000</td>
-									<td class="center">
-									<button data-program="btn_15<?php echo $x; ?>" class="btn btn-info aBtn" data_15="first15" id="btn_15<?php echo $x; ?>" type="button">ADD</button>	
-								</td>
+						<tr  class="clickable">
+							<td width="25%"><input type="checkbox"></td>
+							<td width="25%">AIT</td>
+							<td width="25%">434000</td>
+							<td width="25%">
+                                <button class="btn small_btn accordion-group__accordion-btn"> Details </button> <button class="btn small_btn"> Add </button>
+                            </td>
+						</tr>
+					</tbody>
+				</table>
+			</header>
+			<div class="accordion-group__accordion-panel">
+				<div class="accordion-group__accordion-content">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+							<th>Station</th>
+								<th>Time belt</th>
+								<th>Day of the week</th>
+								<th>programe</th>
+								 <th>Audience</th>
+								 <th></th>
 							</tr>
+						</thead>
+					    <tbody>
+								
+                        <?php for ($x = 5; $x <= 8; $x++) {?>
 
-                            <?php }?>
-																		 
-												 </table>
-																 
-									</div>
-								</div>
-							</section>
-                            <section class="accordion-group__accordion">
-								<header class="accordion-group__accordion-head">
-											<table lass="display default_mpo filter_mpo" id="default_mpo_table">
-												<tbody>
+                        <tr>
+							<td id="statbtn_15<?php echo $x; ?>"> AIT </td>
+							<td id="timebtn_15<?php echo $x; ?>" class="center">21:30 - 13:00</td>
+							<td id="daybtn_15<?php echo $x; ?>"class="center">Thursday  </td>
+							<td id="progbtn_15<?php echo $x; ?>"class="center">Supper Story </td>
+							<td id="audbtn_15<?php echo $x; ?>"class="center">21000</td>
+				           <td class="center">
+				               <button data-program="btn_15<?php echo $x; ?>" class="btn btn-info aBtn" data_15="first15" id="btn_15<?php echo $x; ?>" type="button">ADD</button>	
+			                </td>
+		                </tr>
 
-													<tr  class="clickable">
-														<td width="25%"><input type="checkbox"></td>
-														<td width="25%">NTA</td>
-														<td width="25%">434000</td>
-													    <td width="25%"><button class="btn small_btn accordion-group__accordion-btn"> Details </button> <button class="btn small_btn"> Add </button> </td>
-													</tr>
-											    </tbody>
-											</table>
-								</header>
-								<div class="accordion-group__accordion-panel">
-									<div class="accordion-group__accordion-content">
-											<table class="table table-hover">
-													<thead>
-												<tr>
-												<th>Station</th>
-													<th>Time belt</th>
-													<th>Day of the week</th>
-													<th>programe</th>
-														 <th>Audience</th>
-														 <th>Action</th>
-												</tr>
-													</thead>
-																			 <tbody>
-                               
-                                                    <?php 
-                                                    for ($x = 1; $x <= 4; $x++) {?>
-				
-                                                    <tr>
-								<td id="statbtn_15<?php echo $x; ?>"> NTA </td>
-								<td id="timebtn_15<?php echo $x; ?>" class="center">21:30 - 13:00</td>
-								<td id="daybtn_15<?php echo $x; ?>"class="center">Thursday  </td>
-								<td id="progbtn_15<?php echo $x; ?>"class="center">Supper Story </td>
-								<td id="audbtn_15<?php echo $x; ?>"class="center">21000</td>
-									<td class="center">
-									<button data-program="btn_15<?php echo $x; ?>" class="btn btn-info aBtn" data_15="first15" id="btn_15<?php echo $x; ?>" type="button">ADD</button>	
-								</td>
-							</tr>
+                        <?php }?>
+													 
+					</table>
+											 
+				</div>
+			</div>
+		</section>
+        <section class="accordion-group__accordion">
+			<header class="accordion-group__accordion-head">
+				<table lass="display default_mpo filter_mpo" id="default_mpo_table">
+					<tbody>
 
-                            <?php }?>
+						<tr  class="clickable">
+							<td width="25%"><input type="checkbox"></td>
+							<td width="25%">NTA</td>
+							<td width="25%">434000</td>
+							<td width="25%"><button class="btn small_btn accordion-group__accordion-btn"> Details </button> <button class="btn small_btn"> Add </button> </td>
+						</tr>
+					</tbody>
+				</table>
+			</header>
+			<div class="accordion-group__accordion-panel">
+				<div class="accordion-group__accordion-content">
+						<table class="table table-hover">
+							<thead>
+							    <tr>
+								    <th>Station</th>
+									<th>Time belt</th>
+									<th>Day of the week</th>
+									<th>programe</th>
+									<th>Audience</th>
+									<th>Action</th>
+							    </tr>
+							</thead>
+							<tbody>
+                                <?php for ($x = 1; $x <= 4; $x++) {?>
 
-																		 
-										</table>
-																 
-									</div>
-								</div>
-							</section>
-						</div>
+                                <tr>
+    								<td id="statbtn_15<?php echo $x; ?>"> NTA </td>
+    								<td id="timebtn_15<?php echo $x; ?>" class="center">21:30 - 13:00</td>
+    								<td id="daybtn_15<?php echo $x; ?>"class="center">Thursday  </td>
+    								<td id="progbtn_15<?php echo $x; ?>"class="center">Supper Story </td>
+    								<td id="audbtn_15<?php echo $x; ?>"class="center">21000</td>
+		                            <td class="center">
+				                       <button data-program="btn_15<?php echo $x; ?>" class="btn btn-info aBtn" data_15="first15" id="btn_15<?php echo $x; ?>" type="button">ADD</button>	
+			                        </td>
+		                        </tr>
+
+                                <?php }?>								 
+					    </table>						 
+				</div>
+			</div>
+		</section>
+	</div>
                       
-     
         <!-- end -->
 </div>
 
@@ -507,8 +501,7 @@ for ($x = 5; $x <= 8; $x++) {
 
             position: relative;
             display: inline-block;
-            text-transform: uppercase;
-        !important;
+            text-transform: uppercase !important;
 
         }
     </style>
