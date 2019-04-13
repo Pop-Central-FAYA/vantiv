@@ -133,7 +133,7 @@
                                                     <div class="input_wrap column col_8 {{ $errors->has('discount') ? ' has-error' : '' }}">
                                                         <label class="small_faint">Discount</label>
                                                         <div class="">
-                                                            <input type="text" name="discount" required placeholder="Volume Discount">
+                                                            <input type="text" name="discount" value="{{ $value->volume_discount }}" required placeholder="Volume Discount">
 
                                                             @if($errors->has('discount'))
                                                                 <strong>
