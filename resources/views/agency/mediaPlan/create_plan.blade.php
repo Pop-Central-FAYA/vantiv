@@ -329,7 +329,7 @@
             });
 
             $('#gender').select2({
-                placeholder: "Select Target Gender"
+                placeholder: "Please select gender"
             });
 
             $('#state').select2({
@@ -345,21 +345,21 @@
                 var end_date = $("#end_date").val();
                 var campaign_name = $("#campaign_name").val();
                 if(start_date === '' && end_date === ''){
-                    toastr.error('Start date and End date are required');
+                    toastr.error('Start and end dates are required.');
                     $('.load_this_div').css({
                         opacity : 1
                     });
                     return;
                 }
                 if(new Date(start_date) < new Date() || new Date(end_date) < new Date()){
-                    toastr.error('Start date and or End date cannot be lesser than Today´s date');
+                    toastr.error('Start or end date needs to be greater than the current date');
                     $('.load_this_div').css({
                         opacity : 1
                     });
                     return;
                 }
                 if(campaign_name === ""){
-                    toastr.error('Campaign Name is required');
+                    toastr.error('Campaign name is required');
                     $('.load_this_div').css({
                         opacity : 1
                     });
@@ -374,13 +374,33 @@
                 }
                 var formdata = $("#criteria_form").serialize();
                 var weHaveSuccess = false;
+                
                 $.ajax({
                     cache: false,
                     type: "POST",
                     url: '/agency/media-plan/create-plan',
                     dataType: 'json',
                     data: formdata,
+                    beforeSend: function(data) {
+                        // run toast showing progress
+                        toastr_options = {
+                            "progressBar": true,
+                            // "showDuration": "300",
+                            "preventDuplicates": true,
+                            "tapToDismiss": false,
+                            "hideDuration": "1",
+                            "timeOut": "300000000", //give a really long timeout, we should be done before that
+                            // "extendedTimeOut": "1000",
+                            // "showEasing": "swing",
+                            // "hideEasing": "linear",
+                            // "showMethod": "fadeIn",
+                            // "hideMethod": "fadeOut"
+                        }
+                        msg = "Generating ratings, please wait"
+                        toastr.info(msg, null, toastr_options)
+                    },
                     success: function (data) {
+                        toastr.clear();
                         if (data.status === 'success') {
                             toastr.success(data.message);
                             location.href = '/agency/media-plan/customise/' + data.redirect_url;
@@ -394,6 +414,7 @@
                         weHaveSuccess = true;
                     },
                     error : function (xhr) {
+                        toastr.clear();
                         if(xhr.status === 500){
                             toastr.error('An unknown error has occurred, please try again');
                             $('.load_this_div').css({
