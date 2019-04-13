@@ -603,11 +603,6 @@
 			 
 		  });
 
-            
-<<<<<<< resources/views/agency/mediaPlan/display_suggestions.blade.php
-            function movePlanByDuration(prog_id, plan_station, plan_programe, plan_time, plan_day, plan_aud){
-                
-=======
             function movePlanByDuration(prog_id, key, plan_station, plan_programe, plan_time, plan_day, plan_aud){
 
                 var ids = [];
@@ -617,7 +612,7 @@
                         ids.push(children[i].id); //get child id.
                     } 
                     ids.includes(key)
-                    if(ds.includes(key)){
+                    if(ids.includes(key)){
                         toastr.error("Already selected");
                         return;
                     }
@@ -626,7 +621,6 @@
                var trim = plan_station.split('/');
                         plan_station = trim[0];
 
->>>>>>> resources/views/agency/mediaPlan/display_suggestions.blade.php
                  var new_html = "";
                  let element = document.getElementById("selectedProgTable");
 
