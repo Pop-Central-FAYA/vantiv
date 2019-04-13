@@ -23,6 +23,7 @@ use Vanguard\Services\Mpo\MpoList;
 use Vanguard\Services\Traits\ListDayTrait;
 use Vanguard\Services\Traits\YearTrait;
 use Yajra\DataTables\DataTables;
+use Vanguard\Services\MediaPlan\GetMediaPlans;
 
 
 class DashboardController extends Controller
@@ -77,20 +78,34 @@ class DashboardController extends Controller
 
             $active_campaigns = Utilities::switch_db('api')->select("SELECT * FROM campaignDetails where agency = '$agency_id' AND status = 'active' GROUP BY campaign_id");
 
-            return view('agency.dashboard.new_dashboard')->with(['broadcaster' => $allBroadcasters,
-                                                                    'active_campaigns' => $active_campaigns,
-                                                                    'all_brands' => $all_brands,
-                                                                    'pending_invoices' => $pending_invoices,
-                                                                    'clients' => $clients,
-                                                                    'active' => $tv_rating['percentage_active'],
-                                                                    'pending' => $tv_rating['percentage_pending'],
-                                                                    'finished' => $tv_rating['percentage_finished'],
-                                                                    'radio_rating' => $radio_rating,
-                                                                    'active_radio' => $radio_rating['percentage_active'],
-                                                                    'pending_radio' => $radio_rating['percentage_pending'],
-                                                                    'finish_radio' => $radio_rating['percentage_finished'],
-                                                                    'agency_info' => $agency_details, 'campaigns_on_hold' => $campaigns_on_hold]);
+            $media_plan_service = new GetMediaPlans();
+            //count pending media plans
+            $count_pending_media_plans = $media_plan_service->pendingPlans();
 
+            //count approved media plans
+            $count_approved_media_plans = $media_plan_service->approvedPlans();
+
+            //count declined media plans
+            $count_declined_media_plans = $media_plan_service->declinedPlans();
+
+            return view('agency.dashboard.new_dashboard')->with([
+                'broadcaster' => $allBroadcasters,
+                'active_campaigns' => $active_campaigns,
+                'all_brands' => $all_brands,
+                'pending_invoices' => $pending_invoices,
+                'clients' => $clients,
+                'active' => $tv_rating['percentage_active'],
+                'pending' => $tv_rating['percentage_pending'],
+                'finished' => $tv_rating['percentage_finished'],
+                'radio_rating' => $radio_rating,
+                'active_radio' => $radio_rating['percentage_active'],
+                'pending_radio' => $radio_rating['percentage_pending'],
+                'finish_radio' => $radio_rating['percentage_finished'],
+                'agency_info' => $agency_details, 'campaigns_on_hold' => $campaigns_on_hold,
+                'count_pending_media_plans' => $count_pending_media_plans,
+                'count_approved_media_plans' => $count_approved_media_plans,
+                'count_declined_media_plans' => $count_declined_media_plans
+            ]);
         }
     }
 
@@ -172,6 +187,12 @@ class DashboardController extends Controller
     {
         $campaigns = new AllCampaign($request, $dashboard = true, $this->companyId());
         return $campaigns->run();
+    }
+
+    public function dashboardMediaPlans(Request $request)
+    {
+        $media_plan_service = new GetMediaPlans();
+        return $media_plan_service->run();
     }
 
     public function campaignManagementDashbaord()
