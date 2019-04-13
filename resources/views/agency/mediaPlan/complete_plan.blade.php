@@ -55,7 +55,7 @@
                             <tr>
                                 <th class="fixed-side">Station</th>
                                 <th class="fixed-side">Day</th>
-                                <th class="fixed-side">Time belt</th>
+                                <th class="fixed-side">Time Belt</th>
                                 <th class="fixed-side" id="last-fixed">Programme</th>
                                 <th class="fixed-side">Unit Rate</th>
                                 <th class="fixed-side">Volume Disc</th>

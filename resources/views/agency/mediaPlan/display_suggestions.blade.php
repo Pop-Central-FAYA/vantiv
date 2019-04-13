@@ -516,7 +516,7 @@
 			 
 		  });
             
-            function   movePlanByDuration(prog_id, plan_station, plan_programe, plan_time, plan_day, plan_aud){
+            function movePlanByDuration(prog_id, plan_station, plan_programe, plan_time, plan_day, plan_aud){
                 
                  var new_html = "";
                  let element = document.getElementById("selectedProgTable");

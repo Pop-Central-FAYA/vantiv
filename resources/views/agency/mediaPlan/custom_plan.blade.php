@@ -1,7 +1,7 @@
 @extends('layouts.faya_app')
 
 @section('title')
-    <title> FAYA | MP</title>
+    <title> FAYA | MP </title>
 @stop
 
 @section('content')
@@ -23,11 +23,11 @@
                     <select class="publishers" name="companies[]" id="publishers" multiple="multiple" >
                         @foreach(Auth::user()->companies as $company)
                             <option value="{{ $company->id }}"
-                                    @foreach($companies_id as $company_id)
-                                        @if($company_id->company_id == $company->id)
-                                            selected
-                                        @endif
-                                    @endforeach
+                                @foreach($companies_id as $company_id)
+                                    @if($company_id->company_id == $company->id)
+                                        selected
+                                    @endif
+                                @endforeach
                             >{{ $company->name }}</option>
                         @endforeach
 
@@ -95,28 +95,28 @@
 					<table class="table table-hover">
 						<thead>
 							<tr>
-							<th>Station</th>
-								<th>Time belt</th>
-								<th>Day of the week</th>
-								<th>programe</th>
-								 <th>Audience</th>
-								 <th></th>
+                                <th>Station</th>
+                                <th>Time Belt</th>
+                                <th>Day of the week</th>
+                                <th>programe</th>
+                                <th>Audience</th>
+                                <th></th>
 							</tr>
 						</thead>
 					    <tbody>
 								
-                        <?php for ($x = 5; $x <= 8; $x++) {?>
+                            <?php for ($x = 5; $x <= 8; $x++) {?>
 
-                        <tr>
-							<td id="statbtn_15<?php echo $x; ?>"> AIT </td>
-							<td id="timebtn_15<?php echo $x; ?>" class="center">21:30 - 13:00</td>
-							<td id="daybtn_15<?php echo $x; ?>"class="center">Thursday  </td>
-							<td id="progbtn_15<?php echo $x; ?>"class="center">Supper Story </td>
-							<td id="audbtn_15<?php echo $x; ?>"class="center">21000</td>
-				           <td class="center">
-				               <button data-program="btn_15<?php echo $x; ?>" class="btn btn-info aBtn" data_15="first15" id="btn_15<?php echo $x; ?>" type="button">ADD</button>	
-			                </td>
-		                </tr>
+                            <tr>
+                                <td id="statbtn_15<?php echo $x; ?>"> AIT </td>
+                                <td id="timebtn_15<?php echo $x; ?>" class="center">21:30 - 13:00</td>
+                                <td id="daybtn_15<?php echo $x; ?>"class="center">Thursday  </td>
+                                <td id="progbtn_15<?php echo $x; ?>"class="center">Supper Story </td>
+                                <td id="audbtn_15<?php echo $x; ?>"class="center">21000</td>
+                            <td class="center">
+                                <button data-program="btn_15<?php echo $x; ?>" class="btn btn-info aBtn" data_15="first15" id="btn_15<?php echo $x; ?>" type="button">ADD</button>	
+                                </td>
+                            </tr>
 
                         <?php }?>
 													 
@@ -145,7 +145,7 @@
 							<thead>
 							    <tr>
 								    <th>Station</th>
-									<th>Time belt</th>
+									<th>Time Belt</th>
 									<th>Day of the week</th>
 									<th>programe</th>
 									<th>Audience</th>
@@ -206,7 +206,7 @@
         		<thead>
         			<tr>
         				<th>Station</th>
-                        <th>Time belt</th>
+                        <th>Time Belt</th>
         				<th>Day of the week</th>
         				<th>Programme</th>
         				<th>Audience</th>
@@ -470,7 +470,7 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.5.1/css/buttons.dataTables.min.css" type="text/css"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
     <style>
-        .highcharts-grid path { display: none;}
+        .highcharts-grid path { display: none; }
         .highcharts-legend {
             display: none;
         }
