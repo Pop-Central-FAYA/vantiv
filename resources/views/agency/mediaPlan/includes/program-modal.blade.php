@@ -31,7 +31,7 @@
                             <div class="input_wrap column col_5 {{ $errors->has('unit_rate') ? ' has-error' : '' }}">
                                 <label class="small_faint">{{ $duration }} Seconds</label>
                                 <div class="">
-                                    <input type="number" name="unit_rate[]" placeholder="Enter Unit Rate">
+                                    <input min="0" type="number" name="unit_rate[]" placeholder="Enter Unit Rate">
                                     @if($errors->has('unit_rate'))
                                         <strong>
                                             <span class="help-block">

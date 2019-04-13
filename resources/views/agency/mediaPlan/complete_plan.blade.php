@@ -22,6 +22,7 @@
     <div class="sub_header clearfix mb pt">
         <div class="column col_6">
             {{-- <h2 class="sub_header">Selected stations & programs</h2> --}}
+            {{-- <p><a href="#ex1" rel="modal:open">Open Modal</a></p> --}}
         </div>
     </div>
     <div id="refresh_this_stuff">
@@ -70,9 +71,9 @@
                             @foreach($fayaFound['programs_stations'] as $value)
 
                                 <tr class="{{ $value->program}}">
-                                    <td id="btn" class="fixed-side">{{ $value->station}}</td>
-                                    <td id="btn" class="fixed-side">{{ $value->day}}</td>
-                                    <td id="btn" class="fixed-side"> {{ $value->start_time }} - {{ $value->end_time}}</td>
+                                    <td id="btn" class="fixed-side">{{ $value->station }}</td>
+                                    <td id="btn" class="fixed-side">{{ $value->day }}</td>
+                                    <td id="btn" class="fixed-side"> {{ substr($value->start_time,0,5) }} {{ substr($value->end_time,0,5) }}</td>
 
                                     <td id="btn" class="fixed-side update_program_{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->day.'_'.$value->station.'_'.$value->start_time)) }}">
                                         @if($value->program == 'Unknown Program')
@@ -101,15 +102,20 @@
                                         @endif
                                     @endforeach
 
-                                    <td> <input type="number" value="0" id="vd{{ $duration }}{{$value->id}}" data_12="{{ $value->id}}"
-                                                data_11="60" data_10="" data_9=""></td>
+                                    <td>
+                                        <input type="number" value="0" id="vd{{ $duration }}{{$value->id}}" data_12="{{ $value->id}}" data_11="60" data_10="" data_9="">
+                                    </td>
 
                                     @for ($i = 0; $i < count($fayaFound['dates']); $i++) @if($fayaFound['days'][$i]==$value->day )
-                                        <td> <input type="number" id="{{ $duration }}{{$value->id}}" class="day_input" data_12="{{ $value->id}}"
+                                        <td>
+                                            <input type="number" id="{{ $duration }}{{$value->id}}" class="day_input" data_12="{{ $value->id}}"
                                                     data_11="15" data_10="{{$fayaFound['dates'][$i]}}"
-                                                    data_9="{{$fayaFound['days'][$i]}}"></td>
+                                                    data_9="{{$fayaFound['days'][$i]}}">
+                                        </td>
                                     @else
-                                        <td id=""><input class="disabled_input" type="number" placeholder="" name="lname" disabled></td>
+                                        <td id="">
+                                            <input class="disabled_input" type="number" placeholder="" name="lname" disabled>
+                                        </td>
                                     @endif
                                     @endfor
                                 </tr>
@@ -169,6 +175,12 @@
     <br><br><br><br><br><br><br>
 
 </div>
+
+{{-- modal --}}
+<div id="ex1" class="modal">
+  <p>Thanks for clicking. That felt good.</p>
+  <a href="#" rel="modal:close">Close</a>
+</div>
 @stop
 
 @section('scripts')
@@ -180,13 +192,12 @@
   function goBack() {
     window.history.back();
   }
-  /*format TimeBelt(time) {
-    return time.substring(0, time.length - 3);
-  }*/
-
-  // fixed scroll tabll
 </script>
 <script>
+/*    function replaceDocument(id) {
+        id = '5cac9ebd77e1b';
+        window.history.pushState({}, '', `/agency/media-plan/createplan/${id}`);
+    } */
     <?php echo "var days =".json_encode($days).";\n"; ?>
     <?php echo "var media_plans =".json_encode($fayaFound['programs_stations']).";\n"; ?>
     <?php echo "var media_plan_programs =".json_encode($media_plans_programs).";\n"; ?>
@@ -393,6 +404,7 @@
                         $('.load_this_div').css({
                             opacity : 1
                         });
+                        location.reload();
                     }else{
                         toastr.error('Cannot Update program');
                         $('.load_this_div').css({

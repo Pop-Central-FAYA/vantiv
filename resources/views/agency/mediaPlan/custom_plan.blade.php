@@ -98,7 +98,7 @@
                                 <th>Station</th>
                                 <th>Time Belt</th>
                                 <th>Day of the week</th>
-                                <th>programe</th>
+                                <th>Program</th>
                                 <th>Audience</th>
                                 <th></th>
 							</tr>
