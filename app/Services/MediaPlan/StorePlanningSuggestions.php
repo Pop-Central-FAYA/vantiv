@@ -2,6 +2,7 @@
 
 namespace Vanguard\Services\MediaPlan;
 use Vanguard\Models\MediaPlan;
+use Vanguard\Models\MediaPlanProgram;
 use Vanguard\Models\MediaPlanSuggestion;
 use Auth;
 use Illuminate\Support\Collection;
@@ -42,7 +43,9 @@ class StorePlanningSuggestions
                 'media_plan_id' => $newMediaPlan->id,
                 'media_type' => $suggestion['media_type'],
                 'station' => $suggestion['station'],
-                'program' => $suggestion['program'],
+                'program' => $this->updateProgram($suggestion['station'], $suggestion['day'],
+                            $suggestion['start_time']) ? $this->updateProgram($suggestion['station'],
+                            $suggestion['day'], $suggestion['start_time'])->program_name : $suggestion['program'],
                 'day' => $suggestion['day'],
                 'start_time' => $suggestion['start_time'],
                 'end_time' => $suggestion['end_time'],
@@ -51,5 +54,15 @@ class StorePlanningSuggestions
             ]);
         }
         return $newMediaPlan;   
+    }
+
+    private function updateProgram($station, $day, $start_time)
+    {
+        return MediaPlanProgram::where([
+                                    ['station', $station],
+                                    ['day', $day],
+                                ])
+                                ->whereTime('start_time', $start_time)
+                                ->first();
     }
 }
