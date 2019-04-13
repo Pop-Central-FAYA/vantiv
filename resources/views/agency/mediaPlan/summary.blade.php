@@ -88,9 +88,9 @@
 
                 @if(Auth::user()->hasRole('admin'))
                     <div class="mb3">
-                        <a href="{{ route('agency.media_plan.approve', ['id'=>$media_plan->id]) }}" class="btn block_disp uppercased align_center mb3"><span class="_plus"></span>Approve Plan</a>
+                        <a href="{{ route('agency.media_plan.approve', ['id'=>$media_plan->id]) }}" class="btn block_disp uppercased align_center mb3"><i class="material-icons" style="margin-right: 10px">check</i>Approve Plan</a>
 
-                        <a href="{{ route('agency.media_plan.decline', ['id'=>$media_plan->id]) }}" class="btn block_disp uppercased align_center"><span class="_plus"></span>Decline Plan</a>
+                        <a href="{{ route('agency.media_plan.decline', ['id'=>$media_plan->id]) }}" class="btn block_disp uppercased align_center bg_red"><i class="material-icons mt2" style="margin-right: 10px;">clear</i>Decline Plan</a>
 
                         <a href="{{ route('agency.media_plan.export', ['id'=>$media_plan->id]) }}" class="btn block_disp uppercased align_center"><span class="_plus"></span>Export Plan</a>
                     </div>
@@ -98,7 +98,12 @@
             </div>
         </div>
         <!-- main frame end -->
-
+        <div class="center" style="text-align: center;">
+            <a href="#" onclick="goBack()" class="btn uppercased back_btn w10">
+                <i class="material-icons left" style="margin-top: 5px">keyboard_backspace</i>
+                <span>Back</span>
+            </a>
+        </div>
     </div>
 @stop
 
@@ -106,6 +111,9 @@
     <script src="https://unpkg.com/flatpickr"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
     <script>
+        function goBack() {
+            window.history.back();
+        }
         $(document).ready(function () {
             //flatpickr
             flatpickr(".flatpickr", {

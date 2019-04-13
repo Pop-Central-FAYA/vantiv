@@ -107,7 +107,7 @@
 for ($x = 5; $x <= 8; $x++) {
 ?>
 				
-                                                    <tr>
+                            <tr>
 								<td id="statbtn_15<?php echo $x; ?>"> AIT </td>
 								<td id="timebtn_15<?php echo $x; ?>" class="center">21:30 - 13:00</td>
 								<td id="daybtn_15<?php echo $x; ?>"class="center">Thursday  </td>
@@ -128,16 +128,16 @@ for ($x = 5; $x <= 8; $x++) {
                             <section class="accordion-group__accordion">
 								<header class="accordion-group__accordion-head">
 											<table lass="display default_mpo filter_mpo" id="default_mpo_table">
-													<tbody>
+												<tbody>
 
-															<tr  class="clickable">
-																	<td width="25%"><input type="checkbox"></td>
-																	<td width="25%">NTA</td>
-																	<td width="25%">434000</td>
-																		 <td width="25%"><button class="btn small_btn accordion-group__accordion-btn"> Details </button> <button class="btn small_btn"> Add </button> </td>
-															</tr>
-															</tbody>
-														</table>
+													<tr  class="clickable">
+														<td width="25%"><input type="checkbox"></td>
+														<td width="25%">NTA</td>
+														<td width="25%">434000</td>
+													    <td width="25%"><button class="btn small_btn accordion-group__accordion-btn"> Details </button> <button class="btn small_btn"> Add </button> </td>
+													</tr>
+											    </tbody>
+											</table>
 								</header>
 								<div class="accordion-group__accordion-panel">
 									<div class="accordion-group__accordion-content">

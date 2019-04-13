@@ -56,7 +56,6 @@
                     @foreach($filterValues['day_parts'] as $day_part)
                         <option value="{{ $day_part }}">{{ $day_part }}</option>
                     @endforeach
-                    <option value="">30mins</option>
                 </select>                    
             </div>
             <div class="col_3 column">
@@ -90,7 +89,14 @@
                             {{-- <td width="25%"><input type="checkbox" /> </td> --}}
                             <td width="">{{ $key }}</td>
                             <td width="50%">
-                            {{ $sum_audience}}
+                                <script>
+                                    var num = @php $sum_audience @endphp
+                                    function formatNumber(num) {
+                                      return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+                                    }
+                                    formatNumber(num)
+                                </script>
+                            {{-- {{ $sum_audience }} --}}
                             </td>
                             {{-- <td width="25%">
                                 <button class="btn small_btn"> Details </button>
@@ -219,6 +225,9 @@
     <script>
         function goBack() {
             window.history.back();
+        }
+        function formatNumber(num) {
+          return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
         }
     </script>
     <script>
