@@ -30,6 +30,7 @@ use Vanguard\Exports\MediaPlanExport;
 use Vanguard\Services\Traits\DefaultMaterialLength;
 use Vanguard\Services\Traits\ListDayTrait;
 use Vanguard\Libraries\Utilities;
+use Log;
 
 class MediaPlanController extends Controller
 {
@@ -124,51 +125,59 @@ class MediaPlanController extends Controller
 	 * @todo Fix tis and the one below (getSuggestPlansByIdAndFilters)
 	 */
 	public function getSuggestPlanById($id)
-	{
-		$suggestedPlansService = new GetSuggestedPlans($id, array());
+	{   
+        // Get the filter values
+        $savedFilters = json_decode(MediaPlan::findOrFail($id)->filters, true);
+        if (!$savedFilters) {
+            $savedFilters = array();
+        }
+		$suggestedPlansService = new GetSuggestedPlans($id, $savedFilters);
 		$plans = $suggestedPlansService->get();
-		if (count($plans) == 0) {
-			return redirect()->route("agency.media_plan.criteria_form");
-		}
+		// if (count($plans) == 0) {
+        //     //Render an empty page and do not redirect
+		// 	// return redirect()->route("agency.media_plan.criteria_form");
+		// }
         // also get the filter values list to use to render with the filter dropdowns
-		$filterValues = $this->getFilterFieldValues($id);
-		return view('agency.mediaPlan.display_suggestions')
+        return view('agency.mediaPlan.display_suggestions')
+            ->with('mediaPlanId', $id)
 			->with('fayaFound', $plans)
-			->with('filterValues', $filterValues)
-			->with('selectedFilters', array());
+			->with('filterValues', $this->getFilterFieldValues($id))
+			->with('selectedFilters', $savedFilters);
 	}
 
 	/**
 	 * Get the ratings per filter (Not quite sure how to complete this)
+     * So, save the filters the user selected, then the page will be reloaded
+     * @todo add proper validation
 	 */
-	public function getSuggestPlanByIdAndFilters($id, $request)
+	public function setPlanSuggestionFilters(Request $request)
 	{
-        // fix this
-		$filters = array();
-		if ($request->state) {
-			$filters['state'] = $request->state;
-		}
-		if ($request->day) {
-			$filters['day'] = $request->day;
-		}
-		if ($request->day_parts) {
-			$filters['day_parts'] = $request->day_parts;
-		}
-		$suggestedPlansService = new GetSuggestedPlans($id, $filters);
-		$plans = $suggestedPlansService->get();
-		if (count($plans) == 0) {
-			//display an error message that nothing matched the filters
-			//@todo reset the dropdowns that was chosen?
-			Session::flash('success', 'No results came back for your filters');
-		}
-		//refresh the page with the filtered data
-		//send back the actual filters (so the dropdown is rendered with them)
-		return view('agency.mediaPlan.display_suggestions')
-			->with('fayaFound', $plans)
-			->with('filterValues', $this->getFilterFieldValues($id))
-			->with('selectedFilters', $filters);;
+        try {
+            $media_plan_id = $request->get('mediaPlanId');
+            $expected_fields = array('states', 'day_parts', 'days');
+            $filters = array();
+            foreach($expected_fields as $field) {
+                $value = $request->input($field);
+                if ($value && $value != 'all') {
+                    $filters[$field] = $value;
+                }
+            }
+            $media_plan = MediaPlan::findOrFail($media_plan_id);
+            $media_plan->filters = json_encode($filters);
+            $media_plan->save();
+            return response()->json(array(
+                'status' => 'success', 
+                'message' => 'Filters successfully saved', 
+                'redirect_url' => $media_plan_id
+            ));
+        } catch (\Exception $exception) {
+            Log::error($exception);
+            return response()->json(array(
+                'status' => 'error', 
+                'message' => 'Unknown error occurred'
+            ));
+        }
 	}
-
 	/**
      * Return the values that should be used to populate the filter fields
      * i.e dayparts, and states (that were part of what was found)
@@ -178,11 +187,12 @@ class MediaPlanController extends Controller
 		$state_list = array();
 		$saved_state_list = MediaPlan::find($mediaPlanId)->state_list;
 		if (strlen($saved_state_list) > 0) {
-			$state_list = json_decode($saved_state_list);
+			$state_list = json_decode($saved_state_list, true);
 		}
         return array(
             "day_parts" => collect(GetSuggestedPlans::DAYPARTS)->keys()->sort()->toArray(),
-            "state_list" => $state_list
+            "state_list" => $state_list,
+            "days" => array("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
         );
 	}
 	

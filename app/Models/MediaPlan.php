@@ -10,7 +10,9 @@ class MediaPlan extends Base
     protected $primaryKey = 'id';
     protected $keyType = 'string';
 
-    protected $fillable = ['budget', 'criteria_gender', 'criteria_lsm', 'criteria_social_class', 'criteria_region', 'criteria_state', 'criteria_age_groups', 'start_date', 'end_date', 'planner_id', 'status', 'agency_commission', 'campaign_name', 'client_id', 'brand_id', 'product_name', 'media_type', 'state_list'];
+    protected $fillable = ['budget', 'criteria_gender', 'criteria_lsm', 'criteria_social_class', 'criteria_region', 'criteria_state', 
+        'criteria_age_groups', 'start_date', 'end_date', 'planner_id', 'status', 'agency_commission', 
+        'campaign_name', 'client_id', 'brand_id', 'product_name', 'media_type', 'state_list', 'filters'];
 
     /**
      * Get suggestions associated with the media plan.

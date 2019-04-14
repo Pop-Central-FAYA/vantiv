@@ -1,6 +1,7 @@
 <?php
 namespace Vanguard\Services\MediaPlan;
 use DB;
+use Log;
 
 /**
  * This class should given a media plan id, grab the timebelts/stations that have already been created for it
@@ -29,43 +30,63 @@ class GetSuggestedPlans
             ->where("media_plan_id", $this->mediaPlanId)
             ->when($this->filters, function($query) {
                 foreach ($this->filters as $key => $value) {
-                    if ($key == "dayparts") {
+                    if ($key == "day_parts") {
                         $query->whereBetween("start_time", static::DAYPARTS[$value]);
                         continue;
                     }
-                    if (in_array($key, array("state", "day"))) {
-                        $query->where("state", $value);
+                    if ($key == "days") {
+                        $query->where("day", $value);
                         continue;
+                    }
+                    if ($key == "states") {
+                        $query->where("state_counts", "LIKE", "%{$value}%");
                     }
                 }
             })->get();
-            $suggestionsGraph = $this-> groupForgraph($plans);
-            $selected_plans = DB::table("media_plan_suggestions")
+        
+        if ($plans->isEmpty()) {
+            return array(
+                "total_tv" => 0,
+                "total_radio" => 0,
+                "total_audiences" => 0,
+                "programs_stations" => collect([]),
+                "stations" => collect([]),
+                "selected" => collect([]),
+                'total_graph' => collect([])
+            );
+        }
+
+        $plans = $this->getCountsByState($plans);
+
+        $selected_plans = DB::table("media_plan_suggestions")
             ->select(DB::Raw("*, total_audience as audience"))
             ->where("media_plan_id", $this->mediaPlanId)
             ->where("status", 1)->get();
 
-
-        if ($plans->isEmpty()) {
-            return array();
-        }
-
         $total_audience = $plans->sum("total_audience");
-        $output = array(
+        return array(
             "total_tv" => $total_audience,
             "total_radio" => 0,
             "total_audiences" => $total_audience,
             "programs_stations" => $plans->sortByDesc("total_audience"),
             "stations" => $plans->groupBy("station"),
             "selected" => $selected_plans->sortByDesc("total_audience"),
-            'total_graph' => $suggestionsGraph,
+            'total_graph' => $plans->groupBy(['day', 'station'])
         );
-        return $output;
     }
-    public function groupForgraph($query)
-	{
-		$result = $query->groupBy(['day', 'station']);
-		return $result;
-	}
 
+    /**
+     *  state filter is different, cause the state counts are saved in a field on the suggestions table
+    */
+    protected function getCountsByState($plans) {
+        if (isset($this->filters['states'])) {
+            $state_val = $this->filters['states'];
+            return $plans->map(function ($item, $key) use ($state_val) {
+                $state_counts = json_decode($item->state_counts, true);
+                $item->audience = $state_counts[$state_val];
+                return $item;
+            });
+        }
+        return $plans;
+    }
 }

@@ -36,7 +36,8 @@ class StorePlanningSuggestions
             'campaign_name' => $this->criteriaForm->campaign_name,
             'planner_id' => Auth::id(),
             'status' => 'Suggested',
-            'state_list' => json_encode($this->suggestions['state_list'])
+            'state_list' => json_encode($this->suggestions['state_list']),
+            'filters' => json_encode(array()) //store all the filters which are automatically used to filter the result set
         ]);
         foreach ($this->suggestions['projected_counts'] as $key => $suggestion) {
             MediaPlanSuggestion::create([
