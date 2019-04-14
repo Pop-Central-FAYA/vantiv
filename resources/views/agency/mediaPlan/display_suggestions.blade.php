@@ -7,7 +7,12 @@
 @section('content')
     <div class="main_contain" id="load_this">
     <!-- header -->
-    @include('partials.new-frontend.agency.header')
+    @if(Session::get('broadcaster_id'))
+        @include('partials.new-frontend.broadcaster.header')
+        @include('partials.new-frontend.broadcaster.campaign_management.sidebar')
+    @else
+        @include('partials.new-frontend.agency.header')
+    @endif
     <!-- subheader -->
         <div class="sub_header clearfix mb pt">
             <div class="column col_6">
@@ -33,15 +38,6 @@
         <div class="column col_6 p-t">
             <div class="column col_6">
                 <p class="uppercased weight_medium mt2">Available Stations and Times</p>
-            </div>
-            <div class="column col_6 clearfix">
-                <div class="column col_3">
-                    <span class="weight_medium small_faint uppercased" id="view-table">Table</span>
-                </div>
-
-                <div class="column col_3">
-                    <span class="weight_medium small_faint uppercased" id="view-graph">Graph</span>
-                </div>
             </div>
         </div>
         <div class="column col_6 clearfix">
@@ -172,57 +168,31 @@
 
     </div>
  
-</div>
-
-    <div class="accordion-group">
-
-        @foreach($fayaFound['total_graph'] as $key => $Value)
-
-            </div>
-         
-        </div>
-
-        <div class="accordion-group">
-
-            @foreach($fayaFound['total_graph'] as $key => $Value)
-
-            <section class="accordion-group__accordion">
-            <header class="accordion-group__accordion-head">
-            <div class="filters border_bottom clearfix accordion-group__accordion-btn graph_option">
-                <div class="column col_8 p-t hover">
-                    <p class="uppercased weight_medium">{{ $key }}</p>
-                </div> 
-            </div>
-
-            <div class="accordion-group__accordion-panel">
-            <div class="accordion-group__accordion-content">
-            
-            <div id="container{{ $key }}" style="min-width: 310px; height: 500px; padding: 30 auto"></div>
-
-
-
-
-            </div>
-            </div>
-            </section>
-
     </div>
 
-            @endforeach
+        <div class="accordion-group">
+            @foreach($fayaFound['total_graph'] as $key => $Value)
+                <section class="accordion-group__accordion">
+                    <header class="accordion-group__accordion-head">
+                        <div class="filters border_bottom clearfix accordion-group__accordion-btn graph_option">
+                            <div class="column col_8 p-t hover">
+                                <p class="uppercased weight_medium">{{ $key }}</p>
+                            </div>
+                        </div>
 
+                        <div class="accordion-group__accordion-panel">
+                            <div class="accordion-group__accordion-content">
+                                <div id="container{{ $key }}" style="min-width: 310px; height: 500px; padding: 30 auto"></div>
+                            </div>
+                        </div>
+                    </header>
+                </section>
+            @endforeach
         </div>
 
     </div>
 
     </div> <!-- be -->
-
-
-
-
-
-
-
-
 
     <div class="the_frame client_dets mb4">
 
@@ -322,6 +292,16 @@
         $('.accordion-group').last().ariaAccordion({
           slideSpeed: 200
         });
+
+        $("#view-graph").click(function () {
+            $("#timebelts-graph").show();
+            $("#timebelts-table").hide();
+        })
+
+        $("#view-table").click(function () {
+            $("#timebelts-graph").hide();
+            $("#timebelts-table").show();
+        })
       });
     </script>
      <script type="text/javascript">
