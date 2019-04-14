@@ -28,6 +28,8 @@ node_modules
 package.json
 /vendor
 .env
+.phpintel
+/.phpintel
 /public/.htaccess
 /storage
 storage/*.key

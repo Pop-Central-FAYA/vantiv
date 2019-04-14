@@ -1106,7 +1106,16 @@ h2.sub_header {
 	padding-right: 15px;
 }
 
+._shrink-sides {
+	margin-left: 300px;
+	margin-right: 300px;
+}
 
+.inactive-dashboard-toggle-btn {
+	background: transparent !important;
+	border: 1px solid #44C1C9 !important;
+	color: #000 !important;
+}
 @media only screen and (max-width: 768px) {
 
 

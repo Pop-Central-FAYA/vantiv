@@ -15,15 +15,24 @@
         @endif
    
 
-    <!-- subheader -->
+        <!-- subheader -->
         <div class="sub_header clearfix mb pt">
             <div class="column col_6">
                 <h2 class="sub_header">Stations and Programmes</h2>
             </div>
         </div>
 
+        <div class="clearfix mb4 _shrink-sides">
+            <div class="column col_6">
+                <button id="view-table"  class="btn full block_disp uppercased align_center">Table</button>
+            </div>
 
-        <div>
+            <div class="column col_6">
+                <button id="view-graph"  class="btn full block_disp uppercased align_center">Graph</button>
+            </div>
+        </div>
+
+    <div>
 
 <div class="the_frame client_dets mb4">
     
@@ -31,19 +40,6 @@
         <div class="column col_6 p-t">
             <div class="column col_6">
                 <p class="uppercased weight_medium mt2">Available Stations and Times</p>
-            </div>
-            
-            <!-- <button id="hide">Hide</button>
-            <button id="show">Show</button> -->
-            <!-- <div class="the_stats the_frame column col_6 clearfix"> -->
-            <div class="column col_6 clearfix">
-                <div class="column col_3">
-                    <span class="weight_medium small_faint uppercased" id="view-table">Table</span>
-                </div>
-
-                <div class="column col_3">
-                    <span class="weight_medium small_faint uppercased" id="view-graph">Graph</span>
-                </div>
             </div>
 
         </div>
@@ -117,11 +113,10 @@
                 </table>
             </header>
             <div class="accordion-group__accordion-panel">
-                <div class="accordion-group__accordion-content">
-                    <table class="table table-hover">
+                <div class="accordion-group__accordion-content" style="overflow-x: hidden; background: #b0bec5;">
+                    <table class="table table-hover" style="margin-left: 45px">
                         <thead>
                             <tr>
-                                <th>Station</th> 
                                 <th>Day</th>
                                 <th>Time Belt</th>
                                 <th>Program</th>
@@ -137,7 +132,7 @@
                             @php 
                                 $vid =$Programe->media_plan_id. $Programe->day. $Programe-> total_audience. str_replace(':', '', $Programe-> start_time) ;
                              @endphp
-                                <td id="stat{{ $vid }}"> <input type="hidden" id="unique{{ $vid }}" value="{{ $Programe->id}}"  /> {{ $Programe->station }}</td>
+                                {{-- <td id="stat{{ $vid }}"> <input type="hidden" id="unique{{ $vid }}" value="{{ $Programe->id}}"  /> {{ $Programe->station }}</td> --}}
                                 <td id="day{{ $vid }}"class="center">{{ $Programe->day}} </td>
                                 <td id="time{{ $vid }}" class="center">{{ substr($Programe->start_time,0,5)}} - {{ substr($Programe->end_time,0,5)}}</td>
                                 <td id="prog{{ $vid }}"class="center">{{ $Programe->program }}</td>
@@ -164,54 +159,49 @@
 
   </div><!-- be -->
 
-
   <div>
 
-<div id="timebelts-graph" class="the_frame client_dets mb4" style="display:none">
+    <div id="timebelts-graph" class="the_frame client_dets mb4" style="display:none; margin-top: -36px">
+        <div class="filters border_bottom clearfix">
+            <div class="column col_8 p-t">
+                {{-- <p class="uppercased weight_medium">Graph</p> --}}
+            </div>
+            <div class="column col_4 clearfix">
 
-<div class="filters border_bottom clearfix">
-    <div class="column col_8 p-t">
-        <p class="uppercased weight_medium">Graph</p>
+            </div>
+         
+        </div>
+
+        <div class="accordion-group">
+
+            @foreach($fayaFound['total_graph'] as $key => $Value)
+
+            <section class="accordion-group__accordion">
+            <header class="accordion-group__accordion-head">
+            <div class="filters border_bottom clearfix accordion-group__accordion-btn graph_option">
+                <div class="column col_8 p-t hover">
+                    <p class="uppercased weight_medium">{{ $key }}</p>
+                </div> 
+            </div>
+
+            <div class="accordion-group__accordion-panel">
+            <div class="accordion-group__accordion-content">
+            
+            <div id="container{{ $key }}" style="min-width: 310px; height: 500px; padding: 30 auto"></div>
+
+
+
+
+            </div>
+            </div>
+            </section>
+
+
+            @endforeach
+
+        </div>
+
     </div>
-    <div class="column col_4 clearfix">
-
-    </div>
- 
-</div>
-
-<div class="accordion-group">
-
-        @foreach($fayaFound['total_graph'] as $key => $Value)
-
-        <section class="accordion-group__accordion">
-        <header class="accordion-group__accordion-head">
-        <div class="filters border_bottom clearfix accordion-group__accordion-btn">
-                    <div class="column col_8 p-t">
-                        <p class="uppercased weight_medium">{{ $key }}</p>
-                    </div>
-                
-        </div>
-
-        <div class="accordion-group__accordion-panel">
-        <div class="accordion-group__accordion-content">
-        
-        <div id="container{{ $key }}" style="min-width: 310px; height: 500px; padding: 30 auto"></div>
-
-
-
-
-        </div>
-        </div>
-        </section>
-
-
-        @endforeach
-
-</div>
-
-</div>
-
-
 
   </div> <!-- be -->
 
@@ -249,29 +239,29 @@
         <thead>
             <tr>
                 <th>Station</th>
-                <th>Time Belt</th>
                 <th>Day</th>
+                <th>Time Belt</th>
                 <th>Program</th>
                 <th>Audience</th>
-                <th>Actions </th>
-              
+                <th></th>
             </tr>
         </thead>     
         <tbody class="where-it-is-going" id = "cont" >
-        @foreach($fayaFound['selected'] as $Programe)
-        @php 
-       $vid =$Programe->media_plan_id. $Programe->day. $Programe-> total_audience. str_replace(':', '', $Programe-> start_time) ;
-     @endphp
-   <tr class="ri{{$vid}}" id="{{$Programe -> id}} " >
-    <td id="stat{{ $vid }}"> {{ $Programe->station }}</td>
-    <td id="time{{ $vid }}" class="center">{{ $Programe -> start_time}} - {{ $Programe -> end_time}}</td>
-    <td id="day{{ $vid }}"class="center">{{ $Programe ->day}} </td>
-    <td id="prog{{ $vid }}"class="center">{{ $Programe -> program }}</td>
-    <td id="aud{{$vid }}"class="center">{{ $Programe ->total_audience}}</td>
-    <td class="center">
-        <button data-programm="{{$vid}} " class="plus-btn dBtn" data_15="first15" type="button"><i class="material-icons" style="color: red">delete</i></button>	
-    </td>
-</tr>
+            @foreach($fayaFound['selected'] as $Programe)
+            @php 
+           $vid =$Programe->media_plan_id. $Programe->day. $Programe-> total_audience. str_replace(':', '', $Programe-> start_time) ;
+            @endphp
+            <tr class="ri{{$vid}}" id="{{ $Programe->id }} " >
+                <td id="stat{{ $vid }}"> {{ $Programe->station }}</td>
+                <td id="day{{ $vid }}"class="center">{{ $Programe->day}} </td>
+                <td id="time{{ $vid }}" class="center">{{ substr($Programe->start_time,0,5) }} - {{ substr($Programe->end_time,0,5) }}
+                </td>
+                <td id="prog{{ $vid }}"class="center">{{ $Programe->program }}</td>
+                <td id="aud{{$vid }}"class="center">{{ $Programe->total_audience}}</td>
+                <td class="center">
+                    <button data-programm="{{$vid}} " class="plus-btn dBtn" data_15="first15" type="button"><i class="material-icons" style="color: red">delete</i></button>	
+                </td>
+            </tr>
 @endforeach
         </tbody>
     </table>  
@@ -310,6 +300,7 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script>
+        $('#view-graph').addClass('inactive-dashboard-toggle-btn');
         function goBack() {
             window.history.back();
         }
@@ -318,7 +309,21 @@
         }
     </script>
     <script>
-        $(document).ready(function () {
+        $(document).ready(function ( $ ) {
+
+            $('#view-table').on('click', function() {
+                $('#timebelts-graph').hide();
+                $('#timebelts-table').show();
+                $('#view-table').removeClass('inactive-dashboard-toggle-btn');
+                $('#view-graph').addClass('inactive-dashboard-toggle-btn');
+            });
+
+            $('#view-graph').on('click', function() {
+                $('#timebelts-table').hide();
+                $('#timebelts-graph').show();
+                $('#view-graph').removeClass('inactive-dashboard-toggle-btn');
+                $('#view-table').addClass('inactive-dashboard-toggle-btn');
+            });
             //flatpickr
             flatpickr(".flatpickr", {
                 altInput: true,
@@ -474,16 +479,6 @@
     </script>
      <script type="text/javascript">
         $(document).ready(function() {
-            $('#view-table').on('click', function() {
-                $('#timebelts-graph').hide();
-                $('#timebelts-table').show();
-            });
-
-            $('#view-graph').on('click', function() {
-                $('#timebelts-table').hide();
-                $('#timebelts-graph').show();
-            });
-            
             var url = window.location.href;
                 var trim = url.split('/');
                 var fifthSegment = trim[6];
@@ -754,4 +749,14 @@ foreach($result as $key => $Value){  ?>
 @section('styles')
     <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+
+    <style>
+        .graph_option {
+            transition: 0.3s;
+        }
+        .graph_option:hover {
+            cursor: pointer;
+            background: #cfd8dc;
+        }
+    </style>
 @stop
