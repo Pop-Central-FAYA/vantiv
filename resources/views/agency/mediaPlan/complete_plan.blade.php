@@ -60,6 +60,7 @@
                                 <th class="fixed-side" id="last-fixed">Programme</th>
                                 <th class="fixed-side">Unit Rate</th>
                                 <th class="fixed-side">Volume Disc</th>
+                                <th class="fixed-side">Total Exposure</th>
                                 @for ($i = 0; $i < count($fayaFound['labeldates']); $i++)
                                     <th>{{ $fayaFound['labeldates'][$i] }}</th>
                                 @endfor
@@ -69,7 +70,6 @@
                             <tbody>
 
                             @foreach($fayaFound['programs_stations'] as $value)
-
                                 <tr class="{{ $value->program}}">
                                     <td id="btn" class="fixed-side">{{ $value->station }}</td>
                                     <td id="btn" class="fixed-side">{{ $value->day }}</td>
@@ -91,16 +91,25 @@
                                     <td id="btn" class="fixed-side" style="display: none;">
                                         <a href="#program_modal_{{ $duration }}{{ $value->id }}" class="modal_click"></a>
                                     </td>
-                                    @foreach(json_decode($value->duration_lists) as $key => $duration_list)
-                                        @if($duration_list == $duration)
-                                            <td>
-                                                <input type="number" readonly value="{{ json_decode($value->rate_lists)[$key] }}"
-                                                       class="update_rate_{{ $duration_list.'_'.json_decode($value->rate_lists)[$key] }}"
-                                                       id="ur{{ $duration }}{{$value->id}}" data_12="{{ $value->id}}"
-                                                       data_11="60" data_10="" data_9="">
-                                            </td>
-                                        @endif
-                                    @endforeach
+                                    @if($value->duration_lists != "[null]")
+                                        @foreach(json_decode($value->duration_lists) as $key => $duration_list)
+                                            @if($duration_list == $duration)
+                                                <td>
+                                                    <input type="number" readonly value="{{ json_decode($value->rate_lists)[$key] }}"
+                                                           class="update_rate_{{ $duration_list.'_'.json_decode($value->rate_lists)[$key] }}"
+                                                           id="ur{{ $duration }}{{$value->id}}" data_12="{{ $value->id}}"
+                                                           data_11="60" data_10="" data_9="">
+                                                </td>
+                                            @endif
+                                        @endforeach
+                                    @else
+                                        <td>
+                                            <input type="number" readonly value=""
+                                                   class=""
+                                                   id="ur{{ $duration }}{{$value->id}}" data_12="{{ $value->id}}"
+                                                   data_11="60" data_10="" data_9="">
+                                        </td>
+                                    @endif
 
                                     <td>
                                         <a href="#discount_modal_{{ $duration.'_'.$value->id }}" class="modal_click">
@@ -108,17 +117,24 @@
                                         </a>
                                     </td>
 
-                                    @for ($i = 0; $i < count($fayaFound['dates']); $i++) @if($fayaFound['days'][$i]==$value->day )
-                                        <td>
-                                            <input type="number" id="{{ $duration }}{{$value->id}}" class="day_input" data_12="{{ $value->id}}"
-                                                    data_11="15" data_10="{{$fayaFound['dates'][$i]}}"
-                                                    data_9="{{$fayaFound['days'][$i]}}">
-                                        </td>
-                                    @else
-                                        <td id="">
-                                            <input class="disabled_input" type="number" placeholder="" name="lname" disabled>
-                                        </td>
-                                    @endif
+                                    <td>
+                                        <input type="number" readonly id="exposure_{{ $duration.'_'.$value->id }}" name="exposure">
+                                    </td>
+
+                                    @for ($i = 0; $i < count($fayaFound['dates']); $i++)
+                                        @if($fayaFound['days'][$i]==$value->day )
+                                            <td>
+                                                <input type="number" id="{{ $duration }}{{$value->id}}" class="day_input" data_12="{{ $value->id}}"
+                                                        data_11="15" data_10="{{$fayaFound['dates'][$i]}}"
+                                                        data_9="{{$fayaFound['days'][$i]}}">
+                                            </td>
+                                        @else
+                                            <td id="">
+                                                <input type="number" id="{{ $duration }}{{$value->id}}" class="disabled_input" data_12="{{ $value->id}}"
+                                                       data_11="15" data_10=""
+                                                       data_9="" disabled>
+                                            </td>
+                                        @endif
                                     @endfor
                                 </tr>
 
@@ -363,15 +379,6 @@
                 data: formdata,
                 success: function (data) {
                     if(data.programs){
-                        /*$.each(data.programs, function (data_index, data_value) {
-                            var un_val = convertToSlug(data_value.day+'_'+data_value.station+'_'+data_value.start_time);
-                            $('td.update_program_'+un_val).remove();
-                            $('td.new_program_'+un_val).append(data_value.program_name);
-                            $('td.new_program_'+un_val).show();
-                        });
-                        $.each(data.ratings, function (rating_index, rating_value) {
-                            $('.update_rate_'+rating_value.duration+'_'+rating_value.price).val(rating_value.price)
-                        });*/
                         $("#refresh_this_stuff").load(location.href+" #refresh_this_stuff>*","");
                         toastr.success('Program Updated successful');
                         $.modal.close();
@@ -424,16 +431,6 @@
                 data: formdata,
                 success: function (data) {
                     if(data.programs){
-                        /*$.each(data.programs, function (data_index, data_value) {
-                            var un_val = convertToSlug(data_value.day+'_'+data_value.station+'_'+data_value.start_time);
-                            $('td.update_program_'+un_val).remove();
-                            $('td.new_program_'+un_val).append(data_value.program_name);
-                            $('td.new_program_'+un_val).show();
-                        });
-                        console.log(data.ratings, data.programs);
-                        $.each(data.ratings, function (rating_index, rating_value) {
-                            $('input.update_rate_'+rating_value.duration+'_'+rating_value.price).val(rating_value.price)
-                        });*/
                         $("#refresh_this_stuff").load(location.href+" #refresh_this_stuff>*","");
                         toastr.success('Program Updated successful');
                         $.modal.close();
@@ -532,21 +529,9 @@
 
         });
 
-        function convertToSlug(Text)
-        {
-            return Text
-                .toLowerCase()
-                .replace(/[^a-zA-Z0-9]+/g,'')
-                .replace(/ +/g,'-')
-                .replace('/:/g', '')
-                ;
-        }
-
-
         $("body").delegate(".show", "click", function () {
             $('.show').prop('disabled', true);
             var client_name = $("#client_name").val();
-            var product_name = $("#product_name").val();
             var product_name = $("#product_name").val();
             var plan_id = $("#plan_id").val();
             var body = {
