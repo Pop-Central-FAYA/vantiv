@@ -36,12 +36,7 @@
             @endif
         </div>
 
-
-
-
-
-
-<div class="the_frame client_dets mb4">
+    <div class="the_frame client_dets mb4">
 
     <div class="filters border_bottom clearfix">
         <div class="column col_8 p-t">
@@ -63,7 +58,7 @@
     </div>
 
     <!-- campaigns table -->
-    <div class="accordion-group">
+    <div class="accordion-group loading">
         <table lass="display default_mpo filter_mpo" id="default_mpo_table">
     		<thead>
 				<tr>
@@ -174,11 +169,7 @@
 	</div>
                       
         <!-- end -->
-</div>
-
-
-
-
+    </div>
 
     <div class="the_frame client_dets mb4">
 
@@ -231,134 +222,13 @@
     <script src="https://code.highcharts.com/highcharts-3d.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script src="https://code.highcharts.com/modules/export-data.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/dataTables.buttons.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.flash.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.html5.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.print.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
-
     <script src="https://unpkg.com/flatpickr"></script>
-    {{--datatables--}}
-    <script>
-        <?php echo "var companies =".Auth::user()->companies()->count().";\n"; ?>
-        $(document).ready(function( $ ) {
-            if(companies > 1){
-                $('.publishers').select2();
-                $('body').delegate("#publishers", "change", function () {
-                    $(".default_mpo").dataTable().fnDestroy();
-                    var channels = $("#publishers").val();
-                    if(channels != null){
-                        $('.when_loading').css({
-                            opacity: 0.1
-                        });
-                        var Datefilter =  $('.filter_mpo').DataTable({
-                            dom: 'Blfrtip',
-                            paging: true,
-                            serverSide: true,
-                            processing: true,
-                            aaSorting: [],
-                            aLengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
-                            buttons: [
-                                'copy', 'csv', 'excel', 'pdf', 'print'
-                            ],
-                            oLanguage: {
-                                sLengthMenu: "_MENU_"
-                            },
-                            ajax: {
-                                url: '/mpo/filter',
-                                data: function (d) {
-                                    d.channel_id = channels;
-                                    d.start_date = $('input[name=start_date]').val();
-                                    d.stop_date = $('input[name=stop_date]').val();
-                                }
-                            },
-                            columns: getColumns(),
-                        });
-                        Datefilter.draw();
-                        $('#mpo_filters').on('click', function() {
-                            Datefilter.draw();
-                        });
-                    }
-                })
-            }
-
-            flatpickr(".flatpickr", {
-                altInput: true,
-            });
-
-            $(".filter_mpo").dataTable().fnDestroy();
-
-            var Datefilter =  $('.default_mpo').DataTable({
-                dom: 'Blfrtip',
-                paging: true,
-                serverSide: true,
-                processing: true,
-                aaSorting: [],
-                aLengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
-                buttons: [
-                    'copy', 'csv', 'excel', 'pdf', 'print'
-                ],
-                oLanguage: {
-                    sLengthMenu: "_MENU_"
-                },
-                ajax: {
-                    url: '/mpos/all-data',
-                    data: function (d) {
-                        d.start_date = $('input[name=start_date]').val();
-                        d.stop_date = $('input[name=stop_date]').val();
-                    }
-                },
-                columns: getColumns(),
-            });
-
-            $('#mpo_filters').on('click', function() {
-                Datefilter.draw();
-            });
-
-            function getColumns()
-            {
-                if(companies > 1){
-                    return [
-                        {data: 'id', name: 'id'},
-                        {data: 'name', name: 'name'},
-                        {data: 'brand', name: 'brand'},
-                        {data: 'date_created', name: 'date_created'},
-                        {data: 'budget', name: 'budget'},
-                        {data: 'status', name: 'status'},
-                        {data: 'station', name: 'station'}
-                    ]
-                }else{
-                    return [
-                        {data: 'id', name: 'id'},
-                        {data: 'name', name: 'name'},
-                        {data: 'brand', name: 'brand'},
-                        {data: 'date_created', name: 'date_created'},
-                        {data: 'budget', name: 'budget'},
-                        {data: 'status', name: 'status'},
-                    ]
-                }
-            }
-
-
-
-
-        } );
-
-
-        //new
-
-    </script>
-     <script src="{{asset('js/aria-accordion.js')}}"></script>
+    <script src="{{asset('js/aria-accordion.js')}}"></script>
     <script>
       $(document).ready(function () {
         'use strict';
 
         $(window).on('ariaAccordion.initialised', function (event, element) {
-          console.log('initialised');
         });
 
         $('.accordion-group').first().ariaAccordion({
@@ -381,12 +251,7 @@
         $(document).ready(function() {
             var step = 1;
             var plans = [];
-            alert("The paragraph was clicked.");
-            console.log("NOW ITS WORKIN")
             $("body").delegate(".aBtn", "click", function() {
-                console.log("NOW ITS NOT WORKIN")
-              
-
 			   var value_button = $(this).attr("data_15");
                
 			   var prog_id = $(this).data("program");
@@ -395,70 +260,49 @@
 			   var plan_programe = $("#prog"+prog_id).text();
 			   var plan_day = $("#day"+prog_id).text();
 			   var plan_aud = $("#aud"+prog_id).text();
-
-			
-			 
-
                 plans.push([{ "program_id": prog_id, "station": plan_station, "program": plan_programe, "day": plan_day}]);
-                
-                
-
 			   movePlanByDuration(prog_id, plan_station, plan_programe,plan_time, plan_day, plan_aud);
-
 			   $('#'+prog_id).prop('disabled', true);
-               
             });
 
-
 			$("body").delegate(".dBtn", "click", function() {
-             
 			 var value_button = $(this).attr("data_25");
 			 var prog_id = $(this).data("programm")
-
-			 document.getElementById('ri'+prog_id).remove() 
+			 document.getElementById('ri'+prog_id).remove();
+			 toastr.success('Added successfully');
 			 $('#'+prog_id).prop('disabled', false);
 			 
 		  });
 
+        $("body").delegate(".show", "click", function() {
+            $.ajax({
+                url: '',
+                dataType: 'json',
+                type: 'post',
+                contentType: 'application/json',
+                data: plans,
+                processData: false,
+                success: function( data, textStatus, jQxhr ){
+                    $('#response pre').html( JSON.stringify( data ) );
+                }
 
-
-			$("body").delegate(".show", "click", function() {
-                        $.ajax({
-                            url: '',
-                            dataType: 'json',
-                            type: 'post',
-                            contentType: 'application/json',
-                            data: plans,
-                            processData: false,
-                                    success: function( data, textStatus, jQxhr ){
-                                                $('#response pre').html( JSON.stringify( data ) );
-                                    }
-                                    
-                        });
-                
-                
-			 console.log(plans)
-			
-			 
+            });
 		  });
             
-            function   movePlanByDuration(prog_id, plan_station, plan_programe, plan_time, plan_day, plan_aud){
-                
-                 var new_html = "";
-				 new_html += '<tr  id="ri'+prog_id+'">'+
-				 '<td>'+plan_station+' </td>'+
-                 '<td class="center">'+plan_time+'</td>'+
-				 '<td class="center">'+plan_programe+'</td>'+
-				 '<td class="center">'+plan_day+'</td>'+
-				 '<td class="center">'+plan_aud+'</td>'+
-					'<td class="center"><button data-programm="'+prog_id+'" class="btn btn-danger dBtn" data_15="first15" type="button">Remove</button>'+
-					 '</td>'+
-					 '</td>'+
-					 '</tr>';
-                    
-                    $(".where-it-is-going").append(new_html);
-					
-            }
+        function   movePlanByDuration(prog_id, plan_station, plan_programe, plan_time, plan_day, plan_aud){
+             var new_html = "";
+             new_html += '<tr  id="ri'+prog_id+'">'+
+             '<td>'+plan_station+' </td>'+
+             '<td class="center">'+plan_time+'</td>'+
+             '<td class="center">'+plan_programe+'</td>'+
+             '<td class="center">'+plan_day+'</td>'+
+             '<td class="center">'+plan_aud+'</td>'+
+                '<td class="center"><button data-programm="'+prog_id+'" class="btn btn-danger dBtn" data_15="first15" type="button">Remove</button>'+
+                 '</td>'+
+                 '</td>'+
+                 '</tr>';
+                $(".where-it-is-going").append(new_html);
+        }
             
         })
 </script>
@@ -466,8 +310,6 @@
 
 @section('styles')
     <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.5.1/css/buttons.dataTables.min.css" type="text/css"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
     <style>
         .highcharts-grid path { display: none; }
@@ -477,32 +319,6 @@
 
         .dataTables_filter {
             display: none;
-        }
-
-        #DataTables_Table_0_wrapper .dt-buttons button {
-            line-height: 2.5;
-            color: #fff;
-            cursor: pointer;
-            background: #44C1C9;
-            -webkit-appearance: none;
-            font-family: "Roboto", sans-serif;
-            font-weight: 500;
-            border: 0;
-            padding: 3px 20px 0;
-            font-size: 14px;
-
-            -webkit-border-radius: 2px;
-            -moz-border-radius: 2px;
-            border-radius: 2px;
-
-            -webkit-box-shadow: 9px 10px 20px 1px rgba(0, 159, 160, 0.21);
-            -moz-box-shadow: 9px 10px 20px 1px rgba(0, 159, 160, 0.21);
-            box-shadow: 9px 10px 20px 1px rgba(0, 159, 160, 0.21);
-
-            position: relative;
-            display: inline-block;
-            text-transform: uppercase !important;
-
         }
     </style>
 @stop

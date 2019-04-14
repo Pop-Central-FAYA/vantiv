@@ -5,17 +5,10 @@
 @stop
 
 @section('content')
-    <div class="main_contain">
-        <!-- header -->
-        @if(Session::get('broadcaster_id'))
-            @include('partials.new-frontend.broadcaster.header')
-            @include('partials.new-frontend.broadcaster.campaign_management.sidebar')
-        @else
-            @include('partials.new-frontend.agency.header')
-        @endif
-   
-
-        <!-- subheader -->
+    <div class="main_contain" id="load_this">
+    <!-- header -->
+    @include('partials.new-frontend.agency.header')
+    <!-- subheader -->
         <div class="sub_header clearfix mb pt">
             <div class="column col_6">
                 <h2 class="sub_header">Stations and Programmes</h2>
@@ -34,14 +27,22 @@
 
     <div>
 
-<div class="the_frame client_dets mb4">
+    <div class="the_frame client_dets mb4">
     
     <div class="filters border_bottom clearfix">
         <div class="column col_6 p-t">
             <div class="column col_6">
                 <p class="uppercased weight_medium mt2">Available Stations and Times</p>
             </div>
+            <div class="column col_6 clearfix">
+                <div class="column col_3">
+                    <span class="weight_medium small_faint uppercased" id="view-table">Table</span>
+                </div>
 
+                <div class="column col_3">
+                    <span class="weight_medium small_faint uppercased" id="view-graph">Graph</span>
+                </div>
+            </div>
         </div>
         <div class="column col_6 clearfix">
             <div class="col_3 column">
@@ -78,8 +79,8 @@
         </div>
     </div>
 
-<!-- campaigns table -->
-<div id="timebelts-table" class="accordion-group scroll-y">
+    <!-- campaigns table -->
+    <div id="timebelts-table" class="accordion-group scroll-y">
     <table class="display default_mpo filter_mpo fixed_headers" id="default_mpo_table">
         <thead>
             <tr>
@@ -155,18 +156,27 @@
               
 
 <!-- end -->
-</div>
+    </div>
 
   </div><!-- be -->
 
   <div>
 
-    <div id="timebelts-graph" class="the_frame client_dets mb4" style="display:none; margin-top: -36px">
-        <div class="filters border_bottom clearfix">
-            <div class="column col_8 p-t">
-                {{-- <p class="uppercased weight_medium">Graph</p> --}}
-            </div>
-            <div class="column col_4 clearfix">
+    <div id="timebelts-graph" class="the_frame client_dets mb4" style="display:none">
+
+    <div class="filters border_bottom clearfix">
+    <div class="column col_8 p-t">
+        <p class="uppercased weight_medium">Graph</p>
+    </div>
+    <div class="column col_4 clearfix">
+
+    </div>
+ 
+</div>
+
+    <div class="accordion-group">
+
+        @foreach($fayaFound['total_graph'] as $key => $Value)
 
             </div>
          
@@ -196,6 +206,7 @@
             </div>
             </section>
 
+    </div>
 
             @endforeach
 
@@ -203,7 +214,7 @@
 
     </div>
 
-  </div> <!-- be -->
+    </div> <!-- be -->
 
 
 
@@ -213,24 +224,13 @@
 
 
 
-<div class="the_frame client_dets mb4">
+    <div class="the_frame client_dets mb4">
 
     <div class="filters border_bottom clearfix">
         <div class="column col_8 p-t">
             <p class="uppercased weight_medium">Selected Stations and Times</p>
         </div>
         <div class="column col_4 clearfix">
-{{--             <div class="col_5 column">
-                <input type="text" name="start_date" class="flatpickr" placeholder="Start Date">
-            </div>
-
-            <div class="col_5 column">
-                <input type="text" name="stop_date" class="flatpickr" placeholder="End Date">
-            </div>
-
-            <div class="col_1 column">
-                <button type="button" id="" class="btn small_btn">Filter</button>
-            </div> --}}
         </div>
     </div>
 
@@ -269,9 +269,6 @@
     <!--  end -->
 
 </div>
-
-
-
     <div class="action_footer client_dets mb4 mt4">
       <div class="col_6 column">
         <button type="button" id="back_btn" class="btn small_btn show" onclick="goBack()">Back</button>
@@ -281,16 +278,9 @@
         <button type="button" id="save_progress" class="btn small_btn right save mr-2">Save</button>
       </div>
     </div>
-
-{{--     <div class="the_frame client_dets mb4">
-        <div class="col_4 column">
-            <button type="button" id="mpo_filters" class="btn small_btn show">Create Plan</button>
-        </div>  
-    </div> --}}
-
     <br><br><br><br><br><br><br>
 
-</div>
+    </div>
 @stop
 
 @section('scripts')
@@ -307,149 +297,6 @@
         function formatNumber(num) {
           return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
         }
-    </script>
-    <script>
-        $(document).ready(function ( $ ) {
-
-            $('#view-table').on('click', function() {
-                $('#timebelts-graph').hide();
-                $('#timebelts-table').show();
-                $('#view-table').removeClass('inactive-dashboard-toggle-btn');
-                $('#view-graph').addClass('inactive-dashboard-toggle-btn');
-            });
-
-            $('#view-graph').on('click', function() {
-                $('#timebelts-table').hide();
-                $('#timebelts-graph').show();
-                $('#view-graph').removeClass('inactive-dashboard-toggle-btn');
-                $('#view-table').addClass('inactive-dashboard-toggle-btn');
-            });
-            //flatpickr
-            flatpickr(".flatpickr", {
-                altInput: true,
-            });
-            //select for target audience
-            $('.js-example-basic-multiple').select2();
-            //placeholder for target audienct
-            $('#region').select2({
-                placeholder: "Please select region"
-            });
-
-            $('#lsm').select2({
-                placeholder: "Please select LSM"
-            });
-
-            $('#social_class').select2({
-                placeholder: "Please select social class"
-            });
-
-            $('#state').select2({
-                placeholder: "Please select state"
-            });
-
-            $(".checkbox_region").click( function (){
-                var checkbox_region = $(this).data("region");
-                var $inputs = $('.checkbox_region');
-                if(checkbox_region === "naem6hqwjhjatseog8" && $(this).is(':checked')){
-                    $(".checkbox_region").prop('checked', false);
-                    $("#naem6hqwjhjatseog8").prop('checked', true);
-                    $inputs.not(this).prop('disabled',true);
-                }else{
-                    $(".checkbox_region").prop('disabled', false);
-                }
-            });
-
-            // fetch all brands when a clientSis selected
-            $('body').delegate('#clients','change', function(e){
-                var clients = $("#clients").val();
-                if(clients != ''){
-                    $(".load_stuff").css({
-                        opacity: 0.3
-                    });
-                    $("#industry").val('');
-                    $("#sub_industry").val('');
-                    var url = '/client/get-brands/'+clients;
-                    $.ajax({
-                        url: url,
-                        method: "GET",
-                        data: {clients: clients},
-                        success: function(data){
-                            if(data.brands){
-                                var big_html = '<select name="brand" id="brand">\n';
-                                if(data.brands != ''){
-                                    big_html += '<option value="">Select Brand</option>';
-                                    $.each(data.brands, function (index, value) {
-                                        big_html += '<option value="'+value.id+'">'+value.name+'</option>';
-                                    });
-                                    big_html += '</select>';
-                                    $(".brand_hide").hide();
-                                    $(".brand_select").show();
-                                    $(".brand_select").html(big_html);
-                                    $(".load_stuff").css({
-                                        opacity: 1
-                                    });
-                                }else{
-                                    big_html += '<option value="">Please Select a Client</option></section>';
-                                    $(".brand_hide").hide();
-                                    $(".brand_select").show();
-                                    $(".brand_select").html(big_html);
-                                    $(".load_stuff").css({
-                                        opacity: 1
-                                    });
-                                }
-                            }else{
-                                $(".load_stuff").css({
-                                    opacity: 1
-                                });
-                                toastr.error('An error occurred, please contact the administrator')
-                            }
-
-                        }
-                    });
-                }else{
-                    $("#industry").val('');
-                    $("#sub_industry").val('');
-                }
-            });
-
-            //fetch all industry and sub-industry attached to a brand
-            $('body').delegate('#brand','change', function(e) {
-                var brand = $("#brand").val();
-                if (brand != '') {
-                    $(".load_stuff").css({
-                        opacity: 0.5
-                    });
-                    $('.next').attr("disabled", true);
-                    var url = '/brand/get-industry';
-
-                    
-                    $.ajax({
-                        url: url,
-                        method: "GET",
-                        data: {brand: brand},
-                        success: function (data) {
-                            if (data.error === 'error') {
-                                $(".load_stuff").css({
-                                    opacity: 1
-                                });
-                                toastr.error('An error occured, please contact the administratot ')
-                            } else {
-                                $(".load_stuff").css({
-                                    opacity: 1
-                                });
-
-                                $("#industry").val(data.industry.name);
-                                $("#sub_industry").val(data.sub_industry.name);
-                            }
-
-                        }
-                    });
-                } else {
-                    $("#industry").val('');
-                    $("#sub_industry").val('');
-                }
-            });
-        });
     </script>
 
      <script src="{{asset('new_frontend/js/aria-accordion.js')}}"></script>
@@ -489,7 +336,6 @@
             var plans = [];
             var dplans = [];
             $("body").delegate(".aBtn", "click", function() {
-               
 			   var value_button = $(this).attr("data_15");
 			   var prog_id = $(this).data("program");
 			   var plan_station = $("#stat"+prog_id).text();
@@ -498,9 +344,8 @@
 			   var plan_day = $("#day"+prog_id).text();
 			   var plan_aud = $("#aud"+prog_id).text();
                var key = $("#unique"+prog_id).val();
-
 			   movePlanByDuration(prog_id, key, plan_station, plan_programe,plan_time, plan_day, plan_aud);
-
+                toastr.success('Added successfully');
 			   $('#'+prog_id).prop('disabled', true);
                
             });
@@ -510,27 +355,29 @@
 			 var value_button = $(this).attr("data_25");
 			 var prog_id = $(this).data("programm")
              var ey = $("#dunique"+prog_id).val();
-             console.log("rm", prog_id)
               $('#'+prog_id).prop('disabled', false);
               $( "tr" ).remove(".ri"+prog_id);
+                toastr.success('Removed successfully');
 		     });
 
 
 
 			$("body").delegate(".save", "click", function() {
-
+                    $("#load_this").css({
+                        opacity : 0.2
+                    });
                     var ids = [];
                     var children = document.getElementById("cont").children; //get container element children.
                     for (var i = 0, len = children.length ; i < len; i++) {
                         children[i].className = 'new-class'; //change child class name.
                         ids.push(children[i].id); //get child id.
                     }
-
-                   $('.save').prop('disabled', true);                
-
-
+                   $('.save').prop('disabled', true);
                    if(ids.length == 0 ){
                           toastr.error("Select the staion you want to add")
+                       $("#load_this").css({
+                           opacity : 1
+                       });
                             $('.save').prop('disabled', false);  
                         }else{
                         $.ajax({
@@ -542,20 +389,71 @@
                                 "mediaplan": fifthSegment,
                                 "data": JSON.stringify(ids)
                             },
+                            beforeSend: function(data) {
+                                // run toast showing progress
+                                toastr_options = {
+                                    "progressBar": true,
+                                    // "showDuration": "300",
+                                    "preventDuplicates": true,
+                                    "tapToDismiss": false,
+                                    "hideDuration": "1",
+                                    "timeOut": "300000000"
+                                };
+                                msg = "Saving suggestion, please wait";
+                                toastr.info(msg, null, toastr_options)
+                            },
                             success:function(data){
-                                $('.save').prop('disabled', false);
-                                toastr.success("Plans successfully saved!")
-                                    console.log(data)
-
-                            } 
+                                toastr.clear();
+                                if(data.status === 'success'){
+                                    $('.save').prop('disabled', false);
+                                    $("#load_this").css({
+                                        opacity : 1
+                                    });
+                                    toastr.success("Plans successfully saved!")
+                                }else{
+                                    toastr.error("The current operation failed");
+                                    $("#load_this").css({
+                                        opacity : 1
+                                    });
+                                    $('.save').prop('disabled', false);
+                                }
+                            },
+                            error : function (xhr) {
+                                toastr.clear();
+                                if(xhr.status === 500){
+                                    toastr.error('An unknown error has occurred, please try again');
+                                    $('.load_this').css({
+                                        opacity: 1
+                                    });
+                                    $('.save').prop('disabled', false);
+                                    return;
+                                }else if(xhr.status === 503){
+                                    toastr.error('The request took longer than expected, please try again');
+                                    $('.load_this').css({
+                                        opacity: 1
+                                    });
+                                    $('.save').prop('disabled', false);
+                                    return;
+                                }else{
+                                    toastr.error('An unknown error has occurred, please try again');
+                                    $('.load_this').css({
+                                        opacity: 1
+                                    });
+                                    $('.save').prop('disabled', false);
+                                    return;
+                                }
+                            }
                         });
-                    }
+                   }
    
 		  });
             
 
 
 			$("body").delegate(".show", "click", function() {
+                $("#load_this").css({
+                    opacity : 0.2
+                });
                 var ids = [];
                     var children = document.getElementById("cont").children; //get container element children.
                     for (var i = 0, len = children.length ; i < len; i++) {
@@ -583,19 +481,66 @@
                                 "mediaplan": fifthSegment,
                                 "data": JSON.stringify(ids)
                             },
+                            beforeSend: function(data) {
+                                // run toast showing progress
+                                toastr_options = {
+                                    "progressBar": true,
+                                    // "showDuration": "300",
+                                    "preventDuplicates": true,
+                                    "tapToDismiss": false,
+                                    "hideDuration": "1",
+                                    "timeOut": "300000000"
+                                };
+                                msg = "Creating suggestion, please wait";
+                                toastr.info(msg, null, toastr_options)
+                            },
                             success:function(data){
-                                     toastr.success("Plans successfully selected!")
+                                toastr.clear();
+                                if(data.status === 'success'){
+                                    $('.save').prop('disabled', false);
+                                    $("#load_this").css({
+                                        opacity : 1
+                                    });
+                                    toastr.success("Plans successfully created!")
                                     setTimeout(function() {
                                         location.href = '/agency/media-plan/createplan/'+fifthSegment;
-                                       }, 4000);
-
+                                    }, 2000);
+                                }else{
+                                    toastr.error("The current operation failed");
+                                    $("#load_this").css({
+                                        opacity : 1
+                                    });
+                                    $('.save').prop('disabled', false);
+                                }
+                            },
+                            error : function (xhr) {
+                                toastr.clear();
+                                if(xhr.status === 500){
+                                    toastr.error('An unknown error has occurred, please try again');
+                                    $('.load_this').css({
+                                        opacity: 1
+                                    });
+                                    $('.save').prop('disabled', false);
+                                    return;
+                                }else if(xhr.status === 503){
+                                    toastr.error('The request took longer than expected, please try again');
+                                    $('.load_this').css({
+                                        opacity: 1
+                                    });
+                                    $('.save').prop('disabled', false);
+                                    return;
+                                }else{
+                                    toastr.error('An unknown error has occurred, please try again');
+                                    $('.load_this').css({
+                                        opacity: 1
+                                    });
+                                    $('.save').prop('disabled', false);
+                                    return;
+                                }
                             }
                         });
                     }
-                
-			 console.log(plans)
-			
-			 
+
 		  });
 
             function movePlanByDuration(prog_id, key, plan_station, plan_programe, plan_time, plan_day, plan_aud){
@@ -639,21 +584,11 @@
                     $(".where-it-is-going").append(new_html);
                     // document.getElementById("ri"+prog_id).classList.add('highlight');
          
-         
-         
             }
-            
-       
-
-    
 <?php 
 
 $result = json_decode($fayaFound['total_graph'], true);
 foreach($result as $key => $Value){  ?>
-
-
-
-
 
      Highcharts.chart('container<?php echo $key;?>', {
   chart: {
@@ -667,8 +602,6 @@ foreach($result as $key => $Value){  ?>
                   point: {
                       events: {
                           click: function () {
-                              
-
                               var trim = this.category.substring(0,8)
                               var day =this.series.name.slice(-3);
 
@@ -679,8 +612,7 @@ foreach($result as $key => $Value){  ?>
                             if(this.y <1){
                                 toastr.error("Cant select zero populations")
                             }else {
-                                movePlanByDuration(vid, ke, this.series.name, pla_programe, this.category, day, this.y); 
-
+                                movePlanByDuration(vid, ke, this.series.name, pla_programe, this.category, day, this.y);
                             }
                                     
                           }

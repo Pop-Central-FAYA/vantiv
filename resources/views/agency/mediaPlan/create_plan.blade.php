@@ -389,13 +389,8 @@
                             "preventDuplicates": true,
                             "tapToDismiss": false,
                             "hideDuration": "1",
-                            "timeOut": "300000000", //give a really long timeout, we should be done before that
-                            // "extendedTimeOut": "1000",
-                            // "showEasing": "swing",
-                            // "hideEasing": "linear",
-                            // "showMethod": "fadeIn",
-                            // "hideMethod": "fadeOut"
-                        }
+                            "timeOut": "300000000"
+                        };
                         msg = "Generating ratings, please wait"
                         toastr.info(msg, null, toastr_options)
                     },
