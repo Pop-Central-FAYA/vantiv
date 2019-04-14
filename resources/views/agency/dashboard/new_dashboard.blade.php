@@ -233,13 +233,13 @@
             <div class="the_frame client_dets mb4">
 
                 <div class="filters border_bottom clearfix">
-                    <div class="column col_4 p-t">
+                    <div class="column col_6 p-t">
                         <p class="uppercased weight_medium">All Media Plans</p>
                     </div>
-                    <div class="column col_4 clearfix">
+                    <div class="column col_5 clearfix">
                         <input type="text" name="key_search_media_plan" placeholder="Enter Key Word..." class="key_search_media_plan">
                     </div>
-                    <div class="column col_4 clearfix">
+                    <div class="column col_1 clearfix">
                        <!--  <div class="col_5 column">
                             <input type="text" name="start_date" class="flatpickr" placeholder="Start Date">
                         </div>
