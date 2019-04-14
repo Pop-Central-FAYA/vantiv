@@ -855,6 +855,9 @@ input:-webkit-autofill {
 .bg_red {
   background: #f44336 !important;
 }
+.hover {
+  cursor: pointer;
+}
 .w10 {
   width: 10%;
 }
@@ -1005,7 +1008,6 @@ input:-webkit-autofill {
     background: none;
   }
 }
-
 .highlight {
   animation: highlight 5s;
 }
