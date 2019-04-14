@@ -41,37 +41,40 @@
             </div>
         </div>
         <div class="column col_6 clearfix">
-            <div class="col_3 column">
-                <label for="days">Days</label>
-                <select name="" id="days">
-                    <option value="monday">Monday</option>
-                    <option value="tuesday">Tuesday</option>
-                    <option value="wednesday">Wednesday</option>
-                    <option value="thursday">Thursday</option>
-                    <option value="friday">Friday</option>
-                    <option value="saturday">Saturday</option>
-                    <option value="sunday">Sunday</option>
-                </select>
-            </div>
-            <div class="col_3 column">
-                <label for="days">States</label>
-                <select name="" id="days">
-                    @foreach ($filterValues['state_list'] as $state)
-                    <option value="{{ $state }}">{{ $state }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="col_3 column">
-                <label for="days">Time</label>
-                <select name="" id="days">
-                    @foreach($filterValues['day_parts'] as $day_part)
-                        <option value="{{ $day_part }}">{{ $day_part }}</option>
-                    @endforeach
-                </select>                    
-            </div>
-            <div class="col_3 column">
-                <button class="filter-btn" id="filter-btn"><i class="material-icons left">search</i>Filter</button>
-            </div>
+            <form method="POST" action="" id="filter-form">
+                {{ csrf_field() }}
+                <input type="hidden" name="mediaPlanId" value="{{ $mediaPlanId }}">
+                <div class="col_3 column">
+                    <label for="days">Days</label>
+                    <select name="days" id="days">
+                        <option value="all" selected="true">All</option>
+                        @foreach ($filterValues['days'] as $day)
+                            <option value="{{$day}}" @if(isset($selectedFilters['days']) && $selectedFilters['days'] === $day) selected="selected" @endif>{{$day}}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col_3 column">
+                    <label for="states">States</label>
+                    <select name="states" id="states">
+                        <option value="all" selected="true">All</option>
+                        @foreach ($filterValues['state_list'] as $state)
+                        <option value="{{$state}}" @if(isset($selectedFilters['states']) && $selectedFilters['states'] === $state) selected="selected" @endif>{{$state}}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col_3 column">
+                    <label for="day_parts">Day Parts</label>
+                    <select name="day_parts" id="day_parts">
+                        <option value="all" selected="true">All</option>
+                        @foreach($filterValues['day_parts'] as $day_part)
+                            <option value="{{$day_part}}" @if(isset($selectedFilters['day_parts']) && $selectedFilters['day_parts'] === $day_part) selected="selected" @endif>{{$day_part}}</option>
+                        @endforeach
+                    </select>                    
+                </div>
+                <div class="col_3 column">
+                    <button type="submit" class="filter-btn" id="filter-btn"><i class="material-icons left">search</i>Filter</button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -274,6 +277,69 @@
       $(document).ready(function () {
         'use strict';
 
+        $('#view-table').on('click', function() {
+            $('#timebelts-graph').hide();
+            $('#timebelts-table').show();
+            $('#view-table').removeClass('inactive-dashboard-toggle-btn');
+            $('#view-graph').addClass('inactive-dashboard-toggle-btn');
+        });
+
+        $('#view-graph').on('click', function() {
+            $('#timebelts-table').hide();
+            $('#timebelts-graph').show();
+            $('#view-graph').removeClass('inactive-dashboard-toggle-btn');
+            $('#view-table').addClass('inactive-dashboard-toggle-btn');
+        });
+
+        // The submission button for the filters
+        // This will submit the filters and reload the page
+        $("#filter-form").on('submit', function(e) {
+            event.preventDefault(e);
+            $('.load_this_div').css({opacity : 0.2});
+            var formdata = $("#filter-form").serialize();
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: '/agency/media-plan/customise-filter',
+                dataType: 'json',
+                data: formdata,
+                beforeSend: function(data) {
+                    var toastr_options = {
+                        "preventDuplicates": true,
+                        "tapToDismiss": false,
+                        "hideDuration": "1",
+                        "timeOut": "300000000", //give a really long timeout, we should be done before that
+                    }
+                    var msg = "Setting up filters, please wait"
+                    toastr.info(msg, null, toastr_options)
+                },
+                success: function (data) {
+                    toastr.clear();
+                    if (data.status === 'success') {
+                        toastr.success("Filters set, retrieving results");
+                        location.href = '/agency/media-plan/customise/' + data.redirect_url;
+                    } else {
+                        toastr.error('An unknown error has occurred, please try again');
+                        $('.load_this_div').css({opacity: 1});
+                        return;
+                    }
+                },
+                error : function (xhr) {
+                    toastr.clear();
+                    if(xhr.status === 500){
+                        toastr.error('An unknown error has occurred, please try again');
+                        $('.load_this_div').css({opacity: 1});
+                        return;
+                    }else{
+                        toastr.error('An unknown error has occurred, please try again');
+                        $('.load_this_div').css({opacity: 1});
+                        return;
+                    }
+                }
+            })
+        });
+
+
         $(window).on('ariaAccordion.initialised', function (event, element) {
           console.log('initialised');
         });
@@ -292,16 +358,6 @@
         $('.accordion-group').last().ariaAccordion({
           slideSpeed: 200
         });
-
-        $("#view-graph").click(function () {
-            $("#timebelts-graph").show();
-            $("#timebelts-table").hide();
-        })
-
-        $("#view-table").click(function () {
-            $("#timebelts-graph").hide();
-            $("#timebelts-table").show();
-        })
       });
     </script>
      <script type="text/javascript">
