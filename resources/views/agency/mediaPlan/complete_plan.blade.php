@@ -25,13 +25,13 @@
             {{-- <p><a href="#ex1" rel="modal:open">Open Modal</a></p> --}}
         </div>
     </div>
-    <div id="refresh_this_stuff">
+    <div>
         @foreach($default_material_length as $duration)
             <div class="the_frame client_dets mb4 load_this_div">
 
                 <div class="filters border_bottom clearfix">
                     <div class="column col_8 p-t">
-                        <p class="uppercased weight_medium revealer" id="{{ $duration }}SecRevealer">{{ $duration }} sec </p>
+                        <p class="uppercased weight_medium revealer" id="{{ $duration }}SecRevealer">{{ $duration }} sec </p> <p class="update_{{ $duration }}">Sub Total :</p>
                     </div>
                     <div class="column col_4 p-t right">
                         <div class="select_wrap">
@@ -74,38 +74,25 @@
                                     <td id="btn" class="fixed-side">{{ $value->station }}</td>
                                     <td id="btn" class="fixed-side">{{ $value->day }}</td>
                                     <td id="btn" class="fixed-side"> {{ substr($value->start_time,0,5) }} {{ substr($value->end_time,0,5) }}</td>
-
                                     <td id="btn" class="fixed-side update_program_{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->day.'_'.$value->station.'_'.$value->start_time)) }}">
-                                        @if($value->program == 'Unknown Program')
-                                            <a href="#program_modal_{{ $duration }}{{ $value->id }}" class="modal_click">{{ $value->program }}</a>
-                                        @else
-                                            <a href="#edit_program_modal_{{ $duration }}{{ $value->id }}" class="modal_click">
-                                                {{ $value->program }}
-                                            </a>
-                                        @endif
-                                    </td>
-                                    <td id="btn" class="fixed-side new_program_{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->day.'_'.$value->station.'_'.$value->start_time)) }}" style="display: none;">
-                                        <a href="#program_modal_{{ $duration }}{{ $value->id }}" class="modal_click"></a>
-                                    </td>
-
-                                    <td id="btn" class="fixed-side" style="display: none;">
-                                        <a href="#program_modal_{{ $duration }}{{ $value->id }}" class="modal_click"></a>
+                                        <a href="#program_modal_{{ $duration }}{{ $value->id }}" class="modal_click update_program_a_{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->day.'_'.$value->station.'_'.$value->start_time)) }}">{{ $value->program }}</a>
                                     </td>
                                     @if($value->duration_lists != "[null]")
-                                        @foreach(json_decode($value->duration_lists) as $key => $duration_list)
-                                            @if($duration_list == $duration)
-                                                <td>
-                                                    <input type="number" readonly value="{{ json_decode($value->rate_lists)[$key] }}"
-                                                           class="update_rate_{{ $duration_list.'_'.json_decode($value->rate_lists)[$key] }}"
-                                                           id="ur{{ $duration }}{{$value->id}}" data_12="{{ $value->id}}"
-                                                           data_11="60" data_10="" data_9="">
-                                                </td>
-                                            @endif
-                                        @endforeach
+                                        <td>
+                                            <input type="number" readonly
+                                                   @foreach(json_decode($value->duration_lists) as $key => $duration_list)
+                                                   @if($duration_list == $duration)
+                                                   value="{{ json_decode($value->rate_lists)[$key] }}"
+                                                   @endif
+                                                   @endforeach
+                                                   class="update_rating_class_{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->day.'_'.$value->station.'_'.$value->start_time)) }}"
+                                                   id="ur{{ $duration }}{{$value->id}}" data_12="{{ $value->id}}"
+                                                   data_11="60" data_10="" data_9="">
+                                        </td>
                                     @else
                                         <td>
                                             <input type="number" readonly value=""
-                                                   class=""
+                                                   class="update_rate_{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->program.'_'.$value->station.'_'.$duration)) }}"
                                                    id="ur{{ $duration }}{{$value->id}}" data_12="{{ $value->id}}"
                                                    data_11="60" data_10="" data_9="">
                                         </td>
@@ -113,7 +100,7 @@
 
                                     <td>
                                         <a href="#discount_modal_{{ $duration.'_'.$value->id }}" class="modal_click">
-                                            <input type="number" readonly value="{{ $value->volume_discount }}" id="vd{{ $duration }}{{$value->id}}" data_12="{{ $value->id}}" data_11="60" data_10="" data_9="">
+                                            <input type="number" class="referesh_discount_{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->station)) }}" readonly value="{{ $value->volume_discount }}" id="vd{{ $duration }}{{$value->id}}" data_12="{{ $value->id}}" data_11="60" data_10="" data_9="">
                                         </a>
                                     </td>
 
@@ -124,8 +111,8 @@
                                     @for ($i = 0; $i < count($fayaFound['dates']); $i++)
                                         @if($fayaFound['days'][$i]==$value->day )
                                             <td>
-                                                <input type="number" id="{{ $duration }}{{$value->id}}" class="day_input" data_12="{{ $value->id}}"
-                                                        data_11="15" data_10="{{$fayaFound['dates'][$i]}}"
+                                                <input type="number" id="{{ $duration }}{{$value->id}}" class="day_input input_value_class{{ $duration.'_'.$value->id }} get_value{{ $fayaFound['dates'][$i].$value->id.$duration }}" data_12="{{ $value->id}}"
+                                                        data_11="15" data_10="{{$fayaFound['dates'][$i]}}" data-update_exposure="{{ $duration.'_'.$value->id }}" data-get_data_value="{{$fayaFound['dates'][$i].$value->id.$duration}}"
                                                         data_9="{{$fayaFound['days'][$i]}}">
                                             </td>
                                         @else
@@ -141,7 +128,7 @@
                                 {{--modal for discount--}}
                                 <div class="modal_contain" style="width: 1000px;" id="discount_modal_{{ $duration.'_'.$value->id }}">
                                     <div class="the_frame clearfix mb border_top_color pt load_this_div">
-                                        <form action="{{ route('media_plan.volume_discount.store') }}" data-get_volume_id="{{ $duration.'_'.$value->id }}" class="submit_discount_form" method="post" id="submit_discount_{{ $duration.'_'.$value->id }}">
+                                        <form action="{{ route('media_plan.volume_discount.store') }}" data-get_station_discount="{{ $value->station }}" data-get_volume_id="{{ $duration.'_'.$value->id }}" class="submit_discount_form" method="post" id="submit_discount_{{ $duration.'_'.$value->id }}">
                                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                             <div class="margin_center col_11 clearfix pt4 create_fields">
 
@@ -183,7 +170,6 @@
             </div>
         @endforeach
         @include('agency.mediaPlan.includes.program-modal')
-        @include('agency.mediaPlan.includes.update_program')
     </div>
 
     <div class="clearfix mb">
@@ -289,6 +275,46 @@
         var url = window.location.href;
         var trim = url.split('/');
         var fifthSegment = trim[6];
+        //var summed_value = [];
+        $.each(durations, function (duration_index, duration_value) {
+            $.each(media_plans, function (plan_index, plan_value) {
+                var summed_value = [];
+                $('.input_value_class'+duration_value+'_'+plan_value.id).keyup(function (e) {
+                    var sum = 0;
+                    var target_class_value = $(this).data('get_data_value');
+                    var value_of_input = $('.get_value'+target_class_value).val();
+                    var date = $(this).attr("data_10");
+                    var exposure_id_value = $(this).data('update_exposure');
+                    var number_value = parseInt(value_of_input);
+                    if (e.which !== 8 && e.which !== 0 && (e.which < 48 || e.which > 57)) {
+                        return false;
+                    }else{
+                        if(!isNaN(number_value)){
+                            for(var i = 0; i < summed_value.length; i++){
+                                if ( summed_value[i].date === date) {
+                                    summed_value.splice(i, 1);
+                                }
+                            }
+                            summed_value.push({
+                                'date' : date,
+                                'value' : number_value,
+                            });
+                        }else{
+                            for(var i = 0; i < summed_value.length; i++){
+                                if ( summed_value[i].date === date) {
+                                    summed_value.splice(i, 1);
+                                }
+                            }
+                        }
+                    }
+                    for(var i = 0; i < summed_value.length; i++){
+                        sum += summed_value[i].value;
+                    }
+                    $("#exposure_"+exposure_id_value).val(sum);
+                });
+            })
+        })
+
         $(".day_input").change(function () {
             var value_button = $(this).attr("data_12");
             var duration = $(this).attr("data_11");
@@ -342,7 +368,6 @@
                     '                              <a href="" id="remove'+i+'" data-button_id="'+i+'" style="color:red" class="uppercased color_initial remove">Remove</a>\n' +
                     '                           </div></div>'+
                     '                        </div>';
-                console.log(big_html);
                 $("#dynamic_field_"+value).append(big_html);
 
             });
@@ -390,7 +415,26 @@
                 data: formdata,
                 success: function (data) {
                     if(data.programs){
-                        $("#refresh_this_stuff").load(location.href+" #refresh_this_stuff>*","");
+                        console.log(data.ratings, data.programs);
+                        $.each(durations, function (index, duration_value) {
+                            $.each(data.programs, function (data_index, data_value) {
+                                var un_val = convertToSlug(data_value.day+'_'+data_value.station+'_'+data_value.start_time);
+                                var rating_class = convertToSlug(data_value.program_name+'_'+data_value.station+'_'+duration_value);
+                                $('.update_program_a_'+un_val).text(data_value.program_name);
+                                $('.update_program_modal_'+un_val).val(data_value.program_name);
+                                if($(this).data('get_duration') === duration_value){
+                                    $('.update_rating_class_'+un_val).addClass(rating_class);
+                                }
+                            });
+                            $.each(data.ratings, function (rating_index, rating_value) {
+                                if(duration_value === rating_value.duration){
+                                    var ratings_unique = convertToSlug(rating_value.program_name + '_' + rating_value.station + '_' + duration_value);
+                                    console.log(ratings_unique);
+                                    $('input.update_rate_' + ratings_unique).val(rating_value.price)
+                                }
+                            });
+                        });
+
                         toastr.success('Program Updated successful');
                         $.modal.close();
                         $('.load_this_div').css({
@@ -427,65 +471,13 @@
             })
         });
 
-        $(".update_form").on('submit', function(e) {
-            $('.load_this_div').css({
-                opacity : 0.2
-            });
-            event.preventDefault(e);
-            var form_id = $(this).data('get_id_update');
-            var formdata = $("#update_"+form_id).serialize();
-            $.ajax({
-                cache: false,
-                type: "POST",
-                url : '/agency/media-plan/store-programs',
-                dataType: 'json',
-                data: formdata,
-                success: function (data) {
-                    if(data.programs){
-                        $("#refresh_this_stuff").load(location.href+" #refresh_this_stuff>*","");
-                        toastr.success('Program Updated successful');
-                        $.modal.close();
-                        $('.load_this_div').css({
-                            opacity : 1
-                        });
-                        location.reload();
-                    }else{
-                        toastr.error('Cannot Update program');
-                        $('.load_this_div').css({
-                            opacity : 1
-                        });
-                    }
-                },
-                error : function (xhr) {
-                    if(xhr.status === 500){
-                        toastr.error('An unknown error has occurred, please try again');
-                        $('.load_this_div').css({
-                            opacity: 1
-                        });
-                        return;
-                    }else if(xhr.status === 503){
-                        toastr.error('The request took longer than expected, please try again');
-                        $('.load_this_div').css({
-                            opacity: 1
-                        });
-                        return;
-                    }else{
-                        toastr.error('An unknown error has occurred, please try again');
-                        $('.load_this_div').css({
-                            opacity: 1
-                        });
-                        return;
-                    }
-                },
-            })
-        });
-
         $(".submit_discount_form").on('submit', function(e) {
             $('.load_this_div').css({
                 opacity : 0.2
             });
             event.preventDefault(e);
             var form_id = $(this).data('get_volume_id');
+            var station = convertToSlug($(this).data('get_station_discount'));
             var formdata = $("#submit_discount_"+form_id).serialize();
             $.ajax({
                 cache: false,
@@ -495,13 +487,13 @@
                 data: formdata,
                 success: function (data) {
                     if(data.data){
-                        $("#refresh_this_stuff").load(location.href+" #refresh_this_stuff>*","");
+                        $(".referesh_discount_"+station).val(data.data.discount);
                         toastr.success('Volume Discount Added successful');
                         $.modal.close();
                         $('.load_this_div').css({
                             opacity : 1
                         });
-                        location.reload();
+                        //location.reload();
                     }else{
                         toastr.error('Cannot Add Volume Discount');
                         $('.load_this_div').css({
@@ -532,6 +524,17 @@
                 },
             })
         });
+
+        function convertToSlug(Text)
+        {
+            return Text
+                .toLowerCase()
+                .replace(/[^a-zA-Z0-9]+/g,'')
+                .replace(/ +/g,'-')
+                .replace('/:/g', '')
+                ;
+        }
+
 
         $("body").delegate(".remove_already", "click", function () {
             event.preventDefault();
