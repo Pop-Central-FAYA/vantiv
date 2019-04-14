@@ -294,8 +294,6 @@ class MediaPlanController extends Controller
         $programs_id = json_decode($request->get('data'));
          $media_plan_id = $request->get('mediaplan');
             $value = "";
-            
-
             try{
                 Utilities::switch_db('api')->transaction(function () use($programs_id, $media_plan_id, $value) {
                    
@@ -311,7 +309,7 @@ class MediaPlanController extends Controller
             }catch (\Exception $exception){
                 return response()->json(['status'=>'failed', 'message'=> "The current operation failed" ]);
             }
-		return response()->json(['status'=>'Sucessfull', 'message'=> "Plan Selected successfully" ]);
+		return response()->json(['status'=>'success', 'message'=> "Plan Selected successfully" ]);
 		
 
 	}
