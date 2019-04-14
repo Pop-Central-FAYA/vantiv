@@ -116,9 +116,9 @@ class SummarizePlan
 
         foreach ($material_lengths as $key => $value) {
             $durations[] = $key;
-            $gross_unit_rate = $value->unit_rate;
-            $value_less = $gross_unit_rate * ((100 - $vol_disc) / 100);
-            $net_unit_rate = $value_less * ((100 - $agency_comm) / 100);
+            $gross_unit_rate = (int) $value->unit_rate;
+            $value_less = $gross_unit_rate * ((100 - (int)$vol_disc) / 100);
+            $net_unit_rate = $value_less * ((100 - (int)$agency_comm) / 100);
             $spots = 0;
 
             foreach ($value->days as $date => $num_spots) {

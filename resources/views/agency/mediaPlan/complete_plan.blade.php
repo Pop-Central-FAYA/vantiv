@@ -220,9 +220,20 @@
         <button type="button" id="back_btn" class="btn small_btn show" onclick="goBack()">Back</button>
       </div>
       <div class="col_6 column">
-        <button type="button" id="mpo_filters" class="btn small_btn right show">Create Plan</button>
+        <button type="button" id="save_progress" class="btn small_btn right show summary">Summary</button>
+        <button type="button" id="mpo_filters" class="btn small_btn right show save mr-2">Save</button>
       </div>
     </div>
+
+    <!-- <div class="action_footer client_dets mb4 mt4">
+      <div class="col_6 column">
+        <button type="button" id="back_btn" class="btn small_btn show" onclick="goBack()">Back</button>
+      </div>
+      <div class="col_6 column">
+        <button type="button" id="mpo_filters" class="btn small_btn right show">Create Plan</button>
+        <button type="button" id="save_progress" class="btn small_btn right save mr-2">Save</button>
+      </div>
+    </div> -->
 
     <br><br><br><br><br><br><br>
 
@@ -529,10 +540,24 @@
 
         });
 
-        $("body").delegate(".show", "click", function () {
-            $('.show').prop('disabled', true);
+        function save_plans(forward) {
+            if (plans.length == 0) {
+                // swal("input atleast one spot");
+                toastr.error("Please choose at least one spot.");
+                $('.show').prop('disabled', false);
+                return;
+            }
+
             var client_name = $("#client_name").val();
             var product_name = $("#product_name").val();
+            if (client_name == "Select Client" && product_name == "") {
+                // swal("Select client and enter product name");
+                toastr.error("Please select a client and brand and product");
+                $('.show').prop('disabled', false);
+                return;
+            }
+
+            $('.save').prop('disabled', true);
             var plan_id = $("#plan_id").val();
             var body = {
                 "_token": "{{ csrf_token() }}",
@@ -541,36 +566,96 @@
                 "plan_id": plan_id,
                 "data": JSON.stringify(plans)
             }
-            if (plans.length == 0) {
-                swal("input atleast one spot");
-                $('.show').prop('disabled', false);
-            } else {
-
-                if (client_name == "Select Client" && product_name == "") {
-                    swal("Select client and enter product name");
-                    $('.show').prop('disabled', false);
-                } else {
-
-                    $.ajax({
-                        type: "POST",
-                        dataType: 'json',
-                        url: "/agency/media-plan/finish_plan",
-                        data: body,
-                        success: function (data) {
-                            swal("Success!", "Plans successfully selected!", "success")
-                                .then((value) => {
-                                    location.href = '/agency/media-plan/summary/' +
-                                        fifthSegment;
-                                });
-                        },
-
-                        error: function () {
-                            alert("some error");
-                            $('.show').prop('disabled', false);
+            $.ajax({
+                type: "POST",
+                dataType: 'json',
+                url: "/agency/media-plan/finish_plan",
+                data: body,
+                beforeSend: function(data) {
+                    // run toast showing progress
+                    toastr_options = {
+                        "preventDuplicates": true,
+                        "tapToDismiss": false,
+                        "hideDuration": "1",
+                        "timeOut": "300000000"
+                    };
+                    msg = "Saving, please wait";
+                    toastr.info(msg, null, toastr_options)
+                },
+                success: function(data){
+                    toastr.clear();
+                    if(data.status === 'success'){
+                        if (forward) {
+                            toastr.success("Plans successfully saved! Going to summary")
+                        } else {
+                            toastr.success("Plans successfully saved!")
                         }
-                    });
+                        $('.save').prop('disabled', false);
+                        $("#load_this").css({opacity : 1});
+                        if (forward) {
+                            location.href = '/agency/media-plan/summary/' + plan_id;
+                        }
+                    }else{
+                        toastr.error("Error saving plans.");
+                        $("#load_this").css({opacity : 1});
+                        $('.save').prop('disabled', false);
+                    }
+                },
+                error: function(xhr){
+                    toastr.clear();
+                    toastr.error('An unknown error has occurred, please try again');
+                    $('.load_this').css({opacity: 1});
+                    $('.save').prop('disabled', false);
+                    return;
                 }
-            }
+            });
+        };
+
+        $("body").delegate(".summary", "click", function () {
+            save_plans(true);
+        });
+
+        $("body").delegate(".save", "click", function () {
+            save_plans(false);
+            // $('.save').prop('disabled', true);
+            // var client_name = $("#client_name").val();
+            // var product_name = $("#product_name").val();
+            // var plan_id = $("#plan_id").val();
+            // var body = {
+            //     "_token": "{{ csrf_token() }}",
+            //     "client_name": client_name,
+            //     "product_name": product_name,
+            //     "plan_id": plan_id,
+            //     "data": JSON.stringify(plans)
+            // }
+            // if (plans.length == 0) {
+            //     swal("input atleast one spot");
+            //     $('.show').prop('disabled', false);
+            // } else {
+            //     if (client_name == "Select Client" && product_name == "") {
+            //         swal("Select client and enter product name");
+            //         $('.show').prop('disabled', false);
+            //     } else {
+            //         $.ajax({
+            //             type: "POST",
+            //             dataType: 'json',
+            //             url: "/agency/media-plan/finish_plan",
+            //             data: body,
+            //             success: function (data) {
+            //                 swal("Success!", "Plans successfully selected!", "success")
+            //                     .then((value) => {
+            //                         location.href = '/agency/media-plan/summary/' +
+            //                             fifthSegment;
+            //                     });
+            //             },
+
+            //             error: function () {
+            //                 alert("some error");
+            //                 $('.show').prop('disabled', false);
+            //             }
+            //         });
+            //     }
+            // }
 
         });
     });

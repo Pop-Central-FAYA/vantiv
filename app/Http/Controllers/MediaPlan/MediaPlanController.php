@@ -411,26 +411,30 @@ class MediaPlanController extends Controller
 
     public function CompletePlan(Request $request)
     {
-        $programs_id = json_decode($request->get('data'));
-        $programs_id = collect($programs_id);
-        $programs_id = $this->groupById($programs_id);
-        $client_name = $request->get('client_name');
-        $product_name = $request->get('product_name');
-        $plan_id = $request->get('plan_id');
-        foreach($programs_id as $key => $value){
-            DB::table('media_plan_suggestions')
-            ->where('id', $key)
-            ->update(['material_length' => $value]);
+        try{
+            Utilities::switch_db('api')->transaction(function () use($request) {
+
+                $programs_id = json_decode($request->get('data'));
+                $programs_id = collect($programs_id);
+                $programs_id = $this->groupById($programs_id);
+                $client_name = $request->get('client_name');
+                $product_name = $request->get('product_name');
+                $plan_id = $request->get('plan_id');
+
+                foreach($programs_id as $key => $value) {
+                    DB::table('media_plan_suggestions')
+                        ->where('id', $key)
+                        ->update(['material_length' => $value]);
+                }
+                DB::table('media_plans')
+                    ->where('id', $plan_id)
+                    ->update(['client_id' => $client_name, 'product_name' => $product_name]);
+            });
+        }catch (\Exception $exception){
+            Log::error($exception);
+            return response()->json(['status'=>'error', 'message'=> "The current operation failed" ]);
         }
-
-        DB::table('media_plans')
-        ->where('id', $plan_id)
-        ->update(['client_id' => $client_name, 'product_name' => $product_name,]);
-
-
-        return response()->json(['msg'=>"Good to go", 'msgs'=>$programs_id]);
-
-
+        return response()->json(['msg'=>"Good to go", "status" => "success"]);
     }
 
 
