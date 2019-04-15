@@ -111,11 +111,33 @@
                                     </td>
 
                                     <td>
-                                        <input type="number" readonly id="exposure_{{ $duration.'_'.$value->id }}" name="exposure">
+                                        <input type="number" readonly id="exposure_{{ $duration.'_'.$value->id }}"
+                                               @if($value->material_length != "")
+                                                   @foreach(json_decode($value->material_length) as $media_length_data)
+                                                        @if($media_length_data[0]->material_length == $duration)
+                                                            @foreach($media_length_data as $media)
+                                                                value="{{ collect($media_length_data)->sum('slot') }}"
+                                                            @endforeach
+                                                        @endif
+                                                   @endforeach
+                                               @endif
+                                               name="exposure">
                                     </td>
 
                                     <td>
-                                        <input type="number" readonly id="net_total_{{ $duration.'_'.$value->id }}" class="get_duration_net_{{ $duration }}" name="net_total">
+                                        <input type="number"
+                                               readonly id="net_total_{{ $duration.'_'.$value->id }}"
+                                               class="get_duration_net_{{ $duration }}"
+                                               @if($value->material_length != "")
+                                                   @foreach(json_decode($value->material_length) as $media_length_data)
+                                                       @if($media_length_data[0]->material_length == $duration)
+                                                           @foreach($media_length_data as $media)
+                                                                value="{{ array_last($media_length_data)->net_total }}"
+                                                           @endforeach
+                                                       @endif
+                                                   @endforeach
+                                               @endif
+                                               name="net_total">
                                     </td>
 
                                     @for ($i = 0; $i < count($fayaFound['dates']); $i++)
@@ -325,8 +347,6 @@
         });
 
         var plans = [];
-        var all_summed_net_total = [];
-        var all_summed_value_total = [];
         var url = window.location.href;
         var trim = url.split('/');
         var fifthSegment = trim[6];
@@ -422,8 +442,8 @@
                 'exposure' : exposure,
                 'net_total' : net_total,
             });
+            console.log(plans);
         });
-        console.log(plans)
         var i = $("select .b").length;
         var max = 12;
         $.each(days, function (index, value) {
