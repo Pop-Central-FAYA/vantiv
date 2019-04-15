@@ -87,14 +87,14 @@
                                                    @endif
                                                    @endforeach
                                                    class="update_rating_class_{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->day.'_'.$value->station.'_'.$value->start_time)) }} unit_rate_val_{{ $duration.'_'.$value->id }}"
-                                                   id="ur{{ $duration }}{{$value->id}}" data_12="{{ $value->id}}"
+                                                   id="ur_{{ $duration.'_'.$value->id}}" data_12="{{ $value->id}}"
                                                    data_11="60" data_10="" data_9="">
                                         </td>
                                     @else
                                         <td>
                                             <input type="number" readonly value=""
-                                                   class="update_rate_{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->program.'_'.$value->station.'_'.$duration)) }} unit_rate_val_{{ $duration.'_'.$value->id }}""
-                                                   id="ur{{ $duration }}{{$value->id}}" data_12="{{ $value->id}}"
+                                                   class="update_rate_{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->program.'_'.$value->station.'_'.$duration)) }} unit_rate_val_{{ $duration.'_'.$value->id }}"
+                                                   id="ur_{{ $duration.'_'.$value->id}}" data_12="{{ $value->id}}"
                                                    data_11="60" data_10="" data_9="">
                                         </td>
                                     @endif
@@ -104,7 +104,7 @@
                                             <input type="number"
                                                    class="referesh_discount_{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->station)) }} discount_val_{{ $duration.'_'.$value->id }}"
                                                    readonly value="{{ $value->volume_discount }}"
-                                                   id="vd{{ $duration }}{{$value->id}}"
+                                                   id="vd_{{ $duration.'_'.$value->id}}"
                                                    data_12="{{ $value->id}}"
                                                    data_11="60" data_10="" data_9="">
                                         </a>
@@ -121,11 +121,32 @@
                                     @for ($i = 0; $i < count($fayaFound['dates']); $i++)
                                         @if($fayaFound['days'][$i]==$value->day )
                                             <td>
-                                                <input type="number" id="{{ $duration }}{{$value->id}}" class="day_input input_value_class{{ $duration.'_'.$value->id }} get_value{{ $fayaFound['dates'][$i].$value->id.$duration }}" data_12="{{ $value->id}}"
-                                                        data_11="15" data_10="{{$fayaFound['dates'][$i]}}" data-update_exposure="{{ $duration.'_'.$value->id }}" data-get_data_value="{{$fayaFound['dates'][$i].$value->id.$duration}}"
+                                                <input type="number"
+                                                       id="unit_exposure_{{ $duration.'_'.$value->id }}"
+                                                       class="day_input input_value_class{{ $duration.'_'.$value->id }}
+                                                       get_value{{ $fayaFound['dates'][$i].$value->id.$duration }}"
+                                                       data_12="{{ $value->id}}"
+                                                       data_11="{{ $duration }}"
+                                                       data_10="{{$fayaFound['dates'][$i]}}"
+                                                       data-update_exposure="{{ $duration.'_'.$value->id }}"
+                                                       data-get_data_value="{{$fayaFound['dates'][$i].$value->id.$duration}}"
                                                        data-duration="{{ $duration }}"
+                                                       data-required_values="{{ $fayaFound['dates'][$i].$value->id.$duration }}"
                                                        data-id="{{ $value->id }}"
-                                                        data_9="{{$fayaFound['days'][$i]}}">
+                                                       data-get_select_factor="{{ $duration.'_'.$value->id }}"
+                                                       data_9="{{$fayaFound['days'][$i]}}"
+                                                       @if($value->material_length != "")
+                                                           @foreach(json_decode($value->material_length) as $media_length_data)
+                                                               @if($media_length_data[0]->material_length == $duration)
+                                                                   @foreach($media_length_data as $media)
+                                                                       @if($media->date == $fayaFound['dates'][$i] && $media->id == $value->id)
+                                                                           value="{{ $media->slot }}"
+                                                                       @endif
+                                                                   @endforeach
+                                                               @endif
+                                                           @endforeach
+                                                       @endif
+                                                >
                                             </td>
                                         @else
                                             <td id="">
@@ -237,16 +258,6 @@
         <button type="button" id="mpo_filters" class="btn small_btn right show save mr-2">Save</button>
       </div>
     </div>
-
-    <!-- <div class="action_footer client_dets mb4 mt4">
-      <div class="col_6 column">
-        <button type="button" id="back_btn" class="btn small_btn show" onclick="goBack()">Back</button>
-      </div>
-      <div class="col_6 column">
-        <button type="button" id="mpo_filters" class="btn small_btn right show">Create Plan</button>
-        <button type="button" id="save_progress" class="btn small_btn right save mr-2">Save</button>
-      </div>
-    </div> -->
 
     <br><br><br><br><br><br><br>
 
@@ -366,15 +377,17 @@
 
         $(".day_input").change(function () {
             var value_button = $(this).attr("data_12");
-            var duration = $(this).attr("data_11");
+            var duration = $(this).data("duration");
             var date = $(this).attr("data_10");
             var day = $(this).attr("data_9");
-            var slot = $("#" + duration + value_button).val();
-            var unit_rate = $("#ur" + duration + value_button).val();
-            var volume_disc = $("#vd" + duration + value_button).val();
+            var select_factor = $(this).data('update_exposure');
+            var data_values = $(this).data('get_data_value');
+            var slot = $(".get_value" + data_values).val();
+            var unit_rate = $("#ur_" + select_factor).val();
+            var volume_disc = $("#vd_" + select_factor).val();
             if (plans.length > 0) {
               for (var i = 0; i < plans.length; i++) {
-                if (plans[i].id == value_button && plans[i].date == date && plans[i].duration == duration) {
+                if (plans[i].id === value_button && plans[i].date === date && plans[i].duration === duration) {
                   plans.splice(i, 1)
                 }
               }
@@ -464,7 +477,6 @@
                 data: formdata,
                 success: function (data) {
                     if(data.programs){
-                        console.log(data.ratings, data.programs);
                         $.each(durations, function (index, duration_value) {
                             $.each(data.programs, function (data_index, data_value) {
                                 var un_val = convertToSlug(data_value.day+'_'+data_value.station+'_'+data_value.start_time);
@@ -478,7 +490,6 @@
                             $.each(data.ratings, function (rating_index, rating_value) {
                                 if(duration_value === rating_value.duration){
                                     var ratings_unique = convertToSlug(rating_value.program_name + '_' + rating_value.station + '_' + duration_value);
-                                    console.log(ratings_unique);
                                     $('input.update_rate_' + ratings_unique).val(rating_value.price)
                                 }
                             });
@@ -584,7 +595,6 @@
                 ;
         }
 
-
         $("body").delegate(".remove_already", "click", function () {
             event.preventDefault();
             var button_id = $(this).data("button_id");
@@ -618,7 +628,7 @@
                 "brand_id": brand_id,
                 "plan_id": plan_id,
                 "data": JSON.stringify(plans)
-            }
+            };
             $.ajax({
                 type: "POST",
                 dataType: 'json',
@@ -670,46 +680,6 @@
 
         $("body").delegate(".save", "click", function () {
             save_plans(false);
-            // $('.save').prop('disabled', true);
-            // var client_name = $("#client_name").val();
-            // var product_name = $("#product_name").val();
-            // var plan_id = $("#plan_id").val();
-            // var body = {
-            //     "_token": "{{ csrf_token() }}",
-            //     "client_name": client_name,
-            //     "product_name": product_name,
-            //     "plan_id": plan_id,
-            //     "data": JSON.stringify(plans)
-            // }
-            // if (plans.length == 0) {
-            //     swal("input atleast one spot");
-            //     $('.show').prop('disabled', false);
-            // } else {
-            //     if (client_name == "Select Client" && product_name == "") {
-            //         swal("Select client and enter product name");
-            //         $('.show').prop('disabled', false);
-            //     } else {
-            //         $.ajax({
-            //             type: "POST",
-            //             dataType: 'json',
-            //             url: "/agency/media-plan/finish_plan",
-            //             data: body,
-            //             success: function (data) {
-            //                 swal("Success!", "Plans successfully selected!", "success")
-            //                     .then((value) => {
-            //                         location.href = '/agency/media-plan/summary/' +
-            //                             fifthSegment;
-            //                     });
-            //             },
-
-            //             error: function () {
-            //                 alert("some error");
-            //                 $('.show').prop('disabled', false);
-            //             }
-            //         });
-            //     }
-            // }
-
         });
 
         $('body').delegate('#clients','change', function(e){

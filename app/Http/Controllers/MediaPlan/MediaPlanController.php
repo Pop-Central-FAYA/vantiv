@@ -328,6 +328,7 @@ class MediaPlanController extends Controller
     {
         $get_suggestion_with_ratings = new GetSuggestionListWithProgramRating($id);
         $plans = $get_suggestion_with_ratings->getMediaPlanSuggestionWithProgram();
+
 		$plans_details = DB::table('media_plans')->where('id', $id)->get();
 
 		$clients = new AllClient(\Auth::user()->companies->first()->id);
