@@ -24,19 +24,19 @@
         <!-- main frame -->
         <div class="the_frame clearfix mb border_top_color load_stuff">
 
-            <div class="margin_center col_7 clearfix create_fields">
+            <div class="margin_center col_10 clearfix create_fields">
 
-                <div class="the_stats the_frame clearfix mb4">
+                <div class="the_stats the_frame clearfix mb4 mt4">
                     <table class="display dashboard_campaigns">
                         <tbody>
                            <tr>
-                            <td>Client Name</td><td>{{ $media_plan->client->company_name }}</td>
+                            <td><span class="mr-2"><b>Client Name:</b></span> {{ $media_plan->client->company_name }}</td>
                            </tr>
                            <tr>
-                            <td>Product Name</td><td>{{ $media_plan->product_name }}</td>
+                            <td><span class="mr-2"><b>Product Name:</b></span> {{ $media_plan->product_name }}</td>
                            </tr>
                            <tr>
-                            <td>Flight Date</td><td>{{ date('d-M-Y',strtotime($media_plan->start_date)).' to '.date('d-M-Y',strtotime($media_plan->end_date)) }}</td>
+                            <td><span class="mr-2"><b>Flight Date:</b></span> {{ date('d-M-Y',strtotime($media_plan->start_date)).' to '.date('d-M-Y',strtotime($media_plan->end_date)) }}</td>
                            </tr>
                         </tbody>
                     </table>
@@ -87,23 +87,36 @@
                 </div>
 
                 @if(Auth::user()->hasRole('admin'))
-                    <div class="mb3">
+                    <!-- <div class="mb3">
                         <a href="{{ route('agency.media_plan.approve', ['id'=>$media_plan->id]) }}" class="btn block_disp uppercased align_center mb3"><i class="material-icons" style="margin-right: 10px">check</i>Approve Plan</a>
 
                         <a href="{{ route('agency.media_plan.decline', ['id'=>$media_plan->id]) }}" class="btn block_disp uppercased align_center bg_red"><i class="material-icons mt2" style="margin-right: 10px;">clear</i>Decline Plan</a>
 
                         <a href="{{ route('agency.media_plan.export', ['id'=>$media_plan->id]) }}" class="btn block_disp uppercased align_center"><span class="_plus"></span>Export Plan</a>
-                    </div>
+                    </div> -->
                 @endif
             </div>
         </div>
         <!-- main frame end -->
-        <div class="center" style="text-align: center;">
+        <!-- <div class="center" style="text-align: center;">
             <a href="#" onclick="goBack()" class="btn uppercased back_btn w10">
                 <i class="material-icons left" style="margin-top: 5px">keyboard_backspace</i>
                 <span>Back</span>
             </a>
+        </div> -->
+        <div class="action_footer client_dets mb4 mt4">
+          <div class="col_5 column">
+            <button type="button" id="back_btn" class="btn small_btn show" onclick="goBack()">Back</button>
+          </div>
+          <div class="col_7 column">
+            @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('finance'))
+                <a href="{{ route('agency.media_plan.approve', ['id'=>$media_plan->id]) }}" class="btn block_disp uppercased mr-1"><i class="material-icons">check</i>Approve Plan</a>
+                <a href="{{ route('agency.media_plan.decline', ['id'=>$media_plan->id]) }}" class="btn block_disp uppercased bg_red mr-1"><i class="material-icons">clear</i>Decline Plan</a>
+            @endif
+            <a href="{{ route('agency.media_plan.export', ['id'=>$media_plan->id]) }}" class="btn block_disp uppercased"><i class="material-icons">file_download</i>Export Plan</a>
+          </div>
         </div>
+        <br><br><br><br><br><br><br>
     </div>
 @stop
 
@@ -245,4 +258,14 @@
 @section('styles')
     <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+    <style type="text/css">
+        .material-icons {
+            font-weight: 700;
+            font-size: 14px;
+            height: 11px;
+            width: 11px;
+            margin-right: 10px;
+            margin-top: 6px;
+        }
+    </style>
 @stop
