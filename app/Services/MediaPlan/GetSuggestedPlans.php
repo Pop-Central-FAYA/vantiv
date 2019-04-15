@@ -19,16 +19,22 @@ class GetSuggestedPlans
         "Primetime" => array("17:00", "21:00")
     );
 
+    // const STATION_TYPE = array(
+    //     "Cable" => "cable",
+    //     "Network" => "network",
+    //     "Terrestrial" => "terrestrial"
+    // );
+
     const STATION_TYPE = array(
-        "Cable" => "cable",
         "Network" => "network",
-        "Terrestrial" => "terrestrial"
+        "Regional" => "regional",
+        "Satellite" => "satellite"
     );
 
     public function __construct($mediaPlanId, $filters=array()) {
         $this->mediaPlanId = $mediaPlanId;
         if (!isset($filters['station_type'])) {
-            $filters = array("station_type" => "Terrestrial");
+            $filters = array("station_type" => "Network");
         }
         $this->filters = $filters;
     }

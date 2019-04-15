@@ -25,6 +25,7 @@ services:
       - DB_USERNAME=faya
       - DB_PASSWORD=faya
       - MEDIA_BUCKET=faya-dev-us-east-1-media
+      - PHP_MEMORY_LIMIT=256M
     volumes:
       - $HOME/.aws:/home/.aws
       - ./:/app
