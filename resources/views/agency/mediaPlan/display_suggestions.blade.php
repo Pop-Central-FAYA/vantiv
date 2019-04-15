@@ -112,9 +112,9 @@
                     </tbody>
                 </table>
             </header>
-            <div class="accordion-group__accordion-panel">
+            <div class="accordion-group__accordion-panel" style="display: none;">
                 <div class="accordion-group__accordion-content" style="overflow-x: hidden; background: #b0bec5;">
-                    <table class="table table-hover" style="margin-left: 45px">
+                    <table class="table table-hover accordion" style="margin-left: 45px;">
                         <thead>
                             <tr>
                                 <th>Day</th>
@@ -287,6 +287,10 @@
     <script>
       $(document).ready(function () {
         'use strict';
+
+             //var accc = document.getElementById('accordion');
+            // accc.style.display = "";  
+
         $('#timebelts-graph').hide();
         $('#view-table').on('click', function() {
             $('#timebelts-graph').hide();
