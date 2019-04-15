@@ -194,7 +194,7 @@ class MediaPlanController extends Controller
             "day_parts" => collect(GetSuggestedPlans::DAYPARTS)->keys()->sort()->toArray(),
             "state_list" => $state_list,
             "days" => array("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"),
-            "station_type" => array("Cable", "Network", "Terrestrial")
+            "station_type" => array("Network", "Regional", "Satellite")
         );
 	}
     
