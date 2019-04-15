@@ -31,7 +31,7 @@
 
                 <div class="filters border_bottom clearfix">
                     <div class="column col_8 p-t">
-                        <p class="uppercased weight_medium revealer" id="{{ $duration }}SecRevealer">{{ $duration }} sec </p> <p class="update_{{ $duration }}">Sub Total :</p>
+                        <p class="uppercased weight_medium revealer" id="{{ $duration }}SecRevealer">{{ $duration }} sec </p> <p class="update_{{ $duration }}"></p>
                     </div>
                     <div class="column col_4 p-t right">
                         <div class="select_wrap">
@@ -61,6 +61,7 @@
                                 <th class="fixed-side">Unit Rate</th>
                                 <th class="fixed-side">Volume Disc</th>
                                 <th class="fixed-side">Total Exposure</th>
+                                <th class="fixed-side">Net Total</th>
                                 @for ($i = 0; $i < count($fayaFound['labeldates']); $i++)
                                     <th>{{ $fayaFound['labeldates'][$i] }}</th>
                                 @endfor
@@ -85,14 +86,14 @@
                                                    value="{{ json_decode($value->rate_lists)[$key] }}"
                                                    @endif
                                                    @endforeach
-                                                   class="update_rating_class_{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->day.'_'.$value->station.'_'.$value->start_time)) }}"
+                                                   class="update_rating_class_{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->day.'_'.$value->station.'_'.$value->start_time)) }} unit_rate_val_{{ $duration.'_'.$value->id }}"
                                                    id="ur{{ $duration }}{{$value->id}}" data_12="{{ $value->id}}"
                                                    data_11="60" data_10="" data_9="">
                                         </td>
                                     @else
                                         <td>
                                             <input type="number" readonly value=""
-                                                   class="update_rate_{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->program.'_'.$value->station.'_'.$duration)) }}"
+                                                   class="update_rate_{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->program.'_'.$value->station.'_'.$duration)) }} unit_rate_val_{{ $duration.'_'.$value->id }}""
                                                    id="ur{{ $duration }}{{$value->id}}" data_12="{{ $value->id}}"
                                                    data_11="60" data_10="" data_9="">
                                         </td>
@@ -100,7 +101,12 @@
 
                                     <td>
                                         <a href="#discount_modal_{{ $duration.'_'.$value->id }}" class="modal_click">
-                                            <input type="number" class="referesh_discount_{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->station)) }}" readonly value="{{ $value->volume_discount }}" id="vd{{ $duration }}{{$value->id}}" data_12="{{ $value->id}}" data_11="60" data_10="" data_9="">
+                                            <input type="number"
+                                                   class="referesh_discount_{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->station)) }} discount_val_{{ $duration.'_'.$value->id }}"
+                                                   readonly value="{{ $value->volume_discount }}"
+                                                   id="vd{{ $duration }}{{$value->id}}"
+                                                   data_12="{{ $value->id}}"
+                                                   data_11="60" data_10="" data_9="">
                                         </a>
                                     </td>
 
@@ -108,11 +114,17 @@
                                         <input type="number" readonly id="exposure_{{ $duration.'_'.$value->id }}" name="exposure">
                                     </td>
 
+                                    <td>
+                                        <input type="number" readonly id="net_total_{{ $duration.'_'.$value->id }}" class="get_duration_net_{{ $duration }}" name="net_total">
+                                    </td>
+
                                     @for ($i = 0; $i < count($fayaFound['dates']); $i++)
                                         @if($fayaFound['days'][$i]==$value->day )
                                             <td>
                                                 <input type="number" id="{{ $duration }}{{$value->id}}" class="day_input input_value_class{{ $duration.'_'.$value->id }} get_value{{ $fayaFound['dates'][$i].$value->id.$duration }}" data_12="{{ $value->id}}"
                                                         data_11="15" data_10="{{$fayaFound['dates'][$i]}}" data-update_exposure="{{ $duration.'_'.$value->id }}" data-get_data_value="{{$fayaFound['dates'][$i].$value->id.$duration}}"
+                                                       data-duration="{{ $duration }}"
+                                                       data-id="{{ $value->id }}"
                                                         data_9="{{$fayaFound['days'][$i]}}">
                                             </td>
                                         @else
@@ -275,17 +287,20 @@
         var url = window.location.href;
         var trim = url.split('/');
         var fifthSegment = trim[6];
-        //var summed_value = [];
         $.each(durations, function (duration_index, duration_value) {
+            var sum_net = [];
             $.each(media_plans, function (plan_index, plan_value) {
                 var summed_value = [];
                 $('.input_value_class'+duration_value+'_'+plan_value.id).keyup(function (e) {
                     var sum = 0;
+                    var net_sumation = 0;
                     var target_class_value = $(this).data('get_data_value');
                     var value_of_input = $('.get_value'+target_class_value).val();
                     var date = $(this).attr("data_10");
                     var exposure_id_value = $(this).data('update_exposure');
                     var number_value = parseInt(value_of_input);
+                    var id = $(this).data('id');
+                    var duration = $(this).data('duration');
                     if (e.which !== 8 && e.which !== 0 && (e.which < 48 || e.which > 57)) {
                         return false;
                     }else{
@@ -311,6 +326,25 @@
                         sum += summed_value[i].value;
                     }
                     $("#exposure_"+exposure_id_value).val(sum);
+                    var discount = $('.discount_val_'+exposure_id_value).val();
+                    var unit_rate = $('.unit_rate_val_'+exposure_id_value).val();
+                    var gross_total = unit_rate * sum;
+                    var deducted_value = (discount/100) * gross_total;
+                    var net_total = gross_total - deducted_value;
+                    $('#net_total_'+exposure_id_value).val(net_total);
+                    for(var i = 0; i < sum_net.length; i++){
+                        if ( sum_net[i].id === id) {
+                            sum_net.splice(i, 1);
+                        }
+                    }
+                    sum_net.push({
+                        'id' : id,
+                        'value' : net_total,
+                    });
+                    for(var i = 0; i < sum_net.length; i++){
+                        net_sumation += sum_net[i].value;
+                    }
+                    $('.update_'+duration).text('Sub Total : ₦'+(net_sumation + 0.001).toLocaleString().slice(0,-1));
                 });
             })
         })
