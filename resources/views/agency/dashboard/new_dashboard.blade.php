@@ -19,16 +19,16 @@
 
         <!-- TOGGLE CAMPAIGN DETAILS AND MEDIA PLAN DETAILS -->
         <!-- main stats -->
-        @if(!Auth::user()->hasRole('compliance'))
-        <div class="clearfix mb4">
-            <div class="column col_6">
-                <button id="view-campaigns"  class="btn full block_disp uppercased align_center">Display All Campaigns</button>
-            </div>
+        @if(Auth::user()->hasRole('media_planner') && Auth::user()->hasRole('finance') && Auth::user()->hasRole('admin'))
+            <div class="clearfix mb4">
+                <div class="column col_6">
+                    <button id="view-campaigns"  class="btn full block_disp uppercased align_center">Display All Campaigns</button>
+                </div>
 
-            <div class="column col_6">
-                <button id="view-media-plans"  class="btn full block_disp uppercased align_center">Display All Media Plans</button>
+                <div class="column col_6">
+                    <button id="view-media-plans"  class="btn full block_disp uppercased align_center">Display All Media Plans</button>
+                </div>
             </div>
-        </div>
         @endif
 
         <!-- CAMPAIGN -->

@@ -44,7 +44,7 @@
                                 <th class="fixed-side">Station</th>
                                 <th class="fixed-side">Day</th>
                                 <th class="fixed-side">Time Belt</th>
-                                <th class="fixed-side" id="last-fixed">Programme</th>
+                                <th class="fixed-side" id="last-fixed">Program</th>
                                 <th class="fixed-side">Unit Rate</th>
                                 <th class="fixed-side">Volume Disc</th>
                                 <th class="fixed-side">Total Exposure</th>
@@ -60,13 +60,13 @@
                             @foreach($fayaFound['programs_stations'] as $value)
                                 <tr class="{{ $value->program}}">
                                     <td id="btn" class="fixed-side">{{ $value->station }}</td>
-                                    <td id="btn" class="fixed-side">{{ $value->day }}</td>
+                                    <td id="btn" class="fixed-side">{{ substr($value->day, 0, 3) }}</td>
                                     <td id="btn" class="fixed-side"> {{ substr($value->start_time,0,5) }} {{ substr($value->end_time,0,5) }}</td>
                                     <td id="btn" class="fixed-side update_program_{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->day.'_'.$value->station.'_'.$value->start_time)) }}">
                                         <a href="#program_modal_{{ $duration }}{{ $value->id }}" class="modal_click update_program_a_{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->day.'_'.$value->station.'_'.$value->start_time)) }}">{{ $value->program }}</a>
                                     </td>
                                     @if($value->duration_lists != "[null]")
-                                        <td>
+                                        <td class="fixed-side">
                                             <input type="number" readonly
                                                    @foreach(json_decode($value->duration_lists) as $key => $duration_list)
                                                    @if($duration_list == $duration)
@@ -75,29 +75,35 @@
                                                    @endforeach
                                                    class="update_rating_class_{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->day.'_'.$value->station.'_'.$value->start_time)) }} unit_rate_val_{{ $duration.'_'.$value->id }}"
                                                    id="ur_{{ $duration.'_'.$value->id}}" data_12="{{ $value->id}}"
-                                                   data_11="60" data_10="" data_9="">
+                                                   data_11="60" data_10="" data_9=""
+                                                   style="width: 70px;"
+                                            >
                                         </td>
                                     @else
-                                        <td>
+                                        <td class="fixed-side">
                                             <input type="number" readonly value=""
                                                    class="update_rate_{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->program.'_'.$value->station.'_'.$duration)) }} unit_rate_val_{{ $duration.'_'.$value->id }}"
                                                    id="ur_{{ $duration.'_'.$value->id}}" data_12="{{ $value->id}}"
-                                                   data_11="60" data_10="" data_9="">
+                                                   data_11="60" data_10="" data_9=""
+                                                   style="width: 70px;"
+                                            >
                                         </td>
                                     @endif
 
-                                    <td>
+                                    <td class="fixed-side">
                                         <a href="#discount_modal_{{ $duration.'_'.$value->id }}" class="modal_click">
                                             <input type="number"
                                                    class="referesh_discount_{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->station)) }} discount_val_{{ $duration.'_'.$value->id }}"
                                                    readonly value="{{ $value->volume_discount }}"
                                                    id="vd_{{ $duration.'_'.$value->id}}"
                                                    data_12="{{ $value->id}}"
-                                                   data_11="60" data_10="" data_9="">
+                                                   data_11="60" data_10="" data_9=""
+                                                style="width: 50px;"
+                                            >
                                         </a>
                                     </td>
 
-                                    <td>
+                                    <td class="fixed-side">
                                         <input type="number" readonly id="exposure_{{ $duration.'_'.$value->id }}"
                                                @if($value->material_length != "")
                                                    @foreach(json_decode($value->material_length) as $media_length_data)
@@ -108,10 +114,12 @@
                                                         @endif
                                                    @endforeach
                                                @endif
-                                               name="exposure">
+                                               name="exposure"
+                                               style="width: 50px;"
+                                        >
                                     </td>
 
-                                    <td>
+                                    <td class="fixed-side">
                                         <input type="number"
                                                readonly id="net_total_{{ $duration.'_'.$value->id }}"
                                                class="get_duration_net_{{ $duration }}"
@@ -155,13 +163,14 @@
                                                                @endif
                                                            @endforeach
                                                        @endif
+                                                       style="width: 60px;"
                                                 >
                                             </td>
                                         @else
                                             <td id="">
                                                 <input type="number" id="{{ $duration }}{{$value->id}}" class="disabled_input" data_12="{{ $value->id}}"
                                                        data_11="15" data_10=""
-                                                       data_9="" disabled>
+                                                       data_9="" style="width: 60px;" disabled>
                                             </td>
                                         @endif
                                     @endfor
