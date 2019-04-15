@@ -183,7 +183,7 @@
                                
                                 <div class="column col_1 align_center">
                                 <br><br>
-                                    <button id="day-{{$key}}"  class="btn full block_disp uppercased align_center"  style="margin: 10 auto">  {{ $key }}</button>
+                                    <button id="day-{{substr($key,0,3)}}"  class="btn full block_disp uppercased align_center"  style="margin: 10 auto">  {{ substr($key,0,3) }}</button>
                                     <br><br>
                                 </div>
                     
@@ -196,7 +196,7 @@
         <div  class="the_frame client_dets mb4">
             @foreach($fayaFound['total_graph'] as $key => $Value)
                
-            <div id="view-{{$key}}" >
+            <div id="view-{{substr($key,0,3)}}" >
             <div id="container{{ $key }}" style="min-width: 100%; height: 500px; padding: 30 auto"></div>
                </div>
                   
