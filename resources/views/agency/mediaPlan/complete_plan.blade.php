@@ -111,11 +111,33 @@
                                     </td>
 
                                     <td>
-                                        <input type="number" readonly id="exposure_{{ $duration.'_'.$value->id }}" name="exposure">
+                                        <input type="number" readonly id="exposure_{{ $duration.'_'.$value->id }}"
+                                               @if($value->material_length != "")
+                                                   @foreach(json_decode($value->material_length) as $media_length_data)
+                                                        @if($media_length_data[0]->material_length == $duration)
+                                                            @foreach($media_length_data as $media)
+                                                                value="{{ collect($media_length_data)->sum('slot') }}"
+                                                            @endforeach
+                                                        @endif
+                                                   @endforeach
+                                               @endif
+                                               name="exposure">
                                     </td>
 
                                     <td>
-                                        <input type="number" readonly id="net_total_{{ $duration.'_'.$value->id }}" class="get_duration_net_{{ $duration }}" name="net_total">
+                                        <input type="number"
+                                               readonly id="net_total_{{ $duration.'_'.$value->id }}"
+                                               class="get_duration_net_{{ $duration }}"
+                                               @if($value->material_length != "")
+                                                   @foreach(json_decode($value->material_length) as $media_length_data)
+                                                       @if($media_length_data[0]->material_length == $duration)
+                                                           @foreach($media_length_data as $media)
+                                                                value="{{ array_last($media_length_data)->net_total }}"
+                                                           @endforeach
+                                                       @endif
+                                                   @endforeach
+                                               @endif
+                                               name="net_total">
                                     </td>
 
                                     @for ($i = 0; $i < count($fayaFound['dates']); $i++)
@@ -214,6 +236,9 @@
                     <option>Select Client</option>
                     @foreach($clients as $client)
                         <option value="{{ $client->id }}"
+                            @if($media_plan->client_id === $client->id)
+                                selected
+                            @endif
                         >{{ $client->company_name }}</option>
                     @endforeach
                 </select>
@@ -228,7 +253,19 @@
             <label class="small_faint">Brands</label>
 
             <div class="select_wrap brand_select{{ $errors->has('brand') ? ' has-error' : '' }}">
-                <select name="brand" id="brand"></select>
+                @if($media_plan->brand_id != "")
+                    <select name="brand" id="brand">
+                        @foreach($brands as $brand)
+                            <option value="{{ $brand->id }}"
+                                @if($media_plan->brand_id === $brand->id)
+                                    selected
+                                @endif
+                            >{{ $brand->name }}</option>
+                        @endforeach
+                    </select>
+                @else
+                    <select name="brand" id="brand"></select>
+                @endif
                 @if($errors->has('brand'))
                     <strong>{{ $errors->first('brand') }}</strong>
                 @endif
@@ -238,7 +275,7 @@
     <div class="clearfix mb">
         <div class="col_6 input_wrap{{ $errors->has('product') ? ' has-error' : '' }}">
             <label class="small_faint">Product</label>
-            <input type="text" required name="product" id="product" placeholder="Product">
+            <input type="text" required name="product" @if($media_plan->product_name) value="{{ $media_plan->product_name }}" @endif id="product" placeholder="Product">
 
             @if($errors->has('product'))
                 <strong>
@@ -385,6 +422,8 @@
             var slot = $(".get_value" + data_values).val();
             var unit_rate = $("#ur_" + select_factor).val();
             var volume_disc = $("#vd_" + select_factor).val();
+            var exposure = $("#exposure_"+select_factor).val();
+            var net_total = $("#net_total_"+select_factor).val();
             if (plans.length > 0) {
               for (var i = 0; i < plans.length; i++) {
                 if (plans[i].id === value_button && plans[i].date === date && plans[i].duration === duration) {
@@ -399,10 +438,12 @@
                 "volume_disc": volume_disc,
                 'date': date,
                 'day': day,
-                'slot': slot
+                'slot': slot,
+                'exposure' : exposure,
+                'net_total' : net_total,
             });
+            console.log(plans);
         });
-
         var i = $("select .b").length;
         var max = 12;
         $.each(days, function (index, value) {
@@ -621,6 +662,7 @@
 
             $('.save').prop('disabled', true);
             var plan_id = $("#plan_id").val();
+            console.log(plans);
             var body = {
                 "_token": "{{ csrf_token() }}",
                 "client_name": client_name,
