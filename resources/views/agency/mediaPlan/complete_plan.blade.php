@@ -184,34 +184,49 @@
         @include('agency.mediaPlan.includes.program-modal')
     </div>
 
-    <div class="clearfix mb">
-      <div class="input_wrap column col_4">
-        <div class="select_wrap{{ $errors->has('client') ? ' has-error' : '' }}">
-          <label class="small_faint">Select Client</label>
-          <select name="client" id="client_name" required>
-              @foreach($clients as $client)
-              <option value="{{ $client->id }}" @if((Session::get('campaign_information')) !=null)
-                  @if($campaign_general_information->client === $client->id))
-                  selected="selected"
-                  @endif
-                  @endif
-                  >{{ $client->company_name }}</option>
-              @endforeach
-          </select>
+    <div class="clearfix mb load_stuff">
+        <div class="input_wrap column col_6">
+            <label class="small_faint">Clients</label>
 
-          @if($errors->has('client'))
-          <strong>{{ $errors->first('client') }}</strong>
-          @endif
+            <div class="select_wrap{{ $errors->has('client') ? ' has-error' : '' }}">
+                <select name="client" id="clients" required>
+                    <option>Select Client</option>
+                    @foreach($clients as $client)
+                        <option value="{{ $client->id }}"
+                        >{{ $client->company_name }}</option>
+                    @endforeach
+                </select>
+
+                @if($errors->has('client'))
+                    <strong>{{ $errors->first('client') }}</strong>
+                @endif
+            </div>
         </div>
-      </div>
 
+        <div class="input_wrap column col_6">
+            <label class="small_faint">Brands</label>
 
-      <div class="input_wrap column col_4">
-        <label class="small_faint">Product name</label>
-        <input type="text" id="product_name" name="age_groups[0][max]" placeholder="Product name">
-        <input type="hidden" id="plan_id" value="{{$fayaFound['programs_stations'][0]->media_plan_id}}">
-      </div>
+            <div class="select_wrap brand_select{{ $errors->has('brand') ? ' has-error' : '' }}">
+                <select name="brand" id="brand"></select>
+                @if($errors->has('brand'))
+                    <strong>{{ $errors->first('brand') }}</strong>
+                @endif
+            </div>
+        </div>
     </div>
+    <div class="clearfix mb">
+        <div class="col_6 input_wrap{{ $errors->has('product') ? ' has-error' : '' }}">
+            <label class="small_faint">Product</label>
+            <input type="text" required name="product" id="product" placeholder="Product">
+
+            @if($errors->has('product'))
+                <strong>
+                    <span class="help-block">{{ $errors->first('product') }}</span>
+                </strong>
+            @endif
+        </div>
+    </div>
+    <input type="hidden" name="plan_id" id="plan_id" value="{{ $plan_id }}">
 
     <div class="action_footer client_dets mb4 mt4">
       <div class="col_6 column">
@@ -585,10 +600,10 @@
                 return;
             }
 
-            var client_name = $("#client_name").val();
-            var product_name = $("#product_name").val();
+            var client_name = $("#clients").val();
+            var product_name = $("#product").val();
+            var brand_id = $("#brand").val();
             if (client_name == "Select Client" && product_name == "") {
-                // swal("Select client and enter product name");
                 toastr.error("Please select a client and brand and product");
                 $('.show').prop('disabled', false);
                 return;
@@ -600,6 +615,7 @@
                 "_token": "{{ csrf_token() }}",
                 "client_name": client_name,
                 "product_name": product_name,
+                "brand_id": brand_id,
                 "plan_id": plan_id,
                 "data": JSON.stringify(plans)
             }
@@ -694,6 +710,58 @@
             //     }
             // }
 
+        });
+
+        $('body').delegate('#clients','change', function(e){
+            var clients = $("#clients").val();
+            if(clients != ''){
+                $(".load_stuff").css({
+                    opacity: 0.3
+                });
+                $("#industry").val('');
+                $("#sub_industry").val('');
+                var url = '/client/get-brands/'+clients;
+                $.ajax({
+                    url: url,
+                    method: "GET",
+                    data: {clients: clients},
+                    success: function(data){
+                        if(data.brands){
+                            var big_html = '<select name="brand" id="brand">\n';
+                            if(data.brands != ''){
+                                big_html += '<option value="">Select Brand</option>';
+                                $.each(data.brands, function (index, value) {
+                                    big_html += '<option value="'+value.id+'">'+value.name+'</option>';
+                                });
+                                big_html += '</select>';
+                                $(".brand_hide").hide();
+                                $(".brand_select").show();
+                                $(".brand_select").html(big_html);
+                                $(".load_stuff").css({
+                                    opacity: 1
+                                });
+                            }else{
+                                big_html += '<option value="">Please Select a Client</option></section>';
+                                $(".brand_hide").hide();
+                                $(".brand_select").show();
+                                $(".brand_select").html(big_html);
+                                $(".load_stuff").css({
+                                    opacity: 1
+                                });
+                            }
+                        }else{
+                            $(".load_stuff").css({
+                                opacity: 1
+                            });
+                            toastr.error('An error occurred, please contact the administrator')
+                        }
+
+                    }
+                });
+            }else{
+                $("#industry").val('');
+                $("#sub_industry").val('');
+            }
         });
     });
 </script>

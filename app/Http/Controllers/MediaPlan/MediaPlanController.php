@@ -358,7 +358,8 @@ class MediaPlanController extends Controller
 													        ->with('clients', $clients)
                                                             ->with('days', $this->listDays())
                                                             ->with('media_plans_programs', $media_plans_programs)
-                                                            ->with('default_material_length', $this->getDefaultMaterialLength());
+                                                            ->with('default_material_length', $this->getDefaultMaterialLength())
+                                                            ->with('plan_id', $id);
 	
 	}
 
@@ -419,6 +420,7 @@ class MediaPlanController extends Controller
                 $programs_id = $this->groupById($programs_id);
                 $client_name = $request->get('client_name');
                 $product_name = $request->get('product_name');
+                $brand_id = $request->get('brand_id');
                 $plan_id = $request->get('plan_id');
 
                 foreach($programs_id as $key => $value) {
@@ -428,7 +430,7 @@ class MediaPlanController extends Controller
                 }
                 DB::table('media_plans')
                     ->where('id', $plan_id)
-                    ->update(['client_id' => $client_name, 'product_name' => $product_name]);
+                    ->update(['client_id' => $client_name, 'product_name' => $product_name, 'brand_id' => $brand_id]);
             });
         }catch (\Exception $exception){
             Log::error($exception);
