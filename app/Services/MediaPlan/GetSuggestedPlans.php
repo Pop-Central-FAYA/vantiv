@@ -19,8 +19,17 @@ class GetSuggestedPlans
         "Primetime" => array("17:00", "21:00")
     );
 
+    const STATION_TYPE = array(
+        "Cable" => "cable",
+        "Network" => "network",
+        "Terrestrial" => "terrestrial"
+    );
+
     public function __construct($mediaPlanId, $filters=array()) {
         $this->mediaPlanId = $mediaPlanId;
+        if (!isset($filters['station_type'])) {
+            $filters = array("station_type" => "Terrestrial");
+        }
         $this->filters = $filters;
     }
 
@@ -40,6 +49,10 @@ class GetSuggestedPlans
                     }
                     if ($key == "states") {
                         $query->where("state_counts", "LIKE", "%{$value}%");
+                    }
+                    if ($key == "station_type") {
+                        $query->where("station_type", static::STATION_TYPE[$value]);
+                        continue;
                     }
                 }
             })->get();

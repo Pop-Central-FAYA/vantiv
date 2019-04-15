@@ -197,7 +197,8 @@ class GetStationRatings
         $data = array(
             "media_type" => "Tv", //Only tv is supported for now
             "station" => $station_name,
-            "state" => $timebelt->state,
+            // "state" => $timebelt->state,
+            "state" => $timebelt->station_state,
             "program" => $program,
             "day" => static::DAY_CONVERSION[$timebelt->day],
             "start_time" => $timebelt->start_time,
@@ -209,11 +210,12 @@ class GetStationRatings
 
     private function formatStationName($timebelt) {
         $station = $timebelt->station;
-        $state = $timebelt->station_state;
-        if ($state != '') {
-            $station = $station . " (" . $state . ")";
-        }
         return $station;
+        // $state = $timebelt->station_state;
+        // if ($state != '') {
+        //     $station = $station . " (" . $state . ")";
+        // }
+        // return $station;
     }
 
 }
