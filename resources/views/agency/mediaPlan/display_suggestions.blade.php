@@ -179,17 +179,21 @@
                             
                                 </div>
                     
-                                @foreach($fayaFound['total_graph'] as $key => $Value)
-                               
-                                <div class="column col_1 align_center">
-                                <br><br>
-                                    <button id="day-{{substr($key,0,3)}}"  class="btn full block_disp uppercased align_center"  style="margin: 10 auto">  {{ substr($key,0,3) }}</button>
-                                    <br><br>
-                                </div>
-                    
-                                @endforeach
-                            
-        
+                                    <?php 
+                                        $day = array();
+                                    foreach($fayaFound['total_graph'] as $key => $Value){
+                                        $day[] = $key;
+                                    } 
+                                    for ($x = 0; $x <= 6; $x++) {
+
+                                        if (in_array($fayaFound['days'][$x], $day))
+                                        { ?>
+                                            <div class="column col_1 align_center">
+                                            <br><br>
+                                                <button id="day-<?php  echo substr($fayaFound['days'][$x],0,3); ?>"  class="btn full block_disp uppercased align_center"  style="margin: 10 auto"><?php  echo substr($fayaFound['days'][$x],0,3); ?></button>
+                                                <br><br>
+                                            </div>
+                                            <?php     }  } ?>
                             </div>
         
         <div >
