@@ -33,19 +33,6 @@
                     <div class="column col_8 p-t">
                         <p class="uppercased weight_medium revealer" id="{{ $duration }}SecRevealer">{{ $duration }} sec </p> <p class="update_{{ $duration }}"></p>
                     </div>
-                    <div class="column col_4 p-t right">
-                        <div class="select_wrap">
-                            <select name="month" id="month">
-                                <option>Select Month</option>
-                                <option value="">January</option>
-                                <option value="">February</option>
-                                <option value="">March</option>
-                                <option value="">April</option>
-                                <option value="">May</option>
-                                <option value="">June</option>
-                            </select>
-                        </div>
-                    </div>
                 </div>
 
                 <!-- campaigns table -->
