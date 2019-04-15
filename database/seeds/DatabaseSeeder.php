@@ -18,5 +18,6 @@ class DatabaseSeeder extends Seeder
         $this->call(StatePopulationsTableSeeder::class);
         $this->call(MpsAudiencesTableSeeder::class);
         $this->call(MpsAudienceProgramActivitiesTableSeeder::class);
+        $this->call(StationsTableSeeder::class);
     }
 }
