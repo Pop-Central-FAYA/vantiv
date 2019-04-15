@@ -45,6 +45,14 @@
                 {{ csrf_field() }}
                 <input type="hidden" name="mediaPlanId" value="{{ $mediaPlanId }}">
                 <div class="col_3 column">
+                    <label for="station_type">Station Type</label>
+                    <select name="station_type" id="station_type">
+                        @foreach($filterValues['station_type'] as $station_type)
+                            <option value="{{$station_type}}" @if(isset($selectedFilters['station_type']) && $selectedFilters['station_type'] === $station_type) selected="selected" @endif>{{$station_type}}</option>
+                        @endforeach
+                    </select>                    
+                </div>
+                <div class="col_2 column">
                     <label for="days">Days</label>
                     <select name="days" id="days">
                         <option value="all" selected="true">All</option>
@@ -53,7 +61,7 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="col_3 column">
+                <div class="col_2 column">
                     <label for="states">States</label>
                     <select name="states" id="states">
                         <option value="all" selected="true">All</option>
@@ -62,7 +70,7 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="col_3 column">
+                <div class="col_2 column">
                     <label for="day_parts">Day Parts</label>
                     <select name="day_parts" id="day_parts">
                         <option value="all" selected="true">All</option>

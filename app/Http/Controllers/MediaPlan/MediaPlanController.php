@@ -154,7 +154,7 @@ class MediaPlanController extends Controller
 	{
         try {
             $media_plan_id = $request->get('mediaPlanId');
-            $expected_fields = array('states', 'day_parts', 'days');
+            $expected_fields = array('states', 'day_parts', 'days', 'station_type');
             $filters = array();
             foreach($expected_fields as $field) {
                 $value = $request->input($field);
@@ -192,10 +192,11 @@ class MediaPlanController extends Controller
         return array(
             "day_parts" => collect(GetSuggestedPlans::DAYPARTS)->keys()->sort()->toArray(),
             "state_list" => $state_list,
-            "days" => array("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
+            "days" => array("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"),
+            "station_type" => array("Cable", "Network", "Terrestrial")
         );
 	}
-	
+    
 	public function groupSuggestions($query)
     {
         $query = $query->groupBy(function ($item, $key) {

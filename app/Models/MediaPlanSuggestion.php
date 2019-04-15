@@ -11,7 +11,8 @@ class MediaPlanSuggestion extends Base
     protected $primaryKey = 'id';
     protected $keyType = 'string';
 
-    protected $fillable = ['media_plan_id', 'station', 'program', 'start_time', 'end_time', 'total_audience', 'day', 'media_type', 'state_counts'];
+    protected $fillable = ['media_plan_id', 'station', 'program', 'start_time', 'end_time', 'total_audience', 'day', 
+        'media_type', 'state_counts', 'state', 'region', 'station_type'];
 
     /**
      * Get audience associated with the MpsAudienceProgramActivity.
