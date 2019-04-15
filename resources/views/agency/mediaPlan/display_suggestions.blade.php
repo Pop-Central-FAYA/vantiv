@@ -183,7 +183,7 @@
                                
                                 <div class="column col_1 align_center">
                                 <br><br>
-                                    <button id="day-{{substr($key,0,3)}}"  class="btn full block_disp uppercased align_center"  style="margin: 10 auto">  {{ $key }}</button>
+                                    <button id="day-{{substr($key,0,3)}}"  class="btn full block_disp uppercased align_center"  style="margin: 10 auto">  {{ substr($key,0,3) }}</button>
                                     <br><br>
                                 </div>
                     
