@@ -11,6 +11,7 @@ use Vanguard\Models\MediaPlan;
 use Vanguard\Models\MediaPlanProgram;
 use Vanguard\Models\MediaPlanProgramRating;
 use Vanguard\Models\MediaPlanSuggestion;
+use Vanguard\Services\Client\ClientBrand;
 use Vanguard\Services\Inventory\StoreMediaPlanProgram;
 use Vanguard\Services\MediaPlan\GetSuggestionListWithProgramRating;
 use Vanguard\Services\MediaPlan\StoreMediaPlanVolumeDiscount;
@@ -354,13 +355,21 @@ class MediaPlanController extends Controller
 			'labeldates' => $labeldates,
 			'days' => $days,
 		);
+		$media_plan = MediaPlan::find($id);
+        $client_brand = '';
+        if($media_plan->client_id != ''){
+            $client_brand = new ClientBrand($media_plan->client_id);
+            $client_brand = $client_brand->run();
+        }
 		$media_plans_programs = MediaPlanProgram::all();
 		return view('agency.mediaPlan.complete_plan')->with('fayaFound', $fayaFound)
 													        ->with('clients', $clients)
                                                             ->with('days', $this->listDays())
                                                             ->with('media_plans_programs', $media_plans_programs)
                                                             ->with('default_material_length', $this->getDefaultMaterialLength())
-                                                            ->with('plan_id', $id);
+                                                            ->with('plan_id', $id)
+                                                            ->with('media_plan', $media_plan)
+                                                            ->with('brands', $client_brand);
 	
 	}
 
