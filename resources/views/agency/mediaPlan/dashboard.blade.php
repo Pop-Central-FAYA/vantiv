@@ -18,7 +18,7 @@
         </div>
 
         <!-- Media Plan stats -->
-        @if(!Auth::user()->hasRole('compliance'))
+        @if(Auth::user()->hasRole('media_planner') && Auth::user()->hasRole('finance') && Auth::user()->hasRole('admin'))
         <div class="the_stats the_frame clearfix mb4">
             <div class="column col_4">
                 <span class="weight_medium small_faint uppercased">Approved Media Plans</span>

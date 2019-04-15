@@ -5,7 +5,7 @@
 
     <div class="_nav">
         <ul>
-            @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('finance') || Auth::user()->hasRole('compliance'))
+            @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('finance') || Auth::user()->hasRole('compliance') || Auth::user()->hasRole('media_planner'))
             <li class="campaign_icon {{ Request::is('/') ? 'active' : ''  }}"><a href="{{ route('dashboard') }}">Dashboard</a></li>
             @endif
             <!-- <li class="report_icon"><a href="">Reports</a></li> -->
