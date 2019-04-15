@@ -5,7 +5,7 @@
 @stop
 
 @section('content')
-    <div class="main_contain">
+    <div class="main_contain load_this_div">
         <!-- header -->
         @if(Session::get('broadcaster_id'))
             @include('partials.new-frontend.broadcaster.header')
@@ -22,7 +22,7 @@
         </div>
 
         <!-- main frame -->
-        <div class="the_frame clearfix mb border_top_color load_this_div">
+        <div class="the_frame clearfix mb border_top_color">
             <div class="margin_center col_7 clearfix create_fields">
                 <form method="POST" action="" id="criteria_form">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -291,7 +291,7 @@
 
                     <div class="mb4 clearfix pt4 mb4">
                         <div class="column col_12 align_right">
-                            <button type="submit"  class="btn uppercased ">Run Ratings <span class=""></span></button>
+                            <button type="submit"  class="btn uppercased button_create">Run Ratings <span class=""></span></button>
                         </div>
                     </div>
 
@@ -341,6 +341,8 @@
                 $('.load_this_div').css({
                     opacity : 0.2
                 });
+                $('a').css('pointer-events','none');
+                $('.button_create').hide();
                 var start_date = $("#start_date").val();
                 var end_date = $("#end_date").val();
                 var campaign_name = $("#campaign_name").val();
@@ -349,6 +351,8 @@
                     $('.load_this_div').css({
                         opacity : 1
                     });
+                    $('a').css('pointer-events','');
+                    $('.button_create').show();
                     return;
                 }
                 if(new Date(start_date) < new Date() || new Date(end_date) < new Date()){
@@ -356,6 +360,8 @@
                     $('.load_this_div').css({
                         opacity : 1
                     });
+                    $('a').css('pointer-events','');
+                    $('.button_create').show();
                     return;
                 }
                 if(campaign_name === ""){
@@ -363,6 +369,8 @@
                     $('.load_this_div').css({
                         opacity : 1
                     });
+                    $('a').css('pointer-events','');
+                    $('.button_create').show();
                     return;
                 }
                 if(new Date(start_date) > new Date(end_date)){
@@ -370,6 +378,8 @@
                     $('.load_this_div').css({
                         opacity : 1
                     });
+                    $('a').css('pointer-events','');
+                    $('.button_create').show();
                     return;
                 }
                 var formdata = $("#criteria_form").serialize();
@@ -404,6 +414,8 @@
                             $('.load_this_div').css({
                                 opacity: 1
                             });
+                            $('a').css('pointer-events','');
+                            $('.button_create').show();
                             return;
                         }
                         weHaveSuccess = true;
@@ -415,18 +427,24 @@
                             $('.load_this_div').css({
                                 opacity: 1
                             });
+                            $('a').css('pointer-events','');
+                            $('.button_create').show();
                             return;
                         }else if(xhr.status === 503){
                             toastr.error('The request took longer than expected, please try again');
                             $('.load_this_div').css({
                                 opacity: 1
                             });
+                            $('a').css('pointer-events','');
+                            $('.button_create').show();
                             return;
                         }else{
                             toastr.error('An unknown error has occurred, please try again');
                             $('.load_this_div').css({
                                 opacity: 1
                             });
+                            $('a').css('pointer-events','');
+                            $('.button_create').show();
                             return;
                         }
                     }
