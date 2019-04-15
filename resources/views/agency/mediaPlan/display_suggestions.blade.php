@@ -32,7 +32,7 @@
 
     <div>
 
-    <div class="the_frame client_dets mb4">
+    <div class="the_frame client_dets mb1">
     
     <div class="filters border_bottom clearfix">
         <div class="column col_6 p-t">
@@ -161,33 +161,52 @@
 
   <div>
 
-    <div id="timebelts-graph" class="the_frame client_dets mb4" style="display:none">
+  
 
+    <div id="timebelts-graph" class="accordion-group" >
 
-
-        <div class="accordion-group">
+                 <div class="column col_12">
+                        
+                        <div class="column col_1 align_center">
+                            
+                                </div>
+                    
+                                @foreach($fayaFound['total_graph'] as $key => $Value)
+                               
+                                <div class="column col_1 align_center">
+                                <br><br>
+                                    <button id="day-{{$key}}"  class="btn full block_disp uppercased align_center"  style="margin: 10 auto">  {{ $key }}</button>
+                                    <br><br>
+                                </div>
+                    
+                                @endforeach
+                            
+        
+                            </div>
+        
+        <div >
+        <div  class="the_frame client_dets mb4">
             @foreach($fayaFound['total_graph'] as $key => $Value)
-                <section class="accordion-group__accordion">
-                    <header class="accordion-group__accordion-head">
-                        <div class="filters border_bottom clearfix accordion-group__accordion-btn graph_option">
-                            <div class="column col_8 p-t hover">
-                                <p class="uppercased weight_medium">{{ $key }}</p>
-                            </div>
-                        </div>
+               
+            <div id="view-{{$key}}" >
+            <div id="container{{ $key }}" style="min-width: 100%; height: 500px; padding: 30 auto"></div>
+               </div>
+                  
+               
 
-                        <div class="accordion-group__accordion-panel">
-                            <div class="accordion-group__accordion-content">
-                                <div id="container{{ $key }}" style="min-width: 310px; height: 500px; padding: 30 auto"></div>
-                            </div>
-                        </div>
-                    </header>
-                </section>
+
             @endforeach
         </div>
+
+        </div>
+
 
     </div>
 
     </div> <!-- be -->
+
+
+     <br> <br>  <br>  
 
     <div class="the_frame client_dets mb4">
 
@@ -268,7 +287,7 @@
     <script>
       $(document).ready(function () {
         'use strict';
-
+        $('#timebelts-graph').hide();
         $('#view-table').on('click', function() {
             $('#timebelts-graph').hide();
             $('#timebelts-table').show();
@@ -284,6 +303,168 @@
         });
 
         // The submission button for the filters
+
+
+            $('#view-Mon').show();
+             $('#view-Tue').hide();
+        	$('#view-Wed').hide();
+            $('#view-Thu').hide();
+        	$('#view-Fri').hide();
+            $('#view-Sat').hide();
+            $('#view-Sun').hide();
+
+            
+             $('#day-Tue').addClass('inactive-dashboard-toggle-btn');
+             $('#day-Wed').addClass('inactive-dashboard-toggle-btn');
+             $('#day-Thu').addClass('inactive-dashboard-toggle-btn');
+             $('#day-Fri').addClass('inactive-dashboard-toggle-btn');
+             $('#day-Sat').addClass('inactive-dashboard-toggle-btn');
+             $('#day-Sun').addClass('inactive-dashboard-toggle-btn');
+             $('#day-Mon').removeClass('inactive-dashboard-toggle-btn');
+
+        $('#day-Mon').on('click', function() {
+
+             $('#view-Tue').hide();
+        	$('#view-Wed').hide();
+            $('#view-Thu').hide();
+        	$('#view-Fri').hide();
+            $('#view-Sat').hide();
+            $('#view-Sun').hide();
+                $('#view-Mon').show();
+
+
+             $('#day-Tue').addClass('inactive-dashboard-toggle-btn');
+             $('#day-Wed').addClass('inactive-dashboard-toggle-btn');
+             $('#day-Thu').addClass('inactive-dashboard-toggle-btn');
+             $('#day-Fri').addClass('inactive-dashboard-toggle-btn');
+             $('#day-Sat').addClass('inactive-dashboard-toggle-btn');
+             $('#day-Sun').addClass('inactive-dashboard-toggle-btn');
+             $('#day-Mon').removeClass('inactive-dashboard-toggle-btn');
+
+
+                });
+        $('#day-Tue').on('click', function() {
+
+             $('#view-Mon').hide();
+        	$('#view-Wed').hide();
+            $('#view-Thu').hide();
+        	$('#view-Fri').hide();
+            $('#view-Sat').hide();
+            $('#view-Sun').hide();
+                $('#view-Tue').show();
+
+
+
+            $('#day-Mon').addClass('inactive-dashboard-toggle-btn');
+             $('#day-Wed').addClass('inactive-dashboard-toggle-btn');
+             $('#day-Thu').addClass('inactive-dashboard-toggle-btn');
+             $('#day-Fri').addClass('inactive-dashboard-toggle-btn');
+             $('#day-Sat').addClass('inactive-dashboard-toggle-btn');
+             $('#day-Sun').addClass('inactive-dashboard-toggle-btn');
+             $('#day-Tue').removeClass('inactive-dashboard-toggle-btn');
+
+                });
+        $('#day-Wed').on('click', function() {
+
+             $('#view-Mon').hide();
+             $('#view-Tue').hide();
+            $('#view-Thu').hide();
+        	$('#view-Fri').hide();
+            $('#view-Sat').hide();
+            $('#view-Sun').hide();
+            $('#view-Wed').show();
+
+
+             $('#day-Mon').addClass('inactive-dashboard-toggle-btn');
+             $('#day-Wed').removeClass('inactive-dashboard-toggle-btn');
+             $('#day-Thu').addClass('inactive-dashboard-toggle-btn');
+             $('#day-Fri').addClass('inactive-dashboard-toggle-btn');
+             $('#day-Sat').addClass('inactive-dashboard-toggle-btn');
+             $('#day-Sun').addClass('inactive-dashboard-toggle-btn');
+             $('#day-Tue').addClass('inactive-dashboard-toggle-btn');
+           
+        });
+        $('#day-Thu').on('click', function() {
+            $('#view-Mon').hide();
+             $('#view-Tue').hide();
+        	$('#view-Wed').hide();
+        	$('#view-Fri').hide();
+            $('#view-Sat').hide();
+            $('#view-Sun').hide();
+            $('#view-Thu').show();
+
+
+
+             $('#day-Mon').addClass('inactive-dashboard-toggle-btn');
+             $('#day-Wed').addClass('inactive-dashboard-toggle-btn');
+             $('#day-Thu').removeClass('inactive-dashboard-toggle-btn');
+             $('#day-Fri').addClass('inactive-dashboard-toggle-btn');
+             $('#day-Sat').addClass('inactive-dashboard-toggle-btn');
+             $('#day-Sun').addClass('inactive-dashboard-toggle-btn');
+             $('#day-Tue').addClass('inactive-dashboard-toggle-btn');
+        });
+
+        $('#day-Fri').on('click', function() {
+            $('#view-Mon').hide();
+             $('#view-Tue').hide();
+        	$('#view-Wed').hide();
+            $('#view-Thu').hide();
+            $('#view-Sat').hide();
+            $('#view-Sun').hide();
+            $('#view-Fri').show();
+
+               $('#day-Mon').addClass('inactive-dashboard-toggle-btn');
+             $('#day-Wed').addClass('inactive-dashboard-toggle-btn');
+             $('#day-Thu').addClass('inactive-dashboard-toggle-btn');
+             $('#day-Fri').removeClass('inactive-dashboard-toggle-btn');
+             $('#day-Sat').addClass('inactive-dashboard-toggle-btn');
+             $('#day-Sun').addClass('inactive-dashboard-toggle-btn');
+             $('#day-Tue').addClass('inactive-dashboard-toggle-btn');
+           
+           
+        });
+        $('#day-Sat').on('click', function() {
+            $('#view-Mon').hide();
+             $('#view-Tue').hide();
+        	$('#view-Wed').hide();
+            $('#view-Thu').hide();
+        	$('#view-Fri').hide();
+            $('#view-Sun').hide();
+            $('#view-Sat').show();
+
+             $('#day-Mon').addClass('inactive-dashboard-toggle-btn');
+             $('#day-Wed').addClass('inactive-dashboard-toggle-btn');
+             $('#day-Thu').addClass('inactive-dashboard-toggle-btn');
+             $('#day-Fri').addClass('inactive-dashboard-toggle-btn');
+             $('#day-Sat').removeClass('inactive-dashboard-toggle-btn');
+             $('#day-Sun').addClass('inactive-dashboard-toggle-btn');
+             $('#day-Tue').addClass('inactive-dashboard-toggle-btn');
+
+        });
+
+        $('#day-Sun').on('click', function() {
+            $('#view-Mon').hide();
+             $('#view-Tue').hide();
+        	$('#view-Wed').hide();
+            $('#view-Thu').hide();
+        	$('#view-Fri').hide();
+            $('#view-Sat').hide();
+            $('#view-Sun').show();
+
+             $('#day-Mon').addClass('inactive-dashboard-toggle-btn');
+             $('#day-Wed').addClass('inactive-dashboard-toggle-btn');
+             $('#day-Thu').addClass('inactive-dashboard-toggle-btn');
+             $('#day-Fri').addClass('inactive-dashboard-toggle-btn');
+             $('#day-Sat').addClass('inactive-dashboard-toggle-btn');
+             $('#day-Sun').removeClass('inactive-dashboard-toggle-btn');
+             $('#day-Tue').addClass('inactive-dashboard-toggle-btn');
+           
+        });
+
+
+
+
+
         // This will submit the filters and reload the page
         $("#filter-form").on('submit', function(e) {
             event.preventDefault(e);
