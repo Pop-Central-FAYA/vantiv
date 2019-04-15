@@ -132,8 +132,8 @@
                             @php 
                                 $vid =$Programe->media_plan_id. $Programe->day. $Programe-> total_audience. str_replace(':', '', $Programe-> start_time) ;
                              @endphp
-                                {{-- <td id="stat{{ $vid }}"> <input type="hidden" id="unique{{ $vid }}" value="{{ $Programe->id}}"  /> {{ $Programe->station }}</td> --}}
-                                <td id="day{{ $vid }}"class="center">{{ $Programe->day}} </td>
+                                {{-- <td id="stat{{ $vid }}">  {{ $Programe->station }}</td> --}}
+                                <td id="day{{ $vid }}"class="center"> <input type="hidden" id="unique{{ $vid }}" value="{{ $Programe->id}}"  /> {{ $Programe->day}} </td>
                                 <td id="time{{ $vid }}" class="center">{{ substr($Programe->start_time,0,5)}} - {{ substr($Programe->end_time,0,5)}}</td>
                                 <td id="prog{{ $vid }}"class="center">{{ $Programe->program }}</td>
                                 <td id="aud{{$vid }}"class="center">{{ number_format($Programe->total_audience)}}</td>
