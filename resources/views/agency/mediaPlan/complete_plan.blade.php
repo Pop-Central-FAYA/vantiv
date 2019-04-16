@@ -132,7 +132,9 @@
                                                        @endif
                                                    @endforeach
                                                @endif
-                                               name="net_total">
+                                               name="net_total"
+                                               style="width: 100px;"
+                                        >
                                     </td>
 
                                     @for ($i = 0; $i < count($fayaFound['dates']); $i++)

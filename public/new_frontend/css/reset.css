@@ -14,7 +14,6 @@ table, caption, tbody, tfoot, thead, tr, th, td, input, textarea, select, footer
   outline: 0; 
   font-size: 100%; 
   vertical-align: baseline;
-    -ms-box-sizing:content-box;
     -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;    
   box-sizing: border-box;  
@@ -383,7 +382,7 @@ button.btn {
 input[type="text"], input[type="password"], input[type="email"], input[type="search"], textarea, input[type="number"], select {
   border: 1px solid #ddd;
   height: 40px;
-  width: 100px;
+  width: 100%;
   padding: 8px 10px 5px;
   background: #fff;
   font-weight: 400;

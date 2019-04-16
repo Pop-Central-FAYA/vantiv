@@ -371,7 +371,9 @@
     <script>
         $(document).ready(function( $ ) {
             // hide media plan dashboard on document ready
-            $('#media-plans-dashboard').hide();
+            @if(Auth::user()->hasRole('finance') || Auth::user()->hasRole('admin') || Auth::user()->hasRole('compliance'))
+                $('#media-plans-dashboard').hide();
+            @endif
             $('#view-media-plans').addClass('inactive-dashboard-toggle-btn');
 
             flatpickr(".flatpickr", {
