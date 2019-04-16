@@ -263,6 +263,7 @@ class GetStationRatings
                     $station_type = $this->stationListing[$station][$state]['station_type'];
                     $station_region = $this->stationListing[$station][$state]['region'];
                     $list_to_save[] = [
+                        'id' => uniqid(),
                         'media_plan_id' => $new_media_plan->id,
                         'media_type' => $suggestion['media_type'],
                         'station' => $station,
@@ -274,7 +275,9 @@ class GetStationRatings
                         'start_time' => $suggestion['start_time'],
                         'end_time' => $suggestion['end_time'],
                         'total_audience' => $suggestion['audience'],
-                        'state_counts' => json_encode($suggestion['state_counts'])
+                        'state_counts' => json_encode($suggestion['state_counts']),
+                        'created_at' => $new_media_plan->created_at,
+                        'updated_at' => $new_media_plan->updated_at,
                     ];
                     $count += 1;
                 } else {
@@ -297,8 +300,8 @@ class GetStationRatings
             //     $count = 0;
             // }
             $media_plan_suggestions = new MediaPlanSuggestion();
-            $columns = ['media_plan_id', 'media_type', 'station', 'state', 'station_type', 'region', 'program', 'day', 'start_time',
-                'end_time', 'total_audience', 'state_counts'
+            $columns = ['id', 'media_plan_id', 'media_type', 'station', 'state', 'station_type', 'region', 'program', 'day', 'start_time',
+                'end_time', 'total_audience', 'state_counts', 'created_at', 'updated_at'
             ];
             $batch_size = 2000;
             $laravel_batch = new LaravelBatch(app('db'));

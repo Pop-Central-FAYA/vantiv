@@ -570,7 +570,7 @@
 			   var plan_aud = $("#aud"+prog_id).text();
                var key = $("#unique"+prog_id).val();
 			   movePlanByDuration(prog_id, key, plan_station, plan_programe,plan_time, plan_day, plan_aud);
-                toastr.success('Added successfully');
+                // toastr.success('Added successfully');
 			   $('#'+prog_id).prop('disabled', true);
 
 
@@ -768,7 +768,6 @@
 		  });
 
             function movePlanByDuration(prog_id, key, plan_station, plan_programe, plan_time, plan_day, plan_aud){
-
                 var ids = [];
                     var children = document.getElementById("cont").children; //get container element children.
                     for (var i = 0, len = children.length ; i < len; i++) {
@@ -807,6 +806,7 @@
                     // element.scrollIntoView(options);
                     $(".where-it-is-going").append(new_html);
                     // document.getElementById("ri"+prog_id).classList.add('highlight');
+                    toastr.success('Added successfully');
          
             }
 <?php 
