@@ -19,7 +19,7 @@
 
         <!-- TOGGLE CAMPAIGN DETAILS AND MEDIA PLAN DETAILS -->
         <!-- main stats -->
-        @if(Auth::user()->hasRole('media_planner') && Auth::user()->hasRole('finance') && Auth::user()->hasRole('admin'))
+        @if(Auth::user()->hasRole('finance') || Auth::user()->hasRole('admin'))
             <div class="clearfix mb4">
                 <div class="column col_6">
                     <button id="view-campaigns"  class="btn full block_disp uppercased align_center">Display All Campaigns</button>
@@ -34,7 +34,7 @@
         <!-- CAMPAIGN -->
         <div class="campaigns-dashboard" id="campaigns-dashboard">
             <!-- main stats -->
-            @if(!Auth::user()->hasRole('compliance'))
+            @if(Auth::user()->hasRole('finance') || Auth::user()->hasRole('admin') || Auth::user()->hasRole('compliance'))
             <div class="the_stats the_frame clearfix mb4">
                 <div class="column col_3">
                     <span class="weight_medium small_faint uppercased">Active Campaigns</span>
@@ -62,7 +62,6 @@
                 </div>
 
             </div>
-            @endif
 
             <!-- client charts -->
             <div class="clearfix dashboard_pies">
@@ -204,12 +203,13 @@
                 </table>
                 <!-- end -->
             </div>
+            @endif
         </div>
 
         <!-- MEDIA PLAN -->
         <div class="media-plans-dashboard" id="media-plans-dashboard">
             <!-- Media Plan stats -->
-            @if(!Auth::user()->hasRole('compliance'))
+            @if(Auth::user()->hasRole('finance') || Auth::user()->hasRole('admin') || Auth::user()->hasRole('media_planner'))
             <div class="the_stats the_frame clearfix mb4">
                 <div class="column col_4">
                     <span class="weight_medium small_faint uppercased">Approved Media Plans</span>
@@ -226,8 +226,6 @@
                     <h3><a href="#" style="color: red;">{{ $count_declined_media_plans }}</a></h3>
                 </div>
             </div>
-            @endif
-
 
             <!-- MEDIA PLANS TABLE -->
             <div class="the_frame client_dets mb4">
@@ -270,6 +268,8 @@
                 </table>
                 <!-- end -->
             </div>
+
+            @endif
         </div>
 
     </div>

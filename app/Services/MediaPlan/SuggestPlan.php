@@ -34,7 +34,7 @@ class SuggestPlan
             "age" => $this->request->age_groups
         );
         $criteria = $this->formatCriteria($criteria_fields);
-        $ratings = new GetStationRatings($criteria); 
+        $ratings = new GetStationRatings($criteria, $this->request); 
         $res = $ratings->getRatings();
         return $res;
     }
