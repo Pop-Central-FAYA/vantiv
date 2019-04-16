@@ -147,7 +147,7 @@
                                 <td id="aud{{$vid }}"class="center">{{ number_format($Programe->total_audience)}}</td>
                                 <td class="center">
                                
-                                    <button data-program="{{$vid}}" class="plus-btn aBtn" data_15="first15" id="{{$vid}}" type="button"><i class="material-icons">add</i></button>  
+                                    <button data-program="{{$vid}}" class="plus-btn aBtn" data_15="first15" id="{{$vid}}" type="button"><i class="material-icons">add</i></button>	
                                 </td>
                             </tr>
                             @endforeach
@@ -255,7 +255,7 @@
                 <td id="prog{{ $vid }}"class="center">{{ $Programe->program }}</td>
                 <td id="aud{{$vid }}"class="center">{{ number_format($Programe->total_audience)}}</td>
                 <td class="center">
-                    <button data-programm="{{$vid}} " class="plus-btn dBtn" data_15="first15" type="button"><i class="material-icons" style="color: red">delete</i></button>    
+                    <button data-programm="{{$vid}} " class="plus-btn dBtn" data_15="first15" type="button"><i class="material-icons" style="color: red">delete</i></button>	
                 </td>
             </tr>
 @endforeach
@@ -323,9 +323,9 @@
 
             $('#view-Mon').show();
              $('#view-Tue').hide();
-            $('#view-Wed').hide();
+        	$('#view-Wed').hide();
             $('#view-Thu').hide();
-            $('#view-Fri').hide();
+        	$('#view-Fri').hide();
             $('#view-Sat').hide();
             $('#view-Sun').hide();
 
@@ -341,9 +341,9 @@
         $('#day-Mon').on('click', function() {
 
              $('#view-Tue').hide();
-            $('#view-Wed').hide();
+        	$('#view-Wed').hide();
             $('#view-Thu').hide();
-            $('#view-Fri').hide();
+        	$('#view-Fri').hide();
             $('#view-Sat').hide();
             $('#view-Sun').hide();
                 $('#view-Mon').show();
@@ -362,9 +362,9 @@
         $('#day-Tue').on('click', function() {
 
              $('#view-Mon').hide();
-            $('#view-Wed').hide();
+        	$('#view-Wed').hide();
             $('#view-Thu').hide();
-            $('#view-Fri').hide();
+        	$('#view-Fri').hide();
             $('#view-Sat').hide();
             $('#view-Sun').hide();
                 $('#view-Tue').show();
@@ -385,7 +385,7 @@
              $('#view-Mon').hide();
              $('#view-Tue').hide();
             $('#view-Thu').hide();
-            $('#view-Fri').hide();
+        	$('#view-Fri').hide();
             $('#view-Sat').hide();
             $('#view-Sun').hide();
             $('#view-Wed').show();
@@ -403,8 +403,8 @@
         $('#day-Thu').on('click', function() {
             $('#view-Mon').hide();
              $('#view-Tue').hide();
-            $('#view-Wed').hide();
-            $('#view-Fri').hide();
+        	$('#view-Wed').hide();
+        	$('#view-Fri').hide();
             $('#view-Sat').hide();
             $('#view-Sun').hide();
             $('#view-Thu').show();
@@ -423,7 +423,7 @@
         $('#day-Fri').on('click', function() {
             $('#view-Mon').hide();
              $('#view-Tue').hide();
-            $('#view-Wed').hide();
+        	$('#view-Wed').hide();
             $('#view-Thu').hide();
             $('#view-Sat').hide();
             $('#view-Sun').hide();
@@ -442,9 +442,9 @@
         $('#day-Sat').on('click', function() {
             $('#view-Mon').hide();
              $('#view-Tue').hide();
-            $('#view-Wed').hide();
+        	$('#view-Wed').hide();
             $('#view-Thu').hide();
-            $('#view-Fri').hide();
+        	$('#view-Fri').hide();
             $('#view-Sun').hide();
             $('#view-Sat').show();
 
@@ -461,9 +461,9 @@
         $('#day-Sun').on('click', function() {
             $('#view-Mon').hide();
              $('#view-Tue').hide();
-            $('#view-Wed').hide();
+        	$('#view-Wed').hide();
             $('#view-Thu').hide();
-            $('#view-Fri').hide();
+        	$('#view-Fri').hide();
             $('#view-Sat').hide();
             $('#view-Sun').show();
 
@@ -561,17 +561,17 @@
             var plans = [];
             var dplans = [];
             $("body").delegate(".aBtn", "click", function() {
-               var value_button = $(this).attr("data_15");
-               var prog_id = $(this).data("program");
-               var plan_station = $("#stat"+prog_id).val();
+			   var value_button = $(this).attr("data_15");
+			   var prog_id = $(this).data("program");
+			   var plan_station = $("#stat"+prog_id).val();
                var plan_time = $("#time"+prog_id).text();
-               var plan_programe = $("#prog"+prog_id).text();
-               var plan_day = $("#day"+prog_id).text();
-               var plan_aud = $("#aud"+prog_id).text();
+			   var plan_programe = $("#prog"+prog_id).text();
+			   var plan_day = $("#day"+prog_id).text();
+			   var plan_aud = $("#aud"+prog_id).text();
                var key = $("#unique"+prog_id).val();
-               movePlanByDuration(prog_id, key, plan_station, plan_programe,plan_time, plan_day, plan_aud);
+			   movePlanByDuration(prog_id, key, plan_station, plan_programe,plan_time, plan_day, plan_aud);
                 toastr.success('Added successfully');
-               $('#'+prog_id).prop('disabled', true);
+			   $('#'+prog_id).prop('disabled', true);
 
 
                console.log(prog_id);
@@ -579,18 +579,18 @@
             });
  
 
-            $("body").delegate(".dBtn", "click", function() {
-             var value_button = $(this).attr("data_25");
-             var prog_id = $(this).data("programm")
+			$("body").delegate(".dBtn", "click", function() {
+			 var value_button = $(this).attr("data_25");
+			 var prog_id = $(this).data("programm")
              var ey = $("#dunique"+prog_id).val();
               $('#'+prog_id).prop('disabled', false);
               $( "tr" ).remove(".ri"+prog_id);
                 toastr.success('Removed successfully');
-             });
+		     });
 
 
 
-            $("body").delegate(".save", "click", function() {
+			$("body").delegate(".save", "click", function() {
                     $("#load_this").css({
                         opacity : 0.2
                     });
@@ -674,11 +674,11 @@
                         });
                    }
    
-          });
+		  });
             
 
 
-            $("body").delegate(".show", "click", function() {
+			$("body").delegate(".show", "click", function() {
               
                 var ids = [];
                     var children = document.getElementById("cont").children; //get container element children.
@@ -765,7 +765,7 @@
                         });
                     }
 
-          });
+		  });
 
             function movePlanByDuration(prog_id, key, plan_station, plan_programe, plan_time, plan_day, plan_aud){
 
@@ -789,16 +789,16 @@
                  let element = document.getElementById("selectedProgTable");
 
 
-                 new_html += '<tr  class="ri'+prog_id+'"  id="'+key+'">'+
-                 '<td>  <input type="hidden" id="dunique'+ prog_id +'" value="'+key+'"/>'+  plan_station  +' </td>'+
+				 new_html += '<tr  class="ri'+prog_id+'"  id="'+key+'">'+
+				 '<td>  <input type="hidden" id="dunique'+ prog_id +'" value="'+key+'"/>'+  plan_station  +' </td>'+
                  '<td class="center">'+plan_day+'</td>'+
                  '<td class="center">'+plan_time+'</td>'+
-                 '<td class="center">'+plan_programe+'</td>'+
-                 '<td class="center">'+plan_aud+'</td>'+
-                    '<td class="center"><button data-programm="'+prog_id+'" class="plus-btn dBtn" data_15="first15" type="button"><i class="material-icons" style="color: red">delete</i></button>'+
-                     '</td>'+
-                     '</td>'+
-                     '</tr>';
+				 '<td class="center">'+plan_programe+'</td>'+
+				 '<td class="center">'+plan_aud+'</td>'+
+					'<td class="center"><button data-programm="'+prog_id+'" class="plus-btn dBtn" data_15="first15" type="button"><i class="material-icons" style="color: red">delete</i></button>'+
+					 '</td>'+
+					 '</td>'+
+					 '</tr>';
                     let options = {
                         block: "start",
                         inline: "nearest",
@@ -834,7 +834,7 @@ Highcharts.setOptions({
     column: {
             stacking: 'normal',
             dataLabels: {
-                    format: '{point.y:,.2f} $us',
+            		format: '{point.y:,.2f} $us',
                 enabled: true,
                 color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
             }
@@ -843,12 +843,10 @@ Highcharts.setOptions({
                   point: {
                       events: {
                           click: function () {
-                              var trim = this.category.substring(0,5)
+                            var trim = this.category.substring(0,5)
                                var name = this.series.name;
                                var Segment = name.split('/');
                               var day =Segment[1];
-                              console.log(Segment)
-
                               var vid =fifthSegment+day+ this.y + trim.replace(/[:]/g, '');
                               console.log(vid)
                               $('#'+vid).prop('disabled', true);
@@ -920,6 +918,8 @@ Highcharts.setOptions({
  })
 </script>
 
+@stop
+
 @section('styles')
     <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
@@ -934,5 +934,3 @@ Highcharts.setOptions({
         }
     </style>
 @stop
-
-
