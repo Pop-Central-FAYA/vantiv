@@ -847,6 +847,8 @@ Highcharts.setOptions({
                                var name = this.series.name;
                                var Segment = name.split('/');
                               var day =Segment[1];
+                              console.log(Segment)
+
                               var vid =fifthSegment+day+ this.y + trim.replace(/[:]/g, '');
                               console.log(vid)
                               $('#'+vid).prop('disabled', true);
