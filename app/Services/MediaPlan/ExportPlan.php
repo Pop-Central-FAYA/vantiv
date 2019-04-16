@@ -38,8 +38,8 @@ class ExportPlan
 
         foreach ($suggestions as $suggestion) {
             foreach ($suggestion->material_length as $key => $value) {
-                $gross_unit_rate = $value->unit_rate;
-                $volume_discount = $value->volume_disc;
+                $gross_unit_rate = (int) $value->unit_rate;
+                $volume_discount = (int) $value->volume_disc;
                 $value_less = $gross_unit_rate * ((100 - $volume_discount) / 100);
                 $net_unit_rate = $value_less * ((100 - $agency_commission) / 100);
                 $total_spots = $this->totalSpotsPerDuration($value->days);

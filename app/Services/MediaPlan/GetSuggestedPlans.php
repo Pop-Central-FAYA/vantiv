@@ -71,7 +71,8 @@ class GetSuggestedPlans
                 "programs_stations" => collect([]),
                 "stations" => collect([]),
                 "selected" => collect([]),
-                'total_graph' => collect([])
+                'total_graph' => collect([]),
+                'days' => array("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
             );
         }
 

@@ -31,7 +31,7 @@ class ValidateCriteriaForm
             'end_date' => 'required|date|after_or_equal:today',
             'region' => 'nullable|array',
             'state' => 'nullable|array',
-            'gender' => 'nullable|string',
+            'gender' => 'nullable|array',
             'lsm' => 'nullable|array',
             'social_class' => 'nullable|array',
             'age_groups' => 'nullable|array',
