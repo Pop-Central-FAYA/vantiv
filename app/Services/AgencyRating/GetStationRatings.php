@@ -1,13 +1,28 @@
 <?php
 
 namespace Vanguard\Services\AgencyRating;
+
 use Vanguard\Models\MpsAudience;
 use Vanguard\Models\MpsAudienceProgramActivity;
 use Vanguard\Models\StatePopulation;
+use Vanguard\Models\MediaPlan;
+use Vanguard\Models\MediaPlanProgram;
+use Vanguard\Models\MediaPlanSuggestion;
+use Vanguard\Models\Station;
+
+use Vanguard\Libraries\Utilities;
+
 use Illuminate\Support\Collection;
 
+use Auth;
+use Log;
 use DB;
+// use Batch;
 
+// use Vanguard\Libraries\Batch\LaravelBatch;
+// use Vanguard\\Libraries\\Batch\\LaravelBatch;
+ 
+// use Mavinoo\LaravelBatch as Batch;
 /**
  * This class should given a few demographic parameters returns ratings grouped in a certain way
  * @todo log how long it takes to calculate these counts
@@ -36,15 +51,21 @@ class GetStationRatings
      *  "gender": ["Male", "Female"]
      * }
      */
-    public function __construct($criteria) {
+    public function __construct($criteria, $request) {
         $this->criteria = $this->formatCriteria($criteria);
+        $this->stationListing = array();
+        $this->programNameMap = array();
+        $this->criteriaForm = $request;
     }
 
     public function getRatings() {
         $counts_by_state = $this->getCountsByState();
         $timebelt_counts = $this->getTimeBeltsByCriteria();
         $results = $this->analyzeAndFormatResults($timebelt_counts, $counts_by_state);
-        return $results;
+        $new_media_plan = $this->runInsertQuery($results['state_list'], $results['projected_counts']);
+        Log::debug($new_media_plan);
+        return $new_media_plan;
+        // return $results;
     }
 
     /**
@@ -115,7 +136,7 @@ class GetStationRatings
         $query = DB::table('mps_audiences as ma')
             ->join('mps_audience_program_activities as mapa', 'mapa.external_user_id', '=', 'ma.external_user_id')
             ->select(DB::raw('mapa.station, mapa.state as station_state, mapa.day, mapa.start_time, mapa.end_time, ma.state, COUNT(DISTINCT ma.external_user_id) as num_respondents'))
-            ->groupBy('mapa.station', 'mapa.state', 'mapa.day', 'mapa.start_time', 'ma.state')
+            ->groupBy('mapa.station', 'mapa.state', 'mapa.day', 'mapa.start_time', 'mapa.end_time', 'ma.state')
             ->when($this->criteria, function($query){
                 foreach($this->criteria as $criteria => $sub_criteria) {
                     $field = "ma." . $criteria;
@@ -218,4 +239,128 @@ class GetStationRatings
         // return $station;
     }
 
+    /**
+     * Save these to the database
+     */
+    protected function runInsertQuery($state_list, $projections) {
+        // DB::disableQueryLog();
+        // app('debugbar')->disable();
+
+        $this->getStationListing();
+        $this->getProgramNameMap();
+
+        return Utilities::switch_db('api')->transaction(function() use ($state_list, $projections){
+            $new_media_plan = $this->saveMediaPlan($state_list);
+            Log::debug("did I save media plan properly?");
+
+            $list_to_save = array();
+            // $batch_size = 500;
+            $count = 0;
+            foreach($projections as $suggestion) {
+                $station = $suggestion['station'];
+                $state = $suggestion['state'];
+                if (isset($this->stationListing[$station]) && isset($this->stationListing[$station][$state])) {
+                    $station_type = $this->stationListing[$station][$state]['station_type'];
+                    $station_region = $this->stationListing[$station][$state]['region'];
+                    $list_to_save[] = [
+                        'media_plan_id' => $new_media_plan->id,
+                        'media_type' => $suggestion['media_type'],
+                        'station' => $station,
+                        'state' => $state,
+                        'station_type' => $station_type,
+                        'region' => $station_region,
+                        'program' => $this->getProgramName($suggestion['station'], $suggestion['day'], $suggestion['start_time'], $suggestion['program']),
+                        'day' => $suggestion['day'],
+                        'start_time' => $suggestion['start_time'],
+                        'end_time' => $suggestion['end_time'],
+                        'total_audience' => $suggestion['audience'],
+                        'state_counts' => json_encode($suggestion['state_counts'])
+                    ];
+                    $count += 1;
+                } else {
+                    Log::warn($station . ' or ' . $state . ' is not set');
+                }
+                // if ($count >= 2000) {
+                //     Log::debug("saving batch");
+                //     MediaPlanSuggestion::insert($list_to_save);
+                //     $list_to_save = [];
+                //     $count = 0;
+                //     Log::debug("saved batch");
+                // }
+            }
+            
+            // if (count($list_to_save) > 0) {
+            //     Log::debug("saving last batch");
+            //     MediaPlanSuggestion::insert($list_to_save);
+            //     Log::debug("saved last batch");
+            //     $list_to_save = [];
+            //     $count = 0;
+            // }
+            $media_plan_suggestions = new MediaPlanSuggestion();
+            $columns = ['media_plan_id', 'media_type', 'station', 'state', 'station_type', 'region', 'program', 'day', 'start_time',
+                'end_time', 'total_audience', 'state_counts'
+            ];
+            $batch_size = 2000;
+            $laravel_batch = new LaravelBatch(app('db'));
+            $result = $laravel_batch->insert($media_plan_suggestions, $columns, $list_to_save, $batch_size);
+            Log::debug($result);
+            return $new_media_plan;
+        });    
+    }
+
+    protected function saveMediaPlan($state_list) {
+        $media_plan_data = array(
+            'gender' => json_encode($this->criteriaForm->gender),
+            'criteria_lsm' => json_encode($this->criteriaForm->lsm),
+            'criteria_social_class' => json_encode($this->criteriaForm->social_class),
+            'criteria_region' => json_encode($this->criteriaForm->region),
+            'criteria_state' => json_encode($this->criteriaForm->state),
+            'criteria_age_groups' => json_encode($this->criteriaForm->age_groups),
+            'agency_commission' => $this->criteriaForm->agency_commission,
+            'start_date' => $this->criteriaForm->start_date,
+            'end_date' => $this->criteriaForm->end_date,
+            'media_type' => $this->criteriaForm->media_type,
+            'campaign_name' => $this->criteriaForm->campaign_name,
+            'planner_id' => Auth::id(),
+            'status' => 'Suggested',
+            'state_list' => json_encode($state_list),
+            'filters' => json_encode(array()) //store all the filters which are automatically used to filter the result set
+        );
+        return MediaPlan::create($media_plan_data);
+    }
+
+   
+    private function getProgramName($station, $day, $start_time, $default){
+        $key = $station . '.' . $day . '.' . $start_time;
+        return data_get($this->programNameMap, $key, $default);
+    }
+
+    private function getStationListing() {
+        $collection = Station::all();
+        foreach($collection as $station) {
+            $station_name = $station->station;
+            if (isset($this->stationListing[$station_name])) {
+                $item = $this->stationListing[$station_name];
+            } else {
+                $item = array();
+            }
+            $item[$station->state] = array(
+                'station_type' => $station->station_type,
+                'region' => $station->region
+            );
+            $this->stationListing[$station_name] = $item;
+        } 
+    }
+
+    private function getProgramNameMap(){
+        $collection = MediaPlanProgram::all();
+        foreach($collection as $program_item) {
+            $station = $program_item->station;
+            $day = $program_item->day;
+            $start_time = $program_item->start_time;
+
+            $key = $station . '.' . $day . '.' . $start_time;
+            data_set($this->programNameMap, $key, $program_item->program_name);
+        }
+    }
 }
