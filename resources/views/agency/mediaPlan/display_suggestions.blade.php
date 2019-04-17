@@ -779,7 +779,7 @@
                         return;
                     }
                
-                toastr.success('Added successfully');
+              
                var trim = plan_station.split('/');
                         plan_station = trim[0];
 
@@ -805,6 +805,7 @@
                     // element.scrollIntoView(options);
                     $(".where-it-is-going").append(new_html);
                     //document.getElementById("ri"+prog_id).classList.add('highlight');
+                    toastr.success('Added successfully');
          
             }
 <?php 
