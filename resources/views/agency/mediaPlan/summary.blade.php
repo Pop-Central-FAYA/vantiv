@@ -38,6 +38,9 @@
                            <tr>
                             <td><span class="mr-2"><b>Flight Date:</b></span> {{ date('d-M-Y',strtotime($media_plan->start_date)).' to '.date('d-M-Y',strtotime($media_plan->end_date)) }}</td>
                            </tr>
+                           <tr>
+                            <td><span class="mr-2"><b>Status:</b></span> {{ $media_plan->status }}</td>
+                           </tr>
                         </tbody>
                     </table>
                 </div>
@@ -106,14 +109,14 @@
         </div> -->
         <div class="action_footer client_dets mb4 mt4">
           <div class="col_5 column">
-            <button type="button" id="back_btn" class="btn small_btn show" onclick="goBack()">Back</button>
+            <a id="back_btn" href="{{ route('agency.media_plan.create', ['id'=>$media_plan->id]) }}" class="btn small_btn"><i class="media-plan material-icons">navigate_before</i> Back</a>
           </div>
           <div class="col_7 column">
             @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('finance'))
-                <a href="{{ route('agency.media_plan.approve', ['id'=>$media_plan->id]) }}" class="btn block_disp uppercased mr-1"><i class="material-icons">check</i>Approve Plan</a>
-                <a href="{{ route('agency.media_plan.decline', ['id'=>$media_plan->id]) }}" class="btn block_disp uppercased bg_red mr-1"><i class="material-icons">clear</i>Decline Plan</a>
+                <a href="{{ route('agency.media_plan.approve', ['id'=>$media_plan->id]) }}" class="media-plan btn block_disp uppercased mr-1 {{ ($media_plan->status == 'Approved' || $media_plan->status == 'Declined') ? 'disabled-action-btn' : ''}}"><i class="media-plan material-icons">check</i>Approve Plan</a>
+                <a href="{{ route('agency.media_plan.decline', ['id'=>$media_plan->id]) }}" class="media-plan btn block_disp uppercased bg_red mr-1 {{ ($media_plan->status == 'Approved' || $media_plan->status == 'Declined') ? 'disabled-action-btn' : ''}}"><i class="media-plan material-icons">clear</i>Decline Plan</a>
             @endif
-            <a href="{{ route('agency.media_plan.export', ['id'=>$media_plan->id]) }}" class="btn block_disp uppercased"><i class="material-icons">file_download</i>Export Plan</a>
+            <a href="{{ route('agency.media_plan.export', ['id'=>$media_plan->id]) }}" class="btn block_disp uppercased"><i class="media-plan material-icons">file_download</i>Export Plan</a>
           </div>
         </div>
         <br><br><br><br><br><br><br>
@@ -258,14 +261,4 @@
 @section('styles')
     <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
-    <style type="text/css">
-        .material-icons {
-            font-weight: 700;
-            font-size: 14px;
-            height: 11px;
-            width: 11px;
-            margin-right: 10px;
-            margin-top: 6px;
-        }
-    </style>
 @stop
