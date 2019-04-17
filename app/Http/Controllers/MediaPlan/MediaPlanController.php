@@ -141,6 +141,7 @@ class MediaPlanController extends Controller
         // also get the filter values list to use to render with the filter dropdowns
         return view('agency.mediaPlan.display_suggestions')
             ->with('mediaPlanId', $id)
+            ->with('mediaPlanStatus', MediaPlan::findOrFail($id)->status)
             ->with('fayaFound', $plans)
             ->with('filterValues', $this->getFilterFieldValues($id))
             ->with('selectedFilters', $savedFilters);

@@ -286,11 +286,15 @@
 
     <div class="action_footer client_dets mb4 mt4">
       <div class="col_6 column">
-        <button type="button" id="back_btn" class="btn small_btn show" onclick="goBack()">Back</button>
+        <a id="back_btn" href="{{ route('agency.media_plan.customize', ['id'=>$plan_id]) }}" class="btn small_btn"><i class="media-plan material-icons">navigate_before</i> Back</a>
       </div>
       <div class="col_6 column">
+        @if($media_plan->status == 'Approved' || $media_plan->status == 'Declined')
+        <a href="{{ route('agency.media_plan.summary', ['id'=>$plan_id]) }}" class="media-plan btn small_btn right mr-2 next-page-btn">Next <i class="media-plan material-icons">navigate_next</i></a>
+        @else
         <button type="button" id="save_progress" class="btn small_btn right show summary">Summary</button>
-        <button type="button" id="mpo_filters" class="btn small_btn right show save mr-2">Save</button>
+        @endif
+        <button type="button" id="mpo_filters" class="media-plan btn small_btn right show save mr-2 {{ ($media_plan->status == 'Approved' || $media_plan->status == 'Declined') ? 'disabled-action-btn':''}}"><i class="media-plan material-icons">save</i>Save</button>
       </div>
     </div>
 
