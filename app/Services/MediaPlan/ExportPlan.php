@@ -47,6 +47,8 @@ class ExportPlan
                 $new_array[] = [
                     'material_duration' => $key,
                     'station' => $suggestion->station,
+                    'station_type' => $suggestion->station_type,
+                    'station_region' => $suggestion->region,
                     'program' => $suggestion->program.' '.date('ha', strtotime($suggestion->start_time)).' - '.date('ha', strtotime($suggestion->end_time)),
                     'week_days' => $this->days_of_the_week($suggestion->day),
                     'media_type' => $suggestion->media_type,
@@ -72,8 +74,8 @@ class ExportPlan
     public function groupByMediumMaterialLength($data)
     {
         $data = collect($data);
-        return $data->groupBy(['media_type','material_duration','station']);
-
+        return $data->groupBy(['media_type','material_duration']);
+        // return $data->groupBy(['media_type','material_duration','station']);
     }
 
     public function days_of_the_week($letter_day)

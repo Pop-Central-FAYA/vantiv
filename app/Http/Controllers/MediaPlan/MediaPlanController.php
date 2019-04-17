@@ -252,7 +252,7 @@ class MediaPlanController extends Controller
 
     public function exportPlan($media_plan_id)
     {
-        $mediaPlan = MediaPlan::with(['client'])->findorfail($media_plan_id);
+        $mediaPlan = MediaPlan::with(['client', 'brand'])->findorfail($media_plan_id);
         $selectedSuggestions = $mediaPlan->suggestions->where('status', 1)->where('material_length', '!=', null);
 
         if (count($selectedSuggestions) === 0) {
@@ -268,12 +268,10 @@ class MediaPlanController extends Controller
 
         $export_service = new ExportPlan($mediaPlan);
         $media_plan_grouped_data = $export_service->run();
+
         $monthly_weeks_table_header = json_encode($export_service->monthly_weeks_campaign_duration($plan_start_date, $plan_end_date));
 
-        return Excel::download(new MediaPlanExport($media_plan_summary, $media_plan_grouped_data, $monthly_weeks_table_header, $mediaPlan), 'mediaplan.xlsx');
-
-        // return $media_plan_grouped_data;
-        //display data in excel        
+        return Excel::download(new MediaPlanExport($media_plan_summary, $media_plan_grouped_data, $monthly_weeks_table_header, $mediaPlan), 'mediaplan.xlsx');     
     }
 
     public function approvePlan($media_plan_id)
