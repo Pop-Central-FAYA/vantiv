@@ -74,7 +74,7 @@
                             <label class="small_faint">Gender</label>
 
                             <div class="select_wrap {{ $errors->has('gender') ? ' has-error' : '' }}">
-                                <select class="js-example-basic-multiple" name="gender" id="gender" multiple="multiple">
+                                <select class="js-example-basic-multiple" name="gender[]" id="gender" multiple="multiple">
                                     @foreach($criterias as $criteria)
                                         @if ($criteria->name == "genders")
                                             @foreach ($criteria->subCriterias as $genders)
@@ -101,7 +101,7 @@
                     <div class="clearfix mb">
                         <div class="input_wrap column col_6{{ $errors->has('start_date') ? ' has-error' : '' }}">
                             <label class="small_faint">Start Date</label>
-                            <input type="text" id="start_date" required class="flatpickr" value="{{ old('start_date') }}" name="start_date" placeholder="Select Date">
+                            <input style="display: inline-block;width: 100%;" type="text" id="start_date" required class="flatpickr" value="{{ old('start_date') }}" name="start_date" placeholder="Select Date">
                             @if($errors->has('start_date'))
                                 <strong>
                                     <span class="help-block">{{ $errors->first('start_date') }}</span>
@@ -111,7 +111,7 @@
 
                         <div class="input_wrap column col_6{{ $errors->has('end_date') ? ' has-error' : '' }}">
                             <label class="small_faint">End Date</label>
-                            <input type="text" required class="flatpickr" id="end_date" value="{{ old('end_date') }}" name="end_date" placeholder="Select Date">
+                            <input style="display: inline-block;width: 100%;" type="text" required class="flatpickr" id="end_date" value="{{ old('end_date') }}" name="end_date" placeholder="Select Date">
 
                             @if($errors->has('end_date'))
                                 <strong>
@@ -125,7 +125,7 @@
                     <div class="clearfix mb">
                         <div class="input_wrap column col_6{{  $errors->has('age_groups') ? ' has-error' : '' }}">
                             <label class="small_faint">Min. Age</label>
-                            <input type="number" name="age_groups[0][min]" placeholder="Minimum Age">
+                            <input style="display: inline-block;width: 100%;" type="number" name="age_groups[0][min]" placeholder="Minimum Age">
 
                             @if($errors->has('age_groups'))
                                 <strong>
@@ -136,7 +136,7 @@
 
                         <div class="input_wrap column col_6{{ $errors->has('age_groups') ? ' has-error' : '' }}">
                             <label class="small_faint">Max. Age</label>
-                            <input type="number" name="age_groups[0][max]" placeholder="Maximum Age">
+                            <input style="display: inline-block;width: 100%;" type="number" name="age_groups[0][max]" placeholder="Maximum Age">
                             @if($errors->has('age_groups'))
                                 <strong>
                                     <span class="help-block">{{ $errors->first('age_groups') }}</span>
@@ -267,7 +267,7 @@
                     <div class="clearfix mb">
                         <div class="input_wrap column col_12{{ $errors->has('agency_commission') ? ' has-error' : '' }}">
                             <label class="small_faint">Agency Commission</label>
-                            <input type="number" name="agency_commission" id="agency_commission" value="{{ old('agency_commission') }}" placeholder="Enter Agency Commission">
+                            <input style="display: inline-block;width: 100%;" type="number" name="agency_commission" id="agency_commission" value="{{ old('agency_commission') }}" placeholder="Enter Agency Commission">
                             @if($errors->has('agency_commission'))
                                 <strong>
                                     <span class="help-block">{{ $errors->first('agency_commission') }}</span>
@@ -280,7 +280,7 @@
                     <div class="clearfix mb">
                         <div class="input_wrap column col_12{{ $errors->has('campaign_name') ? ' has-error' : '' }}">
                             <label class="small_faint">Campaign Name</label>
-                            <input type="text" name="campaign_name" id="campaign_name" value="{{ old('campaign_name') }}" placeholder="Enter Campaign Name">
+                            <input style="display: inline-block;width: 100%;" type="text" name="campaign_name" id="campaign_name" value="{{ old('campaign_name') }}" placeholder="Enter Campaign Name">
                             @if($errors->has('campaign_name'))
                                 <strong>
                                     <span class="help-block">{{ $errors->first('campaign_name') }}</span>

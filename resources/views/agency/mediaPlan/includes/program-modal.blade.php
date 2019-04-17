@@ -1,6 +1,6 @@
 @foreach($fayaFound['programs_stations'] as $value)
     @foreach($default_material_length as $duration)
-        <div class="modal_contain reload_content" style="width: 1000px;" id="program_modal_{{ $duration.$value->id }}">
+        <div class="modal_contain reload_content" style="width: 1000px; max-width: 800px;" id="program_modal_{{ $duration.$value->id }}">
             <div class="the_frame clearfix mb border_top_color pt load_this_div">
             <form action="{{ route('media_plan.program.store') }}" data-get_id="{{ $duration.'_'.$value->id }}" class="submit_form" method="post" id="submit_{{ $duration.'_'.$value->id }}">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -105,7 +105,7 @@
                                         <input type="text" id="timepicker" name="end_time[]" class="t_picker timepicker_{{ $day }}"/>
                                     </div>
                                     <div class="column col_2">
-                                        <a href="" id="add_more_{{ $day }}" class="uppercased color_initial">Add More</a>
+                                        <!-- <a href="" id="add_more_{{ $day }}" class="uppercased color_initial">Add More</a> -->
                                     </div>
                                 </div>
                             </div>

@@ -44,7 +44,7 @@
             <form method="POST" action="" id="filter-form">
                 {{ csrf_field() }}
                 <input type="hidden" name="mediaPlanId" value="{{ $mediaPlanId }}">
-                <div class="col_3 column">
+                <div class="col_2 column">
                     <label for="station_type">Station Type</label>
                     <select name="station_type" id="station_type">
                         @foreach($filterValues['station_type'] as $station_type)
@@ -79,7 +79,7 @@
                         @endforeach
                     </select>                    
                 </div>
-                <div class="col_3 column">
+                <div class="col_4 column">
                     <button type="submit" class="filter-btn" id="filter-btn"><i class="material-icons left">search</i>Filter</button>
                 </div>
             </form>
@@ -178,28 +178,26 @@
                         <div class="column col_1 align_center">
                             
                                 </div>
-                    
-                                    <?php 
-                                        $day = array();
-                                    foreach($fayaFound['total_graph'] as $key => $Value){
-                                        $day[] = $key;
-                                    } 
-                                    for ($x = 0; $x <= 6; $x++) {
-
-                                        if (in_array($fayaFound['days'][$x], $day))
-                                        { ?>
-                                            <div class="column col_1 align_center">
-                                            <br><br>
-                                                <button id="day-<?php  echo substr($fayaFound['days'][$x],0,3); ?>"  class="btn full block_disp uppercased align_center"  style="margin: 10 auto"><?php  echo substr($fayaFound['days'][$x],0,3); ?></button>
-                                                <br><br>
-                                            </div>
-                                            <?php     }  } ?>
+                                <?php
+                                foreach($fayaFound['days'] as $day) {
+                                    $substr_day = substr($day,0,3);
+                                    if(isset($fayaFound['total_graph'][$day])) 
+                                    { ?>
+                                        <div class="column col_1 align_center">
+                                <br><br>
+                                    <!-- <button id="day-{{$key}}"  class="btn full block_disp uppercased align_center"  style="margin: 10 auto">  {{ $key }}</button> -->
+                                    <button id="day-<?php  echo $substr_day; ?>"  class="btn full block_disp uppercased align_center"  style="margin: 10 auto"><?php  echo $substr_day; ?></button>
+                                    <br><br>
+                                </div>
+                                <?php }} ?>                            
+        
                             </div>
         
         <div >
         <div  class="the_frame client_dets mb4">
             @foreach($fayaFound['total_graph'] as $key => $Value)
                
+            <!-- <div id="view-{{$key}}" > -->
             <div id="view-{{substr($key,0,3)}}" >
             <div id="container{{ $key }}" style="min-width: 100%; height: 500px; padding: 30 auto"></div>
                </div>
@@ -843,12 +841,11 @@ Highcharts.setOptions({
                   point: {
                       events: {
                           click: function () {
-                            var trim = this.category.substring(0,5)
-                               var name = this.series.name;
+                              var trim = this.category.substring(0,5)
+                            //   var day =this.series.name.slice(-3);
+                              var name = this.series.name;
                                var Segment = name.split('/');
                               var day =Segment[1];
-                              console.log(Segment)
-
                               var vid =fifthSegment+day+ this.y + trim.replace(/[:]/g, '');
                               console.log(vid)
                               $('#'+vid).prop('disabled', true);

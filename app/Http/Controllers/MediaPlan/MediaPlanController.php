@@ -41,7 +41,7 @@ class MediaPlanController extends Controller
 
     public function index($value='')
     {
-    	//Broadcaster Dashboard module
+        //Broadcaster Dashboard module
         $broadcaster_id = Session::get('broadcaster_id');
         $agency_id = Session::get('agency_id');
         if ($broadcaster_id) {
@@ -61,22 +61,22 @@ class MediaPlanController extends Controller
 
             return view('agency.mediaPlan.dashboard')
                     ->with([
-	                    'count_pending_media_plans' => $count_pending_media_plans,
-	                    'count_approved_media_plans' => $count_approved_media_plans,
-	                    'count_declined_media_plans' => $count_declined_media_plans
-	                ]);
-        }	
-	}
-	
-	public function customisPlan()
+                        'count_pending_media_plans' => $count_pending_media_plans,
+                        'count_approved_media_plans' => $count_approved_media_plans,
+                        'count_declined_media_plans' => $count_declined_media_plans
+                    ]);
+        }   
+    }
+    
+    public function customisPlan()
     {
-		return view('agency.mediaPlan.custom_plan');
-    	
+        return view('agency.mediaPlan.custom_plan');
+        
     }
 
     public function getSuggestionsByPlanId($id='')
     {
-    	return "got here";
+        return "got here";
     }
 
     public function dashboardMediaPlans(Request $request)
@@ -87,72 +87,72 @@ class MediaPlanController extends Controller
 
     public function criteriaForm(Request $request)
     {
-    	$criterias = Criteria::with(['subCriterias'])->groupBy('name')->get();
-    	// return criterias array with the frontend view, in order to populate criteria inputs
-    	return view('agency.mediaPlan.create_plan')->with('criterias', $criterias);
+        $criterias = Criteria::with(['subCriterias'])->groupBy('name')->get();
+        // return criterias array with the frontend view, in order to populate criteria inputs
+        return view('agency.mediaPlan.create_plan')->with('criterias', $criterias);
     }
 
     public function suggestPlan(Request $request)
     {
-    	// validate criteria form request
-    	$validateCriteriaFormService = new ValidateCriteriaForm($request->all());
-    	$validation = $validateCriteriaFormService->validateCriteria();
+        // validate criteria form request
+        $validateCriteriaFormService = new ValidateCriteriaForm($request->all());
+        $validation = $validateCriteriaFormService->validateCriteria();
 
-    	if ($validation->fails()) {
-    		// var_dump($validation->errors()); return;
+        if ($validation->fails()) {
+            // var_dump($validation->errors()); return;
             return back()->withErrors($validation)->withInput();
-    	}
-    	// Fetch mps audiences, programs, stations, time duration, based on criteria
-    	$suggestPlanService = new SuggestPlan($request);
-		  $suggestions = $suggestPlanService->suggestPlan();
-		if ($suggestions->isNotEmpty()) {
-    		// store planning criteria and suggestions
-    		$storeSuggestionsService = new StorePlanningSuggestions($request, $suggestions);
-			$newMediaPlan = $storeSuggestionsService->storePlanningSuggestions();
-			return redirect()->action(
-				'MediaPlan\MediaPlanController@getSuggestPlanById', ['id' => $newMediaPlan->id]
-			);
-    	}else{
-			Session::flash('success', 'No results came back for your criteria');
-			return redirect()->action(
-				'MediaPlan\MediaPlanController@criteriaForm'
-			);
-		}
-	}
+        }
+        // Fetch mps audiences, programs, stations, time duration, based on criteria
+        $suggestPlanService = new SuggestPlan($request);
+          $suggestions = $suggestPlanService->suggestPlan();
+        if ($suggestions->isNotEmpty()) {
+            // store planning criteria and suggestions
+            $storeSuggestionsService = new StorePlanningSuggestions($request, $suggestions);
+            $newMediaPlan = $storeSuggestionsService->storePlanningSuggestions();
+            return redirect()->action(
+                'MediaPlan\MediaPlanController@getSuggestPlanById', ['id' => $newMediaPlan->id]
+            );
+        }else{
+            Session::flash('success', 'No results came back for your criteria');
+            return redirect()->action(
+                'MediaPlan\MediaPlanController@criteriaForm'
+            );
+        }
+    }
 
-	/**
-	 * This is the page that returns the suggested plan. (When this page loads it should also load up the filter values)
-	 * @todo This is kinda inefficient right now because the states list is being regenerated each time, but it will do
-	 * @todo Fix tis and the one below (getSuggestPlansByIdAndFilters)
-	 */
-	public function getSuggestPlanById($id)
-	{   
+    /**
+     * This is the page that returns the suggested plan. (When this page loads it should also load up the filter values)
+     * @todo This is kinda inefficient right now because the states list is being regenerated each time, but it will do
+     * @todo Fix tis and the one below (getSuggestPlansByIdAndFilters)
+     */
+    public function getSuggestPlanById($id)
+    {   
         // Get the filter values
         $savedFilters = json_decode(MediaPlan::findOrFail($id)->filters, true);
         if (!$savedFilters) {
             $savedFilters = array();
         }
-		$suggestedPlansService = new GetSuggestedPlans($id, $savedFilters);
-		$plans = $suggestedPlansService->get();
-		// if (count($plans) == 0) {
+        $suggestedPlansService = new GetSuggestedPlans($id, $savedFilters);
+        $plans = $suggestedPlansService->get();
+        // if (count($plans) == 0) {
         //     //Render an empty page and do not redirect
-		// 	// return redirect()->route("agency.media_plan.criteria_form");
-		// }
+        //  // return redirect()->route("agency.media_plan.criteria_form");
+        // }
         // also get the filter values list to use to render with the filter dropdowns
         return view('agency.mediaPlan.display_suggestions')
             ->with('mediaPlanId', $id)
-			->with('fayaFound', $plans)
-			->with('filterValues', $this->getFilterFieldValues($id))
-			->with('selectedFilters', $savedFilters);
-	}
+            ->with('fayaFound', $plans)
+            ->with('filterValues', $this->getFilterFieldValues($id))
+            ->with('selectedFilters', $savedFilters);
+    }
 
-	/**
-	 * Get the ratings per filter (Not quite sure how to complete this)
+    /**
+     * Get the ratings per filter (Not quite sure how to complete this)
      * So, save the filters the user selected, then the page will be reloaded
      * @todo add proper validation
-	 */
-	public function setPlanSuggestionFilters(Request $request)
-	{
+     */
+    public function setPlanSuggestionFilters(Request $request)
+    {
         try {
             $media_plan_id = $request->get('mediaPlanId');
             $expected_fields = array('states', 'day_parts', 'days', 'station_type');
@@ -178,27 +178,27 @@ class MediaPlanController extends Controller
                 'message' => 'Unknown error occurred'
             ));
         }
-	}
-	/**
+    }
+    /**
      * Return the values that should be used to populate the filter fields
      * i.e dayparts, and states (that were part of what was found)
      * @todo not the biggest fan of how this is done, but it should work for now
      */
     protected function getFilterFieldValues($mediaPlanId) {
-		$state_list = array();
-		$saved_state_list = MediaPlan::find($mediaPlanId)->state_list;
-		if (strlen($saved_state_list) > 0) {
-			$state_list = json_decode($saved_state_list, true);
-		}
+        $state_list = array();
+        $saved_state_list = MediaPlan::find($mediaPlanId)->state_list;
+        if (strlen($saved_state_list) > 0) {
+            $state_list = json_decode($saved_state_list, true);
+        }
         return array(
             "day_parts" => collect(GetSuggestedPlans::DAYPARTS)->keys()->sort()->toArray(),
             "state_list" => $state_list,
             "days" => array("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"),
             "station_type" => array("Network", "Regional", "Satellite")
         );
-	}
+    }
     
-	public function groupSuggestions($query)
+    public function groupSuggestions($query)
     {
         $query = $query->groupBy(function ($item, $key) {
             return $item->station.'_'.$item->program.'_'.$item->start_time.'_'.$item->end_time;
@@ -217,21 +217,21 @@ class MediaPlanController extends Controller
     public function groupSuggestionsByStation($query)
     {
         return $query->groupBy('station');
-	}
-	
-	public function countByMediaType($collection, $media_type='')
+    }
+    
+    public function countByMediaType($collection, $media_type='')
     {
         return $collection->where('media_type', $media_type)->sum('audience');
     }
-	
-	/**
-	 * This is a function to filter suggestions and reload the page with the new filtered suggestions.
-	 * The filters are:
-	 * 1. day parts --> i.e Morning, Afternoon, Night etc
-	 * 2. days --> i.e Monday, Tuesday etc
-	 * 3. states --> i.e Abuja, Kaduna etc
-	 * If there are no filters, then the full media plan suggestions get returned (which is the default)
-	 */
+    
+    /**
+     * This is a function to filter suggestions and reload the page with the new filtered suggestions.
+     * The filters are:
+     * 1. day parts --> i.e Morning, Afternoon, Night etc
+     * 2. days --> i.e Monday, Tuesday etc
+     * 3. states --> i.e Abuja, Kaduna etc
+     * If there are no filters, then the full media plan suggestions get returned (which is the default)
+     */
     public function summary($media_plan_id)
     {
         $mediaPlan = MediaPlan::with(['client'])->findorfail($media_plan_id);
@@ -297,10 +297,10 @@ class MediaPlanController extends Controller
     public function totalAudienceFound($collection)
     {
         return $collection->sum('audience');
-	}
-	
+    }
+    
 
-	public function SelectPlanPost(Request $request)
+    public function SelectPlanPost(Request $request)
     {
 
         $programs_id = json_decode($request->get('data'));
@@ -321,71 +321,71 @@ class MediaPlanController extends Controller
             }catch (\Exception $exception){
                 return response()->json(['status'=>'failed', 'message'=> "The current operation failed" ]);
             }
-		return response()->json(['status'=>'success', 'message'=> "Plan Selected successfully" ]);
-		
+        return response()->json(['status'=>'success', 'message'=> "Plan Selected successfully" ]);
+        
 
-	}
-	
-	public function CreatePlan($id)
+    }
+    
+    public function CreatePlan($id)
     {
         $get_suggestion_with_ratings = new GetSuggestionListWithProgramRating($id);
         $plans = $get_suggestion_with_ratings->getMediaPlanSuggestionWithProgram();
 
-		$plans_details = DB::table('media_plans')->where('id', $id)->get();
+        $plans_details = DB::table('media_plans')->where('id', $id)->get();
 
-		$clients = new AllClient(\Auth::user()->companies->first()->id);
+        $clients = new AllClient(\Auth::user()->companies->first()->id);
         $clients = $clients->getAllClients();
 
-		if(count($plans) == 0 || count($plans_details) == 0){
-			return redirect()->route("agency.media_plan.criteria_form");
-		}
-		$fayaFound = [];
-		$suggestions = $this->groupSuggestions($plans);
-		$suggestionsByStation = $this->groupSuggestionsByStation($plans);
-		$dates = $this->dates($plans_details[0]->start_date, $plans_details[0]->end_date);
-		$labeldates = $this->labeldates($plans_details[0]->start_date, $plans_details[0]->end_date);
-		$days = $this->days($plans_details[0]->start_date, $plans_details[0]->end_date);
-		$fayaFound = array(
-			'total_tv' => $this->countByMediaType($suggestions, 'Tv'),
-			'total_radio' => $this->countByMediaType($suggestions, 'Radio'),
-			'programs_stations' => $plans,
-			'stations' => $suggestionsByStation,
-			'total_audiences' => $this->totalAudienceFound($suggestions),
-			'plan_details' => $plans_details,
-			'dates' => $dates,
-			'labeldates' => $labeldates,
-			'days' => $days,
-		);
-		$media_plan = MediaPlan::find($id);
+        if(count($plans) == 0 || count($plans_details) == 0){
+            return redirect()->route("agency.media_plan.criteria_form");
+        }
+        $fayaFound = [];
+        $suggestions = $this->groupSuggestions($plans);
+        $suggestionsByStation = $this->groupSuggestionsByStation($plans);
+        $dates = $this->dates($plans_details[0]->start_date, $plans_details[0]->end_date);
+        $labeldates = $this->labeldates($plans_details[0]->start_date, $plans_details[0]->end_date);
+        $days = $this->days($plans_details[0]->start_date, $plans_details[0]->end_date);
+        $fayaFound = array(
+            'total_tv' => $this->countByMediaType($suggestions, 'Tv'),
+            'total_radio' => $this->countByMediaType($suggestions, 'Radio'),
+            'programs_stations' => $plans,
+            'stations' => $suggestionsByStation,
+            'total_audiences' => $this->totalAudienceFound($suggestions),
+            'plan_details' => $plans_details,
+            'dates' => $dates,
+            'labeldates' => $labeldates,
+            'days' => $days,
+        );
+        $media_plan = MediaPlan::find($id);
         $client_brand = '';
         if($media_plan->client_id != ''){
             $client_brand = new ClientBrand($media_plan->client_id);
             $client_brand = $client_brand->run();
         }
-		$media_plans_programs = MediaPlanProgram::all();
-		return view('agency.mediaPlan.complete_plan')->with('fayaFound', $fayaFound)
-													        ->with('clients', $clients)
+        $media_plans_programs = MediaPlanProgram::all();
+        return view('agency.mediaPlan.complete_plan')->with('fayaFound', $fayaFound)
+                                                            ->with('clients', $clients)
                                                             ->with('days', $this->listDays())
                                                             ->with('media_plans_programs', $media_plans_programs)
                                                             ->with('default_material_length', $this->getDefaultMaterialLength())
                                                             ->with('plan_id', $id)
                                                             ->with('media_plan', $media_plan)
                                                             ->with('brands', $client_brand);
-	
-	}
+    
+    }
 
-	public function days($start, $end)
-	{
+    public function days($start, $end)
+    {
        date_default_timezone_set('UTC');
        $diff = strtotime($end) - strtotime($start);
        $daysBetween = floor($diff/(60*60*24));
-			$formattedDates = array();
-			for ($i = 0; $i <= $daysBetween; $i++) {
-				$tmpDate = date('Y-m-d', strtotime($start . " + $i days"));
-				$formattedDates[] = date('l', strtotime($tmpDate));
-			}    
-			return $formattedDates;
-	}
+            $formattedDates = array();
+            for ($i = 0; $i <= $daysBetween; $i++) {
+                $tmpDate = date('Y-m-d', strtotime($start . " + $i days"));
+                $formattedDates[] = date('l', strtotime($tmpDate));
+            }    
+            return $formattedDates;
+    }
 
     public function labeldates($start, $end)
      {
@@ -505,22 +505,35 @@ class MediaPlanController extends Controller
         // Fetch mps audiences, programs, stations, time duration, based on criteria
         $suggestPlanService = new SuggestPlan($request);
         $suggestions = $suggestPlanService->suggestPlan();
-        if ($suggestions->isNotEmpty()) {
-            // store planning criteria and suggestions
-            $storeSuggestionsService = new StorePlanningSuggestions($request, $suggestions);
-            $newMediaPlan = $storeSuggestionsService->storePlanningSuggestions();
+        if ($suggestions) {
             return [
                 'status'=>"success",
                 'message'=> "Ratings successfully generated, going to next page",
-                'redirect_url' => $newMediaPlan->id
+                'redirect_url' => $suggestions->id
             ];
-        }else{
+        } else {
             Session::flash('error', 'No results came back for your criteria');
             return [
                 'status'=>"error",
                 'message'=> "No results came back for your criteria"
             ];
         }
+        // if ($suggestions->isNotEmpty()) {
+        //     // store planning criteria and suggestions
+        //     $storeSuggestionsService = new StorePlanningSuggestions($request, $suggestions);
+        //     $newMediaPlan = $storeSuggestionsService->storePlanningSuggestions();
+        //     return [
+        //         'status'=>"success",
+        //         'message'=> "Ratings successfully generated, going to next page",
+        //         'redirect_url' => $newMediaPlan->id
+        //     ];
+        // }else{
+        //     Session::flash('error', 'No results came back for your criteria');
+        //     return [
+        //         'status'=>"error",
+        //         'message'=> "No results came back for your criteria"
+        //     ];
+        // }
     }
 
 }
