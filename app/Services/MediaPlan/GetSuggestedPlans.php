@@ -44,7 +44,7 @@ class GetSuggestedPlans
             ->select(DB::Raw("*, total_audience as audience"))
             ->where("media_plan_id", $this->mediaPlanId)
             ->when($this->filters, function($query) {
-               foreach ($this->filters as $key => $value) {
+              foreach ($this->filters as $key => $value) {
                     if ($key == "day_parts") {
                         $query->whereBetween("start_time", static::DAYPARTS[$value]);
                         continue;
@@ -89,7 +89,7 @@ class GetSuggestedPlans
             "total_radio" => 0,
             "total_audiences" => $total_audience,
             "programs_stations" => $plans->sortByDesc("total_audience"),
-            "stations" => $plans->groupBy("station"),
+            "stations" => $this->groupbyState($plans),
             "selected" => $selected_plans->sortByDesc("total_audience"),
             'total_graph' => $plans->groupBy(['day', 'station']),
             'days' => array("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
@@ -110,4 +110,16 @@ class GetSuggestedPlans
         }
         return $plans;
     }
+
+
+protected function groupbyState($plans){
+
+    $grouped = $plans->groupBy(function ($item, $key) {
+        return $item->station. " - ". $item->state;
+    });
+    
+
+    $grouped->toArray();
+    return $grouped;
+}
 }
