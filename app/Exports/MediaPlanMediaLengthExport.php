@@ -7,6 +7,7 @@ use Maatwebsite\Excel\Concerns\WithTitle;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Illuminate\Support\Collection;
 
 class MediaPlanMediaLengthExport implements FromView, ShouldAutoSize, WithTitle
 {
@@ -31,11 +32,27 @@ class MediaPlanMediaLengthExport implements FromView, ShouldAutoSize, WithTitle
     {
         return view('agency.mediaPlan.export.mediaDuration', [
             'data' => collect($this->station_programs),
+            'national_stations' => $this->groupByStationType($this->station_programs, 'network'),
+            'cable_stations' => $this->groupByStationType($this->station_programs, 'cable'),
+            'regional_stations' => $this->groupByRegions($this->station_programs),
             'monthly_weeks' => json_decode($this->monthly_weeks),
             'media_plan_data' => $this->media_plan_data,
             'media_type' => $this->media_type,
             'material_length' => $this->material_length
         ]);
+    }
+
+
+    public function groupByStationType($suggestions, $station_type)
+    {
+        $suggestions = $suggestions->where('station_type', $station_type);
+        return $suggestions->groupBy('station');
+    }
+
+    public function groupByRegions($suggestions)
+    {
+        $suggestions = $suggestions->where('station_type', 'terrestrial');
+        return $suggestions->groupBy(['station_region', 'station']);
     }
 
     /**
