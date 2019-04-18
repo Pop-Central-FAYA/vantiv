@@ -576,7 +576,7 @@
 			   var plan_aud = $("#aud"+prog_id).text();
                var key = $("#unique"+prog_id).val();
 			   movePlanByDuration(prog_id, key, plan_station, plan_programe,plan_time, plan_day, plan_aud);
-                toastr.success('Added successfully');
+            
 			   $('#'+prog_id).prop('disabled', true);
 
 
@@ -787,7 +787,7 @@
                         return;
                     }
                
-
+              
                var trim = plan_station.split('/');
                         plan_station = trim[0];
 
@@ -812,7 +812,8 @@
                     }
                     // element.scrollIntoView(options);
                     $(".where-it-is-going").append(new_html);
-                    // document.getElementById("ri"+prog_id).classList.add('highlight');
+                    //document.getElementById("ri"+prog_id).classList.add('highlight');
+                    toastr.success('Added successfully');
          
             }
 <?php 
