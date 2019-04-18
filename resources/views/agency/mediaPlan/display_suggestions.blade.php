@@ -20,31 +20,21 @@
             </div>
         </div>
 
-        <div class="clearfix mb4 _shrink-sides">
-            <div class="column col_6">
-                <button id="view-table"  class="btn full block_disp uppercased align_center">Table</button>
-            </div>
-
-            <div class="column col_6">
-                <button id="view-graph"  class="btn full block_disp uppercased align_center">Graph</button>
-            </div>
-        </div>
+        
 
     <div>
 
     <div class="the_frame client_dets mb1">
     
     <div class="filters border_bottom clearfix">
-        <div class="column col_6 p-t">
-            <div class="column col_6">
-                <p class="weight_medium mt2">Available Stations and Times</p>
-            </div>
+        <div class="column col_5">
+            <p class="uppercased weight_medium mt2">Available Stations and Times</p>
         </div>
-        <div class="column col_6 clearfix">
+        <div class="column col_7 clearfix">
             <form method="POST" action="" id="filter-form">
                 {{ csrf_field() }}
                 <input type="hidden" name="mediaPlanId" value="{{ $mediaPlanId }}">
-                <div class="col_2 column">
+                <div class="col_3 column">
                     <label for="station_type">Station Type</label>
                     <select name="station_type" id="station_type">
                         @foreach($filterValues['station_type'] as $station_type)
@@ -79,10 +69,20 @@
                         @endforeach
                     </select>                    
                 </div>
-                <div class="col_4 column">
-                    <button type="submit" class="filter-btn" id="filter-btn"><i class="material-icons left">search</i>Filter</button>
+                <div class="col_3 column">
+                    <button type="submit" class="filter-btn" id="filter-btn"><i class="material-icons">search</i>FILTER</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <div class="clearfix mb mt2 mbl mr-2">
+        <div class="column col_6">
+            <button id="view-table"  class="btn full block_disp uppercased align_center">Table</button>
+        </div>
+
+        <div class="column col_6">
+            <button id="view-graph"  class="btn full block_disp uppercased align_center">Graph</button>
         </div>
     </div>
 

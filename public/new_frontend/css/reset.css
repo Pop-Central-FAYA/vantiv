@@ -78,6 +78,9 @@ canvas {
 .mt2 {
   margin-top: 20px;
 }
+.mt {
+  margin-top: 10px;
+}
 .mbl {
   margin-left: 20px;
 }
@@ -989,12 +992,23 @@ input:-webkit-autofill {
 }
 .filter-btn {
   padding: 4px;
-  width: 70%;
+  width: 100%;
   border: 0;
   color: #fff;
-  font-size: 15px;
+  font-size: 16px;
   background: #607D8B;
   border-radius: 3px;
+  padding: 7px 15px;
+  cursor: pointer;
+}
+.filter-btn .material-icons {
+    font-weight: 700;
+    font-size: 16px;
+    height: 11px;
+    width: 11px;
+    margin-right: 10px;
+    top: 2px;
+    position: relative;
 }
 .plus-btn:hover {
   box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
