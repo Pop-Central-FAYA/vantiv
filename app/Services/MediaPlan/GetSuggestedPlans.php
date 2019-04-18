@@ -81,7 +81,8 @@ class GetSuggestedPlans
         $selected_plans = DB::table("media_plan_suggestions")
             ->select(DB::Raw("*, total_audience as audience, CONCAT(station, ' - ', state) as station_state"))
             ->where("media_plan_id", $this->mediaPlanId)
-            ->where("status", 1)->get();
+            ->where("status", 1)->get()
+            ;
 
         $total_audience = $plans->sum("total_audience");
         return array(
@@ -90,7 +91,7 @@ class GetSuggestedPlans
             "total_audiences" => $total_audience,
             "programs_stations" => $plans->sortByDesc("total_audience"),
             "stations" => $this->groupbyState($plans),
-            "selected" => $selected_plans->sortByDesc("total_audience"),
+            "selected" => $this->mapByStateSelected($selected_plans)->sortByDesc("total_audience"),
             'total_graph' => $plans->groupBy(['day', 'station']),
             'days' => array("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
         );
@@ -115,11 +116,25 @@ class GetSuggestedPlans
 protected function groupbyState($plans){
 
     $grouped = $plans->groupBy(function ($item, $key) {
+        if( $item->state !== ""){
         return $item->station. " - ". $item->state;
-    });
+        }
+        return $item->station;
+     });
     
 
     $grouped->toArray();
     return $grouped;
+}
+
+protected function mapByStateSelected($selected_plans){
+        $concantinate = $selected_plans->map(function ($item, $key) {
+            if($item->state !== ""){
+                $item->station = $item->station. " - " .$item->state;
+            }
+            return $item;
+        });
+        return $concantinate;
+
 }
 }

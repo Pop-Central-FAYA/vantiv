@@ -113,7 +113,8 @@
                         <tr class="clickable">
                             {{-- <td width="25%"><input type="checkbox" /> </td> --}}
                             <td width="">
-               <?php if(substr($key, -2) == "- "){echo substr($key, 0, -2);  }else{ echo $key; } ?> </td>
+
+                             {{ $key}}
                             <td width="50%">
                             {{ number_format($sum_audience) }}
                             </td>
@@ -245,12 +246,12 @@
             </tr>
         </thead>     
         <tbody class="where-it-is-going" id = "cont" >
-            @foreach($fayaFound['selected'] as $Programe)
+            @foreach($fayaFound['selected'] as  $Programe)
             @php 
            $vid =$Programe->media_plan_id. $Programe->day. $Programe-> total_audience. str_replace(':', '',    substr($Programe-> start_time, 0, 5)) ;
             @endphp
             <tr class="ri{{$vid}}" id="{{ $Programe->id }} " >
-                <td id="stat{{ $vid }}">   <?php if(substr($Programe->station_state, -2) == "- "){echo substr($Programe->station_state, 0, -2);  }else{ echo $Programe->station_state; } ?> </td>
+                <td id="stat{{ $vid }}"> {{$Programe->station}} </td>
                 <td id="day{{ $vid }}"class="center">{{ $Programe->day}} </td>
                 <td id="time{{ $vid }}" class="center">{{ substr($Programe->start_time,0,5) }} - {{ substr($Programe->end_time,0,5) }}
                 </td>
