@@ -327,45 +327,40 @@ class MediaPlanController extends Controller
     
     public function CreatePlan($id)
     {
-        $get_suggestion_with_ratings = new GetSuggestionListWithProgramRating($id);
-        $plans = $get_suggestion_with_ratings->getMediaPlanSuggestionWithProgram();
-
-        $plans_details = DB::table('media_plans')->where('id', $id)->get();
-
-        $clients = new AllClient(\Auth::user()->companies->first()->id);
-        $clients = $clients->getAllClients();
-
-        if(count($plans) == 0 || count($plans_details) == 0){
+        $media_plan = MediaPlan::find($id);
+        if(!$media_plan){
             return redirect()->route("agency.media_plan.criteria_form");
         }
-        $fayaFound = [];
+        $get_suggestion_with_ratings = new GetSuggestionListWithProgramRating($id);
+        $plans = $get_suggestion_with_ratings->getMediaPlanSuggestionWithProgram();
+        $clients = new AllClient(\Auth::user()->companies->first()->id);
+        $clients = $clients->getAllClients();
+        if(count($plans) == 0 ){
+            return redirect()->route("agency.media_plan.criteria_form");
+        }
         $suggestions = $this->groupSuggestions($plans);
         $suggestionsByStation = $this->groupSuggestionsByStation($plans);
-        $dates = $this->dates($plans_details[0]->start_date, $plans_details[0]->end_date);
-        $labeldates = $this->labeldates($plans_details[0]->start_date, $plans_details[0]->end_date);
-        $days = $this->days($plans_details[0]->start_date, $plans_details[0]->end_date);
+        $dates = $this->dates($media_plan->start_date, $media_plan->end_date);
+        $labeldates = $this->labeldates($media_plan->start_date, $media_plan->end_date);
+        $days = $this->days($media_plan->start_date, $media_plan->end_date);
         $fayaFound = array(
             'total_tv' => $this->countByMediaType($suggestions, 'Tv'),
             'total_radio' => $this->countByMediaType($suggestions, 'Radio'),
             'programs_stations' => $plans,
             'stations' => $suggestionsByStation,
             'total_audiences' => $this->totalAudienceFound($suggestions),
-            'plan_details' => $plans_details,
             'dates' => $dates,
             'labeldates' => $labeldates,
             'days' => $days,
         );
-        $media_plan = MediaPlan::find($id);
         $client_brand = '';
         if($media_plan->client_id != ''){
             $client_brand = new ClientBrand($media_plan->client_id);
             $client_brand = $client_brand->run();
         }
-        $media_plans_programs = MediaPlanProgram::all();
         return view('agency.mediaPlan.complete_plan')->with('fayaFound', $fayaFound)
                                                             ->with('clients', $clients)
                                                             ->with('days', $this->listDays())
-                                                            ->with('media_plans_programs', $media_plans_programs)
                                                             ->with('default_material_length', $this->getDefaultMaterialLength())
                                                             ->with('plan_id', $id)
                                                             ->with('media_plan', $media_plan)
