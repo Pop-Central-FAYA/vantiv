@@ -250,7 +250,7 @@
            $vid =$Programe->media_plan_id. $Programe->day. $Programe-> total_audience. str_replace(':', '',    substr($Programe-> start_time, 0, 5)) ;
             @endphp
             <tr class="ri{{$vid}}" id="{{ $Programe->id }} " >
-                <td id="stat{{ $vid }}"> {{ $Programe->station }}  {{ $Programe->state}}</td>
+                <td id="stat{{ $vid }}">   <?php if(substr($Programe->station_state, -2) == "- "){echo substr($Programe->station_state, 0, -2);  }else{ echo $Programe->station_state; } ?> </td>
                 <td id="day{{ $vid }}"class="center">{{ $Programe->day}} </td>
                 <td id="time{{ $vid }}" class="center">{{ substr($Programe->start_time,0,5) }} - {{ substr($Programe->end_time,0,5) }}
                 </td>

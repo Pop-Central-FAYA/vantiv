@@ -79,7 +79,7 @@ class GetSuggestedPlans
         $plans = $this->getCountsByState($plans);
 
         $selected_plans = DB::table("media_plan_suggestions")
-            ->select(DB::Raw("*, total_audience as audience"))
+            ->select(DB::Raw("*, total_audience as audience, CONCAT(station, ' - ', state) as station_state"))
             ->where("media_plan_id", $this->mediaPlanId)
             ->where("status", 1)->get();
 
