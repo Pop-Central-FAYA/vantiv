@@ -27,8 +27,8 @@ services:
       - MEDIA_BUCKET=faya-dev-us-east-1-media
       - PHP_MEMORY_LIMIT=256M
     volumes:
-      - $HOME/.aws:/home/.aws
-      - ./:/app
+      - $HOME/.aws:/home/.aws:delegated
+      - ./:/app:delegated
     cap_add:
       - SYS_TIME
       - SYS_NICE
@@ -44,5 +44,8 @@ services:
       - MYSQL_ROOT_PASSWORD=faya
       - TZ=UTC
     volumes:
-      - $PWD/dev/mysql:/var/lib/mysql
+      - $PWD/dev/mysql:/var/lib/mysql:cached
       - $PWD/database/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+
+# docker compose issues with mounting on mac
+# https://docs.docker.com/docker-for-mac/osxfs-caching/

@@ -141,6 +141,7 @@ class MediaPlanController extends Controller
         // also get the filter values list to use to render with the filter dropdowns
         return view('agency.mediaPlan.display_suggestions')
             ->with('mediaPlanId', $id)
+            ->with('mediaPlanStatus', MediaPlan::findOrFail($id)->status)
             ->with('fayaFound', $plans)
             ->with('filterValues', $this->getFilterFieldValues($id))
             ->with('selectedFilters', $savedFilters);
@@ -252,7 +253,7 @@ class MediaPlanController extends Controller
 
     public function exportPlan($media_plan_id)
     {
-        $mediaPlan = MediaPlan::with(['client'])->findorfail($media_plan_id);
+        $mediaPlan = MediaPlan::with(['client', 'brand'])->findorfail($media_plan_id);
         $selectedSuggestions = $mediaPlan->suggestions->where('status', 1)->where('material_length', '!=', null);
 
         if (count($selectedSuggestions) === 0) {
@@ -268,12 +269,10 @@ class MediaPlanController extends Controller
 
         $export_service = new ExportPlan($mediaPlan);
         $media_plan_grouped_data = $export_service->run();
+
         $monthly_weeks_table_header = json_encode($export_service->monthly_weeks_campaign_duration($plan_start_date, $plan_end_date));
 
-        return Excel::download(new MediaPlanExport($media_plan_summary, $media_plan_grouped_data, $monthly_weeks_table_header, $mediaPlan), 'mediaplan.xlsx');
-
-        // return $media_plan_grouped_data;
-        //display data in excel        
+        return Excel::download(new MediaPlanExport($media_plan_summary, $media_plan_grouped_data, $monthly_weeks_table_header, $mediaPlan), 'mediaplan.xlsx');     
     }
 
     public function approvePlan($media_plan_id)

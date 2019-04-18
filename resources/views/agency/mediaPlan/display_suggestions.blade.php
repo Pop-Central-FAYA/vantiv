@@ -16,7 +16,7 @@
     <!-- subheader -->
         <div class="sub_header clearfix mb pt">
             <div class="column col_6">
-                <h2 class="sub_header">Stations and programs</h2>
+                <h2 class="sub_header">Stations & Programs</h2>
             </div>
         </div>
 
@@ -37,7 +37,7 @@
     <div class="filters border_bottom clearfix">
         <div class="column col_6 p-t">
             <div class="column col_6">
-                <p class="uppercased weight_medium mt2">Available Stations and Times</p>
+                <p class="weight_medium mt2">Available Stations and Times</p>
             </div>
         </div>
         <div class="column col_6 clearfix">
@@ -92,8 +92,8 @@
         <thead>
             <tr>
                 {{-- <th width="25%">All</th> --}}
-                <th>Station</th>
-                <th width="50%">Audience</th>
+                <th>STATION</th>
+                <th width="50%">AUDIENCE</th>
                 {{-- <th width="25%"> </th> --}}
             </tr>
         </thead>
@@ -125,10 +125,10 @@
                     <table class="table table-hover accordion" style="margin-left: 45px;">
                         <thead>
                             <tr>
-                                <th>Day</th>
-                                <th>Time Belt</th>
-                                <th>programe</th>
-                                <th>Audience</th>
+                                <th>DAY</th>
+                                <th>TIME BELT</th>
+                                <th>PROGRAM</th>
+                                <th>AUDIENCE</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -232,11 +232,11 @@
     <table class="table table-striped table-bordered bootstrap-datatable" id="selectedProgTable">
         <thead>
             <tr>
-                <th>Station</th>
-                <th>Day</th>
-                <th>Time Belt</th>
-                <th>Program</th>
-                <th>Audience</th>
+                <th>STATION</th>
+                <th>DAY</th>
+                <th>TIME BELT</th>
+                <th>PROGRAM</th>
+                <th>AUDIENCE</th>
                 <th></th>
             </tr>
         </thead>     
@@ -265,11 +265,19 @@
 </div>
     <div class="action_footer client_dets mb4 mt4">
       <div class="col_6 column">
-        <button type="button" id="back_btn" class="btn small_btn show" onclick="goBack()">Back</button>
+        <a id="back_btn" href="{{ url('/') }}" class="btn small_btn"><i class="media-plan material-icons">navigate_before</i> Back</a>
       </div>
       <div class="col_6 column">
-        <button type="button" id="mpo_filters" class="btn small_btn right show">Create Plan</button>
-        <button type="button" id="save_progress" class="btn small_btn right save mr-2">Save</button>
+        @if($mediaPlanStatus == 'Approved' || $mediaPlanStatus == 'Declined')
+            <a href="{{ route('agency.media_plan.create', ['id'=>$mediaPlanId]) }}" class="btn small_btn right mr-2 media-plan next-page-btn">Next <i class="media-plan material-icons">navigate_next</i></a>
+        @else 
+           <button type="button" id="mpo_filters" class="btn small_btn right show">
+                <i class="media-plan material-icons">library_add</i>
+                Create Plan
+            </button>
+        @endif
+
+        <button type="button" id="save_progress" class="media-plan btn small_btn right save mr-2 {{ ($mediaPlanStatus == 'Approved' || $mediaPlanStatus == 'Declined') ? 'disabled-action-btn':''}}"><i class="media-plan material-icons">save</i>Save</button>
       </div>
     </div>
     <br><br><br><br><br><br><br>

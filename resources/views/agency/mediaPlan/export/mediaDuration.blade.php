@@ -1,39 +1,50 @@
 <table>
-    <thead>
+    <!-- MEDIA PLAN DETAILS --> 
+    <tbody>
         <tr></tr>
         <tr>
+            <td></td>
             <td>CLIENT:</td>
             <td>{{ $media_plan_data->client->company_name}}</td>
         </tr>
         <tr>
-            <td>BRAND:</td>
             <td></td>
+            <td>BRAND:</td>
+            <td>{{ $media_plan_data->brand->name }}</td>
         </tr>
         <tr>
+            <td></td>
             <td>CAMPAIGN:</td>
             <td>{{ $media_plan_data->campaign_name}}</td>
         </tr>
         <tr>
+            <td></td>
             <td>MEDIUM:</td>
             <td>{{ $media_type }}</td>
         </tr>
         <tr>
+            <td></td>
             <td>MARKET:</td>
             <td></td>
         </tr>
         <tr>
+            <td></td>
             <td>DURATION:</td>
             <td>{{ $material_length }}"</td>
         </tr>
         <tr>
+            <td></td>
             <td>PERIOD:</td>
             <td></td>
         </tr>
         <tr></tr>
         <tr></tr>
         <tr></tr>
+    </tbody>
 
+    <thead>
         <tr>
+            <th rowspan="2"></th>
             <th rowspan="2">STATION</th>
             <th colspan="7">DAYS OF THE WEEK</th>
             <th rowspan="2">GROSS UNIT RATE</th>
@@ -76,46 +87,311 @@
         </tr>
     </thead>
     <tbody>
-        @foreach($data as $station => $programs)
-            <tr><td>{{ $station }}</td></tr>
-            @foreach($programs as $timebelt)
-                <tr>
-                    <td>{{ $timebelt['program'] }}</td>
-                    @foreach($timebelt['week_days'] as $key => $value)
-                        @if($value == 1)
-                            <td>{{ $key }}</td>
-                        @else
+        <tr></tr>
+        <tr></tr>
+
+        @php 
+            $network_total_spots=0; $network_total_bonus_spots=0; $network_cost_bonus_spots=0; $network_gross_value=0; $network_net_value=0; $network_net_value_after_bonus_spots=0;
+
+            $sum_region_total_spots=0; $sum_region_total_bonus_spots=0; $sum_region_cost_bonus_spots=0; $sum_region_gross_value=0; $sum_region_net_value=0; $sum_region_net_value_after_bonus_spots=0;
+
+            $cable_total_spots=0; $cable_total_bonus_spots=0; $cable_cost_bonus_spots=0; $cable_gross_value=0; $cable_net_value=0; $cable_net_value_after_bonus_spots=0; 
+        @endphp
+
+        @if($national_stations)
+            <tr><td><b>NETWORK</b></td></tr>
+            @foreach($national_stations as $station => $programs)
+                <tr><td></td><td><b>{{ $station }}</b></td></tr>
+                @foreach($programs as $timebelt)
+                    <tr>
+                        <td></td>
+                        <td>{{ $timebelt['program'] }}</td>
+                        @foreach($timebelt['week_days'] as $key => $value)
+                            @if($value == 1)
+                                <td>{{ $key }}</td>
+                            @else
+                                <td></td>
+                            @endif
+                        @endforeach
+                        <td>{{ $timebelt['gross_unit_rate'] }}</td>
+                        <td>{{ $timebelt['volume_discount'] }}</td>
+                        <td>{{ $timebelt['value_less'] }}</td>
+                        <td>{{ $timebelt['agency_commission'] }}</td>
+                        <td>{{ $timebelt['net_unit_rate'] }}</td>
+                        <td>{{ $timebelt['total_spots'] }}</td>
+                        <td>{{ $timebelt['bonus_spots'] }}</td>
+                        <td>{{ $timebelt['cost_bonus_spots'] }}</td>
+                        <td>{{ $timebelt['gross_value'] }}</td>
+                        <td>{{ $timebelt['net_value'] }}</td>
+                        <td>{{ $timebelt['net_value_after_bonus_spots'] }}</td>
+                        @foreach($timebelt['month_weeks'] as $month => $weeks)
+                            @php $weeksCount = 1; $totalWeeks = count($weeks); $totalSlots = 0;  @endphp
+                            @foreach ($weeks as $key => $week)
+                                @if ($weeksCount < $totalWeeks)
+                                    <th>{{ $week->slot }}</th>
+                                @elseif ($weeksCount == $totalWeeks)
+                                    <th>{{ $week->slot }}</th>
+                                    <th>{{ $totalSlots}}</th>
+                                @endif
+                                @php $weeksCount++; $totalSlots += $week->slot; @endphp
+                            @endforeach
+                        @endforeach
+                        <td>{{ $timebelt['total_spots'] }}</td>
+                    </tr>
+                    @php 
+                        $network_total_spots += $timebelt['total_spots']; 
+                        $network_total_bonus_spots += $timebelt['bonus_spots'];
+                        $network_cost_bonus_spots += $timebelt['cost_bonus_spots'];
+                        $network_gross_value += $timebelt['gross_value'];
+                        $network_net_value += $timebelt['net_value'];
+                        $network_net_value_after_bonus_spots += $timebelt['net_value_after_bonus_spots'];
+                    @endphp
+                @endforeach
+                <tr></tr> <!-- empty row -->
+            @endforeach
+
+            <!-- DISPLAY NETWORK TOTAL -->
+            <tr>
+                <td></td>
+                <td>TOTAL NETWORK</td>
+                <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>{{ $network_total_spots }}</td>
+                <td>{{ $network_total_bonus_spots }}</td>
+                <td>{{ $network_cost_bonus_spots }}</td>
+                <td></td>
+                <td>{{ $network_net_value }}</td>
+                <td>{{ $network_net_value_after_bonus_spots }}</td>
+                @foreach($monthly_weeks as $month => $weeks)
+                    @php $weeksCount = 1; $totalWeeks = count($weeks);  @endphp
+                    @foreach ($weeks as $weeks)
+                        @if ($weeksCount < $totalWeeks)
+                            <td></td>
+                        @elseif ($weeksCount == $totalWeeks)
+                            <td></td>
                             <td></td>
                         @endif
+                        @php $weeksCount++; @endphp
                     @endforeach
-                    <td>{{ $timebelt['gross_unit_rate'] }}</td>
-                    <td>{{ $timebelt['volume_discount'] }}</td>
-                    <td>{{ $timebelt['value_less'] }}</td>
-                    <td>{{ $timebelt['agency_commission'] }}</td>
-                    <td>{{ $timebelt['net_unit_rate'] }}</td>
-                    <td>{{ $timebelt['total_spots'] }}</td>
-                    <td>{{ $timebelt['bonus_spots'] }}</td>
-                    <td>{{ $timebelt['cost_bonus_spots'] }}</td>
-                    <td>{{ $timebelt['gross_value'] }}</td>
-                    <td>{{ $timebelt['net_value'] }}</td>
-                    <td>{{ $timebelt['net_value_after_bonus_spots'] }}</td>
-                    @foreach($timebelt['month_weeks'] as $month => $weeks)
-                        @php $weeksCount = 1; $totalWeeks = count($weeks); $totalSlots = 0;  @endphp
-                        @foreach ($weeks as $key => $week)
+                @endforeach
+                <td>{{ $network_total_spots }}</td>
+            </tr>
+            <tr></tr> <!-- empty row -->
+        @endif
+
+        @if($regional_stations)
+            @foreach($regional_stations as $region => $stations)
+                @php $region_total_spots=0; $region_total_bonus_spots=0; $region_cost_bonus_spots=0; $region_net_value=0; $region_gross_value=0; $region_net_value_after_bonus_spots=0; @endphp
+                <tr><td>{{ strtoupper($region) }}</td></tr>
+                @foreach($stations as $station => $programs)
+                    <tr><td></td><td>{{ $station }}</td></tr>
+                    @foreach($programs as $program => $timebelt)
+                        <tr>
+                            <td></td>
+                            <td>{{ $timebelt['program'] }}</td>
+                            @foreach($timebelt['week_days'] as $key => $value)
+                                @if($value == 1)
+                                    <td>{{ $key }}</td>
+                                @else
+                                    <td></td>
+                                @endif
+                            @endforeach
+                            <td>{{ $timebelt['gross_unit_rate'] }}</td>
+                            <td>{{ $timebelt['volume_discount'] }}</td>
+                            <td>{{ $timebelt['value_less'] }}</td>
+                            <td>{{ $timebelt['agency_commission'] }}</td>
+                            <td>{{ $timebelt['net_unit_rate'] }}</td>
+                            <td>{{ $timebelt['total_spots'] }}</td>
+                            <td>{{ $timebelt['bonus_spots'] }}</td>
+                            <td>{{ $timebelt['cost_bonus_spots'] }}</td>
+                            <td>{{ $timebelt['gross_value'] }}</td>
+                            <td>{{ $timebelt['net_value'] }}</td>
+                            <td>{{ $timebelt['net_value_after_bonus_spots'] }}</td>
+                            @foreach($timebelt['month_weeks'] as $month => $weeks)
+                                @php $weeksCount = 1; $totalWeeks = count($weeks); $totalSlots = 0;  @endphp
+                                @foreach ($weeks as $key => $week)
+                                    @if ($weeksCount < $totalWeeks)
+                                        <th>{{ $week->slot }}</th>
+                                    @elseif ($weeksCount == $totalWeeks)
+                                        <th>{{ $week->slot }}</th>
+                                        <th>{{ $totalSlots}}</th>
+                                    @endif
+                                    @php $weeksCount++; $totalSlots += $week->slot; @endphp
+                                @endforeach
+                            @endforeach
+                            <td>{{ $timebelt['total_spots'] }}</td>
+                        </tr>
+                        @php 
+                            $region_total_spots += $timebelt['total_spots']; 
+                            $region_total_bonus_spots += $timebelt['bonus_spots'];
+                            $region_cost_bonus_spots += $timebelt['cost_bonus_spots'];
+                            $region_gross_value += $timebelt['gross_value'];
+                            $region_net_value += $timebelt['net_value'];
+                            $region_net_value_after_bonus_spots += $timebelt['net_value_after_bonus_spots'];
+                        @endphp
+                    @endforeach
+                    <tr></tr> <!-- empty row -->
+                @endforeach
+
+                @php 
+                    $sum_region_total_spots += $region_total_spots; 
+                    $sum_region_total_bonus_spots += $region_total_bonus_spots;
+                    $sum_region_cost_bonus_spots += $region_cost_bonus_spots;
+                    $sum_region_gross_value += $region_gross_value;
+                    $sum_region_net_value += $region_net_value;
+                    $sum_region_net_value_after_bonus_spots += $region_net_value_after_bonus_spots;
+                @endphp
+                <!-- DISPLAY Region TOTAL -->
+                <tr>
+                    <td></td>
+                    <td>TOTAL {{ strtoupper($region) }}</td>
+                    <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>{{ $region_total_spots }}</td>
+                    <td>{{ $region_total_bonus_spots }}</td>
+                    <td>{{ $region_cost_bonus_spots }}</td>
+                    <td></td>
+                    <td>{{ $region_net_value }}</td>
+                    <td>{{ $region_net_value_after_bonus_spots }}</td>
+                    @foreach($monthly_weeks as $month => $weeks)
+                        @php $weeksCount = 1; $totalWeeks = count($weeks);  @endphp
+                        @foreach ($weeks as $weeks)
                             @if ($weeksCount < $totalWeeks)
-                                <th>{{ $week->slot }}</th>
+                                <td></td>
                             @elseif ($weeksCount == $totalWeeks)
-                                <th>{{ $week->slot }}</th>
-                                <th>{{ $totalSlots}}</th>
+                                <td></td>
+                                <td></td>
                             @endif
-                            @php $weeksCount++; $totalSlots += $week->slot; @endphp
+                            @php $weeksCount++; @endphp
                         @endforeach
                     @endforeach
-                    <td>{{ $timebelt['total_spots'] }}</td>
+                    <td>{{ $region_total_spots }}</td>
                 </tr>
+                <tr></tr> <!-- empty row -->
             @endforeach
+        @endif
+
+        @if($cable_stations)
+            <tr><td>CABLE</td></tr>
+            @foreach($cable_stations as $station => $programs)
+                <tr><td></td><td>{{ $station }}</td></tr>
+                @foreach($programs as $timebelt)
+                    <tr>
+                        <td></td>
+                        <td>{{ $timebelt['program'] }}</td>
+                        @foreach($timebelt['week_days'] as $key => $value)
+                            @if($value == 1)
+                                <td>{{ $key }}</td>
+                            @else
+                                <td></td>
+                            @endif
+                        @endforeach
+                        <td>{{ $timebelt['gross_unit_rate'] }}</td>
+                        <td>{{ $timebelt['volume_discount'] }}</td>
+                        <td>{{ $timebelt['value_less'] }}</td>
+                        <td>{{ $timebelt['agency_commission'] }}</td>
+                        <td>{{ $timebelt['net_unit_rate'] }}</td>
+                        <td>{{ $timebelt['total_spots'] }}</td>
+                        <td>{{ $timebelt['bonus_spots'] }}</td>
+                        <td>{{ $timebelt['cost_bonus_spots'] }}</td>
+                        <td>{{ $timebelt['gross_value'] }}</td>
+                        <td>{{ $timebelt['net_value'] }}</td>
+                        <td>{{ $timebelt['net_value_after_bonus_spots'] }}</td>
+                        @foreach($timebelt['month_weeks'] as $month => $weeks)
+                            @php $weeksCount = 1; $totalWeeks = count($weeks); $totalSlots = 0;  @endphp
+                            @foreach ($weeks as $key => $week)
+                                @if ($weeksCount < $totalWeeks)
+                                    <th>{{ $week->slot }}</th>
+                                @elseif ($weeksCount == $totalWeeks)
+                                    <th>{{ $week->slot }}</th>
+                                    <th>{{ $totalSlots}}</th>
+                                @endif
+                                @php $weeksCount++; $totalSlots += $week->slot; @endphp
+                            @endforeach
+                        @endforeach
+                        <td>{{ $timebelt['total_spots'] }}</td>
+                    </tr>
+                    @php 
+                        $cable_total_spots += $timebelt['total_spots']; 
+                        $cable_total_bonus_spots += $timebelt['bonus_spots'];
+                        $cable_cost_bonus_spots += $timebelt['cost_bonus_spots'];
+                        $cable_gross_value += $timebelt['gross_value'];
+                        $cable_net_value += $timebelt['net_value'];
+                        $cable_net_value_after_bonus_spots += $timebelt['net_value_after_bonus_spots'];
+                    @endphp
+                @endforeach
+                <tr></tr> <!-- empty row -->
+            @endforeach
+            <!-- DISPLAY Cable TOTAL -->
+            <tr>
+                <td></td>
+                <td>TOTAL CABLE</td>
+                <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>{{ $cable_total_spots }}</td>
+                <td>{{ $cable_total_bonus_spots }}</td>
+                <td>{{ $cable_cost_bonus_spots }}</td>
+                <td></td>
+                <td>{{ $cable_net_value }}</td>
+                <td>{{ $cable_net_value_after_bonus_spots }}</td>
+                @foreach($monthly_weeks as $month => $weeks)
+                    @php $weeksCount = 1; $totalWeeks = count($weeks);  @endphp
+                    @foreach ($weeks as $weeks)
+                        @if ($weeksCount < $totalWeeks)
+                            <td></td>
+                        @elseif ($weeksCount == $totalWeeks)
+                            <td></td>
+                            <td></td>
+                        @endif
+                        @php $weeksCount++; @endphp
+                    @endforeach
+                @endforeach
+                <td>{{ $cable_total_spots }}</td>
+            </tr>
             <tr></tr> <!-- empty row -->
-        @endforeach
+        @endif
+        <!-- DISPLAY SUB TOTAL -->
+            <tr>
+                <td></td>
+                <td>SUB TOTAL (NAIRA)</td>
+                <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>{{ $network_total_spots + $sum_region_total_spots + $cable_total_spots }}</td>
+                <td>{{ $network_total_bonus_spots + $sum_region_total_bonus_spots + $cable_total_bonus_spots }}</td>
+                <td>{{ $network_cost_bonus_spots + $sum_region_cost_bonus_spots + $cable_cost_bonus_spots }}</td>
+                <td>{{ $network_gross_value + $sum_region_gross_value + $cable_gross_value }}</td>
+                <td>{{$network_net_value + $sum_region_net_value + $cable_net_value }}</td>
+                <td>{{ $network_net_value_after_bonus_spots + $sum_region_net_value_after_bonus_spots + $cable_net_value_after_bonus_spots }}</td>
+                @foreach($monthly_weeks as $month => $weeks)
+                    @php $weeksCount = 1; $totalWeeks = count($weeks);  @endphp
+                    @foreach ($weeks as $weeks)
+                        @if ($weeksCount < $totalWeeks)
+                            <td></td>
+                        @elseif ($weeksCount == $totalWeeks)
+                            <td></td>
+                            <td></td>
+                        @endif
+                        @php $weeksCount++; @endphp
+                    @endforeach
+                @endforeach
+                <td>{{ $network_total_spots + $sum_region_total_spots + $cable_total_spots }}</td>
+            </tr>
         <tr></tr>
     </tbody>
 </table>

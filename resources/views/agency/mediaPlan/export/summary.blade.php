@@ -46,14 +46,14 @@
             <td></td>
             <td>10.0%</td>
             <td>{{ number_format($sum_net_value * 0.1, 2) }}</td>
-            <td>{{ number_format($sum_savings, 2) }}</td>
+            <td></td>
         </tr>
         <tr>
             <td>VAT</td>
             <td></td>
             <td></td>
             <td>5%</td>
-            <td></td>
+            <td>{{ number_format($sum_net_value * 0.05, 2) }}</td>
             <td></td>
         </tr>
         <tr>
@@ -61,7 +61,7 @@
             <td></td>
             <td></td>
             <td></td>
-            <td>{{ number_format($sum_net_value * 0.1, 2) }}</td>
+            <td>{{ $sum_net_value + ($sum_net_value * 0.05) + ($sum_net_value * 0.1) }}</td>
             <td></td>
         </tr>
     </tbody>

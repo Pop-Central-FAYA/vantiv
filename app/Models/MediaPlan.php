@@ -29,4 +29,12 @@ class MediaPlan extends Base
     {
         return $this->belongsTo('Vanguard\Models\WalkIns','client_id');
     }
+
+    /**
+     * Get brand details associated with the media plan.
+     */
+    public function brand()
+    {
+        return $this->belongsTo('Vanguard\Models\Brand','brand_id');
+    }
 }
