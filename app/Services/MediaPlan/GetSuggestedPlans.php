@@ -60,7 +60,7 @@ class GetSuggestedPlans
                         $query->where("station_type", static::STATION_TYPE[$value]);
                         continue;
                     }
-                }
+               } 
             })->get();
         
         if ($plans->isEmpty()) {
