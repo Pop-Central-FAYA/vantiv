@@ -44,7 +44,7 @@ class GetSuggestedPlans
             ->select(DB::Raw("*, total_audience as audience"))
             ->where("media_plan_id", $this->mediaPlanId)
             ->when($this->filters, function($query) {
-              /* foreach ($this->filters as $key => $value) {
+               foreach ($this->filters as $key => $value) {
                     if ($key == "day_parts") {
                         $query->whereBetween("start_time", static::DAYPARTS[$value]);
                         continue;
@@ -60,7 +60,7 @@ class GetSuggestedPlans
                         $query->where("station_type", static::STATION_TYPE[$value]);
                         continue;
                     }
-               } */
+               } 
             })->get();
         
         if ($plans->isEmpty()) {
