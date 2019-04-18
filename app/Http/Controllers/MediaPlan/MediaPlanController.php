@@ -138,7 +138,8 @@ class MediaPlanController extends Controller
         //     //Render an empty page and do not redirect
         //  // return redirect()->route("agency.media_plan.criteria_form");
         // }
-        // also get the filter values list to use to render with the filter dropdowns
+        // also get the filter values list to use to render with the filter dropdownss
+        //dd($plans);
         return view('agency.mediaPlan.display_suggestions')
             ->with('mediaPlanId', $id)
             ->with('mediaPlanStatus', MediaPlan::findOrFail($id)->status)
