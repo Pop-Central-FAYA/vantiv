@@ -12,19 +12,31 @@ class CompanyTypeSeeder extends Seeder
      */
     public function run()
     {
-        CompanyType::truncate();
-
         $company_type1 = [
-                'id' => uniqid(),
-                'name' => 'broadcaster'
-            ];
+            'id' => uniqid(),
+            'name' => 'broadcaster'
+        ];
         $company_type2 = [
-                'id' => uniqid(),
-                'name' => 'agency'
-            ];
+            'id' => uniqid(),
+            'name' => 'agency'
+        ];
+        $company_types = CompanyType::all()->toArray();
+        if(count($company_types) != 0){
+            foreach ($company_types as $company_type)
+            {
+                //check if the company type exist, if not create it
+                if($company_type['name'] == $company_type1['name']){
+                    return;
+                }else {
+                     CompanyType::create($company_type1);
+                }
 
-
-        CompanyType::create($company_type1);
-        CompanyType::create($company_type2);
+                if($company_type['name'] == $company_type2['name']){
+                    return;
+                }else{
+                    CompanyType::create($company_type2);
+                }
+            }
+        }
     }
 }
