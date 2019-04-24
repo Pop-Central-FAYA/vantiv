@@ -1,13 +1,13 @@
 @foreach($fayaFound['programs_stations'] as $value)
     @foreach($default_material_length as $duration)
-        <div class="modal_contain reload_content" style="width: 1000px; max-width: 800px;" id="program_modal_{{ $duration.$value->id }}">
-            <div class="the_frame clearfix mb border_top_color pt load_this_div">
+        <div class="modal_contain reload_content" style="width: 100%; max-width: 50%; padding: 0;" id="program_modal_{{ $duration.$value->id }}">
+            <div class="the_frame clearfix border_top_color pt load_this_div">
             <form action="{{ route('media_plan.program.store') }}" data-get_id="{{ $duration.'_'.$value->id }}" class="submit_form" method="post" id="submit_{{ $duration.'_'.$value->id }}">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <div class="margin_center col_11 clearfix pt4 create_fields">
 
                     <div class="clearfix mb3">
-                        <div class="input_wrap column col_4 {{ $errors->has('program_name') ? ' has-error' : '' }}">
+                        <div class="input_wrap column col_12 {{ $errors->has('program_name') ? ' has-error' : '' }}">
                             <label class="small_faint">Program</label>
                             <div class="">
                                 <input type="text" name="program_name"
@@ -30,31 +30,36 @@
 
                     <input type="hidden" name="station" value="{{ $value->station }}">
                     <p class="m-b">Unit Rates</p>
-                    <div class="clearfix mb3">
-                        @foreach($default_material_length as $duration)
-                            <input type="hidden" name="duration[]" value="{{ $duration }}">
-                            <div class="input_wrap column col_5 {{ $errors->has('unit_rate') ? ' has-error' : '' }}">
-                                <label class="small_faint">{{ $duration }} Seconds</label>
-                                <div class="">
-                                    <input min="0" type="number" name="unit_rate[]"
-                                           class="update_rating_class_{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->day.'_'.$value->station.'_'.$value->start_time)) }}"
-                                           @foreach(json_decode($value->duration_lists) as $key => $duration_list)
-                                               @if($duration_list == $duration)
-                                                    value="{{ json_decode($value->rate_lists)[$key] }}"
-                                               @endif
-                                           @endforeach
-                                           placeholder="Enter Unit Rate">
-                                    @if($errors->has('unit_rate'))
-                                        <strong>
-                                            <span class="help-block">
-                                                {{ $errors->first('unit_rate') }}
-                                            </span>
-                                        </strong>
-                                    @endif
+                    <div class="clearfix mb3 program_unit_rates">
+                        <div class="column col_12">
+                            @foreach($default_material_length as $duration)
+                                <input type="hidden" name="duration[]" value="{{ $duration }}">
+                                <div class="column col_6">
+                                    <div class="input_wrap  {{ $errors->has('unit_rate') ? ' has-error' : '' }}">
+                                        <label class="small_faint">{{ $duration }} Seconds</label>
+                                        <!-- <div class=""> -->
+                                            <input min="0" type="number" name="unit_rate[]"
+                                                   class="update_rating_class_{{ strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $value->day.'_'.$value->station.'_'.$value->start_time)) }}"
+                                                   @foreach(json_decode($value->duration_lists) as $key => $duration_list)
+                                                       @if($duration_list == $duration)
+                                                            value="{{ json_decode($value->rate_lists)[$key] }}"
+                                                       @endif
+                                                   @endforeach
+                                                   placeholder="Enter Unit Rate">
+                                            @if($errors->has('unit_rate'))
+                                                <strong>
+                                                    <span class="help-block">
+                                                        {{ $errors->first('unit_rate') }}
+                                                    </span>
+                                                </strong>
+                                            @endif
+                                        <!-- </div> -->
+                                    </div>
                                 </div>
-                            </div>
-                        @endforeach
+                            @endforeach
+                        </div>
                     </div>
+
                     <p class='m-b'>Time Belt</p>
                     <hr>
                     <p><br></p>
@@ -94,18 +99,25 @@
                                     <div class="column col_2">
                                         <p>{{ ucfirst($day) }}</p>
                                     </div>
-                                    <input type="hidden" name="days[]" value="{{ $day }}">
-                                    <div class="input_wrap column col_3">
-                                        <label class="small_faint">Start Time</label>
-                                        <input type="text" id="timepicker" name="start_time[]" class="t_picker timepicker_{{ $day }}"/>
-                                    </div>
+                                    <div class="column col_10 weekly_day_{{ $day }}" id="weekly_day_{{ $day }}">
+                                        <div class="column col-12">
+                                            <input type="hidden" name="days[]" value="{{ $day }}">
+                                            <div class="input_wrap input_wrap_inlin_lbl column col_5">
+                                                <label class="small_faint">Start Time</label>
+                                                <input type="text" id="timepicker" name="start_time[]" class="t_picker timepicker_{{ $day }}"/>
+                                            </div>
 
-                                    <div class="input_wrap column col_3">
-                                        <label class="small_faint">End Time</label>
-                                        <input type="text" id="timepicker" name="end_time[]" class="t_picker timepicker_{{ $day }}"/>
-                                    </div>
-                                    <div class="column col_2">
-                                        <!-- <a href="" id="add_more_{{ $day }}" class="uppercased color_initial">Add More</a> -->
+                                            <div class="input_wrap input_wrap_inlin_lbl column col_5">
+                                                <label class="small_faint">End Time</label>
+                                                <input type="text" id="timepicker" name="end_time[]" class="t_picker timepicker_{{ $day }}"/>
+                                            </div>
+                                            <div class="column col_2 left no_left_margin">
+                                                <!-- <a href="" id="add_more_{{ $day }}" class="uppercased color_initial">Add More</a> -->
+                                                <button type="button" data-day="{{$day}}" class="btn small_btn mbl uppercased addTimeBelt">
+                                                    <i class="material-icons">add</i>
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

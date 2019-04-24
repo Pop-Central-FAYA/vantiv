@@ -39,8 +39,13 @@ class CreateRole extends Command
     public function handle()
     {
         $role = $this->ask('What role do you want to create ?');
+        if(\Auth::user()->company_type == 'broadcaster'){
+            $guard_name = 'ssp';
+        }else{
+            $guard_name = 'dsp';
+        }
         try{
-            $store_role_service = new StoreRoleService(strtolower($role));
+            $store_role_service = new StoreRoleService(strtolower($role), $guard_name);
             $store_role_service->storeRoles();
             $this->info($role.' was added successfully');
         }catch(\Exception $exception){

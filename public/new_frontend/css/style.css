@@ -4,6 +4,32 @@ html, body {
 	background: #FAFAFA;
 }
 
+.program_unit_rates .column.col_6 {
+    margin-right: 0.8%;
+}
+
+button.btn.small_btn.mbl.uppercased.addTimeBelt, button.btn.small_btn.mbl.uppercased.deleteTimeBelt {
+  padding: 5px;
+}
+button.btn.small_btn.mbl.uppercased.addTimeBelt .material-icons, button.btn.small_btn.mbl.uppercased.deleteTimeBelt .material-icons{
+  font-weight: 700;
+  font-size: 16px;
+  height: 11px;
+  /*width: 11px;*/
+  /*margin-right: 10px;*/
+  margin-top: 6px;
+  top: 2px;
+  position: relative;
+}
+
+.input_wrap_inlin_lbl input {
+	width: 40%;
+}
+
+.input_wrap_inlin_lbl label {
+	margin-right: 20px;
+}
+
 .media-plan.material-icons {
     font-weight: 700;
     font-size: 16px;

@@ -195,6 +195,40 @@
                                     @endfor
                                 </tr>
 
+                                {{--modal for discount--}}
+                                <div class="modal_contain" style="width: 100%; max-width: 30%; padding: 0;" id="discount_modal_{{ $duration.'_'.$value->id }}">
+                                    <div class="the_frame clearfix border_top_color pt load_this_div">
+                                        <form action="{{ route('media_plan.volume_discount.store') }}" data-get_station_discount="{{ $value->station }}" data-get_volume_id="{{ $duration.'_'.$value->id }}" class="submit_discount_form" method="post" id="submit_discount_{{ $duration.'_'.$value->id }}">
+                                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                            <div class="margin_center col_11 clearfix pt4 create_fields">
+
+                                                <div class="clearfix">
+                                                    <div class="input_wrap column col_12 {{ $errors->has('discount') ? ' has-error' : '' }}">
+                                                        <label class="small_faint">Discount</label>
+                                                        <div class="">
+                                                            <input type="text" name="discount" value="{{ $value->volume_discount }}" required placeholder="Volume Discount">
+
+                                                            @if($errors->has('discount'))
+                                                                <strong>
+                                                                    <span class="help-block">
+                                                                        {{ $errors->first('discount') }}
+                                                                    </span>
+                                                                </strong>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <input type="hidden" name="station" value="{{ $value->station }}">
+                                                <div class=" align_right pt">
+                                                    <input type="submit" value="Create Discount" id="submit_15{{ $value->id }}" class="btn uppercased mb4">
+                                                </div>
+
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+
                             @endforeach
 
                             </tbody>
@@ -766,6 +800,35 @@
                 $("#industry").val('');
                 $("#sub_industry").val('');
             }
+        });
+
+        var countTimeBelt = 0;
+
+        $("body").delegate(".addTimeBelt", "click", function () {
+            var day = $(this).data('day');
+            var html = '<div class="column col-12 left no_left_margin timeBelt_'+countTimeBelt+'">\
+                          <div class="input_wrap input_wrap_inlin_lbl column col_5">\
+                              <label class="small_faint">Start Time</label>\
+                              <input type="text" id="timepicker" name="start_time[]" class="t_picker timepicker_'+day+'"/>\
+                          </div>\
+                          <div class="input_wrap input_wrap_inlin_lbl column col_5">\
+                              <label class="small_faint">End Time</label>\
+                              <input type="text" id="timepicker" name="end_time[]" class="t_picker timepicker_'+day+'"/>\
+                          </div>\
+                          <div class="column col_2 left no_left_margin">\
+                              <button type="button" data-count="'+countTimeBelt+'" class="btn small_btn mbl bg_red uppercased deleteTimeBelt">\
+                                  <i class="material-icons">delete_forever</i>\
+                              </button>\
+                          </div>\
+                        </div>';
+
+            $('.weekly_day_'+day).append(html);
+            countTimeBelt++;
+        });
+
+        $("body").delegate(".deleteTimeBelt", "click", function () {
+            var count = $(this).data('count');
+            $('.timeBelt_'+count).remove();
         });
     });
 </script>
