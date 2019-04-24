@@ -12,6 +12,8 @@ class CompanyTypeSeeder extends Seeder
      */
     public function run()
     {
+        CompanyType::truncate();
+
         $company_type1 = [
                 'id' => uniqid(),
                 'name' => 'broadcaster'
