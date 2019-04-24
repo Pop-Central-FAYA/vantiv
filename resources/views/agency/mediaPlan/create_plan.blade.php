@@ -159,7 +159,9 @@
                             <label class="small_faint">Social Class</label>
 
                             <div class="select_wrap {{ $errors->has('social_class') ? ' has-error' : '' }}">
-                                <select class="js-example-basic-multiple" name="social_class[]" id="social_class" multiple="multiple">
+                                <select class="js-example-basic-multiple social_class" name="social_class[]" id="social_class" multiple="multiple">
+                                <option value=""></option>
+                                <option value="all">All</option>
                                     @foreach($criterias as $criteria)
                                         @if ($criteria->name == "social_classes")
                                             @foreach ($criteria->subCriterias as $social_classes)
@@ -180,11 +182,12 @@
                     <!-- States -->
                     <div class="clearfix mb">
                         <div class="input_wrap">
-                            <label class="small_faint">State</label>
+                            <label class="small_faint">State</label> 
 
                             <div class="select_wrap{{ $errors->has('state') ? ' has-error' : '' }}">
-                                <select class="js-example-basic-multiple" id="state" name="state[]" multiple="multiple">
+                                <select class="js-example-basic-multiple state" id="state" name="state[]" multiple="multiple">
                                     <option value=""></option>
+                                    <option value="all">All</option>
                                     @foreach($criterias as $criteria)
                                         @if ($criteria->name == "states")
                                             @foreach ($criteria->subCriterias as $states)
@@ -193,6 +196,8 @@
                                             @endforeach
                                         @endif
                                     @endforeach
+
+                                   
                                 </select>
 
                                 @if($errors->has('state'))
@@ -200,6 +205,7 @@
                                         <span class="help-block">{{ $errors->first('state') }}</span>
                                     </strong>
                                 @endif
+    
                             </div>
                         </div>
                     </div>
@@ -276,6 +282,39 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
     <script>
         $(document).ready(function () {
+
+
+                $("select.state").change(function(){
+                    var selectedState = $(this).children("option:selected").val();
+                    if(selectedState == "all" ){
+                        $("#state > option").prop("selected","selected");
+                        $("#state").trigger("change");
+                        $("#state option[value='all']").attr("selected", false);
+                        $("#state option[value='']").attr("selected", false);
+                    }else{
+                    
+                    }
+
+                 });
+
+
+                   $("select.social_class").change(function(){
+                    var selectedSocial = $(this).children("option:selected").val();
+                    if(selectedSocial == "all" ){
+                        $("#social_class > option").prop("selected","selected");
+                        $("#social_class").trigger("change");
+                        $("#social_class option[value='']").attr("selected", false);
+                        $("#social_class option[value='all']").attr("selected", false);
+                    }else{
+                    
+                    }
+
+                 });
+
+
+
+             
+
             //flatpickr
             flatpickr(".flatpickr", {
                 altInput: true,
