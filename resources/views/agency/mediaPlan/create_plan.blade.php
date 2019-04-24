@@ -110,7 +110,7 @@
                     <div class="clearfix mb">
                         <div class="input_wrap column col_6{{  $errors->has('age_groups') ? ' has-error' : '' }}">
                             <label class="small_faint">Min. Age</label>
-                            <input style="display: inline-block;width: 100%;" id="min_age" type="number" name="age_groups[0][min]" placeholder="Minimum Age">
+                            <input style="display: inline-block;width: 100%;" id="min_age" type="number" name="age_groups[0][min]" placeholder="Minimum Age" min="18" >
 
                             @if($errors->has('age_groups'))
                                 <strong>
@@ -121,7 +121,7 @@
 
                         <div class="input_wrap column col_6{{ $errors->has('age_groups') ? ' has-error' : '' }}">
                             <label class="small_faint">Max. Age</label>
-                            <input style="display: inline-block;width: 100%;" id="max_age" type="number" name="age_groups[0][max]" placeholder="Maximum Age">
+                            <input style="display: inline-block;width: 100%;" id="max_age" type="number" name="age_groups[0][max]"  min="18" placeholder="Maximum Age">
                             @if($errors->has('age_groups'))
                                 <strong>
                                     <span class="help-block">{{ $errors->first('age_groups') }}</span>
@@ -320,14 +320,6 @@
                 var campaign_name = $("#campaign_name").val();
                 var min_age = $("#min_age").val();
                 var max_age = $("#min_age").val();
-
-                    if(max_age < 18 && min_age < 18 ){
-                        toastr.error('The maximum age for is 18 years');
-                        $('.load_this_div').css({
-                        opacity : 1
-                    });
-                        return;
-                    }
                     if( min_age  >= max_age){
                           toastr.error('Maximum age must be greater than minimum age');
                           $('.load_this_div').css({
