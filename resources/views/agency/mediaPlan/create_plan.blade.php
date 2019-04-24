@@ -110,7 +110,7 @@
                     <div class="clearfix mb">
                         <div class="input_wrap column col_6{{  $errors->has('age_groups') ? ' has-error' : '' }}">
                             <label class="small_faint">Min. Age</label>
-                            <input style="display: inline-block;width: 100%;" type="number" name="age_groups[0][min]" placeholder="Minimum Age">
+                            <input style="display: inline-block;width: 100%;" id="min_age" type="number" name="age_groups[0][min]" placeholder="Minimum Age" min="18"  max="99" >
 
                             @if($errors->has('age_groups'))
                                 <strong>
@@ -121,7 +121,7 @@
 
                         <div class="input_wrap column col_6{{ $errors->has('age_groups') ? ' has-error' : '' }}">
                             <label class="small_faint">Max. Age</label>
-                            <input style="display: inline-block;width: 100%;" type="number" name="age_groups[0][max]" placeholder="Maximum Age">
+                            <input style="display: inline-block;width: 100%;" id="max_age" type="number" name="age_groups[0][max]"  min="18" max="99" placeholder="Maximum Age">
                             @if($errors->has('age_groups'))
                                 <strong>
                                     <span class="help-block">{{ $errors->first('age_groups') }}</span>
@@ -275,7 +275,12 @@
     <script src="https://unpkg.com/flatpickr"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
     <script>
+
+
+
+
         $(document).ready(function () {
+
             //flatpickr
             flatpickr(".flatpickr", {
                 altInput: true,
@@ -313,6 +318,18 @@
                 var start_date = $("#start_date").val();
                 var end_date = $("#end_date").val();
                 var campaign_name = $("#campaign_name").val();
+                var min_age = $("#min_age").val();
+                var max_age = $("#min_age").val();
+                    if( min_age  >= max_age){
+                          toastr.error('Maximum age must be greater than minimum age');
+                          $('.load_this_div').css({
+                        opacity : 1
+                    });
+                         return;
+                    }
+
+
+
                 if(start_date === '' && end_date === ''){
                     toastr.error('Start and end dates are required.');
                     $('.load_this_div').css({
