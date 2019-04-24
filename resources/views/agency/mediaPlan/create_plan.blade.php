@@ -110,7 +110,7 @@
                     <div class="clearfix mb">
                         <div class="input_wrap column col_6{{  $errors->has('age_groups') ? ' has-error' : '' }}">
                             <label class="small_faint">Min. Age</label>
-                            <input style="display: inline-block;width: 100%;" id="min_age" type="number" name="age_groups[0][min]" placeholder="Minimum Age" min="18" >
+                            <input style="display: inline-block;width: 100%;" id="min_age" type="number" name="age_groups[0][min]" placeholder="Minimum Age" min="18"  max="99" >
 
                             @if($errors->has('age_groups'))
                                 <strong>
@@ -121,7 +121,7 @@
 
                         <div class="input_wrap column col_6{{ $errors->has('age_groups') ? ' has-error' : '' }}">
                             <label class="small_faint">Max. Age</label>
-                            <input style="display: inline-block;width: 100%;" id="max_age" type="number" name="age_groups[0][max]"  min="18" placeholder="Maximum Age">
+                            <input style="display: inline-block;width: 100%;" id="max_age" type="number" name="age_groups[0][max]"  min="18" max="99" placeholder="Maximum Age">
                             @if($errors->has('age_groups'))
                                 <strong>
                                     <span class="help-block">{{ $errors->first('age_groups') }}</span>
