@@ -321,12 +321,18 @@
                 var min_age = $("#min_age").val();
                 var max_age = $("#min_age").val();
 
-                    if(max_age < 18 || min_age < 18 ){
+                    if(max_age < 18 && min_age < 18 ){
                         toastr.error('The maximum age for is 18 years');
+                        $('.load_this_div').css({
+                        opacity : 1
+                    });
                         return;
                     }
                     if( min_age  >= max_age){
-                          toastr.error('Maxinun age must be greater than minimum age');
+                          toastr.error('Maximum age must be greater than minimum age');
+                          $('.load_this_div').css({
+                        opacity : 1
+                    });
                          return;
                     }
 
