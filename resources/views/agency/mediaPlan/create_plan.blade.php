@@ -42,20 +42,10 @@
                                         @if ($criteria->name == "media_types")
                                             @foreach ($criteria->subCriterias as $media_types)
                                             @if ($media_types->name == "Tv")
-                                                <option value="{{ $media_types->name }}" selected 
-                                                    @if((Session::get('campaign_information')) != null)
-                                                    @if($campaign_general_information->client === $client->id))
-                                                    selected="selected"
-                                                @endif
-                                                @endif
+                                                <option value="{{ $media_types->name }}" selected
                                             >{{ $media_types->name }}</option>
                                             @else
-                                                <option value="{{ $media_types->name }}" disabled 
-                                                    @if((Session::get('campaign_information')) != null)
-                                                    @if($campaign_general_information->client === $client->id))
-                                                    selected="selected"
-                                                @endif
-                                                @endif
+                                                <option value="{{ $media_types->name }}" disabled
                                             >{{ $media_types->name }}</option>
                                             @endif
                                             
@@ -79,11 +69,6 @@
                                         @if ($criteria->name == "genders")
                                             @foreach ($criteria->subCriterias as $genders)
                                             <option value="{{ $genders->name }}"
-                                                    @if((Session::get('campaign_information')) != null)
-                                                    @if($campaign_general_information->client === $client->id))
-                                                    selected="selected"
-                                                @endif
-                                                @endif
                                             >{{ $genders->name }}</option>
                                             @endforeach
                                         @endif
@@ -157,11 +142,7 @@
                                         @if ($criteria->name == "living_standard_measures")
                                             @foreach ($criteria->subCriterias as $lsms)
                                             <option value="{{ $lsms->name }}"
-                                                    @if((Session::get('campaign_information')) != null)
-                                                    @if($campaign_general_information->client === $lsms->name))
-                                                    selected="selected"
-                                                @endif
-                                                @endif
+
                                             >{{ $lsms->name }}</option>
                                             @endforeach
                                         @endif
@@ -183,11 +164,6 @@
                                         @if ($criteria->name == "social_classes")
                                             @foreach ($criteria->subCriterias as $social_classes)
                                             <option value="{{ $social_classes->name }}"
-                                                    @if((Session::get('campaign_information')) != null)
-                                                    @if($campaign_general_information->client === $social_classes->name))
-                                                    selected="selected"
-                                                @endif
-                                                @endif
                                             >{{ $social_classes->name }}</option>
                                             @endforeach
                                         @endif
@@ -213,11 +189,6 @@
                                         @if ($criteria->name == "states")
                                             @foreach ($criteria->subCriterias as $states)
                                             <option value="{{ $states->name }}"
-                                                    @if((Session::get('campaign_information')) != null)
-                                                    @if($campaign_general_information->client === $states->name))
-                                                    selected="selected"
-                                                @endif
-                                                @endif
                                             >{{ $states->name }}</option>
                                             @endforeach
                                         @endif
@@ -244,11 +215,7 @@
                                     @if ($criteria->name == "regions")
                                         @foreach ($criteria->subCriterias as $regions)
                                         <option value="{{ $regions->name }}"
-                                                @if((Session::get('campaign_information')) != null)
-                                                @if($campaign_general_information->client === $regions->name))
-                                                selected="selected"
-                                            @endif
-                                            @endif
+
                                         >{{ $regions->name }}</option>
                                         @endforeach
                                     @endif

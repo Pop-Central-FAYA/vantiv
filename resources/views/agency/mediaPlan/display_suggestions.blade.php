@@ -20,31 +20,21 @@
             </div>
         </div>
 
-        <div class="clearfix mb4 _shrink-sides">
-            <div class="column col_6">
-                <button id="view-table"  class="btn full block_disp uppercased align_center">Table</button>
-            </div>
-
-            <div class="column col_6">
-                <button id="view-graph"  class="btn full block_disp uppercased align_center">Graph</button>
-            </div>
-        </div>
+        
 
     <div>
 
     <div class="the_frame client_dets mb1">
     
     <div class="filters border_bottom clearfix">
-        <div class="column col_6 p-t">
-            <div class="column col_6">
-                <p class="weight_medium mt2">Available Stations and Times</p>
-            </div>
+        <div class="column col_5">
+            <p class="uppercased weight_medium mt2">Available Stations and Times</p>
         </div>
-        <div class="column col_6 clearfix">
+        <div class="column col_7 clearfix">
             <form method="POST" action="" id="filter-form">
                 {{ csrf_field() }}
                 <input type="hidden" name="mediaPlanId" value="{{ $mediaPlanId }}">
-                <div class="col_2 column">
+                <div class="col_3 column">
                     <label for="station_type">Station Type</label>
                     <select name="station_type" id="station_type">
                         @foreach($filterValues['station_type'] as $station_type)
@@ -79,10 +69,20 @@
                         @endforeach
                     </select>                    
                 </div>
-                <div class="col_4 column">
-                    <button type="submit" class="filter-btn" id="filter-btn"><i class="material-icons left">search</i>Filter</button>
+                <div class="col_3 column">
+                    <button type="submit" class="filter-btn" id="filter-btn"><i class="material-icons">search</i>FILTER</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <div class="clearfix mb mt2 mbl mr-2">
+        <div class="column col_6">
+            <button id="view-table"  class="btn full block_disp uppercased align_center">Table</button>
+        </div>
+
+        <div class="column col_6">
+            <button id="view-graph"  class="btn full block_disp uppercased align_center">Graph</button>
         </div>
     </div>
 
@@ -98,6 +98,9 @@
             </tr>
         </thead>
      </table>
+
+
+     
     @foreach($fayaFound['stations'] as $key => $Value)
         @php 
             $sum_audience = $Value->sum('total_audience'); 
@@ -109,7 +112,9 @@
                     <tbody class="accordion-group__accordion-btn">
                         <tr class="clickable">
                             {{-- <td width="25%"><input type="checkbox" /> </td> --}}
-                            <td width="">{{ $key }}</td>
+                            <td width="">
+
+                             {{ $key}}
                             <td width="50%">
                             {{ number_format($sum_audience) }}
                             </td>
@@ -141,7 +146,7 @@
                             $vid =$Programe->media_plan_id. $Programe->day. $Programe-> total_audience. str_replace(':', '',    substr($Programe-> start_time, 0, 5)) ;
                              @endphp
                                 {{-- <td id="stat{{ $vid }}">  {{ $Programe->station }}</td> --}}
-                                <td id="day{{ $vid }}"class="center"><input type="hidden" id="stat{{ $vid }}" value=" {{ $Programe->station }}"  />      <input type="hidden" id="unique{{ $vid }}" value="{{ $Programe->id}}"  /> {{ $Programe->day}} </td>
+                                <td id="day{{ $vid }}"class="center"><input type="hidden" id="stat{{ $vid }}" value=" {{ $Programe->station }} - {{ $Programe->state}}"  />      <input type="hidden" id="unique{{ $vid }}" value="{{ $Programe->id}}"  /> {{ $Programe->day}} </td>
                                 <td id="time{{ $vid }}" class="center">{{ substr($Programe->start_time,0,5)}} - {{ substr($Programe->end_time,0,5)}}</td>
                                 <td id="prog{{ $vid }}"class="center">{{ $Programe->program }}</td>
                                 <td id="aud{{$vid }}"class="center">{{ number_format($Programe->total_audience)}}</td>
@@ -241,12 +246,12 @@
             </tr>
         </thead>     
         <tbody class="where-it-is-going" id = "cont" >
-            @foreach($fayaFound['selected'] as $Programe)
+            @foreach($fayaFound['selected'] as  $Programe)
             @php 
            $vid =$Programe->media_plan_id. $Programe->day. $Programe-> total_audience. str_replace(':', '',    substr($Programe-> start_time, 0, 5)) ;
             @endphp
             <tr class="ri{{$vid}}" id="{{ $Programe->id }} " >
-                <td id="stat{{ $vid }}"> {{ $Programe->station }}</td>
+                <td id="stat{{ $vid }}"> {{$Programe->station}} </td>
                 <td id="day{{ $vid }}"class="center">{{ $Programe->day}} </td>
                 <td id="time{{ $vid }}" class="center">{{ substr($Programe->start_time,0,5) }} - {{ substr($Programe->end_time,0,5) }}
                 </td>

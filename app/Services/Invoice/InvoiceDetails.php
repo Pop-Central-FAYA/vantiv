@@ -19,16 +19,16 @@ class InvoiceDetails
     {
         return $this->invoiceBaseQuery()
                     ->join('companies', 'companies.id', '=', 'invoiceDetails.broadcaster_id')
-                    ->leftJoin('discounts', function ($query) {
-                        return $query->on('discounts.discount_type_value', '=', 'invoiceDetails.agency_id')
-                                    ->on('discounts.broadcaster', '=', 'invoiceDetails.broadcaster_id');
+                    ->leftJoin('discounts_old', function ($query) {
+                        return $query->on('discounts_old.discount_type_value', '=', 'invoiceDetails.agency_id')
+                                    ->on('discounts_old.broadcaster', '=', 'invoiceDetails.broadcaster_id');
                     })
                     ->join('selected_adslots', 'selected_adslots.campaign_id', '=', 'campaignDetails.campaign_id')
                     ->addSelect('campaignDetails.start_date', 'campaignDetails.stop_date', 'walkIns.company_logo AS client_logo',
                         'invoiceDetails.broadcaster_id', 'invoiceDetails.actual_amount_paid AS campaign_cost',
                         'campaignDetails.adslots AS quantity', 'companies.name AS company_name', 'walkIns.company_name AS client_name',
                         'walkIns.location AS client_address')
-                    ->selectRaw("COALESCE(discounts.percent_value, 0) AS agency_discount_percentage")
+                    ->selectRaw("COALESCE(discounts_old.percent_value, 0) AS agency_discount_percentage")
                     ->where('invoiceDetails.invoice_id', $this->invoice_id)
                     ->groupBy('invoiceDetails.broadcaster_id')
                     ->get();
