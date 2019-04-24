@@ -46,7 +46,7 @@ services:
     volumes:
       - $PWD/dev/mysql:/var/lib/mysql:cached
       - $PWD/database/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
-    command: --lower_case_table_names=0
+    # command: --lower_case_table_names=0
 
 # docker compose issues with mounting on mac
 # https://docs.docker.com/docker-for-mac/osxfs-caching/
