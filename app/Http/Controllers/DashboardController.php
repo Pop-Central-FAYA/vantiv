@@ -46,9 +46,19 @@ class DashboardController extends Controller
         //Broadcaster Dashboard module
         $broadcaster_id = Session::get('broadcaster_id');
         $agency_id = Session::get('agency_id');
+        /**
+         * If it is a broadcaster, there are some various places the user should be redirected to
+         * 1. If the User has the scheduler role (he/she should be redirected to the inventory management screen)
+         * 2 If the User has the admin, super admin or media_buyer role (he/she should be redirected to the campaign management page)
+         */
         if ($broadcaster_id) {
-            //redirect user to the new landing page of the broadcaster.
-            return view('broadcaster_module.landing_page');
+            if (Auth::user()->hasRole(array('ssp.scheduler'))) {
+                $route = 'broadcaster.inventory_management';
+            } else {
+                // else, the user has the following roles ('ssp.admin', 'ssp.media_buyer', 'ssp.super_admin')
+                $route = 'broadcaster.campaign_management';
+            }
+            return redirect()->route($route);
 
         } else if ($agency_id) {
             //agency dashboard
