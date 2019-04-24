@@ -233,8 +233,8 @@
                     <!-- Agency commission -->
                     <div class="clearfix mb">
                         <div class="input_wrap column col_12{{ $errors->has('agency_commission') ? ' has-error' : '' }}">
-                            <label class="small_faint">Agency Commission</label>
-                            <input style="display: inline-block;width: 100%;" type="number" name="agency_commission" id="agency_commission" value="{{ old('agency_commission') }}" placeholder="Enter Agency Commission">
+                            <label class="small_faint">Service charge (%)</label>
+                            <input style="display: inline-block;width: 100%;" type="number" name="agency_commission" id="agency_commission" value="{{ old('agency_commission') }}" placeholder="Enter Service charge">
                             @if($errors->has('agency_commission'))
                                 <strong>
                                     <span class="help-block">{{ $errors->first('agency_commission') }}</span>
@@ -275,7 +275,9 @@
     <script src="https://unpkg.com/flatpickr"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
     <script>
+
         $(document).ready(function () {
+
             //flatpickr
             flatpickr(".flatpickr", {
                 altInput: true,
