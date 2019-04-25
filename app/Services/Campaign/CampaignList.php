@@ -81,7 +81,7 @@ class CampaignList
             ->make(true);
     }
 
-    protected function fetchAllCampaigns()
+    public function fetchAllCampaigns()
     {
         $query = $this->campaignBaseQuery()->when($this->hasDateFilter(), function ($query) {
             // the relevant filter here is the date filter
@@ -89,7 +89,11 @@ class CampaignList
             return $query->whereBetween('campaignDetails.start_date', $between);
         })->when($this->request->status, function($query) {
             // if the filter is by status
-            return $query->where('campaignDetails.status', $this->request->status);
+            $status = $this->request->status;
+            if (!is_array($this->request->status)) {
+                $status = array($status);
+            }
+            return $query->whereIn('campaignDetails.status', $status);
         })->when($this->request->filter_user, function($query) {
             // if the filter is by campaign type
             // only return campaigns that were either launched by agencies or walkins by the campaign
