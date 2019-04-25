@@ -180,31 +180,31 @@
 
             // });
 
-            // function getColumns()
-            // {
-            //     if(companies > 1){
-            //         return [
-            //                         // {data: 'id', name: 'id'},
-            //                         {data: 'name', name: 'name'},
-            //                         {data: 'brand', name: 'brand'},
-            //                         {data: 'start_date', name: 'start_date'},
-            //                         {data: 'budget', name: 'budget'},
-            //                         {data: 'adslots', name: 'adslots'},
-            //                         {data: 'status', name: 'status'},
-            //                         {data: 'station', name: 'station'}
-            //                     ]
-            //     }else{
-            //         return [
-            //                         // {data: 'id', name: 'id'},
-            //                         {data: 'name', name: 'name'},
-            //                         {data: 'brand', name: 'brand'},
-            //                         {data: 'start_date', name: 'start_date'},
-            //                         {data: 'budget', name: 'budget'},
-            //                         {data: 'adslots', name: 'adslots'},
-            //                         {data: 'status', name: 'status'},
-            //                     ]
-            //     }
-            // }
+            function getColumns()
+            {
+                if(companies > 1){
+                    return [
+                                    // {data: 'id', name: 'id'},
+                                    {data: 'name', name: 'name'},
+                                    {data: 'brand', name: 'brand'},
+                                    {data: 'start_date', name: 'start_date'},
+                                    {data: 'budget', name: 'budget'},
+                                    {data: 'adslots', name: 'adslots'},
+                                    {data: 'status', name: 'status'},
+                                    {data: 'station', name: 'station'}
+                                ]
+                }else{
+                    return [
+                                    // {data: 'id', name: 'id'},
+                                    {data: 'name', name: 'name'},
+                                    {data: 'brand', name: 'brand'},
+                                    {data: 'start_date', name: 'start_date'},
+                                    {data: 'budget', name: 'budget'},
+                                    {data: 'adslots', name: 'adslots'},
+                                    {data: 'status', name: 'status'},
+                                ]
+                }
+            }
 
             // $('#dashboard_filter_campaign').on('click', function() {
             //     campaignFilter.draw();
@@ -269,9 +269,9 @@
                     var channels = $("#publishers").val();
                     var year = current_year;
                     if(channels != null){
-                        $('body').css({
-                            opacity : 0.1
-                        });
+                        // $('body').css({
+                        //     opacity : 0.1
+                        // });
                         var campaignFilter =  $('.dashboard_campaigns_filtered').DataTable({
                             dom: 'Blfrtip',
                             paging: true,
