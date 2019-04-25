@@ -64,7 +64,7 @@
                             <label class="small_faint">Gender</label>
 
                             <div class="select_wrap {{ $errors->has('gender') ? ' has-error' : '' }}">
-                                <select class="js-example-basic-multiple all" name="gender[]" id="gender" multiple="multiple" onchange="selectAll('gender')">
+                                <select class="js-example-basic-multiple all" name="gender[]" id="gender" multiple="multiple" data-value="gender.both">
                                 <option value="all">Both</option>
                                     @foreach($criterias as $criteria)
                                         @if ($criteria->name == "genders")
@@ -160,7 +160,7 @@
                             <label class="small_faint">Social Class</label>
 
                             <div class="select_wrap {{ $errors->has('social_class') ? ' has-error' : '' }}">
-                                <select class="js-example-basic-multiple all" name="social_class[]" id="social_class" multiple="multiple" onchange="selectAll('social_class')"  >
+                                <select class="js-example-basic-multiple all" name="social_class[]" id="social_class" multiple="multiple" data-value="social_class.all"  >
                                 <option value="all">All</option>
                                     @foreach($criterias as $criteria)
                                         @if ($criteria->name == "social_classes")
@@ -185,7 +185,7 @@
                             <label class="small_faint">State</label> 
 
                             <div class="select_wrap{{ $errors->has('state') ? ' has-error' : '' }}">
-                                <select class="js-example-basic-multiple all" id="state" name="state[]" multiple="multiple"  onchange="selectAll('state')" >
+                                <select class="js-example-basic-multiple all" id="state" name="state[]" multiple="multiple"  data-value="state.all" >
                                     <option value="all">All</option>
                                     @foreach($criterias as $criteria)
                                         @if ($criteria->name == "states")
@@ -282,19 +282,30 @@
     <script>
 
 
-
-     function selectAll(container)
-        {
-                    var selectedItem = $("#"+ container).val();
-                    if(selectedItem == "all" ){
-                          $("#"+ container +"> option").prop("selected","selected");
-                          $("#"+container +" option[value='all']").attr("selected", false);
-                         $("#"+ container).trigger("change");
-                     }
-        }
-
         $(document).ready(function () {
+            function isAll(value) {
+                value = value.toLowerCase();
+                return (value == 'all' || value == 'both');
+            }
 
+            $("select.all").change( function() {
+                $children = $(this.children);
+                $all_selected = $children.filter(function() {
+                    if (isAll(this.value)) {
+                        return this.selected == true;
+                    }
+                    return false;
+                })
+                if ($all_selected.length > 0) {
+                    $children.each(function() {
+                        if (isAll(this.value)) {
+                            this.selected = false;
+                        } else {
+                            this.selected = true;
+                        }
+                    });
+                }
+            });
 
             //flatpickr
             flatpickr(".flatpickr", {
@@ -445,5 +456,6 @@
     <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
 @stop
+
 
 
