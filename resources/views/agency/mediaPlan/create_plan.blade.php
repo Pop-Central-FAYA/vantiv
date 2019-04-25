@@ -64,7 +64,8 @@
                             <label class="small_faint">Gender</label>
 
                             <div class="select_wrap {{ $errors->has('gender') ? ' has-error' : '' }}">
-                                <select class="js-example-basic-multiple" name="gender[]" id="gender" multiple="multiple">
+                                <select class="js-example-basic-multiple all" name="gender[]" id="gender" multiple="multiple" data-value="gender.both">
+                                <option value="all">Both</option>
                                     @foreach($criterias as $criteria)
                                         @if ($criteria->name == "genders")
                                             @foreach ($criteria->subCriterias as $genders)
@@ -159,7 +160,8 @@
                             <label class="small_faint">Social Class</label>
 
                             <div class="select_wrap {{ $errors->has('social_class') ? ' has-error' : '' }}">
-                                <select class="js-example-basic-multiple" name="social_class[]" id="social_class" multiple="multiple">
+                                <select class="js-example-basic-multiple all" name="social_class[]" id="social_class" multiple="multiple" data-value="social_class.all"  >
+                                <option value="all">All</option>
                                     @foreach($criterias as $criteria)
                                         @if ($criteria->name == "social_classes")
                                             @foreach ($criteria->subCriterias as $social_classes)
@@ -180,11 +182,11 @@
                     <!-- States -->
                     <div class="clearfix mb">
                         <div class="input_wrap">
-                            <label class="small_faint">State</label>
+                            <label class="small_faint">State</label> 
 
                             <div class="select_wrap{{ $errors->has('state') ? ' has-error' : '' }}">
-                                <select class="js-example-basic-multiple" id="state" name="state[]" multiple="multiple">
-                                    <option value=""></option>
+                                <select class="js-example-basic-multiple all" id="state" name="state[]" multiple="multiple"  data-value="state.all" >
+                                    <option value="all">All</option>
                                     @foreach($criterias as $criteria)
                                         @if ($criteria->name == "states")
                                             @foreach ($criteria->subCriterias as $states)
@@ -193,6 +195,8 @@
                                             @endforeach
                                         @endif
                                     @endforeach
+
+                                   
                                 </select>
 
                                 @if($errors->has('state'))
@@ -200,6 +204,7 @@
                                         <span class="help-block">{{ $errors->first('state') }}</span>
                                     </strong>
                                 @endif
+    
                             </div>
                         </div>
                     </div>
@@ -277,8 +282,32 @@
     <script>
 
         $(document).ready(function () {
+               //Add all
+            function isAll(value) {
+                value = value.toLowerCase();
+                return (value == 'all' || value == 'both');
+            }
 
-            //flatpickr
+            $("select.all").change( function() {
+                $children = $(this.children);
+                $all_selected = $children.filter(function() {
+                    if (isAll(this.value)) {
+                        return this.selected == true;
+                    }
+                    return false;
+                })
+                if ($all_selected.length > 0) {
+                    $children.each(function() {
+                        if (isAll(this.value)) {
+                            this.selected = false;
+                        } else {
+                            this.selected = true;
+                        }
+                    });
+                }
+            });
+
+           //flatpickr
             flatpickr(".flatpickr", {
                 altInput: true,
             });
@@ -439,5 +468,6 @@
     <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
 @stop
+
 
 
