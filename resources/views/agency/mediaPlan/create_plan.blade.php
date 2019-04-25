@@ -64,8 +64,8 @@
                             <label class="small_faint">Gender</label>
 
                             <div class="select_wrap {{ $errors->has('gender') ? ' has-error' : '' }}">
-                                <select class="js-example-basic-multiple all" name="gender[]" id="gender" multiple="multiple" data-value="gender.both">
-                                <option value="all">All</option>
+                                <select class="js-example-basic-multiple all" name="gender[]" id="gender" multiple="multiple" onchange="selectAll('gender')">
+                                <option value="all">Both</option>
                                     @foreach($criterias as $criteria)
                                         @if ($criteria->name == "genders")
                                             @foreach ($criteria->subCriterias as $genders)
@@ -160,7 +160,7 @@
                             <label class="small_faint">Social Class</label>
 
                             <div class="select_wrap {{ $errors->has('social_class') ? ' has-error' : '' }}">
-                                <select class="js-example-basic-multiple all" name="social_class[]" id="social_class" multiple="multiple" data-value="social_class.all">
+                                <select class="js-example-basic-multiple all" name="social_class[]" id="social_class" multiple="multiple" onchange="selectAll('social_class')"  >
                                 <option value="all">All</option>
                                     @foreach($criterias as $criteria)
                                         @if ($criteria->name == "social_classes")
@@ -185,7 +185,7 @@
                             <label class="small_faint">State</label> 
 
                             <div class="select_wrap{{ $errors->has('state') ? ' has-error' : '' }}">
-                                <select class="js-example-basic-multiple all" id="state" name="state[]" multiple="multiple"  data-value="state.all" >
+                                <select class="js-example-basic-multiple all" id="state" name="state[]" multiple="multiple"  onchange="selectAll('state')" >
                                     <option value="all">All</option>
                                     @foreach($criterias as $criteria)
                                         @if ($criteria->name == "states")
@@ -280,52 +280,21 @@
     <script src="https://unpkg.com/flatpickr"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
     <script>
+
+
+
+     function selectAll(container)
+        {
+                    var selectedItem = $("#"+ container).val();
+                    if(selectedItem == "all" ){
+                          $("#"+ container +"> option").prop("selected","selected");
+                          $("#"+container +" option[value='all']").attr("selected", false);
+                         $("#"+ container).trigger("change");
+                     }
+        }
+
         $(document).ready(function () {
 
-
-                $("select.all").change(function(){
-                    if($(this).data("value") === "state.all"){
-                        var selectedState = $("#state").val();
-                        if(selectedState == "all" ){
-                            $("#state > option").prop("selected","selected");
-                            $("#state").trigger("change");
-                            $("#state option[value='all']").attr("selected", false);
-                        }
-                    }
-                    if($(this).data("value") === "gender.both"){
-                        var selectedGender = $("#gender").val();
-                        if(selectedGender == "all" ){
-                            $("#gender > option").prop("selected","selected");
-                            $("#gender").trigger("change");
-                            $("#gender option[value='all']").attr("selected", false);
-                        }
-                    }
-                    if($(this).data("value") === "social_class.all"){
-                        var selectedSocial = $("#social_class").val();
-                        if(selectedSocial == "all" ){
-                            $("#social_class > option").prop("selected","selected");
-                            $("#social_class").trigger("change");
-                            $("#social_class option[value='all']").attr("selected", false);
-                        }
-                    }
-    
-                 });
-
-
-                //    $("select.social_class").change(function(){
-                //     var selectedSocial = $(this).children("option:selected").val();
-                //     if(selectedSocial == "all" ){
-                //         $("#social_class > option").prop("selected","selected");
-                //         $("#social_class").trigger("change");
-                //         $("#social_class option[value='']").attr("selected", false);
-                //         $("#social_class option[value='all']").attr("selected", false);
-                //     }else{
-                    
-                //     }
-
-                //  });
-
-             
 
             //flatpickr
             flatpickr(".flatpickr", {
