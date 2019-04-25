@@ -28,4 +28,10 @@ trait CompanyIdTrait
         }
         return $companies;
     }
+
+    public function getCompanyIdsList()
+    {
+        $companies = \Auth::user()->companies()->get();
+        return $companies->pluck("id")->toArray();
+    }
 }

@@ -26,6 +26,8 @@ use Yajra\DataTables\DataTables;
 use Vanguard\Services\MediaPlan\GetMediaPlans;
 use Vanguard\Services\Campaign\CampaignList;
 
+use Vanguard\Services\Reports\Publisher\RevenueByTimeBelt;
+
 use Log;
 
 class DashboardController extends Controller
@@ -67,6 +69,7 @@ class DashboardController extends Controller
             $allBroadcasters = Utilities::switch_db('api')->select("SELECT * from broadcasters");
             $agency_id = Session::get('agency_id');
             $agency_details = Utilities::switch_db('api')->select("SELECT * from agents where id = '$agency_id'");
+            
 //            TV
             $tv_rating = $this->agencyMediaChannel('TV');
 
@@ -285,14 +288,29 @@ class DashboardController extends Controller
 
     public function inventoryManagementDashboard()
     {
-        $companies_service = new CompanyDetailsFromIdList($this->companyId());
-        if(is_array($this->companyId())){
-            $companies = $companies_service->getCompanyDetails();
-        }else{
-            $companies = '';
+        $company_ids = $this->getCompanyIdsList();
+        $timebelt_revenue_report = new RevenueByTimeBelt($company_ids, array());
+        return view('broadcaster_module.dashboard.inventory_management.dashboard')
+            ->with('days', $this->listDays())
+            ->with('stations', $this->getCompaniesDetails($company_ids))
+            ->with('day_parts', array("Late Night", "Overnight", "Breakfast", "Late Breakfast", "Afternoon", "Primetime"))
+            ->with('timebelt_revenue', $timebelt_revenue_report->run());
+    }
+
+    public function getFilteredTimeBeltRevenue(Request $request) {
+        $company_ids = $this->getCompanyIdsList();
+
+        $filters = array();
+        $filter_fields = array("day_parts", "day", "station_id");
+
+        foreach ($filter_fields as $field) {
+            $value = $request->input($field);
+            if ($value) {
+                $filters[$field] = $value;
+            }
         }
-        return view('broadcaster_module.dashboard.inventory_management.dashboard')->with('days', $this->listDays())
-                                                                                        ->with('companies', $companies);
+        $timebelt_revenue_report = new RevenueByTimeBelt($company_ids, $filters);
+        return response()->json(array("status" => "success", "data" => $timebelt_revenue_report->run()));
     }
 
     public function getChannelWithOtherDetails($channels_id, $companies_id)
