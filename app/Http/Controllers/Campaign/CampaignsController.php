@@ -39,6 +39,7 @@ use Vanguard\Services\Campaign\StoreSelectedAdslot;
 use Vanguard\Services\Campaign\UpdateCampaignFromHoldState;
 use Vanguard\Services\Client\AllClient;
 use Vanguard\Services\Campaign\AllCampaign;
+use Vanguard\Services\Campaign\CampaignList;
 use Vanguard\Services\Client\ClientBrand;
 use Vanguard\Services\Client\ClientDetails;
 use Vanguard\Services\Company\CompanyDetails;
@@ -51,6 +52,7 @@ use Vanguard\Services\Wallet\CreateWalletHistory;
 use Vanguard\Services\Wallet\UpdateWallet;
 use Vanguard\Services\Wallet\WelletService;
 use Yajra\DataTables\DataTables;
+use Vanguard\Libraries\Enum\CampaignStatus;
 
 class CampaignsController extends Controller
 {
@@ -75,19 +77,39 @@ class CampaignsController extends Controller
         });
     }
 
-    public function allActiveCampaigns()
-    {
-        if($this->broadcaster_id){
-            return view('broadcaster_module.campaigns.index');
-        }else{
-            return view('agency.campaigns.active_campaign');
-        }
-    }
-
     public function allActiveCampaignsData(Request $request)
     {
         $campaigns = new AllCampaign($request, $dashboard = false, $this->companyId());
         return $campaigns->run();
+    }
+
+    /**
+     * This should be able to filter the campaign list
+     */
+    public function filteredCampaignsData(Request $request)
+    {
+        $campaigns = new CampaignList($request, $this->companyId());
+        return $campaigns->run();
+    }
+
+    public function campaignsList(Request $request)
+    {
+        $status = $request->status;
+        return $this->displayCampaignsListPage($status);
+    }
+
+    public function allActiveCampaigns()
+    {
+        return $this->displayCampaignsListPage(CampaignStatus::ACTIVE_CAMPAIGN);
+    }
+
+    protected function displayCampaignsListPage($status) {
+        if($this->broadcaster_id){
+            return view('broadcaster_module.campaigns.index')
+                ->with('status', $status);
+        }else{
+            return view('agency.campaigns.active_campaign');
+        }
     }
 
     public function campaignGeneralInformation()
