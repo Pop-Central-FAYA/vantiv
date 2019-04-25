@@ -39,6 +39,17 @@
 
             </div>
             @endif
+            
+            @if(Auth::user()->hasRole('ssp.super_admin') || Auth::user()->hasRole('ssp.admin') || Auth::user()->hasRole('ssp.media_buyer'))
+            <div class="column col_3" id="campaign_on_hold">
+                <span class="weight_medium small_faint uppercased">Campaigns on hold</span>
+                <h3><a href="{{ route('campaign.list', ['status' => 'on_hold']) }}" style="color: red;">{{ count($campaign_on_hold) }}</a></h3>
+            </div>
+            <div class="column col_3" id="filtered_campaign_on_hold" style="display: none;">
+
+            </div>
+            @endif
+
             @if(Auth::user()->hasRole('ssp.super_admin') || Auth::user()->hasRole('ssp.admin') || Auth::user()->hasRole('ssp.media_buyer'))
             <div class="column col_2" id="walkin_count">
                 <span class="weight_medium small_faint uppercased">All Walk-Ins</span>
@@ -63,15 +74,6 @@
                 <h3><a href="{{ route('brand.all') }}">{{ count($brands) }}</a></h3>
             </div>
             <div class="column col_2" id="filtered_brand_count" style="display: none;">
-
-            </div>
-            @endif
-            @if(Auth::user()->hasRole('ssp.super_admin') || Auth::user()->hasRole('ssp.admin') || Auth::user()->hasRole('ssp.media_buyer'))
-            <div class="column col_3" id="campaign_on_hold">
-                <span class="weight_medium small_faint uppercased">Campaigns on hold</span>
-                <h3><a href="{{ route('broadcaster.campaign.hold') }}" style="color: red;">{{ count($campaign_on_hold) }}</a></h3>
-            </div>
-            <div class="column col_3" id="filtered_campaign_on_hold" style="display: none;">
 
             </div>
             @endif

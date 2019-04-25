@@ -24,6 +24,7 @@ use Vanguard\Services\Traits\ListDayTrait;
 use Vanguard\Services\Traits\YearTrait;
 use Yajra\DataTables\DataTables;
 use Vanguard\Services\MediaPlan\GetMediaPlans;
+use Vanguard\Services\Campaign\CampaignList;
 
 
 class DashboardController extends Controller
@@ -205,15 +206,19 @@ class DashboardController extends Controller
         return $media_plan_service->run();
     }
 
-    public function campaignManagementDashbaord()
+    public function campaignManagementDashbaord(Request $request)
     {
+        $campaign_list = new CampaignList($request, $this->companyId());
+        $campaigns = $campaign_list->fetchAllCampaigns();
+
+        $campaign_on_hold = $campaigns->where('status', \Vanguard\Libraries\Enum\CampaignStatus::ON_HOLD);
+        $active_campaigns = $campaigns->where('status', \Vanguard\Libraries\Enum\CampaignStatus::ACTIVE_CAMPAIGN);
+
         $total_volume_campaign_service = new TotalVolumeCampaignChart($this->companyId());
         $company_client_service = new BroadcasterClient($this->companyId());
         $pending_invoice_service = new PendingInvoice($this->companyId());
         $client_brand_service = new CompanyBrands($this->companyId());
-        $campaign_status_service = new CampaignStatus($this->companyId());
         $mpo_list_service = new MpoList($this->companyId(), null,null);
-        $campaign_on_hold_service = new CampaignOnhold($this->companyId());
         $user_channels_with_other_details = $this->getChannelWithOtherDetails(Auth::user()->user_company_channels, $this->companyId());
         $current_year = date('Y');
 
@@ -223,9 +228,9 @@ class DashboardController extends Controller
                             'walkins' => $company_client_service->getCompanyClients(),
                             'pending_invoices' => $pending_invoice_service->getPendingInvoice(),
                             'brands' => $client_brand_service->getBrandCreatedByCompany(),
-                            'active_campaigns' => $campaign_status_service->getActiveCampaigns(),
+                            'active_campaigns' => $active_campaigns,
                             'pending_mpos' => $mpo_list_service->pendingMpoList(),
-                            'campaign_on_hold' => $campaign_on_hold_service->getCampaignsOnhold(),
+                            'campaign_on_hold' => $campaign_on_hold,
                             'user_channel_with_other_details' => $user_channels_with_other_details,
                             'periodic_revenues' => Auth::user()->companies()->count() > 1 ? $this->periodicRevenueChart($this->companyId(), $current_year) : '',
                             'year_list' => Auth::user()->companies()->count() > 1 ? $this->getYearFrom2018() : '',
