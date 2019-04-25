@@ -8,6 +8,8 @@ use Vanguard\Services\Company\CompanyDetails;
 use Vanguard\Services\Traits\CampaignQueryTrait;
 use Yajra\DataTables\DataTables;
 
+use Vanguard\Models\Company;
+
 class AllCampaign
 {
     protected $request;
@@ -214,14 +216,12 @@ class AllCampaign
 
     public function getCompanyName($company_id)
     {
-        $companies = \DB::table('companies')
-                        ->whereIn('id', json_decode($company_id))
-                        ->get();
-        $company_name = '';
-        foreach ($companies as $company){
-            $company_name .= $company->name.' ';
+        $company_id_list = json_decode($company_id);
+        if ($company_id_list) {
+            $companies = Company::select('name')->whereIn('id', $company_id_list)->get();
+            return $companies->implode("name", ", ");
         }
-        return $company_name;
+        return "";
     }
 
 }

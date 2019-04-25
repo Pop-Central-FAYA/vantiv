@@ -10,6 +10,9 @@
             @if(Auth::user()->hasRole('ssp.super_admin') || Auth::user()->hasRole('ssp.admin') || Auth::user()->hasRole('ssp.scheduler') || Auth::user()->hasRole('ssp.media_buyer'))
                 <li class="campaign_icon {{ Request::is('campaign-management/dashboard') ? 'active' : ''  }}"><a href="{{ route('broadcaster.campaign_management') }}">Dashboard</a></li>
             @endif
+            @if(Auth::user()->hasRole('ssp.super_admin') || Auth::user()->hasRole('ssp.admin') || Auth::user()->hasRole('ssp.scheduler') || Auth::user()->hasRole('ssp.media_buyer'))
+                <li class="campaign_icon {{ Request::is('campaign/campaigns-list') ? 'active' : ''  }}"><a href="{{ route('campaign.list') }}">Campaigns</a></li>
+            @endif
             @if(Auth::user()->hasRole('ssp.super_admin') || Auth::user()->hasRole('ssp.admin') || Auth::user()->hasRole('ssp.media_buyer'))
                 <li class="clients_icon {{ Request::is('walk-in') ? 'active' : '' || Request::is('walk-in/walk-in/details/*') ? 'active' : ''  }}"><a href="{{ route('walkins.all') }}">Walk-Ins</a></li>
             @endif

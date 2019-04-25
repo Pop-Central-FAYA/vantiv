@@ -151,8 +151,10 @@ Route::group(['middleware' => 'auth'], function () {
     * Campaign
     */
     Route::group(['prefix' => 'campaign'], function(){
+        Route::get('/campaigns-list', 'Campaign\CampaignsController@campaignsList')->name('campaign.list');
         Route::get('/active-campaigns', 'Campaign\CampaignsController@allActiveCampaigns')->name('campaign.all');
         Route::get('/all-active-campaigns/data', 'Campaign\CampaignsController@allActiveCampaignsData');
+        Route::get('/all-campaigns/data', 'Campaign\CampaignsController@filteredCampaignsData');
         Route::get('/campaign-general-information', 'Campaign\CampaignsController@campaignGeneralInformation')->name('campaign.get_campaign_general_information');
         Route::post('/campaign-general-information/store', 'Campaign\CampaignsController@storeCampaignGeneralInformation')->name('campaign.store_campaign_general_information');
         Route::get('/advert-slot/result/{id}', 'Campaign\CampaignsController@getAdSlotResult')->name('campaign.advert_slot');

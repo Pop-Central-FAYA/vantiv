@@ -18,9 +18,7 @@
                 <div class="column col_6">
                     <select class="publishers" name="companies[]" id="publishers" multiple="multiple" >
                         @foreach(Auth::user()->companies as $company)
-                            <option value="{{ $company->id }}"
-                                    selected
-                            >{{ $company->name }}</option>
+                            <option value="{{ $company->id }}" selected>{{ $company->name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -34,7 +32,7 @@
             @if(Auth::user()->hasRole('ssp.super_admin') || Auth::user()->hasRole('ssp.admin') || Auth::user()->hasRole('ssp.scheduler') || Auth::user()->hasRole('ssp.media_buyer'))
                 <div class="column col_3" id="campaign_count">
                     <span class="weight_medium small_faint uppercased">Active Campaigns</span>
-                    <h3><a href="{{ route('campaign.all') }}">{{ count($active_campaigns) }}</a></h3>
+                    <h3><a href="{{ route('campaign.list', ['status' => 'active']) }}">{{ count($active_campaigns) }}</a></h3>
                 </div>
 
             <div class="column col_3" id="filtered_campaign_count" style="display: none;">
@@ -122,57 +120,6 @@
 
         <p><br></p>
 
-        <div class="the_frame client_dets mb4">
-
-            <div class="filters border_bottom clearfix">
-                <div class="column col_2 p-t">
-                    <p class="uppercased weight_medium">All Campaigns</p>
-                </div>
-                <div class="column select_wrap col_3 clearfix">
-                    <select name="filter_user" class="filter_user" id="filter_user">
-                        <option value="">All Campaigns</option>
-                        <option value="agency">Agency Campaigns</option>
-                        <option value="broadcaster">Walk-In Campaigns</option>
-                    </select>
-                </div>
-                <div class="column col_3 clearfix">
-                    <input type="text" name="key_search" placeholder="Enter Key Word..." class="key_search">
-                </div>
-                <div class="column col_4 clearfix">
-                    <div class="col_5 column">
-                        <input type="text" name="start_date" class="flatpickr" placeholder="Start Date">
-                    </div>
-
-                    <div class="col_5 column">
-                        <input type="text" name="stop_date" class="flatpickr" placeholder="End Date">
-                    </div>
-
-                    <div class="col_1 column">
-                        <button type="button" id="dashboard_filter_campaign" class="btn small_btn">Filter</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- campaigns table -->
-            <table class="display dashboard_campaigns dashboard_campaigns_filtered">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Brand</th>
-                    <th>Start Date</th>
-                    <th>Budget</th>
-                    <th>Ad Slots</th>
-                    <th>Status</th>
-                    @if(Auth::user()->companies()->count() > 1)
-                        <th>Station</th>
-                    @endif
-                </tr>
-                </thead>
-            </table>
-            <!-- end -->
-        </div>
-
     </div>
 @stop
 
@@ -210,66 +157,66 @@
                 altInput: true,
             });
 
-            $(".dashboard_campaigns_filtered").dataTable().fnDestroy();
+            // $(".dashboard_campaigns_filtered").dataTable().fnDestroy();
 
-            var campaignFilter =  $('.dashboard_campaigns').DataTable({
-                dom: 'Blfrtip',
-                paging: true,
-                serverSide: true,
-                processing: true,
-                aaSorting: [],
-                oLanguage: {
-                    sLengthMenu: "_MENU_"
-                },
-                ajax: {
-                    url: '/agency/dashboard/campaigns',
-                    data: function (d) {
-                        d.start_date = $('input[name=start_date]').val();
-                        d.stop_date = $('input[name=stop_date]').val();
-                        d.filter_user = $('#filter_user').val();
-                    }
-                },
-                columns: getColumns(),
+            // var campaignFilter =  $('.dashboard_campaigns').DataTable({
+            //     dom: 'Blfrtip',
+            //     paging: true,
+            //     serverSide: true,
+            //     processing: true,
+            //     aaSorting: [],
+            //     oLanguage: {
+            //         sLengthMenu: "_MENU_"
+            //     },
+            //     ajax: {
+            //         url: '/agency/dashboard/campaigns',
+            //         data: function (d) {
+            //             d.start_date = $('input[name=start_date]').val();
+            //             d.stop_date = $('input[name=stop_date]').val();
+            //             d.filter_user = $('#filter_user').val();
+            //         }
+            //     },
+            //     columns: getColumns(),
 
-            });
+            // });
 
-            function getColumns()
-            {
-                if(companies > 1){
-                    return [
-                                    {data: 'id', name: 'id'},
-                                    {data: 'name', name: 'name'},
-                                    {data: 'brand', name: 'brand'},
-                                    {data: 'start_date', name: 'start_date'},
-                                    {data: 'budget', name: 'budget'},
-                                    {data: 'adslots', name: 'adslots'},
-                                    {data: 'status', name: 'status'},
-                                    {data: 'station', name: 'station'}
-                                ]
-                }else{
-                    return [
-                                    {data: 'id', name: 'id'},
-                                    {data: 'name', name: 'name'},
-                                    {data: 'brand', name: 'brand'},
-                                    {data: 'start_date', name: 'start_date'},
-                                    {data: 'budget', name: 'budget'},
-                                    {data: 'adslots', name: 'adslots'},
-                                    {data: 'status', name: 'status'},
-                                ]
-                }
-            }
+            // function getColumns()
+            // {
+            //     if(companies > 1){
+            //         return [
+            //                         // {data: 'id', name: 'id'},
+            //                         {data: 'name', name: 'name'},
+            //                         {data: 'brand', name: 'brand'},
+            //                         {data: 'start_date', name: 'start_date'},
+            //                         {data: 'budget', name: 'budget'},
+            //                         {data: 'adslots', name: 'adslots'},
+            //                         {data: 'status', name: 'status'},
+            //                         {data: 'station', name: 'station'}
+            //                     ]
+            //     }else{
+            //         return [
+            //                         // {data: 'id', name: 'id'},
+            //                         {data: 'name', name: 'name'},
+            //                         {data: 'brand', name: 'brand'},
+            //                         {data: 'start_date', name: 'start_date'},
+            //                         {data: 'budget', name: 'budget'},
+            //                         {data: 'adslots', name: 'adslots'},
+            //                         {data: 'status', name: 'status'},
+            //                     ]
+            //     }
+            // }
 
-            $('#dashboard_filter_campaign').on('click', function() {
-                campaignFilter.draw();
-            });
+            // $('#dashboard_filter_campaign').on('click', function() {
+            //     campaignFilter.draw();
+            // });
 
-            $('.key_search').on('keyup', function(){
-                campaignFilter.search($(this).val()).draw() ;
-            })
+            // $('.key_search').on('keyup', function(){
+            //     campaignFilter.search($(this).val()).draw() ;
+            // })
 
-            $('#filter_user').on('change', function() {
-                campaignFilter.draw();
-            });
+            // $('#filter_user').on('change', function() {
+            //     campaignFilter.draw();
+            // });
 
             function channel_pie(channel, percent_active, percent_pending, percent_finished){
                 Highcharts.chart(channel,{

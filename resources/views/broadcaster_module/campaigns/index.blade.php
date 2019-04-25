@@ -1,7 +1,7 @@
 @extends('layouts.faya_app')
 
 @section('title')
-    <title> FAYA | ACTIVE CAMPAIGNS</title>
+    <title> FAYA | CAMPAIGNS</title>
 @stop
 
 @section('content')
@@ -15,27 +15,35 @@
     <!-- subheader -->
         <div class="sub_header clearfix mb pt">
             <div class="column col_6">
-                <h2 class="sub_header">Active Campaigns</h2>
+                <!-- <h2 class="sub_header">Active Campaigns</h2> -->
+                <h2 class="sub_header">Campaigns</h2>
             </div>
         </div>
 
         <div class="the_frame client_dets mb4">
 
             <div class="filters border_bottom clearfix">
-                <div class="column col_2 p-t">
-                    <p class="uppercased weight_medium">All Campaigns</p>
-                </div>
-                <div class="column select_wrap col_3 clearfix">
+                <div class="column select_wrap col_2 clearfix">
                     <select name="filter_user" class="filter_user" id="filter_user">
                         <option value="">All Campaigns</option>
                         <option value="agency">Agency Campaigns</option>
                         <option value="broadcaster">Walk-In Campaigns</option>
                     </select>
                 </div>
+                <div class="column select_wrap col_2 clearfix">
+                    <select name="filter_status" class="filter_status" id="filter_status">
+                        <option value="">All Statuses</option>
+                        <option value="on_hold" @if($status === "on_hold") selected="selected" @endif>On Hold</option>
+                        <option value="pending" @if($status === "pending") selected="selected" @endif>Pending</option>
+                        <option value="active" @if($status === "active") selected="selected" @endif>Active</option>
+                        <option value="expired" @if($status === "expired") selected="selected" @endif>Finished</option>
+                    </select>
+                </div>
+
                 <div class="column col_3 clearfix">
                     <input type="text" name="key_search" placeholder="Enter Key Word..." class="key_search">
                 </div>
-                <div class="column col_4 clearfix">
+                <div class="column col_5 clearfix">
                     <div class="col_5 column">
                         <input type="text" name="start_date" class="flatpickr" placeholder="Start Date">
                     </div>
@@ -92,9 +100,23 @@
         <?php echo "var companies =".Auth::user()->companies()->count().";\n"; ?>
 
         $(document).ready(function( $ ) {
-            flatpickr(".flatpickr", {
-                altInput: true,
-            });
+            flatpickr(".flatpickr", {altInput: true});
+
+            function getColumns() {
+                var columns = [
+                    {data: 'name', name: 'name'},
+                    {data: 'brand', name: 'brand'},
+                    {data: 'start_date', name: 'start_date'},
+                    {data: 'budget', name: 'budget'},
+                    {data: 'adslots', name: 'adslots'},
+                    {data: 'status', name: 'status'},
+                ];
+                if(companies > 1){
+                    columns.push({data: 'station', name: 'station'});
+                }
+                return columns;
+            }
+
             var campaignFilter =  $('.dashboard_campaigns').DataTable({
                 dom: 'Blfrtip',
                 paging: true,
@@ -109,39 +131,17 @@
                     sLengthMenu: "_MENU_"
                 },
                 ajax: {
-                    url: '/campaign/all-active-campaigns/data',
+                    // url: '/campaign/all-active-campaigns/data',
+                    url: '/campaign/all-campaigns/data',
                     data: function (d) {
                         d.start_date = $('input[name=start_date]').val();
                         d.stop_date = $('input[name=stop_date]').val();
                         d.filter_user = $('#filter_user').val();
+                        d.status = $('#filter_status').val();
                     }
                 },
                 columns: getColumns(),
             });
-
-            function getColumns()
-            {
-                if(companies > 1){
-                    return [
-                        {data: 'name', name: 'name'},
-                        {data: 'brand', name: 'brand'},
-                        {data: 'start_date', name: 'start_date'},
-                        {data: 'budget', name: 'budget'},
-                        {data: 'adslots', name: 'adslots'},
-                        {data: 'status', name: 'status'},
-                        {data: 'station', name: 'station'}
-                    ]
-                }else{
-                    return [
-                        {data: 'name', name: 'name'},
-                        {data: 'brand', name: 'brand'},
-                        {data: 'start_date', name: 'start_date'},
-                        {data: 'budget', name: 'budget'},
-                        {data: 'adslots', name: 'adslots'},
-                        {data: 'status', name: 'status'},
-                    ]
-                }
-            }
 
             $('#dashboard_filter_campaign').on('click', function() {
                 campaignFilter.draw();
