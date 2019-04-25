@@ -26,6 +26,7 @@ use Yajra\DataTables\DataTables;
 use Vanguard\Services\MediaPlan\GetMediaPlans;
 use Vanguard\Services\Campaign\CampaignList;
 
+use Log;
 
 class DashboardController extends Controller
 {
@@ -249,8 +250,7 @@ class DashboardController extends Controller
         $mpo_list_service = new MpoList($companies_id, null,null);
         $campaign_on_hold_service = new CampaignOnhold($companies_id);
         $periodic_revenues = $this->periodicRevenueChart($companies_id, $year);
-
-        return [
+        $response = [
                 'walkIns' => $company_client_service->getCompanyClients(),
                 'pending_invoices' => $pending_invoice_service->getPendingInvoice(),
                 'brands' => $client_brand_service->getBrandCreatedByCompany(),
@@ -258,7 +258,8 @@ class DashboardController extends Controller
                 'pending_mpos' => $mpo_list_service->pendingMpoList(),
                 'campaign_on_hold' => $campaign_on_hold_service->getCampaignsOnhold(),
                 'periodic_revenues' => $periodic_revenues
-            ];
+        ];
+        return response()->json($response);
     }
 
     public function filteredCampaignListTable()
