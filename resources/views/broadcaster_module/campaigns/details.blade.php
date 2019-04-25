@@ -25,7 +25,7 @@
 
             <div class="clearfix client_personal campaign_filter">
                 @if($campaign_details['campaign_det']['agency_id'])
-                    <div class="column col_3">
+                    <div class="column col_2">
                         <span class="small_faint">Client</span>
 
                         <div class="select_wrap">
@@ -36,7 +36,7 @@
                         </div>
                     </div>
                 @else
-                    <div class="column col_3">
+                    <div class="column col_2">
                         <span class="small_faint">Client</span>
 
                         <div class="select_wrap">
@@ -52,7 +52,7 @@
                         </div>
                     </div>
                 @endif
-                <div class="column col_3">
+                <div class="column col_2">
                     <span class="small_faint">Campaign Name</span>
                     <div class="show_this"></div>
                     <div class="select_wrap load_this" id="hide_this">
@@ -68,39 +68,45 @@
                     </div>
                 </div>
 
-                <div class="column col_3">
+                <div class="column col_2">
                     <span class="small_faint block_disp">Media Type</span>
                     <select name="channel" id="channel" >
                         <option class="{{ strtolower($campaign_details['campaign_det']['channel']->channel) }}" selected value="{{ $campaign_details['campaign_det']['channel']->id }}">{{ $campaign_details['campaign_det']['channel']->channel }}</option>
                     </select>
                 </div>
 
-                <div class="column col_3 check_this">
+                <div class="column col_2 check_this">
                     <span class="small_faint block_disp">Media Channel</span>
                     <select name="media" id="media">
                         <option class="" selected value="{{ $campaign_details['broadcasters'][0]->id }}">{{ $campaign_details['broadcasters'][0]->name }}</option>
                     </select>
                 </div>
+
+                <div class="column col_2 the_stats">
+                    <span class="weight_medium small_faint uppercased m-b block_disp">Total Budget</span>
+                    <p class="weight_medium">N{{ $campaign_details['campaign_det']['campaign_cost'] }}</p>
+                </div>
+
             </div>
         </div>
 
 
         <!-- main charts -->
-        @if($campaign_details['campaign_det']['status'] === 'active' || $campaign_details['campaign_det']['status'] === 'expired')
+        @if($campaign_details['campaign_det']['status'] === 'active-not' || $campaign_details['campaign_det']['status'] === 'expired-not')
             <div class="clearfix mb3">
 
-            <div class="column col_8 the_frame main_campaign_chart">
+            <div class="column col_8 the_frame broadcaster_campaign_chart">
 
                 <!-- filter -->
                 <div class="filters clearfix compliance_load">
-                    <div class="column col_7">
+                    <!-- <div class="column col_7">
                         <h4 class="small_faint 7ppercased weight_medium">Compliance</h4>
                         <div class="small_faint weight_medium add_reports">
 
                         </div>
                         <p><br></p>
-                    </div>
-                    <div class="column col_4 clearfix">
+                    </div> -->
+                    <!-- <div class="column col_4 clearfix">
                         <form action="{{ route('broadcaster.campaign_details.compliance') }}" method="GET" id="compliance-form">
                             <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
                                 <i class="fa fa-calendar"></i>&nbsp;
@@ -109,7 +115,8 @@
                                 <input type="hidden" id="end_date">
                             </div>
                         </form>
-                    </div>
+                    </div> -->
+                    <!-- <div id="container" style="min-width: 310px; height: 370px; margin: 0 auto"></div> -->
                     <div id="container" style="min-width: 310px; height: 370px; margin: 0 auto"></div>
                 </div>
                 <!-- end -->
@@ -118,20 +125,20 @@
 
             <div class="column col_4">
                 <div class="the_frame clearfix _stat mb">
-                    <div class="column col_3 the_stats">
+                    <!-- <div class="column col_3 the_stats">
                         <span class="weight_medium small_faint uppercased m-b block_disp">Target CPM</span>
                         <p class="weight_medium">23</p>
-                    </div>
+                    </div> -->
 
-                    <div class="column col_3 the_stats">
+                    <!-- <div class="column col_3 the_stats">
                         <span class="weight_medium small_faint uppercased m-b block_disp">Reached CPM</span>
                         <p class="weight_medium">23</p>
-                    </div>
+                    </div> -->
 
-                    <div class="column col_6 the_stats">
+                    <!-- <div class="column col_12 the_stats">
                         <span class="weight_medium small_faint uppercased m-b block_disp">Total Budget</span>
                         <p class="weight_medium">N{{ $campaign_details['campaign_det']['campaign_cost'] }}</p>
-                    </div>
+                    </div> -->
                 </div>
 
                 <div class="the_frame _pie media_mix_load">
@@ -427,88 +434,88 @@
 
             });
 
-            Highcharts.chart('media_mix',{
-                chart: {
-                    renderTo: 'container',
-                    type: 'pie',
-                },
-                title: {
-                    text: ''
-                },
+            // Highcharts.chart('media_mix',{
+            //     chart: {
+            //         renderTo: 'container',
+            //         type: 'pie',
+            //     },
+            //     title: {
+            //         text: ''
+            //     },
 
-                credits: {
-                    enabled: false
-                },
-                plotOptions: {
-                    pie: {
-                        allowPointSelect: false,
-                        dataLabels: {
-                            enabled: true,
-                            formatter: function () {
-                                return this.y > 1 ? '<b>' + this.point.name + ':</b> ' +
-                                    this.y + '%' : null;
-                            }
-                        }
-                    }
-                },
-                exporting: { enabled: false },
-                series: [{
-                    innerSize: '50%',
-                    data: media_mix_data
-                }]
-            });
+            //     credits: {
+            //         enabled: false
+            //     },
+            //     plotOptions: {
+            //         pie: {
+            //             allowPointSelect: false,
+            //             dataLabels: {
+            //                 enabled: true,
+            //                 formatter: function () {
+            //                     return this.y > 1 ? '<b>' + this.point.name + ':</b> ' +
+            //                         this.y + '%' : null;
+            //                 }
+            //             }
+            //         }
+            //     },
+            //     exporting: { enabled: false },
+            //     series: [{
+            //         innerSize: '50%',
+            //         data: media_mix_data
+            //     }]
+            // });
 
-            Highcharts.chart('container', {
+            // Highcharts.chart('container', {
 
-                chart: {
-                    type: 'column'
-                },
+            //     chart: {
+            //         type: 'column'
+            //     },
 
-                title: {
-                    text: ''
-                },
+            //     title: {
+            //         text: ''
+            //     },
 
-                xAxis: {
-                    categories: campaign_price_graph.date
-                },
-                tooltip: {
-                    enabled: false
-                },
-                yAxis: {
-                    allowDecimals: false,
-                    min: 0,
-                    title: {
-                        text: 'Total Amount'
-                    }
-                },
-                credits: {
-                    enabled: false
-                },
-                exporting: { enabled: false },
-                tooltip: {
-                    formatter: function () {
-                        return '<b>' + this.x + '</b><br/>' +
-                            this.series.name + ': ' + this.y + '<br/>';
-                    },
+            //     xAxis: {
+            //         categories: campaign_price_graph.date
+            //     },
+            //     tooltip: {
+            //         enabled: false
+            //     },
+            //     yAxis: {
+            //         allowDecimals: false,
+            //         min: 0,
+            //         title: {
+            //             text: 'Total Amount'
+            //         }
+            //     },
+            //     credits: {
+            //         enabled: false
+            //     },
+            //     exporting: { enabled: false },
+            //     tooltip: {
+            //         formatter: function () {
+            //             return '<b>' + this.x + '</b><br/>' +
+            //                 this.series.name + ': ' + this.y + '<br/>';
+            //         },
 
-                },
+            //     },
 
-                plotOptions: {
-                    column: {
-                        stacking: 'normal'
-                    },
-                    bar: {
-                        animation: true,
-                        dataLabels: {
-                            enabled: true,
-                            align: "center",
-                            color: "#FFFFFF"
-                        }
-                    }
-                },
+            //     plotOptions: {
+            //         column: {
+            //             stacking: 'normal'
+            //         },
+            //         bar: {
+            //             animation: true,
+            //             dataLabels: {
+            //                 enabled: true,
+            //                 align: "center",
+            //                 color: "#FFFFFF"
+            //             }
+            //         }
+            //     },
 
-                series: campaign_price_graph.campaign_price_data
-            });
+            //     series: campaign_price_graph.campaign_price_data
+            // });
 
         });
 
@@ -518,88 +525,88 @@
             var start = moment(start_php);
             var end =  moment(end_php);
 
-            function cb(start, end) {
-                $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+            // function cb(start, end) {
+            //     $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
 
-                var start_date = start.format('YYYY-MM-DD');
-                var stop_date = end.format('YYYY-MM-DD');
-                var url = $("#compliance-form").attr("action");
-                var campaign_id = "<?php echo $campaign_details['campaign_det']['campaign_id']; ?>";
-                var media_type = $("#channel").val();
-                var media_channel = $("#media").val();
-                if(media_type != null && media_channel != null){
-                    $.ajax({
-                        method: "GET",
-                        url: url,
-                        data: { campaign_id : campaign_id,start_date: start_date, stop_date: stop_date, media_channel: media_channel },
-                        success: function (data) {
-                            var small_html = '<p>'+ data.percentage_compliance +'</p>'
-                            $(".add_reports").html(small_html);
-                            Highcharts.chart('container', {
+            //     var start_date = start.format('YYYY-MM-DD');
+            //     var stop_date = end.format('YYYY-MM-DD');
+            //     var url = $("#compliance-form").attr("action");
+            //     var campaign_id = "<?php echo $campaign_details['campaign_det']['campaign_id']; ?>";
+            //     var media_type = $("#channel").val();
+            //     var media_channel = $("#media").val();
+            //     if(media_type != null && media_channel != null){
+            //         $.ajax({
+            //             method: "GET",
+            //             url: url,
+            //             data: { campaign_id : campaign_id,start_date: start_date, stop_date: stop_date, media_channel: media_channel },
+            //             success: function (data) {
+            //                 var small_html = '<p>'+ data.percentage_compliance +'</p>'
+            //                 $(".add_reports").html(small_html);
+            //                 Highcharts.chart('container', {
 
-                                chart: {
-                                    type: 'column'
-                                },
+            //                     chart: {
+            //                         type: 'column'
+            //                     },
 
-                                title: {
-                                    text: ''
-                                },
+            //                     title: {
+            //                         text: ''
+            //                     },
 
-                                xAxis: {
-                                    categories: data.date
-                                },
+            //                     xAxis: {
+            //                         categories: data.date
+            //                     },
 
-                                yAxis: {
-                                    allowDecimals: false,
-                                    min: 0,
-                                    title: {
-                                        text: 'Total Amount'
-                                    }
-                                },
-                                credits: {
-                                    enabled: false
-                                },
-                                exporting: { enabled: false },
-                                tooltip: {
-                                    formatter: function () {
-                                        return '<b>' + this.x + '</b><br/>' +
-                                            this.series.name + ': ' + this.y + '<br/>';
-                                    },
+            //                     yAxis: {
+            //                         allowDecimals: false,
+            //                         min: 0,
+            //                         title: {
+            //                             text: 'Total Amount'
+            //                         }
+            //                     },
+            //                     credits: {
+            //                         enabled: false
+            //                     },
+            //                     exporting: { enabled: false },
+            //                     tooltip: {
+            //                         formatter: function () {
+            //                             return '<b>' + this.x + '</b><br/>' +
+            //                                 this.series.name + ': ' + this.y + '<br/>';
+            //                         },
 
-                                },
+            //                     },
 
-                                plotOptions: {
-                                    column: {
-                                        stacking: 'normal'
-                                    }
-                                },
+            //                     plotOptions: {
+            //                         column: {
+            //                             stacking: 'normal'
+            //                         }
+            //                     },
 
-                                series: data.compliance_data
-                            });
+            //                     series: data.compliance_data
+            //                 });
 
-                        }
-                    })
-                }else{
-                    // toastr.error("Please select the media type and channel");
-                }
+            //             }
+            //         })
+            //     }else{
+            //         // toastr.error("Please select the media type and channel");
+            //     }
 
 
-            }
+            // }
 
-            $('#reportrange').daterangepicker({
-                startDate: start,
-                endDate: end,
-                ranges: {
-                    'Ongoing': [moment(start_php), moment(end_php)],
-                    'Last Week': [moment().subtract(6, 'days'), moment()],
-                    'One Month': [moment().subtract(1, 'month').startOf('month'), moment()],
-                    'Three Month': [moment().subtract(3, 'month').startOf('month'), moment()],
-                    'Six Month': [moment().subtract(6, 'month').startOf('month'), moment()],
-                    '1 Year': [moment().subtract(12, 'month').startOf('month'), moment()],
-                }
-            }, cb);
+            // $('#reportrange').daterangepicker({
+            //     startDate: start,
+            //     endDate: end,
+            //     ranges: {
+            //         'Ongoing': [moment(start_php), moment(end_php)],
+            //         'Last Week': [moment().subtract(6, 'days'), moment()],
+            //         'One Month': [moment().subtract(1, 'month').startOf('month'), moment()],
+            //         'Three Month': [moment().subtract(3, 'month').startOf('month'), moment()],
+            //         'Six Month': [moment().subtract(6, 'month').startOf('month'), moment()],
+            //         '1 Year': [moment().subtract(12, 'month').startOf('month'), moment()],
+            //     }
+            // }, cb);
 
-            cb(start, end);
+            // cb(start, end);
 
         })
 

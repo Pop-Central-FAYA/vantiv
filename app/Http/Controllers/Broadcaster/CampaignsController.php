@@ -19,7 +19,7 @@ use Yajra\Datatables\Datatables;
 use Carbon\Carbon;
 use Session;
 use Vanguard\Http\Controllers\Controller;
-
+use Log;
 
 class CampaignsController extends Controller
 {
@@ -415,7 +415,6 @@ class CampaignsController extends Controller
         $all_clients = Utilities::switch_db('api')->select("SELECT * FROM walkIns where broadcaster_id = '$broadcaster_id'");
         $media_mix_data = $this->getMediaMix($campaign_details);
         $campaign_price_graph = $this->getCampaignPriceGraph($campaign_details);
-
         return view('broadcaster_module.campaigns.details', compact('campaign_details', 'all_campaigns', 'all_clients', 'media_mix_data', 'campaign_price_graph'));
     }
 
@@ -498,8 +497,8 @@ class CampaignsController extends Controller
         $compliance_data = [];
 
         $compliances = $this->getDateAndCampaignCompliances($campaign_id, $start_date, $stop_date, $broadcaster_id);
-        $formatted_compliances = $this->formatToGraphFormat($compliances['compliance_data'], $campaign_id);
-        //dd($compliances);
+        $formatted_compliances = $this->formatToGraphFormat($compliances, $campaign_id);
+
         foreach ($formatted_compliances['formatted_compliances'] as $compliance){
             if($compliance['stack'] === 'TV'){
                 $color = '#5281FE';
@@ -541,38 +540,37 @@ class CampaignsController extends Controller
                         ->whereBetween('broadcaster_playouts.played_at', array($start_date, $stop_date))
                         ->groupBy( 'broadcaster_playouts.broadcaster_id')
                         ->get();
-        //dd($compliances);
+        return $compliances;
     }
 
     public function formatToGraphFormat($compliances, $campaign_id)
     {
-        $compliances_array = json_decode(json_encode($compliances), true);
-
         $formatted_compliances = [];
         $total_spent = 0;
-        foreach($compliances_array as $key=>$value){
-            $total_spent += $value['amount'];
-            if(!array_key_exists($value['broadcaster_id'],$formatted_compliances)){
-                $formatted_compliances[$value['broadcaster_id']] = $value;
-                unset($formatted_compliances[$value['broadcaster_id']]['amount']);
-                $formatted_compliances[$value['broadcaster_id']]['date_reference'] =array();
-                $formatted_compliances[$value['broadcaster_id']]['amount'] =array();
+        return (['formatted_compliances' => [], 'percentage_compliance' => 0]);
 
-                array_push($formatted_compliances[$value['broadcaster_id']]['date_reference'],$value['time']);
-                array_push($formatted_compliances[$value['broadcaster_id']]['amount'],(integer)$value['amount']);
-            }else
-            {
-                array_push($formatted_compliances[$value['broadcaster_id']]['date_reference'],$value['time']);
-                array_push($formatted_compliances[$value['broadcaster_id']]['amount'],(integer)$value['amount']);
-            }
+        // foreach($compliances as $value){
+        //     $total_spent += $value['amount'];
+        //     if(!array_key_exists($value['broadcaster_id'],$formatted_compliances)){
+        //         $formatted_compliances[$value['broadcaster_id']] = $value;
+        //         unset($formatted_compliances[$value['broadcaster_id']]['amount']);
+        //         $formatted_compliances[$value['broadcaster_id']]['date_reference'] =array();
+        //         $formatted_compliances[$value['broadcaster_id']]['amount'] =array();
 
-        }
+        //         array_push($formatted_compliances[$value['broadcaster_id']]['date_reference'],$value['time']);
+        //         array_push($formatted_compliances[$value['broadcaster_id']]['amount'],(integer)$value['amount']);
+        //     }else
+        //     {
+        //         array_push($formatted_compliances[$value['broadcaster_id']]['date_reference'],$value['time']);
+        //         array_push($formatted_compliances[$value['broadcaster_id']]['amount'],(integer)$value['amount']);
+        //     }
+        // }
 
-        $total_amount_budgeted = Utilities::switch_db('api')->select("SELECT * from payments where campaign_id = '$campaign_id'");
+        // $total_amount_budgeted = Utilities::switch_db('api')->select("SELECT * from payments where campaign_id = '$campaign_id'");
 
-        $percentage_compliance = round(($total_spent / $total_amount_budgeted[0]->total) * 100);
+        // $percentage_compliance = round(($total_spent / $total_amount_budgeted[0]->total) * 100);
 
-        return (['formatted_compliances' => $formatted_compliances, 'percentage_compliance' => $percentage_compliance]);
+        // return (['formatted_compliances' => $formatted_compliances, 'percentage_compliance' => $percentage_compliance]);
     }
 
     public function getCampaignOnHold()
