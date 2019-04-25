@@ -1,7 +1,7 @@
 @extends('layouts.faya_app')
 
 @section('title')
-    <title> FAYA | Time Belt Management </title>
+    <title> FAYA | Time Belts </title>
 @stop
 
 @section('content')
@@ -15,7 +15,7 @@
     <!-- subheader -->
         <div class="sub_header clearfix mb pt">
             <div class="column col_6">
-                <h2 class="sub_header">Time Belt Management</h2>
+                <h2 class="sub_header">Time Belts</h2>
             </div>
         </div>
 

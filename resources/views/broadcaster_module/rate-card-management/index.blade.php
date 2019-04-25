@@ -1,7 +1,7 @@
 @extends('layouts.faya_app')
 
 @section('title')
-    <title> FAYA | Rate Card Management </title>
+    <title> FAYA | Rate Cards </title>
 @stop
 
 @section('content')
@@ -15,7 +15,7 @@
     <!-- subheader -->
         <div class="sub_header clearfix mb pt">
             <div class="column col_6">
-                <h2 class="sub_header">Rate Card Management</h2>
+                <h2 class="sub_header">Rate Cards</h2>
             </div>
         </div>
 
