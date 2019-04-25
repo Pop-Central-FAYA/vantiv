@@ -27,7 +27,7 @@ class CriteriasTableSeeder extends Seeder
         		'LSM 1 (E)', 'LSM 2 (E)', 'LSM 3 (D)', 'LSM 4 (D)', 'LSM 5 (D)', 'LSM 6 (C2)', 'LSM 7 (C2)', 'LSM 8 (C2)', 'LSM 9 (C1)', 'LSM 10 (C1)', 'LSM 11 (B)', 'LSM 12 (A)'
         	],
         	'social_classes' => [
-        		'A', 'B', 'C', 'D', 'E', 'F'
+        		'A', 'B', 'C', 'D', 'E'
         	],
         	'media_types' => [
         		'Tv', 'Radio', 'All'

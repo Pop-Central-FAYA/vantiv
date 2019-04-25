@@ -48,6 +48,10 @@ Route::group(['middleware' => 'auth'], function () {
         'uses' => 'ProfileManagementsController@updateDetails'
     ]);
 
+    Route::group(['prefix' => 'user'], function() {
+       Route::get('/invite', 'UserController@inviteUser')->name('user.invite');
+    });
+
     /*
      * Super Admin
      */
