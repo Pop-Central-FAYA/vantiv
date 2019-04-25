@@ -2,7 +2,7 @@
 
 namespace Vanguard\Services\RateCard;
 
-use Vanguard\Models\RateCard\Ratecard;
+use Vanguard\Models\Ratecard\Ratecard;
 
 class GetRateCardById
 {
