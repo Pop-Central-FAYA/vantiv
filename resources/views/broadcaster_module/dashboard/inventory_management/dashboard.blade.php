@@ -135,42 +135,48 @@
             }
 
             initChart(data) {
-                this.chart_object = Highcharts.chart(this.chart_element, {
-                    chart: {type: 'spline'},
-                    title: {text: ''},
-                    credits: {enabled: false},
-                    exporting: {enabled: false},
-                    xAxis: {
-                        title: {text: 'Time Belt'},
-                        categories: data.time_belts
-                    },
-                    yAxis: {
-                        title: {text: 'Revenue'},
-                        labels: {
-                            formatter: function() {
-                                return (String.fromCharCode(0x20A6) + numberFormatter.format(this.value)).replace(".00", "");
-                            },
-                        }
-                    },
-                    tooltip: {crosshairs: true,shared: true},
-                    plotOptions: {spline: {marker: {radius: 4, lineColor: '#666666', lineWidth: 1}}},
-                    series: [{
-                        name: 'Revenue',
-                        marker: {symbol: 'square'},
-                        data: data.revenue
-                    }]
-                });
-                return this.chart_object;
+                if (data.revenue !== null && data.time_belts !== null && data.revenue.length > 0 && data.time_belts.length > 0) {
+                        this.chart_object = Highcharts.chart(this.chart_element, {
+                        chart: {type: 'spline'},
+                        title: {text: ''},
+                        credits: {enabled: false},
+                        exporting: {enabled: false},
+                        xAxis: {
+                            title: {text: 'Time Belt'},
+                            categories: data.time_belts
+                        },
+                        yAxis: {
+                            title: {text: 'Revenue'},
+                            labels: {
+                                formatter: function() {
+                                    return (String.fromCharCode(0x20A6) + numberFormatter.format(this.value)).replace(".00", "");
+                                },
+                            }
+                        },
+                        tooltip: {crosshairs: true,shared: true},
+                        plotOptions: {spline: {marker: {radius: 4, lineColor: '#666666', lineWidth: 1}}},
+                        series: [{
+                            name: 'Revenue',
+                            marker: {symbol: 'square'},
+                            data: data.revenue
+                        }]
+                    });
+                    return this.chart_object;
+                }
+                return null;
             }
 
             refreshChart(data) {
-                var update_options = {
-                    name: 'Revenue',
-                    marker: {symbol: 'square'},
-                    data: data.revenue
+                if (data.revenue !== null && data.revenue.length > 0 && this.chart_object !== null) {
+                    var update_options = {
+                        name: 'Revenue',
+                        marker: {symbol: 'square'},
+                        data: data.revenue
+                    }
+                    this.chart_object.xAxis[0].update({categories: data.time_belts}, false);
+                    this.chart_object.series[0].update(update_options, true);
                 }
-                this.chart_object.xAxis[0].update({categories: data.time_belts}, false);
-                this.chart_object.series[0].update(update_options, true);
+                
             }
         }
 
@@ -198,8 +204,13 @@
                 success: function(data) {
                     toastr.clear();
                     if (data.status === 'success') {
-                        toastr.success("Filtered result retrieved");
-                        time_belt_revenue.refreshChart(data.data);
+                        if (data.data.revenue !== null && data.data.revenue.length > 0) {
+                            toastr.success("Filtered result retrieved");
+                            time_belt_revenue.refreshChart(data.data);
+                        } else {
+                            toastr.error("No results were retrived, try another combination please");
+                        }
+                        
                     } else {
                         toastr.error('An unknown error has occurred, please try again');
                         return;
