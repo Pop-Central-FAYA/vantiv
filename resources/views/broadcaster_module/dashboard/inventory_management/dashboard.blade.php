@@ -25,9 +25,9 @@
                 <button class="btn full block_disp uppercased align_center media-type-toggle-btn">TV</button>
             </div>
 
-            <div class="column col_1">
+            <!-- <div class="column col_1">
                 <button id="view-graph" class="btn full block_disp uppercased align_center media-type-toggle-btn inactive-media-type-toggle-btn">RADIO</button>
-            </div>
+            </div> -->
         </div>
 
         <hr class="border_top_color clearfix mb3" />

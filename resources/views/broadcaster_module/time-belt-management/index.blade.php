@@ -51,7 +51,7 @@
                     <th>Program</th>
                     <th>Revenue</th>
                     <th>Rate Card</th>
-                    <th>Details</th>
+                    <!-- <th>Details</th> -->
                 </tr>
                 </thead>
             </table>
@@ -106,7 +106,7 @@
                         {data: 'program', name: 'program'},
                         {data: 'revenue', name: 'revenue'},
                         {data: 'rate_card', name: 'rate_card'},
-                        {data: 'details', name: 'details'}
+                        // {data: 'details', name: 'details'}
                     ]
                 }else{
                     return [
@@ -115,7 +115,7 @@
                         {data: 'program', name: 'program'},
                         {data: 'revenue', name: 'revenue'},
                         {data: 'rate_card', name: 'rate_card'},
-                        {data: 'details', name: 'details'}
+                        // {data: 'details', name: 'details'}
                     ]
                 }
             }

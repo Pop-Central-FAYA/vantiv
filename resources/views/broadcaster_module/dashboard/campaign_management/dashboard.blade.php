@@ -155,6 +155,8 @@
 
         $(document).ready(function( $ ) {
 
+            const numberFormatter = new Intl.NumberFormat('en-US', {});
+
             flatpickr(".flatpickr", {
                 altInput: true,
             });
@@ -427,10 +429,15 @@
              }else{
                 var chart = Highcharts.chart('containerTotal', {
 
-                    title: {
-                        text: ''
-                    },
-
+                    title: {text: ''},
+                    yAxis: {
+                            title: {text: 'Number of Campaigns'},
+                            labels: {
+                                formatter: function() {
+                                    return numberFormatter.format(this.value).replace(".00", "");
+                                },
+                            }
+                        },
                     xAxis: {
                         categories: campaign_month
                     },
