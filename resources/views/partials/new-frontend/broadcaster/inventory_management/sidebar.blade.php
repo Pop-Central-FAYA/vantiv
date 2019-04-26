@@ -29,9 +29,7 @@
 </div>
 
 <div class="_nav_button">
-@if(Auth::user()->hasRole('ssp.super_admin') || Auth::user()->hasRole('ssp.admin'))
     <a href="{{ route('broadcaster.campaign_management') }}" class="btn full block_disp uppercased align_center _campaign_mgt">Campaign Management</a>
-@endif
 </div>
 
 </div>

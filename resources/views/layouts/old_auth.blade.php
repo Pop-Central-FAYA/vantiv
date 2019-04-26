@@ -34,7 +34,7 @@
     </div>
 
     {!! HTML::script('assets/js/jquery-2.1.4.min.js') !!}
-    {!! HTML::script('assets/js/bootstrap.min.js') !!}
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     {!! HTML::script('vendor_public/jsvalidation/js/jsvalidation.js') !!}
     {!! HTML::script('assets/js/as/app.js') !!}
     {!! HTML::script('assets/js/as/btn.js') !!}

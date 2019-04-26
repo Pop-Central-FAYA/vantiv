@@ -3,6 +3,7 @@
 namespace Vanguard;
 
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Collection;
 use Spatie\Permission\Traits\HasRoles;
 use Vanguard\Models\Agency;
 use Vanguard\Models\Broadcaster;
@@ -25,6 +26,7 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract
     use TwoFactorAuthenticatable, CanResetPassword, PresentableTrait, Notifiable, HasRoles;
 
     protected $presenter = UserPresenter::class;
+    protected $guard_name = ['ssp', 'dsp'];
 
 
     /**
@@ -110,6 +112,11 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract
     public function getCompanyTypeAttribute()
     {
         return $this->companies->first()->company_type->name;
+    }
+
+    public function getFullNameAttribute()
+    {
+        return $this->firstname.' '.$this->lastname;
     }
 
     public function getCompanyIdAttribute()
