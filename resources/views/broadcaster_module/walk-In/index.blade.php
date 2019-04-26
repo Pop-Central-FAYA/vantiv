@@ -72,21 +72,24 @@
                         <div class="column col_1">{{ $client->publishers }}</div>
                     @endif
                     <div class="column col_1">
+                        <div class="column col_9"></div>
+                        <div class="column col_3">
+                            <!-- more links -->
+                            <div class="list_more">
+                                <span class="more_icon"></span>
 
-                        <!-- more links -->
-                        <div class="list_more">
-                            <span class="more_icon"></span>
-
-                            <div class="more_more">
-                                <a href="{{ route('walkins.details', ['id' => $client->client_id]) }}">Details</a>
-                                @if(Auth::user()->companies->count() == 1 && $client->walkin_creator == Auth::user()->companies->first()->id)
-                                    <a href="#edit_client{{ $client->client_id }}" class="modal_click">Edit</a>
-                                @endif
-                                {{--<a href="" class="color_red">Delete</a>--}}
+                                <div class="more_more">
+                                    <a href="{{ route('walkins.details', ['id' => $client->client_id]) }}">Details</a>
+                                    @if(Auth::user()->companies->count() == 1 && $client->walkin_creator == Auth::user()->companies->first()->id)
+                                        <a href="#edit_client{{ $client->client_id }}" class="modal_click">Edit</a>
+                                    @endif
+                                    {{--<a href="" class="color_red">Delete</a>--}}
+                                </div>
                             </div>
-                        </div>
 
+                        </div>
                     </div>
+                    
                 </div>
         @endforeach
         <!-- table item end -->
@@ -238,7 +241,7 @@
             </div>
 
             <div class="align_right">
-                <input type="submit" disabled id="submit_walkins" value="Create Client" class="btn uppercased update">
+                <input type="submit" disabled id="submit_walkins" value="Create Walk-In" class="btn uppercased update">
             </div>
 
         </form>
