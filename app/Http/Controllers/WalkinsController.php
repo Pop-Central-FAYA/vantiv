@@ -26,6 +26,7 @@ use Session;
 use Vanguard\Services\Walkin\UpdateWalkIns;
 use Vanguard\Services\Walkin\WalkInLists;
 use Vanguard\Services\Client\ClientBrand as ClientBrands;
+use Vanguard\Support\Enum\UserStatus;
 
 class WalkinsController extends Controller
 {
@@ -145,7 +146,7 @@ class WalkinsController extends Controller
                 $update_walkin_service = new UpdateWalkIns($request->company_logo, $request->company_name, $request->address, $client_id);
                 $update_walkin_service->updateWalkIns();
                 $update_user_service = new UpdateUser($walkin_details->user_id, $request->first_name, $request->last_name, $request->phone,
-                    null, null, null, 'walkins_update');
+                    null, null, null, 'walkins_update', null);
                 $update_user_service->updateUser();
             });
         }catch (\Exception $exception){

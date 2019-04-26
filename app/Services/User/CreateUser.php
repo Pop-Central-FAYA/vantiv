@@ -28,7 +28,7 @@ class CreateUser
 
     public function createUser()
     {
-        $status = 'Active';
+        $status = UserStatus::ACTIVE;
         if($this->registration_source == 'walkins'){
             $status = UserStatus::INACTIVE;
         }

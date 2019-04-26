@@ -34,6 +34,9 @@ Route::get('register/verify/{token}', 'Auth\AuthController@verifyToken');
 
 Route::get('/reg-admin', 'AdminAuthController@getAdmin')->name('admin.register.get');
 
+Route::get('user/complete-account/{id}', 'UserController@getCompleteAccount')->name('user.complete_registration')->middleware('signed');
+Route::post('/user/complete-account/store/{id}', 'UserController@processCompleteAccount');
+
 Route::post('/admin/post', 'AdminAuthController@postRegister')->name('admin.post');
 
 Route::group(['middleware' => 'auth'], function () {
@@ -49,7 +52,9 @@ Route::group(['middleware' => 'auth'], function () {
     ]);
 
     Route::group(['prefix' => 'user'], function() {
-       Route::get('/invite', 'UserController@inviteUser')->name('user.invite');
+        Route::get('/all', 'UserController@index')->name('user.index');
+        Route::get('/invite', 'UserController@inviteUser')->name('user.invite');
+        Route::post('/invite/store', 'UserController@processInvite');
     });
 
     /*

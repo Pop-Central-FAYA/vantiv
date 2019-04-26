@@ -57,5 +57,7 @@ class Kernel extends HttpKernel
         'session.database' => \Vanguard\Http\Middleware\DatabaseSession::class,
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
+
     ];
 }

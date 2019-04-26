@@ -35,7 +35,7 @@ class ProfileManagementsController extends Controller
             $this->uploadImage($request);
         }
         $update_user_service = new UpdateUser(Auth::user()->id, $request->first_name, $request->last_name, $request->phone,
-            $request->address, null, null, 'profile_update');
+            $request->address, null, null, 'profile_update', Auth::user()->status);
         $update_user_service->updateUser();
 
         Session::flash('success', ClassMessages::PROFILE_UPDATE_SUCCESS);
@@ -54,7 +54,7 @@ class ProfileManagementsController extends Controller
         $image_url = AmazonS3::uploadToS3FromPath($filename, $key);
 
         $update_user_service = new UpdateUser(Auth::user()->id, null, null, null,
-                                    null, $image_url, null, 'profile_update');
+                                    null, $image_url, null, 'profile_update', Auth::user()->status);
         return $update_user_service->updateAvatar();
     }
 
@@ -65,7 +65,7 @@ class ProfileManagementsController extends Controller
             'password_confirmation' => 'required|same:password'
         ]);
         $update_user_service = new UpdateUser(Auth::user()->id, null, null, null,
-            null, null, $request->password, 'profile_update');
+            null, null, $request->password, 'profile_update', Auth::user()->status);
         return $update_user_service->updatePassword();
     }
 

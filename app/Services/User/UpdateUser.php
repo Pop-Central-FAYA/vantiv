@@ -14,8 +14,9 @@ class UpdateUser
     protected $avatar;
     protected $password;
     protected $update_source;
+    protected $status;
 
-    public function __construct($user_id, $first_name, $last_name, $phone_number, $address, $avatar, $password, $update_source)
+    public function __construct($user_id, $first_name, $last_name, $phone_number, $address, $avatar, $password, $update_source, $status)
     {
         $this->user_id = $user_id;
         $this->first_name = $first_name;
@@ -25,6 +26,7 @@ class UpdateUser
         $this->avatar = $avatar;
         $this->password = $password;
         $this->update_source = $update_source;
+        $this->status = $status;
     }
 
     public function updateUser()
@@ -34,6 +36,7 @@ class UpdateUser
         $user->lastname = $this->last_name;
         $user->phone_number = $this->phone_number;
         $user->address = $this->update_source == 'profile_update' ? $this->address : $user->address;
+        $user->status = $this->status;
         $user->save();
         return $user;
     }
