@@ -345,12 +345,14 @@
                 var end_date = $("#end_date").val();
                 var campaign_name = $("#campaign_name").val();
                 var min_age = $("#min_age").val();
-                var max_age = $("#min_age").val();
-                    if( min_age  >= max_age){
+                var max_age = $("#max_age").val();
+                    if(min_age  >= max_age){
                           toastr.error('Maximum age must be greater than minimum age');
                           $('.load_this_div').css({
                         opacity : 1
-                    });
+                           });
+                           $('a').css('pointer-events','');
+                           $('.button_create').show();
                          return;
                     }
 
