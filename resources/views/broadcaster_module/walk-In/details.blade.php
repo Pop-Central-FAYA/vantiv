@@ -81,10 +81,11 @@
                                 </div>
                             @endforeach
                         @else
-                            <a id="yearly_client" href="{{ route('client.year', ['client_id' => $client_id]) }}">1Y</a>
+                            <a id="yearly_client" href="{{ route('client.year', ['client_id' => $client_id]) }}" style="visibility: hidden;">1Y</a>
+                            <div></div>
                         @endif
                     </div>
-                    <div class="column col_6 date_filter" id="filtered_publisher_logo" style="display: none">
+                    <div class="column col_6 date_filter" id="filtered_publisher_logo" style="display: none;">
 
                     </div>
 
@@ -95,7 +96,10 @@
                         <input type="text" class="flatpickr" id="stop_date" name="stop_date" placeholder="Stop Date">
                     </div>
                     <div class="column col_2 m-b">
-                        <button type="button" id="filterDate" class="btn small_btn">Filter</button>
+                        <!-- <div class="column col_10"></div> -->
+                        <div class="column col_2">
+                            <button type="button" id="filterDate" class="btn small_btn">Filter</button>
+                        </div>
                     </div>
                 </div>
 
@@ -713,6 +717,13 @@
                         data: campaign_amounts,
                     }]
                 });
+            }
+
+            /**
+            * This is a hack!!
+             */
+            if(companies == 1) {
+                $("#yearly_client").click();
             }
 
         });
