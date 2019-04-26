@@ -489,7 +489,6 @@ class MediaPlanController extends Controller
 
     public function generateRatingsPost(Request $request)
     {
-
         // validate criteria form request
         $validateCriteriaFormService = new ValidateCriteriaForm($request->all());
         $validation = $validateCriteriaFormService->validateCriteria();

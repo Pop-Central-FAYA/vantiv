@@ -155,7 +155,7 @@ class GetStationRatings
                     $query->where($field, $sub_criteria);
                 }
             });
-           
+            Log::info($query->toSql());
             return $query->get();
     }
 

@@ -109,7 +109,9 @@
 
                     <!-- Target Age group -->
                     <div class="clearfix mb">
-                        <div class="input_wrap column col_6{{  $errors->has('age_groups') ? ' has-error' : '' }}">
+                    <div class="input_wrap column col_12 where-it-is-going">
+                    <div class="column col_12 center">
+                        <div class="input_wrap column col_5{{  $errors->has('age_groups') ? ' has-error' : '' }}">
                             <label class="small_faint">Min. Age</label>
                             <input style="display: inline-block;width: 100%;" id="min_age" type="number" name="age_groups[0][min]" placeholder="Minimum Age" min="18"  max="99" >
 
@@ -120,7 +122,7 @@
                             @endif
                         </div>
 
-                        <div class="input_wrap column col_6{{ $errors->has('age_groups') ? ' has-error' : '' }}">
+                        <div class="input_wrap column col_5{{ $errors->has('age_groups') ? ' has-error' : '' }}">
                             <label class="small_faint">Max. Age</label>
                             <input style="display: inline-block;width: 100%;" id="max_age" type="number" name="age_groups[0][max]"  min="18" max="99" placeholder="Maximum Age">
                             @if($errors->has('age_groups'))
@@ -129,6 +131,17 @@
                                 </strong>
                             @endif
                         </div>
+                        <div class="column col_2">
+                         <button class="plus-btn aBtn"  id="" type="button"><i class="material-icons">add</i></button>
+                        </div>
+
+                    </div>
+
+
+                       
+
+
+                       </div>
                     </div>
 
                     <!-- LSM & social classes -->
@@ -177,7 +190,7 @@
                                 @endif
                             </div>
                         </div>
-                    </div>
+                        </div>
 
                     <!-- States -->
                     <div class="clearfix mb">
@@ -282,6 +295,7 @@
     <script>
 
         $(document).ready(function () {
+            ageGroupCount = 0;
                //Add all
             function isAll(value) {
                 value = value.toLowerCase();
@@ -346,13 +360,13 @@
                 var campaign_name = $("#campaign_name").val();
                 var min_age = $("#min_age").val();
                 var max_age = $("#min_age").val();
-                    if( min_age  >= max_age){
-                          toastr.error('Maximum age must be greater than minimum age');
-                          $('.load_this_div').css({
-                        opacity : 1
-                    });
-                         return;
-                    }
+                    // if( min_age  >= max_age){
+                    //       toastr.error('Maximum age must be greater than minimum age');
+                    //       $('.load_this_div').css({
+                    //     opacity : 1
+                    // });
+                    //      return;
+                    // }
 
 
 
@@ -460,6 +474,44 @@
                     }
                 })
             });
+
+                $("body").delegate(".aBtn", "click", function() 
+                {
+			         movePlanByDuration();
+                     var x = $("#age_groups").val();
+                     console.log(x);
+                   
+                 });
+
+
+			$("body").delegate(".dBtn", "click", function() {
+                $('.where-it-is-going').children().last().remove();
+                ageGroupCount--;
+
+		     });
+
+       function movePlanByDuration(){
+          ageGroupCount++;
+            var new_html = "";
+             new_html +='<div class="column col_12 center">'+
+             '<div class="input_wrap column col_5">'+
+                            '<label class="small_faint">Min. Age</label>'+
+                            '<input style="display: inline-block;width: 100%;" id="min_age" type="number" name="age_groups['+ ageGroupCount+'][min]" placeholder="Minimum Age" min="18"  max="99" >'+
+                          '</div>'+
+                        '<div class="input_wrap column col_5">'+
+                            '<label class="small_faint">Max. Age</label>'+
+                            '<input style="display: inline-block;width: 100%;" id="max_age" type="number" name="age_groups['+ ageGroupCount+'][max]"  min="18" max="99" placeholder="Maximum Age">'+
+                        '</div>'+
+                        '<div class="column col_2">'+
+                         '<button class="plus-btn  dBtn"  id="" type="button"><i class="material-icons" style="color: red">delete</i></button>'+
+                        '</div>'+
+
+                    '</div>';
+    
+    // element.scrollIntoView(options);
+    $(".where-it-is-going").append(new_html);
+    
+}
         });
     </script>
 @stop
