@@ -148,6 +148,31 @@ class MediaPlanController extends Controller
             ->with('selectedFilters', $savedFilters);
     }
 
+    public function getSuggestPlanByIdVue($id)
+    {   
+        // Get the filter values
+        $savedFilters = json_decode(MediaPlan::findOrFail($id)->filters, true);
+        if (!$savedFilters) {
+            $savedFilters = array();
+        }
+        $suggestedPlansService = new GetSuggestedPlans($id, $savedFilters);
+        $plans = $suggestedPlansService->get();
+        // $plans['selected'] = $plans['selected'];
+        // dd($plans['selected']);
+        // if (count($plans) == 0) {
+        //     //Render an empty page and do not redirect
+        //  // return redirect()->route("agency.media_plan.criteria_form");
+        // }
+        // also get the filter values list to use to render with the filter dropdownss
+        //dd($plans);
+        return view('agency.mediaPlan.display_suggestions_vue')
+            ->with('mediaPlanId', $id)
+            ->with('mediaPlanStatus', MediaPlan::findOrFail($id)->status)
+            ->with('fayaFound', $plans)
+            ->with('filterValues', $this->getFilterFieldValues($id))
+            ->with('selectedFilters', $savedFilters);
+    }
+
     /**
      * Get the ratings per filter (Not quite sure how to complete this)
      * So, save the filters the user selected, then the page will be reloaded
