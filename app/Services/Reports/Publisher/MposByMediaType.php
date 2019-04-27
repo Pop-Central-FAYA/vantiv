@@ -2,8 +2,6 @@
 
 namespace Vanguard\Services\Reports\Publisher;
 
-use \Vanguard\Libraries\Enum\CampaignStatus;
-
 use DB;
 use Log;
 
