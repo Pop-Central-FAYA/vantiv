@@ -287,6 +287,18 @@ class DashboardController extends Controller
         return $res;
     }
 
+    /**
+     * Requests to filter reports come through this method
+     */
+    protected function getFilteredPublisherReports(\Vanguard\Http\Requests\Publisher\DashboardReportRequest $request) {
+        $validated = $request->validated();
+        $response = array(
+            'status' => 'success',
+            'data' => $this->getMonthlyReport($company_id_list, $monthly_filters, $validated['report_type'])
+        );
+        return response()->json($response); 
+    }
+
     public function campaignManagementFilterResult()
     {
         $companies_id = \request()->channel_id;
