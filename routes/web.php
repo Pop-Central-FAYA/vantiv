@@ -473,6 +473,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/approve/{id}', 'MediaPlan\MediaPlanController@approvePlan')->name('agency.media_plan.approve');
             Route::get('/decline/{id}', 'MediaPlan\MediaPlanController@declinePlan')->name('agency.media_plan.decline');
             Route::get('/customise/{id}', 'MediaPlan\MediaPlanController@getSuggestPlanById')->name('agency.media_plan.customize');
+            Route::get('/vue/customise/{id}', 'MediaPlan\MediaPlanController@getSuggestPlanByIdVue');
 
             Route::post('/customise-filter', 'MediaPlan\MediaPlanController@setPlanSuggestionFilters')->name('agency.media_plan.customize-filter');
 
