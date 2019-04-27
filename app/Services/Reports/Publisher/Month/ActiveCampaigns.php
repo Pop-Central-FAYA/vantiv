@@ -3,6 +3,7 @@
 namespace Vanguard\Services\Reports\Publisher\Month;
 
 use \Vanguard\Libraries\MonthList;
+use \Vanguard\Models\CampaignDetail;
 
 use DB;
 use Log;
