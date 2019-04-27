@@ -226,20 +226,37 @@ class DashboardController extends Controller
         $user_channels_with_other_details = $this->getChannelWithOtherDetails(Auth::user()->user_company_channels, $this->companyId());
         $current_year = date('Y');
 
-        return view('broadcaster_module.dashboard.campaign_management.dashboard')
-                    ->with(['volume' => $total_volume_campaign_service->totalVolumeOfCampaign()['campaign_volumes'],
-                            'month' => $total_volume_campaign_service->totalVolumeOfCampaign()['campaign_months'],
-                            'walkins' => $company_client_service->getCompanyClients(),
-                            'pending_invoices' => $pending_invoice_service->getPendingInvoice(),
-                            'brands' => $client_brand_service->getBrandCreatedByCompany(),
-                            'active_campaigns' => $active_campaigns,
-                            'pending_mpos' => $mpo_list_service->pendingMpoList(),
-                            'campaign_on_hold' => $campaign_on_hold,
-                            'user_channel_with_other_details' => $user_channels_with_other_details,
-                            'periodic_revenues' => Auth::user()->companies()->count() > 1 ? $this->periodicRevenueChart($this->companyId(), $current_year) : '',
-                            'year_list' => Auth::user()->companies()->count() > 1 ? $this->getYearFrom2018() : '',
-                            'current_year' => $current_year]);
+        $data = [
+            'reports_by_media_type' => $this->getReportsForPublisherDashboard(),
+            'volume' => $total_volume_campaign_service->totalVolumeOfCampaign()['campaign_volumes'],
+            'month' => $total_volume_campaign_service->totalVolumeOfCampaign()['campaign_months'],
+            'walkins' => $company_client_service->getCompanyClients(),
+            'pending_invoices' => $pending_invoice_service->getPendingInvoice(),
+            'brands' => $client_brand_service->getBrandCreatedByCompany(),
+            'active_campaigns' => $active_campaigns,
+            'pending_mpos' => $mpo_list_service->pendingMpoList(),
+            'campaign_on_hold' => $campaign_on_hold,
+            'user_channel_with_other_details' => $user_channels_with_other_details,
+            'periodic_revenues' => Auth::user()->companies()->count() > 1 ? $this->periodicRevenueChart($this->companyId(), $current_year) : '',
+            'year_list' => Auth::user()->companies()->count() > 1 ? $this->getYearFrom2018() : '',
+            'current_year' => $current_year
+        ];
+        return view('broadcaster_module.dashboard.campaign_management.dashboard')->with($data);
 
+    }
+
+     /**
+     * This method will return the reports for the new publisher dashboard
+     * @todo make this the main reports and remove the others
+     */
+    protected function getReportsForPublisherDashboard() {
+        $company_id_list = $this->getCompanyIdsList();
+        return array(
+            'campaigns' => (new \Vanguard\Services\Reports\Publisher\CampaignsByMediaType($company_id_list))->run(),
+            'mpos' => (new \Vanguard\Services\Reports\Publisher\MposByMediaType($company_id_list))->run(),
+            'top_media_type_revenue' => (new \Vanguard\Services\Reports\Publisher\TopRevenueByMediaType($company_id_list))->run(),
+            'clients_and_brands' => (new \Vanguard\Services\Reports\Publisher\ClientsAndBrandsByMediaType($company_id_list))->run()
+        );
     }
 
     public function campaignManagementFilterResult()
