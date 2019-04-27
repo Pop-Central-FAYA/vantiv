@@ -55,6 +55,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/all', 'UserController@index')->name('user.index');
         Route::get('/invite', 'UserController@inviteUser')->name('user.invite');
         Route::post('/invite/store', 'UserController@processInvite');
+        Route::get('/data-table', 'UserController@getDatatable');
     });
 
     /*
