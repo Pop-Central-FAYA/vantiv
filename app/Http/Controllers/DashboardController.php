@@ -210,6 +210,9 @@ class DashboardController extends Controller
         return $media_plan_service->run();
     }
 
+    /**
+     * @todo Generate year from database (like how many years active)
+     */
     public function campaignManagementDashbaord(Request $request)
     {
         $campaign_list = new CampaignList($request, $this->companyId());
@@ -224,10 +227,15 @@ class DashboardController extends Controller
         $client_brand_service = new CompanyBrands($this->companyId());
         $mpo_list_service = new MpoList($this->companyId(), null,null);
         $user_channels_with_other_details = $this->getChannelWithOtherDetails(Auth::user()->user_company_channels, $this->companyId());
+        
         $current_year = date('Y');
 
+        $company_id_list = $this->getCompanyIdsList();
+
+        $monthly_filters = array('year' => $current_year);
         $data = [
-            'reports_by_media_type' => $this->getReportsForPublisherDashboard(),
+            'reports_by_media_type' => $this->getReportsForPublisherDashboard($company_id_list),
+            'monthly_reports' => $this->getMonthlyReport($company_id_list, $monthly_filters, 'station_revenues'),
             'volume' => $total_volume_campaign_service->totalVolumeOfCampaign()['campaign_volumes'],
             'month' => $total_volume_campaign_service->totalVolumeOfCampaign()['campaign_months'],
             'walkins' => $company_client_service->getCompanyClients(),
@@ -249,14 +257,34 @@ class DashboardController extends Controller
      * This method will return the reports for the new publisher dashboard
      * @todo make this the main reports and remove the others
      */
-    protected function getReportsForPublisherDashboard() {
-        $company_id_list = $this->getCompanyIdsList();
+    protected function getReportsForPublisherDashboard($company_id_list) {
         return array(
             'campaigns' => (new \Vanguard\Services\Reports\Publisher\CampaignsByMediaType($company_id_list))->run(),
             'mpos' => (new \Vanguard\Services\Reports\Publisher\MposByMediaType($company_id_list))->run(),
             'top_media_type_revenue' => (new \Vanguard\Services\Reports\Publisher\TopRevenueByMediaType($company_id_list))->run(),
             'clients_and_brands' => (new \Vanguard\Services\Reports\Publisher\ClientsAndBrandsByMediaType($company_id_list))->run()
         );
+    }
+
+    protected function getMonthlyReport($company_id_list, $filters, $report_type) {
+        switch ($report_type) {
+            case 'station_revenue':
+                $service = new \Vanguard\Services\Reports\Publisher\Month\StationRevenue($company_id_list);
+                break;
+            case 'active_campaigns':
+                $service = new \Vanguard\Services\Reports\Publisher\Month\ActiveCampaigns($company_id_list);
+                break;
+            case 'spots_sold':
+                $service = new \Vanguard\Services\Reports\Publisher\Month\SpotsSold($company_id_list);
+                break;
+            default:
+                //default is station revenue
+                $service = new \Vanguard\Services\Reports\Publisher\Month\StationRevenue($company_id_list);
+                break;
+        }
+        $res = $service->setFilters($filters)->run();
+        $res['report_type'] = $report_type;
+        return $res;
     }
 
     public function campaignManagementFilterResult()

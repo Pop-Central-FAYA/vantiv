@@ -81,8 +81,8 @@ class StationRevenue
             $actual_revenue = 0;
             $estimated_revenue = 0;
             if ($month_val) {
-                $actual_revenue = $month_val->actual_revenue;
-                $estimated_revenue = $month_val->estimated_revenue;
+                $actual_revenue = (int) $month_val->actual_revenue;
+                $estimated_revenue = (int) $month_val->estimated_revenue;
             }
             $estimated_value[] = $estimated_revenue;
             $actual_value[] = $actual_revenue;
