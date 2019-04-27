@@ -286,6 +286,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/inventory-management/filter-timebelts-report', 'DashboardController@getFilteredTimeBeltRevenue')->name('broadcaster.inventory_management.timebelts_report');
 
     Route::get('/campaign-management/filter-result', 'DashboardController@campaignManagementFilterResult');
+    Route::get('/campaign-management/reports', 'DashboardController@getFilteredPublisherReports');
     Route::get('/campaign-details/filter/company', 'DashboardController@filteredCampaignListTable');
     Route::get('periodic-revenue/filter-year', 'DashboardController@filterPeriodicRevenueByYear');
 
