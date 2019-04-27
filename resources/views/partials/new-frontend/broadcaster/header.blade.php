@@ -15,9 +15,9 @@
 
                 <div class="">
                     <a href="{{ route('user.profile') }}" class="color_dark">Profile</a>
-                    {{--@if(Auth::user()->hasRole('ssp.admin') || Auth::user()->hasRole('ssp.super_admin'))
-                        <a href="{{ route('user.invite') }}" class="color_dark">Users</a>
-                    @endif--}}
+                    @if(Auth::user()->hasRole('ssp.admin') || Auth::user()->hasRole('ssp.super_admin'))
+                        <a href="{{ route('user.index') }}" class="color_dark">Users</a>
+                    @endif
                     <a href="{{ route('auth.logout') }}" class="color_red">Logout</a>
                 </div>
             </div>

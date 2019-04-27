@@ -5,6 +5,7 @@ namespace Vanguard\Http\Controllers;
 use Vanguard\Http\Controllers\Traits\CompanyIdTrait;
 use Vanguard\Mail\InviteUser as InviteUserMail;
 use Vanguard\Services\Mail\UserInvitationMail;
+use Vanguard\Services\User\GetUserList;
 use Vanguard\Services\User\InviteUser;
 use Vanguard\Services\RolesPermission\ListRoleGroup;
 use Illuminate\Http\Request;
@@ -14,6 +15,7 @@ use Vanguard\Services\Validator\ValidateUserInviteRequest;
 use Vanguard\Support\Enum\UserStatus;
 use Vanguard\User;
 use \Illuminate\Support\Facades\URL;
+use Yajra\DataTables\DataTables;
 
 class UserController extends Controller
 {
@@ -22,6 +24,21 @@ class UserController extends Controller
     public function index()
     {
         return view('users.index');
+    }
+
+    public function getDatatable(DataTables $dataTables)
+    {
+        $user_list_service = new GetUserList($this->getCompanyIdsList());
+        $user_list = $user_list_service->getUserData();
+        return $dataTables->collection($user_list)
+            ->addColumn('edit', function ($user_list) {
+                return '<a href="" class="weight_medium">Edit</a>';
+            })
+            ->addColumn('status', function ($user_list) {
+                return '<a href="" class="weight_medium">'.$user_list['status'].'</a>';
+            })
+            ->rawColumns(['edit' => 'edit', 'status' => 'status'])->addIndexColumn()
+            ->make(true);
     }
 
     public function inviteUser()
