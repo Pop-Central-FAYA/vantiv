@@ -3,7 +3,6 @@
 namespace Vanguard\Services\Reports\Publisher\Month;
 
 use \Vanguard\Libraries\MonthList;
-use \Vanguard\Models\CampaignDetail;
 
 use DB;
 use Log;
@@ -13,8 +12,6 @@ use Log;
  */
 class ActiveCampaigns
 {
-    const MONTHS_OF_THE_YEAR = array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 
-        'September', 'October', 'November', 'December');
 
     protected $company_id_list;
     protected $filters;
