@@ -58,7 +58,6 @@ class ActiveCampaigns
                     }
                 }
             })
-            // ->groupBy('MONTH(time_created)')
             ->groupBy('month_num')
             ->orderBy('month_num')
             ->get();
