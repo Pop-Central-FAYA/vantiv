@@ -26,6 +26,7 @@ class RevenueByTimeBelt
     {
         $this->company_id_list = $company_id_list;
         $this->filters = $filters;
+        return $this;
     }
 
     public function run()
