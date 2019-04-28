@@ -248,7 +248,10 @@ class DashboardController extends Controller
             'periodic_revenues' => Auth::user()->companies()->count() > 1 ? $this->periodicRevenueChart($this->companyId(), $current_year) : '',
             'year_list' => $this->getYearFrom2018(),
             'current_year' => $current_year,
-            'stations' => $this->getCompaniesDetails($company_id_list)
+            'stations' => $this->getCompaniesDetails($company_id_list),
+            'top_media_type_revenue' => (new \Vanguard\Services\Reports\Publisher\TopRevenueByMediaType($company_id_list))->run(),
+            'clients_and_brands' => (new \Vanguard\Services\Reports\Publisher\ClientsAndBrandsByMediaType($company_id_list))->run(),
+            'top_revenue_by_client' => (new \Vanguard\Services\Reports\Publisher\TopRevenueByClient($company_id_list))->run()
         ];
         return view('broadcaster_module.dashboard.campaign_management.dashboard')->with($data);
 

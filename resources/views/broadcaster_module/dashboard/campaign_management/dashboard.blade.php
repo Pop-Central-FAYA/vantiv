@@ -23,36 +23,27 @@
         <div class="row stats">
             <div class="card-deck">
                 <div class="card custom-card-group">
-                    <div class="card-body p-2">
-                        <div class="row">
-                            <div class="col-4">
-                                <img src="{{ asset('company_logo/ONtv-max-logo_lrg.jpg') }}">
-                            </div>
-                            <div class="col-8 px-0">
-                                <span class="text-muted">ONMAV TV is your highest TV earner</span>
-                                <h3 class="text-success text-center mt-2"><b>4,050,000</b></h3>
+                    @foreach($top_media_type_revenue as $data)
+                        <div class="card-body p-2">
+                            <div class="row">
+                                <div class="col-4">
+                                    <img src="{{ $data->logo }}">
+                                </div>
+                                <div class="col-8 px-0">
+                                    <span class="text-muted">{{ $data->name }} is your highest {{ strtoupper($data->type) }} earner</span>
+                                    <h3 class="text-success text-center mt-2"><b>{{number_format($data->revenue)}}</b></h3>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    @endforeach
                     <div class="card-body p-2 mt-4">
                         <div class="row">
                             <div class="col-4">
-                                <img src="{{ asset('company_logo/SOUNDCITY_AFRICA_LOGO.png') }}">
+                                <img src="{{ $top_revenue_by_client->company_logo }}">
                             </div>
                             <div class="col-8 px-0">
-                                <span class="text-muted">Soundcity is your highest Radio earner</span>
-                                <h3 class="text-success text-center mt-2"><b>2,050,000</b></h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body p-2 mt-4">
-                        <div class="row">
-                            <div class="col-4">
-                                <img src="{{ asset('company_logo/SOUNDCITY_AFRICA_LOGO.png') }}">
-                            </div>
-                            <div class="col-8 px-0">
-                                <span class="text-muted">Pepsi is your biggest spender</span>
-                                <h3 class="text-success text-center mt-2"><b>7,800,000</b></h3>
+                                <span class="text-muted">{{ $top_revenue_by_client->client_name }} is your highest spender</span>
+                                <h3 class="text-success text-center mt-2"><b>{{number_format($top_revenue_by_client->actual_revenue)}}</b></h3>
                             </div>
                         </div>
                     </div>

@@ -43,11 +43,16 @@ class TopRevenueByMediaType
          * order by revenue desc;
          */
         $collection = DB::table("companies as s")
-            ->selectRaw('SUM(COALESCE(ftbr.revenue, 0)) AS revenue, s.id as station_id, s.name, "tv" as type')
+            ->selectRaw('SUM(COALESCE(ftbr.revenue, 0)) AS revenue, s.id as station_id, s.name, "tv" as type, c.logo')
             ->leftJoin('fake_time_belt_revenues as ftbr', 'ftbr.station_id', '=', 's.id')
+            ->join('companies as c', 'c.id', '=', 'ftbr.station_id')
             ->whereIn('s.id', $this->company_id_list)
             ->groupBy('s.id')
             ->get();
+
+        // add radio data (fake shit)
+        $radio = (object) ['type' => 'radio', 'revenue' => 5000000, 'name' => 'SoundCity Radio', 'logo' => 'https://s3.amazonaws.com/faya-dev-us-east-1-media/company-logo/soundcity.png'];
+        $collection->prepend($radio);
 
         $grouped = $collection->groupBy('type');
         
