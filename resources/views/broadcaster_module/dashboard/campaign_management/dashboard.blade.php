@@ -50,7 +50,6 @@
                 </div>
 
                 <!-- The different cards -->
-                <!-- Television Card -->
                 @foreach($campaigns['detailed_counts'] as $media_type => $data)
                 <div class="card text-center">
                     <div class="card-header bg-white p-0">
@@ -92,52 +91,11 @@
                     </div>
                 </div>
                 @endforeach
-
-                <!-- Radio Card -->
-                {{-- <div class="card text-center">
-                    <div class="card-header bg-white p-0">
-                        <h5 class="bg-white position-relative">
-                            <i class="material-icons">radio</i>
-                            <span>RADIO</span>
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <h3 class="card-title my-3 text-muted">74 Campaigns</h3>
-                        <div class="row dashboard_pies">
-                            <div class="col-7">
-                                <div id="radio" class="_pie_chart" style="height: 130px"></div>
-                            </div>
-                            <div class="col-5 pt-5">
-                                <ul>
-                                    <li class="pie_legend active"><span class="weight_medium">0%</span> Active</li>
-                                    <li class="pie_legend pending"><span class="weight_medium">0%</span> Pending</li>
-                                    <li class="pie_legend finished"><span class="weight_medium">0%</span> Finished</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-footer text-muted bg-white border-0 mb-3">
-                        <div class="row">
-                            <div class="col-4 px-1">
-                                <h3 class="text-muted">16</h3>
-                                <span>Walk Ins</span>
-                            </div>
-                            <div class="col-4 px-1">
-                                <h3 class="text-danger">11</h3>
-                                <span>Pending MPOs</span>
-                            </div>
-                            <div class="col-4 px-1">
-                                <h3 class="text-muted">32</h3>
-                                <span>Brands</span>
-                            </div>
-                        </div>
-                    </div>
-                </div> --}}
             </div>
         </div>
 
         <!-- Charts -->
-        <div class="row my-5 chart-view">
+        <div id="chart-container" class="row my-5 chart-view">
             <div class="col-12 pb-1 mb-3" style="border-bottom: 2px solid #44c1c9;">
                 <div class="btn-group chart-toggle" role="group" aria-label="Basic example">
                     <button id="tv-toggle" type="button" class="btn btn-info py-1 mr-2"><i class="material-icons">tv</i> TV</button>
@@ -148,40 +106,45 @@
             <!-- client charts -->
             <!-- Filters -->
             <div class="col-12 filter">
-                <div class="row mb-2">
-                    <div class="col-5">
-                        <div class="row">
-                            <div class="col-6 pr-0">
-                                <select class="form-control publishers" name="companies[]" id="publishers" multiple="multiple" >
-                                    @foreach(Auth::user()->companies as $company)
-                                        <option value="{{ $company->id }}">{{ $company->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="col-6">
-                                <select class="form-control single-select" name="other" id="other">
-                                    <option value="">Revenue</option>
-                                    <option value="">Ad Slots</option>
-                                    <option value="">Ratings</option>
-                                    <option value="">Campaigns</option>
-                                </select>
+                <form method="" action="" id="filter-form">
+                    {{ csrf_field() }}
+                    <div class="row mb-2">
+                        <div class="col-5">
+                            <div class="row">
+                                @if(count($stations) > 1)
+                                    <div class="col-6 pr-0">
+                                        <select class="form-control publishers" name="station_id[]" id="publishers" multiple="multiple" >
+                                            @foreach(Auth::user()->companies as $company)
+                                                <option value="{{ $company->id }}">{{ $company->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                @endif
+                                <div class="col-6">
+                                    <select class="form-control single-select" name="report_type" id="other">
+                                        <option @if($monthly_reports["report_type"] == "station_revenue") selected @endif value="station_revenue">Revenue</option>
+                                        <option @if($monthly_reports["report_type"] == "spots_sold") selected @endif value="spots_sold">Ad Slots</option>
+                                        <option @if($monthly_reports["report_type"] == "active_campaigns") selected @endif value="active_campaigns">Campaigns</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
+                        <div class="offset-5 col-2 pl-0">
+                            <select name="year" class="filter_year single-select" id="filter_year">
+                                @foreach($year_list as $year)
+                                    <option
+                                        @if($current_year == $year)
+                                            selected
+                                        @endif
+                                        value="{{ $year }}">
+                                        Jan - Dec, {{ $year }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
-                    <div class="offset-5 col-2 pl-0">
-                        <select name="filter_year" class="filter_year single-select" id="filter_year">
-                            @foreach($year_list as $year)
-                                <option
-                                    @if($current_year == $year)
-                                        selected
-                                    @endif
-                                    value="{{ $year }}">
-                                    Jan - Dec, {{ $year }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
+                </form>
+                
             </div>
             <br>
             <!-- {{--Periodic revenue chart goes here--}} -->
@@ -207,6 +170,7 @@
     <script src="https://code.highcharts.com/modules/data.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script src="https://code.highcharts.com/highcharts-more.js"></script>
+    <script src="https://code.highcharts.com/modules/no-data-to-display.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/dataTables.buttons.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.flash.min.js"></script>
@@ -222,203 +186,13 @@
     <script src="{{ asset('js/dashboard-graphs.js') }}"></script>
 
     <script>
-        <?php echo "var channels_with_details =".json_encode($user_channel_with_other_details). ";\n";?>
-        //Bar chart for Total Volume of Campaigns
-        <?php echo "var campaign_volume = ".$volume . ";\n"; ?>
-        <?php echo "var campaign_month = ".$month . ";\n"; ?>
-        <?php echo "var companies =".Auth::user()->companies()->count().";\n"; ?>
-        <?php if(Auth::user()->companies()->count() > 1){ ?>
-        <?php echo "var months =".json_encode($periodic_revenues['month_list']).";\n"; ?>
-        <?php echo "var periodic_revenue_data =".json_encode($periodic_revenues['formated_periodic_revenue_chart']).";\n"; ?>
-        <?php echo "var current_year =".$current_year.";\n"; ?>
-        <?php } ?>
-
+    
         $(document).ready(function( $ ) {
 
-            const numberFormatter = new Intl.NumberFormat('en-US', {});
-
-            if(companies > 1) {
-                // $.each(channels_with_details, function (index, value) {
-                //     if (value.channel_details.channel === 'TV') {
-                //         channel_pie('tv', value.campaign_status_percentage.percentage_active, value.campaign_status_percentage.percentage_pending, value.campaign_status_percentage.percentage_finished)
-                //     } else if (value.channel_details.channel === 'Radio') {
-                //         channel_pie('radio', value.campaign_status_percentage.percentage_active, value.campaign_status_percentage.percentage_pending, value.campaign_status_percentage.percentage_finished)
-                //     }
-                // });
-
-                
-                $('.single-select').SumoSelect({
-                    placeholder: 'Select One',
-                    csvDispCount: 3,
-                });
-
-                $('.publishers').SumoSelect({
-                    placeholder: 'Select Publishers',
-                    csvDispCount: 3,
-                    selectAll: true,
-                    captionFormat: '{0} Publishers Selected',
-                    captionFormatAllSelected: 'All publishers selected!',
-                    okCancelInMulti: true, 
-                });
-
-                $('body').delegate("#publishers", "change", function () {
-                    $(".dashboard_campaigns").dataTable().fnDestroy();
-                    var channels = $("#publishers").val();
-                    var year = current_year;
-                    if(channels != null){
-                        // $('body').css({
-                        //     opacity : 0.1
-                        // });
-                        var campaignFilter =  $('.dashboard_campaigns_filtered').DataTable({
-                            dom: 'Blfrtip',
-                            paging: true,
-                            serverSide: true,
-                            processing: true,
-                            aaSorting: [],
-                            oLanguage: {
-                                sLengthMenu: "_MENU_"
-                            },
-                            ajax: {
-                                url: '/campaign-details/filter/company',
-                                data: function (d) {
-                                    d.company_id = channels;
-                                    d.start_date = $('input[name=start_date]').val();
-                                    d.stop_date = $('input[name=stop_date]').val();
-                                    d.filter_user = $('#filter_user').val();
-                                    d.year = $('#filter_year').val();
-                                }
-                            },
-                            columns: getColumns(),
-                        });
-                        $('#dashboard_filter_campaign').on('click', function() {
-                            campaignFilter.draw();
-                        });
-                        $('.key_search').on('keyup', function(){
-                            campaignFilter.search($(this).val()).draw() ;
-                        });
-                        $('#filter_user').on('change', function() {
-                            campaignFilter.draw();
-                        });
-                        $.ajax({
-                            url: '/campaign-management/filter-result',
-                            method: 'GET',
-                            data: {channel_id: channels, year: year},
-                            success: function (data) {
-                                $("#campaign_count").remove();
-                                $("#filtered_campaign_count").show();
-                                $("#filtered_campaign_count").html(filterActiveCampaignCount(data.active_campaigns));
-                                $("#walkin_count").remove();
-                                $("#filtered_walkin_count").show();
-                                $("#filtered_walkin_count").html(filterWalkinCount(data.walkIns));
-                                $("#pending_mpo_count").remove();
-                                $("#filtered_mpo_count").show();
-                                $("#filtered_mpo_count").html(filterPendingMpoCount(data.pending_mpos));
-                                $("#brand_count").remove();
-                                $("#filtered_brand_count").show();
-                                $("#filtered_brand_count").html(filterBrandCount(data.brands));
-                                $("#campaign_on_hold").remove();
-                                $("#filtered_campaign_on_hold").show();
-                                $("#filtered_campaign_on_hold").html(filterCampaignOnHoldCount(data.campaign_on_hold));
-                                periodicRevenueChat(data.periodic_revenues['month_list'], data.periodic_revenues['formated_periodic_revenue_chart'])
-
-                                $('body').css({
-                                    opacity : 1
-                                });
-                            }
-                        })
-                    }
-                });
-
-                $('body').delegate('#filter_year', 'change', function () {
-                    var year = $('#filter_year').val();
-                    var channels = $("#publishers").val();
-                    $(".periodic_rev").css({
-                        opacity: 0.1
-                    });
-                    $.ajax({
-                        url: '/periodic-revenue/filter-year',
-                        method: 'GET',
-                        data: {channel_id: channels, year: year},
-                        success: function (data) {
-                            if(data.formated_periodic_revenue_chart.length != 0){
-                                periodicRevenueChat(data.month_list, data.formated_periodic_revenue_chart);
-                                $(".periodic_rev").css({
-                                    opacity: 1
-                                });
-                            }else{
-                                periodicRevenueChat(data.month_list, data.formated_periodic_revenue_chart);
-                                $(".periodic_rev").css({
-                                    opacity: 1
-                                });
-                                toastr.info('No data for the selected year');
-                            }
-                        }
-                    })
-                });
-
-                periodicRevenueChat(months, periodic_revenue_data)
-
-                function periodicRevenueChat(month_list, periodic_revenue_data){
-                    Highcharts.chart('periodicChart', {
-                        chart: {
-                            type: 'column'
-                        },
-                        title: {
-                            text: ''
-                        },
-                        xAxis: {
-                            categories: month_list
-                        },
-                        credits: {
-                            enabled: false
-                        },
-                        exporting: {
-                            enabled: false
-                        },
-                        series: periodic_revenue_data
-                    });
-                }
-
-             }else{
-                var chart = Highcharts.chart('containerTotal', {
-
-                    title: {text: ''},
-                    yAxis: {
-                            title: {text: 'Number of Campaigns'},
-                            labels: {
-                                formatter: function() {
-                                    return numberFormatter.format(this.value).replace(".00", "");
-                                },
-                            }
-                        },
-                    xAxis: {
-                        categories: campaign_month
-                    },
-                    credits: {
-                        enabled: false
-                    },
-                    exporting: {
-                        enabled: false
-                    },
-                    series: [{
-                        type: 'column',
-                        colorByPoint: true,
-                        data: campaign_volume,
-                        showInLegend: false
-                    }]
-
-                });
-            }
-
-            $('#tv-toggle').on('click', function() {
-                $('#tv-toggle').removeClass('inactive-toggle');
-                $('#radio-toggle').addClass('inactive-toggle');
-            });
-
-            $('#radio-toggle').on('click', function() {
-                $('#tv-toggle').addClass('inactive-toggle');
-                $('#radio-toggle').removeClass('inactive-toggle');
-            });
+            //Every user should have access to this
+            var monthly_reports = {!! json_encode($monthly_reports) !!};
+            var dashboard_graph = new DashboardGraph($('#chart-container'));
+            dashboard_graph.initChart(monthly_reports);
 
             //Every user should have access to this
             var campaigns_by_media_type = {!! json_encode($campaigns) !!};

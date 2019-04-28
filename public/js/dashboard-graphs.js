@@ -7,6 +7,8 @@ class DashboardGraph {
         this.$chart_container = $chart_container;
         this.chart_element = this.$chart_container.find("#periodicChart").attr('id');
         this.$form_element = $chart_container.find("#filter-form");
+        this.initToggles();
+        this.initDropdowns();
         this.addOnChangeEvents();
     }
 
@@ -143,8 +145,36 @@ class DashboardGraph {
             })
         });
     }
-}
 
+    initDropdowns() {
+        this.$chart_container.find('.single-select').SumoSelect({placeholder: 'Select One', csvDispCount: 3});
+
+        this.$chart_container.find('.publishers').SumoSelect({
+            placeholder: 'Select Stations',
+            csvDispCount: 3,
+            selectAll: true,
+            captionFormat: '{0} Stations Selected',
+            captionFormatAllSelected: 'All Stations selected!',
+            okCancelInMulti: true, 
+        });
+    }
+
+    initToggles() {
+        var self = this;
+        var $tv_toggle = this.$chart_container.find('#tv-toggle');
+        var $radio_toggle = this.$chart_container.find('#radio-toggle');
+
+        $tv_toggle.on('click', function() {
+            $tv_toggle.removeClass('inactive-toggle');
+            $radio_toggle.addClass('inactive-toggle');
+        });
+
+        $radio_toggle.on('click', function() {
+            $tv_toggle.addClass('inactive-toggle');
+            $radio_toggle.removeClass('inactive-toggle');
+        });
+    }
+}
 
 class DashboardTiles {
 
