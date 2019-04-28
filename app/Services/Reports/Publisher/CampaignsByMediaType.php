@@ -37,6 +37,10 @@ class CampaignsByMediaType
             ->groupBy('cd.status', 'type')
             ->get();
 
+        // add radio data (fake shit)
+        $radio = (object) ['type' => 'radio', 'status' => 'pending', 'num' => 10];
+        $collection->prepend($radio);
+
         $grouped = $collection->groupBy('type');
         return $grouped->map(function ($item_list, $key) {
             return $this->formatItemList($item_list);
