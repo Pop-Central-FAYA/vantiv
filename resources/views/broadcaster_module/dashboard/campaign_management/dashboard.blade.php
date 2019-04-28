@@ -123,7 +123,7 @@
                                 <div class="col-6">
                                     <select class="form-control single-select" name="report_type" id="other">
                                         <option @if($monthly_reports["report_type"] == "station_revenue") selected @endif value="station_revenue">Revenue</option>
-                                        <option @if($monthly_reports["report_type"] == "spots_sold") selected @endif value="spots_sold">Ad Slots</option>
+                                        <option @if($monthly_reports["report_type"] == "spots_sold") selected @endif value="spots_sold">Inventory</option>
                                         <option @if($monthly_reports["report_type"] == "active_campaigns") selected @endif value="active_campaigns">Campaigns</option>
                                     </select>
                                 </div>

@@ -37,12 +37,13 @@ class RevenueByTimeBelt
          * GROUP BY start_time
          * ORDER BY start_time
          */
-        $query = DB::table("fake_time_belt_revenues as stbl")
-            ->selectRaw('stbl.start_time, stbl.end_time,  SUM(COALESCE(stbl.revenue, 0)) as revenue')
-            ->whereIn('stbl.station_id', $this->company_id_list)
+        $query = DB::table("time_belts as tb")
+            ->selectRaw('tb.start_time, tb.end_time,  SUM(COALESCE(tbt.amount_paid, 0)) as revenue')
+            ->leftJoin('time_belt_transactions as tbt', 'tbt.time_belt_id', '=', 'tb.id')
+            ->whereIn('tb.station_id', $this->company_id_list)
             ->when($this->filters, function($query) {
                 foreach($this->filters as $key => $value) {
-                    $field = "stbl." . $key;
+                    $field = "tb." . $key;
                     if ($key == "day_parts") {
                         $query->whereBetween("start_time", static::DAYPARTS[$value]);
                         continue;
@@ -50,10 +51,10 @@ class RevenueByTimeBelt
                     $query->where($field, $value);
                 }
             })
-            ->groupBy('stbl.start_time', 'stbl.end_time')
-            ->orderBy('stbl.start_time')
+            ->groupBy('tb.start_time', 'tb.end_time')
+            ->orderBy('tb.start_time')
             ->get();
-        
+
         $time_belts = $query->map(function($item) {
             $start_time = substr($item->start_time, 0, -3);
             $end_time = substr($item->end_time, 0, -3);
