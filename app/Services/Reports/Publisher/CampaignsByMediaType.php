@@ -31,15 +31,16 @@ class CampaignsByMediaType
          * group by cd.status;
          */
         $collection = DB::table("companies as s")
-            ->selectRaw('COUNT(cd.status) AS num, cd.status, "tv" as type')
+            ->selectRaw('COUNT(cd.status) AS num, cd.status, p.type as type')
+            ->join('publishers as p', 'p.company_id', '=', 's.id')
             ->join('campaignDetails as cd', 'cd.launched_on', '=', 's.id')
             ->whereIn('s.id', $this->company_id_list)
             ->groupBy('cd.status', 'type')
             ->get();
 
         // add radio data (fake shit)
-        $radio = (object) ['type' => 'radio', 'status' => 'pending', 'num' => 10];
-        $collection->prepend($radio);
+        // $radio = (object) ['type' => 'radio', 'status' => 'pending', 'num' => 10];
+        // $collection->prepend($radio);
 
         $grouped = $collection->groupBy('type');
         
