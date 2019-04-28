@@ -37,40 +37,6 @@ class FakeTimeBeltTransactionSeeder extends Seeder
      * order by a.id;
      * @return void
      */
-    // public function run()
-    // {
-    //     $existing = TimeBeltTransaction::all()->first();
-    //     if ($existing !== null) {
-    //         echo "You need to manually delete before this seeder can run";
-    //         return;
-    //     }
-
-    //     $collection = DB::table('campaignDetails as cd')
-    //         ->selectRaw('cd.start_date, cd.stop_date, a.id as adslot_id, cd.launched_on, a.from_to_time, cd.id as cd_id, sa.time_picked, sa.file_name, sa.file_url, sa.adslot_amount, sa.air_date, sa.status')
-    //         ->join('adslots as a', function($query) {
-    //             $query->whereRaw('a.id IN (cd.adslots)');
-    //         })
-    //         ->leftJoin('selected_adslots as sa', 'sa.adslot', '=', 'a.id')
-    //         ->get();
-        
-    //     $adslot_prices = AdslotPrice::all();
-    //     $current_date = Carbon::now();
-        
-    //     $collection->each(function($item, $key) use ($adslot_prices, $current_date) {
-    //         $time_belt = $this->getTimeBelt($item);
-
-    //         $model = new TimeBeltTransaction();
-    //         $model->time_belt_id = $time_belt->id;
-    //         $model->campaign_details_id = $item->cd_id;
-    //         if ($item->status != null) {
-    //             $model = $this->setupTransactionForCompleteData($item, $model);
-    //         } else {
-    //             $model = $this->setupTransactionForInCompleteData($item, $model, $adslot_prices, $current_date);
-    //         }
-    //         $model->save();
-    //     });
-    // }
-    
     public function run()
     {
         $existing = TimeBeltTransaction::all()->first();
@@ -109,7 +75,7 @@ class FakeTimeBeltTransactionSeeder extends Seeder
         });
     }
 
-    protected function setupTransactionForCompleteData($adslot_list, $campaign_details) {
+    protected function setupTransactionForCompleteData($adslot_list, $campaign_details, $current_date) {
         $current_num = 0;
         foreach ($adslot_list as $adslots) {
             $model = new TimeBeltTransaction();
@@ -124,6 +90,9 @@ class FakeTimeBeltTransactionSeeder extends Seeder
                 $model->file_url = $adslots->file_url;
                 $model->amount_paid = $adslots->adslot_amount;
                 $model->approval_status = $adslots->status;
+
+
+                $model->approval_status = $this->getRandomTimeBeltStatus(new Carbon($adslots->air_date), $current_date);
                 $model->save();
 
                 $current_num += 1;
@@ -217,6 +186,82 @@ class FakeTimeBeltTransactionSeeder extends Seeder
             }
         }
         return $status;
+    }
+
+    /**
+     * This goes through the timebelt and adds more data to it, to generate a bit more data
+     * 
+     * Let us generate between 20 and 50 spots per campaign
+     */
+    protected function addMoreDataToTimeBelts() {
+        $time_belt_transactions = TimeBeltTransaction::selectRaw("count(*) as num_slots, campaignDetails.*")
+            ->join("campaignDetails", "campaignDetails.id", "=", "time_belt_transactions.campaign_details_id")
+            ->get();
+        foreach ($time_belt_transactions as $transaction) {
+            $additional_slots = (int) range(20, 30);
+            $new_transactions = array();
+            for ($ii=0; $ii < $additional_slots; $ii++) {
+                $playout_date = $this->genPlayoutDate($transaction);
+                $data = array(
+
+                );
+            }
+        }
+    }
+
+    protected function genPlayoutDate($campaign_details) {
+        $start_date = new Carbon($campaign_details->start_date);
+        $end_date = new Carbon($campaign_details->stop_date);
+        $days = $end_date->diffInDays($start_date);
+        $start_date->addDays(rand(0, $days));
+        return $start_date;
+    }
+
+    protected function genTimeBelt($playout_date, $launched_on) {
+        $seconds = time();
+$rounded_seconds = round($seconds / (15 * 60)) * (15 * 60);
+
+echo "Original: " . date('H:i', $seconds) . "\n";
+echo "Rounded: " . date('H:i', $rounded_seconds) . "\n";
+        $date->startOfDay();
+        $date->addMinutes(rand(0, 1440));
+    }
+
+    protected function ssetupTransactionForInCompleteData($campaign_details, $adslot, $adslot_prices, $current_date) {
+        $current_num = 0;
+        foreach ($adslot_list as $adslots) {
+            $model = new TimeBeltTransaction();
+            // get a random date from the campaign details start and end date
+            $start_date = new Carbon($campaign_details->start_date);
+            $end_date = new Carbon($campaign_details->stop_date);
+            $days = $end_date->diffInDays($start_date);
+            $start_date->addDays(rand(0, $days));
+
+            $time_belt = $this->getTimeBelt($adslots->from_to_time, $start_date, $campaign_details->launched_on);
+            
+            if ($time_belt) {
+                $model->time_belt_id = $time_belt->id;
+                $model->campaign_details_id = $campaign_details->id;
+                $model->playout_date = $start_date;
+
+                $duration = $this->getRandomDuration();
+                $price = $adslot_prices->where('adslot_id', $adslots->id)->first()["price_{$duration}"];
+                $status = $this->getRandomTimeBeltStatus($start_date, $current_date);
+
+                $model->amount_paid = $price;
+                $model->duration = $duration;
+                $model->approval_status = $status;
+
+                $model->save();
+
+                $current_num += 1;
+                echo "{$current_num}\n";
+            } else {
+                echo "timebelt non existent for {$adslots->from_to_time} and {$start_date} and {$campaign_details->launched_on}\n";
+            }
+            
+        }
+        return $current_num;
     }
 
 }
