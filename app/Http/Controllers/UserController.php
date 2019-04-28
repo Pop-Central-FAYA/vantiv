@@ -23,7 +23,12 @@ class UserController extends Controller
 
     public function index()
     {
-        return view('users.index');
+        $user_list_service = new GetUserList($this->getCompanyIdsList());
+        $user_list = $user_list_service->getUserData();
+        $roles_service = new ListRoleGroup('ssp');
+        return view('users.index')->with('users', $user_list)
+                                        ->with('roles', $roles_service->getRoles())
+                                        ->with('companies', $this->getCompaniesDetails($this->companyId()));
     }
 
     public function getDatatable(DataTables $dataTables)
@@ -32,7 +37,7 @@ class UserController extends Controller
         $user_list = $user_list_service->getUserData();
         return $dataTables->collection($user_list)
             ->addColumn('edit', function ($user_list) {
-                return '<a href="" class="weight_medium">Edit</a>';
+                return '<a href="#user_modal_'.$user_list['id'].'" class="weight_medium modal_user_click">Edit</a>';
             })
             ->addColumn('status', function ($user_list) {
                 return '<a href="" class="weight_medium">'.$user_list['status'].'</a>';
