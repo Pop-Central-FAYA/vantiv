@@ -52,5 +52,45 @@
 .broadcaster-report .stats .custom-card-group .card-body span {
     font-size: 12px;
 }
-
-
+.broadcaster-report .chart-view .filter .SumoSelect {
+    width: 100%;
+}
+.broadcaster-report .chart-view .filter .SumoSelect .SelectBox {
+    padding: 11px 8px;
+}
+.broadcaster-report .chart-view .filter .SumoSelect>.CaptionCont {
+    position: relative;
+    border: 1px solid #ddd;
+    min-height: 14px;
+    height: 40px;
+    background-color: #fff;
+    border-radius: 2px;
+    margin: 0;
+}
+.broadcaster-report .chart-view .filter .SumoSelect>.CaptionCont>span.placeholder {
+    font-style: normal;
+    font-size: 14px;
+}
+.broadcaster-report .chart-view .filter .SumoSelect .select-all {
+    height: 38px;
+}
+.broadcaster-report .chart-view .filter .SumoSelect>.optWrapper>.options li label {
+    font-size: 13px;
+}
+.broadcaster-report .chart-view .filter .SumoSelect>.CaptionCont>span {
+    font-size: 13px;
+}
+.broadcaster-report .chart-view .chart-toggle .btn .material-icons {
+    height: 11px;
+    width: 11px;
+    margin-right: 13px;
+    top: 5px;
+    position: relative;
+}
+.broadcaster-report .chart-view .chart-toggle .inactive-toggle {
+    background: #fff !important;
+    color: #afacac !important;
+}
+.broadcaster-report .chart-view .chart-toggle .inactive-toggle .material-icons {
+    color: #afacac !important;
+}

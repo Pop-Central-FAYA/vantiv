@@ -139,27 +139,46 @@
                 </div>
             </div>
         </div>
-        <div class="row my-5">
+        <div class="row my-5 chart-view">
             <div class="col-12 pb-1 mb-3" style="border-bottom: 2px solid #44c1c9;">
-                <div class="btn-group" role="group" aria-label="Basic example">
-                    <button id="tv-toggle" type="button" class="btn btn-info mr-2"><i class="material-icons">tv</i> TV</button>
-                    <button id="radio-toggle" type="button" class="btn btn-info"><i class="material-icons">radio</i> RADIO</button>
+                <div class="btn-group chart-toggle" role="group" aria-label="Basic example">
+                    <button id="tv-toggle" type="button" class="btn btn-info py-1 mr-2"><i class="material-icons">tv</i> TV</button>
+                    <button id="radio-toggle" type="button" class="btn btn-info py-1 inactive-toggle"><i class="material-icons">radio</i> RADIO</button>
                 </div>
             </div>
             <!-- client charts -->
             @if(Auth::user()->companies()->count() > 1)
-                <div class="col-12">
+                <!-- Filters -->
+                <div class="col-12 filter">
                     <div class="row mb-2">
-                        <div class="col-6"></div>
-                        <div class="col-6 text-right">
-                            <select name="filter_year" class="filter_year" id="filter_year">
+                        <div class="col-5">
+                            <div class="row">
+                                <div class="col-6 pr-0">
+                                    <select class="form-control publishers" name="companies[]" id="publishers" multiple="multiple" >
+                                        @foreach(Auth::user()->companies as $company)
+                                            <option value="{{ $company->id }}">{{ $company->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-6">
+                                    <select class="form-control single-select" name="other" id="other">
+                                        <option value="">Revenue</option>
+                                        <option value="">Ad Slots</option>
+                                        <option value="">Ratings</option>
+                                        <option value="">Campaigns</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="offset-5 col-2 pl-0">
+                            <select name="filter_year" class="filter_year single-select" id="filter_year">
                                 @foreach($year_list as $year)
                                     <option
                                         @if($current_year == $year)
                                             selected
                                         @endif
                                         value="{{ $year }}">
-                                        {{ $year }}
+                                        Jan - Dec, {{ $year }}
                                     </option>
                                 @endforeach
                             </select>
@@ -191,6 +210,8 @@
     </div>
 @stop
 
+
+
 @section('scripts')
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/modules/data.js"></script>
@@ -206,6 +227,8 @@
     <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.print.min.js"></script>
     <script src="https://unpkg.com/flatpickr"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+    <!-- SUMO SELECT -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.sumoselect/3.0.2/jquery.sumoselect.min.js"></script>
 
     <script>
         <?php echo "var channels_with_details =".json_encode($user_channel_with_other_details). ";\n";?>
@@ -332,7 +355,20 @@
                     }
                 });
 
-                $('.publishers').select2();
+                
+                $('.single-select').SumoSelect({
+                    placeholder: 'Select One',
+                    csvDispCount: 3,
+                });
+
+                $('.publishers').SumoSelect({
+                    placeholder: 'Select Publishers',
+                    csvDispCount: 3,
+                    selectAll: true,
+                    captionFormat: '{0} Publishers Selected',
+                    captionFormatAllSelected: 'All publishers selected!',
+                    okCancelInMulti: true, 
+                });
 
                 $('body').delegate("#publishers", "change", function () {
                     $(".dashboard_campaigns").dataTable().fnDestroy();
@@ -522,7 +558,17 @@
 
                 });
             }
-        } );
+
+            $('#tv-toggle').on('click', function() {
+                $('#tv-toggle').removeClass('inactive-toggle');
+                $('#radio-toggle').addClass('inactive-toggle');
+            });
+
+            $('#radio-toggle').on('click', function() {
+                $('#tv-toggle').addClass('inactive-toggle');
+                $('#radio-toggle').removeClass('inactive-toggle');
+            });
+        });
     </script>
 
 @endsection
@@ -532,7 +578,8 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.5.1/css/buttons.dataTables.min.css" type="text/css"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
-
+    <!-- SUMO SELECT -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.sumoselect/3.0.2/sumoselect.min.css" />
     <style>
         .highcharts-grid path { display: none;}
         .highcharts-legend {
