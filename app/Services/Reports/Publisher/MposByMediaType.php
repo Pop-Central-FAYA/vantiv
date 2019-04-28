@@ -45,14 +45,30 @@ class MposByMediaType
             ->whereIn('s.id', $this->company_id_list);
         
         $collection = DB::query()->fromSub($inner_query, 'mpo_list')
-            ->selectRaw('status, COUNT(status) AS num, type')
+            ->selectRaw('status, COUNT(status) AS num, type, status')
             ->groupBy('status', 'type')
             ->get();
+        
+        // add radio data (fake shit)
+        $radio = (object) ['type' => 'radio', 'status' => 'pending', 'num' => 5];
+        $collection->prepend($radio);
 
         $grouped = $collection->groupBy('type');
-        return $grouped->map(function ($item_list, $key) {
+
+        $formatted_list = $grouped->map(function ($item_list, $key) {
             return $this->formatItemList($item_list);
         });
+
+        $total = $grouped->map(function ($item_list, $key) {
+            return $item_list->sum('num');
+        });
+
+        return collect(
+            array(
+                "total" => $total,
+                "detailed_counts" => $formatted_list
+            )
+        );
     }
 
      /**

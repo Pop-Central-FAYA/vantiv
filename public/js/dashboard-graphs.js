@@ -149,16 +149,17 @@ class DashboardGraph {
 class DashboardTiles {
 
     initTiles(data) {
-        for (var media_type in data) {
-            var tile_data = data[media_type];
+        for (var media_type in data.detailed_counts) {
+            var tile_data = data.detailed_counts[media_type];
+            var total = data.total[media_type]
             var container_id = "pie-chart-" + media_type;
-            this.renderSingleTile(container_id, media_type, tile_data);
+            this.renderSingleTile(container_id, media_type, tile_data, total);
         }
     }
 
-    renderSingleTile(container, media_type, tile_data) {
+    renderSingleTile(container, media_type, tile_data, total) {
         
-        var total = Object.values(tile_data).reduce(function(a,b){return a + b}, 0);
+        // var total = Object.values(tile_data).reduce(function(a,b){return a + b}, 0);
         var num_active = tile_data.active || 0;
         var num_pending = tile_data.pending || 0;
         var num_completed = tile_data.finished || 0;

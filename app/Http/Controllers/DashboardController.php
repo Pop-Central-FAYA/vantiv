@@ -234,7 +234,7 @@ class DashboardController extends Controller
 
         $monthly_filters = array('year' => $current_year);
         $data = [
-            'reports_by_media_type' => $this->getReportsForPublisherDashboard($company_id_list),
+            // 'reports_by_media_type' => $this->getReportsForPublisherDashboard($company_id_list),
             'monthly_reports' => $this->getMonthlyReport($company_id_list, $monthly_filters, 'station_revenue'),
             'volume' => $total_volume_campaign_service->totalVolumeOfCampaign()['campaign_volumes'],
             'month' => $total_volume_campaign_service->totalVolumeOfCampaign()['campaign_months'],
@@ -249,9 +249,12 @@ class DashboardController extends Controller
             'year_list' => $this->getYearFrom2018(),
             'current_year' => $current_year,
             'stations' => $this->getCompaniesDetails($company_id_list),
+
             'top_media_type_revenue' => (new \Vanguard\Services\Reports\Publisher\TopRevenueByMediaType($company_id_list))->run(),
             'clients_and_brands' => (new \Vanguard\Services\Reports\Publisher\ClientsAndBrandsByMediaType($company_id_list))->run(),
-            'top_revenue_by_client' => (new \Vanguard\Services\Reports\Publisher\TopRevenueByClient($company_id_list))->run()
+            'top_revenue_by_client' => (new \Vanguard\Services\Reports\Publisher\TopRevenueByClient($company_id_list))->run(),
+            'campaigns' => (new \Vanguard\Services\Reports\Publisher\CampaignsByMediaType($company_id_list))->run(),
+            'mpos' => (new \Vanguard\Services\Reports\Publisher\MposByMediaType($company_id_list))->run(),
         ];
         return view('broadcaster_module.dashboard.campaign_management.dashboard')->with($data);
 

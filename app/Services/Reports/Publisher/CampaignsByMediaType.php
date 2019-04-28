@@ -42,9 +42,21 @@ class CampaignsByMediaType
         $collection->prepend($radio);
 
         $grouped = $collection->groupBy('type');
-        return $grouped->map(function ($item_list, $key) {
+        
+        $formatted_list = $grouped->map(function ($item_list, $key) {
             return $this->formatItemList($item_list);
         });
+
+        $total = $grouped->map(function ($item_list, $key) {
+            return $item_list->sum('num');
+        });
+
+        return collect(
+            array(
+                "total" => $total,
+                "detailed_counts" => $formatted_list
+            )
+        );
     }
 
      /**

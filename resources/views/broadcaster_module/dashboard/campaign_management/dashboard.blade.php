@@ -48,22 +48,25 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- The different cards -->
                 <!-- Television Card -->
+                @foreach($campaigns['detailed_counts'] as $media_type => $data)
                 <div class="card text-center">
                     <div class="card-header bg-white p-0">
                         <h5 class="bg-white position-relative">
-                            <i class="material-icons">tv</i>
-                            <span>TV</span>
+                            <i class="material-icons">{{$media_type}}</i>
+                            <span>{{strtoupper($media_type)}}</span>
                         </h5>
                     </div>
                     <div class="card-body mt-2">
-                        <h3 class="card-title my-3 text-muted">132 Campaigns</h3>
+                        <h3 class="card-title my-3 text-muted">{{$campaigns['total'][$media_type]}}</h3>
                         <div class="row dashboard_pies">
                             <div class="col-7">
-                                <div id="tv" class="_pie_chart" style="height: 130px"></div>
+                                <div id="pie-chart-{{$media_type}}" class="_pie_chart" style="height: 130px"></div>
                             </div>
                             <div class="col-5 pt-5">
-                                <ul>
+                                <ul id="legend-{{$media_type}}">
                                     <li class="pie_legend active"><span class="weight_medium">0%</span> Active</li>
                                     <li class="pie_legend pending"><span class="weight_medium">0%</span> Pending</li>
                                     <li class="pie_legend finished"><span class="weight_medium">0%</span> Finished</li>
@@ -74,22 +77,24 @@
                     <div class="card-footer text-muted bg-white border-0 mb-3">
                         <div class="row">
                             <div class="col-4 px-1">
-                                <h3 class="text-muted">16</h3>
+                                <h3 class="text-muted">{{count($clients_and_brands['walkin_clients'][$media_type])}}</h3>
                                 <span>Walk Ins</span>
                             </div>
                             <div class="col-4 px-1">
-                                <h3 class="text-danger">11</h3>
+                                <h3 class="text-danger">{{$mpos['detailed_counts'][$media_type]['pending']}}</h3>
                                 <span>Pending MPOs</span>
                             </div>
                             <div class="col-4 px-1">
-                                <h3 class="text-muted">83</h3>
+                                <h3 class="text-muted">{{$clients_and_brands['brands'][$media_type]->num}}</h3>
                                 <span>Brands</span>
                             </div>
                         </div>
                     </div>
                 </div>
+                @endforeach
+
                 <!-- Radio Card -->
-                <div class="card text-center">
+                {{-- <div class="card text-center">
                     <div class="card-header bg-white p-0">
                         <h5 class="bg-white position-relative">
                             <i class="material-icons">radio</i>
@@ -127,9 +132,11 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
             </div>
         </div>
+
+        <!-- Charts -->
         <div class="row my-5 chart-view">
             <div class="col-12 pb-1 mb-3" style="border-bottom: 2px solid #44c1c9;">
                 <div class="btn-group chart-toggle" role="group" aria-label="Basic example">
@@ -137,58 +144,50 @@
                     <button id="radio-toggle" type="button" class="btn btn-info py-1 inactive-toggle"><i class="material-icons">radio</i> RADIO</button>
                 </div>
             </div>
+
             <!-- client charts -->
-            @if(Auth::user()->companies()->count() > 1)
-                <!-- Filters -->
-                <div class="col-12 filter">
-                    <div class="row mb-2">
-                        <div class="col-5">
-                            <div class="row">
-                                <div class="col-6 pr-0">
-                                    <select class="form-control publishers" name="companies[]" id="publishers" multiple="multiple" >
-                                        @foreach(Auth::user()->companies as $company)
-                                            <option value="{{ $company->id }}">{{ $company->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-6">
-                                    <select class="form-control single-select" name="other" id="other">
-                                        <option value="">Revenue</option>
-                                        <option value="">Ad Slots</option>
-                                        <option value="">Ratings</option>
-                                        <option value="">Campaigns</option>
-                                    </select>
-                                </div>
+            <!-- Filters -->
+            <div class="col-12 filter">
+                <div class="row mb-2">
+                    <div class="col-5">
+                        <div class="row">
+                            <div class="col-6 pr-0">
+                                <select class="form-control publishers" name="companies[]" id="publishers" multiple="multiple" >
+                                    @foreach(Auth::user()->companies as $company)
+                                        <option value="{{ $company->id }}">{{ $company->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <select class="form-control single-select" name="other" id="other">
+                                    <option value="">Revenue</option>
+                                    <option value="">Ad Slots</option>
+                                    <option value="">Ratings</option>
+                                    <option value="">Campaigns</option>
+                                </select>
                             </div>
                         </div>
-                        <div class="offset-5 col-2 pl-0">
-                            <select name="filter_year" class="filter_year single-select" id="filter_year">
-                                @foreach($year_list as $year)
-                                    <option
-                                        @if($current_year == $year)
-                                            selected
-                                        @endif
-                                        value="{{ $year }}">
-                                        Jan - Dec, {{ $year }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
+                    </div>
+                    <div class="offset-5 col-2 pl-0">
+                        <select name="filter_year" class="filter_year single-select" id="filter_year">
+                            @foreach($year_list as $year)
+                                <option
+                                    @if($current_year == $year)
+                                        selected
+                                    @endif
+                                    value="{{ $year }}">
+                                    Jan - Dec, {{ $year }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
-                <br>
-                <!-- {{--Periodic revenue chart goes here--}} -->
-                <div class="col-12">
-                    <div id="periodicChart" style="min-width: 310px; height: 400px; margin: 0 auto">
-                </div>
-            @else
-                <div class="clearfix">
-                    <h4><p>Total Volume of campaign</p></h4>
-                    <br>
-                    {{--Total Volume of campaigns graph goes here--}}
-                    <div id="containerTotal" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-                </div>
-            @endif
+            </div>
+            <br>
+            <!-- {{--Periodic revenue chart goes here--}} -->
+            <div class="col-12">
+                <div id="periodicChart" style="min-width: 310px; height: 400px; margin: 0 auto">
+            </div>
         </div>
     </div>
 
@@ -220,6 +219,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
     <!-- SUMO SELECT -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.sumoselect/3.0.2/jquery.sumoselect.min.js"></script>
+    <script src="{{ asset('js/dashboard-graphs.js') }}"></script>
 
     <script>
         <?php echo "var channels_with_details =".json_encode($user_channel_with_other_details). ";\n";?>
@@ -237,114 +237,14 @@
 
             const numberFormatter = new Intl.NumberFormat('en-US', {});
 
-            flatpickr(".flatpickr", {
-                altInput: true,
-            });
-
-            // $(".dashboard_campaigns_filtered").dataTable().fnDestroy();
-
-            // var campaignFilter =  $('.dashboard_campaigns').DataTable({
-            //     dom: 'Blfrtip',
-            //     paging: true,
-            //     serverSide: true,
-            //     processing: true,
-            //     aaSorting: [],
-            //     oLanguage: {
-            //         sLengthMenu: "_MENU_"
-            //     },
-            //     ajax: {
-            //         url: '/agency/dashboard/campaigns',
-            //         data: function (d) {
-            //             d.start_date = $('input[name=start_date]').val();
-            //             d.stop_date = $('input[name=stop_date]').val();
-            //             d.filter_user = $('#filter_user').val();
-            //         }
-            //     },
-            //     columns: getColumns(),
-
-            // });
-
-            function getColumns()
-            {
-                if(companies > 1){
-                    return [
-                                    // {data: 'id', name: 'id'},
-                                    {data: 'name', name: 'name'},
-                                    {data: 'brand', name: 'brand'},
-                                    {data: 'start_date', name: 'start_date'},
-                                    {data: 'budget', name: 'budget'},
-                                    {data: 'adslots', name: 'adslots'},
-                                    {data: 'status', name: 'status'},
-                                    {data: 'station', name: 'station'}
-                                ]
-                }else{
-                    return [
-                                    // {data: 'id', name: 'id'},
-                                    {data: 'name', name: 'name'},
-                                    {data: 'brand', name: 'brand'},
-                                    {data: 'start_date', name: 'start_date'},
-                                    {data: 'budget', name: 'budget'},
-                                    {data: 'adslots', name: 'adslots'},
-                                    {data: 'status', name: 'status'},
-                                ]
-                }
-            }
-
-            // $('#dashboard_filter_campaign').on('click', function() {
-            //     campaignFilter.draw();
-            // });
-
-            // $('.key_search').on('keyup', function(){
-            //     campaignFilter.search($(this).val()).draw() ;
-            // })
-
-            // $('#filter_user').on('change', function() {
-            //     campaignFilter.draw();
-            // });
-
-            function channel_pie(channel, percent_active, percent_pending, percent_finished){
-                Highcharts.chart(channel,{
-                    chart: {
-                        renderTo: 'container',
-                        type: 'pie',
-                        height: 150,
-                        width: 150
-                    },
-                    title: {
-                        text: ''
-                    },
-                    credits: {
-                        enabled: false
-                    },
-                    plotOptions: {
-                        pie: {
-                            allowPointSelect: false,
-                            dataLabels: {
-                                enabled: false,
-                                format: '{point.name}'
-                            }
-                        }
-                    },
-                    exporting: { enabled: false },
-                    series: [{
-                        innerSize: '30%',
-                        data: [
-                            {name: 'Active', y: percent_active, color: '#00C4CA'},
-                            {name: 'Pending', y: percent_pending, color: '#E89B0B' },
-                            {name: 'Finished', y: percent_finished, color: '#E8235F'}
-                        ]
-                    }]
-                });
-            }
-
             if(companies > 1) {
-                $.each(channels_with_details, function (index, value) {
-                    if (value.channel_details.channel === 'TV') {
-                        channel_pie('tv', value.campaign_status_percentage.percentage_active, value.campaign_status_percentage.percentage_pending, value.campaign_status_percentage.percentage_finished)
-                    } else if (value.channel_details.channel === 'Radio') {
-                        channel_pie('radio', value.campaign_status_percentage.percentage_active, value.campaign_status_percentage.percentage_pending, value.campaign_status_percentage.percentage_finished)
-                    }
-                });
+                // $.each(channels_with_details, function (index, value) {
+                //     if (value.channel_details.channel === 'TV') {
+                //         channel_pie('tv', value.campaign_status_percentage.percentage_active, value.campaign_status_percentage.percentage_pending, value.campaign_status_percentage.percentage_finished)
+                //     } else if (value.channel_details.channel === 'Radio') {
+                //         channel_pie('radio', value.campaign_status_percentage.percentage_active, value.campaign_status_percentage.percentage_pending, value.campaign_status_percentage.percentage_finished)
+                //     }
+                // });
 
                 
                 $('.single-select').SumoSelect({
@@ -456,46 +356,6 @@
                     })
                 });
 
-                function filterActiveCampaignCount(campaigns)
-                {
-                    var filter_campaign_section = '';
-                    filter_campaign_section += '<span class="weight_medium small_faint uppercased">Active Campaigns</span>\n' +
-                        '                <h3><a href="/campaign/active-campaigns">'+campaigns.length+'</a></h3>';
-                    return filter_campaign_section;
-                }
-
-                function filterWalkinCount(walkins)
-                {
-                    var filter_walkin_section = '';
-                    filter_walkin_section += '<span class="weight_medium small_faint uppercased">All WalkIns</span>\n' +
-                        '                <h3><a href="/walk-in">'+walkins.length+'</a></h3>';
-                    return filter_walkin_section;
-                }
-
-                function filterPendingMpoCount(mpos)
-                {
-                    var filter_pending_mpo_section = '';
-                    filter_pending_mpo_section += '<span class="weight_medium small_faint uppercased">Pending MPO´s</span>\n' +
-                        '                <h3><a href="/mpos/pending" style="color: red;">'+mpos.length+'</a></h3>';
-                    return filter_pending_mpo_section;
-                }
-
-                function filterBrandCount(brands)
-                {
-                    var filter_brand_section = '';
-                    filter_brand_section += '<span class="weight_medium small_faint uppercased">All Brands</span>\n' +
-                        '                <h3><a href="/brands">'+brands.length+'</a></h3>';
-                    return filter_brand_section;
-                }
-
-                function filterCampaignOnHoldCount(campaign_onholds)
-                {
-                    var filter_campaign_on_hold_section = '';
-                    filter_campaign_on_hold_section += '<span class="weight_medium small_faint uppercased">Campaigns On Hold</span>\n' +
-                        '                <h3><a href="/campaign/campaign-on-hold/broadcaster/data" style="color: red;">'+campaign_onholds.length+'</a></h3>';
-                    return filter_campaign_on_hold_section;
-                }
-
                 periodicRevenueChat(months, periodic_revenue_data)
 
                 function periodicRevenueChat(month_list, periodic_revenue_data){
@@ -559,6 +419,11 @@
                 $('#tv-toggle').addClass('inactive-toggle');
                 $('#radio-toggle').removeClass('inactive-toggle');
             });
+
+            //Every user should have access to this
+            var campaigns_by_media_type = {!! json_encode($campaigns) !!};
+            var dashboard_tiles = new DashboardTiles();
+            dashboard_tiles.initTiles(campaigns_by_media_type);
         });
     </script>
 
