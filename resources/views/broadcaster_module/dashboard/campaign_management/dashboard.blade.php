@@ -217,7 +217,6 @@
     <script src="https://code.highcharts.com/modules/data.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script src="https://code.highcharts.com/highcharts-more.js"></script>
-    <script src="https://code.highcharts.com/modules/no-data-to-display.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/dataTables.buttons.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.flash.min.js"></script>
@@ -232,17 +231,120 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.sumoselect/3.0.2/jquery.sumoselect.min.js"></script>
 
     <script>
+        <?php echo "var channels_with_details =".json_encode($user_channel_with_other_details). ";\n";?>
+        //Bar chart for Total Volume of Campaigns
+        <?php echo "var campaign_volume = ".$volume . ";\n"; ?>
+        <?php echo "var campaign_month = ".$month . ";\n"; ?>
+        <?php echo "var companies =".Auth::user()->companies()->count().";\n"; ?>
+        <?php if(Auth::user()->companies()->count() > 1){ ?>
+        <?php echo "var months =".json_encode($periodic_revenues['month_list']).";\n"; ?>
+        <?php echo "var periodic_revenue_data =".json_encode($periodic_revenues['formated_periodic_revenue_chart']).";\n"; ?>
+        <?php echo "var current_year =".$current_year.";\n"; ?>
+        <?php } ?>
+
         $(document).ready(function( $ ) {
 
-            //Every user should have access to this
-            var monthly_reports = {!! json_encode($monthly_reports) !!};
-            var dashboard_graph = new DashboardGraph($('#chart-container'));
-            dashboard_graph.initChart(monthly_reports);
+            const numberFormatter = new Intl.NumberFormat('en-US', {});
 
-            //Every user should have access to this
-            var campaigns_by_media_type = {!! json_encode($reports_by_media_type['campaigns']) !!};
-            var dashboard_tiles = new DashboardTiles();
-            dashboard_tiles.initTiles(campaigns_by_media_type);
+            flatpickr(".flatpickr", {
+                altInput: true,
+            });
+
+            // $(".dashboard_campaigns_filtered").dataTable().fnDestroy();
+
+            // var campaignFilter =  $('.dashboard_campaigns').DataTable({
+            //     dom: 'Blfrtip',
+            //     paging: true,
+            //     serverSide: true,
+            //     processing: true,
+            //     aaSorting: [],
+            //     oLanguage: {
+            //         sLengthMenu: "_MENU_"
+            //     },
+            //     ajax: {
+            //         url: '/agency/dashboard/campaigns',
+            //         data: function (d) {
+            //             d.start_date = $('input[name=start_date]').val();
+            //             d.stop_date = $('input[name=stop_date]').val();
+            //             d.filter_user = $('#filter_user').val();
+            //         }
+            //     },
+            //     columns: getColumns(),
+
+            // });
+
+            function getColumns()
+            {
+                if(companies > 1){
+                    return [
+                                    // {data: 'id', name: 'id'},
+                                    {data: 'name', name: 'name'},
+                                    {data: 'brand', name: 'brand'},
+                                    {data: 'start_date', name: 'start_date'},
+                                    {data: 'budget', name: 'budget'},
+                                    {data: 'adslots', name: 'adslots'},
+                                    {data: 'status', name: 'status'},
+                                    {data: 'station', name: 'station'}
+                                ]
+                }else{
+                    return [
+                                    // {data: 'id', name: 'id'},
+                                    {data: 'name', name: 'name'},
+                                    {data: 'brand', name: 'brand'},
+                                    {data: 'start_date', name: 'start_date'},
+                                    {data: 'budget', name: 'budget'},
+                                    {data: 'adslots', name: 'adslots'},
+                                    {data: 'status', name: 'status'},
+                                ]
+                }
+            }
+
+            // $('#dashboard_filter_campaign').on('click', function() {
+            //     campaignFilter.draw();
+            // });
+
+            // $('.key_search').on('keyup', function(){
+            //     campaignFilter.search($(this).val()).draw() ;
+            // })
+
+            // $('#filter_user').on('change', function() {
+            //     campaignFilter.draw();
+            // });
+
+            function channel_pie(channel, percent_active, percent_pending, percent_finished){
+                Highcharts.chart(channel,{
+                    chart: {
+                        renderTo: 'container',
+                        type: 'pie',
+                        height: 150,
+                        width: 150
+                    },
+                    title: {
+                        text: ''
+                    },
+                    credits: {
+                        enabled: false
+                    },
+                    plotOptions: {
+                        pie: {
+                            allowPointSelect: false,
+                            dataLabels: {
+                                enabled: false,
+                                format: '{point.name}'
+                            }
+                        }
+                    },
+                    exporting: { enabled: false },
+                    series: [{
+                        innerSize: '30%',
+                        data: [
+                            {name: 'Active', y: percent_active, color: '#00C4CA'},
+                            {name: 'Pending', y: percent_pending, color: '#E89B0B' },
+                            {name: 'Finished', y: percent_finished, color: '#E8235F'}
+                        ]
+                    }]
+                });
+            }
 
             if(companies > 1) {
                 $.each(channels_with_details, function (index, value) {
