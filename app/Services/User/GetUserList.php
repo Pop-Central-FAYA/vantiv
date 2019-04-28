@@ -34,7 +34,9 @@ class GetUserList
                 'name' => $user->full_name,
                 'email' => $user->email,
                 'roles' => $this->roleLabel($user->getRoleNames()),
+                'role_name' => $user->getRoleNames(),
                 'company' => $this->getCompanyName($user->company_id),
+                'company_id' => $user->company_id,
                 'status' => $user->status
             ];
         }

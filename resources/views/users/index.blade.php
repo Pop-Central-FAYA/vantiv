@@ -63,8 +63,78 @@
             </table>
 
         </div>
-
     </div><!-- main contain -->
+
+    @foreach($users as $user)
+        <div class="modal_contain reload_content" style="width: 100%; max-width: 50%; padding: 0;" id="user_modal_{{ $user['id'] }}">
+            <div class="the_frame clearfix border_top_color pt load_this_div">
+                <form class="submit_form" id="update_{{ $user['id'] }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <div class="margin_center col_11 clearfix pt4 create_fields">
+
+                        <div class="clearfix mb3">
+                            @if($user['name'] !== null)
+                                <p> {{ $user['name'] }} </p><br>
+                            @endif
+                            <p>{{ $user['email'] }}</p>
+                        </div>
+
+                        <input type="hidden" name="user_id" value="{{ $user['id'] }}">
+                        <p class="m-b">Roles</p>
+                        <div class="clearfix mb3">
+                            <div class="column col_12">
+                                <div class="create_check clearfix mb">
+                                    <ul>
+                                        @foreach($roles as $role)
+                                            <li class="col_4 column m-b">
+                                                <input name="roles[]" value="{{ $role['id'] }}"
+                                                       @foreach($user['role_name'] as $checked_role)
+                                                       @if($checked_role === $role['role'])
+                                                       checked
+                                                       @endif
+                                                       @endforeach
+                                                       type="checkbox" id='{{ $role['id'] }}'>
+                                                <label for="{{ $role['id'] }}">{{ $role['label'] }}</label>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        @if(Auth::user()->hasRole('ssp.super_admin'))
+                            <p class='m-b'>Company</p>
+                            <div class="clearfix mb3 ">
+                                <div class="column col_12">
+                                    <div class="create_check clearfix mb">
+                                        <ul>
+                                            @foreach($companies as $company)
+                                                <li class="col_4 column m-b">
+                                                    <input name="companies[]" value="{{ $company->id }}"
+                                                           @foreach($user['company_id'] as $checked_company)
+                                                           @if($checked_company === $company->id)
+                                                           checked
+                                                           @endif
+                                                           @endforeach
+                                                           type="checkbox" id='{{ $company->id }}'>
+                                                    <label for="{{ $company->id }}">{{ $company->name }}</label>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                        @endif
+                        <p><br></p>
+                        <div class="mb4 align_right pt">
+                            <input type="submit" value="Update User" id="submit_user{{ $user['id'] }}" class="btn uppercased mb4">
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    @endforeach
 
 @stop
 
@@ -83,7 +153,13 @@
     <script>
         <?php echo "var companies =".Auth::user()->companies()->count().";\n"; ?>
         $(document).ready(function () {
-            var MediaInventoryList =  $('.user').DataTable({
+            $("body").delegate(".modal_user_click", "click", function() {
+                var href = $(this).attr("href");
+                $(href).modal();
+                return false;
+            });
+
+            var UserList =  $('.user').DataTable({
                 dom: 'Blfrtip',
                 paging: true,
                 serverSide: true,
@@ -103,7 +179,7 @@
             });
 
             $('.key_search').on('keyup', function(){
-                MediaInventoryList.search($(this).val()).draw() ;
+                UserList.search($(this).val()).draw() ;
             });
 
             function getColumn() {
