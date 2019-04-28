@@ -43,9 +43,9 @@ class TopRevenueByMediaType
          * order by revenue desc;
          */
         $collection = DB::table("companies as s")
-            ->selectRaw('SUM(COALESCE(ftbr.revenue, 0)) AS revenue, s.id as station_id, s.name, "tv" as type, c.logo')
-            ->leftJoin('fake_time_belt_revenues as ftbr', 'ftbr.station_id', '=', 's.id')
-            ->join('companies as c', 'c.id', '=', 'ftbr.station_id')
+            ->selectRaw('SUM(COALESCE(tbt.amount_paid, 0)) AS revenue, s.id as station_id, s.name, "tv" as type, s.logo')
+            ->join('time_belts as tb', 'tb.station_id', '=', "s.id")
+            ->leftJoin('time_belt_transactions as tbt', 'tbt.time_belt_id', '=', 'tb.id')
             ->whereIn('s.id', $this->company_id_list)
             ->groupBy('s.id')
             ->get();
