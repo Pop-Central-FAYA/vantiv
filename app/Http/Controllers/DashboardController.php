@@ -235,7 +235,7 @@ class DashboardController extends Controller
         $monthly_filters = array('year' => $current_year);
         $data = [
             'reports_by_media_type' => $this->getReportsForPublisherDashboard($company_id_list),
-            'monthly_reports' => $this->getMonthlyReport($company_id_list, $monthly_filters, 'station_revenues'),
+            'monthly_reports' => $this->getMonthlyReport($company_id_list, $monthly_filters, 'station_revenue'),
             'volume' => $total_volume_campaign_service->totalVolumeOfCampaign()['campaign_volumes'],
             'month' => $total_volume_campaign_service->totalVolumeOfCampaign()['campaign_months'],
             'walkins' => $company_client_service->getCompanyClients(),
@@ -246,8 +246,9 @@ class DashboardController extends Controller
             'campaign_on_hold' => $campaign_on_hold,
             'user_channel_with_other_details' => $user_channels_with_other_details,
             'periodic_revenues' => Auth::user()->companies()->count() > 1 ? $this->periodicRevenueChart($this->companyId(), $current_year) : '',
-            'year_list' => Auth::user()->companies()->count() > 1 ? $this->getYearFrom2018() : '',
-            'current_year' => $current_year
+            'year_list' => $this->getYearFrom2018(),
+            'current_year' => $current_year,
+            'stations' => $this->getCompaniesDetails($company_id_list)
         ];
         return view('broadcaster_module.dashboard.campaign_management.dashboard')->with($data);
 
@@ -292,9 +293,10 @@ class DashboardController extends Controller
      */
     protected function getFilteredPublisherReports(\Vanguard\Http\Requests\Publisher\DashboardReportRequest $request) {
         $validated = $request->validated();
+        $company_id_list = $this->getCompanyIdsList();
         $response = array(
             'status' => 'success',
-            'data' => $this->getMonthlyReport($company_id_list, $monthly_filters, $validated['report_type'])
+            'data' => $this->getMonthlyReport($company_id_list, $validated, $validated['report_type'])
         );
         return response()->json($response); 
     }
