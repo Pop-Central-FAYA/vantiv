@@ -35,7 +35,8 @@ class MposByMediaType
          * group by mpo_status, type;
          */
         $inner_query = DB::table("companies AS s")
-            ->selectRaw('IF(md.is_mpo_accepted = 0 and (cd.status != "on_hold" or cd.status = "file_error"), "pending", "accepted") AS status, "tv" as type')
+            ->selectRaw('IF(md.is_mpo_accepted = 0 and (cd.status != "on_hold" or cd.status = "file_error"), "pending", "accepted") AS status, p.type as type')
+            ->join('publishers as p', 'p.company_id', '=', 's.id')
             ->join('mpoDetails AS md', 'md.broadcaster_id', '=', 's.id')
             ->join('mpos AS m', 'm.id', '=', 'md.mpo_id')
             ->join('campaignDetails AS cd', function($join) {
@@ -49,10 +50,6 @@ class MposByMediaType
             ->groupBy('status', 'type')
             ->get();
         
-        // add radio data (fake shit)
-        $radio = (object) ['type' => 'radio', 'status' => 'pending', 'num' => 5];
-        $collection->prepend($radio);
-
         $grouped = $collection->groupBy('type');
 
         $formatted_list = $grouped->map(function ($item_list, $key) {

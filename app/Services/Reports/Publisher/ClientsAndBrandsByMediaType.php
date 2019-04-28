@@ -47,7 +47,8 @@ class ClientsAndBrandsByMediaType
      */
     protected function getNumberOfActiveBrands() {
         $inner_query = DB::table("companies AS s")
-            ->selectRaw('cd.brand, "tv" as type')
+            ->selectRaw('cd.brand, p.type as type')
+            ->join('publishers as p', 'p.company_id', '=', 's.id')
             ->join('campaignDetails AS cd', 'cd.launched_on', '=', 's.id')
             ->whereIn('s.id', $this->company_id_list);
         
@@ -55,10 +56,6 @@ class ClientsAndBrandsByMediaType
             ->selectRaw('COUNT(*) as num, type')
             ->groupBy('type')
             ->get();
-
-        // add radio data (fake shit)
-        $radio = (object) ['type' => 'radio', 'num' => 13];
-        $collection->prepend($radio);
 
         $grouped = $collection->groupBy('type');
         return $grouped->map(function($item_list, $key) {

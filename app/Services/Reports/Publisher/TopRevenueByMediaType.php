@@ -33,26 +33,14 @@ class TopRevenueByMediaType
 
     public function run()
     {
-        /**
-         * FAKE REVENUE QUERY
-         * select sum(coalesce(ftbr.revenue, 0)) as revenue, s.id as station_id, s.name
-         * from companies s
-         * left join fake_time_belt_revenues ftbr on ftbr.station_id = s.id
-         * where s.id in ('10zmij9sroads', '5af99d3407617', '5af9a637e3b16', '5afaf21076fc6', '5b4ca11cc1d35', '5c54a57939575', '5c653b68921a3', '5c653be378439', '5c7d40f56ae77')
-         * group by s.id
-         * order by revenue desc;
-         */
         $collection = DB::table("companies as s")
-            ->selectRaw('SUM(COALESCE(tbt.amount_paid, 0)) AS revenue, s.id as station_id, s.name, "tv" as type, s.logo')
+            ->selectRaw('SUM(COALESCE(tbt.amount_paid, 0)) AS revenue, s.id as station_id, s.name, p.type as type, s.logo')
+            ->join('publishers as p', 'p.company_id', '=', 's.id')
             ->join('time_belts as tb', 'tb.station_id', '=', "s.id")
             ->leftJoin('time_belt_transactions as tbt', 'tbt.time_belt_id', '=', 'tb.id')
             ->whereIn('s.id', $this->company_id_list)
             ->groupBy('s.id')
             ->get();
-
-        // add radio data (fake shit)
-        $radio = (object) ['type' => 'radio', 'revenue' => 5000000, 'name' => 'SoundCity Radio', 'logo' => 'https://s3.amazonaws.com/faya-dev-us-east-1-media/company-logo/soundcity.png'];
-        $collection->prepend($radio);
 
         $grouped = $collection->groupBy('type');
         

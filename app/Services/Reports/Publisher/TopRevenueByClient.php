@@ -15,20 +15,6 @@ class TopRevenueByClient
         return $this;
     }
 
-    /**
-     * select 
-     * w.id as client_id,
-     * w.company_name as client_name,
-     * w.company_logo as company_logo, 
-     * SUM(tbt.amount_paid) as estimated_revenue,
-     * SUM(IF(tbt.approval_status = 'approved', tbt.`amount_paid`, 0)) as actual_revenue 
-     * from `campaignDetails` as `cd` 
-     * inner join `time_belt_transactions` as `tbt` on `tbt`.`campaign_details_id` = `cd`.`id` 
-     * join walkIns as w on w.id = cd.walkins_id
-     * where `cd`.`launched_on` in ('10zmij9sroads', '5c54a57939575', '5c653b68921a3', '5c653be378439') 
-     * group by cd.walkins_id
-     * order by actual_revenue desc;
-     */
     public function run()
     {
         $collection = DB::table('campaignDetails as cd')
