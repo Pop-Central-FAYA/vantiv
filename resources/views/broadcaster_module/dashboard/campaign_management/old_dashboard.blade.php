@@ -6,142 +6,86 @@
 
 @section('content')
     <div class="main_contain">
-        <!-- header -->
+        <!-- heaser -->
         @include('partials.new-frontend.broadcaster.header')
 
         <!-- subheader -->
-            <div class="sub_header clearfix mb pt">
+        <div class="sub_header clearfix mb pt">
+            <div class="column col_6">
+                <h2 class="sub_header">Dashboard</h2>
+            </div>
+            @if(Auth::user()->companies()->count() > 1)
                 <div class="column col_6">
-                    <h2 class="sub_header">Dashboard</h2>
+                    <select class="publishers" name="companies[]" id="publishers" multiple="multiple" >
+                        @foreach(Auth::user()->companies as $company)
+                            <option value="{{ $company->id }}" selected>{{ $company->name }}</option>
+                        @endforeach
+                    </select>
                 </div>
-            </div>
-        <!-- Sidebar -->
-        @include('partials.new-frontend.broadcaster.campaign_management.sidebar')
-    
-    <!-- Channel Summary -->
-    <div class="container-fluid broadcaster-report">
-        <div class="row stats">
-            <div class="card-deck">
-                <div class="card custom-card-group">
-                    <div class="card-body p-2">
-                        <div class="row">
-                            <div class="col-4">
-                                <img src="{{ asset('company_logo/ONtv-max-logo_lrg.jpg') }}">
-                            </div>
-                            <div class="col-8 px-0">
-                                <span class="text-muted">ONMAV TV is your highest TV earner</span>
-                                <h3 class="text-success text-center mt-2"><b>4,050,000</b></h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body p-2 mt-4">
-                        <div class="row">
-                            <div class="col-4">
-                                <img src="{{ asset('company_logo/SOUNDCITY_AFRICA_LOGO.png') }}">
-                            </div>
-                            <div class="col-8 px-0">
-                                <span class="text-muted">Soundcity is your highest Radio earner</span>
-                                <h3 class="text-success text-center mt-2"><b>2,050,000</b></h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body p-2 mt-4">
-                        <div class="row">
-                            <div class="col-4">
-                                <img src="{{ asset('company_logo/SOUNDCITY_AFRICA_LOGO.png') }}">
-                            </div>
-                            <div class="col-8 px-0">
-                                <span class="text-muted">Pepsi is your biggest spender</span>
-                                <h3 class="text-success text-center mt-2"><b>2,050,000</b></h3>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Television Card -->
-                <div class="card text-center">
-                    <div class="card-header bg-white p-0">
-                        <h5 class="bg-white position-relative">
-                            <i class="material-icons">tv</i>
-                            <span>TV</span>
-                        </h5>
-                    </div>
-                    <div class="card-body mt-2">
-                        <h3 class="card-title my-3 text-muted">132 Campaigns</h3>
-                        <div class="row dashboard_pies">
-                            <div class="col-7">
-                                <div id="tv" class="_pie_chart" style="height: 100px"></div>
-                            </div>
-                            <div class="col-5 pt-5">
-                                <ul>
-                                    <li class="pie_legend active"><span class="weight_medium">0%</span> Active</li>
-                                    <li class="pie_legend pending"><span class="weight_medium">0%</span> Pending</li>
-                                    <li class="pie_legend finished"><span class="weight_medium">0%</span> Finished</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-footer text-muted bg-white border-0 mb-3">
-                        <div class="row">
-                            <div class="col-4 px-1">
-                                <h3 class="text-muted">16</h3>
-                                <span>Walk Ins</span>
-                            </div>
-                            <div class="col-4 px-1">
-                                <h3 class="text-danger">11</h3>
-                                <span>Pending MPOs</span>
-                            </div>
-                            <div class="col-4 px-1">
-                                <h3 class="text-muted">83</h3>
-                                <span>Brands</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Radio Card -->
-                <div class="card text-center">
-                    <div class="card-header bg-white p-0">
-                        <h5 class="bg-white position-relative">
-                            <i class="material-icons">radio</i>
-                            <span>RADIO</span>
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <h3 class="card-title my-3 text-muted">74 Campaigns</h3>
-                        <div class="row dashboard_pies">
-                            <div class="col-7">
-                                <div id="tv" class="_pie_chart" style="height: 100px"></div>
-                            </div>
-                            <div class="col-5 pt-5">
-                                <ul>
-                                    <li class="pie_legend active"><span class="weight_medium">0%</span> Active</li>
-                                    <li class="pie_legend pending"><span class="weight_medium">0%</span> Pending</li>
-                                    <li class="pie_legend finished"><span class="weight_medium">0%</span> Finished</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-footer text-muted bg-white border-0 mb-3">
-                        <div class="row">
-                            <div class="col-4 px-1">
-                                <h3 class="text-muted">16</h3>
-                                <span>Walk Ins</span>
-                            </div>
-                            <div class="col-4 px-1">
-                                <h3 class="text-danger">11</h3>
-                                <span>Pending MPOs</span>
-                            </div>
-                            <div class="col-4 px-1">
-                                <h3 class="text-muted">32</h3>
-                                <span>Brands</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @endif
         </div>
-    </div>
 
-    <!-- client charts -->
+        <!-- {{--sidebar--}} -->
+        @include('partials.new-frontend.broadcaster.campaign_management.sidebar')
+        
+        <!-- main stats -->
+        <div class="the_stats the_frame clearfix mb4">
+            @if(Auth::user()->hasRole('ssp.super_admin') || Auth::user()->hasRole('ssp.admin') || Auth::user()->hasRole('ssp.scheduler') || Auth::user()->hasRole('ssp.media_buyer'))
+                <div class="column col_3" id="campaign_count">
+                    <span class="weight_medium small_faint uppercased">Active Campaigns</span>
+                    <h3><a href="{{ route('campaign.list', ['status' => 'active']) }}">{{ count($active_campaigns) }}</a></h3>
+                </div>
+
+            <div class="column col_3" id="filtered_campaign_count" style="display: none;">
+
+            </div>
+            @endif
+            
+            @if(Auth::user()->hasRole('ssp.super_admin') || Auth::user()->hasRole('ssp.admin') || Auth::user()->hasRole('ssp.media_buyer'))
+            <div class="column col_3" id="campaign_on_hold">
+                <span class="weight_medium small_faint uppercased">Campaigns on hold</span>
+                <h3><a href="{{ route('campaign.list', ['status' => 'on_hold']) }}" style="color: red;">{{ count($campaign_on_hold) }}</a></h3>
+            </div>
+            <div class="column col_3" id="filtered_campaign_on_hold" style="display: none;">
+
+            </div>
+            @endif
+
+            @if(Auth::user()->hasRole('ssp.super_admin') || Auth::user()->hasRole('ssp.admin') || Auth::user()->hasRole('ssp.media_buyer'))
+            <div class="column col_2" id="walkin_count">
+                <span class="weight_medium small_faint uppercased">All Walk-Ins</span>
+                <h3><a href="{{ route('walkins.all') }}">{{ count($walkins) }}</a></h3>
+            </div>
+            <div class="column col_2" id="filtered_walkin_count" style="display: none;">
+
+            </div>
+            @endif
+            @if(Auth::user()->hasRole('ssp.super_admin') || Auth::user()->hasRole('ssp.admin') || Auth::user()->hasRole('ssp.scheduler'))
+            <div class="column col_2" id="pending_mpo_count">
+                <span class="weight_medium small_faint uppercased">Pending MPO's</span>
+                <h3><a href="{{ route('pending-mpos') }}" style="color: red;">{{ count($pending_mpos) }}</a></h3>
+            </div>
+            <div class="column col_2" id="filtered_mpo_count" style="display: none;">
+
+            </div>
+            @endif
+            @if(Auth::user()->hasRole('ssp.super_admin') || Auth::user()->hasRole('ssp.admin') || Auth::user()->hasRole('ssp.media_buyer'))
+            <div class="column col_2" id="brand_count">
+                <span class="weight_medium small_faint uppercased">All Brands</span>
+                <h3><a href="{{ route('brand.all') }}">{{ count($brands) }}</a></h3>
+            </div>
+            <div class="column col_2" id="filtered_brand_count" style="display: none;">
+
+            </div>
+            @endif
+        </div>
+
+        <!-- channel summary -->
+        @if(Auth::user()->companies()->count() > 1)
+            @include('broadcaster_module.dashboard.includes.company_channels')
+        @endif
+
+        <!-- client charts -->
         @if(Auth::user()->companies()->count() > 1)
             <div class="clearfix periodic_rev">
                 <h3><p>Periodic Revenue Chart</p></h3>
@@ -175,8 +119,8 @@
                 <div id="containerTotal" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
             </div>
         @endif
-    </div>
 
+    </div>
 
         <p><br></p>
 
@@ -218,6 +162,67 @@
             flatpickr(".flatpickr", {
                 altInput: true,
             });
+
+            // $(".dashboard_campaigns_filtered").dataTable().fnDestroy();
+
+            // var campaignFilter =  $('.dashboard_campaigns').DataTable({
+            //     dom: 'Blfrtip',
+            //     paging: true,
+            //     serverSide: true,
+            //     processing: true,
+            //     aaSorting: [],
+            //     oLanguage: {
+            //         sLengthMenu: "_MENU_"
+            //     },
+            //     ajax: {
+            //         url: '/agency/dashboard/campaigns',
+            //         data: function (d) {
+            //             d.start_date = $('input[name=start_date]').val();
+            //             d.stop_date = $('input[name=stop_date]').val();
+            //             d.filter_user = $('#filter_user').val();
+            //         }
+            //     },
+            //     columns: getColumns(),
+
+            // });
+
+            function getColumns()
+            {
+                if(companies > 1){
+                    return [
+                                    // {data: 'id', name: 'id'},
+                                    {data: 'name', name: 'name'},
+                                    {data: 'brand', name: 'brand'},
+                                    {data: 'start_date', name: 'start_date'},
+                                    {data: 'budget', name: 'budget'},
+                                    {data: 'adslots', name: 'adslots'},
+                                    {data: 'status', name: 'status'},
+                                    {data: 'station', name: 'station'}
+                                ]
+                }else{
+                    return [
+                                    // {data: 'id', name: 'id'},
+                                    {data: 'name', name: 'name'},
+                                    {data: 'brand', name: 'brand'},
+                                    {data: 'start_date', name: 'start_date'},
+                                    {data: 'budget', name: 'budget'},
+                                    {data: 'adslots', name: 'adslots'},
+                                    {data: 'status', name: 'status'},
+                                ]
+                }
+            }
+
+            // $('#dashboard_filter_campaign').on('click', function() {
+            //     campaignFilter.draw();
+            // });
+
+            // $('.key_search').on('keyup', function(){
+            //     campaignFilter.search($(this).val()).draw() ;
+            // })
+
+            // $('#filter_user').on('change', function() {
+            //     campaignFilter.draw();
+            // });
 
             function channel_pie(channel, percent_active, percent_pending, percent_finished){
                 Highcharts.chart(channel,{

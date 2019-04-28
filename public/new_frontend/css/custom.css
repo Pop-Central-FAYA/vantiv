@@ -1,0 +1,56 @@
+.broadcaster-report .stats .card {
+    border: none;
+    border-radius: 0;
+    box-shadow: 2px 2px 5px 0px rgba(123, 122, 122, 0.6);
+    margin: 0px 2rem;
+}
+.broadcaster-report .stats .card .card-header h5 {
+    top: 0.5rem; 
+    margin: 0px 5rem;
+}
+.broadcaster-report .stats .card .card-header h5 .material-icons {
+    font-size: 30px;
+    height: 11px;
+    width: 11px;
+    margin-right: 25px;
+    margin-top: 6px;
+    top: 9px;
+    position: relative;
+}
+.broadcaster-report .stats .card .card-header h5 span {
+    font-size: 14px !important;
+}
+.dashboard_pies .pie_legend {
+    font-size: 11px;
+    position: relative;
+    padding-left: 18px;
+    margin-bottom: 10px;
+    color: #6b757d;
+    font-weight: 500;
+}
+
+.dashboard_pies > div {
+    float: left;
+    margin-bottom: 0px;
+    padding: 0px;
+}
+.broadcaster-report .stats .card .card-footer span {
+    font-size: 12px;
+}
+.broadcaster-report .stats .custom-card-group {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+.broadcaster-report .stats .custom-card-group .card-body {
+    background-color: #fff;
+    background-clip: border-box;
+    border: none;
+    border-radius: 0;
+    box-shadow: 2px 2px 5px 0px rgba(123, 122, 122, 0.6);
+}
+.broadcaster-report .stats .custom-card-group .card-body span {
+    font-size: 12px;
+}
+
+
