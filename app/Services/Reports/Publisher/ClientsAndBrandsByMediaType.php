@@ -56,6 +56,10 @@ class ClientsAndBrandsByMediaType
             ->groupBy('type')
             ->get();
 
+        // add radio data (fake shit)
+        $radio = (object) ['type' => 'radio', 'num' => 13];
+        $collection->prepend($radio);
+
         $grouped = $collection->groupBy('type');
         return $grouped->map(function($item_list, $key) {
             return $item_list->first();
@@ -91,6 +95,10 @@ class ClientsAndBrandsByMediaType
             ->groupBy('walkin_id', 'type')
             ->get();
         
+        // add radio data (fake shit)
+        $radio = (object) ['type' => 'radio', 'name' => 'Papa Ajasco', 'active_campaigns' => 2];
+        $collection->prepend($radio);
+
         return $collection->groupBy('type');
     }
 }

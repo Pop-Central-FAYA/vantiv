@@ -7,6 +7,8 @@ class DashboardGraph {
         this.$chart_container = $chart_container;
         this.chart_element = this.$chart_container.find("#periodicChart").attr('id');
         this.$form_element = $chart_container.find("#filter-form");
+        this.initToggles();
+        this.initDropdowns();
         this.addOnChangeEvents();
     }
 
@@ -143,22 +145,51 @@ class DashboardGraph {
             })
         });
     }
-}
 
+    initDropdowns() {
+        this.$chart_container.find('.single-select').SumoSelect({placeholder: 'Select One', csvDispCount: 3});
+
+        this.$chart_container.find('.publishers').SumoSelect({
+            placeholder: 'Select Stations',
+            csvDispCount: 3,
+            selectAll: true,
+            captionFormat: '{0} Stations Selected',
+            captionFormatAllSelected: 'All Stations selected!',
+            okCancelInMulti: true, 
+        });
+    }
+
+    initToggles() {
+        var self = this;
+        var $tv_toggle = this.$chart_container.find('#tv-toggle');
+        var $radio_toggle = this.$chart_container.find('#radio-toggle');
+
+        $tv_toggle.on('click', function() {
+            $tv_toggle.removeClass('inactive-toggle');
+            $radio_toggle.addClass('inactive-toggle');
+        });
+
+        $radio_toggle.on('click', function() {
+            $tv_toggle.addClass('inactive-toggle');
+            $radio_toggle.removeClass('inactive-toggle');
+        });
+    }
+}
 
 class DashboardTiles {
 
     initTiles(data) {
-        for (var media_type in data) {
-            var tile_data = data[media_type];
+        for (var media_type in data.detailed_counts) {
+            var tile_data = data.detailed_counts[media_type];
+            var total = data.total[media_type]
             var container_id = "pie-chart-" + media_type;
-            this.renderSingleTile(container_id, media_type, tile_data);
+            this.renderSingleTile(container_id, media_type, tile_data, total);
         }
     }
 
-    renderSingleTile(container, media_type, tile_data) {
+    renderSingleTile(container, media_type, tile_data, total) {
         
-        var total = Object.values(tile_data).reduce(function(a,b){return a + b}, 0);
+        // var total = Object.values(tile_data).reduce(function(a,b){return a + b}, 0);
         var num_active = tile_data.active || 0;
         var num_pending = tile_data.pending || 0;
         var num_completed = tile_data.finished || 0;
