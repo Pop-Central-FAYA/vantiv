@@ -18,7 +18,7 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    {{-- <link href="{{ asset('css/app.css') }}" rel="stylesheet"> --}}
 
     <link href="{{ asset('new_frontend/css/reset.css') }}" rel="stylesheet">
     <link href="{{ asset('new_frontend/css/style.css') }}" rel="stylesheet">
@@ -51,7 +51,7 @@
     </div>
 
     <!-- App.js -->
-    <script src="{{ asset('js/app.js') }}"></script>
+    {{-- <script src="{{ asset('js/app.js') }}"></script> --}}
 
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
     <script type="text/javascript" src="{{ asset('new_frontend/js/jquery.simplemodal.1.4.4.min.js') }}"></script>

@@ -2,8 +2,6 @@
 
 namespace Vanguard\Services\Reports\Publisher;
 
-use \Vanguard\Libraries\Enum\CampaignStatus;
-
 use DB;
 use Log;
 
@@ -17,6 +15,7 @@ class MposByMediaType
     public function __construct($company_id_list)
     {
         $this->company_id_list = $company_id_list;
+        return $this;
     }
 
     public function run()

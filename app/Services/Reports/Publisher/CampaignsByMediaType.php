@@ -17,6 +17,7 @@ class CampaignsByMediaType
     public function __construct($company_id_list)
     {
         $this->company_id_list = $company_id_list;
+        return $this;
     }
 
     public function run()
@@ -35,6 +36,10 @@ class CampaignsByMediaType
             ->whereIn('s.id', $this->company_id_list)
             ->groupBy('cd.status', 'type')
             ->get();
+
+        // add radio data (fake shit)
+        $radio = (object) ['type' => 'radio', 'status' => 'pending', 'num' => 10];
+        $collection->prepend($radio);
 
         $grouped = $collection->groupBy('type');
         return $grouped->map(function ($item_list, $key) {
