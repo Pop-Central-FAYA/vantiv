@@ -6,218 +6,132 @@
 
 @section('content')
     <div class="main_contain">
-        <!-- header -->
+        <!-- heaser -->
         @include('partials.new-frontend.broadcaster.header')
 
         <!-- subheader -->
-            <div class="sub_header clearfix mb pt">
-                <div class="column col_6">
-                    <h2 class="sub_header">Dashboard</h2>
-                </div>
+        <div class="sub_header clearfix mb pt">
+            <div class="column col_6">
+                <h2 class="sub_header">Dashboard</h2>
             </div>
-        <!-- Sidebar -->
-        @include('partials.new-frontend.broadcaster.campaign_management.sidebar')
-    
-    <!-- Channel Summary -->
-    <div class="container-fluid broadcaster-report">
-        <div class="row stats">
-            <div class="card-deck">
-                <div class="card custom-card-group">
-                    <div class="card-body p-2">
-                        <div class="row">
-                            <div class="col-4">
-                                <img src="{{ asset('company_logo/ONtv-max-logo_lrg.jpg') }}">
-                            </div>
-                            <div class="col-8 px-0">
-                                <span class="text-muted">ONMAV TV is your highest TV earner</span>
-                                <h3 class="text-success text-center mt-2"><b>4,050,000</b></h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body p-2 mt-4">
-                        <div class="row">
-                            <div class="col-4">
-                                <img src="{{ asset('company_logo/SOUNDCITY_AFRICA_LOGO.png') }}">
-                            </div>
-                            <div class="col-8 px-0">
-                                <span class="text-muted">Soundcity is your highest Radio earner</span>
-                                <h3 class="text-success text-center mt-2"><b>2,050,000</b></h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body p-2 mt-4">
-                        <div class="row">
-                            <div class="col-4">
-                                <img src="{{ asset('company_logo/SOUNDCITY_AFRICA_LOGO.png') }}">
-                            </div>
-                            <div class="col-8 px-0">
-                                <span class="text-muted">Pepsi is your biggest spender</span>
-                                <h3 class="text-success text-center mt-2"><b>7,800,000</b></h3>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Television Card -->
-                <div class="card text-center">
-                    <div class="card-header bg-white p-0">
-                        <h5 class="bg-white position-relative">
-                            <i class="material-icons">tv</i>
-                            <span>TV</span>
-                        </h5>
-                    </div>
-                    <div class="card-body mt-2">
-                        <h3 class="card-title my-3 text-muted">132 Campaigns</h3>
-                        <div class="row dashboard_pies">
-                            <div class="col-7">
-                                <div id="tv" class="_pie_chart" style="height: 130px"></div>
-                            </div>
-                            <div class="col-5 pt-5">
-                                <ul>
-                                    <li class="pie_legend active"><span class="weight_medium">0%</span> Active</li>
-                                    <li class="pie_legend pending"><span class="weight_medium">0%</span> Pending</li>
-                                    <li class="pie_legend finished"><span class="weight_medium">0%</span> Finished</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-footer text-muted bg-white border-0 mb-3">
-                        <div class="row">
-                            <div class="col-4 px-1">
-                                <h3 class="text-muted">16</h3>
-                                <span>Walk Ins</span>
-                            </div>
-                            <div class="col-4 px-1">
-                                <h3 class="text-danger">11</h3>
-                                <span>Pending MPOs</span>
-                            </div>
-                            <div class="col-4 px-1">
-                                <h3 class="text-muted">83</h3>
-                                <span>Brands</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Radio Card -->
-                <div class="card text-center">
-                    <div class="card-header bg-white p-0">
-                        <h5 class="bg-white position-relative">
-                            <i class="material-icons">radio</i>
-                            <span>RADIO</span>
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <h3 class="card-title my-3 text-muted">74 Campaigns</h3>
-                        <div class="row dashboard_pies">
-                            <div class="col-7">
-                                <div id="radio" class="_pie_chart" style="height: 130px"></div>
-                            </div>
-                            <div class="col-5 pt-5">
-                                <ul>
-                                    <li class="pie_legend active"><span class="weight_medium">0%</span> Active</li>
-                                    <li class="pie_legend pending"><span class="weight_medium">0%</span> Pending</li>
-                                    <li class="pie_legend finished"><span class="weight_medium">0%</span> Finished</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-footer text-muted bg-white border-0 mb-3">
-                        <div class="row">
-                            <div class="col-4 px-1">
-                                <h3 class="text-muted">16</h3>
-                                <span>Walk Ins</span>
-                            </div>
-                            <div class="col-4 px-1">
-                                <h3 class="text-danger">11</h3>
-                                <span>Pending MPOs</span>
-                            </div>
-                            <div class="col-4 px-1">
-                                <h3 class="text-muted">32</h3>
-                                <span>Brands</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row my-5 chart-view">
-            <div class="col-12 pb-1 mb-3" style="border-bottom: 2px solid #44c1c9;">
-                <div class="btn-group chart-toggle" role="group" aria-label="Basic example">
-                    <button id="tv-toggle" type="button" class="btn btn-info py-1 mr-2"><i class="material-icons">tv</i> TV</button>
-                    <button id="radio-toggle" type="button" class="btn btn-info py-1 inactive-toggle"><i class="material-icons">radio</i> RADIO</button>
-                </div>
-            </div>
-            <!-- client charts -->
             @if(Auth::user()->companies()->count() > 1)
-                <!-- Filters -->
-                <div class="col-12 filter">
-                    <div class="row mb-2">
-                        <div class="col-5">
-                            <div class="row">
-                                <div class="col-6 pr-0">
-                                    <select class="form-control publishers" name="companies[]" id="publishers" multiple="multiple" >
-                                        @foreach(Auth::user()->companies as $company)
-                                            <option value="{{ $company->id }}">{{ $company->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-6">
-                                    <select class="form-control single-select" name="other" id="other">
-                                        <option value="">Revenue</option>
-                                        <option value="">Ad Slots</option>
-                                        <option value="">Ratings</option>
-                                        <option value="">Campaigns</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="offset-5 col-2 pl-0">
-                            <select name="filter_year" class="filter_year single-select" id="filter_year">
-                                @foreach($year_list as $year)
-                                    <option
-                                        @if($current_year == $year)
-                                            selected
-                                        @endif
-                                        value="{{ $year }}">
-                                        Jan - Dec, {{ $year }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <br>
-                <!-- {{--Periodic revenue chart goes here--}} -->
-                <div class="col-12">
-                    <div id="periodicChart" style="min-width: 310px; height: 400px; margin: 0 auto">
-                </div>
-            @else
-                <div class="clearfix">
-                    <h4><p>Total Volume of campaign</p></h4>
-                    <br>
-                    {{--Total Volume of campaigns graph goes here--}}
-                    <div id="containerTotal" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                <div class="column col_6">
+                    <select class="publishers" name="companies[]" id="publishers" multiple="multiple" >
+                        @foreach(Auth::user()->companies as $company)
+                            <option value="{{ $company->id }}" selected>{{ $company->name }}</option>
+                        @endforeach
+                    </select>
                 </div>
             @endif
         </div>
-    </div>
 
-    
-    </div>
+        <!-- {{--sidebar--}} -->
+        @include('partials.new-frontend.broadcaster.campaign_management.sidebar')
+        
+        <!-- main stats -->
+        <div class="the_stats the_frame clearfix mb4">
+            @if(Auth::user()->hasRole('ssp.super_admin') || Auth::user()->hasRole('ssp.admin') || Auth::user()->hasRole('ssp.scheduler') || Auth::user()->hasRole('ssp.media_buyer'))
+                <div class="column col_3" id="campaign_count">
+                    <span class="weight_medium small_faint uppercased">Active Campaigns</span>
+                    <h3><a href="{{ route('campaign.list', ['status' => 'active']) }}">{{ count($active_campaigns) }}</a></h3>
+                </div>
 
+            <div class="column col_3" id="filtered_campaign_count" style="display: none;">
+
+            </div>
+            @endif
+            
+            @if(Auth::user()->hasRole('ssp.super_admin') || Auth::user()->hasRole('ssp.admin') || Auth::user()->hasRole('ssp.media_buyer'))
+            <div class="column col_3" id="campaign_on_hold">
+                <span class="weight_medium small_faint uppercased">Campaigns on hold</span>
+                <h3><a href="{{ route('campaign.list', ['status' => 'on_hold']) }}" style="color: red;">{{ count($campaign_on_hold) }}</a></h3>
+            </div>
+            <div class="column col_3" id="filtered_campaign_on_hold" style="display: none;">
+
+            </div>
+            @endif
+
+            @if(Auth::user()->hasRole('ssp.super_admin') || Auth::user()->hasRole('ssp.admin') || Auth::user()->hasRole('ssp.media_buyer'))
+            <div class="column col_2" id="walkin_count">
+                <span class="weight_medium small_faint uppercased">All Walk-Ins</span>
+                <h3><a href="{{ route('walkins.all') }}">{{ count($walkins) }}</a></h3>
+            </div>
+            <div class="column col_2" id="filtered_walkin_count" style="display: none;">
+
+            </div>
+            @endif
+            @if(Auth::user()->hasRole('ssp.super_admin') || Auth::user()->hasRole('ssp.admin') || Auth::user()->hasRole('ssp.scheduler'))
+            <div class="column col_2" id="pending_mpo_count">
+                <span class="weight_medium small_faint uppercased">Pending MPO's</span>
+                <h3><a href="{{ route('pending-mpos') }}" style="color: red;">{{ count($pending_mpos) }}</a></h3>
+            </div>
+            <div class="column col_2" id="filtered_mpo_count" style="display: none;">
+
+            </div>
+            @endif
+            @if(Auth::user()->hasRole('ssp.super_admin') || Auth::user()->hasRole('ssp.admin') || Auth::user()->hasRole('ssp.media_buyer'))
+            <div class="column col_2" id="brand_count">
+                <span class="weight_medium small_faint uppercased">All Brands</span>
+                <h3><a href="{{ route('brand.all') }}">{{ count($brands) }}</a></h3>
+            </div>
+            <div class="column col_2" id="filtered_brand_count" style="display: none;">
+
+            </div>
+            @endif
+        </div>
+
+        <!-- channel summary -->
+        @if(Auth::user()->companies()->count() > 1)
+            @include('broadcaster_module.dashboard.includes.company_channels')
+        @endif
+
+        <!-- client charts -->
+        @if(Auth::user()->companies()->count() > 1)
+            <div class="clearfix periodic_rev">
+                <h3><p>Periodic Revenue Chart</p></h3>
+                <br>
+                <div class="row">
+                    <div class="column col_3 clearfix">
+                        <select name="filter_year" class="filter_year" id="filter_year">
+                            @foreach($year_list as $year)
+                                <option
+                                    @if($current_year == $year)
+                                        selected
+                                    @endif
+                                    value="{{ $year }}">
+                                    {{ $year }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <br>
+                {{--Periodic revenue chart goes here--}}
+                <div class="row">
+                    <div id="periodicChart" style="min-width: 310px; height: 400px; margin: 0 auto">
+                </div>
+            </div>
+        @else
+            <div class="clearfix">
+                <h4><p>Total Volume of campaign</p></h4>
+                <br>
+                {{--Total Volume of campaigns graph goes here--}}
+                <div id="containerTotal" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+            </div>
+        @endif
+
+    </div>
 
         <p><br></p>
 
     </div>
 @stop
 
-
-
 @section('scripts')
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/modules/data.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script src="https://code.highcharts.com/highcharts-more.js"></script>
-    <script src="https://code.highcharts.com/modules/no-data-to-display.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/dataTables.buttons.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.flash.min.js"></script>
@@ -228,21 +142,122 @@
     <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.print.min.js"></script>
     <script src="https://unpkg.com/flatpickr"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
-    <!-- SUMO SELECT -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.sumoselect/3.0.2/jquery.sumoselect.min.js"></script>
 
     <script>
+        <?php echo "var channels_with_details =".json_encode($user_channel_with_other_details). ";\n";?>
+        //Bar chart for Total Volume of Campaigns
+        <?php echo "var campaign_volume = ".$volume . ";\n"; ?>
+        <?php echo "var campaign_month = ".$month . ";\n"; ?>
+        <?php echo "var companies =".Auth::user()->companies()->count().";\n"; ?>
+        <?php if(Auth::user()->companies()->count() > 1){ ?>
+        <?php echo "var months =".json_encode($periodic_revenues['month_list']).";\n"; ?>
+        <?php echo "var periodic_revenue_data =".json_encode($periodic_revenues['formated_periodic_revenue_chart']).";\n"; ?>
+        <?php echo "var current_year =".$current_year.";\n"; ?>
+        <?php } ?>
+
         $(document).ready(function( $ ) {
 
-            //Every user should have access to this
-            var monthly_reports = {!! json_encode($monthly_reports) !!};
-            var dashboard_graph = new DashboardGraph($('#chart-container'));
-            dashboard_graph.initChart(monthly_reports);
+            const numberFormatter = new Intl.NumberFormat('en-US', {});
 
-            //Every user should have access to this
-            var campaigns_by_media_type = {!! json_encode($reports_by_media_type['campaigns']) !!};
-            var dashboard_tiles = new DashboardTiles();
-            dashboard_tiles.initTiles(campaigns_by_media_type);
+            flatpickr(".flatpickr", {
+                altInput: true,
+            });
+
+            // $(".dashboard_campaigns_filtered").dataTable().fnDestroy();
+
+            // var campaignFilter =  $('.dashboard_campaigns').DataTable({
+            //     dom: 'Blfrtip',
+            //     paging: true,
+            //     serverSide: true,
+            //     processing: true,
+            //     aaSorting: [],
+            //     oLanguage: {
+            //         sLengthMenu: "_MENU_"
+            //     },
+            //     ajax: {
+            //         url: '/agency/dashboard/campaigns',
+            //         data: function (d) {
+            //             d.start_date = $('input[name=start_date]').val();
+            //             d.stop_date = $('input[name=stop_date]').val();
+            //             d.filter_user = $('#filter_user').val();
+            //         }
+            //     },
+            //     columns: getColumns(),
+
+            // });
+
+            function getColumns()
+            {
+                if(companies > 1){
+                    return [
+                                    // {data: 'id', name: 'id'},
+                                    {data: 'name', name: 'name'},
+                                    {data: 'brand', name: 'brand'},
+                                    {data: 'start_date', name: 'start_date'},
+                                    {data: 'budget', name: 'budget'},
+                                    {data: 'adslots', name: 'adslots'},
+                                    {data: 'status', name: 'status'},
+                                    {data: 'station', name: 'station'}
+                                ]
+                }else{
+                    return [
+                                    // {data: 'id', name: 'id'},
+                                    {data: 'name', name: 'name'},
+                                    {data: 'brand', name: 'brand'},
+                                    {data: 'start_date', name: 'start_date'},
+                                    {data: 'budget', name: 'budget'},
+                                    {data: 'adslots', name: 'adslots'},
+                                    {data: 'status', name: 'status'},
+                                ]
+                }
+            }
+
+            // $('#dashboard_filter_campaign').on('click', function() {
+            //     campaignFilter.draw();
+            // });
+
+            // $('.key_search').on('keyup', function(){
+            //     campaignFilter.search($(this).val()).draw() ;
+            // })
+
+            // $('#filter_user').on('change', function() {
+            //     campaignFilter.draw();
+            // });
+
+            function channel_pie(channel, percent_active, percent_pending, percent_finished){
+                Highcharts.chart(channel,{
+                    chart: {
+                        renderTo: 'container',
+                        type: 'pie',
+                        height: 150,
+                        width: 150
+                    },
+                    title: {
+                        text: ''
+                    },
+                    credits: {
+                        enabled: false
+                    },
+                    plotOptions: {
+                        pie: {
+                            allowPointSelect: false,
+                            dataLabels: {
+                                enabled: false,
+                                format: '{point.name}'
+                            }
+                        }
+                    },
+                    exporting: { enabled: false },
+                    series: [{
+                        innerSize: '30%',
+                        data: [
+                            {name: 'Active', y: percent_active, color: '#00C4CA'},
+                            {name: 'Pending', y: percent_pending, color: '#E89B0B' },
+                            {name: 'Finished', y: percent_finished, color: '#E8235F'}
+                        ]
+                    }]
+                });
+            }
 
             if(companies > 1) {
                 $.each(channels_with_details, function (index, value) {
@@ -253,20 +268,7 @@
                     }
                 });
 
-                
-                $('.single-select').SumoSelect({
-                    placeholder: 'Select One',
-                    csvDispCount: 3,
-                });
-
-                $('.publishers').SumoSelect({
-                    placeholder: 'Select Publishers',
-                    csvDispCount: 3,
-                    selectAll: true,
-                    captionFormat: '{0} Publishers Selected',
-                    captionFormatAllSelected: 'All publishers selected!',
-                    okCancelInMulti: true, 
-                });
+                $('.publishers').select2();
 
                 $('body').delegate("#publishers", "change", function () {
                     $(".dashboard_campaigns").dataTable().fnDestroy();
@@ -456,17 +458,7 @@
 
                 });
             }
-
-            $('#tv-toggle').on('click', function() {
-                $('#tv-toggle').removeClass('inactive-toggle');
-                $('#radio-toggle').addClass('inactive-toggle');
-            });
-
-            $('#radio-toggle').on('click', function() {
-                $('#tv-toggle').addClass('inactive-toggle');
-                $('#radio-toggle').removeClass('inactive-toggle');
-            });
-        });
+        } );
     </script>
 
 @endsection
@@ -476,8 +468,7 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.5.1/css/buttons.dataTables.min.css" type="text/css"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
-    <!-- SUMO SELECT -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.sumoselect/3.0.2/sumoselect.min.css" />
+
     <style>
         .highcharts-grid path { display: none;}
         .highcharts-legend {

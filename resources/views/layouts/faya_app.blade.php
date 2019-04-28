@@ -22,6 +22,8 @@
 
     <link href="{{ asset('new_frontend/css/reset.css') }}" rel="stylesheet">
     <link href="{{ asset('new_frontend/css/style.css') }}" rel="stylesheet">
+    <link href="{{ asset('new_frontend/css/custom.css') }}" rel="stylesheet">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.3/toastr.min.css" />
     <style>
