@@ -110,19 +110,20 @@
                     <!-- Target Age group -->
                     <div class="clearfix mb">
                     <div class="input_wrap column col_12 where-it-is-going">
-                    <div class="column col_12 center">
-                        <div class="input_wrap column col_5{{  $errors->has('age_groups') ? ' has-error' : '' }}">
+                    
+                     <div>
+                    <div class="column col_12 ">
+                    <div class="column col_11 ">
+                        <div class="input_wrap column col_6{{  $errors->has('age_groups') ? ' has-error' : '' }}">
                             <label class="small_faint">Min. Age</label>
                             <input style="display: inline-block;width: 100%;" id="min_age" type="number" name="age_groups[0][min]" placeholder="Minimum Age" min="18"  max="99" >
-
                             @if($errors->has('age_groups'))
                                 <strong>
                                     <span class="help-block">{{ $errors->first('age_groups') }}</span>
                                 </strong>
                             @endif
                         </div>
-
-                        <div class="input_wrap column col_5{{ $errors->has('age_groups') ? ' has-error' : '' }}">
+                        <div class="input_wrap column col_6{{ $errors->has('age_groups') ? ' has-error' : '' }}">
                             <label class="small_faint">Max. Age</label>
                             <input style="display: inline-block;width: 100%;" id="max_age" type="number" name="age_groups[0][max]"  min="18" max="99" placeholder="Maximum Age">
                             @if($errors->has('age_groups'))
@@ -131,13 +132,14 @@
                                 </strong>
                             @endif
                         </div>
-                        <div class="column col_2">
+                        </div>
+                        <div class="column col_1">
                          <button class="plus-btn aBtn"  id="" type="button"><i class="material-icons">add</i></button>
                         </div>
 
                     </div>
 
-
+                      </div>
                        
 
 
@@ -493,19 +495,23 @@
        function movePlanByDuration(){
           ageGroupCount++;
             var new_html = "";
-             new_html +='<div class="column col_12 center">'+
-             '<div class="input_wrap column col_5">'+
+             new_html +='<div>'+
+             '<div class="column col_12">'+
+                ' <div class="column col_11">'+
+                        '<div class="input_wrap column col_6">'+
                             '<label class="small_faint">Min. Age</label>'+
                             '<input style="display: inline-block;width: 100%;" id="min_age" type="number" name="age_groups['+ ageGroupCount+'][min]" placeholder="Minimum Age" min="18"  max="99" >'+
                           '</div>'+
-                        '<div class="input_wrap column col_5">'+
+                        '<div class="input_wrap column col_6">'+
                             '<label class="small_faint">Max. Age</label>'+
                             '<input style="display: inline-block;width: 100%;" id="max_age" type="number" name="age_groups['+ ageGroupCount+'][max]"  min="18" max="99" placeholder="Maximum Age">'+
                         '</div>'+
-                        '<div class="column col_2">'+
+                  '</div>'+
+                  '<div class="column col_1">'+
                          '<button class="plus-btn  dBtn"  id="" type="button"><i class="material-icons" style="color: red">delete</i></button>'+
-                        '</div>'+
+                  '</div>'+
 
+                        '</div>'+
                     '</div>';
     
     // element.scrollIntoView(options);
@@ -519,6 +525,12 @@
 @section('styles')
     <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+
+    <style> 
+ 
+    </style>
+
+
 @stop
 
 
