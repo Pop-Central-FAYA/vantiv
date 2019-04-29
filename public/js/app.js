@@ -50039,6 +50039,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 });
                 $('.save').prop('disabled', false);
             } else {
+                $("#load_this").css({ opacity: 0.2 });
                 $.ajax({
                     type: "POST",
                     dataType: 'json',
