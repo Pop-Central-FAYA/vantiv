@@ -283,9 +283,8 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/campaign-management/dashboard', 'DashboardController@campaignManagementDashbaord')->name('broadcaster.campaign_management');
     Route::get('/inventory-management/dashboard', 'DashboardController@inventoryManagementDashboard')->name('broadcaster.inventory_management');
-    Route::get('/inventory-management/filter-timebelts-report', 'DashboardController@getFilteredTimeBeltRevenue')->name('broadcaster.inventory_management.timebelts_report');
+    Route::get('/inventory-management/reports', 'DashboardController@getFilteredInventoryReports')->name('broadcaster.inventory_management.timebelts_report');
 
-    Route::get('/campaign-management/filter-result', 'DashboardController@campaignManagementFilterResult');
     Route::get('/campaign-management/reports', 'DashboardController@getFilteredPublisherReports');
     Route::get('/campaign-details/filter/company', 'DashboardController@filteredCampaignListTable');
     Route::get('periodic-revenue/filter-year', 'DashboardController@filterPeriodicRevenueByYear');

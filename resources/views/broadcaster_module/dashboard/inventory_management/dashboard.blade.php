@@ -18,220 +18,89 @@
 
     {{--sidebar--}}
     @include('partials.new-frontend.broadcaster.inventory_management.sidebar')
-    <!-- main stats -->
-    <div class="clearfix mb3">
-        <div class="clearfix mt3">
-            <div class="column col_1">
-                <button class="btn full block_disp uppercased align_center media-type-toggle-btn">TV</button>
+
+    <div class="container-fluid broadcaster-report">
+            <!-- Charts -->
+            <div id="chart-container" class="row my-5 chart-view">
+                <div class="col-12 pb-1 mb-3" style="border-bottom: 2px solid #44c1c9;">
+                    <div class="btn-group chart-toggle" role="group" aria-label="Basic example">
+                        @foreach($media_type_list as $value)
+                            <button id="{{$value}}-toggle" type="button" class="btn btn-info py-1 mr-2 @if($value == $media_type) active-toggle @else inactive-toggle @endif" data-media-type="{{$value}}"><i class="material-icons">{{$value}}</i> {{strtoupper($value)}}</button>
+                        @endforeach
+                    </div>
+                </div>
+    
+                <!-- client charts -->
+                <!-- Filters -->
+                <div class="col-12 filter">
+                    <form method="" action="" id="filter-form">
+                        {{ csrf_field() }}
+                        <input type="hidden" id="media-type-input" name="media_type" value="{{$media_type}}">
+                        <input type="hidden" id="media-type-input" name="report_type" value="{{$timebelt_revenue['report_type']}}">
+                        <!-- Render each filter boxes for each media type -->
+                        @foreach($stations as $type => $value)
+                            <div id="{{$type}}-filter-container" class="row mb-2 filter-containers" @if($type !== $media_type) style="display: none;" @endif>
+                                <div class="col-5">
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <select class="form-control days-filter filter-val @if($type !== $media_type) do-not-send @endif" name="day[]" multiple placeholder="Select Days">
+                                                @foreach($days as $day)
+                                                    <option value="{{ $day }}" selected >{{ ucfirst($day) }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="col-4">
+                                            <select class="form-control day-parts-filter filter-val @if($type !== $media_type) do-not-send @endif" name="day_parts[]" multiple placeholder="Select Day Parts">
+                                                @foreach($day_parts as $day_part)
+                                                    <option value="{{ $day_part }}" selected>{{ $day_part }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        @if(count($value) > 1)
+                                            <div class="col-4 pr-0">
+                                                <select class="form-control publishers-filter filter-val @if($type !== $media_type) do-not-send @endif" name="station_id[]" multiple placeholder="Select Stations">
+                                                    @foreach($value as $company)
+                                                        <option value="{{ $company->id }}" selected>{{ $company->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </form>
+                </div>
+                <br>
+                <!-- {{--Periodic revenue chart goes here--}} -->
+                <div class="col-12">
+                    <div id="periodicChart" style="min-width: 310px; height: 400px; margin: 0 auto">
+                </div>
             </div>
-
-            <!-- <div class="column col_1">
-                <button id="view-graph" class="btn full block_disp uppercased align_center media-type-toggle-btn inactive-media-type-toggle-btn">RADIO</button>
-            </div> -->
         </div>
-
-        <hr class="border_top_color clearfix mb3" />
-
-        <div class="clearfix mb3">
-            <form method="POST" action="" id="filter-form">
-                {{ csrf_field() }}
-                <div class="input_wrap column col_2">
-                    <label class="small_faint">Days</label>
-                    <div class="select_wrap{{ $errors->has('day') ? ' has-error' : '' }}">
-                        <select name="day">
-                            <option value="">All Days</option>
-                            @foreach($days as $day)
-                                <option value="{{ $day }}">{{ ucfirst($day) }}</option>
-                            @endforeach
-                        </select>
-
-                        @if($errors->has('day'))
-                            <strong>
-                                <span class="help-block">
-                                    {{ $errors->first('day') }}
-                                </span>
-                            </strong>
-                        @endif
-                    </div>
-                </div>
-
-                <div class="input_wrap column col_2">
-                    <label class="small_faint">Day Parts</label>
-                    <div class="select_wrap{{ $errors->has('day_parts') ? ' has-error' : '' }}">
-                        <select name="day_parts">
-                            <option value="">All Day Parts</option>
-                            @foreach($day_parts as $day_part)
-                                <option value="{{ $day_part }}">{{ $day_part }}</option>
-                            @endforeach
-                        </select>
-
-                        @if($errors->has('day_parts'))
-                            <strong>
-                                <span class="help-block">
-                                    {{ $errors->first('day_parts') }}
-                                </span>
-                            </strong>
-                        @endif
-                    </div>
-                </div>
-
-                @if(Auth::user()->companies()->count() > 1)
-                    <div class="input_wrap column col_2">
-                        <label class="small_faint">Stations</label>
-                        <div class="select_wrap{{ $errors->has('station_id') ? ' has-error' : '' }}">
-                            <select name="station_id">
-                                <option value="">All Stations</option>
-                                @foreach($stations as $station)
-                                    <option value="{{ $station->id }}">{{ $station->name }}</option>
-                                @endforeach
-                            </select>
-
-                            @if($errors->has('station_id'))
-                                <strong>
-                                    <span class="help-block">
-                                        {{ $errors->first('station_id') }}
-                                    </span>
-                                </strong>
-                            @endif
-                        </div>
-                    </div>
-                @endif
-
-                <div class="input_wrap column col_2">
-                    <!-- <button type="submit" class="filter-btn" id="filter-btn"><i class="material-icons">search</i>FILTER</button> -->
-                    <button type="submit" class="btn full block_disp uppercased align_center">
-                        <i class="material-icons">search</i>
-                        FILTER
-                    </button>
-                </div>
-            </form>
-        </div>
-
-        <div class="clearfix">
-            <h4><p>Inventory Revenue</p></h4>
-            <br>
-            <div id="time_belt" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-        </div>
-    </div>
 @stop
 
 @section('scripts')
     <script src="https://code.highcharts.com/highcharts.js"></script>
-    <script src="https://code.highcharts.com/modules/series-label.js"></script>
+    <script src="https://code.highcharts.com/modules/data.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
-    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/highcharts-more.js"></script>
+    <script src="https://code.highcharts.com/modules/no-data-to-display.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+    <!-- SUMO SELECT -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.sumoselect/3.0.2/jquery.sumoselect.min.js"></script>
+    <script src="{{ asset('js/dashboard-graphs.js') }}"></script>
+
     <script>
-        const numberFormatter = new Intl.NumberFormat('en-US', {
-            // style: 'currency',
-            // currency: 'NGN',
-            minimumFractionDigits: 2
-        })
-
-        class TimebeltRevenueChart {
-
-            constructor(chart_element) {
-                this.chart_element = chart_element;
-                this.chart_object = null;
-            }
-
-            initChart(data) {
-                if (data.revenue !== null && data.time_belts !== null && data.revenue.length > 0 && data.time_belts.length > 0) {
-                        this.chart_object = Highcharts.chart(this.chart_element, {
-                        chart: {type: 'spline'},
-                        title: {text: ''},
-                        credits: {enabled: false},
-                        exporting: {enabled: false},
-                        xAxis: {
-                            title: {text: 'Time Belt'},
-                            categories: data.time_belts
-                        },
-                        yAxis: {
-                            title: {text: 'Revenue'},
-                            labels: {
-                                formatter: function() {
-                                    return (String.fromCharCode(0x20A6) + numberFormatter.format(this.value)).replace(".00", "");
-                                },
-                            }
-                        },
-                        tooltip: {crosshairs: true,shared: true},
-                        plotOptions: {spline: {marker: {radius: 4, lineColor: '#666666', lineWidth: 1}}},
-                        series: [{
-                            name: 'Revenue',
-                            marker: {symbol: 'square'},
-                            data: data.revenue
-                        }]
-                    });
-                    return this.chart_object;
-                }
-                return null;
-            }
-
-            refreshChart(data) {
-                if (data.revenue !== null && data.revenue.length > 0 && this.chart_object !== null) {
-                    var update_options = {
-                        name: 'Revenue',
-                        marker: {symbol: 'square'},
-                        data: data.revenue
-                    }
-                    this.chart_object.xAxis[0].update({categories: data.time_belts}, false);
-                    this.chart_object.series[0].update(update_options, true);
-                }
-                
-            }
-        }
-
-        // below is the code to perform filtering for the revenue
-        $("#filter-form").on('submit', function(e) {
-            event.preventDefault(e);
-            $('.load_this_div').css({opacity : 0.2});
-            var formdata = $("#filter-form").serialize();
-            $.ajax({
-                cache: false,
-                type: "GET",
-                url: '/inventory-management/filter-timebelts-report',
-                dataType: 'json',
-                data: formdata,
-                beforeSend: function(data) {
-                    var toastr_options = {
-                        "preventDuplicates": true,
-                        "tapToDismiss": false,
-                        "hideDuration": "1",
-                        "timeOut": "300000000", //give a really long timeout, we should be done before that
-                    }
-                    var msg = "Filtering revenue data"
-                    toastr.info(msg, null, toastr_options)
-                },
-                success: function(data) {
-                    toastr.clear();
-                    if (data.status === 'success') {
-                        if (data.data.revenue !== null && data.data.revenue.length > 0) {
-                            toastr.success("Filtered result retrieved");
-                            time_belt_revenue.refreshChart(data.data);
-                        } else {
-                            toastr.error("No results were retrived, try another combination please");
-                        }
-                        
-                    } else {
-                        toastr.error('An unknown error has occurred, please try again');
-                        return;
-                    }
-                },
-                error : function (xhr) {
-                    toastr.clear();
-                    toastr.error('An unknown error has occurred, please try again');
-                }
-            })
-        });
-
-
         var timebelt_revenue_data = {!! json_encode($timebelt_revenue) !!};
-        var time_belt_revenue = new TimebeltRevenueChart('time_belt');
+        var time_belt_revenue = new TimebeltRevenueChart($('#chart-container'));
         time_belt_revenue.initChart(timebelt_revenue_data);
-
     </script>
 @stop
 
 @section('styles')
+    <!-- SUMO SELECT -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.sumoselect/3.0.2/sumoselect.min.css" />
     <style>
         .highcharts-grid path { display: none;}
         .highcharts-legend {
