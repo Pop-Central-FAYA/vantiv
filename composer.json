@@ -32,7 +32,9 @@
         "fideloper/proxy": "^4.0",
         "spatie/laravel-permission": "^2.29",
         "carlos-meneses/laravel-mpdf": "^2.1",
-        "riskihajar/terbilang": "^1.2"
+        "riskihajar/terbilang": "^1.2",
+        "sendgrid/php-http-client": "~3.9.6",
+        "sendgrid/sendgrid": "~7"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",

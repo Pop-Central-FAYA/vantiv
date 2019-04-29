@@ -15,7 +15,7 @@
     <!-- subheader -->
         <div class="sub_header clearfix mb pt">
             <div class="column col_6">
-                <h2 class="sub_header">All MPOS</h2>
+                <h2 class="sub_header">{!! $pageLabel !!}</h2>
             </div>
 
             @if(Auth::user()->companies()->count() > 1)
@@ -38,10 +38,11 @@
         <div class="the_frame client_dets mb4">
 
             <div class="filters border_bottom clearfix">
-                <div class="column col_8 p-t">
-                    <p class="uppercased weight_medium">All MPOS</p>
+                <div class="column col_7 clearfix">
+                    <!-- <p class="uppercased weight_medium">mpos</p> -->
                 </div>
-                <div class="column col_4 clearfix">
+
+                <div class="column col_5 clearfix">
                     <div class="col_5 column">
                         <input type="text" name="start_date" class="flatpickr" placeholder="Start Date">
                     </div>
@@ -51,16 +52,17 @@
                     </div>
 
                     <div class="col_1 column">
-                        <button type="button" id="mpo_filters" class="btn small_btn">Filter</button>
+                        <button type="button" id="mpo_filters_btn" class="btn small_btn">Filter</button>
                     </div>
                 </div>
+
             </div>
 
             <!-- campaigns table -->
-            <table class="display default_mpo filter_mpo" id="default_mpo_table">
+            <!-- <table class="display default_mpo filter_mpo" id="default_mpo_table"> -->
+            <table class="display default_mpo filter_mpo dashboard_campaigns">
                 <thead>
                 <tr>
-                    <th>ID</th>
                     <th>Name</th>
                     <th>Brand</th>
                     <th>Date Created</th>
@@ -72,6 +74,23 @@
                 </tr>
                 </thead>
             </table>
+
+            <!-- <table class="display dashboard_campaigns">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Brand</th>
+                    <th>Start Date</th>
+                    <th>Budget</th>
+                    <th>Ad Slots</th>
+                    <th>Status</th>
+                    @if(Auth::user()->companies()->count() > 1)
+                        <th>Station</th>
+                    @endif
+                </tr>
+                </thead>
+            </table> -->
+
             <!-- end -->
         </div>
 
@@ -98,6 +117,8 @@
     {{--datatables--}}
     <script>
         <?php echo "var companies =".Auth::user()->companies()->count().";\n"; ?>
+        var status = '{!! $status !!}';
+
         $(document).ready(function( $ ) {
             if(companies > 1){
                 $('.publishers').select2();
@@ -132,7 +153,7 @@
                             columns: getColumns(),
                         });
                         Datefilter.draw();
-                        $('#mpo_filters').on('click', function() {
+                        $('#mpo_filters_btn').on('click', function() {
                             Datefilter.draw();
                         });
                     }
@@ -163,12 +184,13 @@
                     data: function (d) {
                         d.start_date = $('input[name=start_date]').val();
                         d.stop_date = $('input[name=stop_date]').val();
+                        d.status = status;
                     }
                 },
                 columns: getColumns(),
             });
 
-            $('#mpo_filters').on('click', function() {
+            $('#mpo_filters_btn').on('click', function() {
                 Datefilter.draw();
             });
 
@@ -176,7 +198,7 @@
             {
                 if(companies > 1){
                     return [
-                        {data: 'id', name: 'id'},
+                        // {data: 'id', name: 'id'},
                         {data: 'name', name: 'name'},
                         {data: 'brand', name: 'brand'},
                         {data: 'date_created', name: 'date_created'},
@@ -186,7 +208,7 @@
                     ]
                 }else{
                     return [
-                        {data: 'id', name: 'id'},
+                        // {data: 'id', name: 'id'},
                         {data: 'name', name: 'name'},
                         {data: 'brand', name: 'brand'},
                         {data: 'date_created', name: 'date_created'},

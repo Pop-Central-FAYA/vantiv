@@ -25,7 +25,7 @@ clean_default_db_for_test.sql
 database/migrations/2018_09_01_081439_dump_old_table_to_prepare_migration.php
 local_stuffs
 node_modules
-package.json
+# package.json
 /vendor
 .env
 .phpintel

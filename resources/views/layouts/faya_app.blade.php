@@ -11,12 +11,19 @@
     <meta property="og:title" content="FAYA" />
     <meta property="og:description" content="Advertising" />
 
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('new_frontend/img/favicon.ico') }}" />
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
     <link href="{{ asset('new_frontend/css/reset.css') }}" rel="stylesheet">
     <link href="{{ asset('new_frontend/css/style.css') }}" rel="stylesheet">
+    <link href="{{ asset('new_frontend/css/custom.css') }}" rel="stylesheet">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.3/toastr.min.css" />
     <style>
@@ -34,13 +41,17 @@
 </head>
 
 <body>
+    <div id="app">
+        <!-- side navigation -->
+        @if(Session::has('agency_id'))
+            @include('partials.new-frontend.agency.sidebar')
+        @endif
 
-<!-- side navigation -->
-    @if(Session::has('agency_id'))
-        @include('partials.new-frontend.agency.sidebar')
-    @endif
+        @yield('content')
+    </div>
 
-    @yield('content')
+    <!-- App.js -->
+    {{-- <script src="{{ asset('js/app.js') }}"></script> --}}
 
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
     <script type="text/javascript" src="{{ asset('new_frontend/js/jquery.simplemodal.1.4.4.min.js') }}"></script>

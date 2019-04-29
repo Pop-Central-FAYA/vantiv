@@ -34,6 +34,9 @@ Route::get('register/verify/{token}', 'Auth\AuthController@verifyToken');
 
 Route::get('/reg-admin', 'AdminAuthController@getAdmin')->name('admin.register.get');
 
+Route::get('user/complete-account/{id}', 'UserController@getCompleteAccount')->name('user.complete_registration')->middleware('signed');
+Route::post('/user/complete-account/store/{id}', 'UserController@processCompleteAccount');
+
 Route::post('/admin/post', 'AdminAuthController@postRegister')->name('admin.post');
 
 Route::group(['middleware' => 'auth'], function () {
@@ -49,7 +52,14 @@ Route::group(['middleware' => 'auth'], function () {
     ]);
 
     Route::group(['prefix' => 'user'], function() {
-       Route::get('/invite', 'UserController@inviteUser')->name('user.invite');
+        Route::get('/all', 'UserController@index')->name('user.index');
+        Route::get('/invite', 'UserController@inviteUser')->name('user.invite');
+        Route::get('/edit/{id}', 'UserController@editUser')->name('user.edit');
+        Route::post('/update/{id}', 'UserController@updateUser');
+        Route::post('/invite/store', 'UserController@processInvite');
+        Route::get('/data-table', 'UserController@getDatatable');
+        Route::post('/resend/invitation', 'UserController@resendInvitation');
+        Route::get('/status/update', 'UserController@updateStatus');
     });
 
     /*
@@ -151,8 +161,10 @@ Route::group(['middleware' => 'auth'], function () {
     * Campaign
     */
     Route::group(['prefix' => 'campaign'], function(){
+        Route::get('/campaigns-list', 'Campaign\CampaignsController@campaignsList')->name('campaign.list');
         Route::get('/active-campaigns', 'Campaign\CampaignsController@allActiveCampaigns')->name('campaign.all');
         Route::get('/all-active-campaigns/data', 'Campaign\CampaignsController@allActiveCampaignsData');
+        Route::get('/all-campaigns/data', 'Campaign\CampaignsController@filteredCampaignsData');
         Route::get('/campaign-general-information', 'Campaign\CampaignsController@campaignGeneralInformation')->name('campaign.get_campaign_general_information');
         Route::post('/campaign-general-information/store', 'Campaign\CampaignsController@storeCampaignGeneralInformation')->name('campaign.store_campaign_general_information');
         Route::get('/advert-slot/result/{id}', 'Campaign\CampaignsController@getAdSlotResult')->name('campaign.advert_slot');
@@ -275,7 +287,9 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/campaign-management/dashboard', 'DashboardController@campaignManagementDashbaord')->name('broadcaster.campaign_management');
     Route::get('/inventory-management/dashboard', 'DashboardController@inventoryManagementDashboard')->name('broadcaster.inventory_management');
-    Route::get('/campaign-management/filter-result', 'DashboardController@campaignManagementFilterResult');
+    Route::get('/inventory-management/reports', 'DashboardController@getFilteredInventoryReports')->name('broadcaster.inventory_management.timebelts_report');
+
+    Route::get('/campaign-management/reports', 'DashboardController@getFilteredPublisherReports');
     Route::get('/campaign-details/filter/company', 'DashboardController@filteredCampaignListTable');
     Route::get('periodic-revenue/filter-year', 'DashboardController@filterPeriodicRevenueByYear');
 
@@ -463,6 +477,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/approve/{id}', 'MediaPlan\MediaPlanController@approvePlan')->name('agency.media_plan.approve');
             Route::get('/decline/{id}', 'MediaPlan\MediaPlanController@declinePlan')->name('agency.media_plan.decline');
             Route::get('/customise/{id}', 'MediaPlan\MediaPlanController@getSuggestPlanById')->name('agency.media_plan.customize');
+            Route::get('/vue/customise/{id}', 'MediaPlan\MediaPlanController@getSuggestPlanByIdVue');
 
             Route::post('/customise-filter', 'MediaPlan\MediaPlanController@setPlanSuggestionFilters')->name('agency.media_plan.customize-filter');
 

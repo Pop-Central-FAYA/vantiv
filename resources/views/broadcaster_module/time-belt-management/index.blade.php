@@ -1,7 +1,7 @@
 @extends('layouts.faya_app')
 
 @section('title')
-    <title> FAYA | Time Belt Management </title>
+    <title> FAYA | Time Belts </title>
 @stop
 
 @section('content')
@@ -15,7 +15,7 @@
     <!-- subheader -->
         <div class="sub_header clearfix mb pt">
             <div class="column col_6">
-                <h2 class="sub_header">Time Belt Management</h2>
+                <h2 class="sub_header">Time Belts</h2>
             </div>
         </div>
 
@@ -51,7 +51,7 @@
                     <th>Program</th>
                     <th>Revenue</th>
                     <th>Rate Card</th>
-                    <th>Details</th>
+                    <!-- <th>Details</th> -->
                 </tr>
                 </thead>
             </table>
@@ -106,7 +106,7 @@
                         {data: 'program', name: 'program'},
                         {data: 'revenue', name: 'revenue'},
                         {data: 'rate_card', name: 'rate_card'},
-                        {data: 'details', name: 'details'}
+                        // {data: 'details', name: 'details'}
                     ]
                 }else{
                     return [
@@ -115,7 +115,7 @@
                         {data: 'program', name: 'program'},
                         {data: 'revenue', name: 'revenue'},
                         {data: 'rate_card', name: 'rate_card'},
-                        {data: 'details', name: 'details'}
+                        // {data: 'details', name: 'details'}
                     ]
                 }
             }

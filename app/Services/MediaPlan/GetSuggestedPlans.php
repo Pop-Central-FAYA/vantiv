@@ -91,7 +91,7 @@ class GetSuggestedPlans
             "total_audiences" => $total_audience,
             "programs_stations" => $plans->sortByDesc("total_audience"),
             "stations" => $this->groupbyState($plans),
-            "selected" => $this->mapByStateSelected($selected_plans)->sortByDesc("total_audience"),
+            "selected" => $this->mapByStateSelected($selected_plans)->sortByDesc("total_audience")->values()->all(),
             'total_graph' => $plans->groupBy(['day', 'station']),
             'days' => array("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
         );

@@ -24,18 +24,18 @@ class MpoController extends Controller
     public function index()
     {
         $mpo_list_service = new MpoList($this->companyId(), null,null);
-        return view('broadcaster_module.mpos.index')->with('companies_id', \Auth::user()->companies()->count() > 1 ? $mpo_list_service->getMpoCompanyId() : '');
+        return view('broadcaster_module.mpos.index')
+            ->with('companies_id', \Auth::user()->companies()->count() > 1 ? $mpo_list_service->getMpoCompanyId() : '')
+            ->with('status', '')
+            ->with('pageLabel', "All MPOs");;
     }
 
     public function getAllData(Request $request, DataTables $dataTables)
     {
         $broadcaster_id = \Session::get('broadcaster_id');
-
-        $mpo_list_service = new MpoList($this->companyId(), $request->start_date, $request->stop_date);
+        $mpo_list_service = new MpoList($this->companyId(), $request->start_date, $request->stop_date, $request->status);
         $mpos = $mpo_list_service->mpoList();
-
         $mpo_data = $this->getMpoCollection($mpos, $broadcaster_id);
-
         return $this->mpoDatatablesCollection($dataTables, $mpo_data);
     }
 
@@ -50,7 +50,13 @@ class MpoController extends Controller
 
     public function pending_mpos()
     {
-        return view('broadcaster_module.mpos.pending_mpo');
+        // return view('broadcaster_module.mpos.pending_mpo');
+        $mpo_list_service = new MpoList($this->companyId(), null, null);
+        return view('broadcaster_module.mpos.index')
+            ->with('companies_id', \Auth::user()->companies()->count() > 1 ? $mpo_list_service->getMpoCompanyId() : '')
+            ->with('status', 'pending')
+            ->with('pageLabel', "Pending MPOs");
+
     }
 
     public function pendingData(Request $request, DataTables $dataTables)

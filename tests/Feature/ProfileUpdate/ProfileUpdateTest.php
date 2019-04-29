@@ -37,7 +37,7 @@ class ProfileUpdateTest extends TestCase
         $this->actingAs($user);
         //update the user
         $update_user_service = new UpdateUser($user->id, $faker->name, $faker->name, $faker->phoneNumber,
-            null, null, null, null);
+            null, null, null, null, null);
         $update_user = $update_user_service->updateUser();
         //get the user details
         $user_details = $this->getUserDetails($user->id);
@@ -55,7 +55,7 @@ class ProfileUpdateTest extends TestCase
         $this->actingAs($created_user);
         //updating the url of the image
         $update_user_service = new UpdateUser($created_user->id, null, null,
-            null, null, $faker->url, null, null);
+            null, null, $faker->url, null, null, null);
         $update_avatar = $update_user_service->updateAvatar();
         $user_details = $this->getUserDetails($created_user->id);
         $this->assertEquals($update_avatar->avatar, $user_details->avatar);
@@ -68,7 +68,7 @@ class ProfileUpdateTest extends TestCase
         $faker = Factory::create();
         $created_user = $this->createUser($faker);
         $update_user_service = new UpdateUser($created_user->id, null, null, null, null,
-            null, $new_password, null);
+            null, $new_password, null, null);
         $update_user_service->updatePassword();
         $user_details = $this->getUserDetails($created_user->id);
         $this->assertTrue(\Hash::check($new_password, $user_details->password));
