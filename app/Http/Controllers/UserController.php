@@ -10,6 +10,8 @@ use Vanguard\Services\User\InviteUser;
 use Vanguard\Services\RolesPermission\ListRoleGroup;
 use Illuminate\Http\Request;
 use Vanguard\Services\User\UpdateUser;
+use Vanguard\Services\User\UpdateUserService;
+use Vanguard\Services\Validator\UpdateUserValidation;
 use Vanguard\Services\Validator\ValidateUserCompleteAccount;
 use Vanguard\Services\Validator\ValidateUserInviteRequest;
 use Vanguard\Support\Enum\UserStatus;
@@ -23,12 +25,7 @@ class UserController extends Controller
 
     public function index()
     {
-        $user_list_service = new GetUserList($this->getCompanyIdsList());
-        $user_list = $user_list_service->getUserData();
-        $roles_service = new ListRoleGroup('ssp');
-        return view('users.index')->with('users', $user_list)
-                                        ->with('roles', $roles_service->getRoles())
-                                        ->with('companies', $this->getCompaniesDetails($this->companyId()));
+        return view('users.index');
     }
 
     public function getDatatable(DataTables $dataTables)
@@ -37,7 +34,7 @@ class UserController extends Controller
         $user_list = $user_list_service->getUserData();
         return $dataTables->collection($user_list)
             ->addColumn('edit', function ($user_list) {
-                return '<a href="#user_modal_'.$user_list['id'].'" class="weight_medium modal_user_click">Edit</a>';
+                return '<a href="'.route('user.edit', ['id' => $user_list['id']]).'" class="weight_medium">Edit</a>';
             })
             ->addColumn('status', function ($user_list) {
                 return '<a href="" class="weight_medium">'.$user_list['status'].'</a>';
@@ -67,11 +64,7 @@ class UserController extends Controller
         if($validate_request->fails()){
             return ['status'=>"error", 'message'=> $validate_request->errors()->first()];
         }
-        if(isset($request->companies)) {
-            $companies = $request->companies;
-        }else{
-            $companies = \Auth::user()->companies->first()->id;
-        }
+        $companies = $this->getCompany($request->companies);
         $inviter_name = \Auth::user()->full_name;
         \DB::transaction(function () use ($request, $companies, $inviter_name) {
             $user_mail_content_array = [];
@@ -119,5 +112,37 @@ class UserController extends Controller
         });
 
         return ['status'=>"success", 'message'=> "Thank you for completing your registration, you can now login with your credentials"];
+    }
+
+    public function editUser($id)
+    {
+        $user = User::find($id)->load('companies');
+        $roles_service = new ListRoleGroup('ssp');
+        return view('users.edit')->with('roles', $roles_service->getRoles())
+                                        ->with('companies', $this->getCompaniesDetails($this->companyId()))
+                                        ->with('user', $user);
+    }
+
+    public function updateUser($id, Request $request)
+    {
+        $validate_request_service = new UpdateUserValidation($request->all());
+        $validate_request = $validate_request_service->validateRequest();
+        if($validate_request->fails()){
+            return ['status'=>"error", 'message'=> $validate_request->errors()->first()];
+        }
+
+        $update_user_service = new UpdateUserService($request->roles, $this->getCompany($request->companies), $request->user_id);
+        $update_user_service->updateUser();
+        return ['status'=>"success", 'message'=> "User updated successfully"];
+    }
+
+    private function getCompany($request)
+    {
+        if(isset($request->companies)) {
+            $companies = $request->companies;
+        }else{
+            $companies = \Auth::user()->companies->first()->id;
+        }
+        return $companies;
     }
 }
