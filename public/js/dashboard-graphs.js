@@ -3,10 +3,13 @@ const numberFormatter = new Intl.NumberFormat('en-US', {});
 
 class DashboardGraph {
 
-    constructor($chart_container) {
+    constructor($chart_container, stations) {
         this.$chart_container = $chart_container;
+        this.stations = stations;
         this.chart_element = this.$chart_container.find("#periodicChart").attr('id');
         this.$form_element = $chart_container.find("#filter-form");
+        this.$all_toggles = this.$chart_container.find('.chart-toggle button');
+
         this.initToggles();
         this.initDropdowns();
         this.addOnChangeEvents();
@@ -117,36 +120,71 @@ class DashboardGraph {
     addOnChangeEvents() {
         var self = this;
         this.$form_element.find("select").on('change', function() {
-            $.ajax({
-                cache: false,
-                type: "GET",
-                url: '/campaign-management/reports',
-                dataType: 'json',
-                data: self.$form_element.serialize(),
-                beforeSend: function(data) {
-                    var toastr_options = {
-                        "preventDuplicates": true,
-                        "tapToDismiss": false,
-                        "hideDuration": "1",
-                        "timeOut": "300000000", //give a really long timeout, we should be done before that
-                    }
-                    var msg = "Getting new charts, please hold."
-                    toastr.info(msg, null, toastr_options)
-                },
-                success: function(data) {
-                    toastr.clear();
-                    toastr.success("Filtered result retrieved");
-                    self.refreshChart(data.data);
-                },
-                error: function (xhr) {
-                    toastr.clear();
-                    toastr.error('An unknown error has occurred, please try again');
-                }
-            })
+            self.performFilterRequest();
         });
     }
 
-    initDropdowns() {
+    performFilterRequest() {
+        var self = this;
+
+        $.ajax({
+            cache: false,
+            type: "GET",
+            url: '/campaign-management/reports',
+            dataType: 'json',
+            data: self.$form_element.find(":not(.do-not-send)").serialize(),
+            beforeSend: function(data) {
+                var toastr_options = {
+                    "preventDuplicates": true,
+                    "tapToDismiss": false,
+                    "hideDuration": "1",
+                    "timeOut": "300000000", //give a really long timeout, we should be done before that
+                }
+                var msg = "Getting new charts, please hold."
+                toastr.info(msg, null, toastr_options)
+            },
+            success: function(data) {
+                toastr.clear();
+                toastr.success("Filtered result retrieved");
+                self.refreshChart(data.data);
+            },
+            error: function (xhr) {
+                toastr.clear();
+                toastr.error('An unknown error has occurred, please try again');
+            }
+        })
+    }
+
+    initToggles() {
+        var self = this;
+        this.$all_toggles.on('click', function() {
+            var $el = $(this);
+            if ($el.hasClass('active-toggle')) {
+                return;
+            }
+
+            //toggle the active/inactive classes (shows which button is active)
+            self.$all_toggles.removeClass('active-toggle').addClass('inactive-toggle');
+            $el.removeClass('inactive-toggle').addClass('active-toggle');
+
+            //set the media type in the form (for requests)
+            var media_type = $el.attr('data-media-type');
+            self.$form_element.find("#media-type-input").val(media_type);
+
+            //hide the filter bar belonging to one media type and show the selected one
+
+            self.$form_element.find(".filter-containers").hide();
+            self.$form_element.find("#" + media_type + "-filter-container").show()
+
+            self.$form_element.find(".filter-val").addClass("do-not-send");
+            self.$form_element.find("#" + media_type + "-filter-container .filter-val").removeClass("do-not-send")
+
+            //make a request with the default values
+            self.performFilterRequest();
+        });
+    }
+
+    initDropdowns(media_type) {
         this.$chart_container.find('.single-select').SumoSelect({placeholder: 'Select One', csvDispCount: 3});
 
         this.$chart_container.find('.publishers').SumoSelect({
@@ -156,22 +194,6 @@ class DashboardGraph {
             captionFormat: '{0} Stations Selected',
             captionFormatAllSelected: 'All Stations selected!',
             okCancelInMulti: true, 
-        });
-    }
-
-    initToggles() {
-        var self = this;
-        var $tv_toggle = this.$chart_container.find('#tv-toggle');
-        var $radio_toggle = this.$chart_container.find('#radio-toggle');
-
-        $tv_toggle.on('click', function() {
-            $tv_toggle.removeClass('inactive-toggle');
-            $radio_toggle.addClass('inactive-toggle');
-        });
-
-        $radio_toggle.on('click', function() {
-            $tv_toggle.addClass('inactive-toggle');
-            $radio_toggle.removeClass('inactive-toggle');
         });
     }
 }
@@ -198,15 +220,41 @@ class DashboardTiles {
         var percent_pending = this.getWholePercent(num_pending, total);
         var percent_finished = this.getWholePercent(num_completed, total);
 
+        // chart: {           
+        //     margin: [0, 0, 0, 0],
+        //     spacingTop: 0,
+        //     spacingBottom: 0,
+        //     spacingLeft: 0,
+        //     spacingRight: 0
+        // },
+        // plotOptions: {
+        //     pie: {
+        //         size:'100%',
+        //         dataLabels: {
+        //             enabled: false
+        //         }
+        //     }
+        // }
+
         Highcharts.chart(container, {
-            chart: {type: 'pie', height: 150, width: 150},
+            // chart: {type: 'pie', height: 200, width: 200},
+            chart: {
+                type: 'pie', 
+                size:'100%', 
+                dataLabels: {enabled: false},
+                margin: [0, 0, 0, 0],
+                spacingTop: 0,
+                spacingBottom: 0,
+                spacingLeft: 0,
+                spacingRight: 0
+            },
             title: {text: ''},
             credits: {enabled: false},
             plotOptions: {pie: {allowPointSelect: false, dataLabels: {enabled: false, format: '{point.name}'}}},
             exporting: {enabled: false},
             series: [
                 {
-                    innerSize: '30%',
+                    innerSize: '25%',
                     data: [
                         {name: 'Active', y: percent_active, color: '#00C4CA'},
                         {name: 'Pending', y: percent_pending, color: '#E89B0B' },

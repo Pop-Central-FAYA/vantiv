@@ -7,6 +7,8 @@ use Vanguard\Http\Controllers\Traits\CompanyIdTrait;
 use Vanguard\Libraries\Utilities;
 use Auth;
 use Session;
+
+use Vanguard\Models\Publisher;
 use Vanguard\Services\Brands\CompanyBrands;
 use Vanguard\Services\Campaign\AllCampaign;
 use Vanguard\Services\Campaign\PeriodicRevenueChart;
@@ -218,13 +220,34 @@ class DashboardController extends Controller
         $current_year = date('Y');
 
         $company_id_list = $this->getCompanyIdsList();
+        $company_details = $this->getCompaniesDetails($company_id_list);
 
-        $monthly_filters = array('year' => $current_year);
+        //Get the station_ids for the initial query
+        $publishers = Publisher::allowed($company_id_list)->get();
+        $grouped_publishers = $publishers->groupBy('type');
+
+        $media_type_list = $grouped_publishers->keys()->sort()->values()->reverse(); //this sorting is so tv comes first, but the order should be in the db
+        $initial_media_type = $media_type_list->first();
+
+        //get the full station list as an array
+        $station_list = array();
+        foreach ($grouped_publishers as $key => $value) {
+            $station_list[$key] = $company_details->whereIn("id", $value->pluck("company_id"));
+        }
+
+        $monthly_filters = array('year' => $current_year, 'station_id' => $station_list[$initial_media_type]->pluck('id'));
         $data = [
-            'monthly_reports' => $this->getMonthlyReport($company_id_list, $monthly_filters, 'station_revenue'),
+            //other variables used to render different things
             'year_list' => $this->getYearFrom2018(),
             'current_year' => $current_year,
-            'stations' => $this->getCompaniesDetails($company_id_list),
+            'stations' => $station_list,
+            'media_type_list' => $media_type_list,
+            'media_type' => $initial_media_type,
+
+            //monthly reports limits the reports by media type and the companies associated with it
+            'monthly_reports' => $this->getMonthlyReport($company_id_list, $monthly_filters, 'station_revenue'),
+
+            // these reports below use the full company_id list because this is the summary across all types
             'top_media_type_revenue' => (new \Vanguard\Services\Reports\Publisher\TopRevenueByMediaType($company_id_list))->run(),
             'clients_and_brands' => (new \Vanguard\Services\Reports\Publisher\ClientsAndBrandsByMediaType($company_id_list))->run(),
             'top_revenue_by_client' => (new \Vanguard\Services\Reports\Publisher\TopRevenueByClient($company_id_list))->run(),
@@ -262,6 +285,13 @@ class DashboardController extends Controller
     protected function getFilteredPublisherReports(\Vanguard\Http\Requests\Publisher\DashboardReportRequest $request) {
         $validated = $request->validated();
         $company_id_list = $this->getCompanyIdsList();
+        
+        /**
+         * if a specific station was not requested (make sure to limit the query by stations belonging to the current media type being requested)
+         */
+        if (!isset($validated['station_id'])) {
+            $validated['station_id'] = Publisher::ofType($validated['media_type'])->get()->pluck('company_id');
+        }
         $response = array(
             'status' => 'success',
             'data' => $this->getMonthlyReport($company_id_list, $validated, $validated['report_type'])
