@@ -19,7 +19,7 @@
         </div>
 
         <!-- campaign details -->
-        <div class="the_frame client_dets border_top_color mb4">
+        <div class="the_frame client_dets border_top_color mb4 load_this_div">
 
             <!-- filter -->
             <div class="filters clearfix">
@@ -64,7 +64,21 @@
 
         </div>
     </div><!-- main contain -->
-
+    @foreach($users as $user)
+    <div class="modal_contain load_this_div" style="height: 250px;" id="user_modal_{{ $user['id'] }}">
+        <div class="wallet_placer margin_center mb3"></div>
+        <form class="resend_invite" data-user_id="{{ $user['id'] }}" id="invite_{{ $user['id'] }}">
+            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="user_id" value="{{ $user['id'] }}">
+            <div class="clearfix mb3">
+                <p>Click on the send invitation button to re send an invite</p>
+            </div>
+            <div class="align_right">
+                <button type="submit" class="btn button_create">Send Invitation Mail</button>
+            </div>
+        </form>
+    </div>
+    @endforeach
 @stop
 
 @section('scripts')
@@ -82,6 +96,11 @@
     <script>
         <?php echo "var companies =".Auth::user()->companies()->count().";\n"; ?>
         $(document).ready(function () {
+            $("body").delegate(".modal_user_click", "click", function() {
+                var href = $(this).attr("href");
+                $(href).modal();
+                return false;
+            });
 
             var UserList =  $('.user').DataTable({
                 dom: 'Blfrtip',
@@ -119,6 +138,158 @@
                 }
                 return data;
             }
+
+            $(".resend_invite").on('submit', function(e) {
+                event.preventDefault(e);
+                $('.load_this_div').css({
+                    opacity : 0.2
+                });
+                $('a').css('pointer-events','none');
+                $('.button_create').hide();
+                var user_id = $(this).data('user_id');
+                var formdata = $("#invite_"+user_id).serialize();
+                var weHaveSuccess = false;
+
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: '/user/resend/invitation',
+                    dataType: 'json',
+                    data: formdata,
+                    beforeSend: function(data) {
+                        // run toast showing progress
+                        toastr_options = {
+                            "progressBar": true,
+                            // "showDuration": "300",
+                            "preventDuplicates": true,
+                            "tapToDismiss": false,
+                            "hideDuration": "1",
+                            "timeOut": "300000000"
+                        };
+                        msg = "Processing your request..."
+                        toastr.info(msg, null, toastr_options)
+                    },
+                    success: function (data) {
+                        toastr.clear();
+                        if (data.status === 'success') {
+                            toastr.success(data.message);
+                            location.href = '/user/all';
+                        } else {
+                            toastr.error(data.message);
+                            $('.load_this_div').css({
+                                opacity: 1
+                            });
+                            $('a').css('pointer-events','');
+                            $('.button_create').show();
+                            return;
+                        }
+                        weHaveSuccess = true;
+                    },
+                    error : function (xhr) {
+                        toastr.clear();
+                        if(xhr.status === 500){
+                            toastr.error('An unknown error has occurred, please try again');
+                            $('.load_this_div').css({
+                                opacity: 1
+                            });
+                            $('a').css('pointer-events','');
+                            $('.button_create').show();
+                            return;
+                        }else if(xhr.status === 503){
+                            toastr.error('The request took longer than expected, please try again');
+                            $('.load_this_div').css({
+                                opacity: 1
+                            });
+                            $('a').css('pointer-events','');
+                            $('.button_create').show();
+                            return;
+                        }else{
+                            toastr.error('An unknown error has occurred, please try again');
+                            $('.load_this_div').css({
+                                opacity: 1
+                            });
+                            $('a').css('pointer-events','');
+                            $('.button_create').show();
+                            return;
+                        }
+                    }
+                })
+            });
+
+            $('body').delegate('.user_status', 'change', function() {
+                var user_id = $(this).data('user_id');
+                var select_value = $('#status_'+user_id).val();
+                event.preventDefault();
+                $('.load_this_div').css({
+                    opacity : 0.2
+                });
+                $('a').css('pointer-events','none');
+                $('.user_status').prop('disabled', 'disabled');
+                $.ajax({
+                    cache: false,
+                    type: "GET",
+                    url: '/user/status/update',
+                    dataType: 'json',
+                    data: {user_id : user_id, status : select_value},
+                    beforeSend: function(data) {
+                        // run toast showing progress
+                        toastr_options = {
+                            "progressBar": true,
+                            // "showDuration": "300",
+                            "preventDuplicates": true,
+                            "tapToDismiss": false,
+                            "hideDuration": "1",
+                            "timeOut": "300000000"
+                        };
+                        msg = "Processing your request..."
+                        toastr.info(msg, null, toastr_options)
+                    },
+                    success: function (data) {
+                        toastr.clear();
+                        if (data.status === 'success') {
+                            toastr.success(data.message);
+                            location.href = '/user/all';
+                        } else {
+                            toastr.error(data.message);
+                            $('.load_this_div').css({
+                                opacity: 1
+                            });
+                            $('a').css('pointer-events','');
+                            $('.user_status').prop('disabled', false);
+                            return;
+                        }
+                        weHaveSuccess = true;
+                    },
+                    error : function (xhr) {
+                        toastr.clear();
+                        if(xhr.status === 500){
+                            toastr.error('An unknown error has occurred, please try again');
+                            $('.load_this_div').css({
+                                opacity: 1
+                            });
+                            $('a').css('pointer-events','');
+                            $('.user_status').prop('disabled', false);
+                            return;
+                        }else if(xhr.status === 503){
+                            toastr.error('The request took longer than expected, please try again');
+                            $('.load_this_div').css({
+                                opacity: 1
+                            });
+                            $('a').css('pointer-events','');
+                            $('.user_status').prop('disabled', false);
+                            return;
+                        }else{
+                            toastr.error('An unknown error has occurred, please try again');
+                            $('.load_this_div').css({
+                                opacity: 1
+                            });
+                            $('a').css('pointer-events','');
+                            $('.user_status').prop('disabled', false);
+                            return;
+                        }
+                    }
+                })
+            })
 
         })
     </script>

@@ -147,11 +147,10 @@
                             "hideDuration": "1",
                             "timeOut": "300000000"
                         };
-                        msg = "Generating ratings, please wait"
+                        msg = "Processing your request..."
                         toastr.info(msg, null, toastr_options)
                     },
                     success: function (data) {
-                        console.log(data);
                         toastr.clear();
                         if (data.status === 'success') {
                             toastr.success(data.message);

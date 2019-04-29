@@ -3,7 +3,6 @@
 namespace Vanguard\Http\Controllers;
 
 use Vanguard\Http\Controllers\Traits\CompanyIdTrait;
-use Vanguard\Mail\InviteUser as InviteUserMail;
 use Vanguard\Services\Mail\UserInvitationMail;
 use Vanguard\Services\User\GetUserList;
 use Vanguard\Services\User\InviteUser;
@@ -25,19 +24,26 @@ class UserController extends Controller
 
     public function index()
     {
-        return view('users.index');
+        $user_list_service = new GetUserList($this->getCompanyIdsList());
+        $user_list = $user_list_service->getUserData();
+        return view('users.index')->with('users', $user_list);
     }
 
     public function getDatatable(DataTables $dataTables)
     {
         $user_list_service = new GetUserList($this->getCompanyIdsList());
         $user_list = $user_list_service->getUserData();
+        $statuses = UserStatus::lists();
         return $dataTables->collection($user_list)
             ->addColumn('edit', function ($user_list) {
                 return '<a href="'.route('user.edit', ['id' => $user_list['id']]).'" class="weight_medium">Edit</a>';
             })
-            ->addColumn('status', function ($user_list) {
-                return '<a href="" class="weight_medium">'.$user_list['status'].'</a>';
+            ->addColumn('status', function ($user_list) use($statuses) {
+                if($user_list['status'] === UserStatus::UNCONFIRMED){
+                    return '<a href="#user_modal_'.$user_list['id'].'" class="weight_medium modal_user_click">'.$user_list['status'].'</a>';
+                }else{
+                    return view('users.status', ['user_status' => $user_list['status'], 'statuses' => $statuses, 'id' => $user_list['id']]);
+                }
             })
             ->rawColumns(['edit' => 'edit', 'status' => 'status'])->addIndexColumn()
             ->make(true);
@@ -71,15 +77,7 @@ class UserController extends Controller
             foreach ($request->email as $email) {
                 $invite_user_service = new InviteUser($request->roles, $companies, $email);
                 $invited_user = $invite_user_service->createUnconfirmedUser();
-                $user_mail_content_array[] = [
-                    'companies' => collect($invited_user->companies()->pluck('name'))->implode(', '),
-                    'recipient' =>  $invited_user->email,
-                    'subject' => 'New User Invitation',
-                    'inviter' => $inviter_name,
-                    'user_id' => $invited_user->id,
-                    'link' =>  URL::temporarySignedRoute('user.complete_registration', now()->addHour(1),
-                                                    ['id'=> $invited_user->id])
-                ];
+                $user_mail_content_array[] = $this->emailFormat($invited_user, $inviter_name);
             }
             $email_invitation_service = new UserInvitationMail($user_mail_content_array);
             $email_invitation_service->sendInvitationMail();
@@ -144,5 +142,40 @@ class UserController extends Controller
             $companies = \Auth::user()->companies->first()->id;
         }
         return $companies;
+    }
+
+    public function resendInvitation(Request $request)
+    {
+        $user = User::find($request->user_id);
+        $user_mail_content_array[] = $this->emailFormat($user, \Auth::user()->full_name);
+        $email_invitation_service = new UserInvitationMail($user_mail_content_array);
+        $email_invitation_service->sendInvitationMail();
+        return ['status'=>"success", 'message'=> "Invitation has been sent to the user"];
+    }
+
+    private function emailFormat($invited_user, $inviter_name)
+    {
+        return [
+            'companies' => collect($invited_user->companies()->pluck('name'))->implode(', '),
+            'recipient' =>  $invited_user->email,
+            'subject' => 'New User Invitation',
+            'inviter' => $inviter_name,
+            'user_id' => $invited_user->id,
+            'link' =>  URL::temporarySignedRoute('user.complete_registration', now()->addHour(1),
+                ['id'=> $invited_user->id])
+        ];
+    }
+
+    public function updateStatus(Request $request)
+    {
+        try{
+            $user = User::findOrFail($request->user_id);
+            $user->status = $request->status;
+            $user->save();
+        }catch (\Exception $exception){
+            \Log::error($exception);
+            return ['status'=>"error", 'message'=> 'An error occurred while performing your request, please contact admin'];
+        }
+        return ['status'=>"success", 'message'=> "Status updated successfully"];
     }
 }
