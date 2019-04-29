@@ -248,7 +248,12 @@
                         toastr.clear();
                         if (data.status === 'success') {
                             toastr.success(data.message);
-                            location.href = '/user/all';
+                            $('.load_this_div').css({
+                                opacity: 1
+                            });
+                            $('a').css('pointer-events','');
+                            $('.user_status').prop('disabled', false);
+                            $('.user').DataTable().ajax.reload();
                         } else {
                             toastr.error(data.message);
                             $('.load_this_div').css({

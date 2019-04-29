@@ -83,6 +83,9 @@
                             <hr>
                         @endif
                         <p><br></p>
+                        <div class="column col_4">
+                            <a href="{{ route('user.index') }}" class="btn uppercased _white _go_back"><span class=""></span> Back</a>
+                        </div>
                         <div class="mb4 align_right pt">
                             <input type="submit" value="Update User" id="submit_user{{ $user->id }}" class="btn uppercased mb4 button_create">
                         </div>
