@@ -135,7 +135,7 @@ class GetStationRatings
     protected function getTimeBeltsByCriteria() {
         $query = DB::table('mps_audiences as ma')
             ->join('mps_audience_program_activities as mapa', 'mapa.external_user_id', '=', 'ma.external_user_id')
-            ->select(DB::raw('mapa.station, mapa.state as station_state, mapa.day, mapa.start_time, mapa.end_time, ma.state, COUNT(DISTINCT ma.external_user_id) as num_respondents'))
+            ->select(DB::raw('mapa.station, mapa.state as station_state, mapa.day, mapa.start_time, mapa.end_time, ma.state, ma.region, COUNT(DISTINCT ma.external_user_id) as num_respondents'))
             ->groupBy('mapa.station', 'mapa.state', 'mapa.day', 'mapa.start_time', 'mapa.end_time', 'ma.state')
             ->when($this->criteria, function($query){
                 foreach($this->criteria as $criteria => $sub_criteria) {
@@ -155,7 +155,6 @@ class GetStationRatings
                     $query->where($field, $sub_criteria);
                 }
             });
-           
             return $query->get();
     }
 

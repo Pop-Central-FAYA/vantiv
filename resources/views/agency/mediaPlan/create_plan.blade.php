@@ -178,7 +178,33 @@
                             </div>
                         </div>
                     </div>
+                    <!-- Regions -->
+                    <div class="clearfix mb">
+                    <div class="input_wrap">
+                        <label class="small_faint">Region</label>
 
+                        <div class="select_wrap{{ $errors->has('region') ? ' has-error' : '' }}">
+                            <select class="js-example-basic-multiple all" id="region" name="region[]" multiple="multiple">
+                            <option value="all">All</option>
+                                @foreach($criterias as $criteria)
+                                    @if ($criteria->name == "regions")
+                                        @foreach ($criteria->subCriterias as $regions)
+                                        <option value="{{ $regions->name }}"
+
+                                        >{{ $regions->name }}</option>
+                                        @endforeach
+                                    @endif
+                                @endforeach
+                            </select>
+
+                            @if($errors->has('region'))
+                                <strong>
+                                    <span class="help-block">{{ $errors->first('region') }}</span>
+                                </strong>
+                            @endif
+                        </div>
+                    </div>
+                    </div>
                     <!-- States -->
                     <div class="clearfix mb">
                         <div class="input_wrap">
@@ -209,31 +235,7 @@
                         </div>
                     </div>
 
-                    <!-- Regions -->
-                    <!-- <div class="input_wrap">
-                        <label class="small_faint">Region</label>
 
-                        <div class="select_wrap{{ $errors->has('region') ? ' has-error' : '' }}">
-                            <select class="js-example-basic-multiple" id="region" name="region[]" multiple="multiple">
-                                <option value=""></option>
-                                @foreach($criterias as $criteria)
-                                    @if ($criteria->name == "regions")
-                                        @foreach ($criteria->subCriterias as $regions)
-                                        <option value="{{ $regions->name }}"
-
-                                        >{{ $regions->name }}</option>
-                                        @endforeach
-                                    @endif
-                                @endforeach
-                            </select>
-
-                            @if($errors->has('region'))
-                                <strong>
-                                    <span class="help-block">{{ $errors->first('region') }}</span>
-                                </strong>
-                            @endif
-                        </div>
-                    </div> -->
 
                     <!-- Agency commission -->
                     <div class="clearfix mb">
