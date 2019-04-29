@@ -24,26 +24,28 @@
             <div class="card-deck">
                 <div class="card custom-card-group">
                     @foreach($top_media_type_revenue as $data)
-                        <div class="card-body p-2">
+                        <div class="card-body p-2 mb-4">
                             <div class="row">
-                                <div class="col-4">
-                                    <img src="{{ $data->logo }}">
+                                <div class="col-4" style="height:50px; width:200px;">
+                                    <img src="{{ $data->logo }}" class="img-fluid">
                                 </div>
                                 <div class="col-8 px-0">
-                                    <span class="text-muted">{{ $data->name }} is your highest {{ strtoupper($data->type) }} earner</span>
-                                    <h3 class="text-success text-center mt-2"><b>{{number_format($data->revenue)}}</b></h3>
+                                    {{-- <span class="text-muted">{{ $data->name }} is your highest {{ strtoupper($data->type) }} earner</span> --}}
+                                    <p class="text-muted text-center mt-3 mr-4"><b>{{ $data->name }} is your highest {{ strtoupper($data->type) }} earner</b></p>
+                                    <h3 class="text-success text-center mt-5 mr-5"><b>{{number_format($data->revenue)}}</b></h3>
                                 </div>
                             </div>
                         </div>
                     @endforeach
-                    <div class="card-body p-2 mt-4">
+                    <div class="card-body p-2">
                         <div class="row">
                             <div class="col-4">
                                 <img src="{{ $top_revenue_by_client->company_logo }}">
                             </div>
                             <div class="col-8 px-0">
-                                <span class="text-muted">{{ $top_revenue_by_client->client_name }} is your highest spender</span>
-                                <h3 class="text-success text-center mt-2"><b>{{number_format($top_revenue_by_client->actual_revenue)}}</b></h3>
+                                {{-- <span class="text-muted">{{ $top_revenue_by_client->client_name }} is your highest spender</span> --}}
+                                <h5 class="text-muted text-center mt-3"><b>{{ $top_revenue_by_client->client_name }} is your highest spender</b></h5>
+                                <h3 class="text-success text-center mt-5 mr-5"><b>{{number_format($top_revenue_by_client->actual_revenue)}}</b></h3>
                             </div>
                         </div>
                     </div>
@@ -52,21 +54,21 @@
                 <!-- The different cards -->
                 @foreach($campaigns['detailed_counts'] as $media_type => $data)
                 <div class="card text-center">
-                    <div class="card-header bg-white p-0">
-                        <h5 class="bg-white position-relative">
+                    <div class="card-header bg-white p-3">
+                        <h4 class="bg-white position-relative">
                             <i class="material-icons">{{$media_type}}</i>
                             <span>{{strtoupper($media_type)}}</span>
-                        </h5>
+                        </h4>
                     </div>
                     <div class="card-body mt-2">
-                        <h3 class="card-title my-3 text-muted">{{$campaigns['total'][$media_type]}}</h3>
+                        <h3 class="card-title my-3 text-muted">{{$campaigns['total'][$media_type]}} Campaigns</h3>
                         <div class="row dashboard_pies">
                             <div class="col-7">
-                                <div id="pie-chart-{{$media_type}}" class="_pie_chart" style="height: 130px"></div>
+                                <div id="pie-chart-{{$media_type}}" class="_pie_chart" style="height: 200px"></div>
                             </div>
-                            <div class="col-5 pt-5">
+                            <div class="col-5 pt-5 mt-3">
                                 <ul id="legend-{{$media_type}}">
-                                    <li class="pie_legend active"><span class="weight_medium">0%</span> Active</li>
+                                    <li class="pie_legend active" style="font-size: 13px; padding-left: 5px;"><span class="weight_medium">0%</span> Active</li>
                                     <li class="pie_legend pending"><span class="weight_medium">0%</span> Pending</li>
                                     <li class="pie_legend finished"><span class="weight_medium">0%</span> Finished</li>
                                 </ul>
@@ -98,8 +100,9 @@
         <div id="chart-container" class="row my-5 chart-view">
             <div class="col-12 pb-1 mb-3" style="border-bottom: 2px solid #44c1c9;">
                 <div class="btn-group chart-toggle" role="group" aria-label="Basic example">
-                    <button id="tv-toggle" type="button" class="btn btn-info py-1 mr-2"><i class="material-icons">tv</i> TV</button>
-                    <button id="radio-toggle" type="button" class="btn btn-info py-1 inactive-toggle"><i class="material-icons">radio</i> RADIO</button>
+                    @foreach($media_type_list as $value)
+                        <button id="{{$value}}-toggle" type="button" class="btn btn-info py-1 mr-2 @if($value == $media_type) active-toggle @else inactive-toggle @endif" data-media-type="{{$value}}"><i class="material-icons">{{$value}}</i> {{strtoupper($value)}}</button>
+                    @endforeach
                 </div>
             </div>
 
@@ -108,41 +111,44 @@
             <div class="col-12 filter">
                 <form method="" action="" id="filter-form">
                     {{ csrf_field() }}
-                    <div class="row mb-2">
-                        <div class="col-5">
-                            <div class="row">
-                                @if(count($stations) > 1)
-                                    <div class="col-6 pr-0">
-                                        <select class="form-control publishers" name="station_id[]" id="publishers" multiple="multiple" >
-                                            @foreach(Auth::user()->companies as $company)
-                                                <option value="{{ $company->id }}">{{ $company->name }}</option>
-                                            @endforeach
+                    <input type="hidden" id="media-type-input" name="media_type" value="{{$media_type}}">
+                    @foreach($stations as $type => $value)
+                        <div id="{{$type}}-filter-container" class="row mb-2 filter-containers" @if($type !== $media_type) style="display: none;" @endif>
+                            <div class="col-5">
+                                <div class="row">
+                                    @if(count($value) > 1)
+                                        <div class="col-6 pr-0">
+                                            <select class="form-control publishers filter-val @if($type !== $media_type) do-not-send @endif" name="station_id[]" multiple="multiple" >
+                                                @foreach($value as $company)
+                                                    <option value="{{ $company->id }}">{{ $company->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    @endif
+                                    <div class="col-6">
+                                        <select class="form-control single-select filter-val @if($type !== $media_type) do-not-send @endif" name="report_type" >
+                                            <option @if($monthly_reports["report_type"] == "station_revenue") selected @endif value="station_revenue">Revenue</option>
+                                            <option @if($monthly_reports["report_type"] == "spots_sold") selected @endif value="spots_sold">Inventory</option>
+                                            <option @if($monthly_reports["report_type"] == "active_campaigns") selected @endif value="active_campaigns">Campaigns</option>
                                         </select>
                                     </div>
-                                @endif
-                                <div class="col-6">
-                                    <select class="form-control single-select" name="report_type" id="other">
-                                        <option @if($monthly_reports["report_type"] == "station_revenue") selected @endif value="station_revenue">Revenue</option>
-                                        <option @if($monthly_reports["report_type"] == "spots_sold") selected @endif value="spots_sold">Inventory</option>
-                                        <option @if($monthly_reports["report_type"] == "active_campaigns") selected @endif value="active_campaigns">Campaigns</option>
-                                    </select>
                                 </div>
                             </div>
+                            <div class="offset-5 col-2 pl-0">
+                                <select name="year" class="filter_year single-select filter-val @if($type !== $media_type) do-not-send @endif">
+                                    @foreach($year_list as $year)
+                                        <option
+                                            @if($current_year == $year)
+                                                selected
+                                            @endif
+                                            value="{{ $year }}">
+                                            Jan - Dec, {{ $year }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
-                        <div class="offset-5 col-2 pl-0">
-                            <select name="year" class="filter_year single-select" id="filter_year">
-                                @foreach($year_list as $year)
-                                    <option
-                                        @if($current_year == $year)
-                                            selected
-                                        @endif
-                                        value="{{ $year }}">
-                                        Jan - Dec, {{ $year }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
+                    @endforeach
                 </form>
                 
             </div>
@@ -191,7 +197,8 @@
 
             //Every user should have access to this
             var monthly_reports = {!! json_encode($monthly_reports) !!};
-            var dashboard_graph = new DashboardGraph($('#chart-container'));
+            var stations = {!! json_encode($stations) !!};
+            var dashboard_graph = new DashboardGraph($('#chart-container'), stations);
             dashboard_graph.initChart(monthly_reports);
 
             //Every user should have access to this

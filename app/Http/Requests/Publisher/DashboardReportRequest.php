@@ -23,6 +23,7 @@ class DashboardReportRequest extends FormRequest
      */
     public function rules() {
         return [
+            'media_type' => 'required|string',
             'report_type' => 'required|string',
             'station_id' => 'nullable|array',
             'year' => 'required|string',
