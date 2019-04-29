@@ -112,6 +112,7 @@
                 <form method="" action="" id="filter-form">
                     {{ csrf_field() }}
                     <input type="hidden" id="media-type-input" name="media_type" value="{{$media_type}}">
+                    <!-- Render each filter boxes for each media type -->
                     @foreach($stations as $type => $value)
                         <div id="{{$type}}-filter-container" class="row mb-2 filter-containers" @if($type !== $media_type) style="display: none;" @endif>
                             <div class="col-5">
@@ -197,8 +198,7 @@
 
             //Every user should have access to this
             var monthly_reports = {!! json_encode($monthly_reports) !!};
-            var stations = {!! json_encode($stations) !!};
-            var dashboard_graph = new DashboardGraph($('#chart-container'), stations);
+            var dashboard_graph = new DashboardGraph($('#chart-container'));
             dashboard_graph.initChart(monthly_reports);
 
             //Every user should have access to this

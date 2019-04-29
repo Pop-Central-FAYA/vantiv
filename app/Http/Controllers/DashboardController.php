@@ -269,6 +269,9 @@ class DashboardController extends Controller
             case 'spots_sold':
                 $service = new \Vanguard\Services\Reports\Publisher\Month\SpotsSold($company_id_list);
                 break;
+            case 'timebelt_revenue':
+                $service = new \Vanguard\Services\Reports\Publisher\Month\TimeBeltRevenue($company_id_list);
+                break;
             default:
                 //default is station revenue
                 $service = new \Vanguard\Services\Reports\Publisher\Month\StationRevenue($company_id_list);
@@ -283,20 +286,7 @@ class DashboardController extends Controller
      * Requests to filter reports come through this method
      */
     protected function getFilteredPublisherReports(\Vanguard\Http\Requests\Publisher\DashboardReportRequest $request) {
-        $validated = $request->validated();
-        $company_id_list = $this->getCompanyIdsList();
-        
-        /**
-         * if a specific station was not requested (make sure to limit the query by stations belonging to the current media type being requested)
-         */
-        if (!isset($validated['station_id'])) {
-            $validated['station_id'] = Publisher::ofType($validated['media_type'])->get()->pluck('company_id');
-        }
-        $response = array(
-            'status' => 'success',
-            'data' => $this->getMonthlyReport($company_id_list, $validated, $validated['report_type'])
-        );
-        return response()->json($response); 
+        return $this->executeMonthlyReportRequest($request);
     }
 
     public function campaignManagementFilterResult()
@@ -345,14 +335,61 @@ class DashboardController extends Controller
 
     public function inventoryManagementDashboard()
     {
-        $company_ids = $this->getCompanyIdsList();
-        $timebelt_revenue_report = new RevenueByTimeBelt($company_ids, array());
-        return view('broadcaster_module.dashboard.inventory_management.dashboard')
-            ->with('days', $this->listDays())
-            ->with('stations', $this->getCompaniesDetails($company_ids))
-            ->with('day_parts', array("Late Night", "Overnight", "Breakfast", "Late Breakfast", "Afternoon", "Primetime"))
-            ->with('timebelt_revenue', $timebelt_revenue_report->run());
+        $company_id_list = $this->getCompanyIdsList();
+        $company_details = $this->getCompaniesDetails($company_id_list);
+
+        //Get the station_ids for the initial query
+        $publishers = Publisher::allowed($company_id_list)->get();
+        $grouped_publishers = $publishers->groupBy('type');
+
+        $media_type_list = $grouped_publishers->keys()->sort()->values()->reverse(); //this sorting is so tv comes first, but the order should be in the db
+        $initial_media_type = $media_type_list->first();
+
+        //get the full station list as an array
+        $station_list = array();
+        foreach ($grouped_publishers as $key => $value) {
+            $station_list[$key] = $company_details->whereIn("id", $value->pluck("company_id"));
+        }
+
+        $monthly_filters = array('station_id' => $station_list[$initial_media_type]->pluck('id'));
+        $data = [
+            'days' => $this->listDays(),
+            'stations' => $this->getCompaniesDetails($company_id_list),
+            'day_parts' => array("Late Night", "Overnight", "Breakfast", "Late Breakfast", "Afternoon", "Primetime"),
+            'timebelt_revenue' => $this->getMonthlyReport($company_id_list, $monthly_filters, 'timebelt_revenue'),
+            'stations' => $station_list,
+            'media_type_list' => $media_type_list,
+            'media_type' => $initial_media_type,
+        ];
+        return view('broadcaster_module.dashboard.inventory_management.dashboard')->with($data);
+            
     }
+
+     /**
+     * Requests to filter reports come through this method
+     */
+    protected function getFilteredInventoryReports(\Vanguard\Http\Requests\Publisher\DashboardInventoryReportRequest $request) {
+        return $this->executeMonthlyReportRequest($request);
+    }
+
+    protected function executeMonthlyReportRequest($request) {
+        $validated = $request->validated();
+        $company_id_list = $this->getCompanyIdsList();
+        
+        /**
+         * if a specific station was not requested (make sure to limit the query by stations belonging to the current media type being requested)
+         */
+        if (!isset($validated['station_id'])) {
+            $validated['station_id'] = Publisher::ofType($validated['media_type'])->get()->pluck('company_id');
+        }
+        Log::info($validated);
+        $response = array(
+            'status' => 'success',
+            'data' => $this->getMonthlyReport($company_id_list, $validated, $validated['report_type'])
+        );
+        return response()->json($response); 
+    }
+
 
     public function getFilteredTimeBeltRevenue(Request $request) {
         $company_ids = $this->getCompanyIdsList();
