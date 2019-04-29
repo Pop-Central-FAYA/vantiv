@@ -54,6 +54,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::group(['prefix' => 'user'], function() {
         Route::get('/all', 'UserController@index')->name('user.index');
         Route::get('/invite', 'UserController@inviteUser')->name('user.invite');
+        Route::get('/edit/{id}', 'UserController@editUser')->name('user.edit');
+        Route::post('/update/{id}', 'UserController@updateUser');
         Route::post('/invite/store', 'UserController@processInvite');
         Route::get('/data-table', 'UserController@getDatatable');
     });
