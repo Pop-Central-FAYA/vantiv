@@ -58,6 +58,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/update/{id}', 'UserController@updateUser');
         Route::post('/invite/store', 'UserController@processInvite');
         Route::get('/data-table', 'UserController@getDatatable');
+        Route::post('/resend/invitation', 'UserController@resendInvitation');
+        Route::get('/status/update', 'UserController@updateStatus');
     });
 
     /*
