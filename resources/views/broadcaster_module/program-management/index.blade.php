@@ -60,7 +60,6 @@
                 </tr>
                 </thead>
             </table>
-
         </div>
 
     </div><!-- main contain -->

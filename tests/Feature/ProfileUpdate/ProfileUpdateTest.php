@@ -4,6 +4,7 @@ namespace Tests\Feature\ProfileUpdate;
 
 use Faker\Factory;
 use Tests\TestCase;
+use Vanguard\Models\Company;
 use Vanguard\Services\User\CreateUser;
 use Vanguard\Services\User\UpdateUser;
 use Vanguard\Services\User\UserDetails;
@@ -78,7 +79,10 @@ class ProfileUpdateTest extends TestCase
     {
         $create_user_service = new CreateUser($faker->name, $faker->name, $faker->email, null,
             $faker->phoneNumber, 'testUserPassword', null);
-        return $create_user_service->createUser();
+        $user = $create_user_service->createUser();
+        $company = \factory(Company::class)->create();
+        $user->companies()->sync($company->id);
+        return $user;
     }
 
     public function getUserDetails($user_id)

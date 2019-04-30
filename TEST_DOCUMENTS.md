@@ -11,6 +11,14 @@ DEPENDENCY
 Testing the application requires a dump to be ran, this is so because not all the tables are completely captured 
 in the model. The dump file will also be checked in to the remote repository.
 
+ENVIRONMENT SET UP
+The following environment variables are required:
+```DB_CONNECTION_TEST=```
+```DB_HOST_TEST=```
+```DB_DATABASE_TEST=```
+```DB_USERNAME_TEST=```
+```DB_PASSWORD_TEST=```
+
 HOW TO RUN TEST
 
 There are two different ways to go about running the actual test. They are as follows:
@@ -27,3 +35,8 @@ the Feature directory. The unit directory is where all the test in the models ar
 a model (User) belonging to multiple companies. the structure is ```test\Unit\Models\User\UserTest.php``` and the feature directory
 houses the test we write for all our services. Assume in our ```pp\service``` directory, we have a folder called ```User``` 
 which have a file ```GetUserList.php```, the feature test structure will look like ```test\Feature\User\User\GetFeatureListTest.php```
+
+NB
+
+This test can only run on the host environment at the moment, work is in progress to make it run in the container
+so as to solve dependency issues.
