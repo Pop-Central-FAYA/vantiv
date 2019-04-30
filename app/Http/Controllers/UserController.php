@@ -36,13 +36,21 @@ class UserController extends Controller
         $statuses = UserStatus::lists();
         return $dataTables->collection($user_list)
             ->addColumn('edit', function ($user_list) {
-                return '<a href="'.route('user.edit', ['id' => $user_list['id']]).'" class="weight_medium">Edit</a>';
+                if(!\Auth::user()->hasRole('ssp.super_admin') && $user_list['role_name']->first() == 'ssp.super_admin'){
+                    return '';
+                }else{
+                    return '<a href="'.route('user.edit', ['id' => $user_list['id']]).'" class="weight_medium">Edit</a>';
+                }
             })
             ->addColumn('status', function ($user_list) use($statuses) {
                 if($user_list['status'] === UserStatus::UNCONFIRMED){
                     return '<a href="#user_modal_'.$user_list['id'].'" class="weight_medium modal_user_click">'.$user_list['status'].'</a>';
                 }else{
-                    return view('users.status', ['user_status' => $user_list['status'], 'statuses' => $statuses, 'id' => $user_list['id']]);
+                    if(!\Auth::user()->hasRole('ssp.super_admin') && $user_list['role_name']->first() == 'ssp.super_admin'){
+                        return '';
+                    }else{
+                        return view('users.status', ['user_status' => $user_list['status'], 'statuses' => $statuses, 'id' => $user_list['id']]);
+                    }
                 }
             })
             ->rawColumns(['edit' => 'edit', 'status' => 'status'])->addIndexColumn()
