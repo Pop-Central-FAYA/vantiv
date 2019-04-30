@@ -58,13 +58,13 @@ return [
             'strict'    => false
         ],
 
-        'faya-test' => [
+        'faya_test' => [
             'driver'    => 'mysql',
             'engine'    => 'InnoDB',
-            'host'      => env('DB_HOST', 'localhost'),
-            'database'  => env('DB_TEST_DATABASE', 'faya_test'),
-            'username'  => env('DB_USERNAME', 'root'),
-            'password'  => env('DB_PASSWORD', ''),
+            'host'      => env('DB_HOST_TEST', ''),
+            'database'  => env('DB_DATABASE_TEST', ''),
+            'username'  => env('DB_USERNAME_TEST', ''),
+            'password'  => env('DB_PASSWORD_TEST', ''),
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => env('DB_PREFIX', ''),

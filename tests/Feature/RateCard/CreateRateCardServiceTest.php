@@ -11,40 +11,28 @@ class CreateRateCardServiceTest extends TestCase
 {
     use \Tests\RateCardTrait\FakeRateCard;
 
-   public function test_it_can_create_a_base_rate_card()
+   public function test_it_can_create_rate_card()
    {
        $faker = $this->getFakeRateCard();
-       $store_base_rate_card = new StoreBaseRateCard($faker['company_id'], $faker['duration'], $faker['price'], $faker['start_time'],
-           $faker['end_time'], RateCardTypes::BASE, $faker['title']);
-       $base_rate_card = $store_base_rate_card->storeBaseRateCard();
-       $this->assertEquals($base_rate_card->ratecard_type, RateCardTypes::BASE);
+       $store_base_rate_card = new StoreBaseRateCard($faker['company_id'], $this->durationList(), $this->priceList(), $faker['title']);
+       $store_base_rate_card->storeRateCardWithDurationAndPrice();
+       $this->assertDatabaseHas('rate_cards', [
+           'company_id' => $faker['company_id']
+       ]);
    }
 
-   public function test_it_can_create_a_specific_rate_card_for_agency()
+   private function durationList()
    {
-       $faker = $this->getFakeRateCard();
-       $store_base_rate_card = new StoreSpecificRateCard($faker['company_id'], $faker['duration'], $faker['price'], $faker['start_time'],
-           $faker['end_time'], RateCardTypes::AGENCY, $faker['title'], null, null, $faker['rate_card_type_id']);
-       $base_rate_card = $store_base_rate_card->storeBaseRateCard();
-       $this->assertEquals($base_rate_card->ratecard_type, RateCardTypes::AGENCY);
+       return [
+           6000, 7000, 8000, 10000
+       ];
    }
 
-   public function test_it_can_create_a_specific_rate_card_for_brand()
+   private function priceList()
    {
-       $faker = $this->getFakeRateCard();
-       $store_base_rate_card = new StoreSpecificRateCard($faker['company_id'], $faker['duration'], $faker['price'], $faker['start_time'],
-           $faker['end_time'], RateCardTypes::BRAND, $faker['title'], null, null, $faker['rate_card_type_id']);
-       $base_rate_card = $store_base_rate_card->storeBaseRateCard();
-       $this->assertEquals($base_rate_card->ratecard_type, RateCardTypes::BRAND);
-   }
-
-   public function test_it_can_create_a_specific_rate_card_for_date()
-   {
-       $faker = $this->getFakeRateCard();
-       $store_base_rate_card = new StoreSpecificRateCard($faker['company_id'], $faker['duration'], $faker['price'], $faker['start_time'],
-           $faker['end_time'], RateCardTypes::DATE, $faker['title'], $faker['start_date'], $faker['end_date'], null);
-       $base_rate_card = $store_base_rate_card->storeBaseRateCard();
-       $this->assertEquals($base_rate_card->ratecard_type, RateCardTypes::DATE);
+       return [
+           15, 30, 45, 60
+       ];
    }
 
 }
