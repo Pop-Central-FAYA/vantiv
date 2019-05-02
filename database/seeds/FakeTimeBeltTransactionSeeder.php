@@ -2,7 +2,6 @@
 
 use Illuminate\Database\Seeder;
 
-use \Vanguard\Models\FakeTimeBeltRevenue;
 use \Vanguard\Models\TimeBelt;
 use \Vanguard\Models\TimeBeltTransaction;
 use \Vanguard\Models\SelectedAdslot;
@@ -108,7 +107,7 @@ class FakeTimeBeltTransactionSeeder extends Seeder
         return $current_num;
     }
 
-    protected function setupTransactionForInCompleteData($campaign_details, $adslot, $adslot_prices, $current_date) {
+    protected function setupTransactionForInCompleteData($campaign_details, $adslot_list, $adslot_prices, $current_date) {
         $current_num = 0;
         foreach ($adslot_list as $adslots) {
             $model = new TimeBeltTransaction();
