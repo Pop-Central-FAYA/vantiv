@@ -51,13 +51,14 @@ class Kernel extends HttpKernel
         'guest' => \Vanguard\Http\Middleware\RedirectIfAuthenticated::class,
         'registration' => \Vanguard\Http\Middleware\Registration::class,
         'social.login' => \Vanguard\Http\Middleware\SocialLogin::class,
-        'role' => \Zizaco\Entrust\Middleware\EntrustRole::class,
-        'permission' => \Zizaco\Entrust\Middleware\EntrustPermission::class,
         'ability' => \Zizaco\Entrust\Middleware\EntrustAbility::class,
         'session.database' => \Vanguard\Http\Middleware\DatabaseSession::class,
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
+        'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
+        'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
+        'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
 
     ];
 }

@@ -22,6 +22,11 @@ class UserController extends Controller
 {
     use CompanyIdTrait;
 
+    public function __construct()
+    {
+        $this->middleware(['role:ssp.super_admin|ssp.admin']);
+    }
+
     public function index()
     {
         $user_list_service = new GetUserList($this->getCompanyIdsList());
