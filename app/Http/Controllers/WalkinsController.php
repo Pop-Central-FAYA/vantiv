@@ -8,9 +8,9 @@ use Vanguard\Http\Controllers\Traits\CompanyIdTrait;
 use Vanguard\Http\Requests\WalkinStoreRequest;
 use Vanguard\Http\Requests\WalkinUpdateRequest;
 use Vanguard\Libraries\Enum\ClassMessages;
-use Vanguard\Services\Brands\BrandCampaigns;
 use Vanguard\Services\Brands\BrandDetails;
 use Vanguard\Services\Brands\ClientBrand;
+use Vanguard\Services\Brands\ClientsBrandWithCampaign;
 use Vanguard\Services\Brands\CreateBrand;
 use Vanguard\Services\Brands\CreateBrandClient;
 use Vanguard\Services\Client\ClientCampaigns;
@@ -26,7 +26,6 @@ use Session;
 use Vanguard\Services\Walkin\UpdateWalkIns;
 use Vanguard\Services\Walkin\WalkInLists;
 use Vanguard\Services\Client\ClientBrand as ClientBrands;
-use Vanguard\Support\Enum\UserStatus;
 
 class WalkinsController extends Controller
 {
@@ -160,8 +159,9 @@ class WalkinsController extends Controller
 
     public function getDetails($client_id)
     {
-        $client_details_data = $this->clientDetailsData($client_id, $this->companyId());
-        $brands = $this->getBrandDetails($client_details_data['all_brands'], $this->companyId());
+        $client_details_data = $this->clientDetailsData($client_id, $this->getCompanyIdsList());
+        $brands_campaign_service = new ClientsBrandWithCampaign($client_id, $this->getCompanyIdsList());
+        $brands = $this->getBrandDetails($brands_campaign_service->getClientsBrandWithCampaigns());
         if(count($brands) === 0){
             Session::flash('info', ClassMessages::EMPTY_BRAND_FOR_CLIENT);
             return redirect()->back();
@@ -187,7 +187,8 @@ class WalkinsController extends Controller
         $channel_id = request()->channel_id;
         //$client_id = request()->client_id;
         $client_details_data = $this->clientDetailsData($client_id, $channel_id);
-        $brands = $this->getBrandDetails($client_details_data['all_brands'], $channel_id);
+        $brands_campaign_service = new ClientsBrandWithCampaign($client_id, $channel_id);
+        $brands = $this->getBrandDetails($brands_campaign_service->getClientsBrandWithCampaigns());
         if(count($brands) === 0){
             return 'empty_brand';
         }
@@ -211,7 +212,7 @@ class WalkinsController extends Controller
         $industries = new IndustryList();
         $sub_industries = new SubIndustryList();
         //        campaign vs time graph
-        $campaign_graph = Utilities::clientGraph($client_campaigns);
+        $campaign_graph = $this->clientGraph($client_campaigns);
         $campaign_payment = $campaign_graph['campaign_payment'];
         $campaign_date = $campaign_graph['campaign_date'];
         $campaign_publishers_logo = '';
@@ -229,26 +230,41 @@ class WalkinsController extends Controller
             'publisher_logo' => $campaign_publishers_logo, 'publisher_id' => $campaign_publishers_id, 'client_details_service' => $client_details_service];
     }
 
-    public function getBrandDetails($client_brands, $company_id)
+    public function getBrandDetails($client_brands)
     {
         $brands = [];
         foreach ($client_brands as $client_brand){
-            $brand_campaigns_service = new BrandCampaigns($client_brand->id, $client_brand->client_walkins_id, $company_id);
             $brands[] = [
                 'id' => $client_brand->id,
                 'client_id' => $client_brand->client_walkins_id,
-                'brand' => $client_brand->name,
-                'date' => $client_brand->created_at,
+                'brand' => $client_brand->brand,
+                'date' => $client_brand->date,
                 'count_brand' => count($client_brands),
-                'campaigns' => $brand_campaigns_service->countAllBrandCampaigns(),
+                'campaigns' => $client_brand->campaigns,
                 'image_url' => $client_brand->image_url,
-                'last_campaign' => $brand_campaigns_service->countAllBrandCampaigns() != 0 ? $brand_campaigns_service->getBrandLastCampaign()->name : 'none',
-                'total' => number_format($brand_campaigns_service->getBrandTotalSpent(),2),
-                'industry_id' => $client_brand->industry_code,
-                'sub_industry_id' => $client_brand->sub_industry_code,
+                'last_campaign' =>  $client_brand->last_campaign ? $client_brand->last_campaign : 'none',
+                'total' => number_format($client_brand->total,2),
+                'industry_id' => $client_brand->industry_id,
+                'sub_industry_id' => $client_brand->sub_industry_id,
             ];
         }
         return $brands;
+    }
+
+    public function clientGraph($campaigns)
+    {
+        $all_campaign_total_graph = [];
+        $all_campaign_date_graph = [];
+
+        foreach ($campaigns as $campaign){
+            $all_campaign_total_graph[] = $campaign->total_on_graph;
+            $all_campaign_date_graph[] = date('Y-m-d', strtotime($campaign->time_created));
+        }
+
+        $campaign_payment = json_encode($all_campaign_total_graph);
+        $campaign_date = json_encode($all_campaign_date_graph);
+
+        return (['campaign_payment' => $campaign_payment, 'campaign_date' => $campaign_date]);
     }
 
 
