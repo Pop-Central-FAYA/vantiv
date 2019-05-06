@@ -671,14 +671,17 @@
                         type: 'area'
                     },
                     xAxis: {
-                        categories: campaign_dates
+                        categories: campaign_dates,
+                        title: {
+                            text: 'Campaign Flight Dates'
+                        },
                     },
                     title:{
                         text:''
                     },
                     yAxis: {
                         title: {
-                            text: ''
+                            text: 'Total Spend'
                         },
                         labels: {
                             formatter: function () {
@@ -712,7 +715,7 @@
                     },
                     exporting: { enabled: false },
                     series: [{
-                        name: 'Total Budget',
+                        name: 'Total Spend',
                         color: '#00C4CA',
                         data: campaign_amounts,
                     }]
