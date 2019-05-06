@@ -80,9 +80,6 @@
                                     <p><img src="{{ asset($logo) }}" style="height: 50px; width: 50px;" alt=""></p>
                                 </div>
                             @endforeach
-                        @else
-                            <a id="yearly_client" href="{{ route('client.year', ['client_id' => $client_id]) }}" style="visibility: hidden;">1Y</a>
-                            <div></div>
                         @endif
                     </div>
                     <div class="column col_6 date_filter" id="filtered_publisher_logo" style="display: none;">
@@ -169,8 +166,8 @@
                                 <td>{{ ucfirst($all_campaign->brand) }}</td>
                                 <td>{{ date('D M j Y', strtotime($all_campaign->start_date)) }}</td>
                                 <td>{{ date('D M j Y', strtotime($all_campaign->stop_date)) }}</td>
-                                <td>&#8358;{{ Auth::user()->companies()->count() > 1 ? $all_campaign->total : $all_campaign->individual_publisher_total }}</td>
-                                <td>{{ Auth::user()->companies()->count() > 1 ? count((explode(',', $all_campaign->adslots_id))) : $all_campaign->adslots }}</td>
+                                <td>&#8358;{{ $all_campaign->total_on_graph }}</td>
+                                <td>{{ isset($all_campaign->total) ? count((explode(',', $all_campaign->adslots_id))) : $all_campaign->adslots }}</td>
                                 @if($all_campaign->status === 'active')
                                     <td><span class="span_state status_success">Active</span></td>
                                 @elseif($all_campaign->status === 'expired')
@@ -616,53 +613,7 @@
                     chart('container', data.monthly_date, data.monthly_total);
 
                 })
-            })
-
-            //Yearly filter
-            $("#yearly_client").click(function () {
-                event.preventDefault();
-                $(".content_month").css({
-                    opacity: 0.3
-                });
-
-                var url = $("#yearly_client").attr('href');
-                var user_id = "<?php echo $client_id; ?>";
-
-                $.get(url, {'user_id' : user_id, '_token':$('input[name=_token]').val()}, function(data) {
-
-                    $(".content_month").css({
-                        opacity: 1
-                    });
-
-                    var big_html =
-                        '                    <div class="active_fill column col_4">\n' +
-                        '                        <span class="small_faint uppercased weight_medium">Total Campaigns</span>\n' +
-                        '                        <h3>'+data.all_campaign.length+'</h3>\n' +
-                        '                    </div>\n' +
-                        '\n' +
-                        '                    <div class="column col_4">\n' +
-                        '                        <span class="small_faint uppercased weight_medium">Total Spend</span>\n' +
-                        '                        <h3>&#8358;'+ data.all_total +'</h3>\n' +
-                        '                    </div>\n' +
-                        '\n' +
-                        '                    <div class="column col_4">\n' +
-                        '                        <span class="small_faint uppercased weight_medium">Brands</span>\n' +
-                        '                        <h3>'+data.all_brand.length +'</h3>\n' +
-                        '\n' +
-                        '                        <a href="" class="weight_medium small_font view_brands">View Brands</a>\n' +
-                        '                    </div>\n';
-
-                    $("#this_box").hide();
-                    $('#show_this').show();
-                    $('#show_this').html(big_html);
-                    $("#default").removeClass('active');
-                    $("#yearly_client").addClass('active');
-
-                    chart('container', data.monthly_date, data.monthly_total);
-
-                })
-
-            })
+            });
 
             //chart function
             function chart(container, campaign_dates, campaign_amounts){
@@ -722,16 +673,6 @@
                 });
             }
 
-            /**
-            * This is a hack!!
-             */
-            if(companies == 1) {
-                $("#yearly_client").click();
-            }
-
-        });
-
-        $(document).ready(function () {
             // $("#state").change(function() {
             $('#industry').on('change', function(e){
                 $(".modal_contain").css({

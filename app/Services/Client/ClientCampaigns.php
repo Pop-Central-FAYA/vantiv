@@ -19,13 +19,8 @@ class ClientCampaigns
     public function baseQuery()
     {
         return \DB::table('campaignDetails')
-            ->when(!is_array($this->company_id), function($query) {
-                return $query->where('campaignDetails.launched_on', $this->company_id);
-            })
-            ->when(is_array($this->company_id), function ($query) {
-                return $query->whereIn('campaignDetails.launched_on', $this->company_id);
-            })
-            ->where('campaignDetails.walkins_id', $this->client_id);
+                    ->whereIn('campaignDetails.launched_on', $this->company_id)
+                    ->where('campaignDetails.walkins_id', $this->client_id);
     }
 
     public function clientCampaigns()
@@ -70,13 +65,14 @@ class ClientCampaigns
                 'campaignDetails.start_date', 'campaignDetails.stop_date', 'campaignDetails.adslots', 'campaignDetails.adslots_id',
                 'campaigns.campaign_reference', 'brands.name AS brands', 'campaignDetails.time_created',
                 'brands.name AS brand', 'payments.campaign_budget AS budget', 'campaignDetails.status',
-                'paymentDetails.amount AS individual_publisher_total'
+                'paymentDetails.amount AS individual_publisher_total',
+                'paymentDetails.amount AS total_on_graph'
                 )
-            ->selectRaw("SUM(paymentDetails.amount) AS total")
             ->where('campaignDetails.adslots', '>', 0)
             ->orderBy('campaignDetails.time_created', 'DESC')
-            ->when(is_array($this->company_id), function ($query) {
-                return $query->groupBy('campaignDetails.campaign_id');
+            ->when(count($this->company_id) > 1, function ($query) {
+                return $query->selectRaw("SUM(paymentDetails.amount) AS total, SUM(paymentDetails.amount) AS total_on_graph")
+                            ->groupBy('campaignDetails.campaign_id');
             })
             ->get();
 

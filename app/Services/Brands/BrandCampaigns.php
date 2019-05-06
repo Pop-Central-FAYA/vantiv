@@ -24,12 +24,7 @@ class BrandCampaigns
                 ['campaignDetails.brand', $this->brand_id],
                 ['campaignDetails.walkins_id', $this->client_id]
             ])
-            ->when(is_array($this->company_id), function($query) {
-                return $query->whereIn('campaignDetails.launched_on', $this->company_id);
-            })
-            ->when(!is_array($this->company_id), function ($query) {
-                return $query->where('campaignDetails.launched_on', $this->company_id);
-            });
+            ->whereIn('campaignDetails.launched_on', $this->company_id);
     }
 
     public function getBrandCampaigns()

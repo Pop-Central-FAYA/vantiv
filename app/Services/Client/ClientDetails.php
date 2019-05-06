@@ -2,7 +2,6 @@
 
 namespace Vanguard\Services\Client;
 
-use Vanguard\Libraries\Utilities;
 
 class ClientDetails
 {
