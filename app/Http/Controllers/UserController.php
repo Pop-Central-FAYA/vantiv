@@ -24,7 +24,7 @@ class UserController extends Controller
 
     public function __construct()
     {
-        $this->middleware(['role:ssp.super_admin|ssp.admin']);
+        $this->middleware(['role:ssp.super_admin|ssp.admin'], ['except' => ['getCompleteAccount', 'processCompleteAccount']]);
     }
 
     public function index()
