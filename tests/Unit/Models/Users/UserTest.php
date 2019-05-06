@@ -48,4 +48,16 @@ class UserTest extends TestCase
 
         $this->assertEquals($company_type->name, $user->company_type);
     }
+
+    public function test_it_can_pull_users_full_name()
+    {
+        $user = factory(User::class)->create([
+            'firstname' => 'Ridwan',
+            'lastname' => 'Busari'
+        ]);
+
+        $full_name = $user->full_name;
+
+        $this->assertEquals('Ridwan Busari', $full_name);
+    }
 }
