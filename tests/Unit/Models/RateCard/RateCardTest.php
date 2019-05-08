@@ -3,12 +3,10 @@
 namespace Tests\Unit\Models\RateCard;
 
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Vanguard\Models\Company;
 use Vanguard\Models\Ratecard\Ratecard;
 
-class CreateRateCardTest extends TestCase
+class RateCardTest extends TestCase
 {
     public function test_it_belongs_to_a_company()
     {
@@ -20,4 +18,5 @@ class CreateRateCardTest extends TestCase
 
         $this->assertInstanceOf(Company::class, $rate_card->company->first());
     }
+
 }

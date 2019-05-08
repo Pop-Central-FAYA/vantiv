@@ -2,6 +2,8 @@
 
 namespace Vanguard\Services\Company;
 
+use Vanguard\Models\Company;
+
 class CompanyDetailsFromIdList
 {
     protected $company_ids;
@@ -13,8 +15,7 @@ class CompanyDetailsFromIdList
 
     public function getCompanyDetails()
     {
-        return \DB::table('companies')
-                    ->whereIn('id', $this->company_ids)
+        return Company::whereIn('id', $this->company_ids)
                     ->get();
     }
 }

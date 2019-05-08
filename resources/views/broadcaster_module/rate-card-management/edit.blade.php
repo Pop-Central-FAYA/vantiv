@@ -27,7 +27,11 @@
                         <div class="input_wrap column col_4 {{ $errors->has('name') ? ' has-error' : '' }}">
                             <label class="small_faint">Rate Card Name</label>
                             <div class="">
-                                <input type="text" name="name" required value="{{ $rate_card->title }}" placeholder="Rate Card Name">
+                                <input type="text" name="name" required
+                                       @if($rate_card->is_base)
+                                           readonly is
+                                       @endif
+                                       value="{{ $rate_card->title }}" placeholder="Rate Card Name">
 
                                 @if($errors->has('name'))
                                     <strong>
@@ -56,6 +60,21 @@
                                 </div>
                             </div>
                         @endif
+                    </div>
+                    <div class="clearfix mb3">
+                        <div class="create_check clearfix mb3">
+                            <ul>
+                                <li class="col_4 column m-b">
+                                    <input name="is_base" value="true"
+                                           @if($rate_card->is_base)
+                                           checked
+                                           disabled
+                                           @endif
+                                           type="checkbox" id='base_rate'>
+                                    <label for="base_rate">Base Rate</label>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
 
                     <div class="clearfix mb3">

@@ -100,7 +100,7 @@
                         </div>
                     </div>
                     <div class="clearfix mb3">
-                        @if(Auth::user()->companies->count() > 1)
+                        @if(count($companies) > 1)
                             <div class="input_wrap column col_4">
                                 <label class="small_faint">Publisher</label>
                                 <div class="select_wrap{{ $errors->has('company') ? ' has-error' : '' }}">
@@ -134,6 +134,8 @@
                                     @endif
                                 </div>
                             </div>
+                        @else
+                            <input type="hidden" name="company" value="{{ $companies[0]->id }}">
                         @endif
                     </div>
 
