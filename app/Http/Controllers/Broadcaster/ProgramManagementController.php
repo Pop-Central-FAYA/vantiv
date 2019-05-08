@@ -52,7 +52,7 @@ class ProgramManagementController extends Controller
     {
         $program_by_id_service = new GetProgramById($id);
         $program = $program_by_id_service->getProgram();
-        $get_station_rate_card_service = new GetRateCardForStation($program->company_id);
+        $get_station_rate_card_service = new GetRateCardForStation(array($program->company_id));
         return view('broadcaster_module.program-management.edit')->with('program', $program_by_id_service->getProgram())
                                                                     ->with('rate_cards', $get_station_rate_card_service->getRateCardDurations())
                                                                     ->with('time_belts', $program_by_id_service->groupTimeBelt())
@@ -72,27 +72,17 @@ class ProgramManagementController extends Controller
      */
     public function create()
     {
-        $get_station_rate_card_service = new GetRateCardForStation($this->companyId());
-        $companies_service = new CompanyDetailsFromIdList($this->companyId());
-        if(is_array($this->companyId())){
-            $companies = $companies_service->getCompanyDetails();
-        }else{
-            $companies = '';
-        }
-
+        $company_ids = $this->getCompanyIdsList();
+        $get_station_rate_card_service = new GetRateCardForStation($company_ids);
+        $companies_service = new CompanyDetailsFromIdList($company_ids);
         return view('broadcaster_module.program-management.create')->with('days', $this->listDays())
                                                                         ->with('rate_cards', $get_station_rate_card_service->getRateCardDurations())
-                                                                        ->with('companies', $companies);
+                                                                        ->with('companies', $companies_service->getCompanyDetails());
     }
 
     public function store(MediaInventoryStoreRequest $request)
     {
-        if(is_array($this->companyId())){
-            $company_id = $request->company;
-        }else{
-            $company_id = $this->companyId();
-        }
-        $create_media_inventory_service = new CreateInventoryService($request->days, $request->program_name, $company_id,
+        $create_media_inventory_service = new CreateInventoryService($request->days, $request->program_name, $request->company,
             null, $request->rate_card, $request->start_date, $request->end_date, $request->start_time, $request->end_time);
         $create_inventory = $create_media_inventory_service->createTimeBelt();
         if($create_inventory == 'success'){
@@ -106,12 +96,7 @@ class ProgramManagementController extends Controller
 
     public function update(MediaInventoryStoreRequest $request, $program_id)
     {
-        if(is_array($this->companyId())){
-            $company_id = $request->company;
-        }else{
-            $company_id = $this->companyId();
-        }
-        $update_media_inventory_service = new UpdateInventoryService($request->days, $request->program_name, $company_id,
+        $update_media_inventory_service = new UpdateInventoryService($request->days, $request->program_name, $request->company,
             null, $request->rate_card, $request->start_date, $request->end_date, $request->start_time, $request->end_time,
             $program_id);
         $update_media_inventory = $update_media_inventory_service->updateInventory();

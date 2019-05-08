@@ -46,6 +46,6 @@ class InviteUserIndexTest extends TestCase
         $user->companies()->attach(factory(Company::class, 3)->create());
         $this->actingAs($user)
             ->get('/user/invite')
-            ->assertSee($user->companies->first()->name);
+            ->assertSee($user->companies->first()->id);
     }
 }

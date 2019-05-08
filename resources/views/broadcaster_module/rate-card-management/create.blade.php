@@ -24,21 +24,49 @@
                 <div class="margin_center col_11 clearfix pt4 create_fields">
 
                     <div class="clearfix mb3">
-                        <div class="input_wrap column col_4 {{ $errors->has('name') ? ' has-error' : '' }}">
+                        <div class="input_wrap column col_4 {{ $errors->has('title') ? ' has-error' : '' }}">
                             <label class="small_faint">Rate Card Name</label>
                             <div class="">
-                                <input type="text" name="name" required placeholder="Rate Card Name">
+                                <input type="text" name="title" required placeholder="Rate Card Name">
 
-                                @if($errors->has('name'))
+                                @if($errors->has('title'))
                                     <strong>
                                         <span class="help-block">
-                                            {{ $errors->first('name') }}
+                                            {{ $errors->first('title') }}
                                         </span>
                                     </strong>
                                 @endif
                             </div>
                         </div>
-                        @if(Auth::user()->companies->count() > 1)
+                        <br>
+                        <div class="create_check clearfix mb3{{ $errors->has('is_base') ? ' has-error' : '' }}">
+                            @if($rate_card_count == 0)
+                            <input name="is_base" type="hidden" value="{{ true }}"/>
+                            @endif
+
+                            <ul>
+                                <li class="col_4 column m-b">
+                                    <input name="is_base" value="{{ true }}"
+                                           @if($rate_card_count == 0)
+                                                checked
+                                                disabled
+                                           @endif
+                                           type="checkbox" id='base_rate'>
+                                    <label for="base_rate">Base Rate</label>
+                                </li>
+                            </ul>
+
+                                @if($errors->has('is_base'))
+                                    <strong>
+                                            <span class="help-block">
+                                                {{ $errors->first('is_base') }}
+                                            </span>
+                                    </strong>
+                                @endif
+                        </div>
+                    </div>
+                    <div class="margin_center col_11 clearfix pt4 create_fields">
+                        @if($company_id_count > 1)
                             <div class="input_wrap column col_4">
                                 <label class="small_faint">Publisher</label>
                                 <div class="select_wrap{{ $errors->has('company') ? ' has-error' : '' }}">
@@ -51,16 +79,17 @@
 
                                     @if($errors->has('company'))
                                         <strong>
-                                        <span class="help-block">
-                                            {{ $errors->first('company') }}
-                                        </span>
+                                            <span class="help-block">
+                                                {{ $errors->first('company') }}
+                                            </span>
                                         </strong>
                                     @endif
                                 </div>
                             </div>
+                        @else
+                            <input type="hidden" name="company" value="{{ $companies[0]->id }}">
                         @endif
                     </div>
-
                     <div class="clearfix mb3">
                         <table>
                             <thead>
@@ -80,7 +109,7 @@
                                     <td>
                                         <div class="input_wrap column">
                                             <label class="small_faint"></label>
-                                            <input type="text" required name="price[]" value=""/>
+                                            <input type="number" required name="price[]" value=""/>
                                         </div>
                                     </td>
                                 </tr>
@@ -94,7 +123,7 @@
                                     <td>
                                         <div class="input_wrap column">
                                             <label class="small_faint"></label>
-                                            <input type="text" required name="price[]" value=""/>
+                                            <input type="number" required name="price[]" value=""/>
                                         </div>
                                     </td>
                                 </tr>
@@ -108,7 +137,7 @@
                                     <td>
                                         <div class="input_wrap column">
                                             <label class="small_faint"></label>
-                                            <input type="text" required name="price[]" value=""/>
+                                            <input type="number" required name="price[]" value=""/>
                                         </div>
                                     </td>
                                 </tr>
@@ -122,7 +151,7 @@
                                     <td>
                                         <div class="input_wrap column">
                                             <label class="small_faint"></label>
-                                            <input type="text" required name="price[]" value=""/>
+                                            <input type="number" required name="price[]" value=""/>
                                         </div>
                                     </td>
                                 </tr>
@@ -187,6 +216,8 @@
                 $(".remove_div"+button_id).remove();
 
             })
+
+
 
         })
     </script>

@@ -26,4 +26,5 @@ class Ratecard extends Base
     {
         return $this->hasMany(RateCardDuration::class, 'rate_card_id');
     }
+
 }

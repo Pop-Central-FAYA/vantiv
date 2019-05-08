@@ -4,7 +4,7 @@ namespace Vanguard\Services\RateCard;
 
 use Vanguard\Models\Ratecard\Ratecard;
 
-class StoreSpecificRateCard extends StoreBaseRateCard
+class StoreSpecificRateCard extends StoreRateCard
 {
     protected $start_date;
     protected $end_date;

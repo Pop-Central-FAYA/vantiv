@@ -17,14 +17,9 @@ class GetRateCardForStation
 
     public function getRateCardDurations()
     {
-        return Ratecard::with('rate_card_durations')
+        return Ratecard::with('rate_card_durations', 'company')
                         ->where('status', ProgramStatus::ACTIVE)
-                        ->when(is_array($this->station_id), function ($query) {
-                            return $query->whereIn('company_id', $this->station_id);
-                        })
-                        ->when(!is_array($this->station_id), function ($query) {
-                            return $query->where('company_id', $this->station_id);
-                        })
+                        ->whereIn('company_id', $this->station_id)
                         ->get();
     }
 

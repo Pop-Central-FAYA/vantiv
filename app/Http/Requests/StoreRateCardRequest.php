@@ -3,6 +3,7 @@
 namespace Vanguard\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Vanguard\Rules\RateCard\RateCardRule;
 
 class StoreRateCardRequest extends FormRequest
 {
@@ -24,7 +25,10 @@ class StoreRateCardRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required'
+            'title' => ['required', new RateCardRule($this->title, $this->company)],
+            'is_base' => 'boolean',
+            'duration' => 'array|required',
+            'price' => 'array|required'
         ];
     }
 }

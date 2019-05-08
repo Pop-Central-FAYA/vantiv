@@ -119,6 +119,8 @@
                                     @endif
                                 </div>
                             </div>
+                        @else
+                            <input type="hidden" name="company" value="{{ $program->company->id }}">
                         @endif
                     </div>
 
