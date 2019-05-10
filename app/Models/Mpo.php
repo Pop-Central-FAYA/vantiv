@@ -2,14 +2,10 @@
 
 namespace Vanguard\Models;
 
-use Illuminate\Database\Eloquent\Model;
 
-class Mpo extends Model
+class Mpo extends Base
 {
     protected $table = 'mpos';
-    protected $connection = 'api_db';
-    protected $primaryKey = 'id';
-    protected $keyType = 'string';
 
     protected $dates = [
         'time_created', 'time_modified'

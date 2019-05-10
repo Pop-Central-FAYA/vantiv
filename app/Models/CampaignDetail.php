@@ -2,14 +2,9 @@
 
 namespace Vanguard\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
-class CampaignDetail extends Model
+class CampaignDetail extends Base
 {
     protected $table = 'campaignDetails';
-    protected $connection = 'api_db';
-    protected $primaryKey = 'id';
-    protected $keyType = 'string';
 
     protected $dates = [
         'time_created', 'time_modified'
