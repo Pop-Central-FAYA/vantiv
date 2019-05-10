@@ -41,89 +41,65 @@ class DashboardController extends Controller
     use YearTrait;
     use ListDayTrait;
 
-    public function __construct(Utilities $utilities, DataTables $dataTables)
-    {
-        $this->dataTables = $dataTables;
-        $this->utilities = $utilities;
-    }
-
     public function index()
     {
-        //Broadcaster Dashboard module
-        $broadcaster_id = Session::get('broadcaster_id');
+        //agency dashboard
+        $allBroadcasters = Utilities::switch_db('api')->select("SELECT * from broadcasters");
         $agency_id = Session::get('agency_id');
-        /**
-         * If it is a broadcaster, there are some various places the user should be redirected to
-         * 1. If the User has the scheduler role (he/she should be redirected to the inventory management screen)
-         * 2 If the User has the admin, super admin or media_buyer role (he/she should be redirected to the campaign management page)
-         */
-        if ($broadcaster_id) {
-            if (Auth::user()->hasRole(array('ssp.scheduler'))) {
-                $route = 'broadcaster.inventory_management';
-            } else {
-                // else, the user has the following roles ('ssp.admin', 'ssp.media_buyer', 'ssp.super_admin')
-                $route = 'broadcaster.campaign_management';
-            }
-            return redirect()->route($route);
+        $agency_details = Utilities::switch_db('api')->select("SELECT * from agents where id = '$agency_id'");
 
-        } else if ($agency_id) {
-            //agency dashboard
-            $allBroadcasters = Utilities::switch_db('api')->select("SELECT * from broadcasters");
-            $agency_id = Session::get('agency_id');
-            $agency_details = Utilities::switch_db('api')->select("SELECT * from agents where id = '$agency_id'");
-            
 //            TV
-            $tv_rating = $this->agencyMediaChannel('TV');
+        $tv_rating = $this->agencyMediaChannel('TV');
 
-            //Radio
-            $radio_rating = $this->agencyMediaChannel('Radio');
+        //Radio
+        $radio_rating = $this->agencyMediaChannel('Radio');
 
-            $today_date = date("Y-m-d");
+        $today_date = date("Y-m-d");
 
 //            all clients
-            $clients = Utilities::switch_db('reports')->select("SELECT * FROM walkIns WHERE agency_id = '$agency_id' ORDER BY time_created DESC");
+        $clients = Utilities::switch_db('reports')->select("SELECT * FROM walkIns WHERE agency_id = '$agency_id' ORDER BY time_created DESC");
 
 //            pending invoices
-            $pending_invoices = Utilities::switch_db('api')->select("SELECT * FROM invoiceDetails where agency_id = '$agency_id' AND status = 0 GROUP BY invoice_id");
+        $pending_invoices = Utilities::switch_db('api')->select("SELECT * FROM invoiceDetails where agency_id = '$agency_id' AND status = 0 GROUP BY invoice_id");
 
 //            all_brands
-            $all_brands = Utilities::getBrands($agency_id);
+        $all_brands = Utilities::getBrands($agency_id);
 
-            //count campaign on hold
-            $campaigns_on_hold = Utilities::switch_db('api')->select("SELECT id FROM campaignDetails WHERE agency = '$agency_id' 
-                                                                          AND status = 'on_hold' GROUP BY campaign_id");
+        //count campaign on hold
+        $campaigns_on_hold = Utilities::switch_db('api')->select("SELECT id FROM campaignDetails WHERE agency = '$agency_id' 
+                                                                      AND status = 'on_hold' GROUP BY campaign_id");
 
-            $active_campaigns = Utilities::switch_db('api')->select("SELECT * FROM campaignDetails where agency = '$agency_id' AND status = 'active' GROUP BY campaign_id");
+        $active_campaigns = Utilities::switch_db('api')->select("SELECT * FROM campaignDetails where agency = '$agency_id' AND status = 'active' GROUP BY campaign_id");
 
-            $media_plan_service = new GetMediaPlans();
-            //count pending media plans
-            $count_pending_media_plans = $media_plan_service->pendingPlans();
+        $media_plan_service = new GetMediaPlans();
+        //count pending media plans
+        $count_pending_media_plans = $media_plan_service->pendingPlans();
 
-            //count approved media plans
-            $count_approved_media_plans = $media_plan_service->approvedPlans();
+        //count approved media plans
+        $count_approved_media_plans = $media_plan_service->approvedPlans();
 
-            //count declined media plans
-            $count_declined_media_plans = $media_plan_service->declinedPlans();
+        //count declined media plans
+        $count_declined_media_plans = $media_plan_service->declinedPlans();
 
-            return view('agency.dashboard.new_dashboard')->with([
-                'broadcaster' => $allBroadcasters,
-                'active_campaigns' => $active_campaigns,
-                'all_brands' => $all_brands,
-                'pending_invoices' => $pending_invoices,
-                'clients' => $clients,
-                'active' => $tv_rating['percentage_active'],
-                'pending' => $tv_rating['percentage_pending'],
-                'finished' => $tv_rating['percentage_finished'],
-                'radio_rating' => $radio_rating,
-                'active_radio' => $radio_rating['percentage_active'],
-                'pending_radio' => $radio_rating['percentage_pending'],
-                'finish_radio' => $radio_rating['percentage_finished'],
-                'agency_info' => $agency_details, 'campaigns_on_hold' => $campaigns_on_hold,
-                'count_pending_media_plans' => $count_pending_media_plans,
-                'count_approved_media_plans' => $count_approved_media_plans,
-                'count_declined_media_plans' => $count_declined_media_plans
-            ]);
-        }
+        return view('agency.dashboard.new_dashboard')->with([
+            'broadcaster' => $allBroadcasters,
+            'active_campaigns' => $active_campaigns,
+            'all_brands' => $all_brands,
+            'pending_invoices' => $pending_invoices,
+            'clients' => $clients,
+            'active' => $tv_rating['percentage_active'],
+            'pending' => $tv_rating['percentage_pending'],
+            'finished' => $tv_rating['percentage_finished'],
+            'radio_rating' => $radio_rating,
+            'active_radio' => $radio_rating['percentage_active'],
+            'pending_radio' => $radio_rating['percentage_pending'],
+            'finish_radio' => $radio_rating['percentage_finished'],
+            'agency_info' => $agency_details, 'campaigns_on_hold' => $campaigns_on_hold,
+            'count_pending_media_plans' => $count_pending_media_plans,
+            'count_approved_media_plans' => $count_approved_media_plans,
+            'count_declined_media_plans' => $count_declined_media_plans
+        ]);
+
     }
 
     public function agencyMediaChannel($channel)
@@ -211,224 +187,5 @@ class DashboardController extends Controller
         $media_plan_service = new GetMediaPlans();
         return $media_plan_service->run();
     }
-
-    /**
-     * @todo Generate year from database (like how many years active)
-     */
-    public function campaignManagementDashbaord(Request $request)
-    {
-        $current_year = date('Y');
-
-        $company_id_list = $this->getCompanyIdsList();
-        $company_details = $this->getCompaniesDetails($company_id_list);
-
-        //Get the station_ids for the initial query
-        $publishers = Publisher::allowed($company_id_list)->get();
-        $grouped_publishers = $publishers->groupBy('type');
-
-        $media_type_list = $grouped_publishers->keys()->sort()->values()->reverse(); //this sorting is so tv comes first, but the order should be in the db
-        $initial_media_type = $media_type_list->first();
-
-        //get the full station list as an array
-        $station_list = array();
-        foreach ($grouped_publishers as $key => $value) {
-            $station_list[$key] = $company_details->whereIn("id", $value->pluck("company_id"));
-        }
-
-        $monthly_filters = array('year' => $current_year, 'station_id' => $station_list[$initial_media_type]->pluck('id'));
-        $data = [
-            //other variables used to render different things
-            'year_list' => $this->getYearFrom2018(),
-            'current_year' => $current_year,
-            'stations' => $station_list,
-            'media_type_list' => $media_type_list,
-            'media_type' => $initial_media_type,
-
-            //monthly reports limits the reports by media type and the companies associated with it
-            'monthly_reports' => $this->getMonthlyReport($company_id_list, $monthly_filters, 'station_revenue'),
-
-            // these reports below use the full company_id list because this is the summary across all types
-            'top_media_type_revenue' => (new \Vanguard\Services\Reports\Publisher\TopRevenueByMediaType($company_id_list))->run(),
-            'clients_and_brands' => (new \Vanguard\Services\Reports\Publisher\ClientsAndBrandsByMediaType($company_id_list))->run(),
-            'top_revenue_by_client' => (new \Vanguard\Services\Reports\Publisher\TopRevenueByClient($company_id_list))->run(),
-            'campaigns' => (new \Vanguard\Services\Reports\Publisher\CampaignsByMediaType($company_id_list))->run(),
-            'mpos' => (new \Vanguard\Services\Reports\Publisher\MposByMediaType($company_id_list))->run(),
-        ];
-        return view('broadcaster_module.dashboard.campaign_management.dashboard')->with($data);
-
-    }
-
-    protected function getMonthlyReport($company_id_list, $filters, $report_type) {
-        switch ($report_type) {
-            case 'station_revenue':
-                $service = new \Vanguard\Services\Reports\Publisher\Month\StationRevenue($company_id_list);
-                break;
-            case 'active_campaigns':
-                $service = new \Vanguard\Services\Reports\Publisher\Month\ActiveCampaigns($company_id_list);
-                break;
-            case 'spots_sold':
-                $service = new \Vanguard\Services\Reports\Publisher\Month\SpotsSold($company_id_list);
-                break;
-            case 'timebelt_revenue':
-                $service = new \Vanguard\Services\Reports\Publisher\Month\TimeBeltRevenue($company_id_list);
-                break;
-            default:
-                //default is station revenue
-                $service = new \Vanguard\Services\Reports\Publisher\Month\StationRevenue($company_id_list);
-                break;
-        }
-        $res = $service->setFilters($filters)->run();
-        $res['report_type'] = $report_type;
-        return $res;
-    }
-
-    /**
-     * Requests to filter reports come through this method
-     */
-    protected function getFilteredPublisherReports(\Vanguard\Http\Requests\Publisher\DashboardReportRequest $request) {
-        return $this->executeMonthlyReportRequest($request);
-    }
-
-    public function campaignManagementFilterResult()
-    {
-        $companies_id = \request()->channel_id;
-        $year = \request()->year;
-        $company_client_service = new BroadcasterClient($companies_id);
-        $pending_invoice_service = new PendingInvoice($companies_id);
-        $client_brand_service = new CompanyBrands($companies_id);
-        $campaign_status_service = new CampaignStatus($companies_id);
-        $mpo_list_service = new MpoList($companies_id, null,null);
-        $campaign_on_hold_service = new CampaignOnhold($companies_id);
-        $periodic_revenues = $this->periodicRevenueChart($companies_id, $year);
-        $response = [
-                'walkIns' => $company_client_service->getCompanyClients(),
-                'pending_invoices' => $pending_invoice_service->getPendingInvoice(),
-                'brands' => $client_brand_service->getBrandCreatedByCompany(),
-                'active_campaigns' => $campaign_status_service->getActiveCampaigns(),
-                'pending_mpos' => $mpo_list_service->pendingMpoList(),
-                'campaign_on_hold' => $campaign_on_hold_service->getCampaignsOnhold(),
-                'periodic_revenues' => $periodic_revenues
-        ];
-        return response()->json($response);
-    }
-
-    public function filteredCampaignListTable()
-    {
-        $campaigns = new AllCampaign(\request(), $dashboard = true, \request()->company_id);
-        return $campaigns->run();
-    }
-
-    public function periodicRevenueChart($company_id, $year)
-    {
-        $campaign_chart_service = new PeriodicRevenueChart($company_id, $year);
-        return $campaign_chart_service->formatPeriodicChart();
-    }
-
-    public function filterPeriodicRevenueByYear()
-    {
-        $year = \request()->year;
-        $company_id = \request()->channel_id;
-        $campaign_chart_service = new PeriodicRevenueChart($company_id, $year);
-        return $campaign_chart_service->formatPeriodicChart();
-    }
-
-
-    public function inventoryManagementDashboard()
-    {
-        $company_id_list = $this->getCompanyIdsList();
-        $company_details = $this->getCompaniesDetails($company_id_list);
-
-        //Get the station_ids for the initial query
-        $publishers = Publisher::allowed($company_id_list)->get();
-        $grouped_publishers = $publishers->groupBy('type');
-
-        $media_type_list = $grouped_publishers->keys()->sort()->values()->reverse(); //this sorting is so tv comes first, but the order should be in the db
-        $initial_media_type = $media_type_list->first();
-
-        //get the full station list as an array
-        $station_list = array();
-        foreach ($grouped_publishers as $key => $value) {
-            $station_list[$key] = $company_details->whereIn("id", $value->pluck("company_id"));
-        }
-
-        $monthly_filters = array('station_id' => $station_list[$initial_media_type]->pluck('id'));
-        $data = [
-            'days' => $this->listDays(),
-            'stations' => $this->getCompaniesDetails($company_id_list),
-            'day_parts' => array("Late Night", "Overnight", "Breakfast", "Late Breakfast", "Afternoon", "Primetime"),
-            'timebelt_revenue' => $this->getMonthlyReport($company_id_list, $monthly_filters, 'timebelt_revenue'),
-            'stations' => $station_list,
-            'media_type_list' => $media_type_list,
-            'media_type' => $initial_media_type,
-        ];
-        return view('broadcaster_module.dashboard.inventory_management.dashboard')->with($data);
-            
-    }
-
-     /**
-     * Requests to filter reports come through this method
-     */
-    protected function getFilteredInventoryReports(\Vanguard\Http\Requests\Publisher\DashboardInventoryReportRequest $request) {
-        return $this->executeMonthlyReportRequest($request);
-    }
-
-    protected function executeMonthlyReportRequest($request) {
-        $validated = $request->validated();
-        $company_id_list = $this->getCompanyIdsList();
-        
-        /**
-         * if a specific station was not requested (make sure to limit the query by stations belonging to the current media type being requested)
-         */
-        if (!isset($validated['station_id'])) {
-            $validated['station_id'] = Publisher::ofType($validated['media_type'])->get()->pluck('company_id');
-        }
-        Log::info($validated);
-        $response = array(
-            'status' => 'success',
-            'data' => $this->getMonthlyReport($company_id_list, $validated, $validated['report_type'])
-        );
-        return response()->json($response); 
-    }
-
-
-    public function getFilteredTimeBeltRevenue(Request $request) {
-        $company_ids = $this->getCompanyIdsList();
-
-        $filters = array();
-        $filter_fields = array("day_parts", "day", "station_id");
-
-        foreach ($filter_fields as $field) {
-            $value = $request->input($field);
-            if ($value) {
-                $filters[$field] = $value;
-            }
-        }
-        $timebelt_revenue_report = new RevenueByTimeBelt($company_ids, $filters);
-        return response()->json(array("status" => "success", "data" => $timebelt_revenue_report->run()));
-    }
-
-    public function getChannelWithOtherDetails($channels_id, $companies_id)
-    {
-        $channels_with_other_details = [];
-        foreach ($channels_id as $channel_id){
-            $channels_details = new CampaignChannels($channel_id);
-            $user_companies = new UserCompanyByChannel($channel_id, Auth::user()->id);
-            $company_ids = $user_companies->getListOfCompanyIds();
-            $campaign_status_service = new CampaignStatusPercentage($company_ids);
-            $channels_with_other_details[] = [
-                'channel_details' => $channels_details->getCampaignChannelsDetails(),
-                'companies' => $user_companies->getListOfCompany(),
-                'companies_id' => $company_ids,
-                'campaign_status_percentage' => [
-                    'percentage_active' => round($campaign_status_service->activePercentage()),
-                    'percentage_pending' => round($campaign_status_service->pendingPercentage()),
-                    'percentage_finished' => round($campaign_status_service->finishedPercentage())
-                ]
-            ];
-        }
-
-        return $channels_with_other_details;
-    }
-
 
 }

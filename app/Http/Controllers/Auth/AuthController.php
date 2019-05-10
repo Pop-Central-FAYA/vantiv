@@ -140,6 +140,14 @@ class AuthController extends Controller
             return redirect()->to($request->get('to'));
         }
 
+        $authenticated_user_company_type = Auth::user()->company_type;
+
+        if($authenticated_user_company_type === CompanyTypeName::BROADCASTER){
+            return redirect()->route('broadcaster.dashboard.index');
+        }else if($authenticated_user_company_type === CompanyTypeName::AGENCY){
+            return redirect()->route('dashboard');
+        }
+
         return redirect()->intended();
     }
 

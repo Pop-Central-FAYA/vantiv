@@ -67,23 +67,23 @@ Route::group(['middleware' => 'auth'], function () {
      */
 
     Route::group(['prefix' => 'industry'], function () {
-       Route::get('/', 'IndustriesController@index')->name('industry.index');
-       Route::get('/create', 'IndustriesController@create')->name('industry.create');
-       Route::post('/store', 'IndustriesController@store')->name('industry.store');
-       Route::get('/edit/{code}', 'IndustriesController@edit')->name('industry.edit');
-       Route::post('/update/{id}', 'IndustriesController@update')->name('industry.update');
-       Route::get('/delete/{id}', 'IndustriesController@delete')->name('industry.delete');
-       Route::get('/get-data', 'IndustriesController@getData');
+        Route::get('/', 'IndustriesController@index')->name('industry.index');
+        Route::get('/create', 'IndustriesController@create')->name('industry.create');
+        Route::post('/store', 'IndustriesController@store')->name('industry.store');
+        Route::get('/edit/{code}', 'IndustriesController@edit')->name('industry.edit');
+        Route::post('/update/{id}', 'IndustriesController@update')->name('industry.update');
+        Route::get('/delete/{id}', 'IndustriesController@delete')->name('industry.delete');
+        Route::get('/get-data', 'IndustriesController@getData');
 
-       Route::group(['prefix' => 'sub-industry'], function () {
-          Route::get('/', 'IndustriesController@indexSubIndustry')->name('sub_industry.index');
-          Route::get('/get-data', 'IndustriesController@subIndustryData');
-          Route::get('/create', 'IndustriesController@indexCreateIndustry')->name('sub_industry.create');
-          Route::post('/store', 'IndustriesController@storeSubIndustry')->name('sub_industry.store');
-          Route::get('/delete/{id}', 'IndustriesController@deleteSubIndustry')->name('sub_industry.delete');
-          Route::get('/edit/{code}', 'IndustriesController@editSubIndustry')->name('sub_industry.edit');
-          Route::post('/update/{id}', 'IndustriesController@updateSubIndustry')->name('sub_industry.update');
-       });
+        Route::group(['prefix' => 'sub-industry'], function () {
+            Route::get('/', 'IndustriesController@indexSubIndustry')->name('sub_industry.index');
+            Route::get('/get-data', 'IndustriesController@subIndustryData');
+            Route::get('/create', 'IndustriesController@indexCreateIndustry')->name('sub_industry.create');
+            Route::post('/store', 'IndustriesController@storeSubIndustry')->name('sub_industry.store');
+            Route::get('/delete/{id}', 'IndustriesController@deleteSubIndustry')->name('sub_industry.delete');
+            Route::get('/edit/{code}', 'IndustriesController@editSubIndustry')->name('sub_industry.edit');
+            Route::post('/update/{id}', 'IndustriesController@updateSubIndustry')->name('sub_industry.update');
+        });
     });
 
     Route::group(['prefix' => 'regions'], function() {
@@ -105,34 +105,34 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
     Route::group(['prefix' => 'admin-broadcaster'], function() {
-       Route::get('/', 'BroadcasterManagementController@index')->name('admin.broadcaster.index');
-       Route::get('/broadcaster-data', 'BroadcasterManagementController@braodcasterData');
-       Route::get('/details/{id}', 'BroadcasterManagementController@broadcasterDetails')->name('admin.broadcaster.details');
-       Route::get('/inventory/{id}', 'BroadcasterManagementController@getInventory')->name('admin.broadcaster.upload_inventory');
-       Route::post('/inventory/store/{id}', 'BroadcasterManagementController@storeInventory')->name('upload_inventory.store');
+        Route::get('/', 'BroadcasterManagementController@index')->name('admin.broadcaster.index');
+        Route::get('/broadcaster-data', 'BroadcasterManagementController@braodcasterData');
+        Route::get('/details/{id}', 'BroadcasterManagementController@broadcasterDetails')->name('admin.broadcaster.details');
+        Route::get('/inventory/{id}', 'BroadcasterManagementController@getInventory')->name('admin.broadcaster.upload_inventory');
+        Route::post('/inventory/store/{id}', 'BroadcasterManagementController@storeInventory')->name('upload_inventory.store');
     });
 
     Route::group(['prefix' => 'day-parts'], function() {
-       Route::get('/', 'AdminDayPartsController@index')->name('admin.dayparts');
-       Route::get('/data', 'AdminDayPartsController@getData');
-       Route::get('/create', 'AdminDayPartsController@create')->name('admin.daypart.create');
-       Route::post('/store', 'AdminDayPartsController@store')->name('admin.daypart.store');
-       Route::post('/update/{id}', 'AdminDayPartsController@update')->name('admin.daypart.update');
-       Route::get('/delete/{id}', 'AdminDayPartsController@delete')->name('admin.daypart.delete');
+        Route::get('/', 'AdminDayPartsController@index')->name('admin.dayparts');
+        Route::get('/data', 'AdminDayPartsController@getData');
+        Route::get('/create', 'AdminDayPartsController@create')->name('admin.daypart.create');
+        Route::post('/store', 'AdminDayPartsController@store')->name('admin.daypart.store');
+        Route::post('/update/{id}', 'AdminDayPartsController@update')->name('admin.daypart.update');
+        Route::get('/delete/{id}', 'AdminDayPartsController@delete')->name('admin.daypart.delete');
     });
 
     /**
      * Media Inventory
      */
     Route::group(['prefix' => 'program-management'], function () {
-       Route::get('/', 'Broadcaster\ProgramManagementController@index')->name('program.management.index');
-       Route::get('/data-table', 'Broadcaster\ProgramManagementController@formatToDataTable');
-       Route::get('/edit/{id}', 'Broadcaster\ProgramManagementController@edit')->name('program.management.edit');
-       Route::post('/update/{program_id}', 'Broadcaster\ProgramManagementController@update')->name('program.management.update');
-       Route::get('/details/{id}', 'Broadcaster\ProgramManagementController@edit')->name('program.management.details');
-       Route::get('/create', 'Broadcaster\ProgramManagementController@create')->name('program.management.create');
-       Route::post('/store', 'Broadcaster\ProgramManagementController@store')->name('program.management.store');
-       Route::get('/get-rate-card/{station_id}', 'Broadcaster\ProgramManagementController@fetRateCard');
+        Route::get('/', 'Broadcaster\ProgramManagementController@index')->name('program.management.index');
+        Route::get('/data-table', 'Broadcaster\ProgramManagementController@formatToDataTable');
+        Route::get('/edit/{id}', 'Broadcaster\ProgramManagementController@edit')->name('program.management.edit');
+        Route::post('/update/{program_id}', 'Broadcaster\ProgramManagementController@update')->name('program.management.update');
+        Route::get('/details/{id}', 'Broadcaster\ProgramManagementController@edit')->name('program.management.details');
+        Route::get('/create', 'Broadcaster\ProgramManagementController@create')->name('program.management.create');
+        Route::post('/store', 'Broadcaster\ProgramManagementController@store')->name('program.management.store');
+        Route::get('/get-rate-card/{station_id}', 'Broadcaster\ProgramManagementController@fetRateCard');
     });
 
     /**
@@ -152,9 +152,9 @@ Route::group(['middleware' => 'auth'], function () {
      * time belt management
      */
     Route::group(['prefix' => 'time-belt-management'], function () {
-       Route::get('/', 'Broadcaster\TimeBeltManagementController@index')->name('time.belt.management.index');
-       Route::get('/data-table', 'Broadcaster\TimeBeltManagementController@formatToDatatable');
-       Route::get('/details/{time_belt_id}', 'Broadcaster\TimeBeltManagementController@details')->name('time.belt.management.details');
+        Route::get('/', 'Broadcaster\TimeBeltManagementController@index')->name('time.belt.management.index');
+        Route::get('/data-table', 'Broadcaster\TimeBeltManagementController@formatToDatatable');
+        Route::get('/details/{time_belt_id}', 'Broadcaster\TimeBeltManagementController@details')->name('time.belt.management.details');
     });
 
     /*
@@ -283,15 +283,13 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/', ['as' => 'dashboard', 'uses' => 'DashboardController@index']);
 
-    Route::get('/clients-dashboard', ['as' => 'agency.dashboard', 'uses' => 'DashboardController@clientDashboard']);
-
-    Route::get('/campaign-management/dashboard', 'DashboardController@campaignManagementDashbaord')->name('broadcaster.campaign_management');
-    Route::get('/inventory-management/dashboard', 'DashboardController@inventoryManagementDashboard')->name('broadcaster.inventory_management');
-    Route::get('/inventory-management/reports', 'DashboardController@getFilteredInventoryReports')->name('broadcaster.inventory_management.timebelts_report');
-
-    Route::get('/campaign-management/reports', 'DashboardController@getFilteredPublisherReports');
-    Route::get('/campaign-details/filter/company', 'DashboardController@filteredCampaignListTable');
-    Route::get('periodic-revenue/filter-year', 'DashboardController@filterPeriodicRevenueByYear');
+    Route::get('/broadcaster', 'Broadcaster\DashboardController@index')->name('broadcaster.dashboard.index');
+    Route::get('/campaign-management/dashboard', 'Broadcaster\DashboardController@campaignManagementDashbaord')->name('broadcaster.campaign_management');
+    Route::get('/inventory-management/dashboard', 'Broadcaster\DashboardController@inventoryManagementDashboard')->name('broadcaster.inventory_management');
+    Route::get('/inventory-management/reports', 'Broadcaster\DashboardController@getFilteredInventoryReports')->name('broadcaster.inventory_management.timebelts_report');
+    Route::get('/campaign-management/reports', 'Broadcaster\DashboardController@getFilteredPublisherReports');
+    Route::get('agency/dashboard/campaigns', 'DashboardController@dashboardCampaigns');
+    Route::get('agency/dashboard/media-plans', 'DashboardController@dashboardMediaPlans');
 
     /**
      * Adslot
@@ -332,12 +330,12 @@ Route::group(['middleware' => 'auth'], function () {
      * Discounts
      */
     Route::group(['prefix' => 'discount'], function () {
-       Route::get('/', 'DiscountController@index')->name('discount.index');
-       Route::get('/data-table', 'DiscountController@dataTable');
-       Route::get('/create', 'DiscountController@create')->name('discount.create');
-       Route::get('/edit/{id}', 'DiscountController@edit')->name('discount.edit');
-       Route::post('/store', 'DiscountController@store')->name('discount.store');
-       Route::post('/update/{id}', 'DiscountController@update')->name('discount.update');
+        Route::get('/', 'DiscountController@index')->name('discount.index');
+        Route::get('/data-table', 'DiscountController@dataTable');
+        Route::get('/create', 'DiscountController@create')->name('discount.create');
+        Route::get('/edit/{id}', 'DiscountController@edit')->name('discount.edit');
+        Route::post('/store', 'DiscountController@store')->name('discount.store');
+        Route::post('/update/{id}', 'DiscountController@update')->name('discount.update');
     });
 
     /**
@@ -408,15 +406,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/information-update/{campaign_id}', 'Agency\CampaignsController@updateAgencyCampaignInformation')->name('agency.campaign_information.update');
         });
 
-        Route::get('/agency-dashboard/periodic-sales', 'DashboardController@filterByBroad')->name('agency.dashboard.broad');
-        Route::get('/agency-dashboard/periodic-brand', 'DashboardController@filterByBrand')->name('agency.dashboard.data');
-        Route::get('/agency/percentage-periodic', 'DashboardController@filterByMonth')->name('agency.month');
-
         Route::get('/campaign-details/{user_id}', 'Agency\CampaignsController@filterByUser');
-
-        Route::get('/dashboard/campaigns', 'DashboardController@dashboardCampaigns');
-
-        Route::get('/dashboard/media-plans', 'DashboardController@dashboardMediaPlans');
 
         /*
          * User Management

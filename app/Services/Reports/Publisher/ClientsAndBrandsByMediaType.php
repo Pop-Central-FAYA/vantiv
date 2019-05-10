@@ -85,7 +85,7 @@ class ClientsAndBrandsByMediaType
         $inner_query = DB::table("walkIns AS w")
             ->selectRaw('w.company_name as name, cd.id as campaign_id, "tv" as type, w.id as walkin_id')
             ->leftJoin('campaignDetails AS cd', 'cd.walkins_id', '=', 'w.id')
-            ->whereIn('w.broadcaster_id', $this->company_id_list);
+            ->whereIn('w.company_id', $this->company_id_list);
         
         $collection = DB::query()->fromSub($inner_query, 'walkin_list')
             ->selectRaw('name, type, SUM(IF(campaign_id IS NULL, 0, 1)) as active_campaigns')
