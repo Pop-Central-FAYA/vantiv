@@ -98,7 +98,7 @@ class CampaignList
             // if the filter is by campaign type
             // only return campaigns that were either launched by agencies or walkins by the campaign
             if ($this->request->filter_user == 'agency') {
-                return $query->whereNot('campaignDetails.agency_broadcaster', '');
+                return $query->where('campaignDetails.agency_broadcaster', '<>', '');
             } 
             if ($this->request->filter_user == 'broadcaster') {
                 return $query->where('campaignDetails.agency_broadcaster', '');
