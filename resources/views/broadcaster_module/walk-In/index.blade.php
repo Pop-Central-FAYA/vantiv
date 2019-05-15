@@ -98,7 +98,7 @@
     </div>
     <!-- new client modal -->
 
-    <div class="modal_contain" style="width: 800px;" id="new_client">
+    <div class="modal_contain" id="new_client">
         <h2 class="sub_header mb4">New Walk-In</h2>
         <div class="progress">
 
@@ -547,4 +547,13 @@
         });
 
     </script>
+@stop
+@section('styles')
+    <style>
+        .modal_contain {
+            background: #fff;
+            width: 1000px !important;
+            overflow: auto !important;
+        }
+    </style>
 @stop
