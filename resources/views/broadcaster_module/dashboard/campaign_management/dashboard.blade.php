@@ -31,8 +31,13 @@
                                 </div>
                                 <div class="col-8 px-0">
                                     {{-- <span class="text-muted">{{ $data->name }} is your highest {{ strtoupper($data->type) }} earner</span> --}}
-                                    <p class="text-muted text-center mt-3 mr-4"><b>{{ $data->name }} is your highest {{ strtoupper($data->type) }} earner</b></p>
-                                    <h3 class="text-success text-center mt-5 mr-5"><b>{{number_format($data->revenue)}}</b></h3>
+                                    @if(count($company_ids) > 1)
+                                        <p class="text-muted text-center mt-3 mr-4"><b>{{ $data->name }} is your highest {{ strtoupper($data->type) }} earner</b></p>
+                                        <h3 class="text-success text-center mt-5 mr-5"><b>{{number_format($data->revenue)}}</b></h3>
+                                    @else
+                                        <p class="text-muted text-center mt-3 mr-4"><b>Your Total Revenus is</b></p>
+                                        <h3 class="text-success text-center mt-5 mr-5"><b>{{number_format($data->revenue)}}</b></h3>
+                                    @endif
                                 </div>
                             </div>
                         </div>

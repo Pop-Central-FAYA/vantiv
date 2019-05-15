@@ -179,7 +179,7 @@
         </div>
 
         @foreach($ratings as $rating)
-            <div class="modal_contain" style="width: 1000px;" id="modal_slot{{ $rating->id }}">
+            <div class="modal_contain wide" style="width: 1000px;" id="modal_slot{{ $rating->id }}">
                 <h2 class="sub_header mb4">{{ $rating->from_to_time }} | {{ $rating->time_difference - $rating->time_used }} Seconds Available</h2></h2>
                 <form class="form_cart" action="{{ route('campaign.store_preselected_adslot', ['id' => $id]) }}" method="GET">
                     {{ csrf_field() }}
@@ -210,13 +210,13 @@
                                     <input type="hidden" name="file" class="file{{ $rating->id.$uploaded_datum->id }}" value="{{ $uploaded_datum->file_url }}">
                                     <td><div class="col-md-3"><span style="margin-left:15%"></span>{{ $uploaded_datum->time }} Seconds</div></td>
                                     @if($uploaded_datum->time === 15)
-                                        <td><div class="col-md-3">&#8358;{{ $rating->price_15 }}</div></td>
+                                        <td><div class="col-md-3">&#8358;{{ number_format($rating->price_15, 2) }}</div></td>
                                     @elseif($uploaded_datum->time === 30)
-                                        <td><div class="col-md-3">&#8358;{{ $rating->price_30 }}</div></td>
+                                        <td><div class="col-md-3">&#8358;{{ number_format($rating->price_30, 2) }}</div></td>
                                     @elseif($uploaded_datum->time === 45)
-                                        <td><div class="col-md-3">&#8358;{{ $rating->price_45 }}</div></td>
+                                        <td><div class="col-md-3">&#8358;{{ number_format($rating->price_45, 2) }}</div></td>
                                     @elseif($uploaded_datum->time === 60)
-                                        <td><div class="col-md-3">&#8358;{{ $rating->price_60 }}</div></td>
+                                        <td><div class="col-md-3">&#8358;{{ number_format($rating->price_60, 2) }}</div></td>
                                     @endif
                                     <td>
                                         <select name="position" class="form-control" id="position{{ $rating->id.$uploaded_datum->id }}">

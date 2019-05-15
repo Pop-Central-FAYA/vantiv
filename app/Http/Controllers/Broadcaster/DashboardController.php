@@ -72,7 +72,7 @@ class DashboardController extends Controller
             'stations' => $station_list,
             'media_type_list' => $media_type_list,
             'media_type' => $initial_media_type,
-
+            'company_ids' => $company_id_list,
             //monthly reports limits the reports by media type and the companies associated with it
             'monthly_reports' => $this->getMonthlyReport($company_id_list, $monthly_filters, 'station_revenue'),
 

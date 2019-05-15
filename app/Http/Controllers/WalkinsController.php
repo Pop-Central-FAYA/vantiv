@@ -72,14 +72,13 @@ class WalkinsController extends Controller
     {
         $industry = request()->industry;
 
-        $sud_industry = Utilities::switch_db('api')->select("
+        $sub_industry = Utilities::switch_db('api')->select("
             SELECT * FROM subSectors
             WHERE sector_id = '$industry'
             ORDER BY `name` ASC
         ");
-
-        if(count($sud_industry) > 0){
-            return $sud_industry;
+        if(count($sub_industry) > 0){
+            return $sub_industry;
         }else{
             return response()->json(['error' => 'error']);
         }
@@ -127,7 +126,7 @@ class WalkinsController extends Controller
             Session::flash('error', ClassMessages::WALKIN_ERROR);
             return redirect()->back();
         }
-
+        Session::flash('success', 'Walk-In created successfully, please go to campaign create campaign to select your walk-In');
         if($this->broadcaster_id){
             return redirect()->route('walkins.all');
         }else{

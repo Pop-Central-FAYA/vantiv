@@ -257,7 +257,9 @@ class DashboardTiles {
         if (denominator == 0) {
             return 0;
         }
-        return Math.floor((numerator/denominator) * 100);
+        //Math.floor when used does not round up to the nearest whole number
+        //which in turn will not give 100% when summed
+        return Math.round((numerator/denominator) * 100);
     }
 }
 
