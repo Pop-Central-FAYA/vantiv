@@ -50,16 +50,17 @@ class WalkinsController extends Controller
      */
     public function index()
     {
-        $walkins_list_service = new WalkInLists(\Auth::user()->company_id);
+        $walkins_list_service = new WalkInLists($this->getCompanyIdsList());
         $walkins = $walkins_list_service->getWalkInList();
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
         $col = new Collection($walkins);
         $perPage = 10;
         $currentPageSearchResults = $col->slice(($currentPage - 1) * $perPage, $perPage)->all();
         $entries = new LengthAwarePaginator($currentPageSearchResults, count($col), $perPage);
-        $entries->setPath('list');
+        $entries->setPath('walk-in');
         $industries = new IndustryList();
-        return view('broadcaster_module.walk-In.index')->with('clients', $entries)->with('industries', $industries->industryList());
+        return view('broadcaster_module.walk-In.index')->with('clients', $entries)->with('industries', $industries->industryList())
+                                                            ->with('walkin_count', count($walkins));
     }
 
     /**

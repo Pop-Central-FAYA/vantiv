@@ -28,12 +28,12 @@
         <div class="the_stats the_frame clearfix mb4">
             <div class="active column col_4">
                 <span class="small_faint uppercased">Total Walk-Ins</span>
-                <h3>{{ count($clients) }}</h3>
+                <h3>{{ $walkin_count }}</h3>
             </div>
 
             <div class="column col_4">
                 <span class="small_faint uppercased">Active Walk-Ins</span>
-                <h3>{{ count($clients) }}</h3>
+                <h3>{{ $walkin_count }}</h3>
             </div>
 
             <div class="column col_4">
@@ -62,7 +62,7 @@
                     <div class="padd column col_3">
                         <span class="client_ava"><img src="{{ $client->company_logo ? asset($client->company_logo) : '' }}"></span>
                         <p>{{ $client->walkins_company_name }}</p>
-                        <span class="small_faint">Added {{ date('M j, Y h:ia', strtotime($client->time_created)) }}</span>
+                        <span class="small_faint">Added {{ date('M j, Y', strtotime($client->time_created)) }}</span>
                     </div>
                     <div class="column col_1">{{ $client->total_brand }}</div>
                     <div class="column col_2">&#8358; {{ number_format($client->total_spent_so_far, 2) }}</div>
@@ -337,6 +337,8 @@
             </form>
         </div>
     @endforeach
+    <p><br></p>
+    {{ $clients->links('pagination.general') }}
 @stop
 
 @section('scripts')
