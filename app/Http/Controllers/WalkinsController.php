@@ -8,6 +8,7 @@ use Vanguard\Http\Controllers\Traits\CompanyIdTrait;
 use Vanguard\Http\Requests\WalkinStoreRequest;
 use Vanguard\Http\Requests\WalkinUpdateRequest;
 use Vanguard\Libraries\Enum\ClassMessages;
+use Vanguard\Models\SubSector;
 use Vanguard\Services\Brands\BrandDetails;
 use Vanguard\Services\Brands\ClientBrand;
 use Vanguard\Services\Brands\ClientsBrandWithCampaign;
@@ -71,13 +72,8 @@ class WalkinsController extends Controller
     public function getSubIndustry()
     {
         $industry = request()->industry;
-
-        $sub_industry = Utilities::switch_db('api')->select("
-            SELECT * FROM subSectors
-            WHERE sector_id = '$industry'
-            ORDER BY `name` ASC
-        ");
-        if(count($sub_industry) > 0){
+        $sub_industry = SubSector::where('sector_id', $industry)->orderBy('name', 'asc')->get();
+        if($sub_industry){
             return $sub_industry;
         }else{
             return response()->json(['error' => 'error']);
@@ -95,8 +91,10 @@ class WalkinsController extends Controller
         $brand_slug = str_slug($request->brand_name);
         $client_brands = new ClientBrand($brand_slug, $client_id);
         if($client_brands->checkForBrandExistence() == 'brand_exist'){
-            Session::flash('error', ClassMessages::BRAND_ALREADY_EXIST);
-            return redirect()->back();
+            return [
+                'status'=>"error",
+                'message'=> ClassMessages::BRAND_ALREADY_EXIST
+            ];
         }
         try{
             \DB::transaction(function () use($request, $brand_slug, $client_id, $company_id) {
@@ -122,17 +120,16 @@ class WalkinsController extends Controller
                     $store_brand_client_service->storeClientBrand();
                 }
             });
+            return [
+                'status'=>"success",
+                'message'=> "Walk-In created successfully, please go to campaign create campaign to select your walk-In"
+            ];
         }catch (\Exception $exception){
-            Session::flash('error', ClassMessages::WALKIN_ERROR);
-            return redirect()->back();
+            return [
+                'status'=>"error",
+                'message'=> ClassMessages::WALKIN_ERROR
+            ];
         }
-        Session::flash('success', 'Walk-In created successfully, please go to campaign create campaign to select your walk-In');
-        if($this->broadcaster_id){
-            return redirect()->route('walkins.all');
-        }else{
-            return redirect()->route('clients.list');
-        }
-
     }
 
     public function updateWalKins(WalkinUpdateRequest $request, $client_id)

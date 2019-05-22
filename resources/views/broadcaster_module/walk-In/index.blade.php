@@ -103,9 +103,9 @@
         <div class="progress">
 
         </div><br>
-        <form action="{{ route('walkins.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('walkins.store') }}" method="POST" enctype="multipart/form-data" id="create_walkIns">
             {{ csrf_field() }}
-            <div class="clearfix">
+            <div class="clearfix" id="upload_container">
                 <div class="input_wrap column col_7{{ $errors->has('company_name') ? ' has-error' : '' }}">
                     <label class="small_faint">Company Name</label>
                     <input type="text" name="company_name" value="" required  placeholder="e.g Coca Cola">
@@ -241,7 +241,7 @@
             </div>
 
             <div class="align_right">
-                <input type="submit" disabled id="submit_walkins" value="Create Walk-In" class="btn uppercased update">
+                <input type="submit" disabled id="submit_walkins" value="Create Walk-In" class="btn uppercased update button_create">
             </div>
 
         </form>
@@ -345,7 +345,7 @@
             // $("#state").change(function() {
             $('#industry').on('change', function(e){
                 $(".modal_contain").css({
-                    opacity: 0.5
+                    opacity: 0.2
                 });
                 $('.update').attr("disabled", true);
                 var industry = $("#industry").val();
@@ -388,99 +388,26 @@
                     data: {brand_name: brand_name},
                     success: function (data) {
                         if(data === 'already_exists'){
-                            console.log(data);
                             toastr.info('This brand already exists on our platform, by continuing this process means you are aware of its existence');
                         }
                     }
                 })
             });
 
-            $("#phone_number_verify").keyup(function () {
-                var phone_number = $("#phone_number_verify").val();
-                if(phone_number.length == 11 || phone_number.length == 7){
-                    $("#submit_walkins").prop('disabled', false);
-                    toastr.success('Phone number length is valid');
-                }
-                if(phone_number.length > 7 && phone_number.length < 11){
-                    $("#submit_walkins").prop('disabled', true);
-                    toastr.error('Phone number length is invalid');
-                }
-                if(phone_number.length >11){
-                    $("#submit_walkins").prop('disabled', false);
-                    toastr.error('Phone number length is invalid');
-                }
-            })
-
             $(".company_logo").on('change', function () {
-                var url = '/presigned-url';
-                for (var file, i = 0; i < this.files.length; i++) {
-                    file = this.files[i];
-                    if(file.name && !file.name.match(/.(gif|jpeg|jpg|png|svg)$/i)) {
-                    	toastr.error('Only Images are allowed');
-                    	return;
-                    }
-                    $.ajax({
-                        url : url,
-                        type : "GET",
-                        cache : false,
-                        data: {filename : file.name, folder: 'client-images/'},
-                        success: function (data) {
-                            $.ajax({
-                                xhr: function() {
-                                    var xhr = new window.XMLHttpRequest();
-                                    xhr.upload.addEventListener("progress", function(evt) {
-                                        if (evt.lengthComputable) {
-                                            var percentComplete = evt.loaded / evt.total;
-                                            percentComplete = parseInt(percentComplete * 100);
-                                            var big_html = '<div class="progress-bar" role="progressbar" aria-valuenow="'+percentComplete+'"'+
-                                                'aria-valuemin="0" aria-valuemax="100" style="width:'+percentComplete+'%">'+
-                                                '<span class="sr-only">'+percentComplete+'% Complete</span>'+
-                                                '</div>';
-                                            $('.progress').html(big_html);
-                                            if (percentComplete === 100) {
-                                                $('.progress').fadeOut(1000);
-
-                                            }
-
-                                        }
-                                    }, false);
-
-                                    return xhr;
-                                },
-                                url : data,
-                                type : "PUT",
-                                data : file,
-                                dataType : "text",
-                                cache : false,
-                                contentType : file.type,
-                                processData : false,
-                            })
-                            .done(function(){
-                                toastr.success('Your upload was successful');
-                                var uploadedUrl = 'https:'+data.split('?')[0].substr(6);
-                                $(".company_logo_url").val(uploadedUrl);
-                                $(".company_upload_button").hide();
-                                $(".company_uploaded_image").show();
-                                $(".upload_new").show();
-                                $(".company_uploaded_image").html('<img src="'+uploadedUrl+'" style="width: 100px;\n' +
-                                    '    height: 100px;\n' +
-                                    '    padding: 0 0 11px;\n' +
-                                    '    margin-right: auto;\n' +
-                                    '    margin-left: auto;\n' +
-                                    '    margin-top: -70px; " >');
-                            })
-                            .fail(function(){
-                                toastr.error('An error occurred, please try again ');
-                            })
-                        }
-                    })
-                }
+                var files = this.files;
+                uploadImages(files, 'client-images/', ".company_uploaded_image", ".upload_new", ".company_upload_button", ".company_logo_url", '.progress')
             });
 
             $(".brand_logo").on('change', function () {
+                var files = this.files;
+                uploadImages(files, 'brand-images/', ".brand_uploaded_image", ".upload_new_brand", ".brand_upload_button", "#brand_logo_url", '.progress')
+            });
+
+            function uploadImages(files, folder, uploaded_image_class, upload_new_image_class, upload_button, url_input_id, progress_bar_class){
                 var url = '/presigned-url';
-                for (var file, i = 0; i < this.files.length; i++) {
-                    file = this.files[i];
+                for (var file, i = 0; i < files.length; i++) {
+                    file = files[i];
                     if(file.name && !file.name.match(/.(gif|jpeg|jpg|png|svg)$/i)) {
                         toastr.error('Only Images are allowed');
                         return;
@@ -489,9 +416,8 @@
                         url : url,
                         type : "GET",
                         cache : false,
-                        data: {filename : file.name, folder: 'brand-images/'},
+                        data: {filename : file.name, folder: folder},
                         success: function (data) {
-                            console.log(data);
                             $.ajax({
                                 xhr: function() {
                                     var xhr = new window.XMLHttpRequest();
@@ -503,7 +429,7 @@
                                                 'aria-valuemin="0" aria-valuemax="100" style="width:'+percentComplete+'%">'+
                                                 '<span class="sr-only">'+percentComplete+'% Complete</span>'+
                                                 '</div>';
-                                            $('.progress').html(big_html);
+                                            $(progress_bar_class).html(big_html);
                                             if (percentComplete === 100) {
                                                 $('.progress').fadeOut(1000);
 
@@ -525,11 +451,11 @@
                                 .done(function(){
                                     toastr.success('Your upload was successful');
                                     var uploadedUrl = 'https:'+data.split('?')[0].substr(6);
-                                    $("#brand_logo_url").val(uploadedUrl);
-                                    $(".brand_upload_button").hide();
-                                    $(".brand_uploaded_image").show();
-                                    $(".upload_new_brand").show();
-                                    $(".brand_uploaded_image").html('<img src="'+uploadedUrl+'" style="width: 100px;\n' +
+                                    $(url_input_id).val(uploadedUrl);
+                                    $(upload_button).hide();
+                                    $(uploaded_image_class).show();
+                                    $(upload_new_image_class).show();
+                                    $(uploaded_image_class).html('<img src="'+uploadedUrl+'" style="width: 100px;\n' +
                                         '    height: 100px;\n' +
                                         '    padding: 0 0 11px;\n' +
                                         '    margin-right: auto;\n' +
@@ -542,7 +468,104 @@
                         }
                     })
                 }
+            }
+
+            //store_walkins
+            $("#create_walkIns").on('submit', function(e) {
+                event.preventDefault(e);
+                var phone_number = $("#phone_number_verify").val();
+                if(phone_number.length != 13){
+                    toastr.error('Phone number invalid, please make sure you enter a valid number with the specified format as the placeholder')
+                    return;
+                }
+                $('.required').each(function(){
+                    if( $(this).val() == "" ){
+                        toastr.error('All fields are required');
+                        return;
+                    }
+                });
+                $('.modal_contain').css({
+                    opacity : 0.2
+                });
+                $('a').css('pointer-events','none');
+                $('.button_create').hide();
+                var formdata = $("#create_walkIns").serialize();
+                var weHaveSuccess = false;
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: '/walk-in/store',
+                    dataType: 'json',
+                    data: formdata,
+                    beforeSend: function(data) {
+                        // run toast showing progress
+                        toastr_options = {
+                            "progressBar": true,
+                            // "showDuration": "300",
+                            "preventDuplicates": true,
+                            "tapToDismiss": false,
+                            "hideDuration": "1",
+                            "timeOut": "300000000"
+                        };
+                        msg = "Processing request, please wait"
+                        toastr.info(msg, null, toastr_options)
+                    },
+                    success: function (data) {
+                        toastr.clear();
+                        if (data.status === 'success') {
+                            toastr.success(data.message);
+                            location.href = '/walk-in';
+                        } else {
+                            toastr.error(data.message);
+                            $('.modal_contain').css({
+                                opacity: 1
+                            });
+                            $('a').css('pointer-events','');
+                            $('.button_create').show();
+                            return;
+                        }
+                        weHaveSuccess = true;
+                    },
+                    error : function (xhr) {
+                        toastr.clear();
+                        if(xhr.status === 500){
+                            toastr.error('An unknown error has occurred, please try again');
+                            $('.modal_contain').css({
+                                opacity: 1
+                            });
+                            $('a').css('pointer-events','');
+                            $('.button_create').show();
+                            return;
+                        }else if(xhr.status === 503){
+                            toastr.error('The request took longer than expected, please try again');
+                            $('.modal_contain').css({
+                                opacity: 1
+                            });
+                            $('a').css('pointer-events','');
+                            $('.button_create').show();
+                            return;
+                        }else{
+                            toastr.error('An unknown error has occurred, please try again');
+                            $('.modal_contain').css({
+                                opacity: 1
+                            });
+                            $('a').css('pointer-events','');
+                            $('.button_create').show();
+                            return;
+                        }
+                    }
+                })
             });
+
+            //make sure all required class are validated
+            function checkRequiredFields() {
+                $('.required').each(function(){
+                    if( $(this).val() == "" ){
+                        toastr.error('All fields are required');
+                        return;
+                    }
+                });
+            };
 
         });
 
