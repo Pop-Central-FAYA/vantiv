@@ -15,12 +15,12 @@ class WalkInLists
     {
         return \DB::table('walkIns')
                     ->join('users', 'users.id', '=', 'walkIns.user_id')
-                    ->join('companies', 'companies.id', '=', 'walkIns.company_id')
                     ->join('brand_client', 'brand_client.client_id', '=', 'walkIns.id')
                     ->leftJoin('campaignDetails', function($query) {
                         return $query->on('campaignDetails.walkins_id', '=', 'walkIns.id')
                                     ->on('campaignDetails.brand', '=', 'brand_client.brand_id');
                     })
+                    ->join('companies', 'companies.id', '=', 'campaignDetails.launched_on')
                     ->leftJoin('payments', 'payments.campaign_id', '=', 'campaignDetails.campaign_id')
                     ->leftJoin('paymentDetails', function ($query) {
                         return $query->on('paymentDetails.payment_id', '=', 'payments.id')
