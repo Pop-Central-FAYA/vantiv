@@ -16,6 +16,7 @@ use Vanguard\Support\Enum\UserStatus;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Laracasts\Presenter\PresentableTrait;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Spatie\Permission\Models\Role;
 
 class User extends Authenticatable implements TwoFactorAuthenticatableContract
 {
@@ -26,7 +27,7 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract
     use TwoFactorAuthenticatable, CanResetPassword, PresentableTrait, Notifiable, HasRoles;
 
     protected $presenter = UserPresenter::class;
-    protected $guard_name = ['ssp', 'dsp'];
+
 
 
     /**
@@ -176,5 +177,43 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract
     public function companies()
     {
         return $this->belongsToMany(Company::class);
+    }
+
+    public function assignRole($roles, string $guard = null)
+    {
+        $roles = \is_string($roles) ? [$roles] : $roles;
+        $guard = $guard ? : $this->getDefaultGuardName();
+
+        $roles = collect($roles)
+            ->flatten()
+            ->map(function ($role) use ($guard) {
+                return $this->getStoredRole($role, $guard);
+            })
+            ->each(function ($role) {
+                $this->ensureModelSharesGuard($role);
+            })
+            ->all();
+
+        $this->roles()->saveMany($roles);
+
+        $this->forgetCachedPermissions();
+
+        return $this;
+    }
+
+    protected function getStoredRole($role, string $guard): Role
+    {
+        if (\is_string($role)) {
+            return app(Role::class)->findById($role, $guard);
+        }
+
+        return $role;
+    }
+
+    public function syncRoles($roles, $guard)
+    {
+        $this->roles()->detach();
+
+        return $this->assignRole($roles, $guard);
     }
 }
