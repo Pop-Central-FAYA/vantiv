@@ -5,11 +5,11 @@
 
     <div class="_nav">
         <ul>
-            @if(Auth::user()->hasRole('dsp.admin') || Auth::user()->hasRole('dsp.finance') || Auth::user()->hasRole('compliance') || Auth::user()->hasRole('media_planner'))
+            @if(Auth::user()->hasRole('dsp.admin') || Auth::user()->hasRole('dsp.finance') || Auth::user()->hasRole('dsp.compliance') || Auth::user()->hasRole('media_planner'))
             <li class="campaign_icon {{ Request::is('/') ? 'active' : ''  }}"><a href="{{ route('dashboard') }}">Dashboard</a></li>
             @endif
             <!-- <li class="report_icon"><a href="">Reports</a></li> -->
-            @if(Auth::user()->hasRole('dsp.admin') || Auth::user()->hasRole('media_planner'))
+            @if(Auth::user()->hasRole('dsp.admin') || Auth::user()->hasRole('dsp.media_planner'))
                 <li class="clients_icon {{ Request::is('agency/clients/*') ? 'active' : ''  }}"><a href="{{ route('clients.list') }}">Clients</a></li>
             @endif
             @if(Auth::user()->hasRole('dsp.finance') || Auth::user()->hasRole('dsp.admin') || Auth::user()->hasRole('dsp.compliance'))
