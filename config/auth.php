@@ -45,6 +45,16 @@ return [
             'provider' => 'users',
         ],
 
+        'dsp' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
+
+        'ssp' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
+
         'api' => [
             'driver' => 'token',
             'provider' => 'users',

@@ -478,6 +478,23 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/store-programs', 'MediaPlan\MediaPlanController@storePrograms')->name('media_plan.program.store');
             Route::post('/store-volume-discount', 'MediaPlan\MediaPlanController@storeVolumeDiscount')->name('media_plan.volume_discount.store');
         });
+        
+
+
+        /**
+         * User Management
+         */
+
+        Route::group(['prefix' => 'user'], function() {
+            Route::get('/all', 'Agency\UserController@index')->name('agency.user.index');
+            Route::get('/invite', 'Agency\UserController@inviteUser')->name('agency.user.invite');
+            Route::get('/edit/{id}', 'Agency\UserController@editUser')->name('agency.user.edit');
+            Route::post('/update/{id}', 'Agency\UserController@updateUser');
+            Route::post('/invite/store', 'Agency\UserController@processInvite');
+            Route::get('/data-table', 'Agency\UserController@getDatatable');
+            Route::post('/resend/invitation', 'Agency\UserController@resendInvitation');
+            Route::get('/status/update', 'Agency\UserController@updateStatus');
+        });
     });
 
     Route::group(['prefix' => 'wallets'], function(){

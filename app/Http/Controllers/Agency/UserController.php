@@ -1,13 +1,14 @@
 <?php
 
-namespace Vanguard\Http\Controllers;
+namespace Vanguard\Http\Controllers\Agency;
 
+use Illuminate\Http\Request;
+use Vanguard\Http\Controllers\Controller;
+use Vanguard\Services\User\GetUserList;
 use Vanguard\Http\Controllers\Traits\CompanyIdTrait;
 use Vanguard\Services\Mail\UserInvitationMail;
-use Vanguard\Services\User\GetUserList;
 use Vanguard\Services\User\InviteUser;
 use Vanguard\Services\RolesPermission\ListRoleGroup;
-use Illuminate\Http\Request;
 use Vanguard\Services\User\UpdateUser;
 use Vanguard\Services\User\UpdateUserService;
 use Vanguard\Services\Validator\UpdateUserValidation;
@@ -25,14 +26,15 @@ class UserController extends Controller
 
     public function __construct()
     {
-        $this->middleware(['role:ssp.super_admin|ssp.admin'], ['except' => ['getCompleteAccount', 'processCompleteAccount']]);
+        //$this->middleware(['role:dsp.super_admin|dsp.admin'], ['except' => ['getCompleteAccount', 'processCompleteAccount']]);
     }
 
+    // This fub=nction will return a view with the lis of users
     public function index()
     {
-        $user_list_service = new GetUserList($this->getCompanyIdsList());
-        $user_list = $user_list_service->getUserData();
-        return view('users.index')->with('users', $user_list);
+     $user_list_service = new GetUserList($this->getCompanyIdsList());
+       $user_list = $user_list_service->getUserData();
+       return view('agency.user-management.index')->with('users', $user_list);
     }
 
     public function getDatatable(DataTables $dataTables)
@@ -42,37 +44,23 @@ class UserController extends Controller
         $statuses = UserStatus::lists();
         return $dataTables->collection($user_list)
             ->addColumn('edit', function ($user_list) {
-                if(!\Auth::user()->hasRole('ssp.super_admin') && $user_list['role_name']->first() == 'ssp.super_admin'){
-                    return '';
-                }else{
-                    return '<a href="'.route('user.edit', ['id' => $user_list['id']]).'" class="weight_medium">Edit</a>';
-                }
+             
+                    return '<a href="'.route('agency.user.edit', ['id' => $user_list['id']]).'" class="weight_medium">Edit</a>';
+            
             })
             ->addColumn('status', function ($user_list) use($statuses) {
-                if($user_list['status'] === UserStatus::UNCONFIRMED){
+                
                     return '<a href="#user_modal_'.$user_list['id'].'" class="weight_medium modal_user_click">'.$user_list['status'].'</a>';
-                }else{
-                    if(!\Auth::user()->hasRole('ssp.super_admin') && $user_list['role_name']->first() == 'ssp.super_admin'){
-                        return '';
-                    }else{
-                        return view('users.status', ['user_status' => $user_list['status'], 'statuses' => $statuses, 'id' => $user_list['id']]);
-                    }
-                }
+                
             })
             ->rawColumns(['edit' => 'edit', 'status' => 'status'])->addIndexColumn()
             ->make(true);
     }
-
     public function inviteUser()
     {
-        $role_list_services = new ListRoleGroup('ssp');
+        $role_list_services = new ListRoleGroup('dsp');
         $roles = $role_list_services->getRoles();
-        if(!\Auth::user()->hasRole('ssp.super_admin')){
-            $roles = collect($roles)->filter(function($role) {
-                return $role['role'] !== 'ssp.super_admin';
-            });
-        }
-        return view('users.invite_user')
+        return view('agency.user-management.invite_user')
                     ->with('roles', $roles)
                     ->with('companies', $this->getCompaniesDetails($this->companyId()));
     }
@@ -89,7 +77,7 @@ class UserController extends Controller
         \DB::transaction(function () use ($request, $companies, $inviter_name) {
             $user_mail_content_array = [];
             foreach ($request->email as $email) {
-                $invite_user_service = new InviteUser($request->roles, $companies, $email, "ssp");
+                $invite_user_service = new InviteUser($request->roles, $companies, $email, "dsp");
                 $invited_user = $invite_user_service->createUnconfirmedUser();
 
                 $email_format = new MailFormat($invited_user, $inviter_name);
@@ -107,7 +95,7 @@ class UserController extends Controller
             \Session::flash('error', 'Invalid/Expired link, contact admin');
             return redirect()->route('login');
         }
-        $user = User::findOrFail($id);
+        $user = AgencyUser::findOrFail($id);
         return view('auth.complete_registration')->with('user', $user);
     }
 
@@ -127,12 +115,12 @@ class UserController extends Controller
 
         return ['status'=>"success", 'message'=> "Thank you for completing your registration, you can now login with your credentials"];
     }
-
+// retun the view to add role to a member 
     public function editUser($id)
     {
         $user = User::find($id)->load('companies');
-        $roles_service = new ListRoleGroup('ssp');
-        return view('users.edit')->with('roles', $roles_service->getRoles())
+        $roles_service = new ListRoleGroup('dsp');
+        return view('agency.user-management.edit')->with('roles', $roles_service->getRoles())
                                         ->with('companies', $this->getCompaniesDetails($this->companyId()))
                                         ->with('user', $user);
     }
@@ -145,7 +133,7 @@ class UserController extends Controller
             return ['status'=>"error", 'message'=> $validate_request->errors()->first()];
         }
 
-        $update_user_service = new UpdateUserService($request->roles, $this->getCompany($request->companies), $request->user_id,'ssp');
+        $update_user_service = new UpdateUserService($request->roles, $this->getCompany($request->companies), $request->user_id, 'dsp');
         $update_user_service->updateUser();
         return ['status'=>"success", 'message'=> "User updated successfully"];
     }
@@ -163,13 +151,15 @@ class UserController extends Controller
     public function resendInvitation(Request $request)
     {
         $user = User::find($request->user_id);
+
         $email_format = new MailFormat($user, \Auth::user()->full_name);
         $user_mail_content_array[] = $email_format->emailFormat();
+
         $email_invitation_service = new UserInvitationMail($user_mail_content_array);
         $email_invitation_service->sendInvitationMail();
         return ['status'=>"success", 'message'=> "Invitation has been sent to the user"];
     }
-
+ 
     public function updateStatus(Request $request)
     {
         try{
@@ -182,4 +172,6 @@ class UserController extends Controller
         }
         return ['status'=>"success", 'message'=> "Status updated successfully"];
     }
+    
 }
+?>
