@@ -127,15 +127,15 @@
             });
 
             function getColumn() {
-                var data = [
+                return [
                     {data: 'name', name: 'name'},
                     {data: 'email', name: 'email'},
                     {data: 'roles', name: 'roles'},
+                    {data: 'edit', name: 'edit'},
+                    {data: 'status', name: 'status'}
                 ];
                  
-                data.push({data: 'edit', name: 'edit'},{data: 'status', name: 'status'})
-                
-                return data;
+               
             }
 
             $(".resend_invite").on('submit', function(e) {
