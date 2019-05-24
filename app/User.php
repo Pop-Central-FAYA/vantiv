@@ -27,7 +27,7 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract
     use TwoFactorAuthenticatable, CanResetPassword, PresentableTrait, Notifiable, HasRoles;
 
     protected $presenter = UserPresenter::class;
-    //protected $guard_name = ['ssp', 'dsp'];
+
 
 
     /**

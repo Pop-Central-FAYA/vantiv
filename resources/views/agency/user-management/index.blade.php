@@ -58,9 +58,6 @@
                     <th>Name</th>
                     <th>Email</th>
                     <th>Role(s)</th>
-                    @if(Auth::user()->companies()->count() > 1)
-                        <th>Company</th>
-                    @endif
                     <th>Edit</th>
                     <th>Status</th>
                 </tr>
@@ -99,7 +96,6 @@
     <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.html5.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.print.min.js"></script>
     <script>
-        <?php echo "var companies =".Auth::user()->companies()->count().";\n"; ?>
         $(document).ready(function () {
             $("body").delegate(".modal_user_click", "click", function() {
                 var href = $(this).attr("href");
@@ -136,11 +132,9 @@
                     {data: 'email', name: 'email'},
                     {data: 'roles', name: 'roles'},
                 ];
-                if(companies > 1){
-                    data.push({data: 'company', name: 'company'},{data: 'edit', name: 'edit'},{data: 'status', name: 'status'})
-                }else{
-                    data.push({data: 'edit', name: 'edit'},{data: 'status', name: 'status'})
-                }
+                 
+                data.push({data: 'edit', name: 'edit'},{data: 'status', name: 'status'})
+                
                 return data;
             }
 

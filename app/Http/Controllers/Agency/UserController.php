@@ -24,11 +24,6 @@ class UserController extends Controller
 {
     use CompanyIdTrait;
 
-    public function __construct()
-    {
-        //$this->middleware(['role:dsp.super_admin|dsp.admin'], ['except' => ['getCompleteAccount', 'processCompleteAccount']]);
-    }
-
     // This fub=nction will return a view with the lis of users
     public function index()
     {

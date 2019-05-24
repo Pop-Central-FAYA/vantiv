@@ -101,7 +101,6 @@
 @section('scripts')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
     <script>
-        <?php echo "var companies =".Auth::user()->companies()->count().";\n"; ?>
         $(document).ready(function () {
             $(".update_user").on('submit', function(e) {
                 event.preventDefault(e);
@@ -120,17 +119,7 @@
                     $('.button_create').show();
                     return;
                 }
-                if(companies > 1) {
-                    if ($('.company_user_'+user_id).is(":checked") === false){
-                        toastr.error('Please select at least a company');
-                        $('.load_this_div').css({
-                            opacity : 1
-                        });
-                        $('a').css('pointer-events','');
-                        $('.button_create').show();
-                        return;
-                    }
-                }
+               
                 var formdata = $("#update_"+user_id).serialize();
                 var weHaveSuccess = false;
 
