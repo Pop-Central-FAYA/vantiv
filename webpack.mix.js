@@ -1,5 +1,16 @@
 const mix = require('laravel-mix');
 
+// this right here removes console log in production
+mix.options({
+    uglify: {
+        uglifyOptions: {
+            compress: {
+                drop_console: true
+            }
+        }
+    }
+});
+
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management

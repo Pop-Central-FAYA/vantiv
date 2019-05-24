@@ -14,9 +14,6 @@ storage/excels/
 storage/fonts/
 .editorconfig
 .gitattributes
-resources/assets
-resources/js
-resources/sass
 yarn-error.log
 env.example
 database/factories/UserFactory.php
@@ -31,4 +28,5 @@ node_modules
 /public/.htaccess
 /storage
 storage/*.key
+resources/assets/.DS_Store
 

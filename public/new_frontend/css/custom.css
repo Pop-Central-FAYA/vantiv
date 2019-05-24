@@ -94,3 +94,30 @@
 .broadcaster-report .chart-view .chart-toggle .inactive-toggle .material-icons {
     color: #afacac !important;
 }
+
+.swal2-content {
+    color: #fff !important;
+    padding: 0.7rem !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+}
+
+.suggestion-graph .graph-days.nav.nav-tabs {
+    border-bottom: none !important;
+}
+
+.suggestion-graph .graph-days.nav.nav-tabs .nav-link {
+    border: 1px solid #44c1c9;
+    border-top-left-radius: 0rem;
+    border-top-right-radius: 0rem;
+}
+
+.suggestion-graph .graph-days.nav.nav-tabs .nav-link.active {
+    color: #ffffff;
+    background-color: #44c1c9;
+    border-color: #dee2e6 #dee2e6 #f5f8fa;
+}
+
+.suggestion-graph .graph-days.nav.nav-tabs button:focus {
+    outline: none;
+}
