@@ -17,11 +17,6 @@ use Yajra\DataTables\DataTables;
 class RateCardManagementController extends Controller
 {
     use CompanyIdTrait;
-
-    public function __construct()
-    {
-        $this->middleware(['role:ssp.super_admin|ssp.admin']);
-    }
     /**
      * Display a listing of the resource.
      *
@@ -39,7 +34,9 @@ class RateCardManagementController extends Controller
         $rate_cards = $get_rate_card_service->formatRateCardData();
         return $dataTables->collection($rate_cards)
             ->addColumn('edit', function ($rate_cards) {
-                return '<a href="'.route('rate_card.management.edit', ['rate_card_id' => $rate_cards['id']]).'" class="weight_medium">Edit</a>';
+                if(\Auth::user()->hasPermissionTo('update.rate_card')) {
+                    return '<a href="'.route('rate_card.management.edit', ['rate_card_id' => $rate_cards['id']]).'" class="weight_medium">Edit</a>';
+                }
             })
             ->rawColumns(['edit' => 'edit'])->addIndexColumn()
             ->make(true);

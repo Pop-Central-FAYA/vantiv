@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Users;
 
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 use Vanguard\Models\Company;
@@ -33,7 +34,7 @@ class InviteUserEditTest extends TestCase
     {
         //create a user
         $user = factory(User::class)->create();
-        $user->assignRole(factory(Role::class)->create()->id);
+        $user->assignRole($this->createDefaultRole()->id);
         $user->companies()->attach(factory(Company::class)->create()->id);
 
         $user2 = factory(User::class)->create();
@@ -42,5 +43,18 @@ class InviteUserEditTest extends TestCase
         $this->actingAs($user)
             ->get('/user/edit/'.$user2->id)
             ->assertSee($user2->email);
+    }
+
+    public function createDefaultRole()
+    {
+        $role = factory(Role::class)->create([
+            'name' => 'admin',
+            'guard_name' => 'ssp'
+        ]);
+        $role->syncPermissions(factory(Permission::class)->create([
+            'name' => 'update.user',
+            'guard_name' => 'ssp'
+        ]));
+        return $role;
     }
 }

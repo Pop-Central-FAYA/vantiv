@@ -16,7 +16,7 @@
             <div class="column col_6">
                 <h2 class="sub_header">Walk-Ins</h2>
             </div>
-            @if(Auth::user()->companies->count() == 1)
+            @if(Auth::user()->companies->count() == 1 || Auth::user()->hasPermissionTo('create.client'))
                 <div class="column col_6 align_right">
                     <a href="#new_client" class="btn modal_click">New Walk-In</a>
                 </div>
@@ -79,9 +79,13 @@
                                 <span class="more_icon"></span>
 
                                 <div class="more_more">
-                                    <a href="{{ route('walkins.details', ['id' => $client->client_id]) }}">Details</a>
+                                    @if(Auth::user()->hasPermissionTo('view.client'))
+                                        <a href="{{ route('walkins.details', ['id' => $client->client_id]) }}">Details</a>
+                                    @endif
                                     @if(Auth::user()->companies->count() == 1 && $client->walkin_creator == Auth::user()->companies->first()->id)
-                                        <a href="#edit_client{{ $client->client_id }}" class="modal_click">Edit</a>
+                                        @if(Auth::user()->hasPermissionTo('update.client'))
+                                            <a href="#edit_client{{ $client->client_id }}" class="modal_click">Edit</a>
+                                        @endif
                                     @endif
                                     {{--<a href="" class="color_red">Delete</a>--}}
                                 </div>
@@ -97,8 +101,8 @@
 
     </div>
     <!-- new client modal -->
-
-    <div class="modal_contain" id="new_client">
+    @if(Auth::user()->hasPermissionTo('create.client'))
+        <div class="modal_contain" style="width: 800px;" id="new_client">
         <h2 class="sub_header mb4">New Walk-In</h2>
         <div class="progress">
 
@@ -246,9 +250,11 @@
 
         </form>
     </div>
+    @endif
 
     {{--modal for editing a client--}}
-    @foreach($clients as $client)
+    @if(Auth::user()->hasPermissionTo('update.client'))
+        @foreach($clients as $client)
         <div class="modal_contain" id="edit_client{{ $client->client_id }}">
             <h2 class="sub_header mb4">Edit Walk-In : {{ $client->walkins_company_name }}</h2>
             <div class="progress">
@@ -337,8 +343,7 @@
             </form>
         </div>
     @endforeach
-    <p><br></p>
-    {{ $clients->links('pagination.general') }}
+    @endif
 @stop
 
 @section('scripts')

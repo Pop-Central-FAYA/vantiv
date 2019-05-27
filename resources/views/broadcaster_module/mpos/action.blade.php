@@ -48,7 +48,9 @@
                     <th>Reason</th>
                     <th>Reason for Rejection</th>
                     <th>Recomendation</th>
-                    <th>Action</th>
+                    @if(Auth::user()->hasPermissionTo('update.mpo_status'))
+                        <th>Action</th>
+                    @endif
                 </tr>
                 </thead>
                 <tbody>
@@ -66,15 +68,17 @@
                             <p>{{ $mpo_file->get_adslot->get_rate_card->hourly_range->time_range }}</p>
                             <p>{{ $mpo_file->get_adslot->from_to_time }}</p>
                         </td>
-                        <td>
-                            @if ($mpo_file->status === 'pending')
-                                <span class="span_state status_pending">Pending</span>
-                            @elseif ($mpo_file->status === 'approved')
-                                <span class="span_state status_success">Approved</span>
-                            @elseif ($mpo_file->status=== 'rejected')
-                                <span class="span_state status_danger">Rejected</span>
-                            @endif
-                        </td>
+                        @if(Auth::user()->hasPermissionTo('update.mpo_status'))
+                            <td>
+                                @if ($mpo_file->status === 'pending')
+                                    <span class="span_state status_pending">Pending</span>
+                                @elseif ($mpo_file->status === 'approved')
+                                    <span class="span_state status_success">Approved</span>
+                                @elseif ($mpo_file->status=== 'rejected')
+                                    <span class="span_state status_danger">Rejected</span>
+                                @endif
+                            </td>
+                        @endif
                         <td>
                             <select id="status{{ $mpo_file->file_code }}" class="jide form-control" @if($mpo_file->status == 'rejected') disabled @endif data-disappear="{{ $mpo_file->file_code }}">
                                 <option value="null">Select Status</option>

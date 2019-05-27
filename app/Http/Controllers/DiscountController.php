@@ -2,6 +2,7 @@
 
 namespace Vanguard\Http\Controllers;
 
+use Vanguard\Http\Controllers\Auth\AuthController;
 use Vanguard\Http\Controllers\Traits\CompanyIdTrait;
 use Vanguard\Http\Requests\DiscountStoreRequest;
 use Vanguard\Libraries\Api;
@@ -42,7 +43,9 @@ class DiscountController extends Controller
                 return $discounts->company->name;
             })
             ->addColumn('edit', function ($discounts) {
-                return '<a href="'.route('discount.edit', ['id' => $discounts->id]).'" class="weight_medium">Edit</a>';
+                if(\Auth::user()->hasPermissionTo('update.discount')){
+                    return '<a href="'.route('discount.edit', ['id' => $discounts->id]).'" class="weight_medium">Edit</a>';
+                }
             })
             ->rawColumns(['edit' => 'edit', 'station' => 'station'])->addIndexColumn()
             ->make(true);

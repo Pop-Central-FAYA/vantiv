@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Users;
 
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 use Vanguard\Models\Company;
@@ -32,16 +33,14 @@ class InviteUserUpdateTest extends TestCase
 
     public function test_it_update_user_from_the_service()
     {
-        $role = factory(Role::class)->create([
-            'name' => 'ssp.scheduler'
-        ]);
+        $role = $this->createDefaultRole();
 
         $company = factory(Company::class)->create([
             'name' => 'Simple Analytics'
         ]);
 
         $user2 = factory(User::class)->create();
-        $user2->assignRole(factory(Role::class)->create()->id);
+        $user2->assignRole($role->id);
         $user2->companies()->attach(factory(Company::class)->create()->id);
 
         $update_user_service = new UpdateUserService($role->id, $company->id, $user2->id);
@@ -53,7 +52,7 @@ class InviteUserUpdateTest extends TestCase
     public function test_it_can_update_status()
     {
         $user = factory(User::class)->create();
-        $user->assignRole(factory(Role::class)->create()->id);
+        $user->assignRole($this->createDefaultRole()->id);
         $user->companies()->attach(factory(Company::class)->create()->id);
 
         $user2 = factory(User::class)->create([
@@ -67,6 +66,19 @@ class InviteUserUpdateTest extends TestCase
             'id' => $user2->id,
             'status' => UserStatus::ACTIVE
         ]);
+    }
+
+    public function createDefaultRole()
+    {
+        $role = factory(Role::class)->create([
+            'name' => 'admin',
+            'guard_name' => 'ssp'
+        ]);
+        $role->syncPermissions(factory(Permission::class)->create([
+            'name' => 'update.user',
+            'guard_name' => 'ssp'
+        ]));
+        return $role;
     }
 
 }

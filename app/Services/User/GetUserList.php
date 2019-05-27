@@ -56,7 +56,7 @@ class GetUserList
     {
         $role_label = [];
         foreach ($roles as $role){
-            $role_label[] = ucwords(str_replace('_', ' ', explode('.', $role)[1]));
+            $role_label[] = $role ? ucwords(str_replace('_',' ', $role)) : '';
         }
         return $role_label;
     }

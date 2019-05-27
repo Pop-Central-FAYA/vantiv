@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\RateCard;
 
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 use Vanguard\Models\Company;
@@ -29,7 +30,7 @@ class RateCardEditTest extends TestCase
     {
         $user = factory(User::class)->create();
         $user->companies()->attach(factory(Company::class)->create()->id);
-        $user->assignRole(factory(Role::class)->create()->id);
+        $user->assignRole($this->createDefaultRole()->id);
         $this->actingAs($user)
             ->get('/rate-card-management/edit/4')
             ->assertSessionHas('error', 'Could not fetch your rate card details');
@@ -39,7 +40,7 @@ class RateCardEditTest extends TestCase
     {
         $user = factory(User::class)->create();
         $user->companies()->attach(factory(Company::class)->create()->id);
-        $user->assignRole(factory(Role::class)->create()->id);
+        $user->assignRole($this->createDefaultRole()->id);
         $rate_card = factory(Ratecard::class)->create([
             'company_id' => $user->companies->first()->id,
             'is_base' => true
@@ -53,7 +54,7 @@ class RateCardEditTest extends TestCase
     {
         $user = factory(User::class)->create();
         $user->companies()->attach(factory(Company::class)->create()->id);
-        $user->assignRole(factory(Role::class)->create()->id);
+        $user->assignRole($this->createDefaultRole()->id);
         $rate_card = factory(Ratecard::class)->create([
             'company_id' => $user->companies->first()->id,
             'is_base' => true
@@ -62,4 +63,70 @@ class RateCardEditTest extends TestCase
             ->get('/rate-card-management/edit/'.$rate_card->id)
             ->assertSee('disabled');
     }
+
+    public function createDefaultRole()
+    {
+        $role = factory(Role::class)->create([
+            'name' => 'admin',
+            'guard_name' => 'ssp'
+        ]);
+        $role->syncPermissions($this->permissionData());
+        return $role;
+    }
+
+    public function permissionData()
+    {
+        factory(Permission::class)->create([
+            'name' => 'view.rate_card',
+            'guard_name' => 'ssp'
+        ]);
+
+        factory(Permission::class)->create([
+            'name' => 'update.rate_card',
+            'guard_name' => 'ssp'
+        ]);
+
+        factory(Permission::class)->create([
+            'name' => 'create.inventory',
+            'guard_name' => 'ssp'
+        ]);
+
+        factory(Permission::class)->create([
+            'name' => 'update.inventory',
+            'guard_name' => 'ssp'
+        ]);
+
+        factory(Permission::class)->create([
+            'name' => 'view.inventory',
+            'guard_name' => 'ssp'
+        ]);
+
+        factory(Permission::class)->create([
+            'name' => 'view.campaign',
+            'guard_name' => 'ssp'
+        ]);
+
+        factory(Permission::class)->create([
+            'name' => 'view.profile',
+            'guard_name' => 'ssp'
+        ]);
+
+        factory(Permission::class)->create([
+            'name' => 'view.user',
+            'guard_name' => 'ssp'
+        ]);
+
+        factory(Permission::class)->create([
+            'name' => 'view.rate_card',
+            'guard_name' => 'ssp'
+        ]);
+
+        factory(Permission::class)->create([
+            'name' => 'view.discount',
+            'guard_name' => 'ssp'
+        ]);
+
+        return Permission::where('guard_name', 'ssp')->get();
+    }
+
 }

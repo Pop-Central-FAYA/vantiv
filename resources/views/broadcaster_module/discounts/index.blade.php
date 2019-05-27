@@ -39,7 +39,9 @@
                 <div class="column col_4 clearfix">
 
                     <div class="col_8 right align_right">
-                        <a href="{{ route('discount.create') }}" class="btn small_btn"><span class="_plus"></span> Create Discount</a>
+                        @if(Auth::user()->hasPermissionTo('create.discount'))
+                            <a href="{{ route('discount.create') }}" class="btn small_btn"><span class="_plus"></span> Create Discount</a>
+                        @endif
                     </div>
 
                 </div>
@@ -55,7 +57,9 @@
                     @if(Auth::user()->companies()->count() > 1)
                         <th>Station</th>
                     @endif
-                    <th>Edit</th>
+                    @if(Auth::user()->hasPermissionTo('update.discount'))
+                        <th>Edit</th>
+                    @endif
                 </tr>
                 </thead>
             </table>
@@ -79,6 +83,7 @@
     <script>
         <?php echo "var companies =".Auth::user()->companies()->count().";\n"; ?>
         $(document).ready(function () {
+            var can_edit = '<?php echo Auth::user()->hasPermissionTo('update.discount') ?>';
             //rate card data table
             var Discount =  $('.rate_card').DataTable({
                 dom: 'Blfrtip',
@@ -104,20 +109,17 @@
             });
 
             function getColumn() {
+                var column = [
+                    {data: 'name', name: 'name'},
+                    {data: 'percentage', name: 'percentage'},
+                ]
                 if(companies > 1){
-                    return [
-                        {data: 'name', name: 'name'},
-                        {data: 'percentage', name: 'percentage'},
-                        {data: 'station', name: 'station'},
-                        {data: 'edit', name: 'edit'}
-                    ]
-                }else{
-                    return [
-                        {data: 'name', name: 'name'},
-                        {data: 'percentage', name: 'percentage'},
-                        {data: 'edit', name: 'edit'}
-                    ]
+                    column.push({data: 'station', name: 'station'})
                 }
+                if(can_edit){
+                    column.push({data: 'edit', name: 'edit'})
+                }
+                return column;
             }
         })
     </script>

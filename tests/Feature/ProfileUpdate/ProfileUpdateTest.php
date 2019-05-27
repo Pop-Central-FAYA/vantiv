@@ -3,6 +3,8 @@
 namespace Tests\Feature\ProfileUpdate;
 
 use Faker\Factory;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 use Vanguard\Models\Company;
 use Vanguard\Services\User\CreateUser;
@@ -17,11 +19,12 @@ class ProfileUpdateTest extends TestCase
         $result->assertRedirect('/login');
     }
 
-    public function test_if_an_authenticated_user_can_view_the_profile_page()
+    public function test_if_an_authenticated_user_with_right_permissions_can_view_the_profile_page()
     {
         //create a user
         $faker = Factory::create();
         $user = $this->createUser($faker);
+        $user->assignRole($this->createDefaultRole()->id);
         //check if the user can view the profile page
         $this->actingAs($user)
              ->get('/user/profile')
@@ -89,5 +92,18 @@ class ProfileUpdateTest extends TestCase
     {
         $user_details_service = new UserDetails($user_id);
         return $user_details_service->getUserDetails();
+    }
+
+    public function createDefaultRole()
+    {
+        $role = factory(Role::class)->create([
+            'name' => 'admin',
+            'guard_name' => 'ssp'
+        ]);
+        $role->syncPermissions(factory(Permission::class)->create([
+            'name' => 'view.profile',
+            'guard_name' => 'ssp'
+        ]));
+        return $role;
     }
 }

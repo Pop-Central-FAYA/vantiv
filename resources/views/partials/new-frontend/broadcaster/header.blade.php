@@ -14,8 +14,10 @@
                 </p>
 
                 <div class="">
-                    <a href="{{ route('user.profile') }}" class="color_dark">Profile</a>
-                    @if(Auth::user()->hasRole('ssp.admin') || Auth::user()->hasRole('ssp.super_admin'))
+                    @if(Auth::user()->hasPermissionTo('view.profile'))
+                        <a href="{{ route('user.profile') }}" class="color_dark">Profile</a>
+                    @endif
+                    @if(Auth::user()->hasPermissionTo('view.user'))
                         <a href="{{ route('user.index') }}" class="color_dark">Users</a>
                     @endif
                     <a href="{{ route('auth.logout') }}" class="color_red">Logout</a>

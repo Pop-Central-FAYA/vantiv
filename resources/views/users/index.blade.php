@@ -37,11 +37,11 @@
                 </div>
 
                 <div class="column col_4 clearfix">
-
-                    <div class="col_8 right align_right">
-                        <a href="{{ route('user.invite') }}" class="btn small_btn"><span class="_plus"></span>Invite New User</a>
-                    </div>
-
+                    @if(Auth::user()->hasPermissionTo('create.user'))
+                        <div class="col_8 right align_right">
+                            <a href="{{ route('user.invite') }}" class="btn small_btn"><span class="_plus"></span>Invite New User</a>
+                        </div>
+                    @endif
                 </div>
 
             </div>
@@ -56,8 +56,12 @@
                     @if(Auth::user()->companies()->count() > 1)
                         <th>Company</th>
                     @endif
-                    <th>Edit</th>
-                    <th>Status</th>
+                    @if(Auth::user()->hasPermissionTo('update.user'))
+                        <th>Edit</th>
+                    @endif
+                    @if(Auth::user()->hasPermissionTo('update.user'))
+                        <th>Status</th>
+                    @endif
                 </tr>
                 </thead>
             </table>
@@ -96,6 +100,8 @@
     <script>
         <?php echo "var companies =".Auth::user()->companies()->count().";\n"; ?>
         $(document).ready(function () {
+            var can_edit = '<?php echo Auth::user()->hasPermissionTo('update.user') ?>';
+            var can_toggle_status = '<?php echo Auth::user()->hasPermissionTo('update.user') ?>';
             $("body").delegate(".modal_user_click", "click", function() {
                 var href = $(this).attr("href");
                 $(href).modal();
@@ -132,9 +138,13 @@
                     {data: 'roles', name: 'roles'},
                 ];
                 if(companies > 1){
-                    data.push({data: 'company', name: 'company'},{data: 'edit', name: 'edit'},{data: 'status', name: 'status'})
-                }else{
-                    data.push({data: 'edit', name: 'edit'},{data: 'status', name: 'status'})
+                    data.push({data: 'company', name: 'company'})
+                }
+                if(can_edit){
+                    data.push({data: 'edit', name: 'edit'})
+                }
+                if(can_toggle_status){
+                    data.push({data: 'status', name: 'status'})
                 }
                 return data;
             }

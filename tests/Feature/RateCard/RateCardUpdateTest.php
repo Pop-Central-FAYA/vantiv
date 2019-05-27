@@ -22,7 +22,7 @@ class RateCardUpdateTest extends TestCase
         $user = factory(User::class)->create();
         $user->companies()->attach(factory(Company::class)->create()->id);
         $this->actingAs($user)
-            ->ajaxPost('/rate-card-management/update/4')
+            ->get('/rate-card-management/edit/4')
             ->assertSeeText('Forbidden!');
     }
 

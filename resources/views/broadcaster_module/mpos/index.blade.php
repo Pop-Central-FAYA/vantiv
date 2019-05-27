@@ -75,22 +75,6 @@
                 </thead>
             </table>
 
-            <!-- <table class="display dashboard_campaigns">
-                <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Brand</th>
-                    <th>Start Date</th>
-                    <th>Budget</th>
-                    <th>Ad Slots</th>
-                    <th>Status</th>
-                    @if(Auth::user()->companies()->count() > 1)
-                        <th>Station</th>
-                    @endif
-                </tr>
-                </thead>
-            </table> -->
-
             <!-- end -->
         </div>
 
@@ -120,6 +104,7 @@
         var status = '{!! $status !!}';
 
         $(document).ready(function( $ ) {
+            var can_see_details = '<?php echo Auth::user()->hasPermissionTo('view.mpo') ?>'
             if(companies > 1){
                 $('.publishers').select2();
                 $('body').delegate("#publishers", "change", function () {
@@ -196,26 +181,19 @@
 
             function getColumns()
             {
-                if(companies > 1){
-                    return [
-                        // {data: 'id', name: 'id'},
-                        {data: 'name', name: 'name'},
-                        {data: 'brand', name: 'brand'},
-                        {data: 'date_created', name: 'date_created'},
-                        {data: 'budget', name: 'budget'},
-                        {data: 'status', name: 'status'},
-                        {data: 'station', name: 'station'}
-                    ]
-                }else{
-                    return [
-                        // {data: 'id', name: 'id'},
-                        {data: 'name', name: 'name'},
-                        {data: 'brand', name: 'brand'},
-                        {data: 'date_created', name: 'date_created'},
-                        {data: 'budget', name: 'budget'},
-                        {data: 'status', name: 'status'},
-                    ]
+                var column = [
+                    {data: 'name', name: 'name'},
+                    {data: 'brand', name: 'brand'},
+                    {data: 'date_created', name: 'date_created'},
+                    {data: 'budget', name: 'budget'},
+                ];
+                if(can_see_details){
+                    column.push({data: 'status', name: 'status'})
                 }
+                if(companies > 1){
+                    column.push({data: 'station', name: 'station'})
+                }
+                return column;
             }
         } );
     </script>

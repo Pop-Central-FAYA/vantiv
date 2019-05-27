@@ -43,23 +43,30 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('user/profile', [
         'as' => 'user.profile',
-        'uses' => 'ProfileManagementsController@index'
+        'uses' => 'ProfileManagementsController@index',
+        'middleware' => 'permission:view.profile'
     ]);
 
     Route::post('profile/details/update', [
         'as' => 'profile.update.details',
-        'uses' => 'ProfileManagementsController@updateDetails'
+        'uses' => 'ProfileManagementsController@updateDetails',
+        'middleware' => 'permission:update.profile'
     ]);
 
     Route::group(['prefix' => 'user'], function() {
-        Route::get('/all', 'UserController@index')->name('user.index');
-        Route::get('/invite', 'UserController@inviteUser')->name('user.invite');
-        Route::get('/edit/{id}', 'UserController@editUser')->name('user.edit');
+        Route::get('/all', 'UserController@index')->name('user.index')
+                ->middleware('permission:view.user');
+        Route::get('/invite', 'UserController@inviteUser')->name('user.invite')
+                ->middleware('permission:create.user');
+        Route::get('/edit/{id}', 'UserController@editUser')->name('user.edit')
+                ->middleware('permission:update.user');
         Route::post('/update/{id}', 'UserController@updateUser');
         Route::post('/invite/store', 'UserController@processInvite');
         Route::get('/data-table', 'UserController@getDatatable');
-        Route::post('/resend/invitation', 'UserController@resendInvitation');
-        Route::get('/status/update', 'UserController@updateStatus');
+        Route::post('/resend/invitation', 'UserController@resendInvitation')
+                ->middleware('permission:update.user');
+        Route::get('/status/update', 'UserController@updateStatus')
+                ->middleware('permission:update.user');
     });
 
     /*
@@ -125,12 +132,15 @@ Route::group(['middleware' => 'auth'], function () {
      * Media Inventory
      */
     Route::group(['prefix' => 'program-management'], function () {
-        Route::get('/', 'Broadcaster\ProgramManagementController@index')->name('program.management.index');
+        Route::get('/', 'Broadcaster\ProgramManagementController@index')
+                ->name('program.management.index')->middleware('permission:view.inventory');
         Route::get('/data-table', 'Broadcaster\ProgramManagementController@formatToDataTable');
-        Route::get('/edit/{id}', 'Broadcaster\ProgramManagementController@edit')->name('program.management.edit');
+        Route::get('/edit/{id}', 'Broadcaster\ProgramManagementController@edit')
+                    ->name('program.management.edit')->middleware('permission:update.inventory');
         Route::post('/update/{program_id}', 'Broadcaster\ProgramManagementController@update')->name('program.management.update');
         Route::get('/details/{id}', 'Broadcaster\ProgramManagementController@edit')->name('program.management.details');
-        Route::get('/create', 'Broadcaster\ProgramManagementController@create')->name('program.management.create');
+        Route::get('/create', 'Broadcaster\ProgramManagementController@create')
+                ->name('program.management.create')->middleware('permission:create.inventory');
         Route::post('/store', 'Broadcaster\ProgramManagementController@store')->name('program.management.store');
         Route::get('/get-rate-card/{station_id}', 'Broadcaster\ProgramManagementController@fetRateCard');
     });
@@ -139,11 +149,14 @@ Route::group(['middleware' => 'auth'], function () {
      * Rate Card Management
      */
     Route::group(['prefix' => 'rate-card-management'], function () {
-        Route::get('/', 'Broadcaster\RateCardManagementController@index')->name('rate_card.management.index');
+        Route::get('/', 'Broadcaster\RateCardManagementController@index')
+                ->name('rate_card.management.index')->middleware('permission:view.rate_card');
         Route::get('/data-table', 'Broadcaster\RateCardManagementController@formatToDatatable');
-        Route::get('/create', 'Broadcaster\RateCardManagementController@create')->name('rate_card.management.create');
+        Route::get('/create', 'Broadcaster\RateCardManagementController@create')
+                ->name('rate_card.management.create')->middleware('permission:create.rate_card');
         Route::post('/store', 'Broadcaster\RateCardManagementController@store')->name('rate_card.management.store');
-        Route::get('/edit/{rate_card_id}', 'Broadcaster\RateCardManagementController@edit')->name('rate_card.management.edit');
+        Route::get('/edit/{rate_card_id}', 'Broadcaster\RateCardManagementController@edit')
+                ->name('rate_card.management.edit')->middleware('permission:update.rate_card');
         Route::post('/update/{rate_card_id}', 'Broadcaster\RateCardManagementController@update')->name('rate_card.management.update');
         Route::get('/details/{rate_card_id}', 'Broadcaster\RateCardManagementController@details')->name('rate_card.management.details');
     });
@@ -152,7 +165,8 @@ Route::group(['middleware' => 'auth'], function () {
      * time belt management
      */
     Route::group(['prefix' => 'time-belt-management'], function () {
-        Route::get('/', 'Broadcaster\TimeBeltManagementController@index')->name('time.belt.management.index');
+        Route::get('/', 'Broadcaster\TimeBeltManagementController@index')
+                ->name('time.belt.management.index')->middleware('permission:view.inventory');
         Route::get('/data-table', 'Broadcaster\TimeBeltManagementController@formatToDatatable');
         Route::get('/details/{time_belt_id}', 'Broadcaster\TimeBeltManagementController@details')->name('time.belt.management.details');
     });
@@ -161,11 +175,13 @@ Route::group(['middleware' => 'auth'], function () {
     * Campaign
     */
     Route::group(['prefix' => 'campaign'], function(){
-        Route::get('/campaigns-list', 'Campaign\CampaignsController@campaignsList')->name('campaign.list');
+        Route::get('/campaigns-list', 'Campaign\CampaignsController@campaignsList')
+                ->name('campaign.list')->middleware('permission:view.campaign');
         Route::get('/active-campaigns', 'Campaign\CampaignsController@allActiveCampaigns')->name('campaign.all');
         Route::get('/all-active-campaigns/data', 'Campaign\CampaignsController@allActiveCampaignsData');
         Route::get('/all-campaigns/data', 'Campaign\CampaignsController@filteredCampaignsData');
-        Route::get('/campaign-general-information', 'Campaign\CampaignsController@campaignGeneralInformation')->name('campaign.get_campaign_general_information');
+        Route::get('/campaign-general-information', 'Campaign\CampaignsController@campaignGeneralInformation')
+            ->name('campaign.get_campaign_general_information')->middleware('permission:create.campaign');
         Route::post('/campaign-general-information/store', 'Campaign\CampaignsController@storeCampaignGeneralInformation')->name('campaign.store_campaign_general_information');
         Route::get('/advert-slot/result/{id}', 'Campaign\CampaignsController@getAdSlotResult')->name('campaign.advert_slot');
         Route::get('/media-content/{id}', 'Campaign\CampaignsController@getMediaContent')->name('campaign.get_media_content');
@@ -184,9 +200,6 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/payment-process', 'Campaign\CampaignsController@submitWithCardPaymentOption')->name('broadcaster.pay');
         Route::post('/submit-to-broadcasters/agency/{campaign_id}', 'Campaign\CampaignsController@submitAgencyCampaign')->name('agency.campaign.update');
         Route::post('/update-campaign-budget', 'Campaign\CampaignsController@updateBudget')->name('campaign_budget.update');
-
-
-
         Route::get('/create/step3_1/{id}', 'Broadcaster\CampaignsController@storeStep3_1')->name('campaign.create3_1');
         Route::get('/create/step4/{id}/{broadcaster}/{start_date}/{end_date}', 'Broadcaster\CampaignsController@createStep4')->name('campaign.create4');
         Route::get('/cart/store', 'Broadcaster\CampaignsController@postPreselectedAdslot')->name('broadcaster_campaign.cart');
@@ -194,7 +207,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/submit-campaign/{id}', 'Broadcaster\CampaignsController@postCampaign')->name('submit.campaign');
 
 
-        Route::get('/campaign-details/{id}', 'Broadcaster\CampaignsController@campaignDetails')->name('broadcaster.campaign.details');
+        Route::get('/campaign-details/{id}', 'Broadcaster\CampaignsController@campaignDetails')
+                ->name('broadcaster.campaign.details')->middleware('permission:view.campaign');
 
         Route::get('/{user_id}', 'Broadcaster\CampaignsController@filterByUser');
 
@@ -241,12 +255,16 @@ Route::group(['middleware' => 'auth'], function () {
      */
 
     Route::group(['prefix' => 'walk-in'], function () {
-        Route::get('/', 'WalkinsController@index')->name('walkins.all');
-        Route::post('/update/{client_id}', 'WalkinsController@updateWalKins')->name('walkins.update');
-        Route::post('/store', 'WalkinsController@store')->name('walkins.store');
+        Route::get('/', 'WalkinsController@index')->name('walkins.all')
+                ->middleware('permission:view.client');
+        Route::post('/update/{client_id}', 'WalkinsController@updateWalKins')->name('walkins.update')
+                ->middleware('permission:update.client');
+        Route::post('/store', 'WalkinsController@store')->name('walkins.store')
+                ->middleware('permission:create.client');
         Route::get('/delete/{id}', 'WalkinsController@delete')->name('walkins.delete');
         Route::get('/brand', 'WalkinsController@getSubIndustry');
-        Route::get('/details/{client_id}', 'WalkinsController@getDetails')->name('walkins.details');
+        Route::get('/details/{client_id}', 'WalkinsController@getDetails')->name('walkins.details')
+                ->middleware('permission:view.client');
     });
 
     Route::get('/presigned-url', 'S3Controller@getPresignedUrl');
@@ -284,8 +302,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/', ['as' => 'dashboard', 'uses' => 'DashboardController@index']);
 
     Route::get('/broadcaster', 'Broadcaster\DashboardController@index')->name('broadcaster.dashboard.index');
-    Route::get('/campaign-management/dashboard', 'Broadcaster\DashboardController@campaignManagementDashbaord')->name('broadcaster.campaign_management');
-    Route::get('/inventory-management/dashboard', 'Broadcaster\DashboardController@inventoryManagementDashboard')->name('broadcaster.inventory_management');
+    Route::get('/campaign-management/dashboard', 'Broadcaster\DashboardController@campaignManagementDashbaord')
+            ->name('broadcaster.campaign_management')->middleware('permission:view.campaign|view.report');
+    Route::get('/inventory-management/dashboard', 'Broadcaster\DashboardController@inventoryManagementDashboard')
+            ->name('broadcaster.inventory_management')->middleware('permission:view.inventory|view.report');
     Route::get('/inventory-management/reports', 'Broadcaster\DashboardController@getFilteredInventoryReports')->name('broadcaster.inventory_management.timebelts_report');
     Route::get('/campaign-management/reports', 'Broadcaster\DashboardController@getFilteredPublisherReports');
     Route::get('agency/dashboard/campaigns', 'DashboardController@dashboardCampaigns');
@@ -330,10 +350,13 @@ Route::group(['middleware' => 'auth'], function () {
      * Discounts
      */
     Route::group(['prefix' => 'discount'], function () {
-        Route::get('/', 'DiscountController@index')->name('discount.index');
+        Route::get('/', 'DiscountController@index')->name('discount.index')
+                ->middleware('permission:view.discount');
         Route::get('/data-table', 'DiscountController@dataTable');
-        Route::get('/create', 'DiscountController@create')->name('discount.create');
-        Route::get('/edit/{id}', 'DiscountController@edit')->name('discount.edit');
+        Route::get('/create', 'DiscountController@create')->name('discount.create')
+                ->middleware('permission:create.discount');
+        Route::get('/edit/{id}', 'DiscountController@edit')->name('discount.edit')
+                ->middleware('permission:update.discount');
         Route::post('/store', 'DiscountController@store')->name('discount.store');
         Route::post('/update/{id}', 'DiscountController@update')->name('discount.update');
     });
@@ -343,12 +366,13 @@ Route::group(['middleware' => 'auth'], function () {
      */
     Route::group(['prefix' => 'mpos'], function () {
         Route::get('/pending_mpos_data', 'MpoController@pending_mpos_data');
-        Route::get('all', 'MpoController@index')->name('all-mpos');
+        Route::get('all', 'MpoController@index')->name('all-mpos')->middleware('permission:view.mpo');
         Route::get('/all-data', 'MpoController@getAllData');
         Route::get('/pending/data', 'MpoController@pendingData');
         Route::get('pending', 'MpoController@pending_mpos')->name('pending-mpos');
         Route::get('/mpo-action/{mpo_id}', 'MpoController@mpoAction')->name('mpo.action');
-        Route::get('/mpo-action/file-status/update/{file_code}/{campaign_id}/{mpo_id}', ['as' => 'files.update', 'uses' => 'MpoController@update_file']);
+        Route::get('/mpo-action/file-status/update/{file_code}/{campaign_id}/{mpo_id}', 'MpoController@update_file')
+                ->name('files.update')->middleware('permission:update.mpo_status');
         Route::get('/rejected-files/{mpo_id}', 'MpoController@rejectedFiles')->name('mpo.rejected_files');
     });
 

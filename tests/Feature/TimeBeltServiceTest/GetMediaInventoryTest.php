@@ -3,6 +3,8 @@
 namespace Tests\Feature\TimeBeltServiceTest;
 
 use Faker\Factory;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 use Vanguard\Models\Company;
 use Vanguard\Services\Inventory\CreateInventoryService;
@@ -31,7 +33,7 @@ class GetMediaInventoryTest extends TestCase
     {
         $fakeer = Factory::create();
         $user = $this->createUser($fakeer);
-
+        $user->assignRole($this->createDefaultRole()->id);
         $this->actingAs($user)
             ->get('/program-management')
             ->assertSee('Programs');
@@ -41,6 +43,7 @@ class GetMediaInventoryTest extends TestCase
     {
         $faker = Factory::create();
         $user = $this->createUser($faker);
+        $user->assignRole($this->createDefaultRole()->id);
         $time_belt = new PopulateTimeBelt($user->companies->first()->id);
         $time_belt->populateTimeBelt();
         $this->createMediaInventory($user->companies->first()->id);
@@ -52,10 +55,11 @@ class GetMediaInventoryTest extends TestCase
 
     }
 
-    public function test_a_logged_in_user_can_visit_the_create_media_inventory_page()
+    public function test_a_logged_in_user_with_right_permission_can_visit_the_create_media_inventory_page()
     {
         $faker = Factory::create();
         $user = $this->createUser($faker);
+        $user->assignRole($this->createDefaultRole()->id);
         $this->actingAs($user)
             ->get('/program-management/create')
             ->assertSee('Create Program');
@@ -77,8 +81,8 @@ class GetMediaInventoryTest extends TestCase
             'company_id' => $company_id
         ]);
         $media_inventory_service = new CreateInventoryService($this->getDayList(), 'Hello Program', $company_id,
-                        null, $rate_card->id, '2019-04-03', '2019-05-05',
-                                        $this->getStartTimeList(),$this->getEndTimeList());
+            null, $rate_card->id, '2019-04-03', '2019-05-05',
+            $this->getStartTimeList(), $this->getEndTimeList());
         return $media_inventory_service->createTimeBelt();
     }
 
@@ -101,5 +105,59 @@ class GetMediaInventoryTest extends TestCase
         return [
             '12:00:00'
         ];
+    }
+
+    public function createDefaultRole()
+    {
+        $role = factory(Role::class)->create([
+            'name' => 'admin',
+            'guard_name' => 'ssp'
+        ]);
+        $role->syncPermissions($this->permissionData());
+        return $role;
+    }
+
+    public function permissionData()
+    {
+        factory(Permission::class)->create([
+            'name' => 'create.inventory',
+            'guard_name' => 'ssp'
+        ]);
+
+        factory(Permission::class)->create([
+            'name' => 'update.inventory',
+            'guard_name' => 'ssp'
+        ]);
+
+        factory(Permission::class)->create([
+            'name' => 'view.inventory',
+            'guard_name' => 'ssp'
+        ]);
+
+        factory(Permission::class)->create([
+            'name' => 'view.campaign',
+            'guard_name' => 'ssp'
+        ]);
+
+        factory(Permission::class)->create([
+            'name' => 'view.profile',
+            'guard_name' => 'ssp'
+        ]);
+
+        factory(Permission::class)->create([
+            'name' => 'view.user',
+            'guard_name' => 'ssp'
+        ]);
+
+        factory(Permission::class)->create([
+            'name' => 'view.rate_card',
+            'guard_name' => 'ssp'
+        ]);
+
+        factory(Permission::class)->create([
+            'name' => 'view.discount',
+            'guard_name' => 'ssp'
+        ]);
+        return Permission::where('guard_name', 'ssp')->get();
     }
 }
