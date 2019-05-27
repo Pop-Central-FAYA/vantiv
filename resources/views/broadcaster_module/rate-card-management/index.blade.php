@@ -39,7 +39,9 @@
                 <div class="column col_4 clearfix">
 
                     <div class="col_8 right align_right">
+                        @if(Auth::user()->hasPermissionTo('create.rate_card'))
                         <a href="{{ route('rate_card.management.create') }}" class="btn small_btn"><span class="_plus"></span> Create Rate Card</a>
+                        @endif
                     </div>
 
                 </div>
@@ -59,13 +61,14 @@
                     @if(Auth::user()->companies()->count() > 1)
                         <th>Station</th>
                     @endif
-                    <th>Edit</th>
+                    @if(Auth::user()->hasPermissionTo('update.rate_card'))
+                        <th>Edit</th>
+                    @endif
                 </tr>
                 </thead>
             </table>
 
         </div>
-
     </div><!-- main contain -->
 
 @stop
@@ -85,6 +88,7 @@
     <script>
         <?php echo "var companies =".Auth::user()->companies()->count().";\n"; ?>
         $(document).ready(function () {
+            var can_edit = '<?php echo Auth::user()->hasPermissionTo('update.rate_card') ?>';
             //rate card data table
             var RateCardList =  $('.rate_card').DataTable({
                 dom: 'Blfrtip',
@@ -110,28 +114,21 @@
             });
 
             function getColumn() {
-                if(companies > 1){
-                    return [
-                        {data: 'title', name: 'title'},
-                        {data: 'revenue', name: 'revenue'},
-                        {data: 'price_15', name: 'price_15'},
-                        {data: 'price_30', name: 'price_30'},
-                        {data: 'price_45', name: 'price_45'},
-                        {data: 'price_60', name: 'price_60'},
-                        {data: 'station', name: 'station'},
-                        {data: 'edit', name: 'edit'}
-                    ]
-                }else{
-                    return [
-                        {data: 'title', name: 'title'},
-                        {data: 'revenue', name: 'revenue'},
-                        {data: 'price_15', name: 'price_15'},
-                        {data: 'price_30', name: 'price_30'},
-                        {data: 'price_45', name: 'price_45'},
-                        {data: 'price_60', name: 'price_60'},
-                        {data: 'edit', name: 'edit'}
-                    ]
+                var column = [
+                    {data: 'title', name: 'title'},
+                    {data: 'revenue', name: 'revenue'},
+                    {data: 'price_15', name: 'price_15'},
+                    {data: 'price_30', name: 'price_30'},
+                    {data: 'price_45', name: 'price_45'},
+                    {data: 'price_60', name: 'price_60'},
+                ];
+                if(can_edit){
+                    column.push({data: 'edit', name: 'edit'})
                 }
+                if(companies > 1){
+                    column.push({data: 'station', name: 'station'})
+                }
+                return column;
             }
         })
     </script>

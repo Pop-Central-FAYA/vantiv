@@ -37,11 +37,11 @@
                 </div>
 
                 <div class="column col_4 clearfix">
-
-                    <div class="col_8 right align_right">
-                        <a href="{{ route('program.management.create') }}" class="btn small_btn"><span class="_plus"></span> Create Program</a>
-                    </div>
-
+                    @if(Auth::user()->hasPermissionTo('create.inventory'))
+                        <div class="col_8 right align_right">
+                            <a href="{{ route('program.management.create') }}" class="btn small_btn"><span class="_plus"></span> Create Program</a>
+                        </div>
+                    @endif
                 </div>
 
             </div>
@@ -56,7 +56,9 @@
                     @if(Auth::user()->companies()->count() > 1)
                         <th>Station</th>
                     @endif
-                    <th>Edit</th>
+                    @if(Auth::user()->hasPermissionTo('update.inventory'))
+                        <th>Edit</th>
+                    @endif
                 </tr>
                 </thead>
             </table>
@@ -81,6 +83,7 @@
     <script>
         <?php echo "var companies =".Auth::user()->companies()->count().";\n"; ?>
         $(document).ready(function () {
+            var can_edit = '<?php echo Auth::user()->hasPermissionTo('update.inventory') ?>'
             var MediaInventoryList =  $('.media_inventory').DataTable({
                 dom: 'Blfrtip',
                 paging: true,
@@ -105,22 +108,18 @@
             });
 
             function getColumn() {
+                var column = [
+                    {data: 'program', name: 'program'},
+                    {data: 'revenue', name: 'revenue'},
+                    {data: 'rate_card', name: 'rate_card'},
+                ];
                 if(companies > 1){
-                    return [
-                        {data: 'program', name: 'program'},
-                        {data: 'revenue', name: 'revenue'},
-                        {data: 'rate_card', name: 'rate_card'},
-                        {data: 'station', name: 'station'},
-                        {data: 'edit', name: 'edit'},
-                    ]
-                }else{
-                    return [
-                        {data: 'program', name: 'program'},
-                        {data: 'revenue', name: 'revenue'},
-                        {data: 'rate_card', name: 'rate_card'},
-                        {data: 'edit', name: 'edit'},
-                    ]
+                    column.push({data: 'station', name: 'station'})
                 }
+                if(can_edit){
+                    column.push({data: 'edit', name: 'edit'})
+                }
+                return column;
             }
         })
     </script>

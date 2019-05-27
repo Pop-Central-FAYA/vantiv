@@ -19,6 +19,8 @@ class DatabaseSeeder extends Seeder
         $this->call(MpsAudiencesTableSeeder::class);
         $this->call(MpsAudienceProgramActivitiesTableSeeder::class);
         $this->call(StationsTableSeeder::class);
+        $this->call(PublisherFeatureSeeder::class);
+        $this->call(PublisherRoleSeeder::class);
         /**
          * These section were commented out because they are only used
          * to generate fake data for testing and demo purposes. In the future,
@@ -27,7 +29,7 @@ class DatabaseSeeder extends Seeder
          * inventory management), uncomment the piece and run seeder. This should
          * fix the error.
          */
-       /* $this->call(FakeTimeBeltTransactionSeeder::class);
+        /*$this->call(FakeTimeBeltTransactionSeeder::class);
         $this->call(FakeTimeBeltRevenueSeeder::class);
         $this->call(PublisherTableSeeder::class);*/
     }

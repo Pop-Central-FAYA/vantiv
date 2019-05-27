@@ -32,7 +32,7 @@ class ListRoleGroup
         return [
             'id' => $role->id,
             'role' => $role->name,
-            'label' => ucwords(str_replace('_', ' ', explode('.', $role->name)[1]))
+            'label' => ucwords(str_replace('_', ' ', $role->name))
         ];
     }
 }

@@ -32,10 +32,9 @@ class DashboardController extends Controller
          * 2 If the User has the admin, super admin or media_buyer role (he/she should be redirected to the campaign management page)
          * NB This might probably need to change when we finally implement the feature/permission base ALC
          */
-        if (\Auth::user()->hasRole(array('ssp.scheduler'))) {
+        if (\Auth::user()->hasAnyPermission(['view.report', 'view.campaign'])) {
             $route = 'broadcaster.inventory_management';
         } else {
-            // else, the user has the following roles ('ssp.admin', 'ssp.media_buyer', 'ssp.super_admin')
             $route = 'broadcaster.campaign_management';
         }
         return redirect()->route($route);

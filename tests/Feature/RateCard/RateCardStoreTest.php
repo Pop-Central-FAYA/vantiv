@@ -23,7 +23,7 @@ class RateCardStoreTest extends TestCase
         $user = factory(User::class)->create();
         $user->companies()->attach(factory(Company::class)->create()->id);
         $this->actingAs($user)
-            ->ajaxPost('/rate-card-management/store')
+            ->get('/rate-card-management/create')
             ->assertSeeText('Forbidden!');
     }
 
@@ -178,6 +178,20 @@ class RateCardStoreTest extends TestCase
             'price' => [1000],
             'name' => $name,
             'is_base' => $is_base
+        ];
+    }
+
+    public function permissionsArray()
+    {
+        return [
+            [
+                'name' => 'create.inventory',
+                'guard_name' => 'ssp'
+            ],
+            [
+                'name' => 'view.inventory',
+                'guard_name' => 'ssp'
+            ]
         ];
     }
 

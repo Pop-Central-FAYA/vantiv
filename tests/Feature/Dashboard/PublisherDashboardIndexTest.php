@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Dashboard;
 
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 use Vanguard\Models\Company;
@@ -19,9 +20,7 @@ class PublisherDashboardIndexTest extends TestCase
     {
         $user = factory(User::class)->create();
         $user->companies()->attach(factory(Company::class)->create()->id);
-        $user->assignRole(factory(Role::class)->create([
-            'name' => 'ssp.scheduler'
-        ])->id);
+        $user->assignRole($this->createDefaultRole()->id);
         $this->actingAs($user)
             ->get('/broadcaster')
             ->assertRedirect(route('broadcaster.inventory_management'));
@@ -31,9 +30,33 @@ class PublisherDashboardIndexTest extends TestCase
     {
         $user = factory(User::class)->create();
         $user->companies()->attach(factory(Company::class)->create()->id);
-        $user->assignRole(factory(Role::class)->create()->id);
+        $user->assignRole($this->createDefaultRole()->id);
         $this->actingAs($user)
             ->get('/broadcaster')
-            ->assertRedirect(route('broadcaster.campaign_management'));
+            ->assertRedirect(route('broadcaster.inventory_management'));
+    }
+
+    public function createDefaultRole()
+    {
+        $role = factory(Role::class)->create([
+            'name' => 'admin',
+            'guard_name' => 'ssp'
+        ]);
+        $role->syncPermissions($this->permissionData());
+        return $role;
+    }
+
+    public function permissionData()
+    {
+        factory(Permission::class)->create([
+                           'name' => 'view.campaign',
+                           'guard_name' => 'ssp'
+                        ]);
+
+        factory(Permission::class)->create([
+                        'name' => 'view.inventory',
+                        'guard_name' => 'ssp'
+                    ]);
+        return Permission::where('guard_name', 'ssp')->get();
     }
 }

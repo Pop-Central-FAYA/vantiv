@@ -39,7 +39,9 @@ class ProgramManagementController extends Controller
         $media_inventories = $media_inventory_service->activeProgramDate();
         return $dataTables->collection($media_inventories)
             ->addColumn('edit', function ($media_inventories) {
-                return '<a href="'.route('program.management.edit', ['id' => $media_inventories['id']]).'" class="weight_medium">Edit</a>';
+                if(\Auth::user()->hasPermissionTo('update.inventory')){
+                    return '<a href="'.route('program.management.edit', ['id' => $media_inventories['id']]).'" class="weight_medium">Edit</a>';
+                }
             })
             ->rawColumns(['edit' => 'edit'])->addIndexColumn()
             ->make(true);

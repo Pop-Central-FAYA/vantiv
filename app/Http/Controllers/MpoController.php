@@ -203,7 +203,9 @@ class MpoController extends Controller
                     if(\Auth::user()->companies()->count() > 1){
                         return '<span class="span_state status_danger modal_mpo_click">In Progress</span>';
                     }else{
-                        return '<a href="'.route('mpo.action', ['mpo_id' => $mpo_data['mpo_id']]).'" class="span_state status_danger modal_mpo_click">In Progress</a>';
+                        if(\Auth::user()->hasPermissionTo('view.mpo')){
+                            return '<a href="'.route('mpo.action', ['mpo_id' => $mpo_data['mpo_id']]).'" class="span_state status_danger modal_mpo_click">In Review</a>';
+                        }
                     }
                 }else{
                     return '<span class="span_state status_pending">Expired</span>';

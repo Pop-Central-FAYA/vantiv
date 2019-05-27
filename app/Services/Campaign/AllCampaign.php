@@ -43,8 +43,10 @@ class AllCampaign
                 if(\Auth::user()->company_type == CompanyTypeName::BROADCASTER){
                     if($campaigns['status'] === 'on_hold'){
                         return '<a href="'.route('broadcaster.campaign.hold').'">'.$campaigns['name'].'</a>';
-                    }else{
+                    }elseif(\Auth::user()->hasPermissionTo('view.campaign_details')){
                         return '<a href="'.route('broadcaster.campaign.details', ['id' => $campaigns['campaign_id']]).'">'.$campaigns['name'].'</a>';
+                    }else{
+                        return '<span class="span_state status_success">'.$campaigns['name'].'</span>';
                     }
                 }else{
                     if($campaigns['status'] === 'on_hold'){

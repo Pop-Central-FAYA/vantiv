@@ -54,8 +54,12 @@
                                 <span class="more_icon"></span>
 
                                 <div class="more_more">
-                                    <a href="#edit_campaign{{ $campaign['campaign_id'] }}" class="modal_click">Edit</a>
-                                    <a href="#payment{{ $campaign['campaign_id'] }}" class="modal_click">Submit</a>
+                                    @if(Auth::user()->hasPermissionTo('update.campaign'))
+                                        <a href="#edit_campaign{{ $campaign['campaign_id'] }}" class="modal_click">Edit</a>
+                                    @endif
+                                    @if(Auth::user()->hasPermissionTo('submit.campaign'))
+                                        <a href="#payment{{ $campaign['campaign_id'] }}" class="modal_click">Submit</a>
+                                    @endif
                                 </div>
                             </div>
 

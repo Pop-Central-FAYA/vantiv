@@ -108,10 +108,11 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="mb4 align_right">
-                            <input type="submit" value="Save Profile" class="btn uppercased mb4">
-                        </div>
-
+                        @if(Auth::user()->hasPermissionTo('view.profile'))
+                            <div class="mb4 align_right">
+                                <input type="submit" value="Save Profile" class="btn uppercased mb4">
+                            </div>
+                        @endif
                     </div>
                     <!-- end -->
                 </form>
