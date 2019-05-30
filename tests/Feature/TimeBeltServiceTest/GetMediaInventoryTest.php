@@ -13,9 +13,11 @@ use Vanguard\Services\Inventory\GetProgramList;
 use Vanguard\Services\Inventory\PopulateTimeBelt;
 use Vanguard\Services\User\CreateUser;
 use Vanguard\Models\Ratecard\Ratecard;
+use Tests\Traits\PermissionsTrait;
 
 class GetMediaInventoryTest extends TestCase
 {
+    use PermissionsTrait;
     public function test_it_can_fetch_media_inventory_for_publisher()
     {
         $company = factory(Company::class)->create();
@@ -110,54 +112,11 @@ class GetMediaInventoryTest extends TestCase
     public function createDefaultRole()
     {
         $role = factory(Role::class)->create([
-            'name' => 'admin',
-            'guard_name' => 'ssp'
+            'name' => 'ssp.admin',
+            'guard_name' => 'web'
         ]);
         $role->syncPermissions($this->permissionData());
         return $role;
     }
 
-    public function permissionData()
-    {
-        factory(Permission::class)->create([
-            'name' => 'create.inventory',
-            'guard_name' => 'ssp'
-        ]);
-
-        factory(Permission::class)->create([
-            'name' => 'update.inventory',
-            'guard_name' => 'ssp'
-        ]);
-
-        factory(Permission::class)->create([
-            'name' => 'view.inventory',
-            'guard_name' => 'ssp'
-        ]);
-
-        factory(Permission::class)->create([
-            'name' => 'view.campaign',
-            'guard_name' => 'ssp'
-        ]);
-
-        factory(Permission::class)->create([
-            'name' => 'view.profile',
-            'guard_name' => 'ssp'
-        ]);
-
-        factory(Permission::class)->create([
-            'name' => 'view.user',
-            'guard_name' => 'ssp'
-        ]);
-
-        factory(Permission::class)->create([
-            'name' => 'view.rate_card',
-            'guard_name' => 'ssp'
-        ]);
-
-        factory(Permission::class)->create([
-            'name' => 'view.discount',
-            'guard_name' => 'ssp'
-        ]);
-        return Permission::where('guard_name', 'ssp')->get();
-    }
 }

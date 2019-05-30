@@ -40,8 +40,9 @@ class CreateRoleUser extends Command
     {
         $user_id = $this->ask('Please enter the user_id');
         $role_id = $this->ask('Please enter the role_id');
+        $guard = $this->ask('Please enter the guard');
         try{
-            $assign_roles_service = new AssignRoleToUser($user_id, $role_id);
+            $assign_roles_service = new AssignRoleToUser($user_id, $role_id, $guard);
             $assign_roles_service->assignRolesToUser();
             $this->info('role assigned to user successfully');
         }catch (\Exception $exception){

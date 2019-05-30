@@ -5,6 +5,7 @@ namespace Tests\Feature\RateCard;
 use Faker\Factory;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
+use Tests\Traits\PermissionsTrait;
 use Vanguard\Models\Company;
 use Vanguard\Models\Ratecard\Ratecard;
 use Vanguard\Services\RateCard\StoreBaseRateCard;
@@ -12,6 +13,7 @@ use Vanguard\User;
 
 class RateCardStoreTest extends TestCase
 {
+    use PermissionsTrait;
     public function test_it_redirects_to_login_if_user_is_not_authenticated()
     {
         $result = $this->ajaxPost('/rate-card-management/store');
@@ -31,7 +33,7 @@ class RateCardStoreTest extends TestCase
     {
         $user = factory(User::class)->create();
         $user->companies()->attach(factory(Company::class)->create()->id);
-        $user->assignRole(factory(Role::class)->create()->id);
+        $user->assignRole($this->createDefaultRole()->id);
         $this->actingAs($user)
             ->ajaxPost('/rate-card-management/store')
             ->assertSessionHasErrors('title');
@@ -41,7 +43,7 @@ class RateCardStoreTest extends TestCase
     {
         $user = factory(User::class)->create();
         $user->companies()->attach(factory(Company::class)->create()->id);
-        $user->assignRole(factory(Role::class)->create()->id);
+        $user->assignRole($this->createDefaultRole()->id);
         $rate_card = \factory(Ratecard::class)->create([
             'company_id' => $company_id = $user->companies->first()->id
         ]);
@@ -57,7 +59,7 @@ class RateCardStoreTest extends TestCase
     {
         $user = factory(User::class)->create();
         $user->companies()->attach(factory(Company::class)->create()->id);
-        $user->assignRole(factory(Role::class)->create()->id);
+        $user->assignRole($this->createDefaultRole()->id);
         $this->actingAs($user)
             ->ajaxPost('/rate-card-management/store')
             ->assertSessionHasErrors('price');
@@ -67,7 +69,7 @@ class RateCardStoreTest extends TestCase
     {
         $user = factory(User::class)->create();
         $user->companies()->attach(factory(Company::class)->create()->id);
-        $user->assignRole(factory(Role::class)->create()->id);
+        $user->assignRole($this->createDefaultRole()->id);
         $this->actingAs($user)
             ->ajaxPost('/rate-card-management/store')
             ->assertSessionHasErrors('duration');
@@ -77,7 +79,7 @@ class RateCardStoreTest extends TestCase
     {
         $user = factory(User::class)->create();
         $user->companies()->attach(factory(Company::class)->create()->id);
-        $user->assignRole(factory(Role::class)->create()->id);
+        $user->assignRole($this->createDefaultRole()->id);
         $this->actingAs($user)
             ->ajaxPost('/rate-card-management/store', [
                 'is_base' => 'hjdfk'
@@ -100,7 +102,7 @@ class RateCardStoreTest extends TestCase
     {
         $user = factory(User::class)->create();
         $user->companies()->attach(factory(Company::class)->create()->id);
-        $user->assignRole(factory(Role::class)->create()->id);
+        $user->assignRole($this->createDefaultRole()->id);
         $this->actingAs($user)
             ->ajaxPost('/rate-card-management/store', [
                 'title' => 'Test',
@@ -119,7 +121,7 @@ class RateCardStoreTest extends TestCase
     {
         $user = factory(User::class)->create();
         $user->companies()->attach(factory(Company::class)->create()->id);
-        $user->assignRole(factory(Role::class)->create()->id);
+        $user->assignRole($this->createDefaultRole()->id);
         $this->actingAs($user)
             ->ajaxPost('/rate-card-management/store', [
                 'title' => 'Test',
@@ -193,6 +195,16 @@ class RateCardStoreTest extends TestCase
                 'guard_name' => 'ssp'
             ]
         ];
+    }
+
+    public function createDefaultRole()
+    {
+        $role = factory(Role::class)->create([
+            'name' => 'ssp.admin',
+            'guard_name' => 'web'
+        ]);
+        $role->syncPermissions($this->permissionData());
+        return $role;
     }
 
 }

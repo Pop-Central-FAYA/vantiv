@@ -4,11 +4,13 @@ namespace Tests\Feature\Dashboard;
 
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
+use Tests\Traits\PermissionsTrait;
 use Vanguard\Models\Company;
 use Vanguard\User;
 
 class ExecuteMonthlyReportTest extends TestCase
 {
+    use PermissionsTrait;
     public function test_it_redirects_to_login_if_user_is_not_authenticated()
     {
         $result = $this->json('GET','/campaign-management/reports');
@@ -19,7 +21,7 @@ class ExecuteMonthlyReportTest extends TestCase
     {
         $user = factory(User::class)->create();
         $user->companies()->attach(factory(Company::class)->create()->id);
-        $user->assignRole(factory(Role::class)->create()->id);
+        $user->assignRole($this->createDefaultRole()->id);
         $response = $this->actingAs($user)
                         ->json('GET','/campaign-management/reports?media_type=');
         $response->assertJsonValidationErrors('media_type');
@@ -29,7 +31,7 @@ class ExecuteMonthlyReportTest extends TestCase
     {
         $user = factory(User::class)->create();
         $user->companies()->attach(factory(Company::class)->create()->id);
-        $user->assignRole(factory(Role::class)->create()->id);
+        $user->assignRole($this->createDefaultRole()->id);
         $response = $this->actingAs($user)
             ->json('GET','/campaign-management/reports?report_type=');
         $response->assertJsonValidationErrors('media_type');
@@ -39,7 +41,7 @@ class ExecuteMonthlyReportTest extends TestCase
     {
         $user = factory(User::class)->create();
         $user->companies()->attach(factory(Company::class)->create()->id);
-        $user->assignRole(factory(Role::class)->create()->id);
+        $user->assignRole($this->createDefaultRole()->id);
         $response = $this->actingAs($user)
             ->json('GET','/campaign-management/reports?year=');
         $response->assertJsonValidationErrors('year');
@@ -49,12 +51,22 @@ class ExecuteMonthlyReportTest extends TestCase
     {
         $user = factory(User::class)->create();
         $user->companies()->attach(factory(Company::class)->create()->id);
-        $user->assignRole(factory(Role::class)->create()->id);
+        $user->assignRole($this->createDefaultRole()->id);
         $this->actingAs($user)
             ->json('GET','/campaign-management/reports?_token=whqE2ZXj3YYQEhlznV43Nltn5arwJzieDlQrIB3s&media_type=tv&report_type=spots_sold&year=2019')
             ->assertJson([
                 'status' => 'success'
             ]);
+    }
+
+    public function createDefaultRole()
+    {
+        $role = factory(Role::class)->create([
+            'name' => 'ssp.admin',
+            'guard_name' => 'web'
+        ]);
+        $role->syncPermissions($this->permissionData());
+        return $role;
     }
 
 }

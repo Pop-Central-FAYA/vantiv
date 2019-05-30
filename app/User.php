@@ -204,6 +204,8 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract
     protected function getStoredRole($role, string $guard): Role
     {
         if (\is_string($role)) {
+            return app(Role::class)->findByName($role, $guard);
+        }else{
             return app(Role::class)->findById($role, $guard);
         }
 

@@ -4,6 +4,7 @@ namespace Tests\Feature\RateCard;
 
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
+use Tests\Traits\PermissionsTrait;
 use Vanguard\Models\Company;
 use Vanguard\Models\Ratecard\Ratecard;
 use Vanguard\Services\RateCard\UpdateRateCardService;
@@ -11,6 +12,7 @@ use Vanguard\User;
 
 class RateCardUpdateTest extends TestCase
 {
+    use PermissionsTrait;
     public function test_it_redirects_to_login_if_user_is_not_authenticated()
     {
         $result = $this->ajaxPost('/rate-card-management/update/1');
@@ -30,7 +32,7 @@ class RateCardUpdateTest extends TestCase
     {
         $user = factory(User::class)->create();
         $user->companies()->attach(factory(Company::class)->create()->id);
-        $user->assignRole(factory(Role::class)->create()->id);
+        $user->assignRole($this->createDefaultRole()->id);
         $rate_card = \factory(Ratecard::class)->create([
             'company_id' => $company_id = $user->companies->first()->id
         ]);
@@ -43,7 +45,7 @@ class RateCardUpdateTest extends TestCase
     {
         $user = factory(User::class)->create();
         $user->companies()->attach(factory(Company::class)->create()->id);
-        $user->assignRole(factory(Role::class)->create()->id);
+        $user->assignRole($this->createDefaultRole()->id);
         $rate_card = \factory(Ratecard::class)->create([
             'company_id' => $company_id = $user->companies->first()->id
         ]);
@@ -59,7 +61,7 @@ class RateCardUpdateTest extends TestCase
     {
         $user = factory(User::class)->create();
         $user->companies()->attach(factory(Company::class)->create()->id);
-        $user->assignRole(factory(Role::class)->create()->id);
+        $user->assignRole($this->createDefaultRole()->id);
         $rate_card = \factory(Ratecard::class)->create([
             'company_id' => $company_id = $user->companies->first()->id
         ]);
@@ -72,7 +74,7 @@ class RateCardUpdateTest extends TestCase
     {
         $user = factory(User::class)->create();
         $user->companies()->attach(factory(Company::class)->create()->id);
-        $user->assignRole(factory(Role::class)->create()->id);
+        $user->assignRole($this->createDefaultRole()->id);
         $rate_card = \factory(Ratecard::class)->create([
             'company_id' => $company_id = $user->companies->first()->id
         ]);
@@ -85,7 +87,7 @@ class RateCardUpdateTest extends TestCase
     {
         $user = factory(User::class)->create();
         $user->companies()->attach(factory(Company::class)->create()->id);
-        $user->assignRole(factory(Role::class)->create()->id);
+        $user->assignRole($this->createDefaultRole()->id);
         $rate_card = \factory(Ratecard::class)->create([
             'company_id' => $company_id = $user->companies->first()->id
         ]);
@@ -100,7 +102,7 @@ class RateCardUpdateTest extends TestCase
     {
         $user = factory(User::class)->create();
         $user->companies()->attach(factory(Company::class)->create()->id);
-        $user->assignRole(factory(Role::class)->create()->id);
+        $user->assignRole($this->createDefaultRole()->id);
         $rate_card = factory(Ratecard::class)->create([
             'company_id' => $company_id = $user->companies->first()->id
         ]);
@@ -121,7 +123,7 @@ class RateCardUpdateTest extends TestCase
     {
         $user = factory(User::class)->create();
         $user->companies()->attach(factory(Company::class)->create()->id);
-        $user->assignRole(factory(Role::class)->create()->id);
+        $user->assignRole($this->createDefaultRole()->id);
         $rate_card = factory(Ratecard::class)->create([
             'company_id' => $company_id = $user->companies->first()->id
         ]);
@@ -197,5 +199,15 @@ class RateCardUpdateTest extends TestCase
             'name' => $name,
             'is_base' => $is_base,
         ];
+    }
+
+    public function createDefaultRole()
+    {
+        $role = factory(Role::class)->create([
+            'name' => 'ssp.admin',
+            'guard_name' => 'web'
+        ]);
+        $role->syncPermissions($this->permissionData());
+        return $role;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Users;
 
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 use Vanguard\Models\Company;
@@ -20,7 +21,7 @@ class InviteUserStoreTest extends TestCase
     {
         //create a user
         $user = factory(User::class)->create();
-        $user->assignRole(factory(Role::class)->create()->id);
+        $user->assignRole($this->createDefaultRole()->id);
         $user->companies()->attach(factory(Company::class)->create()->id);
         //check if the user can view the profile page
 
@@ -33,7 +34,7 @@ class InviteUserStoreTest extends TestCase
     {
         //create a user
         $user = factory(User::class)->create();
-        $user->assignRole(factory(Role::class)->create()->id);
+        $user->assignRole($this->createDefaultRole()->id);
         $user->companies()->attach(factory(Company::class)->create()->id);
         //check if the user can view the profile page
 
@@ -45,14 +46,26 @@ class InviteUserStoreTest extends TestCase
     public function test_it_can_process_invite_user()
     {
         //invite the user
-        $role = factory(Role::class)->create();
         $company = factory(Company::class)->create();
         $email = 'test@test.com';
-        $invite_user_service = new InviteUser($role->id, $company->id, $email);
+        $invite_user_service = new InviteUser($this->createDefaultRole()->id, $company->id, $email, 'web');
         $invite_user_service->createUnconfirmedUser();
 
         $this->assertDatabaseHas('users', [
             'email' => $email
         ]);
+    }
+
+    public function createDefaultRole()
+    {
+        $role = factory(Role::class)->create([
+            'name' => 'ssp.admin',
+            'guard_name' => 'web'
+        ]);
+        $role->syncPermissions(factory(Permission::class)->create([
+            'name' => 'update.user',
+            'guard_name' => 'web'
+        ]));
+        return $role;
     }
 }

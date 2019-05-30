@@ -6,6 +6,7 @@ use Faker\Factory;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
+use Tests\Traits\PermissionsTrait;
 use Vanguard\Models\Company;
 use Vanguard\Services\User\CreateUser;
 use Vanguard\Services\User\UpdateUser;
@@ -13,6 +14,7 @@ use Vanguard\Services\User\UserDetails;
 
 class ProfileUpdateTest extends TestCase
 {
+    use PermissionsTrait;
     public function test_if_user_cannot_visit_the_profile_route_when_not_authenticated()
     {
         $result = $this->get('/user/profile');
@@ -97,13 +99,10 @@ class ProfileUpdateTest extends TestCase
     public function createDefaultRole()
     {
         $role = factory(Role::class)->create([
-            'name' => 'admin',
-            'guard_name' => 'ssp'
+            'name' => 'ssp.admin',
+            'guard_name' => 'web'
         ]);
-        $role->syncPermissions(factory(Permission::class)->create([
-            'name' => 'view.profile',
-            'guard_name' => 'ssp'
-        ]));
+        $role->syncPermissions($this->permissionData());
         return $role;
     }
 }

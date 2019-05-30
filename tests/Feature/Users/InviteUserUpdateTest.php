@@ -21,7 +21,7 @@ class InviteUserUpdateTest extends TestCase
     public function test_it_requires_role_while_updating_user()
     {
         $user = factory(User::class)->create();
-        $user->assignRole(factory(Role::class)->create()->id);
+        $user->assignRole($this->createDefaultRole()->id);
         $user->companies()->attach(factory(Company::class)->create()->id);
 
         $user2 = factory(User::class)->create();
@@ -43,7 +43,7 @@ class InviteUserUpdateTest extends TestCase
         $user2->assignRole($role->id);
         $user2->companies()->attach(factory(Company::class)->create()->id);
 
-        $update_user_service = new UpdateUserService($role->id, $company->id, $user2->id);
+        $update_user_service = new UpdateUserService($role->id, $company->id, $user2->id, 'web');
         $update_user = $update_user_service->updateUser();
         $this->assertEquals($role->name, $update_user->getRoleNames()->first());
         $this->assertEquals($company->name, $update_user->companies->first()->name);
@@ -71,12 +71,12 @@ class InviteUserUpdateTest extends TestCase
     public function createDefaultRole()
     {
         $role = factory(Role::class)->create([
-            'name' => 'admin',
-            'guard_name' => 'ssp'
+            'name' => 'ssp.admin',
+            'guard_name' => 'web'
         ]);
         $role->syncPermissions(factory(Permission::class)->create([
             'name' => 'update.user',
-            'guard_name' => 'ssp'
+            'guard_name' => 'web'
         ]));
         return $role;
     }
