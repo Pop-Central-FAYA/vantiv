@@ -4,6 +4,7 @@ namespace Tests\Feature\Dashboard;
 
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
+use Tests\Traits\PermissionsTrait;
 use Vanguard\Models\CampaignDetail;
 use Vanguard\Models\Company;
 use Vanguard\Models\Mpo;
@@ -21,6 +22,7 @@ use Vanguard\User;
 
 class CampaignManagementDashboardTest extends TestCase
 {
+    use PermissionsTrait;
     public function test_it_redirects_to_login_if_user_is_not_authenticated()
     {
         $result = $this->get('/campaign-management/dashboard');
@@ -269,9 +271,19 @@ class CampaignManagementDashboardTest extends TestCase
     public function createUserAndAttributes()
     {
         $user = factory(User::class)->create();
-        $user->assignRole(factory(Role::class)->create()->id);
+        $user->assignRole($this->createDefaultRole()->id);
         $company = factory(Company::class)->create(['name' => 'TVC']);
         $user->companies()->attach($company->id);
         return ['user' => $user, 'company' => $company];
+    }
+
+    public function createDefaultRole()
+    {
+        $role = factory(Role::class)->create([
+            'name' => 'ssp.admin',
+            'guard_name' => 'web'
+        ]);
+        $role->syncPermissions($this->permissionData());
+        return $role;
     }
 }

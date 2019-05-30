@@ -15,7 +15,7 @@ class ListRoleGroup
 
     private function getRolesQuery()
     {
-        return Role::where('guard_name', $this->group_name)->get();
+        return Role::where('name', 'like', '%'.$this->group_name.'%')->get();
     }
 
     public function getRoles()
@@ -32,7 +32,7 @@ class ListRoleGroup
         return [
             'id' => $role->id,
             'role' => $role->name,
-            'label' => ucwords(str_replace('_', ' ', $role->name))
+            'label' => ucwords(str_replace('_', ' ', explode('.', $role->name)[1]))
         ];
     }
 }

@@ -5,11 +5,13 @@ namespace Tests\Feature\Dashboard;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
+use Tests\Traits\PermissionsTrait;
 use Vanguard\Models\Company;
 use Vanguard\User;
 
 class PublisherDashboardIndexTest extends TestCase
 {
+    use PermissionsTrait;
     public function test_it_redirects_to_login_if_user_is_not_authenticated()
     {
         $result = $this->get('/broadcaster');
@@ -39,24 +41,11 @@ class PublisherDashboardIndexTest extends TestCase
     public function createDefaultRole()
     {
         $role = factory(Role::class)->create([
-            'name' => 'admin',
-            'guard_name' => 'ssp'
+            'name' => 'ssp.admin',
+            'guard_name' => 'web'
         ]);
         $role->syncPermissions($this->permissionData());
         return $role;
     }
 
-    public function permissionData()
-    {
-        factory(Permission::class)->create([
-                           'name' => 'view.campaign',
-                           'guard_name' => 'ssp'
-                        ]);
-
-        factory(Permission::class)->create([
-                        'name' => 'view.inventory',
-                        'guard_name' => 'ssp'
-                    ]);
-        return Permission::where('guard_name', 'ssp')->get();
-    }
 }

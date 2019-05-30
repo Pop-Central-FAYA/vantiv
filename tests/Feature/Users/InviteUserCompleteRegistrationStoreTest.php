@@ -4,6 +4,7 @@ namespace Tests\Feature\Users;
 
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
+use Tests\Traits\PermissionsTrait;
 use Vanguard\Models\Company;
 use Vanguard\Services\User\InviteUser;
 use Vanguard\Services\User\UpdateUser;
@@ -12,6 +13,7 @@ use Vanguard\User;
 
 class InviteUserCompleteRegistrationStoreTest extends TestCase
 {
+    use PermissionsTrait;
     public function test_an_authenticated_user_can_visit_the_invite_user_page()
     {
         $result = $this->get('/user/invite');
@@ -82,10 +84,9 @@ class InviteUserCompleteRegistrationStoreTest extends TestCase
     public function test_it_update_user_after_account_completion_process_from_the_service()
     {
         //invite the user
-        $role = factory(Role::class)->create();
         $company = factory(Company::class)->create();
         $email = 'test@test.com';
-        $invite_user_service = new InviteUser($role->id, $company->id, $email);
+        $invite_user_service = new InviteUser($this->createDefaultRole()->id, $company->id, $email, 'web');
         $user = $invite_user_service->createUnconfirmedUser();
 
         //update the user
@@ -112,5 +113,15 @@ class InviteUserCompleteRegistrationStoreTest extends TestCase
             ->assertJson([
                 'status' => 'success'
             ]);
+    }
+
+    public function createDefaultRole()
+    {
+        $role = factory(Role::class)->create([
+            'name' => 'ssp.admin',
+            'guard_name' => 'web'
+        ]);
+        $role->syncPermissions($this->permissionData());
+        return $role;
     }
 }

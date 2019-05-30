@@ -37,7 +37,7 @@ class UserController extends Controller
         $statuses = UserStatus::lists();
         return $dataTables->collection($user_list)
             ->addColumn('edit', function ($user_list) {
-                if(!\Auth::user()->hasPermissionTo('update.super_admin') && $user_list['role_name']->first() == 'super_admin'){
+                if(!\Auth::user()->hasPermissionTo('update.super_admin') && $user_list['role_name']->first() == 'ssp.super_admin'){
                     return '';
                 }else{
                     return '<a href="'.route('user.edit', ['id' => $user_list['id']]).'" class="weight_medium">Edit</a>';
@@ -47,7 +47,7 @@ class UserController extends Controller
                 if($user_list['status'] === UserStatus::UNCONFIRMED){
                     return '<a href="#user_modal_'.$user_list['id'].'" class="weight_medium modal_user_click">'.$user_list['status'].'</a>';
                 }else{
-                    if(!\Auth::user()->hasPermissionTo('update.super_admin') && $user_list['role_name']->first() == 'super_admin'){
+                    if(!\Auth::user()->hasPermissionTo('update.super_admin') && $user_list['role_name']->first() == 'ssp.super_admin'){
                         return '';
                     }else{
                         return view('users.status', ['user_status' => $user_list['status'], 'statuses' => $statuses, 'id' => $user_list['id']]);
@@ -62,9 +62,9 @@ class UserController extends Controller
     {
         $role_list_services = new ListRoleGroup('ssp');
         $roles = $role_list_services->getRoles();
-        if(!\Auth::user()->hasRole('super_admin')){
+        if(!\Auth::user()->hasPermissionTo('update.super_admin')){
             $roles = collect($roles)->filter(function($role) {
-                return $role['role'] !== 'super_admin';
+                return $role['role'] !== 'ssp.super_admin';
             });
         }
         return view('users.invite_user')
@@ -127,7 +127,13 @@ class UserController extends Controller
     {
         $user = User::find($id)->load('companies');
         $roles_service = new ListRoleGroup('ssp');
-        return view('users.edit')->with('roles', $roles_service->getRoles())
+        $roles = $roles_service->getRoles();
+        if(!\Auth::user()->hasPermissionTo('update.super_admin')){
+            $roles = collect($roles)->filter(function($role) {
+                return $role['role'] !== 'ssp.super_admin';
+            });
+        }
+        return view('users.edit')->with('roles', $roles)
                                         ->with('companies', $this->getCompaniesDetails($this->companyId()))
                                         ->with('user', $user);
     }

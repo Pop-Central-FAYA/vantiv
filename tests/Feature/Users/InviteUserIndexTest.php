@@ -5,11 +5,13 @@ namespace Tests\Feature\Users;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
+use Tests\Traits\PermissionsTrait;
 use Vanguard\Models\Company;
 use Vanguard\User;
 
 class InviteUserIndexTest extends TestCase
 {
+    use PermissionsTrait;
     public function test_an_authenticated_user_can_visit_the_invite_user_page()
     {
         $result = $this->get('/user/invite');
@@ -31,8 +33,7 @@ class InviteUserIndexTest extends TestCase
     {
         //create a user
         $user = factory(User::class)->create();
-        $role = $this->createDefaultRole();
-        $user->assignRole($role->id);
+        $user->assignRole($this->createDefaultRole()->id);
         $user->companies()->attach(factory(Company::class)->create()->id);
         //check if the user can view the profile page
         $this->actingAs($user)
@@ -44,8 +45,7 @@ class InviteUserIndexTest extends TestCase
     {
         //create a user
         $user = factory(User::class)->create();
-        $role = $this->createDefaultRole();
-        $user->assignRole($role->id);
+        $user->assignRole($this->createDefaultRole()->id);
         $user->companies()->attach(factory(Company::class, 3)->create());
         $this->actingAs($user)
             ->get('/user/invite')
@@ -55,13 +55,10 @@ class InviteUserIndexTest extends TestCase
     public function createDefaultRole()
     {
         $role = factory(Role::class)->create([
-            'name' => 'admin',
-            'guard_name' => 'ssp'
+            'name' => 'ssp.admin',
+            'guard_name' => 'web'
         ]);
-        $role->syncPermissions(factory(Permission::class)->create([
-            'name' => 'create.user',
-            'guard_name' => 'ssp'
-        ]));
+        $role->syncPermissions($this->permissionData());
         return $role;
     }
 }

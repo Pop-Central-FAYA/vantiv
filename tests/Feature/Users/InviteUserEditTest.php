@@ -5,11 +5,13 @@ namespace Tests\Feature\Users;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
+use Tests\Traits\PermissionsTrait;
 use Vanguard\Models\Company;
 use Vanguard\User;
 
 class InviteUserEditTest extends TestCase
 {
+    use PermissionsTrait;
     public function test_an_authenticated_user_can_visit_the_invite_user_page()
     {
         $result = $this->get('/user/invite');
@@ -48,13 +50,10 @@ class InviteUserEditTest extends TestCase
     public function createDefaultRole()
     {
         $role = factory(Role::class)->create([
-            'name' => 'admin',
-            'guard_name' => 'ssp'
+            'name' => 'ssp.admin',
+            'guard_name' => 'web'
         ]);
-        $role->syncPermissions(factory(Permission::class)->create([
-            'name' => 'update.user',
-            'guard_name' => 'ssp'
-        ]));
+        $role->syncPermissions($this->permissionData());
         return $role;
     }
 }
