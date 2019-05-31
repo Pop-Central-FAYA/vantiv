@@ -4,7 +4,7 @@ namespace Vanguard\Models;
 
 class Publisher extends Base
 {
-    protected $fillable = ['company_id', 'type'];
+    protected $fillable = ['company_id', 'type', 'settings'];
 
     /**
      * Scope to return only publishers that belong to a list of companies

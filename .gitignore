@@ -29,4 +29,5 @@ node_modules
 /storage
 storage/*.key
 resources/assets/.DS_Store
+app/.DS_Store
 
