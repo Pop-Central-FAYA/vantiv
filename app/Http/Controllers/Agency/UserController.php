@@ -45,7 +45,15 @@ class UserController extends Controller
             })
             ->addColumn('status', function ($user_list) use($statuses) {
                 
+                if($user_list['status'] === UserStatus::UNCONFIRMED){
                     return '<a href="#user_modal_'.$user_list['id'].'" class="weight_medium modal_user_click">'.$user_list['status'].'</a>';
+                }else{
+                    if(!\Auth::user()->hasRole('dsp.admin')){
+                        return '';
+                    }else{
+                        return view('users.status', ['user_status' => $user_list['status'], 'statuses' => $statuses, 'id' => $user_list['id']]);
+                    }
+                }
                 
             })
             ->rawColumns(['edit' => 'edit', 'status' => 'status'])->addIndexColumn()
