@@ -88,7 +88,7 @@
                     </div>
                     <p class="align_center">Radio</p>
 
-                    <div class="_pie_chart" style="height: 150px"></div>
+                    <div id="radio" class="_pie_chart" style="height: 150px"></div>
 
                     <ul>
                         <li class="pie_legend active"><span class="weight_medium">0%</span> Active</li>
