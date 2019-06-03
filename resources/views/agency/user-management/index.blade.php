@@ -227,7 +227,7 @@
                 $.ajax({
                     cache: false,
                     type: "GET",
-                    url: 'agency/user/status/update',
+                    url: '/agency/user/status/update',
                     dataType: 'json',
                     data: {user_id : user_id, status : select_value},
                     beforeSend: function(data) {
