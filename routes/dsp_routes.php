@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['domain' => 'vantager'. $_SERVER['SERVER_NAME']], function() {
+Route::group(['domain' => 'vantage'. $_SERVER['SERVER_NAME']], function() {
 
          Route::get('login', 'Auth\AuthController@getLogin')->name('login');
          Route::post('login', 'Auth\AuthController@postLogin')->name('post.login');
