@@ -276,10 +276,12 @@
                                 <tr>
                                     <td><video src="{{ asset($uploaded_file->file_url) }}" width="150" height="100" controls></video></td>
                                     <td>
-                                        <p>{{ $uploaded_file->get_adslot->get_rate_card->get_day->day }}</p>
-                                        <p>{{ $uploaded_file->get_adslot->day_part->day_parts }}</p>
-                                        <p>{{ $uploaded_file->get_adslot->get_rate_card->hourly_range->time_range }}</p>
-                                        <p>{{ $uploaded_file->get_adslot->from_to_time }}</p>
+                                        @if($uploaded_file->get_adslot()->count() != 0)
+                                            <p>{{ $uploaded_file->get_adslot->get_rate_card->get_day->day }}</p>
+                                            <p>{{ $uploaded_file->get_adslot->day_part->day_parts }}</p>
+                                            <p>{{ $uploaded_file->get_adslot->get_rate_card->hourly_range->time_range }}</p>
+                                            <p>{{ $uploaded_file->get_adslot->from_to_time }}</p>
+                                        @endif
                                     </td>
                                     @if($uploaded_file->status === 'rejected')
                                         <td>
