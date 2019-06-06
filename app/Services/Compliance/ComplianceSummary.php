@@ -63,7 +63,7 @@ class ComplianceSummary
 
     public function exportToExcel($compliance_reports, $campaign_name)
     {
-        return Excel::create($campaign_name, function($excel) use ($compliance_reports, $campaign_name) {
+        return Excel::download($campaign_name, function($excel) use ($compliance_reports, $campaign_name) {
 
             $excel->sheet($campaign_name, function($sheet) use ($compliance_reports) {
 
