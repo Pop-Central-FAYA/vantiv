@@ -4,6 +4,9 @@
  * Authentication
  */
 
+Route::group(['domain' => $_SERVER['SERVER_NAME']], function() {
+
+     
 Route::get('login', 'Auth\AuthController@getLogin')->name('login');
 Route::post('login', 'Auth\AuthController@postLogin')->name('post.login');
 
@@ -551,3 +554,6 @@ Route::get('activity/user/{user}/log', [
  */
 Route::get('/media-plan1', 'MediaPlan\MediaPlanController@index');
 Route::get('/media-plan2', 'MediaPlan\MediaPlanController@index');
+
+
+});
