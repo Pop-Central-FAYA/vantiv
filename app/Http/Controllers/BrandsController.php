@@ -13,6 +13,7 @@ use Vanguard\Libraries\Utilities;
 use JD\Cloudder\Facades\Cloudder;
 use Vanguard\Models\Brand;
 use Vanguard\Models\BrandClient;
+use Vanguard\Services\Client\ClientBrand;
 
 
 class BrandsController extends Controller
@@ -278,7 +279,8 @@ class BrandsController extends Controller
 
     public function getBrandsWithClients($id)
     {
-        $brands = Utilities::getBrandsForWalkins($id);
+        $client_brands = new ClientBrand($id);
+        $brands = $client_brands->run();
         return response()->json(['brands' => $brands]);
     }
 
