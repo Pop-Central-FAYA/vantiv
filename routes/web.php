@@ -505,8 +505,17 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/store-programs', 'MediaPlan\MediaPlanController@storePrograms')->name('media_plan.program.store');
             Route::post('/store-volume-discount', 'MediaPlan\MediaPlanController@storeVolumeDiscount')->name('media_plan.volume_discount.store');
         });
-        
 
+        /**
+         * Media Assets
+         */
+        Route::group(['prefix' => 'media-assets'], function () {
+            Route::get('/', 'MediaAssetsController@index')->name('agency.media_assets');
+            Route::post('/create', 'MediaAssetsController@createAsset');
+            Route::post('/presigned-url', 'S3Controller@getPresignedUrl');
+            Route::get('/all', 'MediaAssetsController@getAssets');
+            Route::get('/delete/{id}', 'MediaAssetsController@deleteAsset');
+        });
 
         /**
          * User Management
