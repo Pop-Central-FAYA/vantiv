@@ -134,8 +134,8 @@ $appRoutes = function() {
 
 };
 
-Route::group(['domain' => 'vantage.'. $_SERVER['SERVER_NAME']], $appRoutes); 
-Route::group(['domain' => 'stage.vantage.'. $_SERVER['SERVER_NAME']], $appRoutes ); 
+Route::group(['domain' => 'vantage.'. URL::to('/')], $appRoutes); 
+Route::group(['domain' => 'stage.vantage.'. URL::to('/')], $appRoutes ); 
 
 
 
