@@ -4,7 +4,7 @@
  * Authentication
  */
 
-Route::group(['domain' => $_SERVER['SERVER_NAME']], function() {
+Route::group(['domain' => URL::to('/')], function() {
 
      
 Route::get('login', 'Auth\AuthController@getLogin')->name('login');
