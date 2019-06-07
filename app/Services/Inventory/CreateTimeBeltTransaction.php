@@ -4,6 +4,7 @@ namespace Vanguard\Services\Inventory;
 
 use Vanguard\Models\TimeBeltTransaction;
 use Vanguard\Services\Schedule\AdPatternSchedule;
+use Vanguard\Services\Schedule\GetPublisherSettings;
 
 class CreateTimeBeltTransaction
 {
@@ -17,7 +18,8 @@ class CreateTimeBeltTransaction
     public function createTimeBeltTransaction()
     {
         foreach ($this->preselected_time_belt as $time_belt){
-            \DB::transaction(function () use ($time_belt) {
+            $ad_pattern = (new GetPublisherSettings($time_belt->broadcaster_id))->run()['ad_pattern'];
+            \DB::transaction(function () use ($time_belt, $ad_pattern) {
                 $time_belt_transaction = new TimeBeltTransaction();
                 $time_belt_transaction->time_belt_id = $time_belt->time_belt_id;
                 $time_belt_transaction->media_program_id = $time_belt->media_program_id;
@@ -33,7 +35,7 @@ class CreateTimeBeltTransaction
                 $time_belt_transaction->payment_status = $time_belt->payment_status;
                 $time_belt_transaction->save();
 
-                $ad_schedule_service = new AdPatternSchedule($time_belt, 4, $time_belt_transaction->id);
+                $ad_schedule_service = new AdPatternSchedule($time_belt, $ad_pattern, $time_belt_transaction->id);
                 $ad_schedule_service->run();
             });
         }
