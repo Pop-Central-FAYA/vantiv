@@ -4,8 +4,8 @@
  * Authentication
  */
 
-Route::group(['domain' => URL::to('/')], function() {
 
+Route::group(['domain' => Request::getHost()], function() {
      
 Route::get('login', 'Auth\AuthController@getLogin')->name('login');
 Route::post('login', 'Auth\AuthController@postLogin')->name('post.login');
