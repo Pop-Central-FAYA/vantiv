@@ -56,4 +56,9 @@ class Company extends Base
     {
         return $this->hasMany(MediaPlanVolumeDiscount::class);
     }
+
+    public function schedules()
+    {
+        return $this->hasMany(Schedule::class);
+    }
 }
