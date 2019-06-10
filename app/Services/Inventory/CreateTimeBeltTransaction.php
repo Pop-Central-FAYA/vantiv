@@ -40,7 +40,6 @@ class CreateTimeBeltTransaction
                 $ad_schedule_service->run();
             }
         });
-
         return 'success';
     }
 }

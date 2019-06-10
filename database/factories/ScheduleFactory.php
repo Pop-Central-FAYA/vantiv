@@ -4,6 +4,7 @@ use Faker\Generator as Faker;
 
 $factory->define(\Vanguard\Models\Schedule::class, function (Faker $faker) {
     return [
+<<<<<<< HEAD
         'company_id' => factory(\Vanguard\Models\Company::class)->create()->id,
         'playout_date' => '2019-05-4',
         'playout_hour' => '11:00:00',
@@ -11,5 +12,8 @@ $factory->define(\Vanguard\Models\Schedule::class, function (Faker $faker) {
         'file_name' => 'this.mp4',
         'file_url' => 'http://hgdbwrgehsbx.hjgf/kjfd.mp4',
         'ad_break' => '11:00:00'
+=======
+        ''
+>>>>>>> e40e2931c980cbdf82f6687982cdc76923826123
     ];
 });
