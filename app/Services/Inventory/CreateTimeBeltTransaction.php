@@ -33,6 +33,7 @@ class CreateTimeBeltTransaction
                 $time_belt_transaction->playout_hour = $time_belt->playout_hour;
                 $time_belt_transaction->approval_status = $time_belt->approval_status;
                 $time_belt_transaction->payment_status = $time_belt->payment_status;
+                $time_belt_transaction->company_id = $time_belt->broadcaster_id;
                 $time_belt_transaction->save();
 
                 $ad_schedule_service = new AdPatternSchedule($time_belt, $ad_pattern, $time_belt_transaction->id);

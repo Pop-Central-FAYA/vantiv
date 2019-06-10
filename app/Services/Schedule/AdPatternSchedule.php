@@ -26,7 +26,7 @@ class AdPatternSchedule
             foreach ($this->splitHourToAdBreak() as $adbrak){
                 if($adbrak['start_duration'] < $total_new_durations && $adbrak['end_duration'] > $total_new_durations){
                     $last_scheduled_ad = $this->getScheduledAdByAdBreak($adbrak['start_time'])->last();
-                    $order = $last_scheduled_ad->order + 1;
+                    $order = $last_scheduled_ad ? $last_scheduled_ad->order + 1 : 1;
                     $this->scheduleAds($order, $adbrak['start_time'], $this->time_belt->broadcaster_id);
                     break;
                 }
@@ -72,7 +72,7 @@ class AdPatternSchedule
 
     private function scheduleAds($order, $ad_break, $company_id)
     {
-        $schedule = Schedule::where('id', $this->time_belt_transaction_id);
+        $schedule = Schedule::where('id', $this->time_belt_transaction_id)->first();
         $schedule->order = $order + 1;
         $schedule->ad_break = $ad_break;
         $schedule->company_id = $company_id;
