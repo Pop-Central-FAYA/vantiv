@@ -16,11 +16,10 @@ class AdPatternScheduleTest extends TestCase
             'playout_hour' => $time_belt_data->playout_hour,
             'playout_date' => $time_belt_data->playout_date,
             'company_id' => $time_belt_data->broadcaster_id,
-            'duration' => 30
+            'duration' => $time_belt_data->duration
         ]);
-        dd($time_belt_transaction);
         $ad_schedule = new AdPatternSchedule($time_belt_data, 4, $time_belt_transaction->id);
-        dd($ad_schedule->run());
+        $this->assertEquals('success', $ad_schedule->run());
     }
 
     public function timeBeltData()
@@ -28,7 +27,8 @@ class AdPatternScheduleTest extends TestCase
         return [
             'playout_date' => '2019-06-03',
             'playout_hour' => '11:00:00',
-            'broadcaster_id' => factory(Company::class)->create()->id
+            'broadcaster_id' => factory(Company::class)->create()->id,
+            'duration' => 30
         ];
     }
 }

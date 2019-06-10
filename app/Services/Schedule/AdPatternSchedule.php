@@ -67,7 +67,7 @@ class AdPatternSchedule
 
     private function getScheduledAdByAdBreak($ad_break)
     {
-        return $this->getScheduledAds()->where('ad_break', $ad_break)->get();
+        return $this->getScheduledAds()->where('ad_break', $ad_break);
     }
 
     private function scheduleAds($order, $ad_break, $company_id)
