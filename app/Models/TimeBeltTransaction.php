@@ -17,4 +17,9 @@ class TimeBeltTransaction extends Base
     {
         return $this->belongsTo(CampaignDetail::class);
     }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
 }

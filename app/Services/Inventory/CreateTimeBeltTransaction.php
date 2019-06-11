@@ -19,7 +19,6 @@ class CreateTimeBeltTransaction
     {
         \DB::transaction(function () {
             foreach ($this->preselected_time_belt as $time_belt){
-                $ad_pattern = (new GetPublisherSettings($time_belt->broadcaster_id))->run()['ad_pattern']['length'];
                 $time_belt_transaction = new TimeBeltTransaction();
                 $time_belt_transaction->time_belt_id = $time_belt->time_belt_id;
                 $time_belt_transaction->media_program_id = $time_belt->media_program_id;
@@ -36,7 +35,9 @@ class CreateTimeBeltTransaction
                 $time_belt_transaction->company_id = $time_belt->broadcaster_id;
                 $time_belt_transaction->save();
 
-                $ad_schedule_service = new AdPatternSchedule($time_belt, $ad_pattern, $time_belt_transaction->id);
+                $ad_schedule_service = new AdPatternSchedule($time_belt,
+                                            $time_belt_transaction->company->decoded_settings['ad_pattern']['length'],
+                                            $time_belt_transaction->id);
                 $ad_schedule_service->run();
             }
         });
