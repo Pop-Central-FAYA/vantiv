@@ -44,7 +44,7 @@ class PublisherSettings extends Command
         try{
             $settings = [
                 'ad_pattern' => [
-                    'length' => 4,
+                    'length' => $ad_pattern,
                     'unit' => 'breaks',
                     'interval' => '1 hour'
                 ]

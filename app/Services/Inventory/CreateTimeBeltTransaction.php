@@ -19,7 +19,7 @@ class CreateTimeBeltTransaction
     {
         \DB::transaction(function () {
             foreach ($this->preselected_time_belt as $time_belt){
-                $ad_pattern = (new GetPublisherSettings($time_belt->broadcaster_id))->run()['ad_pattern'];
+                $ad_pattern = (new GetPublisherSettings($time_belt->broadcaster_id))->run()['ad_pattern']['length'];
                 $time_belt_transaction = new TimeBeltTransaction();
                 $time_belt_transaction->time_belt_id = $time_belt->time_belt_id;
                 $time_belt_transaction->media_program_id = $time_belt->media_program_id;
