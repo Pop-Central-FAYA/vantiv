@@ -1,6 +1,6 @@
 <?php
 
-namespace Vanguard\Http\Controllers\Agency;
+namespace Vanguard\Http\Controllers\DSPControllers\Agency;
 
 use DB;
 use Vanguard\Mail\SendConfirmationMail;

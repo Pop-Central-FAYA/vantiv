@@ -1,6 +1,6 @@
 <?php
 
-namespace Vanguard\Http\Controllers\MediaPlan;
+namespace Vanguard\Http\Controllers\DSPControllers\MediaPlan;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Vanguard\Http\Controllers\Agency;
+namespace Vanguard\Http\Controllers\DSPControllers\Agency;
 
 use Illuminate\Http\Request;
 use Vanguard\Http\Controllers\Controller;
