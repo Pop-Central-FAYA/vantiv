@@ -1,7 +1,7 @@
 <?php
 $appRoutes = function() {
 
-       Route::get('login', 'Auth\AuthController@getLogin')->name('login');
+       Route::get('login', 'Auth\AuthController@getDspLogin')->name('login');
        Route::post('login', 'Auth\AuthController@postLogin')->name('post.login');
  
        Route::group(['namespace' => 'Agency','prefix' => 'campaigns'], function() {
@@ -134,8 +134,9 @@ $appRoutes = function() {
 
 };
 
-Route::group(['domain' => 'vantage.'. Request::getHost()], $appRoutes); 
-Route::group(['domain' => 'stage.vantage.'. Request::getHost()], $appRoutes ); 
+Route::group(['domain' => 'vantage.'. substr(Request::getHost(), 8)], $appRoutes); 
+Route::group(['domain' => 'stage.vantage.'. substr(Request::getHost(), 14)], $appRoutes ); 
+
 
 
 

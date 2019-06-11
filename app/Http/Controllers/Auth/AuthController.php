@@ -50,6 +50,20 @@ class AuthController extends Controller
         return view('auth.login', compact('socialProviders'));
     }
 
+
+
+   /**
+     * Show the application login form.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getDspLogin()
+    {
+        $socialProviders = config('auth.social.providers');
+        return view('auth.dsp_login', compact('socialProviders'));
+    }
+
+
     /**
      * Handle a login request to the application.
      *

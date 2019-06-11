@@ -7,6 +7,11 @@
 
 Route::group(['domain' => Request::getHost()], function() {
      
+
+Route::get('/pp', function(){
+    return Request::getHost();
+});
+
 Route::get('login', 'Auth\AuthController@getLogin')->name('login');
 Route::post('login', 'Auth\AuthController@postLogin')->name('post.login');
 
