@@ -7,7 +7,11 @@ $factory->define(\Vanguard\Models\Publisher::class, function (Faker $faker) {
         'company_id' => factory(\Vanguard\Models\Company::class)->create()->id,
         'type' => 'tv',
         'settings' => json_encode([
-            'ad_pattern' => 4
+            'ad_pattern' => [
+                'length' => 4,
+                'unit' => 'breaks',
+                'interval' => '1 hour'
+            ]
         ])
     ];
 });
