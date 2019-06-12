@@ -25,4 +25,14 @@ class Publisher extends Base
         return $this->belongsTo('Vanguard\Models\Company');
     }
 
+    public function time_belt_transactions()
+    {
+        return $this->hasMany(TimeBeltTransaction::class, 'company_id', 'company_id');
+    }
+
+    public function getDecodedSettingsAttribute()
+    {
+        return json_decode($this->first()->settings, true);
+    }
+
 }

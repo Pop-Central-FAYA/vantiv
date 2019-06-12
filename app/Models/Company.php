@@ -61,14 +61,4 @@ class Company extends Base
     {
         return $this->hasMany(Schedule::class);
     }
-
-    public function publisher()
-    {
-        return $this->hasOne(Publisher::class);
-    }
-
-    public function getDecodedSettingsAttribute()
-    {
-        return json_decode($this->publisher->first()->settings, true);
-    }
 }

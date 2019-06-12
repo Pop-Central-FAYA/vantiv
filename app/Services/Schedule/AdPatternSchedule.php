@@ -20,7 +20,7 @@ class AdPatternSchedule
 
     public function run()
     {
-        if($this->get_available_space() > $this->time_belt->duration){
+        if($this->getAvailableSpace() > $this->time_belt->duration){
             $total_scheduled_durations = $this->getScheduledAds()->sum('duration');
             $total_new_durations = $total_scheduled_durations + $this->time_belt->duration;
             $this->processScheduleAds($total_new_durations);
@@ -48,7 +48,7 @@ class AdPatternSchedule
      * e.g if the playout hour is 11:00:00, the method returns how many seconds is left
      * for ads to be scheduled
      */
-    private function get_available_space()
+    private function getAvailableSpace()
     {
         $scheduled_duration = $this->getScheduledAds()->sum('duration');
         return self::TOTAL_SCHEDULABLE_DURATION - $scheduled_duration;

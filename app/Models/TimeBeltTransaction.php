@@ -18,8 +18,8 @@ class TimeBeltTransaction extends Base
         return $this->belongsTo(CampaignDetail::class);
     }
 
-    public function company()
+    public function publisher()
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Publisher::class, 'company_id', 'company_id');
     }
 }

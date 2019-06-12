@@ -4,7 +4,6 @@ namespace Vanguard\Services\Inventory;
 
 use Vanguard\Models\TimeBeltTransaction;
 use Vanguard\Services\Schedule\AdPatternSchedule;
-use Vanguard\Services\Schedule\GetPublisherSettings;
 
 class CreateTimeBeltTransaction
 {
@@ -36,7 +35,7 @@ class CreateTimeBeltTransaction
                 $time_belt_transaction->save();
 
                 $ad_schedule_service = new AdPatternSchedule($time_belt,
-                                            $time_belt_transaction->company->decoded_settings['ad_pattern']['length'],
+                                            $time_belt_transaction->publisher->decoded_settings['ad_pattern']['length'],
                                             $time_belt_transaction->id);
                 $ad_schedule_service->run();
             }
