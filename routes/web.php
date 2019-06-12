@@ -13,8 +13,8 @@ Route::post('login', 'Auth\AuthController@postLogin')->name('post.login');
 Route::get('/auth-broadcaster/signup', 'BroadcasterAuthController@getRegister')->name('broadcaster.register.form');
 Route::post('/auth-broadcaster/signup/process', 'BroadcasterAuthController@postRegister')->name('broadcaster.signup');
 
-Route::get('/auth-agent/signup', 'Agency\AgencyAuthController@getRegister')->name('agency.register.form');
-Route::post('/auth-agent/signup/process', 'Agency\AgencyAuthController@postRegister')->name('agency.signup');
+Route::get('/auth-agent/signup', 'Dsp\AgencyAuthController@getRegister')->name('agency.register.form');
+Route::post('/auth-agent/signup/process', 'Dsp\AgencyAuthController@postRegister')->name('agency.signup');
 
 Route::get('/auth-advertiser/signup', 'Advertiser\AdvertiserAuthController@getRegister')->name('advertiser.register.form');
 Route::post('/auth-advertiser/signup/process', 'Advertiser\AdvertiserAuthController@postRegister')->name('advertiser.signup');
@@ -398,7 +398,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::group(['prefix' => 'agency'], function() {
 
 
-        Route::group(['namespace' => 'DSPControllers\Agency','prefix' => 'campaigns'], function() {
+        Route::group(['namespace' => 'Dsp','prefix' => 'campaigns'], function() {
             Route::get('/all-campaigns/active', 'CampaignsController@index')->name('agency.campaign.all');
             Route::get('/all-campaign/data', 'CampaignsController@getData');
             Route::get('/all-clients', 'CampaignsController@allClient')->name('agency.campaign.create');
@@ -435,13 +435,13 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/information-update/{campaign_id}', 'CampaignsController@updateAgencyCampaignInformation')->name('agency.campaign_information.update');
         });
 
-        Route::get('/campaign-details/{user_id}', 'DSPControllers\Agency\CampaignsController@filterByUser');
+        Route::get('/campaign-details/{user_id}', 'Dsp\CampaignsController@filterByUser');
 
         /*
          * User Management
          */
 
-        Route::get('/user/manage', 'DSPControllers\Agency\UserManagementController@index')->name('agency.user_management');
+        Route::get('/user/manage', 'Dsp\UserManagementController@index')->name('agency.user_management');
 
 
         /**
@@ -468,7 +468,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/export/pdf/{id}', 'InvoiceController@exportToPDF')->name('invoice.export');
         });
 
-        Route::group(['namespace' => 'DSPControllers\Agency','prefix' => 'wallets'], function(){
+        Route::group(['namespace' => 'Dsp','prefix' => 'wallets'], function(){
             Route::get('/wallet/credit', 'WalletsController@create')->name('agency_wallet.create');
             Route::get('/wallet-statement', 'WalletsController@index')->name('agency_wallet.statement');
             Route::post('/wallet/amount', 'WalletsController@getAmount')->name('wallet.amount');
@@ -477,7 +477,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/get-wallet/data', 'WalletsController@getData');
         });
 
-        Route::group(['namespace' => 'DSPControllers\Agency','prefix' => 'reports'], function(){
+        Route::group(['namespace' => 'Dsp','prefix' => 'reports'], function(){
             Route::get('/', 'ReportsController@index')->name('reports.index');
             Route::get('/campaign/all-data', 'ReportsController@getCampaign');
             Route::get('/revenue/all-data', 'ReportsController@getRevenue');
@@ -487,7 +487,7 @@ Route::group(['middleware' => 'auth'], function () {
         /**
          * Media Planning
          */
-        Route::group(['namespace' => 'DSPControllers\MediaPlan', 'prefix' => 'media-plan'], function () {
+        Route::group(['namespace' => 'Dsp\MediaPlan', 'prefix' => 'media-plan'], function () {
             Route::get('/', 'MediaPlanController@index')->name('agency.media_plans');
             Route::get('/dashboard/list', 'MediaPlanController@dashboardMediaPlans');
             Route::get('/create', 'MediaPlanController@criteriaForm')->name('agency.media_plan.criteria_form');
@@ -519,23 +519,26 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/delete/{id}', 'MediaAssetsController@deleteAsset');
         });
 
-        /**
-         * User Management
-         */
+         /**
+    * User Management
+    */
 
-        Route::group(['prefix' => 'user'], function() {
-            Route::get('/all', 'Agency\UserController@index')->name('agency.user.index');
-            Route::get('/invite', 'Agency\UserController@inviteUser')->name('agency.user.invite');
-            Route::get('/edit/{id}', 'Agency\UserController@editUser')->name('agency.user.edit');
-            Route::post('/update/{id}', 'Agency\UserController@updateUser');
-            Route::post('/invite/store', 'Agency\UserController@processInvite');
-            Route::get('/data-table', 'Agency\UserController@getDatatable');
-            Route::post('/resend/invitation', 'Agency\UserController@resendInvitation');
-            Route::get('/status/update', 'Agency\UserController@updateStatus');
-        });
+   Route::group(['namespace' => 'Dsp','prefix' => 'user'], function() {
+    Route::get('/all', 'UserController@index')->name('agency.user.index');
+    Route::get('/invite', 'UserController@inviteUser')->name('agency.user.invite');
+    Route::get('/edit/{id}', 'UserController@editUser')->name('agency.user.edit');
+    Route::post('/update/{id}', 'UserController@updateUser');
+    Route::post('/invite/store', 'UserController@processInvite');
+    Route::get('/data-table', 'UserController@getDatatable');
+    Route::post('/resend/invitation', 'UserController@resendInvitation');
+    Route::get('/status/update', 'UserController@updateStatus');
+});
+
+
+
     });
 
-    Route::group(['namespace' => 'DSPControllers\Agency','prefix' => 'wallets'], function(){
+    Route::group(['namespace' => 'Dsp','prefix' => 'wallets'], function(){
         Route::get('/wallet/credit', 'WalletsController@create')->name('wallet.create');
         Route::get('/wallet-statement', 'WalletsController@index')->name('wallet.statement');
         Route::post('/wallet/amount', 'WalletsController@getAmount')->name('wallet.amount');
