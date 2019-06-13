@@ -18,6 +18,11 @@
         <div class="sub_header clearfix mb pt">
             <div class="column col_6">
                 <h2 class="sub_header">Create Media Plan</h2>
+
+                 @if(Auth::user()->hasPermissionTo('create.wallet'))
+                 <h2 class="sub_header">Action</h2>
+                    @endif
+
             </div>
         </div>
 

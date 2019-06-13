@@ -394,9 +394,9 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::group(['prefix' => 'agency'], function() {
         Route::group(['prefix' => 'campaigns'], function() {
-            Route::get('/all-campaigns/active', 'Agency\CampaignsController@index')->name('agency.campaign.all');
+            Route::get('/all-campaigns/active', 'Agency\CampaignsController@index')->name('agency.campaign.all')->middleware('permission:view.campaign');
             Route::get('/all-campaign/data', 'Agency\CampaignsController@getData');
-            Route::get('/all-clients', 'Agency\CampaignsController@allClient')->name('agency.campaign.create');
+            Route::get('/all-clients', 'Agency\CampaignsController@allClient')->name('agency.campaign.create')->middleware('permission:create.campaign');
             Route::get('/all-client/data', 'Agency\CampaignsController@clientData');
             Route::get('/campaign/step1', 'Agency\CampaignsController@getStep1')->name('agency_campaign.step1');
             Route::post('/campaign/step1/store', 'Agency\CampaignsController@postStep1')->name('agency_campaign.store1');
@@ -419,7 +419,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/campaign/submit/{id}', 'Agency\CampaignsController@postCampaign')->name('agency_submit.campaign');
 
 
-            Route::get('/campaign-details/{id}', 'Agency\CampaignsController@getDetails')->name('agency.campaign.details');
+            Route::get('/campaign-details/{id}', 'Agency\CampaignsController@getDetails')->name('agency.campaign.details')->middleware('permission:view.campaign');
             Route::get('/mpo-details/{id}', 'Agency\CampaignsController@mpoDetails')->name('agency.mpo.details');
 
             Route::get('/this/campaign-details/{campaign_id}', 'Agency\CampaignsController@filterByCampaignId');
@@ -443,33 +443,33 @@ Route::group(['middleware' => 'auth'], function () {
          * Clients
          */
         Route::group(['prefix' => 'clients'], function () {
-            Route::get('/list', 'ClientsController@clients')->name('clients.list');
-            Route::get('/client/{client_id}', 'ClientsController@clientShow')->name('client.show');
+            Route::get('/list', 'ClientsController@clients')->name('clients.list')->middleware('permission:view.client');
+            Route::get('/client/{client_id}', 'ClientsController@clientShow')->name('client.show')->middleware('permission:view.client');
             Route::get('/client/brand/{id}', 'ClientsController@getClientBrands')->name('client_brands');
             Route::get('/client/{client_id}/{user_id}', 'ClientsController@getCampaignData');
             Route::get('/client-month/{client_id}', 'ClientsController@filterByDate')->name('client.date');
             Route::get('/client-yearly/{client_id}', 'ClientsController@filterByYear')->name('client.year');
             Route::get('/client-brand/{id}/{client_id}', 'ClientsController@brandCampaign')->name('campaign.brand.client');
-            Route::post('/update-client/{client_id}', 'ClientsController@updateClients')->name('agency.client.update');
+            Route::post('/update-client/{client_id}', 'ClientsController@updateClients')->name('agency.client.update')->middleware('permission:update.client');
         });
 
         Route::group(['prefix' => 'invoices'], function () {
-            Route::get('/all', 'InvoiceController@all')->name('invoices.all');
+            Route::get('/all', 'InvoiceController@all')->name('invoices.all')->middleware('permission:view.invoice');
             Route::get('/data', 'InvoiceController@getInvoiceDate');
             Route::get('/pending/data', 'InvoiceController@pendingData');
             Route::get('/pending', 'InvoiceController@pending')->name('invoices.pending');
-            Route::post('/{invoice_id}/update', 'InvoiceController@approveInvoice')->name('invoices.update');
+            Route::post('/{invoice_id}/update', 'InvoiceController@approveInvoice')->name('invoices.update')->middleware('permission:view.invoice');
             Route::get('/details/{id}', 'InvoiceController@getInvoiceDetails')->name('invoice.details');
             Route::get('/export/pdf/{id}', 'InvoiceController@exportToPDF')->name('invoice.export');
         });
 
         Route::group(['prefix' => 'wallets'], function(){
-            Route::get('/wallet/credit', 'Agency\WalletsController@create')->name('agency_wallet.create');
-            Route::get('/wallet-statement', 'Agency\WalletsController@index')->name('agency_wallet.statement');
+            Route::get('/wallet/credit', 'Agency\WalletsController@create')->name('wallet.create')->middleware('permission:create.wallet');
+            Route::get('/wallet-statement', 'Agency\WalletsController@index')->name('wallet.statement')->middleware('permission:view.wallet');
             Route::post('/wallet/amount', 'Agency\WalletsController@getAmount')->name('wallet.amount');
-            Route::get('/wallet/amount/pay', 'Agency\WalletsController@getPay')->name('amount.pay');
+            Route::get('/wallet/amount/pay', 'Agency\WalletsController@getPay')->name('amount.pay')->middleware('permission:view.wallet');
             Route::post('/pay', 'Agency\WalletsController@pay')->name('pay');
-            Route::get('/get-wallet/data', 'Agency\WalletsController@getData');
+            Route::get('/get-wallet/data', 'Agency\WalletsController@getData')->middleware('permission:view.wallet');
         });
 
         Route::group(['prefix' => 'reports'], function(){
@@ -485,48 +485,47 @@ Route::group(['middleware' => 'auth'], function () {
         Route::group(['prefix' => 'media-plan'], function () {
             Route::get('/', 'MediaPlan\MediaPlanController@index')->name('agency.media_plans');
             Route::get('/dashboard/list', 'MediaPlan\MediaPlanController@dashboardMediaPlans');
-            Route::get('/create', 'MediaPlan\MediaPlanController@criteriaForm')->name('agency.media_plan.criteria_form');
+            Route::get('/create', 'MediaPlan\MediaPlanController@criteriaForm')->name('agency.media_plan.criteria_form')->middleware('permission:create.media_plan');
             Route::post('/create-plan', 'MediaPlan\MediaPlanController@generateRatingsPost')->name('agency.media_plan.suggestPlan');
-            Route::get('/summary/{id}', 'MediaPlan\MediaPlanController@summary')->name('agency.media_plan.summary');
-            Route::get('/approve/{id}', 'MediaPlan\MediaPlanController@approvePlan')->name('agency.media_plan.approve');
-            Route::get('/decline/{id}', 'MediaPlan\MediaPlanController@declinePlan')->name('agency.media_plan.decline');
-            Route::get('/customise/{id}', 'MediaPlan\MediaPlanController@getSuggestPlanById')->name('agency.media_plan.customize');
-            Route::get('/vue/customise/{id}', 'MediaPlan\MediaPlanController@getSuggestPlanByIdVue');
+            Route::get('/summary/{id}', 'MediaPlan\MediaPlanController@summary')->name('agency.media_plan.summary')->middleware('permission:create.media_plan');
+            Route::get('/approve/{id}', 'MediaPlan\MediaPlanController@approvePlan')->name('agency.media_plan.approve')->middleware('permission:create.media_plan');
+            Route::get('/decline/{id}', 'MediaPlan\MediaPlanController@declinePlan')->name('agency.media_plan.decline')->middleware('permission:create.media_plan');
+            Route::get('/customise/{id}', 'MediaPlan\MediaPlanController@getSuggestPlanById')->name('agency.media_plan.customize')->middleware('permission:update.media_plan');
+            Route::get('/vue/customise/{id}', 'MediaPlan\MediaPlanController@getSuggestPlanByIdVue')->middleware('permission:create.media_plan')->middleware('permission:update.media_plan');
 
             Route::post('/customise-filter', 'MediaPlan\MediaPlanController@setPlanSuggestionFilters')->name('agency.media_plan.customize-filter');
 
             Route::post('/select_plan', 'MediaPlan\MediaPlanController@SelectPlanPost');
-            Route::get('/createplan/{id}', 'MediaPlan\MediaPlanController@CreatePlan')->name('agency.media_plan.create');
+            Route::get('/createplan/{id}', 'MediaPlan\MediaPlanController@CreatePlan')->name('agency.media_plan.create')->middleware('permission:create.media_plan');
             Route::post('/finish_plan', 'MediaPlan\MediaPlanController@CompletePlan');
-            Route::get('/export/{id}', 'MediaPlan\MediaPlanController@exportPlan')->name('agency.media_plan.export');
+            Route::get('/export/{id}', 'MediaPlan\MediaPlanController@exportPlan')->name('agency.media_plan.export')->middleware('permission:submit.media_plan');
             Route::post('/store-programs', 'MediaPlan\MediaPlanController@storePrograms')->name('media_plan.program.store');
             Route::post('/store-volume-discount', 'MediaPlan\MediaPlanController@storeVolumeDiscount')->name('media_plan.volume_discount.store');
         });
         
-
 
         /**
          * User Management
          */
 
         Route::group(['prefix' => 'user'], function() {
-            Route::get('/all', 'Agency\UserController@index')->name('agency.user.index');
-            Route::get('/invite', 'Agency\UserController@inviteUser')->name('agency.user.invite');
-            Route::get('/edit/{id}', 'Agency\UserController@editUser')->name('agency.user.edit');
+            Route::get('/all', 'Agency\UserController@index')->name('agency.user.index')->middleware('permission:view.user');
+            Route::get('/invite', 'Agency\UserController@inviteUser')->name('agency.user.invite')->middleware('permission:create.user');
+            Route::get('/edit/{id}', 'Agency\UserController@editUser')->name('agency.user.edit')->middleware('permission:update.user');
             Route::post('/update/{id}', 'Agency\UserController@updateUser');
             Route::post('/invite/store', 'Agency\UserController@processInvite');
-            Route::get('/data-table', 'Agency\UserController@getDatatable');
+            Route::get('/data-table', 'Agency\UserController@getDatatable')->middleware('permission:view.user');
             Route::post('/resend/invitation', 'Agency\UserController@resendInvitation');
-            Route::get('/status/update', 'Agency\UserController@updateStatus');
+            Route::get('/status/update', 'Agency\UserController@updateStatus')->middleware('permission:update.user');
         });
     });
 
     Route::group(['prefix' => 'wallets'], function(){
-        Route::get('/wallet/credit', 'Agency\WalletsController@create')->name('wallet.create');
-        Route::get('/wallet-statement', 'Agency\WalletsController@index')->name('wallet.statement');
+        Route::get('/wallet/credit', 'Agency\WalletsController@create')->name('wallet.create')->middleware('permission:create.wallet');
+        Route::get('/wallet-statement', 'Agency\WalletsController@index')->name('wallet.statement')->middleware('permission:view.wallet');
         Route::post('/wallet/amount', 'Agency\WalletsController@getAmount')->name('wallet.amount');
         Route::get('/wallet/amount/pay', 'Agency\WalletsController@getPay')->name('amount.pay');
-        Route::post('/pay', 'Agency\WalletsController@pay')->name('pay');
+        Route::post('/pay', 'Agency\WalletsController@pay')->name('pay')->middleware('permission:create.wallet');
         Route::get('/get-wallet/data', 'Agency\WalletsController@getData');
     });
 
