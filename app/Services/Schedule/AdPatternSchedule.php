@@ -20,21 +20,22 @@ class AdPatternSchedule
 
     public function run()
     {
-        if($this->getAvailableSpace() > $this->time_belt->duration){
-            $total_scheduled_durations = $this->getScheduledAds()->sum('duration');
+        $get_scheduled_ads = $this->getScheduledAds();
+        if($this->getAvailableSpace($get_scheduled_ads) > $this->time_belt->duration){
+            $total_scheduled_durations = $get_scheduled_ads->sum('duration');
             $total_new_durations = $total_scheduled_durations + $this->time_belt->duration;
-            $this->processScheduleAds($total_new_durations);
+            $this->processScheduleAds($get_scheduled_ads, $total_new_durations);
             return 'success';
         }else{
             return 'error';
         }
     }
 
-    private function processScheduleAds($total_new_durations)
+    private function processScheduleAds($get_scheduled_ads, $total_new_durations)
     {
         foreach ($this->splitHourToAdBreak() as $adbreak){
             if($adbreak['start_duration'] < $total_new_durations && $adbreak['end_duration'] > $total_new_durations){
-                $last_scheduled_ad = $this->getScheduledAdByAdBreak($adbreak['start_time'])->last();
+                $last_scheduled_ad = $this->getScheduledAdByAdBreak($get_scheduled_ads, $adbreak['start_time'])->last();
                 $order = $last_scheduled_ad ? $last_scheduled_ad->order + 1 : 1;
                 $this->scheduleAds($order, $adbreak['start_time'], $this->time_belt->broadcaster_id);
                 break;
@@ -48,9 +49,9 @@ class AdPatternSchedule
      * e.g if the playout hour is 11:00:00, the method returns how many seconds is left
      * for ads to be scheduled
      */
-    private function getAvailableSpace()
+    private function getAvailableSpace($get_scheduled_ads)
     {
-        $scheduled_duration = $this->getScheduledAds()->sum('duration');
+        $scheduled_duration = $get_scheduled_ads->sum('duration');
         return self::TOTAL_SCHEDULABLE_DURATION - $scheduled_duration;
     }
 
@@ -101,9 +102,9 @@ class AdPatternSchedule
      * @return mixed
      * Returns the scheduled ad based on the supplied ad_break
      */
-    private function getScheduledAdByAdBreak($ad_break)
+    private function getScheduledAdByAdBreak($get_scheduled_ads,$ad_break)
     {
-        return $this->getScheduledAds()->where('ad_break', $ad_break);
+        return $get_scheduled_ads->where('ad_break', $ad_break);
     }
 
     /**
