@@ -1,6 +1,6 @@
 <?php
 
-namespace Vanguard\Http\Controllers\Agency;
+namespace Vanguard\Http\Controllers\Dsp;
 
 use Session;
 use Illuminate\Http\Request;
