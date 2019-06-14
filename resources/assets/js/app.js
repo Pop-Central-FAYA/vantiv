@@ -29,12 +29,18 @@ window.Event = new Vue();
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+// MEDIA PLANNING
 Vue.component('media-plan-suggestion-table', require('./components/media_plan/customise/SuggestionTable.vue'));
 Vue.component('media-plan-suggestion-graph', require('./components/media_plan/customise/SuggestionGraph.vue'));
 Vue.component('media-plan-suggestion-selected', require('./components/media_plan/customise/SelectedSuggestions.vue'));
 Vue.component('media-plan-suggestion-filter', require('./components/media_plan/customise/FilterSuggestions.vue'));
 Vue.component('media-plan-footer-nav', require('./components/media_plan/customise/FooterNavigation.vue'));
 Vue.component('media-plan-suggestions', require('./components/media_plan/customise/Suggestions.vue'));
+// ASSET MANAGEMENT
+Vue.component('media-asset-upload', require('./components/asset_management/Upload.vue'));
+Vue.component('media-asset-display', require('./components/asset_management/DisplayAssets.vue'));
+
+
 
 Vue.mixin({
     methods: {

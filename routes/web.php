@@ -4,14 +4,17 @@
  * Authentication
  */
 
-Route::get('login', 'Auth\AuthController@getLogin')->name('login');
-Route::post('login', 'Auth\AuthController@postLogin')->name('post.login');
+
+Route::group(['domain' => Request::getHost()], function() {
+
+Route::get('/login', 'Auth\AuthController@getLogin')->name('login');
+Route::post('/login', 'Auth\AuthController@postLogin')->name('post.login');
 
 Route::get('/auth-broadcaster/signup', 'BroadcasterAuthController@getRegister')->name('broadcaster.register.form');
 Route::post('/auth-broadcaster/signup/process', 'BroadcasterAuthController@postRegister')->name('broadcaster.signup');
 
-Route::get('/auth-agent/signup', 'Agency\AgencyAuthController@getRegister')->name('agency.register.form');
-Route::post('/auth-agent/signup/process', 'Agency\AgencyAuthController@postRegister')->name('agency.signup');
+Route::get('/auth-agent/signup', 'Dsp\AgencyAuthController@getRegister')->name('agency.register.form');
+Route::post('/auth-agent/signup/process', 'Dsp\AgencyAuthController@postRegister')->name('agency.signup');
 
 Route::get('/auth-advertiser/signup', 'Advertiser\AdvertiserAuthController@getRegister')->name('advertiser.register.form');
 Route::post('/auth-advertiser/signup/process', 'Advertiser\AdvertiserAuthController@postRegister')->name('advertiser.signup');
@@ -393,50 +396,52 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/client/get-brands/{id}', 'BrandsController@getBrandsWithClients');
 
     Route::group(['prefix' => 'agency'], function() {
-        Route::group(['prefix' => 'campaigns'], function() {
-            Route::get('/all-campaigns/active', 'Agency\CampaignsController@index')->name('agency.campaign.all')->middleware('permission:view.campaign');
-            Route::get('/all-campaign/data', 'Agency\CampaignsController@getData');
-            Route::get('/all-clients', 'Agency\CampaignsController@allClient')->name('agency.campaign.create')->middleware('permission:create.campaign');
-            Route::get('/all-client/data', 'Agency\CampaignsController@clientData');
-            Route::get('/campaign/step1', 'Agency\CampaignsController@getStep1')->name('agency_campaign.step1');
-            Route::post('/campaign/step1/store', 'Agency\CampaignsController@postStep1')->name('agency_campaign.store1');
-            Route::get('/campaigns/step2/{id}', 'Agency\CampaignsController@getStep2')->name('agency_campaign.step2');
-            Route::get('/campaign/step3/{id}', 'Agency\CampaignsController@getStep3')->name('agency_campaign.step3');
-            Route::get('/campaign/step3/store/{id}', 'Agency\CampaignsController@postStep3')->name('agency_campaign.store3');
-            Route::get('/campaign/step3/1/{id}', 'Agency\CampaignsController@getStep3_1')->name('agency_campaign.step3_1');
-            Route::get('/campaign/step3/store/1/{id}', 'Agency\CampaignsController@postStep3_1')->name('agency_campaign.store3_1');
-            Route::get('/campaign/step3/2/{id}', 'Agency\CampaignsController@getStep3_2')->name('agency_campaign.step3_2');
-            Route::post('/campaign/step3/store/2/{id}/{broadcaster}', 'Agency\CampaignsController@postStep3_2')->name('agency_campaign.store3_2');
-            Route::get('/campaign/step3/3/{id}/{broadcaster}', 'Agency\CampaignsController@getStep3_3')->name('agency_campaign.step3_3');
-            Route::post('/campaign/step3/store/3/{id}/{broadcaster}', 'Agency\CampaignsController@postStep3_3')->name('agency_campaign.store3_3');
-            Route::post('/campaign/step3/store/new-uploads/{id}/{broadcaster}', 'Agency\CampaignsController@postNewUploads')->name('new.upload');
-            Route::get('/camaigns/uploads/delete/{upload_id}/{id}', 'Agency\CampaignsController@deleteUpload')->name('agency.uploads.delete');
-            Route::get('/review-uploads/{id}/{broadcaster}', 'Agency\CampaignsController@reviewUploads')->name('agency_campaign.review_uploads');
-            Route::get('/campaign/step4/{id}/{broadcaster}/{start_date}/{end_date}', 'Agency\CampaignsController@getStep4')->name('agency_campaign.step4');
-            Route::get('/campaigns/cart/store', 'Agency\CampaignsController@postPreselectedAdslot')->name('agency_campaign.cart');
-            Route::get('/campaign/checkout/{id}', 'Agency\CampaignsController@checkout')->name('agency_campaign.checkout');
-            Route::get('/cart/remove/{id}', 'Agency\CampaignsController@removeCart')->name('agency_cart.remove');
-            Route::post('/campaign/submit/{id}', 'Agency\CampaignsController@postCampaign')->name('agency_submit.campaign');
 
 
-            Route::get('/campaign-details/{id}', 'Agency\CampaignsController@getDetails')->name('agency.campaign.details')->middleware('permission:view.campaign');
-            Route::get('/mpo-details/{id}', 'Agency\CampaignsController@mpoDetails')->name('agency.mpo.details');
+        Route::group(['namespace' => 'Dsp','prefix' => 'campaigns'], function() {
+            Route::get('/all-campaigns/active', 'CampaignsController@index')->name('agency.campaign.all')->middleware('permission:view.campaign');
+            Route::get('/all-campaign/data', 'CampaignsController@getData');
+            Route::get('/all-clients', 'CampaignsController@allClient')->name('agency.campaign.create');
+            Route::get('/all-client/data', 'CampaignsController@clientData');
+            Route::get('/campaign/step1', 'CampaignsController@getStep1')->name('agency_campaign.step1')->middleware('permission:create.campaign');
+            Route::post('/campaign/step1/store', 'CampaignsController@postStep1')->name('agency_campaign.store1');
+            Route::get('/campaigns/step2/{id}', 'CampaignsController@getStep2')->name('agency_campaign.step2');
+            Route::get('/campaign/step3/{id}', 'CampaignsController@getStep3')->name('agency_campaign.step3');
+            Route::get('/campaign/step3/store/{id}', 'CampaignsController@postStep3')->name('agency_campaign.store3');
+            Route::get('/campaign/step3/1/{id}', 'CampaignsController@getStep3_1')->name('agency_campaign.step3_1');
+            Route::get('/campaign/step3/store/1/{id}', 'CampaignsController@postStep3_1')->name('agency_campaign.store3_1');
+            Route::get('/campaign/step3/2/{id}', 'CampaignsController@getStep3_2')->name('agency_campaign.step3_2');
+            Route::post('/campaign/step3/store/2/{id}/{broadcaster}', 'CampaignsController@postStep3_2')->name('agency_campaign.store3_2');
+            Route::get('/campaign/step3/3/{id}/{broadcaster}', 'CampaignsController@getStep3_3')->name('agency_campaign.step3_3');
+            Route::post('/campaign/step3/store/3/{id}/{broadcaster}', 'CampaignsController@postStep3_3')->name('agency_campaign.store3_3');
+            Route::post('/campaign/step3/store/new-uploads/{id}/{broadcaster}', 'CampaignsController@postNewUploads')->name('new.upload');
+            Route::get('/camaigns/uploads/delete/{upload_id}/{id}', 'CampaignsController@deleteUpload')->name('agency.uploads.delete');
+            Route::get('/review-uploads/{id}/{broadcaster}', 'CampaignsController@reviewUploads')->name('agency_campaign.review_uploads');
+            Route::get('/campaign/step4/{id}/{broadcaster}/{start_date}/{end_date}', 'CampaignsController@getStep4')->name('agency_campaign.step4');
+            Route::get('/campaigns/cart/store', 'CampaignsController@postPreselectedAdslot')->name('agency_campaign.cart');
+            Route::get('/campaign/checkout/{id}', 'CampaignsController@checkout')->name('agency_campaign.checkout');
+            Route::get('/cart/remove/{id}', 'CampaignsController@removeCart')->name('agency_cart.remove');
+            Route::post('/campaign/submit/{id}', 'CampaignsController@postCampaign')->name('agency_submit.campaign');
 
-            Route::get('/this/campaign-details/{campaign_id}', 'Agency\CampaignsController@filterByCampaignId');
-            Route::get('/media-channel/{campaign_id}', 'Agency\CampaignsController@getMediaChannel');
-            Route::get('/compliance-graph', 'Agency\CampaignsController@campaignBudgetGraph');
-            Route::get('/compliance-graph/filter', 'Agency\CampaignsController@complianceGraph')->name('campaign_details.compliance');
 
-            Route::post('/information-update/{campaign_id}', 'Agency\CampaignsController@updateAgencyCampaignInformation')->name('agency.campaign_information.update');
+            Route::get('/campaign-details/{id}', 'CampaignsController@getDetails')->name('agency.campaign.details');
+            Route::get('/mpo-details/{id}', 'CampaignsController@mpoDetails')->name('agency.mpo.details');
+
+            Route::get('/this/campaign-details/{campaign_id}', 'CampaignsController@filterByCampaignId');
+            Route::get('/media-channel/{campaign_id}', 'CampaignsController@getMediaChannel');
+            Route::get('/compliance-graph', 'CampaignsController@campaignBudgetGraph');
+            Route::get('/compliance-graph/filter', 'CampaignsController@complianceGraph')->name('campaign_details.compliance');
+
+            Route::post('/information-update/{campaign_id}', 'CampaignsController@updateAgencyCampaignInformation')->name('agency.campaign_information.update');
         });
 
-        Route::get('/campaign-details/{user_id}', 'Agency\CampaignsController@filterByUser');
+        Route::get('/campaign-details/{user_id}', 'Dsp\CampaignsController@filterByUser');
 
         /*
          * User Management
          */
 
-        Route::get('/user/manage', 'Agency\UserManagementController@index')->name('agency.user_management');
+        Route::get('/user/manage', 'Dsp\UserManagementController@index')->name('agency.user_management');
 
 
         /**
@@ -463,70 +468,83 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/export/pdf/{id}', 'InvoiceController@exportToPDF')->name('invoice.export');
         });
 
-        Route::group(['prefix' => 'wallets'], function(){
-            Route::get('/wallet/credit', 'Agency\WalletsController@create')->name('wallet.create')->middleware('permission:create.wallet');
-            Route::get('/wallet-statement', 'Agency\WalletsController@index')->name('wallet.statement')->middleware('permission:view.wallet');
-            Route::post('/wallet/amount', 'Agency\WalletsController@getAmount')->name('wallet.amount');
-            Route::get('/wallet/amount/pay', 'Agency\WalletsController@getPay')->name('amount.pay')->middleware('permission:view.wallet');
-            Route::post('/pay', 'Agency\WalletsController@pay')->name('pay');
-            Route::get('/get-wallet/data', 'Agency\WalletsController@getData')->middleware('permission:view.wallet');
+        Route::group(['namespace' => 'Dsp','prefix' => 'wallets'], function(){
+            Route::get('/wallet/credit', 'WalletsController@create')->name('agency_wallet.create')->middleware('permission:create.wallet');
+            Route::get('/wallet-statement', 'WalletsController@index')->name('agency_wallet.statement')->middleware('permission:view.wallet');
+            Route::post('/wallet/amount', 'WalletsController@getAmount')->name('wallet.amount');
+            Route::get('/wallet/amount/pay', 'WalletsController@getPay')->name('amount.pay');
+            Route::post('/pay', 'WalletsController@pay')->name('pay');
+            Route::get('/get-wallet/data', 'WalletsController@getData');
         });
 
-        Route::group(['prefix' => 'reports'], function(){
-            Route::get('/', 'Agency\ReportsController@index')->name('reports.index');
-            Route::get('/campaign/all-data', 'Agency\ReportsController@getCampaign');
-            Route::get('/revenue/all-data', 'Agency\ReportsController@getRevenue');
-//                Route::get('/client-filter/campaign', 'Agency\ReportsController@filterCampaignClient')->name('filter.client');
+        Route::group(['namespace' => 'Dsp','prefix' => 'reports'], function(){
+            Route::get('/', 'ReportsController@index')->name('reports.index');
+            Route::get('/campaign/all-data', 'ReportsController@getCampaign');
+            Route::get('/revenue/all-data', 'ReportsController@getRevenue');
+//          Route::get('/client-filter/campaign', 'Agency\ReportsController@filterCampaignClient')->name('filter.client');
         });
 
         /**
          * Media Planning
          */
-        Route::group(['prefix' => 'media-plan'], function () {
-            Route::get('/', 'MediaPlan\MediaPlanController@index')->name('agency.media_plans');
-            Route::get('/dashboard/list', 'MediaPlan\MediaPlanController@dashboardMediaPlans');
-            Route::get('/create', 'MediaPlan\MediaPlanController@criteriaForm')->name('agency.media_plan.criteria_form')->middleware('permission:create.media_plan');
-            Route::post('/create-plan', 'MediaPlan\MediaPlanController@generateRatingsPost')->name('agency.media_plan.suggestPlan');
-            Route::get('/summary/{id}', 'MediaPlan\MediaPlanController@summary')->name('agency.media_plan.summary')->middleware('permission:create.media_plan');
-            Route::get('/approve/{id}', 'MediaPlan\MediaPlanController@approvePlan')->name('agency.media_plan.approve')->middleware('permission:create.media_plan');
-            Route::get('/decline/{id}', 'MediaPlan\MediaPlanController@declinePlan')->name('agency.media_plan.decline')->middleware('permission:create.media_plan');
-            Route::get('/customise/{id}', 'MediaPlan\MediaPlanController@getSuggestPlanById')->name('agency.media_plan.customize')->middleware('permission:update.media_plan');
-            Route::get('/vue/customise/{id}', 'MediaPlan\MediaPlanController@getSuggestPlanByIdVue')->middleware('permission:create.media_plan')->middleware('permission:update.media_plan');
+        Route::group(['namespace' => 'Dsp\MediaPlan', 'prefix' => 'media-plan'], function () {
+            Route::get('/', 'MediaPlanController@index')->name('agency.media_plans');
+            Route::get('/dashboard/list', 'MediaPlanController@dashboardMediaPlans');
+            Route::get('/create', 'MediaPlanController@criteriaForm')->name('agency.media_plan.criteria_form')->middleware('permission:create.media_plan');
+            Route::post('/create-plan', 'MediaPlanController@generateRatingsPost')->name('agency.media_plan.suggestPlan');
+            Route::get('/summary/{id}', 'MediaPlanController@summary')->name('agency.media_plan.summary')->middleware('permission:create.media_plan');
+            Route::get('/approve/{id}', 'MediaPlanController@approvePlan')->name('agency.media_plan.approve')->middleware('permission:create.media_plan');
+            Route::get('/decline/{id}', 'MediaPlanController@declinePlan')->name('agency.media_plan.decline')->middleware('permission:create.media_plan');
+            Route::get('/customise/{id}', 'MediaPlanController@getSuggestPlanById')->name('agency.media_plan.customize')->middleware('permission:update.media_plan');
+            Route::get('/vue/customise/{id}', 'MediaPlanController@getSuggestPlanByIdVue');
 
-            Route::post('/customise-filter', 'MediaPlan\MediaPlanController@setPlanSuggestionFilters')->name('agency.media_plan.customize-filter');
+            Route::post('/customise-filter', 'MediaPlanController@setPlanSuggestionFilters')->name('agency.media_plan.customize-filter');
 
-            Route::post('/select_plan', 'MediaPlan\MediaPlanController@SelectPlanPost');
-            Route::get('/createplan/{id}', 'MediaPlan\MediaPlanController@CreatePlan')->name('agency.media_plan.create')->middleware('permission:create.media_plan');
-            Route::post('/finish_plan', 'MediaPlan\MediaPlanController@CompletePlan');
-            Route::get('/export/{id}', 'MediaPlan\MediaPlanController@exportPlan')->name('agency.media_plan.export')->middleware('permission:submit.media_plan');
-            Route::post('/store-programs', 'MediaPlan\MediaPlanController@storePrograms')->name('media_plan.program.store');
-            Route::post('/store-volume-discount', 'MediaPlan\MediaPlanController@storeVolumeDiscount')->name('media_plan.volume_discount.store');
+            Route::post('/select_plan', 'MediaPlanController@SelectPlanPost');
+            Route::get('/createplan/{id}', 'MediaPlanController@CreatePlan')->name('agency.media_plan.create')->middleware('permission:create.media_plan');
+            Route::post('/finish_plan', 'MediaPlanController@CompletePlan');
+            Route::get('/export/{id}', 'MediaPlanController@exportPlan')->name('agency.media_plan.export');
+            Route::post('/store-programs', 'MediaPlanController@storePrograms')->name('media_plan.program.store');
+            Route::post('/store-volume-discount', 'MediaPlanController@storeVolumeDiscount')->name('media_plan.volume_discount.store');
         });
-        
 
         /**
-         * User Management
+         * Media Assets
          */
-
-        Route::group(['prefix' => 'user'], function() {
-            Route::get('/all', 'Agency\UserController@index')->name('agency.user.index')->middleware('permission:view.user');
-            Route::get('/invite', 'Agency\UserController@inviteUser')->name('agency.user.invite')->middleware('permission:create.user');
-            Route::get('/edit/{id}', 'Agency\UserController@editUser')->name('agency.user.edit')->middleware('permission:update.user');
-            Route::post('/update/{id}', 'Agency\UserController@updateUser');
-            Route::post('/invite/store', 'Agency\UserController@processInvite');
-            Route::get('/data-table', 'Agency\UserController@getDatatable')->middleware('permission:view.user');
-            Route::post('/resend/invitation', 'Agency\UserController@resendInvitation');
-            Route::get('/status/update', 'Agency\UserController@updateStatus')->middleware('permission:update.user');
+        Route::group(['prefix' => 'media-assets'], function () {
+            Route::get('/', 'MediaAssetsController@index')->name('agency.media_assets');
+            Route::post('/create', 'MediaAssetsController@createAsset');
+            Route::post('/presigned-url', 'S3Controller@getPresignedUrl');
+            Route::get('/all', 'MediaAssetsController@getAssets');
+            Route::get('/delete/{id}', 'MediaAssetsController@deleteAsset');
         });
+
+         /**
+    * User Management
+    */
+
+   Route::group(['namespace' => 'Dsp','prefix' => 'user'], function() {
+    Route::get('/all', 'UserController@index')->name('agency.user.index')->middleware('permission:view.user');
+    Route::get('/invite', 'UserController@inviteUser')->name('agency.user.invite')->middleware('permission:create.user');
+    Route::get('/edit/{id}', 'UserController@editUser')->name('agency.user.edit');
+    Route::post('/update/{id}', 'UserController@updateUser');
+    Route::post('/invite/store', 'UserController@processInvite');
+    Route::get('/data-table', 'UserController@getDatatable');
+    Route::post('/resend/invitation', 'UserController@resendInvitation');
+    Route::get('/status/update', 'UserController@updateStatus')->middleware('permission:update.update.user');
+});
+
+
+
     });
 
-    Route::group(['prefix' => 'wallets'], function(){
-        Route::get('/wallet/credit', 'Agency\WalletsController@create')->name('wallet.create')->middleware('permission:create.wallet');
-        Route::get('/wallet-statement', 'Agency\WalletsController@index')->name('wallet.statement')->middleware('permission:view.wallet');
-        Route::post('/wallet/amount', 'Agency\WalletsController@getAmount')->name('wallet.amount');
-        Route::get('/wallet/amount/pay', 'Agency\WalletsController@getPay')->name('amount.pay');
-        Route::post('/pay', 'Agency\WalletsController@pay')->name('pay')->middleware('permission:create.wallet');
-        Route::get('/get-wallet/data', 'Agency\WalletsController@getData');
+    Route::group(['namespace' => 'Dsp','prefix' => 'wallets'], function(){
+        Route::get('/wallet/credit', 'WalletsController@create')->name('wallet.create')->middleware('permission:create.wallet');
+        Route::get('/wallet-statement', 'WalletsController@index')->name('wallet.statement')->middleware('permission:view.wallet');
+        Route::post('/wallet/amount', 'WalletsController@getAmount')->name('wallet.amount');
+        Route::get('/wallet/amount/pay', 'WalletsController@getPay')->name('amount.pay');
+        Route::post('/pay', 'WalletsController@pay')->name('pay')->middleware('permission:create.wallet');
+        Route::get('/get-wallet/data', 'WalletsController@getData');
     });
 
 });
@@ -550,3 +568,6 @@ Route::get('activity/user/{user}/log', [
  */
 Route::get('/media-plan1', 'MediaPlan\MediaPlanController@index');
 Route::get('/media-plan2', 'MediaPlan\MediaPlanController@index');
+
+
+});

@@ -121,3 +121,21 @@
 .suggestion-graph .graph-days.nav.nav-tabs button:focus {
     outline: none;
 }
+
+.media-asset-management .modal {
+    display: none;
+    vertical-align: unset !important;
+    position: fixed !important;
+    z-index: 1050 !important;
+    max-width: 100% !important;
+    box-sizing: unset !important;
+    width: 100% !important;
+    background: none !important;
+    padding: unset !important;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    -o-border-radius: 8px;
+    -ms-border-radius: 8px;
+    box-shadow: none !important;
+    text-align: left;
+}
