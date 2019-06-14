@@ -12,7 +12,6 @@ class AgencyFeatureSeeder extends Seeder
     public function run()
     {
          //delete if data exist
-         //DB::table('permissions')->delete();
          //permissions so far on the ssp side
          $permissions_array = [
              'create.media_plan', 'update.media_plan', 'submit.media_plan', 'view.media_plan', 
