@@ -19,13 +19,16 @@ class AgencyRoleSeeder extends Seeder
        $admin_role->guard_name = 'web';
        $admin_role->save();
 
-
+       $vantage_permissions = [
+        'create.media_plan', 'update.media_plan', 'submit.media_plan', 'view.media_plan', 
+        'view.invoice', 'view.wallet', 'create.wallet', 'create.asset', 'view.asset', 'update.asset'
+       ];
 
        //fetch all the permissions
-       $permissions = Permission::where('guard_name', 'web')->get();
+       $permissions = Permission::where('guard_name', 'web')->whereIn('name', $vantage_permissions)->get();
 
        //sync permissions to the admin role
-       $admin_role->syncPermissions($permissions->where('name', '<>', 'update.super_admin'));
+       $admin_role->syncPermissions($permissions);
 
     }
 }
