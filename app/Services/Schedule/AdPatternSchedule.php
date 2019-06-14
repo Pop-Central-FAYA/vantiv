@@ -21,7 +21,7 @@ class AdPatternSchedule
     public function run()
     {
         $get_scheduled_ads = $this->getScheduledAds();
-        if($this->getAvailableSpace($get_scheduled_ads) > $this->time_belt->duration){
+        if($this->getAvailableSpace($get_scheduled_ads) >= $this->time_belt->duration){
             $total_scheduled_durations = $get_scheduled_ads->sum('duration');
             $total_new_durations = $total_scheduled_durations + $this->time_belt->duration;
             $this->processScheduleAds($get_scheduled_ads, $total_new_durations);
