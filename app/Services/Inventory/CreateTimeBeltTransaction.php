@@ -4,6 +4,7 @@ namespace Vanguard\Services\Inventory;
 
 use Vanguard\Models\TimeBeltTransaction;
 use Vanguard\Services\Schedule\AdPatternSchedule;
+use Vanguard\Services\Schedule\PlaceAdForSchedule;
 
 class CreateTimeBeltTransaction
 {
@@ -31,13 +32,20 @@ class CreateTimeBeltTransaction
                 $time_belt_transaction->playout_hour = $time_belt->playout_hour;
                 $time_belt_transaction->approval_status = $time_belt->approval_status;
                 $time_belt_transaction->payment_status = $time_belt->payment_status;
-                $time_belt_transaction->company_id = $time_belt->broadcaster_id;
+                $time_belt_transaction->company_id = $time_belt->company_id;
                 $time_belt_transaction->save();
 
+                //method 1
                 $ad_schedule_service = new AdPatternSchedule($time_belt,
                                             $time_belt_transaction->publisher->decoded_settings['ad_pattern']['length'],
                                             $time_belt_transaction->id);
                 $ad_schedule_service->run();
+
+                //method 2
+                $place_ad_for_schedule = new PlaceAdForSchedule($time_belt,
+                                                $time_belt_transaction->publisher->decoded_settings['ad_pattern']['length'],
+                                                $time_belt_transaction->id);
+                $place_ad_for_schedule->run();
             }
         });
         return 'success';

@@ -2,24 +2,41 @@
 
 namespace Vanguard\Services\Schedule;
 
+use Vanguard\Models\Schedule;
+
 class PlaceAdForSchedule
 {
     const TOTAL_SCHEDULABLE_DURATION_FOR_AN_HOUR = 720;
-    protected $playout_date;
     protected $ad_pattern;
-    protected $company_id;
-    protected $media_program_id;
-    protected $duration;
-    protected $specified_hour;
+    protected $time_belt_transaction_id;
+    protected $time_belt;
 
-    public function __construct($playout_date, $ad_pattern, $company_id, $media_program_id, $duration, $specified_hour)
+    public function __construct($ad_pattern, $time_belt_transaction_id, $time_belt)
     {
-        $this->playout_date = $playout_date;
         $this->ad_pattern = $ad_pattern;
-        $this->company_id = $company_id;
-        $this->media_program_id = $media_program_id;
-        $this->duration = $duration;
-        $this->specified_hour = $specified_hour;
+        $this->time_belt_transaction_id = $time_belt_transaction_id;
+        $this->time_belt = $time_belt;
+    }
+
+    public function run()
+    {
+        $per_break_duration = self::TOTAL_SCHEDULABLE_DURATION_FOR_AN_HOUR / $this->ad_pattern;
+        $scheduled_list = $this->buildScheduledList();
+        foreach ($scheduled_list as $schedule){
+            if($per_break_duration >= ($schedule['duration'] + $this->time_belt->duration)){
+                $order = $schedule['total_order'] + 1;
+                return $this->updateTimeBeltTransactions($order, $schedule['ad_break'], $this->time_belt_transaction_id);
+            }
+        }
+    }
+
+    private function updateTimeBeltTransactions($order, $play_out, $time_belt_transaction_id)
+    {
+        $schedule = Schedule::where('id', $time_belt_transaction_id)->first();
+        $schedule->order = $order;
+        $schedule->playout_hour = $play_out;
+        $schedule->save();
+        return $schedule;
     }
 
     /**
@@ -29,23 +46,10 @@ class PlaceAdForSchedule
     private function getHoursInTheProgram()
     {
         return \DB::table('time_belts')
-                    ->selectRaw("hour(start_time) as playout_hours")
-                    ->where('media_program_id', $this->media_program_id)
-                    ->groupBy(\DB::raw('hour(start_time)'))
-                    ->get()
-                    ->toArray();
-    }
-
-    private function determineWhereAdsFit()
-    {
-        $per_break_duration = self::TOTAL_SCHEDULABLE_DURATION_FOR_AN_HOUR / $this->ad_pattern;
-        $scheduled_list = $this->buildScheduledList();
-        foreach ($scheduled_list as $schedule){
-            if($per_break_duration >= ($schedule['duration'] + $this->duration)){
-                $new_order = $schedule['total_order'] + 1;
-
-            }
-        }
+            ->selectRaw("hour(start_time) as playout_hours")
+            ->where('media_program_id', $this->time_belt->media_program_id)
+            ->groupBy(\DB::raw('hour(start_time)'))
+            ->get();
     }
 
     private function buildScheduledList()
@@ -57,8 +61,8 @@ class PlaceAdForSchedule
                             ->selectRaw("SUM(duration) as total_duration, playout_hour, COUNT(id) as number_of_scheduled")
                             ->where([
                                 ['playout_hour', $playout_hour],
-                                ['playout_date', $this->playout_date],
-                                ['company_id', $this->company_id],
+                                ['playout_date', $this->time_belt->playout_date],
+                                ['company_id', $this->time_belt->company_id],
                                 ['media_program_id', $this->media_program_id]
                             ])
                             ->groupBy('playout_hour')
