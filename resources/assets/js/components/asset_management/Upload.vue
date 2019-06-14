@@ -122,6 +122,7 @@
                 mediaType: 'Tv',
                 s3PresignedUrl: '',
                 assetFile: '',
+                uploadedMediaAssetDuration: 0, 
                 assetUrl: '',
                 regulatoryCertFile: '',
                 regulatoryCertUrl: '',
@@ -135,6 +136,11 @@
         },
         mounted() {
             console.log('Media asset upload Component mounted.');
+        },
+        watch: {
+            uploadedMediaAssetDuration: function () {
+                this.uploadedMediaAssetDuration = Math.floor(this.uploadedMediaAssetDuration);
+            }
         },
         methods: {
             get_brands(event) {
@@ -153,9 +159,19 @@
                     this.brands = [];
                 });
             },
+            setFileDuration: function(file) {
+                let video = document.createElement('video');
+                video.preload = 'metadata';
+                video.onloadedmetadata = () => {
+                    window.URL.revokeObjectURL(video.src);
+                    this.uploadedMediaAssetDuration = video.duration;
+                };
+                video.src = URL.createObjectURL(file);
+            },
             on_file_change(event, uploadType) {
                 if (uploadType === 'ASSET') {
                     this.assetFile = event.target.files[0];
+                    this.setFileDuration(this.assetFile);
                     this.assetInputLabel = this.assetFile.name;
                 } else if (uploadType === 'REG_CERT') {
                     this.regulatoryCertFile = event.target.files[0];
@@ -163,7 +179,7 @@
                 }
             },
             process_form: async function(event) {
-                // Validate inputs using a plugin 
+                // Validate inputs using vee-validate plugin 
                 let isValid = await this.$validator.validate().then(valid => {
                     if (!valid) {
                         return false;
@@ -174,6 +190,13 @@
 
                 if (!isValid) {
                     return false;
+                }
+
+                // validate media asset duration
+                if (this.uploadedMediaAssetDuration != this.duration) {
+                    let msg = `You are trying to upload a file of ${this.uploadedMediaAssetDuration} seconds into a duration of ${this.duration} seconds`;
+                    this.sweet_alert(msg, 'error');
+                    return;
                 }
 
                 try {
