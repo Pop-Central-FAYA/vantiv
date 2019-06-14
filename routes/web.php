@@ -6,9 +6,10 @@
 
 
 Route::group(['domain' => Request::getHost()], function() {
+     
 
-Route::get('/login', 'Auth\AuthController@getLogin')->name('login');
-Route::post('/login', 'Auth\AuthController@postLogin')->name('post.login');
+Route::get('login', 'Auth\AuthController@getLogin')->name('login');
+Route::post('login', 'Auth\AuthController@postLogin')->name('post.login');
 
 Route::get('/auth-broadcaster/signup', 'BroadcasterAuthController@getRegister')->name('broadcaster.register.form');
 Route::post('/auth-broadcaster/signup/process', 'BroadcasterAuthController@postRegister')->name('broadcaster.signup');
