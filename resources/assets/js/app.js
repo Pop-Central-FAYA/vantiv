@@ -20,6 +20,10 @@ Vue.use(HighchartsVue, {
 	highcharts: Highcharts
 })
 
+// VeeValidate
+import VeeValidate from 'vee-validate';
+Vue.use(VeeValidate);
+
 // declared to manage events globally
 window.Event = new Vue();
 

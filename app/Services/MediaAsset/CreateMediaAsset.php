@@ -4,7 +4,7 @@ namespace Vanguard\Services\MediaAsset;
 use Vanguard\Models\MediaAsset;
 use Auth;
 
-class StoreMediaAsset
+class CreateMediaAsset
 {
     protected $request;
 

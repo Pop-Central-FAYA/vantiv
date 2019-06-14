@@ -3,8 +3,8 @@
 namespace Vanguard\Http\Controllers;
 use Illuminate\Http\Request;
 use Vanguard\Services\Client\AllClient;
-use Vanguard\Services\MediaAsset\ValidateCreateAsset;
-use Vanguard\Services\MediaAsset\StoreMediaAsset;
+use Vanguard\Http\Requests\StoreMediaAsset;
+use Vanguard\Services\MediaAsset\CreateMediaAsset;
 use Vanguard\Services\MediaAsset\GetMediaAssets;
 use Vanguard\Models\MediaAsset;
 
@@ -18,22 +18,10 @@ class MediaAssetsController extends Controller
         return view('agency.media_assets.index')->with('clients', $clients);
     }
 
-    public function createAsset(Request $request)
+    public function createAsset(StoreMediaAsset $request)
     {
-        // Validate requests
-        $validate_media_asset = new ValidateCreateAsset($request->all());
-        $validator = $validate_media_asset->run();
-
-        // Check for validation errors
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 'error',
-                'data' => implode(",", $validator->messages()->all())
-            ]);
-        }
-
         // store asset to db
-        $store_media_asset = new StoreMediaAsset($request->all());
+        $store_media_asset = new CreateMediaAsset($request->all());
         $new_media_asset = $store_media_asset->run();
 
         if ($new_media_asset) {
@@ -47,7 +35,6 @@ class MediaAssetsController extends Controller
                 'data' => 'Something went wrong, media assets cannot be created. Try again!'
             ]);
         }
-        
     }
 
     public function getAssets()
