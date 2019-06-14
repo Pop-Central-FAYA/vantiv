@@ -2,6 +2,8 @@
 
 namespace Vanguard\Services\Schedule;
 
+use Http\Client\Exception\HttpException;
+use Matrix\Exception;
 use Vanguard\Models\Schedule;
 
 class PlaceAdForSchedule
@@ -23,10 +25,15 @@ class PlaceAdForSchedule
         $per_break_duration = self::TOTAL_SCHEDULABLE_DURATION_FOR_AN_HOUR / $this->ad_pattern;
         $scheduled_list = $this->buildScheduledList();
         foreach ($scheduled_list as $schedule){
-            if($per_break_duration >= ($schedule['duration'] + $this->time_belt->duration)){
-                $order = $schedule['total_order'] + 1;
-                return $this->updateTimeBeltTransactions($order, $schedule['ad_break'], $this->time_belt_transaction_id);
+            try{
+                if($per_break_duration >= ($schedule['duration'] + $this->time_belt->duration)){
+                    $order = $schedule['total_order'] + 1;
+                    return $this->updateTimeBeltTransactions($order, $schedule['ad_break'], $this->time_belt_transaction_id);
+                }
+            }catch (\Exception $e){
+                return null;
             }
+
         }
     }
 
@@ -60,14 +67,14 @@ class PlaceAdForSchedule
             $get_schedule = \DB::table('time_belt_transactions')
                             ->selectRaw("SUM(duration) as total_duration, playout_hour, COUNT(id) as number_of_scheduled")
                             ->where([
-                                ['playout_hour', $playout_hour],
                                 ['playout_date', $this->time_belt->playout_date],
                                 ['company_id', $this->time_belt->company_id],
-                                ['media_program_id', $this->media_program_id]
+                                ['media_program_id', $this->time_belt->media_program_id]
                             ])
+                            ->whereTime('playout_hour', $playout_hour)
                             ->groupBy('playout_hour')
                             ->get();
-            if($get_schedule){
+            if(count($get_schedule) != 0){
                 $duration = $get_schedule[0]->total_duration;
                 $number_of_scheduled = $get_schedule[0]->number_of_scheduled;
             }else{
@@ -89,9 +96,10 @@ class PlaceAdForSchedule
         $adbreak_mintes = 60 / $this->ad_pattern;
         $ad_breaks = [];
         foreach ($playout_hours as $playout_hour){
+            $play_out_hour = $playout_hour->playout_hours.':00:00';
             for ($i = 0; $i < $this->ad_pattern; $i++){
-                $added_minutes = $i * $minutes_in_adbreak;
-                $ad_breaks[] = date('H:i:s', strtotime('+'.$added_minutes.' minutes', strtotime($playout_hour)));
+                $added_minutes = $i * $adbreak_mintes;
+                $ad_breaks[] = date('H:i:s', strtotime('+'.$added_minutes.' minutes', strtotime($play_out_hour)));
             }
         }
         return $ad_breaks;
