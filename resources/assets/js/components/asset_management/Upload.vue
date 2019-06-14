@@ -23,37 +23,40 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="client">Client:</label>
-                                        <select class="form-control" v-model="client" @change="get_brands($event)">
+                                        <select class="form-control" v-validate="'required'" v-model="client" name="client" @change="get_brands($event)">
                                             <option value="">select client</option>
                                             <option v-for="(client, key) in clients" v-bind:key="key" :value="client.id">{{ client.company_name}}</option>
                                         </select>
                                     </div>
+                                    <span class="text-danger" v-show="errors.has('client')">{{ errors.first('client') }}</span>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="brand">Brand:</label>
-                                        <select class="form-control" v-model="brand">
+                                        <select class="form-control" v-validate="'required'" v-model="brand" name="brand">
                                             <option value="">select brand</option>
                                             <option v-for="(brand, key) in brands" v-bind:key="key" :value="brand.id">{{ brand.name }}</option>
                                         </select>
                                     </div>
+                                    <span class="text-danger" v-show="errors.has('brand')">{{ errors.first('brand') }}</span>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="mediaType">Media Type:</label>
-                                        <select class="form-control" v-model="mediaType">
+                                        <select v-validate="'required'" name="media_type" class="form-control" v-model="mediaType">
                                             <option value="Tv" selected>Tv</option>
                                         </select>
                                     </div>
+                                    <span class="text-danger" v-show="errors.has('media_type')">{{ errors.first('media_type') }}</span>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="mediaType">File Duration:</label>
-                                        <select class="form-control" v-model="duration">
+                                        <select v-validate="'required'" name="duration" class="form-control" v-model="duration">
                                             <option value="">select duration</option>
                                             <option value="15">15 Seconds</option>
                                             <option value="30">30 Seconds</option>
@@ -61,15 +64,17 @@
                                             <option value="60">60 Seconds</option>
                                         </select>
                                     </div>
+                                    <span class="text-danger" v-show="errors.has('duration')">{{ errors.first('duration') }}</span>
                                 </div>
                                 <div class="col-md-8">
                                     <label for="mediaType">Upload Asset:</label>
                                     <div class="input-group mb-3">
                                         <div class="custom-file">
-                                            <input type="file" class="custom-file-input" @change="on_file_change($event, 'ASSET')">
+                                            <input v-validate="'required|ext:mp4,3gp,ogg,avi'" name="asset" type="file" class="custom-file-input" @change="on_file_change($event, 'ASSET')">
                                             <label class="custom-file-label" for="asset">{{ this.assetInputLabel }}</label>
                                         </div>
                                     </div>
+                                    <span class="text-danger" v-show="errors.has('asset')">{{ errors.first('asset') }}</span>
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -77,10 +82,11 @@
                                     <label for="mediaType">Upload Regulatory Certificate:</label>
                                     <div class="input-group mb-3">
                                         <div class="custom-file">
-                                            <input type="file" class="custom-file-input" @change="on_file_change($event, 'REG_CERT')">
+                                            <input v-validate="'required|ext:txt'" name="certificate" type="file" class="custom-file-input" @change="on_file_change($event, 'REG_CERT')">
                                             <label class="custom-file-label" for="regCert">{{ this.regCertInputLabel }}</label>
                                         </div>
                                     </div>
+                                    <span class="text-danger" v-show="errors.has('certificate')">{{ errors.first('certificate') }}</span>
                                 </div>
                             </div>
 
@@ -157,9 +163,21 @@
                 }
             },
             process_form: async function(event) {
-                 // Todo validate inputs using a plugin 
-                 try {
-                     // generate presigned url for asset upload
+                // Validate inputs using a plugin 
+                let isValid = await this.$validator.validate().then(valid => {
+                    if (!valid) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                });
+
+                if (!isValid) {
+                    return false;
+                }
+
+                try {
+                    // generate presigned url for asset upload
                     await this.generate_presigned_url(this.assetFile, 'media-assets/');
                     await this.upload_file(this.assetFile, this.s3PresignedUrl, 'ASSET');
                     console.log(this.assetUrl);
@@ -169,10 +187,10 @@
                     console.log(this.regulatoryCertUrl);
                     // make axios call to store created asset to db
                     await this.store_uploaded_asset();
-                 } catch (error) {
-                     console.log(error);
+                } catch (error) {
+                    console.log(error);
                     this.sweet_alert('An unknown error has occurred, asset upload failed. Please try again', 'error');
-                 }
+                }
             },
             store_uploaded_asset: async function(event) {
                  axios({
@@ -197,6 +215,7 @@
                     }
                  }).catch((error) => {
                      console.log(error.response.data);
+                     this.sweet_alert(error.response.data.message, 'error');
                  });
             },
             generate_presigned_url: async function(file, folderName, uploadType) {
