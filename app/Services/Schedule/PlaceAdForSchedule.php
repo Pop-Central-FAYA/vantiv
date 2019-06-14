@@ -4,7 +4,7 @@ namespace Vanguard\Services\Schedule;
 
 class PlaceAdForSchedule
 {
-    const TOTAL_SCHEDULABLE_DURATION_FOR_ADS = 720;
+    const TOTAL_SCHEDULABLE_DURATION_FOR_AN_HOUR = 720;
     protected $playout_date;
     protected $ad_pattern;
     protected $company_id;
@@ -22,6 +22,10 @@ class PlaceAdForSchedule
         $this->specified_hour = $specified_hour;
     }
 
+    /**
+     * @return array
+     * Another thing to consider is if the program is not starting at the top hour
+     */
     private function getHoursInTheProgram()
     {
         return \DB::table('time_belts')
@@ -32,22 +36,48 @@ class PlaceAdForSchedule
                     ->toArray();
     }
 
-    /*private function getAlreadyScheduledAds()
+    private function determineWhereAdsFit()
     {
-        return \DB::table('time_belt_transactions')
-                    ->selectRaw("playout_hour, sum(duration)")
-                    ->where([
-                        ['playout_date', $this->playout_date],
-                        ['company_id', $this->company_id],
-                    ])
-                    ->when($this->specified_hour, function($query) {
-                        return $query->whereRaw("hour(playout_hour) = '$this->specified_hour'");
-                    })
-                    ->whereIn(\DB::raw())
-                    ->groupBy('playout_hour')
-                    ->orderBy('playout_hour', 'desc')
-                    ->get();
-    }*/
+        $per_break_duration = self::TOTAL_SCHEDULABLE_DURATION_FOR_AN_HOUR / $this->ad_pattern;
+        $scheduled_list = $this->buildScheduledList();
+        foreach ($scheduled_list as $schedule){
+            if($per_break_duration >= ($schedule['duration'] + $this->duration)){
+                $new_order = $schedule['total_order'] + 1;
+
+            }
+        }
+    }
+
+    private function buildScheduledList()
+    {
+        $playout_iterator = $this->playoutHourIterator();
+        $scheduled_list = [];
+        foreach ($playout_iterator as $playout_hour){
+            $get_schedule = \DB::table('time_belt_transactions')
+                            ->selectRaw("SUM(duration) as total_duration, playout_hour, COUNT(id) as number_of_scheduled")
+                            ->where([
+                                ['playout_hour', $playout_hour],
+                                ['playout_date', $this->playout_date],
+                                ['company_id', $this->company_id],
+                                ['media_program_id', $this->media_program_id]
+                            ])
+                            ->groupBy('playout_hour')
+                            ->get();
+            if($get_schedule){
+                $duration = $get_schedule[0]->total_duration;
+                $number_of_scheduled = $get_schedule[0]->number_of_scheduled;
+            }else{
+                $duration = 0;
+                $number_of_scheduled = 0;
+            }
+            $scheduled_list[] = [
+                'ad_break' => $playout_hour,
+                'duration' => $duration,
+                'total_order' => $number_of_scheduled
+            ];
+        }
+        return $scheduled_list;
+    }
 
     private function playoutHourIterator()
     {
