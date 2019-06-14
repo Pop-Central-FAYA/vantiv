@@ -21,7 +21,9 @@ class AgencyRoleSeeder extends Seeder
 
        $vantage_permissions = [
         'create.media_plan', 'update.media_plan', 'submit.media_plan', 'view.media_plan', 
-        'view.invoice', 'view.wallet', 'create.wallet', 'create.asset', 'view.asset', 'update.asset'
+        'view.invoice', 'view.wallet', 'create.wallet', 'create.asset', 'view.asset', 'update.asset',
+        'create.user', 'view.user', 'update.user',
+        'view.profile', 'update.profile','view.report', 'view.client', 'update.client', 'create.client'
        ];
 
        //fetch all the permissions
