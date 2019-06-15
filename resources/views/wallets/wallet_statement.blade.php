@@ -18,8 +18,10 @@
             </div>
 
             <div class="column col_6 align_right">
+            @if(Auth::user()->hasPermissionTo('create.wallet'))
                 <a href="#fund_wallet" class="btn modal_click small_btn"><span class="_plus"></span>Fund Wallet</a>
-            </div>
+            @endif
+       </div>
         </div>
 
 

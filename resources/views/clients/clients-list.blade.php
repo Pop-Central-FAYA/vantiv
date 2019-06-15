@@ -16,7 +16,9 @@
             </div>
 
             <div class="column col_6 align_right">
+            @if(Auth::user()->hasPermissionTo('create.client'))
                 <a href="#new_client" class="btn modal_click">New Client</a>
+                @endif
             </div>
         </div>
 
