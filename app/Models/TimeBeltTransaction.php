@@ -22,4 +22,30 @@ class TimeBeltTransaction extends Base
     {
         return $this->belongsTo(Publisher::class, 'company_id', 'company_id');
     }
+
+    public function media_program()
+    {
+        return $this->belongsTo(MediaProgram::class);
+    }
+
+    public function getMediaProgramHours()
+    {
+        return \DB::table('time_belts')
+                ->selectRaw("hour(start_time) as program_hours")
+                ->where('media_program_id', $this->media_program->id)
+                ->groupBy(\DB::raw('hour(start_time)'))
+                ->get()
+                ->toArray();
+
+    }
+
+    public function getFormattedMediaProgramHoursAttribute()
+    {
+        $media_program_hours = $this->getMediaProgramHours();
+        $result = [];
+        foreach ($media_program_hours as $media_program_hour){
+            $result[] = $media_program_hour->program_hours;
+        }
+        return $result;
+    }
 }

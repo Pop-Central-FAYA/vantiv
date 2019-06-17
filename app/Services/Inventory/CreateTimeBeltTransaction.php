@@ -15,7 +15,7 @@ class CreateTimeBeltTransaction
         $this->preselected_time_belt = $preselected_time_belt;
     }
 
-    public function createTimeBeltTransaction()
+    public function run()
     {
         \DB::transaction(function () {
             foreach ($this->preselected_time_belt as $time_belt){
@@ -37,10 +37,12 @@ class CreateTimeBeltTransaction
 
                 $place_ad_for_schedule = new PlaceAdForSchedule(
                                                 $time_belt_transaction->publisher->decoded_settings['ad_pattern']['length'],
-                                                $time_belt_transaction->id,$time_belt, ['11'], null);
+                                                $time_belt_transaction->id,$time_belt,
+                                                $time_belt_transaction->formatted_media_program_hours, null);
                 $place_ad_for_schedule->run();
             }
         });
         return 'success';
     }
+
 }

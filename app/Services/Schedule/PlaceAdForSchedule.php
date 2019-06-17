@@ -13,15 +13,15 @@ class PlaceAdForSchedule
     protected $ad_pattern;
     protected $time_belt_transaction_id;
     protected $time_belt;
-    protected $prefered_hours; //This is an array like [10, 11, 12]
+    protected $preferred_hours; //This is an array like [10, 11, 12]
     protected $start_time; //A time if format of hh:mm:ss
 
-    public function __construct($ad_pattern, $time_belt_transaction_id, $time_belt, $prefered_hours, $start_time)
+    public function __construct($ad_pattern, $time_belt_transaction_id, $time_belt, $preferred_hours, $start_time)
     {
         $this->ad_pattern = $ad_pattern;
         $this->time_belt_transaction_id = $time_belt_transaction_id;
         $this->time_belt = $time_belt;
-        $this->prefered_hours = $prefered_hours;
+        $this->preferred_hours = $preferred_hours;
         $this->start_time = $start_time;
     }
 
@@ -30,16 +30,12 @@ class PlaceAdForSchedule
         $per_break_duration = self::TOTAL_SCHEDULABLE_DURATION_FOR_AN_HOUR / $this->ad_pattern;
         $scheduled_list = $this->buildScheduledList();
         foreach ($scheduled_list as $schedule){
-            try{
-                if($per_break_duration >= ($schedule['duration'] + $this->time_belt->duration)){
-                    $order = $schedule['total_order'] + 1;
-                    return $this->updateTimeBeltTransactions($order, $schedule['ad_break'], $this->time_belt_transaction_id);
-                }
-            }catch (\Exception $e){
-                return null;
+            if($per_break_duration >= ($schedule['duration'] + $this->time_belt->duration)){
+                $order = $schedule['total_order'] + 1;
+                return $this->updateTimeBeltTransactions($order, $schedule['ad_break'], $this->time_belt_transaction_id);
             }
-
         }
+        return null;
     }
 
     private function updateTimeBeltTransactions($order, $playout_hour, $time_belt_transaction_id)
@@ -62,15 +58,15 @@ class PlaceAdForSchedule
                             ['company_id', $this->time_belt->company_id]
                         ])
                         ->groupBy('playout_hour')
+                        ->orderBy('playout_hour', 'desc')
                         ->get();
         foreach ($playout_iterator as $key => $ad_break){
             $schedule = $get_schedule->where('playout_hour', $ad_break)->first();
+            $duration = 0;
+            $number_of_scheduled = 0;
             if($schedule){
                 $duration = $schedule->total_duration;
                 $number_of_scheduled = $schedule->number_of_scheduled;
-            }else{
-                $duration = 0;
-                $number_of_scheduled = 0;
             }
             $scheduled_list[] = [
                 'ad_break' => $ad_break,
@@ -110,11 +106,11 @@ class PlaceAdForSchedule
         $start_time = $this->start_time ? $this->start_time : '00:00:00';
         $adbreak_minutes = 60 / $this->ad_pattern;
         $ad_breaks = [];
-        foreach ($this->prefered_hours as $prefered_hour){
-            $formatted_prefered_hour = $prefered_hour.':00:00';
+        foreach ($this->preferred_hours as $preferred_hour){
+            $formatted_preferred_hour = $preferred_hour.':00:00';
             for ($i = 0; $i < $this->ad_pattern; $i++){
                 $added_minutes = $i * $adbreak_minutes;
-                $new_break = strtotime('+'.$added_minutes.' minutes', strtotime($formatted_prefered_hour));
+                $new_break = strtotime('+'.$added_minutes.' minutes', strtotime($formatted_preferred_hour));
                 if($new_break >= strtotime($start_time)){
                     $ad_breaks[] = date('H:i:s', $new_break);
                 }

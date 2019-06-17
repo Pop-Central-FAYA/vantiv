@@ -17,15 +17,17 @@ class CreateTimeBeltTransactionTest extends TestCase
             'company_id' => $company_id = factory(Company::class)->create()->id
         ]);
         $time_belt_transaction = new CreateTimeBeltTransaction($this->getPreselectedTimeBelt($company_id));
-        $this->assertEquals('success', $time_belt_transaction->createTimeBeltTransaction());
+        $this->assertEquals('success', $time_belt_transaction->run());
     }
 
     public function getPreselectedTimeBelt($company_id)
     {
         $preselected_time_belt = [];
         $preselected_time_belt_1 = (object)[
-            'time_belt_id' => factory(TimeBelt::class)->create()->id,
-            'media_program_id' => factory(MediaProgram::class)->create()->id,
+            'time_belt_id' => factory(TimeBelt::class)->create([
+                'media_program_id' => $program = factory(MediaProgram::class)->create()->id
+            ])->id,
+            'media_program_id' => $program,
             'campaign_details_id' => 'hfcagsrjdmzgxsd',
             'duration' => 30,
             'file_name' => 'ridwan.mp4',
@@ -39,8 +41,10 @@ class CreateTimeBeltTransactionTest extends TestCase
             'company_id' => $company_id
         ];
         $preselected_time_belt_2 = (object)[
-            'time_belt_id' => factory(TimeBelt::class)->create()->id,
-            'media_program_id' => factory(MediaProgram::class)->create()->id,
+            'time_belt_id' => factory(TimeBelt::class)->create([
+                'media_program_id' => $program = factory(MediaProgram::class)->create()->id
+            ])->id,
+            'media_program_id' => $program,
             'campaign_details_id' => 'hfcagsrjdmzgx654',
             'duration' => 45,
             'file_name' => 'ridwan_busari.mp4',
