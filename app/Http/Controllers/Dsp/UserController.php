@@ -38,17 +38,21 @@ class UserController extends Controller
         $user_list = $user_list_service->getUserData();
         $statuses = UserStatus::lists();
         return $dataTables->collection($user_list)
+
             ->addColumn('edit', function ($user_list) {
-             
+                if(!\Auth::user()->hasPermissionTo('update.user')){
+                    return '';
+                }else{
                     return '<a href="'.route('agency.user.edit', ['id' => $user_list['id']]).'" class="weight_medium">Edit</a>';
-            
+                }
             })
+
             ->addColumn('status', function ($user_list) use($statuses) {
                 
                 if($user_list['status'] === UserStatus::UNCONFIRMED){
                     return '<a href="#user_modal_'.$user_list['id'].'" class="weight_medium modal_user_click">'.$user_list['status'].'</a>';
                 }else{
-                    if(!\Auth::user()->hasRole('dsp.admin')){
+                    if(!\Auth::user()->hasPermissionTo('create.user')){
                         return '';
                     }else{
                         return view('users.status', ['user_status' => $user_list['status'], 'statuses' => $statuses, 'id' => $user_list['id']]);

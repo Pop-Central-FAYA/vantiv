@@ -72,7 +72,9 @@
 
                         <div class="more_more">
                             <a href="{{ route('client.show', ['id' => $client['client_id']]) }}">Details</a>
+                            @if(Auth::user()->hasPermissionTo('update.client'))
                             <a href="#edit_client{{ $client['client_id'] }}" class="modal_click">Edit</a>
+                            @endif
                             {{--<a href="" class="color_red">Delete</a>--}}
                         </div>
                     </div>
@@ -318,7 +320,9 @@
                 </div>
 
                 <div class="align_right">
+                @if(Auth::user()->hasPermissionTo('update.client'))
                     <input type="submit" value="Update Client" class="btn uppercased update">
+                    @endif
                 </div>
 
             </form>
