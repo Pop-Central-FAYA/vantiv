@@ -5,6 +5,7 @@ namespace Vanguard\Services\Schedule;
 use Http\Client\Exception\HttpException;
 use Matrix\Exception;
 use Vanguard\Models\Schedule;
+use Vanguard\Models\TimeBeltTransaction;
 
 class PlaceAdForSchedule
 {
@@ -12,12 +13,16 @@ class PlaceAdForSchedule
     protected $ad_pattern;
     protected $time_belt_transaction_id;
     protected $time_belt;
+    protected $prefered_hours; //This is an array like [10, 11, 12]
+    protected $start_time; //A time if format of hh:mm:ss
 
-    public function __construct($ad_pattern, $time_belt_transaction_id, $time_belt)
+    public function __construct($ad_pattern, $time_belt_transaction_id, $time_belt, $prefered_hours, $start_time)
     {
         $this->ad_pattern = $ad_pattern;
         $this->time_belt_transaction_id = $time_belt_transaction_id;
         $this->time_belt = $time_belt;
+        $this->prefered_hours = $prefered_hours;
+        $this->start_time = $start_time;
     }
 
     public function run()
@@ -37,69 +42,82 @@ class PlaceAdForSchedule
         }
     }
 
-    private function updateTimeBeltTransactions($order, $play_out, $time_belt_transaction_id)
+    private function updateTimeBeltTransactions($order, $playout_hour, $time_belt_transaction_id)
     {
-        $schedule = Schedule::where('id', $time_belt_transaction_id)->first();
+        $schedule = Schedule::find($time_belt_transaction_id);
         $schedule->order = $order;
-        $schedule->playout_hour = $play_out;
+        $schedule->playout_hour = $playout_hour;
         $schedule->save();
         return $schedule;
     }
 
-    /**
-     * @return array
-     * Another thing to consider is if the program is not starting at the top hour
-     */
-    private function getHoursInTheProgram()
-    {
-        return \DB::table('time_belts')
-            ->selectRaw("hour(start_time) as playout_hours")
-            ->where('media_program_id', $this->time_belt->media_program_id)
-            ->groupBy(\DB::raw('hour(start_time)'))
-            ->get();
-    }
-
     private function buildScheduledList()
     {
-        $playout_iterator = $this->playoutHourIterator();
         $scheduled_list = [];
-        foreach ($playout_iterator as $playout_hour){
-            $get_schedule = \DB::table('time_belt_transactions')
-                            ->selectRaw("SUM(duration) as total_duration, playout_hour, COUNT(id) as number_of_scheduled")
-                            ->where([
-                                ['playout_date', $this->time_belt->playout_date],
-                                ['company_id', $this->time_belt->company_id],
-                                ['media_program_id', $this->time_belt->media_program_id]
-                            ])
-                            ->whereTime('playout_hour', $playout_hour)
-                            ->groupBy('playout_hour')
-                            ->get();
-            if(count($get_schedule) != 0){
-                $duration = $get_schedule[0]->total_duration;
-                $number_of_scheduled = $get_schedule[0]->number_of_scheduled;
+        $playout_iterator = $this->adBreakList();
+        $get_schedule = \DB::table('time_belt_transactions')
+                        ->selectRaw("SUM(duration) as total_duration, SUM(`order`) as number_of_scheduled, playout_hour")
+                        ->where([
+                            ['playout_date', $this->time_belt->playout_date],
+                            ['company_id', $this->time_belt->company_id]
+                        ])
+                        ->groupBy('playout_hour')
+                        ->get();
+        foreach ($playout_iterator as $key => $ad_break){
+            $schedule = $get_schedule->where('playout_hour', $ad_break)->first();
+            if($schedule){
+                $duration = $schedule->total_duration;
+                $number_of_scheduled = $schedule->number_of_scheduled;
             }else{
                 $duration = 0;
                 $number_of_scheduled = 0;
             }
             $scheduled_list[] = [
-                'ad_break' => $playout_hour,
-                'duration' => $duration,
+                'ad_break' => $ad_break,
+                'duration' => (int)$duration,
                 'total_order' => $number_of_scheduled
             ];
         }
         return $scheduled_list;
     }
 
-    private function playoutHourIterator()
+    /**
+     * @return array
+     * given 10 and 11
+     * if ad_pattern is 4
+     * [
+     *  10:00
+     *  10:15
+     *  10:30
+     *  10:45
+     *  11:00
+     *  11:15
+     *  11:30
+     *  11:45
+     * ]
+     * if ad_pattern is 3
+     * [
+     *  10:00
+     *  10:20
+     *  10:40
+     *  11:00
+     *  11:20
+     *  11:40
+     * ]
+     */
+    private function adBreakList()
     {
-        $playout_hours = $this->getHoursInTheProgram();
-        $adbreak_mintes = 60 / $this->ad_pattern;
+        $start_time = $this->start_time ? $this->start_time : '00:00:00';
+        $adbreak_minutes = 60 / $this->ad_pattern;
         $ad_breaks = [];
-        foreach ($playout_hours as $playout_hour){
-            $play_out_hour = $playout_hour->playout_hours.':00:00';
+        foreach ($this->prefered_hours as $prefered_hour){
+            $formatted_prefered_hour = $prefered_hour.':00:00';
             for ($i = 0; $i < $this->ad_pattern; $i++){
-                $added_minutes = $i * $adbreak_mintes;
-                $ad_breaks[] = date('H:i:s', strtotime('+'.$added_minutes.' minutes', strtotime($play_out_hour)));
+                $added_minutes = $i * $adbreak_minutes;
+                $new_break = strtotime('+'.$added_minutes.' minutes', strtotime($formatted_prefered_hour));
+                if($new_break >= strtotime($start_time)){
+                    $ad_breaks[] = date('H:i:s', $new_break);
+                }
             }
         }
         return $ad_breaks;

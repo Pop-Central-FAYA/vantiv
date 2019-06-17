@@ -24,7 +24,8 @@ class PlaceAdForScheduleTest extends TestCase
             'playout_hour' => '11:15:00'
         ]);
 
-        $place_ad_service = new PlaceAdForSchedule(4, $time_belt_transaction->id, $time_belt_data);
+        $place_ad_service = new PlaceAdForSchedule(4, $time_belt_transaction->id, $time_belt_data,
+            ['11'],'11:00:00');
         $this->assertEquals(1, $place_ad_service->run()->order);
     }
 
@@ -33,6 +34,16 @@ class PlaceAdForScheduleTest extends TestCase
         $program = factory(MediaProgram::class)->create();
         $this->createTimeBelt($program);
         $time_belt_data = (object)$this->preselectedTimeBeltData($program->id);
+
+        factory(TimeBeltTransaction::class)->create([
+            'playout_date' => $time_belt_data->playout_date,
+            'company_id' => $time_belt_data->company_id,
+            'duration' => 60,
+            'media_program_id' => $program->id,
+            'playout_hour' => '11:00:00',
+            'order' => 1
+        ]);
+
         $time_belt_transaction = factory(TimeBeltTransaction::class)->create([
             'playout_date' => $time_belt_data->playout_date,
             'company_id' => $time_belt_data->company_id,
@@ -41,7 +52,8 @@ class PlaceAdForScheduleTest extends TestCase
             'playout_hour' => '11:00:00'
         ]);
 
-        $place_ad_service = new PlaceAdForSchedule(4, $time_belt_transaction->id, $time_belt_data);
+        $place_ad_service = new PlaceAdForSchedule(4, $time_belt_transaction->id, $time_belt_data,
+            ['11'],$this->timeBeltData()[0]['start_time']);
         $this->assertEquals(2, $place_ad_service->run()->order);
     }
 
@@ -66,7 +78,8 @@ class PlaceAdForScheduleTest extends TestCase
             'playout_hour' => '11:15:00'
         ]);
 
-        $place_ad_service = new PlaceAdForSchedule(4, $time_belt_transaction->id, $time_belt_data);
+        $place_ad_service = new PlaceAdForSchedule(4, $time_belt_transaction->id, $time_belt_data,
+            ['11'], null);
         $this->assertEquals('11:15:00', $place_ad_service->run()->playout_hour);
     }
 
@@ -93,8 +106,44 @@ class PlaceAdForScheduleTest extends TestCase
             'media_program_id' => $program->id,
         ]);
 
-        $place_ad_service = new PlaceAdForSchedule(4, $time_belt_transaction->id, $time_belt_data);
+        $place_ad_service = new PlaceAdForSchedule(4, $time_belt_transaction->id, $time_belt_data,
+            ['11'],$this->timeBeltData()[0]['start_time']);
         $this->assertNull($place_ad_service->run());
+    }
+
+    public function test_it_places_ads_when_start_time_is_not_present()
+    {
+        $program = factory(MediaProgram::class)->create();
+        $this->createTimeBelt($program);
+        $time_belt_data = (object)$this->preselectedTimeBeltData($program->id);
+        $time_belt_transaction = factory(TimeBeltTransaction::class)->create([
+            'playout_date' => $time_belt_data->playout_date,
+            'company_id' => $time_belt_data->company_id,
+            'duration' => $time_belt_data->duration,
+            'media_program_id' => $program->id,
+            'playout_hour' => '11:15:00'
+        ]);
+
+        $place_ad_service = new PlaceAdForSchedule(4, $time_belt_transaction->id, $time_belt_data,
+            ['11'],null);
+        $this->assertEquals(1, $place_ad_service->run()->order);
+    }
+
+    public function test_it_can_schedule_ads_for_prgram_with_start_time_not_at_the_top_of_the_hour()
+    {
+        $program = factory(MediaProgram::class)->create();
+        $this->createTimeBelt($program);
+        $time_belt_data = (object)$this->preselectedTimeBeltData($program->id);
+        $time_belt_transaction = factory(TimeBeltTransaction::class)->create([
+            'playout_date' => $time_belt_data->playout_date,
+            'company_id' => $time_belt_data->company_id,
+            'duration' => $time_belt_data->duration,
+            'media_program_id' => $program->id,
+        ]);
+
+        $place_ad_service = new PlaceAdForSchedule(4, $time_belt_transaction->id, $time_belt_data,
+            ['11'],'11:30:00');
+        $this->assertEquals(1, $place_ad_service->run()->order);
     }
 
     public function preselectedTimeBeltData($program_id)
@@ -110,7 +159,7 @@ class PlaceAdForScheduleTest extends TestCase
     public function createTimeBelt($program)
     {
         $time_belt_array = [];
-        foreach ($this->timeBeltData($program) as $time_belt){
+        foreach ($this->timeBeltData() as $time_belt){
             $time_belt_array[] = factory(TimeBelt::class)->create([
                 'media_program_id' => $program->id,
                 'start_time' => $time_belt['start_time'],
@@ -121,7 +170,7 @@ class PlaceAdForScheduleTest extends TestCase
         return $time_belt_array;
     }
 
-    public function timeBeltData($program)
+    public function timeBeltData()
     {
         return [
             [

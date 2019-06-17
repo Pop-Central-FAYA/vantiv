@@ -35,16 +35,9 @@ class CreateTimeBeltTransaction
                 $time_belt_transaction->company_id = $time_belt->company_id;
                 $time_belt_transaction->save();
 
-                //method 1
-                $ad_schedule_service = new AdPatternSchedule($time_belt,
-                                            $time_belt_transaction->publisher->decoded_settings['ad_pattern']['length'],
-                                            $time_belt_transaction->id);
-                $ad_schedule_service->run();
-
-                //method 2
-                $place_ad_for_schedule = new PlaceAdForSchedule($time_belt,
+                $place_ad_for_schedule = new PlaceAdForSchedule(
                                                 $time_belt_transaction->publisher->decoded_settings['ad_pattern']['length'],
-                                                $time_belt_transaction->id);
+                                                $time_belt_transaction->id,$time_belt, ['11'], null);
                 $place_ad_for_schedule->run();
             }
         });

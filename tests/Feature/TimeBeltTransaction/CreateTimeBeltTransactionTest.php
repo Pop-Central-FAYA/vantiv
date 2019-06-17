@@ -36,7 +36,7 @@ class CreateTimeBeltTransactionTest extends TestCase
             'playout_hour' => '11:00:00',
             'approval_status' => 'approved',
             'payment_status' => 'approved',
-            'broadcaster_id' => $company_id
+            'company_id' => $company_id
         ];
         $preselected_time_belt_2 = (object)[
             'time_belt_id' => factory(TimeBelt::class)->create()->id,
@@ -51,7 +51,7 @@ class CreateTimeBeltTransactionTest extends TestCase
             'playout_hour' => '11:00:00',
             'approval_status' => 'approved',
             'payment_status' => 'approved',
-            'broadcaster_id' => $company_id
+            'company_id' => $company_id
         ];
 
         array_push($preselected_time_belt, $preselected_time_belt_1, $preselected_time_belt_2);
