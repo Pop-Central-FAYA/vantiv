@@ -4,6 +4,11 @@
     <title>FAYA | Media Assets</title>
 @stop
 
+@section('styles')
+    <!-- App.js -->
+    <!-- <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" type="text/css" rel="stylesheet"> -->
+@stop
+
 @section('content')
 
     <!-- main container -->
@@ -22,7 +27,13 @@
                 </div>
             </div>
             <div class="row my-5">
-                <media-asset-display></media-asset-display>
+                <div class="col-md-12">
+                <v-app>
+                    <v-content>
+                    <media-asset-display></media-asset-display>
+                    </v-content>
+                </v-app>
+            </div>
             </div>
         </div>
     </div>
