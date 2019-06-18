@@ -44,7 +44,9 @@
                 <div class="column col_4 clearfix">
 
                     <div class="col_8 right align_right">
+                    @if(Auth::user()->hasPermissionTo('create.user'))
                         <a href="{{ route('agency.user.invite') }}" class="btn small_btn"><span class="_plus"></span>Invite New User</a>
+                    @endif
                     </div>
 
                 </div>

@@ -400,11 +400,11 @@ Route::group(['middleware' => 'auth'], function () {
 
 
         Route::group(['namespace' => 'Dsp','prefix' => 'campaigns'], function() {
-            Route::get('/all-campaigns/active', 'CampaignsController@index')->name('agency.campaign.all');
+            Route::get('/all-campaigns/active', 'CampaignsController@index')->name('agency.campaign.all')->middleware('permission:view.campaign');
             Route::get('/all-campaign/data', 'CampaignsController@getData');
             Route::get('/all-clients', 'CampaignsController@allClient')->name('agency.campaign.create');
             Route::get('/all-client/data', 'CampaignsController@clientData');
-            Route::get('/campaign/step1', 'CampaignsController@getStep1')->name('agency_campaign.step1');
+            Route::get('/campaign/step1', 'CampaignsController@getStep1')->name('agency_campaign.step1')->middleware('permission:create.campaign');
             Route::post('/campaign/step1/store', 'CampaignsController@postStep1')->name('agency_campaign.store1');
             Route::get('/campaigns/step2/{id}', 'CampaignsController@getStep2')->name('agency_campaign.step2');
             Route::get('/campaign/step3/{id}', 'CampaignsController@getStep3')->name('agency_campaign.step3');
@@ -449,29 +449,29 @@ Route::group(['middleware' => 'auth'], function () {
          * Clients
          */
         Route::group(['prefix' => 'clients'], function () {
-            Route::get('/list', 'ClientsController@clients')->name('clients.list');
-            Route::get('/client/{client_id}', 'ClientsController@clientShow')->name('client.show');
+            Route::get('/list', 'ClientsController@clients')->name('clients.list')->middleware('permission:view.client');
+            Route::get('/client/{client_id}', 'ClientsController@clientShow')->name('client.show')->middleware('permission:view.client');
             Route::get('/client/brand/{id}', 'ClientsController@getClientBrands')->name('client_brands');
             Route::get('/client/{client_id}/{user_id}', 'ClientsController@getCampaignData');
             Route::get('/client-month/{client_id}', 'ClientsController@filterByDate')->name('client.date');
             Route::get('/client-yearly/{client_id}', 'ClientsController@filterByYear')->name('client.year');
             Route::get('/client-brand/{id}/{client_id}', 'ClientsController@brandCampaign')->name('campaign.brand.client');
-            Route::post('/update-client/{client_id}', 'ClientsController@updateClients')->name('agency.client.update');
+            Route::post('/update-client/{client_id}', 'ClientsController@updateClients')->name('agency.client.update')->middleware('permission:update.client');
         });
 
         Route::group(['prefix' => 'invoices'], function () {
-            Route::get('/all', 'InvoiceController@all')->name('invoices.all');
+            Route::get('/all', 'InvoiceController@all')->name('invoices.all')->middleware('permission:view.invoice');
             Route::get('/data', 'InvoiceController@getInvoiceDate');
             Route::get('/pending/data', 'InvoiceController@pendingData');
             Route::get('/pending', 'InvoiceController@pending')->name('invoices.pending');
-            Route::post('/{invoice_id}/update', 'InvoiceController@approveInvoice')->name('invoices.update');
+            Route::post('/{invoice_id}/update', 'InvoiceController@approveInvoice')->name('invoices.update')->middleware('permission:view.invoice');
             Route::get('/details/{id}', 'InvoiceController@getInvoiceDetails')->name('invoice.details');
             Route::get('/export/pdf/{id}', 'InvoiceController@exportToPDF')->name('invoice.export');
         });
 
         Route::group(['namespace' => 'Dsp','prefix' => 'wallets'], function(){
-            Route::get('/wallet/credit', 'WalletsController@create')->name('agency_wallet.create');
-            Route::get('/wallet-statement', 'WalletsController@index')->name('agency_wallet.statement');
+            Route::get('/wallet/credit', 'WalletsController@create')->name('agency_wallet.create')->middleware('permission:create.wallet');
+            Route::get('/wallet-statement', 'WalletsController@index')->name('agency_wallet.statement')->middleware('permission:view.wallet');
             Route::post('/wallet/amount', 'WalletsController@getAmount')->name('wallet.amount');
             Route::get('/wallet/amount/pay', 'WalletsController@getPay')->name('amount.pay');
             Route::post('/pay', 'WalletsController@pay')->name('pay');
@@ -482,7 +482,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/', 'ReportsController@index')->name('reports.index');
             Route::get('/campaign/all-data', 'ReportsController@getCampaign');
             Route::get('/revenue/all-data', 'ReportsController@getRevenue');
-//                Route::get('/client-filter/campaign', 'Agency\ReportsController@filterCampaignClient')->name('filter.client');
+//          Route::get('/client-filter/campaign', 'Agency\ReportsController@filterCampaignClient')->name('filter.client');
         });
 
         /**
@@ -491,18 +491,18 @@ Route::group(['middleware' => 'auth'], function () {
         Route::group(['namespace' => 'Dsp\MediaPlan', 'prefix' => 'media-plan'], function () {
             Route::get('/', 'MediaPlanController@index')->name('agency.media_plans');
             Route::get('/dashboard/list', 'MediaPlanController@dashboardMediaPlans');
-            Route::get('/create', 'MediaPlanController@criteriaForm')->name('agency.media_plan.criteria_form');
+            Route::get('/create', 'MediaPlanController@criteriaForm')->name('agency.media_plan.criteria_form')->middleware('permission:create.media_plan');
             Route::post('/create-plan', 'MediaPlanController@generateRatingsPost')->name('agency.media_plan.suggestPlan');
-            Route::get('/summary/{id}', 'MediaPlanController@summary')->name('agency.media_plan.summary');
-            Route::get('/approve/{id}', 'MediaPlanController@approvePlan')->name('agency.media_plan.approve');
-            Route::get('/decline/{id}', 'MediaPlanController@declinePlan')->name('agency.media_plan.decline');
-            Route::get('/customise/{id}', 'MediaPlanController@getSuggestPlanById')->name('agency.media_plan.customize');
+            Route::get('/summary/{id}', 'MediaPlanController@summary')->name('agency.media_plan.summary')->middleware('permission:create.media_plan');
+            Route::get('/approve/{id}', 'MediaPlanController@approvePlan')->name('agency.media_plan.approve')->middleware('permission:create.media_plan');
+            Route::get('/decline/{id}', 'MediaPlanController@declinePlan')->name('agency.media_plan.decline')->middleware('permission:create.media_plan');
+            Route::get('/customise/{id}', 'MediaPlanController@getSuggestPlanById')->name('agency.media_plan.customize')->middleware('permission:update.media_plan');
             Route::get('/vue/customise/{id}', 'MediaPlanController@getSuggestPlanByIdVue');
 
             Route::post('/customise-filter', 'MediaPlanController@setPlanSuggestionFilters')->name('agency.media_plan.customize-filter');
 
             Route::post('/select_plan', 'MediaPlanController@SelectPlanPost');
-            Route::get('/createplan/{id}', 'MediaPlanController@CreatePlan')->name('agency.media_plan.create');
+            Route::get('/createplan/{id}', 'MediaPlanController@CreatePlan')->name('agency.media_plan.create')->middleware('permission:create.media_plan');
             Route::post('/finish_plan', 'MediaPlanController@CompletePlan');
             Route::get('/export/{id}', 'MediaPlanController@exportPlan')->name('agency.media_plan.export');
             Route::post('/store-programs', 'MediaPlanController@storePrograms')->name('media_plan.program.store');
@@ -525,14 +525,14 @@ Route::group(['middleware' => 'auth'], function () {
     */
 
    Route::group(['namespace' => 'Dsp','prefix' => 'user'], function() {
-    Route::get('/all', 'UserController@index')->name('agency.user.index');
-    Route::get('/invite', 'UserController@inviteUser')->name('agency.user.invite');
+    Route::get('/all', 'UserController@index')->name('agency.user.index')->middleware('permission:view.user');
+    Route::get('/invite', 'UserController@inviteUser')->name('agency.user.invite')->middleware('permission:create.user');
     Route::get('/edit/{id}', 'UserController@editUser')->name('agency.user.edit');
     Route::post('/update/{id}', 'UserController@updateUser');
     Route::post('/invite/store', 'UserController@processInvite');
     Route::get('/data-table', 'UserController@getDatatable');
     Route::post('/resend/invitation', 'UserController@resendInvitation');
-    Route::get('/status/update', 'UserController@updateStatus');
+    Route::get('/status/update', 'UserController@updateStatus')->middleware('permission:update.update.user');
 });
 
 
@@ -540,11 +540,11 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
     Route::group(['namespace' => 'Dsp','prefix' => 'wallets'], function(){
-        Route::get('/wallet/credit', 'WalletsController@create')->name('wallet.create');
-        Route::get('/wallet-statement', 'WalletsController@index')->name('wallet.statement');
+        Route::get('/wallet/credit', 'WalletsController@create')->name('wallet.create')->middleware('permission:create.wallet');
+        Route::get('/wallet-statement', 'WalletsController@index')->name('wallet.statement')->middleware('permission:view.wallet');
         Route::post('/wallet/amount', 'WalletsController@getAmount')->name('wallet.amount');
         Route::get('/wallet/amount/pay', 'WalletsController@getPay')->name('amount.pay');
-        Route::post('/pay', 'WalletsController@pay')->name('pay');
+        Route::post('/pay', 'WalletsController@pay')->name('pay')->middleware('permission:create.wallet');
         Route::get('/get-wallet/data', 'WalletsController@getData');
     });
 

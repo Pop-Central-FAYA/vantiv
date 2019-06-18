@@ -49,7 +49,7 @@ class AttachPermissionsToRole extends Command
             $permission_array = [];
             foreach ($exploded_permissions as $permission){
                 try{
-                    $get_permission = Permission::findByName($permission, 'ssp');
+                    $get_permission = Permission::findByName($permission, $guard);
                     array_push($permission_array, $get_permission);
                 }catch (Exception $e){
                     $this->error($e->getMessage());
