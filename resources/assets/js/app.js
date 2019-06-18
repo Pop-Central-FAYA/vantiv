@@ -24,6 +24,11 @@ Vue.use(HighchartsVue, {
 import VeeValidate from 'vee-validate';
 Vue.use(VeeValidate);
 
+// Vuetify
+import Vuetify from 'vuetify';
+import 'vuetify/dist/vuetify.min.css';
+Vue.use(Vuetify)
+
 // declared to manage events globally
 window.Event = new Vue();
 
