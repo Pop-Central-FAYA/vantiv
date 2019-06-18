@@ -30,8 +30,7 @@ class TimeBeltTransaction extends Base
 
     public function getMediaProgramHours()
     {
-        return \DB::table('time_belts')
-                ->selectRaw("hour(start_time) as program_hours")
+        return $this->time_belt::selectRaw("hour(start_time) as program_hours")
                 ->where('media_program_id', $this->media_program->id)
                 ->groupBy(\DB::raw('hour(start_time)'))
                 ->get()
