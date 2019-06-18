@@ -43,7 +43,7 @@ class TimeBeltTransaction extends Base
         $media_program_hours = $this->getMediaProgramHours();
         $result = [];
         foreach ($media_program_hours as $media_program_hour){
-            $result[] = $media_program_hour->program_hours;
+            $result[] = $media_program_hour['program_hours'];
         }
         return $result;
     }
