@@ -38,7 +38,8 @@ class CreateTimeBeltTransaction
                 $place_ad_for_schedule = new PlaceAdForSchedule(
                                                 $time_belt_transaction->publisher->decoded_settings['ad_pattern']['length'],
                                                 $time_belt_transaction->id,$time_belt,
-                                                $time_belt_transaction->formatted_media_program_hours, null);
+                                                $time_belt_transaction->formatted_media_program_hours['result'],
+                                                $time_belt_transaction->formatted_media_program_hours['start_time']);
                 $place_ad_for_schedule->run();
             }
         });
