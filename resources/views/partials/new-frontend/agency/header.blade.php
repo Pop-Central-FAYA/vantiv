@@ -14,8 +14,13 @@
                 </p>
 
                 <div class="">
+                  @if(Auth::user()->hasPermissionTo('view.profile'))
                     <a href="{{ route('user.profile') }}" class="color_dark">Profile</a>
+                    @endif
+                    @if(Auth::user()->hasPermissionTo('view.user'))
                     <a href="{{ route('agency.user.index') }}" class="color_dark">Users</a>
+                    @endif
+
                     <a href="{{ route('auth.logout') }}" class="color_red">Logout</a>
                 </div>
             </div>

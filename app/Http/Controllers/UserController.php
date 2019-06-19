@@ -37,11 +37,15 @@ class UserController extends Controller
         $statuses = UserStatus::lists();
         return $dataTables->collection($user_list)
             ->addColumn('edit', function ($user_list) {
+
+
                 if(!\Auth::user()->hasPermissionTo('update.super_admin') && $user_list['role_name']->first() == 'ssp.super_admin'){
                     return '';
                 }else{
                     return '<a href="'.route('user.edit', ['id' => $user_list['id']]).'" class="weight_medium">Edit</a>';
                 }
+
+                
             })
             ->addColumn('status', function ($user_list) use($statuses) {
                 if($user_list['status'] === UserStatus::UNCONFIRMED){
