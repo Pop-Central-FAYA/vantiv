@@ -43,7 +43,11 @@ class PublisherSettings extends Command
         $ad_pattern = $this->ask('Please enter your Ad Pattern');
         try{
             $settings = [
-                'ad_pattern' => $ad_pattern
+                'ad_pattern' => [
+                    'length' => $ad_pattern,
+                    'unit' => 'breaks',
+                    'interval' => '1 hour'
+                ]
             ];
             $publisher = Publisher::where('company_id', $company_id)->first();
             $publisher->settings = json_encode($settings);
