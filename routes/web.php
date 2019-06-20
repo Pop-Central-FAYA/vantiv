@@ -11,6 +11,9 @@ Route::group(['domain' => Request::getHost()], function() {
 Route::get('login', 'Auth\AuthController@getLogin')->name('login');
 Route::post('login', 'Auth\AuthController@postLogin')->name('post.login');
 
+Route::get('dsp/login', 'Auth\DspAuthController@getDspLogin')->name('dsplogin');
+Route::post('dsplogin', 'Auth\DspAuthController@postDspLogin')->name('post.dsplogin');
+
 Route::get('/auth-broadcaster/signup', 'BroadcasterAuthController@getRegister')->name('broadcaster.register.form');
 Route::post('/auth-broadcaster/signup/process', 'BroadcasterAuthController@postRegister')->name('broadcaster.signup');
 
@@ -24,6 +27,12 @@ Route::get('logout', [
     'as' => 'auth.logout',
     'uses' => 'Auth\AuthController@getLogout'
 ]);
+
+Route::get('dsplogout', [
+    'as' => 'auth.logout',
+    'uses' => 'Auth\DspAuthController@getLogout'
+]);
+
 
 Route::get('/forget-password', 'Auth\AuthController@getForgetPassword')->name('password.forgot');
 Route::post('/forget-password/process', 'Auth\AuthController@processForgetPassword')->name('forget_password.process');
@@ -42,6 +51,10 @@ Route::get('user/complete-account/{id}', 'UserController@getCompleteAccount')->n
 Route::post('/user/complete-account/store/{id}', 'UserController@processCompleteAccount');
 
 Route::post('/admin/post', 'AdminAuthController@postRegister')->name('admin.post');
+
+Route::get('/', ['as' => 'dashboard', 'uses' => 'DashboardController@index'])->middleware('auth:dsp');
+
+
 
 Route::group(['middleware' => 'auth'], function () {
 
@@ -303,7 +316,7 @@ Route::group(['middleware' => 'auth'], function () {
      * User Dashboard
      */
 
-    Route::get('/', ['as' => 'dashboard', 'uses' => 'DashboardController@index']);
+    //Route::get('/', ['as' => 'dashboard', 'uses' => 'DashboardController@index']);
 
     Route::get('/broadcaster', 'Broadcaster\DashboardController@index')->name('broadcaster.dashboard.index');
     Route::get('/campaign-management/dashboard', 'Broadcaster\DashboardController@campaignManagementDashbaord')

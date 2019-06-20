@@ -22,36 +22,17 @@ use Vanguard\Http\Controllers\Controller;
 use Vanguard\Services\User\AuthenticatableUser;
 use Vanguard\User;
 
-
-class AuthController extends Controller
+class DspAuthController extends Controller
 {
 
-    /**
-     * Create a new authentication controller instance.
-     * @param UserRepository $users
-     */
-    public function __construct(UserRepository $users)
+    public function __contruct()
     {
-        $this->middleware('guest', ['except' => ['getLogout']]);
-        $this->middleware('auth', ['only' => ['getLogout']]);
-        $this->middleware('registration', ['only' => ['getRegister', 'postRegister']]);
-        $this->users = $users;
+        $this->middleware('guest:dsp');
     }
-
-    /**
-     * Show the application login form.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function getLogin()
+    public function getDspLogin()
     {
-            $socialProviders = config('auth.social.providers');
-
-        return view('auth.login', compact('socialProviders'));
+        return view('auth.dsp_login');
     }
-
-
-
 
 
     /**
@@ -60,7 +41,7 @@ class AuthController extends Controller
      * @param LoginRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function postLogin(Request $request)
+    public function postDspLogin(Request $request)
     {
         if(empty($request->email) || empty($request->password)){
             return redirect()->back()->with('error', ClassMessages::EMAIL_PASSWORD_EMPTY);
@@ -89,49 +70,43 @@ class AuthController extends Controller
                 $this->incrementLoginAttempts($request);
             }
 
-            return redirect()->to('login' . $to)
+            return redirect()->to('dsplogin' . $to)
                 ->with('error', ClassMessages::INVALID_EMAIL_PASSWORD);
         }
 
         $user = Auth::getProvider()->retrieveByCredentials($credentials);
-
+        
+   
         if ($user->isUnconfirmed()) {
-            return redirect()->to('login' . $to)
+            return redirect()->to('dsplogin' . $to)
                 ->with('error', ClassMessages::EMAIL_CONFIRMATION);
         }
 
         if ($user->isBanned()) {
-            return redirect()->to('login' . $to)
+            return redirect()->to('dsplogin' . $to)
                 ->with('error', ClassMessages::BANNED_ACCOUNT);
         }
 
-        Auth::login($user, settings('remember_me') && $request->get('remember'));
+       Auth::guard('dsp')->attempt(['email' => $request->email, 'password' => $request->password], $request->remember);
 
-        if(Auth::user()->status === 'Unconfirmed' || Auth::user()->status === ''){
-            Auth::logout();
+        if(Auth::guard('dsp')->user()->status === 'Unconfirmed' || Auth::guard('dsp')->user()->status === ''){
+           Auth::logout();
         }
-
-        if(Auth::user()->company_type == CompanyTypeName::BROADCASTER){
+     
+        if(Auth::guard('dsp')->user()->company_type == CompanyTypeName::BROADCASTER){
             session()->forget('agency_id');
-            session(['broadcaster_id' => Auth::user()->companies->first()->id]);
-        }elseif(Auth::user()->company_type == CompanyTypeName::AGENCY){
+            session(['broadcaster_id' => Auth::guard('dsp')->user()->companies->first()->id]);
+        }elseif(Auth::guard('dsp')->user()->company_type == CompanyTypeName::AGENCY){
             session()->forget('broadcaster_id');
-            session(['agency_id' => Auth::user()->companies->first()->id]);
+            session(['agency_id' => Auth::guard('dsp')->user()->companies->first()->id]);
         }
+        
 
-        return $this->handleUserWasAuthenticated($request, $throttles, $user);
+        return $this->handleDspUserWasAuthenticated($request, $throttles, $user);
+        
     }
 
-
-    /**
-     * Handle a login request to the application.
-     *
-     * @param LoginRequest $request
-     * @return \Illuminate\Http\Response
-     */
-   
-
-    /**
+        /**
      * Send the response after the user was authenticated.
      *
      * @param  Request $request
@@ -139,47 +114,35 @@ class AuthController extends Controller
      * @param $user
      * @return \Illuminate\Http\Response
      */
-    protected function handleUserWasAuthenticated(Request $request, $throttles, $user)
+
+    protected function handleDspUserWasAuthenticated(Request $request, $throttles, $user)
     {
-        
+          
+      
         if ($throttles) {
             $this->clearLoginAttempts($request);
         }
 
-        $this->users->update($user->id, ['last_login' => Carbon::now()]);
+        $update_user = User::find($user->id);
+        $update_user->last_login = Carbon::now();
+        $update_user->save();
 
-        event(new LoggedIn($user));
-
-        if ($request->has('to')) {
-            return redirect()->to($request->get('to'));
-        }
-
-        $authenticated_user_company_type = Auth::user()->company_type;
-
-        if($authenticated_user_company_type === CompanyTypeName::BROADCASTER){
-            return redirect()->route('broadcaster.dashboard.index');
-        }else if($authenticated_user_company_type === CompanyTypeName::AGENCY){
-            return redirect()->route('dashboard');
-        }
-
-        return redirect()->intended();
+        
+       
+            event(new LoggedIn($user));
+            return redirect()->intended(route('dashboard')); 
+      
     }
-
-
-
-
 
     protected function logoutAndRedirectToTokenPage(Request $request, Authenticatable $user)
     {
-        Auth::logout();
+        Auth::guardlogout();
 
         $request->session()->put('auth.2fa.id', $user->id);
 
         return redirect()->route('auth.token');
     }
-
-
-    /**
+  /**
      * Get the needed authorization credentials from the request.
      *
      * @param  Request  $request
@@ -210,13 +173,13 @@ class AuthController extends Controller
      */
     public function getLogout()
     {
-        event(new LoggedOut(Auth::user()));
+        event(new LoggedOut(Auth::guard('dsp')->user()));
 
-        Auth::logout();
+        Auth::guard('dsp')->logout();
 
         \Session::flush();
 
-        return redirect('login');
+        return redirect(route('dsplogin'));
     }
 
     /**
@@ -270,8 +233,7 @@ class AuthController extends Controller
 
         return $this->maxLoginAttempts() - $attempts + 1;
     }
-
-    /**
+ /**
      * Redirect the user after determining they are locked out.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -314,7 +276,7 @@ class AuthController extends Controller
         );
     }
 
-    /**
+     /**
      * Get the maximum number of login attempts for delaying further attempts.
      *
      * @return int
@@ -399,7 +361,6 @@ class AuthController extends Controller
             return redirect()->back();
         }
     }
-
     public function getChangePassword($token)
     {
         $user_id = decrypt($token);
@@ -422,4 +383,5 @@ class AuthController extends Controller
 
     }
 
+   
 }

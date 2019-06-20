@@ -45,8 +45,9 @@ class Kernel extends HttpKernel
      *
      * @var array
      */
+     
     protected $routeMiddleware = [
-        'auth' => \Vanguard\Http\Middleware\Authenticate::class,
+        'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'guest' => \Vanguard\Http\Middleware\RedirectIfAuthenticated::class,
         'registration' => \Vanguard\Http\Middleware\Registration::class,

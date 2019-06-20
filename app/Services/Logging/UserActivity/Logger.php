@@ -13,24 +13,16 @@ class Logger
      * @var Request
      */
     private $request;
-    /**
-     * @var Guard
-     */
-    private $auth;
-
-    /**
-     * @var User|null
-     */
-    protected $user = null;
+   
+  
     /**
      * @var ActivityRepository
      */
     private $activities;
 
-    public function __construct(Request $request, Guard $auth, ActivityRepository $activities)
+    public function __construct(Request $request,  ActivityRepository $activities)
     {
         $this->request = $request;
-        $this->auth = $auth;
         $this->activities = $activities;
     }
 
@@ -40,31 +32,17 @@ class Logger
      * @param $description
      * @return static
      */
-    public function log($description)
+    public function log($description, $user)
     {
         return $this->activities->log([
             'description' => $description,
-            'user_id' => $this->getUserId(),
+            'user_id' => $user->id,
             'ip_address' => $this->request->ip(),
             'user_agent' => $this->getUserAgent()
         ]);
     }
 
-    /**
-     * Get id if the user for who we want to log this action.
-     * If user was manually set, then we will just return id of that user.
-     * If not, we will return the id of currently logged user.
-     *
-     * @return int|mixed|null
-     */
-    private function getUserId()
-    {
-        if ($this->user) {
-            return $this->user->id;
-        }
-
-        return $this->auth->id();
-    }
+    
 
     /**
      * Get user agent from request headers.
