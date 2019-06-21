@@ -26,8 +26,8 @@ Vue.use(VeeValidate);
 
 // Vuetify
 import Vuetify from 'vuetify';
+Vue.use(Vuetify);
 import 'vuetify/dist/vuetify.min.css';
-Vue.use(Vuetify)
 
 // declared to manage events globally
 window.Event = new Vue();

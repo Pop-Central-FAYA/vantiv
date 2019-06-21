@@ -22,18 +22,22 @@
                 <div class="col-md-6">
                     <h2 class="sub_header">Media Assets</h2>
                 </div>
-                <div class="col-md-6 text-right">
-                    <media-asset-upload :clients="{{ json_encode($clients) }}"></media-asset-upload>
-                </div>
+                @if(Auth::user()->hasPermissionTo('create.asset'))
+                    <div class="col-md-6 text-right">
+                        <media-asset-upload :clients="{{ json_encode($clients) }}"></media-asset-upload>
+                    </div>
+                @endif
             </div>
             <div class="row my-5">
-                <div class="col-md-12">
-                <v-app>
-                    <v-content>
-                    <media-asset-display></media-asset-display>
-                    </v-content>
-                </v-app>
-            </div>
+                @if(Auth::user()->hasPermissionTo('view.asset'))
+                    <div class="col-md-12">
+                        <v-app>
+                            <v-content>
+                            <media-asset-display></media-asset-display>
+                            </v-content>
+                        </v-app>
+                    </div>
+                @endif
             </div>
         </div>
     </div>
@@ -41,5 +45,7 @@
 
 @section('scripts')
     <!-- App.js -->
+    <script src="{{ asset('js/manifest.js') }}"></script>
+    <script src="{{ asset('js/vendor.js') }}"></script>
     <script src="{{ asset('js/app.js') }}"></script>
 @stop
