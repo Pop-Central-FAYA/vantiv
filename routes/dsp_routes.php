@@ -1,9 +1,10 @@
 <?php
 $appRoutes = function() {
 
-       Route::get('login', 'Auth\AuthController@getDspLogin')->name('login');
-       Route::post('login', 'Auth\AuthController@postLogin')->name('post.login');
- 
+       Route::get('dsplogin', 'Auth\DspAuthController@getDspLogin')->name('dsplogin');
+       Route::post('dsplogin', 'Auth\DspAuthController@postDspLogin')->name('post.dsplogin');
+  
+    Route::group(['middleware' => 'auth:dsp'], function () {
        Route::group(['namespace' => 'Dsp','prefix' => 'campaigns'], function() {
        Route::get('/all-campaigns/active', 'CampaignsController@index')->name('agency.campaign.all');
        Route::get('/all-campaign/data', 'CampaignsController@getData');
@@ -131,8 +132,10 @@ $appRoutes = function() {
        Route::get('/status/update', 'UserController@updateStatus');
    });
 
-
+});
 };
+
+
 Route::group(['domain' => 'stage.vantage.'. Request::getHost()], $appRoutes ); 
 Route::group(['domain' => 'vantage.'. Request::getHost()], $appRoutes); 
 
