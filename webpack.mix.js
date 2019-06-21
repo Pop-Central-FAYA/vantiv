@@ -1,5 +1,7 @@
 const mix = require('laravel-mix');
 
+require('laravel-mix-auto-extract');
+
 // this right here removes console log in production
 mix.options({
     uglify: {
@@ -26,3 +28,5 @@ mix.options({
 //     .sass('resources/sass/app.scss', 'public/css');
 mix.js('resources/assets/js/app.js', 'public/js')
     .sass('resources/assets/sass/app.scss', 'public/css');
+
+mix.autoExtract();

@@ -513,11 +513,11 @@ Route::group(['middleware' => 'auth'], function () {
          * Media Assets
          */
         Route::group(['prefix' => 'media-assets'], function () {
-            Route::get('/', 'MediaAssetsController@index')->name('agency.media_assets');
-            Route::post('/create', 'MediaAssetsController@createAsset');
-            Route::post('/presigned-url', 'S3Controller@getPresignedUrl');
-            Route::get('/all', 'MediaAssetsController@getAssets');
-            Route::get('/delete/{id}', 'MediaAssetsController@deleteAsset');
+            Route::get('/', 'MediaAssetsController@index')->name('agency.media_assets')->middleware('permission:view.asset');
+            Route::post('/create', 'MediaAssetsController@createAsset')->middleware('permission:create.asset');
+            Route::post('/presigned-url', 'S3Controller@getPresignedUrl')->middleware('permission:create.asset');
+            Route::get('/all', 'MediaAssetsController@getAssets')->middleware('permission:view.asset');
+            Route::get('/delete/{id}', 'MediaAssetsController@deleteAsset')->middleware('permission:delete.asset');
         });
 
          /**
