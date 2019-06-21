@@ -94,8 +94,8 @@ class DspAuthController extends Controller
         }
      
         if(Auth::guard('dsp')->user()->company_type == CompanyTypeName::BROADCASTER){
-            session()->forget('agency_id');
-            session(['broadcaster_id' => Auth::guard('dsp')->user()->companies->first()->id]);
+            Auth::logout();
+            return redirect()->route('login');
         }elseif(Auth::guard('dsp')->user()->company_type == CompanyTypeName::AGENCY){
             session()->forget('broadcaster_id');
             session(['agency_id' => Auth::guard('dsp')->user()->companies->first()->id]);

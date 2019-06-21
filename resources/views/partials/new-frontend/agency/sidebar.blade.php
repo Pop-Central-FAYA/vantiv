@@ -26,17 +26,10 @@
     </div>
 
     <div class="_nav_button">
-<<<<<<< HEAD
-         @if(Auth::user()->hasPermissionTo('create.media_plan'))
-            <a href="{{ route('agency.media_plan.criteria_form') }}" class="btn full block_disp uppercased align_center mb3"><span class="_plus"></span>New Media Plan</a>
-        @endif
-        @if(Auth::user()->hasPermissionTo('create.campaign'))
-=======
          @if(Auth::guard('dsp')->user()->hasPermissionTo('create.media_plan'))
             <a href="{{ route('agency.media_plan.criteria_form') }}" class="btn full block_disp uppercased align_center mb3"><span class="_plus"></span>New Media Plan</a>
         @endif
         @if(Auth::guard('dsp')->user()->hasPermissionTo('create.campaign'))
->>>>>>> more changes
             <a href="{{ route('campaign.get_campaign_general_information') }}" class="btn full block_disp uppercased align_center"><span class="_plus"></span>New Campaign</a>
         @endif
     </div>

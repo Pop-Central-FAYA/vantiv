@@ -72,11 +72,7 @@
 
                         <div class="more_more">
                             <a href="{{ route('client.show', ['id' => $client['client_id']]) }}">Details</a>
-<<<<<<< HEAD
-                            @if(Auth::user()->hasPermissionTo('update.client'))
-=======
                             @if(Auth::guard('dsp')->user()->hasPermissionTo('update.client'))
->>>>>>> more changes
                             <a href="#edit_client{{ $client['client_id'] }}" class="modal_click">Edit</a>
                             @endif
                             {{--<a href="" class="color_red">Delete</a>--}}

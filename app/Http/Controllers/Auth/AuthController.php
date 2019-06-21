@@ -114,9 +114,9 @@ class AuthController extends Controller
         if(Auth::user()->company_type == CompanyTypeName::BROADCASTER){
             session()->forget('agency_id');
             session(['broadcaster_id' => Auth::user()->companies->first()->id]);
-        }elseif(Auth::user()->company_type == CompanyTypeName::AGENCY){
-            session()->forget('broadcaster_id');
-            session(['agency_id' => Auth::user()->companies->first()->id]);
+        }else{
+            Auth::logout();
+            return redirect()->route('dsplogin');
         }
 
         return $this->handleUserWasAuthenticated($request, $throttles, $user);

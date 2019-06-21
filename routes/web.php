@@ -417,7 +417,7 @@ Route::group(['middleware' => 'auth'], function () {
 Route::group(['middleware' => 'auth:dsp'], function () {
 
     Route::get('/', ['as' => 'dashboard', 'uses' => 'DashboardController@index']);
-    
+    Route::get('agency/dashboard/campaigns', 'DashboardController@dashboardCampaigns');
 
     Route::group(['prefix' => 'agency'], function() {
 
