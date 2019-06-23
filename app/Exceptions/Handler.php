@@ -95,7 +95,6 @@ class Handler extends ExceptionHandler
             break;
         }
         return redirect()->guest(route($login));
-        //return redirect()->guest('login');
     }
     public function sendMail(Exception $exception)
     {
@@ -105,7 +104,6 @@ class Handler extends ExceptionHandler
             $handler = new SymfonyExceptionHandler();
             $html = $handler->getContent($e);
             $logger->add($html);
-//            $sendMail = \Mail::to('ridwan.busari@techadvance.ng')->send(new SendErrorMail($html));
         }catch (Exception $ex){
             $error = $ex->getMessage();
             $logger->add($error);

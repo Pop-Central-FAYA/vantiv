@@ -136,7 +136,7 @@ class DspAuthController extends Controller
 
     protected function logoutAndRedirectToTokenPage(Request $request, Authenticatable $user)
     {
-        Auth::guardlogout();
+        Auth::guard('dsp')->logout();
 
         $request->session()->put('auth.2fa.id', $user->id);
 
@@ -314,73 +314,6 @@ class DspAuthController extends Controller
             ['email' => $param],
             ['email' => 'email']
         )->fails();
-    }
-
-
-    public function verifyToken($token)
-    {
-        $user = User::where('confirmation_token', $token)->first();
-        if($user->status === UserStatus::UNCONFIRMED){
-            $user->status = UserStatus::ACTIVE;
-            $user->save();
-            \Session::flash('success', ClassMessages::EMAIL_VERIFIED);
-            return redirect()->route('login');
-        }elseif($user->status === UserStatus::ACTIVE){
-            \Session::flash('info', ClassMessages::EMAIL_ALREADY_VERIFIED);
-            return redirect()->route('login');
-        }elseif(!$user){
-            \Session::flash('error', ClassMessages::WRONG_ACTIVATION);
-            return redirect()->route('login');
-        }
-    }
-
-    public function getForgetPassword()
-    {
-        return view('auth.password.forget_password');
-    }
-
-    public function processForgetPassword(Request $request)
-    {
-        $this->validate($request, [
-            'email' => 'email|required',
-        ]);
-
-        $user = User::where('email', $request->email)->first();
-        if($user){
-
-            $token = encrypt($user->id);
-
-            $send_mail = \Mail::to($user->email)->send(new PasswordChanger($token));
-
-            \Session::flash('success', ClassMessages::VERIFICATION_LINK);
-            return redirect()->back();
-
-        }else{
-
-            \Session::flash('error', ClassMessages::EMAIL_NOT_FOUND);
-            return redirect()->back();
-        }
-    }
-    public function getChangePassword($token)
-    {
-        $user_id = decrypt($token);
-        $user = User::where('id', $user_id)->first();
-
-        return view('auth.password.change_password', compact('user'));
-
-    }
-
-    public function processChangePassword(PasswordChangeRequest $request, $user_id)
-    {
-        try{
-            $user = User::where('id', $user_id)->first();
-            $user->password = $request->password;;
-            $user->save();
-        }catch (\Exception $exception){
-            return redirect()->back()->withErrors(ClassMessages::PROCESSING_ERROR);
-        }
-        return redirect()->route('login')->with('success', ClassMessages::PASSWORD_CHANGED);
-
     }
 
    
