@@ -29,7 +29,7 @@ Route::get('logout', [
 ]);
 
 Route::get('dsp/logout', [
-    'as' => 'auth.logout',
+    'as' => 'auth.dsplogout',
     'uses' => 'Auth\DspAuthController@getLogout'
 ]);
 
