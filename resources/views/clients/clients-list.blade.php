@@ -16,7 +16,7 @@
             </div>
 
             <div class="column col_6 align_right">
-            @if(Auth::user()->hasPermissionTo('create.client'))
+            @if(Auth::guard('dsp')->user()->hasPermissionTo('create.client'))
                 <a href="#new_client" class="btn modal_click">New Client</a>
                 @endif
             </div>
@@ -72,7 +72,7 @@
 
                         <div class="more_more">
                             <a href="{{ route('client.show', ['id' => $client['client_id']]) }}">Details</a>
-                            @if(Auth::user()->hasPermissionTo('update.client'))
+                            @if(Auth::guard('dsp')->user()->hasPermissionTo('update.client'))
                             <a href="#edit_client{{ $client['client_id'] }}" class="modal_click">Edit</a>
                             @endif
                             {{--<a href="" class="color_red">Delete</a>--}}

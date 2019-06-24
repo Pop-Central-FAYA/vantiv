@@ -17,7 +17,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Mail;
 use Vanguard\Libraries\LogException;
 use Vanguard\Mail\SendErrorMail;
-
 class Handler extends ExceptionHandler
 {
     /**
@@ -31,7 +30,6 @@ class Handler extends ExceptionHandler
         ModelNotFoundException::class,
         ValidationException::class,
     ];
-
     /**
      * Report or log an exception.
      *
@@ -43,14 +41,11 @@ class Handler extends ExceptionHandler
     // public function report(Exception $exception)
     // {
     //     // For now do not send reports
-
     //     if ($this->shouldReport($exception)) {
     //         $this->sendMail($exception); // sends an email
     //     }
-
     //     parent::report($exception);
     // }
-
     /**
      * Render an exception into an HTTP response.
      *
@@ -71,18 +66,13 @@ class Handler extends ExceptionHandler
         } elseif ($e instanceof TokenMismatchException) {
             return response()->view('errors.token-mismatch', [], 500);
         }
-
         if ($this->isHttpException($e)) {
             return $this->toIlluminateResponse($this->renderHttpException($e), $e);
         }
-
-
         return config('app.debug')
             ? $this->toIlluminateResponse($this->convertExceptionToResponse($e), $e)
             : response()->view('errors.500', [], 500);
-
     }
-
     /**
      * Convert an authentication exception into an unauthenticated response.
      *
@@ -95,31 +85,28 @@ class Handler extends ExceptionHandler
         if ($request->expectsJson()) {
             return response()->json(['error' => 'Unauthenticated.'], 401);
         }
-
-        return redirect()->guest('login');
+        $guard = array_get($exception->guards(), 0);
+        switch ($guard) {
+            case 'dsp':
+            $login = 'dsplogin';
+            break;
+            default:
+            $login = 'login';
+            break;
+        }
+        return redirect()->guest(route($login));
     }
-
     public function sendMail(Exception $exception)
     {
         $logger = new LogException();
-
         try {
-
             $e = FlattenException::create($exception);
-
             $handler = new SymfonyExceptionHandler();
-
             $html = $handler->getContent($e);
-
             $logger->add($html);
-
-//            $sendMail = \Mail::to('ridwan.busari@techadvance.ng')->send(new SendErrorMail($html));
-
         }catch (Exception $ex){
             $error = $ex->getMessage();
             $logger->add($error);
-
         }
     }
-
 }

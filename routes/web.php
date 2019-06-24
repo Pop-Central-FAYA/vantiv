@@ -11,6 +11,9 @@ Route::group(['domain' => Request::getHost()], function() {
 Route::get('login', 'Auth\AuthController@getLogin')->name('login');
 Route::post('login', 'Auth\AuthController@postLogin')->name('post.login');
 
+Route::get('dsplogin', 'Auth\DspAuthController@getDspLogin')->name('dsplogin');
+Route::post('dsplogin', 'Auth\DspAuthController@postDspLogin')->name('post.dsplogin');
+
 Route::get('/auth-broadcaster/signup', 'BroadcasterAuthController@getRegister')->name('broadcaster.register.form');
 Route::post('/auth-broadcaster/signup/process', 'BroadcasterAuthController@postRegister')->name('broadcaster.signup');
 
@@ -24,6 +27,12 @@ Route::get('logout', [
     'as' => 'auth.logout',
     'uses' => 'Auth\AuthController@getLogout'
 ]);
+
+Route::get('dsp/logout', [
+    'as' => 'auth.logout',
+    'uses' => 'Auth\DspAuthController@getLogout'
+]);
+
 
 Route::get('/forget-password', 'Auth\AuthController@getForgetPassword')->name('password.forgot');
 Route::post('/forget-password/process', 'Auth\AuthController@processForgetPassword')->name('forget_password.process');
@@ -42,6 +51,9 @@ Route::get('user/complete-account/{id}', 'UserController@getCompleteAccount')->n
 Route::post('/user/complete-account/store/{id}', 'UserController@processCompleteAccount');
 
 Route::post('/admin/post', 'AdminAuthController@postRegister')->name('admin.post');
+
+
+
 
 Route::group(['middleware' => 'auth'], function () {
 
@@ -303,7 +315,7 @@ Route::group(['middleware' => 'auth'], function () {
      * User Dashboard
      */
 
-    Route::get('/', ['as' => 'dashboard', 'uses' => 'DashboardController@index']);
+    //Route::get('/', ['as' => 'dashboard', 'uses' => 'DashboardController@index']);
 
     Route::get('/broadcaster', 'Broadcaster\DashboardController@index')->name('broadcaster.dashboard.index');
     Route::get('/campaign-management/dashboard', 'Broadcaster\DashboardController@campaignManagementDashbaord')
@@ -380,21 +392,32 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/rejected-files/{mpo_id}', 'MpoController@rejectedFiles')->name('mpo.rejected_files');
     });
 
-    Route::group(['prefix' => 'reports'], function () {
-        Route::get('/', 'ReportController@index')->name('reports');
-        Route::get('total-volume-campaigns/all-data', 'ReportController@HVCdata');
-        Route::get('paid-invoices/all-data', 'ReportController@PIdata');
-        Route::get('/periodic-sales/all', 'ReportController@psData');
-        Route::get('/total-volume-of-campaign/all', 'ReportController@tvcData');
-        Route::get('/high-day-parts/all', 'ReportController@hpdData');
-        Route::get('/high-days/all', 'ReportController@hpdaysData');
-    });
+        Route::group(['prefix' => 'reports'], function () {
+            Route::get('/', 'ReportController@index')->name('reports');
+            Route::get('total-volume-campaigns/all-data', 'ReportController@HVCdata');
+            Route::get('paid-invoices/all-data', 'ReportController@PIdata');
+            Route::get('/periodic-sales/all', 'ReportController@psData');
+            Route::get('/total-volume-of-campaign/all', 'ReportController@tvcData');
+            Route::get('/high-day-parts/all', 'ReportController@hpdData');
+            Route::get('/high-days/all', 'ReportController@hpdaysData');
+        });
 
     //route to filter client details by a company owner with multiple publishers
     Route::get('/client-details/{client_id}', 'WalkinsController@filterByPublisher');
 
     //get all brands per walkins or clients
     Route::get('/client/get-brands/{id}', 'BrandsController@getBrandsWithClients');
+
+   
+
+});
+
+
+
+Route::group(['middleware' => 'auth:dsp'], function () {
+
+    Route::get('/', ['as' => 'dashboard', 'uses' => 'DashboardController@index']);
+    Route::get('agency/dashboard/campaigns', 'DashboardController@dashboardCampaigns');
 
     Route::group(['prefix' => 'agency'], function() {
 
@@ -482,7 +505,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/', 'ReportsController@index')->name('reports.index');
             Route::get('/campaign/all-data', 'ReportsController@getCampaign');
             Route::get('/revenue/all-data', 'ReportsController@getRevenue');
-//          Route::get('/client-filter/campaign', 'Agency\ReportsController@filterCampaignClient')->name('filter.client');
+                //   Route::get('/client-filter/campaign', 'Agency\ReportsController@filterCampaignClient')->name('filter.client');
         });
 
         /**
@@ -521,19 +544,19 @@ Route::group(['middleware' => 'auth'], function () {
         });
 
          /**
-    * User Management
-    */
+            * User Management
+            */
 
-   Route::group(['namespace' => 'Dsp','prefix' => 'user'], function() {
-    Route::get('/all', 'UserController@index')->name('agency.user.index')->middleware('permission:view.user');
-    Route::get('/invite', 'UserController@inviteUser')->name('agency.user.invite')->middleware('permission:create.user');
-    Route::get('/edit/{id}', 'UserController@editUser')->name('agency.user.edit');
-    Route::post('/update/{id}', 'UserController@updateUser');
-    Route::post('/invite/store', 'UserController@processInvite');
-    Route::get('/data-table', 'UserController@getDatatable');
-    Route::post('/resend/invitation', 'UserController@resendInvitation');
-    Route::get('/status/update', 'UserController@updateStatus')->middleware('permission:update.update.user');
-});
+        Route::group(['namespace' => 'Dsp','prefix' => 'user'], function() {
+            Route::get('/all', 'UserController@index')->name('agency.user.index');
+            Route::get('/invite', 'UserController@inviteUser')->name('agency.user.invite');
+            Route::get('/edit/{id}', 'UserController@editUser')->name('agency.user.edit');
+            Route::post('/update/{id}', 'UserController@updateUser');
+            Route::post('/invite/store', 'UserController@processInvite');
+            Route::get('/data-table', 'UserController@getDatatable');
+            Route::post('/resend/invitation', 'UserController@resendInvitation');
+            Route::get('/status/update', 'UserController@updateStatus');
+        });
 
 
 
@@ -547,9 +570,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/pay', 'WalletsController@pay')->name('pay')->middleware('permission:create.wallet');
         Route::get('/get-wallet/data', 'WalletsController@getData');
     });
-
-});
-
+    });
 /**
  * Activity Log
  */

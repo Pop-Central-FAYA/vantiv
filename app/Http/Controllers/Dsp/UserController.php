@@ -80,7 +80,7 @@ class UserController extends Controller
             return ['status'=>"error", 'message'=> $validate_request->errors()->first()];
         }
         $companies = $this->getCompany($request->companies);
-        $inviter_name = \Auth::user()->full_name;
+        $inviter_name = \Auth::guard('dsp')->user()->full_name;
         \DB::transaction(function () use ($request, $companies, $inviter_name) {
             $user_mail_content_array = [];
             foreach ($request->email as $email) {
@@ -150,7 +150,7 @@ class UserController extends Controller
         if(isset($request->companies)) {
             $companies = $request->companies;
         }else{
-            $companies = \Auth::user()->companies->first()->id;
+            $companies = \Auth::guard('dsp')->user()->companies->first()->id;
         }
         return $companies;
     }
@@ -159,7 +159,7 @@ class UserController extends Controller
     {
         $user = User::find($request->user_id);
 
-        $email_format = new MailFormat($user, \Auth::user()->full_name);
+        $email_format = new MailFormat($user, \Auth::guard('dsp')->user()->full_name);
         $user_mail_content_array[] = $email_format->emailFormat();
 
         $email_invitation_service = new UserInvitationMail($user_mail_content_array);

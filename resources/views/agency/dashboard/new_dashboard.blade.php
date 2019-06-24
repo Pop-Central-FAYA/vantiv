@@ -19,7 +19,7 @@
 
         <!-- TOGGLE CAMPAIGN DETAILS AND MEDIA PLAN DETAILS -->
         <!-- main stats -->
-        @if(Auth::user()->hasRole('dsp.finance') || Auth::user()->hasRole('dsp.admin'))
+        @if(Auth::user()->hasPermissionTo('view.report'))
             <div class="clearfix mb4">
                 <div class="column col_6">
                     <button id="view-campaigns"  class="btn full block_disp uppercased align_center">Display All Campaigns</button>
@@ -34,7 +34,7 @@
         <!-- CAMPAIGN -->
         <div class="campaigns-dashboard" id="campaigns-dashboard">
             <!-- main stats -->
-            @if(Auth::user()->hasRole('dsp.finance') || Auth::user()->hasRole('dsp.admin') || Auth::user()->hasRole('dsp.compliance'))
+            @if(Auth::user()->hasPermissionTo('view.report'))
             <div class="the_stats the_frame clearfix mb4">
                 <div class="column col_3">
                     <span class="weight_medium small_faint uppercased">Active Campaigns</span>
@@ -209,7 +209,7 @@
         <!-- MEDIA PLAN -->
         <div class="media-plans-dashboard" id="media-plans-dashboard">
             <!-- Media Plan stats -->
-            @if(Auth::user()->hasRole('dsp.finance') || Auth::user()->hasRole('dsp.admin') || Auth::user()->hasRole('media_planner'))
+            @if(Auth::user()->hasPermissionTo('view.media_plan'))
             <div class="the_stats the_frame clearfix mb4">
                 <div class="column col_4">
                     <span class="weight_medium small_faint uppercased">Approved Media Plans</span>

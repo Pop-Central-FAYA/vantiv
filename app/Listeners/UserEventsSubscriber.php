@@ -36,12 +36,12 @@ class UserEventsSubscriber
 
     public function onLogin(LoggedIn $event)
     {
-        $this->logger->log(trans('log.logged_in'));
+        $this->logger->log(trans('log.logged_in'), $event->getUser());
     }
 
     public function onLogout(LoggedOut $event)
     {
-        $this->logger->log(trans('log.logged_out'));
+        $this->logger->log(trans('log.logged_out') , $event->getUser());
     }
 
     public function onRegister(Registered $event)
