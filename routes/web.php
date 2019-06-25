@@ -548,6 +548,7 @@ Route::group(['middleware' => 'auth:dsp'], function () {
             Route::post('/presigned-url', 'S3Controller@getPresignedUrl')->middleware('permission:create.asset');
             Route::get('/all', 'MediaAssetsController@getAssets')->middleware('permission:view.asset');
             Route::get('/delete/{id}', 'MediaAssetsController@deleteAsset')->middleware('permission:delete.asset');
+            Route::get('/client/get-brands/{id}', 'BrandsController@getBrandsWithClients');
         });
 
          /**

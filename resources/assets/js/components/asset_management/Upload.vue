@@ -149,7 +149,7 @@
                 }
                 axios({
                     method: 'get',
-                    url: '/client/get-brands/'+event.target.value,
+                    url: '/agency/media-assets/client/get-brands/'+event.target.value,
                     data: {
                         clients: event.target.value
                     }
