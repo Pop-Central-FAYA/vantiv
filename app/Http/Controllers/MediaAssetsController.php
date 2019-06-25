@@ -7,6 +7,7 @@ use Vanguard\Http\Requests\StoreMediaAsset;
 use Vanguard\Services\MediaAsset\CreateMediaAsset;
 use Vanguard\Services\MediaAsset\GetMediaAssets;
 use Vanguard\Models\MediaAsset;
+use Vanguard\Services\Client\ClientBrand;
 
 class MediaAssetsController extends Controller
 {
@@ -16,6 +17,13 @@ class MediaAssetsController extends Controller
         $clients = new AllClient(\Auth::user()->companies->first()->id);
         $clients = $clients->getAllClients();
         return view('agency.media_assets.index')->with('clients', $clients);
+    }
+
+    public function getBrandsWithClients($id)
+    {
+        $client_brands = new ClientBrand($id);
+        $brands = $client_brands->run();
+        return response()->json(['brands' => $brands]);
     }
 
     public function createAsset(StoreMediaAsset $request)
