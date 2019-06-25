@@ -29,7 +29,7 @@ Route::get('logout', [
 ]);
 
 Route::get('dsp/logout', [
-    'as' => 'auth.logout',
+    'as' => 'auth.dsplogout',
     'uses' => 'Auth\DspAuthController@getLogout'
 ]);
 
@@ -185,6 +185,13 @@ Route::group(['middleware' => 'auth'], function () {
                 ->name('time.belt.management.index')->middleware('permission:view.inventory');
         Route::get('/data-table', 'Broadcaster\TimeBeltManagementController@formatToDatatable');
         Route::get('/details/{time_belt_id}', 'Broadcaster\TimeBeltManagementController@details')->name('time.belt.management.details');
+    });
+
+    /**
+     * Schedule Management System
+     */
+    Route::group(['prefix' => 'schedule'], function() {
+       Route::get('/weekly', 'Broadcaster\ScheduleController@getWeeklySchedule')->name('schedule.weekly');
     });
 
     /*
