@@ -31,7 +31,6 @@ import 'vuetify/dist/vuetify.min.css';
 
 // declared to manage events globally
 window.Event = new Vue();
-
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -48,6 +47,11 @@ Vue.component('media-plan-suggestions', require('./components/media_plan/customi
 // ASSET MANAGEMENT
 Vue.component('media-asset-upload', require('./components/asset_management/Upload.vue'));
 Vue.component('media-asset-display', require('./components/asset_management/DisplayAssets.vue'));
+//Schedule
+Vue.component('vue-cal-weekly-schedule', require('./components/schedule/weekly/WeeklyScheduleCalender.vue'));
+Vue.component('ad-schedule-table', require('./components/schedule/partials/ScheduleTable.vue'));
+Vue.component('ad-hour-table', require('./components/schedule/partials/AdHourTable.vue'));
+Vue.component('ad-break-table', require('./components/schedule/partials/AdBreakTable.vue'));
 
 
 

@@ -187,6 +187,13 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/details/{time_belt_id}', 'Broadcaster\TimeBeltManagementController@details')->name('time.belt.management.details');
     });
 
+    /**
+     * Schedule Management System
+     */
+    Route::group(['prefix' => 'schedule'], function() {
+       Route::get('/weekly', 'Broadcaster\ScheduleController@getWeeklySchedule')->name('schedule.weekly');
+    });
+
     /*
     * Campaign
     */
