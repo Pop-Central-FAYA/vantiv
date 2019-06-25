@@ -65,6 +65,8 @@ class Handler extends ExceptionHandler
             return $this->convertValidationExceptionToResponse($e, $request);
         } elseif ($e instanceof TokenMismatchException) {
             return response()->view('errors.token-mismatch', [], 500);
+        }elseif ($e instanceof AuthenticationException) {
+            return $this->unauthenticated($request, $e);
         }
         if ($this->isHttpException($e)) {
             return $this->toIlluminateResponse($this->renderHttpException($e), $e);
