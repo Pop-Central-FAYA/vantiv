@@ -5,7 +5,7 @@
       <v-spacer></v-spacer>
       <v-text-field v-model="search" append-icon="search" label="Enter Keyword" single-line hide-details></v-text-field>
     </v-card-title>
-    <v-data-table class="custom-vue-table" :headers="headers" :items="assets" :search="search">
+    <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="assets" :search="search" :loading="loading" :no-data-text="noDataText">
       <template v-slot:items="props">
         <td>{{ props.item.file_name }}</td>
         <td class="text-xs-center">{{ props.item.client.company_name }}</td>
@@ -40,6 +40,8 @@
           { text: 'Duration (secs)', value: 'duration' },
           { text: 'Actions', value: 'name', sortable: false }
         ],
+        loading: true,
+        noDataText: 'Processing',
         assets: []
       }
     },
@@ -49,38 +51,46 @@
     },
     methods: {
         get_assets() {
-            axios({
-                method: 'get',
-                url: '/agency/media-assets/all'
-            }).then((res) => {
-                let result = res.data.data;
-                if (result.length === 0) {
-                    this.sweet_alert('No Media asset was found', 'info');
-                } else {
-                    this.assets = result;
-                }
-            }).catch((error) => {
-                this.assets = [];
-                this.sweet_alert('An unknown error has occurred, assets cannot be retrieved. Please try again', 'error');
-            });
+          this.loading = true;
+          this.noDataLoading = "Processing";
+          axios({
+              method: 'get',
+              url: '/agency/media-assets/all'
+          }).then((res) => {
+              this.loading = false;
+              let result = res.data.data;
+              if (result.length === 0) {
+                  this.noDataText = "No data available";
+                  this.sweet_alert('No Media asset was found', 'info');
+                  return;
+              } else {
+                  this.assets = result;
+              }
+          }).catch((error) => {
+              this.assets = [];
+              this.sweet_alert('An unknown error has occurred, assets cannot be retrieved. Please try again', 'error');
+          });
         },
         delete_asset(assetID) {
-            axios({
-                method: 'get',
-                url: '/agency/media-assets/delete/'+assetID
-            }).then((res) => {
-                console.log(res.data);
-                if (res.data.status == 'success') {
-                    this.assets = res.data.data;
-                    this.rows = res.data.data;
-                    this.sweet_alert("Media asset was successfully deleted", 'info');
-                } else {
-                    this.sweet_alert('Media asset cannot be deleted, try again', 'error');
-                }
-            }).catch((error) => {
-                this.assets = [];
-                this.sweet_alert('An unknown error has occurred, media assets cannot be delete. Please try again', 'error');
-            });
+          $("#load_this").css({ opacity: 0.2 });
+          var msg = "Deleting media asset, please wait";
+          this.sweet_alert(msg, 'info');
+          axios({
+              method: 'get',
+              url: '/agency/media-assets/delete/'+assetID
+          }).then((res) => {
+              console.log(res.data);
+              if (res.data.status == 'success') {
+                $('#load_this_div').css({opacity: 1});
+                this.assets = res.data.data;
+                this.sweet_alert("Media asset was successfully deleted", 'info');
+              } else {
+                this.sweet_alert('Media asset cannot be deleted, try again', 'error');
+              }
+          }).catch((error) => {
+              this.assets = [];
+              this.sweet_alert('An unknown error has occurred, media assets cannot be delete. Please try again', 'error');
+          });
         }
     }
   }

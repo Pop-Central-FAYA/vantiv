@@ -12,7 +12,7 @@
 @section('content')
 
     <!-- main container -->
-    <div class="main_contain">
+    <div class="main_contain" id="load_this_div">
         <!-- header -->
         @include('partials.new-frontend.agency.header')
 
