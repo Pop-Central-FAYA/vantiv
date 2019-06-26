@@ -103,40 +103,42 @@ $appRoutes = function() {
                     //   Route::get('/client-filter/campaign', 'Agency\ReportsController@filterCampaignClient')->name('filter.client');
             });
     
-            /**
-             * Media Planning
-             */
-            Route::group(['namespace' => 'Dsp\MediaPlan', 'prefix' => 'media-plan'], function () {
-                Route::get('/', 'MediaPlanController@index')->name('agency.media_plans');
-                Route::get('/dashboard/list', 'MediaPlanController@dashboardMediaPlans');
-                Route::get('/create', 'MediaPlanController@criteriaForm')->name('agency.media_plan.criteria_form')->middleware('permission:create.media_plan');
-                Route::post('/create-plan', 'MediaPlanController@generateRatingsPost')->name('agency.media_plan.suggestPlan');
-                Route::get('/summary/{id}', 'MediaPlanController@summary')->name('agency.media_plan.summary')->middleware('permission:create.media_plan');
-                Route::get('/approve/{id}', 'MediaPlanController@approvePlan')->name('agency.media_plan.approve')->middleware('permission:create.media_plan');
-                Route::get('/decline/{id}', 'MediaPlanController@declinePlan')->name('agency.media_plan.decline')->middleware('permission:create.media_plan');
-                Route::get('/customise/{id}', 'MediaPlanController@getSuggestPlanById')->name('agency.media_plan.customize')->middleware('permission:update.media_plan');
-                Route::get('/vue/customise/{id}', 'MediaPlanController@getSuggestPlanByIdVue');
-    
-                Route::post('/customise-filter', 'MediaPlanController@setPlanSuggestionFilters')->name('agency.media_plan.customize-filter');
-    
-                Route::post('/select_plan', 'MediaPlanController@SelectPlanPost');
-                Route::get('/createplan/{id}', 'MediaPlanController@CreatePlan')->name('agency.media_plan.create')->middleware('permission:create.media_plan');
-                Route::post('/finish_plan', 'MediaPlanController@CompletePlan');
-                Route::get('/export/{id}', 'MediaPlanController@exportPlan')->name('agency.media_plan.export');
-                Route::post('/store-programs', 'MediaPlanController@storePrograms')->name('media_plan.program.store');
-                Route::post('/store-volume-discount', 'MediaPlanController@storeVolumeDiscount')->name('media_plan.volume_discount.store');
-            });
-                /**
-                 * Media Assets
-                 */
-                Route::group(['prefix' => 'media-assets'], function () {
-                    Route::get('/', 'MediaAssetsController@index')->name('agency.media_assets')->middleware('permission:view.asset');
-                    Route::post('/create', 'MediaAssetsController@createAsset')->middleware('permission:create.asset');
-                    Route::post('/presigned-url', 'S3Controller@getPresignedUrl')->middleware('permission:create.asset');
-                    Route::get('/all', 'MediaAssetsController@getAssets')->middleware('permission:view.asset');
-                    Route::get('/delete/{id}', 'MediaAssetsController@deleteAsset')->middleware('permission:delete.asset');
-                });
+           /**
+         * Sectors
+         */
+        Route::group(['namespace' => 'Dsp\MediaPlan', 'prefix' => 'media-plan'], function () {
+            Route::get('/', 'MediaPlanController@index')->name('agency.media_plans');
+            Route::get('/dashboard/list', 'MediaPlanController@dashboardMediaPlans');
+            Route::get('/create', 'MediaPlanController@criteriaForm')->name('agency.media_plan.criteria_form')->middleware('permission:create.media_plan');
+            Route::post('/create-plan', 'MediaPlanController@generateRatingsPost')->name('agency.media_plan.suggestPlan');
+            Route::get('/summary/{id}', 'MediaPlanController@summary')->name('agency.media_plan.summary')->middleware('permission:create.media_plan');
+            Route::get('/approve/{id}', 'MediaPlanController@approvePlan')->name('agency.media_plan.approve')->middleware('permission:create.media_plan');
+            Route::get('/decline/{id}', 'MediaPlanController@declinePlan')->name('agency.media_plan.decline')->middleware('permission:create.media_plan');
+            Route::get('/customise/{id}', 'MediaPlanController@getSuggestPlanById')->name('agency.media_plan.customize')->middleware('permission:update.media_plan');
+            Route::get('/vue/customise/{id}', 'MediaPlanController@getSuggestPlanByIdVue');
 
+            Route::post('/customise-filter', 'MediaPlanController@setPlanSuggestionFilters')->name('agency.media_plan.customize-filter');
+
+            Route::post('/select_plan', 'MediaPlanController@SelectPlanPost');
+            Route::get('/createplan/{id}', 'MediaPlanController@CreatePlan')->name('agency.media_plan.create')->middleware('permission:create.media_plan');
+            Route::post('/finish_plan', 'MediaPlanController@CompletePlan');
+            Route::get('/export/{id}', 'MediaPlanController@exportPlan')->name('agency.media_plan.export');
+            Route::post('/store-programs', 'MediaPlanController@storePrograms')->name('media_plan.program.store');
+            Route::post('/store-volume-discount', 'MediaPlanController@storeVolumeDiscount')->name('media_plan.volume_discount.store');
+            Route::get('/convert-to-campaign/{id}', 'MediaPlanController@convertPlanToCampaign')->name('media_plan.campaign.create');
+        });
+       
+        /**
+         * File Position
+         */
+        Route::group(['prefix' => 'media-assets'], function () {
+            Route::get('/', 'MediaAssetsController@index')->name('agency.media_assets')->middleware('permission:view.asset');
+            Route::post('/create', 'MediaAssetsController@createAsset')->middleware('permission:create.asset');
+            Route::post('/presigned-url', 'S3Controller@getPresignedUrl')->middleware('permission:create.asset');
+            Route::get('/all', 'MediaAssetsController@getAssets')->middleware('permission:view.asset');
+            Route::get('/delete/{id}', 'MediaAssetsController@deleteAsset')->middleware('permission:delete.asset');
+            Route::get('/client/get-brands/{id}', 'BrandsController@getBrandsWithClients');
+        });
 
             /**
                 * User Management
