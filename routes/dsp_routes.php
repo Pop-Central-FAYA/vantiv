@@ -171,9 +171,9 @@ $appRoutes = function() {
 };
 
 
-    Route::group(['domain' => 'vantage.fayamedia.com'], $appRoutes); 
-    Route::group(['domain' => 'vantage.localhost'], $appRoutes); 
-
+Route::group(['domain' => 'vantage.fayamedia.com'], $appRoutes); 
+Route::group(['domain' => '{env}.vantage.fayamedia.com'], $appRoutes); 
+Route::group(['domain' => 'test.vantage.localhost'], $appRoutes); 
 
 
 
