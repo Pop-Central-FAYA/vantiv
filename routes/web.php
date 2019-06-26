@@ -695,5 +695,6 @@ $Routes = function() {
 
 
 
-Route::group(['domain' => 'torch.localhost'], $Routes); 
 Route::group(['domain' => 'torch.fayamedia.com'], $Routes); 
+Route::group(['domain' => '{env}.torch.fayamedia.com'], $Routes); 
+Route::group(['domain' => 'test.torch.localhost'], $Routes); 
