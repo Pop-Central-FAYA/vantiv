@@ -32,6 +32,11 @@ use Vanguard\Services\Traits\DefaultMaterialLength;
 use Vanguard\Services\Traits\ListDayTrait;
 use Vanguard\Libraries\Utilities;
 use Log;
+use Vanguard\Services\MediaPlan\StoreCampaign;
+use Vanguard\Services\MediaPlan\StoreMpo;
+use Carbon\Carbon;
+use Vanguard\Services\MediaPlan\GetSuggestionListByDuration;
+use Vanguard\Libraries\Enum\MediaPlanStatus;
 
 class MediaPlanController extends Controller
 {
@@ -555,4 +560,76 @@ class MediaPlanController extends Controller
         // }
     }
 
+    public function getChannelFromPlan($planMediaType)
+    {
+        if ($planMediaType == 'Tv') {
+            return json_encode(["nzrm6hchjats36"]);
+        } elseif ($planMediaType == 'Radio') {
+            return json_encode(["nzrm64hjatseog6"]);
+        } else {
+            return json_encode(["nzrm64hjatseog6", "nzrm6hchjats36"]);
+        }
+    }
+
+    public function convertPlanGenderToID($planGender)
+    {
+        if ($planGender == 'Male') {
+            return json_encode(["nzrm6hchjatseog9"]);
+        } elseif ($planGender == 'Female') {
+            return json_encode(["nzrm6hchjatseoga"]);
+        } else {
+            return json_encode(["nzrm6hchjatseog9", "nzrm6hchjatseoga"]);
+        }
+    }
+
+    public function convertPlanToCampaign($media_plan_id)
+    {
+        $media_plan = MediaPlan::findorfail($media_plan_id);
+
+        if ($media_plan->status != MediaPlanStatus::APPROVED) {
+            return response()->json([
+                'status' => 'error',
+                'data' => 'You can only convert and approved media plan to campaign'
+            ]);
+        }
+
+        $campaign_id = '';
+
+        try {
+            \DB::transaction(function () use ($media_plan, &$campaign_id) {
+                $suggestion_service = new GetSuggestionListByDuration($media_plan);
+                $suggestions = $suggestion_service->run();
+                // create a campaign instance
+                $campaign_reference = Utilities::generateReference();
+                $now = strtotime(Carbon::now('Africa/Lagos'));
+                $channel = $this->getChannelFromPlan($media_plan->media_type);
+                $target_audience = $this->convertPlanGenderToID($media_plan->criteria_gender);
+                $created_by = \Auth::guard('dsp')->user()->id;
+                $belongs_to = \Auth::guard('dsp')->user()->companies->first()->id;
+                $budget = $suggestion_service->getTotalBudgetPerPlan($suggestions);
+                $ad_slots = $suggestion_service->getTotalAdSlotPerPlan($suggestions);
+                $store_campaign_service = new StoreCampaign($now, $campaign_reference, $channel, $target_audience, $created_by, $belongs_to, $media_plan, $budget, $ad_slots);
+                $campaign = $store_campaign_service->run();
+                $campaign_id = $campaign->id;
+
+                // create MPO for each station in the Media plan
+                // get the media plan program details
+                $store_mpo_service = new StoreMpo($campaign_id, $media_plan, $suggestions);
+                $mpo = $store_mpo_service->run();
+
+                // update media plan field to "is_converted_to_mpo"
+            });
+        } catch (Exception $ex) {
+            return response()->json([
+                'status' => 'error',
+                'data' => 'Something went wrong, media plan cannot be convert to MPO.'.$ex->getMessage()
+            ]);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'data' => 'Media Plan successfully converted to MPO',
+            'campaign_id' => $campaign_id
+        ]);
+    }
 }
