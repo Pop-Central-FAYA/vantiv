@@ -538,6 +538,7 @@ Route::group(['middleware' => 'auth:dsp'], function () {
             Route::get('/export/{id}', 'MediaPlanController@exportPlan')->name('agency.media_plan.export');
             Route::post('/store-programs', 'MediaPlanController@storePrograms')->name('media_plan.program.store');
             Route::post('/store-volume-discount', 'MediaPlanController@storeVolumeDiscount')->name('media_plan.volume_discount.store');
+            Route::get('/convert-to-campaign/{id}', 'MediaPlanController@convertPlanToCampaign')->name('media_plan.campaign.create');
         });
 
         /**

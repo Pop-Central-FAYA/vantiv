@@ -5,7 +5,7 @@
 @stop
 
 @section('content')
-    <div class="main_contain">
+    <div class="main_contain" id="load_this">
         <!-- header -->
         @if(Session::get('broadcaster_id'))
             @include('partials.new-frontend.broadcaster.header')
@@ -107,158 +107,31 @@
                 <span>Back</span>
             </a>
         </div> -->
-        <div class="action_footer client_dets mb4 mt4">
-          <div class="col_5 column">
-            <a id="back_btn" href="{{ route('agency.media_plan.create', ['id'=>$media_plan->id]) }}" class="btn small_btn"><i class="media-plan material-icons">navigate_before</i> Back</a>
-          </div>
-          <div class="col_7 column">
-            @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('finance'))
-                <a href="{{ route('agency.media_plan.approve', ['id'=>$media_plan->id]) }}" class="media-plan btn block_disp uppercased mr-1 {{ ($media_plan->status == 'Approved' || $media_plan->status == 'Declined') ? 'disabled-action-btn' : ''}}"><i class="media-plan material-icons">check</i>Approve Plan</a>
-                <a href="{{ route('agency.media_plan.decline', ['id'=>$media_plan->id]) }}" class="media-plan btn block_disp uppercased bg_red mr-1 {{ ($media_plan->status == 'Approved' || $media_plan->status == 'Declined') ? 'disabled-action-btn' : ''}}"><i class="media-plan material-icons">clear</i>Decline Plan</a>
-            @endif
-            <a href="{{ route('agency.media_plan.export', ['id'=>$media_plan->id]) }}" class="btn block_disp uppercased"><i class="media-plan material-icons">file_download</i>Export Plan</a>
-          </div>
+
+        <div class="container-fluid my-5">
+            <div class="row">
+                <div class="col-md-4 p-0">
+                    <a id="back_btn" href="{{ route('agency.media_plan.create', ['id'=>$media_plan->id]) }}" class="btn small_btn"><i class="media-plan material-icons">navigate_before</i> Back</a>
+                </div>
+                <div class="col-md-8 p-0 text-right">
+                    @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('finance'))
+                        <a href="{{ route('agency.media_plan.approve', ['id'=>$media_plan->id]) }}" class="media-plan btn block_disp uppercased mr-1 {{ ($media_plan->status == 'Approved' || $media_plan->status == 'Declined') ? 'disabled-action-btn' : ''}}"><i class="media-plan material-icons">check</i>Approve Plan</a>
+                        <a href="{{ route('agency.media_plan.decline', ['id'=>$media_plan->id]) }}" class="media-plan btn block_disp uppercased bg_red mr-1 {{ ($media_plan->status == 'Approved' || $media_plan->status == 'Declined') ? 'disabled-action-btn' : ''}}"><i class="media-plan material-icons">clear</i>Decline Plan</a>
+                    @endif
+                    <a href="{{ route('agency.media_plan.export', ['id'=>$media_plan->id]) }}" class="btn block_disp uppercased"><i class="media-plan material-icons">file_download</i>Export Plan</a>
+                    @if ($media_plan->status == 'Approved')
+                        <media-plan-create-campaign :id="{{ json_encode($media_plan->id) }}"></media-plan-create-campaign>
+                    @endif
+                </div>
+            </div>
         </div>
         <br><br><br><br><br><br><br>
     </div>
 @stop
 
 @section('scripts')
-    <script src="https://unpkg.com/flatpickr"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
-    <script>
-        function goBack() {
-            window.history.back();
-        }
-        $(document).ready(function () {
-            //flatpickr
-            flatpickr(".flatpickr", {
-                altInput: true,
-            });
-            //select for target audience
-            $('.js-example-basic-multiple').select2();
-            //placeholder for target audienct
-            $('#region').select2({
-                placeholder: "Please select region"
-            });
-
-            $('#lsm').select2({
-                placeholder: "Please select LSM"
-            });
-
-            $('#social_class').select2({
-                placeholder: "Please select social class"
-            });
-
-            $('#state').select2({
-                placeholder: "Please select state"
-            });
-
-            $(".checkbox_region").click( function (){
-                var checkbox_region = $(this).data("region");
-                var $inputs = $('.checkbox_region');
-                if(checkbox_region === "naem6hqwjhjatseog8" && $(this).is(':checked')){
-                    $(".checkbox_region").prop('checked', false);
-                    $("#naem6hqwjhjatseog8").prop('checked', true);
-                    $inputs.not(this).prop('disabled',true);
-                }else{
-                    $(".checkbox_region").prop('disabled', false);
-                }
-            });
-
-            // fetch all brands when a clientSis selected
-            $('body').delegate('#clients','change', function(e){
-                var clients = $("#clients").val();
-                if(clients != ''){
-                    $(".load_stuff").css({
-                        opacity: 0.3
-                    });
-                    $("#industry").val('');
-                    $("#sub_industry").val('');
-                    var url = '/client/get-brands/'+clients;
-                    $.ajax({
-                        url: url,
-                        method: "GET",
-                        data: {clients: clients},
-                        success: function(data){
-                            if(data.brands){
-                                var big_html = '<select name="brand" id="brand">\n';
-                                if(data.brands != ''){
-                                    big_html += '<option value="">Select Brand</option>';
-                                    $.each(data.brands, function (index, value) {
-                                        big_html += '<option value="'+value.id+'">'+value.name+'</option>';
-                                    });
-                                    big_html += '</select>';
-                                    $(".brand_hide").hide();
-                                    $(".brand_select").show();
-                                    $(".brand_select").html(big_html);
-                                    $(".load_stuff").css({
-                                        opacity: 1
-                                    });
-                                }else{
-                                    big_html += '<option value="">Please Select a Client</option></section>';
-                                    $(".brand_hide").hide();
-                                    $(".brand_select").show();
-                                    $(".brand_select").html(big_html);
-                                    $(".load_stuff").css({
-                                        opacity: 1
-                                    });
-                                }
-                            }else{
-                                $(".load_stuff").css({
-                                    opacity: 1
-                                });
-                                toastr.error('An error occurred, please contact the administrator')
-                            }
-
-                        }
-                    });
-                }else{
-                    $("#industry").val('');
-                    $("#sub_industry").val('');
-                }
-            });
-
-            //fetch all industry and sub-industry attached to a brand
-            $('body').delegate('#brand','change', function(e) {
-                var brand = $("#brand").val();
-                if (brand != '') {
-                    $(".load_stuff").css({
-                        opacity: 0.5
-                    });
-                    $('.next').attr("disabled", true);
-                    var url = '/brand/get-industry';
-                    $.ajax({
-                        url: url,
-                        method: "GET",
-                        data: {brand: brand},
-                        success: function (data) {
-                            if (data.error === 'error') {
-                                $(".load_stuff").css({
-                                    opacity: 1
-                                });
-                                toastr.error('An error occured, please contact the administratot ')
-                            } else {
-                                $(".load_stuff").css({
-                                    opacity: 1
-                                });
-
-                                $("#industry").val(data.industry.name);
-                                $("#sub_industry").val(data.sub_industry.name);
-                            }
-
-                        }
-                    });
-                } else {
-                    $("#industry").val('');
-                    $("#sub_industry").val('');
-                }
-            });
-        });
-    </script>
-@stop
-
-@section('styles')
-    <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+    <!-- App.js -->
+    <script src="{{ asset('js/manifest.js') }}"></script>
+    <script src="{{ asset('js/vendor.js') }}"></script>
+    <script src="{{ asset('js/app.js') }}"></script>
 @stop
