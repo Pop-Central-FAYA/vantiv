@@ -191,7 +191,8 @@ Route::group(['middleware' => 'auth'], function () {
      * Schedule Management System
      */
     Route::group(['prefix' => 'schedule'], function() {
-       Route::get('/weekly', 'Broadcaster\ScheduleController@getWeeklySchedule')->name('schedule.weekly');
+       Route::get('/weekly', 'Broadcaster\ScheduleController@getWeeklySchedule')->name('schedule.weekly')
+                ->middleware('permission:view.schedule');
     });
 
     /*

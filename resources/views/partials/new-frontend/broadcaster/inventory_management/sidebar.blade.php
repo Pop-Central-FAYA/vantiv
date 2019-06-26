@@ -21,8 +21,9 @@
 @if(Auth::user()->hasPermissionTo('view.inventory'))
     <li class="settings_icon {{ Request::is('program-management') ? 'active' : Request::is('program-management/create') ? 'active' : Request::is('program-management/edit/*') ? 'active' : ''  }}"><a href="{{ route('program.management.index') }}">Programs</a></li>
 @endif
+@if(Auth::user()->hasPermissionTo('view.schedule'))
     <li class="settings_icon {{ Request::is('schedule/weekly') ? 'active' : ''  }}"><a href="{{ route('schedule.weekly') }}">Schedules</a></li>
-
+@endif
 
 <!-- <li class="report_icon"><a href="">Reports</a></li> -->
 <!-- <li class="settings_icon"><a href="">User Management</a></li> -->
