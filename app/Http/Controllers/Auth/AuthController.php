@@ -89,19 +89,19 @@ class AuthController extends Controller
                 $this->incrementLoginAttempts($request);
             }
 
-            return redirect()->to('login' . $to)
+            return redirect()->to(route('login'). $to)
                 ->with('error', ClassMessages::INVALID_EMAIL_PASSWORD);
         }
 
         $user = Auth::getProvider()->retrieveByCredentials($credentials);
 
         if ($user->isUnconfirmed()) {
-            return redirect()->to('login' . $to)
+            return redirect()->to(route('login') . $to)
                 ->with('error', ClassMessages::EMAIL_CONFIRMATION);
         }
 
         if ($user->isBanned()) {
-            return redirect()->to('login' . $to)
+            return redirect()->to(route('login') . $to)
                 ->with('error', ClassMessages::BANNED_ACCOUNT);
         }
 
@@ -115,8 +115,8 @@ class AuthController extends Controller
             session()->forget('agency_id');
             session(['broadcaster_id' => Auth::user()->companies->first()->id]);
         }else{
-            Auth::logout();
-            return redirect()->route('dsplogin');
+            return redirect()->to(route('login') . $to)
+            ->with('error', ClassMessages::INVALID_EMAIL_PASSWORD);
         }
 
         return $this->handleUserWasAuthenticated($request, $throttles, $user);

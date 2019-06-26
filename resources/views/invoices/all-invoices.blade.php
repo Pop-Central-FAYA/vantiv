@@ -104,7 +104,7 @@
                     'copy', 'csv', 'excel', 'pdf', 'print'
                 ],
                 ajax: {
-                    url: '/agency/invoices/data',
+                    url: '/invoices/data',
                     data: function (d) {
                         d.start_date = $('input[name=txtFromDate_ps]').val();
                         d.stop_date = $('input[name=txtToDate_ps]').val();

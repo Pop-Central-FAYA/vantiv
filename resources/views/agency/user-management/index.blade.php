@@ -119,7 +119,7 @@
                     sLengthMenu: "_MENU_"
                 },
                 ajax: {
-                    url: '/agency/user/data-table',
+                    url: '/user/data-table',
                 },
                 columns: getColumn(),
             });
@@ -154,7 +154,7 @@
                 $.ajax({
                     cache: false,
                     type: "POST",
-                    url: 'agency/user/resend/invitation',
+                    url: '/user/resend/invitation',
                     dataType: 'json',
                     data: formdata,
                     beforeSend: function(data) {
@@ -229,7 +229,7 @@
                 $.ajax({
                     cache: false,
                     type: "GET",
-                    url: '/agency/user/status/update',
+                    url: '/user/status/update',
                     dataType: 'json',
                     data: {user_id : user_id, status : select_value},
                     beforeSend: function(data) {
