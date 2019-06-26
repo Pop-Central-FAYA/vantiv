@@ -16,10 +16,10 @@
                 <li class="invoice_icon {{ Request::is('agency/invoices/*') ? 'active' : ''  }}"><a href="{{ route('invoices.all') }}">Invoices</a></li>
             @endif
             @if(Auth::guard('dsp')->user()->hasPermissionTo('view.wallet'))
-                <li class="wallet_icon {{ Request::is('agency/wallets/*') ? 'active' :  Request::is('agency/wallets/wallet-statement') ? 'active' : ''  }}"><a href="{{ route('agency_wallet.statement') }}">Wallet</a></li>
+                <li class="wallet_icon {{ Request::is('agency/wallets/*') ? 'active' :  Request::is('wallets/wallet-statement') ? 'active' : ''  }}"><a href="{{ route('agency_wallet.statement') }}">Wallet</a></li>
             @endif
             @if(Auth::guard('dsp')->user()->hasPermissionTo('create.asset'))
-                <li class="wallet_icon {{ Request::is('agency/media-assets/*') ? 'active' :  Request::is('agency/media-assets/*') ? 'active' : ''  }}"><a href="{{ route('agency.media_assets') }}">Media Assets</a></li>
+                <li class="wallet_icon {{ Request::is('agency/media-assets/*') ? 'active' :  Request::is('media-assets/*') ? 'active' : ''  }}"><a href="{{ route('agency.media_assets') }}">Media Assets</a></li>
             @endif
         <!-- <li class="settings_icon {{ Request::is('agency/user/manage') ? 'active' : '' }}"><a href="{{ route('agency.user_management') }}">User Management</a></li> -->
         </ul>

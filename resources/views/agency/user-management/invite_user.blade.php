@@ -154,7 +154,7 @@
                 $.ajax({
                     cache: false,
                     type: "POST",
-                    url: '/agency/user/invite/store',
+                    url: '/user/invite/store',
                     dataType: 'json',
                     data: form_request,
                     beforeSend: function(data) {

@@ -423,7 +423,7 @@
                 oLanguage: { sLengthMenu: "_MENU_", },
                 aaSorting: [],
                 ajax: {
-                    url: '/agency/media-plan/dashboard/list',
+                    url: '/media-plan/dashboard/list',
                     data: function (d) {
                         d.start_date = $('input[name=start_date]').val();
                         d.stop_date = $('input[name=stop_date]').val();

@@ -43,6 +43,7 @@ class DspAuthController extends Controller
      */
     public function postDspLogin(Request $request)
     {
+      
         if(empty($request->email) || empty($request->password)){
             return redirect()->back()->with('error', ClassMessages::EMAIL_PASSWORD_EMPTY);
         }
@@ -70,7 +71,7 @@ class DspAuthController extends Controller
                 $this->incrementLoginAttempts($request);
             }
 
-            return redirect()->to('dsplogin' . $to)
+            return redirect()->to(route('dsplogin') . $to)
                 ->with('error', ClassMessages::INVALID_EMAIL_PASSWORD);
         }
 
@@ -78,12 +79,12 @@ class DspAuthController extends Controller
         
    
         if ($user->isUnconfirmed()) {
-            return redirect()->to('dsplogin' . $to)
+            return redirect()->to(route('dsplogin') . $to)
                 ->with('error', ClassMessages::EMAIL_CONFIRMATION);
         }
 
         if ($user->isBanned()) {
-            return redirect()->to('dsplogin' . $to)
+            return redirect()->to(route('dsplogin')  . $to)
                 ->with('error', ClassMessages::BANNED_ACCOUNT);
         }
 
@@ -93,15 +94,14 @@ class DspAuthController extends Controller
            Auth::logout();
         }
      
-        if(Auth::guard('dsp')->user()->company_type == CompanyTypeName::BROADCASTER){
-            Auth::logout();
-            return redirect()->route('login');
-        }elseif(Auth::guard('dsp')->user()->company_type == CompanyTypeName::AGENCY){
+       if(Auth::guard('dsp')->user()->company_type == CompanyTypeName::AGENCY){
             session()->forget('broadcaster_id');
             session(['agency_id' => Auth::guard('dsp')->user()->companies->first()->id]);
+        }else{
+           return redirect()->to(route('dsplogin')  . $to)
+            ->with('error', ClassMessages::INVALID_EMAIL_PASSWORD);
         }
-        
-
+      
         return $this->handleDspUserWasAuthenticated($request, $throttles, $user);
         
     }
@@ -128,7 +128,8 @@ class DspAuthController extends Controller
         $update_user->save();
 
         
-       
+         
+      
             event(new LoggedIn($user));
             return redirect()->intended(route('dashboard')); 
       

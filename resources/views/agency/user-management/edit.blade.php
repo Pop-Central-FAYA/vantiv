@@ -126,7 +126,7 @@
                 $.ajax({
                     cache: false,
                     type: "POST",
-                    url: '/agency/user/update/'+user_id,
+                    url: '/user/update/'+user_id,
                     dataType: 'json',
                     data: formdata,
                     beforeSend: function(data) {
