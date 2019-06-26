@@ -666,9 +666,6 @@ $Routes = function() {
         //get all brands per walkins or clients
         Route::get('/client/get-brands/{id}', 'BrandsController@getBrandsWithClients');
     
-       
-    
-    });
     
     
  
