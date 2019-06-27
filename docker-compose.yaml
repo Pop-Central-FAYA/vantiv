@@ -1,20 +1,30 @@
 version: "2"
 services:
-  app:
+  proxy:
+    image: traefik
+    command: --api --docker --docker.domain=docker.localhost --logLevel=DEBUG
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /dev/null:/traefik.toml
+
+  vantage:
     build:
       context: ./
       dockerfile: app.dockerfile
     image: faya-app
     labels:
-      - "traefik.backend=alpine"
-      - "traefik.frontend.rule=Host:alpine.docker.localhost"
-    ports:
-      - "9000:80"
+      - traefik.backend=vantage
+      - traefik.frontend.rule=Host:local.vantage.docker.localhost
+      - traefik.port=80
     environment:
       - HOME=/home
       - AWS_REGION=us-east-1
       - MYSQL_HOST=database
-      - APACHE_SERVER_NAME=alpine.docker.localhost
+      - APACHE_SERVER_NAME=local.vantage.docker.localhost
+      - APP_URL=http://local.vantage.docker.localhost
       - CONTAINER_TIMEZONE=UTC
       - PHP_ERROR_REPORTING=E_ALL
       - PHP_DISPLAY_ERRORS=On
@@ -50,3 +60,5 @@ services:
 
 # docker compose issues with mounting on mac
 # https://docs.docker.com/docker-for-mac/osxfs-caching/
+# traefix
+# https://jtreminio.com/blog/traefik-on-docker-for-web-developers/

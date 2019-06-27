@@ -11,7 +11,7 @@
         <input type="hidden" value="<?= csrf_token() ?>" name="_token">
 
         <div class="align_center m-b">
-            <h2 class="m-b">Welcome Back To Vantage</h2>
+            <h2 class="m-b">Welcome To Vantage</h2>
             <p class="mb4">Enter email and password to login</p>
 
             <br>
@@ -28,7 +28,7 @@
             </div>
 
             <div class="column col_6 align_right">
-                <a href="{{ route('password.forgot') }}">Forgot Password?</a>
+                <a href="{{ route('dsp.password.forgot') }}">Forgot Password?</a>
             </div>
         </div>
 

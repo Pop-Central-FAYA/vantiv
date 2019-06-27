@@ -42,7 +42,7 @@ class RouteServiceProvider extends ServiceProvider
     public function map()
     {
         $this->mapApiRoutes();
-        $this->mapDSPRoutes();
+        $this->mapDspRoutes();
         $this->mapWebRoutes();
     }
 
@@ -64,13 +64,13 @@ class RouteServiceProvider extends ServiceProvider
     }
 
 
-    protected function mapDSPRoutes()
+    protected function mapDspRoutes()
     {
         Route::group([
             'namespace' => $this->namespace,
             'middleware' => 'web',
         ], function ($router) {
-            require base_path('routes/dsp_routes.php');
+            require base_path('routes/dsp_web.php');
         });
     }
 
