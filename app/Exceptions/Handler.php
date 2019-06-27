@@ -87,16 +87,8 @@ class Handler extends ExceptionHandler
         if ($request->expectsJson()) {
             return response()->json(['error' => 'Unauthenticated.'], 401);
         }
-        $guard = array_get($exception->guards(), 0);
-        switch ($guard) {
-            case 'dsp':
-            $login = 'dsplogin';
-            break;
-            default:
-            $login = 'login';
-            break;
-        }
-        return redirect()->guest(route($login));
+        return redirect()->guest("login");
+
     }
     public function sendMail(Exception $exception)
     {
