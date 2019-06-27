@@ -500,7 +500,7 @@
             $.ajax({
                 cache: false,
                 type: "POST",
-                url: '/agency/media-plan/customise-filter',
+                url: '/media-plan/customise-filter',
                 dataType: 'json',
                 data: formdata,
                 beforeSend: function(data) {
@@ -517,7 +517,7 @@
                     toastr.clear();
                     if (data.status === 'success') {
                         toastr.success("Filters set, retrieving results");
-                        location.href = '/agency/media-plan/customise/' + data.redirect_url;
+                        location.href = '/media-plan/customise/' + data.redirect_url;
                     } else {
                         toastr.error('An unknown error has occurred, please try again');
                         $('.load_this_div').css({opacity: 1});
@@ -622,7 +622,7 @@
                         $.ajax({
                             type: "POST",
                             dataType: 'json',
-                            url: "/agency/media-plan/select_plan",
+                            url: "/media-plan/select_plan",
                             data: {
                                 "_token": "{{ csrf_token() }}",
                                 "mediaplan": fifthSegment,
@@ -710,7 +710,7 @@
                         $.ajax({
                             type: "POST",
                             dataType: 'json',
-                            url: "/agency/media-plan/select_plan",
+                            url: "/media-plan/select_plan",
                             data: {
                                 "_token": "{{ csrf_token() }}",
                                 "mediaplan": fifthSegment,
@@ -738,7 +738,7 @@
                                     });
                                     toastr.success("Plans successfully created!")
                                     setTimeout(function() {
-                                        location.href = '/agency/media-plan/createplan/'+fifthSegment;
+                                        location.href = '/media-plan/createplan/'+fifthSegment;
                                     }, 2000);
                                 }else{
                                     toastr.error("The current operation failed");
