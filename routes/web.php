@@ -659,6 +659,9 @@ $sspRoutes = function() {
 };
 
 
-Route::group(['domain' => 'torch.fayamedia.com'], $sspRoutes); 
-Route::group(['domain' => '{env}.torch.fayamedia.com'], $sspRoutes); 
-Route::group(['domain' => 'local.torch.docker.localhost'], $sspRoutes); 
+// Route::group(['domain' => 'torch.fayamedia.com'], $sspRoutes); 
+// Route::group(['domain' => '{env}.torch.fayamedia.com'], $sspRoutes); 
+// Route::group(['domain' => 'local.torch.docker.localhost'], $sspRoutes); 
+
+Route::group(['domain' => env('SITE_URL', 'local.torch.docker.localhost')], $sspRoutes);
+// Route::group(['domain' => env('SITE_URL', 'local.torch.docker.localhost')], $sspRoutes);

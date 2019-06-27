@@ -41,9 +41,20 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function map()
     {
-        $this->mapApiRoutes();
-        $this->mapDspRoutes();
-        $this->mapWebRoutes();
+        $product = env('PRODUCT');
+        switch ($product) {
+            case 'ssp':
+                $this->mapApiRoutes();
+                $this->mapWebRoutes();
+                break;
+            default:
+                # The order here is very important
+                # There are some routes in web routes that should only be in dsp routes
+                # So, for now, those routes need to be loaded, but have dsp override
+                $this->mapWebRoutes();
+                $this->mapDspRoutes();
+                break;
+        }
     }
 
     /**
