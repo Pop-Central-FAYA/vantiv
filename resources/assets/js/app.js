@@ -54,6 +54,8 @@ Vue.component('vue-cal-weekly-schedule', require('./components/schedule/weekly/W
 Vue.component('ad-schedule-table', require('./components/schedule/partials/ScheduleTable.vue'));
 Vue.component('ad-hour-table', require('./components/schedule/partials/AdHourTable.vue'));
 Vue.component('ad-break-table', require('./components/schedule/partials/AdBreakTable.vue'));
+//mpo list
+Vue.component('campaign-mpos-list', require('./components/campaign_mpos/DisplayMpoList.vue'));
 
 
 

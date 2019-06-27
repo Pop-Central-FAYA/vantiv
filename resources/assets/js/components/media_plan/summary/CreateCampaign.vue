@@ -38,7 +38,7 @@
                 this.sweet_alert(msg, 'info');
                 axios({
                     method: 'get',
-                    url: '/agency/media-plan/convert-to-campaign/'+this.id
+                    url: '/media-plan/convert-to-campaign/'+this.id
                 }).then((res) => {
                     console.log(res.data);
                     $('#load_this_div').css({opacity: 1});

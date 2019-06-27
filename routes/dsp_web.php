@@ -119,7 +119,7 @@ $dspRoutes = function() {
 
             Route::post('/select_plan', 'MediaPlanController@SelectPlanPost');
             Route::get('/createplan/{id}', 'MediaPlanController@CreatePlan')->name('agency.media_plan.create')->middleware('permission:create.media_plan');
-            Route::post('/finish_plan', 'MediaPlanController@CompletePlan');
+            Route::post('/finish_plan', 'MediaPlanController@CompletePlan')->name('agency.media_plan.submit.finish_plan');
             Route::get('/export/{id}', 'MediaPlanController@exportPlan')->name('agency.media_plan.export');
             Route::post('/store-programs', 'MediaPlanController@storePrograms')->name('media_plan.program.store');
             Route::post('/store-volume-discount', 'MediaPlanController@storeVolumeDiscount')->name('media_plan.volume_discount.store');

@@ -466,7 +466,7 @@
             $.ajax({
                 cache: false,
                 type: "POST",
-                url : '/agency/media-plan/store-programs',
+                url : `{{ route('media_plan.program.store') }}`,
                 dataType: 'json',
                 data: formdata,
                 success: function (data) {
@@ -630,7 +630,7 @@
             $.ajax({
                 type: "POST",
                 dataType: 'json',
-                url: "/agency/media-plan/finish_plan",
+                url: `{{ route('agency.media_plan.submit.finish_plan') }}`,
                 data: body,
                 beforeSend: function(data) {
                     // run toast showing progress
@@ -654,7 +654,7 @@
                         $('.save').prop('disabled', false);
                         $("#load_this").css({opacity : 1});
                         if (forward) {
-                            location.href = '/agency/media-plan/summary/' + plan_id;
+                            location.href = `{{ route('agency.media_plan.summary', ['id' => $plan_id]) }}`;
                         }
                     }else{
                         toastr.error("Error saving plans.");
