@@ -9,6 +9,7 @@ use Vanguard\Services\Traits\CampaignQueryTrait;
 use Yajra\DataTables\DataTables;
 
 use Vanguard\Models\Company;
+use Vanguard\Models\Campaign;
 
 class AllCampaign
 {
@@ -36,7 +37,11 @@ class AllCampaign
 
         $campaigns = $this->fetchAllCampaigns();
 
-        $campaigns = $this->getCampaignDatatables($campaigns);
+        $old_campaigns = $this->getCampaignDatatables($campaigns);
+
+        $new_campaigns = $this->getAllCampaigns();
+
+        $campaigns = array_merge($new_campaigns, $old_campaigns);
 
         return $datatables->collection($campaigns)
             ->addColumn('name', function ($campaigns) {
@@ -52,7 +57,11 @@ class AllCampaign
                     if($campaigns['status'] === 'on_hold'){
                         return '<a href="'.route('agency.campaigns.hold').'">'.$campaigns['name'].'</a>';
                     }else{
-                        return '<a href="'.route('agency.campaign.details', ['id' => $campaigns['campaign_id']]).'">'.$campaigns['name'].'</a>';
+                        if($campaigns['campaign_creation_format'] === 'new') {
+                            return '<a href="'.route('agency.campaign.new.details', ['id' => $campaigns['campaign_id']]).'">'.$campaigns['name'].'</a>';
+                        }else{
+                            return '<a href="'.route('agency.campaign.details', ['id' => $campaigns['campaign_id']]).'">'.$campaigns['name'].'</a>';
+                        }
                     }
                 }
             })
@@ -184,7 +193,8 @@ class AllCampaign
                 'adslots' => $this->countAdslots($all_campaign),
                 'budget' => $this->totalSpentOnCampaign($all_campaign),
                 'status' => $all_campaign->status,
-                'station' => \Auth::user()->companies()->count() > 1 ? $this->getCompanyName($all_campaign->station_id) : ''
+                'station' => \Auth::user()->companies()->count() > 1 ? $this->getCompanyName($all_campaign->station_id) : '',
+                'campaign_creation_format' => 'old'
             ];
         }
 
@@ -224,6 +234,35 @@ class AllCampaign
             return $companies->implode("name", ", ");
         }
         return "";
+    }
+
+    public function getAllCampaigns()
+    {
+        $company = \Auth::guard('dsp')->user()->companies->first()->id;
+        $campaigns = Campaign::with(['client', 'brand'])->where('belongs_to', $company)
+                            ->when($this->request->start_date && $this->request->stop_date, function ($query) {
+                                return $query->whereBetween('start_date', [$this->request->start_date,
+                                    $this->request->stop_date]);
+                            })->get();
+        $new_campaigns = [];
+        foreach ($campaigns as $campaign) {
+            $new_campaigns[] = [
+                'id' => $campaign->campaign_reference,
+                'campaign_id' => $campaign->id,
+                'name' => $campaign->name,
+                'product' => $campaign->product,
+                'brand' => ucfirst($campaign->brand['name']),
+                'date_created' => date('M j, Y', strtotime($campaign->time_created)),
+                'start_date' => date('M j, Y', strtotime($campaign->start_date)),
+                'end_date' => date('Y-m-d', strtotime($campaign->stop_date)),
+                'adslots' => $campaign->ad_slots,
+                'budget' => number_format($campaign->budget,2),
+                'status' => $campaign->status,
+                'station' => '',
+                'campaign_creation_format' => 'new'
+            ];
+        }
+        return $new_campaigns;
     }
 
 }

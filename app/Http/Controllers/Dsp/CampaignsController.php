@@ -14,6 +14,7 @@ use Vanguard\Libraries\Utilities;
 use Vanguard\Models\PreselectedAdslot;
 use Vanguard\Models\SelectedAdslot;
 use Vanguard\Models\Upload;
+use Vanguard\Models\Campaign;
 use Vanguard\Services\Campaign\MediaMix;
 use Vanguard\Services\Campaign\CampaignBudgetGraph;
 use Session;
@@ -33,10 +34,21 @@ class CampaignsController extends Controller
     {
         $agency_id = \Session::get('agency_id');
         $campaign_details = Utilities::campaignDetails($id, null, $agency_id);
+        // return $campaign_details;
         $user_id = $campaign_details['campaign_det']['company_user_id'];
         $all_campaigns = Utilities::switch_db('api')->select("SELECT * FROM campaignDetails where agency = '$agency_id' and user_id = '$user_id' GROUP BY campaign_id");
         $all_clients = Utilities::switch_db('api')->select("SELECT * FROM walkIns where agency_id = '$agency_id'");
         return view('agency.campaigns.campaign_details', compact('campaign_details', 'all_campaigns', 'all_clients'));
+    }
+
+    public function getNewDetails($id)
+    {
+        $agency_id = \Auth::guard('dsp')->user()->companies->first()->id;
+        $campaign_details = Campaign::with(['client', 'brand'])->where('id', $id)->where('belongs_to', $agency_id)->first();
+        $user_id = $campaign_details['campaign_det']['company_user_id'];
+        $all_campaigns = Utilities::switch_db('api')->select("SELECT * FROM campaigns where belongs_to = '$agency_id' GROUP BY id");
+        $all_clients = Utilities::switch_db('api')->select("SELECT * FROM walkIns where agency_id = '$agency_id'");
+        return view('agency.campaigns.new_campaign_details', compact('campaign_details', 'all_campaigns', 'all_clients'));
     }
 
     public function filterByUser($user_id)
