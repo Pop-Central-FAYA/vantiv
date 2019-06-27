@@ -1,12 +1,12 @@
 <?php
 
-$dspRoutes = function() {
+$dspRoutes = function () {
 
     Route::get('login', 'Auth\DspAuthController@getDspLogin')->name('dsplogin');
     Route::post('login', 'Auth\DspAuthController@postDspLogin')->name('post.dsplogin');
     Route::get('logout', [
         'as' => 'auth.dsplogout',
-        'uses' => 'Auth\DspAuthController@getLogout'
+        'uses' => 'Auth\DspAuthController@getLogout',
     ]);
 
     Route::get('/forget-password', 'Auth\AuthController@getForgetPassword')->name('dsp.password.forgot');
@@ -15,7 +15,7 @@ $dspRoutes = function() {
         Route::get('/', ['as' => 'dashboard', 'uses' => 'DashboardController@index']);
         Route::get('agency/dashboard/campaigns', 'DashboardController@dashboardCampaigns');
 
-        Route::group(['namespace' => 'Dsp','prefix' => 'campaigns'], function() {
+        Route::group(['namespace' => 'Dsp', 'prefix' => 'campaigns'], function () {
             Route::get('/all-campaigns/active', 'CampaignsController@index')->name('agency.campaign.all')->middleware('permission:view.campaign');
             Route::get('/all-campaign/data', 'CampaignsController@getData');
             Route::get('/all-clients', 'CampaignsController@allClient')->name('agency.campaign.create');
@@ -40,7 +40,6 @@ $dspRoutes = function() {
             Route::get('/cart/remove/{id}', 'CampaignsController@removeCart')->name('agency_cart.remove');
             Route::post('/campaign/submit/{id}', 'CampaignsController@postCampaign')->name('agency_submit.campaign');
 
-
             Route::get('/campaign-details/{id}', 'CampaignsController@getDetails')->name('agency.campaign.details');
             Route::get('/details/{id}', 'CampaignsController@getNewDetails')->name('agency.campaign.new.details');
             Route::get('/mpo-details/{id}', 'CampaignsController@mpoDetails')->name('agency.mpo.details');
@@ -58,11 +57,10 @@ $dspRoutes = function() {
         Route::get('/campaign-details/{user_id}', 'Dsp\CampaignsController@filterByUser');
 
         /*
-            * User Management
-            */
+         * User Management
+         */
 
         Route::get('/user/manage', 'Dsp\UserManagementController@index')->name('agency.user_management');
-
 
         /**
          * Clients
@@ -76,6 +74,9 @@ $dspRoutes = function() {
             Route::get('/client-yearly/{client_id}', 'ClientsController@filterByYear')->name('client.year');
             Route::get('/client-brand/{id}/{client_id}', 'ClientsController@brandCampaign')->name('campaign.brand.client');
             Route::post('/update-client/{client_id}', 'ClientsController@updateClients')->name('agency.client.update')->middleware('permission:update.client');
+
+            # This is not being used
+            Route::post('/store', 'ClientsController@storeClients')->name('client.store')->middleware('permission:create.client');
         });
 
         Route::group(['prefix' => 'invoices'], function () {
@@ -88,7 +89,7 @@ $dspRoutes = function() {
             Route::get('/export/pdf/{id}', 'InvoiceController@exportToPDF')->name('invoice.export');
         });
 
-        Route::group(['namespace' => 'Dsp','prefix' => 'wallets'], function(){
+        Route::group(['namespace' => 'Dsp', 'prefix' => 'wallets'], function () {
             Route::get('/wallet/credit', 'WalletsController@create')->name('agency_wallet.create')->middleware('permission:create.wallet');
             Route::get('/wallet-statement', 'WalletsController@index')->name('agency_wallet.statement')->middleware('permission:view.wallet');
             Route::post('/wallet/amount', 'WalletsController@getAmount')->name('wallet.amount');
@@ -97,14 +98,14 @@ $dspRoutes = function() {
             Route::get('/get-wallet/data', 'WalletsController@getData');
         });
 
-        Route::group(['namespace' => 'Dsp','prefix' => 'reports'], function(){
+        Route::group(['namespace' => 'Dsp', 'prefix' => 'reports'], function () {
             Route::get('/', 'ReportsController@index')->name('reports.index');
             Route::get('/campaign/all-data', 'ReportsController@getCampaign');
             Route::get('/revenue/all-data', 'ReportsController@getRevenue');
-                //   Route::get('/client-filter/campaign', 'Agency\ReportsController@filterCampaignClient')->name('filter.client');
+            //   Route::get('/client-filter/campaign', 'Agency\ReportsController@filterCampaignClient')->name('filter.client');
         });
 
-           /**
+        /**
          * Sectors
          */
         Route::group(['namespace' => 'Dsp\MediaPlan', 'prefix' => 'media-plan'], function () {
@@ -140,43 +141,35 @@ $dspRoutes = function() {
             Route::get('/delete/{id}', 'MediaAssetsController@deleteAsset')->middleware('permission:delete.asset');
             Route::get('/client/get-brands/{id}', 'BrandsController@getBrandsWithClients');
         });
-            Route::get('/client/get-brands/{id}', 'BrandsController@getBrandsWithClients');
-            /**
-                * User Management
-                */
+        Route::get('/client/get-brands/{id}', 'BrandsController@getBrandsWithClients');
+        /**
+         * User Management
+         */
 
-                Route::get('user/profile', [
-                    'as' => 'user.profile',
-                    'uses' => 'ProfileManagementsController@index',
-                    'middleware' => 'permission:view.profile'
-                ]);
+        Route::get('user/profile', [
+            'as' => 'user.profile',
+            'uses' => 'ProfileManagementsController@index',
+            'middleware' => 'permission:view.profile',
+        ]);
 
-                Route::post('profile/details/update', [
-                    'as' => 'profile.update.details',
-                    'uses' => 'ProfileManagementsController@updateDetails',
-                    'middleware' => 'permission:update.profile'
-                ]);
+        Route::post('profile/details/update', [
+            'as' => 'profile.update.details',
+            'uses' => 'ProfileManagementsController@updateDetails',
+            'middleware' => 'permission:update.profile',
+        ]);
 
-            Route::group(['namespace' => 'Dsp','prefix' => 'user'], function() {
-                Route::get('/all', 'UserController@index')->name('agency.user.index')->middleware('permission:view.user');
-                Route::get('/invite', 'UserController@inviteUser')->name('agency.user.invite')->middleware('permission:create.user');
-                Route::get('/edit/{id}', 'UserController@editUser')->name('agency.user.edit')->middleware('permission:update.user');
-                Route::post('/update/{id}', 'UserController@updateUser');
-                Route::post('/invite/store', 'UserController@processInvite');
-                Route::get('/data-table', 'UserController@getDatatable');
-                Route::post('/resend/invitation', 'UserController@resendInvitation')->middleware('permission:update.user');
-                Route::get('/status/update', 'UserController@updateStatus')->middleware('permission:update.user');
-            });
-
-
+        Route::group(['namespace' => 'Dsp', 'prefix' => 'user'], function () {
+            Route::get('/all', 'UserController@index')->name('agency.user.index')->middleware('permission:view.user');
+            Route::get('/invite', 'UserController@inviteUser')->name('agency.user.invite')->middleware('permission:create.user');
+            Route::get('/edit/{id}', 'UserController@editUser')->name('agency.user.edit')->middleware('permission:update.user');
+            Route::post('/update/{id}', 'UserController@updateUser');
+            Route::post('/invite/store', 'UserController@processInvite');
+            Route::get('/data-table', 'UserController@getDatatable');
+            Route::post('/resend/invitation', 'UserController@resendInvitation')->middleware('permission:update.user');
+            Route::get('/status/update', 'UserController@updateStatus')->middleware('permission:update.user');
+        });
 
     });
 };
 
 Route::group(['domain' => env('SITE_URL', 'local.vantage.docker.localhost')], $dspRoutes);
-
-
-
-
-
-
