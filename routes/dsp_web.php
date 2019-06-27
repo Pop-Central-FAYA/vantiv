@@ -1,4 +1,5 @@
 <?php
+
 $dspRoutes = function() {
 
     Route::get('login', 'Auth\DspAuthController@getDspLogin')->name('dsplogin');
@@ -7,13 +8,13 @@ $dspRoutes = function() {
         'as' => 'auth.dsplogout',
         'uses' => 'Auth\DspAuthController@getLogout'
     ]);
-    
+
     Route::get('/forget-password', 'Auth\AuthController@getForgetPassword')->name('dsp.password.forgot');
 
-    Route::group(['middleware' => 'auth:dsp'], function () {
+    Route::group(['middleware' => ['auth:web']], function () {
         Route::get('/', ['as' => 'dashboard', 'uses' => 'DashboardController@index']);
         Route::get('agency/dashboard/campaigns', 'DashboardController@dashboardCampaigns');
-    
+
         Route::group(['namespace' => 'Dsp','prefix' => 'campaigns'], function() {
             Route::get('/all-campaigns/active', 'CampaignsController@index')->name('agency.campaign.all')->middleware('permission:view.campaign');
             Route::get('/all-campaign/data', 'CampaignsController@getData');
@@ -102,7 +103,7 @@ $dspRoutes = function() {
             Route::get('/revenue/all-data', 'ReportsController@getRevenue');
                 //   Route::get('/client-filter/campaign', 'Agency\ReportsController@filterCampaignClient')->name('filter.client');
         });
-    
+
            /**
          * Sectors
          */
@@ -127,7 +128,7 @@ $dspRoutes = function() {
             Route::post('/store-volume-discount', 'MediaPlanController@storeVolumeDiscount')->name('media_plan.volume_discount.store');
             Route::get('/convert-to-campaign/{id}', 'MediaPlanController@convertPlanToCampaign')->name('media_plan.campaign.create');
         });
-       
+
         /**
          * File Position
          */
@@ -167,12 +168,12 @@ $dspRoutes = function() {
                 Route::get('/status/update', 'UserController@updateStatus')->middleware('permission:update.user');
             });
 
-    
+
 
     });
 };
 
-Route::group(['domain' => env('SITE_URL', 'local.vantage.docker.localhost')], $dspRoutes); 
+Route::group(['domain' => env('SITE_URL', 'local.vantage.docker.localhost')], $dspRoutes);
 
 
 

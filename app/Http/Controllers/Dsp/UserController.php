@@ -48,7 +48,7 @@ class UserController extends Controller
             })
 
             ->addColumn('status', function ($user_list) use($statuses) {
-                
+
                 if($user_list['status'] === UserStatus::UNCONFIRMED){
                     return '<a href="#user_modal_'.$user_list['id'].'" class="weight_medium modal_user_click">'.$user_list['status'].'</a>';
                 }else{
@@ -58,7 +58,7 @@ class UserController extends Controller
                         return view('users.status', ['user_status' => $user_list['status'], 'statuses' => $statuses, 'id' => $user_list['id']]);
                     }
                 }
-                
+
             })
             ->rawColumns(['edit' => 'edit', 'status' => 'status'])->addIndexColumn()
             ->make(true);
@@ -80,7 +80,7 @@ class UserController extends Controller
             return ['status'=>"error", 'message'=> $validate_request->errors()->first()];
         }
         $companies = $this->getCompany($request->companies);
-        $inviter_name = \Auth::guard('dsp')->user()->full_name;
+        $inviter_name = \Auth::user()->full_name;
         \DB::transaction(function () use ($request, $companies, $inviter_name) {
             $user_mail_content_array = [];
             foreach ($request->email as $email) {
@@ -122,7 +122,7 @@ class UserController extends Controller
 
         return ['status'=>"success", 'message'=> "Thank you for completing your registration, you can now login with your credentials"];
     }
-// retun the view to add role to a member 
+// retun the view to add role to a member
     public function editUser($id)
     {
         $user = User::find($id)->load('companies');
@@ -150,7 +150,7 @@ class UserController extends Controller
         if(isset($request->companies)) {
             $companies = $request->companies;
         }else{
-            $companies = \Auth::guard('dsp')->user()->companies->first()->id;
+            $companies = \Auth::user()->companies->first()->id;
         }
         return $companies;
     }
@@ -159,14 +159,14 @@ class UserController extends Controller
     {
         $user = User::find($request->user_id);
 
-        $email_format = new MailFormat($user, \Auth::guard('dsp')->user()->full_name);
+        $email_format = new MailFormat($user, \Auth::->user()->full_name);
         $user_mail_content_array[] = $email_format->emailFormat();
 
         $email_invitation_service = new UserInvitationMail($user_mail_content_array);
         $email_invitation_service->sendInvitationMail();
         return ['status'=>"success", 'message'=> "Invitation has been sent to the user"];
     }
- 
+
     public function updateStatus(Request $request)
     {
         try{
@@ -179,6 +179,6 @@ class UserController extends Controller
         }
         return ['status'=>"success", 'message'=> "Status updated successfully"];
     }
-    
+
 }
 ?>

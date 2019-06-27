@@ -16,21 +16,21 @@ class RedirectIfAuthenticated
      * @return mixed
      */
 
-    public function handle($request, Closure $next, $guard =null)
+    public function handle($request, Closure $next, $guard=null)
     {
-        switch ($guard){
-            case 'dsp':
-                if (Auth::guard($guard)->check()) {
-                    return redirect()->route('dashboard');
-                }
-            break;
-            default:
-                if (Auth::guard($guard)->check()) {
-                    return redirect('/');
-                }
-            break;
-        }
+        // if (Auth::guard($guard)->check()) {
+        //     if ($guard == 'dsp') {
+        //         Auth::shouldUse($guard);
+        //         return redirect()->route('dashboard');
+        //     } else {
+        //         return redirect('/');
+        //     }
+        // }
+        // return $next($request);
 
+        if (Auth::guard($guard)->check()) {
+            return redirect('/');
+        }
         return $next($request);
     }
 }

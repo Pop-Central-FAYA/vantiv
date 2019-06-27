@@ -70,13 +70,13 @@ class MediaPlanController extends Controller
                         'count_approved_media_plans' => $count_approved_media_plans,
                         'count_declined_media_plans' => $count_declined_media_plans
                     ]);
-        }   
+        }
     }
-    
+
     public function customisPlan()
     {
         return view('agency.mediaPlan.custom_plan');
-        
+
     }
 
     public function getSuggestionsByPlanId($id='')
@@ -131,7 +131,7 @@ class MediaPlanController extends Controller
      * @todo Fix tis and the one below (getSuggestPlansByIdAndFilters)
      */
     public function getSuggestPlanById($id)
-    {   
+    {
         // Get the filter values
         $savedFilters = json_decode(MediaPlan::findOrFail($id)->filters, true);
         if (!$savedFilters) {
@@ -154,7 +154,7 @@ class MediaPlanController extends Controller
     }
 
     public function getSuggestPlanByIdVue($id)
-    {   
+    {
         // Get the filter values
         $savedFilters = json_decode(MediaPlan::findOrFail($id)->filters, true);
         if (!$savedFilters) {
@@ -199,14 +199,14 @@ class MediaPlanController extends Controller
             $media_plan->filters = json_encode($filters);
             $media_plan->save();
             return response()->json(array(
-                'status' => 'success', 
-                'message' => 'Filters successfully saved', 
+                'status' => 'success',
+                'message' => 'Filters successfully saved',
                 'redirect_url' => $media_plan_id
             ));
         } catch (\Exception $exception) {
             Log::error($exception);
             return response()->json(array(
-                'status' => 'error', 
+                'status' => 'error',
                 'message' => 'Unknown error occurred'
             ));
         }
@@ -229,7 +229,7 @@ class MediaPlanController extends Controller
             "station_type" => array("Network", "Regional", "Satellite")
         );
     }
-    
+
     public function groupSuggestions($query)
     {
         $query = $query->groupBy(function ($item, $key) {
@@ -250,12 +250,12 @@ class MediaPlanController extends Controller
     {
         return $query->groupBy('station');
     }
-    
+
     public function countByMediaType($collection, $media_type='')
     {
         return $collection->where('media_type', $media_type)->sum('audience');
     }
-    
+
     /**
      * This is a function to filter suggestions and reload the page with the new filtered suggestions.
      * The filters are:
@@ -303,7 +303,7 @@ class MediaPlanController extends Controller
 
         $monthly_weeks_table_header = json_encode($export_service->monthly_weeks_campaign_duration($plan_start_date, $plan_end_date));
 
-        return Excel::download(new MediaPlanExport($media_plan_summary, $media_plan_grouped_data, $monthly_weeks_table_header, $mediaPlan), 'mediaplan.xlsx');     
+        return Excel::download(new MediaPlanExport($media_plan_summary, $media_plan_grouped_data, $monthly_weeks_table_header, $mediaPlan), 'mediaplan.xlsx');
     }
 
     public function approvePlan($media_plan_id)
@@ -328,7 +328,7 @@ class MediaPlanController extends Controller
     {
         return $collection->sum('audience');
     }
-    
+
 
     public function SelectPlanPost(Request $request)
     {
@@ -338,24 +338,24 @@ class MediaPlanController extends Controller
             $value = "";
             try{
                 Utilities::switch_db('api')->transaction(function () use($programs_id, $media_plan_id, $value) {
-                   
+
                     DB::table('media_plan_suggestions')
                     ->where('media_plan_id', $media_plan_id)
                     ->whereNotIn('id', $programs_id)
                     ->update(['status' => 0, 'material_length' => $value]);
                     DB::table('media_plan_suggestions')
                     ->whereIn('id', $programs_id)
-                    ->update(['status' => 1]); 
+                    ->update(['status' => 1]);
 
                 });
             }catch (\Exception $exception){
                 return response()->json(['status'=>'failed', 'message'=> "The current operation failed" ]);
             }
         return response()->json(['status'=>'success', 'message'=> "Plan Selected successfully" ]);
-        
+
 
     }
-    
+
     public function CreatePlan($id)
     {
         $media_plan = MediaPlan::find($id);
@@ -396,7 +396,7 @@ class MediaPlanController extends Controller
                                                             ->with('plan_id', $id)
                                                             ->with('media_plan', $media_plan)
                                                             ->with('brands', $client_brand);
-    
+
     }
 
     public function days($start, $end)
@@ -408,7 +408,7 @@ class MediaPlanController extends Controller
             for ($i = 0; $i <= $daysBetween; $i++) {
                 $tmpDate = date('Y-m-d', strtotime($start . " + $i days"));
                 $formattedDates[] = date('l', strtotime($tmpDate));
-            }    
+            }
             return $formattedDates;
     }
 
@@ -604,8 +604,8 @@ class MediaPlanController extends Controller
                 $now = strtotime(Carbon::now('Africa/Lagos'));
                 $channel = $this->getChannelFromPlan($media_plan->media_type);
                 $target_audience = $this->convertPlanGenderToID($media_plan->criteria_gender);
-                $created_by = \Auth::guard('dsp')->user()->id;
-                $belongs_to = \Auth::guard('dsp')->user()->companies->first()->id;
+                $created_by = \Auth::user()->id;
+                $belongs_to = \Auth::user()->companies->first()->id;
                 $budget = $suggestion_service->getTotalBudgetPerPlan($suggestions);
                 $ad_slots = $suggestion_service->getTotalAdSlotPerPlan($suggestions);
                 $store_campaign_service = new StoreCampaign($now, $campaign_reference, $channel, $target_audience, $created_by, $belongs_to, $media_plan, $budget, $ad_slots);

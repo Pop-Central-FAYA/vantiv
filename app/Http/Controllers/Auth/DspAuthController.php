@@ -24,11 +24,6 @@ use Vanguard\User;
 
 class DspAuthController extends Controller
 {
-
-    public function __contruct()
-    {
-        $this->middleware('guest:dsp');
-    }
     public function getDspLogin()
     {
         return view('auth.dsp_login');
@@ -43,7 +38,7 @@ class DspAuthController extends Controller
      */
     public function postDspLogin(Request $request)
     {
-      
+
         if(empty($request->email) || empty($request->password)){
             return redirect()->back()->with('error', ClassMessages::EMAIL_PASSWORD_EMPTY);
         }
@@ -76,8 +71,8 @@ class DspAuthController extends Controller
         }
 
         $user = Auth::getProvider()->retrieveByCredentials($credentials);
-        
-   
+
+
         if ($user->isUnconfirmed()) {
             return redirect()->to(route('dsplogin') . $to)
                 ->with('error', ClassMessages::EMAIL_CONFIRMATION);
@@ -88,22 +83,22 @@ class DspAuthController extends Controller
                 ->with('error', ClassMessages::BANNED_ACCOUNT);
         }
 
-       Auth::guard('dsp')->attempt(['email' => $request->email, 'password' => $request->password], $request->remember);
+       Auth::guard('web')->attempt(['email' => $request->email, 'password' => $request->password], $request->remember);
 
-        if(Auth::guard('dsp')->user()->status === 'Unconfirmed' || Auth::guard('dsp')->user()->status === ''){
+        if(Auth::guard('web')->user()->status === 'Unconfirmed' || Auth::guard('web')->user()->status === ''){
            Auth::logout();
         }
-     
-       if(Auth::guard('dsp')->user()->company_type == CompanyTypeName::AGENCY){
+
+       if(Auth::guard('web')->user()->company_type == CompanyTypeName::AGENCY){
             session()->forget('broadcaster_id');
-            session(['agency_id' => Auth::guard('dsp')->user()->companies->first()->id]);
+            session(['agency_id' => Auth::guard('web')->user()->companies->first()->id]);
         }else{
            return redirect()->to(route('dsplogin')  . $to)
             ->with('error', ClassMessages::INVALID_EMAIL_PASSWORD);
         }
-      
+
         return $this->handleDspUserWasAuthenticated($request, $throttles, $user);
-        
+
     }
 
         /**
@@ -117,8 +112,8 @@ class DspAuthController extends Controller
 
     protected function handleDspUserWasAuthenticated(Request $request, $throttles, $user)
     {
-          
-      
+
+
         if ($throttles) {
             $this->clearLoginAttempts($request);
         }
@@ -127,17 +122,17 @@ class DspAuthController extends Controller
         $update_user->last_login = Carbon::now();
         $update_user->save();
 
-        
-         
-      
+
+
+
             event(new LoggedIn($user));
-            return redirect()->intended(route('dashboard')); 
-      
+            return redirect()->intended(route('dashboard'));
+
     }
 
     protected function logoutAndRedirectToTokenPage(Request $request, Authenticatable $user)
     {
-        Auth::guard('dsp')->logout();
+        Auth::guard('web')->logout();
 
         $request->session()->put('auth.2fa.id', $user->id);
 
@@ -174,9 +169,9 @@ class DspAuthController extends Controller
      */
     public function getLogout()
     {
-        event(new LoggedOut(Auth::guard('dsp')->user()));
+        event(new LoggedOut(Auth::guard('web')->user()));
 
-        Auth::guard('dsp')->logout();
+        Auth::guard('web')->logout();
 
         \Session::flush();
 
@@ -317,5 +312,5 @@ class DspAuthController extends Controller
         )->fails();
     }
 
-   
+
 }
