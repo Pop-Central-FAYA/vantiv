@@ -89,9 +89,12 @@
     </div>
 
     <!-- new client modal -->
+    @if(Auth::user()->hasPermissionTo('create.client'))
     <div class="modal_contain" id="new_client">
         <h2 class="sub_header mb4">New Client</h2>
-        <form action="{{ route('walkins.store') }}" method="POST" enctype="multipart/form-data">
+        <!-- <div class="progress">
+        </div><br> -->
+        <form action="{{ route('walkins.store') }}" method="POST" enctype="multipart/form-data" id="create_client">
             {{ csrf_field() }}
             <div class="clearfix">
                 <div class="input_wrap column col_7{{ $errors->has('company_name') ? ' has-error' : '' }}">
@@ -234,6 +237,7 @@
 
         </form>
     </div>
+    @endif
 
     {{--modal for editing a client--}}
     {{--modal for editing a client--}}
@@ -386,21 +390,22 @@
                 })
             });
 
-            $("#phone_number_verify").keyup(function () {
-                var phone_number = $("#phone_number_verify").val();
-                if(phone_number.length == 11 || phone_number.length == 7){
-                    $("#submit_walkins").prop('disabled', false);
-                    toastr.success('Phone number length is valid');
-                }
-                if(phone_number.length > 7 && phone_number.length < 11){
-                    $("#submit_walkins").prop('disabled', true);
-                    toastr.error('Phone number length is invalid');
-                }
-                if(phone_number.length >11){
-                    $("#submit_walkins").prop('disabled', false);
-                    toastr.error('Phone number length is invalid');
-                }
-            })
+            // $("#phone_number_verify").keyup(function () {
+            //     var phone_number = $("#phone_number_verify").val();
+            //     // if(phone_number.length == 11 || phone_number.length == 7){
+            //     if(phone_number.length == 11 || phone_number.length == 7){
+            //         $("#submit_walkins").prop('disabled', false);
+            //         toastr.success('Phone number length is valid');
+            //     }
+            //     if(phone_number.length > 7 && phone_number.length < 11){
+            //         $("#submit_walkins").prop('disabled', true);
+            //         toastr.error('Phone number length is invalid');
+            //     }
+            //     if(phone_number.length >11){
+            //         $("#submit_walkins").prop('disabled', false);
+            //         toastr.error('Phone number length is invalid');
+            //     }
+            // })
 
             $(".company_logo").on('change', function () {
                 var url = '/presigned-url';
@@ -534,6 +539,94 @@
                         }
                     })
                 }
+            });
+
+            //store_walkins (this is so freakign hacky)
+            $("#create_client").on('submit', function(e) {
+                event.preventDefault(e);
+                var phone_number = $("#phone_number_verify").val();
+                if(phone_number.length != 13){
+                    toastr.error('Phone number invalid, please make sure you enter a valid number with the specified format as the placeholder')
+                    return;
+                }
+                $('.required').each(function(){
+                    if( $(this).val() == "" ){
+                        toastr.error('All fields are required');
+                        return;
+                    }
+                });
+                $('.modal_contain').css({
+                    opacity : 0.2
+                });
+                $('a').css('pointer-events','none');
+                $('.button_create').hide();
+                var formdata = $("#create_client").serialize();
+                debugger;
+                var weHaveSuccess = false;
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: '/walk-in/store',
+                    dataType: 'json',
+                    data: formdata,
+                    beforeSend: function(data) {
+                        // run toast showing progress
+                        toastr_options = {
+                            "progressBar": true,
+                            // "showDuration": "300",
+                            "preventDuplicates": true,
+                            "tapToDismiss": false,
+                            "hideDuration": "1",
+                            "timeOut": "300000000"
+                        };
+                        msg = "Processing request, please wait"
+                        toastr.info(msg, null, toastr_options)
+                    },
+                    success: function (data) {
+                        toastr.clear();
+                        if (data.status === 'success') {
+                            toastr.success(data.message);
+                            location.href = '/clients/list';
+                        } else {
+                            toastr.error(data.message);
+                            $('.modal_contain').css({
+                                opacity: 1
+                            });
+                            $('a').css('pointer-events','');
+                            $('.button_create').show();
+                            return;
+                        }
+                        weHaveSuccess = true;
+                    },
+                    error : function (xhr) {
+                        toastr.clear();
+                        if(xhr.status === 500){
+                            toastr.error('An unknown error has occurred, please try again');
+                            $('.modal_contain').css({
+                                opacity: 1
+                            });
+                            $('a').css('pointer-events','');
+                            $('.button_create').show();
+                            return;
+                        }else if(xhr.status === 503){
+                            toastr.error('The request took longer than expected, please try again');
+                            $('.modal_contain').css({
+                                opacity: 1
+                            });
+                            $('a').css('pointer-events','');
+                            $('.button_create').show();
+                            return;
+                        }else{
+                            toastr.error('An unknown error has occurred, please try again');
+                            $('.modal_contain').css({
+                                opacity: 1
+                            });
+                            $('a').css('pointer-events','');
+                            $('.button_create').show();
+                            return;
+                        }
+                    }
+                })
             });
         });
 
