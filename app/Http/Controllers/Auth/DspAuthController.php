@@ -24,6 +24,15 @@ use Vanguard\User;
 
 class DspAuthController extends Controller
 {
+
+    public function __construct(UserRepository $users)
+    {
+        $this->middleware('guest', ['except' => ['getLogout']]);
+        $this->middleware('auth', ['only' => ['getLogout']]);
+        $this->middleware('registration', ['only' => ['getRegister', 'postRegister']]);
+        $this->users = $users;
+    }
+
     public function getDspLogin()
     {
         return view('auth.dsp_login');

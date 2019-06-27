@@ -11,7 +11,7 @@ $dspRoutes = function() {
 
     Route::get('/forget-password', 'Auth\AuthController@getForgetPassword')->name('dsp.password.forgot');
 
-    Route::group(['middleware' => ['auth:web']], function () {
+    Route::group(['middleware' => 'auth'], function () {
         Route::get('/', ['as' => 'dashboard', 'uses' => 'DashboardController@index']);
         Route::get('agency/dashboard/campaigns', 'DashboardController@dashboardCampaigns');
 
