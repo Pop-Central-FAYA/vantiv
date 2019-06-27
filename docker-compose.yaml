@@ -25,6 +25,8 @@ services:
       - MYSQL_HOST=database
       - APACHE_SERVER_NAME=local.vantage.docker.localhost
       - APP_URL=http://local.vantage.docker.localhost
+      - SITE_URL=local.vantage.docker.localhost
+      - PRODUCT=dsp
       - CONTAINER_TIMEZONE=UTC
       - PHP_ERROR_REPORTING=E_ALL
       - PHP_DISPLAY_ERRORS=On

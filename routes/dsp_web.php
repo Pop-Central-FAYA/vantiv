@@ -170,12 +170,7 @@ $dspRoutes = function() {
     });
 };
 
-
-Route::group(['domain' => 'vantage.fayamedia.com'], $dspRoutes); 
-Route::group(['domain' => '{env}.vantage.fayamedia.com'], $dspRoutes); 
-Route::group(['domain' => 'local.vantage.docker.localhost'], $dspRoutes); 
-
-
+Route::group(['domain' => env('SITE_URL', 'local.vantage.docker.localhost')], $dspRoutes); 
 
 
 
