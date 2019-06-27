@@ -56,6 +56,7 @@ Vue.component('ad-hour-table', require('./components/schedule/partials/AdHourTab
 Vue.component('ad-break-table', require('./components/schedule/partials/AdBreakTable.vue'));
 //mpo list
 Vue.component('campaign-mpos-list', require('./components/campaign_mpos/DisplayMpoList.vue'));
+Vue.component('mpo-slot-list', require('./components/campaign_mpos/DisplayAdslotList.vue'));
 
 
 
