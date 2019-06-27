@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class Campaign extends Base
 {
     protected $table = 'campaigns';
-    protected $connection = 'api_db';
 
     protected $dates = [
         'time_created', 'time_modified'
@@ -33,5 +32,15 @@ class Campaign extends Base
     public function brand()
     {
         return $this->belongsTo('Vanguard\Models\Brand','brand_id');
+    }
+
+    /**
+     * get association with campaign mpos
+     *
+     * @return void
+     */
+    public function campaign_mpos()
+    {
+        return $this->hasMany(CampaignMpo::class);
     }
 }

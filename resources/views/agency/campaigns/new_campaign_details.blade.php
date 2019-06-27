@@ -144,11 +144,12 @@
                 @if($campaign_details->status === 'active' || $campaign_details->status === 'expired')
                     <a href="#comp">Compliance</a>
                 @endif
+                <a href="#campaign_mpos">MPO's</a>
             </div>
 
             {{--{{ dd($campaign_details) }}--}}
 
-            <div class="tab_contain default_summary">
+            <div class="tab_contain default_summary" id="app">
 
                 <!-- summary -->
                 <div class="tab_content col_10 campaign_summary" id="summary">
@@ -229,7 +230,6 @@
                 </div>
                 <!-- end -->
 
-                {{--files--}}
                 <div class="tab_content" id="files">
                     <!-- filter -->
                     <table>
@@ -265,6 +265,13 @@
                     </table>
                 </div>
                 <!-- end -->
+                <!-- campaign mpos -->
+                <div class="tab_content" id="campaign_mpos">
+                    <campaign-mpos-list
+                        :mpos="{{json_encode($campaign_details->campaign_mpos)}}"
+                    ></campaign-mpos-list>
+                </div>
+                <!-- end -->
 
             </div>
             
@@ -278,6 +285,10 @@
 @stop
 
 @section('scripts')
+    <!-- App.js -->
+    <script src="{{ asset('js/manifest.js') }}"></script>
+    <script src="{{ asset('js/vendor.js') }}"></script>
+    <script src="{{ asset('js/app.js') }}"></script>
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script src="https://code.highcharts.com/modules/export-data.js"></script>
