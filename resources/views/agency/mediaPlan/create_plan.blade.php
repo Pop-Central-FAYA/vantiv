@@ -423,7 +423,7 @@
                 $.ajax({
                     cache: false,
                     type: "POST",
-                    url: '/agency/media-plan/create-plan',
+                    url: '/media-plan/create-plan',
                     dataType: 'json',
                     data: formdata,
                     beforeSend: function(data) {
@@ -443,7 +443,7 @@
                         toastr.clear();
                         if (data.status === 'success') {
                             toastr.success(data.message);
-                            location.href = '/agency/media-plan/customise/' + data.redirect_url;
+                            location.href = '/media-plan/customise/' + data.redirect_url;
                         } else {
                             toastr.error(data.message);
                             $('.load_this_div').css({
