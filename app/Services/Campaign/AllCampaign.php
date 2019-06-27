@@ -238,7 +238,7 @@ class AllCampaign
 
     public function getAllCampaigns()
     {
-        $company = \Auth::guard('dsp')->user()->companies->first()->id;
+        $company = \Auth::user()->companies->first()->id;
         $campaigns = Campaign::with(['client', 'brand'])->where('belongs_to', $company)
                             ->when($this->request->start_date && $this->request->stop_date, function ($query) {
                                 return $query->whereBetween('start_date', [$this->request->start_date,

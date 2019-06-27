@@ -9,8 +9,8 @@
 
             <div class="inner_nav">
                 <p class="border_bottom">
-                    <span class="weight_bold block_disp eliptic">{{ Auth::guard('dsp')->user()->firstname }} {{ Auth::guard('dsp')->user()->lastname }}</span>
-                    <span class="block_disp small_faint">{{ Auth::guard('dsp')->user()->username ? Auth::guard('dsp')->user()->username : Auth::guard('dsp')->user()->firstname }}</span>
+                    <span class="weight_bold block_disp eliptic">{{ Auth::user()->firstname }} {{ Auth::user()->lastname }}</span>
+                    <span class="block_disp small_faint">{{ Auth::user()->username ? Auth::user()->username : Auth::user()->firstname }}</span>
                 </p>
 
                 <div class="">
@@ -27,7 +27,7 @@
         </div>
 
 
-        <p class="right padd">{{ Auth::guard('dsp')->user()->username ? Auth::guard('dsp')->user()->username : Auth::guard('dsp')->user()->firstname }}</p>
+        <p class="right padd">{{ Auth::user()->username ? Auth::user()->username : Auth::user()->firstname }}</p>
 
     </div>
 </div>

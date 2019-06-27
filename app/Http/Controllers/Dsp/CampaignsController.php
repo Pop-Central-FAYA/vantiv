@@ -44,7 +44,7 @@ class CampaignsController extends Controller
 
     public function getNewDetails($id)
     {
-        $agency_id = \Auth::guard('dsp')->user()->companies->first()->id;
+        $agency_id = \Auth::user()->companies->first()->id;
         $campaign_details = Campaign::with(['client', 'brand', 'campaign_mpos'])->where('id', $id)->where('belongs_to', $agency_id)->first();
         $user_id = $campaign_details['campaign_det']['company_user_id'];
         $all_campaigns = Utilities::switch_db('api')->select("SELECT * FROM campaigns where belongs_to = '$agency_id' GROUP BY id");
