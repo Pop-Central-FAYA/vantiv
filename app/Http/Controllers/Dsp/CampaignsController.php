@@ -33,6 +33,7 @@ class CampaignsController extends Controller
     {
         $agency_id = \Session::get('agency_id');
         $campaign_details = Utilities::campaignDetails($id, null, $agency_id);
+        // return $campaign_details;
         $user_id = $campaign_details['campaign_det']['company_user_id'];
         $all_campaigns = Utilities::switch_db('api')->select("SELECT * FROM campaignDetails where agency = '$agency_id' and user_id = '$user_id' GROUP BY campaign_id");
         $all_clients = Utilities::switch_db('api')->select("SELECT * FROM walkIns where agency_id = '$agency_id'");
