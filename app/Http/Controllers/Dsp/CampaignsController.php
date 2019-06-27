@@ -19,6 +19,7 @@ use Vanguard\Services\Campaign\MediaMix;
 use Vanguard\Services\Campaign\CampaignBudgetGraph;
 use Session;
 use Vanguard\Services\Compliance\ComplianceGraph;
+use Vanguard\Models\CampaignMpo;
 
 class CampaignsController extends Controller
 {
@@ -115,6 +116,12 @@ class CampaignsController extends Controller
 
         return response()->json(['date' => $compliance_graph_service->getComplianceDates(),
                                 'data' => $compliance_graph_service->formatDataForGraphCompatibility()]);
+    }
+
+    public function campaignMpoDetails($campaign_mpo_id)
+    {
+        $campaign_mpo = CampaignMpo::find($campaign_mpo_id);
+        return view('agency.campaigns.view_adslots')->with('campaign_mpo', $campaign_mpo);
     }
 
 }

@@ -14,7 +14,7 @@ class CampaignMpo extends Base
         return $this->belongsTo(Campaign::class);
     }
 
-    public function campaign_mpo_time_belt()
+    public function campaign_mpo_time_belts()
     {
         return $this->hasMany(CampaignMpoTimeBelt::class, 'mpo_id');
     }
