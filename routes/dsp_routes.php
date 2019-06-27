@@ -139,7 +139,7 @@ $appRoutes = function() {
             Route::get('/delete/{id}', 'MediaAssetsController@deleteAsset')->middleware('permission:delete.asset');
             Route::get('/client/get-brands/{id}', 'BrandsController@getBrandsWithClients');
         });
-
+            Route::get('/client/get-brands/{id}', 'BrandsController@getBrandsWithClients');
             /**
                 * User Management
                 */
