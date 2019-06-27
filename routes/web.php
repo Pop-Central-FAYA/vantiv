@@ -1,6 +1,6 @@
 <?php
 
-$Routes = function() {
+$sspRoutes = function() {
      
 
         /**
@@ -659,8 +659,6 @@ $Routes = function() {
 };
 
 
-
-
-Route::group(['domain' => 'torch.fayamedia.com'], $Routes); 
-Route::group(['domain' => '{env}.torch.fayamedia.com'], $Routes); 
-Route::group(['domain' => 'test.torch.localhost'], $Routes); 
+Route::group(['domain' => 'torch.fayamedia.com'], $sspRoutes); 
+Route::group(['domain' => '{env}.torch.fayamedia.com'], $sspRoutes); 
+Route::group(['domain' => 'local.torch.docker.localhost'], $sspRoutes); 

@@ -1,21 +1,18 @@
 <?php
-$appRoutes = function() {
+$dspRoutes = function() {
 
-       Route::get('login', 'Auth\DspAuthController@getDspLogin')->name('dsplogin');
-       Route::post('login', 'Auth\DspAuthController@postDspLogin')->name('post.dsplogin');
-
-       Route::get('logout', [
+    Route::get('login', 'Auth\DspAuthController@getDspLogin')->name('dsplogin');
+    Route::post('login', 'Auth\DspAuthController@postDspLogin')->name('post.dsplogin');
+    Route::get('logout', [
         'as' => 'auth.dsplogout',
         'uses' => 'Auth\DspAuthController@getLogout'
     ]);
-  
-    Route::group(['middleware' => 'auth:dsp'], function () {
+    
+    Route::get('/forget-password', 'Auth\AuthController@getForgetPassword')->name('dsp.password.forgot');
 
+    Route::group(['middleware' => 'auth:dsp'], function () {
         Route::get('/', ['as' => 'dashboard', 'uses' => 'DashboardController@index']);
         Route::get('agency/dashboard/campaigns', 'DashboardController@dashboardCampaigns');
-    
-      
-    
     
             Route::group(['namespace' => 'Dsp','prefix' => 'campaigns'], function() {
                 Route::get('/all-campaigns/active', 'CampaignsController@index')->name('agency.campaign.all')->middleware('permission:view.campaign');
@@ -173,9 +170,9 @@ $appRoutes = function() {
 };
 
 
-Route::group(['domain' => 'vantage.fayamedia.com'], $appRoutes); 
-Route::group(['domain' => '{env}.vantage.fayamedia.com'], $appRoutes); 
-Route::group(['domain' => 'test.vantage.localhost'], $appRoutes); 
+Route::group(['domain' => 'vantage.fayamedia.com'], $dspRoutes); 
+Route::group(['domain' => '{env}.vantage.fayamedia.com'], $dspRoutes); 
+Route::group(['domain' => 'local.vantage.docker.localhost'], $dspRoutes); 
 
 
 
