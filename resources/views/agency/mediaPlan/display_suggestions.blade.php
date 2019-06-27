@@ -564,7 +564,7 @@
         $(document).ready(function() {
             var url = window.location.href;
                 var trim = url.split('/');
-                var fifthSegment = trim[6];
+                var fifthSegment = trim[5];
 
 
 
