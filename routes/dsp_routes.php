@@ -44,6 +44,7 @@ $appRoutes = function() {
     
     
                 Route::get('/campaign-details/{id}', 'CampaignsController@getDetails')->name('agency.campaign.details');
+                Route::get('/details/{id}', 'CampaignsController@getNewDetails')->name('agency.campaign.new.details');
                 Route::get('/mpo-details/{id}', 'CampaignsController@mpoDetails')->name('agency.mpo.details');
     
                 Route::get('/this/campaign-details/{campaign_id}', 'CampaignsController@filterByCampaignId');

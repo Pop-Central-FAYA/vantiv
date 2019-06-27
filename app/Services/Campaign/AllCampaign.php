@@ -57,7 +57,11 @@ class AllCampaign
                     if($campaigns['status'] === 'on_hold'){
                         return '<a href="'.route('agency.campaigns.hold').'">'.$campaigns['name'].'</a>';
                     }else{
-                        return '<a href="'.route('agency.campaign.details', ['id' => $campaigns['campaign_id']]).'">'.$campaigns['name'].'</a>';
+                        if($campaigns['campaign_creation_format'] === 'new') {
+                            return '<a href="'.route('agency.campaign.new.details', ['id' => $campaigns['campaign_id']]).'">'.$campaigns['name'].'</a>';
+                        }else{
+                            return '<a href="'.route('agency.campaign.details', ['id' => $campaigns['campaign_id']]).'">'.$campaigns['name'].'</a>';
+                        }
                     }
                 }
             })
@@ -189,7 +193,8 @@ class AllCampaign
                 'adslots' => $this->countAdslots($all_campaign),
                 'budget' => $this->totalSpentOnCampaign($all_campaign),
                 'status' => $all_campaign->status,
-                'station' => \Auth::user()->companies()->count() > 1 ? $this->getCompanyName($all_campaign->station_id) : ''
+                'station' => \Auth::user()->companies()->count() > 1 ? $this->getCompanyName($all_campaign->station_id) : '',
+                'campaign_creation_format' => 'old'
             ];
         }
 
@@ -253,7 +258,8 @@ class AllCampaign
                 'adslots' => $campaign->ad_slots,
                 'budget' => number_format($campaign->budget,2),
                 'status' => $campaign->status,
-                'station' => ''
+                'station' => '',
+                'campaign_creation_format' => 'new'
             ];
         }
         return $new_campaigns;
