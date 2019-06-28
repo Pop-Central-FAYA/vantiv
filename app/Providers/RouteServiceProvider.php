@@ -28,6 +28,11 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        // generic health checks for load balancers
+        Route::get('/health', function () {
+            return 'All Good!';
+        });
+
         parent::boot();
 
         $this->bindUser();
