@@ -29,7 +29,7 @@ class StoreMpo
             $mpo = new CampaignMpo();
             $mpo->campaign_id = $this->campaign_id;
             $mpo->station = $key;
-            $mpo->ad_slots = $time_belts->sum('total_spots');
+            $mpo->ad_slots = $this->getNumberOfShowDates($time_belts);
             $mpo->budget = $time_belts->sum('net_value');
             $mpo->status = 'Pending';
             $mpo->save();
@@ -42,12 +42,21 @@ class StoreMpo
                         'day' => $time_belt['day'],
                         'duration' => $time_belt['duration'],
                         'program' => $time_belt['program'],
-                        'ad_slots' => $time_belt['total_spots'],
+                        'ad_slots' => $ad_slots,
                         'playout_date' => date('Y-m-d', strtotime($show_date))
                     ]);
                 }
             }
         }
         return $stations;
+    }
+
+    public function getNumberOfShowDates($timeBeltArr)
+    {
+        $total_slots = 0;
+        foreach ($timeBeltArr as $time_belt) {
+            $total_slots += count(json_decode(json_encode($time_belt['show_dates']), true));
+        }
+        return $total_slots;
     }
 }
