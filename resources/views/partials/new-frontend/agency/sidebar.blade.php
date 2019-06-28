@@ -15,9 +15,9 @@
             @if(Auth::user()->hasPermissionTo('view.invoice'))
                 <li class="invoice_icon {{ Request::is('agency/invoices/*') ? 'active' : ''  }}"><a href="{{ route('invoices.all') }}">Invoices</a></li>
             @endif
-            @if(Auth::user()->hasPermissionTo('view.wallet'))
-                <li class="wallet_icon {{ Request::is('agency/wallets/*') ? 'active' :  Request::is('wallets/wallet-statement') ? 'active' : ''  }}"><a href="{{ route('agency_wallet.statement') }}">Wallet</a></li>
-            @endif
+            {{-- @if(Auth::user()->hasPermissionTo('view.wallet')) --}}
+                {{-- <li class="wallet_icon {{ Request::is('agency/wallets/*') ? 'active' :  Request::is('wallets/wallet-statement') ? 'active' : ''  }}"><a href="{{ route('agency_wallet.statement') }}">Wallet</a></li> --}}
+            {{-- @endif --}}
             @if(Auth::user()->hasPermissionTo('create.asset'))
                 <li class="wallet_icon {{ Request::is('agency/media-assets/*') ? 'active' :  Request::is('media-assets/*') ? 'active' : ''  }}"><a href="{{ route('agency.media_assets') }}">Media Assets</a></li>
             @endif
@@ -29,8 +29,8 @@
          @if(Auth::user()->hasPermissionTo('create.media_plan'))
             <a href="{{ route('agency.media_plan.criteria_form') }}" class="btn full block_disp uppercased align_center mb3"><span class="_plus"></span>New Media Plan</a>
         @endif
-        @if(Auth::user()->hasPermissionTo('create.campaign'))
-            <a href="{{ route('campaign.get_campaign_general_information') }}" class="btn full block_disp uppercased align_center"><span class="_plus"></span>New Campaign</a>
-        @endif
+        {{-- @if(Auth::user()->hasPermissionTo('create.campaign')) --}}
+            {{-- <a href="{{ route('campaign.get_campaign_general_information') }}" class="btn full block_disp uppercased align_center"><span class="_plus"></span>New Campaign</a> --}}
+        {{-- @endif --}}
     </div>
 </div>
