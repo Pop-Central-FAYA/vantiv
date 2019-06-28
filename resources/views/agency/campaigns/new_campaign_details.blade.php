@@ -17,7 +17,6 @@
             </div>
         </div>
 
-
         <!-- main stats -->
         <div class="the_frame clearfix mb">
 
@@ -29,10 +28,17 @@
                         <select name="client" id="client">
                             @foreach($all_clients as $all_client)
                                 <option value="{{ $all_client->user_id }}"
-                                @if($all_client->user_id === $campaign_details['campaign_det']['company_user_id'])
+                                @if($all_client->user_id === $campaign_details->walkin_id)
                                     selected
                                 @endif
                                 >{{ $all_client->company_name ? $all_client->company_name : '' }}</option>
+
+                                <option value="5c5c2dc380e97"
+                                @if($all_client->user_id === $campaign_details->walkin_id)
+                                    selected
+                                @endif
+                                >Pepsi</option>
+                                
                             @endforeach
                         </select>
                     </div>
@@ -59,7 +65,9 @@
 
                     <div class="select_wrap">
                         <select class="js-example-basic-multiple" name="channel" id="channel" multiple="multiple">
-                            <!-- display media type/channels here -->
+                        @foreach($campaign_details->channel_information as $channel)
+                                <option value="{{ $channel->id }}">{{ $channel->channel }}</option>
+                            @endforeach
                         </select>
                     </div>
 
@@ -169,7 +177,7 @@
                         </div>
                         <div class="column col_3">
                             <span class="small_faint">Media Type</span>
-                            <p class="weight_medium"> Tv </p>
+                            <p class="weight_medium">@foreach($campaign_details->channel_information as $channel) {{ $channel->channel.',' }} @endforeach </p>
                         </div>
                     </div>
 
@@ -196,9 +204,9 @@
                         <div class="column col_3">
                             <span class="small_faint">Market</span>
                             <div>
-                                <p class="weight_medium"><span class="small_faint">Location</span> - </p>
-                                <p class="weight_medium"><span class="small_faint">Audience</span> - </p>
-                                <p class="weight_medium"><span class="small_faint">Age Groups</span> - </p>
+                                <p class="weight_medium"><span class="small_faint">Location</span> - @foreach(json_decode($campaign_details->regions) as $region) {{ $region.',' }} @endforeach</p>
+                                <p class="weight_medium"><span class="small_faint">Audience</span> - @foreach($campaign_details->audience_information as $audience) {{ $audience->audience.',' }} @endforeach</p>
+                                <p class="weight_medium"><span class="small_faint">Age Groups</span> - @foreach(json_decode($campaign_details->age_groups) as $age_group) {{ $age_group->min.' - '.$age_group->max.' years,' }} @endforeach</p>
                             </div>
                         </div>
 
@@ -302,49 +310,50 @@
             // flatpickr(".flatpickr", {
             //     altInput: true,
             // });
-            // $('body').delegate("#client", "change", function (e) {
-            //     var user_id = $("#client").val();
-            //     var campaign_id = "<?php echo $campaign_details['campaign_det']['campaign_id']; ?>";
-            //     $(".load_this").css({
-            //         opacity: 0.3
-            //     });
-            //     $.ajax({
-            //         url: '/agency/campaign-details/'+user_id,
-            //         method: "GET",
-            //         data: {
-            //             user_id: user_id, campaign_id : campaign_id,
-            //         },
-            //         success: function (data) {
-            //             var big_html = '<div class="select_wrap show_this" id="show_this">\n' +
-            //                             ' <select name="campaign" id="campaign"><option value="">Select Campaign</option>';
-            //             big_html +=  '';
-            //             $.each(data.campaign, function (index, value) {
-            //                big_html += '<option value="'+value.campaign_id+'">'+value.name+'</option>';
-            //             });
+            $('body').delegate("#client", "change", function (e) {
+                var client_id = $("#client").val();
+                var campaign_id = "<?php echo $campaign_details->id; ?>";
+                $(".load_this").css({
+                    opacity: 0.3
+                });
+                $.ajax({
+                    url: '/campaigns/filter-by-client/'+client_id,
+                    method: "GET",
+                    data: {
+                        client_id: client_id, campaign_id : campaign_id,
+                    },
+                    success: function (data) {
+                        
+                        var big_html = '<div class="select_wrap show_this" id="show_this">\n' +
+                                        ' <select name="campaign" id="campaign"><option value="">Select Campaign</option>';
+                        big_html +=  '';
+                        $.each(data.campaign, function (index, value) {
+                           big_html += '<option value="'+value.id+'">'+value.name+'</option>';
+                        });
 
-            //             big_html += '</select>\n' +
-            //                 '      </div>';
+                        big_html += '</select>\n' +
+                            '      </div>';
 
-            //             var chanel_html = '';
-            //             $.each(data.channel, function (index, value) {
-            //                 chanel_html += '<span> '+value.brand+' <a href=""></a></span>';
-            //             });
+                        var chanel_html = '';
+                        $.each(data.channel, function (index, value) {
+                            chanel_html += '<span> '+value.brand+' <a href=""></a></span>';
+                        });
 
-            //             $("#hide_this").hide();
-            //             $(".show_this").show();
-            //             $(".show_this").html(big_html);
+                        $("#hide_this").hide();
+                        $(".show_this").show();
+                        $(".show_this").html(big_html);
 
-            //             $(".load_this").css({
-            //                 opacity: 1
-            //             });
-            //         },
-            //         error: function () {
-            //             $(".load_this").css({
-            //                 opacity: 1
-            //             });
-            //         }
-            //     });
-            // });
+                        $(".load_this").css({
+                            opacity: 1
+                        });
+                    },
+                    error: function () {
+                        $(".load_this").css({
+                            opacity: 1
+                        });
+                    }
+                });
+            });
 
             $('.js-example-basic-multiple').select2();
             //placeholder for target audienct
@@ -470,7 +479,7 @@
         jQuery( document ).ready(function( $ ) {
             $('body').delegate("#channel", "change", function () {
                 var channel = $("#channel").val();
-                var campaign_id = "<?php echo $campaign_details['campaign_det']['campaign_id'] ?>";
+                var campaign_id = "<?php echo $campaign_details->id ?>";
                 var media_channel = $("#media").val();
 
                 $(".media_mix_load").css({
@@ -478,7 +487,7 @@
                 });
 
                 $.ajax({
-                    url: '/agency/campaigns/media-channel/'+campaign_id,
+                    url: '/campaigns/media-channel/'+campaign_id,
                     method: "GET",
                     data: {
                         channel: channel, campaign_id: campaign_id, media_channel: media_channel,
@@ -600,7 +609,7 @@
                 if(channel != null){
                     var campaign_id = "<?php echo $campaign_details['campaign_det']['campaign_id'] ?>";
                     $.ajax({
-                        url: '/agency/campaigns/compliance-graph',
+                        url: '/campaigns/compliance-graph',
                         method: 'GET',
                         data: {
                             channel: channel, campaign_id: campaign_id, type: type,

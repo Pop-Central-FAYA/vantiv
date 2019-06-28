@@ -376,7 +376,7 @@
                     opacity: 0.3
                 });
                 $.ajax({
-                    url: '/agency/campaign-details/'+user_id,
+                    url: '/campaigns/campaign-details/'+user_id,
                     method: "GET",
                     data: {
                         user_id: user_id, campaign_id : campaign_id,
@@ -422,7 +422,7 @@
 
             $('body').delegate("#campaign", "change", function (e) {
                 var campaign_id = $("#campaign").val();
-                window.location = '/agency/campaigns/campaign-details/'+campaign_id;
+                window.location = '/campaigns/campaign-details/'+campaign_id;
 
             });
 
@@ -546,7 +546,7 @@
                 });
 
                 $.ajax({
-                    url: '/agency/campaigns/media-channel/'+campaign_id,
+                    url: '/campaigns/media-channel/'+campaign_id,
                     method: "GET",
                     data: {
                         channel: channel, campaign_id: campaign_id, media_channel: media_channel,
@@ -668,7 +668,7 @@
                 if(channel != null){
                     var campaign_id = "<?php echo $campaign_details['campaign_det']['campaign_id'] ?>";
                     $.ajax({
-                        url: '/agency/campaigns/compliance-graph',
+                        url: '/campaigns/compliance-graph',
                         method: 'GET',
                         data: {
                             channel: channel, campaign_id: campaign_id, type: type,
