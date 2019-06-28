@@ -82,7 +82,7 @@
                                     <label for="mediaType">Upload Regulatory Certificate:</label>
                                     <div class="input-group mb-3">
                                         <div class="custom-file">
-                                            <input v-validate="'required|ext:txt'" name="certificate" type="file" class="custom-file-input" @change="on_file_change($event, 'REG_CERT')">
+                                            <input v-validate="'required|ext:txt,pdf,docx,doc'" name="certificate" type="file" class="custom-file-input" @change="on_file_change($event, 'REG_CERT')">
                                             <label class="custom-file-label" for="regCert">{{ this.regCertInputLabel }}</label>
                                         </div>
                                     </div>
@@ -149,7 +149,7 @@
                 }
                 axios({
                     method: 'get',
-                    url: '/agency/media-assets/client/get-brands/'+event.target.value,
+                    url: '/media-assets/client/get-brands/'+event.target.value,
                     data: {
                         clients: event.target.value
                     }
@@ -218,7 +218,7 @@
             store_uploaded_asset: async function(event) {
                  axios({
                      method: 'post',
-                     url: '/agency/media-assets/create',
+                     url: '/media-assets/create',
                      data: {
                          client_id: this.client,
                          brand_id: this.brand,
@@ -232,7 +232,7 @@
                     console.log(res.data);
                     if (res.data.status === 'success') {
                         this.sweet_alert(res.data.data, 'success');
-                        window.location = '/agency/media-assets/';
+                        window.location = '/media-assets/';
                     } else {
                         this.sweet_alert(res.data.data, 'error');
                     }
@@ -244,7 +244,7 @@
             generate_presigned_url: async function(file, folderName, uploadType) {
                 await axios({
                         method: 'post',
-                        url: 'media-assets/presigned-url',
+                        url: '/media-assets/presigned-url',
                         data: {
                             filename: file.name,
                             folder: folderName

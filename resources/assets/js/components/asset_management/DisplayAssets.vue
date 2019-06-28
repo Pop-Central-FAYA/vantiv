@@ -55,7 +55,7 @@
           this.noDataLoading = "Processing";
           axios({
               method: 'get',
-              url: '/agency/media-assets/all'
+              url: '/media-assets/all'
           }).then((res) => {
               this.loading = false;
               let result = res.data.data;
@@ -77,7 +77,7 @@
           this.sweet_alert(msg, 'info');
           axios({
               method: 'get',
-              url: '/agency/media-assets/delete/'+assetID
+              url: '/media-assets/delete/'+assetID
           }).then((res) => {
               console.log(res.data);
               if (res.data.status == 'success') {
