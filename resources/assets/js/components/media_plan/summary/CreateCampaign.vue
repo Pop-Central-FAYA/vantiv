@@ -46,8 +46,7 @@
                         this.sweet_alert(res.data.data, 'error');
                     } else {
                         this.sweet_alert(res.data.data, 'success');
-                        // window.location = '/agency/campaigns/campaign-details/' + res.data.campaign_id;
-                        window.location = '/';
+                        window.location = '/campaigns/details/'+res.data.campaign_id;
                     }
                 }).catch((error) => {
                     console.log(error.response.data);
