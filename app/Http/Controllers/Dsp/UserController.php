@@ -159,7 +159,7 @@ class UserController extends Controller
     {
         $user = User::find($request->user_id);
 
-        $email_format = new MailFormat($user, \Auth::->user()->full_name);
+        $email_format = new MailFormat($user, \Auth::user()->full_name);
         $user_mail_content_array[] = $email_format->emailFormat();
 
         $email_invitation_service = new UserInvitationMail($user_mail_content_array);
