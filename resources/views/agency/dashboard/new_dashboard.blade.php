@@ -38,7 +38,7 @@
             <div class="the_stats the_frame clearfix mb4">
                 <div class="column col_3">
                     <span class="weight_medium small_faint uppercased">Active Campaigns</span>
-                    <h3><a href="{{ route('campaign.all') }}">{{ count($active_campaigns) }}</a></h3>
+                    <h3><a href="{{ route('agency.campaign.all') }}">{{ count($active_campaigns) }}</a></h3>
                 </div>
 
                 <div class="column col_3">

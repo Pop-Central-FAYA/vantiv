@@ -536,7 +536,7 @@
             $.ajax({
                 cache: false,
                 type: "POST",
-                url : '/agency/media-plan/store-volume-discount',
+                url : '/media-plan/store-volume-discount',
                 dataType: 'json',
                 data: formdata,
                 success: function (data) {

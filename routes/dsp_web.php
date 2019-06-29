@@ -53,10 +53,18 @@ $dspRoutes = function () {
             Route::post('/information-update/{campaign_id}', 'CampaignsController@updateAgencyCampaignInformation')->name('agency.campaign_information.update');
 
             Route::get('/mpo/details/{campaign_mpo_id}', 'CampaignsController@campaignMpoDetails');
+
+
+            Route::get('/campaign-on-hold/agency/data', 'Campaign\CampaignsController@getCampaignOnHold')->name('agency.campaigns.hold');
+           
         });
 
         Route::get('/campaign-details/{user_id}', 'Dsp\CampaignsController@filterByUser');
-
+        Route::get('/campaign-general-information', 'Campaign\CampaignsController@campaignGeneralInformation')
+        ->name('campaign.get_campaign_general_information')->middleware('permission:create.campaign');
+        Route::post('/campaign-general-information/store', 'Campaign\CampaignsController@storeCampaignGeneralInformation')->name('campaign.store_campaign_general_information');
+        Route::get('/advert-slot/result/{id}', 'Campaign\CampaignsController@getAdSlotResult')->name('campaign.advert_slot');
+           
         /*
          * User Management
          */
@@ -143,6 +151,12 @@ $dspRoutes = function () {
             Route::get('/client/get-brands/{id}', 'BrandsController@getBrandsWithClients');
         });
         Route::get('/client/get-brands/{id}', 'BrandsController@getBrandsWithClients');
+        Route::get('file-update/{file_id}', 'MpoController@updateFiles')->name('file.change');
+          /*
+         * Compliance summary
+         */
+        Route::get('/compliance/view-summary/{campaign_id}', 'Compliance\ComplianceController@downloadSummary')->name('compliance.download.summary');
+
         /**
          * User Management
          */
@@ -168,6 +182,32 @@ $dspRoutes = function () {
             Route::get('/data-table', 'UserController@getDatatable');
             Route::post('/resend/invitation', 'UserController@resendInvitation')->middleware('permission:update.user');
             Route::get('/status/update', 'UserController@updateStatus')->middleware('permission:update.user');
+        });
+ /*
+         * WalkIns Management
+         */
+
+        Route::group(['prefix' => 'walk-in'], function () {
+            Route::get('/', 'WalkinsController@index')->name('walkins.all')
+                ->middleware('permission:view.client');
+            Route::post('/update/{client_id}', 'WalkinsController@updateWalKins')->name('walkins.update')
+                ->middleware('permission:update.client');
+            Route::post('/store', 'WalkinsController@store')->name('walkins.store')
+                ->middleware('permission:create.client');
+            Route::get('/delete/{id}', 'WalkinsController@delete')->name('walkins.delete');
+            Route::get('/brand', 'WalkinsController@getSubIndustry');
+            Route::get('/details/{client_id}', 'WalkinsController@getDetails')->name('walkins.details')
+                ->middleware('permission:view.client');
+        });
+
+        Route::group(['prefix' => 'brands'], function () {
+            Route::get('/', 'BrandsController@index')->name('brand.all');
+            Route::get('/create', 'BrandsController@create')->name('brand.create');
+            Route::post('/create/store', 'BrandsController@store')->name('brand.store');
+            Route::post('/brands/update/{id}', 'BrandsController@update')->name('brands.update');
+            Route::get('/brands/delete/{id}', 'BrandsController@delete')->name('brands.delete');
+            Route::get('/search-brands', 'BrandsController@search')->name('broadcasters.brands.search');
+            Route::get('/details/{id}/{client_id}', 'BrandsController@getBrandDetails')->name('brand.details');
         });
 
     });

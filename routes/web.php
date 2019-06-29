@@ -180,7 +180,7 @@ $sspRoutes = function () {
             Route::get('/preselected-adslot/remove/{id}', 'Campaign\CampaignsController@removePreselectedAdslot')->name('preselected_adslot.remove');
             Route::post('/campaign-hold/{id}', 'Campaign\CampaignsController@postCampaign')->name('campaign.post_hold');
             Route::get('/campaign-on-hold/broadcaster/data', 'Campaign\CampaignsController@getCampaignOnHold')->name('broadcaster.campaign.hold');
-            Route::get('/campaign-on-hold/agency/data', 'Campaign\CampaignsController@getCampaignOnHold')->name('agency.campaigns.hold');
+         
             Route::post('/submit-to-broadcasters/{campaign_id}', 'Campaign\CampaignsController@submitWithOtherPaymentOption')->name('campaign.submit.other_payment');
             Route::post('/payment-process', 'Campaign\CampaignsController@submitWithCardPaymentOption')->name('broadcaster.pay');
             Route::post('/submit-to-broadcasters/agency/{campaign_id}', 'Campaign\CampaignsController@submitAgencyCampaign')->name('agency.campaign.update');
