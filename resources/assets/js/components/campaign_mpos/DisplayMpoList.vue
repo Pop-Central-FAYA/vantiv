@@ -10,10 +10,10 @@
         <tbody>
             <tr v-for="mpo in mpos" :key="mpo.id">
                 <td>{{ mpo.station }}</td>
-                <td>{{ mpo.budget }}</td>
+                <td>{{ format_audience(mpo.budget) }}</td>
                 <td>{{ mpo.ad_slots }}</td>
                 <td>{{ mpo.status }}</td>
-                <td><a href="#">Export</a> | <a href="#">Submit</a> | <button @click="adslotList(mpo.id)">View Adslots</button></td>
+                <td><button @click="exportMpo(mpo.id)">Export</button> | <a href="#">Submit</a> | <button @click="adslotList(mpo.id)">View Adslots</button></td>
             </tr>
         </tbody>
     </table>
@@ -30,6 +30,11 @@
         methods : {
             adslotList : function(mpo_id) {
                 return window.location.href = '/campaigns/mpo/details/'+mpo_id
+            },
+            exportMpo : function(mpo_id) {
+                var msg = "Generating Excel Document, Please wait";
+                this.sweet_alert(msg, 'info');
+                return window.location.href = '/campaigns/mpo/export/'+mpo_id
             }
         }
     }

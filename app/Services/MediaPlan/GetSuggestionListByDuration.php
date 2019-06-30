@@ -53,7 +53,7 @@ class GetSuggestionListByDuration
                 $volume_discount = (int) $value->volume_disc;
                 $value_less = $gross_unit_rate * ((100 - $volume_discount) / 100);
                 $net_unit_rate = $value_less * ((100 - $agency_commission) / 100);
-                $total_spots = $this->totalSpotsPerDuration($value->dates);
+                $total_spots = $this->totalSpotsPerDuration($value->slot_details);
 
                 $new_array[] = [
                     'station' => $suggestion->station,
@@ -71,19 +71,18 @@ class GetSuggestionListByDuration
                     'gross_value' => $gross_unit_rate * $total_spots,
                     'net_value' => $net_unit_rate * $total_spots,
                     'net_value_after_bonus_spots' => $net_unit_rate * $total_spots,
-                    'show_dates' => $value->dates
+                    'individual_details' => $value->slot_details,
                 ];
             }
         }
-
         return $new_array;
     }
 
-    public function totalSpotsPerDuration($dates)
+    public function totalSpotsPerDuration($slot_details)
     {
         $spots = 0;
-        foreach ($dates as $date => $num_spots) {
-            $spots += $num_spots;
+        foreach ($slot_details as $key => $slot) {
+            $spots += $slot->exposure;
         }
         return $spots;
     }
@@ -93,19 +92,25 @@ class GetSuggestionListByDuration
         $new_array = [];
         if ($material_lengths) {
             foreach ($material_lengths as $key => $value) {
-                $dates = [];
+                $individual_spot_details = [];
     
                 foreach ($value as $details) {
                     if ($details->slot === '') {
                         $details->slot = 0;
                     }
-                    $dates[$details->date] = $details->slot;
+                    $individual_spot_details[] = [
+                        'date' => $details->date,
+                        'vol_disc' => $details->volume_disc,
+                        'net_total' => $details->net_total,
+                        'unit_rate' => $details->unit_rate,
+                        'exposure' => $details->slot
+                    ];
                 }
     
                 $new_array[$key]['unit_rate'] = $value[0]->unit_rate;
                 $new_array[$key]['volume_disc'] = $value[0]->volume_disc;
                 $new_array[$key]['day'] = $value[0]->day;
-                $new_array[$key]['dates'] = $dates;
+                $new_array[$key]['slot_details'] = $individual_spot_details;
             }
         }
         return json_decode(json_encode($new_array));

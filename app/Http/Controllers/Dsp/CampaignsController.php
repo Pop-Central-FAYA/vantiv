@@ -21,6 +21,13 @@ use Vanguard\Services\Campaign\CampaignDetails;
 use Session;
 use Vanguard\Services\Compliance\ComplianceGraph;
 use Vanguard\Models\CampaignMpo;
+use Vanguard\Models\CampaignMpoTimeBelt;
+use Illuminate\Support\Facades\DB;
+
+use Vanguard\Services\Mpo\ExportCampaignMpo;
+use Maatwebsite\Excel\Facades\Excel;
+use Vanguard\Exports\MpoExport;
+use Vanguard\Services\Mpo\ExportCampaignMpoSummary; 
 
 class CampaignsController extends Controller
 {
@@ -131,5 +138,33 @@ class CampaignsController extends Controller
         $campaign_mpo = CampaignMpo::find($campaign_mpo_id);
         return view('agency.campaigns.view_adslots')->with('campaign_mpo', $campaign_mpo);
     }
+
+    public function exportMpoAsExcel($campaign_mpo_id)
+    {
+        $mpo_details = CampaignMpo::with('campaign')->find($campaign_mpo_id);
+        $campaign_mpo_time_belts = DB::table('campaign_mpo_time_belts')->select(DB::raw("*,
+                                                        DATE_FORMAT(playout_date, '%Y-%m') AS month,
+                                                        DATE_FORMAT(playout_date, '%d') AS day_number"))
+                                                        ->where('mpo_id', $campaign_mpo_id)
+                                                        ->get()
+                                                        ->toArray();
+        $campaign_mpo_time_belts = collect($campaign_mpo_time_belts);
+        $days_array = [];
+        for($i = 1; $i <=31; $i++){
+            $days_array[] = $i;
+        }
+        $mpo_time_belts = new ExportCampaignMpo(
+            $campaign_mpo_time_belts->groupBy(['program', 'duration'])        
+        );
+
+        $mpo_time_belt_summary = new ExportCampaignMpoSummary($campaign_mpo_time_belts->groupBy('duration'));
+
+        return Excel::download(new MpoExport($mpo_time_belts->run(), 
+                                $days_array, 
+                                $mpo_details,
+                                $mpo_time_belt_summary->run()), str_slug($mpo_details->campaign->name).'.xlsx');
+    }
+
+    
 
 }

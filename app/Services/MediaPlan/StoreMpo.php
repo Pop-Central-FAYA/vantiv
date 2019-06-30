@@ -8,6 +8,7 @@ use Auth;
 use Carbon\CarbonPeriod;
 use Illuminate\Support\Collection;
 use DateTime;
+use function GuzzleHttp\json_decode;
 
 class StoreMpo
 {
@@ -29,12 +30,12 @@ class StoreMpo
             $mpo = new CampaignMpo();
             $mpo->campaign_id = $this->campaign_id;
             $mpo->station = $key;
-            $mpo->ad_slots = $this->getNumberOfShowDates($time_belts);
-            $mpo->budget = $time_belts->sum('net_value');
+            $mpo->ad_slots = $this->countTotalSlots($time_belts);
+            $mpo->budget = $this->sumBudget($time_belts);
             $mpo->status = 'Pending';
             $mpo->save();
             foreach ($time_belts as $time_belt) {
-                foreach ($time_belt['show_dates'] as $show_date => $ad_slots) {
+                foreach ($time_belt['individual_details'] as $key => $individual_slot) {
                     $mpo_timebelt = CampaignMpoTimeBelt::Create([
                         'mpo_id' => $mpo->id,
                         'time_belt_start_time' => $time_belt['start_time'],
@@ -42,8 +43,11 @@ class StoreMpo
                         'day' => $time_belt['day'],
                         'duration' => $time_belt['duration'],
                         'program' => $time_belt['program'],
-                        'ad_slots' => $ad_slots,
-                        'playout_date' => date('Y-m-d', strtotime($show_date))
+                        'ad_slots' => $individual_slot->exposure,
+                        'playout_date' => date('Y-m-d', strtotime($individual_slot->date)),
+                        'volume_discount' => $individual_slot->vol_disc,
+                        'net_total' => $individual_slot->net_total,
+                        'unit_rate' => $individual_slot->unit_rate
                     ]);
                 }
             }
@@ -51,12 +55,25 @@ class StoreMpo
         return $stations;
     }
 
-    public function getNumberOfShowDates($timeBeltArr)
+    public function countTotalSlots($timeBeltArr)
     {
         $total_slots = 0;
         foreach ($timeBeltArr as $time_belt) {
-            $total_slots += count(json_decode(json_encode($time_belt['show_dates']), true));
+            foreach ($time_belt['individual_details'] as $key => $individual_slot) {
+                $total_slots += count(json_decode(json_encode($individual_slot), true));
+            }
         }
         return $total_slots;
+    }
+
+    public function sumBudget($timeBeltArr)
+    {
+        $summed_budget = 0;
+        foreach ($timeBeltArr as $time_belt) {
+            foreach ($time_belt['individual_details'] as $key => $individual_slot) {
+                $summed_budget += $individual_slot->net_total;
+            }
+        }
+        return $summed_budget;
     }
 }

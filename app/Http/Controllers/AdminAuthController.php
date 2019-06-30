@@ -26,7 +26,7 @@ class AdminAuthController extends Controller
 
     public function postRegister(Request $request)
     {
-
+        
     }
 
 }

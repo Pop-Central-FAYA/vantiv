@@ -59,26 +59,6 @@
                                 <span class="small_faint">Brand</span>
                                 <p class="weight_medium">{{ ucfirst($campaign_mpo->campaign->brand->name) }}</p>
                             </div>
-                            <div class="column col_3">
-                                <span class="small_faint">Media Channel</span>
-                            </div>
-                        </div>
-
-                        <div class="clearfix mb">
-
-                            <div class="column col_3">
-                                <span class="small_faint">Market</span>
-                                <div>
-                                    <p class="weight_medium"><span class="small_faint">Location</span> - </p>
-                                    <p class="weight_medium"><span class="small_faint">Audience</span> - </p>
-                                    <p class="weight_medium"><span class="small_faint">Age Groups</span> - </p>
-                                </div>
-                            </div>
-
-                            <div class="column col_3">
-                                <span class="small_faint">LSM</span>
-                                <p class="weight_medium">A, B, C1, C2</p>
-                            </div>
                         </div>
 
                     </div>
