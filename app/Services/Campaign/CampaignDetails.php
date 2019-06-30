@@ -24,7 +24,7 @@ class CampaignDetails
 
     public function getCampaignDetails()
     {
-        $agency_id = \Auth::guard('dsp')->user()->companies->first()->id;
+        $agency_id = \Auth::user()->companies->first()->id;
         return Campaign::with(['client', 'brand', 'campaign_mpos'])
                         ->where('id', $this->campaign_id)
                         ->where('belongs_to', $agency_id)
