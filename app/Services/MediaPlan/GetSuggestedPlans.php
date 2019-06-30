@@ -2,23 +2,13 @@
 namespace Vanguard\Services\MediaPlan;
 use DB;
 use Log;
+use Vanguard\Libraries\DayPartList;
 
 /**
  * This class should given a media plan id, grab the timebelts/stations that have already been created for it
  */
 class GetSuggestedPlans
 {
-
-    //inclusive
-    const DAYPARTS = array(
-        "Late Night" => array("21:00", "00:00"),
-        "Overnight" => array("00:00", "05:00"),
-        "Breakfast" => array("05:00", "09:00"),
-        "Late Breakfast" => array("09:00", "12:00"),
-        "Afternoon" => array("12:00", "17:00"),
-        "Primetime" => array("17:00", "21:00")
-    );
-
     // const STATION_TYPE = array(
     //     "Cable" => "cable",
     //     "Network" => "network",
@@ -46,7 +36,7 @@ class GetSuggestedPlans
             ->when($this->filters, function($query) {
               foreach ($this->filters as $key => $value) {
                     if ($key == "day_parts") {
-                        $query->whereBetween("start_time", static::DAYPARTS[$value]);
+                        $query->whereBetween("start_time", DayPartList::DAYPARTS[$value]);
                         continue;
                     }
                     if ($key == "days") {

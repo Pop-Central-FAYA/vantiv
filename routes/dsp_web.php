@@ -44,7 +44,6 @@ $dspRoutes = function () {
             Route::get('/campaign/checkout/{id}', 'CampaignsController@checkout')->name('agency_campaign.checkout');
             Route::get('/cart/remove/{id}', 'CampaignsController@removeCart')->name('agency_cart.remove');
             Route::post('/campaign/submit/{id}', 'CampaignsController@postCampaign')->name('agency_submit.campaign');
-
             Route::get('/campaign-details/{id}', 'CampaignsController@getDetails')->name('agency.campaign.details');
             Route::get('/details/{id}', 'CampaignsController@getNewDetails')->name('agency.campaign.new.details');
             Route::get('/filter-by-client/{id}', 'CampaignsController@getCampaignsByClient');
@@ -58,6 +57,8 @@ $dspRoutes = function () {
             Route::post('/information-update/{campaign_id}', 'CampaignsController@updateAgencyCampaignInformation')->name('agency.campaign_information.update');
 
             Route::get('/mpo/details/{campaign_mpo_id}', 'CampaignsController@campaignMpoDetails');
+
+            Route::get('/mpo/export/{campaign_mpo_id}', 'CampaignsController@exportMpoAsExcel');
 
 
             Route::get('/campaign-on-hold/agency/data', 'Campaign\CampaignsController@getCampaignOnHold')->name('agency.campaigns.hold');

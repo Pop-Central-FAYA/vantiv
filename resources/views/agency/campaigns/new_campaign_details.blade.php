@@ -152,7 +152,7 @@
                 @if($campaign_details->status === 'active' || $campaign_details->status === 'expired')
                     <a href="#comp">Compliance</a>
                 @endif
-                <a href="#campaign_mpos">MPO's</a>
+                <a href="#campaign_mpos">MPOS</a>
             </div>
 
             {{--{{ dd($campaign_details) }}--}}
@@ -204,7 +204,9 @@
                         <div class="column col_3">
                             <span class="small_faint">Market</span>
                             <div>
-                                <p class="weight_medium"><span class="small_faint">Location</span> - @foreach(json_decode($campaign_details->regions) as $region) {{ $region.',' }} @endforeach</p>
+                                @if(@count($campaign_details->regions) == 0)
+                                    <p class="weight_medium"><span class="small_faint">Location</span> - @foreach(json_decode($campaign_details->regions) as $region) {{ $region.',' }} @endforeach</p>
+                                @endif
                                 <p class="weight_medium"><span class="small_faint">Audience</span> - @foreach($campaign_details->audience_information as $audience) {{ $audience->audience.',' }} @endforeach</p>
                                 <p class="weight_medium"><span class="small_faint">Age Groups</span> - @foreach(json_decode($campaign_details->age_groups) as $age_group) {{ $age_group->min.' - '.$age_group->max.' years,' }} @endforeach</p>
                             </div>

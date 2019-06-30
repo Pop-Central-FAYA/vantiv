@@ -37,6 +37,7 @@ use Vanguard\Services\MediaPlan\StoreMpo;
 use Carbon\Carbon;
 use Vanguard\Services\MediaPlan\GetSuggestionListByDuration;
 use Vanguard\Libraries\Enum\MediaPlanStatus;
+use Vanguard\Libraries\DayPartList;
 
 class MediaPlanController extends Controller
 {
@@ -223,7 +224,7 @@ class MediaPlanController extends Controller
             $state_list = json_decode($saved_state_list, true);
         }
         return array(
-            "day_parts" => collect(GetSuggestedPlans::DAYPARTS)->keys()->sort()->toArray(),
+            "day_parts" => collect(DayPartList::DAYPARTS)->keys()->sort()->toArray(),
             "state_list" => $state_list,
             "days" => array("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"),
             "station_type" => array("Network", "Regional", "Satellite")
@@ -542,22 +543,6 @@ class MediaPlanController extends Controller
                 'message'=> "No results came back for your criteria"
             ];
         }
-        // if ($suggestions->isNotEmpty()) {
-        //     // store planning criteria and suggestions
-        //     $storeSuggestionsService = new StorePlanningSuggestions($request, $suggestions);
-        //     $newMediaPlan = $storeSuggestionsService->storePlanningSuggestions();
-        //     return [
-        //         'status'=>"success",
-        //         'message'=> "Ratings successfully generated, going to next page",
-        //         'redirect_url' => $newMediaPlan->id
-        //     ];
-        // }else{
-        //     Session::flash('error', 'No results came back for your criteria');
-        //     return [
-        //         'status'=>"error",
-        //         'message'=> "No results came back for your criteria"
-        //     ];
-        // }
     }
 
     public function getChannelFromPlan($planMediaType)
@@ -610,7 +595,7 @@ class MediaPlanController extends Controller
                 $ad_slots = $suggestion_service->getTotalAdSlotPerPlan($suggestions);
                 $store_campaign_service = new StoreCampaign($now, $campaign_reference, $channel, $target_audience, $created_by, $belongs_to, $media_plan, $budget, $ad_slots);
                 $campaign = $store_campaign_service->run();
-                $campaign_id = $campaign->id;
+                $campaign_id = $campaign->id; 
 
                 // create MPO for each station in the Media plan
                 // get the media plan program details
@@ -625,7 +610,6 @@ class MediaPlanController extends Controller
                 'data' => 'Something went wrong, media plan cannot be convert to MPO.'.$ex->getMessage()
             ]);
         }
-
         return response()->json([
             'status' => 'success',
             'data' => 'Media Plan successfully converted to MPO',
