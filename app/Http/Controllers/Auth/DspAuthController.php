@@ -322,4 +322,56 @@ class DspAuthController extends Controller
     }
 
 
+
+    public function getForgetPassword()
+    {
+        return view('auth.dsp_password.forget_password');
+    }
+
+    public function processForgetPassword(Request $request)
+    {
+        $this->validate($request, [
+            'email' => 'email|required',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+        if($user){
+
+            $token = encrypt($user->id);
+
+            $send_mail = \Mail::to($user->email)->send(new PasswordChanger($token));
+
+            \Session::flash('success', ClassMessages::VERIFICATION_LINK);
+            return redirect()->back();
+
+        }else{
+
+            \Session::flash('error', ClassMessages::EMAIL_NOT_FOUND);
+            return redirect()->back();
+        }
+    }
+
+    public function getChangePassword($token)
+    {
+        $user_id = decrypt($token);
+        $user = User::where('id', $user_id)->first();
+
+        return view('auth.dsp_password.change_password', compact('user'));
+
+    }
+
+    public function processChangePassword(PasswordChangeRequest $request, $user_id)
+    {
+        try{
+            $user = User::where('id', $user_id)->first();
+            $user->password = $request->password;;
+            $user->save();
+        }catch (\Exception $exception){
+            return redirect()->back()->withErrors(ClassMessages::PROCESSING_ERROR);
+        }
+        return redirect()->route('dsplogin')->with('success', ClassMessages::PASSWORD_CHANGED);
+
+    }
+
+
 }
