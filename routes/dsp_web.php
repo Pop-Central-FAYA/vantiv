@@ -9,7 +9,12 @@ $dspRoutes = function () {
         'uses' => 'Auth\DspAuthController@getLogout',
     ]);
 
-    Route::get('/forget-password', 'Auth\AuthController@getForgetPassword')->name('dsp.password.forgot');
+
+    Route::get('/forget-password', 'Auth\DspAuthController@getForgetPassword')->name('dsp.password.forgot');
+    Route::post('/forget-password/process', 'Auth\DspAuthController@processForgetPassword')->name('dsp.forget_password.process');
+    Route::get('/proceed/password-change/{token}', 'Auth\DspAuthController@getChangePassword');
+    Route::post('/change-password/process/{user_id}', 'Auth\DspAuthController@processChangePassword')->name('dsp.change_password.process');
+
 
     Route::group(['middleware' => 'auth'], function () {
         Route::get('/', ['as' => 'dashboard', 'uses' => 'DashboardController@index']);
