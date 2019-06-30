@@ -40,7 +40,10 @@ $sspRoutes = function () {
 
     Route::post('/admin/post', 'AdminAuthController@postRegister')->name('admin.post');
 
+    
     Route::group(['middleware' => 'auth'], function () {
+        # We need a default index
+        Route::get('/', ['as' => 'dashboard', 'uses' => 'Broadcaster\DashboardController@index']);
 
         Route::get('user/profile', [
             'as' => 'user.profile',
