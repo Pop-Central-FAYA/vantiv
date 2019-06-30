@@ -45,7 +45,7 @@ class CampaignsController extends Controller
 
     public function getNewDetails($id)
     {
-        $agency_id = \Auth::guard('dsp')->user()->companies->first()->id;
+        $agency_id = \Auth::user()->companies->first()->id;
         $campaign_details_service = new CampaignDetails($id);
         $campaign_details = $campaign_details_service->run();
         $all_campaigns = Utilities::switch_db('api')->select("SELECT * FROM campaigns where belongs_to = '$agency_id' GROUP BY id");
@@ -55,7 +55,7 @@ class CampaignsController extends Controller
 
     public function getCampaignsByClient($client_id)
     {
-        $agency_id = \Auth::guard('dsp')->user()->companies->first()->id;
+        $agency_id = \Auth::user()->companies->first()->id;
         $all_campaigns = Utilities::switch_db('api')->select("SELECT * FROM campaigns where belongs_to = '$agency_id' and walkin_id = '$client_id' GROUP BY id");
         return (['campaign' => $all_campaigns]);
     }
