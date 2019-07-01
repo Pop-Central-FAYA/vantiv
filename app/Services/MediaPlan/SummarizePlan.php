@@ -89,7 +89,7 @@ class SummarizePlan
                 'net_value' => $value->sum('net_value'),
                 'savings' => $value->sum('savings'),
                 'total_spots' => $value->sum('num_spots'),
-                'material_durations' => $value->pluck('material_durations')->unique()->collapse()
+                'material_durations' => $value->pluck('material_durations')->collapse()->unique() 
             ];
         }
 
