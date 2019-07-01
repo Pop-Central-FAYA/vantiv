@@ -54,7 +54,10 @@ return [
     |
     */
 
-    'from' => ['address' => env('MAIL_FROM','ridwan.busari@techadvance.ng'), 'name' => null],
+    'from' => [
+        'address' => env('MAIL_FROM','info@fayamedia.com'),
+        'name' => env('EMAIL_FROM_NAME','fayamedia')
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -80,7 +83,7 @@ return [
     |
     */
 
-    'username' => env('MAIL_USERNAME', 'FAYA Media'),
+    'username' => env('MAIL_USERNAME'),
 
     /*
     |--------------------------------------------------------------------------
@@ -119,7 +122,7 @@ return [
     |
     */
 
-    'pretend' => false,
+    'pretend' => env('MAIL_PRETEND', false),
 
     /*
     |--------------------------------------------------------------------------

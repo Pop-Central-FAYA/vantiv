@@ -38,6 +38,7 @@ services:
       - DB_PASSWORD=faya
       - MEDIA_BUCKET=faya-dev-us-east-1-media
       - PHP_MEMORY_LIMIT=256M
+      - MAIL_DRIVER=log
     volumes:
       - $HOME/.aws:/home/.aws:delegated
       - ./:/app:delegated
@@ -73,6 +74,7 @@ services:
       - DB_PASSWORD=faya
       - MEDIA_BUCKET=faya-dev-us-east-1-media
       - PHP_MEMORY_LIMIT=256M
+      - MAIL_DRIVER=log
     volumes:
       - $HOME/.aws:/home/.aws:delegated
       - ./:/app:delegated
