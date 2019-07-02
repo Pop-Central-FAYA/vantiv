@@ -277,9 +277,16 @@
                 <!-- end -->
                 <!-- campaign mpos -->
                 <div class="tab_content" id="campaign_mpos">
-                    <campaign-mpos-list
-                        :mpos="{{json_encode($campaign_details->campaign_mpos)}}"
-                    ></campaign-mpos-list>
+                    <v-app>
+                        <v-content>
+                        <campaign-mpos-list
+                            :mpos="{{json_encode($campaign_details->campaign_mpos)}}"
+                            :assets="{{json_encode($client_media_assets)}}"
+                            :client="{{json_encode($campaign_details->client['company_name'])}}"
+                            :brand="{{json_encode($campaign_details->brand['name'])}}"
+                        ></campaign-mpos-list>
+                        </v-content>
+                    </v-app>
                 </div>
                 <!-- end -->
 

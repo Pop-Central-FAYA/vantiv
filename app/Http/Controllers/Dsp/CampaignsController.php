@@ -55,9 +55,12 @@ class CampaignsController extends Controller
         $agency_id = \Auth::user()->companies->first()->id;
         $campaign_details_service = new CampaignDetails($id);
         $campaign_details = $campaign_details_service->run();
+        $campaign_details_client_id = $campaign_details->client->id;
+        $campaign_details_brand_id = $campaign_details->brand->id;
         $all_campaigns = Utilities::switch_db('api')->select("SELECT * FROM campaigns where belongs_to = '$agency_id' GROUP BY id");
         $all_clients = Utilities::switch_db('api')->select("SELECT * FROM walkIns where agency_id = '$agency_id'");
-        return view('agency.campaigns.new_campaign_details', compact('campaign_details', 'all_campaigns', 'all_clients'));
+        $client_media_assets = Utilities::switch_db('api')->select("SELECT * FROM media_assets where client_id = '$campaign_details_client_id' AND brand_id = '$campaign_details_brand_id'");
+        return view('agency.campaigns.new_campaign_details', compact('campaign_details', 'all_campaigns', 'all_clients', 'client_media_assets'));
     }
 
     public function getCampaignsByClient($client_id)
@@ -165,6 +168,28 @@ class CampaignsController extends Controller
                                 $mpo_time_belt_summary->run()), str_slug($mpo_details->campaign->name).'.xlsx');
     }
 
-    
+    public function associateAssetsToMpo()
+    {
+        $file_durations = request()->durations;
+        $media_assets = request()->assets;
+        $mpo_id = request()->mpo_id;
+        
+        try {
+            \DB::transaction(function () use ($file_durations, $media_assets, $mpo_id) {
+                foreach ($file_durations as $key => $duration) {
+                    CampaignMpoTimeBelt::where('mpo_id', $mpo_id)->where('duration',$duration)->update(['asset_id' => $media_assets[$key]]);
+                }
+            });
+        } catch (Exception $ex) {
+            return response()->json([
+                'status' => 'error',
+                'data' => 'Something went wrong, Media asset cannot be associated with MPO.'.$ex->getMessage()
+            ]);
+        }
+        return response()->json([
+            'status' => 'success',
+            'data' => 'Media Assets successfully associated to MPO'
+        ]);
+    }
 
 }
