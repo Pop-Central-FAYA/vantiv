@@ -1,22 +1,33 @@
 <template>
-    <table>
-        <tr>
-            <th>Station</th>
-            <th>Budget</th>
-            <th>Adslots</th>
-            <th>Status</th>
-            <th>Action</th>
-        </tr>
-        <tbody>
-            <tr v-for="mpo in mpos" :key="mpo.id">
-                <td>{{ mpo.station }}</td>
-                <td>{{ format_audience(mpo.budget) }}</td>
-                <td>{{ mpo.ad_slots }}</td>
-                <td>{{ mpo.status }}</td>
-                <td><button @click="exportMpo(mpo.id)">Export</button> | <a href="#">Submit</a> | <button @click="adslotList(mpo.id)">View Adslots</button></td>
-            </tr>
-        </tbody>
-    </table>
+    <v-card>
+        <v-card-title>
+        MPOS
+        <v-spacer></v-spacer>
+        <v-text-field v-model="search" append-icon="search" label="Enter Keyword" single-line hide-details></v-text-field>
+        </v-card-title>
+        <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="mpos" :search="search">
+        <template v-slot:items="props">
+            <td>{{ props.item.station }}</td>
+            <td class="text-xs-left">{{ props.item.budget }}</td>
+            <td class="text-xs-left">{{ props.item.ad_slots }}</td>
+            <td class="text-xs-left">{{ props.item.status }}</td>
+            <td class="justify-center layout px-0">
+                <v-btn color="primary" small @click="exportMpo(props.item.id)" dark>
+                    Export
+                </v-btn>
+                <v-btn color="secondary" small @click="adslotList(props.item.id)" dark>
+                    Ad Slots
+                </v-btn>
+                <mpo-file-manager :mpo="props.item" :assets="assets" :client="client" :brand="brand"></mpo-file-manager>
+            </td>
+        </template>
+        <template v-slot:no-results>
+            <v-alert :value="true" color="error" icon="warning">
+            Your search for "{{ search }}" found no results.
+            </v-alert>
+        </template>
+        </v-data-table>
+    </v-card>
 </template>
 
 <script>
@@ -25,6 +36,21 @@
             mpos : {
                 required : true,
                 type : Array
+            },
+            assets: Array,
+            client: String,
+            brand: String
+        },
+        data () {
+            return {
+                search: '',
+                headers: [
+                    { text: 'Station', align: 'left', value: 'station' },
+                    { text: 'Budget', value: 'budget' },
+                    { text: 'Adslots', value: 'ad_slots' },
+                    { text: 'Status', value: 'status' },
+                    { text: 'Actions', value: 'name', sortable: false }
+                ]
             }
         },
         methods : {

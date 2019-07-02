@@ -60,6 +60,8 @@ $dspRoutes = function () {
 
             Route::get('/mpo/export/{campaign_mpo_id}', 'CampaignsController@exportMpoAsExcel');
 
+            Route::post('/mpo/associate-assets', 'CampaignsController@associateAssetsToMpo');
+
 
             Route::get('/campaign-on-hold/agency/data', 'Campaign\CampaignsController@getCampaignOnHold')->name('agency.campaigns.hold');
            

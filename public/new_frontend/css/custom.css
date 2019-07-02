@@ -150,3 +150,18 @@
 .media-asset-management .v-datatable thead .v-datatable__progress th.column {
     padding-top: 0px !important;
 }
+
+.v-datatable thead th.column {
+    position: relative !important;
+    float: none !important;
+    display: table-cell !important;
+    padding-top: 21px !important;
+}
+
+.v-datatable thead .v-datatable__progress th.column {
+    padding-top: 0px !important;
+}
+
+.v-text-field input {
+    border: none;
+}
