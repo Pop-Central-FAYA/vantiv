@@ -47,7 +47,7 @@
                                 <option value=""></option>
                                 <option value="boss"></option>
                                 @foreach($roles as $role)
-                                    <option value="{{ $role['id'] }}">
+                                    <option value="{{ $role['role'] }}">
                                         {{ $role['label'] }}
                                     </option>
                                    
