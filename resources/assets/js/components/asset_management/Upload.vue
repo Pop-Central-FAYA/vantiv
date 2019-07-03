@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 text-right">
+            <div class="col-md-12 text-right px-0">
                 <!-- Button trigger modal -->
                 <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal">Upload Asset</button>
             </div>
