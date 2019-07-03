@@ -32,4 +32,9 @@ class MediaAsset extends Base
     {
         return $this->belongsTo('Vanguard\Models\Brand','brand_id');
     }
+
+    public function campaign_mpo_time_belts()
+    {
+        return $this->hasMany(CampaignMpoTimeBelt::class);
+    }
 }
