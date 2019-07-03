@@ -66,6 +66,8 @@ $dspRoutes = function () {
 
             Route::post('/mpo/associate-assets', 'CampaignsController@associateAssetsToMpo');
 
+            Route::post('/mpo/details/{campaign_mpo_id}/adslots/delete', 'CampaignsController@deleteMultipleAdslots');
+
 
             Route::get('/campaign-on-hold/agency/data', 'Campaign\CampaignsController@getCampaignOnHold')->name('agency.campaigns.hold');
            
