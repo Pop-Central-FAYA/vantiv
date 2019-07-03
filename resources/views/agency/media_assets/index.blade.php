@@ -19,12 +19,16 @@
         <div class="container-fluid media-asset-management">
             <div class="row">
                 <!-- subheader -->
-                <div class="col-md-6">
+                <div class="col-md-10">
                     <h2 class="sub_header">Media Assets</h2>
                 </div>
                 @if(Auth::user()->hasPermissionTo('create.asset'))
-                    <div class="col-md-6 text-right">
-                        <media-asset-upload :clients="{{ json_encode($clients) }}"></media-asset-upload>
+                    <div class="col-md-2 text-right px-2">
+                        <media-asset-upload 
+                            :clients="{{ json_encode($clients) }}"
+                            :brands="{{ json_encode($brands) }}"
+                        >
+                        </media-asset-upload>
                     </div>
                 @endif
             </div>

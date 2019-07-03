@@ -1,124 +1,143 @@
 <template>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12 text-right px-0">
-                <!-- Button trigger modal -->
-                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal">Upload Asset</button>
-            </div>
-        </div>
-        <div class="row">
-            <!-- Modal -->
-            <div class="modal" id="exampleModal" tabindex="-1" role="dialog">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Upload Media Asset</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="client">Client:</label>
-                                        <select class="form-control" v-validate="'required'" v-model="client" name="client" @change="get_brands($event)">
-                                            <option value="">select client</option>
-                                            <option v-for="(client, key) in clients" v-bind:key="key" :value="client.id">{{ client.company_name}}</option>
-                                        </select>
-                                    </div>
-                                    <span class="text-danger" v-show="errors.has('client')">{{ errors.first('client') }}</span>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="brand">Brand:</label>
-                                        <select class="form-control" v-validate="'required'" v-model="brand" name="brand">
-                                            <option value="">select brand</option>
-                                            <option v-for="(brand, key) in brands" v-bind:key="key" :value="brand.id">{{ brand.name }}</option>
-                                        </select>
-                                    </div>
-                                    <span class="text-danger" v-show="errors.has('brand')">{{ errors.first('brand') }}</span>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="mediaType">Media Type:</label>
-                                        <select v-validate="'required'" name="media_type" class="form-control" v-model="mediaType">
-                                            <option value="Tv" selected>Tv</option>
-                                        </select>
-                                    </div>
-                                    <span class="text-danger" v-show="errors.has('media_type')">{{ errors.first('media_type') }}</span>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="mediaType">File Duration:</label>
-                                        <select v-validate="'required'" name="duration" class="form-control" v-model="duration">
-                                            <option value="">select duration</option>
-                                            <option value="15">15 Seconds</option>
-                                            <option value="30">30 Seconds</option>
-                                            <option value="45">45 Seconds</option>
-                                            <option value="60">60 Seconds</option>
-                                        </select>
-                                    </div>
-                                    <span class="text-danger" v-show="errors.has('duration')">{{ errors.first('duration') }}</span>
-                                </div>
-                                <div class="col-md-8">
-                                    <label for="mediaType">Upload Asset:</label>
-                                    <div class="input-group mb-3">
-                                        <div class="custom-file">
-                                            <input v-validate="'required|ext:mp4,3gp,ogg,avi'" name="asset" type="file" class="custom-file-input" @change="on_file_change($event, 'ASSET')">
-                                            <label class="custom-file-label" for="asset">{{ this.assetInputLabel }}</label>
-                                        </div>
-                                    </div>
-                                    <span class="text-danger" v-show="errors.has('asset')">{{ errors.first('asset') }}</span>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-md-12">
-                                    <label for="mediaType">Upload Regulatory Certificate:</label>
-                                    <div class="input-group mb-3">
-                                        <div class="custom-file">
-                                            <input v-validate="'required|ext:txt,pdf,docx,doc'" name="certificate" type="file" class="custom-file-input" @change="on_file_change($event, 'REG_CERT')">
-                                            <label class="custom-file-label" for="regCert">{{ this.regCertInputLabel }}</label>
-                                        </div>
-                                    </div>
-                                    <span class="text-danger" v-show="errors.has('certificate')">{{ errors.first('certificate') }}</span>
-                                </div>
-                            </div>
-
-                            <div class="row mb-3" v-show="showProgressBar">
-                                <div class="col-md-12">
-                                    <p class="text-muted">{{ currentUploadTitle }}</p>
-                                    <progress class="w-100" max="100" :value.prop="uploadPercentage"></progress>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" @click="process_form()">Create Media Asset</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <v-layout>
+        <v-dialog v-model="dialog" persistent max-width="600px">
+        <template v-slot:activator="{ on }">
+            <v-btn color="" class="default-vue-btn" dark v-on="on">Upload Asset</v-btn>
+        </template>
+        <v-card>
+            <v-card-text>
+            <v-container grid-list-md>
+                <v-form>
+                    <v-layout wrap>
+                        <v-flex xs12 sm6 md6>
+                            <span>Client</span>
+                            <v-select
+                                v-model="client"
+                                :items="clients"
+                                item-text="company_name"
+                                item-value="id"
+                                v-validate="'required'"
+                                name="client"
+                                solo
+                                @change="get_brands"
+                            ></v-select>
+                            <span class="text-danger" v-show="errors.has('client')">{{ errors.first('client') }}</span>
+                        </v-flex>
+                        <v-flex xs12 sm6 md6>
+                            <span>Brand</span>
+                            <v-select
+                                v-model="brand"
+                                :items="filteredBrands"
+                                item-text="name"
+                                item-value="id"
+                                v-validate="'required'"
+                                name="brand"
+                                solo
+                            ></v-select>
+                            <span class="text-danger" v-show="errors.has('brand')">{{ errors.first('brand') }}</span>
+                        </v-flex>
+                    </v-layout>
+                    <v-layout wrap>
+                        <v-flex xs12 sm6 md3>
+                            <span>Duration</span>
+                            <v-select
+                                v-model="duration"
+                                :items="durations"
+                                v-validate="'required'"
+                                name="duration"
+                                solo
+                            ></v-select>
+                            <span class="text-danger" v-show="errors.has('duration')">{{ errors.first('duration') }}</span>
+                        </v-flex>
+                        <v-flex xs12 sm6 md9>
+                            <span>
+                                Video File
+                                <v-tooltip right>
+                                    <template v-slot:activator="{ on }">
+                                        <v-icon small color="blue-grey darken-2" dark v-on="on">info</v-icon>
+                                    </template>
+                                    <span>Only video extension are allowed; mp4,3gp,ogg,avi</span>
+                                </v-tooltip>
+                            </span>
+                            <v-text-field solo v-model="assetInputLabel" prepend-icon="attach_file" accept="video/*" @click="chooseFile('ASSET')"></v-text-field>
+                            <input type="file" style="display: none" ref="video" accept="video/*" v-validate="'required|ext:mp4,3gp,ogg,avi'" name="asset" @change="on_file_change($event, 'ASSET')">
+                            <span class="text-danger" v-show="errors.has('asset')">{{ errors.first('asset') }}</span>
+                        </v-flex>
+                    </v-layout>
+                    <v-layout wrap>
+                        <v-flex xs12 sm12 md12>
+                            <span>
+                                Regulatory Certificate
+                                <v-tooltip right>
+                                <template v-slot:activator="{ on }">
+                                    <v-icon small color="blue-grey darken-2" dark v-on="on">info</v-icon>
+                                </template>
+                                <span>Ceriticate is optional. Following extensions are allowed; txt,pdf,docx,doc,png,jpeg,jpg,gif</span>
+                                </v-tooltip>
+                            </span>
+                            <v-text-field solo v-model="regCertInputLabel" prepend-icon="attach_file" name="certificate" @click="chooseFile('REG_CERT')"></v-text-field>
+                            <input type="file" style="display: none" ref="certificate" accept=".txt,.pdf,.docx,.doc,.png,.jpeg,.jpg,.gif" @change="on_file_change($event, 'REG_CERT')">
+                        </v-flex>
+                    </v-layout>
+                    <v-layout wrap>
+                        <v-flex xs12 sm12 md12 v-show="showProgressBar">
+                            <p class="text-muted">{{ currentUploadTitle }}</p>
+                            <v-progress-linear v-model="uploadPercentage" color="success"></v-progress-linear>
+                        </v-flex>
+                    </v-layout>
+                </v-form>
+            </v-container>
+            </v-card-text>
+            <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="" class="default-vue-btn" dark @click="dialog = false">Close</v-btn>
+            <v-btn color="" class="default-vue-btn" dark @click="process_form()">Upload</v-btn>
+            </v-card-actions>
+        </v-card>
+        </v-dialog>
+    </v-layout>
 </template>
 
+<style>
+    .v-text-field {
+        padding-top: 2px;
+        margin-top: 0px;
+    }
+    .default-vue-btn {
+        color: #fff;
+        cursor: pointer;
+        background: #44C1C9 !important;
+        -webkit-appearance: none;
+        font-family: "Roboto", sans-serif;
+        font-weight: 500;
+        border: 0;
+        font-size: 15px;
+        -webkit-border-radius: 2px;
+        -moz-border-radius: 2px;
+        border-radius: 2px;
+        -webkit-box-shadow: 9px 10px 20px 1px rgba(0,159,160,0.21);
+        -moz-box-shadow: 9px 10px 20px 1px rgba(0,159,160,0.21);
+        box-shadow: 9px 10px 20px 1px rgba(0,159,160,0.21);
+        position: relative;
+        display: inline-block;
+        text-transform: uppercase;
+    }
+</style>
+
 <script>
+    const DECREASE_DURATION = 2;
     export default {
         props: {
             clients: Array,
+            brands: Object
         },
         data() {
             return {
+                dialog: false,
                 client: '',
                 brand: '',
                 duration: '',
+                durations: ['15', '30', '45', '60'],
                 mediaType: 'Tv',
                 s3PresignedUrl: '',
                 assetFile: '',
@@ -129,9 +148,9 @@
                 uploadPercentage: 0,
                 showProgressBar: false,
                 currentUploadTitle: '',
-                assetInputLabel: 'Choose media file',
+                assetInputLabel: 'Choose video file',
                 regCertInputLabel: 'Choose regulatory certifcate',
-                brands: []
+                filteredBrands: []
             };
         },
         mounted() {
@@ -143,21 +162,8 @@
             }
         },
         methods: {
-            get_brands(event) {
-                if (event.target.value === '') {
-                    return;
-                }
-                axios({
-                    method: 'get',
-                    url: '/media-assets/client/get-brands/'+event.target.value,
-                    data: {
-                        clients: event.target.value
-                    }
-                }).then((res) => {
-                    this.brands = res.data.brands;
-                }).catch((error) => {
-                    this.brands = [];
-                });
+            get_brands() {
+                this.filteredBrands = this.brands[this.client];
             },
             setFileDuration: function(file) {
                 let video = document.createElement('video');
@@ -168,7 +174,16 @@
                 };
                 video.src = URL.createObjectURL(file);
             },
+            chooseFile(upload_type) {
+                if(upload_type == 'ASSET') {
+                    this.$refs.video.click();
+                }
+                if(upload_type == 'REG_CERT') {
+                    this.$refs.certificate.click();
+                }
+            },
             on_file_change(event, uploadType) {
+                console.log(event);
                 if (uploadType === 'ASSET') {
                     this.assetFile = event.target.files[0];
                     this.setFileDuration(this.assetFile);
@@ -193,7 +208,7 @@
                 }
 
                 // validate media asset duration
-                if (this.uploadedMediaAssetDuration != this.duration) {
+                if (this.uploadedMediaAssetDuration < this.duration - DECREASE_DURATION || this.uploadedMediaAssetDuration > this.duration) {
                     let msg = `You are trying to upload a file of ${this.uploadedMediaAssetDuration} seconds into a duration of ${this.duration} seconds`;
                     this.sweet_alert(msg, 'error');
                     return;
@@ -205,9 +220,11 @@
                     await this.upload_file(this.assetFile, this.s3PresignedUrl, 'ASSET');
                     console.log(this.assetUrl);
                     // generate presigned url for regulatory certificate upload
-                    await this.generate_presigned_url(this.regulatoryCertFile, 'regulatory-certificates/');
-                    await this.upload_file(this.assetFile, this.s3PresignedUrl, 'REG_CERT');
-                    console.log(this.regulatoryCertUrl);
+                    if(this.regulatoryCertFile) {
+                        await this.generate_presigned_url(this.regulatoryCertFile, 'regulatory-certificates/');
+                        await this.upload_file(this.assetFile, this.s3PresignedUrl, 'REG_CERT');
+                        console.log(this.regulatoryCertUrl);
+                    }
                     // make axios call to store created asset to db
                     await this.store_uploaded_asset();
                 } catch (error) {
