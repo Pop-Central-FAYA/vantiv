@@ -60,7 +60,6 @@ export default {
         }
     },
     mounted() {
-        console.log(this.getDistinctAssetId(this.mpo.campaign_mpo_time_belts))
         this.filterAssetByDuration(this.assets, this.mpo.campaign_mpo_time_belts);
     },
     methods : {

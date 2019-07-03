@@ -18,34 +18,22 @@ class ExportCampaignMpoSummary
 
     public function run()
     {
-        return $this->getSummaryData();
+        return $this->getMpoSummaryData();
     }
 
-    public function groupByDayPart()
+    private function getMpoSummaryData()
     {
-        return $this->campaign_mpo_details->map(function($item) {
-            return $item->map(function($ads) {
-                return collect($ads)->put('day_part', $this->getDayPart($ads->time_belt_start_time)['name']);
-            })->groupBy('day_part');
-        });
-    }
-
-    public function getSummaryData()
-    {
-        $summary = [];
-        foreach($this->groupByDayPart() as $duration => $groupd_durations){
-            foreach($groupd_durations as $day_part => $grouped_day_part){
-                $summary[] = [
-                    'duration' => $duration,
-                    'day_part' => $day_part,
-                    'total_spot' => $grouped_day_part->sum('ad_slots'),
-                    'agency_percentage' => 15,
-                    'volume_percent' => $grouped_day_part[0]['volume_discount'],
-                    'total' => $grouped_day_part->sum('net_total')
-                ];
-            }
+        $summary_data = [];
+        foreach($this->campaign_mpo_details as $duration => $campaign_mpo){
+            $summary_data[] = [
+                'duration' => $duration,
+                'day_part' => $this->getDayPart($campaign_mpo[0]->time_belt_start_time)['name'],
+                'total_spot' => $campaign_mpo->sum('ad_slots'),
+                'agency_percentage' => 15,
+                'volume_percent' => $campaign_mpo[0]->volume_discount,
+                'total' => $campaign_mpo->sum('net_total')
+            ];
         }
-        return $summary;
+        return $summary_data;
     }
-
 }
