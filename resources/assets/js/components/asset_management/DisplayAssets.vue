@@ -1,17 +1,18 @@
 <template>
   <v-card>
     <v-card-title>
-      All Media Assets
+      <v-spacer></v-spacer>
+      <v-spacer></v-spacer>
       <v-spacer></v-spacer>
       <v-text-field v-model="search" append-icon="search" label="Enter Keyword" single-line hide-details></v-text-field>
     </v-card-title>
     <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="assets" :search="search" :loading="loading" :no-data-text="noDataText">
       <template v-slot:items="props">
         <td>{{ props.item.file_name }}</td>
-        <td class="text-xs-center">{{ props.item.client.company_name }}</td>
-        <td class="text-xs-center">{{ props.item.brand.name }}</td>
-        <td class="text-xs-center">{{ props.item.media_type }}</td>
-        <td class="text-xs-center">{{ props.item.duration }}</td>
+        <td class="text-xs-left">{{ props.item.client.company_name }}</td>
+        <td class="text-xs-left">{{ props.item.brand.name }}</td>
+        <td class="text-xs-left">{{ props.item.media_type }}</td>
+        <td class="text-xs-left">{{ props.item.duration }}</td>
         <td class="justify-center layout px-0">
             <v-btn color="red" small @click="delete_asset(props.item.id)" dark>
                 Delete <v-icon dark right>delete</v-icon>
