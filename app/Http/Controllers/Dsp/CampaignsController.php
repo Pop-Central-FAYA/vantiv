@@ -163,7 +163,6 @@ class CampaignsController extends Controller
         );
 
         $mpo_time_belt_summary = new ExportCampaignMpoSummary($campaign_mpo_time_belts->groupBy('duration'));
-
         return Excel::download(new MpoExport($mpo_time_belts->run(), 
                                 $days_array, 
                                 $mpo_details,
