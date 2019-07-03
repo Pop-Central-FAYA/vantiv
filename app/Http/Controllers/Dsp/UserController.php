@@ -81,10 +81,11 @@ class UserController extends Controller
         }
         $companies = $this->getCompany($request->companies);
         $inviter_name = \Auth::user()->full_name;
+        
         \DB::transaction(function () use ($request, $companies, $inviter_name) {
             $user_mail_content_array = [];
             foreach ($request->email as $email) {
-                $invite_user_service = new InviteUser($request->roles, $companies, $email, "dsp");
+                $invite_user_service = new InviteUser($request->roles, $companies, $email, "web");
                 $invited_user = $invite_user_service->createUnconfirmedUser();
 
                 $email_format = new MailFormat($invited_user, $inviter_name);
@@ -140,7 +141,7 @@ class UserController extends Controller
             return ['status'=>"error", 'message'=> $validate_request->errors()->first()];
         }
 
-        $update_user_service = new UpdateUserService($request->roles, $this->getCompany($request->companies), $request->user_id, 'dsp');
+        $update_user_service = new UpdateUserService($request->roles, $this->getCompany($request->companies), $request->user_id, 'web');
         $update_user_service->updateUser();
         return ['status'=>"success", 'message'=> "User updated successfully"];
     }

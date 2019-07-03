@@ -44,7 +44,7 @@
                                     <ul>
                                         @foreach($roles as $role)
                                             <li class="col_4 column m-b">
-                                                <input name="roles[]" value="{{ $role['id'] }}"
+                                                <input name="roles[]" value="{{ $role['role'] }}"
                                                        @foreach($user->getRoleNames() as $checked_role)
                                                        @if($checked_role === $role['role'])
                                                        checked
@@ -84,7 +84,7 @@
                         @endif
                         <p><br></p>
                         <div class="column col_4">
-                            <a href="{{ route('user.index') }}" class="btn uppercased _white _go_back"><span class=""></span> Back</a>
+                            <a href="{{ route('agency.user.index') }}" class="btn uppercased _white _go_back"><span class=""></span> Back</a>
                         </div>
                         <div class="mb4 align_right pt">
                             <input type="submit" value="Update User" id="submit_user{{ $user->id }}" class="btn uppercased mb4 button_create">
@@ -146,7 +146,7 @@
                         toastr.clear();
                         if (data.status === 'success') {
                             toastr.success(data.message);
-                            location.href = '/agency/user/all';
+                            location.href = '/user/all';
                         } else {
                             toastr.error(data.message);
                             $('.load_this_div').css({

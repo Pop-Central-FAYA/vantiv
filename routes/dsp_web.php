@@ -16,6 +16,10 @@ $dspRoutes = function () {
     Route::post('/change-password/process/{user_id}', 'Auth\DspAuthController@processChangePassword')->name('dsp.change_password.process');
 
 
+    Route::get('user/complete-account/{id}', 'UserController@getCompleteAccount')->name('user.complete_registration')->middleware('signed');
+    Route::post('/user/complete-account/store/{id}', 'UserController@processCompleteAccount');
+
+
     Route::group(['middleware' => 'auth'], function () {
         Route::get('/', ['as' => 'dashboard', 'uses' => 'DashboardController@index']);
         Route::get('agency/dashboard/campaigns', 'DashboardController@dashboardCampaigns');
