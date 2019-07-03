@@ -6,6 +6,7 @@ class UpdateRoleSeeder extends Seeder
 {
     /**
      * Run the database seeds.
+     * To update the role table
      *
      * @return void
      */
