@@ -29,6 +29,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Vanguard\Exports\MpoExport;
 use Vanguard\Services\Mpo\ExportCampaignMpoSummary;
 use Vanguard\Services\Mpo\GetCampaignMpo;
+use PhpOffice\PhpSpreadsheet\Chart\Exception;
 
 class CampaignsController extends Controller
 {
@@ -190,6 +191,27 @@ class CampaignsController extends Controller
         return response()->json([
             'status' => 'success',
             'data' => 'Media Assets successfully associated to MPO'
+        ]);
+    }
+
+    public function deleteMultipleAdslots(Request $request, $mpo_id)
+    {
+        try {
+            DB::table('campaign_mpo_time_belts')->where([
+                ['program', $request->program],
+                ['duration', $request->duration],
+                ['playout_date', $request->playout_date]
+            ])->delete();
+        }catch (Exception $exception) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'An error occured while performing your request'
+            ]);
+        }
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Adslot deleted successfully',
+            'data' => CampaignMpoTimeBelt::where('mpo_id', $mpo_id)->get()
         ]);
     }
 
