@@ -1,4 +1,4 @@
-@extends('layouts.old_auth')
+@extends('dsp_layouts.old_auth')
 
 @section('page-title', trans('app.login'))
 

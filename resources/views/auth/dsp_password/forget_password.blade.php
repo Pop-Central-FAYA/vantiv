@@ -1,4 +1,4 @@
-@extends('layouts.auth')
+@extends('dsp_layouts.auth')
 
 @section('title')
     <title>FAYA.</title>
