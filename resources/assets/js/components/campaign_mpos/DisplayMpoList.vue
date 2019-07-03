@@ -7,19 +7,19 @@
         </v-card-title>
         <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="mpos" :search="search">
         <template v-slot:items="props">
-            <td>{{ props.item.station }}</td>
-            <td class="text-xs-left">{{ props.item.budget }}</td>
-            <td class="text-xs-left">{{ props.item.ad_slots }}</td>
-            <td class="text-xs-left">{{ props.item.status }}</td>
-            <td class="justify-center layout px-0">
-                <v-btn color="primary" small @click="exportMpo(props.item.id)" dark>
-                    Export
-                </v-btn>
-                <v-btn color="secondary" small @click="adslotList(props.item.id)" dark>
-                    Ad Slots
-                </v-btn>
-                <mpo-file-manager :mpo="props.item" :assets="assets" :client="client" :brand="brand"></mpo-file-manager>
-            </td>
+            <tr @click="adslotList(props.item.id)">
+                <td>{{ props.item.station }}</td>
+                <td class="text-xs-left">{{ props.item.budget }}</td>
+                <td class="text-xs-left">{{ props.item.ad_slots }}</td>
+                <td class="text-xs-left">{{ props.item.status }}</td>
+                <td class="justify-center layout px-0">
+                    <v-btn color="primary" small @click="exportMpo(props.item.id)" dark>
+                        Export
+                    </v-btn>
+                    <file-modal :mpo="props.item" :assets="assets"></file-modal>
+                    <mpo-file-manager :mpo="props.item" :assets="assets" :client="client" :brand="brand"></mpo-file-manager>
+                </td>
+            </tr>
         </template>
         <template v-slot:no-results>
             <v-alert :value="true" color="error" icon="warning">

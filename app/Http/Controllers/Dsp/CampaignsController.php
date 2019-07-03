@@ -27,7 +27,8 @@ use Illuminate\Support\Facades\DB;
 use Vanguard\Services\Mpo\ExportCampaignMpo;
 use Maatwebsite\Excel\Facades\Excel;
 use Vanguard\Exports\MpoExport;
-use Vanguard\Services\Mpo\ExportCampaignMpoSummary; 
+use Vanguard\Services\Mpo\ExportCampaignMpoSummary;
+use Vanguard\Services\Mpo\GetCampaignMpo;
 
 class CampaignsController extends Controller
 {
