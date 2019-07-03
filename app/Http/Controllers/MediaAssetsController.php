@@ -16,7 +16,12 @@ class MediaAssetsController extends Controller
         // get clients associated with the logged in user company
         $clients = new AllClient(\Auth::user()->companies->first()->id);
         $clients = $clients->getAllClients();
-        return view('agency.media_assets.index')->with('clients', $clients);
+        $client_brands = [];
+        foreach ($clients as $client) {
+            $brands = new ClientBrand($client->id);
+            $client_brands[$client->id] = $brands->run();
+        }
+        return view('agency.media_assets.index')->with('clients', $clients)->with('brands', $client_brands);
     }
 
     public function getBrandsWithClients($id)

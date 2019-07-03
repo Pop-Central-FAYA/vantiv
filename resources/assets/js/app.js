@@ -49,6 +49,10 @@ Vue.component('media-plan-create-campaign', require('./components/media_plan/sum
 // ASSET MANAGEMENT
 Vue.component('media-asset-upload', require('./components/asset_management/Upload.vue'));
 Vue.component('media-asset-display', require('./components/asset_management/DisplayAssets.vue'));
+Vue.component('media-asset-delete', require('./components/asset_management/DeleteAsset.vue'));
+Vue.component('media-asset-play-video', require('./components/asset_management/PlayVideo.vue'));
+
+
 //Schedule
 Vue.component('vue-cal-weekly-schedule', require('./components/schedule/weekly/WeeklyScheduleCalender.vue'));
 Vue.component('ad-schedule-table', require('./components/schedule/partials/ScheduleTable.vue'));

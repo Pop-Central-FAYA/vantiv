@@ -8,15 +8,13 @@
     </v-card-title>
     <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="assets" :search="search" :loading="loading" :no-data-text="noDataText">
       <template v-slot:items="props">
-        <td>{{ props.item.file_name }}</td>
+        <td><media-asset-play-video :asset="props.item"></media-asset-play-video></td>
         <td class="text-xs-left">{{ props.item.client.company_name }}</td>
         <td class="text-xs-left">{{ props.item.brand.name }}</td>
         <td class="text-xs-left">{{ props.item.media_type }}</td>
         <td class="text-xs-left">{{ props.item.duration }}</td>
         <td class="justify-center layout px-0">
-            <v-btn color="red" small @click="delete_asset(props.item.id)" dark>
-                Delete <v-icon dark right>delete</v-icon>
-            </v-btn>
+          <media-asset-delete :asset-id="props.item.id"></media-asset-delete>
         </td>
       </template>
       <template v-slot:no-results>
@@ -46,6 +44,12 @@
         assets: []
       }
     },
+    created() {
+        var self = this;
+        Event.$on('latest-assets', function (assets) {
+            self.assets = assets;
+        });
+    },
     mounted() {
         console.log('Display Assets Component mounted.');
         this.get_assets();
@@ -70,27 +74,6 @@
           }).catch((error) => {
               this.assets = [];
               this.sweet_alert('An unknown error has occurred, assets cannot be retrieved. Please try again', 'error');
-          });
-        },
-        delete_asset(assetID) {
-          $("#load_this").css({ opacity: 0.2 });
-          var msg = "Deleting media asset, please wait";
-          this.sweet_alert(msg, 'info');
-          axios({
-              method: 'get',
-              url: '/media-assets/delete/'+assetID
-          }).then((res) => {
-              console.log(res.data);
-              if (res.data.status == 'success') {
-                $('#load_this_div').css({opacity: 1});
-                this.assets = res.data.data;
-                this.sweet_alert("Media asset was successfully deleted", 'info');
-              } else {
-                this.sweet_alert('Media asset cannot be deleted, try again', 'error');
-              }
-          }).catch((error) => {
-              this.assets = [];
-              this.sweet_alert('An unknown error has occurred, media assets cannot be delete. Please try again', 'error');
           });
         }
     }

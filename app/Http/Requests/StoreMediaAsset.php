@@ -28,7 +28,7 @@ class StoreMediaAsset extends FormRequest
             'brand_id' => 'required|string',
             'media_type' => 'required|string',
             'asset_url' => 'required|string',
-            'regulatory_cert_url' => 'required|string',
+            'regulatory_cert_url' => 'nullable|string',
             'file_name' => 'required|string',
             'duration' => 'required|integer'
         ];
