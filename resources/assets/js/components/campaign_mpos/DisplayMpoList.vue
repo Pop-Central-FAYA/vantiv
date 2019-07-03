@@ -1,7 +1,6 @@
 <template>
     <v-card>
         <v-card-title>
-        MPOS
         <v-spacer></v-spacer>
         <v-text-field v-model="search" append-icon="search" label="Enter Keyword" single-line hide-details></v-text-field>
         </v-card-title>
@@ -9,8 +8,8 @@
         <template v-slot:items="props">
             <tr @click="adslotList(props.item.id)">
                 <td>{{ props.item.station }}</td>
-                <td class="text-xs-left">{{ props.item.budget }}</td>
-                <td class="text-xs-left">{{ props.item.ad_slots }}</td>
+                <td class="text-xs-left">{{ sumNetTotalInCampaignMpoTimeBelt(props.item.campaign_mpo_time_belts) }}</td> 
+                <td class="text-xs-left">{{ sumAdslotsInCampaignMpoTimeBelt(props.item.campaign_mpo_time_belts) }}</td>
                 <td class="text-xs-left">{{ props.item.status }}</td>
                 <td class="justify-center layout px-0">
                     <v-btn color="primary" small @click="exportMpo(props.item.id)" dark>
@@ -47,7 +46,7 @@
                 headers: [
                     { text: 'Station', align: 'left', value: 'station' },
                     { text: 'Budget', value: 'budget' },
-                    { text: 'Adslots', value: 'ad_slots' },
+                    { text: 'Exposures', value: 'ad_slots' },
                     { text: 'Status', value: 'status' },
                     { text: 'Actions', value: 'name', sortable: false }
                 ]
@@ -61,7 +60,23 @@
                 var msg = "Generating Excel Document, Please wait";
                 this.sweet_alert(msg, 'info');
                 return window.location.href = '/campaigns/mpo/export/'+mpo_id
+            },
+            sumAdslotsInCampaignMpoTimeBelt : function(campaign_mpo_time_belts) {
+                return campaign_mpo_time_belts.reduce((prev, cur) => prev + cur.ad_slots, 0);
+            },
+            sumNetTotalInCampaignMpoTimeBelt : function(campaign_mpo_time_belts) {
+                return campaign_mpo_time_belts.reduce((prev, cur) => prev + cur.net_total, 0);
             }
         }
     }
 </script>
+<style>
+    tbody tr:hover {
+        background-color: transparent !important;
+        cursor: pointer;
+    }
+    tbody:hover {
+    background-color: rgba(0, 0, 0, 0.12);
+    }
+</style>
+
