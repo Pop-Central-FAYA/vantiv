@@ -185,8 +185,7 @@
                                                                     <tr>
                                                                         <td valign="top" class="specbundle"><div class="contentEditableContainer contentTextEditable">
                                                                                 <div class="contentEditable">
-                                                                                    <p style='text-align:center;'><span class="font"> <svg width="119px" height="36px" id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 553.34 216.48"><defs><style>.cls-1{fill:#64c4ce;}.cls-2{fill:#575758;}.cls-3{fill:#4eaeaf;}.cls-4{font-size:91.26px;fill:#1d1d1d;font-family:LemonMilk, "Lemon/Milk";}.cls-5{letter-spacing:-0.12em;}.cls-6{letter-spacing:-0.07em;}</style></defs><title>Vantage+Torch_Logos</title><polygon class="cls-1" points="109.8 126.06 143.69 33.21 182.71 33.21 123.02 154.83 109.8 126.06"/><polygon class="cls-1" points="153.81 33.21 182.71 33.21 109.17 183.1 101.38 140.09 153.81 33.21"/><polygon class="cls-2" points="76.86 33.21 122.76 127.08 168.66 33.21 76.86 33.21"/><polygon class="cls-3" points="123.6 153.64 109.13 183.06 35.66 33.14 64.58 33.21 123.6 153.64"/><text class="cls-4" transform="translate(151.36 154.83)">AN<tspan class="cls-5" x="135.77" y="0">T</tspan><tspan class="cls-6" x="178.02" y="0">A</tspan><tspan x="240.44" y="0">GE</tspan></text></svg>
-   </span> </p>
+                                                                                    <p style='text-align:center;'><span class="font"><img src="http://res.cloudinary.com/drwrickhm/image/upload/v1522495083/logo_mail.png" /></span> </p>
                                                                                 </div>
                                                                             </div></td>
 

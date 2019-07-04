@@ -185,7 +185,7 @@
                                                                     <tr>
                                                                         <td valign="top" class="specbundle"><div class="contentEditableContainer contentTextEditable">
                                                                                 <div class="contentEditable">
-                                                                                    <p style='text-align:center;'><span class="font"><img src="http://res.cloudinary.com/drwrickhm/image/upload/v1522495083/logo_mail.png" alt=""></span> </p>
+                                                                                    <p style='text-align:center;'><span class="font"><img src="http://res.cloudinary.com/drwrickhm/image/upload/v1522495083/logo_mail.png" /> </span> </p>
                                                                                 </div>
                                                                             </div></td>
 

@@ -265,6 +265,7 @@ return [
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
         'PDF' => Meneses\LaravelMpdf\Facades\LaravelMpdf::class,
         'Terbilang' => Riskihajar\Terbilang\Facades\Terbilang::class,
+        'AssetsHelper' => Vanguard\Helpers\AssetsHelper::class
 
     ],
 
