@@ -156,14 +156,14 @@
 <table bgcolor="#ffffff" width="100%" border="0" cellspacing="0" cellpadding="0" class="tableContent" align="center"  style='font-family:Helvetica, Arial,serif;'>
     <tbody>
     <tr>
-        <td><table width="600" border="0" cellspacing="0" cellpadding="0" align="center" bgcolor="#ffffff" class="MainContainer">
+        <td><table style="width: 600px;" border="0" cellspacing="0" cellpadding="0" align="center" bgcolor="#ffffff" class="MainContainer">
                 <tbody>
                 <tr>
                     <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
                             <tbody>
                             <tr>
                                 <td valign="top" width="40">&nbsp;</td>
-                                <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                <td><table style="width: 400px;" border="0" cellspacing="0" cellpadding="0">
                                         <tbody>
                                         <!-- =============================== Header ====================================== -->
                                         <tr>
@@ -185,7 +185,7 @@
                                                                     <tr>
                                                                         <td valign="top" class="specbundle"><div class="contentEditableContainer contentTextEditable">
                                                                                 <div class="contentEditable">
-                                                                                    <p style='text-align:center;'><span class="font">{!! AssetsHelper::mailLogo() !!}</span> </p>
+                                                                                    <p style='text-align:center;'><span class="font"><img src="https://faya-dev-us-east-1-media.s3.amazonaws.com/email-asset/vantage_logo.png" /> </span> </p>
                                                                                 </div>
                                                                             </div></td>
 
@@ -198,7 +198,7 @@
                                                     </table>
                                                 </div>
                                                 <div class="movableContent" style="border: 0px; padding-top: 0px; position: relative;">
-                                                    <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+                                                    <table style="width: 400px;" border="0" cellspacing="0" cellpadding="0" align="center">
                                                         <tr><td height='55'></td></tr>
                                                         <tr>
                                                             <td align='left'>
@@ -209,24 +209,16 @@
                                                                 </div>
                                                             </td>
                                                         </tr>
-                                                        <tr>
-                                                            <td align='left'>
-                                                                <div class="contentEditableContainer contentTextEditable">
-                                                                    <div class="contentEditable" align='center'>
-                                                                        <h2 >You have requested to change your password</h2>
-                                                                    </div>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
 
                                                         <tr><td height='15'> </td></tr>
 
                                                         <tr>
-                                                            <td align='left'>
+                                                            <td align='left' style="width: 400px;">
                                                                 <div class="contentEditableContainer contentTextEditable">
-                                                                    <div class="contentEditable" align='center'>
-                                                                        <p >
-                                                                            Please click on the button below to change your password
+                                                                    <div class="contentEditable" align='left'>
+                                                                        <p align="center">
+                                                                            You have been invited by -inviter- to be part of -company- on the FAYA Platform
+                                                                            <br>
                                                                             <br>
                                                                         </p>
                                                                     </div>
@@ -240,12 +232,13 @@
                                                             <td align='center'>
                                                                 <table>
                                                                     <tr>
-                                                                        <td align='center' bgcolor='#1A54BA' style='background:#00c4ca; padding:15px 18px;-webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px;'>
+                                                                        <td align='left' bgcolor='#1A54BA' style='background:#00c4ca; padding:15px 18px;-webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px;'>
+                                                                            <a href="-link-" style="text-decoration: none;">
                                                                             <div class="contentEditableContainer contentTextEditable">
                                                                                 <div class="contentEditable" align='center'>
-                                                                                    <a href='{{ URL::to('proceed/password-change/' . $token) }}' class='link2' style='color:#ffffff; text-decoration: none;'>Change Password</a>
+                                                                                    <p style="color: white;">Accept Invite </p>
                                                                                 </div>
-                                                                            </div>
+                                                                            </div></a>
                                                                         </td>
                                                                     </tr>
                                                                 </table>
@@ -279,27 +272,6 @@
                                                                                 </div>
                                                                             </div></td>
                                                                         <td valign="top" width="30" class="specbundle">&nbsp;</td>
-                                                                        <td valign="top" class="specbundle"><table width="100%" border="0" cellspacing="0" cellpadding="0">
-                                                                                <tbody>
-                                                                                <tr>
-                                                                                    <td valign='top' width='52'>
-                                                                                        <div class="contentEditableContainer contentFacebookEditable">
-                                                                                            <div class="contentEditable">
-                                                                                                <a target='_blank' href="#"><img src="http://res.cloudinary.com/drwrickhm/image/upload/v1521213828/facebook.png" width='52' height='53' alt='facebook icon' data-default="placeholder" data-max-width="52" data-customIcon="true"></a>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </td>
-                                                                                    <td valign="top" width="16">&nbsp;</td>
-                                                                                    <td valign='top' width='52'>
-                                                                                        <div class="contentEditableContainer contentTwitterEditable">
-                                                                                            <div class="contentEditable">
-                                                                                                <a target='_blank' href="#"><img src="http://res.cloudinary.com/drwrickhm/image/upload/v1521213828/twitter.png" width='52' height='53' alt='twitter icon' data-default="placeholder" data-max-width="52" data-customIcon="true"></a>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </td>
-                                                                                </tr>
-                                                                                </tbody>
-                                                                            </table>
                                                                         </td>
                                                                     </tr>
                                                                     </tbody>
