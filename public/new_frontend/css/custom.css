@@ -165,3 +165,8 @@
 .v-text-field input {
     border: none;
 }
+
+/* Override default vuetify ul tag style that is affecting the alignment of the side nav */
+.side_nav ._nav ul {
+    padding-left: 0px;
+}
