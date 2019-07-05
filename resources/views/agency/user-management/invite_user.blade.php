@@ -1,7 +1,7 @@
 @extends('dsp_layouts.faya_app')
 
 @section('title')
-    <title>FAYA | Invite User</title>
+    <title>Vantage | Invite User</title>
 @stop
 
 @section('content')

@@ -1,7 +1,7 @@
 @extends('dsp_layouts.auth')
 
 @section('title')
-    <title>FAYA.</title>
+    <title>Vantage.</title>
 @stop
 
 @section('content')

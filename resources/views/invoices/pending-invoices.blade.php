@@ -1,7 +1,7 @@
 @extends('dsp_layouts.faya_app')
 
 @section('title')
-    <title> FAYA | Pending Invoices </title>
+    <title> Vantage | Pending Invoices </title>
 @stop
 
 @section('content')
