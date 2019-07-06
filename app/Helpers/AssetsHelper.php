@@ -34,7 +34,28 @@ class AssetsHelper
                 </svg>';
             break;
             default:
-                return '<svg width="130px" height="80px" id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 553.34 216.48"><defs><style>.cls-1{fill:#64c4ce;}.cls-2{fill:#575758;}.cls-3{fill:#4eaeaf;}.cls-4{font-size:91.26px;fill:#1d1d1d;font-family:LemonMilk, "Lemon/Milk";}.cls-5{letter-spacing:-0.12em;}.cls-6{letter-spacing:-0.07em;}</style></defs><title>Vantage</title><polygon class="cls-1" points="109.8 126.06 143.69 33.21 182.71 33.21 123.02 154.83 109.8 126.06"/><polygon class="cls-1" points="153.81 33.21 182.71 33.21 109.17 183.1 101.38 140.09 153.81 33.21"/><polygon class="cls-2" points="76.86 33.21 122.76 127.08 168.66 33.21 76.86 33.21"/><polygon class="cls-3" points="123.6 153.64 109.13 183.06 35.66 33.14 64.58 33.21 123.6 153.64"/><text class="cls-4" transform="translate(151.36 154.83)">AN<tspan class="cls-5" x="135.77" y="0">T</tspan><tspan class="cls-6" x="178.02" y="0">A</tspan><tspan x="240.44" y="0">GE</tspan></text></svg>
+                return ' 
+                <svg width="119" height="46" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <!-- Created with SVG-edit - http://svg-edit.googlecode.com/ -->
+                <defs>
+                 <symbol id="svg_2" viewBox="0 0 553.34 216.48" xmlns="http://www.w3.org/2000/svg">
+                  <title>Vantage+Torch_Logos</title>
+                  <polygon points="109.8 126.06 143.69 33.21 182.71 33.21 123.02 154.83 109.8 126.06" fill="#64c4ce" id="Fill-1"/>
+                  <polygon points="153.81 33.21 182.71 33.21 109.17 183.1 101.38 140.09 153.81 33.21" fill="#64c4ce" id="Fill-2"/>
+                  <polygon class="cls-2" points="76.86 33.21 122.76 127.08 168.66 33.21 76.86 33.21" fill="#575758" id="Fill-3"/>
+                  <polygon points="123.6 153.64 109.13 183.06 35.66 33.14 64.58 33.21 123.6 153.64" fill="#4eaeaf" id="Fill-4"/>
+                  <text id="svg_8" font-family="LemonMilk" fill="#1d1d1d" font-size="91.26px" x="151.36" y="154.83">AN
+                   <tspan id="svg_9" x="287.13" y="154.83">T</tspan>
+                   <tspan id="svg_10" x="329.38" y="154.83">A</tspan>
+                   <tspan id="svg_11" x="391.8" y="154.83">GE</tspan></text>
+                 </symbol>
+                </defs>
+                <g>
+                 <title>Layer 1</title>
+                 <use id="svg_3" xlink:href="#svg_2" transform="matrix(1.1134798870399125,0,0,1.0357963171947533,-11.671895890043723,-23.101256644532413) " y="22.6777" x="2.49327"/>
+                 <g id="svg_4"/>
+                </g>
+               </svg>
                 ';
             break;
         }

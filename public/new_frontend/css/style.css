@@ -55,7 +55,7 @@ button.btn.small_btn.mbl.uppercased.addTimeBelt .material-icons, button.btn.smal
 
 .login_logo {
 	width: 100px;
-	margin: 81px auto 40px;
+	margin: 71px auto 20px;
 }
 
 .auth_contain {
@@ -111,13 +111,12 @@ button.btn.small_btn.mbl.uppercased.addTimeBelt .material-icons, button.btn.smal
 	top: 0;
 	right: 0;
 	bottom: 0;
-	padding-top: 2px;
+	padding-top: 32px;
 	padding-left: 32px;
 }
 
 .side_nav .logo {
-	height: 30px;
-	margin-bottom: 66px;
+	height: 20px;
 	
 }
 
