@@ -55,8 +55,15 @@ button.btn.small_btn.mbl.uppercased.addTimeBelt .material-icons, button.btn.smal
 
 .login_logo {
 	width: 100px;
-	margin: 71px auto 20px;
+	margin: 70px auto 10px;
+
 }
+
+.dsp_login_logo {
+	width: 160px;
+	margin: 70px auto 10px;
+}
+
 
 .auth_contain {
 	border-top: 3px solid #44C1C9;
