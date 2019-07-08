@@ -8,7 +8,7 @@
         <template v-slot:items="props">
             <tr @click="adslotList(props.item.id)">
                 <td>{{ props.item.station }}</td>
-                <td class="text-xs-left">{{ sumNetTotalInCampaignMpoTimeBelt(props.item.campaign_mpo_time_belts) }}</td> 
+                <td class="text-xs-left">{{ format_audience(sumNetTotalInCampaignMpoTimeBelt(props.item.campaign_mpo_time_belts)) }}</td> 
                 <td class="text-xs-left">{{ sumAdslotsInCampaignMpoTimeBelt(props.item.campaign_mpo_time_belts) }}</td>
                 <td class="text-xs-left">{{ props.item.status }}</td>
                 <td class="justify-center layout px-0">

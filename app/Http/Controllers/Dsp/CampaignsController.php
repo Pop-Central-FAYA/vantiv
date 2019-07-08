@@ -30,10 +30,18 @@ use Vanguard\Exports\MpoExport;
 use Vanguard\Services\Mpo\ExportCampaignMpoSummary;
 use Vanguard\Services\Mpo\GetCampaignMpo;
 use PhpOffice\PhpSpreadsheet\Chart\Exception;
+use Vanguard\Services\Walkin\WalkInLists;
+use Vanguard\Services\MediaAsset\GetMediaAssetByClient;
+use Vanguard\Services\Traits\SplitTimeRange;
+use Vanguard\Http\Requests\UpdateMpoTimeBeltRequest;
+use Vanguard\Services\Mpo\DeleteMpoTimeBelt;
+use Vanguard\Services\Mpo\CreateMpoTimeBelt;
 
 class CampaignsController extends Controller
 {
     private $campaign_dates, $utilities;
+
+    use SplitTimeRange;
 
     public function __construct(CampaignDate $campaignDate, Utilities $utilities)
     {
@@ -59,9 +67,10 @@ class CampaignsController extends Controller
         $campaign_details = $campaign_details_service->run();
         $campaign_details_client_id = $campaign_details->client->id;
         $campaign_details_brand_id = $campaign_details->brand->id;
-        $all_campaigns = Utilities::switch_db('api')->select("SELECT * FROM campaigns where belongs_to = '$agency_id' GROUP BY id");
-        $all_clients = Utilities::switch_db('api')->select("SELECT * FROM walkIns where agency_id = '$agency_id'");
-        $client_media_assets = Utilities::switch_db('api')->select("SELECT * FROM media_assets where client_id = '$campaign_details_client_id' AND brand_id = '$campaign_details_brand_id'");
+        //come back here and clean up this raw sql to rather use query builder
+        $all_campaigns = DB::select("SELECT * FROM campaigns where belongs_to = '$agency_id' GROUP BY id"); //there is no reason to group by here s it will always return one field
+        $all_clients = (new WalkInLists($agency_id))->getWalkInListWithMinmalDetails();
+        $client_media_assets = (new GetMediaAssetByClient($campaign_details_client_id, $campaign_details_brand_id))->run();
         return view('agency.campaigns.new_campaign_details', compact('campaign_details', 'all_campaigns', 'all_clients', 'client_media_assets'));
     }
 
@@ -141,7 +150,11 @@ class CampaignsController extends Controller
     public function campaignMpoDetails($campaign_mpo_id)
     {
         $campaign_mpo = CampaignMpo::find($campaign_mpo_id);
-        return view('agency.campaigns.view_adslots')->with('campaign_mpo', $campaign_mpo);
+        $assets = (new GetMediaAssetByClient($campaign_mpo->campaign->walkin_id, $campaign_mpo->campaign->brand_id))->run();
+        $time_belts = $this->splitTimeRangeByBase('00:00:00', '23:59:59', '15');
+        return view('agency.campaigns.view_adslots')->with('campaign_mpo', $campaign_mpo)
+                                                    ->with('assets', $assets)
+                                                    ->with('time_belts', $time_belts);
     }
 
     public function exportMpoAsExcel($campaign_mpo_id)
@@ -196,11 +209,7 @@ class CampaignsController extends Controller
     public function deleteMultipleAdslots(Request $request, $mpo_id)
     {
         try {
-            DB::table('campaign_mpo_time_belts')->where([
-                ['program', $request->program],
-                ['duration', $request->duration],
-                ['playout_date', $request->playout_date]
-            ])->delete();
+            (new DeleteMpoTimeBelt($request->program, $request->duration, $request->playout_date))->run();
         }catch (Exception $exception) {
             return response()->json([
                 'status' => 'error',
@@ -210,6 +219,27 @@ class CampaignsController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Adslot deleted successfully',
+            'data' => CampaignMpoTimeBelt::where('mpo_id', $mpo_id)->get()
+        ]);
+    }
+
+    public function updateAdslots(UpdateMpoTimeBeltRequest $request, $mpo_id)
+    {
+        $mpo_time_belt = CampaignMpoTimeBelt::find($request->id);
+        try {
+            DB::transaction(function() use ($mpo_time_belt, $request, $mpo_id) {
+                (new DeleteMpoTimeBelt($mpo_time_belt->program, $mpo_time_belt->duration, $mpo_time_belt->playout_date))->run();
+                (new CreateMpoTimeBelt($request, $mpo_id, $mpo_time_belt->duration))->run();
+            });
+        }catch(Exception $exception) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'An error occured while performing your request'
+            ]);
+        }
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Adslot updated successfully',
             'data' => CampaignMpoTimeBelt::where('mpo_id', $mpo_id)->get()
         ]);
     }

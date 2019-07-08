@@ -1,20 +1,12 @@
 <template>
     <v-layout>
-        <v-dialog v-model="dialog" persistent max-width="600px">
+        <v-dialog v-model="dialog" persistent max-width="400px">
             <template v-slot:activator="{ on }">
-            <v-btn
-                color="red lighten-2"
-                dark
-                small
-                fab
-                v-on="on"
-            >
-                <v-icon dark>edit</v-icon>
-            </v-btn>
+                <v-icon color="red" dark v-on="on" right>delete</v-icon>
             </template>
             <v-card>
                 <v-card-title>
-                    <span class="headline"> Delete Slots</span>
+                    <span class="headline"> Delete {{ adslot.program }} for {{ adslot.duration }} Seconds on {{ adslot.playout_date }}</span>
                 </v-card-title>
 
                 <v-card-text>

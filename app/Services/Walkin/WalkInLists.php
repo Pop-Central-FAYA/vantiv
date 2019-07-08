@@ -2,6 +2,7 @@
 
 namespace Vanguard\Services\Walkin;
 
+use Illuminate\Support\Facades\DB;
 
 class WalkInLists
 {
@@ -42,5 +43,10 @@ class WalkInLists
                     ->orWhereIn('campaignDetails.launched_on', $this->company_id)
                     ->groupBy('walkIns.id')
                     ->get();
+    }
+
+    public function getWalkInListWithMinmalDetails()
+    {
+        return DB::table('walkIns')->where('company_id', $this->company_id)->get();
     }
 }

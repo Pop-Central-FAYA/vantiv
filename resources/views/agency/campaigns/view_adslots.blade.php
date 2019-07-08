@@ -67,6 +67,8 @@
                 <div class="tab_content" id="slots">
                     <mpo-slot-list
                         :adslots="{{json_encode($campaign_mpo->campaign_mpo_time_belts)}}"
+                        :assets="{{ json_encode($assets) }}"
+                        :time_belts="{{ json_encode($time_belts) }}"
                     ></mpo-slot-list>
                 </div>
             </div>
