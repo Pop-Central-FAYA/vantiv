@@ -33,7 +33,15 @@ class UserInvitationMail
 
     public function sendInvitationMail()
     {
-        $html_content = file_get_contents("../resources/views/mail/invite_user.html");
+        $product = env('PRODUCT');
+        switch ($product) {
+            case 'ssp':
+            $html_content = file_get_contents("../resources/views/mail/invite_user.html");
+             break;
+            default:
+            $html_content = file_get_contents("../resources/views/mail/dsp_invite_user.html");
+            break;
+        }
         $from = new \SendGrid\Mail\From(getenv('EMAIL_FROM'), getenv('EMAIL_FROM_NAME'));
         $tos = $this->processEmailContent();
         $subject = new \SendGrid\Mail\Subject("Hi -email-!"); // default subject

@@ -1,7 +1,7 @@
 @extends('dsp_layouts.new_app')
 
 @section('title')
-    <title>Agency | Add Clients</title>
+    <title>Vantage | Add Clients</title>
 @stop
 
 @section('styles')

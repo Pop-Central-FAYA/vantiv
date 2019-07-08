@@ -1,7 +1,7 @@
 @extends('dsp_layouts.faya_app')
 
 @section('title')
-<title>FAYA | Create Media Plan</title>
+<title>Vantage | Create Media Plan</title>
 @stop
 
 @section('extra-meta')
