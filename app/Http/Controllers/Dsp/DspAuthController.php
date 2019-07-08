@@ -1,7 +1,8 @@
 <?php
 
-namespace Vanguard\Http\Controllers\Auth;
+namespace Vanguard\Http\Controllers\Dsp;
 
+use Vanguard\Http\Controllers\Auth\AuthController;
 use Vanguard\Events\User\LoggedIn;
 use Vanguard\Events\User\LoggedOut;
 use Vanguard\Http\Requests\Auth\LoginRequest;
@@ -22,18 +23,10 @@ use Vanguard\Http\Controllers\Controller;
 use Vanguard\Services\User\AuthenticatableUser;
 use Vanguard\User;
 
-class DspAuthController extends Controller
+class DspAuthController extends AuthController
 {
 
-    public function __construct(UserRepository $users)
-    {
-        $this->middleware('guest', ['except' => ['getLogout']]);
-        $this->middleware('auth', ['only' => ['getLogout']]);
-        $this->middleware('registration', ['only' => ['getRegister', 'postRegister']]);
-        $this->users = $users;
-    }
-
-    public function getDspLogin()
+    public function getLogin()
     {
         return view('auth.dsp_login');
     }
@@ -45,7 +38,7 @@ class DspAuthController extends Controller
      * @param LoginRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function postDspLogin(Request $request)
+    public function postLogin(Request $request)
     {
 
         if(empty($request->email) || empty($request->password)){
@@ -102,7 +95,7 @@ class DspAuthController extends Controller
             session()->forget('broadcaster_id');
             session(['agency_id' => Auth::guard('web')->user()->companies->first()->id]);
         }else{
-           return redirect()->to(route('dsplogin')  . $to)
+           return redirect()->to(route('login')  . $to)
             ->with('error', ClassMessages::INVALID_EMAIL_PASSWORD);
         }
 
@@ -147,35 +140,14 @@ class DspAuthController extends Controller
 
         return redirect()->route('auth.token');
     }
-  /**
-     * Get the needed authorization credentials from the request.
-     *
-     * @param  Request  $request
-     * @return array
-     */
-    protected function getCredentials(Request $request)
-    {
-        // The form field for providing username or password
-        // have name of "username", however, in order to support
-        // logging users in with both (username and email)
-        // we have to check if user has entered one or another
-        $usernameOrEmail = $request->get($this->loginUsername());
 
-        if ($this->isEmail($usernameOrEmail)) {
-            return [
-                'email' => $usernameOrEmail,
-                'password' => $request->get('password')
-            ];
-        }
-
-        return $request->only($this->loginUsername(), 'password');
-    }
 
     /**
      * Log the user out of the application.
      *
      * @return \Illuminate\Http\Response
      */
+
     public function getLogout()
     {
         event(new LoggedOut(Auth::guard('web')->user()));
@@ -184,60 +156,9 @@ class DspAuthController extends Controller
 
         \Session::flush();
 
-        return redirect(route('dsplogin'));
+        return redirect(route('login'));
     }
 
-    /**
-     * Get the login username to be used by the controller.
-     *
-     * @return string
-     */
-    public function loginUsername()
-    {
-        return 'email';
-    }
-
-    /**
-     * Determine if the user has too many failed login attempts.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return bool
-     */
-    protected function hasTooManyLoginAttempts(Request $request)
-    {
-        return app(RateLimiter::class)->tooManyAttempts(
-            $request->input($this->loginUsername()).$request->ip(),
-            $this->maxLoginAttempts(), $this->lockoutTime() / 60
-        );
-    }
-
-    /**
-     * Increment the login attempts for the user.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return int
-     */
-    protected function incrementLoginAttempts(Request $request)
-    {
-        app(RateLimiter::class)->hit(
-            $request->input($this->loginUsername()).$request->ip()
-        );
-    }
-
-    /**
-     * Determine how many retries are left for the user.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return int
-     */
-    protected function retriesLeft(Request $request)
-    {
-        $attempts = app(RateLimiter::class)->attempts(
-            $request->input($this->loginUsername()).$request->ip()
-        );
-
-        return $this->maxLoginAttempts() - $attempts + 1;
-    }
  /**
      * Redirect the user after determining they are locked out.
      *
@@ -267,61 +188,6 @@ class DspAuthController extends Controller
     {
         return trans('auth.throttle', ['seconds' => $seconds]);
     }
-
-    /**
-     * Clear the login locks for the given user credentials.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return void
-     */
-    protected function clearLoginAttempts(Request $request)
-    {
-        app(RateLimiter::class)->clear(
-            $request->input($this->loginUsername()).$request->ip()
-        );
-    }
-
-     /**
-     * Get the maximum number of login attempts for delaying further attempts.
-     *
-     * @return int
-     */
-    protected function maxLoginAttempts()
-    {
-        return settings('throttle_attempts', 5);
-    }
-
-    /**
-     * The number of seconds to delay further login attempts.
-     *
-     * @return int
-     */
-    protected function lockoutTime()
-    {
-        $lockout = (int) settings('throttle_lockout_time');
-
-        if ($lockout <= 1) {
-            $lockout = 1;
-        }
-
-        return 60 * $lockout;
-    }
-
-    /**
-     * Validate if provided parameter is valid email.
-     *
-     * @param $param
-     * @return bool
-     */
-    private function isEmail($param)
-    {
-        return ! \Validator::make(
-            ['email' => $param],
-            ['email' => 'email']
-        )->fails();
-    }
-
-
 
     public function getForgetPassword()
     {

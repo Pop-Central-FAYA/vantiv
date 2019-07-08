@@ -1,20 +1,20 @@
 <?php
-
-$dspRoutes = function () {
-
-    Route::get('login', 'Auth\DspAuthController@getDspLogin')->name('dsplogin');
-    Route::post('login', 'Auth\DspAuthController@postDspLogin')->name('post.dsplogin');
+ Route::group(['namespace' => 'Dsp'], function () {
+    Route::get('login', 'DspAuthController@getLogin')->name('login');
+    Route::post('login', 'DspAuthController@postLogin')->name('post.login');
     Route::get('logout', [
         'as' => 'auth.dsplogout',
-        'uses' => 'Auth\DspAuthController@getLogout',
+        'uses' => 'DspAuthController@getLogout',
     ]);
 
 
-    Route::get('/forget-password', 'Auth\DspAuthController@getForgetPassword')->name('dsp.password.forgot');
-    Route::post('/forget-password/process', 'Auth\DspAuthController@processForgetPassword')->name('dsp.forget_password.process');
-    Route::get('/proceed/password-change/{token}', 'Auth\DspAuthController@getChangePassword');
-    Route::post('/change-password/process/{user_id}', 'Auth\DspAuthController@processChangePassword')->name('dsp.change_password.process');
+    Route::get('/forget-password', 'DspAuthController@getForgetPassword')->name('dsp.password.forgot');
+    Route::post('/forget-password/process', 'DspAuthController@processForgetPassword')->name('dsp.forget_password.process');
+    Route::get('/proceed/password-change/{token}', 'DspAuthController@getChangePassword');
+    Route::post('/change-password/process/{user_id}', 'DspAuthController@processChangePassword')->name('dsp.change_password.process');
+    
 
+     });
 
     Route::get('user/complete-account/{id}', 'UserController@getCompleteAccount')->name('user.complete_registration')->middleware('signed');
     Route::post('/user/complete-account/store/{id}', 'UserController@processCompleteAccount');
@@ -225,6 +225,4 @@ $dspRoutes = function () {
         });
 
     });
-};
 
-Route::group(['domain' => env('SITE_URL', 'local.vantage.docker.localhost')], $dspRoutes);

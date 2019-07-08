@@ -6,7 +6,7 @@
 
 @section('content')
 
-    <form role="form" action="{{ route('post.dsplogin') }}" method="POST" id="login-form" autocomplete="off">
+    <form role="form" action="{{ route('post.login') }}" method="POST" id="login-form" autocomplete="off">
 
         <input type="hidden" value="<?= csrf_token() ?>" name="_token">
 
