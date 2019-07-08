@@ -64,6 +64,7 @@ Vue.component('mpo-slot-list', require('./components/campaign_mpos/DisplayAdslot
 Vue.component('mpo-file-manager', require('./components/campaign_mpos/AssociateFiles.vue'));
 Vue.component('file-modal', require('./components/campaign_mpos/FileModal.vue'));
 Vue.component('delete-slots-modal', require('./components/campaign_mpos/DeleteSlotModal.vue'));
+Vue.component('edit-slots-modal', require('./components/campaign_mpos/EditSlotModal.vue'));
 
 Vue.mixin({
     methods: {
