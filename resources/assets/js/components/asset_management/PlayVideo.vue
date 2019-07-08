@@ -2,11 +2,11 @@
     <v-layout>
         <v-dialog v-model="dialog" persistent max-width="600px">
         <template v-slot:activator="{ on }">
-            <a dark v-on="on">{{ asset.file_name}}</a>
+            <a v-on="on" class="default-vue-link">{{ asset.file_name}}</a>
         </template>
         <v-card>
-            <v-card-text>
-                <v-container grid-list-md>
+            <v-card-text class="px-2 pt-2 pb-0">
+                <v-container grid-list-md class="pa-0">
                     <v-layout wrap>
                         <v-flex xs12 sm12 md12>
                             <video class="video" :src="asset.asset_url" controls></video>
@@ -27,25 +27,6 @@
     .v-text-field {
         padding-top: 2px;
         margin-top: 0px;
-    }
-    .default-vue-btn {
-        color: #fff;
-        cursor: pointer;
-        background: #44C1C9 !important;
-        -webkit-appearance: none;
-        font-family: "Roboto", sans-serif;
-        font-weight: 500;
-        border: 0;
-        font-size: 15px;
-        -webkit-border-radius: 2px;
-        -moz-border-radius: 2px;
-        border-radius: 2px;
-        -webkit-box-shadow: 9px 10px 20px 1px rgba(0,159,160,0.21);
-        -moz-box-shadow: 9px 10px 20px 1px rgba(0,159,160,0.21);
-        box-shadow: 9px 10px 20px 1px rgba(0,159,160,0.21);
-        position: relative;
-        display: inline-block;
-        text-transform: uppercase;
     }
 </style>
 

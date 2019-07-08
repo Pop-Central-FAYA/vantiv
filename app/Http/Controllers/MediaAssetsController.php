@@ -38,14 +38,15 @@ class MediaAssetsController extends Controller
         $new_media_asset = $store_media_asset->run();
 
         if ($new_media_asset) {
+            $media_assets = new GetMediaAssets();
             return response()->json([
                 'status' => 'success',
-                'data' => 'Media asset was successfully created'
+                'data' => $media_assets->run()
             ]);
         } else {
             return response()->json([
                 'status' => 'error',
-                'data' => 'Something went wrong, media assets cannot be created. Try again!'
+                'data' => []
             ]);
         }
     }

@@ -166,6 +166,28 @@
     border: none;
 }
 
+.default-vue-link {
+    color: #44C1C9 !important;
+}
+.default-vue-btn {
+    color: #fff;
+    cursor: pointer;
+    background: #44C1C9 !important;
+    -webkit-appearance: none;
+    font-family: "Roboto", sans-serif;
+    font-weight: 500;
+    border: 0;
+    font-size: 15px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    -webkit-box-shadow: 9px 10px 20px 1px rgba(0,159,160,0.21);
+    -moz-box-shadow: 9px 10px 20px 1px rgba(0,159,160,0.21);
+    box-shadow: 9px 10px 20px 1px rgba(0,159,160,0.21);
+    position: relative;
+    display: inline-block;
+    text-transform: uppercase;
+}
 /* Override default vuetify ul tag style that is affecting the alignment of the side nav */
 .side_nav ._nav ul {
     padding-left: 0px;

@@ -90,7 +90,7 @@
             </v-card-text>
             <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="" class="default-vue-btn" dark @click="dialog = false">Close</v-btn>
+            <v-btn color="red" dark @click="dialog = false">Close</v-btn>
             <v-btn color="" class="default-vue-btn" dark @click="process_form()">Upload</v-btn>
             </v-card-actions>
         </v-card>
@@ -246,12 +246,13 @@
                          file_name: this.assetFile.name
                      }
                  }).then((res) => {
-                    console.log(res.data);
+                    console.log(res.data.data);
                     if (res.data.status === 'success') {
-                        this.sweet_alert(res.data.data, 'success');
-                        window.location = '/media-assets/';
+                        this.dialog = false;
+                        Event.$emit('latest-assets', res.data.data);
+                        this.sweet_alert('Media asset was successfully created', 'success');
                     } else {
-                        this.sweet_alert(res.data.data, 'error');
+                        this.sweet_alert('Something went wrong, media assets cannot be created. Try again!', 'error');
                     }
                  }).catch((error) => {
                      console.log(error.response.data);

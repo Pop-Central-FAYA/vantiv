@@ -107,6 +107,10 @@ Vue.mixin({
             return position;
             }, []);
             return  result
+        },
+        formatDate(date_str) {
+            var dateParts = date_str.split("-");
+            return `${dateParts[0]}-${dateParts[1]}-${dateParts[2].substr(0,2)}`;
         }
     }
 })
