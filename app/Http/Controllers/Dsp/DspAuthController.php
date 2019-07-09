@@ -132,90 +132,11 @@ class DspAuthController extends AuthController
 
     }
 
-    protected function logoutAndRedirectToTokenPage(Request $request, Authenticatable $user)
-    {
-        Auth::guard('web')->logout();
-
-        $request->session()->put('auth.2fa.id', $user->id);
-
-        return redirect()->route('auth.token');
-    }
-
-
-    /**
-     * Log the user out of the application.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
-    public function getLogout()
-    {
-        event(new LoggedOut(Auth::guard('web')->user()));
-
-        Auth::guard('web')->logout();
-
-        \Session::flush();
-
-        return redirect(route('login'));
-    }
-
- /**
-     * Redirect the user after determining they are locked out.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    protected function sendLockoutResponse(Request $request)
-    {
-        $seconds = app(RateLimiter::class)->availableIn(
-            $request->input($this->loginUsername()).$request->ip()
-        );
-
-        return redirect('login')
-            ->withInput($request->only($this->loginUsername(), 'remember'))
-            ->withErrors([
-                $this->loginUsername() => $this->getLockoutErrorMessage($seconds),
-            ]);
-    }
-
-    /**
-     * Get the login lockout error message.
-     *
-     * @param  int  $seconds
-     * @return string
-     */
-    protected function getLockoutErrorMessage($seconds)
-    {
-        return trans('auth.throttle', ['seconds' => $seconds]);
-    }
-
     public function getForgetPassword()
     {
         return view('auth.dsp_password.forget_password');
     }
 
-    public function processForgetPassword(Request $request)
-    {
-        $this->validate($request, [
-            'email' => 'email|required',
-        ]);
-
-        $user = User::where('email', $request->email)->first();
-        if($user){
-
-            $token = encrypt($user->id);
-
-            $send_mail = \Mail::to($user->email)->send(new PasswordChanger($token));
-
-            \Session::flash('success', ClassMessages::VERIFICATION_LINK);
-            return redirect()->back();
-
-        }else{
-
-            \Session::flash('error', ClassMessages::EMAIL_NOT_FOUND);
-            return redirect()->back();
-        }
-    }
 
     public function getChangePassword($token)
     {
@@ -223,19 +144,6 @@ class DspAuthController extends AuthController
         $user = User::where('id', $user_id)->first();
 
         return view('auth.dsp_password.change_password', compact('user'));
-
-    }
-
-    public function processChangePassword(PasswordChangeRequest $request, $user_id)
-    {
-        try{
-            $user = User::where('id', $user_id)->first();
-            $user->password = $request->password;;
-            $user->save();
-        }catch (\Exception $exception){
-            return redirect()->back()->withErrors(ClassMessages::PROCESSING_ERROR);
-        }
-        return redirect()->route('dsplogin')->with('success', ClassMessages::PASSWORD_CHANGED);
 
     }
 

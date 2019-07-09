@@ -8,10 +8,10 @@
     ]);
 
 
-    Route::get('/forget-password', 'DspAuthController@getForgetPassword')->name('dsp.password.forgot');
-    Route::post('/forget-password/process', 'DspAuthController@processForgetPassword')->name('dsp.forget_password.process');
+    Route::get('/forget-password', 'DspAuthController@getForgetPassword')->name('password.forgot');
+    Route::post('/forget-password/process', 'DspAuthController@processForgetPassword')->name('forget_password.process');
     Route::get('/proceed/password-change/{token}', 'DspAuthController@getChangePassword');
-    Route::post('/change-password/process/{user_id}', 'DspAuthController@processChangePassword')->name('dsp.change_password.process');
+    Route::post('/change-password/process/{user_id}', 'DspAuthController@processChangePassword')->name('change_password.process');
     
 
      });

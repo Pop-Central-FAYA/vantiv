@@ -11,7 +11,7 @@
 
         {{--@include('partials/messages')--}}
 
-        <form role="form" action="{{ route('dsp.change_password.process', ['user_id' => $user->id]) }}" method="POST" id="password-change-form" autocomplete="off">
+        <form role="form" action="{{ route('change_password.process', ['user_id' => $user->id]) }}" method="POST" id="password-change-form" autocomplete="off">
             <input type="hidden" value="<?= csrf_token() ?>" name="_token">
 
             @if (Input::has('to'))

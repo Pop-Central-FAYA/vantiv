@@ -28,7 +28,7 @@
             </div>
 
             <div class="column col_6 align_right">
-                <a href="{{ route('dsp.password.forgot') }}">Forgot Password?</a>
+                <a href="{{ route('password.forgot') }}">Forgot Password?</a>
             </div>
         </div>
 

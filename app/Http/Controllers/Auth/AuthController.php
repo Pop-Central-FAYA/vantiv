@@ -387,7 +387,6 @@ class AuthController extends Controller
         if($user){
 
             $token = encrypt($user->id);
-
             $send_mail = \Mail::to($user->email)->send(new PasswordChanger($token));
 
             \Session::flash('success', ClassMessages::VERIFICATION_LINK);
