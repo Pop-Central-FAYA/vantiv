@@ -23,7 +23,8 @@ class PublisherFeatureSeeder extends Seeder
             'view.rate_card', 'create.rate_card', 'update.rate_card',
             'view.discount', 'create.discount', 'update.discount',
             'create.user', 'view.user', 'update.user',
-            'view.profile', 'update.profile'
+            'view.profile', 'update.profile',
+            'view.schedule', 'create.schedule'
         ];
 
         //store permissions

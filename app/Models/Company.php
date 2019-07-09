@@ -61,4 +61,9 @@ class Company extends Base
     {
         return $this->hasMany(Schedule::class);
     }
+
+    public function publisher()
+    {
+        return $this->hasOne(Publisher::class);
+    }
 }

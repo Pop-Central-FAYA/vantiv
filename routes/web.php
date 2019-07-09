@@ -157,6 +157,7 @@ $sspRoutes = function () {
         Route::group(['prefix' => 'schedule'], function () {
             Route::get('/weekly', 'Broadcaster\ScheduleController@getWeeklySchedule')->name('schedule.weekly')
                 ->middleware('permission:view.schedule');
+            Route::post('/weekly/navigate', 'Broadcaster\ScheduleController@navigateWeekly');
         });
 
         /*
