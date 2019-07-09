@@ -18,24 +18,30 @@ To get the docker environment to run locally, the following steps need to be tak
     * `sudo chmod -R 777 ./bootstrap/cache`
 3. while in the root directory, run the following command, which will start all the services and set them to the background:
     * `docker-compose up --build -d`
-4. go into the running app container and run `composer install`. You only need to run these whenever composer.json changes, or you delete the vendor directory. As a matter of principle, I try to run this everytime I do a pull and start the app. To go into the container and user composer do the following:
-    * `docker-compose exec app bash`
+4. go into the running app container, there are two containers you can go into to run. `vantage` or `torch` and run `composer install`. You only need to run these whenever composer.json changes, or you delete the vendor directory. As a matter of principle, I try to run this everytime I do a pull and start the app. To go into the container and user composer do the following:
+    * `docker-compose exec vantage bash`
     * `composer install`
-5. the webserver and mysql database can be accessed at the following endpoints and ports:
+Alternatively, you do not have to go into any of the containers to do this, you can run the command directly from docker-compose, the following can work for you.
+    * `docker-compose exec vantage composer install`
+    * `docker-compose exec torch composer install`
+5. building frontend assets. the `composer install` command will build the initial assets for production. However for local dev, you want to build the assets whenever the files change for dev, so whenever you are working on the frontend and want to build the assets as you work, in another terminal, you can run the following to build and watch.
+    * `docker-compose exec npm run watch`
+6. the webserver and mysql database can be accessed at the following endpoints and ports:
     * webserver: __localhost:9000__
     * database:
         * location: __localhost:33061__
         * username: __faya__
         * password: __faya__
     note, that these are default values and are actually set as environment variables that are picked up by both the app and the database. See `docker-compose.yaml` for more information about all of these.
-6. Enjoy testing.
+7. Enjoy testing.
 
 As you make changes, the changes are reflected, while testing.
 
 If you want to go into a running container, whether te webserver or the database, the following commands using docker-compose will help.
 
 ```bash
-docker-compose exec app bash # this is for the php app
+docker-compose exec vantage bash # this is for the php app (vantage)
+docker-compose exec torch bash # this is for the php app (torch)
 docker-compose exec database bash # this is for the database
 ```
 
