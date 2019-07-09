@@ -1,11 +1,12 @@
 <template>
     <table>
-        <tr v-for="ad in ads" :key="ad.id">
-            <td style="border : 0;">
+        <p>({{ sumDurationInAdBreak(event_group) }} seconds used from {{ event_group[0].ad_pattern }})</p>
+        <tr v-for="event in event_group" :key="event.time_belt_transaction_id">
+            <td >
                 <div class="card_table">
-                    {{ ad.campaign_name }} <br>
-                     {{ ad.client_name }} <br>
-                      {{ ad.duration }}
+                    {{ event.campaign_name }} <br>
+                    {{ event.client_name }} <br>
+                    {{ event.duration }}
                 </div>
             </td>
         </tr>
@@ -14,9 +15,14 @@
 <script>
     export default {
         props : {
-            ads : {
+            event_group : {
                 required : true,
                 type : Array
+            }
+        },
+        methods : {
+            sumDurationInAdBreak : function(ad_break) {
+                return ad_break.reduce((prev,next) => prev + next.duration,0);
             }
         }
     }

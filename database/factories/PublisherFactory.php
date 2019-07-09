@@ -12,6 +12,6 @@ $factory->define(\Vanguard\Models\Publisher::class, function (Faker $faker) {
                 'unit' => 'breaks',
                 'interval' => '1 hour'
             ]
-        ])
+        ]) 
     ];
 });

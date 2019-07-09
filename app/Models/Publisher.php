@@ -32,7 +32,7 @@ class Publisher extends Base
 
     public function getDecodedSettingsAttribute()
     {
-        return json_decode($this->settings, true);
+        return json_decode($this->settings, true); 
     }
 
 }

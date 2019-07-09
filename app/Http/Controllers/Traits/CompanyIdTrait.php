@@ -11,7 +11,6 @@ trait CompanyIdTrait
         $user = \Auth::user();
         if($user->companies()->count() > 1){
             $company_id = $user->company_id;
-
         }else{
             $company_id = $user->companies->first()->id;
         }
