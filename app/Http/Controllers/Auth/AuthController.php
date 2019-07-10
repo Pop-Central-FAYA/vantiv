@@ -25,7 +25,19 @@ use Vanguard\User;
 
 class AuthController extends Controller
 {
-
+    public $login_layout;
+    public $forget_password;
+    public $change_password;
+    public $dashboard_routel;
+    public function getLayouts()
+    {
+       $this->login_layout = 'auth.login';
+       $this->forget_password='auth.password.forget_password';
+       $this->change_password ='auth.password.change_password';
+       $this->dashboard_route= 'broadcaster.dashboard.index';
+    }
+     
+    
     /**
      * Create a new authentication controller instance.
      * @param UserRepository $users
@@ -36,7 +48,10 @@ class AuthController extends Controller
         $this->middleware('auth', ['only' => ['getLogout']]);
         $this->middleware('registration', ['only' => ['getRegister', 'postRegister']]);
         $this->users = $users;
+        $this->getLayouts();
     }
+
+  
 
     /**
      * Show the application login form.
@@ -46,8 +61,7 @@ class AuthController extends Controller
     public function getLogin()
     {
             $socialProviders = config('auth.social.providers');
-
-        return view('auth.login', compact('socialProviders'));
+            return view($this->login_layout, compact('socialProviders'));
     }
 
 
@@ -62,48 +76,12 @@ class AuthController extends Controller
      */
     public function postLogin(Request $request)
     {
-        if(empty($request->email) || empty($request->password)){
-            return redirect()->back()->with('error', ClassMessages::EMAIL_PASSWORD_EMPTY);
-        }
-
         // In case that request throttling is enabled, we have to check if user can perform this request.
         // We'll key this by the username and the IP address of the client making these requests into this application.
         $throttles = settings('throttle_enabled');
-
-        //Redirect URL that can be passed as hidden field.
-        $to = $request->has('to') ? "?to=" . $request->get('to') : '';
-
-        if ($throttles && $this->hasTooManyLoginAttempts($request)) {
-            return $this->sendLockoutResponse($request);
-        }
-
         $credentials = $this->getCredentials($request);
-
-
-        if (! Auth::validate($credentials)) {
-
-            // If the login attempt was unsuccessful we will increment the number of attempts
-            // to login and redirect the user back to the login form. Of course, when this
-            // user surpasses their maximum number of attempts they will get locked out.
-            if ($throttles) {
-                $this->incrementLoginAttempts($request);
-            }
-
-            return redirect()->to(route('login'). $to)
-                ->with('error', ClassMessages::INVALID_EMAIL_PASSWORD);
-        }
-
         $user = Auth::getProvider()->retrieveByCredentials($credentials);
-
-        if ($user->isUnconfirmed()) {
-            return redirect()->to(route('login') . $to)
-                ->with('error', ClassMessages::EMAIL_CONFIRMATION);
-        }
-
-        if ($user->isBanned()) {
-            return redirect()->to(route('login') . $to)
-                ->with('error', ClassMessages::BANNED_ACCOUNT);
-        }
+        $validate = $this->loginValidation($request, $throttles,$credentials,$user);
 
         Auth::login($user, settings('remember_me') && $request->get('remember'));
 
@@ -122,6 +100,48 @@ class AuthController extends Controller
         return $this->handleUserWasAuthenticated($request, $throttles, $user);
     }
 
+    /**
+     * Handle a login request valiudation
+     */
+
+    public function loginValidation(Request $request, $throttles,$credentials,$user)
+    {
+        if(empty($request->email) || empty($request->password)){
+            return redirect()->back()->with('error', ClassMessages::EMAIL_PASSWORD_EMPTY);
+        }
+
+
+        //Redirect URL that can be passed as hidden field.
+        $to = $request->has('to') ? "?to=" . $request->get('to') : '';
+
+        if ($throttles && $this->hasTooManyLoginAttempts($request)) {
+            return $this->sendLockoutResponse($request);
+        }
+
+        if (! Auth::validate($credentials)) {
+
+            // If the login attempt was unsuccessful we will increment the number of attempts
+            // to login and redirect the user back to the login form. Of course, when this
+            // user surpasses their maximum number of attempts they will get locked out.
+            if ($throttles) {
+                $this->incrementLoginAttempts($request);
+            }
+
+            return redirect()->to(route('login') . $to)
+                ->with('error', ClassMessages::INVALID_EMAIL_PASSWORD);
+        }
+
+        if ($user->isUnconfirmed()) {
+            return redirect()->to(route('login') . $to)
+                ->with('error', ClassMessages::EMAIL_CONFIRMATION);
+        }
+
+        if ($user->isBanned()) {
+            return redirect()->to(route('login')  . $to)
+                ->with('error', ClassMessages::BANNED_ACCOUNT);
+        }
+            return true;
+    }
 
     /**
      * Handle a login request to the application.
@@ -154,15 +174,7 @@ class AuthController extends Controller
             return redirect()->to($request->get('to'));
         }
 
-        $authenticated_user_company_type = Auth::user()->company_type;
-
-        if($authenticated_user_company_type === CompanyTypeName::BROADCASTER){
-            return redirect()->route('broadcaster.dashboard.index');
-        }else if($authenticated_user_company_type === CompanyTypeName::AGENCY){
-            return redirect()->route('dashboard');
-        }
-
-        return redirect()->intended();
+            return redirect()->intended(route($this->dashboard_route));
     }
 
 
@@ -374,7 +386,7 @@ class AuthController extends Controller
 
     public function getForgetPassword()
     {
-        return view('auth.password.forget_password');
+        return view($this->forget_password);
     }
 
     public function processForgetPassword(Request $request)
@@ -404,7 +416,7 @@ class AuthController extends Controller
         $user_id = decrypt($token);
         $user = User::where('id', $user_id)->first();
 
-        return view('auth.password.change_password', compact('user'));
+        return view($this->change_password, compact('user'));
 
     }
 

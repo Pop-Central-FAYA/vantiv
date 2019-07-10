@@ -1,17 +1,14 @@
 <?php
  Route::group(['namespace' => 'Dsp'], function () {
-    Route::get('login', 'DspAuthController@getLogin')->name('login');
-    Route::post('login', 'DspAuthController@postLogin')->name('post.login');
-    Route::get('logout', [
-        'as' => 'auth.dsplogout',
-        'uses' => 'DspAuthController@getLogout',
-    ]);
+    Route::get('login', 'AuthController@getLogin')->name('login');
+    Route::post('login', 'AuthController@postLogin')->name('post.login');
+    Route::get('logout', 'AuthController@getLogout')->name('auth.dsplogout');
+ 
 
-
-    Route::get('/forget-password', 'DspAuthController@getForgetPassword')->name('password.forgot');
-    Route::post('/forget-password/process', 'DspAuthController@processForgetPassword')->name('forget_password.process');
-    Route::get('/proceed/password-change/{token}', 'DspAuthController@getChangePassword');
-    Route::post('/change-password/process/{user_id}', 'DspAuthController@processChangePassword')->name('change_password.process');
+    Route::get('/forget-password', 'AuthController@getForgetPassword')->name('password.forgot');
+    Route::post('/forget-password/process', 'AuthController@processForgetPassword')->name('forget_password.process');
+    Route::get('/proceed/password-change/{token}', 'AuthController@getChangePassword');
+    Route::post('/change-password/process/{user_id}', 'AuthController@processChangePassword')->name('change_password.process');
     
 
      });
