@@ -27,7 +27,7 @@
     <div class="row">
         <div class="col-md-6 col-md-push-3">
             <div class="text-center">
-                <img src="{{ url('assets/img/vanguard-logo-no-text.png') }}" alt="{{ settings('app_name') }}" class="logo">
+            {!! AssetsHelper::errorPageLogo() !!}
                 <h1>Server Error</h1>
                 <br />
                 <p>
