@@ -52,10 +52,11 @@ RUN mv /app/.env.example /app/.env \
 
 ### Need to install docker in production without the dev dependencies (get that fixed)
 # RUN /usr/local/bin/composer install --no-ansi --no-dev --optimize-autoloader --no-plugins --no-scripts --no-interaction \
-RUN /usr/local/bin/composer install --no-ansi --optimize-autoloader --no-plugins --no-scripts --no-interaction \
+RUN /usr/local/bin/composer install --no-ansi --optimize-autoloader --no-plugins --no-interaction \
     && rm -rf /app/node_modules \
     && php artisan config:clear \
     && php artisan cache:clear \
+    && php artisan route:clear \
     && chown -R apache:apache /app \
     && chmod -R 755 /app
 
