@@ -150,10 +150,13 @@ class CampaignsController extends Controller
     public function campaignMpoDetails($campaign_mpo_id)
     {
         $campaign_mpo = CampaignMpo::find($campaign_mpo_id);
+        $campaign_details_service = new CampaignDetails($campaign_mpo->campaign_id);
+        $campaign_details = $campaign_details_service->run();
         $assets = (new GetMediaAssetByClient($campaign_mpo->campaign->walkin_id, $campaign_mpo->campaign->brand_id))->run();
         $time_belts = $this->splitTimeRangeByBase('00:00:00', '23:59:59', '15');
         return view('agency.campaigns.view_adslots')->with('campaign_mpo', $campaign_mpo)
                                                     ->with('assets', $assets)
+                                                    ->with('campaign_details', $campaign_details)
                                                     ->with('time_belts', $time_belts);
     }
 

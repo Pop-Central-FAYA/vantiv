@@ -42,6 +42,10 @@ class StoreCampaign
         $campaign->brand_id = $this->other_information->brand_id;
         $campaign->age_groups = $this->other_information->criteria_age_groups;
         $campaign->regions = $this->other_information->criteria_region;
+        $campaign->agency_commission = $this->other_information->agency_commission;
+        $campaign->lsm = $this->other_information->criteria_lsm;
+        $campaign->social_class = $this->other_information->criteria_social_class;
+        $campaign->states = $this->other_information->criteria_state;
         $campaign->channel = $this->channel;
         $campaign->target_audience = $this->target_audience;
         $campaign->created_by = $this->created_by;

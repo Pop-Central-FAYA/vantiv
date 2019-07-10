@@ -235,7 +235,7 @@ class AllCampaign
                             ->when($this->request->start_date && $this->request->stop_date, function ($query) {
                                 return $query->whereBetween('start_date', [$this->request->start_date,
                                     $this->request->stop_date]);
-                            })->orderBy('time_created','DESC')->get();
+                            })->orderBy('time_created', 'DESC')->get();
         $new_campaigns = [];
         foreach ($campaigns as $campaign) {
             $new_campaigns[] = [
