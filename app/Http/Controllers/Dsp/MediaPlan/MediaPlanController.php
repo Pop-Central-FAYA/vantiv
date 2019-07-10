@@ -38,6 +38,8 @@ use Carbon\Carbon;
 use Vanguard\Services\MediaPlan\GetSuggestionListByDuration;
 use Vanguard\Libraries\Enum\MediaPlanStatus;
 use Vanguard\Libraries\DayPartList;
+use Vanguard\Services\MediaPlan\GetTargetAudience;
+use Vanguard\Services\CampaignChannels\GetChannelByName;
 
 class MediaPlanController extends Controller
 {
@@ -545,26 +547,22 @@ class MediaPlanController extends Controller
         }
     }
 
-    public function getChannelFromPlan($planMediaType)
+    public function getPlanChannelId($planMediaType)
     {
-        if ($planMediaType == 'Tv') {
-            return json_encode(["nzrm6hchjats36"]);
-        } elseif ($planMediaType == 'Radio') {
-            return json_encode(["nzrm64hjatseog6"]);
-        } else {
-            return json_encode(["nzrm64hjatseog6", "nzrm6hchjats36"]);
-        }
+        $channel_service = new GetChannelByName($planMediaType);
+        $channel = $channel_service->getCampaignChannelsByName();
+        return json_encode([$channel->id]);
     }
 
-    public function convertPlanGenderToID($planGender)
+    public function getPlanGenderId($planGender)
     {
-        if ($planGender == 'Male') {
-            return json_encode(["nzrm6hchjatseog9"]);
-        } elseif ($planGender == 'Female') {
-            return json_encode(["nzrm6hchjatseoga"]);
-        } else {
-            return json_encode(["nzrm6hchjatseog9", "nzrm6hchjatseoga"]);
+        $audience_service = new GetTargetAudience($planGender);
+        $audiences = $audience_service->getAudienceByName();
+        $audienceId = [];
+        foreach ($audiences as $audience) {
+            $audienceId[] = $audience->id;
         }
+        return json_encode($audienceId);
     }
 
     public function convertPlanToCampaign($media_plan_id)
@@ -587,8 +585,8 @@ class MediaPlanController extends Controller
                 // create a campaign instance
                 $campaign_reference = Utilities::generateReference();
                 $now = strtotime(Carbon::now('Africa/Lagos'));
-                $channel = $this->getChannelFromPlan($media_plan->media_type);
-                $target_audience = $this->convertPlanGenderToID($media_plan->criteria_gender);
+                $channel = $this->getPlanChannelId($media_plan->media_type);
+                $target_audience = $this->getPlanGenderId(json_decode($media_plan->gender));
                 $created_by = \Auth::user()->id;
                 $belongs_to = \Auth::user()->companies->first()->id;
                 $budget = $suggestion_service->getTotalBudgetPerPlan($suggestions);
