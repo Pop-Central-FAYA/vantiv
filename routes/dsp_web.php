@@ -1,6 +1,7 @@
 <?php
 
 $dspRoutes = function () {
+    Route::get('health', 'Auth\DspAuthController@getDspLogin');
 
     Route::get('login', 'Auth\DspAuthController@getDspLogin')->name('dsplogin');
     Route::post('login', 'Auth\DspAuthController@postDspLogin')->name('post.dsplogin');
@@ -72,7 +73,7 @@ $dspRoutes = function () {
 
 
             Route::get('/campaign-on-hold/agency/data', 'Campaign\CampaignsController@getCampaignOnHold')->name('agency.campaigns.hold');
-           
+
         });
 
         Route::get('/campaign-details/{user_id}', 'Dsp\CampaignsController@filterByUser');
@@ -80,7 +81,7 @@ $dspRoutes = function () {
         ->name('campaign.get_campaign_general_information')->middleware('permission:create.campaign');
         Route::post('/campaign-general-information/store', 'Campaign\CampaignsController@storeCampaignGeneralInformation')->name('campaign.store_campaign_general_information');
         Route::get('/advert-slot/result/{id}', 'Campaign\CampaignsController@getAdSlotResult')->name('campaign.advert_slot');
-           
+
         /*
          * User Management
          */

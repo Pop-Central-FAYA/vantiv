@@ -28,11 +28,6 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        /**
-         * @todo, fix this health check route, create a generic health check route
-         */
-        Route::get('health', '\Vanguard\Http\Controllers\Auth\DspAuthController@getDspLogin');
-        
         parent::boot();
 
         $this->bindUser();

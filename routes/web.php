@@ -1,6 +1,7 @@
 <?php
 
 $sspRoutes = function () {
+    Route::get('health', 'Auth\AuthController@getLogin');
 
     /**
      * Authentication
@@ -40,7 +41,7 @@ $sspRoutes = function () {
 
     Route::post('/admin/post', 'AdminAuthController@postRegister')->name('admin.post');
 
-    
+
     Route::group(['middleware' => 'auth'], function () {
         # We need a default index
         Route::get('/', ['as' => 'dashboard', 'uses' => 'Broadcaster\DashboardController@index']);
@@ -184,7 +185,7 @@ $sspRoutes = function () {
             Route::get('/preselected-adslot/remove/{id}', 'Campaign\CampaignsController@removePreselectedAdslot')->name('preselected_adslot.remove');
             Route::post('/campaign-hold/{id}', 'Campaign\CampaignsController@postCampaign')->name('campaign.post_hold');
             Route::get('/campaign-on-hold/broadcaster/data', 'Campaign\CampaignsController@getCampaignOnHold')->name('broadcaster.campaign.hold');
-         
+
             Route::post('/submit-to-broadcasters/{campaign_id}', 'Campaign\CampaignsController@submitWithOtherPaymentOption')->name('campaign.submit.other_payment');
             Route::post('/payment-process', 'Campaign\CampaignsController@submitWithCardPaymentOption')->name('broadcaster.pay');
             Route::post('/submit-to-broadcasters/agency/{campaign_id}', 'Campaign\CampaignsController@submitAgencyCampaign')->name('agency.campaign.update');
