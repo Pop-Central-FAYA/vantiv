@@ -28,11 +28,11 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // generic health checks for load balancers
-        Route::get('/health', function () {
-            return 'All Good!';
-        });
-
+        /**
+         * @todo, fix this health check route, create a generic health check route
+         */
+        Route::get('health', 'Auth\DspAuthController@getDspLogin');
+        
         parent::boot();
 
         $this->bindUser();
