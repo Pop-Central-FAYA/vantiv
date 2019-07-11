@@ -27,7 +27,7 @@
     <div class="row">
         <div class="col-md-6 col-md-push-3">
             <div class="text-center">
-            {!! AssetsHelper::errorPageLogo() !!}
+            {!! AssetsHelper::logo('error') !!}
                 <h1>Server Error</h1>
                 <br />
                 <p>

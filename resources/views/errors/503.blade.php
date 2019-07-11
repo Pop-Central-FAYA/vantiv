@@ -26,7 +26,7 @@
     <div class="row">
         <div class="col-md-6 col-md-push-3">
             <div class="text-center">
-            {!! AssetsHelper::errorPageLogo() !!}
+            {!! AssetsHelper::logo('error') !!}
                 <h1>Be Right Back.</h1>
                 <br>
                 <p class="lead">Application is currently being updated. <br> Please check back in few minutes.</p>
