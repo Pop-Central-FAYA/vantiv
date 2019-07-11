@@ -114,13 +114,21 @@
                     <a id="back_btn" href="{{ route('agency.media_plan.create', ['id'=>$media_plan->id]) }}" class="btn small_btn"><i class="media-plan material-icons">navigate_before</i> Back</a>
                 </div>
                 <div class="col-md-8 p-0 text-right">
-                    @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('finance'))
-                        <a href="{{ route('agency.media_plan.approve', ['id'=>$media_plan->id]) }}" class="media-plan btn block_disp uppercased mr-1 {{ ($media_plan->status == 'Approved' || $media_plan->status == 'Declined') ? 'disabled-action-btn' : ''}}"><i class="media-plan material-icons">check</i>Approve Plan</a>
-                        <a href="{{ route('agency.media_plan.decline', ['id'=>$media_plan->id]) }}" class="media-plan btn block_disp uppercased bg_red mr-1 {{ ($media_plan->status == 'Approved' || $media_plan->status == 'Declined') ? 'disabled-action-btn' : ''}}"><i class="media-plan material-icons">clear</i>Decline Plan</a>
+                    @if ($media_plan->status == 'Suggested') 
+                        @if(Auth::user()->hasPermissionTo('approve.media_plan'))
+                            <a href="{{ route('agency.media_plan.approve', ['id'=>$media_plan->id]) }}" class="media-plan btn block_disp uppercased mr-1"><i class="media-plan material-icons">check</i>Approve Plan</a>
+                        @endif
+                        @if(Auth::user()->hasPermissionTo('decline.media_plan'))
+                            <a href="{{ route('agency.media_plan.decline', ['id'=>$media_plan->id]) }}" class="media-plan btn block_disp uppercased bg_red mr-1"><i class="media-plan material-icons">clear</i>Decline Plan</a>
+                        @endif
                     @endif
-                    <a href="{{ route('agency.media_plan.export', ['id'=>$media_plan->id]) }}" class="btn block_disp uppercased"><i class="media-plan material-icons">file_download</i>Export Plan</a>
+                    @if(Auth::user()->hasPermissionTo('export.media_plan'))
+                        <a href="{{ route('agency.media_plan.export', ['id'=>$media_plan->id]) }}" class="btn block_disp uppercased"><i class="media-plan material-icons">file_download</i>Export Plan</a>
+                    @endif
                     @if ($media_plan->status == 'Approved')
-                        <media-plan-create-campaign :id="{{ json_encode($media_plan->id) }}"></media-plan-create-campaign>
+                        @if(Auth::user()->hasPermissionTo('convert.media_plan'))
+                            <media-plan-create-campaign :id="{{ json_encode($media_plan->id) }}"></media-plan-create-campaign>
+                        @endif
                     @endif
                 </div>
             </div>

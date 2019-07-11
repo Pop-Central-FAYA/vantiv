@@ -14,7 +14,7 @@ class AgencyFeatureSeeder extends Seeder
          //delete if data exist
          //permissions so far on the ssp side
          $permissions_array = [
-             'create.media_plan', 'update.media_plan', 'submit.media_plan', 'view.media_plan', 
+             'create.media_plan', 'update.media_plan', 'submit.media_plan', 'view.media_plan', 'approve.media_plan', 'decline.media_plan', 'export.media_plan', 'convert.media_plan', 'delete.media_plan',
              'view.invoice', 'view.wallet', 'create.wallet', 'create.asset', 'view.asset', 'update.asset',
              'delete.asset'
          ];

@@ -184,52 +184,58 @@
                                         {{ date("M d, y", strtotime($campaign_details->start_date)) }} - {{ date("M d, y", strtotime($campaign_details->stop_date)) }}
                                     </p>
                                 </div>
-                                <div class="column col_12">
-                                    <p class="weight_medium">
-                                        <span class="weight_medium small_faint pr-1">Media Type</span>
-                                        @foreach($campaign_details->channel_information as $key=>$channel) {{ $channel->channel }}@if(($key+1) < count($campaign_details->channel_information)){{', '}} @endif @endforeach 
-                                    </p>
-                                </div>
+                                @if (count($campaign_details->channel_information) > 0)
+                                    <div class="column col_12">
+                                        <p class="weight_medium">
+                                            <span class="weight_medium small_faint pr-1">Media Type:</span>
+                                            @foreach($campaign_details->channel_information as $key=>$channel) {{ $channel->channel }}@if(($key+1) < count($campaign_details->channel_information)){{', '}} @endif @endforeach 
+                                        </p>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                         <div class="column col_7">
                             <div class="clearfix mb">
-                                <div class="column col_12 mb" style="margin-left: 1.6%;">
-                                    <p class="weight_medium">
-                                        <span class="weight_medium small_faint pr-1">Gender:</span>
-                                        @foreach($campaign_details->audience_information as $key=>$audience) {{ $audience->audience }} @if(($key+1) < count($campaign_details->audience_information)){{','}} @endif @endforeach
-                                    </p>
-                                </div>
-                                <div class="column col_12 mb">
-                                    <p class="weight_medium">
-                                        <span class="weight_medium small_faint pr-1">Age Groups:</span>
-                                        @foreach(json_decode($campaign_details->age_groups) as $key=>$age_group){{ $age_group->min.' - '.$age_group->max.' Yrs' }} @if(($key+1) < count(json_decode($campaign_details->age_groups))){{', '}} @endif @endforeach
-                                    </p>
-                                </div>
-                                <div class="column col_12 mb">
-                                    @if ($campaign_details->social_class != null)
+                                @if (count($campaign_details->audience_information) > 0)
+                                    <div class="column col_12 mb" style="margin-left: 1.6%;">
+                                        <p class="weight_medium">
+                                            <span class="weight_medium small_faint pr-1">Gender:</span>
+                                            @foreach($campaign_details->audience_information as $key=>$audience) {{ $audience->audience }} @if(($key+1) < count($campaign_details->audience_information)){{','}} @endif @endforeach
+                                        </p>
+                                    </div>
+                                @endif
+                                @if (is_array(json_decode($campaign_details->age_groups)))
+                                    <div class="column col_12 mb">
+                                        <p class="weight_medium">
+                                            <span class="weight_medium small_faint pr-1">Age Groups:</span>
+                                            @foreach(json_decode($campaign_details->age_groups) as $key=>$age_group){{ $age_group->min.' - '.$age_group->max.' Yrs' }} @if(($key+1) < count(json_decode($campaign_details->age_groups))){{', '}} @endif @endforeach
+                                        </p>
+                                    </div>
+                                @endif
+                                @if (is_array(json_decode($campaign_details->social_class)))
+                                    <div class="column col_12 mb">
                                         <p class="weight_medium">
                                             <span class="weight_medium small_faint pr-1">Social Class:</span>
                                             @foreach(json_decode($campaign_details->social_class) as $key=>$class) {{ $class }}@if(($key+1) < count(json_decode($campaign_details->social_class))){{', '}} @endif @endforeach
                                         </p>
-                                    @endif
-                                </div>
-                                <div class="column col_12 mb">
-                                    @if ($campaign_details->states != null)
+                                    </div>
+                                @endif
+                                @if (is_array(json_decode($campaign_details->states)))
+                                    <div class="column col_12 mb">
                                         <p class="weight_medium">
                                             <span class="weight_medium small_faint pr-1">States:</span>
                                             @foreach(json_decode($campaign_details->states) as $key=>$state) {{ $state }}@if(($key+1) < count(json_decode($campaign_details->states))){{', '}} @endif @endforeach
                                         </p>
-                                    @endif
-                                </div>
-                                <div class="column col_12 mb">
-                                    @if ($campaign_details->regions != null)
+                                    </div>
+                                @endif
+                                @if (is_array(json_decode($campaign_details->regions)))
+                                    <div class="column col_12 mb">
                                         <p class="weight_medium">
                                             <span class="weight_medium small_faint pr-1">Regions:</span>
                                             @foreach(json_decode($campaign_details->regions) as $key=>$region) {{ $region }} @if(($key+1) < count(json_decode($campaign_details->regions))){{', '}} @endif @endforeach
                                         </p>
-                                    @endif
-                                </div>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>
