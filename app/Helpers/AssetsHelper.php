@@ -7,7 +7,7 @@ namespace Vanguard\Helpers;
 class AssetsHelper 
 {
 
-    public static $vantage_logo = '
+   static $VANTAGE_LOGO = '
      <!-- Created with SVG-edit - http://svg-edit.googlecode.com/ -->
     <defs>
      <symbol id="svg_2" viewBox="0 0 553.34 216.48" xmlns="http://www.w3.org/2000/svg">
@@ -27,7 +27,7 @@ class AssetsHelper
      <use id="svg_3" xlink:href="#svg_2" transform="matrix(1.1134798870399125,0,0,1.0357963171947533,-11.671895890043723,-23.101256644532413) " y="22.6777" x="2.49327"/>
      <g id="svg_4"/>
     </g>';
-    public static $faya_logo= ' <!-- Generator: Sketch 49.2 (51160) - http://www.bohemiancoding.com/sketch -->
+    static $FAYA_LOGO =' <!-- Generator: Sketch 49.2 (51160) - http://www.bohemiancoding.com/sketch -->
     <title>Page 1</title>
     <desc>Created with Sketch.</desc>
     <defs></defs>
@@ -52,13 +52,13 @@ class AssetsHelper
             case 'ssp':
             return ' 
             <svg width="119" height="46" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'.
-            self::$faya_logo. '</svg>
+            static::$FAYA_LOGO. '</svg>
             ';
             break;
             default:
                 return ' 
                 <svg width="119" height="46" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'.
-                self::$vantage_logo. '</svg>
+                static::$VANTAGE_LOGO. '</svg>
                 ';
             break;
         }
@@ -85,13 +85,13 @@ class AssetsHelper
             case 'ssp':
                 return ' 
                 <svg width="400" height="90" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'.
-                self::$faya_logo. 
+                static::$FAYA_LOGO. 
                 '</svg>';
             break;
             default:
                 return ' 
                 <svg width="400" height="90" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'.
-                self::$vantage_logo. 
+                static::$VANTAGE_LOGO. 
                 '</svg>';
             break;
         }
