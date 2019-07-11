@@ -20,7 +20,7 @@ class AgencyRoleSeeder extends Seeder
        $admin_role->save();
 
        $vantage_permissions = [
-        'create.media_plan', 'update.media_plan', 'submit.media_plan', 'view.media_plan', 
+        'create.media_plan', 'update.media_plan', 'submit.media_plan', 'view.media_plan', 'approve.media_plan', 'decline.media_plan', 'export.media_plan', 'convert.media_plan', 'delete.media_plan',
         'view.invoice', 'view.wallet', 'create.wallet', 'create.asset', 'view.asset', 'update.asset', 'delete.asset',
         'create.user', 'view.user', 'update.user', 'view.campaign', 'submit.campaign', 'create.campaign', 'update.campaign',
         'view.profile', 'update.profile','view.report', 'view.client', 'update.client', 'create.client'
