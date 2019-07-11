@@ -45,21 +45,34 @@ class AssetsHelper
         </g>
     </g>';
 
-    static function logo()
+    static function logo($type='null')
     {
         $product = env('PRODUCT');
         switch ($product) {
             case 'ssp':
+            if($type == "error")
+            return ' 
+            <svg width="400" height="90"  xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'.
+            static::$FAYA_LOGO. '</svg>
+            ';
+            else
             return ' 
             <svg width="119" height="46" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'.
             static::$FAYA_LOGO. '</svg>
             ';
+
             break;
             default:
+                if($type == "error")
+                    return ' 
+                    <svg width="400" height="90"  xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'.
+                    static::$VANTAGE_LOGO. '</svg>
+                    ';
+                else
                 return ' 
-                <svg width="119" height="46" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'.
-                static::$VANTAGE_LOGO. '</svg>
-                ';
+                    <svg width="119" height="46" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'.
+                    static::$VANTAGE_LOGO. '</svg>
+                    ';
             break;
         }
        
@@ -78,23 +91,4 @@ class AssetsHelper
        
     }
 
-    static function errorPageLogo()
-    {
-        $product = env('PRODUCT');
-        switch ($product) {
-            case 'ssp':
-                return ' 
-                <svg width="400" height="90" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'.
-                static::$FAYA_LOGO. 
-                '</svg>';
-            break;
-            default:
-                return ' 
-                <svg width="400" height="90" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'.
-                static::$VANTAGE_LOGO. 
-                '</svg>';
-            break;
-        }
-       
-    }
 }
