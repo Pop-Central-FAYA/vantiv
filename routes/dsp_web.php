@@ -2,7 +2,7 @@
  Route::group(['namespace' => 'Dsp'], function () {
     Route::get('login', 'AuthController@getLogin')->name('login');
     Route::post('login', 'AuthController@postLogin')->name('post.login');
-    Route::get('logout', 'AuthController@getLogout')->name('auth.dsplogout');
+    Route::get('logout', 'AuthController@getLogout')->name('auth.logout');
  
 
     Route::get('/forget-password', 'AuthController@getForgetPassword')->name('password.forgot');

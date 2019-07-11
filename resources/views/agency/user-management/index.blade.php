@@ -174,7 +174,7 @@
                         toastr.clear();
                         if (data.status === 'success') {
                             toastr.success(data.message);
-                            location.href = 'agency/user/all';
+                            location.href = '/user/all';
                         } else {
                             toastr.error(data.message);
                             $('.load_this_div').css({

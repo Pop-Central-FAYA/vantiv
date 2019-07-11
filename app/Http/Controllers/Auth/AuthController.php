@@ -76,47 +76,22 @@ class AuthController extends Controller
      */
     public function postLogin(Request $request)
     {
-        // In case that request throttling is enabled, we have to check if user can perform this request.
-        // We'll key this by the username and the IP address of the client making these requests into this application.
-        $throttles = settings('throttle_enabled');
-        $credentials = $this->getCredentials($request);
-        $user = Auth::getProvider()->retrieveByCredentials($credentials);
-        $validate = $this->loginValidation($request, $throttles,$credentials,$user);
-
-        Auth::login($user, settings('remember_me') && $request->get('remember'));
-
-        if(Auth::user()->status === 'Unconfirmed' || Auth::user()->status === ''){
-            Auth::logout();
-        }
-
-        if(Auth::user()->company_type == CompanyTypeName::BROADCASTER){
-            session()->forget('agency_id');
-            session(['broadcaster_id' => Auth::user()->companies->first()->id]);
-        }else{
-            return redirect()->to(route('login') . $to)
-            ->with('error', ClassMessages::INVALID_EMAIL_PASSWORD);
-        }
-
-        return $this->handleUserWasAuthenticated($request, $throttles, $user);
-    }
-
-    /**
-     * Handle a login request valiudation
-     */
-
-    public function loginValidation(Request $request, $throttles,$credentials,$user)
-    {
         if(empty($request->email) || empty($request->password)){
             return redirect()->back()->with('error', ClassMessages::EMAIL_PASSWORD_EMPTY);
         }
-
+       // In case that request throttling is enabled, we have to check if user can perform this request.
+        // We'll key this by the username and the IP address of the client making these requests into this application.
+        $throttles = settings('throttle_enabled');
 
         //Redirect URL that can be passed as hidden field.
         $to = $request->has('to') ? "?to=" . $request->get('to') : '';
 
+
         if ($throttles && $this->hasTooManyLoginAttempts($request)) {
             return $this->sendLockoutResponse($request);
         }
+        
+        $credentials = $this->getCredentials($request);
 
         if (! Auth::validate($credentials)) {
 
@@ -131,6 +106,8 @@ class AuthController extends Controller
                 ->with('error', ClassMessages::INVALID_EMAIL_PASSWORD);
         }
 
+        $user = Auth::getProvider()->retrieveByCredentials($credentials);
+
         if ($user->isUnconfirmed()) {
             return redirect()->to(route('login') . $to)
                 ->with('error', ClassMessages::EMAIL_CONFIRMATION);
@@ -140,7 +117,31 @@ class AuthController extends Controller
             return redirect()->to(route('login')  . $to)
                 ->with('error', ClassMessages::BANNED_ACCOUNT);
         }
-            return true;
+
+      
+        Auth::guard('web')->attempt(['email' => $request->email, 'password' => $request->password], $request->remember);
+
+        if(Auth::guard('web')->user()->status === 'Unconfirmed' || Auth::guard('web')->user()->status === ''){
+           Auth::logout();
+        }
+         $this->checkUserTypeOnLogin();
+
+        return $this->handleUserWasAuthenticated($request, $throttles, $user);
+    }
+
+
+    public function checkUserTypeOnLogin()
+    {
+        
+       
+        if(Auth::user()->company_type == CompanyTypeName::BROADCASTER){
+            session()->forget('agency_id');
+            session(['broadcaster_id' => Auth::user()->companies->first()->id]);
+        }else{
+            return redirect()->to(route('login'))
+            ->with('error', ClassMessages::INVALID_EMAIL_PASSWORD);
+        }
+
     }
 
     /**
