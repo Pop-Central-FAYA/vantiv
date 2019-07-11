@@ -19,7 +19,10 @@
                 </div>
             </div>
             <div class="row my-5">
-                <vue-cal-weekly-schedule></vue-cal-weekly-schedule>
+                <vue-cal-weekly-schedule
+                :time_belts="{{ json_encode($time_belts) }}"
+                :weekly_schedule="{{ json_encode($schedules) }}"
+                ></vue-cal-weekly-schedule>
 
             </div>
         </div>

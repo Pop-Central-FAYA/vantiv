@@ -13,7 +13,7 @@ class TimeBeltTransaction extends Base
         return $this->belongsTo(TimeBelt::class);
     }
 
-    public function campaign_detail()
+    public function campaign_details()
     {
         return $this->belongsTo(CampaignDetail::class);
     }

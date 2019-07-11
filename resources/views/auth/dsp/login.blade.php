@@ -1,7 +1,7 @@
 @extends('dsp_layouts.auth')
 
 @section('title')
-    <title>FAYA.</title>
+    <title>Vantage.</title>
 @stop
 
 @section('content')
@@ -11,7 +11,7 @@
         <input type="hidden" value="<?= csrf_token() ?>" name="_token">
 
         <div class="align_center m-b">
-            <h2 class="m-b">Welcome To Vantage</h2>
+            <h2 class="m-b">Welcome</h2>
             <p class="mb4">Enter email and password to login</p>
 
             <br>

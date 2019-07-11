@@ -6,15 +6,16 @@
       <v-spacer></v-spacer>
       <v-text-field v-model="search" append-icon="search" label="Enter Keyword" single-line hide-details></v-text-field>
     </v-card-title>
-    <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="assets" :search="search" :loading="loading" :no-data-text="noDataText">
+    <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="assets" :search="search" :loading="loading" :no-data-text="noDataText" :pagination.sync="pagination">
       <template v-slot:items="props">
         <td><media-asset-play-video :asset="props.item"></media-asset-play-video></td>
         <td class="text-xs-left">{{ props.item.client.company_name }}</td>
         <td class="text-xs-left">{{ props.item.brand.name }}</td>
         <td class="text-xs-left">{{ props.item.media_type }}</td>
         <td class="text-xs-left">{{ props.item.duration }}</td>
+        <td class="text-xs-left">{{ formatDate(props.item.created_at) }}</td>
         <td class="justify-center layout px-0">
-          <media-asset-delete :asset-id="props.item.id"></media-asset-delete>
+          <media-asset-delete :asset="props.item"></media-asset-delete>
         </td>
       </template>
       <template v-slot:no-results>
@@ -32,13 +33,17 @@
       return {
         search: '',
         headers: [
-          { text: 'File Name', align: 'left', value: 'file_name' },
-          { text: 'Client', value: 'client.company_name' },
-          { text: 'Brand', value: 'brand.name' },
-          { text: 'Media Type', value: 'media_type' },
-          { text: 'Duration (secs)', value: 'duration' },
-          { text: 'Actions', value: 'name', sortable: false }
+          { text: 'File Name', align: 'left', value: 'file_name', width: '46%' },
+          { text: 'Client', value: 'client.company_name', width: '25%' },
+          { text: 'Brand', value: 'brand.name', width: '25%' },
+          { text: 'Media Type', value: 'media_type', width: '1%' },
+          { text: 'Duration', value: 'duration', width: '1%' },
+          { text: 'Upload Date', value: 'created_at', width: '1%' },
+          { text: 'Actions', value: 'name', width: '1%', sortable: false }
         ],
+        pagination: {
+            rowsPerPage: 10
+        },
         loading: true,
         noDataText: 'Processing',
         assets: []

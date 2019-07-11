@@ -1,25 +1,17 @@
 <template>
     <table>
-        <tr v-for="program in playout_hour" :key="program.program_id">
+        <tr>
             <div class="row">
-                <div class="col-4 program" :style="{ 'background-color' : program.background_color }" 
-                        v-if="program.program_name">
+                <div class="col-4 program" :style="{ 'background-color' : event_group[0].background_color }" 
+                        v-if="event_group[0].program_name">
                     <td style="border : 0;">
-                        <p class="program_name">{{ program.program_name }}</p> 
+                        <p class="program_name">{{ event_group[0].program_name }}</p> 
                     </td>
                 </div>
                 <div class="col-8">
-                    <table>
-                        <tr v-for="(playout, key) in program.program_ad_break" :key="key">
-                            <td >
-                                <p class="center bold"> {{ playout.ad_break }}</p> <br>
-                                <p>({{ sumDurationInAdBreak(playout.ads) }} seconds used from {{ ad_pattern_duration }})</p>
-                                <ad-break-table
-                                    :ads="playout.ads"
-                                ></ad-break-table>
-                            </td>
-                        </tr>
-                    </table>
+                    <ad-break-table
+                    :event_group="event_group"
+                    ></ad-break-table>
                 </div>
             </div>
         </tr>
@@ -28,18 +20,9 @@
 <script>
     export default {
         props : {
-            playout_hour : {
+            event_group : {
                 required : true,
                 type : Array
-            },
-            ad_pattern_duration : {
-                required : true,
-                type : String
-            }
-        },
-        methods : {
-            sumDurationInAdBreak : function(ad_break) {
-                return ad_break.reduce((prev,next) => prev + next.duration,0);
             }
         }
     }

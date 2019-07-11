@@ -1,6 +1,6 @@
 @extends('dsp_layouts.new_app')
 @section('title')
-    <title>Agency | Create Campaigns</title>
+    <title>Vantage | Create Campaigns</title>
 @stop
 @section('content')
 

@@ -64,6 +64,7 @@ Vue.component('mpo-slot-list', require('./components/campaign_mpos/DisplayAdslot
 Vue.component('mpo-file-manager', require('./components/campaign_mpos/AssociateFiles.vue'));
 Vue.component('file-modal', require('./components/campaign_mpos/FileModal.vue'));
 Vue.component('delete-slots-modal', require('./components/campaign_mpos/DeleteSlotModal.vue'));
+Vue.component('edit-slots-modal', require('./components/campaign_mpos/EditSlotModal.vue'));
 
 Vue.mixin({
     methods: {
@@ -106,6 +107,10 @@ Vue.mixin({
             return position;
             }, []);
             return  result
+        },
+        formatDate(date_str) {
+            var dateParts = date_str.split("-");
+            return `${dateParts[0]}-${dateParts[1]}-${dateParts[2].substr(0,2)}`;
         }
     }
 })

@@ -1,6 +1,6 @@
 <div class="side_nav load_this_div">
     <div class="logo mb4">
-        <img src="{{ asset('new_frontend/img/logo.svg') }}">
+    {!! AssetsHelper::logo() !!}
     </div>
 
     <div class="_nav">

@@ -21,17 +21,4 @@ class AuthController extends MainAuthController
         $this->dashboard_route= 'dashboard';
     }
 
-    public function checkUserTypeOnLogin()
-    {  
-        if(Auth::guard('web')->user()->company_type == CompanyTypeName::AGENCY){
-            session()->forget('broadcaster_id');
-            session(['agency_id' => Auth::guard('web')->user()->companies->first()->id]);
-        }else{
-           return redirect()->to(route('login'))
-            ->with('error', ClassMessages::INVALID_EMAIL_PASSWORD);
-        }
-        
-    }
-
-
 }

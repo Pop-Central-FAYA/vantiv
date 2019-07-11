@@ -1,7 +1,7 @@
 @extends('dsp_layouts.faya_app')
 
 @section('title')
-    <title>FAYA | Media Assets</title>
+    <title>Vantage | Media Assets</title>
 @stop
 
 @section('styles')

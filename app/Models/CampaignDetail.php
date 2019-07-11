@@ -24,4 +24,10 @@ class CampaignDetail extends Base
     {
         return $this->hasMany(TimeBeltTransaction::class);
     }
+
+    public function client()
+    {
+        return $this->belongsTo(WalkIns::class,'walkins_id');
+    }
+    
 }

@@ -85,6 +85,7 @@ class AuthController extends Controller
 
         //Redirect URL that can be passed as hidden field.
         $to = $request->has('to') ? "?to=" . $request->get('to') : '';
+      
 
 
         if ($throttles && $this->hasTooManyLoginAttempts($request)) {
@@ -118,30 +119,40 @@ class AuthController extends Controller
                 ->with('error', ClassMessages::BANNED_ACCOUNT);
         }
 
-      
         Auth::guard('web')->attempt(['email' => $request->email, 'password' => $request->password], $request->remember);
 
         if(Auth::guard('web')->user()->status === 'Unconfirmed' || Auth::guard('web')->user()->status === ''){
            Auth::logout();
         }
-         $this->checkUserTypeOnLogin();
+     
+            $product = env('PRODUCT');
+            switch ($product) {
+                case 'ssp':
+                 if(Auth::guard('web')->user()->company_type == CompanyTypeName::BROADCASTER){
+                    session()->forget('agency_id');
+                    session(['broadcaster_id' => Auth::guard('web')->user()->companies->first()->id]);
+                   }else{
+                    Auth::logout();
+                    return redirect()->to(route('login') . "")
+                    ->with('error', ClassMessages::INVALID_EMAIL_PASSWORD);
+                    }
+                break;
+                default:
+                if(Auth::guard('web')->user()->company_type == CompanyTypeName::AGENCY){
+                    session()->forget('broadcaster_id');
+                    session(['agency_id' => Auth::guard('web')->user()->companies->first()->id]);
+                }else{
+                    Auth::logout();
+                   return redirect()->to(route('login'))
+                    ->with('error', ClassMessages::INVALID_EMAIL_PASSWORD);
+                }
+                break;
+            }
+           
 
-        return $this->handleUserWasAuthenticated($request, $throttles, $user);
-    }
 
-
-    public function checkUserTypeOnLogin()
-    {
-        
        
-        if(Auth::user()->company_type == CompanyTypeName::BROADCASTER){
-            session()->forget('agency_id');
-            session(['broadcaster_id' => Auth::user()->companies->first()->id]);
-        }else{
-            return redirect()->to(route('login'))
-            ->with('error', ClassMessages::INVALID_EMAIL_PASSWORD);
-        }
-
+        return $this->handleUserWasAuthenticated($request, $throttles, $user);
     }
 
     /**

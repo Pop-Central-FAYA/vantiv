@@ -16,7 +16,6 @@ storage/fonts/
 .gitattributes
 yarn-error.log
 env.example
-database/factories/UserFactory.php
 storage/logs/
 local_stuffs
 node_modules

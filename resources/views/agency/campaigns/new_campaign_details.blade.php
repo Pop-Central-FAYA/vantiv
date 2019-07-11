@@ -1,7 +1,7 @@
 @extends('dsp_layouts.faya_app')
 
 @section('title')
-    <title>FAYA | Campaign Details</title>
+    <title>Vantage | Campaign Details</title>
 @stop
 
 @section('content')
@@ -21,7 +21,7 @@
         <div class="the_frame clearfix mb">
 
             <div class="clearfix client_personal campaign_filter">
-                <div class="column col_3">
+                <div class="column col_4">
                     <span class="small_faint">Client</span>
 
                     <div class="select_wrap">
@@ -44,7 +44,7 @@
                     </div>
                 </div>
 
-                <div class="column col_3">
+                <div class="column col_4">
                     <span class="small_faint">Campaign Name</span>
                     <div class="show_this"></div>
                     <div class="select_wrap load_this" id="hide_this">
@@ -60,23 +60,15 @@
                     </div>
                 </div>
 
-                <div class="column col_3">
-                    <span class="small_faint block_disp">Media Type</span>
-
+                <div class="column col_4">
+                    <span class="small_faint">Media Type</span>
                     <div class="select_wrap">
-                        <select class="js-example-basic-multiple" name="channel" id="channel" multiple="multiple">
+                        <select name="channel" id="channel">
                         @foreach($campaign_details->channel_information as $channel)
                                 <option value="{{ $channel->id }}">{{ $channel->channel }}</option>
                             @endforeach
                         </select>
                     </div>
-
-                </div>
-
-                <div class="column col_3 check_this">
-                    <span class="small_faint block_disp">Media Channel</span>
-
-
                 </div>
             </div>
         </div>
@@ -146,7 +138,6 @@
             <!-- tab links -->
             <div class="tab_header m4 border_bottom clearfix">
                 <a href="#summary">Summary</a>
-                <a href="#slots">Ad Slots</a>
                 <a href="#files">Files</a>
                 @if($campaign_details->status === 'active' || $campaign_details->status === 'expired')
                     <a href="#comp">Compliance</a>
@@ -159,83 +150,95 @@
             <div class="tab_contain default_summary" id="app">
 
                 <!-- summary -->
-                <div class="tab_content col_10 campaign_summary" id="summary">
-
+                <div class="tab_content col_12 campaign_summary" id="summary">
                     <div class="clearfix mb">
-                        <div class="column col_3">
-                            <span class="weight_medium small_faint">Campaign</span>
-                            <p class="weight_medium">{{ $campaign_details->name }}</p>
-                        </div>
-                        <div class="column col_3">
-                            <span class="small_faint">Start Date</span>
-                            <p class="weight_medium">{{ $campaign_details->start_date }}</p>
-                        </div>
-                        <div class="column col_3">
-                            <span class="small_faint">Client</span>
-                            <p class="weight_medium">{{ $campaign_details->client['company_name'] }}</p>
-                        </div>
-                        <div class="column col_3">
-                            <span class="small_faint">Media Type</span>
-                            <p class="weight_medium">@foreach($campaign_details->channel_information as $channel) {{ $channel->channel.',' }} @endforeach </p>
-                        </div>
-                    </div>
-
-                    <div class="clearfix mb">
-                        <div class="column col_3">
-                            <span class="weight_medium small_faint">Budget</span>
-                            <p class="weight_medium">N{{ $campaign_details->budget }}</p>
-                        </div>
-                        <div class="column col_3">
-                            <span class="small_faint">End Date</span>
-                            <p class="weight_medium">{{ $campaign_details->stop_date }}</p>
-                        </div>
-                        <div class="column col_3">
-                            <span class="small_faint">Brand</span>
-                            <p class="weight_medium">{{ ucfirst($campaign_details->brand['name']) }}</p>
-                        </div>
-                        <div class="column col_3">
-                            <span class="small_faint">Media Channel</span>
-                        </div>
-                    </div>
-
-                    <div class="clearfix mb">
-
-                        <div class="column col_3">
-                            <span class="small_faint">Market</span>
-                            <div>
-                                @if(@count($campaign_details->regions) == 0)
-                                    <p class="weight_medium"><span class="small_faint">Location</span> - @foreach(json_decode($campaign_details->regions) as $region) {{ $region.',' }} @endforeach</p>
+                        <div class="column col_5">
+                            <div class="clearfix mb">
+                                <div class="column col_12 mb" style="margin-left: 1.6%;">
+                                    <p class="weight_medium">
+                                        <span class="weight_medium small_faint pr-1">Campaign Name:</span>
+                                        {{ $campaign_details->name }}
+                                    </p>
+                                </div>
+                                <div class="column col_12 mb">
+                                    <p class="weight_medium">
+                                        <span class="weight_medium small_faint pr-1">Client:</span>
+                                        {{ $campaign_details->client['company_name'] }}
+                                    </p>
+                                </div>
+                                <div class="column col_12 mb">
+                                    <p class="weight_medium">
+                                        <span class="weight_medium small_faint pr-1">Brand:</span>
+                                        {{ ucfirst($campaign_details->brand['name']) }}
+                                    </p>
+                                </div>
+                                <div class="column col_12 mb">
+                                    <p class="weight_medium">
+                                        <span class="weight_medium small_faint pr-1">Budget:</span>
+                                        N{{ $campaign_details->budget }}
+                                    </p>
+                                </div>
+                                <div class="column col_12 mb">
+                                    <p class="weight_medium">
+                                        <span class="weight_medium small_faint pr-1">Flight Date:</span>
+                                        {{ date("M d, y", strtotime($campaign_details->start_date)) }} - {{ date("M d, y", strtotime($campaign_details->stop_date)) }}
+                                    </p>
+                                </div>
+                                @if (count($campaign_details->channel_information) > 0)
+                                    <div class="column col_12">
+                                        <p class="weight_medium">
+                                            <span class="weight_medium small_faint pr-1">Media Type:</span>
+                                            @foreach($campaign_details->channel_information as $key=>$channel) {{ $channel->channel }}@if(($key+1) < count($campaign_details->channel_information)){{', '}} @endif @endforeach 
+                                        </p>
+                                    </div>
                                 @endif
-                                <p class="weight_medium"><span class="small_faint">Audience</span> - @foreach($campaign_details->audience_information as $audience) {{ $audience->audience.',' }} @endforeach</p>
-                                <p class="weight_medium"><span class="small_faint">Age Groups</span> - @foreach(json_decode($campaign_details->age_groups) as $age_group) {{ $age_group->min.' - '.$age_group->max.' years,' }} @endforeach</p>
                             </div>
                         </div>
-
-                        <div class="column col_3">
-                            <span class="small_faint">LSM</span>
-                            <p class="weight_medium">A, B, C1, C2</p>
+                        <div class="column col_7">
+                            <div class="clearfix mb">
+                                @if (count($campaign_details->audience_information) > 0)
+                                    <div class="column col_12 mb" style="margin-left: 1.6%;">
+                                        <p class="weight_medium">
+                                            <span class="weight_medium small_faint pr-1">Gender:</span>
+                                            @foreach($campaign_details->audience_information as $key=>$audience) {{ $audience->audience }} @if(($key+1) < count($campaign_details->audience_information)){{','}} @endif @endforeach
+                                        </p>
+                                    </div>
+                                @endif
+                                @if (is_array(json_decode($campaign_details->age_groups)))
+                                    <div class="column col_12 mb">
+                                        <p class="weight_medium">
+                                            <span class="weight_medium small_faint pr-1">Age Groups:</span>
+                                            @foreach(json_decode($campaign_details->age_groups) as $key=>$age_group){{ $age_group->min.' - '.$age_group->max.' Yrs' }} @if(($key+1) < count(json_decode($campaign_details->age_groups))){{', '}} @endif @endforeach
+                                        </p>
+                                    </div>
+                                @endif
+                                @if (is_array(json_decode($campaign_details->social_class)))
+                                    <div class="column col_12 mb">
+                                        <p class="weight_medium">
+                                            <span class="weight_medium small_faint pr-1">Social Class:</span>
+                                            @foreach(json_decode($campaign_details->social_class) as $key=>$class) {{ $class }}@if(($key+1) < count(json_decode($campaign_details->social_class))){{', '}} @endif @endforeach
+                                        </p>
+                                    </div>
+                                @endif
+                                @if (is_array(json_decode($campaign_details->states)))
+                                    <div class="column col_12 mb">
+                                        <p class="weight_medium">
+                                            <span class="weight_medium small_faint pr-1">States:</span>
+                                            @foreach(json_decode($campaign_details->states) as $key=>$state) {{ $state }}@if(($key+1) < count(json_decode($campaign_details->states))){{', '}} @endif @endforeach
+                                        </p>
+                                    </div>
+                                @endif
+                                @if (is_array(json_decode($campaign_details->regions)))
+                                    <div class="column col_12 mb">
+                                        <p class="weight_medium">
+                                            <span class="weight_medium small_faint pr-1">Regions:</span>
+                                            @foreach(json_decode($campaign_details->regions) as $key=>$region) {{ $region }} @if(($key+1) < count(json_decode($campaign_details->regions))){{', '}} @endif @endforeach
+                                        </p>
+                                    </div>
+                                @endif
+                            </div>
                         </div>
                     </div>
-
-                </div>
-                <!-- end -->
-
-
-                <!-- Ad slots -->
-                <div class="tab_content" id="slots">
-                    <!-- filter -->
-
-
-                    <table>
-                        <tr>
-                            <th>Day</th>
-                            <th>Day Parts</th>
-                            <th>Region</th>
-                            <th>Media Channel</th>
-                            <th>Hourly Range</th>
-                        </tr>
-
-                    </table>
                 </div>
                 <!-- end -->
 
@@ -364,10 +367,10 @@
 
             $('.js-example-basic-multiple').select2();
             //placeholder for target audienct
-            $('#channel').select2({
-                // theme: "flat",
-                placeholder: "Please select Media Type"
-            });
+            // $('#channel').select2({
+            //     // theme: "flat",
+            //     placeholder: "Please select Media Type"
+            // });
 
             $('body').delegate("#campaign", "change", function (e) {
                 var campaign_id = $("#campaign").val();

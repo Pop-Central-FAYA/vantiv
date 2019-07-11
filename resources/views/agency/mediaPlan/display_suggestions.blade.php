@@ -1,7 +1,7 @@
 @extends('dsp_layouts.faya_app')
 
 @section('title')
-    <title>FAYA | Create Media Plan</title>
+    <title>Vantage | Create Media Plan</title>
 @stop
 
 @section('content')
@@ -273,16 +273,21 @@
         <a id="back_btn" href="{{ url('/') }}" class="btn small_btn"><i class="media-plan material-icons">navigate_before</i> Back</a>
       </div>
       <div class="col_6 column">
-        @if($mediaPlanStatus == 'Approved' || $mediaPlanStatus == 'Declined')
-            <a href="{{ route('agency.media_plan.create', ['id'=>$mediaPlanId]) }}" class="btn small_btn right mr-2 media-plan next-page-btn">Next <i class="media-plan material-icons">navigate_next</i></a>
-        @else 
-           <button type="button" id="mpo_filters" class="btn small_btn right show">
-                <i class="media-plan material-icons">library_add</i>
-                Create Plan
-            </button>
+        @if(Auth::user()->hasPermissionTo('view.media_plan'))
+            @if($mediaPlanStatus == 'Approved' || $mediaPlanStatus == 'Declined')
+                <a href="{{ route('agency.media_plan.create', ['id'=>$mediaPlanId]) }}" class="btn small_btn right mr-2 media-plan next-page-btn">Next <i class="media-plan material-icons">navigate_next</i></a>
+            @else
+                @if(Auth::user()->hasPermissionTo('create.media_plan') || Auth::user()->hasPermissionTo('update.media_plan'))                              
+                    <button type="button" id="mpo_filters" class="btn small_btn right show">
+                        <i class="media-plan material-icons">library_add</i>
+                        Create Plan
+                    </button>
+                    <button type="button" id="save_progress" class="media-plan btn small_btn right save mr-2 {{ ($mediaPlanStatus == 'Approved' || $mediaPlanStatus == 'Declined') ? 'disabled-action-btn':''}}"><i class="media-plan material-icons">save</i>Save</button>
+                @else
+                    <a href="{{ route('agency.media_plan.create', ['id'=>$mediaPlanId]) }}" class="btn small_btn right mr-2 media-plan next-page-btn">Next <i class="media-plan material-icons">navigate_next</i></a>
+                @endif
+            @endif
         @endif
-
-        <button type="button" id="save_progress" class="media-plan btn small_btn right save mr-2 {{ ($mediaPlanStatus == 'Approved' || $mediaPlanStatus == 'Declined') ? 'disabled-action-btn':''}}"><i class="media-plan material-icons">save</i>Save</button>
       </div>
     </div>
     <br><br><br><br><br><br><br>

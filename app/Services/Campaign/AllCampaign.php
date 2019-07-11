@@ -34,15 +34,7 @@ class AllCampaign
     public function campaignsDataToDatatables()
     {
         $datatables = new DataTables();
-
-        $campaigns = $this->fetchAllCampaigns();
-
-        $old_campaigns = $this->getCampaignDatatables($campaigns);
-
-        $new_campaigns = $this->getAllCampaigns();
-
-        $campaigns = array_merge($new_campaigns, $old_campaigns);
-
+        $campaigns = $this->getAllCampaigns();
         return $datatables->collection($campaigns)
             ->addColumn('name', function ($campaigns) {
                 if(\Auth::user()->company_type == CompanyTypeName::BROADCASTER){
@@ -243,7 +235,7 @@ class AllCampaign
                             ->when($this->request->start_date && $this->request->stop_date, function ($query) {
                                 return $query->whereBetween('start_date', [$this->request->start_date,
                                     $this->request->stop_date]);
-                            })->get();
+                            })->orderBy('time_created', 'DESC')->get();
         $new_campaigns = [];
         foreach ($campaigns as $campaign) {
             $new_campaigns[] = [
