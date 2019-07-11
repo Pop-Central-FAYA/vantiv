@@ -2,42 +2,39 @@
 
 namespace Vanguard\Http\Controllers\Auth;
 
+use Auth;
+use Carbon\Carbon;
+use Illuminate\Cache\RateLimiter;
+use Illuminate\Http\Request;
 use Vanguard\Events\User\LoggedIn;
 use Vanguard\Events\User\LoggedOut;
+use Vanguard\Http\Controllers\Controller;
 use Vanguard\Http\Requests\Auth\LoginRequest;
 use Vanguard\Http\Requests\User\PasswordChangeRequest;
 use Vanguard\Libraries\Enum\ClassMessages;
 use Vanguard\Libraries\Enum\CompanyTypeName;
 use Vanguard\Libraries\Enum\UserStatus;
 use Vanguard\Mail\PasswordChanger;
-use Vanguard\Models\Agency;
 use Vanguard\Models\Broadcaster;
 use Vanguard\Repositories\User\UserRepository;
 use Vanguard\Services\Auth\TwoFactor\Contracts\Authenticatable;
-use Auth;
-use Carbon\Carbon;
-use Illuminate\Cache\RateLimiter;
-use Illuminate\Http\Request;
-use Vanguard\Http\Controllers\Controller;
-use Vanguard\Services\User\AuthenticatableUser;
 use Vanguard\User;
-
 
 class AuthController extends Controller
 {
     public $login_layout;
     public $forget_password;
     public $change_password;
-    public $dashboard_routel;
+    public $dashboard_route;
+
     public function getLayouts()
     {
-       $this->login_layout = 'auth.login';
-       $this->forget_password='auth.password.forget_password';
-       $this->change_password ='auth.password.change_password';
-       $this->dashboard_route= 'broadcaster.dashboard.index';
+        $this->login_layout = 'auth.login';
+        $this->forget_password = 'auth.password.forget_password';
+        $this->change_password = 'auth.password.change_password';
+        $this->dashboard_route = 'broadcaster.dashboard.index';
     }
-     
-    
+
     /**
      * Create a new authentication controller instance.
      * @param UserRepository $users
@@ -51,8 +48,6 @@ class AuthController extends Controller
         $this->getLayouts();
     }
 
-  
-
     /**
      * Show the application login form.
      *
@@ -60,13 +55,9 @@ class AuthController extends Controller
      */
     public function getLogin()
     {
-            $socialProviders = config('auth.social.providers');
-            return view($this->login_layout, compact('socialProviders'));
+        $socialProviders = config('auth.social.providers');
+        return view($this->login_layout, compact('socialProviders'));
     }
-
-
-
-
 
     /**
      * Handle a login request to the application.
@@ -76,25 +67,23 @@ class AuthController extends Controller
      */
     public function postLogin(Request $request)
     {
-        if(empty($request->email) || empty($request->password)){
+        if (empty($request->email) || empty($request->password)) {
             return redirect()->back()->with('error', ClassMessages::EMAIL_PASSWORD_EMPTY);
         }
-       // In case that request throttling is enabled, we have to check if user can perform this request.
+        // In case that request throttling is enabled, we have to check if user can perform this request.
         // We'll key this by the username and the IP address of the client making these requests into this application.
         $throttles = settings('throttle_enabled');
 
         //Redirect URL that can be passed as hidden field.
         $to = $request->has('to') ? "?to=" . $request->get('to') : '';
-      
-
 
         if ($throttles && $this->hasTooManyLoginAttempts($request)) {
             return $this->sendLockoutResponse($request);
         }
-        
+
         $credentials = $this->getCredentials($request);
 
-        if (! Auth::validate($credentials)) {
+        if (!Auth::validate($credentials)) {
 
             // If the login attempt was unsuccessful we will increment the number of attempts
             // to login and redirect the user back to the login form. Of course, when this
@@ -115,44 +104,43 @@ class AuthController extends Controller
         }
 
         if ($user->isBanned()) {
-            return redirect()->to(route('login')  . $to)
+            return redirect()->to(route('login') . $to)
                 ->with('error', ClassMessages::BANNED_ACCOUNT);
+        }
+
+        if ($user->status === 'Unconfirmed' || $user->status === '') {
+            return redirect()->to(route('login') . $to);
+        }
+
+        if ($this->isRightUser($user) === false) {
+            return redirect()->to(route('login'))
+                ->with('error', ClassMessages::INVALID_EMAIL_PASSWORD);
         }
 
         Auth::guard('web')->attempt(['email' => $request->email, 'password' => $request->password], $request->remember);
 
-        if(Auth::guard('web')->user()->status === 'Unconfirmed' || Auth::guard('web')->user()->status === ''){
-           Auth::logout();
-        }
-     
-            $product = env('PRODUCT');
-            switch ($product) {
-                case 'ssp':
-                 if(Auth::guard('web')->user()->company_type == CompanyTypeName::BROADCASTER){
-                    session()->forget('agency_id');
-                    session(['broadcaster_id' => Auth::guard('web')->user()->companies->first()->id]);
-                   }else{
-                    Auth::logout();
-                    return redirect()->to(route('login') . "")
-                    ->with('error', ClassMessages::INVALID_EMAIL_PASSWORD);
-                    }
-                break;
-                default:
-                if(Auth::guard('web')->user()->company_type == CompanyTypeName::AGENCY){
-                    session()->forget('broadcaster_id');
-                    session(['agency_id' => Auth::guard('web')->user()->companies->first()->id]);
-                }else{
-                    Auth::logout();
-                   return redirect()->to(route('login'))
-                    ->with('error', ClassMessages::INVALID_EMAIL_PASSWORD);
-                }
-                break;
-            }
-           
+        $this->setUserSession($user);
 
-
-       
         return $this->handleUserWasAuthenticated($request, $throttles, $user);
+    }
+
+    /**
+     * This is a temporary fix to make sure that only the appropriate user for a product is able to login
+     * @todo Remove and use different user models and guards instead
+     */
+    protected function isRightUser($user)
+    {
+        return $user->company_type == CompanyTypeName::BROADCASTER;
+    }
+
+    /**
+     * This is a temporary fix to set session variables
+     * @todo No need to do this anymore, but need to make sure the different sessions are not used
+     */
+    protected function setUserSession($user)
+    {
+        session()->forget('agency_id');
+        session(['broadcaster_id' => $user->companies->first()->id]);
     }
 
     /**
@@ -161,7 +149,6 @@ class AuthController extends Controller
      * @param LoginRequest $request
      * @return \Illuminate\Http\Response
      */
-   
 
     /**
      * Send the response after the user was authenticated.
@@ -173,7 +160,7 @@ class AuthController extends Controller
      */
     protected function handleUserWasAuthenticated(Request $request, $throttles, $user)
     {
-        
+
         if ($throttles) {
             $this->clearLoginAttempts($request);
         }
@@ -186,12 +173,8 @@ class AuthController extends Controller
             return redirect()->to($request->get('to'));
         }
 
-            return redirect()->intended(route($this->dashboard_route));
+        return redirect()->intended(route($this->dashboard_route));
     }
-
-
-
-
 
     protected function logoutAndRedirectToTokenPage(Request $request, Authenticatable $user)
     {
@@ -201,7 +184,6 @@ class AuthController extends Controller
 
         return redirect()->route('auth.token');
     }
-
 
     /**
      * Get the needed authorization credentials from the request.
@@ -220,7 +202,7 @@ class AuthController extends Controller
         if ($this->isEmail($usernameOrEmail)) {
             return [
                 'email' => $usernameOrEmail,
-                'password' => $request->get('password')
+                'password' => $request->get('password'),
             ];
         }
 
@@ -262,7 +244,7 @@ class AuthController extends Controller
     protected function hasTooManyLoginAttempts(Request $request)
     {
         return app(RateLimiter::class)->tooManyAttempts(
-            $request->input($this->loginUsername()).$request->ip(),
+            $request->input($this->loginUsername()) . $request->ip(),
             $this->maxLoginAttempts(), $this->lockoutTime() / 60
         );
     }
@@ -276,7 +258,7 @@ class AuthController extends Controller
     protected function incrementLoginAttempts(Request $request)
     {
         app(RateLimiter::class)->hit(
-            $request->input($this->loginUsername()).$request->ip()
+            $request->input($this->loginUsername()) . $request->ip()
         );
     }
 
@@ -289,7 +271,7 @@ class AuthController extends Controller
     protected function retriesLeft(Request $request)
     {
         $attempts = app(RateLimiter::class)->attempts(
-            $request->input($this->loginUsername()).$request->ip()
+            $request->input($this->loginUsername()) . $request->ip()
         );
 
         return $this->maxLoginAttempts() - $attempts + 1;
@@ -304,7 +286,7 @@ class AuthController extends Controller
     protected function sendLockoutResponse(Request $request)
     {
         $seconds = app(RateLimiter::class)->availableIn(
-            $request->input($this->loginUsername()).$request->ip()
+            $request->input($this->loginUsername()) . $request->ip()
         );
 
         return redirect('login')
@@ -334,7 +316,7 @@ class AuthController extends Controller
     protected function clearLoginAttempts(Request $request)
     {
         app(RateLimiter::class)->clear(
-            $request->input($this->loginUsername()).$request->ip()
+            $request->input($this->loginUsername()) . $request->ip()
         );
     }
 
@@ -372,25 +354,24 @@ class AuthController extends Controller
      */
     private function isEmail($param)
     {
-        return ! \Validator::make(
+        return !\Validator::make(
             ['email' => $param],
             ['email' => 'email']
         )->fails();
     }
 
-
     public function verifyToken($token)
     {
         $user = User::where('confirmation_token', $token)->first();
-        if($user->status === UserStatus::UNCONFIRMED){
+        if ($user->status === UserStatus::UNCONFIRMED) {
             $user->status = UserStatus::ACTIVE;
             $user->save();
             \Session::flash('success', ClassMessages::EMAIL_VERIFIED);
             return redirect()->route('login');
-        }elseif($user->status === UserStatus::ACTIVE){
+        } elseif ($user->status === UserStatus::ACTIVE) {
             \Session::flash('info', ClassMessages::EMAIL_ALREADY_VERIFIED);
             return redirect()->route('login');
-        }elseif(!$user){
+        } elseif (!$user) {
             \Session::flash('error', ClassMessages::WRONG_ACTIVATION);
             return redirect()->route('login');
         }
@@ -408,7 +389,7 @@ class AuthController extends Controller
         ]);
 
         $user = User::where('email', $request->email)->first();
-        if($user){
+        if ($user) {
 
             $token = encrypt($user->id);
             $send_mail = \Mail::to($user->email)->send(new PasswordChanger($token));
@@ -416,7 +397,7 @@ class AuthController extends Controller
             \Session::flash('success', ClassMessages::VERIFICATION_LINK);
             return redirect()->back();
 
-        }else{
+        } else {
 
             \Session::flash('error', ClassMessages::EMAIL_NOT_FOUND);
             return redirect()->back();
@@ -434,11 +415,11 @@ class AuthController extends Controller
 
     public function processChangePassword(PasswordChangeRequest $request, $user_id)
     {
-        try{
+        try {
             $user = User::where('id', $user_id)->first();
-            $user->password = $request->password;;
+            $user->password = $request->password;
             $user->save();
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return redirect()->back()->withErrors(ClassMessages::PROCESSING_ERROR);
         }
         return redirect()->route('login')->with('success', ClassMessages::PASSWORD_CHANGED);
