@@ -4901,6 +4901,7 @@ var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
   __webpack_require__(240)
+  __webpack_require__(242)
 }
 var normalizeComponent = __webpack_require__(1)
 /* script */
@@ -4979,19 +4980,83 @@ exports = module.exports = __webpack_require__(3)(false);
 
 
 // module
+exports.push([module.i, "\n.container-action-btn {\n    padding: 0px 24px;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 242 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(243);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(4)("63f43534", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-74304c98\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=1!./DisplayMpoList.vue", function() {
+     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-74304c98\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=1!./DisplayMpoList.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 243 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(3)(false);
+// imports
+
+
+// module
 exports.push([module.i, "\ntbody tr:hover {\n    background-color: transparent !important;\n    cursor: pointer;\n}\ntbody:hover {\nbackground-color: rgba(0, 0, 0, 0.12);\n}\n", ""]);
 
 // exports
 
 
 /***/ }),
-/* 242 */,
-/* 243 */,
 /* 244 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -5037,7 +5102,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     data: function data() {
         return {
             search: '',
-            headers: [{ text: 'Station', align: 'left', value: 'station' }, { text: 'Budget', value: 'budget' }, { text: 'Exposures', value: 'ad_slots' }, { text: 'Status', value: 'status' }, { text: 'Actions', value: 'name', sortable: false }]
+            headers: [{ text: 'Station', align: 'left', value: 'station', width: '30%' }, { text: 'Budget', value: 'budget', width: '20%' }, { text: 'Exposures', value: 'ad_slots', width: '15%' }, { text: 'Status', value: 'status', width: '20%' }, { text: 'Actions', value: 'name', sortable: false, width: '15%' }],
+            pagination: {
+                rowsPerPage: 10
+            }
         };
     },
 
@@ -5048,7 +5116,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         exportMpo: function exportMpo(mpo_id) {
             var msg = "Generating Excel Document, Please wait";
             this.sweet_alert(msg, 'info');
-            return window.location.href = '/campaigns/mpo/export/' + mpo_id;
+            window.location = '/campaigns/mpo/export/' + mpo_id;
+            // window.location.href = '/campaigns/mpo/export/'+mpo_id
         },
         sumAdslotsInCampaignMpoTimeBelt: function sumAdslotsInCampaignMpoTimeBelt(campaign_mpo_time_belts) {
             return campaign_mpo_time_belts.reduce(function (prev, cur) {
@@ -5079,6 +5148,10 @@ var render = function() {
         [
           _c("v-spacer"),
           _vm._v(" "),
+          _c("v-spacer"),
+          _vm._v(" "),
+          _c("v-spacer"),
+          _vm._v(" "),
           _c("v-text-field", {
             attrs: {
               "append-icon": "search",
@@ -5100,25 +5173,59 @@ var render = function() {
       _vm._v(" "),
       _c("v-data-table", {
         staticClass: "custom-vue-table elevation-1",
-        attrs: { headers: _vm.headers, items: _vm.mpos, search: _vm.search },
+        attrs: {
+          headers: _vm.headers,
+          items: _vm.mpos,
+          search: _vm.search,
+          pagination: _vm.pagination
+        },
+        on: {
+          "update:pagination": function($event) {
+            _vm.pagination = $event
+          }
+        },
         scopedSlots: _vm._u([
           {
             key: "items",
             fn: function(props) {
               return [
-                _c(
-                  "tr",
-                  {
-                    on: {
-                      click: function($event) {
-                        return _vm.adslotList(props.item.id)
+                _c("tr", [
+                  _c(
+                    "td",
+                    {
+                      on: {
+                        click: function($event) {
+                          return _vm.adslotList(props.item.id)
+                        }
                       }
-                    }
-                  },
-                  [
-                    _c("td", [_vm._v(_vm._s(props.item.station))]),
-                    _vm._v(" "),
-                    _c("td", { staticClass: "text-xs-left" }, [
+                    },
+                    [
+                      _c(
+                        "a",
+                        {
+                          staticClass: "default-vue-link",
+                          on: {
+                            click: function($event) {
+                              return _vm.adslotList(props.item.id)
+                            }
+                          }
+                        },
+                        [_vm._v(_vm._s(props.item.station))]
+                      )
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "td",
+                    {
+                      staticClass: "text-xs-left",
+                      on: {
+                        click: function($event) {
+                          return _vm.adslotList(props.item.id)
+                        }
+                      }
+                    },
+                    [
                       _vm._v(
                         _vm._s(
                           _vm.format_audience(
@@ -5128,9 +5235,20 @@ var render = function() {
                           )
                         )
                       )
-                    ]),
-                    _vm._v(" "),
-                    _c("td", { staticClass: "text-xs-left" }, [
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "td",
+                    {
+                      staticClass: "text-xs-left",
+                      on: {
+                        click: function($event) {
+                          return _vm.adslotList(props.item.id)
+                        }
+                      }
+                    },
+                    [
                       _vm._v(
                         _vm._s(
                           _vm.sumAdslotsInCampaignMpoTimeBelt(
@@ -5138,50 +5256,137 @@ var render = function() {
                           )
                         )
                       )
-                    ]),
-                    _vm._v(" "),
-                    _c("td", { staticClass: "text-xs-left" }, [
-                      _vm._v(_vm._s(props.item.status))
-                    ]),
-                    _vm._v(" "),
-                    _c(
-                      "td",
-                      { staticClass: "justify-center layout px-0" },
-                      [
-                        _c(
-                          "v-btn",
-                          {
-                            attrs: { color: "primary", small: "", dark: "" },
-                            on: {
-                              click: function($event) {
-                                return _vm.exportMpo(props.item.id)
-                              }
-                            }
-                          },
-                          [
-                            _vm._v(
-                              "\n                    Export\n                "
-                            )
-                          ]
-                        ),
-                        _vm._v(" "),
-                        _c("file-modal", {
-                          attrs: { mpo: props.item, assets: _vm.assets }
-                        }),
-                        _vm._v(" "),
-                        _c("mpo-file-manager", {
-                          attrs: {
-                            mpo: props.item,
-                            assets: _vm.assets,
-                            client: _vm.client,
-                            brand: _vm.brand
-                          }
-                        })
-                      ],
-                      1
-                    )
-                  ]
-                )
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "td",
+                    {
+                      staticClass: "text-xs-left",
+                      on: {
+                        click: function($event) {
+                          return _vm.adslotList(props.item.id)
+                        }
+                      }
+                    },
+                    [_vm._v(_vm._s(props.item.status))]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "td",
+                    { staticClass: "justify-center layout px-0" },
+                    [
+                      _c(
+                        "v-container",
+                        {
+                          staticClass: "container-action-btn",
+                          attrs: { "grid-list-md": "" }
+                        },
+                        [
+                          _c(
+                            "v-layout",
+                            { attrs: { wrap: "" } },
+                            [
+                              _c(
+                                "v-flex",
+                                { attrs: { xs12: "", sm6: "", md4: "" } },
+                                [
+                                  _c(
+                                    "v-layout",
+                                    [
+                                      _c(
+                                        "v-tooltip",
+                                        {
+                                          attrs: { top: "" },
+                                          scopedSlots: _vm._u(
+                                            [
+                                              {
+                                                key: "activator",
+                                                fn: function(ref) {
+                                                  var on = ref.on
+                                                  return [
+                                                    _c(
+                                                      "v-icon",
+                                                      _vm._g(
+                                                        {
+                                                          attrs: {
+                                                            color: "primary",
+                                                            dark: "",
+                                                            left: ""
+                                                          },
+                                                          on: {
+                                                            click: function(
+                                                              $event
+                                                            ) {
+                                                              return _vm.exportMpo(
+                                                                props.item.id
+                                                              )
+                                                            }
+                                                          }
+                                                        },
+                                                        on
+                                                      ),
+                                                      [_vm._v("fa-file-excel")]
+                                                    )
+                                                  ]
+                                                }
+                                              }
+                                            ],
+                                            null,
+                                            true
+                                          )
+                                        },
+                                        [
+                                          _vm._v(" "),
+                                          _c("span", [_vm._v("Export MPO")])
+                                        ]
+                                      )
+                                    ],
+                                    1
+                                  )
+                                ],
+                                1
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "v-flex",
+                                { attrs: { xs12: "", sm6: "", md4: "" } },
+                                [
+                                  _c("file-modal", {
+                                    attrs: {
+                                      mpo: props.item,
+                                      assets: _vm.assets
+                                    }
+                                  })
+                                ],
+                                1
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "v-flex",
+                                { attrs: { xs12: "", sm6: "", md4: "" } },
+                                [
+                                  _c("mpo-file-manager", {
+                                    attrs: {
+                                      mpo: props.item,
+                                      assets: _vm.assets,
+                                      client: _vm.client,
+                                      brand: _vm.brand
+                                    }
+                                  })
+                                ],
+                                1
+                              )
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  )
+                ])
               ]
             }
           },
@@ -5360,6 +5565,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: {
@@ -5381,6 +5587,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             search: '',
             editDialog: false,
             headers: [{ text: 'Day', align: 'left', value: 'day' }, { text: 'Program', value: 'program' }, { text: 'Duration', value: 'duration' }, { text: 'Insertions', value: 'insertions' }, { text: 'Program Time', value: 'program_time' }, { text: 'Net Total', value: 'net_total' }, { text: 'Actions', value: 'name', sortable: false }],
+            pagination: {
+                rowsPerPage: 10
+            },
             groupedAdslots: [],
             isHidden: true,
             currentItem: {}
@@ -5444,7 +5653,10 @@ var render = function() {
           _c(
             "v-card-title",
             [
-              _vm._v("\n            Adslots\n        "),
+              _c("v-spacer"),
+              _vm._v(" "),
+              _c("v-spacer"),
+              _vm._v(" "),
               _c("v-spacer"),
               _vm._v(" "),
               _c("v-text-field", {
@@ -5471,7 +5683,13 @@ var render = function() {
             attrs: {
               headers: _vm.headers,
               items: _vm.groupedAdslots,
-              search: _vm.search
+              search: _vm.search,
+              pagination: _vm.pagination
+            },
+            on: {
+              "update:pagination": function($event) {
+                _vm.pagination = $event
+              }
             },
             scopedSlots: _vm._u([
               {
@@ -5669,6 +5887,11 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
@@ -5775,12 +5998,44 @@ var render = function() {
                 var on = ref.on
                 return [
                   _c(
-                    "v-btn",
-                    _vm._g(
-                      { attrs: { color: "primary", small: "", dark: "" } },
-                      on
-                    ),
-                    [_vm._v("Attach Files")]
+                    "v-tooltip",
+                    {
+                      attrs: { top: "" },
+                      scopedSlots: _vm._u(
+                        [
+                          {
+                            key: "activator",
+                            fn: function(ref) {
+                              var on = ref.on
+                              return [
+                                _c(
+                                  "v-icon",
+                                  _vm._g(
+                                    {
+                                      attrs: {
+                                        color: "primary",
+                                        dark: "",
+                                        left: ""
+                                      },
+                                      on: {
+                                        click: function($event) {
+                                          _vm.dialog = true
+                                        }
+                                      }
+                                    },
+                                    on
+                                  ),
+                                  [_vm._v("attach_files")]
+                                )
+                              ]
+                            }
+                          }
+                        ],
+                        null,
+                        true
+                      )
+                    },
+                    [_vm._v(" "), _c("span", [_vm._v("Attach Files to MPO")])]
                   )
                 ]
               }
@@ -5929,7 +6184,7 @@ var render = function() {
                   _c(
                     "v-btn",
                     {
-                      attrs: { color: "success", dark: "" },
+                      attrs: { color: "red", dark: "" },
                       on: {
                         click: function($event) {
                           _vm.dialog = false
@@ -5942,7 +6197,8 @@ var render = function() {
                   _c(
                     "v-btn",
                     {
-                      attrs: { color: "success", dark: "" },
+                      staticClass: "default-vue-btn",
+                      attrs: { dark: "" },
                       on: {
                         click: function($event) {
                           return _vm.associateFiles()
@@ -6119,6 +6375,12 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: {
@@ -6197,12 +6459,44 @@ var render = function() {
                 var on = ref.on
                 return [
                   _c(
-                    "v-btn",
-                    _vm._g(
-                      { attrs: { color: "success", small: "", dark: "" } },
-                      on
-                    ),
-                    [_vm._v("Submit")]
+                    "v-tooltip",
+                    {
+                      attrs: { top: "" },
+                      scopedSlots: _vm._u(
+                        [
+                          {
+                            key: "activator",
+                            fn: function(ref) {
+                              var on = ref.on
+                              return [
+                                _c(
+                                  "v-icon",
+                                  _vm._g(
+                                    {
+                                      attrs: {
+                                        color: "success",
+                                        dark: "",
+                                        left: ""
+                                      },
+                                      on: {
+                                        click: function($event) {
+                                          _vm.dialog = true
+                                        }
+                                      }
+                                    },
+                                    on
+                                  ),
+                                  [_vm._v("fa-clipboard-list")]
+                                )
+                              ]
+                            }
+                          }
+                        ],
+                        null,
+                        true
+                      )
+                    },
+                    [_vm._v(" "), _c("span", [_vm._v("Submit MPO")])]
                   )
                 ]
               }
@@ -6232,110 +6526,148 @@ var render = function() {
                 [
                   _c(
                     "v-container",
-                    { attrs: { "grid-list-md": "" } },
+                    { attrs: { "px-0": "" } },
                     [
                       _c(
-                        "v-form",
+                        "v-layout",
+                        { attrs: { row: "", wrap: "" } },
                         [
-                          _vm._l(_vm.groupedAssets, function(asset, key) {
-                            return _c(
-                              "v-layout",
-                              { key: key, attrs: { wrap: "" } },
-                              [
-                                _c(
-                                  "v-flex",
-                                  { attrs: { xs12: "", sm6: "", md2: "" } },
-                                  [
-                                    _c("v-card-text", [
-                                      _vm._v(
-                                        _vm._s(asset[0].duration) + " Seconds"
-                                      )
-                                    ])
-                                  ],
-                                  1
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "v-flex",
-                                  { attrs: { xs12: "", sm6: "", md3: "" } },
-                                  [
-                                    _c("v-card-text", [
-                                      _vm._v(_vm._s(asset[0].file_name) + " ")
-                                    ])
-                                  ],
-                                  1
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "v-flex",
-                                  { attrs: { xs12: "", sm6: "", md5: "" } },
-                                  [
-                                    _c("video", {
-                                      attrs: { src: asset[0].asset_url }
-                                    })
-                                  ]
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "v-flex",
-                                  { attrs: { xs12: "", sm6: "", md2: "" } },
-                                  [
-                                    _c("input", {
+                          _c(
+                            "v-flex",
+                            {
+                              attrs: {
+                                xs12: "",
+                                md12: "",
+                                lg12: "",
+                                "mb-3": ""
+                              }
+                            },
+                            [
+                              _c(
+                                "v-expansion-panel",
+                                { attrs: { popout: "" } },
+                                _vm._l(_vm.groupedAssets, function(asset, key) {
+                                  return _c(
+                                    "v-expansion-panel-content",
+                                    {
+                                      key: key,
                                       attrs: {
-                                        type: "hidden",
-                                        id: "file-asset"
+                                        "expand-icon": "remove_red_eye"
                                       },
-                                      domProps: { value: asset[0].asset_url }
-                                    }),
-                                    _vm._v(" "),
-                                    _c(
-                                      "v-btn",
-                                      {
-                                        attrs: {
-                                          color: "info",
-                                          small: "",
-                                          dark: ""
-                                        },
-                                        on: {
-                                          click: function($event) {
-                                            return _vm.copyToClipboard()
+                                      scopedSlots: _vm._u(
+                                        [
+                                          {
+                                            key: "header",
+                                            fn: function() {
+                                              return [
+                                                _c("div", [
+                                                  _vm._v(
+                                                    _vm._s(asset[0].duration) +
+                                                      " Secs"
+                                                  )
+                                                ]),
+                                                _vm._v(" "),
+                                                _c("div", [
+                                                  _vm._v(
+                                                    _vm._s(asset[0].file_name) +
+                                                      " "
+                                                  )
+                                                ]),
+                                                _vm._v(" "),
+                                                _c(
+                                                  "div",
+                                                  [
+                                                    _c("input", {
+                                                      attrs: {
+                                                        type: "hidden",
+                                                        id: "file-asset"
+                                                      },
+                                                      domProps: {
+                                                        value:
+                                                          asset[0].asset_url
+                                                      }
+                                                    }),
+                                                    _vm._v(" "),
+                                                    _c(
+                                                      "v-btn",
+                                                      {
+                                                        attrs: {
+                                                          color: "info",
+                                                          small: "",
+                                                          dark: ""
+                                                        },
+                                                        on: {
+                                                          click: function(
+                                                            $event
+                                                          ) {
+                                                            return _vm.copyToClipboard()
+                                                          }
+                                                        }
+                                                      },
+                                                      [_vm._v("copy url")]
+                                                    )
+                                                  ],
+                                                  1
+                                                )
+                                              ]
+                                            },
+                                            proxy: true
                                           }
-                                        }
-                                      },
-                                      [_vm._v("copy url")]
-                                    )
-                                  ],
-                                  1
-                                )
-                              ],
-                              1
-                            )
-                          }),
-                          _vm._v(" "),
-                          Object.keys(_vm.groupedAssets).length === 0
-                            ? _c(
-                                "v-layout",
-                                { attrs: { wrap: "" } },
-                                [
-                                  _c(
-                                    "v-flex",
-                                    { attrs: { xs12: "", sm12: "", md12: "" } },
+                                        ],
+                                        null,
+                                        true
+                                      )
+                                    },
                                     [
-                                      _c("v-card-text", [
-                                        _vm._v(
-                                          "You have not attached a file on this Vendor"
-                                        )
-                                      ])
+                                      _vm._v(" "),
+                                      _c(
+                                        "v-card",
+                                        [
+                                          _c("v-card-text", [
+                                            _c("video", {
+                                              attrs: {
+                                                src: asset[0].asset_url,
+                                                controls: ""
+                                              }
+                                            })
+                                          ])
+                                        ],
+                                        1
+                                      )
                                     ],
                                     1
                                   )
+                                }),
+                                1
+                              )
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      Object.keys(_vm.groupedAssets).length === 0
+                        ? _c(
+                            "v-layout",
+                            { attrs: { wrap: "" } },
+                            [
+                              _c(
+                                "v-flex",
+                                { attrs: { xs12: "", sm12: "", md12: "" } },
+                                [
+                                  _c("v-card-text", [
+                                    _vm._v(
+                                      "You have not attached a file on this Vendor"
+                                    )
+                                  ])
                                 ],
                                 1
                               )
-                            : _vm._e()
-                        ],
-                        2
-                      )
+                            ],
+                            1
+                          )
+                        : _vm._e()
                     ],
                     1
                   )
@@ -6351,7 +6683,7 @@ var render = function() {
                   _c(
                     "v-btn",
                     {
-                      attrs: { color: "success", dark: "" },
+                      attrs: { color: "red", dark: "" },
                       on: {
                         click: function($event) {
                           _vm.dialog = false
@@ -6638,7 +6970,8 @@ var render = function() {
                   _c(
                     "v-btn",
                     {
-                      attrs: { color: "primary", dark: "" },
+                      staticClass: "default-vue-btn",
+                      attrs: { dark: "" },
                       on: {
                         click: function($event) {
                           _vm.dialog = false
@@ -6651,7 +6984,7 @@ var render = function() {
                   _c(
                     "v-btn",
                     {
-                      attrs: { color: "error", dark: "" },
+                      attrs: { color: "red", dark: "" },
                       on: {
                         click: function($event) {
                           return _vm.deleteSlots()
@@ -7710,12 +8043,7 @@ var render = function() {
                                 "v-btn",
                                 {
                                   staticClass: "default-vue-btn",
-                                  attrs: {
-                                    color: "success",
-                                    dark: "",
-                                    right: "",
-                                    small: ""
-                                  },
+                                  attrs: { dark: "", right: "", small: "" },
                                   on: {
                                     click: function($event) {
                                       return _vm.addRow()
@@ -7749,7 +8077,7 @@ var render = function() {
                 "v-btn",
                 {
                   staticClass: "default-vue-btn",
-                  attrs: { color: "error", dark: "" },
+                  attrs: { color: "red", dark: "" },
                   on: {
                     click: function($event) {
                       _vm.editDialog = false
@@ -7763,7 +8091,7 @@ var render = function() {
                 "v-btn",
                 {
                   staticClass: "default-vue-btn",
-                  attrs: { color: "success", dark: "" },
+                  attrs: { dark: "" },
                   on: {
                     click: function($event) {
                       return _vm.updateSlot()

@@ -2,45 +2,51 @@
     <v-layout>
         <v-dialog v-model="dialog" persistent max-width="600px">
             <template v-slot:activator="{ on }">
-                <v-btn color="success" small dark v-on="on">Submit</v-btn>
+                <v-tooltip top>
+                    <template v-slot:activator="{ on }">
+                        <v-icon color="success" dark left v-on="on" @click="dialog = true">fa-clipboard-list</v-icon>
+                    </template>
+                    <span>Submit MPO</span>
+                </v-tooltip>
             </template>
             <v-card>
                 <v-card-title>
                     <span class="headline"> {{ mpo.station }}</span>
                 </v-card-title>
-                
                 <v-card-text>
-                    <v-container grid-list-md>
-                        <v-form>
-                            <v-layout wrap v-for="(asset,key) in groupedAssets" v-bind:key="key">
-                                <v-flex xs12 sm6 md2>
-                                    <v-card-text>{{ asset[0].duration }} Seconds</v-card-text>
-                                </v-flex>
-                                <v-flex xs12 sm6 md3>
-                                    <v-card-text>{{ asset[0].file_name }} </v-card-text>
-                                </v-flex>
-                                <v-flex xs12 sm6 md5>
-                                    <video :src="asset[0].asset_url"></video>
-                                </v-flex>
-                                <v-flex xs12 sm6 md2>
-                                    <input type="hidden" id="file-asset" :value="asset[0].asset_url">
-                                    <v-btn color="info" @click="copyToClipboard()" small dark>copy url</v-btn>
-                                </v-flex>
-                                 <!-- v-if="Object.keys(groupedAssets).length" -->
-                            </v-layout>
-                            <v-layout wrap v-if="Object.keys(groupedAssets).length === 0" >
-                                <v-flex xs12 sm12 md12>
-                                    <v-card-text>You have not attached a file on this Vendor</v-card-text>
-                                </v-flex>
-                            </v-layout>
-                        </v-form>
+                    <v-container px-0>
+                        <v-layout row wrap>
+                            <v-flex xs12 md12 lg12 mb-3>
+                                <v-expansion-panel popout>
+                                    <v-expansion-panel-content v-for="(asset,key) in groupedAssets" v-bind:key="key" expand-icon="remove_red_eye">
+                                        <template v-slot:header>
+                                            <div>{{ asset[0].duration }} Secs</div>
+                                            <div>{{ asset[0].file_name }} </div>
+                                            <div>
+                                                <input type="hidden" id="file-asset" :value="asset[0].asset_url">
+                                                <v-btn color="info" @click="copyToClipboard()" small dark>copy url</v-btn>
+                                            </div>
+                                        </template>
+                                        <v-card>
+                                            <v-card-text><video :src="asset[0].asset_url" controls></video></v-card-text>
+                                        </v-card>
+                                    </v-expansion-panel-content>
+                                </v-expansion-panel>
+                            </v-flex>
+                        </v-layout>
+                        <v-layout wrap v-if="Object.keys(groupedAssets).length === 0" >
+                            <v-flex xs12 sm12 md12>
+                                <v-card-text>You have not attached a file on this Vendor</v-card-text>
+                            </v-flex>
+                        </v-layout>
                     </v-container>
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="success" dark @click="dialog = false">Close</v-btn>
+                    <v-btn color="red" dark @click="dialog = false">Close</v-btn>
                 </v-card-actions>
             </v-card>
+            
         </v-dialog>
     </v-layout>
 </template>

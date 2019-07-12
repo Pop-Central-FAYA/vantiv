@@ -2,7 +2,12 @@
   <v-layout>
     <v-dialog v-model="dialog" persistent max-width="600px">
       <template v-slot:activator="{ on }">
-        <v-btn color="primary" small dark v-on="on">Attach Files</v-btn>
+          <v-tooltip top>
+              <template v-slot:activator="{ on }">
+                  <v-icon color="primary" dark left v-on="on" @click="dialog = true">attach_files</v-icon>
+              </template>
+              <span>Attach Files to MPO</span>
+          </v-tooltip>
       </template>
       <v-card>
         <v-card-title>
@@ -34,8 +39,8 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="success" dark @click="dialog = false">Close</v-btn>
-          <v-btn color="success" dark @click="associateFiles()">Submit</v-btn>
+          <v-btn color="red" dark @click="dialog = false">Close</v-btn>
+          <v-btn class="default-vue-btn" dark @click="associateFiles()">Submit</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

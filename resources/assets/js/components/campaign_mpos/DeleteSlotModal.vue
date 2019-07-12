@@ -16,8 +16,8 @@
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="primary" dark @click="dialog = false">Close</v-btn>
-                    <v-btn color="error" dark 
+                    <v-btn class="default-vue-btn" dark @click="dialog = false">Close</v-btn>
+                    <v-btn color="red" dark 
                     @click="deleteSlots()"
                     >Proceed</v-btn>
                 </v-card-actions>

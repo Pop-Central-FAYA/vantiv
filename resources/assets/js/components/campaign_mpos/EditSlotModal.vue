@@ -99,7 +99,7 @@
                             <v-flex xs12 sm12 md3>
                                 <v-spacer></v-spacer>
                                 <v-spacer></v-spacer>
-                                <v-btn color="success" class="default-vue-btn" dark right small @click="addRow()">Add Time belt</v-btn>
+                                <v-btn class="default-vue-btn" dark right small @click="addRow()">Add Time belt</v-btn>
                             </v-flex>
                         </v-layout>
                     </v-form>
@@ -107,8 +107,8 @@
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="error" class="default-vue-btn" dark @click="editDialog = false">Close</v-btn>
-                <v-btn color="success" class="default-vue-btn" dark @click="updateSlot()">Update</v-btn>
+                <v-btn color="red" class="default-vue-btn" dark @click="editDialog = false">Close</v-btn>
+                <v-btn class="default-vue-btn" dark @click="updateSlot()">Update</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
