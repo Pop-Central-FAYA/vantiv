@@ -2,11 +2,12 @@
     <v-app>
         <v-card>
             <v-card-title>
-                Adslots
-            <v-spacer></v-spacer>
-            <v-text-field v-model="search" append-icon="search" label="Enter Keyword" single-line hide-details></v-text-field>
+                <v-spacer></v-spacer>
+                <v-spacer></v-spacer>
+                <v-spacer></v-spacer>
+                <v-text-field v-model="search" append-icon="search" label="Enter Keyword" single-line hide-details></v-text-field>
             </v-card-title>
-            <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="groupedAdslots" :search="search">
+            <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="groupedAdslots" :search="search" :pagination.sync="pagination">
                 <template v-slot:items="props">
                     <tr @click="openEditDialog(props.item)">
                         <td>{{ props.item.day }} ({{ props.item.playout_date }})
@@ -70,6 +71,9 @@
                     {text : 'Net Total', value : 'net_total'},
                     { text: 'Actions', value: 'name', sortable: false }
                 ],
+                pagination: {
+                    rowsPerPage: 10
+                },
                 groupedAdslots : [],
                 isHidden : true,
                 currentItem: {},
