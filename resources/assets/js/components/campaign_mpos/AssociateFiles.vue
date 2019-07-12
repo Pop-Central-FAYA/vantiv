@@ -17,21 +17,20 @@
         <v-card-text>
           <v-container grid-list-md>
             <v-form>
-              <v-layout wrap v-for="(asset,key, index) in groupedAssets" v-bind:key="key">
+              <v-layout wrap v-for="(duration,key) in form.duration" v-bind:key="key">
                 <v-flex xs12 sm6 md2>
-                  <v-text-field label="Duration" required readonly :value="key" v-model="form.duration[index]"></v-text-field>
+                  <v-text-field label="Duration" required readonly :value="duration" v-model="form.duration[key]"></v-text-field>
                 </v-flex>
                 <v-flex xs12 sm6 md10>
                   <v-select
-                    v-model="form.asset[index]"
-                    :items="asset"
+                    v-model="form.asset[key]"
+                    :items="groupedAssets[duration]"
                     item-text="file_name"
                     item-value="id"
                     label="Select File"
-                    v-validate="'required'"
-                    :name="`file.${index}`"
+                    :name="`file.${key}`"
                   ></v-select>
-                  <span class="text-danger" v-show="errors.has(`file.${index}`)">{{ errors.first(`file.${index}`) }}</span>
+                  <span class="text-danger" v-show="errors.has(`file.${key}`)">{{ errors.first(`file.${key}`) }}</span>
                 </v-flex>
               </v-layout>
             </v-form>
@@ -82,7 +81,13 @@
         const duration = this.getDistinctDuration(time_belts);
         this.form.duration = duration;
         const filtered_assets = assets.filter(item => duration.some(resultItem => resultItem === item.duration));
-        this.groupedAssets =  _.groupBy(filtered_assets, asset => asset.duration);
+        const groupedAssets = _.groupBy(filtered_assets, asset => asset.duration);
+        this.groupedAssets = groupedAssets;
+        const defaultSelectValues = [];
+        Object.keys(groupedAssets).forEach(function (item, index) {
+          defaultSelectValues[index] = groupedAssets[item][0]['id'];
+        });
+        this.form.asset = defaultSelectValues;
       },
       associateFiles() {
         // Validate inputs using vee-validate plugin 
@@ -112,7 +117,7 @@
                     this.dialog = false;
                 }
             }).catch((error) => {
-                this.sweet_alert('An unknown error has occurred, media assets cannot be delete. Please try again', 'error');
+                this.sweet_alert('An unknown error has occurred, media assets cannot be associated. Please try again', 'error');
             });
           }
         });

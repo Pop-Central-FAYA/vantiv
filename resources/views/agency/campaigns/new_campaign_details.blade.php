@@ -147,152 +147,138 @@
 
             {{--{{ dd($campaign_details) }}--}}
 
-            <div class="tab_contain default_summary" id="app">
+            <v-app>
+                <v-content>
+                    <div class="tab_contain default_summary" id="app">
+                        <!-- summary -->
+                        <div class="tab_content col_12 campaign_summary" id="summary">
+                            <div class="clearfix mb">
+                                <div class="column col_5">
+                                    <div class="clearfix mb">
+                                        <div class="column col_12 mb" style="margin-left: 1.6%;">
+                                            <p class="weight_medium">
+                                                <span class="weight_medium small_faint pr-1">Campaign Name:</span>
+                                                {{ $campaign_details->name }}
+                                            </p>
+                                        </div>
+                                        <div class="column col_12 mb">
+                                            <p class="weight_medium">
+                                                <span class="weight_medium small_faint pr-1">Client:</span>
+                                                {{ $campaign_details->client['company_name'] }}
+                                            </p>
+                                        </div>
+                                        <div class="column col_12 mb">
+                                            <p class="weight_medium">
+                                                <span class="weight_medium small_faint pr-1">Brand:</span>
+                                                {{ ucfirst($campaign_details->brand['name']) }}
+                                            </p>
+                                        </div>
+                                        <div class="column col_12 mb">
+                                            <p class="weight_medium">
+                                                <span class="weight_medium small_faint pr-1">Budget:</span>
+                                                N{{ $campaign_details->budget }}
+                                            </p>
+                                        </div>
+                                        <div class="column col_12 mb">
+                                            <p class="weight_medium">
+                                                <span class="weight_medium small_faint pr-1">Flight Date:</span>
+                                                {{ date("M d, y", strtotime($campaign_details->start_date)) }} - {{ date("M d, y", strtotime($campaign_details->stop_date)) }}
+                                            </p>
+                                        </div>
+                                        @if (count($campaign_details->channel_information) > 0)
+                                            <div class="column col_12">
+                                                <p class="weight_medium">
+                                                    <span class="weight_medium small_faint pr-1">Media Type:</span>
+                                                    @foreach($campaign_details->channel_information as $key=>$channel) {{ $channel->channel }}@if(($key+1) < count($campaign_details->channel_information)){{', '}} @endif @endforeach 
+                                                </p>
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="column col_7">
+                                    <div class="clearfix mb">
+                                        @if (count($campaign_details->audience_information) > 0)
+                                            <div class="column col_12 mb" style="margin-left: 1.6%;">
+                                                <p class="weight_medium">
+                                                    <span class="weight_medium small_faint pr-1">Gender:</span>
+                                                    @foreach($campaign_details->audience_information as $key=>$audience) {{ $audience->audience }} @if(($key+1) < count($campaign_details->audience_information)){{','}} @endif @endforeach
+                                                </p>
+                                            </div>
+                                        @endif
+                                        @if (is_array(json_decode($campaign_details->age_groups)))
+                                            <div class="column col_12 mb">
+                                                <p class="weight_medium">
+                                                    <span class="weight_medium small_faint pr-1">Age Groups:</span>
+                                                    @foreach(json_decode($campaign_details->age_groups) as $key=>$age_group){{ $age_group->min.' - '.$age_group->max.' Yrs' }} @if(($key+1) < count(json_decode($campaign_details->age_groups))){{', '}} @endif @endforeach
+                                                </p>
+                                            </div>
+                                        @endif
+                                        @if (is_array(json_decode($campaign_details->social_class)))
+                                            <div class="column col_12 mb">
+                                                <p class="weight_medium">
+                                                    <span class="weight_medium small_faint pr-1">Social Class:</span>
+                                                    @foreach(json_decode($campaign_details->social_class) as $key=>$class) {{ $class }}@if(($key+1) < count(json_decode($campaign_details->social_class))){{', '}} @endif @endforeach
+                                                </p>
+                                            </div>
+                                        @endif
+                                        @if (is_array(json_decode($campaign_details->states)))
+                                            <div class="column col_12 mb">
+                                                <p class="weight_medium">
+                                                    <span class="weight_medium small_faint pr-1">States:</span>
+                                                    @foreach(json_decode($campaign_details->states) as $key=>$state) {{ $state }}@if(($key+1) < count(json_decode($campaign_details->states))){{', '}} @endif @endforeach
+                                                </p>
+                                            </div>
+                                        @endif
+                                        @if (is_array(json_decode($campaign_details->regions)))
+                                            <div class="column col_12 mb">
+                                                <p class="weight_medium">
+                                                    <span class="weight_medium small_faint pr-1">Regions:</span>
+                                                    @foreach(json_decode($campaign_details->regions) as $key=>$region) {{ $region }} @if(($key+1) < count(json_decode($campaign_details->regions))){{', '}} @endif @endforeach
+                                                </p>
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end -->
+                        <!-- files -->
+                        <div class="tab_content" id="files">
+                            <campaign-file-list :files="{{json_encode($campaign_files)}}"></campaign-file-list>
+                        </div>
+                        <!-- end -->
+                        <!-- Complaince -->
+                        <div class="tab_content" id="comp">
+                            <!-- filter -->
+                            <!-- end -->
 
-                <!-- summary -->
-                <div class="tab_content col_12 campaign_summary" id="summary">
-                    <div class="clearfix mb">
-                        <div class="column col_5">
-                            <div class="clearfix mb">
-                                <div class="column col_12 mb" style="margin-left: 1.6%;">
-                                    <p class="weight_medium">
-                                        <span class="weight_medium small_faint pr-1">Campaign Name:</span>
-                                        {{ $campaign_details->name }}
-                                    </p>
-                                </div>
-                                <div class="column col_12 mb">
-                                    <p class="weight_medium">
-                                        <span class="weight_medium small_faint pr-1">Client:</span>
-                                        {{ $campaign_details->client['company_name'] }}
-                                    </p>
-                                </div>
-                                <div class="column col_12 mb">
-                                    <p class="weight_medium">
-                                        <span class="weight_medium small_faint pr-1">Brand:</span>
-                                        {{ ucfirst($campaign_details->brand['name']) }}
-                                    </p>
-                                </div>
-                                <div class="column col_12 mb">
-                                    <p class="weight_medium">
-                                        <span class="weight_medium small_faint pr-1">Budget:</span>
-                                        N{{ $campaign_details->budget }}
-                                    </p>
-                                </div>
-                                <div class="column col_12 mb">
-                                    <p class="weight_medium">
-                                        <span class="weight_medium small_faint pr-1">Flight Date:</span>
-                                        {{ date("M d, y", strtotime($campaign_details->start_date)) }} - {{ date("M d, y", strtotime($campaign_details->stop_date)) }}
-                                    </p>
-                                </div>
-                                @if (count($campaign_details->channel_information) > 0)
-                                    <div class="column col_12">
-                                        <p class="weight_medium">
-                                            <span class="weight_medium small_faint pr-1">Media Type:</span>
-                                            @foreach($campaign_details->channel_information as $key=>$channel) {{ $channel->channel }}@if(($key+1) < count($campaign_details->channel_information)){{', '}} @endif @endforeach 
-                                        </p>
-                                    </div>
-                                @endif
-                            </div>
+                            <table>
+                                <tr>
+                                    <th>Scheduled Date</th>
+                                    <th>Station</th>
+                                    <th>Schedule Spot</th>
+                                    <th>Time Aired</th>
+                                    <th>Duration</th>
+                                    <th>File Name</th>
+                                </tr>
+
+                            </table>
                         </div>
-                        <div class="column col_7">
-                            <div class="clearfix mb">
-                                @if (count($campaign_details->audience_information) > 0)
-                                    <div class="column col_12 mb" style="margin-left: 1.6%;">
-                                        <p class="weight_medium">
-                                            <span class="weight_medium small_faint pr-1">Gender:</span>
-                                            @foreach($campaign_details->audience_information as $key=>$audience) {{ $audience->audience }} @if(($key+1) < count($campaign_details->audience_information)){{','}} @endif @endforeach
-                                        </p>
-                                    </div>
-                                @endif
-                                @if (is_array(json_decode($campaign_details->age_groups)))
-                                    <div class="column col_12 mb">
-                                        <p class="weight_medium">
-                                            <span class="weight_medium small_faint pr-1">Age Groups:</span>
-                                            @foreach(json_decode($campaign_details->age_groups) as $key=>$age_group){{ $age_group->min.' - '.$age_group->max.' Yrs' }} @if(($key+1) < count(json_decode($campaign_details->age_groups))){{', '}} @endif @endforeach
-                                        </p>
-                                    </div>
-                                @endif
-                                @if (is_array(json_decode($campaign_details->social_class)))
-                                    <div class="column col_12 mb">
-                                        <p class="weight_medium">
-                                            <span class="weight_medium small_faint pr-1">Social Class:</span>
-                                            @foreach(json_decode($campaign_details->social_class) as $key=>$class) {{ $class }}@if(($key+1) < count(json_decode($campaign_details->social_class))){{', '}} @endif @endforeach
-                                        </p>
-                                    </div>
-                                @endif
-                                @if (is_array(json_decode($campaign_details->states)))
-                                    <div class="column col_12 mb">
-                                        <p class="weight_medium">
-                                            <span class="weight_medium small_faint pr-1">States:</span>
-                                            @foreach(json_decode($campaign_details->states) as $key=>$state) {{ $state }}@if(($key+1) < count(json_decode($campaign_details->states))){{', '}} @endif @endforeach
-                                        </p>
-                                    </div>
-                                @endif
-                                @if (is_array(json_decode($campaign_details->regions)))
-                                    <div class="column col_12 mb">
-                                        <p class="weight_medium">
-                                            <span class="weight_medium small_faint pr-1">Regions:</span>
-                                            @foreach(json_decode($campaign_details->regions) as $key=>$region) {{ $region }} @if(($key+1) < count(json_decode($campaign_details->regions))){{', '}} @endif @endforeach
-                                        </p>
-                                    </div>
-                                @endif
-                            </div>
+                        <!-- end -->
+                        <!-- campaign mpos -->
+                        <div class="tab_content" id="campaign_mpos">
+                            <campaign-mpos-list
+                                :mpos="{{json_encode($campaign_details->campaign_mpos)}}"
+                                :assets="{{json_encode($client_media_assets)}}"
+                                :client="{{json_encode($campaign_details->client['company_name'])}}"
+                                :brand="{{json_encode($campaign_details->brand['name'])}}"
+                            ></campaign-mpos-list>
                         </div>
+                        <!-- end -->
+
                     </div>
-                </div>
-                <!-- end -->
-
-                <div class="tab_content" id="files">
-                    <!-- filter -->
-                    <table>
-                        <tr>
-                            <th>Files</th>
-                            <th>Adslots</th>
-                            <th>Channel</th>
-                            <th>Air Date</th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                        </tr>
-
-                    </table>
-                </div>
-
-                <!-- Complaince -->
-                <div class="tab_content" id="comp">
-                    <!-- filter -->
-                    <!-- end -->
-
-                    <table>
-                        <tr>
-                            <th>Scheduled Date</th>
-                            <th>Station</th>
-                            <th>Schedule Spot</th>
-                            <th>Time Aired</th>
-                            <th>Duration</th>
-                            <th>File Name</th>
-                        </tr>
-
-                    </table>
-                </div>
-                <!-- end -->
-                <!-- campaign mpos -->
-                <div class="tab_content" id="campaign_mpos">
-                    <v-app>
-                        <v-content>
-                        <campaign-mpos-list
-                            :mpos="{{json_encode($campaign_details->campaign_mpos)}}"
-                            :assets="{{json_encode($client_media_assets)}}"
-                            :client="{{json_encode($campaign_details->client['company_name'])}}"
-                            :brand="{{json_encode($campaign_details->brand['name'])}}"
-                        ></campaign-mpos-list>
-                        </v-content>
-                    </v-app>
-                </div>
-                <!-- end -->
-
-            </div>
+                </v-content>
+            </v-app>
             
             <div class="tab_contain new_summary" style="display: none;">
                 

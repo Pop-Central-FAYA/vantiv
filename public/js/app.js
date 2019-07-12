@@ -3,7 +3,7 @@ webpackJsonp([1],Array(149).concat([
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(150);
-module.exports = __webpack_require__(267);
+module.exports = __webpack_require__(272);
 
 
 /***/ }),
@@ -88,6 +88,7 @@ Vue.component('mpo-file-manager', __webpack_require__(251));
 Vue.component('file-modal', __webpack_require__(254));
 Vue.component('delete-slots-modal', __webpack_require__(259));
 Vue.component('edit-slots-modal', __webpack_require__(264));
+Vue.component('campaign-file-list', __webpack_require__(267));
 
 Vue.mixin({
     methods: {
@@ -5891,7 +5892,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 //
 //
 //
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
@@ -5934,9 +5934,15 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           return resultItem === item.duration;
         });
       });
-      this.groupedAssets = _.groupBy(filtered_assets, function (asset) {
+      var groupedAssets = _.groupBy(filtered_assets, function (asset) {
         return asset.duration;
       });
+      this.groupedAssets = groupedAssets;
+      var defaultSelectValues = [];
+      Object.keys(groupedAssets).forEach(function (item, index) {
+        defaultSelectValues[index] = groupedAssets[item][0]['id'];
+      });
+      this.form.asset = defaultSelectValues;
     },
     associateFiles: function associateFiles() {
       var _this = this;
@@ -5968,7 +5974,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
               _this.dialog = false;
             }
           }).catch(function (error) {
-            _this.sweet_alert('An unknown error has occurred, media assets cannot be delete. Please try again', 'error');
+            _this.sweet_alert('An unknown error has occurred, media assets cannot be associated. Please try again', 'error');
           });
         }
       });
@@ -6079,7 +6085,7 @@ var render = function() {
                     [
                       _c(
                         "v-form",
-                        _vm._l(_vm.groupedAssets, function(asset, key, index) {
+                        _vm._l(_vm.form.duration, function(duration, key) {
                           return _c(
                             "v-layout",
                             { key: key, attrs: { wrap: "" } },
@@ -6093,14 +6099,14 @@ var render = function() {
                                       label: "Duration",
                                       required: "",
                                       readonly: "",
-                                      value: key
+                                      value: duration
                                     },
                                     model: {
-                                      value: _vm.form.duration[index],
+                                      value: _vm.form.duration[key],
                                       callback: function($$v) {
-                                        _vm.$set(_vm.form.duration, index, $$v)
+                                        _vm.$set(_vm.form.duration, key, $$v)
                                       },
-                                      expression: "form.duration[index]"
+                                      expression: "form.duration[key]"
                                     }
                                   })
                                 ],
@@ -6112,27 +6118,19 @@ var render = function() {
                                 { attrs: { xs12: "", sm6: "", md10: "" } },
                                 [
                                   _c("v-select", {
-                                    directives: [
-                                      {
-                                        name: "validate",
-                                        rawName: "v-validate",
-                                        value: "required",
-                                        expression: "'required'"
-                                      }
-                                    ],
                                     attrs: {
-                                      items: asset,
+                                      items: _vm.groupedAssets[duration],
                                       "item-text": "file_name",
                                       "item-value": "id",
                                       label: "Select File",
-                                      name: "file." + index
+                                      name: "file." + key
                                     },
                                     model: {
-                                      value: _vm.form.asset[index],
+                                      value: _vm.form.asset[key],
                                       callback: function($$v) {
-                                        _vm.$set(_vm.form.asset, index, $$v)
+                                        _vm.$set(_vm.form.asset, key, $$v)
                                       },
-                                      expression: "form.asset[index]"
+                                      expression: "form.asset[key]"
                                     }
                                   }),
                                   _vm._v(" "),
@@ -6143,20 +6141,16 @@ var render = function() {
                                         {
                                           name: "show",
                                           rawName: "v-show",
-                                          value: _vm.errors.has(
-                                            "file." + index
-                                          ),
+                                          value: _vm.errors.has("file." + key),
                                           expression:
-                                            "errors.has(`file.${index}`)"
+                                            "errors.has(`file.${key}`)"
                                         }
                                       ],
                                       staticClass: "text-danger"
                                     },
                                     [
                                       _vm._v(
-                                        _vm._s(
-                                          _vm.errors.first("file." + index)
-                                        )
+                                        _vm._s(_vm.errors.first("file." + key))
                                       )
                                     ]
                                   )
@@ -8122,6 +8116,278 @@ if (false) {
 
 /***/ }),
 /* 267 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(268)
+}
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(270)
+/* template */
+var __vue_template__ = __webpack_require__(271)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/campaign_mpos/MpoFileList.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-27598234", Component.options)
+  } else {
+    hotAPI.reload("data-v-27598234", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 268 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(269);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(4)("3af83df3", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-27598234\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./MpoFileList.vue", function() {
+     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-27598234\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./MpoFileList.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 269 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(3)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\ntbody tr:hover {\n    background-color: transparent !important;\n    cursor: pointer;\n}\ntbody:hover {\nbackground-color: rgba(0, 0, 0, 0.12);\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 270 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        files: {
+            required: true,
+            type: Object
+        }
+    },
+    data: function data() {
+        return {
+            search: '',
+            headers: [{ text: 'File Name', align: 'left', value: 'station' }, { text: 'Duration', value: 'budget' }, { text: 'Insertions', value: 'ad_slots' }],
+            pagination: {
+                rowsPerPage: 10
+            },
+            fileArr: []
+        };
+    },
+    mounted: function mounted() {
+        this.convertFilesObjToArr();
+    },
+
+    methods: {
+        convertFilesObjToArr: function convertFilesObjToArr() {
+            this.fileArr = Object.values(this.files);
+        },
+        sumAdslotsInCampaignMpoTimeBelt: function sumAdslotsInCampaignMpoTimeBelt(campaign_mpo_time_belts) {
+            return campaign_mpo_time_belts.reduce(function (prev, cur) {
+                return prev + cur.ad_slots;
+            }, 0);
+        }
+    }
+});
+
+/***/ }),
+/* 271 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "v-card",
+    [
+      _c(
+        "v-card-title",
+        [
+          _c("v-spacer"),
+          _vm._v(" "),
+          _c("v-spacer"),
+          _vm._v(" "),
+          _c("v-spacer"),
+          _vm._v(" "),
+          _c("v-text-field", {
+            attrs: {
+              "append-icon": "search",
+              label: "Enter Keyword",
+              "single-line": "",
+              "hide-details": ""
+            },
+            model: {
+              value: _vm.search,
+              callback: function($$v) {
+                _vm.search = $$v
+              },
+              expression: "search"
+            }
+          })
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c("v-data-table", {
+        staticClass: "custom-vue-table elevation-1",
+        attrs: {
+          headers: _vm.headers,
+          items: _vm.fileArr,
+          search: _vm.search,
+          pagination: _vm.pagination
+        },
+        on: {
+          "update:pagination": function($event) {
+            _vm.pagination = $event
+          }
+        },
+        scopedSlots: _vm._u([
+          {
+            key: "items",
+            fn: function(props) {
+              return [
+                _c("tr", { on: { click: true } }, [
+                  _c(
+                    "td",
+                    [
+                      _c("media-asset-play-video", {
+                        attrs: { asset: props.item[0]["media_asset"] }
+                      })
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c("td", { staticClass: "text-xs-left" }, [
+                    _vm._v(_vm._s(props.item[0]["duration"]))
+                  ]),
+                  _vm._v(" "),
+                  _c("td", { staticClass: "text-xs-left" }, [
+                    _vm._v(
+                      _vm._s(_vm.sumAdslotsInCampaignMpoTimeBelt(props.item))
+                    )
+                  ])
+                ])
+              ]
+            }
+          },
+          {
+            key: "no-results",
+            fn: function() {
+              return [
+                _c(
+                  "v-alert",
+                  { attrs: { value: true, color: "error", icon: "warning" } },
+                  [
+                    _vm._v(
+                      '\n        Your search for "' +
+                        _vm._s(_vm.search) +
+                        '" found no results.\n        '
+                    )
+                  ]
+                )
+              ]
+            },
+            proxy: true
+          }
+        ])
+      })
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-27598234", module.exports)
+  }
+}
+
+/***/ }),
+/* 272 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
