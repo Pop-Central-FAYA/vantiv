@@ -67,11 +67,16 @@ class CampaignsController extends Controller
         $campaign_details = $campaign_details_service->run();
         $campaign_details_client_id = $campaign_details->client->id;
         $campaign_details_brand_id = $campaign_details->brand->id;
-        //come back here and clean up this raw sql to rather use query builder
-        $all_campaigns = DB::select("SELECT * FROM campaigns where belongs_to = '$agency_id' GROUP BY id"); //there is no reason to group by here s it will always return one field
+        $all_campaigns = Campaign::where('belongs_to', $agency_id)->get();
         $all_clients = (new WalkInLists($agency_id))->getWalkInListWithMinmalDetails();
         $client_media_assets = (new GetMediaAssetByClient($campaign_details_client_id, $campaign_details_brand_id))->run();
-        return view('agency.campaigns.new_campaign_details', compact('campaign_details', 'all_campaigns', 'all_clients', 'client_media_assets'));
+        $campaign_files = CampaignMpoTimeBelt::with(['media_asset'])->whereNotNull('asset_id')->whereHas('campaign_mpo', function ($query) use ($id){
+                $query->whereHas('campaign', function ($query) use ($id) {
+                    $query->where('id', $id);
+                });
+            })->get();
+        $campaign_files = $campaign_files->groupBy('asset_id');
+        return view('agency.campaigns.new_campaign_details', compact('campaign_details', 'all_campaigns', 'all_clients', 'client_media_assets', 'campaign_files'));
     }
 
     public function getCampaignsByClient($client_id)
@@ -190,11 +195,13 @@ class CampaignsController extends Controller
         $file_durations = request()->durations;
         $media_assets = request()->assets;
         $mpo_id = request()->mpo_id;
-        
+
         try {
             \DB::transaction(function () use ($file_durations, $media_assets, $mpo_id) {
                 foreach ($file_durations as $key => $duration) {
-                    CampaignMpoTimeBelt::where('mpo_id', $mpo_id)->where('duration',$duration)->update(['asset_id' => $media_assets[$key]]);
+                    if (array_key_exists($key, $media_assets)) {
+                        CampaignMpoTimeBelt::where('mpo_id', $mpo_id)->where('duration',$duration)->update(['asset_id' => $media_assets[$key]]);
+                    }
                 }
             });
         } catch (Exception $ex) {

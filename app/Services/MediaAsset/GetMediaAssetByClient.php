@@ -2,6 +2,7 @@
 namespace Vanguard\Services\MediaAsset;
 
 use Illuminate\Support\Facades\DB;
+use Vanguard\Models\MediaAsset;
 
 class GetMediaAssetByClient
 {
@@ -20,9 +21,12 @@ class GetMediaAssetByClient
 
     public function run()
     {
-        return DB::table('media_assets')->where([
-            ['client_id', $this->client_id],
-            ['brand_id', $this->brand_id]
-        ])->get();
+        // return DB::table('media_assets')->where([
+        //     ['client_id', $this->client_id],
+        //     ['brand_id', $this->brand_id]
+        // ])->get();
+        return MediaAsset::where('client_id', $this->client_id)
+                        ->where('brand_id', $this->brand_id)
+                        ->get();
     }
 }

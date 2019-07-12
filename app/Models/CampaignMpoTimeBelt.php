@@ -13,7 +13,7 @@ class CampaignMpoTimeBelt extends Base
 
     public function campaign_mpo()
     {
-        return $this->belongsTo(CampaignMpo::class);
+        return $this->belongsTo(CampaignMpo::class, 'mpo_id', 'id');
     }
 
     public function media_asset()
