@@ -6,7 +6,7 @@
 
 @section('content')
 
-    <form role="form" action="{{ route('dsp.forget_password.process') }}" method="POST" id="login-form" autocomplete="off">
+    <form role="form" action="{{ route('forget_password.process') }}" method="POST" id="login-form" autocomplete="off">
         <input type="hidden" value="<?= csrf_token() ?>" name="_token">
         <div class="align_center mb4">
             <h2 class="m-b">Reset Your Password</h2>
@@ -29,7 +29,7 @@
         <input type="submit" value="Reset my Password" class= "btn full">
     </form>
 
-    <p class="align_center pt">Have an account? <a href="{{ route('dsplogin') }}" class="">Sign In</a></p>
+    <p class="align_center pt">Have an account? <a href="{{ route('login') }}" class="">Sign In</a></p>
 
 @stop
 

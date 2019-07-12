@@ -21,7 +21,7 @@
                     <a href="{{ route('agency.user.index') }}" class="color_dark">Users</a>
                     @endif
 
-                    <a href="{{ route('auth.dsplogout') }}" class="color_red">Logout</a>
+                    <a href="{{ route('auth.logout') }}" class="color_red">Logout</a>
                 </div>
             </div>
         </div>
