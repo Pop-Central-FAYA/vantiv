@@ -23,7 +23,8 @@ class UserInvitationMail
                             '-link-' => $mail_content['link'],
                             '-email-' => $mail_content['recipient'],
                             '-inviter-' => $mail_content['inviter'],
-                            '-company-' => $mail_content['companies']
+                            '-company-' => $mail_content['companies'],
+                            '-date_time-' => date('F j, Y | G:i A T')
                         ],
                         "New User Invitation -email-"
                     );
