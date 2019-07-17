@@ -2311,6 +2311,158 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\",[\"transform-runtime\",{\"polyfill\":false,\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/media_plan/summary/Summary.vue":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        summaryDetails: Object,
+        summaryData: Array,
+        userDetails: Array
+    },
+    data: function data() {
+        return {
+            summarydataobj: this.summaryDetails,
+            sumData: this.summaryData,
+            user: this.userDetails,
+            total_total_spots: 0,
+            total_gross_value: 0,
+            total_net_value: 0,
+            total_savings: 0
+        };
+    },
+    mounted: function mounted() {
+        console.log(this.user);
+        console.log('Suggestions Table Component mounted.');
+        this.getSums();
+    },
+    methods: {
+        dateToYMD: function dateToYMD(date) {
+            var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            var current_datetime = new Date(date);
+            return current_datetime.getDate() + "-" + months[current_datetime.getMonth()] + "-" + current_datetime.getFullYear();
+        },
+        nunberformat: function nunberformat(n) {
+            return n.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '');
+        },
+        getSums: function getSums() {
+            var self = this;
+            this.sumData.forEach(function (item, key) {
+                self.total_total_spots += item['total_spots'];
+                self.total_gross_value += item['gross_value'];
+                self.total_net_value += item['net_value'];
+                self.total_savings += item['savings'];
+            });
+        },
+        checkPermmission: function checkPermmission(name) {
+            var l = true;
+            this.userDetails.forEach(function (item, key) {
+                if (item['name'] == name) {
+                    console.log(name);
+                    l = true;
+                } else {
+                    l = false;
+                    console.log(' wrong');
+                }
+            });
+
+            return l;
+        }
+    }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\",[\"transform-runtime\",{\"polyfill\":false,\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/media_plan/summary/SummaryData.vue":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -2857,6 +3009,298 @@ exports.push([module.i, "/*!\n* Vuetify v1.5.15\n* Forged by John Leider\n* Rele
 
 // exports
 
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-0a9baf09\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/media_plan/summary/Summary.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c(
+      "div",
+      { staticClass: "the_frame clearfix mb border_top_color load_stuff" },
+      [
+        _c(
+          "div",
+          { staticClass: "margin_center col_10 clearfix create_fields" },
+          [
+            _c("div", { staticClass: "the_stats the_frame clearfix mb4 mt4" }, [
+              _c("table", { staticClass: "display dashboard_campaigns" }, [
+                _c("tbody", [
+                  _c("tr", [
+                    _c("td", [
+                      _vm._m(0),
+                      _vm._v(
+                        "  " + _vm._s(_vm.summarydataobj.client.company_name)
+                      )
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("tr", [
+                    _c("td", [
+                      _vm._m(1),
+                      _vm._v("  " + _vm._s(_vm.summarydataobj.product_name))
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("tr", [
+                    _c("td", [
+                      _vm._m(2),
+                      _vm._v(
+                        " " +
+                          _vm._s(_vm.dateToYMD(_vm.summarydataobj.start_date)) +
+                          " to " +
+                          _vm._s(_vm.dateToYMD(_vm.summarydataobj.end_date)) +
+                          " "
+                      )
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("tr", [
+                    _c("td", [
+                      _vm._m(3),
+                      _vm._v("  " + _vm._s(_vm.summarydataobj.status))
+                    ])
+                  ])
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "the_frame client_dets mb4" }, [
+              _c("table", { staticClass: "display dashboard_campaigns" }, [
+                _vm._m(4),
+                _vm._v(" "),
+                _c(
+                  "tbody",
+                  [
+                    _vm._l(_vm.sumData, function(sumData, key) {
+                      return _c("tr", { key: key }, [
+                        _c("td", [_vm._v(_vm._s(sumData.medium))]),
+                        _vm._v(" "),
+                        _c(
+                          "td",
+                          _vm._l(sumData.material_durations, function(
+                            list,
+                            index
+                          ) {
+                            return _c("span", { key: index }, [
+                              _c("span", [_vm._v(_vm._s(list))]),
+                              index + 1 < sumData.material_durations.length
+                                ? _c("span", [_vm._v(", ")])
+                                : _vm._e()
+                            ])
+                          }),
+                          0
+                        ),
+                        _vm._v(" "),
+                        _c("td", [
+                          _vm._v(" " + _vm._s(sumData.total_spots) + " ")
+                        ]),
+                        _vm._v(" "),
+                        _c("td", [
+                          _vm._v(
+                            _vm._s(_vm.nunberformat(sumData.gross_value)) + " "
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("td", [
+                          _vm._v(
+                            " " + _vm._s(_vm.nunberformat(sumData.net_value))
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("td", [
+                          _vm._v(
+                            " " + _vm._s(_vm.nunberformat(sumData.savings))
+                          )
+                        ])
+                      ])
+                    }),
+                    _vm._v(" "),
+                    _c("tr", [
+                      _c("td", [_vm._v("Total")]),
+                      _vm._v(" "),
+                      _c("td"),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(_vm.total_total_spots))]),
+                      _vm._v(" "),
+                      _c("td", [
+                        _vm._v(_vm._s(_vm.nunberformat(_vm.total_gross_value)))
+                      ]),
+                      _vm._v(" "),
+                      _c("td", [
+                        _vm._v(_vm._s(_vm.nunberformat(_vm.total_net_value)))
+                      ]),
+                      _vm._v(" "),
+                      _c("td", [
+                        _vm._v(_vm._s(_vm.nunberformat(_vm.total_savings)))
+                      ])
+                    ])
+                  ],
+                  2
+                )
+              ])
+            ])
+          ]
+        )
+      ]
+    ),
+    _vm._v(" "),
+    _c("div", { staticClass: "container-fluid my-5" }, [
+      _c("div", { staticClass: "row" }, [
+        _vm._m(5),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "col-md-8 p-0 text-right" },
+          [
+            _vm._m(6),
+            _vm._v(" "),
+            _vm._m(7),
+            _vm._v(" "),
+            _vm.checkPermmission("export.media_plan")
+              ? _c(
+                  "a",
+                  {
+                    staticClass: "btn block_disp uppercased",
+                    attrs: { href: "" }
+                  },
+                  [
+                    _c("i", { staticClass: "media-plan material-icons" }, [
+                      _vm._v("file_download")
+                    ]),
+                    _vm._v("Export Plan")
+                  ]
+                )
+              : _vm._e(),
+            _vm._v(" "),
+            _c("media-plan-create-campaign", {
+              attrs: { id: _vm.summarydataobj.id }
+            })
+          ],
+          1
+        )
+      ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "mr-2" }, [
+      _c("b", [_vm._v("Client Name:")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "mr-2" }, [
+      _c("b", [_vm._v("Product Name:")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "mr-2" }, [
+      _c("b", [_vm._v("Flight Date:")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "mr-2" }, [_c("b", [_vm._v("Status:")])])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("Medium")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Material Duration")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Number of Spots/units")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Gross Media Cost")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Net Media Cost")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Savings")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-md-4 p-0" }, [
+      _c(
+        "a",
+        { staticClass: "btn small_btn", attrs: { id: "back_btn", href: "" } },
+        [
+          _c("i", { staticClass: "media-plan material-icons" }, [
+            _vm._v("navigate_before")
+          ]),
+          _vm._v(" Back")
+        ]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "a",
+      {
+        staticClass: "media-plan btn block_disp uppercased mr-1",
+        attrs: { href: "" }
+      },
+      [
+        _c("i", { staticClass: "media-plan material-icons" }, [
+          _vm._v("check")
+        ]),
+        _vm._v("Approve Plan")
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "a",
+      {
+        staticClass: "media-plan btn block_disp uppercased bg_red mr-1",
+        attrs: { href: "" }
+      },
+      [
+        _c("i", { staticClass: "media-plan material-icons" }, [
+          _vm._v("clear")
+        ]),
+        _vm._v("Decline Plan")
+      ]
+    )
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-0a9baf09", module.exports)
+  }
+}
 
 /***/ }),
 
@@ -7563,6 +8007,7 @@ Vue.component('media-plan-create-campaign', __webpack_require__("./resources/ass
 Vue.component('media-plan-export-plan', __webpack_require__("./resources/assets/js/components/media_plan/summary/ExportPlanButtons.vue"));
 Vue.component('media-plan-summary-details', __webpack_require__("./resources/assets/js/components/media_plan/summary/SummaryDetails.vue"));
 Vue.component('media-plan-summary-data', __webpack_require__("./resources/assets/js/components/media_plan/summary/SummaryData.vue"));
+Vue.component('media-plan-summary', __webpack_require__("./resources/assets/js/components/media_plan/summary/Summary.vue"));
 
 // ASSET MANAGEMENT
 Vue.component('media-asset-upload', __webpack_require__("./resources/assets/js/components/asset_management/Upload.vue"));
@@ -8630,6 +9075,54 @@ if (false) {(function () {
     hotAPI.createRecord("data-v-34705e67", Component.options)
   } else {
     hotAPI.reload("data-v-34705e67", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+
+/***/ "./resources/assets/js/components/media_plan/summary/Summary.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
+/* script */
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\",[\"transform-runtime\",{\"polyfill\":false,\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/media_plan/summary/Summary.vue")
+/* template */
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-0a9baf09\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/media_plan/summary/Summary.vue")
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/media_plan/summary/Summary.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-0a9baf09", Component.options)
+  } else {
+    hotAPI.reload("data-v-0a9baf09", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true

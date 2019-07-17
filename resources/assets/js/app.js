@@ -48,6 +48,7 @@ Vue.component('media-plan-create-campaign', require('./components/media_plan/sum
 Vue.component('media-plan-export-plan', require('./components/media_plan/summary/ExportPlanButtons.vue'));
 Vue.component('media-plan-summary-details', require('./components/media_plan/summary/SummaryDetails.vue'));
 Vue.component('media-plan-summary-data', require('./components/media_plan/summary/SummaryData.vue'));
+Vue.component('media-plan-summary', require('./components/media_plan/summary/Summary.vue'));
 
 // ASSET MANAGEMENT
 Vue.component('media-asset-upload', require('./components/asset_management/Upload.vue'));
