@@ -22,7 +22,7 @@ class MailFormat
         return [
             'companies' => collect( $this->invited_user->companies()->pluck('name'))->implode(', '),
             'recipient' =>   $this->invited_user->email,
-            'subject' => 'New User Invitation',
+            'subject' => 'Invitation to join Vantage',
             'inviter' =>  $this->inviter_name,
             'user_id' =>  $this->invited_user->id,
             'link' =>  URL::temporarySignedRoute('user.complete_registration', now()->addHour(1),

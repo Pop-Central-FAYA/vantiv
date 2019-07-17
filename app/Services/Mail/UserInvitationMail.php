@@ -26,7 +26,7 @@ class UserInvitationMail
                             '-company-' => $mail_content['companies'],
                             '-date_time-' => date('F j, Y | G:i A T')
                         ],
-                        "New User Invitation -email-"
+                        "Invitation to join Vantage"
                     );
         }
         return $to;
@@ -34,6 +34,7 @@ class UserInvitationMail
 
     public function sendInvitationMail()
     {
+       
         $product = env('PRODUCT');
         switch ($product) {
             case 'ssp':
@@ -49,9 +50,11 @@ class UserInvitationMail
         $globalSubstitutions = [
             '-time-' => date('Y-m-d H:i:s')
         ];
+     
         $plainTextContent = new \SendGrid\Mail\PlainTextContent(
             "You have been invited by -inviter- to be part of -company- ,copy the  -link- in a browser to accept invitation"
         );
+       
         $htmlContent = new \SendGrid\Mail\HtmlContent($html_content);
         $email = new \SendGrid\Mail\Mail(
             $from,
@@ -61,7 +64,7 @@ class UserInvitationMail
             $htmlContent,
             $globalSubstitutions
         );
-
+     
         $sendgrid = new \SendGrid(getenv('SENDGRID_API_KEY'));
         try {
             $sendgrid->send($email);

@@ -12,6 +12,6 @@
     </tr> 
     <tr style="border-collapse:collapse;"> 
     <td align="center" style="padding:0;Margin:0;padding-top:10px;padding-bottom:10px;"> <p style="Margin:0;font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;">If you didn't ask about resetting your password,
-    <a href="#">let us know.</a><br></p> 
+    <a href="mailto:info@fayamedia.com">let us know.</a><br></p> 
 </td> 
 @stop

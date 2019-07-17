@@ -26,6 +26,7 @@ class AuthController extends Controller
     public $forget_password;
     public $change_password;
     public $dashboard_route;
+    public $email_subject;
 
     public function getLayouts()
     {
@@ -33,6 +34,7 @@ class AuthController extends Controller
         $this->forget_password = 'auth.password.forget_password';
         $this->change_password = 'auth.password.change_password';
         $this->dashboard_route = 'broadcaster.dashboard.index';
+        $this->email_subject = 'FAYA password reset';
     }
 
     /**
@@ -392,7 +394,7 @@ class AuthController extends Controller
         if ($user) {
 
             $token = encrypt($user->id);
-            $send_mail = \Mail::to($user->email)->send(new PasswordChanger($token));
+            $send_mail = \Mail::to($user->email)->send(new PasswordChanger($token, $this->email_subject));
 
             \Session::flash('success', ClassMessages::VERIFICATION_LINK);
             return redirect()->back();
