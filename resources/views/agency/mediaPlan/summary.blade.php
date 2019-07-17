@@ -25,25 +25,9 @@
         <div class="the_frame clearfix mb border_top_color load_stuff">
 
             <div class="margin_center col_10 clearfix create_fields">
-
-                <div class="the_stats the_frame clearfix mb4 mt4">
-                    <table class="display dashboard_campaigns">
-                        <tbody>
-                           <tr>
-                            <td><span class="mr-2"><b>Client Name:</b></span> {{ $media_plan->client->company_name }}</td>
-                           </tr>
-                           <tr>
-                            <td><span class="mr-2"><b>Product Name:</b></span> {{ $media_plan->product_name }}</td>
-                           </tr>
-                           <tr>
-                            <td><span class="mr-2"><b>Flight Date:</b></span> {{ date('d-M-Y',strtotime($media_plan->start_date)).' to '.date('d-M-Y',strtotime($media_plan->end_date)) }}</td>
-                           </tr>
-                           <tr>
-                            <td><span class="mr-2"><b>Status:</b></span> {{ $media_plan->status }}</td>
-                           </tr>
-                        </tbody>
-                    </table>
-                </div>
+                 <media-plan-summary-details  :summary-data="{{ json_encode($media_plan) }}"></media-plan-summary-details>
+                 <media-plan-summary-data  :summary-data="{{ json_encode($summary) }}"></media-plan-summary-data>
+                
 
                 <div class="the_frame client_dets mb4">
                     <!-- Suggestions table -->
@@ -111,20 +95,25 @@
         <div class="container-fluid my-5">
             <div class="row">
                 <div class="col-md-4 p-0">
-                    <a id="back_btn" href="{{ route('agency.media_plan.create', ['id'=>$media_plan->id]) }}" class="btn small_btn"><i class="media-plan material-icons">navigate_before</i> Back</a>
-                </div>
+                 <media-plan-export-plan :btn-name="{{json_encode('Back')}}" :btn-icon="{{json_encode('navigate_before')}}" :id="{{ json_encode($media_plan->id) }}"></media-plan-export-plan>
+                 </div>
                 <div class="col-md-8 p-0 text-right">
                     @if ($media_plan->status == 'Suggested') 
                         @if(Auth::user()->hasPermissionTo('approve.media_plan'))
                             <a href="{{ route('agency.media_plan.approve', ['id'=>$media_plan->id]) }}" class="media-plan btn block_disp uppercased mr-1"><i class="media-plan material-icons">check</i>Approve Plan</a>
+                            <media-plan-export-plan :btn-name="{{json_encode('Approve Plan')}}" :btn-icon="{{json_encode('check')}}" :id="{{ json_encode($media_plan->id) }}"></media-plan-export-plan>
+
                         @endif
                         @if(Auth::user()->hasPermissionTo('decline.media_plan'))
+                        <media-plan-export-plan :btn-name="{{json_encode('Decline Plan')}}" :btn-icon="{{json_encode('clear')}}" :id="{{ json_encode($media_plan->id) }}"></media-plan-export-plan>
+
                             <a href="{{ route('agency.media_plan.decline', ['id'=>$media_plan->id]) }}" class="media-plan btn block_disp uppercased bg_red mr-1"><i class="media-plan material-icons">clear</i>Decline Plan</a>
                         @endif
                     @endif
-                    @if(Auth::user()->hasPermissionTo('export.media_plan'))
-                        <a href="{{ route('agency.media_plan.export', ['id'=>$media_plan->id]) }}" class="btn block_disp uppercased"><i class="media-plan material-icons">file_download</i>Export Plan</a>
-                    @endif
+                       @if(Auth::user()->hasPermissionTo('export.media_plan'))
+                            <media-plan-export-plan :btn-name="{{json_encode('Export Plan')}}" :btn-icon="{{json_encode('file_download')}}" :id="{{ json_encode($media_plan->id) }}"></media-plan-export-plan>
+                            @endif
+
                     @if ($media_plan->status == 'Approved')
                         @if(Auth::user()->hasPermissionTo('convert.media_plan'))
                             <media-plan-create-campaign :id="{{ json_encode($media_plan->id) }}"></media-plan-create-campaign>

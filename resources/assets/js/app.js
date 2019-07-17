@@ -45,6 +45,9 @@ Vue.component('media-plan-suggestion-filter', require('./components/media_plan/c
 Vue.component('media-plan-footer-nav', require('./components/media_plan/customise/FooterNavigation.vue'));
 Vue.component('media-plan-suggestions', require('./components/media_plan/customise/Suggestions.vue'));
 Vue.component('media-plan-create-campaign', require('./components/media_plan/summary/CreateCampaign.vue'));
+Vue.component('media-plan-export-plan', require('./components/media_plan/summary/ExportPlanButtons.vue'));
+Vue.component('media-plan-summary-details', require('./components/media_plan/summary/SummaryDetails.vue'));
+Vue.component('media-plan-summary-data', require('./components/media_plan/summary/SummaryData.vue'));
 
 // ASSET MANAGEMENT
 Vue.component('media-asset-upload', require('./components/asset_management/Upload.vue'));
