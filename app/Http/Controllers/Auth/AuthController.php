@@ -34,7 +34,7 @@ class AuthController extends Controller
         $this->forget_password = 'auth.password.forget_password';
         $this->change_password = 'auth.password.change_password';
         $this->dashboard_route = 'broadcaster.dashboard.index';
-        $this->email_subject = 'FAYA password reset';
+        $this->email_subject = 'FAYA Password Reset';
     }
 
     /**

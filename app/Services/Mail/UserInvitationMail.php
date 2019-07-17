@@ -26,7 +26,7 @@ class UserInvitationMail
                             '-company-' => $mail_content['companies'],
                             '-date_time-' => date('F j, Y | G:i A T')
                         ],
-                        "Invitation to join Vantage"
+                        $mail_content['subject']
                     );
         }
         return $to;
