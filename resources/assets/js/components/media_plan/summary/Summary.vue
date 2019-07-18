@@ -60,29 +60,7 @@
  
             </div>
         </div>
-   
 
-        <div class="container-fluid my-5">
-            <div class="row">
-                <div class="col-md-4 p-0">
-                    <a id="back_btn" href="" class="btn small_btn"><i class="media-plan material-icons">navigate_before</i> Back</a>
-                </div>
-                <div class="col-md-8 p-0 text-right" >
-                  
-                            <a href="" class="media-plan btn block_disp uppercased mr-1"><i class="media-plan material-icons">check</i>Approve Plan</a>
-                      
-                            <a href="" class="media-plan btn block_disp uppercased bg_red mr-1"><i class="media-plan material-icons">clear</i>Decline Plan</a>
-                  
-                             <a href="" v-if="checkPermmission('export.media_plan')" class="btn block_disp uppercased"><i class="media-plan material-icons">file_download</i>Export Plan</a>
-
-
-                         <media-plan-create-campaign :id="summarydataobj.id"></media-plan-create-campaign>
-                    
-
-                   
-                </div>
-            </div>
-        </div>
          </div>
 </template>
 <script>
@@ -90,13 +68,11 @@
         props: {
             summaryDetails: Object,
             summaryData: Array,
-            userDetails: Array,
         },
         data() {
             return {
                 summarydataobj: this.summaryDetails, 
                 sumData: this.summaryData,
-                user:this.userDetails,
                 total_total_spots: 0,
                 total_gross_value: 0,
                 total_net_value: 0,
@@ -104,7 +80,6 @@
             };
         },
         mounted() {
-            console.log(this.user)
             console.log('Suggestions Table Component mounted.')
             this. getSums();
         },   methods: {
@@ -125,22 +100,7 @@
                     self.total_net_value += item['net_value']
                     self.total_savings += item['savings']
                     });
-               },
-               checkPermmission(name){
-                    let l = true
-                    this.userDetails.forEach(function (item, key) {   
-                      if(item['name'] == name){
-                           console.log(name);
-                      l= true;
-                      }else{
-                        l=  false;
-                         console.log(' wrong');
-                      }
-                    });
-
-                 return l;
                }
-
          }
     }
 </script>
