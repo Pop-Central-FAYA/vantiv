@@ -250,64 +250,53 @@ class GetStationRatings
         $this->getProgramNameMap();
 
         return Utilities::switch_db('api')->transaction(function() use ($state_list, $projections){
-            $new_media_plan = $this->saveMediaPlan($state_list);
-            Log::debug("did I save media plan properly?");
+            if (count($projections)) {
+                $new_media_plan = $this->saveMediaPlan($state_list);
+                Log::debug("did I save media plan properly?");
 
-            $list_to_save = array();
-            // $batch_size = 500;
-            $count = 0;
-            foreach($projections as $suggestion) {
-                $station = $suggestion['station'];
-                $state = $suggestion['state'];
-                if (isset($this->stationListing[$station]) && isset($this->stationListing[$station][$state])) {
-                    $station_type = $this->stationListing[$station][$state]['station_type'];
-                    $station_region = $this->stationListing[$station][$state]['region'];
-                    $list_to_save[] = [
-                        'id' => uniqid(),
-                        'media_plan_id' => $new_media_plan->id,
-                        'media_type' => $suggestion['media_type'],
-                        'station' => $station,
-                        'state' => $state,
-                        'station_type' => $station_type,
-                        'region' => $station_region,
-                        'program' => $this->getProgramName($suggestion['station'], $suggestion['day'], $suggestion['start_time'], $suggestion['program']),
-                        'day' => $suggestion['day'],
-                        'start_time' => $suggestion['start_time'],
-                        'end_time' => $suggestion['end_time'],
-                        'total_audience' => $suggestion['audience'],
-                        'state_counts' => json_encode($suggestion['state_counts']),
-                        'created_at' => $new_media_plan->created_at,
-                        'updated_at' => $new_media_plan->updated_at,
-                    ];
-                    $count += 1;
-                } else {
-                    Log::warn($station . ' or ' . $state . ' is not set');
+                $list_to_save = array();
+                // $batch_size = 500;
+                $count = 0;
+                foreach($projections as $suggestion) {
+                    $station = $suggestion['station'];
+                    $state = $suggestion['state'];
+                    if (isset($this->stationListing[$station]) && isset($this->stationListing[$station][$state])) {
+                        $station_type = $this->stationListing[$station][$state]['station_type'];
+                        $station_region = $this->stationListing[$station][$state]['region'];
+                        $list_to_save[] = [
+                            'id' => uniqid(),
+                            'media_plan_id' => $new_media_plan->id,
+                            'media_type' => $suggestion['media_type'],
+                            'station' => $station,
+                            'state' => $state,
+                            'station_type' => $station_type,
+                            'region' => $station_region,
+                            'program' => $this->getProgramName($suggestion['station'], $suggestion['day'], $suggestion['start_time'], $suggestion['program']),
+                            'day' => $suggestion['day'],
+                            'start_time' => $suggestion['start_time'],
+                            'end_time' => $suggestion['end_time'],
+                            'total_audience' => $suggestion['audience'],
+                            'state_counts' => json_encode($suggestion['state_counts']),
+                            'created_at' => $new_media_plan->created_at,
+                            'updated_at' => $new_media_plan->updated_at,
+                        ];
+                        $count += 1;
+                    } else {
+                        Log::warn($station . ' or ' . $state . ' is not set');
+                    }
                 }
-                // if ($count >= 2000) {
-                //     Log::debug("saving batch");
-                //     MediaPlanSuggestion::insert($list_to_save);
-                //     $list_to_save = [];
-                //     $count = 0;
-                //     Log::debug("saved batch");
-                // }
+                
+                $media_plan_suggestions = new MediaPlanSuggestion();
+                $columns = ['id', 'media_plan_id', 'media_type', 'station', 'state', 'station_type', 'region', 'program', 'day', 'start_time',
+                    'end_time', 'total_audience', 'state_counts', 'created_at', 'updated_at'
+                ];
+                $batch_size = 2000;
+                $laravel_batch = new LaravelBatch(app('db'));
+                $result = $laravel_batch->insert($media_plan_suggestions, $columns, $list_to_save, $batch_size);
+                Log::debug($result);
+                return $new_media_plan;
             }
-            
-            // if (count($list_to_save) > 0) {
-            //     Log::debug("saving last batch");
-            //     MediaPlanSuggestion::insert($list_to_save);
-            //     Log::debug("saved last batch");
-            //     $list_to_save = [];
-            //     $count = 0;
-            // }
-            $media_plan_suggestions = new MediaPlanSuggestion();
-            $columns = ['id', 'media_plan_id', 'media_type', 'station', 'state', 'station_type', 'region', 'program', 'day', 'start_time',
-                'end_time', 'total_audience', 'state_counts', 'created_at', 'updated_at'
-            ];
-            $batch_size = 2000;
-            $laravel_batch = new LaravelBatch(app('db'));
-            $result = $laravel_batch->insert($media_plan_suggestions, $columns, $list_to_save, $batch_size);
-            Log::debug($result);
-            return $new_media_plan;
+            return null;
         });    
     }
 
