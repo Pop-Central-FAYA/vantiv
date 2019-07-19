@@ -11,7 +11,11 @@ a[x-apple-data-detectors] { color:inherit; text-decoration:none; font-size:inher
  </head> 
  <body style="width:100%;font-family:arial, 'helvetica neue', helvetica, sans-serif;padding:0;Margin:0;"> 
   <div class="es-wrapper-color" style="background-color:#E4E5E7;"> 
-
+   <!--[if gte mso 9]>
+      <v:background xmlns:v="urn:schemas-microsoft-com:vml" fill="t">
+        <v:fill type="tile" color="#e4e5e7"></v:fill>
+      </v:background>
+    <![endif]--> 
    <table class="es-wrapper" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;width:100%;height:100%;background-repeat:repeat;background-position:center top;"> 
      <tr style="border-collapse:collapse;"> 
       <td valign="top" style="padding:0;Margin:0;"> 
@@ -38,7 +42,7 @@ a[x-apple-data-detectors] { color:inherit; text-decoration:none; font-size:inher
                   <td width="280" align="left" style="padding:0;Margin:0;"> 
                    <table width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;border-spacing:0px;"> 
                      <tr style="border-collapse:collapse;"> 
-                      <td class="es-infoblock" align="right" style="padding:0;Margin:0;line-height:14px;font-size:12px;color:#999999;"> </td> 
+                      <td class="es-infoblock" align="right" style="padding:0;Margin:0;line-height:14px;font-size:12px;color:#999999;"> <p style="Margin:0;font-size:12px;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:14px;color:#999999;"><a href="https://viewstripo.email/" target="_blank" style="font-family:arial, 'helvetica neue', helvetica, sans-serif;font-size:12px;text-decoration:none;color:#999999;"></a></p> </td> 
                      </tr> 
                    </table> </td> 
                  </tr> 
@@ -60,7 +64,7 @@ a[x-apple-data-detectors] { color:inherit; text-decoration:none; font-size:inher
                   <td class="es-m-p0r es-m-p20b" width="178" valign="top" align="center" style="padding:0;Margin:0;"> 
                    <table width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;border-spacing:0px;"> 
                      <tr style="border-collapse:collapse;"> 
-                      <td class="es-m-txt-c" align="left" style="padding:0;Margin:0;"> <img src="http://res.cloudinary.com/drwrickhm/image/upload/v1522495083/logo_mail.png" alt="Vantage logo" title="Hummingbird logo" width="104" height="104" style="display:block;border:0;outline:none;text-decoration:none;"></amp-img></td> 
+                      <td class="es-m-txt-c" align="left" style="padding:0;Margin:0;">{!! AssetsHelper::mailLogo() !!}</td> 
                      </tr> 
                    </table> </td> 
                  </tr> 
@@ -71,7 +75,7 @@ a[x-apple-data-detectors] { color:inherit; text-decoration:none; font-size:inher
                   <td width="362" align="left" style="padding:0;Margin:0;"> 
                    <table width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;border-spacing:0px;"> 
                      <tr style="border-collapse:collapse;"> 
-                      <td class="es-m-txt-c" align="right" style="padding:0;Margin:0;padding-top:15px;padding-bottom:20px;"> <p style="Margin:0;font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#21CBA7;"></p><p style="Margin:0;font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#21CBA7;"> -date_time- </p> </td> 
+                      <td class="es-m-txt-c" align="right" style="padding:0;Margin:0;padding-top:15px;padding-bottom:20px;"> <p style="Margin:0;font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#21CBA7;"></p><p style="Margin:0;font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#21CBA7;"> {{ date('F j, Y | G:i A T') }} </p> </td> 
                      </tr> 
                    </table> </td> 
                  </tr> 
@@ -85,7 +89,7 @@ a[x-apple-data-detectors] { color:inherit; text-decoration:none; font-size:inher
                   <td width="600" valign="top" align="center" style="padding:0;Margin:0;"> 
                    <table width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;border-spacing:0px;"> 
                      <tr style="border-collapse:collapse;"> 
-                      <td align="center" style="padding:0;Margin:0;"> <img class="adapt-img" src="https://deozz.stripocdn.email/content/guids/CABINET_84164752b8a377d5e94cfc0e1ea2c8e6/images/47051523540803179.png" alt style="display:block;border:0;outline:none;text-decoration:none;" width="600" height="38" layout="responsive"></td> 
+                      <td align="center" style="padding:0;Margin:0;"> <amp-img class="adapt-img" src="https://deozz.stripocdn.email/content/guids/CABINET_84164752b8a377d5e94cfc0e1ea2c8e6/images/47051523540803179.png" alt style="display:block;border:0;outline:none;text-decoration:none;" width="600" height="38" layout="responsive"></amp-img></td> 
                      </tr> 
                    </table> </td> 
                  </tr> 
@@ -105,8 +109,11 @@ a[x-apple-data-detectors] { color:inherit; text-decoration:none; font-size:inher
                   <td width="600" valign="top" align="center" style="padding:0;Margin:0;"> 
                    <table width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;border-spacing:0px;"> 
                      <tr style="border-collapse:collapse;"> 
-                      <td align="center" style="Margin:0;padding-top:10px;padding-left:10px;padding-right:10px;padding-bottom:15px;"> <span class="es-button-border" style="border-style:solid;border-color:transparent;background:#44C1C9;border-width:0px;display:inline-block;border-radius:5px;width:auto;"> <a href="-link-" class="es-button" target="_blank" style="text-decoration:none;font-family:arial, 'helvetica neue', helvetica, sans-serif;font-size:18px;color:#FFFFFF;border-style:solid;border-color:#44C1C9;border-width:10px 20px 10px 20px;display:inline-block;background:#44C1C9;border-radius:5px;font-weight:normal;font-style:normal;line-height:22px;width:auto;text-align:center;">Accept Invite</a> </span> </td> 
-                     </tr> 
+                      <td align="center" style="Margin:0;padding-top:10px;padding-left:10px;padding-right:10px;padding-bottom:15px;"> <span class="es-button-border" style="border-style:solid;border-color:transparent;background:#44C1C9;border-width:0px;display:inline-block;border-radius:5px;width:auto;"> 
+                      @yield('button')
+                    </span> </td> 
+                   
+                    </tr> 
                    </table> </td> 
                  </tr> 
                </table> </td> 
@@ -136,17 +143,17 @@ a[x-apple-data-detectors] { color:inherit; text-decoration:none; font-size:inher
                <table width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;border-spacing:0px;"> 
                  <tr style="border-collapse:collapse;"> 
                   <td width="520" align="left" style="padding:0;Margin:0;"> 
+
                    <table width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;border-spacing:0px;"> 
                      <tr style="border-collapse:collapse;"> 
-                      <td align="center" style="padding:0;Margin:0;"> <h4 style="Margin:0;line-height:24px;font-family:tahoma, verdana, segoe, sans-serif;font-size:20px;font-style:normal;font-weight:normal;color:#333333;">Invitation To Join Vantage</h4> </td> 
-                     </tr> 
-                     <tr style="border-collapse:collapse;"> 
-                      <td align="center" style="padding:0;Margin:0;padding-top:10px;padding-bottom:10px;"> <p style="Margin:0;font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;">  You have been invited by -inviter- to be part of -company- on the <a href="https://torch.fayamedia.com/login">FAYA </a> Platform.<br></p> </td> 
+                     @yield('body_info')
                      </tr> 
                      <tr style="border-collapse:collapse;"> 
                       <td align="center" style="padding:0;Margin:0;padding-bottom:10px;padding-top:15px;"> <h3 style="Margin:0;line-height:24px;font-family:tahoma, verdana, segoe, sans-serif;font-size:20px;font-style:normal;font-weight:normal;color:#333333;">FAYA Inc. 2019</h3> </td> 
                      </tr> 
-                   </table> </td> 
+                   </table> 
+                
+                </td> 
                  </tr> 
                </table> </td> 
              </tr> 

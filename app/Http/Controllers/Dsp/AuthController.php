@@ -13,6 +13,7 @@ class AuthController extends MainAuthController
         $this->forget_password = 'auth.dsp.password.forget_password';
         $this->change_password = 'auth.dsp.password.change_password';
         $this->dashboard_route = 'dashboard';
+        $this->email_subject = 'Vantage Password Reset';
     }
 
     protected function isRightUser($user) 
