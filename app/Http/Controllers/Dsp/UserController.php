@@ -92,7 +92,6 @@ class UserController extends Controller
                 $email_format = new MailFormat($invited_user, $inviter_name, $subject);
                 $user_mail_content_array[] = $email_format->emailFormat();
             }
-            dd($user_mail_content_array);
             $email_invitation_service = new UserInvitationMail($user_mail_content_array);
             $email_invitation_service->sendInvitationMail();
         });
@@ -161,8 +160,8 @@ class UserController extends Controller
     public function resendInvitation(Request $request)
     {
         $user = User::find($request->user_id);
-
-        $email_format = new MailFormat($user, \Auth::user()->full_name);
+        $subject="Invitation to join Vantage";
+        $email_format = new MailFormat($user, \Auth::user()->full_name, $subject);
         $user_mail_content_array[] = $email_format->emailFormat();
 
         $email_invitation_service = new UserInvitationMail($user_mail_content_array);
