@@ -56,7 +56,7 @@ return [
 
     'from' => [
         'address' => env('MAIL_FROM','info@fayamedia.com'),
-        'name' => env('EMAIL_FROM_NAME','fayamedia')
+        'name' => env('EMAIL_FROM_NAME','FAYA media')
     ],
 
     /*
