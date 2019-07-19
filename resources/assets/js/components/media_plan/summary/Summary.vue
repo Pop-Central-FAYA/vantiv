@@ -7,16 +7,16 @@
                     <table class="display dashboard_campaigns">
                         <tbody>
                            <tr>
-                            <td><span class="mr-2"><b>Client Name:</b></span>  {{ summarydataobj.client.company_name }}</td>
+                            <td><span class="mr-2"><b>Client Name:</b></span>  {{ summaryDetails.client.company_name }}</td>
                            </tr>
                            <tr>
-                            <td><span class="mr-2"><b>Product Name:</b></span>  {{ summarydataobj.product_name }}</td>
+                            <td><span class="mr-2"><b>Product Name:</b></span>  {{ summaryDetails.product_name }}</td>
                            </tr>
                            <tr>
-                            <td><span class="mr-2"><b>Flight Date:</b></span> {{ dateToYMD(summarydataobj.start_date) }} to {{ dateToYMD(summarydataobj.end_date) }} </td>
+                            <td><span class="mr-2"><b>Flight Date:</b></span> {{ dateToHumanReadable(summaryDetails.start_date) }} to {{ dateToHumanReadable(summaryDetails.end_date) }} </td>
                            </tr>
                            <tr>
-                            <td><span class="mr-2"><b>Status:</b></span>  {{ summarydataobj.status }}</td>
+                            <td><span class="mr-2"><b>Status:</b></span>  {{ summaryDetails.status }}</td>
                            </tr>
                         </tbody>
                     </table>
@@ -35,22 +35,22 @@
                         </tr>
                         </thead>
                         <tbody>
-                                <tr v-for="(sumData,key) in sumData" v-bind:key="key">
-                                    <td>{{ sumData.medium }}</td>
-                                    <td> <span v-for="(list, index) in sumData.material_durations" v-bind:key="index"> <span>{{list}}</span><span v-if="index+1 < sumData.material_durations.length">, </span>  </span> </td>
-                                    <td> {{ sumData.total_spots }} </td>
-                                    <td>{{ nunberformat(sumData.gross_value) }} </td>
-                                    <td> {{ nunberformat(sumData.net_value) }}</td>
-                                    <td> {{ nunberformat(sumData.savings) }}</td>
+                                <tr v-for="(summaryData,key) in summaryData" v-bind:key="key">
+                                    <td>{{ summaryData.medium }}</td>
+                                    <td> <span v-for="(list, index) in summaryData.material_durations" v-bind:key="index"> <span>{{list}}</span><span v-if="index+1 < summaryData.material_durations.length">, </span>  </span> </td>
+                                    <td> {{ summaryData.total_spots }} </td>
+                                    <td>{{ numberFormat(summaryData.gross_value) }} </td>
+                                    <td> {{ numberFormat(summaryData.net_value) }}</td>
+                                    <td> {{ numberFormat(summaryData.savings) }}</td>
                                 </tr>
                           
                             <tr>
                                 <td>Total</td>
                                 <td></td>
-                                <td>{{ total_total_spots }}</td>
-                                <td>{{ nunberformat(total_gross_value) }}</td>
-                                <td>{{ nunberformat( total_net_value) }}</td>
-                                <td>{{ nunberformat(total_savings) }}</td>
+                                <td>{{ total_spots }}</td>
+                                <td>{{ numberFormat(total_gross_value) }}</td>
+                                <td>{{ numberFormat( total_net_value) }}</td>
+                                <td>{{ numberFormat(total_savings) }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -71,9 +71,7 @@
         },
         data() {
             return {
-                summarydataobj: this.summaryDetails, 
-                sumData: this.summaryData,
-                total_total_spots: 0,
+                total_spots: 0,
                 total_gross_value: 0,
                 total_net_value: 0,
                 total_savings: 0,
@@ -83,19 +81,10 @@
             console.log('Suggestions Table Component mounted.')
             this. getSums();
         },   methods: {
-            dateToYMD(date) {
-                const months = ["Jan", "Feb", "Mar","Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-                let current_datetime = new Date(date)
-                return current_datetime.getDate() + "-" + months[current_datetime.getMonth()] + "-" + current_datetime.getFullYear()
-
-            },
-             nunberformat(n) {
-                  return n.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '');
-               },
                getSums(){
                     let self = this;
                     this.sumData.forEach(function (item, key) {
-                    self.total_total_spots += item['total_spots']
+                    self.total_spots += item['total_spots']
                     self.total_gross_value += item['gross_value']
                     self.total_net_value += item['net_value']
                     self.total_savings += item['savings']

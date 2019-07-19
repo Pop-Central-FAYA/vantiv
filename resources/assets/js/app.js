@@ -115,7 +115,16 @@ Vue.mixin({
         formatDate(date_str) {
             var dateParts = date_str.split("-");
             return `${dateParts[0]}-${dateParts[1]}-${dateParts[2].substr(0,2)}`;
-        }
+        },
+        dateToHumanReadable(date) {
+            const months = ["Jan", "Feb", "Mar","Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            let current_datetime = new Date(date)
+            return current_datetime.getDate() + "-" + months[current_datetime.getMonth()] + "-" + current_datetime.getFullYear()
+
+        },
+         numberFormat(n) {
+              return n.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '');
+           },
     }
 })
 const app = new Vue({

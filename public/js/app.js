@@ -2415,9 +2415,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     data: function data() {
         return {
-            summarydataobj: this.summaryDetails,
-            sumData: this.summaryData,
-            total_total_spots: 0,
+            total_spots: 0,
             total_gross_value: 0,
             total_net_value: 0,
             total_savings: 0
@@ -2428,18 +2426,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         this.getSums();
     },
     methods: {
-        dateToYMD: function dateToYMD(date) {
-            var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-            var current_datetime = new Date(date);
-            return current_datetime.getDate() + "-" + months[current_datetime.getMonth()] + "-" + current_datetime.getFullYear();
-        },
-        nunberformat: function nunberformat(n) {
-            return n.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '');
-        },
         getSums: function getSums() {
             var self = this;
             this.sumData.forEach(function (item, key) {
-                self.total_total_spots += item['total_spots'];
+                self.total_spots += item['total_spots'];
                 self.total_gross_value += item['gross_value'];
                 self.total_net_value += item['net_value'];
                 self.total_savings += item['savings'];
@@ -2902,7 +2892,7 @@ var render = function() {
                     _c("td", [
                       _vm._m(0),
                       _vm._v(
-                        "  " + _vm._s(_vm.summarydataobj.client.company_name)
+                        "  " + _vm._s(_vm.summaryDetails.client.company_name)
                       )
                     ])
                   ]),
@@ -2910,7 +2900,7 @@ var render = function() {
                   _c("tr", [
                     _c("td", [
                       _vm._m(1),
-                      _vm._v("  " + _vm._s(_vm.summarydataobj.product_name))
+                      _vm._v("  " + _vm._s(_vm.summaryDetails.product_name))
                     ])
                   ]),
                   _vm._v(" "),
@@ -2919,9 +2909,15 @@ var render = function() {
                       _vm._m(2),
                       _vm._v(
                         " " +
-                          _vm._s(_vm.dateToYMD(_vm.summarydataobj.start_date)) +
+                          _vm._s(
+                            _vm.dateToHumanReadable(
+                              _vm.summaryDetails.start_date
+                            )
+                          ) +
                           " to " +
-                          _vm._s(_vm.dateToYMD(_vm.summarydataobj.end_date)) +
+                          _vm._s(
+                            _vm.dateToHumanReadable(_vm.summaryDetails.end_date)
+                          ) +
                           " "
                       )
                     ])
@@ -2930,7 +2926,7 @@ var render = function() {
                   _c("tr", [
                     _c("td", [
                       _vm._m(3),
-                      _vm._v("  " + _vm._s(_vm.summarydataobj.status))
+                      _vm._v("  " + _vm._s(_vm.summaryDetails.status))
                     ])
                   ])
                 ])
@@ -2944,19 +2940,19 @@ var render = function() {
                 _c(
                   "tbody",
                   [
-                    _vm._l(_vm.sumData, function(sumData, key) {
+                    _vm._l(_vm.summaryData, function(summaryData, key) {
                       return _c("tr", { key: key }, [
-                        _c("td", [_vm._v(_vm._s(sumData.medium))]),
+                        _c("td", [_vm._v(_vm._s(summaryData.medium))]),
                         _vm._v(" "),
                         _c(
                           "td",
-                          _vm._l(sumData.material_durations, function(
+                          _vm._l(summaryData.material_durations, function(
                             list,
                             index
                           ) {
                             return _c("span", { key: index }, [
                               _c("span", [_vm._v(_vm._s(list))]),
-                              index + 1 < sumData.material_durations.length
+                              index + 1 < summaryData.material_durations.length
                                 ? _c("span", [_vm._v(", ")])
                                 : _vm._e()
                             ])
@@ -2965,24 +2961,26 @@ var render = function() {
                         ),
                         _vm._v(" "),
                         _c("td", [
-                          _vm._v(" " + _vm._s(sumData.total_spots) + " ")
+                          _vm._v(" " + _vm._s(summaryData.total_spots) + " ")
                         ]),
                         _vm._v(" "),
                         _c("td", [
                           _vm._v(
-                            _vm._s(_vm.nunberformat(sumData.gross_value)) + " "
+                            _vm._s(_vm.numberFormat(summaryData.gross_value)) +
+                              " "
                           )
                         ]),
                         _vm._v(" "),
                         _c("td", [
                           _vm._v(
-                            " " + _vm._s(_vm.nunberformat(sumData.net_value))
+                            " " +
+                              _vm._s(_vm.numberFormat(summaryData.net_value))
                           )
                         ]),
                         _vm._v(" "),
                         _c("td", [
                           _vm._v(
-                            " " + _vm._s(_vm.nunberformat(sumData.savings))
+                            " " + _vm._s(_vm.numberFormat(summaryData.savings))
                           )
                         ])
                       ])
@@ -2993,18 +2991,18 @@ var render = function() {
                       _vm._v(" "),
                       _c("td"),
                       _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(_vm.total_total_spots))]),
+                      _c("td", [_vm._v(_vm._s(_vm.total_spots))]),
                       _vm._v(" "),
                       _c("td", [
-                        _vm._v(_vm._s(_vm.nunberformat(_vm.total_gross_value)))
+                        _vm._v(_vm._s(_vm.numberFormat(_vm.total_gross_value)))
                       ]),
                       _vm._v(" "),
                       _c("td", [
-                        _vm._v(_vm._s(_vm.nunberformat(_vm.total_net_value)))
+                        _vm._v(_vm._s(_vm.numberFormat(_vm.total_net_value)))
                       ]),
                       _vm._v(" "),
                       _c("td", [
-                        _vm._v(_vm._s(_vm.nunberformat(_vm.total_savings)))
+                        _vm._v(_vm._s(_vm.numberFormat(_vm.total_savings)))
                       ])
                     ])
                   ],
@@ -7694,6 +7692,14 @@ Vue.mixin({
         formatDate: function formatDate(date_str) {
             var dateParts = date_str.split("-");
             return dateParts[0] + '-' + dateParts[1] + '-' + dateParts[2].substr(0, 2);
+        },
+        dateToHumanReadable: function dateToHumanReadable(date) {
+            var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            var current_datetime = new Date(date);
+            return current_datetime.getDate() + "-" + months[current_datetime.getMonth()] + "-" + current_datetime.getFullYear();
+        },
+        numberFormat: function numberFormat(n) {
+            return n.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '');
         }
     }
 });
