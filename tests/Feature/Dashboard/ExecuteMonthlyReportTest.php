@@ -13,7 +13,7 @@ class ExecuteMonthlyReportTest extends TestCase
     use PermissionsTrait;
     public function test_it_redirects_to_login_if_user_is_not_authenticated()
     {
-        $result = $this->json('GET','/campaign-management/reports');
+        $result = $this->get('/campaign-management/reports');
         $result->assertRedirect('login');
     }
 
