@@ -37,6 +37,7 @@ window.Event = new Vue();
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+
 // MEDIA PLANNING
 Vue.component('media-plan-suggestion-table', require('./components/media_plan/customise/SuggestionTable.vue'));
 Vue.component('media-plan-suggestion-graph', require('./components/media_plan/customise/SuggestionGraph.vue'));
@@ -45,8 +46,6 @@ Vue.component('media-plan-suggestion-filter', require('./components/media_plan/c
 Vue.component('media-plan-footer-nav', require('./components/media_plan/customise/FooterNavigation.vue'));
 Vue.component('media-plan-suggestions', require('./components/media_plan/customise/Suggestions.vue'));
 Vue.component('media-plan-create-campaign', require('./components/media_plan/summary/CreateCampaign.vue'));
-Vue.component('default-button', require('./components/media_plan/summary/DefaultButton.vue'));
-Vue.component('danger-button', require('./components/media_plan/summary/DangerButton.vue'));
 Vue.component('media-plan-summary', require('./components/media_plan/summary/Summary.vue'));
 
 // ASSET MANAGEMENT

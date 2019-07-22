@@ -2269,74 +2269,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\",[\"transform-runtime\",{\"polyfill\":false,\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/media_plan/summary/DangerButton.vue":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    props: {
-        btnName: String,
-        btnIcon: String,
-        btnDestination: String
-    },
-    data: function data() {
-        return {
-            client: ''
-        };
-    },
-    mounted: function mounted() {},
-
-    methods: {
-        ButtonAction: function ButtonAction() {
-            window.location = this.btnDestination;
-        }
-    }
-});
-
-/***/ }),
-
-/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\",[\"transform-runtime\",{\"polyfill\":false,\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/media_plan/summary/DefaultButton.vue":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    props: {
-        btnName: String,
-        btnIcon: String,
-        btnDestination: String
-    },
-    data: function data() {
-        return {
-            client: ''
-        };
-    },
-    mounted: function mounted() {},
-
-    methods: {
-        ButtonAction: function ButtonAction() {
-            window.location = this.btnDestination;
-        }
-    }
-});
-
-/***/ }),
-
 /***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\",[\"transform-runtime\",{\"polyfill\":false,\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/media_plan/summary/Summary.vue":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -2407,11 +2339,29 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: {
         summaryDetails: Object,
-        summaryData: Array
+        summaryData: Array,
+        summaryPermissions: Array
     },
     data: function data() {
         return {
@@ -2422,18 +2372,31 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         };
     },
     mounted: function mounted() {
-        console.log('Suggestions Table Component mounted.');
+        console.log('Summary Table Component mounted.');
         this.getSums();
     },
     methods: {
         getSums: function getSums() {
             var self = this;
-            this.sumData.forEach(function (item, key) {
+            this.summaryData.forEach(function (item, key) {
                 self.total_spots += item['total_spots'];
                 self.total_gross_value += item['gross_value'];
                 self.total_net_value += item['net_value'];
                 self.total_savings += item['savings'];
             });
+        },
+        haspermission: function haspermission(permmision) {
+            var marvelHeroes = this.summaryPermissions.filter(function (hero) {
+                return hero.name == permmision;
+            });
+            if (marvelHeroes.length == 0) {
+                return false;
+            } else {
+                return true;
+            }
+        },
+        ButtonAction: function ButtonAction(Destination) {
+            window.location = Destination;
         }
     }
 });
@@ -3013,7 +2976,122 @@ var render = function() {
           ]
         )
       ]
-    )
+    ),
+    _vm._v(" "),
+    _c("div", { staticClass: "container-fluid my-5" }, [
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col-md-4 p-0" }, [
+          _c(
+            "button",
+            {
+              staticClass: "btn small_btn",
+              attrs: { id: "back_btn" },
+              on: {
+                click: function($event) {
+                  return _vm.ButtonAction(
+                    "/media-plan/createplan/" + _vm.summaryDetails.id
+                  )
+                }
+              }
+            },
+            [
+              _c("i", { staticClass: "media-plan material-icons" }, [
+                _vm._v("navigate_before")
+              ]),
+              _vm._v(" Back")
+            ]
+          )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-md-8 p-0 text-right" }, [
+          _vm.summaryDetails.status == "Suggested"
+            ? _c("span", [
+                _vm.haspermission("approve.media_plan")
+                  ? _c(
+                      "button",
+                      {
+                        staticClass:
+                          "media-plan btn block_disp uppercased mr-1",
+                        on: {
+                          click: function($event) {
+                            return _vm.ButtonAction(
+                              "/media-plan/approve/" + _vm.summaryDetails.id
+                            )
+                          }
+                        }
+                      },
+                      [
+                        _c("i", { staticClass: "media-plan material-icons" }, [
+                          _vm._v("check")
+                        ]),
+                        _vm._v("Approve Plan")
+                      ]
+                    )
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.haspermission("decline.media_plan")
+                  ? _c(
+                      "button",
+                      {
+                        staticClass:
+                          "media-plan btn block_disp uppercased bg_red mr-1",
+                        on: {
+                          click: function($event) {
+                            return _vm.ButtonAction(
+                              "/media-plan/decline/" + _vm.summaryDetails.id
+                            )
+                          }
+                        }
+                      },
+                      [
+                        _c("i", { staticClass: "media-plan material-icons" }, [
+                          _vm._v("clear")
+                        ]),
+                        _vm._v("Decline Plan")
+                      ]
+                    )
+                  : _vm._e()
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.haspermission("export.media_plan")
+            ? _c(
+                "button",
+                {
+                  staticClass: "btn block_disp uppercased",
+                  on: {
+                    click: function($event) {
+                      return _vm.ButtonAction(
+                        "/media-plan/export/" + _vm.summaryDetails.id
+                      )
+                    }
+                  }
+                },
+                [
+                  _c("i", { staticClass: "media-plan material-icons" }, [
+                    _vm._v("file_download")
+                  ]),
+                  _vm._v("Export Plan")
+                ]
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.summaryDetails.status == "Approved"
+            ? _c(
+                "span",
+                [
+                  _vm.haspermission("convert.media_plan")
+                    ? _c("media-plan-create-campaign", {
+                        attrs: { id: _vm.summaryDetails.id }
+                      })
+                    : _vm._e()
+                ],
+                1
+              )
+            : _vm._e()
+        ])
+      ])
+    ])
   ])
 }
 var staticRenderFns = [
@@ -3969,45 +4047,6 @@ if (false) {
   module.hot.accept()
   if (module.hot.data) {
     require("vue-hot-reload-api")      .rerender("data-v-16ffcb78", module.exports)
-  }
-}
-
-/***/ }),
-
-/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-1f513b3c\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/media_plan/summary/DangerButton.vue":
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "button",
-    {
-      staticClass: "media-plan btn block_disp uppercased bg_red mr-1",
-      attrs: { type: "button" },
-      on: {
-        click: function($event) {
-          return _vm.ButtonAction()
-        }
-      }
-    },
-    [
-      _vm._v(">"),
-      _c("i", { staticClass: "media-plan material-icons" }, [
-        _vm._v(_vm._s(_vm.btnIcon))
-      ]),
-      _vm._v(_vm._s(_vm.btnName))
-    ]
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-1f513b3c", module.exports)
   }
 }
 
@@ -5517,44 +5556,6 @@ if (false) {
   module.hot.accept()
   if (module.hot.data) {
     require("vue-hot-reload-api")      .rerender("data-v-4146a9df", module.exports)
-  }
-}
-
-/***/ }),
-
-/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-4cbbd976\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/media_plan/summary/DefaultButton.vue":
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "button",
-    {
-      staticClass: "btn btn-success media-plan btn block_disp uppercased",
-      attrs: { type: "button" },
-      on: {
-        click: function($event) {
-          return _vm.ButtonAction()
-        }
-      }
-    },
-    [
-      _c("i", { staticClass: "media-plan material-icons" }, [
-        _vm._v(_vm._s(_vm.btnIcon))
-      ]),
-      _vm._v(_vm._s(_vm.btnName))
-    ]
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-4cbbd976", module.exports)
   }
 }
 
@@ -7623,8 +7624,6 @@ Vue.component('media-plan-suggestion-filter', __webpack_require__("./resources/a
 Vue.component('media-plan-footer-nav', __webpack_require__("./resources/assets/js/components/media_plan/customise/FooterNavigation.vue"));
 Vue.component('media-plan-suggestions', __webpack_require__("./resources/assets/js/components/media_plan/customise/Suggestions.vue"));
 Vue.component('media-plan-create-campaign', __webpack_require__("./resources/assets/js/components/media_plan/summary/CreateCampaign.vue"));
-Vue.component('default-button', __webpack_require__("./resources/assets/js/components/media_plan/summary/DefaultButton.vue"));
-Vue.component('danger-button', __webpack_require__("./resources/assets/js/components/media_plan/summary/DangerButton.vue"));
 Vue.component('media-plan-summary', __webpack_require__("./resources/assets/js/components/media_plan/summary/Summary.vue"));
 
 // ASSET MANAGEMENT
@@ -8653,102 +8652,6 @@ if (false) {(function () {
     hotAPI.createRecord("data-v-1517b6ce", Component.options)
   } else {
     hotAPI.reload("data-v-1517b6ce", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-
-/***/ "./resources/assets/js/components/media_plan/summary/DangerButton.vue":
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
-/* script */
-var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\",[\"transform-runtime\",{\"polyfill\":false,\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/media_plan/summary/DangerButton.vue")
-/* template */
-var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-1f513b3c\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/media_plan/summary/DangerButton.vue")
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/media_plan/summary/DangerButton.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-1f513b3c", Component.options)
-  } else {
-    hotAPI.reload("data-v-1f513b3c", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-
-/***/ "./resources/assets/js/components/media_plan/summary/DefaultButton.vue":
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
-/* script */
-var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\",[\"transform-runtime\",{\"polyfill\":false,\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/media_plan/summary/DefaultButton.vue")
-/* template */
-var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-4cbbd976\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/media_plan/summary/DefaultButton.vue")
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/media_plan/summary/DefaultButton.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-4cbbd976", Component.options)
-  } else {
-    hotAPI.reload("data-v-4cbbd976", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
