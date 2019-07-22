@@ -8,6 +8,7 @@ use Vanguard\Models\Company;
 use Vanguard\Models\CompanyType;
 use Vanguard\Services\User\AuthenticatableUser;
 use Vanguard\User;
+use Vanguard\Libraries\Enum\CompanyTypeName;
 
 class UserFlowTest extends TestCase
 {
@@ -18,7 +19,7 @@ class UserFlowTest extends TestCase
      */
     public function test_user_can_view_a_login_form()
     {
-        $response = $this->get('/login');
+        $response = $this->get('login');
         $response->assertSuccessful();
         $response->assertViewIs('auth.dsp.login');
     }
@@ -30,30 +31,48 @@ class UserFlowTest extends TestCase
         $this->assertInstanceOf(User::class, $user);
     }
 
-    public function test_user_can_login_in_to_vantage()
+    public function test_user_can_login_to_vantage()
     {
-       // \Session::start();
+       \Session::start();
 
         $faker = Factory::create();
         $user = $this->createUser($faker);
-        $this->assertInstanceOf(User::class, $user);
-        $authenticate = $this->login($user->email);
-        $authenticate->assertRedirect(route('dashboard'));
+         $this->assertInstanceOf(User::class, $user);
+         $authenticate = $this->login($user->email, "helloThisIsAuthenticatable");
+         $authenticate->assertRedirect('/');
+         $this->assertAuthenticatedAs($user);
+
+    }
+
+
+    public function test_user_can_log_out_of_vantage()
+    {
+       \Session::start();
+
+        $faker = Factory::create();
+        $user = $this->createUser($faker);
+         $this->assertInstanceOf(User::class, $user);
+         $authenticate = $this->login($user->email, "helloThisIsAuthenticatable");
         $this->assertAuthenticatedAs($user);
+        $authenticate = $this->logout();
+         $authenticate->assertRedirect('/login');
+         
 
     }
 
     public function test_user_cannot_view_a_login_form_when_authenticated()
     {
         $user = factory(User::class)->make();
-        $response = $this->actingAs($user)->get('/login');
+        $response = $this->actingAs($user)->get('login');
         $response->assertRedirect('/');
     }
 
     public function createUser($faker)
     {
         //create company type
-        $company_type = factory(CompanyType::class)->create();
+        $company_type = factory(CompanyType::class)->create([
+            'name' => CompanyTypeName::AGENCY
+        ]);
         //create company
         $company = \factory(Company::class)->create([
             'company_type_id' => $company_type->id
@@ -64,15 +83,33 @@ class UserFlowTest extends TestCase
         return $authenticatable_user_service->createAuthenticatableUser();
     }
 
-    public function login($email)
+
+    public function login($email, $password)
     {
         \Session::start();
         return $this->post(route('post.login'), [
                     '_token' => \Session::token(),
                     'email' => $email,
-                    'password' => 'helloThisIsAuthenticatable',
+                    'password' => $password,
                 ]);
     }
-   
+    public function logout()
+    {
+        return $this->get(route('auth.logout'));
+    }
+    
+    public function test_user_cannot_login_with_incorrect_password()
+    {       
+        $faker = Factory::create();
+        $user = $this->createUser($faker);
+         $this->assertInstanceOf(User::class, $user);
+         $authenticate = $this->login($user->email, "wrongpassword");
+        $authenticate->assertRedirect('/login');
+        $this->followRedirects($authenticate)
+        ->assertSee('email and or password invalid');
+        $this->assertGuest();
+    }
 
+
+   
 }
