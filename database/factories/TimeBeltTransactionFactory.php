@@ -19,6 +19,6 @@ $factory->define(\Vanguard\Models\TimeBeltTransaction::class, function (Faker $f
         'playout_hour' => $faker->time('H:i:s', 'now'),
         'approval_status' => 'approved',
         'payment_status' => 'approved',
-        'order' => $faker->numberBetween(1,6)
+        'order' => 0
     ];
 });

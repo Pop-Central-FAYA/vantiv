@@ -7,14 +7,9 @@
 @section('content')
     <div class="main_contain">
         <!-- header -->
-    @if(Session::get('broadcaster_id'))
-        @include('partials.new-frontend.broadcaster.header')
-        @include('partials.new-frontend.broadcaster.campaign_management.sidebar')
-    @else
-        @include('partials.new-frontend.agency.header')
-    @endif
-
-    <!-- subheader -->
+    @include('partials.new-frontend.broadcaster.header')
+    @include('partials.new-frontend.broadcaster.campaign_management.sidebar')
+        <!-- subheader -->
         <div class="sub_header clearfix mb pt">
             <div class="column col_6">
                 <h2 class="sub_header">Profile Management</h2>
