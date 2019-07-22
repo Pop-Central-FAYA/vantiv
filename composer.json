@@ -1,5 +1,5 @@
 {
-    "name": "Faya",
+    "name": "fayamedia/core",
     "description": "Faya is a platform that aggregates media owners and media agency for the purpose of media planning, media buying, media monitoring among others",
     "keywords": ["advanced", "secure", "login", "user management", "authentication", "authorization", "register", "media", "buy", "plan", "monitoring"],
     "type": "project",

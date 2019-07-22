@@ -18,7 +18,8 @@ services:
     labels:
       - traefik.backend=vantage
       - traefik.frontend.rule=Host:local.vantage.docker.localhost
-      - traefik.port=80
+      - traefik.port=8080
+      - traefik.frontend.passHostHeader=true
     environment:
       - HOME=/home
       - AWS_REGION=us-east-1
@@ -41,7 +42,7 @@ services:
       - MAIL_DRIVER=log
     volumes:
       - $HOME/.aws:/home/.aws:delegated
-      - ./:/app:delegated
+      - ./:/var/www:delegated
     cap_add:
       - SYS_TIME
       - SYS_NICE
@@ -54,7 +55,8 @@ services:
     labels:
       - traefik.backend=torch
       - traefik.frontend.rule=Host:local.torch.docker.localhost
-      - traefik.port=80
+      - traefik.port=8080
+      - traefik.frontend.passHostHeader=true
     environment:
       - HOME=/home
       - AWS_REGION=us-east-1
@@ -77,7 +79,7 @@ services:
       - MAIL_DRIVER=log
     volumes:
       - $HOME/.aws:/home/.aws:delegated
-      - ./:/app:delegated
+      - ./:/var/www:delegated
     cap_add:
       - SYS_TIME
       - SYS_NICE

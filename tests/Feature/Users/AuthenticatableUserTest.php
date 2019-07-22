@@ -8,6 +8,7 @@ use Vanguard\Models\Company;
 use Vanguard\Models\CompanyType;
 use Vanguard\Services\User\AuthenticatableUser;
 use Vanguard\User;
+use Vanguard\Libraries\Enum\CompanyTypeName;
 
 class AuthenticatableUserTest extends TestCase
 {
@@ -30,7 +31,7 @@ class AuthenticatableUserTest extends TestCase
         $faker = Factory::create();
         $user = $this->createUser($faker);
         $authenticate = $this->login($user->email);
-        $authenticate->assertRedirect(route('dashboard'));
+        $authenticate->assertRedirect(route('broadcaster.dashboard.index'));
         $this->assertAuthenticatedAs($user);
 
     }
@@ -38,7 +39,9 @@ class AuthenticatableUserTest extends TestCase
     public function createUser($faker)
     {
         //create company type
-        $company_type = factory(CompanyType::class)->create();
+        $company_type = factory(CompanyType::class)->create([
+            'name' => CompanyTypeName::BROADCASTER
+        ]);
         //create company
         $company = \factory(Company::class)->create([
             'company_type_id' => $company_type->id
@@ -52,8 +55,8 @@ class AuthenticatableUserTest extends TestCase
     public function login($email)
     {
         \Session::start();
-        return $this->post(route('post.login'), [
-                    '_token' => \Session::token(),
+        return $this->post('/login', [
+                    '_token' => csrf_token(),
                     'email' => $email,
                     'password' => 'helloThisIsAuthenticatable',
                 ]);

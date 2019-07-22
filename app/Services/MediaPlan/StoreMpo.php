@@ -71,7 +71,7 @@ class StoreMpo
         $summed_budget = 0;
         foreach ($timeBeltArr as $time_belt) {
             foreach ($time_belt['individual_details'] as $key => $individual_slot) {
-                $summed_budget += $individual_slot->net_total;
+                $summed_budget += (INT) $individual_slot->net_total;
             }
         }
         return $summed_budget;

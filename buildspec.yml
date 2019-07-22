@@ -1,0 +1,31 @@
+#@todo two environment variables, BUILD_ENV and BUILD_PRODUCT
+#@todo validate that those two environment variables are set otherwise die
+#@todo make sure that errors that occurred do not go to the next phase
+#@todo run unit tests here?
+#@todo run integration tests here?
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      docker:	18
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws --version
+      - $(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
+      - REPOSITORY_URI=032415894776.dkr.ecr.us-east-1.amazonaws.com/faya-core
+      - IMAGE_TAG=$BUILD_PRODUCT-$BUILD_COMMIT_HASH
+      - LATEST_IMAGE_TAG=$BUILD_PRODUCT-$BUILD_ENV
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Building the Docker image...          
+      - docker build -t $REPOSITORY_URI:$IMAGE_TAG -f app.dockerfile .
+      - docker tag $REPOSITORY_URI:$IMAGE_TAG $REPOSITORY_URI:$LATEST_IMAGE_TAG
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker images...
+      - docker push $REPOSITORY_URI:$IMAGE_TAG
+      - docker push $REPOSITORY_URI:$LATEST_IMAGE_TAG
