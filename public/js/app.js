@@ -2356,12 +2356,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: {
         summaryDetails: Object,
         summaryData: Array,
-        summaryPermissions: Array
+        Permissions: Array
     },
     data: function data() {
         return {
@@ -2386,17 +2388,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
         },
         haspermission: function haspermission(permmision) {
-            var marvelHeroes = this.summaryPermissions.filter(function (hero) {
-                return hero.name == permmision;
+            var result = this.Permissions.filter(function (permission) {
+                return permission.name == permmision;
             });
-            if (marvelHeroes.length == 0) {
+            if (result.length == 0) {
                 return false;
             } else {
                 return true;
             }
         },
-        ButtonAction: function ButtonAction(Destination) {
-            window.location = Destination;
+        buttonAction: function buttonAction(destination) {
+            window.location = destination;
         }
     }
 });
@@ -2988,7 +2990,7 @@ var render = function() {
               attrs: { id: "back_btn" },
               on: {
                 click: function($event) {
-                  return _vm.ButtonAction(
+                  return _vm.buttonAction(
                     "/media-plan/createplan/" + _vm.summaryDetails.id
                   )
                 }
@@ -3014,7 +3016,7 @@ var render = function() {
                           "media-plan btn block_disp uppercased mr-1",
                         on: {
                           click: function($event) {
-                            return _vm.ButtonAction(
+                            return _vm.buttonAction(
                               "/media-plan/approve/" + _vm.summaryDetails.id
                             )
                           }
@@ -3037,7 +3039,7 @@ var render = function() {
                           "media-plan btn block_disp uppercased bg_red mr-1",
                         on: {
                           click: function($event) {
-                            return _vm.ButtonAction(
+                            return _vm.buttonAction(
                               "/media-plan/decline/" + _vm.summaryDetails.id
                             )
                           }
@@ -3061,7 +3063,7 @@ var render = function() {
                   staticClass: "btn block_disp uppercased",
                   on: {
                     click: function($event) {
-                      return _vm.ButtonAction(
+                      return _vm.buttonAction(
                         "/media-plan/export/" + _vm.summaryDetails.id
                       )
                     }

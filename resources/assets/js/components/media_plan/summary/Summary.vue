@@ -1,5 +1,5 @@
 <template>
-  <div>
+     <div>
         <div class="the_frame clearfix mb border_top_color load_stuff">
 
             <div class="margin_center col_10 clearfix create_fields">
@@ -59,33 +59,35 @@
 
  
             </div>
-        </div>
- <div class="container-fluid my-5">
+         </div>
+
+
+        <div class="container-fluid my-5">
             <div class="row">
                 <div class="col-md-4 p-0">
-                    <button id="back_btn" @click="ButtonAction('/media-plan/createplan/'+summaryDetails.id)"  class="btn small_btn"><i class="media-plan material-icons">navigate_before</i> Back</button>
+                    <button id="back_btn" @click="buttonAction('/media-plan/createplan/'+summaryDetails.id)"  class="btn small_btn"><i class="media-plan material-icons">navigate_before</i> Back</button>
                 </div>
                 <div class="col-md-8 p-0 text-right">
                       <span v-if="summaryDetails.status == 'Suggested'" >
-                            <button v-if="haspermission('approve.media_plan')"  @click="ButtonAction('/media-plan/approve/'+summaryDetails.id)" class="media-plan btn block_disp uppercased mr-1"><i class="media-plan material-icons">check</i>Approve Plan</button>
+                            <button v-if="haspermission('approve.media_plan')"  @click="buttonAction('/media-plan/approve/'+summaryDetails.id)" class="media-plan btn block_disp uppercased mr-1"><i class="media-plan material-icons">check</i>Approve Plan</button>
                       
-                            <button v-if="haspermission('decline.media_plan')"  @click="ButtonAction('/media-plan/decline/'+summaryDetails.id)"  class="media-plan btn block_disp uppercased bg_red mr-1"><i class="media-plan material-icons">clear</i>Decline Plan</button>
+                            <button v-if="haspermission('decline.media_plan')"  @click="buttonAction('/media-plan/decline/'+summaryDetails.id)"  class="media-plan btn block_disp uppercased bg_red mr-1"><i class="media-plan material-icons">clear</i>Decline Plan</button>
                       </span>
-                            <button v-if="haspermission('export.media_plan')"  @click="ButtonAction('/media-plan/export/'+summaryDetails.id)"  class="btn block_disp uppercased"><i class="media-plan material-icons">file_download</i>Export Plan</button>
+                            <button v-if="haspermission('export.media_plan')"  @click="buttonAction('/media-plan/export/'+summaryDetails.id)"  class="btn block_disp uppercased"><i class="media-plan material-icons">file_download</i>Export Plan</button>
                      <span v-if="summaryDetails.status == 'Approved'" >
                             <media-plan-create-campaign v-if="haspermission('convert.media_plan')" :id="summaryDetails.id"></media-plan-create-campaign>
                      </span>
                 </div>
             </div>
         </div>
-         </div>
+ </div>
 </template>
 <script>
     export default {
         props: {
             summaryDetails: Object,
             summaryData: Array,
-            summaryPermissions:Array,
+            Permissions:Array,
         },
         data() {
             return {
@@ -99,7 +101,7 @@
             console.log('Summary Table Component mounted.')
             this. getSums();
         },   methods: {
-               getSums(){
+                getSums(){
                     let self = this;
                     this.summaryData.forEach(function (item, key) {
                     self.total_spots += item['total_spots']
@@ -107,20 +109,20 @@
                     self.total_net_value += item['net_value']
                     self.total_savings += item['savings']
                     });
-               },
-                  haspermission(permmision){
-                var marvelHeroes =  this.summaryPermissions.filter(function(hero) {
-	               return hero.name == permmision;
+                },
+                haspermission(permmision){
+                   var result =  this.Permissions.filter(function(permission) {
+	               return permission.name == permmision;
                     });
-                  if (marvelHeroes.length==0){
+                     if (result.length==0){
                         return false
                    }else{
                         return true
                    }
             
                },
-                  ButtonAction(Destination) {
-                  window.location = Destination; 
+                buttonAction(destination) {
+                    window.location = destination; 
                 }
          }
     }
