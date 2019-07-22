@@ -23,7 +23,7 @@ class AuthenticatableUserTest extends TestCase
         $this->assertInstanceOf(User::class, $user);
     }
 
-    public function test_user_can_login_in()
+    public function test_user_can_login_in_k()
     {
         \Session::start();
 

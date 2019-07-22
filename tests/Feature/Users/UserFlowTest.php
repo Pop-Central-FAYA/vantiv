@@ -30,16 +30,24 @@ class UserFlowTest extends TestCase
         $this->assertInstanceOf(User::class, $user);
     }
 
-    public function test_user_can_login_in()
+    public function test_user_can_login_in_to_vantage()
     {
-        \Session::start();
+       // \Session::start();
 
         $faker = Factory::create();
         $user = $this->createUser($faker);
+        $this->assertInstanceOf(User::class, $user);
         $authenticate = $this->login($user->email);
         $authenticate->assertRedirect(route('dashboard'));
         $this->assertAuthenticatedAs($user);
 
+    }
+
+    public function test_user_cannot_view_a_login_form_when_authenticated()
+    {
+        $user = factory(User::class)->make();
+        $response = $this->actingAs($user)->get('/login');
+        $response->assertRedirect('/');
     }
 
     public function createUser($faker)
