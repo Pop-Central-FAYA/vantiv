@@ -2363,7 +2363,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     props: {
         summaryDetails: Object,
         summaryData: Array,
-        Permissions: Array
+        permissions: Array
     },
     data: function data() {
         return {
@@ -2374,9 +2374,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         };
     },
     mounted: function mounted() {
-        console.log('Summary Table Component mounted.');
+        console.log(this.permissions);
         this.getSums();
     },
+
     methods: {
         getSums: function getSums() {
             var self = this;
@@ -2387,8 +2388,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 self.total_savings += item['savings'];
             });
         },
-        haspermission: function haspermission(permmision) {
-            var result = this.Permissions.filter(function (permission) {
+        haspermission: function haspermission(permision_list, permision) {
+            var result = this.permision_list.filter(function (permission) {
                 return permission.name == permmision;
             });
             if (result.length == 0) {
@@ -3008,7 +3009,7 @@ var render = function() {
         _c("div", { staticClass: "col-md-8 p-0 text-right" }, [
           _vm.summaryDetails.status == "Suggested"
             ? _c("span", [
-                _vm.haspermission("approve.media_plan")
+                _vm.haspermission(_vm.permissions, "approve.media_plan")
                   ? _c(
                       "button",
                       {
@@ -3031,7 +3032,7 @@ var render = function() {
                     )
                   : _vm._e(),
                 _vm._v(" "),
-                _vm.haspermission("decline.media_plan")
+                _vm.haspermission(_vm.permissions, "decline.media_plan")
                   ? _c(
                       "button",
                       {
@@ -3056,7 +3057,7 @@ var render = function() {
               ])
             : _vm._e(),
           _vm._v(" "),
-          _vm.haspermission("export.media_plan")
+          _vm.haspermission(_vm.permissions, "export.media_plan")
             ? _c(
                 "button",
                 {
@@ -3082,7 +3083,7 @@ var render = function() {
             ? _c(
                 "span",
                 [
-                  _vm.haspermission("convert.media_plan")
+                  _vm.haspermission(_vm.permissions, "convert.media_plan")
                     ? _c("media-plan-create-campaign", {
                         attrs: { id: _vm.summaryDetails.id }
                       })
