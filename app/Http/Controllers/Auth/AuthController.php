@@ -114,7 +114,7 @@ class AuthController extends Controller
             return redirect()->to(route('login') . $to);
         }
 
-        if ($this->isRightUser($user) === false) {
+        if (!$this->isRightUser($user)) {
             return redirect()->to(route('login'))
                 ->with('error', ClassMessages::INVALID_EMAIL_PASSWORD);
         }
