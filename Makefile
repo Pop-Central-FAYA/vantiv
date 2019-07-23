@@ -1,4 +1,4 @@
-.PHONY: help build tag run-local fresh-run clean-run
+.PHONY: help build tag run-local fresh-run clean-run code-sniff
 
 help: ## This help.
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
@@ -70,3 +70,11 @@ fresh-run-no-build: clean-run
 	docker-compose up -d
 # update-service: push-image ## Update the service after pushing
 # 	@if [ -z $(env) ]; then echo "env variable is not set" && exit 1; else echo "env=$(env)"; fi
+
+code-sniff:
+	@if [ -z $(product) ]; then echo "product variable is not set" && exit 1; else echo "product=$(env)"; fi
+	docker-compose exec $(product) ./vendor/bin/phpcs
+
+code-fix:
+	@if [ -z $(product) ]; then echo "product variable is not set" && exit 1; else echo "product=$(env)"; fi
+	docker-compose exec $(product) ./vendor/bin/phpcbf

@@ -17,263 +17,152 @@
             </div>
         </div>
 
-        <!-- TOGGLE CAMPAIGN DETAILS AND MEDIA PLAN DETAILS -->
         <!-- main stats -->
-        @if(Auth::user()->hasPermissionTo('view.report'))
-            <div class="clearfix mb4">
-                <div class="column col_6">
-                    <button id="view-campaigns"  class="btn full block_disp uppercased align_center">Display All Campaigns</button>
-                </div>
-
-                <div class="column col_6">
-                    <button id="view-media-plans"  class="btn full block_disp uppercased align_center">Display All Media Plans</button>
-                </div>
-            </div>
-        @endif
-
         <!-- CAMPAIGN -->
-        <div class="campaigns-dashboard" id="campaigns-dashboard">
+        <div class="campaigns-dashboard dsp-dashboard" id="campaigns-dashboard">
             <!-- main stats -->
             @if(Auth::user()->hasPermissionTo('view.report'))
-            <div class="the_stats the_frame clearfix mb4">
-                <div class="column col_3">
-                    <span class="weight_medium small_faint uppercased">Active Campaigns</span>
-                    <h3><a href="{{ route('agency.campaign.all') }}">{{ count($active_campaigns) }}</a></h3>
-                </div>
-
-                <div class="column col_3">
-                    <span class="weight_medium small_faint uppercased">Campaigns On Hold</span>
-                    <h3><a href="{{ route('agency.campaigns.hold') }}" style="color: red;">{{ count($campaigns_on_hold) }}</a></h3>
-                </div>
-
-                <div class="column col_3">
-                    <span class="weight_medium small_faint uppercased">All Clients</span>
-                    <h3><a href="{{ route('clients.list') }}">{{ count($clients) }}</a></h3>
-                </div>
-
-                <!-- <div class="column col_3">
-                    <span class="weight_medium small_faint uppercased">Pending Invoices</span>
-                    <h3><a href="{{ route('invoices.pending') }}" style="color: red;">{{ count($pending_invoices) }}</a></h3>
-                </div> -->
-
-                <div class="column col_3">
-                    <span class="weight_medium small_faint uppercased">All Brands</span>
-                    <h3><a href="{{ route('brand.all') }}">{{ count($all_brands) }}</a></h3>
-                </div>
-
-            </div>
-
-            <!-- client charts -->
-            <div class="clearfix dashboard_pies">
-                <!-- tv -->
-                <div class="">
-                    <div class="pie_icon margin_center">
-                        <img src="{{ asset('new_frontend/img/tv.svg') }}">
+                <!-- Campaign Report -->
+                <div class="the_stats the_frame clearfix mb3">
+                    <div class="column col_3">
+                        <span class="weight_medium small_faint uppercased">Active Campaigns</span>
+                        <h3><a href="{{ route('agency.campaign.all',['status'=>'active']) }}">{{ count($active_campaigns) }}</a></h3>
                     </div>
-                    <p class="align_center">TV</p>
 
-                    <div id="tv" class="_pie_chart" style="height: 150px"></div>
+                    <div class="column col_3">
+                        <span class="weight_medium small_faint uppercased">Campaigns On Hold</span>
+                        <h3><a href="{{ route('agency.campaign.all',['status'=>'on_hold']) }}" style="color: red;">{{ count($campaigns_on_hold) }}</a></h3>
+                    </div>
 
-                    <ul>
-                        <li class="pie_legend active"><span class="weight_medium">{{ round($active) }}%</span> Active</li>
-                        <li class="pie_legend pending"><span class="weight_medium">{{ round($pending) }}%</span> Pending</li>
-                        <li class="pie_legend finished"><span class="weight_medium">{{ round($finished) }}%</span> Finished</li>
-                    </ul>
+                    <div class="column col_3">
+                        <span class="weight_medium small_faint uppercased">All Clients</span>
+                        <h3><a href="{{ route('clients.list') }}">{{ count($clients) }}</a></h3>
+                    </div>
+
+                    <div class="column col_3">
+                        <span class="weight_medium small_faint uppercased">All Brands</span>
+                        <h3><a href="{{ route('brand.all') }}">{{ count($all_brands) }}</a></h3>
+                    </div>
                 </div>
-
-                <!-- radio -->
-                <div class="">
-                    <div class="pie_icon margin_center">
-                        <img src="{{ asset('new_frontend/img/radio.svg') }}">
-                    </div>
-                    <p class="align_center">Radio</p>
-
-                    <div id="radio" class="_pie_chart" style="height: 150px"></div>
-
-                    <ul>
-                        <li class="pie_legend active"><span class="weight_medium">0%</span> Active</li>
-                        <li class="pie_legend pending"><span class="weight_medium">0%</span> Pending</li>
-                        <li class="pie_legend finished"><span class="weight_medium">0%</span> Finished</li>
-                    </ul>
-                </div>
-                <!-- newspaper -->
-                <div class="">
-                    <div class="pie_icon margin_center">
-                        <img src="{{ asset('new_frontend/img/paper.svg') }}">
-                    </div>
-                    <p class="align_center">Newspaper</p>
-
-                    <div class="_pie_chart" style="height: 150px"></div>
-
-                    <ul>
-                        <li class="pie_legend active"><span class="weight_medium">0%</span> Active</li>
-                        <li class="pie_legend pending"><span class="weight_medium">0%</span> Pending</li>
-                        <li class="pie_legend finished"><span class="weight_medium">0%</span> Finished</li>
-                    </ul>
-                </div>
-
-                <!-- ooh -->
-                <div class="">
-                    <div class="pie_icon margin_center">
-                        <img src="{{ asset('new_frontend/img/ooh.svg') }}">
-                    </div>
-                    <p class="align_center">OOH</p>
-
-                    <div class="_pie_chart" style="height: 150px"></div>
-
-                    <ul>
-                        <li class="pie_legend active"><span class="weight_medium">0%</span> Active</li>
-                        <li class="pie_legend pending"><span class="weight_medium">0%</span> Pending</li>
-                        <li class="pie_legend finished"><span class="weight_medium">0%</span> Finished</li>
-                    </ul>
-                </div>
-
-                <!-- desktop -->
-                <div class="">
-                    <div class="pie_icon margin_center">
-                        <img src="{{ asset('new_frontend/img/desktop.svg') }}">
-                    </div>
-                    <p class="align_center">Desktop</p>
-
-                    <div class="_pie_chart" style="height: 150px"></div>
-
-                    <ul>
-                        <li class="pie_legend active"><span class="weight_medium">0%</span> Active</li>
-                        <li class="pie_legend pending"><span class="weight_medium">0%</span> Pending</li>
-                        <li class="pie_legend finished"><span class="weight_medium">0%</span> Finished</li>
-                    </ul>
-                </div>
-
-                <!-- mobile -->
-                <div class="">
-                    <div class="pie_icon margin_center">
-                        <img src="{{ asset('new_frontend/img/mobile.svg') }}">
-                    </div>
-                    <p class="align_center">Mobile</p>
-
-                    <div class="_pie_chart" style="height: 150px"></div>
-
-                    <ul>
-                        <li class="pie_legend active"><span class="weight_medium">0%</span> Active</li>
-                        <li class="pie_legend pending"><span class="weight_medium">0%</span> Pending</li>
-                        <li class="pie_legend finished"><span class="weight_medium">0%</span> Finished</li>
-                    </ul>
-                </div>
-
-            </div>
-
-
-            <div class="the_frame client_dets mb4">
-
-                <div class="filters border_bottom clearfix">
-                    <div class="column col_4 p-t">
-                        <p class="uppercased weight_medium">All Campaigns</p>
-                    </div>
-                    <div class="column col_4 clearfix">
-                        <input type="text" name="key_search" placeholder="Enter Key Word..." class="key_search">
-                    </div>
-                    <div class="column col_4 clearfix">
-                        <div class="col_5 column">
-                            <input type="text" name="start_date" class="flatpickr" placeholder="Start Date">
+                <!-- client charts -->
+                <div class="clearfix dashboard_pies mb3">
+                    <!-- tv -->
+                    <div class="">
+                        <div class="pie_icon margin_center">
+                            <img src="{{ asset('new_frontend/img/tv.svg') }}">
                         </div>
+                        <p class="align_center">TV</p>
 
-                        <div class="col_5 column">
-                            <input type="text" name="stop_date" class="flatpickr" placeholder="End Date">
-                        </div>
+                        <div id="tv" class="_pie_chart margin_center" style="height: 100px"></div>
 
-                        <div class="col_1 column">
-                            <button type="button" id="dashboard_filter_campaign" class="btn small_btn">Filter</button>
+                        <ul style="margin-left: 9px;">
+                            <li class="pie_legend active"><span class="weight_medium">{{ round($active) }}%</span> Active</li>
+                            <li class="pie_legend pending"><span class="weight_medium">{{ round($pending) }}%</span> Pending</li>
+                            <li class="pie_legend finished"><span class="weight_medium">{{ round($finished) }}%</span> Finished</li>
+                        </ul>
+                    </div>
+
+                    <!-- radio -->
+                    <div class="">
+                        <div class="pie_icon margin_center">
+                            <img src="{{ asset('new_frontend/img/radio.svg') }}">
                         </div>
+                        <p class="align_center">Radio</p>
+
+                        <div id="radio" class="_pie_chart margin_center" style="height: 100px"></div>
+
+                        <ul style="margin-left: 9px;">
+                            <li class="pie_legend active"><span class="weight_medium">0%</span> Active</li>
+                            <li class="pie_legend pending"><span class="weight_medium">0%</span> Pending</li>
+                            <li class="pie_legend finished"><span class="weight_medium">0%</span> Finished</li>
+                        </ul>
+                    </div>
+                    <!-- newspaper -->
+                    <div class="">
+                        <div class="pie_icon margin_center">
+                            <img src="{{ asset('new_frontend/img/paper.svg') }}">
+                        </div>
+                        <p class="align_center">Newspaper</p>
+
+                        <div class="_pie_chart" style="height: 100px"></div>
+
+                        <ul style="margin-left: 9px;">
+                            <li class="pie_legend active"><span class="weight_medium">0%</span> Active</li>
+                            <li class="pie_legend pending"><span class="weight_medium">0%</span> Pending</li>
+                            <li class="pie_legend finished"><span class="weight_medium">0%</span> Finished</li>
+                        </ul>
+                    </div>
+
+                    <!-- ooh -->
+                    <div class="">
+                        <div class="pie_icon margin_center">
+                            <img src="{{ asset('new_frontend/img/ooh.svg') }}">
+                        </div>
+                        <p class="align_center">OOH</p>
+
+                        <div class="_pie_chart" style="height: 100px"></div>
+
+                        <ul style="margin-left: 9px;">
+                            <li class="pie_legend active"><span class="weight_medium">0%</span> Active</li>
+                            <li class="pie_legend pending"><span class="weight_medium">0%</span> Pending</li>
+                            <li class="pie_legend finished"><span class="weight_medium">0%</span> Finished</li>
+                        </ul>
+                    </div>
+
+                    <!-- desktop -->
+                    <div class="">
+                        <div class="pie_icon margin_center">
+                            <img src="{{ asset('new_frontend/img/desktop.svg') }}">
+                        </div>
+                        <p class="align_center">Desktop</p>
+
+                        <div class="_pie_chart" style="height: 100px"></div>
+
+                        <ul style="margin-left: 9px;">
+                            <li class="pie_legend active"><span class="weight_medium">0%</span> Active</li>
+                            <li class="pie_legend pending"><span class="weight_medium">0%</span> Pending</li>
+                            <li class="pie_legend finished"><span class="weight_medium">0%</span> Finished</li>
+                        </ul>
+                    </div>
+
+                    <!-- mobile -->
+                    <div class="">
+                        <div class="pie_icon margin_center">
+                            <img src="{{ asset('new_frontend/img/mobile.svg') }}">
+                        </div>
+                        <p class="align_center">Mobile</p>
+
+                        <div class="_pie_chart" style="height: 100px"></div>
+
+                        <ul style="margin-left: 9px;">
+                            <li class="pie_legend active"><span class="weight_medium">0%</span> Active</li>
+                            <li class="pie_legend pending"><span class="weight_medium">0%</span> Pending</li>
+                            <li class="pie_legend finished"><span class="weight_medium">0%</span> Finished</li>
+                        </ul>
                     </div>
 
                 </div>
+                <!-- Media Plan Report -->
+                <div class="the_stats the_frame clearfix">
+                    <div class="column col_4">
+                        <span class="weight_medium small_faint uppercased">Approved Media Plans</span>
+                        
+                        <h3><a href="{{ route('agency.media_plans', ['status'=>'approved']) }}">{{ $count_approved_media_plans }}</a></h3>
+                    </div>
 
-                <!-- campaigns table -->
-                <table class="display dashboard_campaigns">
-                    <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Brand</th>
-                        <th>Start Date</th>
-                        <th>Budget</th>
-                        <th>Ad Slots</th>
-                        <th>Status</th>
-                    </tr>
-                    </thead>
-                </table>
-                <!-- end -->
-            </div>
+                    <div class="column col_4">
+                        <span class="weight_medium small_faint uppercased">Pending Media Plans</span>
+                        <h3><a href="{{ route('agency.media_plans', ['status'=>'pending']) }}" style="color: red;">{{ $count_pending_media_plans }}</a></h3>
+                    </div>
+
+                    <div class="column col_4">
+                        <span class="weight_medium small_faint uppercased">Declined Media Plans</span>
+                        <h3><a href="{{ route('agency.media_plans', ['status'=>'declined']) }}" style="color: red;">{{ $count_declined_media_plans }}</a></h3>
+                    </div>
+                </div>
             @endif
         </div>
-
-        <!-- MEDIA PLAN -->
-        <div class="media-plans-dashboard" id="media-plans-dashboard">
-            <!-- Media Plan stats -->
-            @if(Auth::user()->hasPermissionTo('view.media_plan'))
-            <div class="the_stats the_frame clearfix mb4">
-                <div class="column col_4">
-                    <span class="weight_medium small_faint uppercased">Approved Media Plans</span>
-                    <h3><a href="#">{{ $count_approved_media_plans }}</a></h3>
-                </div>
-
-                <div class="column col_4">
-                    <span class="weight_medium small_faint uppercased">Pending Media Plans</span>
-                    <h3><a href="#" style="color: red;">{{ $count_pending_media_plans }}</a></h3>
-                </div>
-
-                <div class="column col_4">
-                    <span class="weight_medium small_faint uppercased">Declined Media Plans</span>
-                    <h3><a href="#" style="color: red;">{{ $count_declined_media_plans }}</a></h3>
-                </div>
-            </div>
-
-            <!-- MEDIA PLANS TABLE -->
-            <div class="the_frame client_dets mb4">
-
-                <div class="filters border_bottom clearfix">
-                    <div class="column col_6 p-t">
-                        <p class="uppercased weight_medium">All Media Plans</p>
-                    </div>
-                    <div class="column col_5 clearfix">
-                        <input type="text" name="key_search_media_plan" placeholder="Enter Key Word..." class="key_search_media_plan">
-                    </div>
-                    <div class="column col_1 clearfix">
-                       <!--  <div class="col_5 column">
-                            <input type="text" name="start_date" class="flatpickr" placeholder="Start Date">
-                        </div>
-
-                        <div class="col_5 column">
-                            <input type="text" name="stop_date" class="flatpickr" placeholder="End Date">
-                        </div> -->
-
-                        <div class="col_1 column">
-                            <button type="button" id="dashboard_filter_media_plans" class="btn small_btn">Filter</button>
-                        </div>
-                    </div>
-
-                </div>
-
-                <!-- media plans table -->
-                <table class="display dashboard_media_plans">
-                    <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Media Type</th>
-                        <th>Start Date</th>
-                        <th>End Date</th>
-                        <!-- <th>Budget</th> -->
-                        <th>Status</th>
-                    </tr>
-                    </thead>
-                </table>
-                <!-- end -->
-            </div>
-
-            @endif
-        </div>
-
     </div>
-
 @stop
 
 @section('scripts')
@@ -370,94 +259,8 @@
     {{--datatables--}}
     <script>
         $(document).ready(function( $ ) {
-            // hide media plan dashboard on document ready
-            @if(Auth::user()->hasRole('finance') || Auth::user()->hasRole('admin') || Auth::user()->hasRole('compliance'))
-                $('#media-plans-dashboard').hide();
-            @endif
-            $('#view-media-plans').addClass('inactive-dashboard-toggle-btn');
-
             flatpickr(".flatpickr", {
                 altInput: true,
-            });
-            
-            var Datefilter =  $('.dashboard_campaigns').DataTable({
-                dom: 'Blfrtip',
-                paging: true,
-                serverSide: true,
-                processing: true,
-                lengthMenu : [[10, 25, 50, -1], [10, 25, 50, "All"]],
-                oLanguage: { sLengthMenu: "_MENU_", },
-                aaSorting: [],
-                ajax: {
-                    url: '/agency/dashboard/campaigns',
-                    data: function (d) {
-                        d.start_date = $('input[name=start_date]').val();
-                        d.stop_date = $('input[name=stop_date]').val();
-                    }
-                },
-                columns: [
-                    {data: 'name', name: 'name'},
-                    {data: 'brand', name: 'brand'},
-                    {data: 'start_date', name: 'start_date'},
-                    {data: 'budget', name: 'budget'},
-                    {data: 'adslots', name: 'adslots'},
-                    {data: 'status', name: 'status'},
-                ],
-            });
-
-            $('#dashboard_filter_campaign').on('click', function() {
-                Datefilter.draw();
-            });
-
-            $('.key_search').on('keyup', function(){
-                Datefilter.search($(this).val()).draw() ;
-            });
-
-            // MEDIA PLAN
-            var mediaPlanfilter =  $('.dashboard_media_plans').DataTable({
-                dom: 'Blfrtip',
-                paging: true,
-                serverSide: true,
-                processing: true,
-                lengthMenu : [[10, 25, 50, -1], [10, 25, 50, "All"]],
-                oLanguage: { sLengthMenu: "_MENU_", },
-                aaSorting: [],
-                ajax: {
-                    url: '/media-plan/dashboard/list',
-                    data: function (d) {
-                        d.start_date = $('input[name=start_date]').val();
-                        d.stop_date = $('input[name=stop_date]').val();
-                    }
-                },
-                columns: [
-                    {data: 'campaign_name', name: 'name'},
-                    {data: 'media_type', name: 'media_type'},
-                    {data: 'start_date', name: 'start_date'},
-                    {data: 'end_date', name: 'end_date'},
-                    {data: 'status', name: 'status'},
-                ],
-            });
-
-            $('#dashboard_filter_media_plans').on('click', function() {
-                mediaPlanfilter.draw();
-            });
-
-            $('.key_search_media_plan').on('keyup', function(){
-                mediaPlanfilter.search($(this).val()).draw() ;
-            });
-
-            $('#view-campaigns').on('click', function() {
-                $('#media-plans-dashboard').hide();
-                $('#campaigns-dashboard').show();
-                $('#view-campaigns').removeClass('inactive-dashboard-toggle-btn');
-                $('#view-media-plans').addClass('inactive-dashboard-toggle-btn');
-            });
-
-            $('#view-media-plans').on('click', function() {
-                $('#campaigns-dashboard').hide();
-                $('#media-plans-dashboard').show();
-                $('#view-campaigns').addClass('inactive-dashboard-toggle-btn');
-                $('#view-media-plans').removeClass('inactive-dashboard-toggle-btn');
             });
         } );
     </script>

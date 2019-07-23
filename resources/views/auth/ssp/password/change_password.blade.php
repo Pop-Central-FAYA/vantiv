@@ -1,6 +1,8 @@
 @extends('layouts.old_auth')
 
-@section('page-title', trans('app.login'))
+@section('title')
+    <title> Torch | Reset Password </title>
+@stop
 
 @section('content')
 
@@ -8,8 +10,6 @@
         <div style="text-align: center; margin-bottom: 25px;">
             <a href="{{ route('dashboard') }}"><img src="{{ asset('new_assets/images/logo.png') }}" alt="{{ settings('app_name') }}"></a>
         </div>
-
-        {{--@include('partials/messages')--}}
 
         <form role="form" action="{{ route('change_password.process', ['user_id' => $user->id]) }}" method="POST" id="password-change-form" autocomplete="off">
             <input type="hidden" value="<?= csrf_token() ?>" name="_token">

@@ -1,12 +1,11 @@
-@extends('layouts.faya_app')
+@extends('layouts.ssp.layout')
 
 @section('title')
-    <title> FAYA | Rate Cards </title>
+    <title> Torch | Rate Cards </title>
 @stop
 
 @section('content')
-        @include('partials.new-frontend.broadcaster.inventory_management.sidebar')
-
+    @include('partials.new-frontend.broadcaster.inventory_management.sidebar')
     <!-- main container -->
     <div class="main_contain">
         <!-- heaser -->
