@@ -150,7 +150,7 @@ class UserController extends Controller
             return ['status'=>"error", 'message'=> $validate_request->errors()->first()];
         }
 
-        $update_user_service = new UpdateUserService($request->roles, $this->getCompany($request->companies), $request->user_id,'ssp');
+        $update_user_service = new UpdateUserService($request->roles, $this->getCompany($request->companies), $request->user_id,'web');
         $update_user_service->updateUser();
         return ['status'=>"success", 'message'=> "User updated successfully"];
     }
