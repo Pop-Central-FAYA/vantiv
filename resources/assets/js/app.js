@@ -16,6 +16,7 @@ Vue.use(VueSweetalert2);
 // Highcharts package
 import Highcharts from 'highcharts'
 import HighchartsVue from 'highcharts-vue'
+import moment from 'moment' 
 Vue.use(HighchartsVue, {
 	highcharts: Highcharts
 })
@@ -116,14 +117,22 @@ Vue.mixin({
             return `${dateParts[0]}-${dateParts[1]}-${dateParts[2].substr(0,2)}`;
         },
         dateToHumanReadable(date) {
-            const months = ["Jan", "Feb", "Mar","Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-            let current_datetime = new Date(date)
-            return current_datetime.getDate() + "-" + months[current_datetime.getMonth()] + "-" + current_datetime.getFullYear()
-
+            return moment(date).format('Do-MMM-YYYY');
         },
-         numberFormat(n) {
+        numberFormat(n) {
               return n.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '');
-           },
+        },
+        haspermission(permission_list,permision){
+            var result =  this.permission_list.filter(function(permission) {
+            return permission.name == permission;
+             });
+              if (result.length==0){
+                 return false
+              }else{
+                 return true
+              }
+     
+        },
     }
 })
 const app = new Vue({

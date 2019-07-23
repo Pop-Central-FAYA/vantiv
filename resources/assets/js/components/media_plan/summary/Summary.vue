@@ -13,7 +13,7 @@
                             <td><span class="mr-2"><b>Product Name:</b></span>  {{ summaryDetails.product_name }}</td>
                            </tr>
                            <tr>
-                            <td><span class="mr-2"><b>Flight Date:</b></span> {{ dateToHumanReadable(summaryDetails.start_date) }} to {{ dateToHumanReadable(summaryDetails.end_date) }} </td>
+                            <td><span class="mr-2"><b>Flight Date:</b></span> {{  dateToHumanReadable(summaryDetails.start_date) }} to {{ dateToHumanReadable(summaryDetails.end_date) }} </td>
                            </tr>
                            <tr>
                             <td><span class="mr-2"><b>Status:</b></span>  {{ summaryDetails.status }}</td>
@@ -69,13 +69,13 @@
                 </div>
                 <div class="col-md-8 p-0 text-right">
                       <span v-if="summaryDetails.status == 'Suggested'" >
-                            <button v-if="haspermission(permissions,'approve.media_plan')"  @click="buttonAction('/media-plan/approve/'+summaryDetails.id)" class="media-plan btn block_disp uppercased mr-1"><i class="media-plan material-icons">check</i>Approve Plan</button>
+                            <button v-if="haspermission(permission_list,'approve.media_plan')"  @click="buttonAction('/media-plan/approve/'+summaryDetails.id)" class="media-plan btn block_disp uppercased mr-1"><i class="media-plan material-icons">check</i>Approve Plan</button>
                       
-                            <button v-if="haspermission(permissions,'decline.media_plan')"  @click="buttonAction('/media-plan/decline/'+summaryDetails.id)"  class="media-plan btn block_disp uppercased bg_red mr-1"><i class="media-plan material-icons">clear</i>Decline Plan</button>
+                            <button v-if="haspermission(permisson_list,'decline.media_plan')"  @click="buttonAction('/media-plan/decline/'+summaryDetails.id)"  class="media-plan btn block_disp uppercased bg_red mr-1"><i class="media-plan material-icons">clear</i>Decline Plan</button>
                       </span>
-                            <button v-if="haspermission(permissions,'export.media_plan')"  @click="buttonAction('/media-plan/export/'+summaryDetails.id)"  class="btn block_disp uppercased"><i class="media-plan material-icons">file_download</i>Export Plan</button>
+                            <button v-if="haspermission(permission_list,'export.media_plan')"  @click="buttonAction('/media-plan/export/'+summaryDetails.id)"  class="btn block_disp uppercased"><i class="media-plan material-icons">file_download</i>Export Plan</button>
                      <span v-if="summaryDetails.status == 'Approved'" >
-                            <media-plan-create-campaign v-if="haspermission(permissions,'convert.media_plan')" :id="summaryDetails.id"></media-plan-create-campaign>
+                            <media-plan-create-campaign v-if="haspermission(permission_list,'convert.media_plan')" :id="summaryDetails.id"></media-plan-create-campaign>
                      </span>
                 </div>
             </div>
@@ -87,7 +87,7 @@
         props: {
             summaryDetails: Object,
             summaryData: Array,
-            permissions:Array,
+            permission_list:Array,
         },
         data() {
             return {
@@ -98,8 +98,8 @@
             };
         },
         mounted() {
-                console.log(this.permissions)
-            this.getSums();
+             console.log("Summary component mounted");
+             this.getSums();
         },   
         methods: {
                 getSums(){
@@ -111,20 +111,11 @@
                         self.total_savings += item['savings']
                     });
                 },
-                haspermission(permision_list,permision){
-                   var result =  this.permision_list.filter(function(permission) {
-	               return permission.name == permmision;
-                    });
-                     if (result.length==0){
-                        return false
-                   }else{
-                        return true
-                   }
-            
-               },
                 buttonAction(destination) {
                     window.location = destination; 
-                }
+                },
+                   
+              
          }
     }
 </script>

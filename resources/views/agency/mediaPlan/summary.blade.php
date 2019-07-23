@@ -20,7 +20,7 @@
                 <h2 class="sub_header">Summary</h2>
             </div>
         </div>
-           <media-plan-summary  :summary-data="{{ json_encode($summary) }}" :summary-details="{{ json_encode($media_plan) }}"   :permissions="{{ json_encode(Auth::user()->getAllPermissions()) }}"></media-plan-summary>
+           <media-plan-summary  :summary-data="{{ json_encode($summary) }}" :summary-details="{{ json_encode($media_plan) }}"   :permission_list="{{ json_encode(Auth::user()->getAllPermissions()) }}"></media-plan-summary>
         <br><br><br><br><br><br><br>
     </div>
 @stop

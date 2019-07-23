@@ -2363,7 +2363,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     props: {
         summaryDetails: Object,
         summaryData: Array,
-        permissions: Array
+        permission_list: Array
     },
     data: function data() {
         return {
@@ -2374,7 +2374,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         };
     },
     mounted: function mounted() {
-        console.log(this.permissions);
+        console.log("Summary component mounted");
         this.getSums();
     },
 
@@ -2387,16 +2387,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 self.total_net_value += item['net_value'];
                 self.total_savings += item['savings'];
             });
-        },
-        haspermission: function haspermission(permision_list, permision) {
-            var result = this.permision_list.filter(function (permission) {
-                return permission.name == permmision;
-            });
-            if (result.length == 0) {
-                return false;
-            } else {
-                return true;
-            }
         },
         buttonAction: function buttonAction(destination) {
             window.location = destination;
@@ -3009,7 +2999,7 @@ var render = function() {
         _c("div", { staticClass: "col-md-8 p-0 text-right" }, [
           _vm.summaryDetails.status == "Suggested"
             ? _c("span", [
-                _vm.haspermission(_vm.permissions, "approve.media_plan")
+                _vm.haspermission(_vm.permission_list, "approve.media_plan")
                   ? _c(
                       "button",
                       {
@@ -3032,7 +3022,7 @@ var render = function() {
                     )
                   : _vm._e(),
                 _vm._v(" "),
-                _vm.haspermission(_vm.permissions, "decline.media_plan")
+                _vm.haspermission(_vm.permisson_list, "decline.media_plan")
                   ? _c(
                       "button",
                       {
@@ -3057,7 +3047,7 @@ var render = function() {
               ])
             : _vm._e(),
           _vm._v(" "),
-          _vm.haspermission(_vm.permissions, "export.media_plan")
+          _vm.haspermission(_vm.permission_list, "export.media_plan")
             ? _c(
                 "button",
                 {
@@ -3083,7 +3073,7 @@ var render = function() {
             ? _c(
                 "span",
                 [
-                  _vm.haspermission(_vm.permissions, "convert.media_plan")
+                  _vm.haspermission(_vm.permission_list, "convert.media_plan")
                     ? _c("media-plan-create-campaign", {
                         attrs: { id: _vm.summaryDetails.id }
                       })
@@ -7575,11 +7565,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_highcharts___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_highcharts__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_highcharts_vue__ = __webpack_require__("./node_modules/highcharts-vue/dist/highcharts-vue.min.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_highcharts_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_highcharts_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_vee_validate__ = __webpack_require__("./node_modules/vee-validate/dist/vee-validate.esm.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_vuetify__ = __webpack_require__("./node_modules/vuetify/dist/vuetify.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_vuetify___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_vuetify__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_vuetify_dist_vuetify_min_css__ = __webpack_require__("./node_modules/vuetify/dist/vuetify.min.css");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_vuetify_dist_vuetify_min_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_vuetify_dist_vuetify_min_css__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_moment__ = __webpack_require__("./node_modules/moment/moment.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_moment__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_vee_validate__ = __webpack_require__("./node_modules/vee-validate/dist/vee-validate.esm.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_vuetify__ = __webpack_require__("./node_modules/vuetify/dist/vuetify.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_vuetify___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_vuetify__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_vuetify_dist_vuetify_min_css__ = __webpack_require__("./node_modules/vuetify/dist/vuetify.min.css");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_vuetify_dist_vuetify_min_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_vuetify_dist_vuetify_min_css__);
 
 /**
  * First we will load all of this project's JavaScript dependencies which
@@ -7598,17 +7590,18 @@ Vue.use(__WEBPACK_IMPORTED_MODULE_0_vue_sweetalert2__["a" /* default */]);
 // Highcharts package
 
 
+
 Vue.use(__WEBPACK_IMPORTED_MODULE_2_highcharts_vue___default.a, {
     highcharts: __WEBPACK_IMPORTED_MODULE_1_highcharts___default.a
 });
 
 // VeeValidate
 
-Vue.use(__WEBPACK_IMPORTED_MODULE_3_vee_validate__["a" /* default */]);
+Vue.use(__WEBPACK_IMPORTED_MODULE_4_vee_validate__["a" /* default */]);
 
 // Vuetify
 
-Vue.use(__WEBPACK_IMPORTED_MODULE_4_vuetify___default.a);
+Vue.use(__WEBPACK_IMPORTED_MODULE_5_vuetify___default.a);
 
 
 // declared to manage events globally
@@ -7696,12 +7689,20 @@ Vue.mixin({
             return dateParts[0] + '-' + dateParts[1] + '-' + dateParts[2].substr(0, 2);
         },
         dateToHumanReadable: function dateToHumanReadable(date) {
-            var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-            var current_datetime = new Date(date);
-            return current_datetime.getDate() + "-" + months[current_datetime.getMonth()] + "-" + current_datetime.getFullYear();
+            return __WEBPACK_IMPORTED_MODULE_3_moment___default()(date).format('Do-MMM-YYYY');
         },
         numberFormat: function numberFormat(n) {
             return n.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '');
+        },
+        haspermission: function haspermission(permission_list, permision) {
+            var result = this.permission_list.filter(function (permission) {
+                return permission.name == permission;
+            });
+            if (result.length == 0) {
+                return false;
+            } else {
+                return true;
+            }
         }
     }
 });
