@@ -31,4 +31,4 @@ node_modules
 storage/*.key
 resources/assets/.DS_Store
 app/.DS_Store
-
+*.out
