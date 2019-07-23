@@ -1,7 +1,7 @@
-@extends('layouts.faya_app')
+@extends('layouts.ssp.layout')
 
 @section('title')
-    <title>FAYA | Walk-In Details</title>
+    <title>Torch | Walk-In Details</title>
 @stop
 
 @section('content')
@@ -71,7 +71,7 @@
 
         <!-- client charts -->
         <div class="the_frame mb client_charts content_month when_loading">
-            <form action="{{ route('client.date', ['client_id' => $client_id]) }}" id="client_month" method="get">
+            <form action="" id="client_month" method="get">
                 <div class="filters chart_filters border_bottom clearfix">
                     <div class="column col_6 date_filter" id="default_publisher_logo">
                         @if(Auth::user()->companies()->count() > 1)

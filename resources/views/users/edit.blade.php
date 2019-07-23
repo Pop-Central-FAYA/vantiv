@@ -1,14 +1,15 @@
-@extends('layouts.faya_app')
+@extends('layouts.ssp.layout')
 
 @section('title')
-    <title>FAYA | Edit User</title>
+    <title>Torch | Edit User</title>
 @stop
 
 @section('content')
     <div class="main_contain">
-        <!-- header -->
+    <!-- header -->
     @include('partials.new-frontend.broadcaster.header')
     @include('partials.new-frontend.broadcaster.campaign_management.sidebar')
+    
 
     <!-- subheader -->
         <div class="sub_header clearfix mb pt">

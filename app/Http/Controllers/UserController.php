@@ -107,7 +107,7 @@ class UserController extends Controller
             return redirect()->route('login');
         }
         $user = User::findOrFail($id);
-        return view('auth.complete_registration')->with('user', $user);
+        return view('auth.ssp.complete_registration')->with('user', $user);
     }
 
     public function processCompleteAccount(Request $request, $id)

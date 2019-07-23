@@ -1,7 +1,7 @@
-@extends('layouts.faya_app')
+@extends('layouts.ssp.layout')
 
 @section('title')
-    <title>FAYA | Edit Discount</title>
+    <title>Torch | Edit Discount</title>
 @stop
 
 @section('content')
