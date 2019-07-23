@@ -7,61 +7,41 @@ use Auth;
 
 class GetMediaPlans
 {
-    public function __construct()
+    protected $plan_status;
+    protected $planner_id;
+
+    public function __construct($status='', $planner_id='')
     {
-        
+        if ($status == "pending") {
+            $this->plan_status = ['Pending','Suggested','Selected'];
+        } elseif ($status == "approved" || $status == "declined") {
+            $this->plan_status = [$status];
+        } 
+        else {
+            $this->plan_status = ['Pending','Suggested','Selected','Approved','Declined'];
+        }
+        $this->planner_id = $planner_id;  
     }
 
     public function run()
     {
-        return $this->mediaPlanDataToDatatables();
+        return $this->fetchMediaPlans();
     }
 
-    public function mediaPlanDataToDatatables()
+    public function fetchMediaPlans()
     {
-        $datatables = new DataTables();
-
-        $plans = $this->fetchAllMediaPlans();
-
-        $plans = $this->getMediaPlanDatatables($plans);
-
-        return $datatables->collection($plans)
-            ->editColumn('campaign_name', function ($plans){
-                // 'Suggested','Selected','Pending','Approved','Declined'
-                if($plans['status'] === "Approved" OR $plans['status'] === "Pending"){
-                    return '<a href="'.route('agency.media_plan.summary', ['id'=>$plans['plan_id']]).'">'.$plans['campaign_name'].'</a>';
-                }elseif($plans['status'] === "Declined" && $plans['status'] === "Selected") {
-                    //redirect to the review suggested plan page
-                    return '<a href="'.route('agency.media_plan.create', ['id'=>$plans['plan_id']]).'">'.$plans['campaign_name'].'</a>';
-                }elseif($plans['status'] === "Suggested") {
-                    //redirect to the select suggestions page
-                    return '<a href="'.route('agency.media_plan.customize', ['id'=>$plans['plan_id']]).'">'.$plans['campaign_name'].'</a>';
-                }else {
-                    return '<a href="#">'.$plans['campaign_name'].'</a>';
-                }
-            })
-            ->editColumn('status', function ($plans){
-                if($plans['status'] === "Approved"){
-                    return '<span class="span_state status_success">Approved</span>';
-                }elseif ($plans['status'] === "Pending" OR $plans['status'] === "Suggested" OR $plans['status'] === "Selected"){
-                    return '<span class="span_state status_pending">Pending</span>';
-                }elseif ($plans['status'] === 'Declined'){
-                    return '<span class="span_state status_danger">Declined</span>';
-                }else {
-                    return '<span class="span_state status_danger">File Errors</span>';
-                }
-            })
-            ->rawColumns(['status' => 'status', 'campaign_name' => 'campaign_name'])
-            ->addIndexColumn()
-            ->make(true);
+        $status = $this->plan_status;
+        $planner_id = $this->planner_id;
+        $plans =  MediaPlan::whereIn('status', $status)
+                    ->when($planner_id, function ($query, $planner_id) {
+                        $query->where('planner_id', $planner_id);
+                    })
+                    ->get();
+        $plans = $this->reformatMediaPlans($plans);
+        return $plans;
     }
 
-    public function fetchAllMediaPlans()
-    {
-        return MediaPlan::where('planner_id', Auth::id())->latest()->get();
-    }
-
-    public function getMediaPlanDatatables($media_plans)
+    public function reformatMediaPlans($media_plans)
     {
         $plans = [];
         foreach ($media_plans as $plan)
@@ -73,28 +53,39 @@ class GetMediaPlans
                 'campaign_name' => $plan->campaign_name,
                 'campaign_duration' => date('M j, Y', $start_date).' - '.date('M j, Y', $end_date),
                 'date_created' => date('M j, Y', strtotime($plan->created_at)),
-                'start_date' => date('M j, Y', $start_date),
-                'end_date' => date('M j, Y', $end_date),
+                'start_date' => date('M j, Y', strtotime($plan->start_date)),
+                'end_date' => date('M j, Y', strtotime($plan->end_date)),
                 'media_type' => $plan->media_type,
-                // 'budget' => number_format($plan->budget, 2),
-                'status' => $plan->status,
+                'redirect_url' => $this->generateRedirectUrl($plan),
+                'status' => $this->getStatusHtml($plan),
             ];
         }
         return $plans;
     }
 
-    public function approvedPlans()
+    public function generateRedirectUrl($media_plan)
     {
-        return MediaPlan::where('planner_id', Auth::id())->where('status', 'Approved')->count();
+        if ($media_plan->status === "Approved" || $media_plan->status === "Declined") {
+            return route('agency.media_plan.summary',['id'=>$media_plan->id]);
+        } elseif ($media_plan->status === "Pending" || $media_plan->status === "Suggested") {
+            return route('agency.media_plan.customize',['id'=>$media_plan->id]);
+        } elseif ($media_plan->status === "Selected") {
+            return route('agency.media_plan.create',['id'=>$media_plan->id]);
+        } else {
+            return route('agency.media_plans');
+        }
     }
-
-    public function declinedPlans()
+    
+    public function getStatusHtml($media_plan)
     {
-        return MediaPlan::where('planner_id', Auth::id())->where('status', 'Declined')->count();
-    }
-
-    public function pendingPlans()
-    {
-        return MediaPlan::where('planner_id', Auth::id())->whereIn('status', ['Pending','Suggested','Selected'])->count();
+        if ($media_plan->status === "Approved" || $media_plan->status === "Declined") {
+            return '<span class="span_state status_success">Approved</span>';
+        } elseif ($media_plan->status === "Declined") {
+            return '<span class="span_state status_danger">Declined</span>';
+        } elseif ($media_plan->status === "Pending" || $media_plan->status === "Suggested" || $media_plan->status === "Suggested") {
+            return '<span class="span_state status_pending">Pending</span>';
+        } else {
+            return '<span class="span_state status_danger">File Error</span>';
+        }
     }
 }
