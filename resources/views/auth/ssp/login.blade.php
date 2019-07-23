@@ -1,7 +1,7 @@
-@extends('layouts.auth')
+@extends('layouts.ssp.auth')
 
 @section('title')
-    <title>FAYA.</title>
+    <title>Torch | Login</title>
 @stop
 
 @section('content')
