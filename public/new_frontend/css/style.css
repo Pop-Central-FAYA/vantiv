@@ -421,6 +421,9 @@ h2.sub_header {
 ._nav li.campaign_icon:before {
 	content: url(../img/campaign_icon.svg);
 }
+._nav li.media_icon:before {
+	content: url(../img/plan.svg);
+}
 
 ._nav li.dash_icon:before {
 	content: url(../img/dashboard.svg);
@@ -462,6 +465,9 @@ h2.sub_header {
 
 ._nav li.active.campaign_icon:before {
 	content: url(../img/campaign_active.svg);
+}
+._nav li.active.media_icon:before {
+	content: url(../img/plan_active.svg);
 }
 
 ._nav li.active.dash_icon:before {

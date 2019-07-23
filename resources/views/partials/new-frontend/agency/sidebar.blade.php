@@ -6,13 +6,13 @@
     <div class="_nav">
         <ul>
             @if(Auth::user()->hasPermissionTo('view.report'))
-            <li class="campaign_icon {{ Request::is('/') ? 'active' : ''  }}"><a href="{{ route('dashboard') }}">Dashboard</a></li>
+            <li class="dash_icon {{ Request::is('/') ? 'active' : ''  }}"><a href="{{ route('dashboard') }}">Dashboard</a></li>
             @endif
             @if(Auth::user()->hasPermissionTo('view.campaign'))
-                <li class="wallet_icon {{ Request::is('campaigns') ? 'active' :  Request::is('campaigns/*') ? 'active' : ''  }}"><a href="{{ route('agency.campaign.all') }}">Campaigns</a></li>
+                <li class="campaign_icon {{ Request::is('campaigns') ? 'active' :  Request::is('campaigns/*') ? 'active' : ''  }}"><a href="{{ route('agency.campaign.all') }}">Campaigns</a></li>
             @endif
             @if(Auth::user()->hasPermissionTo('view.media_plan'))
-                <li class="wallet_icon {{ Request::is('media-plan') ? 'active' :  Request::is('media-plan/*') ? 'active' : ''  }}"><a href="{{ route('agency.media_plans') }}">Media Plans</a></li>
+                <li class="media_icon {{ Request::is('media-plan') ? 'active' :  Request::is('media-plan/*') ? 'active' : ''  }}"><a href="{{ route('agency.media_plans') }}">Media Plans</a></li>
             @endif
             @if(Auth::user()->hasPermissionTo('view.client'))
                 <li class="clients_icon {{ Request::is('clients/*') ? 'active' : ''  }}"><a href="{{ route('clients.list') }}">Clients</a></li>
