@@ -27,34 +27,18 @@ class AssetsHelper
      <use id="svg_3" xlink:href="#svg_2" transform="matrix(1.1134798870399125,0,0,1.0357963171947533,-11.671895890043723,-23.101256644532413) " y="22.6777" x="2.49327"/>
      <g id="svg_4"/>
     </g>';
-    static $FAYA_LOGO =' <!-- Generator: Sketch 49.2 (51160) - http://www.bohemiancoding.com/sketch -->
-    <title>Page 1</title>
-    <desc>Created with Sketch.</desc>
-    <defs></defs>
-    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Login" transform="translate(-580.000000, -81.000000)">
-            <g id="Page-1" transform="translate(580.000000, 81.000000)">
-                <polygon id="Fill-1" fill="#44C1C9" points="0 6 24 6 24 0 0 0"></polygon>
-                <polygon id="Fill-2" fill="#222222" points="0 15 0 36 5.99114925 36 5.99114925 21.1044174 22 21.1044174 22 15"></polygon>
-                <polygon id="Fill-3" fill="#44C1C9" points="23 36 30.3379468 36 41 13.8387817 37.7457945 7"></polygon>
-                <polygon id="Fill-4" fill="#009FA0" points="41.2783896 0 38 6.67742466 41.1771528 13.5920247 41.2783896 13.3742576 51.8358002 36 59 36"></polygon>
-                <polygon id="Fill-5" fill="#44C1C9" points="80.9945174 0 71.0238493 13.3442398 60.3337537 0 53 0 67.6684942 19.3440751 67.6684942 36 73.6604348 36 73.6604348 19.3440751 89 0"></polygon>
-                <polygon id="Fill-6" fill="#009FA0" points="100.806629 0 83 36 90.2176706 36 100.806629 13.3742576 100.808258 13.3775471 104 6.43860451"></polygon>
-                <polygon id="Fill-7" fill="#44C1C9" points="101 12.8071663 111.722726 35 119 35 104.218099 6"></polygon>
-            </g>
-        </g>
-    </g>';
     static $TORCH_LOGO = '
-    <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" 
-    viewBox="0 0 522.57 179.82"><defs><style>.cls-1{fill:#575758;}.cls-2{fill:#4eaeaf;}.
-    cls-3{fill:#64c4ce;}.cls-4{font-size:86.12px;fill:#1d1d1d;font-family:LemonMilk, 
-        "Lemon/Milk";letter-spacing:-0.08em;}.cls-5{letter-spacing:0em;}</style></defs>
-        <title>Vantage+Torch_Logos</title><polygon class="cls-1" 
-        points="117.92 145.78 30.07 33.24 205.77 33.24 117.92 145.78"/>
-        <polygon class="cls-2" points="154.14 107.5 102.69 33.24 205.6 33.24 154.14 107.5"/>
-        <polygon class="cls-3" points="81.53 107.5 30.07 33.24 132.99 33.24 81.53 107.5"/>
-        <text class="cls-4" transform="translate(200.6 127.67)">
-        T<tspan class="cls-5" x="43.81" y="0">ORCH</tspan></text></svg>';
+    <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 478.81 179.82">
+        <defs>
+            <style>.cls-1{font-size:86.12px;fill:#1d1d1d;font-family:LemonMilk, "Lemon/Milk";}.cls-2{fill:#575758;}.cls-3{fill:#4eaeaf;}.cls-4{fill:#64c4ce;}
+            </style>
+        </defs>
+        <title>Vantage+Torch_Logos</title>
+        <text class="cls-1" transform="translate(187.99 129.26)">ORCH</text>
+        <polygon class="cls-2" points="162.01 128.12 130.62 147.15 99.16 128.12 99.16 53.16 162.01 53.16 162.01 128.12"/>
+        <polygon class="cls-3" points="176.9 58.9 200.77 58.9 218.26 33.66 115.35 33.66 166.81 107.91 176.9 93.35 176.9 58.9"/>
+        <polygon class="cls-4" points="42.73 33.66 60.23 58.9 84.33 58.9 84.33 93.59 84.27 93.59 94.19 107.91 145.65 33.66 42.73 33.66"/>
+    </svg>';
 
     static function logo($type='null')
     {
@@ -68,7 +52,7 @@ class AssetsHelper
                 ';
             else
                 return ' 
-                <svg width="119" height="46" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'.
+                <svg width="119" height="46" style="margin-left: -11px;" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'.
                 static::$TORCH_LOGO. '</svg>
                 ';
             break;
@@ -92,13 +76,25 @@ class AssetsHelper
         $product = env('PRODUCT');
         switch ($product) {
             case 'ssp':
-                return '<img src="http://res.cloudinary.com/drwrickhm/image/upload/v1522495083/logo_mail.png" />';
+                return '<img src="https://faya-dev-us-east-1-media.s3.amazonaws.com/email-asset/Torchlogo2.png" />';
             break;
             default:
                 return '<img src="https://faya-dev-us-east-1-media.s3.amazonaws.com/email-asset/vantage_logo.png" />';
             break;
         }
-       
+    }
+
+    static function brandName()
+    {
+        $product = env('PRODUCT');
+        switch ($product) {
+            case 'ssp':
+                return 'Torch';
+            break;
+            default:
+                return 'Vantage';
+            break;
+        }
     }
 
 }

@@ -14,7 +14,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('new_frontend/img/favicon.ico') }}" />
+    <link rel="shortcut icon" type="image/x-icon" href="https://faya-dev-us-east-1-media.s3.amazonaws.com/email-asset/Torchlogo2.png" />
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
