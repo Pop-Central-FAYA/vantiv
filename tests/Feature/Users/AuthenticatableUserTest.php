@@ -24,12 +24,6 @@ class AuthenticatableUserTest extends TestCase
         $this->assertInstanceOf(User::class, $user);
     }
 
-    public function test_a_torch_user_can_visit_the_login_page()
-    {
-        $this->get(route('login'))
-            ->assertSee('Welcome Back');
-    }
-
     public function test_user_can_login_in()
     {
         \Session::start();
