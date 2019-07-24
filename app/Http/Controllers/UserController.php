@@ -88,7 +88,7 @@ class UserController extends Controller
         \DB::transaction(function () use ($request, $companies, $inviter_name) {
             $user_mail_content_array = [];
             foreach ($request->email as $email) {
-                $invite_user_service = new InviteUser($request->roles, $companies, $email, "ssp");
+                $invite_user_service = new InviteUser($request->roles, $companies, $email, "web");
                 $invited_user = $invite_user_service->createUnconfirmedUser();
                 $subject="Invitation to join Torch";
                 $email_format = new MailFormat($invited_user, $inviter_name, $subject);
