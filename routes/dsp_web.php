@@ -1,5 +1,5 @@
 <?php
- Route::group(['namespace' => 'Dsp'], function () {
+    Route::group(['namespace' => 'Dsp'], function () {
     Route::get('health', 'AuthController@getLogin');
      /**
      * Authentication
