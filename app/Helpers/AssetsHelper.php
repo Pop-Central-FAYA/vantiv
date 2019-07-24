@@ -44,6 +44,17 @@ class AssetsHelper
             </g>
         </g>
     </g>';
+    static $TORCH_LOGO = '
+    <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" 
+    viewBox="0 0 522.57 179.82"><defs><style>.cls-1{fill:#575758;}.cls-2{fill:#4eaeaf;}.
+    cls-3{fill:#64c4ce;}.cls-4{font-size:86.12px;fill:#1d1d1d;font-family:LemonMilk, 
+        "Lemon/Milk";letter-spacing:-0.08em;}.cls-5{letter-spacing:0em;}</style></defs>
+        <title>Vantage+Torch_Logos</title><polygon class="cls-1" 
+        points="117.92 145.78 30.07 33.24 205.77 33.24 117.92 145.78"/>
+        <polygon class="cls-2" points="154.14 107.5 102.69 33.24 205.6 33.24 154.14 107.5"/>
+        <polygon class="cls-3" points="81.53 107.5 30.07 33.24 132.99 33.24 81.53 107.5"/>
+        <text class="cls-4" transform="translate(200.6 127.67)">
+        T<tspan class="cls-5" x="43.81" y="0">ORCH</tspan></text></svg>';
 
     static function logo($type='null')
     {
@@ -53,12 +64,12 @@ class AssetsHelper
             if($type == "error")
                 return ' 
                 <svg width="400" height="90"  xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'.
-                static::$FAYA_LOGO. '</svg>
+                static::$TORCH_LOGO. '</svg>
                 ';
             else
                 return ' 
                 <svg width="119" height="46" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'.
-                static::$FAYA_LOGO. '</svg>
+                static::$TORCH_LOGO. '</svg>
                 ';
             break;
             default:

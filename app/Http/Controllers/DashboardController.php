@@ -27,6 +27,8 @@ use Vanguard\Services\Traits\YearTrait;
 use Yajra\DataTables\DataTables;
 use Vanguard\Services\MediaPlan\GetMediaPlans;
 use Vanguard\Services\Campaign\CampaignList;
+use Vanguard\Models\Campaign;
+use Vanguard\Models\CampaignChannel;
 
 use Vanguard\Services\Reports\Publisher\RevenueByTimeBelt;
 
@@ -48,7 +50,7 @@ class DashboardController extends Controller
         $agency_id = Session::get('agency_id');
         $agency_details = Utilities::switch_db('api')->select("SELECT * from agents where id = '$agency_id'");
 
-//            TV
+        //TV
         $tv_rating = $this->agencyMediaChannel('TV');
 
         //Radio
@@ -56,30 +58,32 @@ class DashboardController extends Controller
 
         $today_date = date("Y-m-d");
 
-//            all clients
+        //all clients
         $clients = Utilities::switch_db('reports')->select("SELECT * FROM walkIns WHERE agency_id = '$agency_id' ORDER BY time_created DESC");
 
-//            pending invoices
+        //pending invoices
         $pending_invoices = Utilities::switch_db('api')->select("SELECT * FROM invoiceDetails where agency_id = '$agency_id' AND status = 0 GROUP BY invoice_id");
 
-//            all_brands
+        //all_brands
         $all_brands = Utilities::getBrands($agency_id);
 
-        //count campaign on hold
-        $campaigns_on_hold = Utilities::switch_db('api')->select("SELECT id FROM campaignDetails WHERE agency = '$agency_id' 
-                                                                      AND status = 'on_hold' GROUP BY campaign_id");
+        //count campaigns on hold
+        $campaigns_on_hold = Campaign::where('belongs_to', $agency_id)->where('status','on_hold')->get();
 
-        $active_campaigns = Utilities::switch_db('api')->select("SELECT * FROM campaignDetails where agency = '$agency_id' AND status = 'active' GROUP BY campaign_id");
+        //count active campaigns
+        $active_campaigns = Campaign::where('belongs_to', $agency_id)->where('status','active')->get();
 
-        $media_plan_service = new GetMediaPlans();
         //count pending media plans
-        $count_pending_media_plans = $media_plan_service->pendingPlans();
+        $media_plan_service = new GetMediaPlans('pending');
+        $count_pending_media_plans = count($media_plan_service->run());
 
         //count approved media plans
-        $count_approved_media_plans = $media_plan_service->approvedPlans();
+        $media_plan_service = new GetMediaPlans('approved');
+        $count_approved_media_plans = count($media_plan_service->run());
 
         //count declined media plans
-        $count_declined_media_plans = $media_plan_service->declinedPlans();
+        $media_plan_service = new GetMediaPlans('declined');
+        $count_declined_media_plans = count($media_plan_service->run());
 
         return view('agency.dashboard.new_dashboard')->with([
             'broadcaster' => $allBroadcasters,
@@ -94,7 +98,8 @@ class DashboardController extends Controller
             'active_radio' => $radio_rating['percentage_active'],
             'pending_radio' => $radio_rating['percentage_pending'],
             'finish_radio' => $radio_rating['percentage_finished'],
-            'agency_info' => $agency_details, 'campaigns_on_hold' => $campaigns_on_hold,
+            'agency_info' => $agency_details, 
+            'campaigns_on_hold' => $campaigns_on_hold,
             'count_pending_media_plans' => $count_pending_media_plans,
             'count_approved_media_plans' => $count_approved_media_plans,
             'count_declined_media_plans' => $count_declined_media_plans
@@ -108,18 +113,16 @@ class DashboardController extends Controller
 
         $agency_id = Session::get('agency_id');
 
-        $campaigns = Utilities::switch_db('api')->select("SELECT * from campaignDetails where broadcaster IN 
-                                                      (SELECT b.id from broadcasters as b, campaignChannels as c where b.channel_id = c.id AND c.channel = '$channel')
-                                                      AND agency = '$agency_id'");
+        $campaigns = Campaign::where('belongs_to', $agency_id)->get();
 
         foreach ($campaigns as $campaign){
-            $channels = Utilities::switch_db('api')->select("SELECT * from campaignChannels where id IN ($campaign->channel) AND channel = '$channel' ");
+            $channels = CampaignChannel::whereIn('id', json_decode($campaign->channel))->first();
             $agency_media_channels[] = [
                 'campaign_id' => $campaign->campaign_id,
                 'start_date' => $campaign->start_date,
                 'end_date' => $campaign->stop_date,
-                'channel' => $channels[0]->channel,
-                'channel_id' => $channels[0]->id,
+                'channel' => $channels->channel,
+                'channel_id' => $channels->id,
                 'campaign_status' => $campaign->status
             ];
 
@@ -187,5 +190,4 @@ class DashboardController extends Controller
         $media_plan_service = new GetMediaPlans();
         return $media_plan_service->run();
     }
-
 }

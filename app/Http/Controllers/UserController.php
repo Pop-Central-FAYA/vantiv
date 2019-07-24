@@ -90,8 +90,8 @@ class UserController extends Controller
             foreach ($request->email as $email) {
                 $invite_user_service = new InviteUser($request->roles, $companies, $email, "ssp");
                 $invited_user = $invite_user_service->createUnconfirmedUser();
-
-                $email_format = new MailFormat($invited_user, $inviter_name);
+                $subject="Invitation to join Torch";
+                $email_format = new MailFormat($invited_user, $inviter_name, $subject);
                 $user_mail_content_array[] = $email_format->emailFormat();
             }
             $email_invitation_service = new UserInvitationMail($user_mail_content_array);
@@ -107,7 +107,7 @@ class UserController extends Controller
             return redirect()->route('login');
         }
         $user = User::findOrFail($id);
-        return view('auth.complete_registration')->with('user', $user);
+        return view('auth.ssp.complete_registration')->with('user', $user);
     }
 
     public function processCompleteAccount(Request $request, $id)
@@ -150,7 +150,7 @@ class UserController extends Controller
             return ['status'=>"error", 'message'=> $validate_request->errors()->first()];
         }
 
-        $update_user_service = new UpdateUserService($request->roles, $this->getCompany($request->companies), $request->user_id,'ssp');
+        $update_user_service = new UpdateUserService($request->roles, $this->getCompany($request->companies), $request->user_id,'web');
         $update_user_service->updateUser();
         return ['status'=>"success", 'message'=> "User updated successfully"];
     }
@@ -168,7 +168,8 @@ class UserController extends Controller
     public function resendInvitation(Request $request)
     {
         $user = User::find($request->user_id);
-        $email_format = new MailFormat($user, \Auth::user()->full_name);
+        $subject="Invitation to join Torch";
+        $email_format = new MailFormat($user, \Auth::user()->full_name, $subject);
         $user_mail_content_array[] = $email_format->emailFormat();
         $email_invitation_service = new UserInvitationMail($user_mail_content_array);
         $email_invitation_service->sendInvitationMail();

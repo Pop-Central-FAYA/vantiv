@@ -45,6 +45,10 @@ Vue.component('media-plan-suggestion-filter', require('./components/media_plan/c
 Vue.component('media-plan-footer-nav', require('./components/media_plan/customise/FooterNavigation.vue'));
 Vue.component('media-plan-suggestions', require('./components/media_plan/customise/Suggestions.vue'));
 Vue.component('media-plan-create-campaign', require('./components/media_plan/summary/CreateCampaign.vue'));
+Vue.component('media-plan-list', require('./components/media_plan/AllMediaPlans.vue'));
+
+// CAMPAIGN
+Vue.component('campaign-list', require('./components/campaign/AllCampaigns.vue'));
 
 // ASSET MANAGEMENT
 Vue.component('media-asset-upload', require('./components/asset_management/Upload.vue'));

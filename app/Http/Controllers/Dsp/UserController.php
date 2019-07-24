@@ -74,6 +74,7 @@ class UserController extends Controller
 
     public function processInvite(Request $request)
     {
+        
         $validate_request_service = new ValidateUserInviteRequest($request->all());
         $validate_request = $validate_request_service->validateRequest();
         if($validate_request->fails()){
@@ -87,8 +88,8 @@ class UserController extends Controller
             foreach ($request->email as $email) {
                 $invite_user_service = new InviteUser($request->roles, $companies, $email, "web");
                 $invited_user = $invite_user_service->createUnconfirmedUser();
-
-                $email_format = new MailFormat($invited_user, $inviter_name);
+                $subject="Invitation to join Vantage";
+                $email_format = new MailFormat($invited_user, $inviter_name, $subject);
                 $user_mail_content_array[] = $email_format->emailFormat();
             }
             $email_invitation_service = new UserInvitationMail($user_mail_content_array);
@@ -159,8 +160,8 @@ class UserController extends Controller
     public function resendInvitation(Request $request)
     {
         $user = User::find($request->user_id);
-
-        $email_format = new MailFormat($user, \Auth::user()->full_name);
+        $subject="Invitation to join Vantage";
+        $email_format = new MailFormat($user, \Auth::user()->full_name, $subject);
         $user_mail_content_array[] = $email_format->emailFormat();
 
         $email_invitation_service = new UserInvitationMail($user_mail_content_array);

@@ -36,12 +36,15 @@ use Vanguard\Services\Traits\SplitTimeRange;
 use Vanguard\Http\Requests\UpdateMpoTimeBeltRequest;
 use Vanguard\Services\Mpo\DeleteMpoTimeBelt;
 use Vanguard\Services\Mpo\CreateMpoTimeBelt;
+use Vanguard\Services\Client\AllClient;
+use Vanguard\Http\Controllers\Traits\CompanyIdTrait;
 
 class CampaignsController extends Controller
 {
     private $campaign_dates, $utilities;
 
     use SplitTimeRange;
+    use CompanyIdTrait;
 
     public function __construct(CampaignDate $campaignDate, Utilities $utilities)
     {
@@ -49,10 +52,70 @@ class CampaignsController extends Controller
         $this->utilities = $utilities;
     }
 
+    public function index(Request $request)
+    {
+        $agency_id = $this->companyId();
+        $campaigns = Campaign::when($request->status, function ($query) use ($request){
+                                $query->where('status', $request->status);
+                            })
+                            ->where('belongs_to',$agency_id)
+                            ->get();
+        $campaigns = $this->reformatCampaignList($campaigns);
+        return view('agency.campaigns.index')->with('campaigns', $campaigns);
+    }
+
+    public function reformatCampaignList($campaigns)
+    {
+        $new_campaigns = [];
+        foreach ($campaigns as $campaign) {
+            $new_campaigns[] = [
+                'id' => $campaign->campaign_reference,
+                'campaign_id' => $campaign->id,
+                'name' => $campaign->name,
+                'product' => $campaign->product,
+                'brand' => ucfirst($campaign->brand['name']),
+                'date_created' => date('M j, Y', strtotime($campaign->time_created)),
+                'start_date' => date('M j, Y', strtotime($campaign->start_date)),
+                'end_date' => date('Y-m-d', strtotime($campaign->stop_date)),
+                'adslots' => $campaign->ad_slots,
+                'budget' => number_format($campaign->budget,2),
+                'status' => $this->getCampaignStatusHtml($campaign),
+                'redirect_url' => $this->generateRedirectUrl($campaign),
+                'station' => ''
+            ];
+        }
+        return $new_campaigns;
+    }
+
+    public function getCampaignStatusHtml($campaign)
+    {
+        // To do refactor this and push the rendering logic to vue frontend
+        if ($campaign->status === "active") {
+            return '<span class="span_state status_success">Active</span>';
+        } elseif ($campaign->status === "expired") {
+            return '<span class="span_state status_danger">Finished</span>';
+        } elseif ($campaign->status === "pending") {
+            return '<span class="span_state status_pending">Pending</span>';
+        } elseif ($campaign->status === "on_hold") {
+            return '<span class="span_state status_on_hold">On Hold</span>';
+        } else {
+            return '<span class="span_state status_danger">File Error</span>';
+        }
+    }
+
+    public function generateRedirectUrl($campaign)
+    {
+        if ($campaign->status === "pending" || $campaign->status === "on_hold") {
+            return route('agency.campaign.new.details', ['id' => $campaign->id]);
+        } else {
+            return route('agency.campaign.all');
+        }
+    }
+
     public function getDetails($id)
     {
         //we will need to remove this later
-        $agency_id = \Session::get('agency_id');
+        $agency_id = $this->companyId();
         $campaign_details = Utilities::campaignDetails($id, null, $agency_id);
         $user_id = $campaign_details['campaign_det']['company_user_id'];
         $all_campaigns = Utilities::switch_db('api')->select("SELECT * FROM campaignDetails where agency = '$agency_id' and user_id = '$user_id' GROUP BY campaign_id");
@@ -62,7 +125,7 @@ class CampaignsController extends Controller
 
     public function getNewDetails($id)
     {
-        $agency_id = \Auth::user()->companies->first()->id;
+        $agency_id = $this->companyId();
         $campaign_details_service = new CampaignDetails($id);
         $campaign_details = $campaign_details_service->run();
         $campaign_details_client_id = $campaign_details->client->id;
@@ -81,14 +144,14 @@ class CampaignsController extends Controller
 
     public function getCampaignsByClient($client_id)
     {
-        $agency_id = \Auth::user()->companies->first()->id;
+        $agency_id = $this->companyId();
         $all_campaigns = Utilities::switch_db('api')->select("SELECT * FROM campaigns where belongs_to = '$agency_id' and walkin_id = '$client_id' GROUP BY id");
         return (['campaign' => $all_campaigns]);
     }
 
     public function filterByUser($user_id)
     {
-        $agency_id = \Session::get('agency_id');
+        $agency_id = $this->companyId();
         $all_campaigns = Utilities::switch_db('api')->select("SELECT * FROM campaignDetails where agency = '$agency_id' and user_id = '$user_id' GROUP BY campaign_id");
 
         $media_chanel = Utilities::switch_db('api')->select("SELECT * FROM broadcasters where id IN (SELECT broadcaster from campaignDetails where user_id = '$user_id')");
@@ -97,7 +160,7 @@ class CampaignsController extends Controller
 
     public function filterByCampaignId($campaign_id)
     {
-        $agency_id = Session::get('agency_id');
+        $agency_id = $this->companyId();
         $summary = Utilities::campaignDetails($campaign_id, null, $agency_id);
         $media_chanel = Utilities::switch_db('api')->select("SELECT * FROM broadcasters where id IN (SELECT broadcaster from campaignDetails where campaign_id = '$campaign_id')");
         return response()->json(['media_channel' => $media_chanel, 'summary' => $summary]);
@@ -105,7 +168,7 @@ class CampaignsController extends Controller
 
     public function mpoDetails($id)
     {
-        $agency_id = Session::get('agency_id');
+        $agency_id = $this->companyId();
         $mpo_details = Utilities::getMpoDetails($id, $agency_id);
 
         return view('agency.mpo.mpo')->with('mpo_details', $mpo_details);

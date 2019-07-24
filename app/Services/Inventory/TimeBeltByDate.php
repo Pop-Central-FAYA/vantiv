@@ -2,14 +2,12 @@
 
 namespace Vanguard\Services\Inventory;
 
-use Vanguard\Services\Traits\CalculateTotalSlot;
 use Vanguard\Services\Traits\GetTimeBeltInventoryDetails;
 use Vanguard\Services\Traits\TimeBeltTrait;
 
 class TimeBeltByDate
 {
     use TimeBeltTrait;
-    use CalculateTotalSlot;
     use GetTimeBeltInventoryDetails;
 
     protected $date;

@@ -14,6 +14,26 @@ trait PermissionsTrait
         ]);
 
         factory(Permission::class)->create([
+            'name' => 'create.campaign',
+            'guard_name' => 'web'
+        ]);
+
+        factory(Permission::class)->create([
+            'name' => 'view.client',
+            'guard_name' => 'web'
+        ]);
+
+        factory(Permission::class)->create([
+            'name' => 'view.schedule',
+            'guard_name' => 'web'
+        ]);
+
+        factory(Permission::class)->create([
+            'name' => 'view.mpo',
+            'guard_name' => 'web'
+        ]);
+
+        factory(Permission::class)->create([
             'name' => 'update.user',
             'guard_name' => 'web'
         ]);

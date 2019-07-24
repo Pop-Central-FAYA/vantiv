@@ -192,3 +192,20 @@
 .side_nav ._nav ul {
     padding-left: 0px;
 }
+
+.application--wrap {
+    min-height: 0% !important;
+}
+
+.application--wrap .tab_content {
+    min-height: 0px;
+}
+
+.dsp-dashboard .highcharts-root {
+    width: 100%;
+    height: 100px;
+}
+
+.dsp-dashboard .pie_icon {
+    height: 20px !important;
+}
