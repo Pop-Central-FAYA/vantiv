@@ -74,9 +74,19 @@ class MediaPlanController extends Controller
 
     public function criteriaForm(Request $request)
     {
-        $criterias = Criteria::with(['subCriterias'])->groupBy('name')->get();
+        $criterias = Criteria::with(['subCriterias'])->get();
+        $new_criterias = [];
+        foreach ($criterias as $key => $criteria) {
+            $sub_criterias = [];
+            foreach ($criteria->subCriterias as $key => $value) {
+                $sub_criterias[$key] = $value->name;
+            }
+            $new_criterias[$criteria->name]['criterias'] = $sub_criterias;
+            $new_criterias[$criteria->name]['all'] = 'All';
+        }
         // return criterias array with the frontend view, in order to populate criteria inputs
-        return view('agency.mediaPlan.create_plan')->with('criterias', $criterias);
+        return view('agency.mediaPlan.create_plan')->with('criterias', $new_criterias)
+                                                    ->with('redirect_urls', ['submit_form' => route('agency.media_plan.submit.criterias')]);
     }
 
     public function suggestPlan(Request $request)
@@ -503,6 +513,7 @@ class MediaPlanController extends Controller
         // validate criteria form request
         $validateCriteriaFormService = new ValidateCriteriaForm($request->all());
         $validation = $validateCriteriaFormService->validateCriteria();
+
         if ($validation->fails()) {
             Session::flash('error', 'Please make sure the required parameters are filled out');
             return ['status'=>"error", 'message'=> "Please make sure the required parameters are filled out" ];
@@ -514,7 +525,7 @@ class MediaPlanController extends Controller
             return [
                 'status'=>"success",
                 'message'=> "Ratings successfully generated, going to next page",
-                'redirect_url' => $suggestions->id
+                'redirect_url' => route('agency.media_plan.customize',['id'=>$suggestions->id])
             ];
         } else {
             Session::flash('error', 'No results came back for your criteria');

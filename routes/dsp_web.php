@@ -133,7 +133,7 @@
         Route::group(['namespace' => 'Dsp\MediaPlan', 'prefix' => 'media-plan'], function () {
             Route::get('all/{status?}', 'MediaPlanController@index')->name('agency.media_plans');
             Route::get('/set-criterias', 'MediaPlanController@criteriaForm')->name('agency.media_plan.criteria_form')->middleware('permission:create.media_plan');
-            Route::post('/create-plan', 'MediaPlanController@generateRatingsPost')->name('agency.media_plan.suggestPlan');
+            Route::post('/create-plan', 'MediaPlanController@generateRatingsPost')->name('agency.media_plan.submit.criterias');
             Route::get('/summary/{id}', 'MediaPlanController@summary')->name('agency.media_plan.summary')->middleware('permission:create.media_plan');
             Route::get('/approve/{id}', 'MediaPlanController@approvePlan')->name('agency.media_plan.approve')->middleware('permission:create.media_plan');
             Route::get('/decline/{id}', 'MediaPlanController@declinePlan')->name('agency.media_plan.decline')->middleware('permission:create.media_plan');

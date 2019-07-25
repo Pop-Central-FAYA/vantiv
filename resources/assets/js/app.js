@@ -30,6 +30,10 @@ import Vuetify from 'vuetify';
 Vue.use(Vuetify);
 import 'vuetify/dist/vuetify.min.css';
 
+// Vue MultiSelect
+import Multiselect from 'vue-multiselect'
+Vue.component('multiselect', Multiselect);
+
 // declared to manage events globally
 window.Event = new Vue();
 /**
@@ -48,6 +52,7 @@ Vue.component('media-plan-footer-nav', require('./components/media_plan/customis
 Vue.component('media-plan-suggestions', require('./components/media_plan/customise/Suggestions.vue'));
 Vue.component('media-plan-create-campaign', require('./components/media_plan/summary/CreateCampaign.vue'));
 Vue.component('media-plan-summary', require('./components/media_plan/summary/Summary.vue'));
+Vue.component('media-plan-criteria-form', require('./components/media_plan/CriteriaForm.vue'));
 Vue.component('media-plan-list', require('./components/media_plan/AllMediaPlans.vue'));
 
 // CAMPAIGN
@@ -83,7 +88,7 @@ Vue.mixin({
             time = time.split(":");
             return `${time[0]}h${time[1]}m`;
         },
-        sweet_alert(message, type) {
+        sweet_alert(message, type, timer=10000) {
             let background = '';
             if (type === 'success') {
                 background = '#28a745';
@@ -99,7 +104,7 @@ Vue.mixin({
                 showConfirmButton: false,
                 toast: true,
                 background: background,
-                timer: 10000
+                timer: timer
             });
         },
         groupAdslotByProgram(adslots) {
