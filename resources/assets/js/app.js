@@ -124,7 +124,7 @@ Vue.mixin({
             return moment(date).format('Do-MMM-YYYY');
         },
         numberFormat(n) {
-              return n.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '');
+            return n.toFixed(2)
         },
         hasPermission(permissionList,search_permission){
             var result =  permissionList.filter(function(permission) {

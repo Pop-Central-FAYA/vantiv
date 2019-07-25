@@ -65,15 +65,15 @@
         <div class="container-fluid my-5">
             <div class="row">
                 <div class="col-md-4 p-0">
-                    <button id="back_btn" @click="buttonAction('/media-plan/createplan/'+summaryDetails.id)"  class="btn small_btn"><i class="media-plan material-icons">navigate_before</i> Back</button>
+                    <button id="back_btn" @click="buttonAction(routes.back)"  class="btn small_btn"><i class="media-plan material-icons">navigate_before</i> Back</button>
                 </div>
                 <div class="col-md-8 p-0 text-right">
                       <span v-if="summaryDetails.status == 'Suggested'" >
-                            <button v-if="hasPermission(permissionList,'approve.media_plan')"  @click="buttonAction('/media-plan/approve/'+summaryDetails.id)" class="media-plan btn block_disp uppercased mr-1"><i class="media-plan material-icons">check</i>Approve Plan</button>
+                            <button v-if="hasPermission(permissionList,'approve.media_plan')"  @click="buttonAction(routes.approve)" class="media-plan btn block_disp uppercased mr-1"><i class="media-plan material-icons">check</i>Approve Plan</button>
                       
-                            <button v-if="hasPermission(permissionList,'decline.media_plan')"  @click="buttonAction('/media-plan/decline/'+summaryDetails.id)"  class="media-plan btn block_disp uppercased bg_red mr-1"><i class="media-plan material-icons">clear</i>Decline Plan</button>
+                            <button v-if="hasPermission(permissionList,'decline.media_plan')"  @click="buttonAction(routes.decline)"  class="media-plan btn block_disp uppercased bg_red mr-1"><i class="media-plan material-icons">clear</i>Decline Plan</button>
                       </span>
-                            <button v-if="hasPermission(permissionList,'export.media_plan')"  @click="buttonAction('/media-plan/export/'+summaryDetails.id)"  class="btn block_disp uppercased"><i class="media-plan material-icons">file_download</i>Export Plan</button>
+                            <button v-if="hasPermission(permissionList,'export.media_plan')"  @click="buttonAction(routes.export)"  class="btn block_disp uppercased"><i class="media-plan material-icons">file_download</i>Export Plan</button>
                      <span v-if="summaryDetails.status == 'Approved'" >
                             <media-plan-create-campaign v-if="hasPermission(permissionList,'convert.media_plan')" :id="summaryDetails.id"></media-plan-create-campaign>
                      </span>
@@ -88,6 +88,7 @@
             summaryDetails: Object,
             summaryData: Array,
             permissionList:Array,
+            routes:Object,
         },
         data() {
             return {
@@ -99,9 +100,13 @@
         },
         mounted() {
              console.log("Summary component mounted");
-             this.getSums();
-        },   
-        methods: {
+           
+        },  
+        created() {    
+           this.getSums();
+
+          }, 
+         methods: {
                 getSums(){
                     let self = this;
                     this.summaryData.forEach(function (item, key) {

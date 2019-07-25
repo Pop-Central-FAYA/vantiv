@@ -2469,7 +2469,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     props: {
         summaryDetails: Object,
         summaryData: Array,
-        permissionList: Array
+        permissionList: Array,
+        routes: Object
     },
     data: function data() {
         return {
@@ -2481,6 +2482,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     mounted: function mounted() {
         console.log("Summary component mounted");
+    },
+    created: function created() {
         this.getSums();
     },
 
@@ -3087,9 +3090,7 @@ var render = function() {
               attrs: { id: "back_btn" },
               on: {
                 click: function($event) {
-                  return _vm.buttonAction(
-                    "/media-plan/createplan/" + _vm.summaryDetails.id
-                  )
+                  return _vm.buttonAction(_vm.routes.back)
                 }
               }
             },
@@ -3113,9 +3114,7 @@ var render = function() {
                           "media-plan btn block_disp uppercased mr-1",
                         on: {
                           click: function($event) {
-                            return _vm.buttonAction(
-                              "/media-plan/approve/" + _vm.summaryDetails.id
-                            )
+                            return _vm.buttonAction(_vm.routes.approve)
                           }
                         }
                       },
@@ -3136,9 +3135,7 @@ var render = function() {
                           "media-plan btn block_disp uppercased bg_red mr-1",
                         on: {
                           click: function($event) {
-                            return _vm.buttonAction(
-                              "/media-plan/decline/" + _vm.summaryDetails.id
-                            )
+                            return _vm.buttonAction(_vm.routes.decline)
                           }
                         }
                       },
@@ -3160,9 +3157,7 @@ var render = function() {
                   staticClass: "btn block_disp uppercased",
                   on: {
                     click: function($event) {
-                      return _vm.buttonAction(
-                        "/media-plan/export/" + _vm.summaryDetails.id
-                      )
+                      return _vm.buttonAction(_vm.routes.export)
                     }
                   }
                 },
@@ -8054,7 +8049,7 @@ Vue.mixin({
             return __WEBPACK_IMPORTED_MODULE_3_moment___default()(date).format('Do-MMM-YYYY');
         },
         numberFormat: function numberFormat(n) {
-            return n.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '');
+            return n.toFixed(2);
         },
         hasPermission: function hasPermission(permissionList, search_permission) {
             var result = permissionList.filter(function (permission) {
