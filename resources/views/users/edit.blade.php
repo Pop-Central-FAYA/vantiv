@@ -41,7 +41,7 @@
                                     <ul>
                                         @foreach($roles as $role)
                                             <li class="col_4 column m-b">
-                                                <input name="roles[]" value="{{ $role['id'] }}"
+                                                <input name="roles[]" value="{{ $role['role'] }}"
                                                        @foreach($user->getRoleNames() as $checked_role)
                                                        @if($checked_role === $role['role'])
                                                        checked

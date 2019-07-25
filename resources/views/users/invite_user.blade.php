@@ -38,12 +38,11 @@
 
                     <div class="input_wrap">
                         <label class="small_faint">Roles</label>
-
                         <div class="select_wrap">
                             <select class="js-example-basic-multiple" id="roles" name="roles[]" multiple="multiple" >
                                 <option value=""></option>
                                 @foreach($roles as $role)
-                                    <option value="{{ $role['id'] }}">
+                                    <option value="{{ $role['role'] }}">
                                         {{ $role['label'] }}
                                     </option>
                                 @endforeach

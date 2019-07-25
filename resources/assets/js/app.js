@@ -126,11 +126,12 @@ Vue.mixin({
         numberFormat(n) {
               return n.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '');
         },
-        haspermission(permission_list,permision){
-            var result =  this.permission_list.filter(function(permission) {
-            return permission.name == permission;
-             });
-              if (result.length==0){
+        hasPermission(permissionList,search_permission){
+            var result =  permissionList.filter(function(permission) {
+                return permission.name == search_permission;
+            });
+              
+            if (result.length==0){
                  return false
               }else{
                  return true

@@ -69,13 +69,13 @@
                 </div>
                 <div class="col-md-8 p-0 text-right">
                       <span v-if="summaryDetails.status == 'Suggested'" >
-                            <button v-if="haspermission(permission_list,'approve.media_plan')"  @click="buttonAction('/media-plan/approve/'+summaryDetails.id)" class="media-plan btn block_disp uppercased mr-1"><i class="media-plan material-icons">check</i>Approve Plan</button>
+                            <button v-if="hasPermission(permissionList,'approve.media_plan')"  @click="buttonAction('/media-plan/approve/'+summaryDetails.id)" class="media-plan btn block_disp uppercased mr-1"><i class="media-plan material-icons">check</i>Approve Plan</button>
                       
-                            <button v-if="haspermission(permisson_list,'decline.media_plan')"  @click="buttonAction('/media-plan/decline/'+summaryDetails.id)"  class="media-plan btn block_disp uppercased bg_red mr-1"><i class="media-plan material-icons">clear</i>Decline Plan</button>
+                            <button v-if="hasPermission(permissionList,'decline.media_plan')"  @click="buttonAction('/media-plan/decline/'+summaryDetails.id)"  class="media-plan btn block_disp uppercased bg_red mr-1"><i class="media-plan material-icons">clear</i>Decline Plan</button>
                       </span>
-                            <button v-if="haspermission(permission_list,'export.media_plan')"  @click="buttonAction('/media-plan/export/'+summaryDetails.id)"  class="btn block_disp uppercased"><i class="media-plan material-icons">file_download</i>Export Plan</button>
+                            <button v-if="hasPermission(permissionList,'export.media_plan')"  @click="buttonAction('/media-plan/export/'+summaryDetails.id)"  class="btn block_disp uppercased"><i class="media-plan material-icons">file_download</i>Export Plan</button>
                      <span v-if="summaryDetails.status == 'Approved'" >
-                            <media-plan-create-campaign v-if="haspermission(permission_list,'convert.media_plan')" :id="summaryDetails.id"></media-plan-create-campaign>
+                            <media-plan-create-campaign v-if="hasPermission(permissionList,'convert.media_plan')" :id="summaryDetails.id"></media-plan-create-campaign>
                      </span>
                 </div>
             </div>
@@ -87,7 +87,7 @@
         props: {
             summaryDetails: Object,
             summaryData: Array,
-            permission_list:Array,
+            permissionList:Array,
         },
         data() {
             return {

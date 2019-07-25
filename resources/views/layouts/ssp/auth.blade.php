@@ -10,7 +10,7 @@
     <meta property="og:title" content="FAYA" />
     <meta property="og:description" content="Advertising" />
 
-    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('new_frontend/img/favicon.ico') }}" />
+    <link rel="shortcut icon" type="image/x-icon" href="https://faya-dev-us-east-1-media.s3.amazonaws.com/email-asset/Torchlogo2.png" />
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
 
     <link href="{{ asset('new_frontend/css/reset.css') }}" rel="stylesheet">
@@ -29,7 +29,17 @@
 
 
 <div class="login_logo">
-    <img src="{{ asset('new_frontend/img/logo.svg') }}">
+    <svg id="Layer_1" width="160" height="76" style="margin-left: -30px;" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 478.81 179.82">
+        <defs>
+            <style>.cls-1{font-size:86.12px;fill:#1d1d1d;font-family:LemonMilk, "Lemon/Milk";}.cls-2{fill:#575758;}.cls-3{fill:#4eaeaf;}.cls-4{fill:#64c4ce;}
+            </style>
+        </defs>
+        <title>Vantage+Torch_Logos</title>
+        <text class="cls-1" transform="translate(187.99 129.26)">ORCH</text>
+        <polygon class="cls-2" points="162.01 128.12 130.62 147.15 99.16 128.12 99.16 53.16 162.01 53.16 162.01 128.12"/>
+        <polygon class="cls-3" points="176.9 58.9 200.77 58.9 218.26 33.66 115.35 33.66 166.81 107.91 176.9 93.35 176.9 58.9"/>
+        <polygon class="cls-4" points="42.73 33.66 60.23 58.9 84.33 58.9 84.33 93.59 84.27 93.59 94.19 107.91 145.65 33.66 42.73 33.66"/>
+    </svg>
 </div>
 
 
