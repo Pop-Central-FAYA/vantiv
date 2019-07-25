@@ -193,6 +193,10 @@
     padding-left: 0px;
 }
 
+.theme--light.application {
+    background: #ffffff !important;
+}
+
 .application--wrap {
     min-height: 0% !important;
 }
