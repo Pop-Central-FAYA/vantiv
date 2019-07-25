@@ -2777,6 +2777,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: {
@@ -3488,6 +3491,26 @@ var render = function() {
                         ]),
                         _vm._v("Decline Plan")
                       ]
+                    )
+                  : _vm._e()
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.summaryDetails.status == "Approved"
+            ? _c("span", [
+                _vm.hasPermission(_vm.permissionList, "approve.media_plan")
+                  ? _c(
+                      "button",
+                      {
+                        staticClass:
+                          "media-plan btn block_disp uppercased mr-1",
+                        on: {
+                          click: function($event) {
+                            return _vm.buttonAction(_vm.routes.approve)
+                          }
+                        }
+                      },
+                      [_vm._v("Request Approval")]
                     )
                   : _vm._e()
               ])

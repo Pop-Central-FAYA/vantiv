@@ -73,6 +73,9 @@
                       
                             <button v-if="hasPermission(permissionList,'decline.media_plan')"  @click="buttonAction(routes.decline)"  class="media-plan btn block_disp uppercased bg_red mr-1"><i class="media-plan material-icons">clear</i>Decline Plan</button>
                       </span>
+                              <span v-if="summaryDetails.status == 'Approved'" >
+                            <button v-if="hasPermission(permissionList,'approve.media_plan')"  @click="buttonAction(routes.approve)" class="media-plan btn block_disp uppercased mr-1">Request Approval</button>
+                      </span>
                             <button v-if="hasPermission(permissionList,'export.media_plan')"  @click="buttonAction(routes.export)"  class="btn block_disp uppercased"><i class="media-plan material-icons">file_download</i>Export Plan</button>
                      <span v-if="summaryDetails.status == 'Approved'" >
                             <media-plan-create-campaign v-if="hasPermission(permissionList,'convert.media_plan')" :id="summaryDetails.id"></media-plan-create-campaign>
