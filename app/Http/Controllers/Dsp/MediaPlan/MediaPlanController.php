@@ -324,9 +324,6 @@ class MediaPlanController extends Controller
 
     public function declinePlan($media_plan_id)
     {
-      
-      
-        
         $mediaPlan = MediaPlan::findorfail($media_plan_id);
         $mediaPlan->status = 'Declined';
         $mediaPlan->save();
@@ -633,7 +630,8 @@ class MediaPlanController extends Controller
             "action" => $action_result,
             "client" =>  $this->getClientName($media_plan_id),
             "reciver_name" => $this->getPlannerDetails($mediaPlan->planner_id)['name'], 
-            "link" => $media_plan_id
+            "link" => route('agency.media_plan.decline', ['id'=>$media_plan_id]),
+            "subject" => "Your Media Plan has been ". $action_result
 
         );
         $send_mail = \Mail::to($this->getPlannerDetails($mediaPlan->planner_id)['email'])->send(new ApprovalNotification($user_mail_content_array));
@@ -647,7 +645,8 @@ class MediaPlanController extends Controller
             "sender_name" => \Auth::user()->firstname.  " ". \Auth::user()->lastname, 
             "client" => $this->getClientName($media_plan_id),
             "reciver_name" => $this->getUserByRole("Admin")['name'], 
-            "link" => $media_plan_id
+            "link" => $media_plan_id,
+           
           );
             $send_mail = \Mail::to($this->getUserByRole("Admin")['email'])->send(new MailForApproval($user_mail_content_array));
         }
