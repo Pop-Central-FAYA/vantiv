@@ -8,9 +8,9 @@ use Auth;
 class GetMediaPlans
 {
     protected $plan_status;
-    protected $planner_id;
+    protected $planners_id;
 
-    public function __construct($status='', $planner_id='')
+    public function __construct($status='', $planners_id=[])
     {
         if ($status == "pending") {
             $this->plan_status = ['Pending','Suggested','Selected'];
@@ -20,7 +20,7 @@ class GetMediaPlans
         else {
             $this->plan_status = ['Pending','Suggested','Selected','Approved','Declined'];
         }
-        $this->planner_id = $planner_id;  
+        $this->planners_id = $planners_id;  
     }
 
     public function run()
@@ -31,10 +31,10 @@ class GetMediaPlans
     public function fetchMediaPlans()
     {
         $status = $this->plan_status;
-        $planner_id = $this->planner_id;
+        $planners_id = $this->planners_id;
         $plans =  MediaPlan::whereIn('status', $status)
-                    ->when($planner_id, function ($query, $planner_id) {
-                        $query->where('planner_id', $planner_id);
+                    ->when($planners_id, function ($query, $planners_id) {
+                        $query->whereIn('planner_id', $planners_id);
                     })
                     ->get();
         $plans = $this->reformatMediaPlans($plans);

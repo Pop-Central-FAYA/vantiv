@@ -40,6 +40,7 @@ use Vanguard\Libraries\Enum\MediaPlanStatus;
 use Vanguard\Libraries\DayPartList;
 use Vanguard\Services\MediaPlan\GetTargetAudience;
 use Vanguard\Services\CampaignChannels\GetChannelByName;
+use Illuminate\Support\Facades\Auth;
 
 class MediaPlanController extends Controller
 {
@@ -49,17 +50,16 @@ class MediaPlanController extends Controller
 
     public function index(Request $request)
     {
-        //Broadcaster Dashboard module
-        $broadcaster_id = Session::get('broadcaster_id');
-        $agency_id = $this->companyId();
-        if ($broadcaster_id) {
-            //redirect user to the new landing page of the broadcaster.
-            return view('broadcaster_module.landing_page');
-        } else if ($agency_id) {
-            $media_plan_service = new GetMediaPlans($request->status, \Auth::id());
-            $plans = $media_plan_service->run();
-            return view('agency.mediaPlan.index')->with('plans', $plans);
-        }
+        $planners_id = $this->getUserListInCompany();
+        $media_plan_service = new GetMediaPlans($request->status, $planners_id);
+        $plans = $media_plan_service->run();
+        return view('agency.mediaPlan.index')->with('plans', $plans);
+    }
+
+    public function getUserListInCompany()
+    {
+        $users = Auth::user()->companies->first()->users->all();
+        return collect($users)->pluck('id')->toArray();
     }
 
     public function customisPlan()
