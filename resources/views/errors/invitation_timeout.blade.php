@@ -28,10 +28,10 @@
         <div class="col-md-6 col-md-push-3">
             <div class="text-center">
             {!! AssetsHelper::logo('error') !!}
-                <h1>Timed Out</h1>
+                <h1>Link Expired</h1>
                 <br />
                 <p>
-                    Hmmm... The link you followed has expired. Contact your admin to resend invitation
+                    Hmmm... The link you followed has expired. Please contact your admin to resend the invitation.
                 </p>
             </div>
         </div>
