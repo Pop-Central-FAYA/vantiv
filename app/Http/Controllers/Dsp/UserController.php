@@ -100,11 +100,12 @@ class UserController extends Controller
 
     public function getCompleteAccount(Request $request, $id)
     {
-        if (! $request->hasValidSignature()) {
+
+        if (!$request->hasValidSignature()) {
             \Session::flash('error', 'Invalid/Expired link, contact admin');
             return redirect()->route('login');
         }
-        $user = AgencyUser::findOrFail($id);
+        $user = User::findOrFail($id);
         return view('auth.complete_registration')->with('user', $user);
     }
 
