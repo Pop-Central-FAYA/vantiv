@@ -30,6 +30,6 @@ class ApprovalNotification extends Mailable
      */
     public function build()
     {
-        return $this->view('mail.password_email')->subject("Subject")->with('mail_content', $this->user_mail_content_array);
+        return $this->view('mail.approval_confirmation')->subject("Subject")->with('mail_content', $this->user_mail_content_array);
     }
 }

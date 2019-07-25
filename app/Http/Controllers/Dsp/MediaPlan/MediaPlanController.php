@@ -40,6 +40,9 @@ use Vanguard\Libraries\Enum\MediaPlanStatus;
 use Vanguard\Libraries\DayPartList;
 use Vanguard\Services\MediaPlan\GetTargetAudience;
 use Vanguard\Services\CampaignChannels\GetChannelByName;
+use Vanguard\Services\User\GetUserList;
+use Vanguard\Mail\MailForApproval;
+use Vanguard\Mail\ApprovalNotification;
 
 class MediaPlanController extends Controller
 {
@@ -314,17 +317,23 @@ class MediaPlanController extends Controller
         $mediaPlan = MediaPlan::findorfail($media_plan_id);
         $mediaPlan->status = 'Approved';
         $mediaPlan->save();
+        $this->sendApprovalConfirmation($media_plan_id, "Approved");
         Session::flash('success', 'Media plan successfully approved');
         return redirect()->route('agency.media_plan.summary',['id'=>$mediaPlan->id]);
     }
 
     public function declinePlan($media_plan_id)
     {
+      
+      
+        
         $mediaPlan = MediaPlan::findorfail($media_plan_id);
         $mediaPlan->status = 'Declined';
         $mediaPlan->save();
+        $this->sendApprovalConfirmation($media_plan_id, "Rejected");
         Session::flash('success', 'Media plan has been declined');
         return redirect()->route('agency.media_plan.summary',['id'=>$mediaPlan->id]);
+        
     }
 
     public function totalAudienceFound($collection)
@@ -613,5 +622,79 @@ class MediaPlanController extends Controller
             'data' => 'Media Plan successfully converted to MPO',
             'campaign_id' => $campaign_id
         ]);
+    }
+
+    public function sendApprovalConfirmation($media_plan_id, $action_result)
+    {
+
+       $mediaPlan = MediaPlan::findorfail($media_plan_id);
+       $user_mail_content_array = array(
+            "sender_name" => \Auth::user()->firstname.  " ". \Auth::user()->lastname, 
+            "action" => $action_result,
+            "client" =>  $this->getClientName($media_plan_id),
+            "reciver_name" => $this->getPlannerDetails($mediaPlan->planner_id)['name'], 
+            "link" => $media_plan_id
+
+        );
+        $send_mail = \Mail::to($this->getPlannerDetails($mediaPlan->planner_id)['email'])->send(new ApprovalNotification($user_mail_content_array));
+           
+    }
+
+    public function sendForApproval($media_plan_id)
+    {       
+       if(!$this->getUserByRole("Admin")==""){
+          $user_mail_content_array = array(
+            "sender_name" => \Auth::user()->firstname.  " ". \Auth::user()->lastname, 
+            "client" => $this->getClientName($media_plan_id),
+            "reciver_name" => $this->getUserByRole("Admin")['name'], 
+            "link" => $media_plan_id
+          );
+            $send_mail = \Mail::to($this->getUserByRole("Admin")['email'])->send(new MailForApproval($user_mail_content_array));
+        }
+    }
+
+    function getPlannerDetails($planner_id){
+        $planner="";
+        $user_list_service = new GetUserList([\Auth::user()->companies->first()->id]);
+        $user_list = $user_list_service->getUserData();
+        foreach($user_list as $user){
+            if($planner_id == $user['id'])
+            {
+                $planner= $user;
+            }
+        } 
+        return $planner;
+    }
+
+
+    function getUserByRole($user_role){
+        $user_detail="";
+        $user_list_service = new GetUserList([\Auth::user()->companies->first()->id]);
+        $user_list = $user_list_service->getUserData();
+
+       foreach($user_list as $user){
+            foreach($user['roles'] as $role){
+                if($role ==  $user_role)
+                {
+                    $user_detail= $user;
+                }
+            } 
+        } 
+        
+        return $user_detail;
+    }
+
+    function getClientName($media_plan_id){
+        $mediaPlan = MediaPlan::findorfail($media_plan_id);
+        $client_name = "";
+        $clients = new AllClient(\Auth::user()->companies->first()->id);
+        $clients = $clients->getAllClients();
+        foreach($clients as $client){
+            if($mediaPlan->client_id = $client->id)
+            {
+                $client_name= $client->company_name;
+            }
+        } 
+        return $client_name;
     }
 }

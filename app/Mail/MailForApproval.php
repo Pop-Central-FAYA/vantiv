@@ -30,6 +30,6 @@ class MailForApproval extends Mailable
      */
     public function build()
     {
-        return $this->view('mail.password_email')->subject("Subject")->with('mail_content', $this->user_mail_content_array);
+        return $this->view('mail.request_approval')->subject("Subject")->with('mail_content', $this->user_mail_content_array);
     }
 }
