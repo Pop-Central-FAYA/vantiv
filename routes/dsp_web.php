@@ -221,5 +221,7 @@
             Route::get('/details/{id}/{client_id}', 'BrandsController@getBrandDetails')->name('brand.details');
         });
 
+        Route::get('/presigned-url', 'S3Controller@getPresignedUrl');
+
     });
 
