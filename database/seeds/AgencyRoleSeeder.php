@@ -13,24 +13,105 @@ class AgencyRoleSeeder extends Seeder
      */
     public function run()
     {
-       //create a default admin role
-       $admin_role = Role::firstOrNew(['name' => 'dsp.admin']);
-       $admin_role->name = 'dsp.admin';
-       $admin_role->guard_name = 'web';
-       $admin_role->save();
+        // php artisan db:seed --class=AgencyRoleSeeder
+        $vantagePermissions = [
+            'create.media_plan' => array('dsp.admin', 'dsp.media_planner'),
+            'update.media_plan' => array('dsp.admin', 'dsp.media_planner'),
+            'submit.media_plan' => array('dsp.admin', 'dsp.media_planner'),
+            'view.media_plan' => array('dsp.compliance', 'dsp.finance', 'dsp.admin', 'dsp.media_planner', 'dsp.media_buyer'),
+            'approve.media_plan' => array('dsp.finance', 'dsp.admin'),
+            'decline.media_plan' => array('dsp.finance', 'dsp.admin'),
+            'export.media_plan' => array('dsp.compliance', 'dsp.finance', 'dsp.admin', 'dsp.media_planner', 'dsp.media_buyer'),
+            'convert.media_plan' => array('dsp.admin', 'dsp.media_planner', 'dsp.media_buyer'),
+            'delete.media_plan' => array('dsp.admin', 'dsp.media_planner'),
 
-       $vantage_permissions = [
-        'create.media_plan', 'update.media_plan', 'submit.media_plan', 'view.media_plan', 'approve.media_plan', 'decline.media_plan', 'export.media_plan', 'convert.media_plan', 'delete.media_plan',
-        'view.invoice', 'view.wallet', 'create.wallet', 'create.asset', 'view.asset', 'update.asset', 'delete.asset',
-        'create.user', 'view.user', 'update.user', 'view.campaign', 'submit.campaign', 'create.campaign', 'update.campaign',
-        'view.profile', 'update.profile','view.report', 'view.client', 'update.client', 'create.client'
-       ];
+            'view.invoice' => array('dsp.finance', 'dsp.admin', 'dsp.media_buyer'),
 
-       //fetch all the permissions
-       $permissions = Permission::where('guard_name', 'web')->whereIn('name', $vantage_permissions)->get();
+            'view.wallet' => array('dsp.finance', 'dsp.admin', 'dsp.media_buyer'),
+            'create.wallet' => array('dsp.finance', 'dsp.admin', 'dsp.media_buyer'),
 
-       //sync permissions to the admin role
-       $admin_role->syncPermissions($permissions);
+            'create.asset' => array('dsp.admin', 'dsp.media_planner', 'dsp.media_buyer'),
+            'view.asset' => array('dsp.compliance', 'dsp.finance', 'dsp.admin', 'dsp.media_planner', 'dsp.media_buyer'),
+            'update.asset' => array('dsp.admin', 'dsp.media_planner', 'dsp.media_buyer'),
+            'delete.asset' => array('dsp.admin', 'dsp.media_planner', 'dsp.media_buyer'),
 
+            'create.user' => array('dsp.admin'),
+            'view.user' => array('dsp.compliance', 'dsp.finance', 'dsp.admin', 'dsp.media_planner', 'dsp.media_buyer'),
+            'update.user' => array('dsp.admin'),
+
+            'view.campaign' => array('dsp.compliance', 'dsp.finance', 'dsp.admin', 'dsp.media_planner', 'dsp.media_buyer'),
+            'submit.campaign' => array('dsp.admin', 'dsp.media_buyer'),
+            'create.campaign' => array('dsp.admin', 'dsp.media_buyer'),
+            'update.campaign' => array('dsp.admin', 'dsp.media_buyer'),
+
+            'view.profile' => array('dsp.compliance', 'dsp.finance', 'dsp.admin', 'dsp.media_planner', 'dsp.media_buyer'),
+            'update.profile' => array('dsp.compliance', 'dsp.finance', 'dsp.admin', 'dsp.media_planner', 'dsp.media_buyer'),
+
+            'view.report' => array('dsp.compliance', 'dsp.finance', 'dsp.admin', 'dsp.media_planner', 'dsp.media_buyer'),
+
+            'view.client' => array('dsp.compliance', 'dsp.finance', 'dsp.admin', 'dsp.media_planner', 'dsp.media_buyer'),
+            'update.client' => array('dsp.admin', 'dsp.media_planner', 'dsp.media_buyer'),
+            'create.client' => array('dsp.admin', 'dsp.media_planner', 'dsp.media_buyer')
+        ];
+        
+        //Create the different roles if they do not exist
+        foreach ($this->getRoles($vantagePermissions) as $roleName) {
+            $role = Role::firstOrNew(['name' => $roleName]);
+            $role->name = $roleName;
+            $role->guard_name = 'web';
+            $role->save();
+        }
+
+        //Create all the different permissions if they do not exist already
+        foreach ($this->getPermissions($vantagePermissions) as $permissionName) {
+            $permission = Permission::firstOrNew(['name' => $permissionName, 'guard_name' => 'web']);
+            $permission->name = $permissionName;
+            $permission->guard_name = 'web';
+            $permission->save();
+        }
+
+        //sync the permissions to roles
+        foreach ($this->groupPermissionsByRoles($vantagePermissions) as $roleName => $permissionList) {
+            $role = Role::where(['name' => $roleName, 'guard_name' => 'web'])->first();
+            $permissions = Permission::where('guard_name', 'web')->whereIn('name', $permissionList)->get();
+            $role->syncPermissions($permissions);
+        }
+    }
+    
+    private function getRoles($permissionList)
+    {
+        $roleList = collect([]);
+        foreach ($permissionList as $permission => $allowedRoles) {
+            $roleList = $roleList->concat($allowedRoles);
+        }
+        return $roleList->unique()->values()->all();
+    }
+
+    private function getPermissions($permissionList)
+    {
+        return collect($permissionList)->keys()->all();
+    }
+
+    private function groupPermissionsByRoles($permissionList)
+    {
+        $finalGroup = [];
+
+        foreach ($this->getRoles($permissionList) as $roleName) {
+            $finalGroup[$roleName] = collect([]);
+        }
+
+        foreach ($permissionList as $permission => $allowedRoles) {
+            foreach ($allowedRoles as $roleName) {
+                $rolePerms = $finalGroup[$roleName];
+                $finalGroup[$roleName] = $rolePerms->push($permission);
+            }
+        }
+
+        //make unique
+        foreach ($finalGroup as $roleName => $perms) {
+            $finalGroup[$roleName] = $perms->unique()->values()->all();
+        }
+
+        return $finalGroup;
     }
 }
