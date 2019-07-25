@@ -267,9 +267,8 @@ class MediaPlanController extends Controller
         }
 
         $summary_service = new SummarizePlan($mediaPlan);
-
         $summaryData =  $summary_service->run();
-
+        
         return view('agency.mediaPlan.summary')->with('summary', $summaryData)
                 ->with('media_plan', $mediaPlan);
     }

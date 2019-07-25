@@ -16,6 +16,7 @@ Vue.use(VueSweetalert2);
 // Highcharts package
 import Highcharts from 'highcharts'
 import HighchartsVue from 'highcharts-vue'
+import moment from 'moment' 
 Vue.use(HighchartsVue, {
 	highcharts: Highcharts
 })
@@ -41,6 +42,7 @@ window.Event = new Vue();
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+
 // MEDIA PLANNING
 Vue.component('media-plan-suggestion-table', require('./components/media_plan/customise/SuggestionTable.vue'));
 Vue.component('media-plan-suggestion-graph', require('./components/media_plan/customise/SuggestionGraph.vue'));
@@ -49,6 +51,7 @@ Vue.component('media-plan-suggestion-filter', require('./components/media_plan/c
 Vue.component('media-plan-footer-nav', require('./components/media_plan/customise/FooterNavigation.vue'));
 Vue.component('media-plan-suggestions', require('./components/media_plan/customise/Suggestions.vue'));
 Vue.component('media-plan-create-campaign', require('./components/media_plan/summary/CreateCampaign.vue'));
+Vue.component('media-plan-summary', require('./components/media_plan/summary/Summary.vue'));
 Vue.component('media-plan-criteria-form', require('./components/media_plan/CriteriaForm.vue'));
 Vue.component('media-plan-list', require('./components/media_plan/AllMediaPlans.vue'));
 
@@ -121,7 +124,25 @@ Vue.mixin({
         formatDate(date_str) {
             var dateParts = date_str.split("-");
             return `${dateParts[0]}-${dateParts[1]}-${dateParts[2].substr(0,2)}`;
-        }
+        },
+        dateToHumanReadable(date) {
+            return moment(date).format('Do-MMM-YYYY');
+        },
+        numberFormat(n) {
+            return n.toFixed(2)
+        },
+        hasPermission(permissionList,search_permission){
+            var result =  permissionList.filter(function(permission) {
+                return permission.name == search_permission;
+            });
+              
+            if (result.length==0){
+                 return false
+              }else{
+                 return true
+              }
+     
+        },
     }
 })
 const app = new Vue({
