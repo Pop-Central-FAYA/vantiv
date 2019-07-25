@@ -26,8 +26,7 @@
         Route::get('agency/dashboard/campaigns', 'DashboardController@dashboardCampaigns');
 
         Route::group(['namespace' => 'Dsp', 'prefix' => 'campaigns'], function () {
-            Route::get('/all-campaigns/active', 'CampaignsController@index')->name('agency.campaign.all')->middleware('permission:view.campaign');
-            Route::get('/all-campaign/data', 'CampaignsController@getData');
+            Route::get('/{status?}', 'CampaignsController@index')->name('agency.campaign.all')->middleware('permission:view.campaign');
             Route::get('/all-clients', 'CampaignsController@allClient')->name('agency.campaign.create');
             Route::get('/all-client/data', 'CampaignsController@clientData');
             Route::get('/campaign/step1', 'CampaignsController@getStep1')->name('agency_campaign.step1')->middleware('permission:create.campaign');
@@ -70,9 +69,6 @@
             Route::post('/mpo/details/{campaign_mpo_id}/adslots/delete', 'CampaignsController@deleteMultipleAdslots');
 
             Route::post('/mpo/details/{campaign_mpo_id}/adslots/update', 'CampaignsController@updateAdslots');
-
-
-            Route::get('/campaign-on-hold/agency/data', 'Campaign\CampaignsController@getCampaignOnHold')->name('agency.campaigns.hold');
 
         });
 
@@ -135,10 +131,9 @@
          * Sectors
          */
         Route::group(['namespace' => 'Dsp\MediaPlan', 'prefix' => 'media-plan'], function () {
-            Route::get('/', 'MediaPlanController@index')->name('agency.media_plans');
-            Route::get('/dashboard/list', 'MediaPlanController@dashboardMediaPlans');
-            Route::get('/create', 'MediaPlanController@criteriaForm')->name('agency.media_plan.criteria_form')->middleware('permission:create.media_plan');
-            Route::post('/create-plan', 'MediaPlanController@generateRatingsPost')->name('agency.media_plan.suggestPlan');
+            Route::get('all/{status?}', 'MediaPlanController@index')->name('agency.media_plans');
+            Route::get('/set-criterias', 'MediaPlanController@criteriaForm')->name('agency.media_plan.criteria_form')->middleware('permission:create.media_plan');
+            Route::post('/create-plan', 'MediaPlanController@generateRatingsPost')->name('agency.media_plan.submit.criterias');
             Route::get('/summary/{id}', 'MediaPlanController@summary')->name('agency.media_plan.summary')->middleware('permission:create.media_plan');
             Route::get('/approve/{id}', 'MediaPlanController@approvePlan')->name('agency.media_plan.approve')->middleware('permission:create.media_plan');
             Route::get('/decline/{id}', 'MediaPlanController@declinePlan')->name('agency.media_plan.decline')->middleware('permission:create.media_plan');

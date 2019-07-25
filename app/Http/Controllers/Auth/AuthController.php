@@ -30,11 +30,11 @@ class AuthController extends Controller
 
     public function getLayouts()
     {
-        $this->login_layout = 'auth.login';
-        $this->forget_password = 'auth.password.forget_password';
-        $this->change_password = 'auth.password.change_password';
+        $this->login_layout = 'auth.ssp.login';
+        $this->forget_password = 'auth.ssp.password.forget_password';
+        $this->change_password = 'auth.ssp.password.change_password';
         $this->dashboard_route = 'broadcaster.dashboard.index';
-        $this->email_subject = 'FAYA Password Reset';
+        $this->email_subject = 'Torch Password Reset';
     }
 
     /**
@@ -114,7 +114,7 @@ class AuthController extends Controller
             return redirect()->to(route('login') . $to);
         }
 
-        if ($this->isRightUser($user) === false) {
+        if (!$this->isRightUser($user)) {
             return redirect()->to(route('login'))
                 ->with('error', ClassMessages::INVALID_EMAIL_PASSWORD);
         }

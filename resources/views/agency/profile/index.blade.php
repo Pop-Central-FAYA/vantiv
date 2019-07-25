@@ -1,14 +1,13 @@
-@extends('layouts.faya_app')
+@extends('dsp_layouts.faya_app')
 
 @section('title')
-    <title>FAYA | Profile Management</title>
+    <title>Vantage | Profile Management</title>
 @stop
 
 @section('content')
     <div class="main_contain">
         <!-- header -->
-    @include('partials.new-frontend.broadcaster.header')
-    @include('partials.new-frontend.broadcaster.campaign_management.sidebar')
+        @include('partials.new-frontend.agency.header')
         <!-- subheader -->
         <div class="sub_header clearfix mb pt">
             <div class="column col_6">

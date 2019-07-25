@@ -50,39 +50,24 @@ class MediaPlanController extends Controller
     use DefaultMaterialLength;
     use CompanyIdTrait;
 
-    public function index($value='')
+    public function index(Request $request)
     {
         //Broadcaster Dashboard module
         $broadcaster_id = Session::get('broadcaster_id');
-        $agency_id = Session::get('agency_id');
+        $agency_id = $this->companyId();
         if ($broadcaster_id) {
             //redirect user to the new landing page of the broadcaster.
             return view('broadcaster_module.landing_page');
-
         } else if ($agency_id) {
-            $media_plan_service = new GetMediaPlans();
-            //count pending media plans
-            $count_pending_media_plans = $media_plan_service->pendingPlans();
-
-            //count approved media plans
-            $count_approved_media_plans = $media_plan_service->approvedPlans();
-
-            //count declined media plans
-            $count_declined_media_plans = $media_plan_service->declinedPlans();
-
-            return view('agency.mediaPlan.dashboard')
-                    ->with([
-                        'count_pending_media_plans' => $count_pending_media_plans,
-                        'count_approved_media_plans' => $count_approved_media_plans,
-                        'count_declined_media_plans' => $count_declined_media_plans
-                    ]);
+            $media_plan_service = new GetMediaPlans($request->status, \Auth::id());
+            $plans = $media_plan_service->run();
+            return view('agency.mediaPlan.index')->with('plans', $plans);
         }
     }
 
     public function customisPlan()
     {
         return view('agency.mediaPlan.custom_plan');
-
     }
 
     public function getSuggestionsByPlanId($id='')
@@ -90,17 +75,21 @@ class MediaPlanController extends Controller
         return "got here";
     }
 
-    public function dashboardMediaPlans(Request $request)
-    {
-        $media_plan_service = new GetMediaPlans();
-        return $media_plan_service->run();
-    }
-
     public function criteriaForm(Request $request)
     {
-        $criterias = Criteria::with(['subCriterias'])->groupBy('name')->get();
+        $criterias = Criteria::with(['subCriterias'])->get();
+        $new_criterias = [];
+        foreach ($criterias as $key => $criteria) {
+            $sub_criterias = [];
+            foreach ($criteria->subCriterias as $key => $value) {
+                $sub_criterias[$key] = $value->name;
+            }
+            $new_criterias[$criteria->name]['criterias'] = $sub_criterias;
+            $new_criterias[$criteria->name]['all'] = 'All';
+        }
         // return criterias array with the frontend view, in order to populate criteria inputs
-        return view('agency.mediaPlan.create_plan')->with('criterias', $criterias);
+        return view('agency.mediaPlan.create_plan')->with('criterias', $new_criterias)
+                                                    ->with('redirect_urls', ['submit_form' => route('agency.media_plan.submit.criterias')]);
     }
 
     public function suggestPlan(Request $request)
@@ -281,9 +270,8 @@ class MediaPlanController extends Controller
         }
 
         $summary_service = new SummarizePlan($mediaPlan);
-
         $summaryData =  $summary_service->run();
-
+        
         return view('agency.mediaPlan.summary')->with('summary', $summaryData)
                 ->with('media_plan', $mediaPlan);
     }
@@ -531,6 +519,7 @@ class MediaPlanController extends Controller
         // validate criteria form request
         $validateCriteriaFormService = new ValidateCriteriaForm($request->all());
         $validation = $validateCriteriaFormService->validateCriteria();
+
         if ($validation->fails()) {
             Session::flash('error', 'Please make sure the required parameters are filled out');
             return ['status'=>"error", 'message'=> "Please make sure the required parameters are filled out" ];
@@ -542,7 +531,7 @@ class MediaPlanController extends Controller
             return [
                 'status'=>"success",
                 'message'=> "Ratings successfully generated, going to next page",
-                'redirect_url' => $suggestions->id
+                'redirect_url' => route('agency.media_plan.customize',['id'=>$suggestions->id])
             ];
         } else {
             Session::flash('error', 'No results came back for your criteria');

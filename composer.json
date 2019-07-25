@@ -48,7 +48,8 @@
         "laravel/browser-kit-testing": "^1.0",
         "barryvdh/laravel-ide-helper": "^2.5",
         "orangehill/iseed": "^2.6",
-        "barryvdh/laravel-debugbar": "^3.2"
+        "barryvdh/laravel-debugbar": "^3.2",
+        "squizlabs/php_codesniffer": "^3.4"
     },
     "autoload": {
         "classmap": [

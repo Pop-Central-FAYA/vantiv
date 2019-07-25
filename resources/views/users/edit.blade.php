@@ -1,14 +1,15 @@
-@extends('layouts.faya_app')
+@extends('layouts.ssp.layout')
 
 @section('title')
-    <title>FAYA | Edit User</title>
+    <title>Torch | Edit User</title>
 @stop
 
 @section('content')
     <div class="main_contain">
-        <!-- header -->
+    <!-- header -->
     @include('partials.new-frontend.broadcaster.header')
     @include('partials.new-frontend.broadcaster.campaign_management.sidebar')
+    
 
     <!-- subheader -->
         <div class="sub_header clearfix mb pt">
@@ -40,7 +41,7 @@
                                     <ul>
                                         @foreach($roles as $role)
                                             <li class="col_4 column m-b">
-                                                <input name="roles[]" value="{{ $role['id'] }}"
+                                                <input name="roles[]" value="{{ $role['role'] }}"
                                                        @foreach($user->getRoleNames() as $checked_role)
                                                        @if($checked_role === $role['role'])
                                                        checked

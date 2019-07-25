@@ -1,14 +1,15 @@
-@extends('layouts.faya_app')
+@extends('layouts.ssp.layout')
 
 @section('title')
-    <title>FAYA | Invite User</title>
+    <title>Torch | Invite User</title>
 @stop
 
 @section('content')
     <div class="main_contain">
         <!-- header -->
-        @include('partials.new-frontend.broadcaster.header')
-        @include('partials.new-frontend.broadcaster.campaign_management.sidebar')
+    @include('partials.new-frontend.broadcaster.header')
+    @include('partials.new-frontend.broadcaster.campaign_management.sidebar')
+    
 
         <!-- subheader -->
         <div class="sub_header clearfix mb pt">
@@ -37,12 +38,11 @@
 
                     <div class="input_wrap">
                         <label class="small_faint">Roles</label>
-
                         <div class="select_wrap">
                             <select class="js-example-basic-multiple" id="roles" name="roles[]" multiple="multiple" >
                                 <option value=""></option>
                                 @foreach($roles as $role)
-                                    <option value="{{ $role['id'] }}">
+                                    <option value="{{ $role['role'] }}">
                                         {{ $role['label'] }}
                                     </option>
                                 @endforeach

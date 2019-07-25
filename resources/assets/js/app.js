@@ -16,6 +16,7 @@ Vue.use(VueSweetalert2);
 // Highcharts package
 import Highcharts from 'highcharts'
 import HighchartsVue from 'highcharts-vue'
+import moment from 'moment' 
 Vue.use(HighchartsVue, {
 	highcharts: Highcharts
 })
@@ -29,6 +30,10 @@ import Vuetify from 'vuetify';
 Vue.use(Vuetify);
 import 'vuetify/dist/vuetify.min.css';
 
+// Vue MultiSelect
+import Multiselect from 'vue-multiselect'
+Vue.component('multiselect', Multiselect);
+
 // declared to manage events globally
 window.Event = new Vue();
 /**
@@ -36,6 +41,7 @@ window.Event = new Vue();
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
+
 
 // MEDIA PLANNING
 Vue.component('media-plan-suggestion-table', require('./components/media_plan/customise/SuggestionTable.vue'));
@@ -45,6 +51,12 @@ Vue.component('media-plan-suggestion-filter', require('./components/media_plan/c
 Vue.component('media-plan-footer-nav', require('./components/media_plan/customise/FooterNavigation.vue'));
 Vue.component('media-plan-suggestions', require('./components/media_plan/customise/Suggestions.vue'));
 Vue.component('media-plan-create-campaign', require('./components/media_plan/summary/CreateCampaign.vue'));
+Vue.component('media-plan-summary', require('./components/media_plan/summary/Summary.vue'));
+Vue.component('media-plan-criteria-form', require('./components/media_plan/CriteriaForm.vue'));
+Vue.component('media-plan-list', require('./components/media_plan/AllMediaPlans.vue'));
+
+// CAMPAIGN
+Vue.component('campaign-list', require('./components/campaign/AllCampaigns.vue'));
 
 // ASSET MANAGEMENT
 Vue.component('media-asset-upload', require('./components/asset_management/Upload.vue'));
@@ -76,7 +88,7 @@ Vue.mixin({
             time = time.split(":");
             return `${time[0]}h${time[1]}m`;
         },
-        sweet_alert(message, type) {
+        sweet_alert(message, type, timer=10000) {
             let background = '';
             if (type === 'success') {
                 background = '#28a745';
@@ -92,7 +104,7 @@ Vue.mixin({
                 showConfirmButton: false,
                 toast: true,
                 background: background,
-                timer: 10000
+                timer: timer
             });
         },
         groupAdslotByProgram(adslots) {
@@ -112,7 +124,25 @@ Vue.mixin({
         formatDate(date_str) {
             var dateParts = date_str.split("-");
             return `${dateParts[0]}-${dateParts[1]}-${dateParts[2].substr(0,2)}`;
-        }
+        },
+        dateToHumanReadable(date) {
+            return moment(date).format('Do-MMM-YYYY');
+        },
+        numberFormat(n) {
+            return n.toFixed(2)
+        },
+        hasPermission(permissionList,search_permission){
+            var result =  permissionList.filter(function(permission) {
+                return permission.name == search_permission;
+            });
+              
+            if (result.length==0){
+                 return false
+              }else{
+                 return true
+              }
+     
+        },
     }
 })
 const app = new Vue({

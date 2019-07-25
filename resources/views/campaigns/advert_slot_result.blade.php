@@ -1,18 +1,15 @@
-@extends('layouts.faya_app')
+@extends('layouts.ssp.layout')
 
 @section('title')
-    <title>FAYA | Adslot Filter Results</title>
+    <title>Torch | Adslot Filter Results</title>
 @stop
 
 @section('content')
     <div class="main_contain">
         <!-- heaser -->
-    @if(Session::get('broadcaster_id'))
-        @include('partials.new-frontend.broadcaster.header')
-        @include('partials.new-frontend.broadcaster.campaign_management.sidebar')
-    @else
-        @include('partials.new-frontend.agency.header')
-    @endif
+    @include('partials.new-frontend.broadcaster.header')
+    @include('partials.new-frontend.broadcaster.campaign_management.sidebar')
+    
 
     <!-- subheader -->
         <div class="sub_header clearfix mb pt">
