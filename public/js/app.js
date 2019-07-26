@@ -2818,7 +2818,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\",[\"transform-runtime\",{\"polyfill\":false,\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/schedule/partials/AdBreakTable.vue":
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\",[\"transform-runtime\",{\"polyfill\":false,\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/schedule/partials/AdbreakModal.vue":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2837,141 +2837,97 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            search: '',
+            editDialog: false,
+            headers: [{ text: 'Client', align: 'left', value: 'client' }, { text: 'Campaign', value: 'campaign' }, { text: 'Duration', value: 'duration' }]
+        };
+    },
+    created: function created() {
+        var self = this;
+        Event.$on('display-ads-modal', function (modal) {
+            self.editDialog = modal;
+        });
+    },
+
     props: {
-        event_group: {
+        program_time_belt: {
             required: true,
-            type: Array
+            type: Object
         }
     },
     methods: {
         sumDurationInAdBreak: function sumDurationInAdBreak(ad_break) {
-            return ad_break.reduce(function (prev, next) {
-                return prev + next.duration;
-            }, 0);
+            if (ad_break) {
+                return ad_break.reduce(function (prev, next) {
+                    return prev + next.duration;
+                }, 0);
+            }
+        },
+        getAdPattern: function getAdPattern(ad_break) {
+            if (ad_break) {
+                return ad_break[0].ad_pattern;
+            }
         }
     }
 });
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\",[\"transform-runtime\",{\"polyfill\":false,\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/schedule/partials/AdHourTable.vue":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    props: {
-        event_group: {
-            required: true,
-            type: Array
-        }
-    }
-});
-
-/***/ }),
-
-/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\",[\"transform-runtime\",{\"polyfill\":false,\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/schedule/partials/ScheduleTable.vue":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    props: {
-        hours_breakdown: {
-            required: true,
-            type: Array
-        },
-        current_week: {
-            required: true,
-            type: Array
-        },
-        events: {
-            required: true,
-            type: Array
-        }
-    },
-    methods: {
-        filterEventByTimeBelt: function filterEventByTimeBelt(events, date, time_belt) {
-            return events.filter(function (event) {
-                return event.playout_date === date && event.time_belt === time_belt.start_time;
-            });
-        },
-        groupEventByDateProgramTimeBelt: function groupEventByDateProgramTimeBelt(events, date, time_belt) {
-            var filtered_slots = this.filterEventByTimeBelt(events, date, time_belt);
-            var grouped_data = _.groupBy(filtered_slots, function (event) {
-                return event.playout_date + "-" + event.program_name + "-" + event.time_belt;
-            });
-            return grouped_data;
-        }
-    }
-});
-
-/***/ }),
-
-/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\",[\"transform-runtime\",{\"polyfill\":false,\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/schedule/weekly/WeeklyScheduleCalender.vue":
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\",[\"transform-runtime\",{\"polyfill\":false,\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/schedule/weekly/WeeklySchedule.vue":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_moment__ = __webpack_require__("./node_modules/moment/moment.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_moment__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -3010,19 +2966,45 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         weekly_schedule: {
             required: true,
-            type: Array
+            type: Object
+        },
+        ad_pattern: {
+            required: true,
+            type: Number
         }
     },
     data: function data() {
         return {
+            editDialog: false,
             weekView: [],
             startOfWeek: {},
             endOfWeek: {},
-            events: this.weekly_schedule
+            events: this.weekly_schedule,
+            currentItem: {},
+            current_moment: {
+                date: __WEBPACK_IMPORTED_MODULE_0_moment___default()().format('YYYY-MM-DD'),
+                day_number: __WEBPACK_IMPORTED_MODULE_0_moment___default()().format('D'),
+                month_year: __WEBPACK_IMPORTED_MODULE_0_moment___default()().format('MMM') + ', ' + __WEBPACK_IMPORTED_MODULE_0_moment___default()().format('YYYY')
+            }
         };
     },
 
     methods: {
+        getDayStyle: function getDayStyle(week) {
+            if (week.name === 'Sun') {
+                return 'sunday';
+            } else if (week.day_number === this.current_moment.day_number) {
+                return 'current_day';
+            } else {
+                return 'regular_day';
+            }
+        },
+        current_week: function current_week() {
+            this.startOfWeek = __WEBPACK_IMPORTED_MODULE_0_moment___default()().startOf('isoWeek');
+            this.endOfWeek = __WEBPACK_IMPORTED_MODULE_0_moment___default()().endOf('isoWeek');
+            this.weekView = this.current(this.startOfWeek, this.endOfWeek);
+            this.fetchEvent(this.startOfWeek, this.endOfWeek);
+        },
         prev: function prev() {
             this.startOfWeek = this.getLastWeekStart();
             this.endOfWeek = this.getLastWeekEnd();
@@ -3051,11 +3033,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var weeks = [];
             while (start_of_week <= end_of_week) {
                 weeks.push({
-                    'day_number': start_of_week.format('Do'),
+                    'day_number': start_of_week.format('D'),
                     'full_date': start_of_week,
                     'current_date': __WEBPACK_IMPORTED_MODULE_0_moment___default()().format('YYYY-MM-DD'),
                     'date': start_of_week.format('YYYY-MM-DD'),
-                    'name': start_of_week.format('dddd')
+                    'name': start_of_week.format('ddd'),
+                    'full_day_name': start_of_week.format('dddd').toLowerCase()
                 });
                 start_of_week = start_of_week.clone().add(1, 'd');
             }
@@ -3086,14 +3069,133 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this.events = [];
                 _this.sweet_alert('An unknown error has occurred, schedule cannot be retrieved. Please try again', 'error');
             });
+        },
+        weekMonthName: function weekMonthName() {
+            if (this.weekView.length != 0) {
+                var first_date = this.weekView[0].date;
+                var last_date = this.weekView[this.weekView.length - 1].date;
+                var first_date_month = __WEBPACK_IMPORTED_MODULE_0_moment___default()(first_date).format('MMM');
+                var last_date_month = __WEBPACK_IMPORTED_MODULE_0_moment___default()(last_date).format('MMM');
+                var year = __WEBPACK_IMPORTED_MODULE_0_moment___default()(first_date).format('YYYY');
+                if (first_date_month === last_date_month) {
+                    return first_date_month + ', ' + year;
+                } else {
+                    return first_date_month + ' - ' + last_date_month + ', ' + year;
+                }
+            }
+        },
+        getProgramForDay: function getProgramForDay(day_object, time_belt) {
+            var self = this;
+            var current_day_schedule = this.events[day_object.full_day_name];
+            var program_name = '';
+            var program_color = '';
+            var program_id = '';
+            var ads_schedule_for_day = [];
+            if (current_day_schedule) {
+                current_day_schedule.forEach(function (item) {
+                    if (item.time_belt === time_belt.start_time) {
+                        program_name = item.program_name;
+                        program_color = item.background_color;
+                        program_id = item.program_id;
+                        ads_schedule_for_day.push(item);
+                    }
+                });
+            }
+            return { 'program_name': program_name,
+                'program_color': program_color,
+                'program_id': program_id,
+                'time_belt': time_belt.start_time,
+                'date': day_object.date,
+                'ads_schedules': ads_schedule_for_day,
+                'total_slot_used': this.sumDurationInAdBreak(ads_schedule_for_day),
+                'tool_tip_heigth': this.getTootTipHeight(ads_schedule_for_day) + 'px',
+                'toot_tip_margin_top': -this.getToottipMarginTop(ads_schedule_for_day) + 'px' };
+        },
+        openAdslotModal: function openAdslotModal(item) {
+            if (item.program_name !== "") {
+                this.currentItem = Object.assign({}, item);
+                Event.$emit('display-ads-modal', true);
+            }
+        },
+        sumDurationInAdBreak: function sumDurationInAdBreak(ad_break) {
+            if (ad_break) {
+                return ad_break.reduce(function (prev, next) {
+                    return prev + next.duration;
+                }, 0);
+            }
+        },
+        getTootTipHeight: function getTootTipHeight(ad_break) {
+            var total_scheduled_slot = this.sumDurationInAdBreak(ad_break);
+            return Math.floor(total_scheduled_slot * 30 / this.ad_pattern);
+        },
+        getToottipMarginTop: function getToottipMarginTop(ad_break) {
+            var total_scheduled_slot = this.sumDurationInAdBreak(ad_break);
+            return Math.floor(total_scheduled_slot * 5 / this.ad_pattern);
+        },
+        checkConcurrentProgram: function checkConcurrentProgram(time_belt, day_object, time_belt_key) {
+            if (time_belt_key != 0) {
+                return this.getProgramForDay(day_object, time_belt).program_id === this.getProgramForDay(day_object, this.time_belts[time_belt_key - 1]).program_id;
+            }
+        },
+        getDynamicBorderTop: function getDynamicBorderTop(time_belt, day_object, time_belt_key) {
+            if (this.getProgramForDay(day_object, time_belt).program_id && this.checkConcurrentProgram(time_belt, day_object, time_belt_key)) {
+                return 'no_border_top';
+            } else {
+                return 'has_border_top';
+            }
         }
     },
     mounted: function mounted() {
-        this.startOfWeek = __WEBPACK_IMPORTED_MODULE_0_moment___default()().startOf('isoWeek');
-        this.endOfWeek = __WEBPACK_IMPORTED_MODULE_0_moment___default()().endOf('isoWeek');
-        this.weekView = this.current(this.startOfWeek, this.endOfWeek);
+        this.current_week();
     }
 });
+
+/***/ }),
+
+/***/ "./node_modules/bootstrap-vue/dist/bootstrap-vue.css":
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__("./node_modules/css-loader/index.js!./node_modules/bootstrap-vue/dist/bootstrap-vue.css");
+if(typeof content === 'string') content = [[module.i, content, '']];
+// Prepare cssTransformation
+var transform;
+
+var options = {}
+options.transform = transform
+// add the styles to the DOM
+var update = __webpack_require__("./node_modules/style-loader/lib/addStyles.js")(content, options);
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../../css-loader/index.js!./bootstrap-vue.css", function() {
+			var newContent = require("!!../../css-loader/index.js!./bootstrap-vue.css");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js!./node_modules/bootstrap-vue/dist/bootstrap-vue.css":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "@charset \"UTF-8\";\n/*!\n * BootstrapVue Custom CSS (https://bootstrap-vue.js.org)\n */\n@media (max-width: 575.98px) {\n  .bv-d-xs-down-none {\n    display: none !important;\n  }\n}\n\n@media (max-width: 767.98px) {\n  .bv-d-sm-down-none {\n    display: none !important;\n  }\n}\n\n@media (max-width: 991.98px) {\n  .bv-d-md-down-none {\n    display: none !important;\n  }\n}\n\n@media (max-width: 1199.98px) {\n  .bv-d-lg-down-none {\n    display: none !important;\n  }\n}\n\n.bv-d-xl-down-none {\n  display: none !important;\n}\n\n.card-img-left {\n  border-top-left-radius: calc(0.25rem - 1px);\n  border-bottom-left-radius: calc(0.25rem - 1px);\n}\n\n.card-img-right {\n  border-top-right-radius: calc(0.25rem - 1px);\n  border-bottom-right-radius: calc(0.25rem - 1px);\n}\n\n.dropdown:not(.dropleft) .dropdown-toggle.dropdown-toggle-no-caret::after {\n  display: none !important;\n}\n\n.dropdown.dropleft .dropdown-toggle.dropdown-toggle-no-caret::before {\n  display: none !important;\n}\n\n.dropdown.b-dropdown .b-dropdown-form {\n  display: inline-block;\n  padding: 0.25rem 1.5rem;\n  width: 100%;\n  clear: both;\n  font-weight: 400;\n}\n\n.dropdown.b-dropdown .b-dropdown-form:focus {\n  outline: 1px dotted !important;\n  outline: 5px auto -webkit-focus-ring-color !important;\n}\n\n.dropdown.b-dropdown .b-dropdown-form.disabled, .dropdown.b-dropdown .b-dropdown-form:disabled {\n  outline: 0 !important;\n  color: #6c757d;\n  pointer-events: none;\n}\n\n.b-dropdown-text {\n  display: inline-block;\n  padding: 0.25rem 1.5rem;\n  margin-bottom: 0;\n  width: 100%;\n  clear: both;\n  font-weight: lighter;\n}\n\n.input-group > .input-group-prepend > .btn-group > .btn,\n.input-group > .input-group-append:not(:last-child) > .btn-group > .btn,\n.input-group > .input-group-append:last-child > .btn-group:not(:last-child):not(.dropdown-toggle) > .btn {\n  border-top-right-radius: 0;\n  border-bottom-right-radius: 0;\n}\n\n.input-group > .input-group-append > .btn-group > .btn,\n.input-group > .input-group-prepend:not(:first-child) > .btn-group > .btn,\n.input-group > .input-group-prepend:first-child > .btn-group:not(:first-child) > .btn {\n  border-top-left-radius: 0;\n  border-bottom-left-radius: 0;\n}\n\n.was-validated .form-control:invalid,\n.was-validated .form-control:valid, .form-control.is-invalid, .form-control.is-valid {\n  background-position: right calc(0.375em + 0.1875rem) center;\n}\n\ninput[type=\"color\"].form-control {\n  height: calc(1.5em + 0.75rem + 2px);\n  padding: 0.125rem 0.25rem;\n}\n\ninput[type=\"color\"].form-control.form-control-sm,\n.input-group-sm input[type=\"color\"].form-control {\n  height: calc(1.5em + 0.5rem + 2px);\n  padding: 0.125rem 0.25rem;\n}\n\ninput[type=\"color\"].form-control.form-control-lg,\n.input-group-lg input[type=\"color\"].form-control {\n  height: calc(1.5em + 1rem + 2px);\n  padding: 0.125rem 0.25rem;\n}\n\ninput[type=\"color\"].form-control:disabled {\n  background-color: #adb5bd;\n  opacity: 0.65;\n}\n\n.input-group > .custom-range {\n  position: relative;\n  flex: 1 1 auto;\n  width: 1%;\n  margin-bottom: 0;\n}\n\n.input-group > .custom-range + .form-control,\n.input-group > .custom-range + .form-control-plaintext,\n.input-group > .custom-range + .custom-select,\n.input-group > .custom-range + .custom-range,\n.input-group > .custom-range + .custom-file {\n  margin-left: -1px;\n}\n\n.input-group > .form-control + .custom-range,\n.input-group > .form-control-plaintext + .custom-range,\n.input-group > .custom-select + .custom-range,\n.input-group > .custom-range + .custom-range,\n.input-group > .custom-file + .custom-range {\n  margin-left: -1px;\n}\n\n.input-group > .custom-range:focus {\n  z-index: 3;\n}\n\n.input-group > .custom-range:not(:last-child) {\n  border-top-right-radius: 0;\n  border-bottom-right-radius: 0;\n}\n\n.input-group > .custom-range:not(:first-child) {\n  border-top-left-radius: 0;\n  border-bottom-left-radius: 0;\n}\n\n.input-group > .custom-range {\n  height: calc(1.5em + 0.75rem + 2px);\n  padding: 0 0.75rem;\n  background-color: #fff;\n  background-clip: padding-box;\n  border: 1px solid #ced4da;\n  height: calc(1.5em + 0.75rem + 2px);\n  border-radius: 0.25rem;\n  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  .input-group > .custom-range {\n    transition: none;\n  }\n}\n\n.input-group > .custom-range:focus {\n  color: #495057;\n  background-color: #fff;\n  border-color: #80bdff;\n  outline: 0;\n  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);\n}\n\n.input-group > .custom-range:disabled, .input-group > .custom-range[readonly] {\n  background-color: #e9ecef;\n}\n\n.input-group-lg > .custom-range {\n  height: calc(1.5em + 1rem + 2px);\n  padding: 0 1rem;\n  border-radius: 0.3rem;\n}\n\n.input-group-sm > .custom-range {\n  height: calc(1.5em + 0.5rem + 2px);\n  padding: 0 0.5rem;\n  border-radius: 0.2rem;\n}\n\n.was-validated .input-group .custom-range:valid, .input-group .custom-range.is-valid {\n  border-color: #28a745;\n}\n\n.was-validated .input-group .custom-range:valid:focus, .input-group .custom-range.is-valid:focus {\n  border-color: #28a745;\n  box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);\n}\n\n.was-validated .custom-range:valid:focus::-webkit-slider-thumb, .custom-range.is-valid:focus::-webkit-slider-thumb {\n  box-shadow: 0 0 0 1px #fff, 0 0 0 0.2rem #9be7ac;\n}\n\n.was-validated .custom-range:valid:focus::-moz-range-thumb, .custom-range.is-valid:focus::-moz-range-thumb {\n  box-shadow: 0 0 0 1px #fff, 0 0 0 0.2rem #9be7ac;\n}\n\n.was-validated .custom-range:valid:focus::-ms-thumb, .custom-range.is-valid:focus::-ms-thumb {\n  box-shadow: 0 0 0 1px #fff, 0 0 0 0.2rem #9be7ac;\n}\n\n.was-validated .custom-range:valid::-webkit-slider-thumb, .custom-range.is-valid::-webkit-slider-thumb {\n  background-color: #28a745;\n  background-image: none;\n}\n\n.was-validated .custom-range:valid::-webkit-slider-thumb:active, .custom-range.is-valid::-webkit-slider-thumb:active {\n  background-color: #9be7ac;\n  background-image: none;\n}\n\n.was-validated .custom-range:valid::-webkit-slider-runnable-track, .custom-range.is-valid::-webkit-slider-runnable-track {\n  background-color: rgba(40, 167, 69, 0.35);\n}\n\n.was-validated .custom-range:valid::-moz-range-thumb, .custom-range.is-valid::-moz-range-thumb {\n  background-color: #28a745;\n  background-image: none;\n}\n\n.was-validated .custom-range:valid::-moz-range-thumb:active, .custom-range.is-valid::-moz-range-thumb:active {\n  background-color: #9be7ac;\n  background-image: none;\n}\n\n.was-validated .custom-range:valid::-moz-range-track, .custom-range.is-valid::-moz-range-track {\n  background: rgba(40, 167, 69, 0.35);\n}\n\n.was-validated .custom-range:valid ~ .valid-feedback,\n.was-validated .custom-range:valid ~ .valid-tooltip, .custom-range.is-valid ~ .valid-feedback,\n.custom-range.is-valid ~ .valid-tooltip {\n  display: block;\n}\n\n.was-validated .custom-range:valid::-ms-thumb, .custom-range.is-valid::-ms-thumb {\n  background-color: #28a745;\n  background-image: none;\n}\n\n.was-validated .custom-range:valid::-ms-thumb:active, .custom-range.is-valid::-ms-thumb:active {\n  background-color: #9be7ac;\n  background-image: none;\n}\n\n.was-validated .custom-range:valid::-ms-track-lower, .custom-range.is-valid::-ms-track-lower {\n  background: rgba(40, 167, 69, 0.35);\n}\n\n.was-validated .custom-range:valid::-ms-track-upper, .custom-range.is-valid::-ms-track-upper {\n  background: rgba(40, 167, 69, 0.35);\n}\n\n.was-validated .input-group .custom-range:invalid, .input-group .custom-range.is-invalid {\n  border-color: #dc3545;\n}\n\n.was-validated .input-group .custom-range:invalid:focus, .input-group .custom-range.is-invalid:focus {\n  border-color: #dc3545;\n  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);\n}\n\n.was-validated .custom-range:invalid:focus::-webkit-slider-thumb, .custom-range.is-invalid:focus::-webkit-slider-thumb {\n  box-shadow: 0 0 0 1px #fff, 0 0 0 0.2rem #f6cdd1;\n}\n\n.was-validated .custom-range:invalid:focus::-moz-range-thumb, .custom-range.is-invalid:focus::-moz-range-thumb {\n  box-shadow: 0 0 0 1px #fff, 0 0 0 0.2rem #f6cdd1;\n}\n\n.was-validated .custom-range:invalid:focus::-ms-thumb, .custom-range.is-invalid:focus::-ms-thumb {\n  box-shadow: 0 0 0 1px #fff, 0 0 0 0.2rem #f6cdd1;\n}\n\n.was-validated .custom-range:invalid::-webkit-slider-thumb, .custom-range.is-invalid::-webkit-slider-thumb {\n  background-color: #dc3545;\n  background-image: none;\n}\n\n.was-validated .custom-range:invalid::-webkit-slider-thumb:active, .custom-range.is-invalid::-webkit-slider-thumb:active {\n  background-color: #f6cdd1;\n  background-image: none;\n}\n\n.was-validated .custom-range:invalid::-webkit-slider-runnable-track, .custom-range.is-invalid::-webkit-slider-runnable-track {\n  background-color: rgba(220, 53, 69, 0.35);\n}\n\n.was-validated .custom-range:invalid::-moz-range-thumb, .custom-range.is-invalid::-moz-range-thumb {\n  background-color: #dc3545;\n  background-image: none;\n}\n\n.was-validated .custom-range:invalid::-moz-range-thumb:active, .custom-range.is-invalid::-moz-range-thumb:active {\n  background-color: #f6cdd1;\n  background-image: none;\n}\n\n.was-validated .custom-range:invalid::-moz-range-track, .custom-range.is-invalid::-moz-range-track {\n  background: rgba(220, 53, 69, 0.35);\n}\n\n.was-validated .custom-range:invalid ~ .invalid-feedback,\n.was-validated .custom-range:invalid ~ .invalid-tooltip, .custom-range.is-invalid ~ .invalid-feedback,\n.custom-range.is-invalid ~ .invalid-tooltip {\n  display: block;\n}\n\n.was-validated .custom-range:invalid::-ms-thumb, .custom-range.is-invalid::-ms-thumb {\n  background-color: #dc3545;\n  background-image: none;\n}\n\n.was-validated .custom-range:invalid::-ms-thumb:active, .custom-range.is-invalid::-ms-thumb:active {\n  background-color: #f6cdd1;\n  background-image: none;\n}\n\n.was-validated .custom-range:invalid::-ms-track-lower, .custom-range.is-invalid::-ms-track-lower {\n  background: rgba(220, 53, 69, 0.35);\n}\n\n.was-validated .custom-range:invalid::-ms-track-upper, .custom-range.is-invalid::-ms-track-upper {\n  background: rgba(220, 53, 69, 0.35);\n}\n\n.modal-backdrop {\n  opacity: 0.5;\n}\n\n.b-popover-primary.popover {\n  background-color: #cce5ff;\n  border-color: #b8daff;\n}\n\n.b-popover-primary.bs-popover-top > .arrow::before, .b-popover-primary.bs-popover-auto[x-placement^=\"top\"] > .arrow::before {\n  border-top-color: #b8daff;\n}\n\n.b-popover-primary.bs-popover-top > .arrow::after, .b-popover-primary.bs-popover-auto[x-placement^=\"top\"] > .arrow::after {\n  border-top-color: #cce5ff;\n}\n\n.b-popover-primary.bs-popover-right > .arrow::before, .b-popover-primary.bs-popover-auto[x-placement^=\"right\"] > .arrow::before {\n  border-right-color: #b8daff;\n}\n\n.b-popover-primary.bs-popover-right > .arrow::after, .b-popover-primary.bs-popover-auto[x-placement^=\"right\"] > .arrow::after {\n  border-right-color: #cce5ff;\n}\n\n.b-popover-primary.bs-popover-bottom > .arrow::before, .b-popover-primary.bs-popover-auto[x-placement^=\"bottom\"] > .arrow::before {\n  border-bottom-color: #b8daff;\n}\n\n.b-popover-primary.bs-popover-bottom > .arrow::after, .b-popover-primary.bs-popover-auto[x-placement^=\"bottom\"] > .arrow::after {\n  border-bottom-color: #bdddff;\n}\n\n.b-popover-primary.bs-popover-bottom .popover-header::before, .b-popover-primary.bs-popover-auto[x-placement^=\"bottom\"] .popover-header::before {\n  border-bottom-color: #bdddff;\n}\n\n.b-popover-primary.bs-popover-left > .arrow::before, .b-popover-primary.bs-popover-auto[x-placement^=\"left\"] > .arrow::before {\n  border-left-color: #b8daff;\n}\n\n.b-popover-primary.bs-popover-left > .arrow::after, .b-popover-primary.bs-popover-auto[x-placement^=\"left\"] > .arrow::after {\n  border-left-color: #cce5ff;\n}\n\n.b-popover-primary .popover-header {\n  color: #212529;\n  background-color: #bdddff;\n  border-bottom-color: #a3d0ff;\n}\n\n.b-popover-primary .popover-body {\n  color: #004085;\n}\n\n.b-popover-secondary.popover {\n  background-color: #e2e3e5;\n  border-color: #d6d8db;\n}\n\n.b-popover-secondary.bs-popover-top > .arrow::before, .b-popover-secondary.bs-popover-auto[x-placement^=\"top\"] > .arrow::before {\n  border-top-color: #d6d8db;\n}\n\n.b-popover-secondary.bs-popover-top > .arrow::after, .b-popover-secondary.bs-popover-auto[x-placement^=\"top\"] > .arrow::after {\n  border-top-color: #e2e3e5;\n}\n\n.b-popover-secondary.bs-popover-right > .arrow::before, .b-popover-secondary.bs-popover-auto[x-placement^=\"right\"] > .arrow::before {\n  border-right-color: #d6d8db;\n}\n\n.b-popover-secondary.bs-popover-right > .arrow::after, .b-popover-secondary.bs-popover-auto[x-placement^=\"right\"] > .arrow::after {\n  border-right-color: #e2e3e5;\n}\n\n.b-popover-secondary.bs-popover-bottom > .arrow::before, .b-popover-secondary.bs-popover-auto[x-placement^=\"bottom\"] > .arrow::before {\n  border-bottom-color: #d6d8db;\n}\n\n.b-popover-secondary.bs-popover-bottom > .arrow::after, .b-popover-secondary.bs-popover-auto[x-placement^=\"bottom\"] > .arrow::after {\n  border-bottom-color: #dadbde;\n}\n\n.b-popover-secondary.bs-popover-bottom .popover-header::before, .b-popover-secondary.bs-popover-auto[x-placement^=\"bottom\"] .popover-header::before {\n  border-bottom-color: #dadbde;\n}\n\n.b-popover-secondary.bs-popover-left > .arrow::before, .b-popover-secondary.bs-popover-auto[x-placement^=\"left\"] > .arrow::before {\n  border-left-color: #d6d8db;\n}\n\n.b-popover-secondary.bs-popover-left > .arrow::after, .b-popover-secondary.bs-popover-auto[x-placement^=\"left\"] > .arrow::after {\n  border-left-color: #e2e3e5;\n}\n\n.b-popover-secondary .popover-header {\n  color: #212529;\n  background-color: #dadbde;\n  border-bottom-color: #ccced2;\n}\n\n.b-popover-secondary .popover-body {\n  color: #383d41;\n}\n\n.b-popover-success.popover {\n  background-color: #d4edda;\n  border-color: #c3e6cb;\n}\n\n.b-popover-success.bs-popover-top > .arrow::before, .b-popover-success.bs-popover-auto[x-placement^=\"top\"] > .arrow::before {\n  border-top-color: #c3e6cb;\n}\n\n.b-popover-success.bs-popover-top > .arrow::after, .b-popover-success.bs-popover-auto[x-placement^=\"top\"] > .arrow::after {\n  border-top-color: #d4edda;\n}\n\n.b-popover-success.bs-popover-right > .arrow::before, .b-popover-success.bs-popover-auto[x-placement^=\"right\"] > .arrow::before {\n  border-right-color: #c3e6cb;\n}\n\n.b-popover-success.bs-popover-right > .arrow::after, .b-popover-success.bs-popover-auto[x-placement^=\"right\"] > .arrow::after {\n  border-right-color: #d4edda;\n}\n\n.b-popover-success.bs-popover-bottom > .arrow::before, .b-popover-success.bs-popover-auto[x-placement^=\"bottom\"] > .arrow::before {\n  border-bottom-color: #c3e6cb;\n}\n\n.b-popover-success.bs-popover-bottom > .arrow::after, .b-popover-success.bs-popover-auto[x-placement^=\"bottom\"] > .arrow::after {\n  border-bottom-color: #c9e8d1;\n}\n\n.b-popover-success.bs-popover-bottom .popover-header::before, .b-popover-success.bs-popover-auto[x-placement^=\"bottom\"] .popover-header::before {\n  border-bottom-color: #c9e8d1;\n}\n\n.b-popover-success.bs-popover-left > .arrow::before, .b-popover-success.bs-popover-auto[x-placement^=\"left\"] > .arrow::before {\n  border-left-color: #c3e6cb;\n}\n\n.b-popover-success.bs-popover-left > .arrow::after, .b-popover-success.bs-popover-auto[x-placement^=\"left\"] > .arrow::after {\n  border-left-color: #d4edda;\n}\n\n.b-popover-success .popover-header {\n  color: #212529;\n  background-color: #c9e8d1;\n  border-bottom-color: #b7e1c1;\n}\n\n.b-popover-success .popover-body {\n  color: #155724;\n}\n\n.b-popover-info.popover {\n  background-color: #d1ecf1;\n  border-color: #bee5eb;\n}\n\n.b-popover-info.bs-popover-top > .arrow::before, .b-popover-info.bs-popover-auto[x-placement^=\"top\"] > .arrow::before {\n  border-top-color: #bee5eb;\n}\n\n.b-popover-info.bs-popover-top > .arrow::after, .b-popover-info.bs-popover-auto[x-placement^=\"top\"] > .arrow::after {\n  border-top-color: #d1ecf1;\n}\n\n.b-popover-info.bs-popover-right > .arrow::before, .b-popover-info.bs-popover-auto[x-placement^=\"right\"] > .arrow::before {\n  border-right-color: #bee5eb;\n}\n\n.b-popover-info.bs-popover-right > .arrow::after, .b-popover-info.bs-popover-auto[x-placement^=\"right\"] > .arrow::after {\n  border-right-color: #d1ecf1;\n}\n\n.b-popover-info.bs-popover-bottom > .arrow::before, .b-popover-info.bs-popover-auto[x-placement^=\"bottom\"] > .arrow::before {\n  border-bottom-color: #bee5eb;\n}\n\n.b-popover-info.bs-popover-bottom > .arrow::after, .b-popover-info.bs-popover-auto[x-placement^=\"bottom\"] > .arrow::after {\n  border-bottom-color: #c5e7ed;\n}\n\n.b-popover-info.bs-popover-bottom .popover-header::before, .b-popover-info.bs-popover-auto[x-placement^=\"bottom\"] .popover-header::before {\n  border-bottom-color: #c5e7ed;\n}\n\n.b-popover-info.bs-popover-left > .arrow::before, .b-popover-info.bs-popover-auto[x-placement^=\"left\"] > .arrow::before {\n  border-left-color: #bee5eb;\n}\n\n.b-popover-info.bs-popover-left > .arrow::after, .b-popover-info.bs-popover-auto[x-placement^=\"left\"] > .arrow::after {\n  border-left-color: #d1ecf1;\n}\n\n.b-popover-info .popover-header {\n  color: #212529;\n  background-color: #c5e7ed;\n  border-bottom-color: #b2dfe7;\n}\n\n.b-popover-info .popover-body {\n  color: #0c5460;\n}\n\n.b-popover-warning.popover {\n  background-color: #fff3cd;\n  border-color: #ffeeba;\n}\n\n.b-popover-warning.bs-popover-top > .arrow::before, .b-popover-warning.bs-popover-auto[x-placement^=\"top\"] > .arrow::before {\n  border-top-color: #ffeeba;\n}\n\n.b-popover-warning.bs-popover-top > .arrow::after, .b-popover-warning.bs-popover-auto[x-placement^=\"top\"] > .arrow::after {\n  border-top-color: #fff3cd;\n}\n\n.b-popover-warning.bs-popover-right > .arrow::before, .b-popover-warning.bs-popover-auto[x-placement^=\"right\"] > .arrow::before {\n  border-right-color: #ffeeba;\n}\n\n.b-popover-warning.bs-popover-right > .arrow::after, .b-popover-warning.bs-popover-auto[x-placement^=\"right\"] > .arrow::after {\n  border-right-color: #fff3cd;\n}\n\n.b-popover-warning.bs-popover-bottom > .arrow::before, .b-popover-warning.bs-popover-auto[x-placement^=\"bottom\"] > .arrow::before {\n  border-bottom-color: #ffeeba;\n}\n\n.b-popover-warning.bs-popover-bottom > .arrow::after, .b-popover-warning.bs-popover-auto[x-placement^=\"bottom\"] > .arrow::after {\n  border-bottom-color: #ffefbe;\n}\n\n.b-popover-warning.bs-popover-bottom .popover-header::before, .b-popover-warning.bs-popover-auto[x-placement^=\"bottom\"] .popover-header::before {\n  border-bottom-color: #ffefbe;\n}\n\n.b-popover-warning.bs-popover-left > .arrow::before, .b-popover-warning.bs-popover-auto[x-placement^=\"left\"] > .arrow::before {\n  border-left-color: #ffeeba;\n}\n\n.b-popover-warning.bs-popover-left > .arrow::after, .b-popover-warning.bs-popover-auto[x-placement^=\"left\"] > .arrow::after {\n  border-left-color: #fff3cd;\n}\n\n.b-popover-warning .popover-header {\n  color: #212529;\n  background-color: #ffefbe;\n  border-bottom-color: #ffe9a4;\n}\n\n.b-popover-warning .popover-body {\n  color: #856404;\n}\n\n.b-popover-danger.popover {\n  background-color: #f8d7da;\n  border-color: #f5c6cb;\n}\n\n.b-popover-danger.bs-popover-top > .arrow::before, .b-popover-danger.bs-popover-auto[x-placement^=\"top\"] > .arrow::before {\n  border-top-color: #f5c6cb;\n}\n\n.b-popover-danger.bs-popover-top > .arrow::after, .b-popover-danger.bs-popover-auto[x-placement^=\"top\"] > .arrow::after {\n  border-top-color: #f8d7da;\n}\n\n.b-popover-danger.bs-popover-right > .arrow::before, .b-popover-danger.bs-popover-auto[x-placement^=\"right\"] > .arrow::before {\n  border-right-color: #f5c6cb;\n}\n\n.b-popover-danger.bs-popover-right > .arrow::after, .b-popover-danger.bs-popover-auto[x-placement^=\"right\"] > .arrow::after {\n  border-right-color: #f8d7da;\n}\n\n.b-popover-danger.bs-popover-bottom > .arrow::before, .b-popover-danger.bs-popover-auto[x-placement^=\"bottom\"] > .arrow::before {\n  border-bottom-color: #f5c6cb;\n}\n\n.b-popover-danger.bs-popover-bottom > .arrow::after, .b-popover-danger.bs-popover-auto[x-placement^=\"bottom\"] > .arrow::after {\n  border-bottom-color: #f6cace;\n}\n\n.b-popover-danger.bs-popover-bottom .popover-header::before, .b-popover-danger.bs-popover-auto[x-placement^=\"bottom\"] .popover-header::before {\n  border-bottom-color: #f6cace;\n}\n\n.b-popover-danger.bs-popover-left > .arrow::before, .b-popover-danger.bs-popover-auto[x-placement^=\"left\"] > .arrow::before {\n  border-left-color: #f5c6cb;\n}\n\n.b-popover-danger.bs-popover-left > .arrow::after, .b-popover-danger.bs-popover-auto[x-placement^=\"left\"] > .arrow::after {\n  border-left-color: #f8d7da;\n}\n\n.b-popover-danger .popover-header {\n  color: #212529;\n  background-color: #f6cace;\n  border-bottom-color: #f2b4ba;\n}\n\n.b-popover-danger .popover-body {\n  color: #721c24;\n}\n\n.b-popover-light.popover {\n  background-color: #fefefe;\n  border-color: #fdfdfe;\n}\n\n.b-popover-light.bs-popover-top > .arrow::before, .b-popover-light.bs-popover-auto[x-placement^=\"top\"] > .arrow::before {\n  border-top-color: #fdfdfe;\n}\n\n.b-popover-light.bs-popover-top > .arrow::after, .b-popover-light.bs-popover-auto[x-placement^=\"top\"] > .arrow::after {\n  border-top-color: #fefefe;\n}\n\n.b-popover-light.bs-popover-right > .arrow::before, .b-popover-light.bs-popover-auto[x-placement^=\"right\"] > .arrow::before {\n  border-right-color: #fdfdfe;\n}\n\n.b-popover-light.bs-popover-right > .arrow::after, .b-popover-light.bs-popover-auto[x-placement^=\"right\"] > .arrow::after {\n  border-right-color: #fefefe;\n}\n\n.b-popover-light.bs-popover-bottom > .arrow::before, .b-popover-light.bs-popover-auto[x-placement^=\"bottom\"] > .arrow::before {\n  border-bottom-color: #fdfdfe;\n}\n\n.b-popover-light.bs-popover-bottom > .arrow::after, .b-popover-light.bs-popover-auto[x-placement^=\"bottom\"] > .arrow::after {\n  border-bottom-color: #f6f6f6;\n}\n\n.b-popover-light.bs-popover-bottom .popover-header::before, .b-popover-light.bs-popover-auto[x-placement^=\"bottom\"] .popover-header::before {\n  border-bottom-color: #f6f6f6;\n}\n\n.b-popover-light.bs-popover-left > .arrow::before, .b-popover-light.bs-popover-auto[x-placement^=\"left\"] > .arrow::before {\n  border-left-color: #fdfdfe;\n}\n\n.b-popover-light.bs-popover-left > .arrow::after, .b-popover-light.bs-popover-auto[x-placement^=\"left\"] > .arrow::after {\n  border-left-color: #fefefe;\n}\n\n.b-popover-light .popover-header {\n  color: #212529;\n  background-color: #f6f6f6;\n  border-bottom-color: #eaeaea;\n}\n\n.b-popover-light .popover-body {\n  color: #818182;\n}\n\n.b-popover-dark.popover {\n  background-color: #d6d8d9;\n  border-color: #c6c8ca;\n}\n\n.b-popover-dark.bs-popover-top > .arrow::before, .b-popover-dark.bs-popover-auto[x-placement^=\"top\"] > .arrow::before {\n  border-top-color: #c6c8ca;\n}\n\n.b-popover-dark.bs-popover-top > .arrow::after, .b-popover-dark.bs-popover-auto[x-placement^=\"top\"] > .arrow::after {\n  border-top-color: #d6d8d9;\n}\n\n.b-popover-dark.bs-popover-right > .arrow::before, .b-popover-dark.bs-popover-auto[x-placement^=\"right\"] > .arrow::before {\n  border-right-color: #c6c8ca;\n}\n\n.b-popover-dark.bs-popover-right > .arrow::after, .b-popover-dark.bs-popover-auto[x-placement^=\"right\"] > .arrow::after {\n  border-right-color: #d6d8d9;\n}\n\n.b-popover-dark.bs-popover-bottom > .arrow::before, .b-popover-dark.bs-popover-auto[x-placement^=\"bottom\"] > .arrow::before {\n  border-bottom-color: #c6c8ca;\n}\n\n.b-popover-dark.bs-popover-bottom > .arrow::after, .b-popover-dark.bs-popover-auto[x-placement^=\"bottom\"] > .arrow::after {\n  border-bottom-color: #ced0d2;\n}\n\n.b-popover-dark.bs-popover-bottom .popover-header::before, .b-popover-dark.bs-popover-auto[x-placement^=\"bottom\"] .popover-header::before {\n  border-bottom-color: #ced0d2;\n}\n\n.b-popover-dark.bs-popover-left > .arrow::before, .b-popover-dark.bs-popover-auto[x-placement^=\"left\"] > .arrow::before {\n  border-left-color: #c6c8ca;\n}\n\n.b-popover-dark.bs-popover-left > .arrow::after, .b-popover-dark.bs-popover-auto[x-placement^=\"left\"] > .arrow::after {\n  border-left-color: #d6d8d9;\n}\n\n.b-popover-dark .popover-header {\n  color: #212529;\n  background-color: #ced0d2;\n  border-bottom-color: #c1c4c5;\n}\n\n.b-popover-dark .popover-body {\n  color: #1b1e21;\n}\n\n.table.b-table.b-table-fixed {\n  table-layout: fixed;\n}\n\n.table.b-table[aria-busy=\"true\"] {\n  opacity: 0.55;\n}\n\n.table.b-table > tbody > tr.b-table-details > td {\n  border-top: none !important;\n}\n\n.table.b-table > caption {\n  caption-side: bottom;\n}\n\n.table.b-table > caption.b-table-caption-top {\n  caption-side: top !important;\n}\n\n.table.b-table > thead > tr > th[aria-sort],\n.table.b-table > tfoot > tr > th[aria-sort] {\n  cursor: pointer;\n}\n\n.table.b-table > thead > tr > th[aria-sort]::before,\n.table.b-table > tfoot > tr > th[aria-sort]::before {\n  display: inline-block;\n  float: right;\n  margin-left: 0.5em;\n  width: 0.5em;\n  font-size: inherit;\n  line-height: inherit;\n  opacity: 0.4;\n  content: \"\\2195\";\n  speak: none;\n}\n\n.table.b-table > thead > tr > th[aria-sort][aria-sort=\"ascending\"]::before,\n.table.b-table > tfoot > tr > th[aria-sort][aria-sort=\"ascending\"]::before {\n  opacity: 1;\n  content: \"\\2193\";\n}\n\n.table.b-table > thead > tr > th[aria-sort][aria-sort=\"descending\"]::before,\n.table.b-table > tfoot > tr > th[aria-sort][aria-sort=\"descending\"]::before {\n  opacity: 1;\n  content: \"\\2191\";\n}\n\n@media (max-width: 575.98px) {\n  .table.b-table.b-table-stacked-sm {\n    display: block;\n    width: 100%;\n  }\n  .table.b-table.b-table-stacked-sm > caption,\n  .table.b-table.b-table-stacked-sm > tbody,\n  .table.b-table.b-table-stacked-sm > tbody > tr,\n  .table.b-table.b-table-stacked-sm > tbody > tr > td,\n  .table.b-table.b-table-stacked-sm > tbody > tr > td {\n    display: block;\n  }\n  .table.b-table.b-table-stacked-sm > thead,\n  .table.b-table.b-table-stacked-sm > tfoot {\n    display: none;\n  }\n  .table.b-table.b-table-stacked-sm > thead > tr.b-table-top-row,\n  .table.b-table.b-table-stacked-sm > thead > tr.b-table-bottom-row,\n  .table.b-table.b-table-stacked-sm > tfoot > tr.b-table-top-row,\n  .table.b-table.b-table-stacked-sm > tfoot > tr.b-table-bottom-row {\n    display: none;\n  }\n  .table.b-table.b-table-stacked-sm > caption {\n    caption-side: top !important;\n  }\n  .table.b-table.b-table-stacked-sm > tbody > tr > [data-label]::before {\n    content: attr(data-label);\n    display: inline-block;\n    width: 40%;\n    float: left;\n    text-align: right;\n    overflow-wrap: break-word;\n    font-weight: bold;\n    font-style: normal;\n    padding: 0;\n    margin: 0;\n  }\n  .table.b-table.b-table-stacked-sm > tbody > tr > [data-label]::after {\n    display: block;\n    clear: both;\n    content: \"\";\n  }\n  .table.b-table.b-table-stacked-sm > tbody > tr > [data-label] > div {\n    display: inline-block;\n    width: calc(100% - 40%);\n    padding: 0 0 0 1rem;\n    margin: 0;\n  }\n  .table.b-table.b-table-stacked-sm > tbody > tr.top-row, .table.b-table.b-table-stacked-sm > tbody > tr.bottom-row {\n    display: none;\n  }\n  .table.b-table.b-table-stacked-sm > tbody > tr > :first-child {\n    border-top-width: 3px;\n  }\n}\n\n@media (max-width: 767.98px) {\n  .table.b-table.b-table-stacked-md {\n    display: block;\n    width: 100%;\n  }\n  .table.b-table.b-table-stacked-md > caption,\n  .table.b-table.b-table-stacked-md > tbody,\n  .table.b-table.b-table-stacked-md > tbody > tr,\n  .table.b-table.b-table-stacked-md > tbody > tr > td,\n  .table.b-table.b-table-stacked-md > tbody > tr > td {\n    display: block;\n  }\n  .table.b-table.b-table-stacked-md > thead,\n  .table.b-table.b-table-stacked-md > tfoot {\n    display: none;\n  }\n  .table.b-table.b-table-stacked-md > thead > tr.b-table-top-row,\n  .table.b-table.b-table-stacked-md > thead > tr.b-table-bottom-row,\n  .table.b-table.b-table-stacked-md > tfoot > tr.b-table-top-row,\n  .table.b-table.b-table-stacked-md > tfoot > tr.b-table-bottom-row {\n    display: none;\n  }\n  .table.b-table.b-table-stacked-md > caption {\n    caption-side: top !important;\n  }\n  .table.b-table.b-table-stacked-md > tbody > tr > [data-label]::before {\n    content: attr(data-label);\n    display: inline-block;\n    width: 40%;\n    float: left;\n    text-align: right;\n    overflow-wrap: break-word;\n    font-weight: bold;\n    font-style: normal;\n    padding: 0;\n    margin: 0;\n  }\n  .table.b-table.b-table-stacked-md > tbody > tr > [data-label]::after {\n    display: block;\n    clear: both;\n    content: \"\";\n  }\n  .table.b-table.b-table-stacked-md > tbody > tr > [data-label] > div {\n    display: inline-block;\n    width: calc(100% - 40%);\n    padding: 0 0 0 1rem;\n    margin: 0;\n  }\n  .table.b-table.b-table-stacked-md > tbody > tr.top-row, .table.b-table.b-table-stacked-md > tbody > tr.bottom-row {\n    display: none;\n  }\n  .table.b-table.b-table-stacked-md > tbody > tr > :first-child {\n    border-top-width: 3px;\n  }\n}\n\n@media (max-width: 991.98px) {\n  .table.b-table.b-table-stacked-lg {\n    display: block;\n    width: 100%;\n  }\n  .table.b-table.b-table-stacked-lg > caption,\n  .table.b-table.b-table-stacked-lg > tbody,\n  .table.b-table.b-table-stacked-lg > tbody > tr,\n  .table.b-table.b-table-stacked-lg > tbody > tr > td,\n  .table.b-table.b-table-stacked-lg > tbody > tr > td {\n    display: block;\n  }\n  .table.b-table.b-table-stacked-lg > thead,\n  .table.b-table.b-table-stacked-lg > tfoot {\n    display: none;\n  }\n  .table.b-table.b-table-stacked-lg > thead > tr.b-table-top-row,\n  .table.b-table.b-table-stacked-lg > thead > tr.b-table-bottom-row,\n  .table.b-table.b-table-stacked-lg > tfoot > tr.b-table-top-row,\n  .table.b-table.b-table-stacked-lg > tfoot > tr.b-table-bottom-row {\n    display: none;\n  }\n  .table.b-table.b-table-stacked-lg > caption {\n    caption-side: top !important;\n  }\n  .table.b-table.b-table-stacked-lg > tbody > tr > [data-label]::before {\n    content: attr(data-label);\n    display: inline-block;\n    width: 40%;\n    float: left;\n    text-align: right;\n    overflow-wrap: break-word;\n    font-weight: bold;\n    font-style: normal;\n    padding: 0;\n    margin: 0;\n  }\n  .table.b-table.b-table-stacked-lg > tbody > tr > [data-label]::after {\n    display: block;\n    clear: both;\n    content: \"\";\n  }\n  .table.b-table.b-table-stacked-lg > tbody > tr > [data-label] > div {\n    display: inline-block;\n    width: calc(100% - 40%);\n    padding: 0 0 0 1rem;\n    margin: 0;\n  }\n  .table.b-table.b-table-stacked-lg > tbody > tr.top-row, .table.b-table.b-table-stacked-lg > tbody > tr.bottom-row {\n    display: none;\n  }\n  .table.b-table.b-table-stacked-lg > tbody > tr > :first-child {\n    border-top-width: 3px;\n  }\n}\n\n@media (max-width: 1199.98px) {\n  .table.b-table.b-table-stacked-xl {\n    display: block;\n    width: 100%;\n  }\n  .table.b-table.b-table-stacked-xl > caption,\n  .table.b-table.b-table-stacked-xl > tbody,\n  .table.b-table.b-table-stacked-xl > tbody > tr,\n  .table.b-table.b-table-stacked-xl > tbody > tr > td,\n  .table.b-table.b-table-stacked-xl > tbody > tr > td {\n    display: block;\n  }\n  .table.b-table.b-table-stacked-xl > thead,\n  .table.b-table.b-table-stacked-xl > tfoot {\n    display: none;\n  }\n  .table.b-table.b-table-stacked-xl > thead > tr.b-table-top-row,\n  .table.b-table.b-table-stacked-xl > thead > tr.b-table-bottom-row,\n  .table.b-table.b-table-stacked-xl > tfoot > tr.b-table-top-row,\n  .table.b-table.b-table-stacked-xl > tfoot > tr.b-table-bottom-row {\n    display: none;\n  }\n  .table.b-table.b-table-stacked-xl > caption {\n    caption-side: top !important;\n  }\n  .table.b-table.b-table-stacked-xl > tbody > tr > [data-label]::before {\n    content: attr(data-label);\n    display: inline-block;\n    width: 40%;\n    float: left;\n    text-align: right;\n    overflow-wrap: break-word;\n    font-weight: bold;\n    font-style: normal;\n    padding: 0;\n    margin: 0;\n  }\n  .table.b-table.b-table-stacked-xl > tbody > tr > [data-label]::after {\n    display: block;\n    clear: both;\n    content: \"\";\n  }\n  .table.b-table.b-table-stacked-xl > tbody > tr > [data-label] > div {\n    display: inline-block;\n    width: calc(100% - 40%);\n    padding: 0 0 0 1rem;\n    margin: 0;\n  }\n  .table.b-table.b-table-stacked-xl > tbody > tr.top-row, .table.b-table.b-table-stacked-xl > tbody > tr.bottom-row {\n    display: none;\n  }\n  .table.b-table.b-table-stacked-xl > tbody > tr > :first-child {\n    border-top-width: 3px;\n  }\n}\n\n.table.b-table.b-table-stacked {\n  display: block;\n  width: 100%;\n}\n\n.table.b-table.b-table-stacked > caption,\n.table.b-table.b-table-stacked > tbody,\n.table.b-table.b-table-stacked > tbody > tr,\n.table.b-table.b-table-stacked > tbody > tr > td,\n.table.b-table.b-table-stacked > tbody > tr > td {\n  display: block;\n}\n\n.table.b-table.b-table-stacked > thead,\n.table.b-table.b-table-stacked > tfoot {\n  display: none;\n}\n\n.table.b-table.b-table-stacked > thead > tr.b-table-top-row,\n.table.b-table.b-table-stacked > thead > tr.b-table-bottom-row,\n.table.b-table.b-table-stacked > tfoot > tr.b-table-top-row,\n.table.b-table.b-table-stacked > tfoot > tr.b-table-bottom-row {\n  display: none;\n}\n\n.table.b-table.b-table-stacked > caption {\n  caption-side: top !important;\n}\n\n.table.b-table.b-table-stacked > tbody > tr > [data-label]::before {\n  content: attr(data-label);\n  display: inline-block;\n  width: 40%;\n  float: left;\n  text-align: right;\n  overflow-wrap: break-word;\n  font-weight: bold;\n  font-style: normal;\n  padding: 0;\n  margin: 0;\n}\n\n.table.b-table.b-table-stacked > tbody > tr > [data-label]::after {\n  display: block;\n  clear: both;\n  content: \"\";\n}\n\n.table.b-table.b-table-stacked > tbody > tr > [data-label] > div {\n  display: inline-block;\n  width: calc(100% - 40%);\n  padding: 0 0 0 1rem;\n  margin: 0;\n}\n\n.table.b-table.b-table-stacked > tbody > tr.top-row, .table.b-table.b-table-stacked > tbody > tr.bottom-row {\n  display: none;\n}\n\n.table.b-table.b-table-stacked > tbody > tr > :first-child {\n  border-top-width: 3px;\n}\n\n.table.b-table.b-table-selectable > tbody > tr {\n  cursor: pointer;\n}\n\n.table.b-table.b-table-selectable.b-table-selecting.b-table-select-range > tbody > tr {\n  -webkit-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n}\n\n.b-toast {\n  display: block;\n  position: relative;\n  max-width: 350px;\n  -webkit-backface-visibility: hidden;\n  backface-visibility: hidden;\n  background-clip: padding-box;\n  z-index: 1;\n  border-radius: 0.25rem;\n}\n\n.b-toast:not(:last-child) {\n  margin-bottom: 0.75rem;\n}\n\n.b-toast.b-toast-solid .toast {\n  background-color: white;\n}\n\n.b-toast .toast {\n  opacity: 1;\n}\n\n.b-toast .toast.fade:not(.show) {\n  opacity: 0;\n}\n\n.b-toast .toast .toast-body {\n  display: block;\n}\n\n.b-toast-primary .toast {\n  background-color: rgba(230, 242, 255, 0.85);\n  border-color: rgba(184, 218, 255, 0.85);\n  color: #004085;\n}\n\n.b-toast-primary .toast .toast-header {\n  color: #004085;\n  background-color: rgba(204, 229, 255, 0.85);\n  border-bottom-color: rgba(184, 218, 255, 0.85);\n}\n\n.b-toast-primary.b-toast-solid .toast {\n  background-color: #e6f2ff;\n}\n\n.b-toast-secondary .toast {\n  background-color: rgba(239, 240, 241, 0.85);\n  border-color: rgba(214, 216, 219, 0.85);\n  color: #383d41;\n}\n\n.b-toast-secondary .toast .toast-header {\n  color: #383d41;\n  background-color: rgba(226, 227, 229, 0.85);\n  border-bottom-color: rgba(214, 216, 219, 0.85);\n}\n\n.b-toast-secondary.b-toast-solid .toast {\n  background-color: #eff0f1;\n}\n\n.b-toast-success .toast {\n  background-color: rgba(230, 245, 233, 0.85);\n  border-color: rgba(195, 230, 203, 0.85);\n  color: #155724;\n}\n\n.b-toast-success .toast .toast-header {\n  color: #155724;\n  background-color: rgba(212, 237, 218, 0.85);\n  border-bottom-color: rgba(195, 230, 203, 0.85);\n}\n\n.b-toast-success.b-toast-solid .toast {\n  background-color: #e6f5e9;\n}\n\n.b-toast-info .toast {\n  background-color: rgba(229, 244, 247, 0.85);\n  border-color: rgba(190, 229, 235, 0.85);\n  color: #0c5460;\n}\n\n.b-toast-info .toast .toast-header {\n  color: #0c5460;\n  background-color: rgba(209, 236, 241, 0.85);\n  border-bottom-color: rgba(190, 229, 235, 0.85);\n}\n\n.b-toast-info.b-toast-solid .toast {\n  background-color: #e5f4f7;\n}\n\n.b-toast-warning .toast {\n  background-color: rgba(255, 249, 231, 0.85);\n  border-color: rgba(255, 238, 186, 0.85);\n  color: #856404;\n}\n\n.b-toast-warning .toast .toast-header {\n  color: #856404;\n  background-color: rgba(255, 243, 205, 0.85);\n  border-bottom-color: rgba(255, 238, 186, 0.85);\n}\n\n.b-toast-warning.b-toast-solid .toast {\n  background-color: #fff9e7;\n}\n\n.b-toast-danger .toast {\n  background-color: rgba(252, 237, 238, 0.85);\n  border-color: rgba(245, 198, 203, 0.85);\n  color: #721c24;\n}\n\n.b-toast-danger .toast .toast-header {\n  color: #721c24;\n  background-color: rgba(248, 215, 218, 0.85);\n  border-bottom-color: rgba(245, 198, 203, 0.85);\n}\n\n.b-toast-danger.b-toast-solid .toast {\n  background-color: #fcedee;\n}\n\n.b-toast-light .toast {\n  background-color: rgba(255, 255, 255, 0.85);\n  border-color: rgba(253, 253, 254, 0.85);\n  color: #818182;\n}\n\n.b-toast-light .toast .toast-header {\n  color: #818182;\n  background-color: rgba(254, 254, 254, 0.85);\n  border-bottom-color: rgba(253, 253, 254, 0.85);\n}\n\n.b-toast-light.b-toast-solid .toast {\n  background-color: white;\n}\n\n.b-toast-dark .toast {\n  background-color: rgba(227, 229, 229, 0.85);\n  border-color: rgba(198, 200, 202, 0.85);\n  color: #1b1e21;\n}\n\n.b-toast-dark .toast .toast-header {\n  color: #1b1e21;\n  background-color: rgba(214, 216, 217, 0.85);\n  border-bottom-color: rgba(198, 200, 202, 0.85);\n}\n\n.b-toast-dark.b-toast-solid .toast {\n  background-color: #e3e5e5;\n}\n\n.b-toaster {\n  z-index: 1100;\n}\n\n.b-toaster .b-toaster-slot {\n  position: relative;\n  display: block;\n}\n\n.b-toaster .b-toaster-slot:empty {\n  display: none !important;\n}\n\n.b-toaster.b-toaster-top-right, .b-toaster.b-toaster-top-left, .b-toaster.b-toaster-top-center, .b-toaster.b-toaster-top-full, .b-toaster.b-toaster-bottom-right, .b-toaster.b-toaster-bottom-left, .b-toaster.b-toaster-bottom-center, .b-toaster.b-toaster-bottom-full {\n  position: fixed;\n  left: 0.5rem;\n  right: 0.5rem;\n  margin: 0;\n  padding: 0;\n  height: 0;\n  overflow: visible;\n}\n\n.b-toaster.b-toaster-top-right .b-toaster-slot, .b-toaster.b-toaster-top-left .b-toaster-slot, .b-toaster.b-toaster-top-center .b-toaster-slot, .b-toaster.b-toaster-top-full .b-toaster-slot, .b-toaster.b-toaster-bottom-right .b-toaster-slot, .b-toaster.b-toaster-bottom-left .b-toaster-slot, .b-toaster.b-toaster-bottom-center .b-toaster-slot, .b-toaster.b-toaster-bottom-full .b-toaster-slot {\n  position: absolute;\n  max-width: 350px;\n  width: 100%;\n  /* IE11 fix */\n  left: 0;\n  right: 0;\n  padding: 0;\n  margin: 0;\n}\n\n.b-toaster.b-toaster-top-full .b-toaster-slot, .b-toaster.b-toaster-bottom-full .b-toaster-slot {\n  width: 100%;\n  max-width: 100%;\n}\n\n.b-toaster.b-toaster-top-full .b-toaster-slot .b-toast,\n.b-toaster.b-toaster-top-full .b-toaster-slot .toast, .b-toaster.b-toaster-bottom-full .b-toaster-slot .b-toast,\n.b-toaster.b-toaster-bottom-full .b-toaster-slot .toast {\n  width: 100%;\n  max-width: 100%;\n}\n\n.b-toaster.b-toaster-top-right, .b-toaster.b-toaster-top-left, .b-toaster.b-toaster-top-center, .b-toaster.b-toaster-top-full {\n  top: 0;\n}\n\n.b-toaster.b-toaster-top-right .b-toaster-slot, .b-toaster.b-toaster-top-left .b-toaster-slot, .b-toaster.b-toaster-top-center .b-toaster-slot, .b-toaster.b-toaster-top-full .b-toaster-slot {\n  top: 0.5rem;\n}\n\n.b-toaster.b-toaster-bottom-right, .b-toaster.b-toaster-bottom-left, .b-toaster.b-toaster-bottom-center, .b-toaster.b-toaster-bottom-full {\n  bottom: 0;\n}\n\n.b-toaster.b-toaster-bottom-right .b-toaster-slot, .b-toaster.b-toaster-bottom-left .b-toaster-slot, .b-toaster.b-toaster-bottom-center .b-toaster-slot, .b-toaster.b-toaster-bottom-full .b-toaster-slot {\n  bottom: 0.5rem;\n}\n\n.b-toaster.b-toaster-top-right .b-toaster-slot, .b-toaster.b-toaster-bottom-right .b-toaster-slot, .b-toaster.b-toaster-top-center .b-toaster-slot, .b-toaster.b-toaster-bottom-center .b-toaster-slot {\n  margin-left: auto;\n}\n\n.b-toaster.b-toaster-top-left .b-toaster-slot, .b-toaster.b-toaster-bottom-left .b-toaster-slot, .b-toaster.b-toaster-top-center .b-toaster-slot, .b-toaster.b-toaster-bottom-center .b-toaster-slot {\n  margin-right: auto;\n}\n\n.b-toaster.b-toaster-top-right .b-toast, .b-toaster.b-toaster-top-left .b-toast, .b-toaster.b-toaster-bottom-right .b-toast, .b-toaster.b-toaster-bottom-left .b-toast {\n  /*\n      &.b-toaster-enter-active,\n      &.b-toaster-enter-to {\n        .toast.fade {\n          // Delay the appearance of the toast until\n          // the move transition has completed\n          transition-delay: 0.175s;\n        }\n      }\n\n      &.b-toaster-move {\n        transition: transform 0.175s;\n        // transition-delay: 0.175s;\n      }\n\n      &.b-toaster-enter-active {\n        z-index: 0;\n      }\n\n      &.b-toaster-leave-active {\n        transition: transform 0.175s;\n      }\n\n      &.b-toaster-leave,\n      &.b-toaster-leave-active {\n        position: absolute;\n        z-index: 0;\n        transition-delay: 0.175s;\n\n        .toast.fade {\n          transition-delay: 0s;\n        }\n      }\n\n      &.b-toaster-leave {\n      }\n\n      &.b-toaster-leave-to {\n      }\n      */\n}\n\n.b-toaster.b-toaster-top-right .b-toast.b-toaster-enter-active, .b-toaster.b-toaster-top-right .b-toast.b-toaster-leave-active, .b-toaster.b-toaster-top-right .b-toast.b-toaster-move, .b-toaster.b-toaster-top-left .b-toast.b-toaster-enter-active, .b-toaster.b-toaster-top-left .b-toast.b-toaster-leave-active, .b-toaster.b-toaster-top-left .b-toast.b-toaster-move, .b-toaster.b-toaster-bottom-right .b-toast.b-toaster-enter-active, .b-toaster.b-toaster-bottom-right .b-toast.b-toaster-leave-active, .b-toaster.b-toaster-bottom-right .b-toast.b-toaster-move, .b-toaster.b-toaster-bottom-left .b-toast.b-toaster-enter-active, .b-toaster.b-toaster-bottom-left .b-toast.b-toaster-leave-active, .b-toaster.b-toaster-bottom-left .b-toast.b-toaster-move {\n  transition: -webkit-transform 0.175s;\n  transition: transform 0.175s;\n  transition: transform 0.175s, -webkit-transform 0.175s;\n}\n\n.b-toaster.b-toaster-top-right .b-toast.b-toaster-enter-to .toast.fade, .b-toaster.b-toaster-top-right .b-toast.b-toaster-enter-active .toast.fade, .b-toaster.b-toaster-top-left .b-toast.b-toaster-enter-to .toast.fade, .b-toaster.b-toaster-top-left .b-toast.b-toaster-enter-active .toast.fade, .b-toaster.b-toaster-bottom-right .b-toast.b-toaster-enter-to .toast.fade, .b-toaster.b-toaster-bottom-right .b-toast.b-toaster-enter-active .toast.fade, .b-toaster.b-toaster-bottom-left .b-toast.b-toaster-enter-to .toast.fade, .b-toaster.b-toaster-bottom-left .b-toast.b-toaster-enter-active .toast.fade {\n  transition-delay: 0.175s;\n}\n\n.b-toaster.b-toaster-top-right .b-toast.b-toaster-leave-active, .b-toaster.b-toaster-top-left .b-toast.b-toaster-leave-active, .b-toaster.b-toaster-bottom-right .b-toast.b-toaster-leave-active, .b-toaster.b-toaster-bottom-left .b-toast.b-toaster-leave-active {\n  position: absolute;\n  transition-delay: 0.175s;\n}\n\n.b-toaster.b-toaster-top-right .b-toast.b-toaster-leave-active .toast.fade, .b-toaster.b-toaster-top-left .b-toast.b-toaster-leave-active .toast.fade, .b-toaster.b-toaster-bottom-right .b-toast.b-toaster-leave-active .toast.fade, .b-toaster.b-toaster-bottom-left .b-toast.b-toaster-leave-active .toast.fade {\n  transition-delay: 0s;\n}\n\n.tooltip.b-tooltip-primary.bs-tooltip-top .arrow::before, .tooltip.b-tooltip-primary.bs-tooltip-auto[x-placement^=\"top\"] .arrow::before {\n  border-top-color: #007bff;\n}\n\n.tooltip.b-tooltip-primary.bs-tooltip-right .arrow::before, .tooltip.b-tooltip-primary.bs-tooltip-auto[x-placement^=\"right\"] .arrow::before {\n  border-right-color: #007bff;\n}\n\n.tooltip.b-tooltip-primary.bs-tooltip-bottom .arrow::before, .tooltip.b-tooltip-primary.bs-tooltip-auto[x-placement^=\"bottom\"] .arrow::before {\n  border-bottom-color: #007bff;\n}\n\n.tooltip.b-tooltip-primary.bs-tooltip-left .arrow::before, .tooltip.b-tooltip-primary.bs-tooltip-auto[x-placement^=\"left\"] .arrow::before {\n  border-left-color: #007bff;\n}\n\n.tooltip.b-tooltip-primary .tooltip-inner {\n  color: #fff;\n  background-color: #007bff;\n}\n\n.tooltip.b-tooltip-secondary.bs-tooltip-top .arrow::before, .tooltip.b-tooltip-secondary.bs-tooltip-auto[x-placement^=\"top\"] .arrow::before {\n  border-top-color: #6c757d;\n}\n\n.tooltip.b-tooltip-secondary.bs-tooltip-right .arrow::before, .tooltip.b-tooltip-secondary.bs-tooltip-auto[x-placement^=\"right\"] .arrow::before {\n  border-right-color: #6c757d;\n}\n\n.tooltip.b-tooltip-secondary.bs-tooltip-bottom .arrow::before, .tooltip.b-tooltip-secondary.bs-tooltip-auto[x-placement^=\"bottom\"] .arrow::before {\n  border-bottom-color: #6c757d;\n}\n\n.tooltip.b-tooltip-secondary.bs-tooltip-left .arrow::before, .tooltip.b-tooltip-secondary.bs-tooltip-auto[x-placement^=\"left\"] .arrow::before {\n  border-left-color: #6c757d;\n}\n\n.tooltip.b-tooltip-secondary .tooltip-inner {\n  color: #fff;\n  background-color: #6c757d;\n}\n\n.tooltip.b-tooltip-success.bs-tooltip-top .arrow::before, .tooltip.b-tooltip-success.bs-tooltip-auto[x-placement^=\"top\"] .arrow::before {\n  border-top-color: #28a745;\n}\n\n.tooltip.b-tooltip-success.bs-tooltip-right .arrow::before, .tooltip.b-tooltip-success.bs-tooltip-auto[x-placement^=\"right\"] .arrow::before {\n  border-right-color: #28a745;\n}\n\n.tooltip.b-tooltip-success.bs-tooltip-bottom .arrow::before, .tooltip.b-tooltip-success.bs-tooltip-auto[x-placement^=\"bottom\"] .arrow::before {\n  border-bottom-color: #28a745;\n}\n\n.tooltip.b-tooltip-success.bs-tooltip-left .arrow::before, .tooltip.b-tooltip-success.bs-tooltip-auto[x-placement^=\"left\"] .arrow::before {\n  border-left-color: #28a745;\n}\n\n.tooltip.b-tooltip-success .tooltip-inner {\n  color: #fff;\n  background-color: #28a745;\n}\n\n.tooltip.b-tooltip-info.bs-tooltip-top .arrow::before, .tooltip.b-tooltip-info.bs-tooltip-auto[x-placement^=\"top\"] .arrow::before {\n  border-top-color: #17a2b8;\n}\n\n.tooltip.b-tooltip-info.bs-tooltip-right .arrow::before, .tooltip.b-tooltip-info.bs-tooltip-auto[x-placement^=\"right\"] .arrow::before {\n  border-right-color: #17a2b8;\n}\n\n.tooltip.b-tooltip-info.bs-tooltip-bottom .arrow::before, .tooltip.b-tooltip-info.bs-tooltip-auto[x-placement^=\"bottom\"] .arrow::before {\n  border-bottom-color: #17a2b8;\n}\n\n.tooltip.b-tooltip-info.bs-tooltip-left .arrow::before, .tooltip.b-tooltip-info.bs-tooltip-auto[x-placement^=\"left\"] .arrow::before {\n  border-left-color: #17a2b8;\n}\n\n.tooltip.b-tooltip-info .tooltip-inner {\n  color: #fff;\n  background-color: #17a2b8;\n}\n\n.tooltip.b-tooltip-warning.bs-tooltip-top .arrow::before, .tooltip.b-tooltip-warning.bs-tooltip-auto[x-placement^=\"top\"] .arrow::before {\n  border-top-color: #ffc107;\n}\n\n.tooltip.b-tooltip-warning.bs-tooltip-right .arrow::before, .tooltip.b-tooltip-warning.bs-tooltip-auto[x-placement^=\"right\"] .arrow::before {\n  border-right-color: #ffc107;\n}\n\n.tooltip.b-tooltip-warning.bs-tooltip-bottom .arrow::before, .tooltip.b-tooltip-warning.bs-tooltip-auto[x-placement^=\"bottom\"] .arrow::before {\n  border-bottom-color: #ffc107;\n}\n\n.tooltip.b-tooltip-warning.bs-tooltip-left .arrow::before, .tooltip.b-tooltip-warning.bs-tooltip-auto[x-placement^=\"left\"] .arrow::before {\n  border-left-color: #ffc107;\n}\n\n.tooltip.b-tooltip-warning .tooltip-inner {\n  color: #212529;\n  background-color: #ffc107;\n}\n\n.tooltip.b-tooltip-danger.bs-tooltip-top .arrow::before, .tooltip.b-tooltip-danger.bs-tooltip-auto[x-placement^=\"top\"] .arrow::before {\n  border-top-color: #dc3545;\n}\n\n.tooltip.b-tooltip-danger.bs-tooltip-right .arrow::before, .tooltip.b-tooltip-danger.bs-tooltip-auto[x-placement^=\"right\"] .arrow::before {\n  border-right-color: #dc3545;\n}\n\n.tooltip.b-tooltip-danger.bs-tooltip-bottom .arrow::before, .tooltip.b-tooltip-danger.bs-tooltip-auto[x-placement^=\"bottom\"] .arrow::before {\n  border-bottom-color: #dc3545;\n}\n\n.tooltip.b-tooltip-danger.bs-tooltip-left .arrow::before, .tooltip.b-tooltip-danger.bs-tooltip-auto[x-placement^=\"left\"] .arrow::before {\n  border-left-color: #dc3545;\n}\n\n.tooltip.b-tooltip-danger .tooltip-inner {\n  color: #fff;\n  background-color: #dc3545;\n}\n\n.tooltip.b-tooltip-light.bs-tooltip-top .arrow::before, .tooltip.b-tooltip-light.bs-tooltip-auto[x-placement^=\"top\"] .arrow::before {\n  border-top-color: #f8f9fa;\n}\n\n.tooltip.b-tooltip-light.bs-tooltip-right .arrow::before, .tooltip.b-tooltip-light.bs-tooltip-auto[x-placement^=\"right\"] .arrow::before {\n  border-right-color: #f8f9fa;\n}\n\n.tooltip.b-tooltip-light.bs-tooltip-bottom .arrow::before, .tooltip.b-tooltip-light.bs-tooltip-auto[x-placement^=\"bottom\"] .arrow::before {\n  border-bottom-color: #f8f9fa;\n}\n\n.tooltip.b-tooltip-light.bs-tooltip-left .arrow::before, .tooltip.b-tooltip-light.bs-tooltip-auto[x-placement^=\"left\"] .arrow::before {\n  border-left-color: #f8f9fa;\n}\n\n.tooltip.b-tooltip-light .tooltip-inner {\n  color: #212529;\n  background-color: #f8f9fa;\n}\n\n.tooltip.b-tooltip-dark.bs-tooltip-top .arrow::before, .tooltip.b-tooltip-dark.bs-tooltip-auto[x-placement^=\"top\"] .arrow::before {\n  border-top-color: #343a40;\n}\n\n.tooltip.b-tooltip-dark.bs-tooltip-right .arrow::before, .tooltip.b-tooltip-dark.bs-tooltip-auto[x-placement^=\"right\"] .arrow::before {\n  border-right-color: #343a40;\n}\n\n.tooltip.b-tooltip-dark.bs-tooltip-bottom .arrow::before, .tooltip.b-tooltip-dark.bs-tooltip-auto[x-placement^=\"bottom\"] .arrow::before {\n  border-bottom-color: #343a40;\n}\n\n.tooltip.b-tooltip-dark.bs-tooltip-left .arrow::before, .tooltip.b-tooltip-dark.bs-tooltip-auto[x-placement^=\"left\"] .arrow::before {\n  border-left-color: #343a40;\n}\n\n.tooltip.b-tooltip-dark .tooltip-inner {\n  color: #fff;\n  background-color: #343a40;\n}", ""]);
+
+// exports
+
 
 /***/ }),
 
@@ -3172,7 +3274,7 @@ exports.push([module.i, "\ntbody tr:hover {\n    background-color: transparent !
 
 /***/ }),
 
-/***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-3a44c6df\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/schedule/weekly/WeeklyScheduleCalender.vue":
+/***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-447da105\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/schedule/weekly/WeeklySchedule.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/css-base.js")(false);
@@ -3180,7 +3282,7 @@ exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/cs
 
 
 // module
-exports.push([module.i, "\n.table-wrapper {\nmax-height: 500px;\noverflow: auto;\ndisplay:inline-block;\n}\n.table-earnings {\n    background: #F3F5F6;\n}\n.card_table {\n    -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);\n            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* this adds the \"card\" effect */\n    text-align: center;\n    background-color: #f1f1f1;\n}\n.program {\n    -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);\n            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* this adds the \"card\" effect */\n    text-align: center;\n}\n.bold {\n    font-weight: bold;\n}\n.week-text {\n    text-align : center;\n}\n.right {\n    text-align: right;\n}\n.split_column {\n    border: solid 1px lightblue;\n}\n.active {\n    color : blue\n}\n.program_name {\n    color : white\n}\n", ""]);
+exports.push([module.i, "\n.week_name {\n    text-transform: capitalize;\n}\n.regular_day {\n    color: silver;\n}\n.current_day {\n    color: black;\n}\n.scrollable {\n    overflow-y: auto;\n}\n.hover_over {\n    width: -webkit-fill-available !important;\n    margin-top: 17px;\n    height: 12px;\n}\n.no_border_top {\n    border-top: 0px !important;\n}\n.has_border_top {\n    border-top: 1px solid #e1e1e1;\n}\n.total_duration_box {\n    height: 29px;\n    margin-top: -14px;\n}\n", ""]);
 
 // exports
 
@@ -4682,57 +4784,6 @@ if (false) {
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-2aedc8bb\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/schedule/partials/AdHourTable.vue":
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("table", [
-    _c("tr", [
-      _c("div", { staticClass: "row" }, [
-        _vm.event_group[0].program_name
-          ? _c(
-              "div",
-              {
-                staticClass: "col-4 program",
-                style: {
-                  "background-color": _vm.event_group[0].background_color
-                }
-              },
-              [
-                _c("td", { staticStyle: { border: "0" } }, [
-                  _c("p", { staticClass: "program_name" }, [
-                    _vm._v(_vm._s(_vm.event_group[0].program_name))
-                  ])
-                ])
-              ]
-            )
-          : _vm._e(),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "col-8" },
-          [_c("ad-break-table", { attrs: { event_group: _vm.event_group } })],
-          1
-        )
-      ])
-    ])
-  ])
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-2aedc8bb", module.exports)
-  }
-}
-
-/***/ }),
-
 /***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-2b3fa97a\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/campaign/AllCampaigns.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -5827,73 +5878,6 @@ if (false) {
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-3a44c6df\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/schedule/weekly/WeeklyScheduleCalender.vue":
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "container-fluid" }, [
-    _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "col-md-12" }, [
-        _c(
-          "div",
-          { staticClass: "card" },
-          [
-            _c("div", { staticClass: "card-header py-3" }, [
-              _c("div", { staticClass: "row" }, [
-                _c("div", { staticClass: "col-4" }, [
-                  _c("button", { on: { click: _vm.prev } }, [_vm._v("prev")])
-                ]),
-                _vm._v(" "),
-                _vm._m(0),
-                _vm._v(" "),
-                _c("div", { staticClass: "col-4" }, [
-                  _c(
-                    "button",
-                    { staticClass: "right", on: { click: _vm.next } },
-                    [_vm._v("next")]
-                  )
-                ])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("ad-schedule-table", {
-              attrs: {
-                hours_breakdown: _vm.time_belts,
-                current_week: _vm.weekView,
-                events: _vm.events
-              }
-            })
-          ],
-          1
-        )
-      ])
-    ])
-  ])
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-4" }, [
-      _c("h4", { staticClass: "week-text bold" }, [_vm._v("WEEKLY SCHEDULES")])
-    ])
-  }
-]
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-3a44c6df", module.exports)
-  }
-}
-
-/***/ }),
-
 /***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-3b66a7fb\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/media_plan/customise/SelectedSuggestions.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -6126,44 +6110,214 @@ if (false) {
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-55efc16e\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/schedule/partials/AdBreakTable.vue":
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-447da105\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/schedule/weekly/WeeklySchedule.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "table",
-    [
-      _c("p", [
-        _vm._v(
-          "(" +
-            _vm._s(_vm.sumDurationInAdBreak(_vm.event_group)) +
-            " seconds used from " +
-            _vm._s(_vm.event_group[0].ad_pattern) +
-            ")"
+  return _c("main", [
+    _c("div", { staticClass: "toolbar" }, [
+      _c("div", { staticClass: "toggle" }, [
+        _c(
+          "div",
+          {
+            staticClass: "toggle__option toggle__option--selected",
+            on: { click: _vm.prev }
+          },
+          [_vm._v("Previous")]
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            staticClass: "toggle__option toggle__option--selected",
+            on: { click: _vm.current_week }
+          },
+          [_vm._v("Today")]
         )
       ]),
       _vm._v(" "),
-      _vm._l(_vm.event_group, function(event) {
-        return _c("tr", { key: event.time_belt_transaction_id }, [
-          _c("td", [
-            _c("div", { staticClass: "card_table" }, [
-              _vm._v("\n                " + _vm._s(event.campaign_name) + " "),
-              _c("br"),
-              _vm._v("\n                " + _vm._s(event.client_name) + " "),
-              _c("br"),
-              _vm._v(
-                "\n                " + _vm._s(event.duration) + "\n            "
-              )
-            ])
-          ])
-        ])
-      })
-    ],
-    2
-  )
+      _c("div", { staticClass: "toggle_center" }, [
+        _c("h3", [_vm._v(_vm._s(_vm.weekMonthName()))])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "toggle_right" }, [
+        _c(
+          "div",
+          {
+            staticClass: "toggle__option toggle__option--selected",
+            on: { click: _vm.next }
+          },
+          [_vm._v("Next")]
+        )
+      ])
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "calendar" },
+      [
+        _c(
+          "div",
+          { staticClass: "calendar__header" },
+          [
+            _c("div", { staticClass: "hour" }),
+            _vm._v(" "),
+            _vm._l(_vm.weekView, function(week, key) {
+              return _c("div", { key: key, staticClass: "week_name" }, [
+                _c("h2", { class: _vm.getDayStyle(week) }, [
+                  _vm._v(_vm._s(week.day_number))
+                ]),
+                _vm._v(" "),
+                _c(
+                  "h5",
+                  { staticClass: "week_name", class: _vm.getDayStyle(week) },
+                  [_vm._v(_vm._s(week.name))]
+                )
+              ])
+            })
+          ],
+          2
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "scrollable" },
+          _vm._l(_vm.time_belts, function(time_belt, time_belt_key) {
+            return _c(
+              "div",
+              { key: time_belt_key, staticClass: "calendar__week" },
+              [
+                _c("div", { staticClass: "calendar__day day hour" }, [
+                  _vm._v(_vm._s(time_belt.start_time))
+                ]),
+                _vm._v(" "),
+                _vm._l(_vm.weekView, function(day_object, key) {
+                  return _c(
+                    "div",
+                    {
+                      key: key,
+                      staticClass: "calendar__day day",
+                      class: _vm.getDynamicBorderTop(
+                        time_belt,
+                        day_object,
+                        time_belt_key
+                      ),
+                      style: {
+                        "background-color": _vm.getProgramForDay(
+                          day_object,
+                          time_belt
+                        ).program_color
+                      },
+                      on: {
+                        click: function($event) {
+                          _vm.openAdslotModal(
+                            _vm.getProgramForDay(day_object, time_belt)
+                          )
+                        }
+                      }
+                    },
+                    [
+                      !_vm.checkConcurrentProgram(
+                        time_belt,
+                        day_object,
+                        time_belt_key
+                      )
+                        ? _c(
+                            "p",
+                            {
+                              staticStyle: {
+                                "text-align": "center",
+                                color: "white"
+                              }
+                            },
+                            [
+                              _vm._v(
+                                " " +
+                                  _vm._s(
+                                    _vm.getProgramForDay(day_object, time_belt)
+                                      .program_name
+                                  )
+                              )
+                            ]
+                          )
+                        : _c(
+                            "p",
+                            {
+                              style: {
+                                "text-align": "center",
+                                color: _vm.getProgramForDay(
+                                  day_object,
+                                  time_belt
+                                ).program_color
+                              }
+                            },
+                            [
+                              _vm._v(
+                                _vm._s(
+                                  _vm.getProgramForDay(day_object, time_belt)
+                                    .program_name
+                                )
+                              )
+                            ]
+                          ),
+                      _vm._v(" "),
+                      _vm.getProgramForDay(day_object, time_belt).program_name
+                        ? _c(
+                            "div",
+                            {
+                              staticClass: "total_duration_box",
+                              staticStyle: { "background-color": "white" }
+                            },
+                            [
+                              _c(
+                                "div",
+                                { staticClass: "text-center my-3" },
+                                [
+                                  _c("b-button", {
+                                    directives: [
+                                      {
+                                        name: "b-popover",
+                                        rawName: "v-b-popover.hover",
+                                        value:
+                                          _vm.getProgramForDay(
+                                            day_object,
+                                            time_belt
+                                          ).total_slot_used +
+                                          " seconds used from " +
+                                          _vm.ad_pattern +
+                                          " seconds",
+                                        expression:
+                                          "getProgramForDay(day_object, time_belt).total_slot_used+' seconds used from '+ad_pattern+' seconds'",
+                                        modifiers: { hover: true }
+                                      }
+                                    ],
+                                    staticClass: "hover_over",
+                                    attrs: { title: "Slot Duration" }
+                                  })
+                                ],
+                                1
+                              )
+                            ]
+                          )
+                        : _vm._e()
+                    ]
+                  )
+                })
+              ],
+              2
+            )
+          }),
+          0
+        ),
+        _vm._v(" "),
+        _c("ad-break-modal", { attrs: { program_time_belt: _vm.currentItem } })
+      ],
+      1
+    )
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -6171,7 +6325,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-55efc16e", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-447da105", module.exports)
   }
 }
 
@@ -8533,93 +8687,132 @@ if (false) {
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-cf4e1c6a\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/schedule/partials/ScheduleTable.vue":
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-ecf7a6a6\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/schedule/partials/AdbreakModal.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "table-wrapper" }, [
-    _c(
-      "table",
-      { staticClass: "table table-earnings table-earnings__challenge" },
-      [
-        _c("thead", [
+  return _c(
+    "v-app",
+    [
+      _c(
+        "v-dialog",
+        {
+          attrs: { persistent: "", "max-width": "600px" },
+          model: {
+            value: _vm.editDialog,
+            callback: function($$v) {
+              _vm.editDialog = $$v
+            },
+            expression: "editDialog"
+          }
+        },
+        [
           _c(
-            "tr",
+            "v-card",
             [
-              _c("th", { staticClass: "split_column" }),
-              _vm._v(" "),
-              _vm._l(_vm.current_week, function(week, key) {
-                return _c(
-                  "th",
-                  {
-                    key: key,
-                    staticClass: "split_column",
-                    class: { active: week.date === week.current_date }
-                  },
-                  [_vm._v(_vm._s(week.day_number) + " " + _vm._s(week.name))]
-                )
-              })
-            ],
-            2
-          )
-        ]),
-        _vm._v(" "),
-        _c(
-          "tbody",
-          _vm._l(_vm.hours_breakdown, function(time_belt, key) {
-            return _c(
-              "tr",
-              { key: key },
-              [
-                _c("td", { staticClass: "split_column bold" }, [
+              _c("v-card-title", [
+                _c("span", { staticClass: "headline" }, [
                   _vm._v(
-                    "\n                    " +
-                      _vm._s(time_belt.start_time) +
-                      " \n                "
+                    " " +
+                      _vm._s(_vm.program_time_belt.program_name) +
+                      " |\n                    " +
+                      _vm._s(_vm.program_time_belt.date) +
+                      " |\n                    (" +
+                      _vm._s(_vm.program_time_belt.time_belt) +
+                      ")\n                    "
                   )
-                ]),
-                _vm._v(" "),
-                _vm._l(_vm.current_week, function(week, key) {
-                  return _c("td", { key: key, staticClass: "split_column" }, [
-                    _c(
-                      "table",
-                      _vm._l(
-                        _vm.groupEventByDateProgramTimeBelt(
-                          _vm.events,
-                          week.date,
-                          time_belt
-                        ),
-                        function(event_group, key) {
-                          return _c("tr", { key: key }, [
-                            _c(
-                              "td",
-                              { staticStyle: { border: "0" } },
-                              [
-                                _c("ad-hour-table", {
-                                  attrs: { event_group: event_group }
-                                })
-                              ],
-                              1
-                            )
-                          ])
+                ])
+              ]),
+              _vm._v(" "),
+              _c("v-card-title", [
+                _vm._v(
+                  "\n                " +
+                    _vm._s(
+                      _vm.sumDurationInAdBreak(
+                        _vm.program_time_belt.ads_schedules
+                      )
+                    ) +
+                    " seconds used from " +
+                    _vm._s(
+                      _vm.getAdPattern(_vm.program_time_belt.ads_schedules)
+                    ) +
+                    "\n            "
+                )
+              ]),
+              _vm._v(" "),
+              _c(
+                "v-card-text",
+                [
+                  _c("v-data-table", {
+                    staticClass: "custom-vue-table elevation-1",
+                    attrs: {
+                      headers: _vm.headers,
+                      items: _vm.program_time_belt.ads_schedules,
+                      search: _vm.search
+                    },
+                    scopedSlots: _vm._u([
+                      {
+                        key: "items",
+                        fn: function(props) {
+                          return [
+                            _c("td", [
+                              _vm._v(
+                                _vm._s(props.item.client_name) +
+                                  "\n                        "
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("td", { staticClass: "text-xs-left" }, [
+                              _vm._v(
+                                _vm._s(props.item.campaign_name) +
+                                  "\n                        "
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("td", { staticClass: "text-xs-left" }, [
+                              _vm._v(_vm._s(props.item.duration) + " Seconds")
+                            ])
+                          ]
                         }
-                      ),
-                      0
-                    )
-                  ])
-                })
-              ],
-              2
-            )
-          }),
-          0
-        )
-      ]
-    )
-  ])
+                      }
+                    ])
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "v-card-actions",
+                [
+                  _c("v-spacer"),
+                  _vm._v(" "),
+                  _c(
+                    "v-btn",
+                    {
+                      attrs: { color: "error", dark: "" },
+                      on: {
+                        click: function($event) {
+                          _vm.editDialog = false
+                        }
+                      }
+                    },
+                    [_vm._v("Close")]
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          )
+        ],
+        1
+      )
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -8627,7 +8820,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-cf4e1c6a", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-ecf7a6a6", module.exports)
   }
 }
 
@@ -8908,23 +9101,23 @@ if(false) {
 
 /***/ }),
 
-/***/ "./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-3a44c6df\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/schedule/weekly/WeeklyScheduleCalender.vue":
+/***/ "./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-447da105\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/schedule/weekly/WeeklySchedule.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__("./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-3a44c6df\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/schedule/weekly/WeeklyScheduleCalender.vue");
+var content = __webpack_require__("./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-447da105\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/schedule/weekly/WeeklySchedule.vue");
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__("./node_modules/vue-style-loader/lib/addStylesClient.js")("5ed1332a", content, false, {});
+var update = __webpack_require__("./node_modules/vue-style-loader/lib/addStylesClient.js")("ddd43c16", content, false, {});
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
  if(!content.locals) {
-   module.hot.accept("!!../../../../../../node_modules/css-loader/index.js!../../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-3a44c6df\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./WeeklyScheduleCalender.vue", function() {
-     var newContent = require("!!../../../../../../node_modules/css-loader/index.js!../../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-3a44c6df\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./WeeklyScheduleCalender.vue");
+   module.hot.accept("!!../../../../../../node_modules/css-loader/index.js!../../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-447da105\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./WeeklySchedule.vue", function() {
+     var newContent = require("!!../../../../../../node_modules/css-loader/index.js!../../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-447da105\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./WeeklySchedule.vue");
      if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
      update(newContent);
    });
@@ -9119,8 +9312,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_vuetify___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_vuetify__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_vuetify_dist_vuetify_min_css__ = __webpack_require__("./node_modules/vuetify/dist/vuetify.min.css");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_vuetify_dist_vuetify_min_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_vuetify_dist_vuetify_min_css__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_vue_multiselect__ = __webpack_require__("./node_modules/vue-multiselect/dist/vue-multiselect.min.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_vue_multiselect___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7_vue_multiselect__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_bootstrap_vue__ = __webpack_require__("./node_modules/bootstrap-vue/esm/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_bootstrap_vue_dist_bootstrap_vue_css__ = __webpack_require__("./node_modules/bootstrap-vue/dist/bootstrap-vue.css");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_bootstrap_vue_dist_bootstrap_vue_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8_bootstrap_vue_dist_bootstrap_vue_css__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_vue_multiselect__ = __webpack_require__("./node_modules/vue-multiselect/dist/vue-multiselect.min.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_vue_multiselect___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9_vue_multiselect__);
 
 /**
  * First we will load all of this project's JavaScript dependencies which
@@ -9153,9 +9349,14 @@ Vue.use(__WEBPACK_IMPORTED_MODULE_4_vee_validate__["a" /* default */]);
 Vue.use(__WEBPACK_IMPORTED_MODULE_5_vuetify___default.a);
 
 
+
+Vue.use(__WEBPACK_IMPORTED_MODULE_7_bootstrap_vue__["a" /* default */]);
+
+
+
 // Vue MultiSelect
 
-Vue.component('multiselect', __WEBPACK_IMPORTED_MODULE_7_vue_multiselect___default.a);
+Vue.component('multiselect', __WEBPACK_IMPORTED_MODULE_9_vue_multiselect___default.a);
 
 // declared to manage events globally
 window.Event = new Vue();
@@ -9187,10 +9388,9 @@ Vue.component('media-asset-delete', __webpack_require__("./resources/assets/js/c
 Vue.component('media-asset-play-video', __webpack_require__("./resources/assets/js/components/asset_management/PlayVideo.vue"));
 
 //Schedule
-Vue.component('vue-cal-weekly-schedule', __webpack_require__("./resources/assets/js/components/schedule/weekly/WeeklyScheduleCalender.vue"));
-Vue.component('ad-schedule-table', __webpack_require__("./resources/assets/js/components/schedule/partials/ScheduleTable.vue"));
-Vue.component('ad-hour-table', __webpack_require__("./resources/assets/js/components/schedule/partials/AdHourTable.vue"));
-Vue.component('ad-break-table', __webpack_require__("./resources/assets/js/components/schedule/partials/AdBreakTable.vue"));
+Vue.component('weekly-schedule', __webpack_require__("./resources/assets/js/components/schedule/weekly/WeeklySchedule.vue"));
+Vue.component('ad-break-modal', __webpack_require__("./resources/assets/js/components/schedule/partials/AdbreakModal.vue"));
+
 //mpo list
 Vue.component('campaign-mpos-list', __webpack_require__("./resources/assets/js/components/campaign_mpos/DisplayMpoList.vue"));
 Vue.component('mpo-slot-list', __webpack_require__("./resources/assets/js/components/campaign_mpos/DisplayAdslotList.vue"));
@@ -10425,15 +10625,15 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ "./resources/assets/js/components/schedule/partials/AdBreakTable.vue":
+/***/ "./resources/assets/js/components/schedule/partials/AdbreakModal.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
 /* script */
-var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\",[\"transform-runtime\",{\"polyfill\":false,\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/schedule/partials/AdBreakTable.vue")
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\",[\"transform-runtime\",{\"polyfill\":false,\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/schedule/partials/AdbreakModal.vue")
 /* template */
-var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-55efc16e\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/schedule/partials/AdBreakTable.vue")
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-ecf7a6a6\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/schedule/partials/AdbreakModal.vue")
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -10450,7 +10650,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources/assets/js/components/schedule/partials/AdBreakTable.vue"
+Component.options.__file = "resources/assets/js/components/schedule/partials/AdbreakModal.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -10459,9 +10659,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-55efc16e", Component.options)
+    hotAPI.createRecord("data-v-ecf7a6a6", Component.options)
   } else {
-    hotAPI.reload("data-v-55efc16e", Component.options)
+    hotAPI.reload("data-v-ecf7a6a6", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -10473,115 +10673,19 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ "./resources/assets/js/components/schedule/partials/AdHourTable.vue":
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
-/* script */
-var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\",[\"transform-runtime\",{\"polyfill\":false,\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/schedule/partials/AdHourTable.vue")
-/* template */
-var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-2aedc8bb\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/schedule/partials/AdHourTable.vue")
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/schedule/partials/AdHourTable.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-2aedc8bb", Component.options)
-  } else {
-    hotAPI.reload("data-v-2aedc8bb", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-
-/***/ "./resources/assets/js/components/schedule/partials/ScheduleTable.vue":
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
-/* script */
-var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\",[\"transform-runtime\",{\"polyfill\":false,\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/schedule/partials/ScheduleTable.vue")
-/* template */
-var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-cf4e1c6a\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/schedule/partials/ScheduleTable.vue")
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/schedule/partials/ScheduleTable.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-cf4e1c6a", Component.options)
-  } else {
-    hotAPI.reload("data-v-cf4e1c6a", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-
-/***/ "./resources/assets/js/components/schedule/weekly/WeeklyScheduleCalender.vue":
+/***/ "./resources/assets/js/components/schedule/weekly/WeeklySchedule.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__("./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-3a44c6df\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/schedule/weekly/WeeklyScheduleCalender.vue")
+  __webpack_require__("./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-447da105\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/schedule/weekly/WeeklySchedule.vue")
 }
 var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
 /* script */
-var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\",[\"transform-runtime\",{\"polyfill\":false,\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/schedule/weekly/WeeklyScheduleCalender.vue")
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\",[\"transform-runtime\",{\"polyfill\":false,\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/schedule/weekly/WeeklySchedule.vue")
 /* template */
-var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-3a44c6df\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/schedule/weekly/WeeklyScheduleCalender.vue")
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-447da105\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/schedule/weekly/WeeklySchedule.vue")
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -10598,7 +10702,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources/assets/js/components/schedule/weekly/WeeklyScheduleCalender.vue"
+Component.options.__file = "resources/assets/js/components/schedule/weekly/WeeklySchedule.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -10607,9 +10711,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-3a44c6df", Component.options)
+    hotAPI.createRecord("data-v-447da105", Component.options)
   } else {
-    hotAPI.reload("data-v-3a44c6df", Component.options)
+    hotAPI.reload("data-v-447da105", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true

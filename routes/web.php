@@ -90,7 +90,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::group(['prefix' => 'schedule'], function () {
             Route::get('/weekly', 'ScheduleController@getWeeklySchedule')->name('schedule.weekly')
                 ->middleware('permission:view.schedule');
-            Route::post('/weekly/navigate', 'ScheduleController@navigateWeekly');
+            Route::post('/weekly/navigate', 'ScheduleController@navigateWeeklySchedule');
         });
         /*
         * User Dashboard

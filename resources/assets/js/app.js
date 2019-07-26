@@ -30,8 +30,13 @@ import Vuetify from 'vuetify';
 Vue.use(Vuetify);
 import 'vuetify/dist/vuetify.min.css';
 
+import BootstrapVue from 'bootstrap-vue';
+Vue.use(BootstrapVue);
+
+import 'bootstrap-vue/dist/bootstrap-vue.css';
+
 // Vue MultiSelect
-import Multiselect from 'vue-multiselect'
+import Multiselect from 'vue-multiselect';
 Vue.component('multiselect', Multiselect);
 
 // declared to manage events globally
@@ -66,10 +71,9 @@ Vue.component('media-asset-play-video', require('./components/asset_management/P
 
 
 //Schedule
-Vue.component('vue-cal-weekly-schedule', require('./components/schedule/weekly/WeeklyScheduleCalender.vue'));
-Vue.component('ad-schedule-table', require('./components/schedule/partials/ScheduleTable.vue'));
-Vue.component('ad-hour-table', require('./components/schedule/partials/AdHourTable.vue'));
-Vue.component('ad-break-table', require('./components/schedule/partials/AdBreakTable.vue'));
+Vue.component('weekly-schedule', require('./components/schedule/weekly/WeeklySchedule.vue'));
+Vue.component('ad-break-modal', require('./components/schedule/partials/AdbreakModal.vue'));
+
 //mpo list
 Vue.component('campaign-mpos-list', require('./components/campaign_mpos/DisplayMpoList.vue'));
 Vue.component('mpo-slot-list', require('./components/campaign_mpos/DisplayAdslotList.vue'));
