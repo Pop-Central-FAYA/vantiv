@@ -41,7 +41,7 @@
 </head>
 
 <body>
-    <div id="app">
+    <div>
         <!-- side navigation -->
         @if(Session::has('agency_id'))
             @include('partials.new-frontend.agency.sidebar')
