@@ -137,6 +137,7 @@
             Route::get('/summary/{id}', 'MediaPlanController@summary')->name('agency.media_plan.summary')->middleware('permission:create.media_plan');
             Route::get('/approve/{id}', 'MediaPlanController@approvePlan')->name('agency.media_plan.approve')->middleware('permission:create.media_plan');
             Route::get('/decline/{id}', 'MediaPlanController@declinePlan')->name('agency.media_plan.decline')->middleware('permission:create.media_plan');
+            Route::post('/get_approval/', 'MediaPlanController@postSendForApproval')->name('agency.media_plan.get_approval')->middleware('permission:create.media_plan');
             Route::get('/customise/{id}', 'MediaPlanController@getSuggestPlanById')->name('agency.media_plan.customize')->middleware('permission:update.media_plan');
             Route::get('/vue/customise/{id}', 'MediaPlanController@getSuggestPlanByIdVue');
 

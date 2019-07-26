@@ -273,7 +273,7 @@ class MediaPlanController extends Controller
         $summaryData =  $summary_service->run();
         
         return view('agency.mediaPlan.summary')->with('summary', $summaryData)
-                ->with('media_plan', $mediaPlan);
+                ->with('media_plan', $mediaPlan)->with('users', $this->getUserByRole("Admin"));
     }
 
     public function exportPlan($media_plan_id)
@@ -627,17 +627,18 @@ class MediaPlanController extends Controller
            
     }
 
-    public function sendForApproval($media_plan_id)
+    public function sendForApproval($media_plan_id, $user_id)
     {       
+
        if(!$this->getUserByRole("Admin")==""){
           $user_mail_content_array = array(
             "sender_name" => \Auth::user()->firstname.  " ". \Auth::user()->lastname, 
             "client" => $this->getClientName($media_plan_id),
-            "reciver_name" => $this->getUserByRole("Admin")['name'], 
+            "reciver_name" => $this->getPlannerDetails($user_id)['name'],
             "link" => $media_plan_id,
            
           );
-            $send_mail = \Mail::to($this->getUserByRole("Admin")['email'])->send(new MailForApproval($user_mail_content_array));
+            $send_mail = \Mail::to($this->getPlannerDetails($user_id)['email'])->send(new MailForApproval($user_mail_content_array));
         }
     }
 
@@ -656,15 +657,15 @@ class MediaPlanController extends Controller
 
 
     function getUserByRole($user_role){
-        $user_detail="";
+        $user_detail=array();
         $user_list_service = new GetUserList([\Auth::user()->companies->first()->id]);
         $user_list = $user_list_service->getUserData();
 
        foreach($user_list as $user){
             foreach($user['roles'] as $role){
-                if($role ==  $user_role)
+                if($role == $user_role)
                 {
-                    $user_detail= $user;
+                    array_push($user_detail, $user);
                 }
             } 
         } 
@@ -684,5 +685,18 @@ class MediaPlanController extends Controller
             }
         } 
         return $client_name;
+    }
+
+    public function postSendForApproval(Request $request)
+    {
+      $mediaPlan = MediaPlan::with(['client'])->findorfail($request->media_plan_id);
+      $mediaPlan->status = 'Suggested';
+      $mediaPlan->save();
+      $lo= $this->sendForApproval($request->media_plan_id, $request->user_id);
+       $mediaPlanData = MediaPlan::with(['client'])->findorfail($request->media_plan_id);
+       return response()->json([
+        'status' => 'success',
+        'data' =>  $mediaPlanData
+        ]);
     }
 }

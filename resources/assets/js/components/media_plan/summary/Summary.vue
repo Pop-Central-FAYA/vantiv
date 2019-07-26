@@ -7,16 +7,16 @@
                     <table class="display dashboard_campaigns">
                         <tbody>
                            <tr>
-                            <td><span class="mr-2"><b>Client Name:</b></span>  {{ summaryDetails.client.company_name }}</td>
+                            <td><span class="mr-2"><b>Client Name:</b></span>  {{ summary_details.client.company_name }}</td>
                            </tr>
                            <tr>
-                            <td><span class="mr-2"><b>Product Name:</b></span>  {{ summaryDetails.product_name }}</td>
+                            <td><span class="mr-2"><b>Product Name:</b></span>  {{ summary_details.product_name }}</td>
                            </tr>
                            <tr>
-                            <td><span class="mr-2"><b>Flight Date:</b></span> {{  dateToHumanReadable(summaryDetails.start_date) }} to {{ dateToHumanReadable(summaryDetails.end_date) }} </td>
+                            <td><span class="mr-2"><b>Flight Date:</b></span> {{  dateToHumanReadable(summary_details.start_date) }} to {{ dateToHumanReadable(summaryDetails.end_date) }} </td>
                            </tr>
                            <tr>
-                            <td><span class="mr-2"><b>Status:</b></span>  {{ summaryDetails.status }}</td>
+                            <td><span class="mr-2"><b>Status:</b></span>  {{ summary_details.status }}</td>
                            </tr>
                         </tbody>
                     </table>
@@ -68,18 +68,18 @@
                     <button id="back_btn" @click="buttonAction(routes.back)"  class="btn small_btn"><i class="media-plan material-icons">navigate_before</i> Back</button>
                 </div>
                 <div class="col-md-8 p-0 text-right">
-                      <span v-if="summaryDetails.status == 'Suggested'" >
+                      <span v-if="summary_details.status == 'Suggested'" >
                             <button v-if="hasPermission(permissionList,'approve.media_plan')"  @click="buttonAction(routes.approve)" class="media-plan btn block_disp uppercased mr-1"><i class="media-plan material-icons">check</i>Approve Plan</button>
                       
                             <button v-if="hasPermission(permissionList,'decline.media_plan')"  @click="buttonAction(routes.decline)"  class="media-plan btn block_disp uppercased bg_red mr-1"><i class="media-plan material-icons">clear</i>Decline Plan</button>
-                      </span>
-                              <span v-if="summaryDetails.status == 'Approved'" >
-                            <button v-if="hasPermission(permissionList,'approve.media_plan')"  @click="buttonAction(routes.approve)" class="media-plan btn block_disp uppercased mr-1">Request Approval</button>
-                      </span>
+                        </span>
+                        <span v-if="summary_details.status == 'Approved'" >
+                                <media-plan-request-approval  :users="userList"  :media-plan="summary_details.id" :action-link="routes.approval"></media-plan-request-approval>
+                        </span>
                             <button v-if="hasPermission(permissionList,'export.media_plan')"  @click="buttonAction(routes.export)"  class="btn block_disp uppercased"><i class="media-plan material-icons">file_download</i>Export Plan</button>
-                     <span v-if="summaryDetails.status == 'Approved'" >
-                            <media-plan-create-campaign v-if="hasPermission(permissionList,'convert.media_plan')" :id="summaryDetails.id"></media-plan-create-campaign>
-                     </span>
+                        <span v-if="summary_details.status == 'Approved'" >
+                            <media-plan-create-campaign v-if="hasPermission(permissionList,'convert.media_plan')" :id="summary_details.id"></media-plan-create-campaign>
+                        </span>
                 </div>
             </div>
         </div>
@@ -91,6 +91,7 @@
             summaryDetails: Object,
             summaryData: Array,
             permissionList:Array,
+            userList:Array,
             routes:Object,
         },
         data() {
@@ -99,15 +100,21 @@
                 total_gross_value: 0,
                 total_net_value: 0,
                 total_savings: 0,
+                 summary_details:  this.summaryDetails
             };
         },
         mounted() {
+              this.getSums();
+            console.log(this.userList)
              console.log("Summary component mounted");
            
         },  
         created() {    
-           this.getSums();
+            var self = this;
+            Event.$on('updated-mediaPlan', function (mediaPlan) {
+                self.summary_details = mediaPlan;
 
+            });
           }, 
          methods: {
                 getSums(){

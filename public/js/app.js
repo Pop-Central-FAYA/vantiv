@@ -2688,6 +2688,148 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\",[\"transform-runtime\",{\"polyfill\":false,\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/media_plan/summary/RequestApproval.vue":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator__ = __webpack_require__("./node_modules/babel-runtime/regenerator/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator__);
+
+
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        users: Array,
+        mediaPlan: String,
+        actionLink: String
+    },
+    data: function data() {
+        return {
+            user: '',
+            dialog: false
+        };
+    },
+    mounted: function mounted() {
+        console.log('finance Component mounted.');
+    },
+
+    methods: {
+        process_form: function () {
+            var _ref = _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.mark(function _callee(event) {
+                var _this = this;
+
+                var isValid;
+                return __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
+                    while (1) {
+                        switch (_context.prev = _context.next) {
+                            case 0:
+                                _context.next = 2;
+                                return this.$validator.validate().then(function (valid) {
+                                    if (!valid) {
+                                        return false;
+                                    } else {
+                                        return true;
+                                    }
+                                });
+
+                            case 2:
+                                isValid = _context.sent;
+
+                                if (isValid) {
+                                    _context.next = 5;
+                                    break;
+                                }
+
+                                return _context.abrupt('return', false);
+
+                            case 5:
+
+                                axios({
+                                    method: 'post',
+                                    url: this.actionLink,
+                                    data: {
+                                        user_id: this.user,
+                                        media_plan_id: this.mediaPlan
+                                    }
+                                }).then(function (res) {
+                                    console.log(res.data);
+                                    if (res.data.status === 'success') {
+                                        _this.dialog = false;
+                                        Event.$emit('updated-mediaPlan', res.data.data);
+                                        _this.sweet_alert('Request sent successfully', 'success');
+                                    } else {
+                                        _this.sweet_alert('Something went wrong, Try again!', 'error');
+                                    }
+                                }).catch(function (error) {
+                                    console.log(error.response.data);
+                                    _this.sweet_alert(error.response.data.message, 'error');
+                                });
+
+                            case 6:
+                            case 'end':
+                                return _context.stop();
+                        }
+                    }
+                }, _callee, this);
+            }));
+
+            function process_form(_x) {
+                return _ref.apply(this, arguments);
+            }
+
+            return process_form;
+        }()
+    }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\",[\"transform-runtime\",{\"polyfill\":false,\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/media_plan/summary/Summary.vue":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -2786,6 +2928,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         summaryDetails: Object,
         summaryData: Array,
         permissionList: Array,
+        userList: Array,
         routes: Object
     },
     data: function data() {
@@ -2793,14 +2936,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             total_spots: 0,
             total_gross_value: 0,
             total_net_value: 0,
-            total_savings: 0
+            total_savings: 0,
+            summary_details: this.summaryDetails
         };
     },
     mounted: function mounted() {
+        this.getSums();
+        console.log(this.userList);
         console.log("Summary component mounted");
     },
     created: function created() {
-        this.getSums();
+        var self = this;
+        Event.$on('updated-mediaPlan', function (mediaPlan) {
+            self.summary_details = mediaPlan;
+        });
     },
 
     methods: {
@@ -3100,6 +3249,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 
+/***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-063cc455\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/media_plan/summary/RequestApproval.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.v-text-field {\n    padding-top: 2px;\n    margin-top: 0px;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-0c30c301\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/asset_management/PlayVideo.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3280,6 +3444,163 @@ exports.push([module.i, "/*!\n* Vuetify v1.5.15\n* Forged by John Leider\n* Rele
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-063cc455\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/media_plan/summary/RequestApproval.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "v-dialog",
+    {
+      attrs: { persistent: "", "max-width": "600px", "data-app": "" },
+      scopedSlots: _vm._u([
+        {
+          key: "activator",
+          fn: function(ref) {
+            var on = ref.on
+            return [
+              _c(
+                "button",
+                _vm._g({ staticClass: "btn block_disp uppercased" }, on),
+                [_vm._v("Request Approval")]
+              )
+            ]
+          }
+        }
+      ]),
+      model: {
+        value: _vm.dialog,
+        callback: function($$v) {
+          _vm.dialog = $$v
+        },
+        expression: "dialog"
+      }
+    },
+    [
+      _vm._v(" "),
+      _c(
+        "v-card",
+        [
+          _c(
+            "v-card-text",
+            { staticClass: "px-2 pt-2 pb-0" },
+            [
+              _c(
+                "v-container",
+                { staticClass: "pa-0", attrs: { "grid-list-md": "" } },
+                [
+                  _c(
+                    "v-card-text",
+                    [
+                      _c(
+                        "v-form",
+                        [
+                          _c(
+                            "v-layout",
+                            { attrs: { wrap: "" } },
+                            [
+                              _c(
+                                "v-flex",
+                                { attrs: { xs12: "", sm12: "", md12: "" } },
+                                [
+                                  _c("v-select", {
+                                    directives: [
+                                      {
+                                        name: "validate",
+                                        rawName: "v-validate",
+                                        value: "required",
+                                        expression: "'required'"
+                                      }
+                                    ],
+                                    attrs: {
+                                      items: _vm.users,
+                                      "item-text": "name",
+                                      "item-value": "id",
+                                      name: "user",
+                                      solo: ""
+                                    },
+                                    model: {
+                                      value: _vm.user,
+                                      callback: function($$v) {
+                                        _vm.user = $$v
+                                      },
+                                      expression: "user"
+                                    }
+                                  })
+                                ],
+                                1
+                              )
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "v-card-actions",
+                    [
+                      _c("v-spacer"),
+                      _vm._v(" "),
+                      _c(
+                        "v-btn",
+                        {
+                          attrs: { color: "red", dark: "" },
+                          on: {
+                            click: function($event) {
+                              _vm.dialog = false
+                            }
+                          }
+                        },
+                        [_vm._v("Close")]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "v-btn",
+                        {
+                          staticClass: "default-vue-btn",
+                          attrs: { color: "", dark: "" },
+                          on: {
+                            click: function($event) {
+                              return _vm.process_form()
+                            }
+                          }
+                        },
+                        [_vm._v("Request")]
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          )
+        ],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-063cc455", module.exports)
+  }
+}
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-0a9baf09\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/media_plan/summary/Summary.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3303,7 +3624,7 @@ var render = function() {
                     _c("td", [
                       _vm._m(0),
                       _vm._v(
-                        "  " + _vm._s(_vm.summaryDetails.client.company_name)
+                        "  " + _vm._s(_vm.summary_details.client.company_name)
                       )
                     ])
                   ]),
@@ -3311,7 +3632,7 @@ var render = function() {
                   _c("tr", [
                     _c("td", [
                       _vm._m(1),
-                      _vm._v("  " + _vm._s(_vm.summaryDetails.product_name))
+                      _vm._v("  " + _vm._s(_vm.summary_details.product_name))
                     ])
                   ]),
                   _vm._v(" "),
@@ -3322,7 +3643,7 @@ var render = function() {
                         " " +
                           _vm._s(
                             _vm.dateToHumanReadable(
-                              _vm.summaryDetails.start_date
+                              _vm.summary_details.start_date
                             )
                           ) +
                           " to " +
@@ -3337,7 +3658,7 @@ var render = function() {
                   _c("tr", [
                     _c("td", [
                       _vm._m(3),
-                      _vm._v("  " + _vm._s(_vm.summaryDetails.status))
+                      _vm._v("  " + _vm._s(_vm.summary_details.status))
                     ])
                   ])
                 ])
@@ -3450,7 +3771,7 @@ var render = function() {
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "col-md-8 p-0 text-right" }, [
-          _vm.summaryDetails.status == "Suggested"
+          _vm.summary_details.status == "Suggested"
             ? _c("span", [
                 _vm.hasPermission(_vm.permissionList, "approve.media_plan")
                   ? _c(
@@ -3496,24 +3817,20 @@ var render = function() {
               ])
             : _vm._e(),
           _vm._v(" "),
-          _vm.summaryDetails.status == "Approved"
-            ? _c("span", [
-                _vm.hasPermission(_vm.permissionList, "approve.media_plan")
-                  ? _c(
-                      "button",
-                      {
-                        staticClass:
-                          "media-plan btn block_disp uppercased mr-1",
-                        on: {
-                          click: function($event) {
-                            return _vm.buttonAction(_vm.routes.approve)
-                          }
-                        }
-                      },
-                      [_vm._v("Request Approval")]
-                    )
-                  : _vm._e()
-              ])
+          _vm.summary_details.status == "Approved"
+            ? _c(
+                "span",
+                [
+                  _c("media-plan-request-approval", {
+                    attrs: {
+                      users: _vm.userList,
+                      "media-plan": _vm.summary_details.id,
+                      "action-link": _vm.routes.approval
+                    }
+                  })
+                ],
+                1
+              )
             : _vm._e(),
           _vm._v(" "),
           _vm.hasPermission(_vm.permissionList, "export.media_plan")
@@ -3536,13 +3853,13 @@ var render = function() {
               )
             : _vm._e(),
           _vm._v(" "),
-          _vm.summaryDetails.status == "Approved"
+          _vm.summary_details.status == "Approved"
             ? _c(
                 "span",
                 [
                   _vm.hasPermission(_vm.permissionList, "convert.media_plan")
                     ? _c("media-plan-create-campaign", {
-                        attrs: { id: _vm.summaryDetails.id }
+                        attrs: { id: _vm.summary_details.id }
                       })
                     : _vm._e()
                 ],
@@ -8796,6 +9113,33 @@ if (false) {
 
 /***/ }),
 
+/***/ "./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-063cc455\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/media_plan/summary/RequestApproval.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__("./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-063cc455\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/media_plan/summary/RequestApproval.vue");
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__("./node_modules/vue-style-loader/lib/addStylesClient.js")("3735bd22", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../../node_modules/css-loader/index.js!../../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-063cc455\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./RequestApproval.vue", function() {
+     var newContent = require("!!../../../../../../node_modules/css-loader/index.js!../../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-063cc455\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./RequestApproval.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+
 /***/ "./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-0c30c301\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/asset_management/PlayVideo.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -9199,6 +9543,7 @@ Vue.component('media-plan-create-campaign', __webpack_require__("./resources/ass
 Vue.component('media-plan-summary', __webpack_require__("./resources/assets/js/components/media_plan/summary/Summary.vue"));
 Vue.component('media-plan-criteria-form', __webpack_require__("./resources/assets/js/components/media_plan/CriteriaForm.vue"));
 Vue.component('media-plan-list', __webpack_require__("./resources/assets/js/components/media_plan/AllMediaPlans.vue"));
+Vue.component('media-plan-request-approval', __webpack_require__("./resources/assets/js/components/media_plan/summary/RequestApproval.vue"));
 
 // CAMPAIGN
 Vue.component('campaign-list', __webpack_require__("./resources/assets/js/components/campaign/AllCampaigns.vue"));
@@ -10389,6 +10734,58 @@ if (false) {(function () {
     hotAPI.createRecord("data-v-1517b6ce", Component.options)
   } else {
     hotAPI.reload("data-v-1517b6ce", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+
+/***/ "./resources/assets/js/components/media_plan/summary/RequestApproval.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__("./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-063cc455\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/media_plan/summary/RequestApproval.vue")
+}
+var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
+/* script */
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\",[\"transform-runtime\",{\"polyfill\":false,\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/media_plan/summary/RequestApproval.vue")
+/* template */
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-063cc455\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/media_plan/summary/RequestApproval.vue")
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/media_plan/summary/RequestApproval.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-063cc455", Component.options)
+  } else {
+    hotAPI.reload("data-v-063cc455", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
