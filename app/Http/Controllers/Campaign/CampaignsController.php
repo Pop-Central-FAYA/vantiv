@@ -1,6 +1,6 @@
 <?php
 
-namespace Vanguard\Http\Controllers\Ssp\Campaign;
+namespace Vanguard\Http\Controllers\Campaign;
 
 use Carbon\Carbon;
 use Illuminate\Pagination\LengthAwarePaginator;

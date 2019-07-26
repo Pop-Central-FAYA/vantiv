@@ -199,6 +199,8 @@
          */
 
         Route::group(['prefix' => 'walk-in'], function () {
+            Route::get('/', 'WalkinsController@index')->name('walkins.all')
+                ->middleware('permission:view.client');
             Route::post('/update/{client_id}', 'WalkinsController@updateWalKins')->name('walkins.update')
                 ->middleware('permission:update.client');
             Route::post('/store', 'WalkinsController@store')->name('walkins.store')

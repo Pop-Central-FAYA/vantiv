@@ -1,6 +1,6 @@
 <?php
 
-namespace Vanguard\Http\Controllers\Ssp;
+namespace Vanguard\Http\Controllers\Broadcaster;
 
 use Vanguard\Services\Schedule\GetWeeklySchedule;
 

@@ -1,11 +1,9 @@
 <?php
 
-namespace Vanguard\Http\Controllers\Ssp;
+namespace Vanguard\Http\Controllers;
 
 use Vanguard\Libraries\Api;
 use Illuminate\Http\Request;
-use Vanguard\Http\Controllers\Controller;
-
 
 class SectorController extends Controller
 {
