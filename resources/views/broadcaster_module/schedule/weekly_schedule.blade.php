@@ -10,21 +10,12 @@
     <div class="main_contain" id="app">
         <!-- header -->
         @include('partials.new-frontend.broadcaster.header')
-
         <div class="container-fluid media-asset-management">
-            <div class="row">
-                <!-- subheader -->
-                <div class="col-md-6">
-                    <h2 class="sub_header">Weekly Schedule</h2>
-                </div>
-            </div>
-            <div class="row my-5">
-                <vue-cal-weekly-schedule
+            <weekly-schedule
                 :time_belts="{{ json_encode($time_belts) }}"
                 :weekly_schedule="{{ json_encode($schedules) }}"
-                ></vue-cal-weekly-schedule>
-
-            </div>
+                :ad_pattern="{{ $ad_pattern }}"
+            ></weekly-schedule>
         </div>
     </div>
 @stop
@@ -34,4 +25,8 @@
     <script src="{{ asset('js/manifest.js') }}"></script>
     <script src="{{ asset('js/vendor.js') }}"></script>
     <script src="{{ asset('js/app.js') }}"></script>
+@stop
+
+@section('styles')
+    <link href="{{ asset('new_frontend/css/custom-calendar.css') }}" rel="stylesheet">
 @stop

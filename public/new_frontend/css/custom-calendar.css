@@ -1,0 +1,156 @@
+@media screen and (min-width: 850px) {
+    .wrapper {
+        grid-template-columns: 200px 5fr;
+        grid-template-rows: 1fr;
+        grid-template-areas: "sidebar content";
+    }
+}
+/* MAIN */
+.toolbar{
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 13px;
+}
+
+.calendar__week,
+.calendar__header {
+display: grid;
+grid-template-columns: 80px 1fr 1fr 1fr 1fr 1fr 1fr 1fr;  
+}
+.calendar__week {
+grid-auto-rows: 70px;
+text-align: right;
+}
+
+.calendar__header {
+grid-auto-rows: 50px;
+align-items: center;
+text-align: center;
+}
+
+.calendar__day {
+padding: 16px;
+}
+
+/* COSMETIC STYLING */
+
+:root {
+--red: #44C1C9;
+}
+
+main {
+background-color: #FCFBFC;
+}
+.menu__item {
+text-transform: uppercase;
+font-size: 0.7rem;
+font-weight: 500;
+padding: 16px 16px 16px 14px;
+border-left: 4px solid transparent;
+color: inherit;
+text-decoration: none;
+transition: color ease 0.3s;
+}
+
+.menu__item--active .menu__icon {
+color: var(--red);
+}
+.menu__item--active .menu__text {
+color: black;
+}
+
+.menu__item:hover {
+color: black;
+}
+
+
+.menu__icon {
+font-size: 1.3rem;
+}
+
+@media screen and (min-width: 850px) {
+.menu__icon {
+    font-size: 0.9rem;
+    padding-right: 16px;
+}
+.menu__item--active {
+    border-left: 4px solid var(--red);
+    box-shadow: inset 10px 0px 17px -13px var(--red);
+}
+}
+
+.calendar {
+background-color: white;
+border: 1px solid #e1e1e1;
+}
+
+.calendar__header > div {
+text-transform: uppercase;
+font-size: 0.8em;
+font-weight: bold;
+}
+
+.sunday {
+    color: red;
+}
+
+.calendar__day {
+border-right: 1px solid #e1e1e1;
+border-top: 1px solid #e1e1e1;
+}
+
+.calendar__day:last-child {
+border-right: 0;
+}
+
+.toggle{
+display: grid;
+grid-template-columns: 1fr 1fr;
+
+text-align: center;
+font-size: 0.9em;
+}
+
+.month {
+    text-align: center;
+}
+
+.toggle_right{
+    display: grid;
+    grid-template-columns: 1fr;
+    
+    text-align: center;
+    font-size: 0.9em;
+}
+
+.toggle_center{
+    display: grid;
+    grid-template-columns: 1fr;
+    text-align: center;
+    margin-left: -114px;
+}
+
+.hour {
+    
+}
+
+.toggle__option{
+padding: 10px;
+border-radius: 8px;
+text-transform: capitalize;
+cursor: pointer;
+}
+
+.toggle__option--selected{
+    border-color: white;
+    background-color: white;
+    color: var(--black);
+    font-weight: 500;
+    margin: 3px;
+    box-shadow: 1px 1px 25px -5px var(--cyan);
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
