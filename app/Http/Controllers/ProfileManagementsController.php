@@ -17,7 +17,12 @@ class ProfileManagementsController extends Controller
     public function index()
     {
         $user = User::where('id', Auth::user()->id)->first();
-        return view('agency.profile.index')->with('user', $user);
+        //this is just hack around as it will be fixed in the controller seperation ticket to use proper inheritance
+        if($user->company_type === CompanyTypeName::BROADCASTER){
+            return view('broadcaster_module.profile.index')->with('user', $user);
+        }else{
+            return view('agency.profile.index')->with('user', $user);
+        }
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace Vanguard\Http\Controllers\Ssp;
+namespace Vanguard\Http\Controllers\Broadcaster;
 
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -11,12 +11,15 @@ use Vanguard\Libraries\CampaignDate;
 use Vanguard\Libraries\Enum\BroadcasterPlayoutStatus;
 use Vanguard\Libraries\Paystack;
 use Vanguard\Libraries\Utilities;
+use Vanguard\Models\BroadcasterPlayout;
 use Vanguard\Models\PreselectedAdslot;
 use Vanguard\Models\SelectedAdslot;
 use Vanguard\Models\Upload;
+use Yajra\Datatables\Datatables;
 use Carbon\Carbon;
 use Session;
 use Vanguard\Http\Controllers\Controller;
+use Log;
 
 class CampaignsController extends Controller
 {

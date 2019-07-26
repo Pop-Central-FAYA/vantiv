@@ -1,6 +1,6 @@
 <?php
 
-namespace Vanguard\Http\Controllers\Ssp;
+namespace Vanguard\Http\Controllers;
 
 use Vanguard\Http\Controllers\Traits\CompanyIdTrait;
 use Vanguard\Services\Mail\UserInvitationMail;
@@ -15,10 +15,9 @@ use Vanguard\Services\Validator\ValidateUserCompleteAccount;
 use Vanguard\Services\Validator\ValidateUserInviteRequest;
 use Vanguard\Support\Enum\UserStatus;
 use Vanguard\User;
+use \Illuminate\Support\Facades\URL;
 use Yajra\DataTables\DataTables;
 use Vanguard\Services\Mail\MailFormat;
-use Vanguard\Http\Controllers\Controller;
-
 
 class UserController extends Controller
 {

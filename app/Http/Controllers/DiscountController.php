@@ -1,17 +1,27 @@
 <?php
 
-namespace Vanguard\Http\Controllers\Ssp;
+namespace Vanguard\Http\Controllers;
 
+use Vanguard\Http\Controllers\Auth\AuthController;
 use Vanguard\Http\Controllers\Traits\CompanyIdTrait;
 use Vanguard\Http\Requests\DiscountStoreRequest;
+use Vanguard\Libraries\Api;
 use Illuminate\Http\Request;
+use Vanguard\Libraries\Utilities;
+use Vanguard\Services\Brands\CompanyBrands;
 use Vanguard\Services\Company\CompanyDetailsFromIdList;
+use Vanguard\Services\Company\CompanyList;
+use Vanguard\Services\Discount\BrandDiscountList;
+use Vanguard\Services\Discount\CompanyDiscountList;
+use Vanguard\Services\Discount\DayPartDiscountList;
 use Vanguard\Services\Discount\GetDiscountById;
 use Vanguard\Services\Discount\GetPublisherDiscountList;
+use Vanguard\Services\Discount\PriceDiscountList;
+use Vanguard\Services\Discount\PublisherDiscountList;
 use Vanguard\Services\Discount\StoreDiscount;
+use Vanguard\Services\Discount\TimeDiscountList;
 use Vanguard\Services\Discount\UpdateDiscount;
-use Vanguard\Http\Controllers\Controller;
-
+use Vanguard\Services\PreloadedData\PreloadedData;
 use Yajra\DataTables\DataTables;
 
 class DiscountController extends Controller
