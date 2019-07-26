@@ -1,6 +1,6 @@
 <?php
 
-namespace Vanguard\Http\Controllers\Broadcaster;
+namespace Vanguard\Http\Controllers\Ssp;
 
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Http\Controllers\Traits\CompanyIdTrait;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Vanguard\Http\Controllers;
+namespace Vanguard\Http\Controllers\Ssp;
 
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -16,6 +16,7 @@ use Vanguard\Services\Mpo\MpoDetails;
 use Vanguard\Services\Mpo\MpoList;
 use Yajra\DataTables\DataTables;
 use Vanguard\Services\BroadcasterPlayout\CreatePlayout;
+use Vanguard\Http\Controllers\Controller;
 
 class MpoController extends Controller
 {
