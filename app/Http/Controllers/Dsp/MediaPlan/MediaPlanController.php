@@ -273,7 +273,7 @@ class MediaPlanController extends Controller
         $summaryData =  $summary_service->run();
         
         return view('agency.mediaPlan.summary')->with('summary', $summaryData)
-                ->with('media_plan', $mediaPlan)->with('users', $this->getUserByRole("Admin"));
+                ->with('media_plan', $mediaPlan)->with('users', $this->getUserByRole("Finance"));
     }
 
     public function exportPlan($media_plan_id)
@@ -630,7 +630,7 @@ class MediaPlanController extends Controller
     public function sendForApproval($media_plan_id, $user_id)
     {       
 
-       if(!$this->getUserByRole("Admin")==""){
+       if(!$this->getUserByRole("Finance")==""){
           $user_mail_content_array = array(
             "sender_name" => \Auth::user()->firstname.  " ". \Auth::user()->lastname, 
             "client" => $this->getClientName($media_plan_id),

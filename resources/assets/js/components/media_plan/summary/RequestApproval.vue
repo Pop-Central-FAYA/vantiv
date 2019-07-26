@@ -10,8 +10,10 @@
                         <v-form>
                             <v-layout wrap>
                                 <v-flex xs12 sm12 md12>
+                                    
                                     <v-select
-                                     v-model="user"
+                                        label="Select Finance Admin"
+                                        v-model="user"
                                         :items="users"
                                         item-text="name"
                                         item-value="id"
