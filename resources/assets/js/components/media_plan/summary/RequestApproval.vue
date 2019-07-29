@@ -7,23 +7,20 @@
             <v-card-text class="px-2 pt-2 pb-0">
                 <v-container grid-list-md class="pa-0">
                      <v-card-text>
-                        <v-form>
-                            <v-layout wrap>
-                                <v-flex xs12 sm12 md12>
-                                    
+                            <v-layout row wrap>
+                                <v-flex xs12 sm12 md12 text-left>
+                                    <span>Select user: </span>
                                     <v-select
-                                        label="Select Finance Admin"
+                                        placeholder="Select user"
                                         v-model="user"
                                         :items="users"
                                         item-text="name"
                                         item-value="id"
                                         v-validate="'required'"
                                         name="user"
-                                        solo
                                     ></v-select>
                                 </v-flex>
                             </v-layout>
-                        </v-form>
                      </v-card-text>
                      <v-card-actions>
                             <v-spacer></v-spacer>

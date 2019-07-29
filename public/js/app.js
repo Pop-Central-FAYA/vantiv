@@ -2741,7 +2741,6 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 //
 //
 //
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: {
@@ -3495,43 +3494,46 @@ var render = function() {
                     "v-card-text",
                     [
                       _c(
-                        "v-form",
+                        "v-layout",
+                        { attrs: { row: "", wrap: "" } },
                         [
                           _c(
-                            "v-layout",
-                            { attrs: { wrap: "" } },
+                            "v-flex",
+                            {
+                              attrs: {
+                                xs12: "",
+                                sm12: "",
+                                md12: "",
+                                "text-left": ""
+                              }
+                            },
                             [
-                              _c(
-                                "v-flex",
-                                { attrs: { xs12: "", sm12: "", md12: "" } },
-                                [
-                                  _c("v-select", {
-                                    directives: [
-                                      {
-                                        name: "validate",
-                                        rawName: "v-validate",
-                                        value: "required",
-                                        expression: "'required'"
-                                      }
-                                    ],
-                                    attrs: {
-                                      items: _vm.users,
-                                      "item-text": "name",
-                                      "item-value": "id",
-                                      name: "user",
-                                      solo: ""
-                                    },
-                                    model: {
-                                      value: _vm.user,
-                                      callback: function($$v) {
-                                        _vm.user = $$v
-                                      },
-                                      expression: "user"
-                                    }
-                                  })
+                              _c("span", [_vm._v("Select user: ")]),
+                              _vm._v(" "),
+                              _c("v-select", {
+                                directives: [
+                                  {
+                                    name: "validate",
+                                    rawName: "v-validate",
+                                    value: "required",
+                                    expression: "'required'"
+                                  }
                                 ],
-                                1
-                              )
+                                attrs: {
+                                  placeholder: "Select user",
+                                  items: _vm.users,
+                                  "item-text": "name",
+                                  "item-value": "id",
+                                  name: "user"
+                                },
+                                model: {
+                                  value: _vm.user,
+                                  callback: function($$v) {
+                                    _vm.user = $$v
+                                  },
+                                  expression: "user"
+                                }
+                              })
                             ],
                             1
                           )
@@ -3771,14 +3773,14 @@ var render = function() {
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "col-md-8 p-0 text-right" }, [
-          _vm.summary_details.status == "Suggested"
+          _vm.summary_details.status == "InRequest"
             ? _c("span", [
                 _vm.hasPermission(_vm.permissionList, "approve.media_plan")
                   ? _c(
                       "button",
                       {
                         staticClass:
-                          "media-plan btn block_disp uppercased mr-1",
+                          "media-plan btn block_disp uppercased mr-1 btn-sm",
                         on: {
                           click: function($event) {
                             return _vm.buttonAction(_vm.routes.approve)
@@ -3799,7 +3801,7 @@ var render = function() {
                       "button",
                       {
                         staticClass:
-                          "media-plan btn block_disp uppercased bg_red mr-1",
+                          "media-plan btn block_disp uppercased bg_red mr-1  btn-sm",
                         on: {
                           click: function($event) {
                             return _vm.buttonAction(_vm.routes.decline)
@@ -3817,7 +3819,7 @@ var render = function() {
               ])
             : _vm._e(),
           _vm._v(" "),
-          _vm.summary_details.status == "Approved"
+          _vm.summary_details.status != "Approved"
             ? _c(
                 "span",
                 [

@@ -271,9 +271,11 @@ class MediaPlanController extends Controller
 
         $summary_service = new SummarizePlan($mediaPlan);
         $summaryData =  $summary_service->run();
+        $user_list_service = new GetUserList([\Auth::user()->companies->first()->id]);
+        $user_list = $user_list_service->getUserData();
         
         return view('agency.mediaPlan.summary')->with('summary', $summaryData)
-                ->with('media_plan', $mediaPlan)->with('users', $this->getUserByRole("Finance"));
+                ->with('media_plan', $mediaPlan)->with('users', $user_list);
     }
 
     public function exportPlan($media_plan_id)
@@ -305,7 +307,7 @@ class MediaPlanController extends Controller
         $mediaPlan = MediaPlan::findorfail($media_plan_id);
         $mediaPlan->status = 'Approved';
         $mediaPlan->save();
-        $this->sendApprovalConfirmation($media_plan_id, "Approved");
+        $this->sendRequestResponse($media_plan_id, "Approved");
         Session::flash('success', 'Media plan successfully approved');
         return redirect()->route('agency.media_plan.summary',['id'=>$mediaPlan->id]);
     }
@@ -315,7 +317,7 @@ class MediaPlanController extends Controller
         $mediaPlan = MediaPlan::findorfail($media_plan_id);
         $mediaPlan->status = 'Declined';
         $mediaPlan->save();
-        $this->sendApprovalConfirmation($media_plan_id, "Rejected");
+        $this->sendRequestResponse($media_plan_id, "Rejected");
         Session::flash('success', 'Media plan has been declined');
         return redirect()->route('agency.media_plan.summary',['id'=>$mediaPlan->id]);
         
@@ -610,27 +612,26 @@ class MediaPlanController extends Controller
         ]);
     }
 
-    public function sendApprovalConfirmation($media_plan_id, $action_result)
+    public function sendRequestResponse($media_plan_id, $status)
     {
 
        $mediaPlan = MediaPlan::findorfail($media_plan_id);
        $user_mail_content_array = array(
             "sender_name" => \Auth::user()->firstname.  " ". \Auth::user()->lastname, 
-            "action" => $action_result,
+            "action" => $status,
             "client" =>  $this->getClientName($media_plan_id),
             "reciver_name" => $this->getPlannerDetails($mediaPlan->planner_id)['name'], 
             "link" => route('agency.media_plan.decline', ['id'=>$media_plan_id]),
-            "subject" => "Your Media Plan has been ". $action_result
+            "subject" => "Your Media Plan has been ". $status
 
         );
         $send_mail = \Mail::to($this->getPlannerDetails($mediaPlan->planner_id)['email'])->send(new ApprovalNotification($user_mail_content_array));
            
     }
 
-    public function sendForApproval($media_plan_id, $user_id)
+    public function requestApproval($media_plan_id, $user_id)
     {       
 
-       if(!$this->getUserByRole("Finance")==""){
           $user_mail_content_array = array(
             "sender_name" => \Auth::user()->firstname.  " ". \Auth::user()->lastname, 
             "client" => $this->getClientName($media_plan_id),
@@ -639,7 +640,6 @@ class MediaPlanController extends Controller
            
           );
             $send_mail = \Mail::to($this->getPlannerDetails($user_id)['email'])->send(new MailForApproval($user_mail_content_array));
-        }
     }
 
     function getPlannerDetails($planner_id){
@@ -653,24 +653,6 @@ class MediaPlanController extends Controller
             }
         } 
         return $planner;
-    }
-
-
-    function getUserByRole($user_role){
-        $user_detail=array();
-        $user_list_service = new GetUserList([\Auth::user()->companies->first()->id]);
-        $user_list = $user_list_service->getUserData();
-
-       foreach($user_list as $user){
-            foreach($user['roles'] as $role){
-                if($role == $user_role)
-                {
-                    array_push($user_detail, $user);
-                }
-            } 
-        } 
-        
-        return $user_detail;
     }
 
     function getClientName($media_plan_id){
@@ -687,12 +669,12 @@ class MediaPlanController extends Controller
         return $client_name;
     }
 
-    public function postSendForApproval(Request $request)
+    public function postRequestApproval(Request $request)
     {
       $mediaPlan = MediaPlan::with(['client'])->findorfail($request->media_plan_id);
-      $mediaPlan->status = 'Suggested';
+      $mediaPlan->status = 'InRequest';
       $mediaPlan->save();
-      $lo= $this->sendForApproval($request->media_plan_id, $request->user_id);
+      $lo= $this->requestApproval($request->media_plan_id, $request->user_id);
        $mediaPlanData = MediaPlan::with(['client'])->findorfail($request->media_plan_id);
        return response()->json([
         'status' => 'success',
