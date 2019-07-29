@@ -157,7 +157,7 @@
         content: none;
     }
     .v-date-picker-table {
-        height: 260px !important;
+        height: 100% !important;
     }
     .multiselect__tags {
         min-height: 45px;
