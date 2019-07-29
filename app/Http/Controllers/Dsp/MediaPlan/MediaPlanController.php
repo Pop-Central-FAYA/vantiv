@@ -347,7 +347,7 @@ class MediaPlanController extends Controller
 
     }
 
-    public function CreatePlan($id)
+    public function createPlan($id)
     {
         $media_plan = MediaPlan::find($id);
         if(!$media_plan){
@@ -355,7 +355,7 @@ class MediaPlanController extends Controller
         }
         $get_suggestion_with_ratings = new GetSuggestionListWithProgramRating($id);
         $plans = $get_suggestion_with_ratings->getMediaPlanSuggestionWithProgram();
-        $clients = new AllClient(\Auth::user()->companies->first()->id);
+        $clients = new AllClient($this->companyId());
         $clients = $clients->getAllClients();
         if(count($plans) == 0 ){
             return redirect()->route("agency.media_plan.criteria_form");
@@ -363,36 +363,76 @@ class MediaPlanController extends Controller
         $suggestions = $this->groupSuggestions($plans);
         $suggestionsByStation = $this->groupSuggestionsByStation($plans);
         $dates = $this->dates($media_plan->start_date, $media_plan->end_date);
-        $labeldates = $this->labeldates($media_plan->start_date, $media_plan->end_date);
+        $label_dates = $this->labelDates($media_plan->start_date, $media_plan->end_date);
         $days = $this->days($media_plan->start_date, $media_plan->end_date);
+
         $fayaFound = array(
             'total_tv' => $this->countByMediaType($suggestions, 'Tv'),
             'total_radio' => $this->countByMediaType($suggestions, 'Radio'),
-            'programs_stations' => $plans,
+            'programs_stations' => $this->initializePlansWithExposures($plans, $dates, $this->getDefaultMaterialLength()),
             'stations' => $suggestionsByStation,
             'total_audiences' => $this->totalAudienceFound($suggestions),
             'dates' => $dates,
-            'labeldates' => $labeldates,
+            'labeldates' => $label_dates,
             'days' => $days,
         );
-        $client_brand = '';
-        if($media_plan->client_id != ''){
-            $client_brand = new ClientBrand($media_plan->client_id);
-            $client_brand = $client_brand->run();
+        $client_brands = [];
+        foreach ($clients as $client) {
+            $brands = new ClientBrand($client->id);
+            $client_brands[$client->id] = $brands->run();
         }
-        return view('agency.mediaPlan.complete_plan')->with('fayaFound', $fayaFound)
-                                                            ->with('clients', $clients)
-                                                            ->with('days', $this->listDays())
-                                                            ->with('default_material_length', $this->getDefaultMaterialLength())
-                                                            ->with('plan_id', $id)
-                                                            ->with('media_plan', $media_plan)
-                                                            ->with('brands', $client_brand);
+        $redirect_urls = [
+            'back_action' => route('agency.media_plan.customize', ['id'=>$id]),
+            'next_action' => route('agency.media_plan.summary', ['id'=>$id]),
+            'save_action' => route('agency.media_plan.submit.finish_plan')
+        ];
 
+        return view('agency.mediaPlan.complete_plan')->with('fayaFound', $fayaFound)
+                                                    ->with('clients', $clients)
+                                                    ->with('client_brands', $client_brands)
+                                                    ->with('days', $this->listDays())
+                                                    ->with('default_material_length', $this->getDefaultMaterialLength())
+                                                    ->with('plan_id', $id)
+                                                    ->with('media_plan', $media_plan)
+                                                    ->with('redirect_urls', $redirect_urls);
+
+    }
+
+    public function initializePlansWithExposures($suggestions, $dates, $durations)
+    {
+        foreach ($suggestions as $key => $suggestion) {
+            $suggestion->exposures = [];
+            foreach ($durations as $duration) {
+                $suggestion->exposures[$duration] = $this->setExposuresByDuration($dates, $duration, $suggestion);
+            }
+        }
+        return $suggestions;
+    }
+
+    public function setExposuresByDuration($dates, $duration, $suggestion)
+    {
+        $dates_arr = [];
+        $total_exposures = 0;
+        $net_total = 0;
+        foreach ($dates as $date) {
+            $dates_arr[$date] = 0;
+            if ($suggestion->material_length != '') {
+                $material_lengths = json_decode($suggestion->material_length, true);
+                if (array_key_exists($duration, $material_lengths)) {
+                    foreach ($material_lengths[$duration] as $exposure) {
+                        if ($exposure['date'] == $date) {
+                            $dates_arr[$date] = $exposure['slot'];
+                            $total_exposures += (INT) $exposure['slot'];
+                        }
+                    }
+                }
+            }
+        }
+        return ['dates' => $dates_arr, 'total_exposures' => $total_exposures, 'net_total' => $net_total];
     }
 
     public function days($start, $end)
     {
-       date_default_timezone_set('UTC');
        $diff = strtotime($end) - strtotime($start);
        $daysBetween = floor($diff/(60*60*24));
             $formattedDates = array();
@@ -403,10 +443,8 @@ class MediaPlanController extends Controller
             return $formattedDates;
     }
 
-    public function labeldates($start, $end)
+    public function labelDates($start, $end)
      {
-        date_default_timezone_set('UTC');
-
         $diff = strtotime($end) - strtotime($start);
 
         $daysBetween = floor($diff/(60*60*24));
@@ -414,14 +452,12 @@ class MediaPlanController extends Controller
         $formattedDates = array();
         for ($i = 0; $i <= $daysBetween; $i++) {
             $tmpDate = date('Y-m-d', strtotime($start . " + $i days"));
-            $formattedDates[] = date('F d', strtotime($tmpDate));
+            $formattedDates[] = date('M d', strtotime($tmpDate));
         }
         return $formattedDates;
     }
 
     public function dates($start, $end) {
-        date_default_timezone_set('UTC');
-
         $diff = strtotime($end) - strtotime($start);
 
         $daysBetween = floor($diff/(60*60*24));
@@ -434,46 +470,95 @@ class MediaPlanController extends Controller
         return $formattedDates;
     }
 
-
-
-
-    public function CompletePlan(Request $request)
+    public function completePlan(Request $request)
     {
         try{
-            Utilities::switch_db('api')->transaction(function () use($request) {
-
-                $programs_id = json_decode($request->get('data'));
-                $programs_id = collect($programs_id);
-                $programs_id = $this->groupById($programs_id);
-                $client_name = $request->get('client_name');
-                $product_name = $request->get('product_name');
-                $brand_id = $request->get('brand_id');
-                $plan_id = $request->get('plan_id');
-
-                foreach($programs_id as $key => $value) {
-                    DB::table('media_plan_suggestions')
-                        ->where('id', $key)
-                        ->update(['material_length' => $value]);
+            \DB::transaction(function () use($request) {
+                // store new program details
+                if (count($request->new_programs) > 0) {
+                    foreach ($request->new_programs as $program) {
+                        $store_media_plan_program_service = new StoreMediaPlanProgram($program['days'], $program['program_name'],$program['station'],
+                                                $program['start_time'], $program['end_time'],$program['unit_rate'], $program['duration']);
+                        $store_media_plan_program = $store_media_plan_program_service->storeMediaPlanProgram();
+                    }
                 }
-                DB::table('media_plans')
-                    ->where('id', $plan_id)
-                    ->update(['client_id' => $client_name, 'product_name' => $product_name, 'brand_id' => $brand_id]);
+
+                // store new volume discounts
+                if (count($request->new_volume_discounts) > 0) {
+                    foreach ($request->new_volume_discounts as $detail) {
+                        $store_volume_discount_service = new StoreMediaPlanVolumeDiscount($detail['discount'], $detail['station'], $this->companyId());
+                        $store_volume_discount = $store_volume_discount_service->storeMediaPlanDiscount();
+                    }
+                }
+
+                // update media plan suggestions material lengths
+                if (count($request->programs_stations) > 0) {
+                    foreach ($request->programs_stations as $program_station) {
+                        $material_lengths = $this->computeMaterialLengthsForSuggestion($program_station);
+                        MediaPlanSuggestion::where('id', $program_station['id'])->update(['material_length' => json_encode($material_lengths)]);
+                    }
+                }
+
+                // update media plan client, brand and product name
+                MediaPlan::where('id', $request->plan_id)->update([
+                    'client_id' => $request->client_id,
+                    'brand_id' => $request->brand_id,
+                    'product_name' => $request->product_name
+                ]);
             });
         }catch (\Exception $exception){
             Log::error($exception);
-            return response()->json(['status'=>'error', 'message'=> "The current operation failed" ]);
+            return response()->json(['status'=>'error', 'message'=> "The current operation failed. ".$exception ]);
         }
-        return response()->json(['msg'=>"Good to go", "status" => "success"]);
+        return response()->json(['message'=>"Media plan updated", "status" => "success"]);
     }
 
+    public function computeMaterialLengthsForSuggestion($suggestion)
+    {
+        $material_lengths = [];
+        foreach ($suggestion['exposures'] as $duration => $exposures) {
+            foreach ($exposures['dates'] as $date => $exposure) {
+                if ((INT)$exposure > 0) {
+                    if ($suggestion['duration_lists'] != "[null]" && $suggestion['rate_lists'] != "[null]") {
+                        if (gettype($suggestion['duration_lists']) == 'string') {
+                            $duration_lists = json_decode($suggestion['duration_lists']);
+                            $rate_lists = json_decode($suggestion['rate_lists']);
+                        } else {
+                            $duration_lists = $suggestion['duration_lists'];
+                            $rate_lists = $suggestion['rate_lists'];
+                        }
+                        foreach ($duration_lists as $key => $value) {
+                            if ($duration == $value) {
+                                $unit_rate = $rate_lists[$key];
+                            }
+                        }
+                    }
+
+                    $gross_total = (INT)$unit_rate * (INT)$exposure;
+                    $deducted_value = ((INT)$suggestion['volume_discount']/100) * $gross_total;
+                    $net_total = $gross_total - $deducted_value;
+
+                    $material_lengths[$duration][] = [
+                        'id' => $suggestion['id'],
+                        'material_length' => $duration,
+                        'unit_rate' => (INT)$unit_rate,
+                        'volume_disc' => (INT)$suggestion['volume_discount'],
+                        'date' => $date,
+                        'day' => $suggestion['day'],
+                        'slot' => (INT)$exposure,
+                        'exposure' => (INT)$exposure,
+                        'net_total' => $net_total
+                    ];
+                }
+            }
+        }
+        return $material_lengths;
+    }
 
     public function groupById($query)
     {
-
         $result = $query->groupBy(['id', 'material_length']);
         return $result;
-
-
     }
 
     public function groupByDuration($query)

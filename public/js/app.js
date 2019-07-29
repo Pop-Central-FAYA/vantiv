@@ -1962,6 +1962,549 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\",[\"transform-runtime\",{\"polyfill\":false,\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/media_plan/complete/PlanDetails.vue":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        durations: Array,
+        timeBelts: Object,
+        plan: Object,
+        clients: Array,
+        brands: Object,
+        redirectUrls: Object
+    },
+    data: function data() {
+        return {
+            client: this.plan.client_id,
+            brand: this.plan.brand_id,
+            product: this.plan.product_name,
+            filteredBrands: [],
+            fayaDurations: this.durations,
+            fayaTimebelts: this.timeBelts,
+            volumeDiscounts: [],
+            newPrograms: [],
+            isRunRatings: false
+        };
+    },
+    created: function created() {
+        var self = this;
+        Event.$on('update-program-details', function (details) {
+            self.newPrograms.push(details);
+            self.updateProgramsStations(details);
+        });
+    },
+    mounted: function mounted() {
+        console.log('Media Plan Details Component mounted.');
+        if (this.client) {
+            this.getBrands();
+        }
+    },
+
+    methods: {
+        getBrands: function getBrands() {
+            this.filteredBrands = this.brands[this.client];
+        },
+        getUnitRate: function getUnitRate(time_belt, duration) {
+            if (time_belt.duration_lists != '[null]' && time_belt.rate_lists != '[null]') {
+                if (typeof time_belt.duration_lists === 'string') {
+                    var current_timebelt_durations = JSON.parse(time_belt.duration_lists);
+                    var current_timebelt_rate_lists = JSON.parse(time_belt.rate_lists);
+                } else {
+                    var current_timebelt_durations = time_belt.duration_lists;
+                    var current_timebelt_rate_lists = time_belt.rate_lists;
+                }
+                var unit_rate = 0;
+                current_timebelt_durations.forEach(function (element, key) {
+                    if (element == duration) {
+                        unit_rate = current_timebelt_rate_lists[key];
+                    }
+                });
+                return unit_rate;
+            } else {
+                return 0;
+            }
+        },
+        countExposureByTimeBelt: function countExposureByTimeBelt(time_belt_pos, duration) {
+            var exposures = this.fayaTimebelts['programs_stations'][time_belt_pos]['exposures'][duration]['dates'];
+            this.fayaTimebelts['programs_stations'][time_belt_pos]['exposures'][duration]['total_exposures'] = Object.values(exposures).reduce(function (a, b) {
+                return parseInt(a) + parseInt(b);
+            }, 0);
+            this.$forceUpdate();
+        },
+        getTotalExposureByTimebelt: function getTotalExposureByTimebelt(time_belt_pos, duration) {
+            return this.fayaTimebelts['programs_stations'][time_belt_pos]['exposures'][duration]['total_exposures'];
+        },
+        getNetTotalByTimeBelt: function getNetTotalByTimeBelt(time_belt, time_belt_pos, duration) {
+            var exposures = this.fayaTimebelts['programs_stations'][time_belt_pos]['exposures'][duration]['total_exposures'];
+            if (this.fayaTimebelts['programs_stations'][time_belt_pos]['volume_discount'] == null) {
+                var discount = 0;
+            } else {
+                var discount = this.fayaTimebelts['programs_stations'][time_belt_pos]['volume_discount'];
+            }
+            var unit_rate = this.getUnitRate(time_belt, duration);
+            var gross_total = unit_rate * exposures;
+            var deducted_value = discount / 100 * gross_total;
+            var net_total = gross_total - deducted_value;
+            this.fayaTimebelts['programs_stations'][time_belt_pos]['exposures'][duration]['net_total'] = net_total;
+            return net_total;
+        },
+        getNetTotalByDuration: function getNetTotalByDuration(search_duration) {
+            var net_total = 0;
+            this.fayaTimebelts['programs_stations'].forEach(function (program_station) {
+                Object.keys(program_station.exposures).forEach(function (duration) {
+                    if (search_duration == duration) {
+                        net_total += program_station.exposures[duration]['net_total'];
+                    }
+                });
+            });
+            return net_total;
+        },
+        storeVolumeDiscount: function storeVolumeDiscount(station, evt) {
+            var discount = evt.target.value;
+            if (discount > 0 && discount <= 100) {
+                this.volumeDiscounts.push({ discount: discount, station: station });
+                this.fayaTimebelts.programs_stations.forEach(function (element) {
+                    if (element.station == station) {
+                        element.volume_discount = discount;
+                    }
+                });
+            }
+        },
+        updateProgramsStations: function updateProgramsStations(details) {
+            var _this = this;
+
+            var filterByStation = this.fayaTimebelts.programs_stations.filter(function (program) {
+                return program.station == details.station;
+            });
+            filterByStation.forEach(function (station, station_key) {
+                details.days.forEach(function (day, key) {
+                    if (station.day == day && _this.format_time(station.start_time) == _this.format_time(details.start_time[key]) && _this.format_time(station.end_time) == _this.format_time(details.end_time[key])) {
+                        filterByStation[station_key]['program'] = details.program_name;
+                        filterByStation[station_key]['duration_lists'] = details.duration;
+                        filterByStation[station_key]['rate_lists'] = details.unit_rate;
+                    }
+                });
+            });
+        },
+        buttonRedirect: function buttonRedirect(url) {
+            window.location = url;
+        },
+        save: function save(is_redirect) {
+            var _this2 = this;
+
+            var net_total_all_durations = 0;
+            this.fayaDurations.forEach(function (duration) {
+                net_total_all_durations += _this2.getNetTotalByDuration(duration);
+            });
+
+            if (net_total_all_durations <= 0) {
+                this.sweet_alert("Please select some exposures", 'info');
+            }
+
+            // Validate inputs using vee-validate plugin 
+            this.$validator.validate().then(function (valid) {
+                if (!valid) {
+                    console.log('invalid form');
+                }
+                if (valid) {
+                    _this2.isRunRatings = true;
+                    var msg = "Saving media plan, please wait";
+                    _this2.sweet_alert(msg, 'info', 60000);
+                    axios({
+                        method: 'post',
+                        url: _this2.redirectUrls.save_action,
+                        data: {
+                            new_programs: _this2.newPrograms,
+                            new_volume_discounts: _this2.volumeDiscounts,
+                            programs_stations: _this2.fayaTimebelts.programs_stations,
+                            client_id: _this2.client,
+                            brand_id: _this2.brand,
+                            product_name: _this2.product,
+                            plan_id: _this2.plan.id
+                        }
+                    }).then(function (res) {
+                        _this2.isRunRatings = false;
+                        console.log(res.data);
+                        if (res.data.status === "success") {
+                            _this2.sweet_alert(res.data.message, 'success');
+                            if (is_redirect) {
+                                window.location = _this2.redirectUrls.next_action;
+                            }
+                        } else {
+                            _this2.sweet_alert(res.data.message, 'error');
+                        }
+                    }).catch(function (error) {
+                        _this2.isRunRatings = false;
+                        _this2.sweet_alert('An unknown error has occurred, please try again', 'error');
+                    });
+                }
+            });
+        }
+    }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\",[\"transform-runtime\",{\"polyfill\":false,\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/media_plan/complete/ProgramDetails.vue":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        timeBelt: Object
+    },
+    data: function data() {
+        return {
+            dialog: false,
+            selectedValues: {
+                program: this.timeBelt.program,
+                station: this.timeBelt.station,
+                timeBelts: {
+                    Monday: [],
+                    Tuesday: [],
+                    Wednesday: [],
+                    Thursday: [],
+                    Friday: [],
+                    Saturday: [],
+                    Sunday: []
+                },
+                ratingsPerDuration: {
+                    15: '',
+                    30: '',
+                    45: '',
+                    60: ''
+                }
+            }
+        };
+    },
+    created: function created() {
+        this.setUnitRates();
+    },
+
+    computed: {
+        currentProgramStartTime: function currentProgramStartTime() {
+            var time = this.timeBelt.start_time;
+            time = time.split(":");
+            return { HH: time[0], mm: time[1] };
+        },
+        currentProgramEndTime: function currentProgramEndTime() {
+            var time = this.timeBelt.end_time;
+            time = time.split(":");
+            return { HH: time[0], mm: time[1] };
+        }
+    },
+    mounted: function mounted() {
+        console.log('Program Details Component mounted.');
+        // console.log(this.timeBelt);
+        this.setTimeBelts();
+    },
+
+    methods: {
+        setUnitRates: function setUnitRates() {
+            var _this = this;
+
+            if (this.timeBelt.duration_lists != '[null]' && this.timeBelt.rate_lists != '[null]') {
+                var current_timebelt_durations = JSON.parse(this.timeBelt.duration_lists);
+                var current_timebelt_rate_lists = JSON.parse(this.timeBelt.rate_lists);
+                current_timebelt_durations.forEach(function (element, key) {
+                    _this.selectedValues.ratingsPerDuration[element] = current_timebelt_rate_lists[key];
+                });
+            }
+        },
+        updateProgramDetails: function updateProgramDetails() {
+            Event.$emit('update-program-details', this.reformatNewProgram(this.selectedValues));
+            this.dialog = false;
+        },
+        reformatNewProgram: function reformatNewProgram(details) {
+            var start_time_arr = [];
+            var end_time_arr = [];
+            Object.values(details.timeBelts).forEach(function (timebelt) {
+                var start_time_obj = timebelt[0].start_time;
+                var end_time_obj = timebelt[0].end_time;
+                start_time_arr.push(start_time_obj.HH + ':' + start_time_obj.mm);
+                end_time_arr.push(end_time_obj.HH + ':' + end_time_obj.mm);
+            });
+            return {
+                program_name: details.program,
+                station: details.station,
+                duration: Object.keys(details.ratingsPerDuration),
+                unit_rate: Object.values(details.ratingsPerDuration),
+                days: Object.keys(details.timeBelts),
+                start_time: start_time_arr,
+                end_time: end_time_arr
+            };
+        },
+        setTimeBelts: function setTimeBelts() {
+            var _this2 = this;
+
+            Object.keys(this.selectedValues.timeBelts).forEach(function (element) {
+                if (_this2.timeBelt.day == element) {
+                    var start_time = _this2.currentProgramStartTime;
+                    var end_time = _this2.currentProgramEndTime;
+                    _this2.selectedValues.timeBelts[element][0] = { start_time: { HH: start_time['HH'], mm: start_time['mm'] }, end_time: { HH: end_time['HH'], mm: end_time['mm'] } };
+                } else {
+                    _this2.selectedValues.timeBelts[element][0] = { start_time: { HH: '00', mm: '00' }, end_time: { HH: '00', mm: '00' } };
+                }
+            });
+        },
+        addTimeBelt: function addTimeBelt(day) {
+            var timeBeltsPerDay = this.selectedValues.timeBelts[day];
+            timeBeltsPerDay.push({ start_time: { HH: '00', mm: '00' }, end_time: { HH: '00', mm: '00' } });
+        },
+        deleteTimeBelt: function deleteTimeBelt(day, time_belt_pos) {
+            var timeBeltsPerDay = this.selectedValues.timeBelts[day];
+            timeBeltsPerDay.splice(time_belt_pos, 1);
+        }
+    }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\",[\"transform-runtime\",{\"polyfill\":false,\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/media_plan/customise/FilterSuggestions.vue":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -3289,6 +3832,21 @@ exports.push([module.i, "\n.week_name {\n    text-transform: capitalize;\n}\n.re
 
 /***/ }),
 
+/***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-53727c40\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/media_plan/complete/ProgramDetails.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.v-text-field {\n    padding-top: 2px;\n    margin-top: 0px;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-632891a7\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=1!./resources/assets/js/components/media_plan/CriteriaForm.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3313,6 +3871,21 @@ exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/cs
 
 // module
 exports.push([module.i, "\nfieldset[disabled] .multiselect{pointer-events:none\n}\n.multiselect__spinner{position:absolute;right:1px;top:1px;width:48px;height:35px;background:#fff;display:block\n}\n.multiselect__spinner:after,.multiselect__spinner:before{position:absolute;content:\"\";top:50%;left:50%;margin:-8px 0 0 -8px;width:16px;height:16px;border-radius:100%;border:2px solid transparent;border-top-color:#41b883;-webkit-box-shadow:0 0 0 1px transparent;box-shadow:0 0 0 1px transparent\n}\n.multiselect__spinner:before{-webkit-animation:spinning 2.4s cubic-bezier(.41,.26,.2,.62);animation:spinning 2.4s cubic-bezier(.41,.26,.2,.62);-webkit-animation-iteration-count:infinite;animation-iteration-count:infinite\n}\n.multiselect__spinner:after{-webkit-animation:spinning 2.4s cubic-bezier(.51,.09,.21,.8);animation:spinning 2.4s cubic-bezier(.51,.09,.21,.8);-webkit-animation-iteration-count:infinite;animation-iteration-count:infinite\n}\n.multiselect__loading-enter-active,.multiselect__loading-leave-active{-webkit-transition:opacity .4s ease-in-out;transition:opacity .4s ease-in-out;opacity:1\n}\n.multiselect__loading-enter,.multiselect__loading-leave-active{opacity:0\n}\n.multiselect,.multiselect__input,.multiselect__single{font-family:inherit;font-size:16px;-ms-touch-action:manipulation;touch-action:manipulation\n}\n.multiselect{-webkit-box-sizing:content-box;box-sizing:content-box;display:block;position:relative;width:100%;min-height:40px;text-align:left;color:#35495e\n}\n.multiselect *{-webkit-box-sizing:border-box;box-sizing:border-box\n}\n.multiselect:focus{outline:none\n}\n.multiselect--disabled{background:#ededed;pointer-events:none;opacity:.6\n}\n.multiselect--active{z-index:50\n}\n.multiselect--active:not(.multiselect--above) .multiselect__current,.multiselect--active:not(.multiselect--above) .multiselect__input,.multiselect--active:not(.multiselect--above) .multiselect__tags{border-bottom-left-radius:0;border-bottom-right-radius:0\n}\n.multiselect--active .multiselect__select{-webkit-transform:rotate(180deg);transform:rotate(180deg)\n}\n.multiselect--above.multiselect--active .multiselect__current,.multiselect--above.multiselect--active .multiselect__input,.multiselect--above.multiselect--active .multiselect__tags{border-top-left-radius:0;border-top-right-radius:0\n}\n.multiselect__input,.multiselect__single{position:relative;display:inline-block;min-height:20px;line-height:20px;border:none;border-radius:5px;background:#fff;padding:0 0 0 5px;width:100%;-webkit-transition:border .1s ease;transition:border .1s ease;-webkit-box-sizing:border-box;box-sizing:border-box;margin-bottom:8px;vertical-align:top\n}\n.multiselect__input:-ms-input-placeholder{color:#35495e\n}\n.multiselect__input::-webkit-input-placeholder{color:#35495e\n}\n.multiselect__input::-moz-placeholder{color:#35495e\n}\n.multiselect__input::-ms-input-placeholder{color:#35495e\n}\n.multiselect__input::placeholder{color:#35495e\n}\n.multiselect__tag~.multiselect__input,.multiselect__tag~.multiselect__single{width:auto\n}\n.multiselect__input:hover,.multiselect__single:hover{border-color:#cfcfcf\n}\n.multiselect__input:focus,.multiselect__single:focus{border-color:#a8a8a8;outline:none\n}\n.multiselect__single{padding-left:5px;margin-bottom:8px\n}\n.multiselect__tags-wrap{display:inline\n}\n.multiselect__tags{min-height:40px;display:block;padding:8px 40px 0 8px;border-radius:5px;border:1px solid #e8e8e8;background:#fff;font-size:14px\n}\n.multiselect__tag{position:relative;display:inline-block;padding:4px 26px 4px 10px;border-radius:5px;margin-right:10px;color:#fff;line-height:1;background:#41b883;margin-bottom:5px;white-space:nowrap;overflow:hidden;max-width:100%;text-overflow:ellipsis\n}\n.multiselect__tag-icon{cursor:pointer;margin-left:7px;position:absolute;right:0;top:0;bottom:0;font-weight:700;font-style:normal;width:22px;text-align:center;line-height:22px;-webkit-transition:all .2s ease;transition:all .2s ease;border-radius:5px\n}\n.multiselect__tag-icon:after{content:\"\\D7\";color:#266d4d;font-size:14px\n}\n.multiselect__tag-icon:focus,.multiselect__tag-icon:hover{background:#369a6e\n}\n.multiselect__tag-icon:focus:after,.multiselect__tag-icon:hover:after{color:#fff\n}\n.multiselect__current{min-height:40px;overflow:hidden;padding:8px 30px 0 12px;white-space:nowrap;border-radius:5px;border:1px solid #e8e8e8\n}\n.multiselect__current,.multiselect__select{line-height:16px;-webkit-box-sizing:border-box;box-sizing:border-box;display:block;margin:0;text-decoration:none;cursor:pointer\n}\n.multiselect__select{position:absolute;width:40px;height:38px;right:1px;top:1px;padding:4px 8px;text-align:center;-webkit-transition:-webkit-transform .2s ease;transition:-webkit-transform .2s ease;transition:transform .2s ease;transition:transform .2s ease, -webkit-transform .2s ease\n}\n.multiselect__select:before{position:relative;right:0;top:65%;color:#999;margin-top:4px;border-color:#999 transparent transparent;border-style:solid;border-width:5px 5px 0;content:\"\"\n}\n.multiselect__placeholder{color:#adadad;display:inline-block;margin-bottom:10px;padding-top:2px\n}\n.multiselect--active .multiselect__placeholder{display:none\n}\n.multiselect__content-wrapper{position:absolute;display:block;background:#fff;width:100%;max-height:240px;overflow:auto;border:1px solid #e8e8e8;border-top:none;border-bottom-left-radius:5px;border-bottom-right-radius:5px;z-index:50;-webkit-overflow-scrolling:touch\n}\n.multiselect__content{list-style:none;display:inline-block;padding:0;margin:0;min-width:100%;vertical-align:top\n}\n.multiselect--above .multiselect__content-wrapper{bottom:100%;border-bottom-left-radius:0;border-bottom-right-radius:0;border-top-left-radius:5px;border-top-right-radius:5px;border-bottom:none;border-top:1px solid #e8e8e8\n}\n.multiselect__content::webkit-scrollbar{display:none\n}\n.multiselect__element{display:block\n}\n.multiselect__option{display:block;padding:12px;min-height:40px;line-height:16px;text-decoration:none;text-transform:none;vertical-align:middle;position:relative;cursor:pointer;white-space:nowrap\n}\n.multiselect__option:after{top:0;right:0;position:absolute;line-height:40px;padding-right:12px;padding-left:20px;font-size:13px\n}\n.multiselect__option--highlight{background:#41b883;outline:none;color:#fff\n}\n.multiselect__option--highlight:after{content:attr(data-select);background:#41b883;color:#fff\n}\n.multiselect__option--selected{background:#f3f3f3;color:#35495e;font-weight:700\n}\n.multiselect__option--selected:after{content:attr(data-selected);color:silver\n}\n.multiselect__option--selected.multiselect__option--highlight{background:#ff6a6a;color:#fff\n}\n.multiselect__option--selected.multiselect__option--highlight:after{background:#ff6a6a;content:attr(data-deselect);color:#fff\n}\n.multiselect--disabled .multiselect__current,.multiselect--disabled .multiselect__select{background:#ededed;color:#a6a6a6\n}\n.multiselect__option--disabled{background:#ededed!important;color:#a6a6a6!important;cursor:text;pointer-events:none\n}\n.multiselect__option--group{background:#ededed;color:#35495e\n}\n.multiselect__option--group.multiselect__option--highlight{background:#35495e;color:#fff\n}\n.multiselect__option--group.multiselect__option--highlight:after{background:#35495e\n}\n.multiselect__option--disabled.multiselect__option--highlight{background:#dedede\n}\n.multiselect__option--group-selected.multiselect__option--highlight{background:#ff6a6a;color:#fff\n}\n.multiselect__option--group-selected.multiselect__option--highlight:after{background:#ff6a6a;content:attr(data-deselect);color:#fff\n}\n.multiselect-enter-active,.multiselect-leave-active{-webkit-transition:all .15s ease;transition:all .15s ease\n}\n.multiselect-enter,.multiselect-leave-active{opacity:0\n}\n.multiselect__strong{margin-bottom:8px;line-height:20px;display:inline-block;vertical-align:top\n}\n[dir=rtl] .multiselect{text-align:right\n}\n[dir=rtl] .multiselect__select{right:auto;left:1px\n}\n[dir=rtl] .multiselect__tags{padding:8px 8px 0 40px\n}\n[dir=rtl] .multiselect__content{text-align:right\n}\n[dir=rtl] .multiselect__option:after{right:auto;left:0\n}\n[dir=rtl] .multiselect__clear{right:auto;left:12px\n}\n[dir=rtl] .multiselect__spinner{right:auto;left:1px\n}\n@-webkit-keyframes spinning{\n0%{-webkit-transform:rotate(0);transform:rotate(0)\n}\nto{-webkit-transform:rotate(2turn);transform:rotate(2turn)\n}\n}\n@keyframes spinning{\n0%{-webkit-transform:rotate(0);transform:rotate(0)\n}\nto{-webkit-transform:rotate(2turn);transform:rotate(2turn)\n}\n}", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-6b69a0b2\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/media_plan/complete/PlanDetails.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.v-content {\n    background: #fafafa;\n}\n.white-bg {\n    background: #ffffff;\n}\n.subtotal td {\n    border-bottom: none !important;\n}\n.dates td, .exposure-td {\n    padding: 13px 5px;\n    font-size: 12px;\n}\n.dates td input, .exposure-td input {\n    padding: 8px 2px 5px;\n    text-align: center;\n}\n.v-text-field .v-input__slot {\n    padding: 0px 12px;\n    min-height: 45px;\n    margin-bottom: 0px;\n    border: 1px solid #ccc;\n    border-radius: 5px;\n    /* box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12); */\n}\n.v-text-field>.v-input__control>.v-input__slot:after, .v-text-field>.v-input__control>.v-input__slot:before {\n    content: none;\n}\n.theme--dark.v-btn.v-btn--disabled:not(.v-btn--icon):not(.v-btn--flat):not(.v-btn--outline) {\n    background-color: hsl(184, 55%, 53%)!important;\n}\n", ""]);
 
 // exports
 
@@ -3358,6 +3931,21 @@ exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/cs
 
 // module
 exports.push([module.i, "\n.v-text-field {\n    padding-top: 2px;\n    margin-top: 0px;\n}\n.default-vue-btn {\n    color: #fff;\n    cursor: pointer;\n    background: #44C1C9 !important;\n    -webkit-appearance: none;\n    font-family: \"Roboto\", sans-serif;\n    font-weight: 500;\n    border: 0;\n    font-size: 15px;\n    border-radius: 2px;\n    -webkit-box-shadow: 9px 10px 20px 1px rgba(0,159,160,0.21);\n    box-shadow: 9px 10px 20px 1px rgba(0,159,160,0.21);\n    position: relative;\n    display: inline-block;\n    text-transform: uppercase;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js!./node_modules/vue2-timepicker/src/style/vue-timepicker.css":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, ".time-picker {\n  display: inline-block;\n  position: relative;\n  font-size: 1em;\n  width: 10em;\n  font-family: sans-serif;\n  vertical-align: middle;\n}\n\n.time-picker * {\n  box-sizing: border-box;\n}\n\n.time-picker input.display-time {\n  border: 1px solid #d2d2d2;\n  width: 10em;\n  height: 2.2em;\n  padding: 0.3em 0.5em;\n  font-size: 1em;\n}\n\n.time-picker .clear-btn {\n  position: absolute;\n  display: flex;\n  flex-flow: column nowrap;\n  justify-content: center;\n  align-items: center;\n  top: 0;\n  right: 0;\n  bottom: 0;\n  margin-top: -0.15em;\n  z-index: 3;\n  font-size: 1.1em;\n  line-height: 1em;\n  vertical-align: middle;\n  width: 1.3em;\n  color: #d2d2d2;\n  background: rgba(255,255,255,0);\n  text-align: center;\n  font-style: normal;\n\n  -webkit-transition: color .2s;\n  transition: color .2s;\n}\n\n.time-picker .clear-btn:hover {\n  color: #797979;\n  cursor: pointer;\n}\n\n.time-picker .time-picker-overlay {\n  z-index: 2;\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n}\n\n.time-picker .dropdown {\n  position: absolute;\n  z-index: 5;\n  top: calc(2.2em + 2px);\n  left: 0;\n  background: #fff;\n  box-shadow: 0 1px 6px rgba(0,0,0,0.15);\n  width: 10em;\n  height: 10em;\n  font-weight: normal;\n}\n\n.time-picker .dropdown .select-list {\n  width: 10em;\n  height: 10em;\n  overflow: hidden;\n  display: flex;\n  flex-flow: row nowrap;\n  align-items: stretch;\n  justify-content: space-between;\n}\n\n.time-picker .dropdown ul {\n  padding: 0;\n  margin: 0;\n  list-style: none;\n\n  flex: 1;\n  overflow-x: hidden;\n  overflow-y: auto;\n}\n\n.time-picker .dropdown ul.minutes,\n.time-picker .dropdown ul.seconds,\n.time-picker .dropdown ul.apms{\n  border-left: 1px solid #fff;\n}\n\n.time-picker .dropdown ul li {\n  text-align: center;\n  padding: 0.3em 0;\n  color: #161616;\n}\n\n.time-picker .dropdown ul li:not(.hint):hover {\n  background: rgba(0,0,0,.08);\n  color: #161616;\n  cursor: pointer;\n}\n\n.time-picker .dropdown ul li.active,\n.time-picker .dropdown ul li.active:hover {\n  background: #41B883;\n  color: #fff;\n}\n\n.time-picker .dropdown .hint {\n  color: #a5a5a5;\n  cursor: default;\n  font-size: 0.8em;\n}\n", ""]);
 
 // exports
 
@@ -6331,6 +6919,419 @@ if (false) {
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-53727c40\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/media_plan/complete/ProgramDetails.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "v-layout",
+    [
+      _c(
+        "v-dialog",
+        {
+          attrs: { persistent: "", "max-width": "600px" },
+          scopedSlots: _vm._u([
+            {
+              key: "activator",
+              fn: function(ref) {
+                var on = ref.on
+                return [
+                  _c("a", _vm._g({ staticClass: "default-vue-link" }, on), [
+                    _vm._v(_vm._s(_vm.timeBelt.program))
+                  ])
+                ]
+              }
+            }
+          ]),
+          model: {
+            value: _vm.dialog,
+            callback: function($$v) {
+              _vm.dialog = $$v
+            },
+            expression: "dialog"
+          }
+        },
+        [
+          _vm._v(" "),
+          _c(
+            "v-card",
+            [
+              _c("v-card-title", [
+                _c("span", { staticClass: "headline" }, [
+                  _vm._v(
+                    "Update program details for " +
+                      _vm._s(_vm.timeBelt.station) +
+                      " " +
+                      _vm._s(_vm.timeBelt.start_time) +
+                      " - " +
+                      _vm._s(_vm.timeBelt.end_time)
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c(
+                "v-card-text",
+                { staticClass: "px-2 pt-2 pb-0" },
+                [
+                  _c(
+                    "v-container",
+                    { attrs: { "grid-list-md": "" } },
+                    [
+                      _c(
+                        "v-layout",
+                        { attrs: { wrap: "" } },
+                        [
+                          _c(
+                            "v-flex",
+                            { attrs: { xs12: "", sm12: "", md12: "" } },
+                            [
+                              _c("span", [_vm._v("Program Name:")]),
+                              _vm._v(" "),
+                              _c("v-text-field", {
+                                attrs: {
+                                  type: "text",
+                                  placeholder: "Program name"
+                                },
+                                model: {
+                                  value: _vm.selectedValues.program,
+                                  callback: function($$v) {
+                                    _vm.$set(_vm.selectedValues, "program", $$v)
+                                  },
+                                  expression: "selectedValues.program"
+                                }
+                              })
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "v-layout",
+                        { attrs: { wrap: "" } },
+                        [
+                          _c(
+                            "v-flex",
+                            { attrs: { xs12: "", sm6: "", md6: "" } },
+                            [
+                              _c("span", [_vm._v("15 Seconds:")]),
+                              _vm._v(" "),
+                              _c("v-text-field", {
+                                attrs: {
+                                  type: "number",
+                                  placeholder: "Enter Unit Rate"
+                                },
+                                model: {
+                                  value:
+                                    _vm.selectedValues.ratingsPerDuration["15"],
+                                  callback: function($$v) {
+                                    _vm.$set(
+                                      _vm.selectedValues.ratingsPerDuration,
+                                      "15",
+                                      $$v
+                                    )
+                                  },
+                                  expression:
+                                    "selectedValues.ratingsPerDuration['15']"
+                                }
+                              })
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "v-flex",
+                            { attrs: { xs12: "", sm6: "", md6: "" } },
+                            [
+                              _c("span", [_vm._v("30 Seconds:")]),
+                              _vm._v(" "),
+                              _c("v-text-field", {
+                                attrs: {
+                                  type: "number",
+                                  placeholder: "Enter Unit Rate"
+                                },
+                                model: {
+                                  value:
+                                    _vm.selectedValues.ratingsPerDuration["30"],
+                                  callback: function($$v) {
+                                    _vm.$set(
+                                      _vm.selectedValues.ratingsPerDuration,
+                                      "30",
+                                      $$v
+                                    )
+                                  },
+                                  expression:
+                                    "selectedValues.ratingsPerDuration['30']"
+                                }
+                              })
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "v-flex",
+                            { attrs: { xs12: "", sm6: "", md6: "" } },
+                            [
+                              _c("span", [_vm._v("45 Seconds:")]),
+                              _vm._v(" "),
+                              _c("v-text-field", {
+                                attrs: {
+                                  type: "number",
+                                  placeholder: "Enter Unit Rate"
+                                },
+                                model: {
+                                  value:
+                                    _vm.selectedValues.ratingsPerDuration["45"],
+                                  callback: function($$v) {
+                                    _vm.$set(
+                                      _vm.selectedValues.ratingsPerDuration,
+                                      "45",
+                                      $$v
+                                    )
+                                  },
+                                  expression:
+                                    "selectedValues.ratingsPerDuration['45']"
+                                }
+                              })
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "v-flex",
+                            { attrs: { xs12: "", sm6: "", md6: "" } },
+                            [
+                              _c("span", [_vm._v("60 Seconds:")]),
+                              _vm._v(" "),
+                              _c("v-text-field", {
+                                attrs: {
+                                  type: "number",
+                                  placeholder: "Enter Unit Rate"
+                                },
+                                model: {
+                                  value:
+                                    _vm.selectedValues.ratingsPerDuration["60"],
+                                  callback: function($$v) {
+                                    _vm.$set(
+                                      _vm.selectedValues.ratingsPerDuration,
+                                      "60",
+                                      $$v
+                                    )
+                                  },
+                                  expression:
+                                    "selectedValues.ratingsPerDuration['60']"
+                                }
+                              })
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _vm._l(_vm.selectedValues.timeBelts, function(
+                        times,
+                        day
+                      ) {
+                        return _c(
+                          "v-layout",
+                          { key: day, attrs: { wrap: "" } },
+                          [
+                            _c(
+                              "v-flex",
+                              { attrs: { xs12: "", sm12: "", md3: "" } },
+                              [_c("span", [_vm._v(_vm._s(day))])]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "v-flex",
+                              { attrs: { xs12: "", sm12: "", md9: "" } },
+                              _vm._l(times, function(time, key) {
+                                return _c(
+                                  "v-layout",
+                                  { key: key, attrs: { wrap: "" } },
+                                  [
+                                    _c(
+                                      "v-flex",
+                                      { attrs: { xs12: "", sm3: "", md5: "" } },
+                                      [
+                                        _c("vue-timepicker", {
+                                          staticClass: "mb-2",
+                                          attrs: { "minute-interval": 5 },
+                                          model: {
+                                            value:
+                                              _vm.selectedValues.timeBelts[day][
+                                                key
+                                              ]["start_time"],
+                                            callback: function($$v) {
+                                              _vm.$set(
+                                                _vm.selectedValues.timeBelts[
+                                                  day
+                                                ][key],
+                                                "start_time",
+                                                $$v
+                                              )
+                                            },
+                                            expression:
+                                              "selectedValues.timeBelts[day][key]['start_time']"
+                                          }
+                                        })
+                                      ],
+                                      1
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "v-flex",
+                                      { attrs: { xs12: "", sm3: "", md5: "" } },
+                                      [
+                                        _c("vue-timepicker", {
+                                          staticClass: "mb-2",
+                                          attrs: { "minute-interval": 5 },
+                                          model: {
+                                            value:
+                                              _vm.selectedValues.timeBelts[day][
+                                                key
+                                              ]["end_time"],
+                                            callback: function($$v) {
+                                              _vm.$set(
+                                                _vm.selectedValues.timeBelts[
+                                                  day
+                                                ][key],
+                                                "end_time",
+                                                $$v
+                                              )
+                                            },
+                                            expression:
+                                              "selectedValues.timeBelts[day][key]['end_time']"
+                                          }
+                                        })
+                                      ],
+                                      1
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "v-flex",
+                                      {
+                                        attrs: {
+                                          xs12: "",
+                                          sm1: "",
+                                          md1: "",
+                                          "px-1": ""
+                                        }
+                                      },
+                                      [
+                                        key == 0
+                                          ? _c(
+                                              "v-icon",
+                                              {
+                                                staticClass: "pt-1",
+                                                attrs: {
+                                                  color: "success",
+                                                  dark: ""
+                                                },
+                                                on: {
+                                                  click: function($event) {
+                                                    return _vm.addTimeBelt(day)
+                                                  }
+                                                }
+                                              },
+                                              [_vm._v("add_box")]
+                                            )
+                                          : _c(
+                                              "v-icon",
+                                              {
+                                                staticClass: "pt-1",
+                                                attrs: {
+                                                  color: "red",
+                                                  dark: ""
+                                                },
+                                                on: {
+                                                  click: function($event) {
+                                                    return _vm.deleteTimeBelt(
+                                                      day,
+                                                      key
+                                                    )
+                                                  }
+                                                }
+                                              },
+                                              [_vm._v("delete")]
+                                            )
+                                      ],
+                                      1
+                                    )
+                                  ],
+                                  1
+                                )
+                              }),
+                              1
+                            )
+                          ],
+                          1
+                        )
+                      })
+                    ],
+                    2
+                  )
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "v-card-actions",
+                [
+                  _c("v-spacer"),
+                  _vm._v(" "),
+                  _c(
+                    "v-btn",
+                    {
+                      attrs: { color: "red", dark: "" },
+                      on: {
+                        click: function($event) {
+                          _vm.dialog = false
+                        }
+                      }
+                    },
+                    [_vm._v("Close")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "v-btn",
+                    {
+                      staticClass: "default-vue-btn",
+                      attrs: { color: "", dark: "" },
+                      on: { click: _vm.updateProgramDetails }
+                    },
+                    [_vm._v("Update Program")]
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          )
+        ],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-53727c40", module.exports)
+  }
+}
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-632891a7\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/media_plan/CriteriaForm.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -7378,6 +8379,753 @@ if (false) {
   module.hot.accept()
   if (module.hot.data) {
     require("vue-hot-reload-api")      .rerender("data-v-655b8a33", module.exports)
+  }
+}
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-6b69a0b2\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/media_plan/complete/PlanDetails.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "v-container",
+    { staticClass: "pt-0 pb-3 px-0", attrs: { "grid-list-md": "" } },
+    [
+      _c(
+        "v-layout",
+        { staticClass: "white-bg", attrs: { row: "", wrap: "" } },
+        [
+          _c(
+            "v-flex",
+            { attrs: { xs12: "", sm12: "", md12: "", lg12: "", "mb-3": "" } },
+            [
+              _c(
+                "v-expansion-panel",
+                { attrs: { popout: "" } },
+                _vm._l(_vm.fayaDurations, function(duration, durationkey) {
+                  return _c(
+                    "v-expansion-panel-content",
+                    {
+                      key: durationkey,
+                      staticClass: "py-2",
+                      scopedSlots: _vm._u(
+                        [
+                          {
+                            key: "header",
+                            fn: function() {
+                              return [
+                                _c("div", [
+                                  _vm._v(_vm._s(duration) + " Seconds")
+                                ])
+                              ]
+                            },
+                            proxy: true
+                          }
+                        ],
+                        null,
+                        true
+                      )
+                    },
+                    [
+                      _vm._v(" "),
+                      _c(
+                        "v-card",
+                        [
+                          _c(
+                            "v-card-text",
+                            [
+                              _c(
+                                "v-layout",
+                                {
+                                  staticStyle: {
+                                    "border-bottom": "1px solid #e8e8e8"
+                                  },
+                                  attrs: { wrap: "" }
+                                },
+                                [
+                                  _c(
+                                    "v-flex",
+                                    {
+                                      staticStyle: { "overflow-x": "auto" },
+                                      attrs: { md12: "", "px-0": "" }
+                                    },
+                                    [
+                                      _c("table", [
+                                        _c("thead", [
+                                          _c(
+                                            "tr",
+                                            [
+                                              _c(
+                                                "th",
+                                                { staticClass: "fixed-side" },
+                                                [_vm._v("Station")]
+                                              ),
+                                              _vm._v(" "),
+                                              _c(
+                                                "th",
+                                                { staticClass: "fixed-side" },
+                                                [_vm._v("Day")]
+                                              ),
+                                              _vm._v(" "),
+                                              _c(
+                                                "th",
+                                                { staticClass: "fixed-side" },
+                                                [_vm._v("Time Belt")]
+                                              ),
+                                              _vm._v(" "),
+                                              _c(
+                                                "th",
+                                                { staticClass: "fixed-side" },
+                                                [_vm._v("Program")]
+                                              ),
+                                              _vm._v(" "),
+                                              _c(
+                                                "th",
+                                                { staticClass: "fixed-side" },
+                                                [_vm._v("Unit Rate")]
+                                              ),
+                                              _vm._v(" "),
+                                              _c(
+                                                "th",
+                                                { staticClass: "fixed-side" },
+                                                [_vm._v("Discount")]
+                                              ),
+                                              _vm._v(" "),
+                                              _c(
+                                                "th",
+                                                { staticClass: "fixed-side" },
+                                                [_vm._v("Net Total")]
+                                              ),
+                                              _vm._v(" "),
+                                              _c(
+                                                "th",
+                                                { staticClass: "fixed-side" },
+                                                [_vm._v("Total Exposure")]
+                                              ),
+                                              _vm._v(" "),
+                                              _vm._l(
+                                                _vm.timeBelts["labeldates"],
+                                                function(date, labelDateKey) {
+                                                  return _c(
+                                                    "th",
+                                                    {
+                                                      key: labelDateKey,
+                                                      staticClass: "fixed-side"
+                                                    },
+                                                    [_vm._v(_vm._s(date))]
+                                                  )
+                                                }
+                                              )
+                                            ],
+                                            2
+                                          )
+                                        ]),
+                                        _vm._v(" "),
+                                        _c(
+                                          "tbody",
+                                          [
+                                            _vm._l(
+                                              _vm.fayaTimebelts[
+                                                "programs_stations"
+                                              ],
+                                              function(timebelt, timeBeltkey) {
+                                                return _c(
+                                                  "tr",
+                                                  { key: timeBeltkey },
+                                                  [
+                                                    _c("td", [
+                                                      _vm._v(
+                                                        _vm._s(timebelt.station)
+                                                      )
+                                                    ]),
+                                                    _vm._v(" "),
+                                                    _c("td", [
+                                                      _vm._v(
+                                                        _vm._s(
+                                                          _vm.shortDay(
+                                                            timebelt.day
+                                                          )
+                                                        )
+                                                      )
+                                                    ]),
+                                                    _vm._v(" "),
+                                                    _c("td", [
+                                                      _vm._v(
+                                                        _vm._s(
+                                                          _vm.format_time(
+                                                            timebelt.start_time
+                                                          )
+                                                        ) +
+                                                          " " +
+                                                          _vm._s(
+                                                            _vm.format_time(
+                                                              timebelt.end_time
+                                                            )
+                                                          )
+                                                      )
+                                                    ]),
+                                                    _vm._v(" "),
+                                                    _c(
+                                                      "td",
+                                                      [
+                                                        _c(
+                                                          "media-plan-program-details",
+                                                          {
+                                                            attrs: {
+                                                              "time-belt": timebelt
+                                                            }
+                                                          }
+                                                        )
+                                                      ],
+                                                      1
+                                                    ),
+                                                    _vm._v(" "),
+                                                    _c("td", [
+                                                      _vm._v(
+                                                        _vm._s(
+                                                          _vm.formatAmount(
+                                                            _vm.getUnitRate(
+                                                              timebelt,
+                                                              duration
+                                                            )
+                                                          )
+                                                        )
+                                                      )
+                                                    ]),
+                                                    _vm._v(" "),
+                                                    _c("td", [
+                                                      timebelt.volume_discount
+                                                        ? _c("input", {
+                                                            attrs: {
+                                                              min: "0",
+                                                              max: "100",
+                                                              type: "number"
+                                                            },
+                                                            domProps: {
+                                                              value:
+                                                                timebelt.volume_discount
+                                                            },
+                                                            on: {
+                                                              blur: function(
+                                                                $event
+                                                              ) {
+                                                                return _vm.storeVolumeDiscount(
+                                                                  timebelt.station,
+                                                                  $event
+                                                                )
+                                                              }
+                                                            }
+                                                          })
+                                                        : _c("input", {
+                                                            attrs: {
+                                                              min: "0",
+                                                              max: "100",
+                                                              type: "number"
+                                                            },
+                                                            domProps: {
+                                                              value: 0
+                                                            },
+                                                            on: {
+                                                              blur: function(
+                                                                $event
+                                                              ) {
+                                                                return _vm.storeVolumeDiscount(
+                                                                  timebelt.station,
+                                                                  $event
+                                                                )
+                                                              }
+                                                            }
+                                                          })
+                                                    ]),
+                                                    _vm._v(" "),
+                                                    _c("td", [
+                                                      _vm._v(
+                                                        _vm._s(
+                                                          _vm.formatAmount(
+                                                            _vm.getNetTotalByTimeBelt(
+                                                              timebelt,
+                                                              timeBeltkey,
+                                                              duration
+                                                            )
+                                                          )
+                                                        )
+                                                      )
+                                                    ]),
+                                                    _vm._v(" "),
+                                                    _c("td", [
+                                                      _vm._v(
+                                                        _vm._s(
+                                                          _vm.getTotalExposureByTimebelt(
+                                                            timeBeltkey,
+                                                            duration
+                                                          )
+                                                        )
+                                                      )
+                                                    ]),
+                                                    _vm._v(" "),
+                                                    _vm._l(
+                                                      _vm.fayaTimebelts[
+                                                        "dates"
+                                                      ],
+                                                      function(
+                                                        timebeltDate,
+                                                        timebeltDatekey
+                                                      ) {
+                                                        return _c(
+                                                          "td",
+                                                          {
+                                                            key: timebeltDatekey,
+                                                            staticClass:
+                                                              "exposure-td"
+                                                          },
+                                                          [
+                                                            _vm.fayaTimebelts[
+                                                              "days"
+                                                            ][
+                                                              timebeltDatekey
+                                                            ] == timebelt.day
+                                                              ? _c("input", {
+                                                                  directives: [
+                                                                    {
+                                                                      name:
+                                                                        "model",
+                                                                      rawName:
+                                                                        "v-model",
+                                                                      value:
+                                                                        _vm
+                                                                          .fayaTimebelts[
+                                                                          "programs_stations"
+                                                                        ][
+                                                                          timeBeltkey
+                                                                        ][
+                                                                          "exposures"
+                                                                        ][
+                                                                          duration
+                                                                        ][
+                                                                          "dates"
+                                                                        ][
+                                                                          timebeltDate
+                                                                        ],
+                                                                      expression:
+                                                                        "fayaTimebelts['programs_stations'][timeBeltkey]['exposures'][duration]['dates'][timebeltDate]"
+                                                                    }
+                                                                  ],
+                                                                  attrs: {
+                                                                    type:
+                                                                      "number"
+                                                                  },
+                                                                  domProps: {
+                                                                    value:
+                                                                      _vm
+                                                                        .fayaTimebelts[
+                                                                        "programs_stations"
+                                                                      ][
+                                                                        timeBeltkey
+                                                                      ][
+                                                                        "exposures"
+                                                                      ][
+                                                                        duration
+                                                                      ][
+                                                                        "dates"
+                                                                      ][
+                                                                        timebeltDate
+                                                                      ]
+                                                                  },
+                                                                  on: {
+                                                                    change: function(
+                                                                      $event
+                                                                    ) {
+                                                                      return _vm.countExposureByTimeBelt(
+                                                                        timeBeltkey,
+                                                                        duration
+                                                                      )
+                                                                    },
+                                                                    input: function(
+                                                                      $event
+                                                                    ) {
+                                                                      if (
+                                                                        $event
+                                                                          .target
+                                                                          .composing
+                                                                      ) {
+                                                                        return
+                                                                      }
+                                                                      _vm.$set(
+                                                                        _vm
+                                                                          .fayaTimebelts[
+                                                                          "programs_stations"
+                                                                        ][
+                                                                          timeBeltkey
+                                                                        ][
+                                                                          "exposures"
+                                                                        ][
+                                                                          duration
+                                                                        ][
+                                                                          "dates"
+                                                                        ],
+                                                                        timebeltDate,
+                                                                        $event
+                                                                          .target
+                                                                          .value
+                                                                      )
+                                                                    }
+                                                                  }
+                                                                })
+                                                              : _c("input", {
+                                                                  staticClass:
+                                                                    "disabled_input",
+                                                                  attrs: {
+                                                                    type:
+                                                                      "number",
+                                                                    disabled: ""
+                                                                  }
+                                                                })
+                                                          ]
+                                                        )
+                                                      }
+                                                    )
+                                                  ],
+                                                  2
+                                                )
+                                              }
+                                            ),
+                                            _vm._v(" "),
+                                            _c(
+                                              "tr",
+                                              { staticClass: "subtotal" },
+                                              [
+                                                _c("td", [_vm._v("Subtotal")]),
+                                                _vm._v(" "),
+                                                _c("td"),
+                                                _vm._v(" "),
+                                                _c("td"),
+                                                _vm._v(" "),
+                                                _c("td"),
+                                                _vm._v(" "),
+                                                _c("td"),
+                                                _vm._v(" "),
+                                                _c("td"),
+                                                _vm._v(" "),
+                                                _c("td", [
+                                                  _vm._v(
+                                                    _vm._s(
+                                                      _vm.formatAmount(
+                                                        _vm.getNetTotalByDuration(
+                                                          duration
+                                                        )
+                                                      )
+                                                    )
+                                                  )
+                                                ]),
+                                                _vm._v(" "),
+                                                _c("td")
+                                              ]
+                                            )
+                                          ],
+                                          2
+                                        )
+                                      ])
+                                    ]
+                                  )
+                                ],
+                                1
+                              )
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  )
+                }),
+                1
+              )
+            ],
+            1
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "v-layout",
+        { staticClass: "px-4 pb-3 white-bg", attrs: { row: "", wrap: "" } },
+        [
+          _c(
+            "v-flex",
+            { attrs: { xs12: "", sm4: "", md4: "" } },
+            [
+              _c("span", [_vm._v("Client:")]),
+              _vm._v(" "),
+              _c("v-select", {
+                directives: [
+                  {
+                    name: "validate",
+                    rawName: "v-validate",
+                    value: "required",
+                    expression: "'required'"
+                  }
+                ],
+                attrs: {
+                  items: _vm.clients,
+                  "item-text": "company_name",
+                  "item-value": "id",
+                  name: "client",
+                  placeholder: "Please select client"
+                },
+                on: { change: _vm.getBrands },
+                model: {
+                  value: _vm.client,
+                  callback: function($$v) {
+                    _vm.client = $$v
+                  },
+                  expression: "client"
+                }
+              }),
+              _vm._v(" "),
+              _c(
+                "span",
+                {
+                  directives: [
+                    {
+                      name: "show",
+                      rawName: "v-show",
+                      value: _vm.errors.has("client"),
+                      expression: "errors.has('client')"
+                    }
+                  ],
+                  staticClass: "text-danger"
+                },
+                [_vm._v(_vm._s(_vm.errors.first("client")))]
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "v-flex",
+            { attrs: { xs12: "", sm4: "", md4: "" } },
+            [
+              _c("span", [_vm._v("Brand:")]),
+              _vm._v(" "),
+              _c("v-select", {
+                directives: [
+                  {
+                    name: "validate",
+                    rawName: "v-validate",
+                    value: "required",
+                    expression: "'required'"
+                  }
+                ],
+                attrs: {
+                  items: _vm.filteredBrands,
+                  "item-text": "name",
+                  "item-value": "id",
+                  name: "brand",
+                  placeholder: "Please select brand"
+                },
+                model: {
+                  value: _vm.brand,
+                  callback: function($$v) {
+                    _vm.brand = $$v
+                  },
+                  expression: "brand"
+                }
+              }),
+              _vm._v(" "),
+              _c(
+                "span",
+                {
+                  directives: [
+                    {
+                      name: "show",
+                      rawName: "v-show",
+                      value: _vm.errors.has("brand"),
+                      expression: "errors.has('brand')"
+                    }
+                  ],
+                  staticClass: "text-danger"
+                },
+                [_vm._v(_vm._s(_vm.errors.first("brand")))]
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "v-flex",
+            { attrs: { xs12: "", sm4: "", md4: "" } },
+            [
+              _c("span", [_vm._v("Product Name:")]),
+              _vm._v(" "),
+              _c("v-text-field", {
+                directives: [
+                  {
+                    name: "validate",
+                    rawName: "v-validate",
+                    value: "required",
+                    expression: "'required'"
+                  }
+                ],
+                attrs: { name: "product", placeholder: "Product name" },
+                model: {
+                  value: _vm.product,
+                  callback: function($$v) {
+                    _vm.product = $$v
+                  },
+                  expression: "product"
+                }
+              }),
+              _vm._v(" "),
+              _c(
+                "span",
+                {
+                  directives: [
+                    {
+                      name: "show",
+                      rawName: "v-show",
+                      value: _vm.errors.has("product"),
+                      expression: "errors.has('product')"
+                    }
+                  ],
+                  staticClass: "text-danger"
+                },
+                [_vm._v(_vm._s(_vm.errors.first("product")))]
+              )
+            ],
+            1
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "v-layout",
+        { staticClass: "px-0 py-5", attrs: { row: "", wrap: "" } },
+        [
+          _c(
+            "v-flex",
+            { staticClass: "px-0", attrs: { xs12: "", sm12: "", md4: "" } },
+            [
+              _c(
+                "v-btn",
+                {
+                  attrs: { color: "vue-back-btn", large: "" },
+                  on: {
+                    click: function($event) {
+                      return _vm.buttonRedirect(_vm.redirectUrls.back_action)
+                    }
+                  }
+                },
+                [
+                  _c("v-icon", { attrs: { left: "" } }, [
+                    _vm._v("navigate_before")
+                  ]),
+                  _vm._v("Back")
+                ],
+                1
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "v-flex",
+            {
+              staticClass: "px-0 text-right",
+              attrs: { xs12: "", s12: "", md8: "" }
+            },
+            [
+              _c(
+                "v-btn",
+                {
+                  attrs: {
+                    disabled:
+                      _vm.isRunRatings ||
+                      _vm.plan.status == "Approved" ||
+                      _vm.plan.status == "Declined",
+                    color: "default-vue-btn",
+                    large: ""
+                  },
+                  on: {
+                    click: function($event) {
+                      return _vm.save(false)
+                    }
+                  }
+                },
+                [
+                  _c("v-icon", { attrs: { left: "" } }, [_vm._v("save")]),
+                  _vm._v("Save")
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _vm.plan.status == "Approved" || _vm.plan.status == "Declined"
+                ? _c(
+                    "v-btn",
+                    {
+                      attrs: { color: "default-vue-btn", large: "" },
+                      on: {
+                        click: function($event) {
+                          return _vm.buttonRedirect(
+                            _vm.redirectUrls.next_action
+                          )
+                        }
+                      }
+                    },
+                    [
+                      _vm._v("Next"),
+                      _c("v-icon", { attrs: { right: "" } }, [
+                        _vm._v("navigate_next")
+                      ])
+                    ],
+                    1
+                  )
+                : _c(
+                    "v-btn",
+                    {
+                      attrs: {
+                        disabled: _vm.isRunRatings,
+                        color: "default-vue-btn",
+                        large: ""
+                      },
+                      on: {
+                        click: function($event) {
+                          return _vm.save(true)
+                        }
+                      }
+                    },
+                    [
+                      _vm._v("Summary"),
+                      _c("v-icon", { attrs: { right: "" } }, [
+                        _vm._v("navigate_next")
+                      ])
+                    ],
+                    1
+                  )
+            ],
+            1
+          )
+        ],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-6b69a0b2", module.exports)
   }
 }
 
@@ -9128,6 +10876,33 @@ if(false) {
 
 /***/ }),
 
+/***/ "./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-53727c40\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/media_plan/complete/ProgramDetails.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__("./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-53727c40\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/media_plan/complete/ProgramDetails.vue");
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__("./node_modules/vue-style-loader/lib/addStylesClient.js")("08c0a495", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../../node_modules/css-loader/index.js!../../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-53727c40\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./ProgramDetails.vue", function() {
+     var newContent = require("!!../../../../../../node_modules/css-loader/index.js!../../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-53727c40\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./ProgramDetails.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+
 /***/ "./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-632891a7\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=1!./resources/assets/js/components/media_plan/CriteriaForm.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -9172,6 +10947,33 @@ if(false) {
  if(!content.locals) {
    module.hot.accept("!!../../css-loader/index.js!../../vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-632891a7\",\"scoped\":false,\"hasInlineConfig\":true}!./vue-multiselect.min.css", function() {
      var newContent = require("!!../../css-loader/index.js!../../vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-632891a7\",\"scoped\":false,\"hasInlineConfig\":true}!./vue-multiselect.min.css");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+
+/***/ "./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-6b69a0b2\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/media_plan/complete/PlanDetails.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__("./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-6b69a0b2\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/media_plan/complete/PlanDetails.vue");
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__("./node_modules/vue-style-loader/lib/addStylesClient.js")("b462eb0c", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../../node_modules/css-loader/index.js!../../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-6b69a0b2\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./PlanDetails.vue", function() {
+     var newContent = require("!!../../../../../../node_modules/css-loader/index.js!../../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-6b69a0b2\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./PlanDetails.vue");
      if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
      update(newContent);
    });
@@ -9317,6 +11119,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_bootstrap_vue_dist_bootstrap_vue_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8_bootstrap_vue_dist_bootstrap_vue_css__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_vue_multiselect__ = __webpack_require__("./node_modules/vue-multiselect/dist/vue-multiselect.min.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_vue_multiselect___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9_vue_multiselect__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_vue2_timepicker__ = __webpack_require__("./node_modules/vue2-timepicker/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_vue2_timepicker___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_10_vue2_timepicker__);
 
 /**
  * First we will load all of this project's JavaScript dependencies which
@@ -9358,6 +11162,10 @@ Vue.use(__WEBPACK_IMPORTED_MODULE_7_bootstrap_vue__["a" /* default */]);
 
 Vue.component('multiselect', __WEBPACK_IMPORTED_MODULE_9_vue_multiselect___default.a);
 
+// Vue time picker
+
+Vue.component('vue-timepicker', __WEBPACK_IMPORTED_MODULE_10_vue2_timepicker___default.a);
+
 // declared to manage events globally
 window.Event = new Vue();
 /**
@@ -9374,6 +11182,8 @@ Vue.component('media-plan-suggestion-filter', __webpack_require__("./resources/a
 Vue.component('media-plan-footer-nav', __webpack_require__("./resources/assets/js/components/media_plan/customise/FooterNavigation.vue"));
 Vue.component('media-plan-suggestions', __webpack_require__("./resources/assets/js/components/media_plan/customise/Suggestions.vue"));
 Vue.component('media-plan-create-campaign', __webpack_require__("./resources/assets/js/components/media_plan/summary/CreateCampaign.vue"));
+Vue.component('media-plan-details', __webpack_require__("./resources/assets/js/components/media_plan/complete/PlanDetails.vue"));
+Vue.component('media-plan-program-details', __webpack_require__("./resources/assets/js/components/media_plan/complete/ProgramDetails.vue"));
 Vue.component('media-plan-summary', __webpack_require__("./resources/assets/js/components/media_plan/summary/Summary.vue"));
 Vue.component('media-plan-criteria-form', __webpack_require__("./resources/assets/js/components/media_plan/CriteriaForm.vue"));
 Vue.component('media-plan-list', __webpack_require__("./resources/assets/js/components/media_plan/AllMediaPlans.vue"));
@@ -9447,6 +11257,12 @@ Vue.mixin({
         formatDate: function formatDate(date_str) {
             var dateParts = date_str.split("-");
             return dateParts[0] + '-' + dateParts[1] + '-' + dateParts[2].substr(0, 2);
+        },
+        shortDay: function shortDay(str) {
+            return str.substring(0, 3);
+        },
+        formatAmount: function formatAmount(number) {
+            return number.toLocaleString();
         },
         dateToHumanReadable: function dateToHumanReadable(date) {
             return __WEBPACK_IMPORTED_MODULE_3_moment___default()(date).format('Do-MMM-YYYY');
@@ -10230,6 +12046,110 @@ if (false) {(function () {
     hotAPI.createRecord("data-v-632891a7", Component.options)
   } else {
     hotAPI.reload("data-v-632891a7", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+
+/***/ "./resources/assets/js/components/media_plan/complete/PlanDetails.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__("./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-6b69a0b2\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/media_plan/complete/PlanDetails.vue")
+}
+var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
+/* script */
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\",[\"transform-runtime\",{\"polyfill\":false,\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/media_plan/complete/PlanDetails.vue")
+/* template */
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-6b69a0b2\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/media_plan/complete/PlanDetails.vue")
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/media_plan/complete/PlanDetails.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-6b69a0b2", Component.options)
+  } else {
+    hotAPI.reload("data-v-6b69a0b2", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+
+/***/ "./resources/assets/js/components/media_plan/complete/ProgramDetails.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__("./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-53727c40\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/media_plan/complete/ProgramDetails.vue")
+}
+var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
+/* script */
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\",[\"transform-runtime\",{\"polyfill\":false,\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/media_plan/complete/ProgramDetails.vue")
+/* template */
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-53727c40\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/media_plan/complete/ProgramDetails.vue")
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/media_plan/complete/ProgramDetails.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-53727c40", Component.options)
+  } else {
+    hotAPI.reload("data-v-53727c40", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
