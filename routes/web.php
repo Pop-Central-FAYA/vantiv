@@ -137,7 +137,6 @@ Route::group(['namespace' => 'Ssp'], function () {
         Route::delete('sector/{sector}', 'SectorController@delete')->name('sector.delete');
         Route::get('/mpo/filter', 'MpoController@filterCompany');
         Route::get('file-update/{file_id}', 'MpoController@updateFiles')->name('file.change');
-        Route::get('/presigned-url', 'S3Controller@getPresignedUrl');
         /**
          * MPOs
          */
@@ -221,3 +220,4 @@ Route::group(['namespace' => 'Ssp'], function () {
         });
     });
 });
+Route::get('/presigned-url', 'S3Controller@getPresignedUrl');

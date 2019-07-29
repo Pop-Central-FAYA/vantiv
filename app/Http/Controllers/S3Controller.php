@@ -1,6 +1,6 @@
 <?php
 
-namespace Vanguard\Http\Controllers\Ssp;
+namespace Vanguard\Http\Controllers;
 
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Libraries\AmazonS3;
