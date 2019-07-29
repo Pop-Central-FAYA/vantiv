@@ -1,6 +1,6 @@
 <?php
 
-namespace Vanguard\Http\Controllers\Broadcaster;
+namespace Vanguard\Http\Controllers\Ssp;
 
 use Illuminate\Http\Request;
 use Vanguard\Http\Controllers\Controller;

@@ -1,8 +1,8 @@
 <?php
 
-namespace Vanguard\Http\Controllers;
+namespace Vanguard\Http\Controllers\Ssp;
 
-
+use Vanguard\Http\Controllers\Controller;
 use Vanguard\Libraries\AmazonS3;
 
 class S3Controller extends Controller
