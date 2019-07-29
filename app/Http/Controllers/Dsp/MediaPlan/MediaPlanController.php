@@ -644,7 +644,7 @@ class MediaPlanController extends Controller
 
     function getPlannerDetails($planner_id){
         $planner="";
-        $user_list_service = new GetUserList([\Auth::user()->companies->first()->id]);
+        $user_list_service = new GetUserList([$this->companyId()]);
         $user_list = $user_list_service->getUserData();
         foreach($user_list as $user){
             if($planner_id == $user['id'])
@@ -658,7 +658,7 @@ class MediaPlanController extends Controller
     function getClientName($media_plan_id){
         $mediaPlan = MediaPlan::findorfail($media_plan_id);
         $client_name = "";
-        $clients = new AllClient(\Auth::user()->companies->first()->id);
+        $clients = new AllClient($this->companyId());
         $clients = $clients->getAllClients();
         foreach($clients as $client){
             if($mediaPlan->client_id = $client->id)

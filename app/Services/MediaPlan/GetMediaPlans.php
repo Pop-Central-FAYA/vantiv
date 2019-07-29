@@ -13,12 +13,12 @@ class GetMediaPlans
     public function __construct($status='', $planner_id='')
     {
         if ($status == "pending") {
-            $this->plan_status = ['Pending','Suggested','Selected'];
+            $this->plan_status = ['Pending','Suggested','Selected', 'InRequest'];
         } elseif ($status == "approved" || $status == "declined") {
             $this->plan_status = [$status];
         } 
         else {
-            $this->plan_status = ['Pending','Suggested','Selected','Approved','Declined'];
+            $this->plan_status = ['Pending','Suggested','Selected','Approved','Declined','InRequest'];
         }
         $this->planner_id = $planner_id;  
     }
@@ -82,7 +82,7 @@ class GetMediaPlans
             return '<span class="span_state status_success">Approved</span>';
         } elseif ($media_plan->status === "Declined") {
             return '<span class="span_state status_danger">Declined</span>';
-        } elseif ($media_plan->status === "Pending" || $media_plan->status === "Suggested" || $media_plan->status === "Suggested") {
+        } elseif ($media_plan->status === "Pending" || $media_plan->status === "Suggested" || $media_plan->status === "Suggested"  || $media_plan->status === "InRequest") {
             return '<span class="span_state status_pending">Pending</span>';
         } else {
             return '<span class="span_state status_danger">File Error</span>';
