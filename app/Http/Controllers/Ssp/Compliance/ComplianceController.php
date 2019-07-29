@@ -1,6 +1,6 @@
 <?php
 
-namespace Vanguard\Http\Controllers\Compliance;
+namespace Vanguard\Http\Controllers\Ssp\Compliance;
 
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Libraries\Enum\CompanyTypeName;
