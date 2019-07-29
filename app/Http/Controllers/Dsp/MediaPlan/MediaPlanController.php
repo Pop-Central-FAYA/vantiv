@@ -508,7 +508,7 @@ class MediaPlanController extends Controller
             });
         }catch (\Exception $exception){
             Log::error($exception);
-            return response()->json(['status'=>'error', 'message'=> "The current operation failed. ".$exception ]);
+            return response()->json(['status'=>'error', 'message'=> "The current operation failed."]);
         }
         return response()->json(['message'=>"Media plan updated", "status" => "success"]);
     }
@@ -518,7 +518,8 @@ class MediaPlanController extends Controller
         $material_lengths = [];
         foreach ($suggestion['exposures'] as $duration => $exposures) {
             foreach ($exposures['dates'] as $date => $exposure) {
-                if ((INT)$exposure > 0) {
+                if ((INT)$exposure > 0 && $suggestion['program'] != "Unknown Program") {
+                    $unit_rate = 0;
                     if ($suggestion['duration_lists'] != "[null]" && $suggestion['rate_lists'] != "[null]") {
                         if (gettype($suggestion['duration_lists']) == 'string') {
                             $duration_lists = json_decode($suggestion['duration_lists']);

@@ -193,7 +193,7 @@
     background: #607D8B !important;
     padding: 5px;
     color: #ffffff !important;
-    box-shadow: 9px 10px 20px 1px rgba(103,131,144,0.21);
+    box-shadow: 9px 10px 20px 1px rgba(103,131,144,0.21) !important;
 }
 /* Override default vuetify ul tag style that is affecting the alignment of the side nav */
 .side_nav ._nav ul {

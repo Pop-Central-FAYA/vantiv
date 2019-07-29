@@ -2193,7 +2193,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 return 0;
             }
         },
-        countExposureByTimeBelt: function countExposureByTimeBelt(time_belt_pos, duration) {
+        countExposureByTimeBelt: function countExposureByTimeBelt(time_belt_pos, duration, exposure_date) {
+            var exposure_date_value = this.fayaTimebelts['programs_stations'][time_belt_pos]['exposures'][duration]['dates'][exposure_date];
+            if (exposure_date_value == "" || exposure_date_value < 0) {
+                this.fayaTimebelts['programs_stations'][time_belt_pos]['exposures'][duration]['dates'][exposure_date] = 0;
+            }
             var exposures = this.fayaTimebelts['programs_stations'][time_belt_pos]['exposures'][duration]['dates'];
             this.fayaTimebelts['programs_stations'][time_belt_pos]['exposures'][duration]['total_exposures'] = Object.values(exposures).reduce(function (a, b) {
                 return parseInt(a) + parseInt(b);
@@ -8741,7 +8745,8 @@ var render = function() {
                                                                     ) {
                                                                       return _vm.countExposureByTimeBelt(
                                                                         timeBeltkey,
-                                                                        duration
+                                                                        duration,
+                                                                        timebeltDate
                                                                       )
                                                                     },
                                                                     input: function(
