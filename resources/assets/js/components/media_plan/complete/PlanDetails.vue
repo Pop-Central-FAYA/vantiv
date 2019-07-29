@@ -41,7 +41,7 @@
                                                     <td>{{ formatAmount(getNetTotalByTimeBelt(timebelt, timeBeltkey, duration)) }}</td>
                                                     <td>{{ getTotalExposureByTimebelt(timeBeltkey, duration) }}</td>
                                                     <td v-for="(timebeltDate, timebeltDatekey) in fayaTimebelts['dates']" :key="timebeltDatekey" class="exposure-td">
-                                                        <input type="number" v-if="fayaTimebelts['days'][timebeltDatekey] == timebelt.day" v-model="fayaTimebelts['programs_stations'][timeBeltkey]['exposures'][duration]['dates'][timebeltDate]" @change="countExposureByTimeBelt(timeBeltkey, duration)">
+                                                        <input type="number" v-if="fayaTimebelts['days'][timebeltDatekey] == timebelt.day" v-model="fayaTimebelts['programs_stations'][timeBeltkey]['exposures'][duration]['dates'][timebeltDate]" @change="countExposureByTimeBelt(timeBeltkey, duration, timebeltDate)">
                                                         <input type="number" class="disabled_input" disabled v-else>
                                                     </td>
                                                 </tr>
@@ -223,7 +223,11 @@
                     return 0;
                 }
             },
-            countExposureByTimeBelt(time_belt_pos, duration) {
+            countExposureByTimeBelt(time_belt_pos, duration, exposure_date) {
+                var exposure_date_value = this.fayaTimebelts['programs_stations'][time_belt_pos]['exposures'][duration]['dates'][exposure_date];
+                if (exposure_date_value == "" || exposure_date_value < 0) {
+                    this.fayaTimebelts['programs_stations'][time_belt_pos]['exposures'][duration]['dates'][exposure_date] = 0;
+                }
                 var exposures = this.fayaTimebelts['programs_stations'][time_belt_pos]['exposures'][duration]['dates'];
                 this.fayaTimebelts['programs_stations'][time_belt_pos]['exposures'][duration]['total_exposures'] = Object.values(exposures).reduce((a,b) => parseInt(a) + parseInt(b), 0);
                 this.$forceUpdate();
