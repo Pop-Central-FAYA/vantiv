@@ -25,7 +25,7 @@
                      <v-card-actions>
                             <v-spacer></v-spacer>
                             <v-btn color="red" dark @click="dialog = false">Close</v-btn>
-                            <v-btn color="" class="default-vue-btn" dark @click="process_form()">Request</v-btn>
+                            <v-btn color="" class="default-vue-btn" dark @click="processForm()">Request</v-btn>
                       </v-card-actions>
                 </v-container>
             </v-card-text>
@@ -34,10 +34,6 @@
 </template>
 
 <style>
-    .v-text-field {
-        padding-top: 2px;
-        margin-top: 0px;
-    }
 </style>
 
 <script>
@@ -57,7 +53,7 @@
             console.log('finance Component mounted.');
         },
         methods:{
-            process_form: async function(event) {
+            processForm: async function(event) {
                 // Validate inputs using vee-validate plugin 
                 let isValid = await this.$validator.validate().then(valid => {
                     if (!valid) {
