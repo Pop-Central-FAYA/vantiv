@@ -2,13 +2,12 @@
     <v-dialog v-model="editDialog" persistent max-width="500px">
         <v-card>
             <v-card-title>
-                <span class="headline"> Edit : {{ adslot.program }} 
-                                            for {{ adslot.duration }} 
-                                            Seconds duration on 
-                                            {{ adslot.playout_date }}
-                                            </span>
+                <span class="headline"> {{ adslot.program }} 
+                                    for {{ adslot.duration }} 
+                                    Seconds duration on 
+                                        {{ adslot.playout_date }}
+                </span>
             </v-card-title>
-            
             <v-card-text>
                 <v-container grid-list-md>
                     <v-form>
@@ -17,7 +16,9 @@
                                 <span>
                                     Program
                                 </span>
-                                <input type="text" required v-validate="'required'" name="progeam" v-model="adslot.program" class="form-control">
+                                <v-text-field v-validate="'required'" 
+                                type="text" placeholder="Program name" 
+                                name="program" v-model="adslot.program"></v-text-field>
                                 <span class="text-danger" v-show="errors.has('progeam')">{{ errors.first('progeam') }}</span>
                             </v-flex>
                         </v-layout>
@@ -26,7 +27,27 @@
                                 <span>
                                     Date
                                 </span>
-                                <input type="date" required v-validate="'required'" name="date" v-model="adslot.playout_date" class="form-control">
+                                <v-menu
+                                v-model="dateMenu"
+                                    :close-on-content-click="false"
+                                    :nudge-right="40"
+                                    lazy
+                                    transition="scale-transition"
+                                    offset-y
+                                    full-width
+                                >
+                                    <template v-slot:activator="{ on }">
+                                        <v-text-field
+                                        v-model="adslot.playout_date"
+                                        name="date"
+                                        v-validate="'required|date_format:yyyy-MM-dd'"
+                                        placeholder="DD/MM/YYYY"
+                                        v-on="on"
+                                        ></v-text-field>
+                                    </template>
+                                    <v-date-picker v-model="adslot.playout_date" no-title @input="dateMenu = false"></v-date-picker>
+                                </v-menu>
+                                <!-- <input type="date" required v-validate="'required'" name="date" v-model="adslot.playout_date" class="form-control"> -->
                                 <span class="text-danger" v-show="errors.has('date')">{{ errors.first('date') }}</span>
                             </v-flex>
                         </v-layout>
@@ -35,14 +56,19 @@
                                 <span>
                                     Unit Price
                                 </span>
-                                <input type="number" required v-validate="'required|min:1'" name="unit_price" v-model="adslot.unit_rate" class="form-control">
+                                <v-text-field v-validate="'required|min:1'" 
+                                type="number" placeholder="Unit Price" 
+                                name="unit_price" v-model="adslot.unit_rate"></v-text-field>
                                 <span class="text-danger" v-show="errors.has('unit_price')">{{ errors.first('unit_price') }}</span>
                             </v-flex>
                             <v-flex xs12 sm12 md6>
                                 <span>
-                                    Total Insertions
+                                    Volume Discount (%)
                                 </span>
-                                <input type="number" required disabled name="exposures" v-model="newTotalInsertions" class="form-control">
+                                <v-text-field v-validate="'required|min:1'" 
+                                type="number" placeholder="Unit Price"
+                                name="volume_discount" v-model="adslot.volume_discount"></v-text-field>
+                                <span class="text-danger" v-show="errors.has('volume_discount')">{{ errors.first('volume_discount') }}</span>
                             </v-flex>
                         </v-layout>
                         <v-layout wrap>
@@ -50,56 +76,45 @@
                                 <span>
                                     Media Asset
                                 </span>
-                                <select name="media_asset" required v-validate="'required'" v-model="adslot.asset_id">
-                                    <option value="">Select Media Asset</option>
-                                    <option :value="asset.id" v-for="asset in filterAssetByDuration(assets, adslot.duration)" :key="asset.id">
-                                        {{ asset.file_name }}
-                                    </option>
-                                </select>
+                                <v-select
+                                    v-model="adslot.asset_id"
+                                    :items="filterAssetByDuration(assets, adslot.duration)"
+                                    item-text="file_name"
+                                    item-value="id"
+                                    v-validate="'required'"
+                                    name="media_asset"
+                                    placeholder="Select Media Asset"
+                                    solo
+                                ></v-select>
                                 <span class="text-danger" v-show="errors.has('media_asset')">{{ errors.first('media_asset') }}</span>
                             </v-flex>
                         </v-layout>
-                        <v-layout wrap v-for="(input, index) in selected_time_belts" :key="index">
-                            <v-flex xs12 sm12 md5>
-                                <span v-if="index === 0">
+                        <v-layout wrap>
+                            <v-flex xs12 sm12 md6>
+                                <span>
                                     Time Belt
                                 </span>
-                                <select name="time_belt" required v-validate="'required'" v-model="selected_time_belts[index].time_belt">
-                                    <option :value="slot.start_time" v-for="(slot, key) in time_belts" :key="key">
-                                        {{ slot.start_time }}
-                                    </option>
-                                </select>
+                                <p></p>
+                                <v-select
+                                    v-model="adslot.time_belt_start_time"
+                                    :items="time_belts"
+                                    item-text="start_time"
+                                    item-value="start_time"
+                                    v-validate="'required'"
+                                    name="time_belt"
+                                    solo
+                                ></v-select>
                                 <span class="text-danger" v-show="errors.has('time_belt')">{{ errors.first('time_belt') }}</span>
                             </v-flex>
 
-                            <v-flex xs12 sm12 md5>
-                                <span v-if="index === 0">
-                                    Insertion
-                                </span>
-                                <input type="number" required name="insertion" v-validate="'required|min:1'" class="form-control" v-model="inputed_insertions[index].insertion">
-                                <span class="text-danger" v-show="errors.has('insertion')">{{ errors.first('insertion') }}</span>
-                            </v-flex>
-
-                            <v-flex xs12 sm12 md2>
-                                <span v-if="index == 0">
-                                    Action
-                                </span>
-                                <v-icon v-if="index > 0" color="red" dark right @click="deleteRow(index)">delete</v-icon>
-                            </v-flex>
-                        </v-layout>
-                        <v-layout>
                             <v-flex xs12 sm12 md6>
                                 <span>
-                                    Volume Discount
+                                    Insertion
                                 </span>
-                                <input type="number" required name="volume_discount" v-validate="'required|min:1'" v-model="adslot.volume_discount" class="form-control">
-                                <span class="text-danger" v-show="errors.has('volume_discount')">{{ errors.first('volume_discount') }}</span>
-                            </v-flex>
-                            <v-flex md3></v-flex>
-                            <v-flex xs12 sm12 md3>
-                                <v-spacer></v-spacer>
-                                <v-spacer></v-spacer>
-                                <v-btn class="default-vue-btn" dark right small @click="addRow()">Add Time belt</v-btn>
+                                <v-text-field v-validate="'required|min:1'" 
+                                type="number" placeholder="Unit Price"
+                                name="insertion" v-model="adslot.ad_slots"></v-text-field>
+                                <span class="text-danger" v-show="errors.has('insertion')">{{ errors.first('insertion') }}</span>
                             </v-flex>
                         </v-layout>
                     </v-form>
@@ -132,22 +147,24 @@ export default {
     data () {
         return {
             editDialog : false,
-            selected_time_belts : [],
-            inputed_insertions : []
+            media_asset_id : null,
+            dateMenu: false,
         }
+    },
+    mounted() {
+        const dictionay = {
+        custom: {
+                media_asset: {
+                    required: 'please choose a video file'
+                }
+            }
+        };
+        this.$validator.localize('en', dictionay);
     },
     created () {
         var self = this
         Event.$on('edit-dialog-modal', function(modal) {
             self.editDialog = modal
-        })
-    },
-    mounted () {
-        this.selected_time_belts.push({
-            time_belt : '00:00'
-        })
-        this.inputed_insertions.push({
-            insertion : ''
         })
     },
     computed : {
@@ -169,7 +186,6 @@ export default {
             if (!isValid) {
                 return false;
             }
-
             var msg = "Processing request, please wait...";
             this.sweet_alert(msg, 'info');
 
@@ -182,8 +198,8 @@ export default {
                     playout_date : this.adslot.playout_date,
                     asset_id : this.adslot.asset_id,
                     unit_rate : this.adslot.unit_rate,
-                    time_belts : this.selected_time_belts,
-                    insertions: this.inputed_insertions,
+                    time_belt : this.adslot.time_belt_start_time,
+                    insertion: this.adslot.ad_slots,
                     volume_discount : this.adslot.volume_discount
                 }
             }).then((res) => {
@@ -202,20 +218,34 @@ export default {
         },
         filterAssetByDuration : function(assets, duration) {
             return assets.filter(item => item.duration === duration);
-        },
-        addRow : function() {
-            this.selected_time_belts.push({
-            time_belt : '00:00'
-            })
-            this.inputed_insertions.push({
-                insertion : ''
-            })
-        },
-        deleteRow : function(index) {
-            this.selected_time_belts.splice(index,1)
-            this.inputed_insertions.splice(index,1)
         }
     }
 }
 </script>
+<style>
+    .v-date-picker-table {
+            height: 380px !important;
+        }
+    .menuable__content__active {
+        min-width : 0px !important;
+    }
+    .v-text-field .v-input__slot {
+        padding: 0px 12px;
+        min-height: 45px;
+        margin-bottom: 0px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        /* box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12); */
+    }
+    .v-text-field>.v-input__control>.v-input__slot:after, .v-text-field>.v-input__control>.v-input__slot:before {
+        content: none;
+    }
+    .v-date-picker-table {
+        height: 100% !important;
+    }
+    .theme--dark.v-btn.v-btn--disabled:not(.v-btn--icon):not(.v-btn--flat):not(.v-btn--outline) {
+        background-color: hsl(184, 55%, 53%)!important;
+    }
+</style>
+
 

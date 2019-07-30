@@ -20,4 +20,15 @@ class CampaignMpoTimeBelt extends Base
     {
         return $this->belongsTo(MediaAsset::class, 'asset_id', 'id');
     }
+
+    public function getTimeBeltStartTimeAttribute($value)
+    {
+        $split_value = explode(":", $value);
+        return $split_value[0].':'.$split_value[1];
+    }
+
+    public function timeBeltsByMpo($mpo_id)
+    {
+        return $this->where('mpo_id', $mpo_id)->get();
+    }
 }
