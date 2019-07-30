@@ -90,7 +90,7 @@
         },
         methods : {
             openEditDialog : function(item) {
-                this.currentItem = Object.assign({}, item)
+                this.currentItem = item
                 Event.$emit('edit-dialog-modal', true)
             }
         }
