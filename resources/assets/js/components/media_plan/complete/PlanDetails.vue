@@ -293,7 +293,8 @@
                 });
 
                 if (net_total_all_durations <= 0) {
-                    this.sweet_alert("Please select some exposures", 'info');
+                    this.sweet_alert("Please add at least one insertion", 'error');
+                    return;
                 }
 
                 // Validate inputs using vee-validate plugin 
