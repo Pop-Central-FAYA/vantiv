@@ -279,7 +279,7 @@ class MediaPlanController extends Controller
 
         $summary_service = new SummarizePlan($mediaPlan);
         $summaryData =  $summary_service->run();
-        $user_list_service = new GetUserList([\Auth::user()->companies->first()->id]);
+        $user_list_service = new GetUserList([$this->companyId()]);
         $user_list = $user_list_service->getUserData();
         
         return view('agency.mediaPlan.summary')->with('summary', $summaryData)

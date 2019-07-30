@@ -112,7 +112,6 @@
         },
         mounted() {
               this.getSums();
-            console.log(this.userList)
              console.log("Summary component mounted");
            
         },  

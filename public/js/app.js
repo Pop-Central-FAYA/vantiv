@@ -2737,6 +2737,18 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: {
@@ -2793,7 +2805,6 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                                         media_plan_id: this.mediaPlan
                                     }
                                 }).then(function (res) {
-                                    console.log(res.data);
                                     if (res.data.status === 'success') {
                                         _this.dialog = false;
                                         Event.$emit('updated-mediaPlan', res.data.data);
@@ -2802,7 +2813,6 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                                         _this.sweet_alert('Something went wrong, Try again!', 'error');
                                     }
                                 }).catch(function (error) {
-                                    console.log(error.response.data);
                                     _this.sweet_alert(error.response.data.message, 'error');
                                 });
 
@@ -2944,7 +2954,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     mounted: function mounted() {
         this.getSums();
-        console.log(this.userList);
         console.log("Summary component mounted");
     },
     created: function created() {
@@ -3259,7 +3268,7 @@ exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/cs
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n.v-text-field .v-input__slot {\n    padding: 0px 12px;\n    min-height: 45px;\n    margin-bottom: 0px;\n    border: 1px solid #ccc;\n    border-radius: 5px;\n    /* box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12); */\n}\n.v-text-field>.v-input__control>.v-input__slot:after, .v-text-field>.v-input__control>.v-input__slot:before {\n    content: none;\n}\n\n", ""]);
 
 // exports
 
