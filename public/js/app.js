@@ -2251,7 +2251,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
             filterByStation.forEach(function (station, station_key) {
                 details.days.forEach(function (day, key) {
-                    if (station.day == day && _this.format_time(station.start_time) == _this.format_time(details.start_time[key]) && _this.format_time(station.end_time) == _this.format_time(details.end_time[key])) {
+                    if (station.day == day && _this.format_time(station.start_time) >= _this.format_time(details.start_time[key]) && _this.format_time(station.end_time) <= _this.format_time(details.end_time[key])) {
                         filterByStation[station_key]['program'] = details.program_name;
                         filterByStation[station_key]['duration_lists'] = details.duration;
                         filterByStation[station_key]['rate_lists'] = details.unit_rate;
