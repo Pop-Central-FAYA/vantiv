@@ -268,6 +268,14 @@ class MediaPlanController extends Controller
             // redirect to review suggestions page for user to select suggestions
             return redirect()->route('agency.media_plan.create', ['id'=> $mediaPlan->id]);
         }
+        $routes= array(
+            "back" => route('agency.media_plan.create', ['id'=>$media_plan_id]),
+            "approve" => route('agency.media_plan.approve', ['id'=>$media_plan_id]),
+            "decline" => route('agency.media_plan.decline', ['id'=>$media_plan_id]),
+            "export" => route('agency.media_plan.export', ['id'=>$media_plan_id]),
+            "approval" => route('agency.media_plan.get_approval')  
+        );
+
 
         $summary_service = new SummarizePlan($mediaPlan);
         $summaryData =  $summary_service->run();
@@ -275,7 +283,7 @@ class MediaPlanController extends Controller
         $user_list = $user_list_service->getUserData();
         
         return view('agency.mediaPlan.summary')->with('summary', $summaryData)
-                ->with('media_plan', $mediaPlan)->with('users', $user_list);
+                ->with('media_plan', $mediaPlan)->with('users', $user_list)->with('routes', $routes);
     }
 
     public function exportPlan($media_plan_id)
