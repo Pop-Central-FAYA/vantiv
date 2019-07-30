@@ -5,6 +5,7 @@ namespace Vanguard\Models;
 
 use Vanguard\User;
 use Vanguard\Models\Ratecard\Ratecard;
+use Illuminate\Support\Facades\Auth;
 
 class Company extends Base
 {
@@ -20,6 +21,11 @@ class Company extends Base
     public function users()
     {
         return $this->belongsToMany(User::class);
+    }
+
+    public function getUserCompanyAttribute()
+    {
+        return Auth::user()->companies()->first();
     }
 
     public function company_type()

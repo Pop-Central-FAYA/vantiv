@@ -8,7 +8,7 @@
 
     <div class="form-wrap col-md-6 auth-form load_this_div" id="login">
         <div style="text-align: center; margin-bottom: 25px;">
-            <a href=""><img src="{{ asset('new_assets/images/logo.png') }}" alt="{{ settings('app_name') }}"></a>
+            <a href="">{!! AssetsHelper::logo() !!}</a>
         </div>
 
 

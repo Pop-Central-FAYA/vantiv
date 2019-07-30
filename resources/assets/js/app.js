@@ -30,9 +30,19 @@ import Vuetify from 'vuetify';
 Vue.use(Vuetify);
 import 'vuetify/dist/vuetify.min.css';
 
+import BootstrapVue from 'bootstrap-vue';
+Vue.use(BootstrapVue);
+
+import 'bootstrap-vue/dist/bootstrap-vue.css';
+
 // Vue MultiSelect
-import Multiselect from 'vue-multiselect'
+import Multiselect from 'vue-multiselect';
 Vue.component('multiselect', Multiselect);
+
+// Vue time picker
+import VueTimepicker from 'vue2-timepicker';
+Vue.component('vue-timepicker', VueTimepicker);
+
 
 // declared to manage events globally
 window.Event = new Vue();
@@ -51,6 +61,8 @@ Vue.component('media-plan-suggestion-filter', require('./components/media_plan/c
 Vue.component('media-plan-footer-nav', require('./components/media_plan/customise/FooterNavigation.vue'));
 Vue.component('media-plan-suggestions', require('./components/media_plan/customise/Suggestions.vue'));
 Vue.component('media-plan-create-campaign', require('./components/media_plan/summary/CreateCampaign.vue'));
+Vue.component('media-plan-details', require('./components/media_plan/complete/PlanDetails.vue'));
+Vue.component('media-plan-program-details', require('./components/media_plan/complete/ProgramDetails.vue'));
 Vue.component('media-plan-summary', require('./components/media_plan/summary/Summary.vue'));
 Vue.component('media-plan-criteria-form', require('./components/media_plan/CriteriaForm.vue'));
 Vue.component('media-plan-list', require('./components/media_plan/AllMediaPlans.vue'));
@@ -67,10 +79,9 @@ Vue.component('media-asset-play-video', require('./components/asset_management/P
 
 
 //Schedule
-Vue.component('vue-cal-weekly-schedule', require('./components/schedule/weekly/WeeklyScheduleCalender.vue'));
-Vue.component('ad-schedule-table', require('./components/schedule/partials/ScheduleTable.vue'));
-Vue.component('ad-hour-table', require('./components/schedule/partials/AdHourTable.vue'));
-Vue.component('ad-break-table', require('./components/schedule/partials/AdBreakTable.vue'));
+Vue.component('weekly-schedule', require('./components/schedule/weekly/WeeklySchedule.vue'));
+Vue.component('ad-break-modal', require('./components/schedule/partials/AdbreakModal.vue'));
+
 //mpo list
 Vue.component('campaign-mpos-list', require('./components/campaign_mpos/DisplayMpoList.vue'));
 Vue.component('mpo-slot-list', require('./components/campaign_mpos/DisplayAdslotList.vue'));
@@ -125,6 +136,12 @@ Vue.mixin({
         formatDate(date_str) {
             var dateParts = date_str.split("-");
             return `${dateParts[0]}-${dateParts[1]}-${dateParts[2].substr(0,2)}`;
+        },
+        shortDay(str) {
+            return str.substring(0, 3);
+        },
+        formatAmount(number) {
+            return number.toLocaleString();
         },
         dateToHumanReadable(date) {
             return moment(date).format('Do-MMM-YYYY');

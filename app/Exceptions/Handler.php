@@ -55,6 +55,12 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $e)
     {
+         /*
+           This is not the best place to do this, we can do much better later but for now it works
+         */
+        if($e->getMessage()=="Invalid signature."){
+            return response()->view('errors.invitation_timeout', [""], 500);
+        }
         if ($e instanceof HttpResponseException) {
             return $e->getResponse();
         } elseif ($e instanceof ModelNotFoundException) {

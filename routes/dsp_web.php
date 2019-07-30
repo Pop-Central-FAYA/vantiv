@@ -1,26 +1,26 @@
 <?php
     Route::group(['namespace' => 'Dsp'], function () {
-    Route::get('health', 'AuthController@getLogin');
-     /**
-     * Authentication
-     */
-    Route::get('login', 'AuthController@getLogin')->name('login');
-    Route::post('login', 'AuthController@postLogin')->name('post.login');
-    Route::get('logout', 'AuthController@getLogout')->name('auth.logout');
- 
-
-    Route::get('/forget-password', 'AuthController@getForgetPassword')->name('password.forgot');
-    Route::post('/forget-password/process', 'AuthController@processForgetPassword')->name('forget_password.process');
-    Route::get('/proceed/password-change/{token}', 'AuthController@getChangePassword');
-    Route::post('/change-password/process/{user_id}', 'AuthController@processChangePassword')->name('change_password.process');
+      Route::get('health', 'AuthController@getLogin');
+    
+        /**
+         * Authentication
+         */
+        Route::get('login', 'AuthController@getLogin')->name('login');
+        Route::post('login', 'AuthController@postLogin')->name('post.login');
+        Route::get('logout', 'AuthController@getLogout')->name('auth.logout');
     
 
-     });
+        Route::get('/forget-password', 'AuthController@getForgetPassword')->name('password.forgot');
+        Route::post('/forget-password/process', 'AuthController@processForgetPassword')->name('forget_password.process');
+        Route::get('/proceed/password-change/{token}', 'AuthController@getChangePassword');
+        Route::post('/change-password/process/{user_id}', 'AuthController@processChangePassword')->name('change_password.process');
+        
 
-    Route::get('user/complete-account/{id}', 'UserController@getCompleteAccount')->name('user.complete_registration')->middleware('signed');
-    Route::post('/user/complete-account/store/{id}', 'UserController@processCompleteAccount');
+    
+        Route::get('user/complete-account/{id}', 'UserController@getCompleteAccount')->name('user.complete_registration')->middleware('signed');
+        Route::post('/user/complete-account/store/{id}', 'UserController@processCompleteAccount');
 
-
+    });
     Route::group(['middleware' => 'auth'], function () {
         Route::get('/', ['as' => 'dashboard', 'uses' => 'DashboardController@index']);
         Route::get('agency/dashboard/campaigns', 'DashboardController@dashboardCampaigns');
@@ -144,8 +144,8 @@
             Route::post('/customise-filter', 'MediaPlanController@setPlanSuggestionFilters')->name('agency.media_plan.customize-filter');
 
             Route::post('/select_plan', 'MediaPlanController@SelectPlanPost');
-            Route::get('/createplan/{id}', 'MediaPlanController@CreatePlan')->name('agency.media_plan.create')->middleware('permission:create.media_plan');
-            Route::post('/finish_plan', 'MediaPlanController@CompletePlan')->name('agency.media_plan.submit.finish_plan');
+            Route::get('/createplan/{id}', 'MediaPlanController@createPlan')->name('agency.media_plan.create')->middleware('permission:create.media_plan');
+            Route::post('/finish_plan', 'MediaPlanController@completePlan')->name('agency.media_plan.submit.finish_plan');
             Route::get('/export/{id}', 'MediaPlanController@exportPlan')->name('agency.media_plan.export');
             Route::post('/store-programs', 'MediaPlanController@storePrograms')->name('media_plan.program.store');
             Route::post('/store-volume-discount', 'MediaPlanController@storeVolumeDiscount')->name('media_plan.volume_discount.store');
@@ -201,8 +201,6 @@
          */
 
         Route::group(['prefix' => 'walk-in'], function () {
-            Route::get('/', 'WalkinsController@index')->name('walkins.all')
-                ->middleware('permission:view.client');
             Route::post('/update/{client_id}', 'WalkinsController@updateWalKins')->name('walkins.update')
                 ->middleware('permission:update.client');
             Route::post('/store', 'WalkinsController@store')->name('walkins.store')
@@ -222,6 +220,8 @@
             Route::get('/search-brands', 'BrandsController@search')->name('broadcasters.brands.search');
             Route::get('/details/{id}/{client_id}', 'BrandsController@getBrandDetails')->name('brand.details');
         });
+
+        Route::get('/presigned-url', 'S3Controller@getPresignedUrl');
 
     });
 
