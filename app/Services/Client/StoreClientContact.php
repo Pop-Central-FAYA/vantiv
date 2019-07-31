@@ -2,7 +2,9 @@
 
 namespace Vanguard\Services\Client;
 
-class StoreClient
+use Vanguard\Models\ClientContact;
+
+class StoreClientContact
 {
     protected $client_contact_details;
 
@@ -13,18 +15,14 @@ class StoreClient
 
     public function store()
     {
-        return \DB::table('client_contacts')->insert(
-            [
-                'id' => $this->client_contact_details->id,
-                'client_id' => $this->client_contact_details->client_id,
-                'first_name' => $this->client_contact_details->first_name,
-                'last_name' => $this->client_contact_details->last_name,
-                'email' => $this->client_contact_details->email,
-                'phone_number' => $this->client_contact_details->phone_number,
-                'is_primary' => $this->client_contact_details->is_primary
-            ]
-        );
+        $client_contact = new ClientContact();
+        $client_contact->client_id = $this->client_contact_details->client_id;
+        $client_contact->first_name = $this->client_contact_details->first_name;
+        $client_contact->last_name =  $this->client_contact_details->last_name;
+        $client_contact->email = $this->client_contact_details->email;
+        $client_contact->phone_number = $this->client_contact_details->phone_number;
+        $client_contact->is_primary = $this->client_contact_details->is_primary;
+        $client_contact->save();
+        return $client_contact;
     }
 }
-
-
