@@ -11,6 +11,7 @@ use Illuminate\Support\Carbon;
 use PhpOffice\PhpSpreadsheet\Chart\Exception;
 use Vanguard\Models\Company;
 use Auth;
+use Vanguard\Services\Schedule\GetTransactionMpos;
 
 class ScheduleController extends Controller
 {
@@ -26,20 +27,23 @@ class ScheduleController extends Controller
         $weekEndDate = $now->endOfWeek()->format('Y-m-d');
         $ad_pattern = $company->user_company->publisher->decoded_settings['ad_pattern']['length'] === '4' ? '180' : '240';
         $weeklySchedule = (new GetWeeklySchedule($weekStartDate, $weekEndDate, $company->user_company->id, 
-                            $ad_pattern))->run();
+                            $ad_pattern, null))->run();
+        $schedule_mpos = (new GetTransactionMpos($company->user_company->id))->run();
         $time_belts = $this->splitTimeRangeByBase('00:00:00', '23:59:59', '15');
         return view('broadcaster_module.schedule.weekly_schedule')
                 ->with('time_belts', $time_belts)
                 ->with('ad_pattern', $ad_pattern)
+                ->with('mpos', [$schedule_mpos])
                 ->with('schedules', collect($weeklySchedule)->groupBy('day')); 
     }
 
     public function navigateWeeklySchedule(Request $request, Company $company)
     {
+        $selected_mpos = collect($request->selected_mpos)->pluck('id')->toArray();
         $ad_pattern = $company->user_company->publisher->decoded_settings['ad_pattern']['length'] === '4' ? '180' : '240';
         try {
-            $weeklySchedule = (new GetWeeklySchedule($request->start_date, $request->end_date, 
-                                $company->user_company->id, $ad_pattern))->run();
+            $weeklySchedule = (new GetWeeklySchedule($request->start_date, $request->end_date,
+                                $company->user_company->id, $ad_pattern, $selected_mpos))->run();
         }catch(Exception $exception){
             return response()->json([
                 'status' => 'error',

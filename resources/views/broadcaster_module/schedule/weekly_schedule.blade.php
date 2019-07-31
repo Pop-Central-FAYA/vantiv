@@ -11,6 +11,9 @@
         <!-- header -->
         @include('partials.new-frontend.broadcaster.header')
         <div class="container-fluid media-asset-management">
+            <schedule-mpo-filter
+            :mpos="{{ json_encode($mpos) }}"
+            ></schedule-mpo-filter>
             <weekly-schedule
                 :time_belts="{{ json_encode($time_belts) }}"
                 :weekly_schedule="{{ json_encode($schedules) }}"
