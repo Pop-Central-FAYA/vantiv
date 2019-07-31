@@ -39,6 +39,8 @@ use Vanguard\Services\Mpo\CreateMpoTimeBelt;
 use Vanguard\Services\Client\AllClient;
 use Vanguard\Http\Controllers\Traits\CompanyIdTrait;
 use Vanguard\Services\Mpo\UpdateCampaignMpoTimeBelt;
+use Vanguard\Http\Requests\StoreCampaignMpoAdslotRequest;
+use Vanguard\Services\Mpo\StoreCampaignMpoTimeBelt;
 
 class CampaignsController extends Controller
 {
@@ -306,18 +308,9 @@ class CampaignsController extends Controller
                 //updating campaign mpo timebelts
                 (new UpdateCampaignMpoTimeBelt($request))->run();
                 //update campaign mpos
-                $time_belt = $time_belt->timeBeltsByMpo($mpo_id);
-                $total_sum = $time_belt->sum('net_total');
-                $total_insertion = $time_belt->sum('ad_slots');
-                $campaign_mpo = $campaign_mpo->campaignMpoDetails($mpo_id);
-                $campaign_mpo->budget = $total_sum;
-                $campaign_mpo->ad_slots = $total_insertion;
-                $campaign_mpo->save();
+                $campaign_mpo = $this->updateCampaignMpo($mpo_id, $time_belt, $campaign_mpo);
                 //update campaign budget
-                $total_campaign_budget = $campaign_mpo->campaignByMpos($campaign_mpo->campaign_id)->sum('budget');
-                $campaign = $campaign->getCampaign($campaign_mpo->campaign_id);
-                $campaign->budget = $total_campaign_budget;
-                $campaign->save();
+                $this->updateCampaignBudget($campaign_mpo, $campaign);
             });
         }catch(Exception $exception) {
             return response()->json([
@@ -330,6 +323,51 @@ class CampaignsController extends Controller
             'message' => 'Adslot updated successfully',
             'data' => $time_belt->timeBeltsByMpo($mpo_id)
         ]);
+    }
+
+    public function storeAdslots(StoreCampaignMpoAdslotRequest $request, $mpo_id,
+                                CampaignMpo $campaign_mpo, Campaign $campaign, CampaignMpoTimeBelt $time_belt)
+    {
+        try {
+            DB::transaction(function() use ($request, $time_belt, $mpo_id, $campaign_mpo, $campaign) {
+                //updating campaign mpo timebelts
+                (new StoreCampaignMpoTimeBelt($request, $time_belt))->run();
+                //update campaign mpos
+                $campaign_mpo = $this->updateCampaignMpo($mpo_id, $time_belt, $campaign_mpo);
+                //update campaign budget
+                $this->updateCampaignBudget($campaign_mpo, $campaign);
+            });
+        }catch(Exception $exception) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'An error occured while performing your request'
+            ]);
+        }
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Adslot updated successfully',
+            'data' => $time_belt->timeBeltsByMpo($mpo_id)
+        ]);
+    }
+
+    private function updateCampaignBudget($campaign_mpo, $campaign)
+    {
+        $total_campaign_budget = $campaign_mpo->campaignByMpos($campaign_mpo->campaign_id)->sum('budget');
+        $campaign = $campaign->getCampaign($campaign_mpo->campaign_id);
+        $campaign->budget = $total_campaign_budget;
+        $campaign->save();
+    }
+
+    private function updateCampaignMpo($mpo_id, $time_belt, $campaign_mpo)
+    {
+        $time_belt = $time_belt->timeBeltsByMpo($mpo_id);
+        $total_sum = $time_belt->sum('net_total');
+        $total_insertion = $time_belt->sum('ad_slots');
+        $campaign_mpo = $campaign_mpo->campaignMpoDetails($mpo_id);
+        $campaign_mpo->budget = $total_sum;
+        $campaign_mpo->ad_slots = $total_insertion;
+        $campaign_mpo->save();
+        return $campaign_mpo;
     }
 
 }
