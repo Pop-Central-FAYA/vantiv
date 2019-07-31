@@ -14,13 +14,15 @@ class GetWeeklySchedule
     protected $weekEndDate;
     protected $companyId;
     protected $ad_pattern;
+    protected $selected_mpos;
 
-    public function __construct($weekStartDate, $weekEndDate, $companyId, $ad_pattern)
+    public function __construct($weekStartDate, $weekEndDate, $companyId, $ad_pattern, $selected_mpos)
     {
         $this->weekStartDate = $weekStartDate;
         $this->weekEndDate = $weekEndDate;
         $this->companyId = $companyId;
         $this->ad_pattern = $ad_pattern;
+        $this->selected_mpos = $selected_mpos;
     }
 
     public function run()
@@ -36,6 +38,9 @@ class GetWeeklySchedule
     private function getWeekSchedule()
     {
         return TimeBeltTransaction::where('company_id', $this->companyId)
+                    ->when($this->selected_mpos != null, function($query) {
+                        return $query->whereIn('campaign_details_id', $this->selected_mpos);
+                    })
                     ->select(DB::raw("*, hour(playout_hour) AS hour, TIME_FORMAT(playout_hour, '%H:%i') AS ad_break"))
                     ->whereDate('playout_date', '>=', $this->weekStartDate)
                     ->whereDate('playout_date', '<=', $this->weekEndDate)
