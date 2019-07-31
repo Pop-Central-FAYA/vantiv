@@ -7,7 +7,7 @@
 <td align="center" style="padding:0;Margin:0;"></td> 
     </tr> 
     <tr style="border-collapse:collapse;"> 
-    <td align="center" style="padding:0;Margin:0;padding-top:10px;padding-bottom:10px;"> <p style="Margin:0;font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333; text-align:left;"> {!! $mail_content['reciver_name'] !!},
+    <td align="center" style="padding:0;Margin:0;padding-top:10px;padding-bottom:10px;"> <p style="Margin:0;font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333; text-align:left;"> {!! $mail_content['receiver_name'] !!},
    <br></p> </td> 
     </tr> 
     <tr style="border-collapse:collapse;"> 

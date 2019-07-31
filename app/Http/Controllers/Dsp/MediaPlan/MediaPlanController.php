@@ -714,7 +714,7 @@ class MediaPlanController extends Controller
             "sender_name" => \Auth::user()->firstname.  " ". \Auth::user()->lastname, 
             "action" => $status,
             "client" =>  $this->getClientName($media_plan_id),
-            "reciver_name" => $this->getPlannerDetails($mediaPlan->planner_id)['name'], 
+            "receiver_name" => $this->getPlannerDetails($mediaPlan->planner_id)['name'], 
             "link" => route('agency.media_plan.decline', ['id'=>$media_plan_id]),
             "subject" => "Your Media Plan has been ". $status
 
@@ -729,7 +729,7 @@ class MediaPlanController extends Controller
           $user_mail_content_array = array(
             "sender_name" => \Auth::user()->firstname.  " ". \Auth::user()->lastname, 
             "client" => $this->getClientName($media_plan_id),
-            "reciver_name" => $this->getPlannerDetails($user_id)['name'],
+            "receiver_name" => $this->getPlannerDetails($user_id)['name'],
             "link" => $media_plan_id,
            
           );
