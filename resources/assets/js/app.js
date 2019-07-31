@@ -90,6 +90,7 @@ Vue.component('file-modal', require('./components/campaign_mpos/FileModal.vue'))
 Vue.component('delete-slots-modal', require('./components/campaign_mpos/DeleteSlotModal.vue'));
 Vue.component('edit-slots-modal', require('./components/campaign_mpos/EditSlotModal.vue'));
 Vue.component('campaign-file-list', require('./components/campaign_mpos/MpoFileList.vue'));
+Vue.component('add-adslot-modal', require('./components/campaign_mpos/AddAdslotModal.vue'));
 
 Vue.mixin({
     methods: {

@@ -2,8 +2,11 @@
     <v-app>
         <v-card>
             <v-card-title>
-                <v-spacer></v-spacer>
-                <v-spacer></v-spacer>
+                <add-adslot-modal
+                :assets="assets"
+                :time_belts="time_belts"
+                :mpo_id="adslots[0].mpo_id"
+                ></add-adslot-modal>
                 <v-spacer></v-spacer>
                 <v-text-field v-model="search" append-icon="search" label="Enter Keyword" single-line hide-details></v-text-field>
             </v-card-title>

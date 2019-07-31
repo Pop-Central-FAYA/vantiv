@@ -18,6 +18,7 @@ class UpdateCampaignMpoTimeBelt
         $mpo_time_belt = CampaignMpoTimeBelt::find($this->request->id);
         $mpo_time_belt->program = $this->request->program;
         $mpo_time_belt->playout_date = $this->request->playout_date;
+        $mpo_time_belt->day = date('l', strtotime($this->request->playout_date));
         $mpo_time_belt->asset_id = $this->request->asset_id;
         $mpo_time_belt->unit_rate = $this->request->unit_rate;
         $mpo_time_belt->volume_discount = $this->request->volume_discount;
@@ -28,7 +29,7 @@ class UpdateCampaignMpoTimeBelt
         return $mpo_time_belt;
     }
 
-    private function calculateNetTotal()
+    public function calculateNetTotal()
     {
         $gross_value = $this->request->insertion * $this->request->unit_rate;
         $discount_value = ($this->request->discount / 100) * $gross_value;
