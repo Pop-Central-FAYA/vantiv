@@ -1,24 +1,38 @@
 <template>
-    <div class="container-fluid suggestion-graph">
-        <div class="row">
-            <div class="col-md-12 col-md-12 mx-3 my-4">
-                <!-- Nav tabs -->
-                <ul class="graph-days nav nav-tabs" role="tablist">
-                    <li class="nav-item mx-1" v-for="(day, key) in computedGraphDays" v-bind:key="key">
-                        <button type="button" @click="series_by_day(day)" :class="'nav-link px-4 '+ [key == 0 ? 'active' : '']" data-toggle="tab" role="tab" aria-controls="day" aria-selected="true">
-                            {{ short_day(day) }}
-                        </button>
-                    </li>
-                </ul>
-            </div>
-            <div class="col-md-12">
-                <div  class="the_frame client_dets">
-                    <highcharts :options="chartOptions" :highcharts="hcInstance"></highcharts>
+    <v-layout row wrap class="white-bg">
+        <v-flex xs12 sm12 md12 lg12 class="day-toggle">
+            <v-btn-toggle>
+                <div v-for="(day, key) in computedGraphDays" v-bind:key="key">
+                    <v-btn text :class="`${activateFirstButton} px-4 mr-3`" @click="seriesByDay(day, key)" v-if="key == 0">
+                        {{ shortDay(day) }}
+                    </v-btn>
+                    <v-btn text class="px-4 mr-3" @click="seriesByDay(day)" v-else>
+                        {{ shortDay(day) }}
+                    </v-btn>
                 </div>
-            </div>
-        </div>
-    </div>
+            </v-btn-toggle>
+        </v-flex>
+        <v-flex xs12 sm12 md12 lg12 px-0>
+            <highcharts :options="chartOptions" :highcharts="hcInstance"></highcharts>
+        </v-flex>
+    </v-layout>
+   
 </template>
+
+<style>
+    .day-toggle .v-btn-toggle--selected {
+        box-shadow: none !important;
+    }
+    .day-toggle .v-btn {
+        border: 1px solid #3dadb5 !important;
+        color: #000 !important;
+    }
+    .day-toggle .v-btn.v-btn--active.theme--light {
+        background: #44c1c9;
+        color: #ffffff !important;
+    }
+</style>
+
 
 <script>
     import Highcharts from 'highcharts';
@@ -38,6 +52,7 @@
         },
         data() {
             return {
+                activateFirstButton: 'v-btn--active',
                 hcInstance: Highcharts,
                 chartOptions: {
                     chart: {
@@ -76,27 +91,27 @@
         computed: {
             computedGraphDays: function () {
                 let graphDetailsFoundDays = Object.keys(this.graphDetails);
+                console.log(this.graphDays.filter(f => graphDetailsFoundDays.includes(f)));
                 return this.graphDays.filter(f => graphDetailsFoundDays.includes(f));
             }
         },
         mounted() {
             console.log('Suggestions Graph Component mounted.')
-            generalTimeBeltObj = this.default_time_belts_obj();
-            this.series_by_day(this.computedGraphDays[0]);
+            generalTimeBeltObj = this.defaultTimeBeltsObj();
+            this.seriesByDay(this.computedGraphDays[0], 0);
         },
         methods: {
-            short_day(day) {
-                day = day.split("");
-                return day[0] + day[1] + day[2];
-            },
-            default_time_belts_obj() {
+            defaultTimeBeltsObj() {
                 let newArray = [];
                 generalTimeBeltValue.forEach(function (item) {
                     newArray[item] = 0;
                 });
                 return newArray;
             },
-            series_by_day(day) {
+            seriesByDay(day, key) {
+                if (key != 0) {
+                    this.activateFirstButton = '';
+                }
                 let stationTimebelts = this.graphDetails[day];
                 let seriesValues = [];
                 Object.keys(stationTimebelts).forEach(function (station) {

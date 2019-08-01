@@ -128,42 +128,18 @@ class MediaPlanController extends Controller
         }
         $suggestedPlansService = new GetSuggestedPlans($id, $savedFilters);
         $plans = $suggestedPlansService->get();
-        // if (count($plans) == 0) {
-        //     //Render an empty page and do not redirect
-        //  // return redirect()->route("agency.media_plan.criteria_form");
-        // }
-        // also get the filter values list to use to render with the filter dropdownss
-        //dd($plans);
+        $redirect_urls = [
+            'back_action' => route('agency.media_plans'),
+            'next_action' => route('agency.media_plan.create',['id'=>$id]),
+            'save_action' => route('agency.media_plan.select_suggestions'),
+            'filter_action' => route('agency.media_plan.customize-filter')
+        ];
         return view('agency.mediaPlan.display_suggestions')
             ->with('mediaPlanId', $id)
             ->with('mediaPlanStatus', MediaPlan::findOrFail($id)->status)
             ->with('fayaFound', $plans)
             ->with('filterValues', $this->getFilterFieldValues($id))
-            ->with('selectedFilters', $savedFilters);
-    }
-
-    public function getSuggestPlanByIdVue($id)
-    {
-        // Get the filter values
-        $savedFilters = json_decode(MediaPlan::findOrFail($id)->filters, true);
-        if (!$savedFilters) {
-            $savedFilters = array();
-        }
-        $suggestedPlansService = new GetSuggestedPlans($id, $savedFilters);
-        $plans = $suggestedPlansService->get();
-        // $plans['selected'] = $plans['selected'];
-        // dd($plans['selected']);
-        // if (count($plans) == 0) {
-        //     //Render an empty page and do not redirect
-        //  // return redirect()->route("agency.media_plan.criteria_form");
-        // }
-        // also get the filter values list to use to render with the filter dropdownss
-        //dd($plans);
-        return view('agency.mediaPlan.display_suggestions_vue')
-            ->with('mediaPlanId', $id)
-            ->with('mediaPlanStatus', MediaPlan::findOrFail($id)->status)
-            ->with('fayaFound', $plans)
-            ->with('filterValues', $this->getFilterFieldValues($id))
+            ->with('redirectUrls', $redirect_urls)
             ->with('selectedFilters', $savedFilters);
     }
 
@@ -190,7 +166,7 @@ class MediaPlanController extends Controller
             return response()->json(array(
                 'status' => 'success',
                 'message' => 'Filters successfully saved',
-                'redirect_url' => $media_plan_id
+                'redirect_url' => route('agency.media_plan.customize',['id'=>$media_plan_id])
             ));
         } catch (\Exception $exception) {
             Log::error($exception);
