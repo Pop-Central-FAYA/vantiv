@@ -81,6 +81,7 @@ Vue.component('media-asset-play-video', require('./components/asset_management/P
 //Schedule
 Vue.component('weekly-schedule', require('./components/schedule/weekly/WeeklySchedule.vue'));
 Vue.component('ad-break-modal', require('./components/schedule/partials/AdbreakModal.vue'));
+Vue.component('schedule-mpo-filter', require('./components/schedule/weekly/MpoFilter.vue'));
 
 //mpo list
 Vue.component('campaign-mpos-list', require('./components/campaign_mpos/DisplayMpoList.vue'));
@@ -90,6 +91,7 @@ Vue.component('file-modal', require('./components/campaign_mpos/FileModal.vue'))
 Vue.component('delete-slots-modal', require('./components/campaign_mpos/DeleteSlotModal.vue'));
 Vue.component('edit-slots-modal', require('./components/campaign_mpos/EditSlotModal.vue'));
 Vue.component('campaign-file-list', require('./components/campaign_mpos/MpoFileList.vue'));
+Vue.component('add-adslot-modal', require('./components/campaign_mpos/AddAdslotModal.vue'));
 
 Vue.mixin({
     methods: {

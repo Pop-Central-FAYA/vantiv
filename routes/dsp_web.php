@@ -70,6 +70,8 @@
 
             Route::post('/mpo/details/{campaign_mpo_id}/adslots/update', 'CampaignsController@updateAdslots');
 
+            Route::post('/mpo/details/{campaign_mpo_id}/adslots/store', 'CampaignsController@storeAdslots');
+
         });
 
         Route::get('/campaign-details/{user_id}', 'Dsp\CampaignsController@filterByUser');
