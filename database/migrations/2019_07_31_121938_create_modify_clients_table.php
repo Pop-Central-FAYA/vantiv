@@ -15,11 +15,13 @@ class CreateModifyClientsTable extends Migration
     {
         Schema::table('clients', function (Blueprint $table) {
             $table->string('status')->change();
+            $table->string('name');
             $table->string('created_by');
-            $table->string('company_id');
+            $table->string('company_id')->index();
             $table->string('street_address');
             $table->string('city');
             $table->string('state');
+            $table->timestamps();
         });
     }
 
@@ -31,11 +33,7 @@ class CreateModifyClientsTable extends Migration
     public function down()
     {
         Schema::table('clients', function (Blueprint $table) {
-            $table->dropColumn('created_by');
-            $table->dropColumn('company_id');
-            $table->dropColumn('street_address');
-            $table->dropColumn('city');
-            $table->dropColumn('state');
+            $table->dropColumn(['created_by', 'name','company_id', 'street_address', 'city','state']);
         });
     }
 }

@@ -15,7 +15,7 @@ class CreateClientContactsTable extends Migration
     {
         Schema::create('client_contacts', function (Blueprint $table) {
             $table->string('id');
-            $table->string('client_id');
+            $table->string('client_id')->index();
             $table->string('first_name');
             $table->string('last_name');
             $table->string('email');

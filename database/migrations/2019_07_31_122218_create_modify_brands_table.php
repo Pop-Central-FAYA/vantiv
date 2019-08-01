@@ -15,8 +15,8 @@ class CreateModifyBrandsTable extends Migration
     {
         Schema::table('brands', function (Blueprint $table) {
             $table->string('status');
-            $table->string('created_by');
-            $table->string('client_id');
+            $table->string('created_by')->index();
+            $table->string('client_id')->index();
         });
     }
 
@@ -28,9 +28,7 @@ class CreateModifyBrandsTable extends Migration
     public function down()
     {
         Schema::table('brands', function (Blueprint $table) {
-            $table->string('status');
-            $table->string('created_by');
-            $table->string('client_id');
+            $table->dropColumn(['created_by', 'status', 'client_id']);
         });
     }
 }
