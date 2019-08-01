@@ -150,17 +150,20 @@ Vue.mixin({
             return n.toFixed(2)
         },
         hasPermission(permissionList,search_permission){
-            var result =  permissionList.filter(function(permission) {
-                return permission.name == search_permission;
-            });
-              
-            if (result.length==0){
-                 return false
-              }else{
-                 return true
-              }
-     
+            if(typeof search_permission != Array){
+                search_permission = [search_permission]
+            }
+            const found = permissionList.some(permission => search_permission.indexOf(permission) >= 0)
+            return found
+            
         },
+        hasPermissionAction(permissionList, permission) {
+            if(this.hasPermission(permissionList, permission)){
+                return true
+            }
+            this.sweet_alert('You dont have the permission to perform this action', 'info');
+            return false
+        }
     }
 })
 const app = new Vue({
