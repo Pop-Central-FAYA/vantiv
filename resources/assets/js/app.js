@@ -66,6 +66,7 @@ Vue.component('media-plan-program-details', require('./components/media_plan/com
 Vue.component('media-plan-summary', require('./components/media_plan/summary/Summary.vue'));
 Vue.component('media-plan-criteria-form', require('./components/media_plan/CriteriaForm.vue'));
 Vue.component('media-plan-list', require('./components/media_plan/AllMediaPlans.vue'));
+Vue.component('media-plan-request-approval', require('./components/media_plan/summary/RequestApproval'));
 
 // CAMPAIGN
 Vue.component('campaign-list', require('./components/campaign/AllCampaigns.vue'));

@@ -13,12 +13,12 @@ class GetMediaPlans
     public function __construct($status='', $planners_id=[])
     {
         if ($status == "pending") {
-            $this->plan_status = ['Pending','Suggested','Selected'];
+            $this->plan_status = ['Pending','Suggested','Selected', 'In Review'];
         } elseif ($status == "approved" || $status == "declined") {
             $this->plan_status = [$status];
         } 
         else {
-            $this->plan_status = ['Pending','Suggested','Selected','Approved','Declined'];
+            $this->plan_status = ['Pending','Suggested','Selected','Approved','Declined','In Review'];
         }
         $this->planners_id = $planners_id;  
     }
@@ -67,7 +67,7 @@ class GetMediaPlans
     {
         if ($media_plan->status === "Approved" || $media_plan->status === "Declined") {
             return route('agency.media_plan.summary',['id'=>$media_plan->id]);
-        } elseif ($media_plan->status === "Pending" || $media_plan->status === "Suggested") {
+        } elseif ($media_plan->status === "Pending" || $media_plan->status === "Suggested" || $media_plan->status === "In Review") {
             return route('agency.media_plan.customize',['id'=>$media_plan->id]);
         } elseif ($media_plan->status === "Selected") {
             return route('agency.media_plan.create',['id'=>$media_plan->id]);
@@ -82,7 +82,7 @@ class GetMediaPlans
             return '<span class="span_state status_success">Approved</span>';
         } elseif ($media_plan->status === "Declined") {
             return '<span class="span_state status_danger">Declined</span>';
-        } elseif ($media_plan->status === "Pending" || $media_plan->status === "Suggested" || $media_plan->status === "Suggested") {
+        } elseif ($media_plan->status === "Pending" || $media_plan->status === "Suggested" || $media_plan->status === "Suggested"  || $media_plan->status === "In Review") {
             return '<span class="span_state status_pending">Pending</span>';
         } else {
             return '<span class="span_state status_danger">File Error</span>';
