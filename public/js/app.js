@@ -4495,7 +4495,7 @@ var render = function() {
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "col-md-8 p-0 text-right" }, [
-          _vm.summaryDetail.status == "InRequest"
+          _vm.summaryDetail.status == "In Review"
             ? _c("span", [
                 _vm.hasPermission(_vm.permissionList, "approve.media_plan")
                   ? _c(
