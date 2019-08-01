@@ -43,4 +43,9 @@ class Campaign extends Base
     {
         return $this->hasMany(CampaignMpo::class);
     }
+
+    public function getCampaign($id)
+    {
+        return $this->find($id);
+    }
 }

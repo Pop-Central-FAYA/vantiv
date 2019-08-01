@@ -2,9 +2,7 @@
 
 namespace Vanguard\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-
-class UpdateMpoTimeBeltRequest extends FormRequest
+class StoreCampaignMpoAdslotRequest extends UpdateAdslotsRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -30,7 +28,8 @@ class UpdateMpoTimeBeltRequest extends FormRequest
             'asset_id' => 'required',
             'time_belt' => 'required',
             'insertion' => 'required',
-            'volume_discount' => 'required'
+            'volume_discount' => 'required',
+            'duration' => 'required'
         ];
     }
 }

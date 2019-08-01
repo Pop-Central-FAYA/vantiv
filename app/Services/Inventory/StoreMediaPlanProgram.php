@@ -53,8 +53,7 @@ class StoreMediaPlanProgram
         $start_time = $start_time.':00';
         $media_plan_suggestions = MediaPlanSuggestion::where([
                                                             ['station', $this->station],
-                                                            ['day', ucfirst($day)],
-                                                            ['status', 1]
+                                                            ['day', ucfirst($day)]
                                                         ])
                                                     ->whereTime('start_time', $start_time)
                                                     ->get();

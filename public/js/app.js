@@ -713,6 +713,280 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\",[\"transform-runtime\",{\"polyfill\":false,\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/campaign_mpos/AddAdslotModal.vue":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator__ = __webpack_require__("./node_modules/babel-runtime/regenerator/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator__);
+
+
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        assets: {
+            required: true,
+            type: Array
+        },
+        mpo_id: {
+            required: true,
+            type: String
+        },
+        time_belts: {
+            required: true,
+            type: Array
+        }
+    },
+    data: function data() {
+        return {
+            dialog: false,
+            media_asset_id: null,
+            dateMenu: false,
+            form: {
+                program: '',
+                playout_date: '',
+                unit_price: 0,
+                volume_discount: 0,
+                asset_id: '',
+                time_belt: '',
+                insertion: 0,
+                duration: '',
+                mpo_id: this.mpo_id
+            },
+            durations: [15, 30, 45, 60]
+        };
+    },
+    mounted: function mounted() {
+        var dictionay = {
+            custom: {
+                media_asset: {
+                    required: 'please choose a video file'
+                },
+                duration: {
+                    required: 'please choose a media duration'
+                }
+            }
+        };
+        this.$validator.localize('en', dictionay);
+    },
+
+    methods: {
+        addAdslot: function () {
+            var _ref = _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.mark(function _callee(event) {
+                var _this = this;
+
+                var isValid, msg;
+                return __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
+                    while (1) {
+                        switch (_context.prev = _context.next) {
+                            case 0:
+                                _context.next = 2;
+                                return this.$validator.validate().then(function (valid) {
+                                    if (!valid) {
+                                        return false;
+                                    } else {
+                                        return true;
+                                    }
+                                });
+
+                            case 2:
+                                isValid = _context.sent;
+
+                                if (isValid) {
+                                    _context.next = 5;
+                                    break;
+                                }
+
+                                return _context.abrupt('return', false);
+
+                            case 5:
+                                msg = "Processing request, please wait...";
+
+                                this.sweet_alert(msg, 'info');
+                                axios({
+                                    method: 'POST',
+                                    url: '/campaigns/mpo/details/' + this.mpo_id + '/adslots/store',
+                                    data: this.form
+                                }).then(function (res) {
+                                    if (res.data.status === 'success') {
+                                        _this.sweet_alert(res.data.message, 'success');
+                                        Event.$emit('updated-adslots', _this.groupAdslotByProgram(res.data.data));
+                                        _this.dialog = false;
+                                    } else {
+                                        _this.sweet_alert(res.data.message, 'error');
+                                        _this.isHidden = true;
+                                    }
+                                }).catch(function (error) {
+                                    _this.sweet_alert(error.response.data.message, 'error');
+                                    _this.isHidden = true;
+                                });
+
+                            case 8:
+                            case 'end':
+                                return _context.stop();
+                        }
+                    }
+                }, _callee, this);
+            }));
+
+            function addAdslot(_x) {
+                return _ref.apply(this, arguments);
+            }
+
+            return addAdslot;
+        }(),
+        filterAssetByDuration: function filterAssetByDuration(assets, duration) {
+            return assets.filter(function (item) {
+                return item.duration === duration;
+            });
+        }
+    }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\",[\"transform-runtime\",{\"polyfill\":false,\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/campaign_mpos/AssociateFiles.vue":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -988,6 +1262,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: {
@@ -1029,7 +1306,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     methods: {
         openEditDialog: function openEditDialog(item) {
-            this.currentItem = Object.assign({}, item);
+            this.currentItem = item;
             Event.$emit('edit-dialog-modal', true);
         }
     }
@@ -1271,6 +1548,21 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: {
@@ -1290,22 +1582,24 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
     data: function data() {
         return {
             editDialog: false,
-            selected_time_belts: [],
-            inputed_insertions: []
+            media_asset_id: null,
+            dateMenu: false
         };
+    },
+    mounted: function mounted() {
+        var dictionay = {
+            custom: {
+                media_asset: {
+                    required: 'please choose a video file'
+                }
+            }
+        };
+        this.$validator.localize('en', dictionay);
     },
     created: function created() {
         var self = this;
         Event.$on('edit-dialog-modal', function (modal) {
             self.editDialog = modal;
-        });
-    },
-    mounted: function mounted() {
-        this.selected_time_belts.push({
-            time_belt: '00:00'
-        });
-        this.inputed_insertions.push({
-            insertion: ''
         });
     },
 
@@ -1360,8 +1654,8 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                                         playout_date: this.adslot.playout_date,
                                         asset_id: this.adslot.asset_id,
                                         unit_rate: this.adslot.unit_rate,
-                                        time_belts: this.selected_time_belts,
-                                        insertions: this.inputed_insertions,
+                                        time_belt: this.adslot.time_belt_start_time,
+                                        insertion: this.adslot.ad_slots,
                                         volume_discount: this.adslot.volume_discount
                                     }
                                 }).then(function (res) {
@@ -1396,18 +1690,6 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
             return assets.filter(function (item) {
                 return item.duration === duration;
             });
-        },
-        addRow: function addRow() {
-            this.selected_time_belts.push({
-                time_belt: '00:00'
-            });
-            this.inputed_insertions.push({
-                insertion: ''
-            });
-        },
-        deleteRow: function deleteRow(index) {
-            this.selected_time_belts.splice(index, 1);
-            this.inputed_insertions.splice(index, 1);
         }
     }
 });
@@ -2251,7 +2533,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
             filterByStation.forEach(function (station, station_key) {
                 details.days.forEach(function (day, key) {
-                    if (station.day == day && _this.format_time(station.start_time) == _this.format_time(details.start_time[key]) && _this.format_time(station.end_time) == _this.format_time(details.end_time[key])) {
+                    if (station.day == day && _this.format_time(station.start_time) >= _this.format_time(details.start_time[key]) && _this.format_time(station.end_time) <= _this.format_time(details.end_time[key])) {
                         filterByStation[station_key]['program'] = details.program_name;
                         filterByStation[station_key]['duration_lists'] = details.duration;
                         filterByStation[station_key]['rate_lists'] = details.unit_rate;
@@ -3606,6 +3888,58 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\",[\"transform-runtime\",{\"polyfill\":false,\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/schedule/weekly/MpoFilter.vue":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        mpos: {
+            required: true,
+            type: Array
+        }
+    },
+    data: function data() {
+        return {
+            selected: []
+        };
+    },
+
+    methods: {
+        onChange: function onChange() {
+            Event.$emit('mpos', this.selected);
+        }
+    }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\",[\"transform-runtime\",{\"polyfill\":false,\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/schedule/weekly/WeeklySchedule.vue":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -3696,7 +4030,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 date: __WEBPACK_IMPORTED_MODULE_0_moment___default()().format('YYYY-MM-DD'),
                 day_number: __WEBPACK_IMPORTED_MODULE_0_moment___default()().format('D'),
                 month_year: __WEBPACK_IMPORTED_MODULE_0_moment___default()().format('MMM') + ', ' + __WEBPACK_IMPORTED_MODULE_0_moment___default()().format('YYYY')
-            }
+            },
+            selected_mpos: []
         };
     },
 
@@ -3765,7 +4100,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 url: '/schedule/weekly/navigate',
                 data: {
                     start_date: start_date,
-                    end_date: end_date
+                    end_date: end_date,
+                    selected_mpos: this.selected_mpos
                 }
             }).then(function (res) {
                 var result = res.data.data;
@@ -3855,6 +4191,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 return 'has_border_top';
             }
         }
+    },
+    created: function created() {
+        var self = this;
+        Event.$on('mpos', function (mpo) {
+            self.selected_mpos = mpo;
+            self.fetchEvent(self.startOfWeek, self.endOfWeek);
+        });
     },
     mounted: function mounted() {
         this.current_week();
@@ -3955,6 +4298,36 @@ exports.push([module.i, "\n.v-text-field {\n    padding-top: 2px;\n    margin-to
 
 /***/ }),
 
+/***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-0eb78d07\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=1!./resources/assets/js/components/schedule/weekly/MpoFilter.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.multiselect__input {\n    position: unset !important;\n    width: -webkit-fill-available !important;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-0eb78d07\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-multiselect/dist/vue-multiselect.min.css":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "\nfieldset[disabled] .multiselect{pointer-events:none\n}\n.multiselect__spinner{position:absolute;right:1px;top:1px;width:48px;height:35px;background:#fff;display:block\n}\n.multiselect__spinner:after,.multiselect__spinner:before{position:absolute;content:\"\";top:50%;left:50%;margin:-8px 0 0 -8px;width:16px;height:16px;border-radius:100%;border:2px solid transparent;border-top-color:#41b883;-webkit-box-shadow:0 0 0 1px transparent;box-shadow:0 0 0 1px transparent\n}\n.multiselect__spinner:before{-webkit-animation:spinning 2.4s cubic-bezier(.41,.26,.2,.62);animation:spinning 2.4s cubic-bezier(.41,.26,.2,.62);-webkit-animation-iteration-count:infinite;animation-iteration-count:infinite\n}\n.multiselect__spinner:after{-webkit-animation:spinning 2.4s cubic-bezier(.51,.09,.21,.8);animation:spinning 2.4s cubic-bezier(.51,.09,.21,.8);-webkit-animation-iteration-count:infinite;animation-iteration-count:infinite\n}\n.multiselect__loading-enter-active,.multiselect__loading-leave-active{-webkit-transition:opacity .4s ease-in-out;transition:opacity .4s ease-in-out;opacity:1\n}\n.multiselect__loading-enter,.multiselect__loading-leave-active{opacity:0\n}\n.multiselect,.multiselect__input,.multiselect__single{font-family:inherit;font-size:16px;-ms-touch-action:manipulation;touch-action:manipulation\n}\n.multiselect{-webkit-box-sizing:content-box;box-sizing:content-box;display:block;position:relative;width:100%;min-height:40px;text-align:left;color:#35495e\n}\n.multiselect *{-webkit-box-sizing:border-box;box-sizing:border-box\n}\n.multiselect:focus{outline:none\n}\n.multiselect--disabled{background:#ededed;pointer-events:none;opacity:.6\n}\n.multiselect--active{z-index:50\n}\n.multiselect--active:not(.multiselect--above) .multiselect__current,.multiselect--active:not(.multiselect--above) .multiselect__input,.multiselect--active:not(.multiselect--above) .multiselect__tags{border-bottom-left-radius:0;border-bottom-right-radius:0\n}\n.multiselect--active .multiselect__select{-webkit-transform:rotate(180deg);transform:rotate(180deg)\n}\n.multiselect--above.multiselect--active .multiselect__current,.multiselect--above.multiselect--active .multiselect__input,.multiselect--above.multiselect--active .multiselect__tags{border-top-left-radius:0;border-top-right-radius:0\n}\n.multiselect__input,.multiselect__single{position:relative;display:inline-block;min-height:20px;line-height:20px;border:none;border-radius:5px;background:#fff;padding:0 0 0 5px;width:100%;-webkit-transition:border .1s ease;transition:border .1s ease;-webkit-box-sizing:border-box;box-sizing:border-box;margin-bottom:8px;vertical-align:top\n}\n.multiselect__input:-ms-input-placeholder{color:#35495e\n}\n.multiselect__input::-webkit-input-placeholder{color:#35495e\n}\n.multiselect__input::-moz-placeholder{color:#35495e\n}\n.multiselect__input::-ms-input-placeholder{color:#35495e\n}\n.multiselect__input::placeholder{color:#35495e\n}\n.multiselect__tag~.multiselect__input,.multiselect__tag~.multiselect__single{width:auto\n}\n.multiselect__input:hover,.multiselect__single:hover{border-color:#cfcfcf\n}\n.multiselect__input:focus,.multiselect__single:focus{border-color:#a8a8a8;outline:none\n}\n.multiselect__single{padding-left:5px;margin-bottom:8px\n}\n.multiselect__tags-wrap{display:inline\n}\n.multiselect__tags{min-height:40px;display:block;padding:8px 40px 0 8px;border-radius:5px;border:1px solid #e8e8e8;background:#fff;font-size:14px\n}\n.multiselect__tag{position:relative;display:inline-block;padding:4px 26px 4px 10px;border-radius:5px;margin-right:10px;color:#fff;line-height:1;background:#41b883;margin-bottom:5px;white-space:nowrap;overflow:hidden;max-width:100%;text-overflow:ellipsis\n}\n.multiselect__tag-icon{cursor:pointer;margin-left:7px;position:absolute;right:0;top:0;bottom:0;font-weight:700;font-style:normal;width:22px;text-align:center;line-height:22px;-webkit-transition:all .2s ease;transition:all .2s ease;border-radius:5px\n}\n.multiselect__tag-icon:after{content:\"\\D7\";color:#266d4d;font-size:14px\n}\n.multiselect__tag-icon:focus,.multiselect__tag-icon:hover{background:#369a6e\n}\n.multiselect__tag-icon:focus:after,.multiselect__tag-icon:hover:after{color:#fff\n}\n.multiselect__current{min-height:40px;overflow:hidden;padding:8px 30px 0 12px;white-space:nowrap;border-radius:5px;border:1px solid #e8e8e8\n}\n.multiselect__current,.multiselect__select{line-height:16px;-webkit-box-sizing:border-box;box-sizing:border-box;display:block;margin:0;text-decoration:none;cursor:pointer\n}\n.multiselect__select{position:absolute;width:40px;height:38px;right:1px;top:1px;padding:4px 8px;text-align:center;-webkit-transition:-webkit-transform .2s ease;transition:-webkit-transform .2s ease;transition:transform .2s ease;transition:transform .2s ease, -webkit-transform .2s ease\n}\n.multiselect__select:before{position:relative;right:0;top:65%;color:#999;margin-top:4px;border-color:#999 transparent transparent;border-style:solid;border-width:5px 5px 0;content:\"\"\n}\n.multiselect__placeholder{color:#adadad;display:inline-block;margin-bottom:10px;padding-top:2px\n}\n.multiselect--active .multiselect__placeholder{display:none\n}\n.multiselect__content-wrapper{position:absolute;display:block;background:#fff;width:100%;max-height:240px;overflow:auto;border:1px solid #e8e8e8;border-top:none;border-bottom-left-radius:5px;border-bottom-right-radius:5px;z-index:50;-webkit-overflow-scrolling:touch\n}\n.multiselect__content{list-style:none;display:inline-block;padding:0;margin:0;min-width:100%;vertical-align:top\n}\n.multiselect--above .multiselect__content-wrapper{bottom:100%;border-bottom-left-radius:0;border-bottom-right-radius:0;border-top-left-radius:5px;border-top-right-radius:5px;border-bottom:none;border-top:1px solid #e8e8e8\n}\n.multiselect__content::webkit-scrollbar{display:none\n}\n.multiselect__element{display:block\n}\n.multiselect__option{display:block;padding:12px;min-height:40px;line-height:16px;text-decoration:none;text-transform:none;vertical-align:middle;position:relative;cursor:pointer;white-space:nowrap\n}\n.multiselect__option:after{top:0;right:0;position:absolute;line-height:40px;padding-right:12px;padding-left:20px;font-size:13px\n}\n.multiselect__option--highlight{background:#41b883;outline:none;color:#fff\n}\n.multiselect__option--highlight:after{content:attr(data-select);background:#41b883;color:#fff\n}\n.multiselect__option--selected{background:#f3f3f3;color:#35495e;font-weight:700\n}\n.multiselect__option--selected:after{content:attr(data-selected);color:silver\n}\n.multiselect__option--selected.multiselect__option--highlight{background:#ff6a6a;color:#fff\n}\n.multiselect__option--selected.multiselect__option--highlight:after{background:#ff6a6a;content:attr(data-deselect);color:#fff\n}\n.multiselect--disabled .multiselect__current,.multiselect--disabled .multiselect__select{background:#ededed;color:#a6a6a6\n}\n.multiselect__option--disabled{background:#ededed!important;color:#a6a6a6!important;cursor:text;pointer-events:none\n}\n.multiselect__option--group{background:#ededed;color:#35495e\n}\n.multiselect__option--group.multiselect__option--highlight{background:#35495e;color:#fff\n}\n.multiselect__option--group.multiselect__option--highlight:after{background:#35495e\n}\n.multiselect__option--disabled.multiselect__option--highlight{background:#dedede\n}\n.multiselect__option--group-selected.multiselect__option--highlight{background:#ff6a6a;color:#fff\n}\n.multiselect__option--group-selected.multiselect__option--highlight:after{background:#ff6a6a;content:attr(data-deselect);color:#fff\n}\n.multiselect-enter-active,.multiselect-leave-active{-webkit-transition:all .15s ease;transition:all .15s ease\n}\n.multiselect-enter,.multiselect-leave-active{opacity:0\n}\n.multiselect__strong{margin-bottom:8px;line-height:20px;display:inline-block;vertical-align:top\n}\n[dir=rtl] .multiselect{text-align:right\n}\n[dir=rtl] .multiselect__select{right:auto;left:1px\n}\n[dir=rtl] .multiselect__tags{padding:8px 8px 0 40px\n}\n[dir=rtl] .multiselect__content{text-align:right\n}\n[dir=rtl] .multiselect__option:after{right:auto;left:0\n}\n[dir=rtl] .multiselect__clear{right:auto;left:12px\n}\n[dir=rtl] .multiselect__spinner{right:auto;left:1px\n}\n@-webkit-keyframes spinning{\n0%{-webkit-transform:rotate(0);transform:rotate(0)\n}\nto{-webkit-transform:rotate(2turn);transform:rotate(2turn)\n}\n}\n@keyframes spinning{\n0%{-webkit-transform:rotate(0);transform:rotate(0)\n}\nto{-webkit-transform:rotate(2turn);transform:rotate(2turn)\n}\n}", ""]);
+
+// exports
+
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-1651cb1e\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/campaign_mpos/FileModal.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3985,6 +4358,21 @@ exports.push([module.i, "\n.modal {\noverflow-y: auto;\n}\n.modal-open {\noverfl
 
 /***/ }),
 
+/***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-2128577b\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/campaign_mpos/AddAdslotModal.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.v-date-picker-table {\n        height: 380px !important;\n}\n.menuable__content__active {\n    min-width : 0px !important;\n}\n.v-text-field .v-input__slot {\n    padding: 0px 12px;\n    min-height: 45px;\n    margin-bottom: 0px;\n    border: 1px solid #ccc;\n    border-radius: 5px;\n    /* box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12); */\n}\n.v-text-field>.v-input__control>.v-input__slot:after, .v-text-field>.v-input__control>.v-input__slot:before {\n    content: none;\n}\n.v-date-picker-table {\n    height: 100% !important;\n}\n.theme--dark.v-btn.v-btn--disabled:not(.v-btn--icon):not(.v-btn--flat):not(.v-btn--outline) {\n    background-color: hsl(184, 55%, 53%)!important;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-27598234\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/campaign_mpos/MpoFileList.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3994,6 +4382,21 @@ exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/cs
 
 // module
 exports.push([module.i, "\ntbody tr:hover {\n    background-color: transparent !important;\n    cursor: pointer;\n}\ntbody:hover {\nbackground-color: rgba(0, 0, 0, 0.12);\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-352b5645\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/campaign_mpos/EditSlotModal.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.v-date-picker-table {\n        height: 380px !important;\n}\n.menuable__content__active {\n    min-width : 0px !important;\n}\n.v-text-field .v-input__slot {\n    padding: 0px 12px;\n    min-height: 45px;\n    margin-bottom: 0px;\n    border: 1px solid #ccc;\n    border-radius: 5px;\n    /* box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12); */\n}\n.v-text-field>.v-input__control>.v-input__slot:after, .v-text-field>.v-input__control>.v-input__slot:before {\n    content: none;\n}\n.v-date-picker-table {\n    height: 100% !important;\n}\n.theme--dark.v-btn.v-btn--disabled:not(.v-btn--icon):not(.v-btn--flat):not(.v-btn--outline) {\n    background-color: hsl(184, 55%, 53%)!important;\n}\n", ""]);
 
 // exports
 
@@ -4023,7 +4426,7 @@ exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/cs
 
 
 // module
-exports.push([module.i, "\n.week_name {\n    text-transform: capitalize;\n}\n.regular_day {\n    color: silver;\n}\n.current_day {\n    color: black;\n}\n.scrollable {\n    overflow-y: auto;\n}\n.hover_over {\n    width: -webkit-fill-available !important;\n    margin-top: 17px;\n    height: 12px;\n}\n.no_border_top {\n    border-top: 0px !important;\n}\n.has_border_top {\n    border-top: 1px solid #e1e1e1;\n}\n.total_duration_box {\n    height: 29px;\n    margin-top: -14px;\n}\n", ""]);
+exports.push([module.i, "\n.week_name {\n    text-transform: capitalize;\n}\n.regular_day {\n    color: silver;\n}\n.current_day {\n    color: black;\n}\n.scrollable {\n    overflow-y: auto;\n    height: 500px;\n}\n.hover_over {\n    width: -webkit-fill-available !important;\n    margin-top: 17px;\n    height: 12px;\n}\n.no_border_top {\n    border-top: 0px !important;\n}\n.has_border_top {\n    border-top: 1px solid #e1e1e1;\n}\n.total_duration_box {\n    height: 29px;\n    margin-top: -14px;\n}\n", ""]);
 
 // exports
 
@@ -4974,6 +5377,69 @@ if (false) {
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-0eb78d07\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/schedule/weekly/MpoFilter.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "v-container",
+    { attrs: { "grid-list-md": "" } },
+    [
+      _c(
+        "v-layout",
+        { attrs: { wrap: "" } },
+        [
+          _c(
+            "v-flex",
+            { attrs: { xs12: "", sm12: "", md12: "" } },
+            [
+              _c("multiselect", {
+                staticClass: "mb-3",
+                attrs: {
+                  placeholder: "Please select mpos",
+                  options: _vm.mpos,
+                  multiple: true,
+                  "group-values": "selected_mpos",
+                  "group-label": "all",
+                  "group-select": true,
+                  searchable: true,
+                  "track-by": "id",
+                  label: "name"
+                },
+                on: { input: _vm.onChange },
+                model: {
+                  value: _vm.selected,
+                  callback: function($$v) {
+                    _vm.selected = $$v
+                  },
+                  expression: "selected"
+                }
+              })
+            ],
+            1
+          )
+        ],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-0eb78d07", module.exports)
+  }
+}
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-0edee83f\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/asset_management/DisplayAssets.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -5553,6 +6019,656 @@ if (false) {
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-2128577b\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/campaign_mpos/AddAdslotModal.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "v-dialog",
+    {
+      attrs: { persistent: "", "max-width": "500px" },
+      scopedSlots: _vm._u([
+        {
+          key: "activator",
+          fn: function(ref) {
+            var on = ref.on
+            return [
+              _c(
+                "v-btn",
+                _vm._g(
+                  {
+                    staticClass: "default-vue-btn",
+                    attrs: { color: "", dark: "" }
+                  },
+                  on
+                ),
+                [_vm._v("Add Adslot")]
+              )
+            ]
+          }
+        }
+      ]),
+      model: {
+        value: _vm.dialog,
+        callback: function($$v) {
+          _vm.dialog = $$v
+        },
+        expression: "dialog"
+      }
+    },
+    [
+      _vm._v(" "),
+      _c(
+        "v-card",
+        [
+          _c(
+            "v-card-text",
+            [
+              _c(
+                "v-container",
+                { attrs: { "grid-list-md": "" } },
+                [
+                  _c(
+                    "v-form",
+                    [
+                      _c(
+                        "v-layout",
+                        { attrs: { wrap: "" } },
+                        [
+                          _c(
+                            "v-flex",
+                            { attrs: { xs12: "", sm12: "", md12: "" } },
+                            [
+                              _c("span", [
+                                _vm._v(
+                                  "\n                                Program\n                            "
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("v-text-field", {
+                                directives: [
+                                  {
+                                    name: "validate",
+                                    rawName: "v-validate",
+                                    value: "required",
+                                    expression: "'required'"
+                                  }
+                                ],
+                                attrs: {
+                                  type: "text",
+                                  placeholder: "Program name",
+                                  name: "program"
+                                },
+                                model: {
+                                  value: _vm.form.program,
+                                  callback: function($$v) {
+                                    _vm.$set(_vm.form, "program", $$v)
+                                  },
+                                  expression: "form.program"
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c(
+                                "span",
+                                {
+                                  directives: [
+                                    {
+                                      name: "show",
+                                      rawName: "v-show",
+                                      value: _vm.errors.has("progeam"),
+                                      expression: "errors.has('progeam')"
+                                    }
+                                  ],
+                                  staticClass: "text-danger"
+                                },
+                                [_vm._v(_vm._s(_vm.errors.first("progeam")))]
+                              )
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "v-layout",
+                        { attrs: { wrap: "" } },
+                        [
+                          _c(
+                            "v-flex",
+                            { attrs: { xs12: "", sm12: "", md12: "" } },
+                            [
+                              _c("span", [
+                                _vm._v(
+                                  "\n                                Playout Date\n                            "
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c(
+                                "v-menu",
+                                {
+                                  attrs: {
+                                    "close-on-content-click": false,
+                                    "nudge-right": 40,
+                                    lazy: "",
+                                    transition: "scale-transition",
+                                    "offset-y": "",
+                                    "full-width": ""
+                                  },
+                                  scopedSlots: _vm._u([
+                                    {
+                                      key: "activator",
+                                      fn: function(ref) {
+                                        var on = ref.on
+                                        return [
+                                          _c(
+                                            "v-text-field",
+                                            _vm._g(
+                                              {
+                                                directives: [
+                                                  {
+                                                    name: "validate",
+                                                    rawName: "v-validate",
+                                                    value:
+                                                      "required|date_format:yyyy-MM-dd",
+                                                    expression:
+                                                      "'required|date_format:yyyy-MM-dd'"
+                                                  }
+                                                ],
+                                                attrs: {
+                                                  name: "date",
+                                                  placeholder: "DD/MM/YYYY"
+                                                },
+                                                model: {
+                                                  value: _vm.form.playout_date,
+                                                  callback: function($$v) {
+                                                    _vm.$set(
+                                                      _vm.form,
+                                                      "playout_date",
+                                                      $$v
+                                                    )
+                                                  },
+                                                  expression:
+                                                    "form.playout_date"
+                                                }
+                                              },
+                                              on
+                                            )
+                                          )
+                                        ]
+                                      }
+                                    }
+                                  ]),
+                                  model: {
+                                    value: _vm.dateMenu,
+                                    callback: function($$v) {
+                                      _vm.dateMenu = $$v
+                                    },
+                                    expression: "dateMenu"
+                                  }
+                                },
+                                [
+                                  _vm._v(" "),
+                                  _c("v-date-picker", {
+                                    attrs: { "no-title": "" },
+                                    on: {
+                                      input: function($event) {
+                                        _vm.dateMenu = false
+                                      }
+                                    },
+                                    model: {
+                                      value: _vm.form.playout_date,
+                                      callback: function($$v) {
+                                        _vm.$set(_vm.form, "playout_date", $$v)
+                                      },
+                                      expression: "form.playout_date"
+                                    }
+                                  })
+                                ],
+                                1
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "span",
+                                {
+                                  directives: [
+                                    {
+                                      name: "show",
+                                      rawName: "v-show",
+                                      value: _vm.errors.has("date"),
+                                      expression: "errors.has('date')"
+                                    }
+                                  ],
+                                  staticClass: "text-danger"
+                                },
+                                [_vm._v(_vm._s(_vm.errors.first("date")))]
+                              )
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "v-layout",
+                        { attrs: { wrap: "" } },
+                        [
+                          _c(
+                            "v-flex",
+                            { attrs: { xs12: "", sm12: "", md6: "" } },
+                            [
+                              _c("span", [
+                                _vm._v(
+                                  "\n                                Unit Price\n                            "
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("v-text-field", {
+                                directives: [
+                                  {
+                                    name: "validate",
+                                    rawName: "v-validate",
+                                    value: "required|min:1",
+                                    expression: "'required|min:1'"
+                                  }
+                                ],
+                                attrs: {
+                                  type: "number",
+                                  placeholder: "Unit Price",
+                                  name: "unit_price"
+                                },
+                                model: {
+                                  value: _vm.form.unit_rate,
+                                  callback: function($$v) {
+                                    _vm.$set(_vm.form, "unit_rate", $$v)
+                                  },
+                                  expression: "form.unit_rate"
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c(
+                                "span",
+                                {
+                                  directives: [
+                                    {
+                                      name: "show",
+                                      rawName: "v-show",
+                                      value: _vm.errors.has("unit_price"),
+                                      expression: "errors.has('unit_price')"
+                                    }
+                                  ],
+                                  staticClass: "text-danger"
+                                },
+                                [_vm._v(_vm._s(_vm.errors.first("unit_price")))]
+                              )
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "v-flex",
+                            { attrs: { xs12: "", sm12: "", md6: "" } },
+                            [
+                              _c("span", [
+                                _vm._v(
+                                  "\n                                Volume Discount (%)\n                            "
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("v-text-field", {
+                                directives: [
+                                  {
+                                    name: "validate",
+                                    rawName: "v-validate",
+                                    value: "required|min:1",
+                                    expression: "'required|min:1'"
+                                  }
+                                ],
+                                attrs: {
+                                  type: "number",
+                                  placeholder: "Unit Price",
+                                  name: "volume_discount"
+                                },
+                                model: {
+                                  value: _vm.form.volume_discount,
+                                  callback: function($$v) {
+                                    _vm.$set(_vm.form, "volume_discount", $$v)
+                                  },
+                                  expression: "form.volume_discount"
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c(
+                                "span",
+                                {
+                                  directives: [
+                                    {
+                                      name: "show",
+                                      rawName: "v-show",
+                                      value: _vm.errors.has("volume_discount"),
+                                      expression:
+                                        "errors.has('volume_discount')"
+                                    }
+                                  ],
+                                  staticClass: "text-danger"
+                                },
+                                [
+                                  _vm._v(
+                                    _vm._s(_vm.errors.first("volume_discount"))
+                                  )
+                                ]
+                              )
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "v-layout",
+                        { attrs: { wrap: "" } },
+                        [
+                          _c(
+                            "v-flex",
+                            { attrs: { xs12: "", sm12: "", md6: "" } },
+                            [
+                              _c("span", [
+                                _vm._v(
+                                  "\n                                Duration\n                            "
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("v-select", {
+                                directives: [
+                                  {
+                                    name: "validate",
+                                    rawName: "v-validate",
+                                    value: "required",
+                                    expression: "'required'"
+                                  }
+                                ],
+                                attrs: {
+                                  items: _vm.durations,
+                                  name: "duration",
+                                  placeholder: "Select duration",
+                                  solo: ""
+                                },
+                                model: {
+                                  value: _vm.form.duration,
+                                  callback: function($$v) {
+                                    _vm.$set(_vm.form, "duration", $$v)
+                                  },
+                                  expression: "form.duration"
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c(
+                                "span",
+                                {
+                                  directives: [
+                                    {
+                                      name: "show",
+                                      rawName: "v-show",
+                                      value: _vm.errors.has("duration"),
+                                      expression: "errors.has('duration')"
+                                    }
+                                  ],
+                                  staticClass: "text-danger"
+                                },
+                                [_vm._v(_vm._s(_vm.errors.first("duration")))]
+                              )
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "v-flex",
+                            { attrs: { xs12: "", sm12: "", md6: "" } },
+                            [
+                              _c("span", [
+                                _vm._v(
+                                  "\n                                Media Asset\n                            "
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("v-select", {
+                                directives: [
+                                  {
+                                    name: "validate",
+                                    rawName: "v-validate",
+                                    value: "required",
+                                    expression: "'required'"
+                                  }
+                                ],
+                                attrs: {
+                                  items: _vm.filterAssetByDuration(
+                                    _vm.assets,
+                                    _vm.form.duration
+                                  ),
+                                  "item-text": "file_name",
+                                  "item-value": "id",
+                                  name: "media_asset",
+                                  placeholder: "Select Media Asset",
+                                  solo: ""
+                                },
+                                model: {
+                                  value: _vm.form.asset_id,
+                                  callback: function($$v) {
+                                    _vm.$set(_vm.form, "asset_id", $$v)
+                                  },
+                                  expression: "form.asset_id"
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c(
+                                "span",
+                                {
+                                  directives: [
+                                    {
+                                      name: "show",
+                                      rawName: "v-show",
+                                      value: _vm.errors.has("media_asset"),
+                                      expression: "errors.has('media_asset')"
+                                    }
+                                  ],
+                                  staticClass: "text-danger"
+                                },
+                                [
+                                  _vm._v(
+                                    _vm._s(_vm.errors.first("media_asset"))
+                                  )
+                                ]
+                              )
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "v-layout",
+                        { attrs: { wrap: "" } },
+                        [
+                          _c(
+                            "v-flex",
+                            { attrs: { xs12: "", sm12: "", md6: "" } },
+                            [
+                              _c("span", [
+                                _vm._v(
+                                  "\n                                Time Belt\n                            "
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("p"),
+                              _vm._v(" "),
+                              _c("v-select", {
+                                directives: [
+                                  {
+                                    name: "validate",
+                                    rawName: "v-validate",
+                                    value: "required",
+                                    expression: "'required'"
+                                  }
+                                ],
+                                attrs: {
+                                  items: _vm.time_belts,
+                                  "item-text": "start_time",
+                                  "item-value": "start_time",
+                                  name: "time_belt",
+                                  solo: ""
+                                },
+                                model: {
+                                  value: _vm.form.time_belt,
+                                  callback: function($$v) {
+                                    _vm.$set(_vm.form, "time_belt", $$v)
+                                  },
+                                  expression: "form.time_belt"
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c(
+                                "span",
+                                {
+                                  directives: [
+                                    {
+                                      name: "show",
+                                      rawName: "v-show",
+                                      value: _vm.errors.has("time_belt"),
+                                      expression: "errors.has('time_belt')"
+                                    }
+                                  ],
+                                  staticClass: "text-danger"
+                                },
+                                [_vm._v(_vm._s(_vm.errors.first("time_belt")))]
+                              )
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "v-flex",
+                            { attrs: { xs12: "", sm12: "", md6: "" } },
+                            [
+                              _c("span", [
+                                _vm._v(
+                                  "\n                                Insertion\n                            "
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("v-text-field", {
+                                directives: [
+                                  {
+                                    name: "validate",
+                                    rawName: "v-validate",
+                                    value: "required|min:1",
+                                    expression: "'required|min:1'"
+                                  }
+                                ],
+                                attrs: {
+                                  type: "number",
+                                  placeholder: "Unit Price",
+                                  name: "insertion"
+                                },
+                                model: {
+                                  value: _vm.form.insertion,
+                                  callback: function($$v) {
+                                    _vm.$set(_vm.form, "insertion", $$v)
+                                  },
+                                  expression: "form.insertion"
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c(
+                                "span",
+                                {
+                                  directives: [
+                                    {
+                                      name: "show",
+                                      rawName: "v-show",
+                                      value: _vm.errors.has("insertion"),
+                                      expression: "errors.has('insertion')"
+                                    }
+                                  ],
+                                  staticClass: "text-danger"
+                                },
+                                [_vm._v(_vm._s(_vm.errors.first("insertion")))]
+                              )
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "v-card-actions",
+            [
+              _c("v-spacer"),
+              _vm._v(" "),
+              _c(
+                "v-btn",
+                {
+                  staticClass: "default-vue-btn",
+                  attrs: { color: "red", dark: "" },
+                  on: {
+                    click: function($event) {
+                      _vm.dialog = false
+                    }
+                  }
+                },
+                [_vm._v("Close")]
+              ),
+              _vm._v(" "),
+              _c(
+                "v-btn",
+                {
+                  staticClass: "default-vue-btn",
+                  attrs: { dark: "" },
+                  on: {
+                    click: function($event) {
+                      return _vm.addAdslot()
+                    }
+                  }
+                },
+                [_vm._v("Add Adslot")]
+              )
+            ],
+            1
+          )
+        ],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-2128577b", module.exports)
+  }
+}
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-27598234\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/campaign_mpos/MpoFileList.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -5900,13 +7016,13 @@ var render = function() {
           _c("v-card-title", [
             _c("span", { staticClass: "headline" }, [
               _vm._v(
-                " Edit : " +
+                " " +
                   _vm._s(_vm.adslot.program) +
-                  " \n                                        for " +
+                  " \n                                for " +
                   _vm._s(_vm.adslot.duration) +
-                  " \n                                        Seconds duration on \n                                        " +
+                  " \n                                Seconds duration on \n                                    " +
                   _vm._s(_vm.adslot.playout_date) +
-                  "\n                                        "
+                  "\n            "
               )
             ])
           ]),
@@ -5935,39 +7051,26 @@ var render = function() {
                                 )
                               ]),
                               _vm._v(" "),
-                              _c("input", {
+                              _c("v-text-field", {
                                 directives: [
                                   {
                                     name: "validate",
                                     rawName: "v-validate",
                                     value: "required",
                                     expression: "'required'"
-                                  },
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value: _vm.adslot.program,
-                                    expression: "adslot.program"
                                   }
                                 ],
-                                staticClass: "form-control",
                                 attrs: {
                                   type: "text",
-                                  required: "",
-                                  name: "progeam"
+                                  placeholder: "Program name",
+                                  name: "program"
                                 },
-                                domProps: { value: _vm.adslot.program },
-                                on: {
-                                  input: function($event) {
-                                    if ($event.target.composing) {
-                                      return
-                                    }
-                                    _vm.$set(
-                                      _vm.adslot,
-                                      "program",
-                                      $event.target.value
-                                    )
-                                  }
+                                model: {
+                                  value: _vm.adslot.program,
+                                  callback: function($$v) {
+                                    _vm.$set(_vm.adslot, "program", $$v)
+                                  },
+                                  expression: "adslot.program"
                                 }
                               }),
                               _vm._v(" "),
@@ -5986,7 +7089,8 @@ var render = function() {
                                 },
                                 [_vm._v(_vm._s(_vm.errors.first("progeam")))]
                               )
-                            ]
+                            ],
+                            1
                           )
                         ],
                         1
@@ -6006,41 +7110,94 @@ var render = function() {
                                 )
                               ]),
                               _vm._v(" "),
-                              _c("input", {
-                                directives: [
-                                  {
-                                    name: "validate",
-                                    rawName: "v-validate",
-                                    value: "required",
-                                    expression: "'required'"
+                              _c(
+                                "v-menu",
+                                {
+                                  attrs: {
+                                    "close-on-content-click": false,
+                                    "nudge-right": 40,
+                                    lazy: "",
+                                    transition: "scale-transition",
+                                    "offset-y": "",
+                                    "full-width": ""
                                   },
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value: _vm.adslot.playout_date,
-                                    expression: "adslot.playout_date"
-                                  }
-                                ],
-                                staticClass: "form-control",
-                                attrs: {
-                                  type: "date",
-                                  required: "",
-                                  name: "date"
-                                },
-                                domProps: { value: _vm.adslot.playout_date },
-                                on: {
-                                  input: function($event) {
-                                    if ($event.target.composing) {
-                                      return
+                                  scopedSlots: _vm._u([
+                                    {
+                                      key: "activator",
+                                      fn: function(ref) {
+                                        var on = ref.on
+                                        return [
+                                          _c(
+                                            "v-text-field",
+                                            _vm._g(
+                                              {
+                                                directives: [
+                                                  {
+                                                    name: "validate",
+                                                    rawName: "v-validate",
+                                                    value:
+                                                      "required|date_format:yyyy-MM-dd",
+                                                    expression:
+                                                      "'required|date_format:yyyy-MM-dd'"
+                                                  }
+                                                ],
+                                                attrs: {
+                                                  name: "date",
+                                                  placeholder: "DD/MM/YYYY"
+                                                },
+                                                model: {
+                                                  value:
+                                                    _vm.adslot.playout_date,
+                                                  callback: function($$v) {
+                                                    _vm.$set(
+                                                      _vm.adslot,
+                                                      "playout_date",
+                                                      $$v
+                                                    )
+                                                  },
+                                                  expression:
+                                                    "adslot.playout_date"
+                                                }
+                                              },
+                                              on
+                                            )
+                                          )
+                                        ]
+                                      }
                                     }
-                                    _vm.$set(
-                                      _vm.adslot,
-                                      "playout_date",
-                                      $event.target.value
-                                    )
+                                  ]),
+                                  model: {
+                                    value: _vm.dateMenu,
+                                    callback: function($$v) {
+                                      _vm.dateMenu = $$v
+                                    },
+                                    expression: "dateMenu"
                                   }
-                                }
-                              }),
+                                },
+                                [
+                                  _vm._v(" "),
+                                  _c("v-date-picker", {
+                                    attrs: { "no-title": "" },
+                                    on: {
+                                      input: function($event) {
+                                        _vm.dateMenu = false
+                                      }
+                                    },
+                                    model: {
+                                      value: _vm.adslot.playout_date,
+                                      callback: function($$v) {
+                                        _vm.$set(
+                                          _vm.adslot,
+                                          "playout_date",
+                                          $$v
+                                        )
+                                      },
+                                      expression: "adslot.playout_date"
+                                    }
+                                  })
+                                ],
+                                1
+                              ),
                               _vm._v(" "),
                               _c(
                                 "span",
@@ -6057,7 +7214,8 @@ var render = function() {
                                 },
                                 [_vm._v(_vm._s(_vm.errors.first("date")))]
                               )
-                            ]
+                            ],
+                            1
                           )
                         ],
                         1
@@ -6077,39 +7235,26 @@ var render = function() {
                                 )
                               ]),
                               _vm._v(" "),
-                              _c("input", {
+                              _c("v-text-field", {
                                 directives: [
                                   {
                                     name: "validate",
                                     rawName: "v-validate",
                                     value: "required|min:1",
                                     expression: "'required|min:1'"
-                                  },
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value: _vm.adslot.unit_rate,
-                                    expression: "adslot.unit_rate"
                                   }
                                 ],
-                                staticClass: "form-control",
                                 attrs: {
                                   type: "number",
-                                  required: "",
+                                  placeholder: "Unit Price",
                                   name: "unit_price"
                                 },
-                                domProps: { value: _vm.adslot.unit_rate },
-                                on: {
-                                  input: function($event) {
-                                    if ($event.target.composing) {
-                                      return
-                                    }
-                                    _vm.$set(
-                                      _vm.adslot,
-                                      "unit_rate",
-                                      $event.target.value
-                                    )
-                                  }
+                                model: {
+                                  value: _vm.adslot.unit_rate,
+                                  callback: function($$v) {
+                                    _vm.$set(_vm.adslot, "unit_rate", $$v)
+                                  },
+                                  expression: "adslot.unit_rate"
                                 }
                               }),
                               _vm._v(" "),
@@ -6128,7 +7273,8 @@ var render = function() {
                                 },
                                 [_vm._v(_vm._s(_vm.errors.first("unit_price")))]
                               )
-                            ]
+                            ],
+                            1
                           ),
                           _vm._v(" "),
                           _c(
@@ -6137,414 +7283,30 @@ var render = function() {
                             [
                               _c("span", [
                                 _vm._v(
-                                  "\n                                Total Insertions\n                            "
+                                  "\n                                Volume Discount (%)\n                            "
                                 )
                               ]),
                               _vm._v(" "),
-                              _c("input", {
-                                directives: [
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value: _vm.newTotalInsertions,
-                                    expression: "newTotalInsertions"
-                                  }
-                                ],
-                                staticClass: "form-control",
-                                attrs: {
-                                  type: "number",
-                                  required: "",
-                                  disabled: "",
-                                  name: "exposures"
-                                },
-                                domProps: { value: _vm.newTotalInsertions },
-                                on: {
-                                  input: function($event) {
-                                    if ($event.target.composing) {
-                                      return
-                                    }
-                                    _vm.newTotalInsertions = $event.target.value
-                                  }
-                                }
-                              })
-                            ]
-                          )
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "v-layout",
-                        { attrs: { wrap: "" } },
-                        [
-                          _c(
-                            "v-flex",
-                            { attrs: { xs12: "", sm12: "", md12: "" } },
-                            [
-                              _c("span", [
-                                _vm._v(
-                                  "\n                                Media Asset\n                            "
-                                )
-                              ]),
-                              _vm._v(" "),
-                              _c(
-                                "select",
-                                {
-                                  directives: [
-                                    {
-                                      name: "validate",
-                                      rawName: "v-validate",
-                                      value: "required",
-                                      expression: "'required'"
-                                    },
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: _vm.adslot.asset_id,
-                                      expression: "adslot.asset_id"
-                                    }
-                                  ],
-                                  attrs: { name: "media_asset", required: "" },
-                                  on: {
-                                    change: function($event) {
-                                      var $$selectedVal = Array.prototype.filter
-                                        .call($event.target.options, function(
-                                          o
-                                        ) {
-                                          return o.selected
-                                        })
-                                        .map(function(o) {
-                                          var val =
-                                            "_value" in o ? o._value : o.value
-                                          return val
-                                        })
-                                      _vm.$set(
-                                        _vm.adslot,
-                                        "asset_id",
-                                        $event.target.multiple
-                                          ? $$selectedVal
-                                          : $$selectedVal[0]
-                                      )
-                                    }
-                                  }
-                                },
-                                [
-                                  _c("option", { attrs: { value: "" } }, [
-                                    _vm._v("Select Media Asset")
-                                  ]),
-                                  _vm._v(" "),
-                                  _vm._l(
-                                    _vm.filterAssetByDuration(
-                                      _vm.assets,
-                                      _vm.adslot.duration
-                                    ),
-                                    function(asset) {
-                                      return _c(
-                                        "option",
-                                        {
-                                          key: asset.id,
-                                          domProps: { value: asset.id }
-                                        },
-                                        [
-                                          _vm._v(
-                                            "\n                                    " +
-                                              _vm._s(asset.file_name) +
-                                              "\n                                "
-                                          )
-                                        ]
-                                      )
-                                    }
-                                  )
-                                ],
-                                2
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "span",
-                                {
-                                  directives: [
-                                    {
-                                      name: "show",
-                                      rawName: "v-show",
-                                      value: _vm.errors.has("media_asset"),
-                                      expression: "errors.has('media_asset')"
-                                    }
-                                  ],
-                                  staticClass: "text-danger"
-                                },
-                                [
-                                  _vm._v(
-                                    _vm._s(_vm.errors.first("media_asset"))
-                                  )
-                                ]
-                              )
-                            ]
-                          )
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _vm._l(_vm.selected_time_belts, function(input, index) {
-                        return _c(
-                          "v-layout",
-                          { key: index, attrs: { wrap: "" } },
-                          [
-                            _c(
-                              "v-flex",
-                              { attrs: { xs12: "", sm12: "", md5: "" } },
-                              [
-                                index === 0
-                                  ? _c("span", [
-                                      _vm._v(
-                                        "\n                                Time Belt\n                            "
-                                      )
-                                    ])
-                                  : _vm._e(),
-                                _vm._v(" "),
-                                _c(
-                                  "select",
-                                  {
-                                    directives: [
-                                      {
-                                        name: "validate",
-                                        rawName: "v-validate",
-                                        value: "required",
-                                        expression: "'required'"
-                                      },
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value:
-                                          _vm.selected_time_belts[index]
-                                            .time_belt,
-                                        expression:
-                                          "selected_time_belts[index].time_belt"
-                                      }
-                                    ],
-                                    attrs: { name: "time_belt", required: "" },
-                                    on: {
-                                      change: function($event) {
-                                        var $$selectedVal = Array.prototype.filter
-                                          .call($event.target.options, function(
-                                            o
-                                          ) {
-                                            return o.selected
-                                          })
-                                          .map(function(o) {
-                                            var val =
-                                              "_value" in o ? o._value : o.value
-                                            return val
-                                          })
-                                        _vm.$set(
-                                          _vm.selected_time_belts[index],
-                                          "time_belt",
-                                          $event.target.multiple
-                                            ? $$selectedVal
-                                            : $$selectedVal[0]
-                                        )
-                                      }
-                                    }
-                                  },
-                                  _vm._l(_vm.time_belts, function(slot, key) {
-                                    return _c(
-                                      "option",
-                                      {
-                                        key: key,
-                                        domProps: { value: slot.start_time }
-                                      },
-                                      [
-                                        _vm._v(
-                                          "\n                                    " +
-                                            _vm._s(slot.start_time) +
-                                            "\n                                "
-                                        )
-                                      ]
-                                    )
-                                  }),
-                                  0
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "span",
-                                  {
-                                    directives: [
-                                      {
-                                        name: "show",
-                                        rawName: "v-show",
-                                        value: _vm.errors.has("time_belt"),
-                                        expression: "errors.has('time_belt')"
-                                      }
-                                    ],
-                                    staticClass: "text-danger"
-                                  },
-                                  [
-                                    _vm._v(
-                                      _vm._s(_vm.errors.first("time_belt"))
-                                    )
-                                  ]
-                                )
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "v-flex",
-                              { attrs: { xs12: "", sm12: "", md5: "" } },
-                              [
-                                index === 0
-                                  ? _c("span", [
-                                      _vm._v(
-                                        "\n                                Insertion\n                            "
-                                      )
-                                    ])
-                                  : _vm._e(),
-                                _vm._v(" "),
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "validate",
-                                      rawName: "v-validate",
-                                      value: "required|min:1",
-                                      expression: "'required|min:1'"
-                                    },
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value:
-                                        _vm.inputed_insertions[index].insertion,
-                                      expression:
-                                        "inputed_insertions[index].insertion"
-                                    }
-                                  ],
-                                  staticClass: "form-control",
-                                  attrs: {
-                                    type: "number",
-                                    required: "",
-                                    name: "insertion"
-                                  },
-                                  domProps: {
-                                    value:
-                                      _vm.inputed_insertions[index].insertion
-                                  },
-                                  on: {
-                                    input: function($event) {
-                                      if ($event.target.composing) {
-                                        return
-                                      }
-                                      _vm.$set(
-                                        _vm.inputed_insertions[index],
-                                        "insertion",
-                                        $event.target.value
-                                      )
-                                    }
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c(
-                                  "span",
-                                  {
-                                    directives: [
-                                      {
-                                        name: "show",
-                                        rawName: "v-show",
-                                        value: _vm.errors.has("insertion"),
-                                        expression: "errors.has('insertion')"
-                                      }
-                                    ],
-                                    staticClass: "text-danger"
-                                  },
-                                  [
-                                    _vm._v(
-                                      _vm._s(_vm.errors.first("insertion"))
-                                    )
-                                  ]
-                                )
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "v-flex",
-                              { attrs: { xs12: "", sm12: "", md2: "" } },
-                              [
-                                index == 0
-                                  ? _c("span", [
-                                      _vm._v(
-                                        "\n                                Action\n                            "
-                                      )
-                                    ])
-                                  : _vm._e(),
-                                _vm._v(" "),
-                                index > 0
-                                  ? _c(
-                                      "v-icon",
-                                      {
-                                        attrs: {
-                                          color: "red",
-                                          dark: "",
-                                          right: ""
-                                        },
-                                        on: {
-                                          click: function($event) {
-                                            return _vm.deleteRow(index)
-                                          }
-                                        }
-                                      },
-                                      [_vm._v("delete")]
-                                    )
-                                  : _vm._e()
-                              ],
-                              1
-                            )
-                          ],
-                          1
-                        )
-                      }),
-                      _vm._v(" "),
-                      _c(
-                        "v-layout",
-                        [
-                          _c(
-                            "v-flex",
-                            { attrs: { xs12: "", sm12: "", md6: "" } },
-                            [
-                              _c("span", [
-                                _vm._v(
-                                  "\n                                Volume Discount\n                            "
-                                )
-                              ]),
-                              _vm._v(" "),
-                              _c("input", {
+                              _c("v-text-field", {
                                 directives: [
                                   {
                                     name: "validate",
                                     rawName: "v-validate",
                                     value: "required|min:1",
                                     expression: "'required|min:1'"
-                                  },
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value: _vm.adslot.volume_discount,
-                                    expression: "adslot.volume_discount"
                                   }
                                 ],
-                                staticClass: "form-control",
                                 attrs: {
                                   type: "number",
-                                  required: "",
+                                  placeholder: "Unit Price",
                                   name: "volume_discount"
                                 },
-                                domProps: { value: _vm.adslot.volume_discount },
-                                on: {
-                                  input: function($event) {
-                                    if ($event.target.composing) {
-                                      return
-                                    }
-                                    _vm.$set(
-                                      _vm.adslot,
-                                      "volume_discount",
-                                      $event.target.value
-                                    )
-                                  }
+                                model: {
+                                  value: _vm.adslot.volume_discount,
+                                  callback: function($$v) {
+                                    _vm.$set(_vm.adslot, "volume_discount", $$v)
+                                  },
+                                  expression: "adslot.volume_discount"
                                 }
                               }),
                               _vm._v(" "),
@@ -6568,31 +7330,193 @@ var render = function() {
                                   )
                                 ]
                               )
-                            ]
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "v-layout",
+                        { attrs: { wrap: "" } },
+                        [
+                          _c(
+                            "v-flex",
+                            { attrs: { xs12: "", sm12: "", md12: "" } },
+                            [
+                              _c("span", [
+                                _vm._v(
+                                  "\n                                Media Asset\n                            "
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("v-select", {
+                                directives: [
+                                  {
+                                    name: "validate",
+                                    rawName: "v-validate",
+                                    value: "required",
+                                    expression: "'required'"
+                                  }
+                                ],
+                                attrs: {
+                                  items: _vm.filterAssetByDuration(
+                                    _vm.assets,
+                                    _vm.adslot.duration
+                                  ),
+                                  "item-text": "file_name",
+                                  "item-value": "id",
+                                  name: "media_asset",
+                                  placeholder: "Select Media Asset",
+                                  solo: ""
+                                },
+                                model: {
+                                  value: _vm.adslot.asset_id,
+                                  callback: function($$v) {
+                                    _vm.$set(_vm.adslot, "asset_id", $$v)
+                                  },
+                                  expression: "adslot.asset_id"
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c(
+                                "span",
+                                {
+                                  directives: [
+                                    {
+                                      name: "show",
+                                      rawName: "v-show",
+                                      value: _vm.errors.has("media_asset"),
+                                      expression: "errors.has('media_asset')"
+                                    }
+                                  ],
+                                  staticClass: "text-danger"
+                                },
+                                [
+                                  _vm._v(
+                                    _vm._s(_vm.errors.first("media_asset"))
+                                  )
+                                ]
+                              )
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "v-layout",
+                        { attrs: { wrap: "" } },
+                        [
+                          _c(
+                            "v-flex",
+                            { attrs: { xs12: "", sm12: "", md6: "" } },
+                            [
+                              _c("span", [
+                                _vm._v(
+                                  "\n                                Time Belt\n                            "
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("p"),
+                              _vm._v(" "),
+                              _c("v-select", {
+                                directives: [
+                                  {
+                                    name: "validate",
+                                    rawName: "v-validate",
+                                    value: "required",
+                                    expression: "'required'"
+                                  }
+                                ],
+                                attrs: {
+                                  items: _vm.time_belts,
+                                  "item-text": "start_time",
+                                  "item-value": "start_time",
+                                  name: "time_belt",
+                                  solo: ""
+                                },
+                                model: {
+                                  value: _vm.adslot.time_belt_start_time,
+                                  callback: function($$v) {
+                                    _vm.$set(
+                                      _vm.adslot,
+                                      "time_belt_start_time",
+                                      $$v
+                                    )
+                                  },
+                                  expression: "adslot.time_belt_start_time"
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c(
+                                "span",
+                                {
+                                  directives: [
+                                    {
+                                      name: "show",
+                                      rawName: "v-show",
+                                      value: _vm.errors.has("time_belt"),
+                                      expression: "errors.has('time_belt')"
+                                    }
+                                  ],
+                                  staticClass: "text-danger"
+                                },
+                                [_vm._v(_vm._s(_vm.errors.first("time_belt")))]
+                              )
+                            ],
+                            1
                           ),
-                          _vm._v(" "),
-                          _c("v-flex", { attrs: { md3: "" } }),
                           _vm._v(" "),
                           _c(
                             "v-flex",
-                            { attrs: { xs12: "", sm12: "", md3: "" } },
+                            { attrs: { xs12: "", sm12: "", md6: "" } },
                             [
-                              _c("v-spacer"),
+                              _c("span", [
+                                _vm._v(
+                                  "\n                                Insertion\n                            "
+                                )
+                              ]),
                               _vm._v(" "),
-                              _c("v-spacer"),
+                              _c("v-text-field", {
+                                directives: [
+                                  {
+                                    name: "validate",
+                                    rawName: "v-validate",
+                                    value: "required|min:1",
+                                    expression: "'required|min:1'"
+                                  }
+                                ],
+                                attrs: {
+                                  type: "number",
+                                  placeholder: "Unit Price",
+                                  name: "insertion"
+                                },
+                                model: {
+                                  value: _vm.adslot.ad_slots,
+                                  callback: function($$v) {
+                                    _vm.$set(_vm.adslot, "ad_slots", $$v)
+                                  },
+                                  expression: "adslot.ad_slots"
+                                }
+                              }),
                               _vm._v(" "),
                               _c(
-                                "v-btn",
+                                "span",
                                 {
-                                  staticClass: "default-vue-btn",
-                                  attrs: { dark: "", right: "", small: "" },
-                                  on: {
-                                    click: function($event) {
-                                      return _vm.addRow()
+                                  directives: [
+                                    {
+                                      name: "show",
+                                      rawName: "v-show",
+                                      value: _vm.errors.has("insertion"),
+                                      expression: "errors.has('insertion')"
                                     }
-                                  }
+                                  ],
+                                  staticClass: "text-danger"
                                 },
-                                [_vm._v("Add Time belt")]
+                                [_vm._v(_vm._s(_vm.errors.first("insertion")))]
                               )
                             ],
                             1
@@ -6601,7 +7525,7 @@ var render = function() {
                         1
                       )
                     ],
-                    2
+                    1
                   )
                 ],
                 1
@@ -6703,9 +7627,13 @@ var render = function() {
           _c(
             "v-card-title",
             [
-              _c("v-spacer"),
-              _vm._v(" "),
-              _c("v-spacer"),
+              _c("add-adslot-modal", {
+                attrs: {
+                  assets: _vm.assets,
+                  time_belts: _vm.time_belts,
+                  mpo_id: _vm.adslots[0].mpo_id
+                }
+              }),
               _vm._v(" "),
               _c("v-spacer"),
               _vm._v(" "),
@@ -11170,6 +12098,60 @@ if(false) {
 
 /***/ }),
 
+/***/ "./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-0eb78d07\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=1!./resources/assets/js/components/schedule/weekly/MpoFilter.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__("./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-0eb78d07\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=1!./resources/assets/js/components/schedule/weekly/MpoFilter.vue");
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__("./node_modules/vue-style-loader/lib/addStylesClient.js")("fe17a486", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../../node_modules/css-loader/index.js!../../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-0eb78d07\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=1!./MpoFilter.vue", function() {
+     var newContent = require("!!../../../../../../node_modules/css-loader/index.js!../../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-0eb78d07\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=1!./MpoFilter.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+
+/***/ "./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-0eb78d07\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-multiselect/dist/vue-multiselect.min.css":
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__("./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-0eb78d07\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-multiselect/dist/vue-multiselect.min.css");
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__("./node_modules/vue-style-loader/lib/addStylesClient.js")("6747da9e", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../css-loader/index.js!../../vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-0eb78d07\",\"scoped\":false,\"hasInlineConfig\":true}!./vue-multiselect.min.css", function() {
+     var newContent = require("!!../../css-loader/index.js!../../vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-0eb78d07\",\"scoped\":false,\"hasInlineConfig\":true}!./vue-multiselect.min.css");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+
 /***/ "./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-1651cb1e\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/campaign_mpos/FileModal.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11224,6 +12206,33 @@ if(false) {
 
 /***/ }),
 
+/***/ "./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-2128577b\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/campaign_mpos/AddAdslotModal.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__("./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-2128577b\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/campaign_mpos/AddAdslotModal.vue");
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__("./node_modules/vue-style-loader/lib/addStylesClient.js")("44eb1e3a", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-2128577b\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./AddAdslotModal.vue", function() {
+     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-2128577b\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./AddAdslotModal.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+
 /***/ "./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-27598234\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/campaign_mpos/MpoFileList.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11241,6 +12250,33 @@ if(false) {
  if(!content.locals) {
    module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-27598234\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./MpoFileList.vue", function() {
      var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-27598234\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./MpoFileList.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+
+/***/ "./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-352b5645\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/campaign_mpos/EditSlotModal.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__("./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-352b5645\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/campaign_mpos/EditSlotModal.vue");
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__("./node_modules/vue-style-loader/lib/addStylesClient.js")("dfedbfba", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-352b5645\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./EditSlotModal.vue", function() {
+     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-352b5645\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./EditSlotModal.vue");
      if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
      update(newContent);
    });
@@ -11630,6 +12666,7 @@ Vue.component('media-asset-play-video', __webpack_require__("./resources/assets/
 //Schedule
 Vue.component('weekly-schedule', __webpack_require__("./resources/assets/js/components/schedule/weekly/WeeklySchedule.vue"));
 Vue.component('ad-break-modal', __webpack_require__("./resources/assets/js/components/schedule/partials/AdbreakModal.vue"));
+Vue.component('schedule-mpo-filter', __webpack_require__("./resources/assets/js/components/schedule/weekly/MpoFilter.vue"));
 
 //mpo list
 Vue.component('campaign-mpos-list', __webpack_require__("./resources/assets/js/components/campaign_mpos/DisplayMpoList.vue"));
@@ -11639,6 +12676,7 @@ Vue.component('file-modal', __webpack_require__("./resources/assets/js/component
 Vue.component('delete-slots-modal', __webpack_require__("./resources/assets/js/components/campaign_mpos/DeleteSlotModal.vue"));
 Vue.component('edit-slots-modal', __webpack_require__("./resources/assets/js/components/campaign_mpos/EditSlotModal.vue"));
 Vue.component('campaign-file-list', __webpack_require__("./resources/assets/js/components/campaign_mpos/MpoFileList.vue"));
+Vue.component('add-adslot-modal', __webpack_require__("./resources/assets/js/components/campaign_mpos/AddAdslotModal.vue"));
 
 Vue.mixin({
     methods: {
@@ -12029,6 +13067,58 @@ module.exports = Component.exports
 
 /***/ }),
 
+/***/ "./resources/assets/js/components/campaign_mpos/AddAdslotModal.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__("./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-2128577b\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/campaign_mpos/AddAdslotModal.vue")
+}
+var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
+/* script */
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\",[\"transform-runtime\",{\"polyfill\":false,\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/campaign_mpos/AddAdslotModal.vue")
+/* template */
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-2128577b\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/campaign_mpos/AddAdslotModal.vue")
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/campaign_mpos/AddAdslotModal.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-2128577b", Component.options)
+  } else {
+    hotAPI.reload("data-v-2128577b", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+
 /***/ "./resources/assets/js/components/campaign_mpos/AssociateFiles.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -12238,6 +13328,10 @@ module.exports = Component.exports
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__("./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-352b5645\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/campaign_mpos/EditSlotModal.vue")
+}
 var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
 /* script */
 var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\",[\"transform-runtime\",{\"polyfill\":false,\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/campaign_mpos/EditSlotModal.vue")
@@ -12246,7 +13340,7 @@ var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/templa
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
-var __vue_styles__ = null
+var __vue_styles__ = injectStyle
 /* scopeId */
 var __vue_scopeId__ = null
 /* moduleIdentifier (server only) */
@@ -13068,6 +14162,59 @@ if (false) {(function () {
     hotAPI.createRecord("data-v-ecf7a6a6", Component.options)
   } else {
     hotAPI.reload("data-v-ecf7a6a6", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+
+/***/ "./resources/assets/js/components/schedule/weekly/MpoFilter.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__("./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-0eb78d07\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-multiselect/dist/vue-multiselect.min.css")
+  __webpack_require__("./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-0eb78d07\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=1!./resources/assets/js/components/schedule/weekly/MpoFilter.vue")
+}
+var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
+/* script */
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\",[\"transform-runtime\",{\"polyfill\":false,\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/schedule/weekly/MpoFilter.vue")
+/* template */
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-0eb78d07\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/schedule/weekly/MpoFilter.vue")
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/schedule/weekly/MpoFilter.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-0eb78d07", Component.options)
+  } else {
+    hotAPI.reload("data-v-0eb78d07", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
