@@ -53,16 +53,10 @@ class MediaPlanController extends Controller
 
     public function index(Request $request)
     {
-        $planners_id = $this->getUserListInCompany();
-        $media_plan_service = new GetMediaPlans($request->status, $planners_id);
+        $company_id = $this->companyId();
+        $media_plan_service = new GetMediaPlans($request->status, $company_id);
         $plans = $media_plan_service->run();
         return view('agency.mediaPlan.index')->with('plans', $plans);
-    }
-
-    public function getUserListInCompany()
-    {
-        $users = Auth::user()->companies->first()->users->all();
-        return collect($users)->pluck('id')->toArray();
     }
 
     public function customisPlan()

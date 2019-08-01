@@ -47,7 +47,7 @@ class DashboardController extends Controller
     {
         //agency dashboard
         $allBroadcasters = Utilities::switch_db('api')->select("SELECT * from broadcasters");
-        $agency_id = Session::get('agency_id');
+        $agency_id = $this->companyId();
         $agency_details = Utilities::switch_db('api')->select("SELECT * from agents where id = '$agency_id'");
 
         //TV
@@ -74,15 +74,15 @@ class DashboardController extends Controller
         $active_campaigns = Campaign::where('belongs_to', $agency_id)->where('status','active')->get();
 
         //count pending media plans
-        $media_plan_service = new GetMediaPlans('pending');
+        $media_plan_service = new GetMediaPlans('Pending', $agency_id);
         $count_pending_media_plans = count($media_plan_service->run());
 
         //count approved media plans
-        $media_plan_service = new GetMediaPlans('approved');
+        $media_plan_service = new GetMediaPlans('Approved', $agency_id);
         $count_approved_media_plans = count($media_plan_service->run());
 
         //count declined media plans
-        $media_plan_service = new GetMediaPlans('declined');
+        $media_plan_service = new GetMediaPlans('Declined', $agency_id);
         $count_declined_media_plans = count($media_plan_service->run());
 
         return view('agency.dashboard.new_dashboard')->with([
