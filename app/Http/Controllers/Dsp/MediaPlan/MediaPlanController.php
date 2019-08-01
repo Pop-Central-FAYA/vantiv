@@ -731,6 +731,7 @@ class MediaPlanController extends Controller
             "client" => $this->getClientName($media_plan_id),
             "receiver_name" => $this->getPlannerDetails($user_id)['name'],
             "link" => $media_plan_id,
+            "subject" => "Request For Approval"
            
           );
             $send_mail = \Mail::to($this->getPlannerDetails($user_id)['email'])->send(new MailForApproval($user_mail_content_array));
@@ -749,7 +750,7 @@ class MediaPlanController extends Controller
         return $planner;
     }
 
-    function getClientName($media_plan_id){
+    public function getClientName($media_plan_id){
         $mediaPlan = MediaPlan::findorfail($media_plan_id);
         $client_name = "";
         $clients = new AllClient($this->companyId());
@@ -766,7 +767,7 @@ class MediaPlanController extends Controller
     public function postRequestApproval(Request $request)
     {
       $mediaPlan = MediaPlan::with(['client'])->findorfail($request->media_plan_id);
-      $mediaPlan->status = 'InRequest';
+      $mediaPlan->status = 'In Review';
       $mediaPlan->save();
       $lo= $this->requestApproval($request->media_plan_id, $request->user_id);
        $mediaPlanData = MediaPlan::with(['client'])->findorfail($request->media_plan_id);

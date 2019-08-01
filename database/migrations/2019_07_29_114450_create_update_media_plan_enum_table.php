@@ -14,7 +14,7 @@ class CreateUpdateMediaPlanEnumTable extends Migration
      */
     public function up()
     {
-        DB::statement("ALTER TABLE media_plans CHANGE COLUMN status status ENUM('Suggested', 'Selected', 'Pending', 'Approved', 'Declined', 'InRequest') NOT NULL DEFAULT 'Suggested'");
+        DB::statement("ALTER TABLE media_plans CHANGE COLUMN status status ENUM('Suggested', 'Selected', 'Pending', 'Approved', 'Declined', 'In Review') NOT NULL DEFAULT 'Suggested'");
     }
 
     /**
@@ -24,6 +24,6 @@ class CreateUpdateMediaPlanEnumTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('update_media_plan_enum');
+        DB::statement("ALTER TABLE media_plans CHANGE COLUMN status status ENUM('Suggested', 'Selected', 'Pending', 'Approved', 'Declined') NOT NULL DEFAULT 'Suggested'");
     }
 }
