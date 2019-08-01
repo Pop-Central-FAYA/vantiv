@@ -3338,7 +3338,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         selectedFilters: Array,
         planId: String,
         planStatus: String,
-        redirectUrls: Object
+        redirectUrls: Object,
+        permissionList: Array
     },
     data: function data() {
         return {
@@ -3363,6 +3364,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         save: function save(isRedirect) {
             var _this = this;
 
+            if (!this.hasPermissionAction(this.permissionList, ['create.media_plan', 'update.media_plan'])) {
+                return;
+            }
             var suggestionIds = [];
             var self = this;
             this.timeBeltsArr.forEach(function (timeBelt) {
@@ -3417,7 +3421,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: {
-        id: String
+        id: String,
+        permissionList: Array
     },
     data: function data() {
         return {
@@ -3447,9 +3452,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this.brands = [];
             });
         },
-        create_campaign: function create_campaign() {
+        createCampaign: function createCampaign() {
             var _this2 = this;
 
+            if (permission != null && !this.hasPermissionAction(this.permissionList, 'convert.media_plan')) {
+                return;
+            }
             $("#load_this").css({ opacity: 0.2 });
             var msg = "Converting media plan to MPO, please wait";
             this.sweet_alert(msg, 'info');
@@ -3542,7 +3550,8 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
     props: {
         users: Array,
         mediaPlan: String,
-        actionLink: String
+        actionLink: String,
+        permissionList: Array
     },
     data: function data() {
         return {
@@ -3584,7 +3593,14 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                                 return _context.abrupt('return', false);
 
                             case 5:
+                                if (!(permission != null && !this.hasPermissionAction(this.permissionList, permission))) {
+                                    _context.next = 7;
+                                    break;
+                                }
 
+                                return _context.abrupt('return');
+
+                            case 7:
                                 axios({
                                     method: 'post',
                                     url: this.actionLink,
@@ -3595,7 +3611,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                                 }).then(function (res) {
                                     if (res.data.status === 'success') {
                                         _this.dialog = false;
-                                        Event.$emit('updated-mediaPlan', res.data.data);
+                                        Event.$emit('updated-media-plan', res.data.data);
                                         _this.sweet_alert('Request sent successfully', 'success');
                                     } else {
                                         _this.sweet_alert('Something went wrong, Try again!', 'error');
@@ -3604,7 +3620,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                                     _this.sweet_alert(error.response.data.message, 'error');
                                 });
 
-                            case 6:
+                            case 8:
                             case 'end':
                                 return _context.stop();
                         }
@@ -3628,6 +3644,12 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -3746,7 +3768,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     created: function created() {
         var self = this;
-        Event.$on('updated-mediaPlan', function (mediaPlan) {
+        Event.$on('updated-media-plan', function (mediaPlan) {
             self.summaryDetail = mediaPlan;
         });
     },
@@ -3761,8 +3783,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 self.totalSavings += item['savings'];
             });
         },
-        buttonAction: function buttonAction(destination) {
-            window.location = destination;
+        buttonAction: function buttonAction(destination, permission) {
+            if (permission != null && !this.hasPermissionAction(this.permissionList, permission)) {
+                return;
+            } else {
+                window.location = destination;
+            }
         }
     }
 });
@@ -4926,7 +4952,10 @@ var render = function() {
                           "media-plan btn block_disp uppercased mr-1 btn-sm",
                         on: {
                           click: function($event) {
-                            return _vm.buttonAction(_vm.routes.approve)
+                            return _vm.buttonAction(
+                              _vm.routes.approve,
+                              "approve.media_plan"
+                            )
                           }
                         }
                       },
@@ -4947,7 +4976,10 @@ var render = function() {
                           "media-plan btn block_disp uppercased bg_red mr-1  btn-sm",
                         on: {
                           click: function($event) {
-                            return _vm.buttonAction(_vm.routes.decline)
+                            return _vm.buttonAction(
+                              _vm.routes.decline,
+                              "decline.media_plan"
+                            )
                           }
                         }
                       },
@@ -4970,7 +5002,8 @@ var render = function() {
                     attrs: {
                       users: _vm.userList,
                       "media-plan": _vm.summaryDetail.id,
-                      "action-link": _vm.routes.approval
+                      "action-link": _vm.routes.approval,
+                      permissionList: _vm.permissionList
                     }
                   })
                 ],
@@ -4985,7 +5018,10 @@ var render = function() {
                   staticClass: "btn block_disp uppercased",
                   on: {
                     click: function($event) {
-                      return _vm.buttonAction(_vm.routes.export)
+                      return _vm.buttonAction(
+                        _vm.routes.export,
+                        "export.media_plan"
+                      )
                     }
                   }
                 },
@@ -5004,7 +5040,10 @@ var render = function() {
                 [
                   _vm.hasPermission(_vm.permissionList, "convert.media_plan")
                     ? _c("media-plan-create-campaign", {
-                        attrs: { id: _vm.summaryDetail.id }
+                        attrs: {
+                          id: _vm.summaryDetail.id,
+                          permissionList: _vm.permissionList
+                        }
                       })
                     : _vm._e()
                 ],
@@ -12727,6 +12766,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_vue_multiselect___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9_vue_multiselect__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_vue2_timepicker__ = __webpack_require__("./node_modules/vue2-timepicker/index.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_vue2_timepicker___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_10_vue2_timepicker__);
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 /**
  * First we will load all of this project's JavaScript dependencies which
@@ -12879,15 +12919,20 @@ Vue.mixin({
             return n.toFixed(2);
         },
         hasPermission: function hasPermission(permissionList, search_permission) {
-            var result = permissionList.filter(function (permission) {
-                return permission.name == search_permission;
+            if ((typeof search_permission === 'undefined' ? 'undefined' : _typeof(search_permission)) != Array) {
+                search_permission = [search_permission];
+            }
+            var found = permissionList.some(function (permission) {
+                return search_permission.indexOf(permission) >= 0;
             });
-
-            if (result.length == 0) {
-                return false;
-            } else {
+            return found;
+        },
+        hasPermissionAction: function hasPermissionAction(permissionList, permission) {
+            if (this.hasPermission(permissionList, permission)) {
                 return true;
             }
+            this.sweet_alert('You dont have the permission to perform this action', 'info');
+            return false;
         }
     }
 });

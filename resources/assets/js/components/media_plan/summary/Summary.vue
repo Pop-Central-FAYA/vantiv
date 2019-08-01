@@ -56,11 +56,8 @@
                     </table>
                     <!-- end -->
                 </div>
-
- 
             </div>
-         </div>
-
+        </div>
 
         <div class="container-fluid my-5">
             <div class="row">
@@ -68,18 +65,27 @@
                     <button id="back_btn" @click="buttonAction(routes.back)"  class="btn small_btn"><i class="media-plan material-icons">navigate_before</i> Back</button>
                 </div>
                 <div class="col-md-8 p-0 text-right">
-                      <span v-if="summaryDetail.status == 'In Review'" >
-                            <button v-if="hasPermission(permissionList,'approve.media_plan')"  @click="buttonAction(routes.approve)" class="media-plan btn block_disp uppercased mr-1 btn-sm"><i class="media-plan material-icons">check</i>Approve Plan</button>
-                      
-                            <button v-if="hasPermission(permissionList,'decline.media_plan')"  @click="buttonAction(routes.decline)"  class="media-plan btn block_disp uppercased bg_red mr-1  btn-sm"><i class="media-plan material-icons">clear</i>Decline Plan</button>
-                        </span>
-                        <span v-if="summaryDetail.status != 'Approved'" >
-                                <media-plan-request-approval  :users="userList"  :media-plan="summaryDetail.id" :action-link="routes.approval"></media-plan-request-approval>
-                        </span>
-                            <button v-if="hasPermission(permissionList,'export.media_plan')"  @click="buttonAction(routes.export)"  class="btn block_disp uppercased"><i class="media-plan material-icons">file_download</i>Export Plan</button>
-                        <span v-if="summaryDetail.status == 'Approved'" >
-                            <media-plan-create-campaign v-if="hasPermission(permissionList,'convert.media_plan')" :id="summaryDetail.id"></media-plan-create-campaign>
-                        </span>
+                    <span v-if="summaryDetail.status == 'In Review'" >
+                        <button v-if="hasPermission(permissionList,'approve.media_plan')"  @click="buttonAction(routes.approve, 'approve.media_plan')" class="media-plan btn block_disp uppercased mr-1 btn-sm"><i class="media-plan material-icons">check</i>Approve Plan</button>
+                    
+                        <button v-if="hasPermission(permissionList,'decline.media_plan')"  @click="buttonAction(routes.decline, 'decline.media_plan')"  class="media-plan btn block_disp uppercased bg_red mr-1  btn-sm"><i class="media-plan material-icons">clear</i>Decline Plan</button>
+                    </span>
+                    <span v-if="summaryDetail.status != 'Approved'" >
+                        <media-plan-request-approval  
+                        :users="userList"  
+                        :media-plan="summaryDetail.id" 
+                        :action-link="routes.approval"
+                        :permissionList="permissionList">
+                        </media-plan-request-approval>
+                    </span>
+                        <button v-if="hasPermission(permissionList,'export.media_plan')"  @click="buttonAction(routes.export, 'export.media_plan')"  class="btn block_disp uppercased"><i class="media-plan material-icons">file_download</i>Export Plan</button>
+                    <span v-if="summaryDetail.status == 'Approved'" >
+                        <media-plan-create-campaign 
+                        v-if="hasPermission(permissionList,'convert.media_plan')" 
+                        :id="summaryDetail.id"
+                        :permissionList="permissionList"
+                        ></media-plan-create-campaign>
+                    </span>
                 </div>
             </div>
         </div>
@@ -107,7 +113,7 @@
                 totalGrossValue: 0,
                 totalNetValue: 0,
                 totalSavings: 0,
-                 summaryDetail:  this.summaryDetails
+                summaryDetail:  this.summaryDetails
             };
         },
         mounted() {
@@ -117,26 +123,28 @@
         },  
         created() {    
             var self = this;
-            Event.$on('updated-mediaPlan', function (mediaPlan) {
+            Event.$on('updated-media-plan', function (mediaPlan) {
                 self.summaryDetail = mediaPlan;
 
             });
           }, 
          methods: {
-                getSums(){
-                    let self = this;
-                    this.summaryData.forEach(function (item, key) {
-                        self.totalSpots += item['total_spots']
-                        self.totalGrossValue += item['gross_value']
-                        self.totalNetValue += item['net_value']
-                        self.totalSavings += item['savings']
-                    });
-                },
-                buttonAction(destination) {
-                    window.location = destination; 
-                },
-                   
-              
-         }
+            getSums(){
+                let self = this;
+                this.summaryData.forEach(function (item, key) {
+                    self.totalSpots += item['total_spots']
+                    self.totalGrossValue += item['gross_value']
+                    self.totalNetValue += item['net_value']
+                    self.totalSavings += item['savings']
+                });
+            },
+            buttonAction(destination, permission) {
+                if(permission != null && !this.hasPermissionAction(this.permissionList, permission)){
+                    return
+                }else{
+                    window.location = destination;
+                }
+            },      
+        }
     }
 </script>

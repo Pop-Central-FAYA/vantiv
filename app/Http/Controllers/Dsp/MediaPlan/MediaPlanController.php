@@ -8,7 +8,6 @@ use Vanguard\Http\Controllers\Controller;
 use Vanguard\Http\Controllers\Traits\CompanyIdTrait;
 use Vanguard\Models\Criteria;
 use Vanguard\Models\MediaPlan;
-use Vanguard\Models\MediaPlanProgram;
 use Vanguard\Models\MediaPlanProgramRating;
 use Vanguard\Models\MediaPlanSuggestion;
 use Vanguard\Services\Client\ClientBrand;
@@ -25,7 +24,6 @@ use Vanguard\Services\MediaPlan\GetSuggestedPlans;
 use Vanguard\Services\MediaPlan\ExportPlan;
 use Vanguard\Services\Client\AllClient;
 use Session;
-use Maatwebsite;
 use Maatwebsite\Excel\Facades\Excel;
 use Vanguard\Exports\MediaPlanExport;
 use Vanguard\Services\Traits\DefaultMaterialLength;
@@ -43,7 +41,6 @@ use Vanguard\Services\CampaignChannels\GetChannelByName;
 use Vanguard\Services\User\GetUserList;
 use Vanguard\Mail\MailForApproval;
 use Vanguard\Mail\ApprovalNotification;
-use Illuminate\Support\Facades\Auth;
 
 class MediaPlanController extends Controller
 {
@@ -101,7 +98,7 @@ class MediaPlanController extends Controller
           $suggestions = $suggestPlanService->suggestPlan();
         if ($suggestions->isNotEmpty()) {
             // store planning criteria and suggestions
-            $storeSuggestionsService = new StorePlanningSuggestions($request, $suggestions);
+            $storeSuggestionsService = new StorePlanningSuggestions($request, $suggestions, $this->companyId());
             $newMediaPlan = $storeSuggestionsService->storePlanningSuggestions();
             return redirect()->action(
                 'MediaPlan\MediaPlanController@getSuggestPlanById', ['id' => $newMediaPlan->id]

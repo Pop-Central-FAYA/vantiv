@@ -5,7 +5,8 @@
 <script>
     export default {
         props: {
-            id: String
+            id: String,
+            permissionList : Array
         },
         data() {
             return {
@@ -32,7 +33,10 @@
                     this.brands = [];
                 });
             },
-            create_campaign() {
+            createCampaign() {
+                if(permission != null && !this.hasPermissionAction(this.permissionList, 'convert.media_plan')){
+                    return
+                }
                 $("#load_this").css({ opacity: 0.2 });
                 var msg = "Converting media plan to MPO, please wait";
                 this.sweet_alert(msg, 'info');

@@ -53,7 +53,8 @@
         props: {
         users:Array,
         mediaPlan:String,
-        actionLink:String
+        actionLink:String,
+        permissionList:Array
         },
         data() {
             return {
@@ -78,26 +79,27 @@
                 if (!isValid) {
                     return false;
                 }
-                   
-                  axios({
-                     method: 'post',
-                     url: this.actionLink,
-                     data: {
-                         user_id: this.user,
-                         media_plan_id: this.mediaPlan,
-                     }
-                    }).then((res) => {
-                    if (res.data.status === 'success') {
-                        this.dialog = false;
-                        Event.$emit('updated-mediaPlan', res.data.data);
-                        this.sweet_alert('Request sent successfully', 'success');
-                    } else {
-                        this.sweet_alert('Something went wrong, Try again!', 'error');
+                if(permission != null && !this.hasPermissionAction(this.permissionList, permission)){
+                    return
+                }  
+                axios({
+                    method: 'post',
+                    url: this.actionLink,
+                    data: {
+                        user_id: this.user,
+                        media_plan_id: this.mediaPlan,
                     }
-                    }).catch((error) => {
-                     this.sweet_alert(error.response.data.message, 'error');
-                  });
-            
+                }).then((res) => {
+                if (res.data.status === 'success') {
+                    this.dialog = false;
+                    Event.$emit('updated-media-plan', res.data.data);
+                    this.sweet_alert('Request sent successfully', 'success');
+                } else {
+                    this.sweet_alert('Something went wrong, Try again!', 'error');
+                }
+                }).catch((error) => {
+                    this.sweet_alert(error.response.data.message, 'error');
+                });
             },
         }
     }
