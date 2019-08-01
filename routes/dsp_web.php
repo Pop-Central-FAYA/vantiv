@@ -141,11 +141,8 @@
             Route::get('/decline/{id}', 'MediaPlanController@declinePlan')->name('agency.media_plan.decline')->middleware('permission:create.media_plan');
             Route::post('/get_approval/', 'MediaPlanController@postRequestApproval')->name('agency.media_plan.get_approval')->middleware('permission:create.media_plan');
             Route::get('/customise/{id}', 'MediaPlanController@getSuggestPlanById')->name('agency.media_plan.customize')->middleware('permission:update.media_plan');
-            Route::get('/vue/customise/{id}', 'MediaPlanController@getSuggestPlanByIdVue');
-
             Route::post('/customise-filter', 'MediaPlanController@setPlanSuggestionFilters')->name('agency.media_plan.customize-filter');
-
-            Route::post('/select_plan', 'MediaPlanController@SelectPlanPost');
+            Route::post('/select_plan', 'MediaPlanController@SelectPlanPost')->name('agency.media_plan.select_suggestions');
             Route::get('/createplan/{id}', 'MediaPlanController@createPlan')->name('agency.media_plan.create')->middleware('permission:create.media_plan');
             Route::post('/finish_plan', 'MediaPlanController@completePlan')->name('agency.media_plan.submit.finish_plan');
             Route::get('/export/{id}', 'MediaPlanController@exportPlan')->name('agency.media_plan.export');

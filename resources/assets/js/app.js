@@ -43,7 +43,6 @@ Vue.component('multiselect', Multiselect);
 import VueTimepicker from 'vue2-timepicker';
 Vue.component('vue-timepicker', VueTimepicker);
 
-
 // declared to manage events globally
 window.Event = new Vue();
 /**
@@ -58,7 +57,6 @@ Vue.component('media-plan-suggestion-table', require('./components/media_plan/cu
 Vue.component('media-plan-suggestion-graph', require('./components/media_plan/customise/SuggestionGraph.vue'));
 Vue.component('media-plan-suggestion-selected', require('./components/media_plan/customise/SelectedSuggestions.vue'));
 Vue.component('media-plan-suggestion-filter', require('./components/media_plan/customise/FilterSuggestions.vue'));
-Vue.component('media-plan-footer-nav', require('./components/media_plan/customise/FooterNavigation.vue'));
 Vue.component('media-plan-suggestions', require('./components/media_plan/customise/Suggestions.vue'));
 Vue.component('media-plan-create-campaign', require('./components/media_plan/summary/CreateCampaign.vue'));
 Vue.component('media-plan-details', require('./components/media_plan/complete/PlanDetails.vue'));

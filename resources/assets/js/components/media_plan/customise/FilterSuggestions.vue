@@ -1,46 +1,55 @@
 <template>
-   <form>
-        <div class="row">
-            <div class="col-md-3 px-1">
-                <label for="station_type">Station Type</label>
-                <select name="station_type" v-model="stationType">
-                    <option v-for="(station,key) in filterValues['station_type']" v-bind:key="key" :value="station">{{station}}</option>
-                </select>                    
-            </div>
-            <div class="col-md-2 px-1">
-                <label for="days">Days</label>
-                <select name="days" v-model="days">
-                    <option value="all" selected="true">All</option>
-                    <option v-for="(day,key) in filterValues['days']" v-bind:key="key" :value="day">{{day}}</option>
-                </select>
-            </div>
-            <div class="col-md-2 px-1">
-                <label for="states">States</label>
-                <select name="states" v-model="states">
-                    <option value="all" selected="true">All</option>
-                    <option v-for="(state,key) in filterValues['state_list']" v-bind:key="key" :value="state">{{state}}</option>
-                </select>
-            </div>
-            <div class="col-md-2 px-1">
-                <label for="day_parts">Day Parts</label>
-                <select name="day_parts" v-model="dayParts">
-                    <option value="all" selected="true">All</option>
-                    <option v-for="(day_part,key) in filterValues['day_parts']" v-bind:key="key" :value="day_part">{{day_part}}</option>
-                </select>                    
-            </div>
-            <div class="col-md-3 px-1">
-                <button type="button" @click="filter_suggestions" class="filter-btn" id="filter-btn"><i class="material-icons">search</i>FILTER</button>
-            </div>
-        </div>
-    </form>
+    <v-layout wrap>
+        <v-flex xs12 sm3 md3>
+            <span>Station Type:</span>
+                <v-select class="mt-0 pt-1" v-model="stationType" :items="filterValues['station_type']"></v-select>
+        </v-flex>
+        <v-flex xs12 sm2 md2>
+            <span>Days:</span>
+                <v-select class="mt-0 pt-1" v-model="days" :items="filterValueDays"></v-select>
+        </v-flex>
+        <v-flex xs12 sm2 md2>
+            <span>States:</span>
+                <v-select class="mt-0 pt-1" v-model="states" :items="filterValueStates"></v-select>
+        </v-flex>
+        <v-flex xs12 sm2 md2>
+            <span>Day Parts:</span>
+                <v-select class="mt-0 pt-1" v-model="dayParts" :items="filterValueDayParts"></v-select>
+        </v-flex>
+        <v-flex xs12 sm3 md3 pt-4>
+            <v-btn @click="filterSuggestions" color="default-vue-btn">
+                <v-icon>search</v-icon> FILTER
+            </v-btn>
+        </v-flex>
+    </v-layout>
 </template>
+
+<style>
+    .v-text-field .v-input__slot {
+        padding: 0px 12px;
+        min-height: 45px;
+        margin-bottom: 0px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    .v-text-field>.v-input__control>.v-input__slot:after, .v-text-field>.v-input__control>.v-input__slot:before {
+        content: none;
+    }
+    .theme--dark.v-btn.v-btn--disabled:not(.v-btn--icon):not(.v-btn--flat):not(.v-btn--outline) {
+        background-color: hsl(184, 55%, 53%)!important;
+    }
+    .v-btn {
+        height: 45px !important;
+    }
+</style>
 
 <script>
     export default {
         props: {
             filterValues: Object,
-            selectedFilters: Object,
-            planId: String
+            selectedFilters: Array,
+            planId: String,
+            redirectUrls: Object
         },
         data() {
             return {
@@ -54,10 +63,27 @@
             console.log('Filter Suggestions Component mounted.');
         },
         created() {
-            this.set_selected_filters();
+            this.setSelectedFilters();
+        },
+        computed: {
+            filterValueDayParts() {
+                var day_parts = Object.values(this.filterValues.day_parts)
+                day_parts.splice(0,0,'all');
+                return day_parts;
+            },
+            filterValueDays() {
+                var days = Object.values(this.filterValues.days)
+                days.splice(0,0,'all');
+                return days;
+            },
+            filterValueStates() {
+                var states = Object.values(this.filterValues.state_list)
+                states.splice(0,0,'all');
+                return states;
+            }
         },
         methods: {
-            set_selected_filters() {
+            setSelectedFilters() {
                 if (this.selectedFilters['station_type']) { 
                     this.stationType = this.selectedFilters['station_type'];
                 } 
@@ -71,13 +97,12 @@
                     this.states = this.selectedFilters['states'];
                 }
             },
-            filter_suggestions(e) {
-                $("#load_this").css({ opacity: 0.2 });
+            filterSuggestions() {
                 var msg = "Setting up filters, please wait";
                 this.sweet_alert(msg, 'info');
                 axios({
                     method: 'post',
-                    url: '/agency/media-plan/customise-filter',
+                    url: this.redirectUrls.filter_action,
                     data: {
                         day_parts: this.dayParts,
                         states: this.states,
@@ -88,15 +113,13 @@
                 }).then((res) => {
                     if (res.data.status === 'success') {
                         this.sweet_alert(res.data.message, 'success');
-                        window.location = '/agency/media-plan/vue/customise/' + res.data.redirect_url;
+                        window.location = res.data.redirect_url;
                     } else {
                         this.sweet_alert('An unknown error has occurred, please try again', 'error');
-                        $('#load_this_div').css({opacity: 1});
                     }
                 }).catch((error) => {
                     console.log(error.response.data);
                     this.sweet_alert('An unknown error has occurred, please try again', 'error');
-                    $('#load_this_div').css({opacity: 1});
                 });
             }
         }
