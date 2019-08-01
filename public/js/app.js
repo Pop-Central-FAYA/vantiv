@@ -1782,14 +1782,10 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         },
         filterAssetByDuration: function filterAssetByDuration(assets, time_belts) {
             var time_belt = this.getDistinctAssetId(time_belts);
-            //this.form.duration = duration;
-            var filtered_assets = assets.filter(function (item) {
+            this.groupedAssets = assets.filter(function (item) {
                 return time_belt.some(function (resultItem) {
                     return resultItem === item.id;
                 });
-            });
-            this.groupedAssets = _.groupBy(filtered_assets, function (asset) {
-                return asset.duration;
             });
         },
 
@@ -5729,22 +5725,33 @@ var render = function() {
                                             key: "header",
                                             fn: function() {
                                               return [
-                                                _c("div", [
-                                                  _vm._v(
-                                                    _vm._s(asset[0].duration) +
-                                                      " Secs"
-                                                  )
-                                                ]),
-                                                _vm._v(" "),
-                                                _c("div", [
-                                                  _vm._v(
-                                                    _vm._s(asset[0].file_name) +
-                                                      " "
-                                                  )
-                                                ]),
+                                                _c(
+                                                  "div",
+                                                  { staticClass: "text-left" },
+                                                  [
+                                                    _vm._v(
+                                                      _vm._s(asset.duration) +
+                                                        " Secs"
+                                                    )
+                                                  ]
+                                                ),
                                                 _vm._v(" "),
                                                 _c(
                                                   "div",
+                                                  {
+                                                    staticClass: "text-center"
+                                                  },
+                                                  [
+                                                    _vm._v(
+                                                      _vm._s(asset.file_name) +
+                                                        " "
+                                                    )
+                                                  ]
+                                                ),
+                                                _vm._v(" "),
+                                                _c(
+                                                  "div",
+                                                  { staticClass: "text-right" },
                                                   [
                                                     _c("input", {
                                                       attrs: {
@@ -5752,8 +5759,7 @@ var render = function() {
                                                         id: "file-asset"
                                                       },
                                                       domProps: {
-                                                        value:
-                                                          asset[0].asset_url
+                                                        value: asset.asset_url
                                                       }
                                                     }),
                                                     _vm._v(" "),
@@ -5795,7 +5801,7 @@ var render = function() {
                                           _c("v-card-text", [
                                             _c("video", {
                                               attrs: {
-                                                src: asset[0].asset_url,
+                                                src: asset.asset_url,
                                                 controls: ""
                                               }
                                             })
