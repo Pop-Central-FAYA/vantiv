@@ -67,7 +67,7 @@ class GetMediaPlans
     {
         if ($media_plan->status === "Approved" || $media_plan->status === "Declined") {
             return route('agency.media_plan.summary',['id'=>$media_plan->id]);
-        } elseif ($media_plan->status === "Pending" || $media_plan->status === "Suggested") {
+        } elseif ($media_plan->status === "Pending" || $media_plan->status === "Suggested" || $media_plan->status === "In Review") {
             return route('agency.media_plan.customize',['id'=>$media_plan->id]);
         } elseif ($media_plan->status === "Selected") {
             return route('agency.media_plan.create',['id'=>$media_plan->id]);
