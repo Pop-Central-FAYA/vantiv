@@ -96,41 +96,43 @@
                 window.location = url;
             },
             save(isRedirect) {
-                var suggestionIds = [];
-                var self = this;
-                this.timeBeltsArr.forEach(function (timeBelt) {
-                    suggestionIds.push(timeBelt.id);
-                });
-
-                if (suggestionIds.length === 0) {
-                    this.sweet_alert("Select the station you want to add", 'error');
-                }else {
-                    this.isRunRatings = true;
-                    var msg = `${self.timeBeltsArr.length} suggestion(s) selected. Saving in progress, please wait...`;
-                    this.sweet_alert(msg, 'info', null);
-                    axios({
-                        method: 'post',
-                        url: this.redirectUrls.save_action,
-                        data: {
-                            data: JSON.stringify(suggestionIds),
-                            mediaplan: this.planId
-                        }
-                    }).then((res) => {
-                        this.isRunRatings = false;
-                        if (res.data.status === 'success') {
-                            this.sweet_alert("Selected suggestions successfully saved!", 'success');
-                            if (isRedirect) {
-                                setTimeout(function () {
-                                    location.href = self.redirectUrls.next_action;
-                                }, 2000);
-                            } 
-                        } else {
-                            this.sweet_alert("Selected suggestions couldn't be saved, please try again", 'error');
-                        }
-                    }).catch((error) => {
-                        this.isRunRatings = false;
-                        this.sweet_alert("An unknown error has occurred, please try again", 'error');
+                if(this.hasPermissionAction(this.permissionList, ['create.media_plan','update.media_plan'])){
+                    var suggestionIds = [];
+                    var self = this;
+                    this.timeBeltsArr.forEach(function (timeBelt) {
+                        suggestionIds.push(timeBelt.id);
                     });
+
+                    if (suggestionIds.length === 0) {
+                        this.sweet_alert("Select the station you want to add", 'error');
+                    }else {
+                        this.isRunRatings = true;
+                        var msg = `${self.timeBeltsArr.length} suggestion(s) selected. Saving in progress, please wait...`;
+                        this.sweet_alert(msg, 'info', null);
+                        axios({
+                            method: 'post',
+                            url: this.redirectUrls.save_action,
+                            data: {
+                                data: JSON.stringify(suggestionIds),
+                                mediaplan: this.planId
+                            }
+                        }).then((res) => {
+                            this.isRunRatings = false;
+                            if (res.data.status === 'success') {
+                                this.sweet_alert("Selected suggestions successfully saved!", 'success');
+                                if (isRedirect) {
+                                    setTimeout(function () {
+                                        location.href = self.redirectUrls.next_action;
+                                    }, 2000);
+                                } 
+                            } else {
+                                this.sweet_alert("Selected suggestions couldn't be saved, please try again", 'error');
+                            }
+                        }).catch((error) => {
+                            this.isRunRatings = false;
+                            this.sweet_alert("An unknown error has occurred, please try again", 'error');
+                        });
+                    }   
                 }
             }
         }
