@@ -3364,9 +3364,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         save: function save(isRedirect) {
             var _this = this;
 
-            if (!this.hasPermissionAction(this.permissionList, ['create.media_plan', 'update.media_plan'])) {
-                return;
-            }
             var suggestionIds = [];
             var self = this;
             this.timeBeltsArr.forEach(function (timeBelt) {
