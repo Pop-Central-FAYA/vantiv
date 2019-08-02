@@ -150,12 +150,11 @@ Vue.mixin({
             return n.toFixed(2)
         },
         hasPermission(permissionList,search_permission){
-            if(typeof search_permission != Array){
+            if(typeof search_permission === 'string'){
                 search_permission = [search_permission]
             }
             const found = permissionList.some(permission => search_permission.indexOf(permission) >= 0)
             return found
-            
         },
         hasPermissionAction(permissionList, permission) {
             if(this.hasPermission(permissionList, permission)){

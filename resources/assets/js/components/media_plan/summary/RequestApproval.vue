@@ -67,36 +67,38 @@
         },
         methods:{
             processForm: async function(event) {
-                // Validate inputs using vee-validate plugin 
-                let isValid = await this.$validator.validate().then(valid => {
-                    if (!valid) {
-                        return false;
-                    } else {
-                        return true;
-                    }
-                });
+                if(this.hasPermissionAction(this.permissionList, ['create.media_plan', 'update.media_plan'])){
+                    // Validate inputs using vee-validate plugin 
+                    let isValid = await this.$validator.validate().then(valid => {
+                        if (!valid) {
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    });
 
-                if (!isValid) {
-                    return false;
-                } 
-                axios({
-                    method: 'post',
-                    url: this.actionLink,
-                    data: {
-                        user_id: this.user,
-                        media_plan_id: this.mediaPlan,
+                    if (!isValid) {
+                        return false;
+                    } 
+                    axios({
+                        method: 'post',
+                        url: this.actionLink,
+                        data: {
+                            user_id: this.user,
+                            media_plan_id: this.mediaPlan,
+                        }
+                    }).then((res) => {
+                    if (res.data.status === 'success') {
+                        this.dialog = false;
+                        Event.$emit('updated-media-plan', res.data.data);
+                        this.sweet_alert('Request sent successfully', 'success');
+                    } else {
+                        this.sweet_alert('Something went wrong, Try again!', 'error');
                     }
-                }).then((res) => {
-                if (res.data.status === 'success') {
-                    this.dialog = false;
-                    Event.$emit('updated-media-plan', res.data.data);
-                    this.sweet_alert('Request sent successfully', 'success');
-                } else {
-                    this.sweet_alert('Something went wrong, Try again!', 'error');
+                    }).catch((error) => {
+                        this.sweet_alert(error.response.data.message, 'error');
+                    });
                 }
-                }).catch((error) => {
-                    this.sweet_alert(error.response.data.message, 'error');
-                });
             },
         }
     }

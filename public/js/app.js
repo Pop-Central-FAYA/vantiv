@@ -3364,41 +3364,43 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         save: function save(isRedirect) {
             var _this = this;
 
-            var suggestionIds = [];
-            var self = this;
-            this.timeBeltsArr.forEach(function (timeBelt) {
-                suggestionIds.push(timeBelt.id);
-            });
-
-            if (suggestionIds.length === 0) {
-                this.sweet_alert("Select the station you want to add", 'error');
-            } else {
-                this.isRunRatings = true;
-                var msg = self.timeBeltsArr.length + ' suggestion(s) selected. Saving in progress, please wait...';
-                this.sweet_alert(msg, 'info', null);
-                axios({
-                    method: 'post',
-                    url: this.redirectUrls.save_action,
-                    data: {
-                        data: JSON.stringify(suggestionIds),
-                        mediaplan: this.planId
-                    }
-                }).then(function (res) {
-                    _this.isRunRatings = false;
-                    if (res.data.status === 'success') {
-                        _this.sweet_alert("Selected suggestions successfully saved!", 'success');
-                        if (isRedirect) {
-                            setTimeout(function () {
-                                location.href = self.redirectUrls.next_action;
-                            }, 2000);
-                        }
-                    } else {
-                        _this.sweet_alert("Selected suggestions couldn't be saved, please try again", 'error');
-                    }
-                }).catch(function (error) {
-                    _this.isRunRatings = false;
-                    _this.sweet_alert("An unknown error has occurred, please try again", 'error');
+            if (this.hasPermissionAction(this.permissionList, ['create.media_plan', 'update.media_plan'])) {
+                var suggestionIds = [];
+                var self = this;
+                this.timeBeltsArr.forEach(function (timeBelt) {
+                    suggestionIds.push(timeBelt.id);
                 });
+
+                if (suggestionIds.length === 0) {
+                    this.sweet_alert("Select the station you want to add", 'error');
+                } else {
+                    this.isRunRatings = true;
+                    var msg = self.timeBeltsArr.length + ' suggestion(s) selected. Saving in progress, please wait...';
+                    this.sweet_alert(msg, 'info', null);
+                    axios({
+                        method: 'post',
+                        url: this.redirectUrls.save_action,
+                        data: {
+                            data: JSON.stringify(suggestionIds),
+                            mediaplan: this.planId
+                        }
+                    }).then(function (res) {
+                        _this.isRunRatings = false;
+                        if (res.data.status === 'success') {
+                            _this.sweet_alert("Selected suggestions successfully saved!", 'success');
+                            if (isRedirect) {
+                                setTimeout(function () {
+                                    location.href = self.redirectUrls.next_action;
+                                }, 2000);
+                            }
+                        } else {
+                            _this.sweet_alert("Selected suggestions couldn't be saved, please try again", 'error');
+                        }
+                    }).catch(function (error) {
+                        _this.isRunRatings = false;
+                        _this.sweet_alert("An unknown error has occurred, please try again", 'error');
+                    });
+                }
             }
         }
     }
@@ -3570,7 +3572,12 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                     while (1) {
                         switch (_context.prev = _context.next) {
                             case 0:
-                                _context.next = 2;
+                                if (!this.hasPermissionAction(this.permissionList, ['create.media_plan', 'update.media_plan'])) {
+                                    _context.next = 7;
+                                    break;
+                                }
+
+                                _context.next = 3;
                                 return this.$validator.validate().then(function (valid) {
                                     if (!valid) {
                                         return false;
@@ -3579,17 +3586,17 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                                     }
                                 });
 
-                            case 2:
+                            case 3:
                                 isValid = _context.sent;
 
                                 if (isValid) {
-                                    _context.next = 5;
+                                    _context.next = 6;
                                     break;
                                 }
 
                                 return _context.abrupt('return', false);
 
-                            case 5:
+                            case 6:
                                 axios({
                                     method: 'post',
                                     url: this.actionLink,
@@ -3609,7 +3616,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                                     _this.sweet_alert(error.response.data.message, 'error');
                                 });
 
-                            case 6:
+                            case 7:
                             case 'end':
                                 return _context.stop();
                         }
@@ -12755,7 +12762,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_vue_multiselect___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9_vue_multiselect__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_vue2_timepicker__ = __webpack_require__("./node_modules/vue2-timepicker/index.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_vue2_timepicker___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_10_vue2_timepicker__);
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 /**
  * First we will load all of this project's JavaScript dependencies which
@@ -12908,7 +12914,7 @@ Vue.mixin({
             return n.toFixed(2);
         },
         hasPermission: function hasPermission(permissionList, search_permission) {
-            if ((typeof search_permission === 'undefined' ? 'undefined' : _typeof(search_permission)) != Array) {
+            if (typeof search_permission === 'string') {
                 search_permission = [search_permission];
             }
             var found = permissionList.some(function (permission) {
