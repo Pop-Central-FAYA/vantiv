@@ -3593,14 +3593,6 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                                 return _context.abrupt('return', false);
 
                             case 5:
-                                if (!(permission != null && !this.hasPermissionAction(this.permissionList, permission))) {
-                                    _context.next = 7;
-                                    break;
-                                }
-
-                                return _context.abrupt('return');
-
-                            case 7:
                                 axios({
                                     method: 'post',
                                     url: this.actionLink,
@@ -3620,7 +3612,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                                     _this.sweet_alert(error.response.data.message, 'error');
                                 });
 
-                            case 8:
+                            case 6:
                             case 'end':
                                 return _context.stop();
                         }

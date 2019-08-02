@@ -78,10 +78,7 @@
 
                 if (!isValid) {
                     return false;
-                }
-                if(permission != null && !this.hasPermissionAction(this.permissionList, permission)){
-                    return
-                }  
+                } 
                 axios({
                     method: 'post',
                     url: this.actionLink,
