@@ -1,5 +1,5 @@
 <template>
-    <button @click="create_campaign()" type="button" class="btn btn-success media-plan btn block_disp uppercased">Convert to Campaign</button>
+    <button @click="createCampaign()" type="button" class="btn btn-success media-plan btn block_disp uppercased">Convert to Campaign</button>
 </template>
 
 <script>
@@ -34,7 +34,7 @@
                 });
             },
             createCampaign() {
-                if(permission != null && !this.hasPermissionAction(this.permissionList, 'convert.media_plan')){
+                if(!this.hasPermissionAction(this.permissionList, 'convert.media_plan')){
                     return
                 }
                 $("#load_this").css({ opacity: 0.2 });
