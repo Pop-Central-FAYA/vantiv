@@ -3455,7 +3455,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         createCampaign: function createCampaign() {
             var _this2 = this;
 
-            if (permission != null && !this.hasPermissionAction(this.permissionList, 'convert.media_plan')) {
+            if (!this.hasPermissionAction(this.permissionList, 'convert.media_plan')) {
                 return;
             }
             $("#load_this").css({ opacity: 0.2 });
@@ -5687,7 +5687,7 @@ var render = function() {
       attrs: { type: "button" },
       on: {
         click: function($event) {
-          return _vm.create_campaign()
+          return _vm.createCampaign()
         }
       }
     },
