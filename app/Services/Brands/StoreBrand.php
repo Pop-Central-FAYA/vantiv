@@ -13,7 +13,7 @@ class StoreBrand implements IService
 
     public function __construct($brand_details, $client_id, $user)
     {
-        $this->brand_details = $brand_details;
+        $this->brand_details = (object)$brand_details;
         $this->user = $user;
         $this->client_id = $client_id;
     }
