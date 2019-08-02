@@ -6,7 +6,7 @@ use Faker\Factory;
 use Tests\TestCase;
 use Vanguard\Services\Client\StoreClient;
 use Vanguard\Services\Client\StoreClientContact;
-use Vanguard\Model\Client;
+use Vanguard\Models\Client;
 
 
 class CreateClient extends TestCase
@@ -59,9 +59,25 @@ class CreateClient extends TestCase
     }
 
     public function test_can_create_client_with_route() {
-        $data = factory(Client::class)->create();
-        $this->post(route('new.client'), $data)
-            ->assertJson($data);
+         $faker = Factory::create();
+          $response = $this->post('/clients', [
+                '_token' => csrf_token(),
+                'id' => $faker->word,
+                'name' => $faker->word,
+                'brand' => $faker->word,
+                'image_url' => $faker->url,
+                'status' => $faker->word,
+                'created_by' => $faker->word,
+                'company_id' => $faker->word,
+                'street_address' => $faker->word,
+                'city' => $faker->word,
+                'state' => $faker->word,
+                'nationality' => $faker->word,
+          ]);
+         // $this->assertTrue($response);
+         $data = factory(Client::class)->create();
+        
+          
     }
 
 

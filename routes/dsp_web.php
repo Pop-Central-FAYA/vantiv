@@ -223,7 +223,7 @@
          /*
          * new Client route
          */
-        Route::post('/clients', 'ClientController@store')->name('new.client');
+        Route::get('/clients', 'ClientController@action')->name('new.client');
        
 
     });

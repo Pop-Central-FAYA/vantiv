@@ -13,7 +13,7 @@ use Faker\Generator as Faker;
 |
 */
 
-$factory->define(Vanguard\Model\Client::class, function (Faker $faker) {
+$factory->define(Vanguard\Models\Client::class, function (Faker $faker) {
     return [
         'id' => $faker->word,
         'name' => $faker->word,
