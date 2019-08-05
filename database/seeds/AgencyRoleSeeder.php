@@ -8,11 +8,14 @@ class AgencyRoleSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
+     * Build according to: https://docs.spatie.be/laravel-permission/v2/advanced-usage/seeding/
      * @return void
      */
     public function run()
     {
+        // Reset cached roles and permissions
+        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+
         // php artisan db:seed --class=AgencyRoleSeeder
         $vantagePermissions = [
             'create.media_plan' => array('dsp.admin', 'dsp.media_planner'),
@@ -51,7 +54,11 @@ class AgencyRoleSeeder extends Seeder
 
             'view.client' => array('dsp.compliance', 'dsp.finance', 'dsp.admin', 'dsp.media_planner', 'dsp.media_buyer'),
             'update.client' => array('dsp.admin', 'dsp.media_planner', 'dsp.media_buyer'),
-            'create.client' => array('dsp.admin', 'dsp.media_planner', 'dsp.media_buyer')
+            'create.client' => array('dsp.admin', 'dsp.media_planner', 'dsp.media_buyer'),
+
+            'view.ad_vendor' => array('dsp.compliance', 'dsp.finance', 'dsp.admin', 'dsp.media_planner', 'dsp.media_buyer'),
+            'update.ad_vendor' => array('dsp.admin', 'dsp.media_planner', 'dsp.media_buyer'),
+            'create.ad_vendor' => array('dsp.admin', 'dsp.media_planner', 'dsp.media_buyer')
         ];
         
         //Create the different roles if they do not exist

@@ -23,7 +23,7 @@
         </whitelist>
     </filter>
     <php>
-        <env name="APP_ENV" value="local"/>
+        <env name="APP_ENV" value="testing"/>
         <env name="BCRYPT_ROUNDS" value="4"/>
         <env name="CACHE_DRIVER" value="array"/>
         <env name="MAIL_DRIVER" value="array"/>
@@ -31,5 +31,6 @@
         <env name="SESSION_DRIVER" value="array"/>
         <env name="DB_CONNECTION" value="api_db"/>
         <env name="DB_DATABASE" value="faya_test"/>
+        <env name="APP_TIMEZONE" value="UTC"/>
     </php>
 </phpunit>
