@@ -35,6 +35,10 @@ return [
     */
 
     'channels' => [
+        'testing' => [
+            'driver' => 'stack',
+            'channels' => ['stderr', 'single']
+        ],
         'local' => [
             'driver' => 'stack',
             'channels' => ['stderr', 'single']
