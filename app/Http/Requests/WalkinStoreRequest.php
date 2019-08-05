@@ -31,7 +31,7 @@ class WalkinStoreRequest extends FormRequest
             'brand_name' => 'required',
             'image_url' => 'required',
             'company_name' => 'required',
-            'company_logo' => 'required',
+            'company_logo' => 'required'
         ];
     }
 }

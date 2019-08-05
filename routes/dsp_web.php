@@ -220,7 +220,7 @@
             Route::get('/search-brands', 'BrandsController@search')->name('broadcasters.brands.search');
             Route::get('/details/{id}/{client_id}', 'BrandsController@getBrandDetails')->name('brand.details');
         });
-
+        Route::get('/check-brand-existence', 'BrandsController@checkBrandExistsWithSameInformation');
         Route::get('/presigned-url', 'S3Controller@getPresignedUrl');
 
         Route::group(['namespace' => 'Dsp'], function() {

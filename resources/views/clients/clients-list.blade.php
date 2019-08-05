@@ -90,7 +90,7 @@
 
     <!-- new client modal -->
     @if(Auth::user()->hasPermissionTo('create.client'))
-    <div class="modal_contain" id="new_client">
+    <div class="modal_contain" style="overflow:scroll;"id="new_client">
         <h2 class="sub_header mb4">New Client</h2>
         <!-- <div class="progress">
         </div><br> -->
@@ -561,7 +561,6 @@
                 $('a').css('pointer-events','none');
                 $('.button_create').hide();
                 var formdata = $("#create_client").serialize();
-                debugger;
                 var weHaveSuccess = false;
                 $.ajax({
                     cache: false,

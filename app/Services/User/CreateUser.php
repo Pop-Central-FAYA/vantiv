@@ -42,7 +42,6 @@ class CreateUser
         $user->phone_number = $this->phone_number;
         $user->status =  $status;
         $user->save();
-
         return $user;
     }
 }
