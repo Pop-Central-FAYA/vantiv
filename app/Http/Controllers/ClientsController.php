@@ -17,7 +17,7 @@ class ClientsController extends Controller
 
         $clients = Utilities::switch_db('api')->select("SELECT w.user_id, w.id, u.id as user_det_id, u.firstname, u.lastname, u.phone_number, w.location,
                                                             w.company_logo, w.company_name, w.time_created, u.email, w.image_url from walkIns as w
-                                                            INNER JOIN users as u ON u.id = w.user_id where agency_id = '$agency_id'");
+                                                            INNER JOIN users as u ON u.id = w.user_id where company_id = '$agency_id'");
 
         $client_data = [];
 
