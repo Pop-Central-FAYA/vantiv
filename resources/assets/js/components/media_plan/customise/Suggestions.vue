@@ -16,7 +16,7 @@
                     <v-tabs background-color="deep-purple accent-4" class="elevation-2" :centered="true" :grow="true">
                         <v-tabs-slider></v-tabs-slider>
                         <v-tab :href="`#table-view`"><v-icon class="mr-2">view_list</v-icon> Table</v-tab>
-                        <v-tab :href="`#graph-view`"><v-icon class="mr-2">multiline_chart</v-icon> Graph</v-tab>
+                        <v-tab :href="`#graph-view`" @click="renderGraph"><v-icon class="mr-2">multiline_chart</v-icon> Graph</v-tab>
                         <v-tab-item :value="'table-view'">
                             <v-card flat tile>
                                 <v-card-text class="px-1 pb-0">
@@ -24,7 +24,7 @@
                                 </v-card-text>
                             </v-card>
                         </v-tab-item>
-                        <v-tab-item :value="'graph-view'">
+                        <v-tab-item :value="'graph-view'" v-if="viewGraph">
                             <v-card flat tile>
                                 <v-card-text class="pb-0">
                                     <media-plan-suggestion-graph :graph-days="graphDays" :graph-details="graphDetails"></media-plan-suggestion-graph>
@@ -70,7 +70,7 @@
             graphDays: Array,
             graphDetails: Object,
             filterValues: Object,
-            selectedFilters: Array,
+            selectedFilters: [Object, Array],
             planId: String,
             planStatus: String,
             redirectUrls: Object,
@@ -80,6 +80,7 @@
             return {
                 timeBeltsArr: [],
                 isRunRatings: false,
+                viewGraph: false
             };
         },
         mounted() {
@@ -134,6 +135,9 @@
                         });
                     }   
                 }
+            },
+            renderGraph() {
+                this.viewGraph = true;
             }
         }
     }
