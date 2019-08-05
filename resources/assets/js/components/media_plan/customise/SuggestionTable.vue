@@ -4,14 +4,16 @@
             <v-expansion-panel px-0>
                 <v-layout px-4 py-2>
                     <v-flex><h4>STATION</h4></v-flex>
-                    <v-flex style="margin-left: -20px;"><h4>AUDIENCE</h4></v-flex>
+                    <v-flex style="margin-left: -12px;"><h4>AUDIENCE</h4></v-flex>
                 </v-layout>
-                <v-expansion-panel-content v-for="(timebelts, key) in suggestions" v-bind:key="key">
+                <v-expansion-panel-content v-for="(timebelts, key, index) in suggestions" v-bind:key="key">
                     <template v-slot:header>
-                        <div style="width: 40px">{{ key }}</div>
-                        <div style="width: 40px">{{ totalAudiencePerStation(timebelts) }}</div>
+                        <v-layout @click="renderTimeBelts(index)">
+                            <v-flex md6>{{ key }}</v-flex>
+                            <v-flex md6>{{ totalAudiencePerStation(timebelts) }}</v-flex>
+                        </v-layout>
                     </template>
-                    <v-card>
+                    <v-card v-if="stationsToggle[index]['show']">
                         <v-card-text>
                             <v-layout wrap style="border-bottom: 1px solid #e8e8e8;">
                                 <v-flex md12 px-0 style="overflow-x:auto;  height: 40vh;">
@@ -63,8 +65,21 @@
         data() {
             return {
                 accordionCounter: 0,
-                newTimeBelt: {}
+                newTimeBelt: {},
+                curPos: 0,
+                stationsToggle: []
             };
+        },
+        created() {
+            var stations = Object.keys(this.suggestions);
+            var stationsToggle = [];
+            stations.forEach((element, key) => {
+                stationsToggle[key] = {
+                    station: element,
+                    show: false
+                }
+            });
+            this.stationsToggle = stationsToggle;
         },
         mounted() {
             console.log('Suggestions Table Component mounted.')
@@ -83,6 +98,10 @@
                 var time = `${this.format_time(time_belt.start_time)} - ${this.format_time(time_belt.end_time)}`;
                 var successMsg = `${time_belt.station} - ${time_belt.program}  showing on  ${time_belt.day}  ${time} added successfully`;
                 this.sweet_alert(successMsg, 'success');
+            },
+            renderTimeBelts(position) {
+                console.log(position);
+                this.stationsToggle[position]['show'] = true;
             }
         }
     }

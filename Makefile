@@ -78,3 +78,7 @@ code-sniff:
 code-fix:
 	@if [ -z $(product) ]; then echo "product variable is not set" && exit 1; else echo "product=$(env)"; fi
 	docker-compose exec $(product) ./vendor/bin/phpcbf
+
+run-test:
+	@if [ -z $(product) ]; then echo "product variable is not set" && exit 1; else echo "product=$(product)"; fi
+	docker-compose exec $(product) ./vendor/bin/phpunit $(file)

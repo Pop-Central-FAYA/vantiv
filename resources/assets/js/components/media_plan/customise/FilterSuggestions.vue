@@ -47,7 +47,7 @@
     export default {
         props: {
             filterValues: Object,
-            selectedFilters: Array,
+            selectedFilters: [Object, Array],
             planId: String,
             redirectUrls: Object
         },

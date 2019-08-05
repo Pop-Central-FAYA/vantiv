@@ -21,6 +21,7 @@
         Route::post('/user/complete-account/store/{id}', 'UserController@processCompleteAccount');
 
     });
+
     Route::group(['middleware' => 'auth'], function () {
         Route::get('/', ['as' => 'dashboard', 'uses' => 'DashboardController@index']);
         Route::get('agency/dashboard/campaigns', 'DashboardController@dashboardCampaigns');
@@ -230,6 +231,12 @@
             Route::get('/', 'CompanyController@index')->name('company.detail');
             Route::post('/update', 'CompanyController@updateDetails')->name('company.update');
             Route::post('/update/avatar', 'CompanyController@uploadImage')->name('company.update.avatar');
+        });
+        Route::group(['namespace' => 'Dsp'], function() {
+            Route::get('/ad-vendors', 'AdVendorController@list')->name('ad-vendor.list');
+            Route::get('/ad-vendors/{id}', 'AdVendorController@get')->name('ad-vendor.get');
+            Route::post('/ad-vendors', 'AdVendorController@create')->name('ad-vendor.create');
+            Route::patch('/ad-vendors/{id}', 'AdVendorController@update')->name('ad-vendor.update');
         });
 
     });

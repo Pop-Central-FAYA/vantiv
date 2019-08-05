@@ -13,7 +13,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        'Vanguard\Model' => 'Vanguard\Policies\ModelPolicy',
+        \Vanguard\Models\AdVendor::class => \Vanguard\Policies\AdVendorPolicy::class,
     ];
 
     /**
@@ -23,6 +23,6 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        $this->registerPolicies();
     }
 }

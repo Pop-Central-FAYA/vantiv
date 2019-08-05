@@ -189,6 +189,7 @@ return [
         Spatie\Permission\PermissionServiceProvider::class,
         Meneses\LaravelMpdf\LaravelMpdfServiceProvider::class,
         Riskihajar\Terbilang\TerbilangServiceProvider::class,
+        EloquentFilter\ServiceProvider::class,
 
 
 

@@ -25,18 +25,14 @@ class CompanyController extends Controller
      */
     public function updateDetails(Request $request)
     {
-       /* if($request->image_url){
+       if($request->image_url){
             $this->uploadImage($request);
         }
         $update_company_service = new UpdateCompany($this->companyId(), $request->address, "");
         $update_company_service->run();
 
         Session::flash('success', ClassMessages::COMPANY_UPDATE_SUCCESS);
-        return redirect()->back(); */
-        return response()->json([
-            'status' => 'success',
-            'created' => true,
-            ]);
+        return redirect()->back(); 
     }
 
 
