@@ -102,7 +102,7 @@
     </div>
     <!-- new client modal -->
     @if(Auth::user()->hasPermissionTo('create.client'))
-        <div class="modal_contain" style="width: 800px;" id="new_client">
+        <div class="modal_contain" style="width: 800px; overflow:scroll;" id="new_client">
         <h2 class="sub_header mb4">New Walk-In</h2>
         <div class="progress">
 
