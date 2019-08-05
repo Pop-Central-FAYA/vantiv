@@ -13,6 +13,13 @@ mix.options({
     }
 });
 
+mix.webpackConfig({
+    output: {
+        publicPath: '/',
+        chunkFilename: 'js/[name].js',
+    }
+});
+
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management

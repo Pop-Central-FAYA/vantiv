@@ -91,7 +91,6 @@
         computed: {
             computedGraphDays: function () {
                 let graphDetailsFoundDays = Object.keys(this.graphDetails);
-                console.log(this.graphDays.filter(f => graphDetailsFoundDays.includes(f)));
                 return this.graphDays.filter(f => graphDetailsFoundDays.includes(f));
             }
         },

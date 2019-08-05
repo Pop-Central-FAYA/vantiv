@@ -20,19 +20,13 @@
                 <h2 class="sub_header">Summary</h2>
             </div>
         </div>
-           <media-plan-summary  
-           :summary-data="{{ json_encode($summary) }}" 
-           :summary-details="{{ json_encode($media_plan) }}" 
-           :routes="{{ json_encode($routes) }}"  
-           :permission-list="{{ json_encode(Auth::user()->getAllPermissions()->pluck('name')) }}"  
-           :user-list="{{ json_encode($users) }}"></media-plan-summary>
+        
+        <media-plan-summary  
+        :summary-data="{{ json_encode($summary) }}" 
+        :summary-details="{{ json_encode($media_plan) }}" 
+        :routes="{{ json_encode($routes) }}"  
+        :permission-list="{{ json_encode(Auth::user()->getAllPermissions()->pluck('name')) }}"  
+        :user-list="{{ json_encode($users) }}"></media-plan-summary>
         <br><br><br><br><br><br><br>
     </div>
-@stop
-
-@section('scripts')
-    <!-- App.js -->
-    <script src="{{ mix('js/manifest.js') }}"></script>
-    <script src="{{ mix('js/vendor.js') }}"></script>
-    <script src="{{ mix('js/app.js') }}"></script>
 @stop
