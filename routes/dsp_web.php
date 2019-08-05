@@ -222,5 +222,15 @@
 
         Route::get('/presigned-url', 'S3Controller@getPresignedUrl');
 
+         /**
+         * User Management
+         */
+
+        Route::group(['prefix' => 'company'], function () {
+            Route::get('/', 'CompanyController@index')->name('company.detail');
+            Route::post('/update', 'CompanyController@updateDetails')->name('company.update');
+            Route::post('/update/avatar', 'CompanyController@uploadImage')->name('company.update.avatar');
+        });
+
     });
 
