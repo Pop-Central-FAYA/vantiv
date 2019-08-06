@@ -27,7 +27,7 @@ class UpdateCompany
 
     /**
      * Update the company
-     * @return \Vanguard\Models\Company  The model holding the vendor
+     * @return \Vanguard\Models\Company  The model holding the company
      */
     protected function update()
     {

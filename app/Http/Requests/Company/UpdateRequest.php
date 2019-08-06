@@ -24,8 +24,8 @@ class UpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'address' => 'sometimes|required',
-            'image_url' => 'required'
+            'address' => 'sometimes|required|string',
+            'logo' => 'required'
         ];
     }
 }

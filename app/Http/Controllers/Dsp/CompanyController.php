@@ -23,7 +23,7 @@ class CompanyController extends Controller
      */
     public function updateDetails(UpdateRequest $request, $id)
     {
-        $company =  Company::findOrFail($this->companyId());
+        $company =  Company::findOrFail($id);
         $validated = $request->validated();
         $update_company_service = new UpdateCompany($company,  $request);
         $update_company_service->run();

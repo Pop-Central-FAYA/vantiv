@@ -92,8 +92,4 @@ class ClassMessages
 
     const ADSLOT_ERROR = 'There was an error creating the slot';
 
-    const COMPANY_UPDATE_SUCCESS = 'Company updated successfully';
-
-    const COMPANY_UPDATE_ERROR = 'An error occurred while updating company';
-
 }
