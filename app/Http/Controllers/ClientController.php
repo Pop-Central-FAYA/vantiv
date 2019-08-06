@@ -10,13 +10,15 @@ use Vanguard\Services\Client\StoreClient;
 use Vanguard\Services\Client\StoreClientContact;
 use Illuminate\Support\Facades\Auth;
 use Vanguard\Http\Controllers\Traits\CompanyIdTrait;
+use Vanguard\Http\Requests\Client\StoreRequest;
 
 
 class ClientController extends Controller
 {
     use CompanyIdTrait;
-    public function storeClient(Request $request)
+    public function storeClient(StoreRequest $request)
     {
+        $validated = $request->validated();
         $user = Auth::user();
         $new_client = new StoreClient($request, $this->companyId(), $user);
         $client = $new_client->run(); 

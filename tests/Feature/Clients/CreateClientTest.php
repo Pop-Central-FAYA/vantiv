@@ -58,9 +58,9 @@ class CreateClient extends TestCase
         return true;
     }
 
-    public function test_can_create_client_with_route() {
+    public function test_authenticated_user_can_create_client_with_route() {
          $faker = Factory::create();
-          $response = $this->post('/clients', [
+          $response = $this->actingAs($user)->post('/clients', [
                 '_token' => csrf_token(),
                 'id' => $faker->word,
                 'name' => $faker->word,
@@ -79,6 +79,17 @@ class CreateClient extends TestCase
         
           
     }
+
+    public function test_unauthenticated_user_can_access_create_client_route()
+    {
+        \Session::start();
+        $response = $this->postJson(route('new.client'), [
+            '_token' => csrf_token()
+        ]);
+        $response->assertStatus(401);
+
+    }
+
 
 
    
