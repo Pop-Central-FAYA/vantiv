@@ -1,0 +1,33 @@
+<?php
+namespace Vanguard\Http\Controllers\Dsp;
+
+use Illuminate\Http\Request;
+use Vanguard\Http\Controllers\Controller;
+use Vanguard\Libraries\Enum\ClassMessages;
+use Auth;
+use Vanguard\Services\Company\UpdateCompany;
+use Vanguard\User;
+use Vanguard\Models\Company;
+use Vanguard\Http\Controllers\Traits\CompanyIdTrait;
+use Vanguard\Http\Requests\Company\UpdateRequest;
+
+class CompanyController extends Controller
+{
+    use CompanyIdTrait;
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function updateDetails(UpdateRequest $request)
+    {
+        $company =  Company::findOrFail($this->companyId());
+        $validated = $request->validated();
+        $update_company_service = new UpdateCompany($company,  $request);
+        $update_company_service->run();
+
+        Session::flash('success', ClassMessages::COMPANY_UPDATE_SUCCESS);
+        return redirect()->back(); 
+    }
+}

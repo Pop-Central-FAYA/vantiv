@@ -1,44 +1,57 @@
 <?php
 
 namespace Vanguard\Services\Company;
-use Vanguard\Models\Company;
+use Illuminate\Support\Arr;
+use DB;
 
 
 /**
  * This service is to update a company.
  */
 class UpdateCompany
-{
-    protected $company_id;
-    protected $address;
-    protected $image_url;
+{ 
+    const COMPANY_UPDATE_FIELDS = ['logo', 'address'];
+    protected $company;
+    protected $data;
 
-    public function __construct($company_id, $address, $image_url)
+    public function __construct($company, $data)
     {
-        $this->company_id = $company_id;
-        $this->address = $address;
-        $this->image_url = $image_url;
+        $this->company = $company;
+        $this->data = $data;
     }
 
     public function run()
     {
         return $this->update();
     }
-    
+
+    /**
+     * Update the company
+     * @return \Vanguard\Models\Company  The model holding the vendor
+     */
     protected function update()
     {
-        $company = Company::where('id', $this->company_id)->first();
-        $company->address = $this->address;
-        $company->save();
-        return $company;
+        return DB::transaction(function () {
+            $this->updateModel($this->company, static::COMPANY_UPDATE_FIELDS, $this->data);
+            return $this->company;
+        });
     }
 
-    public function updateAvatar()
+
+
+     /**
+     * Setting attributes like this, so that events are fired
+     * if we just do a model update directly from array, events will not be fired
+     */
+    private function updateModel($model, $update_fields, $data)
     {
-        $company = Company::where('id', $this->company_id)->first();
-        $company->logo = $this->image_url;
-        $company->save();
-        return $company;
+        foreach ($update_fields as $key) {
+            if (Arr::has($data, $key)) {
+                $model->setAttribute($key, $data[$key]);
+            }
+        }
+        //save will only actually save if the model has changed
+        $model->save();
     }
 }
 

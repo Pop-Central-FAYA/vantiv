@@ -227,10 +227,9 @@
          * User Management
          */
 
-        Route::group(['prefix' => 'company'], function () {
-            Route::get('/', 'CompanyController@index')->name('company.detail');
-            Route::post('/update', 'CompanyController@updateDetails')->name('company.update');
-            Route::post('/update/avatar', 'CompanyController@uploadImage')->name('company.update.avatar');
+        Route::group(['namespace' => 'Dsp'], function () {
+            Route::get('/company', 'CompanyController@index')->name('company.detail');
+            Route::patch('/company/{id}', 'CompanyController@updateDetails')->name('company.update');
         });
         Route::group(['namespace' => 'Dsp'], function() {
             Route::get('/ad-vendors', 'AdVendorController@list')->name('ad-vendor.list');
