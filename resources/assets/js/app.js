@@ -93,6 +93,9 @@ Vue.component('edit-slots-modal', () => import('./components/campaign_mpos/EditS
 Vue.component('campaign-file-list', () => import('./components/campaign_mpos/MpoFileList.vue'));
 Vue.component('add-adslot-modal', () => import('./components/campaign_mpos/AddAdslotModal.vue'));
 
+// AD VENDOR MANAGEMENT
+Vue.component('ad-vendor-list', () => import('./components/ad_vendors/ListVendors.vue'));
+
 Vue.mixin({
     methods: {
         format_audience(number) {
@@ -136,8 +139,11 @@ Vue.mixin({
             return  result
         },
         formatDate(date_str) {
-            var dateParts = date_str.split("-");
-            return `${dateParts[0]}-${dateParts[1]}-${dateParts[2].substr(0,2)}`;
+            if (date_str) {
+                var dateParts = date_str.split("-");
+                return `${dateParts[0]}-${dateParts[1]}-${dateParts[2].substr(0,2)}`;
+            }
+            return '';
         },
         shortDay(str) {
             return str.substring(0, 3);
