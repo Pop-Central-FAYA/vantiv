@@ -7,6 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class Brand extends Base
 {
     protected $primaryKey = 'id';
-    protected $fillable = ['name', 'image_url', 'industry_code', 'sub_industry_code', 'slug','status'];
+    protected $fillable = ['name', 'image_url', 'industry_code', 'sub_industry_code', 'slug','created_by', 'client_id', 'status'];
 
 }
