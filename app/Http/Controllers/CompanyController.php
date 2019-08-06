@@ -13,10 +13,6 @@ use Vanguard\Http\Controllers\Traits\CompanyIdTrait;
 class CompanyController extends Controller
 {
     use CompanyIdTrait;
-    public function index()
-    {
-    }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -45,11 +41,7 @@ class CompanyController extends Controller
         $filename = realpath($avatar);
         $key = 'profile-images/'.uniqid().'-'.$avatar->getClientOriginalName();
         $image_url = AmazonS3::uploadToS3FromPath($filename, $key);
-
         $update_company_service = new UpdateCompany($this->companyId(), "", $image_url);
         return $update_company_service->updateAvatar();
     }
-
-
-
 }
