@@ -71,4 +71,21 @@ class GetAdVendorTest extends AdVendorTestCase
         $response->assertStatus(403);
     }
 
+    public function test_vendor_is_returned_with_links_value_for_other_actions_on_resource()
+    {
+        $user = $this->setupUserWithPermissions();
+        $vendor = $this->setupAdVendor($user);
+
+        $response = $this->getResponse($user, $vendor->id);
+        $response->assertStatus(200);
+
+        $expected = [
+            'links' => [
+                'self' => route('ad-vendor.get', ['id' => $vendor->id], false)
+            ]
+        ];
+        $actual = $response->json()['data'];
+        $this->assertArraySubset($expected, $actual);
+    }
+
 }

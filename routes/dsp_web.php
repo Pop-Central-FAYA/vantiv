@@ -224,6 +224,9 @@
         Route::get('/presigned-url', 'S3Controller@getPresignedUrl');
 
         Route::group(['namespace' => 'Dsp'], function() {
+            //@todo possibly create another name for the index route
+            Route::get('/ad-vendors/index', 'AdVendorController@index')->name('ad-vendor.index');
+            //@todo possibly wrap the api endpoints with a versioned api
             Route::get('/ad-vendors', 'AdVendorController@list')->name('ad-vendor.list');
             Route::get('/ad-vendors/{id}', 'AdVendorController@get')->name('ad-vendor.get');
             Route::post('/ad-vendors', 'AdVendorController@create')->name('ad-vendor.create');

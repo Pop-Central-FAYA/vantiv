@@ -5,7 +5,10 @@ namespace Vanguard\Http\Resources;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class AdVendorCollection extends ResourceCollection
-{
+{   
+
+    public $collects = 'Vanguard\Http\Resources\AdVendorResource';
+
     /**
      * Transform the resource collection into an array.
      *

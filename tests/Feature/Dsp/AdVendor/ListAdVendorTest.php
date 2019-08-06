@@ -99,4 +99,21 @@ class ListAdVendorTest extends AdVendorTestCase
 
         $response->assertStatus(403);
     }
+
+    public function test_vendor_list_is_returned_with_links_value_for_other_actions_on_resource()
+    {
+        $user = $this->setupUserWithPermissions();
+        $ad_vendor = $this->setupAdVendor($user);
+
+        $response = $this->getResponse($user);
+        $response->assertStatus(200);
+
+        $expected = [
+            'links' => [
+                'self' => route('ad-vendor.get', ['id' => $ad_vendor->id], false)
+            ]
+        ];
+        $actual = $response->json()['data'][0];
+        $this->assertArraySubset($expected, $actual);
+    }
 }
