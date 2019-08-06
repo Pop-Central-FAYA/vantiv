@@ -227,7 +227,11 @@
          * User Management
          */
 
-      
+        Route::group(['namespace' => 'Dsp'], function () {
+            Route::get('/company', 'CompanyController@index')->name('company.detail');
+            Route::patch('/company/{id}', 'CompanyController@updateDetails')->name('company.update');
+        });
+        
         Route::group(['namespace' => 'Dsp'], function() {
             Route::get('/ad-vendors', 'AdVendorController@list')->name('ad-vendor.list');
             Route::get('/ad-vendors/{id}', 'AdVendorController@get')->name('ad-vendor.get');
@@ -237,7 +241,4 @@
 
     });
 
-    Route::group(['namespace' => 'Dsp'], function () {
-        Route::get('/company', 'CompanyController@index')->name('company.detail');
-        Route::patch('/company/{id}', 'CompanyController@updateDetails')->name('company.update');
-    });
+   
