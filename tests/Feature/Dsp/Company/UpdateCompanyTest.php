@@ -15,10 +15,9 @@ class UpdateCompanyTest extends TestCase
         return $this->actingAs($user)->patchJson(route($this->route_name, ['id' => $company_id]), $data);
     }
 
-    protected function setupCompany($id, $parent_company_id)
+    protected function setupCompany($parent_company_id)
     {
         $company = factory(\Vanguard\Models\Company::class)->create([
-            'id' => $id,
             'parent_company_id' => $parent_company_id
         ]);
         return $company->refresh();
@@ -55,8 +54,8 @@ class UpdateCompanyTest extends TestCase
     public function test_authentication_user_can_update_company_with_route()
     {
         \Session::start();
-        $company_id = uniqid();
-        $company = $this->setupCompany($company_id, $company_id);
+        $parent_company_id = uniqid();
+        $company = $this->setupCompany($parent_company_id);
         $data = [
             '_token' => csrf_token(),
             'address' => '21 akin',
