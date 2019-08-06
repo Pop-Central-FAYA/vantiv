@@ -179,6 +179,11 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract
         return $this->belongsToMany(Company::class);
     }
 
+    public function companyIdList()
+    {
+        return $this->companies()->get()->pluck("id")->toArray();
+    }
+
     public function assignRole($roles, string $guard = null)
     {
         $roles = \is_string($roles) ? [$roles] : $roles;

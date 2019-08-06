@@ -9,6 +9,8 @@ dev
 get-pip.py
 .DS_Store
 public/.DS_Store
+public/js/*
+!public/js/dashboard-graphs.js
 storage/.DS_Store
 resources/.DS_Store
 resources/views/.DS_Store

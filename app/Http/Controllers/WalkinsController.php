@@ -49,16 +49,17 @@ class WalkinsController extends Controller
                 'message'=> ClassMessages::BRAND_ALREADY_EXIST
             ];
         }
+        
         try{
             \DB::transaction(function () use($request, $brand_slug, $company_id) {
                 $user_service = new CreateUser($request->first_name,$request->last_name,$request->email, $request->username,
                     $request->phone, '', 'walkins' );
                 $user = $user_service->createUser();
-
-                $walkin_service = new CreateWalkIns($user->id, $this->broadcaster_id, $this->agency_id, $request->company_logo,
+    
+                $walkin_service = new CreateWalkIns($user->id, $request->company_logo,
                     $request->client_type_id, $request->address,$request->company_name, $request->broadcaster_id, $company_id);
                 $store_walkin = $walkin_service->createWalkIn();
-
+               
                 $brands = new BrandDetails(null, $brand_slug);
                 $brand_details = $brands->getBrandDetails();
                 if(!$brand_details){
@@ -66,18 +67,19 @@ class WalkinsController extends Controller
                         $request->sub_industry, $brand_slug);
                     $store_brand = $store_brand_service->storeBrand();
 
-                    $store_brand_client_service = new CreateBrandClient($this->broadcaster_id,$store_brand->id,$company_id,$store_walkin->id);
+                    $store_brand_client_service = new CreateBrandClient($company_id,$store_brand->id,$company_id,$store_walkin->id);
                     $store_brand_client_service->storeClientBrand();
                 }else{
-                    $store_brand_client_service = new CreateBrandClient($this->broadcaster_id,$brand_details->id,$company_id,$store_walkin->id);
+                    $store_brand_client_service = new CreateBrandClient($company_id,$brand_details->id,$company_id,$store_walkin->id);
                     $store_brand_client_service->storeClientBrand();
-                }
+                } 
             });
             return [
                 'status'=>"success",
                 'message'=> "Walk-In created successfully, please go to campaign create campaign to select your walk-In"
             ];
         }catch (\Exception $exception){
+            dd($exception);
             return [
                 'status'=>"error",
                 'message'=> ClassMessages::WALKIN_ERROR

@@ -275,7 +275,7 @@
                 var filterByStation = this.fayaTimebelts.programs_stations.filter(program => program.station == details.station);
                 filterByStation.forEach((station, station_key) => {
                     details.days.forEach((day, key) => {
-                        if (station.day == day && this.format_time(station.start_time) == this.format_time(details.start_time[key]) && this.format_time(station.end_time) == this.format_time(details.end_time[key])) {
+                        if (station.day == day && this.format_time(station.start_time) >= this.format_time(details.start_time[key]) && this.format_time(station.end_time) <= this.format_time(details.end_time[key])) {
                             filterByStation[station_key]['program'] = details.program_name;
                             filterByStation[station_key]['duration_lists'] = details.duration;
                             filterByStation[station_key]['rate_lists'] = details.unit_rate;
@@ -293,7 +293,8 @@
                 });
 
                 if (net_total_all_durations <= 0) {
-                    this.sweet_alert("Please select some exposures", 'info');
+                    this.sweet_alert("Please add at least one insertion", 'error');
+                    return;
                 }
 
                 // Validate inputs using vee-validate plugin 

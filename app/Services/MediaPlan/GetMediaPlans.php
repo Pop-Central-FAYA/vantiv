@@ -2,25 +2,26 @@
 
 namespace Vanguard\Services\MediaPlan;
 use Vanguard\Models\MediaPlan;
-use Yajra\DataTables\DataTables;
-use Auth;
+use Vanguard\Libraries\Enum\MediaPlanStatus;
 
 class GetMediaPlans
 {
     protected $plan_status;
-    protected $planners_id;
+    protected $company_id;
 
-    public function __construct($status='', $planners_id=[])
+    public function __construct($status='', $company_id)
     {
-        if ($status == "pending") {
-            $this->plan_status = ['Pending','Suggested','Selected'];
-        } elseif ($status == "approved" || $status == "declined") {
+        if ($status == MediaPlanStatus::PENDING) {
+            $this->plan_status = [MediaPlanStatus::PENDING,MediaPlanStatus::SUGGESTED,
+                                MediaPlanStatus::SELECTED,MediaPlanStatus::IN_REVIEW];
+        } elseif ($status == MediaPlanStatus::APPROVED || $status == MediaPlanStatus::DECLINED) {
             $this->plan_status = [$status];
         } 
         else {
-            $this->plan_status = ['Pending','Suggested','Selected','Approved','Declined'];
+            $this->plan_status = [MediaPlanStatus::PENDING,MediaPlanStatus::SUGGESTED,MediaPlanStatus::SELECTED,
+                                MediaPlanStatus::APPROVED,MediaPlanStatus::DECLINED,MediaPlanStatus::IN_REVIEW];
         }
-        $this->planners_id = $planners_id;  
+        $this->company_id = $company_id;  
     }
 
     public function run()
@@ -31,11 +32,8 @@ class GetMediaPlans
     public function fetchMediaPlans()
     {
         $status = $this->plan_status;
-        $planners_id = $this->planners_id;
-        $plans =  MediaPlan::whereIn('status', $status)
-                    ->when($planners_id, function ($query, $planners_id) {
-                        $query->whereIn('planner_id', $planners_id);
-                    })
+        $plans =  MediaPlan::where('company_id', $this->company_id)
+                    ->whereIn('status', $status)
                     ->get();
         $plans = $this->reformatMediaPlans($plans);
         return $plans;
@@ -65,11 +63,14 @@ class GetMediaPlans
 
     public function generateRedirectUrl($media_plan)
     {
-        if ($media_plan->status === "Approved" || $media_plan->status === "Declined") {
+        if ($media_plan->status === MediaPlanStatus::APPROVED || 
+            $media_plan->status === MediaPlanStatus::DECLINED|| 
+            $media_plan->status === MediaPlanStatus::IN_REVIEW) {
             return route('agency.media_plan.summary',['id'=>$media_plan->id]);
-        } elseif ($media_plan->status === "Pending" || $media_plan->status === "Suggested") {
+        } elseif ($media_plan->status === MediaPlanStatus::PENDING || 
+                  $media_plan->status === MediaPlanStatus::SUGGESTED) {
             return route('agency.media_plan.customize',['id'=>$media_plan->id]);
-        } elseif ($media_plan->status === "Selected") {
+        } elseif ($media_plan->status === MediaPlanStatus::SELECTED) {
             return route('agency.media_plan.create',['id'=>$media_plan->id]);
         } else {
             return route('agency.media_plans');
@@ -78,12 +79,15 @@ class GetMediaPlans
     
     public function getStatusHtml($media_plan)
     {
-        if ($media_plan->status === "Approved" || $media_plan->status === "Declined") {
-            return '<span class="span_state status_success">Approved</span>';
-        } elseif ($media_plan->status === "Declined") {
-            return '<span class="span_state status_danger">Declined</span>';
-        } elseif ($media_plan->status === "Pending" || $media_plan->status === "Suggested" || $media_plan->status === "Suggested") {
-            return '<span class="span_state status_pending">Pending</span>';
+        if ($media_plan->status === MediaPlanStatus::APPROVED || $media_plan->status === MediaPlanStatus::DECLINED) {
+            return '<span class="span_state status_success">'.MediaPlanStatus::APPROVED.'</span>';
+        } elseif ($media_plan->status === MediaPlanStatus::DECLINED) {
+            return '<span class="span_state status_danger">'.MediaPlanStatus::DECLINED.'</span>';
+        } elseif ($media_plan->status === MediaPlanStatus::PENDING || 
+                  $media_plan->status === MediaPlanStatus::SUGGESTED || 
+                  $media_plan->status === MediaPlanStatus::SELECTED  || 
+                  $media_plan->status === MediaPlanStatus::IN_REVIEW) {
+            return '<span class="span_state status_pending">'.MediaPlanStatus::PENDING.'</span>';
         } else {
             return '<span class="span_state status_danger">File Error</span>';
         }

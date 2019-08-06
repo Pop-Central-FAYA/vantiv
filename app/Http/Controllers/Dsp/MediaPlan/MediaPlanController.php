@@ -8,7 +8,6 @@ use Vanguard\Http\Controllers\Controller;
 use Vanguard\Http\Controllers\Traits\CompanyIdTrait;
 use Vanguard\Models\Criteria;
 use Vanguard\Models\MediaPlan;
-use Vanguard\Models\MediaPlanProgram;
 use Vanguard\Models\MediaPlanProgramRating;
 use Vanguard\Models\MediaPlanSuggestion;
 use Vanguard\Services\Client\ClientBrand;
@@ -25,7 +24,6 @@ use Vanguard\Services\MediaPlan\GetSuggestedPlans;
 use Vanguard\Services\MediaPlan\ExportPlan;
 use Vanguard\Services\Client\AllClient;
 use Session;
-use Maatwebsite;
 use Maatwebsite\Excel\Facades\Excel;
 use Vanguard\Exports\MediaPlanExport;
 use Vanguard\Services\Traits\DefaultMaterialLength;
@@ -40,7 +38,9 @@ use Vanguard\Libraries\Enum\MediaPlanStatus;
 use Vanguard\Libraries\DayPartList;
 use Vanguard\Services\MediaPlan\GetTargetAudience;
 use Vanguard\Services\CampaignChannels\GetChannelByName;
-use Illuminate\Support\Facades\Auth;
+use Vanguard\Services\User\GetUserList;
+use Vanguard\Mail\MailForApproval;
+use Vanguard\Mail\ApprovalNotification;
 
 class MediaPlanController extends Controller
 {
@@ -50,16 +50,10 @@ class MediaPlanController extends Controller
 
     public function index(Request $request)
     {
-        $planners_id = $this->getUserListInCompany();
-        $media_plan_service = new GetMediaPlans($request->status, $planners_id);
+        $company_id = $this->companyId();
+        $media_plan_service = new GetMediaPlans($request->status, $company_id);
         $plans = $media_plan_service->run();
         return view('agency.mediaPlan.index')->with('plans', $plans);
-    }
-
-    public function getUserListInCompany()
-    {
-        $users = Auth::user()->companies->first()->users->all();
-        return collect($users)->pluck('id')->toArray();
     }
 
     public function customisPlan()
@@ -104,7 +98,7 @@ class MediaPlanController extends Controller
           $suggestions = $suggestPlanService->suggestPlan();
         if ($suggestions->isNotEmpty()) {
             // store planning criteria and suggestions
-            $storeSuggestionsService = new StorePlanningSuggestions($request, $suggestions);
+            $storeSuggestionsService = new StorePlanningSuggestions($request, $suggestions, $this->companyId());
             $newMediaPlan = $storeSuggestionsService->storePlanningSuggestions();
             return redirect()->action(
                 'MediaPlan\MediaPlanController@getSuggestPlanById', ['id' => $newMediaPlan->id]
@@ -131,42 +125,18 @@ class MediaPlanController extends Controller
         }
         $suggestedPlansService = new GetSuggestedPlans($id, $savedFilters);
         $plans = $suggestedPlansService->get();
-        // if (count($plans) == 0) {
-        //     //Render an empty page and do not redirect
-        //  // return redirect()->route("agency.media_plan.criteria_form");
-        // }
-        // also get the filter values list to use to render with the filter dropdownss
-        //dd($plans);
+        $redirect_urls = [
+            'back_action' => route('agency.media_plans'),
+            'next_action' => route('agency.media_plan.create',['id'=>$id]),
+            'save_action' => route('agency.media_plan.select_suggestions'),
+            'filter_action' => route('agency.media_plan.customize-filter')
+        ];
         return view('agency.mediaPlan.display_suggestions')
             ->with('mediaPlanId', $id)
             ->with('mediaPlanStatus', MediaPlan::findOrFail($id)->status)
             ->with('fayaFound', $plans)
             ->with('filterValues', $this->getFilterFieldValues($id))
-            ->with('selectedFilters', $savedFilters);
-    }
-
-    public function getSuggestPlanByIdVue($id)
-    {
-        // Get the filter values
-        $savedFilters = json_decode(MediaPlan::findOrFail($id)->filters, true);
-        if (!$savedFilters) {
-            $savedFilters = array();
-        }
-        $suggestedPlansService = new GetSuggestedPlans($id, $savedFilters);
-        $plans = $suggestedPlansService->get();
-        // $plans['selected'] = $plans['selected'];
-        // dd($plans['selected']);
-        // if (count($plans) == 0) {
-        //     //Render an empty page and do not redirect
-        //  // return redirect()->route("agency.media_plan.criteria_form");
-        // }
-        // also get the filter values list to use to render with the filter dropdownss
-        //dd($plans);
-        return view('agency.mediaPlan.display_suggestions_vue')
-            ->with('mediaPlanId', $id)
-            ->with('mediaPlanStatus', MediaPlan::findOrFail($id)->status)
-            ->with('fayaFound', $plans)
-            ->with('filterValues', $this->getFilterFieldValues($id))
+            ->with('redirectUrls', $redirect_urls)
             ->with('selectedFilters', $savedFilters);
     }
 
@@ -193,7 +163,7 @@ class MediaPlanController extends Controller
             return response()->json(array(
                 'status' => 'success',
                 'message' => 'Filters successfully saved',
-                'redirect_url' => $media_plan_id
+                'redirect_url' => route('agency.media_plan.customize',['id'=>$media_plan_id])
             ));
         } catch (\Exception $exception) {
             Log::error($exception);
@@ -265,12 +235,22 @@ class MediaPlanController extends Controller
             // redirect to review suggestions page for user to select suggestions
             return redirect()->route('agency.media_plan.create', ['id'=> $mediaPlan->id]);
         }
+        $routes= array(
+            "back" => route('agency.media_plan.create', ['id'=>$media_plan_id]),
+            "approve" => route('agency.media_plan.approve', ['id'=>$media_plan_id]),
+            "decline" => route('agency.media_plan.decline', ['id'=>$media_plan_id]),
+            "export" => route('agency.media_plan.export', ['id'=>$media_plan_id]),
+            "approval" => route('agency.media_plan.get_approval')  
+        );
+
 
         $summary_service = new SummarizePlan($mediaPlan);
         $summaryData =  $summary_service->run();
+        $user_list_service = new GetUserList([$this->companyId()]);
+        $user_list = $user_list_service->getUserData();
         
         return view('agency.mediaPlan.summary')->with('summary', $summaryData)
-                ->with('media_plan', $mediaPlan);
+                ->with('media_plan', $mediaPlan)->with('users', $user_list)->with('routes', $routes);
     }
 
     public function exportPlan($media_plan_id)
@@ -302,6 +282,7 @@ class MediaPlanController extends Controller
         $mediaPlan = MediaPlan::findorfail($media_plan_id);
         $mediaPlan->status = 'Approved';
         $mediaPlan->save();
+        $this->sendRequestResponse($media_plan_id, "Approved");
         Session::flash('success', 'Media plan successfully approved');
         return redirect()->route('agency.media_plan.summary',['id'=>$mediaPlan->id]);
     }
@@ -311,8 +292,10 @@ class MediaPlanController extends Controller
         $mediaPlan = MediaPlan::findorfail($media_plan_id);
         $mediaPlan->status = 'Declined';
         $mediaPlan->save();
+        $this->sendRequestResponse($media_plan_id, "Rejected");
         Session::flash('success', 'Media plan has been declined');
         return redirect()->route('agency.media_plan.summary',['id'=>$mediaPlan->id]);
+        
     }
 
     public function totalAudienceFound($collection)
@@ -687,6 +670,77 @@ class MediaPlanController extends Controller
             'status' => 'success',
             'data' => 'Media Plan successfully converted to MPO',
             'campaign_id' => $campaign_id
+        ]);
+    }
+
+    public function sendRequestResponse($media_plan_id, $status)
+    {
+
+       $mediaPlan = MediaPlan::findorfail($media_plan_id);
+       $user_mail_content_array = array(
+            "sender_name" => \Auth::user()->firstname.  " ". \Auth::user()->lastname, 
+            "action" => $status,
+            "client" =>  $this->getClientName($media_plan_id),
+            "receiver_name" => $this->getPlannerDetails($mediaPlan->planner_id)['name'], 
+            "link" => route('agency.media_plan.decline', ['id'=>$media_plan_id]),
+            "subject" => "Your Media Plan has been ". $status
+
+        );
+        $send_mail = \Mail::to($this->getPlannerDetails($mediaPlan->planner_id)['email'])->send(new ApprovalNotification($user_mail_content_array));
+           
+    }
+
+    public function requestApproval($media_plan_id, $user_id)
+    {       
+
+          $user_mail_content_array = array(
+            "sender_name" => \Auth::user()->firstname.  " ". \Auth::user()->lastname, 
+            "client" => $this->getClientName($media_plan_id),
+            "receiver_name" => $this->getPlannerDetails($user_id)['name'],
+            "link" => $media_plan_id,
+            "subject" => "Request For Approval"
+           
+          );
+            $send_mail = \Mail::to($this->getPlannerDetails($user_id)['email'])->send(new MailForApproval($user_mail_content_array));
+    }
+
+    function getPlannerDetails($planner_id){
+        $planner="";
+        $user_list_service = new GetUserList([$this->companyId()]);
+        $user_list = $user_list_service->getUserData();
+        foreach($user_list as $user){
+            if($planner_id == $user['id'])
+            {
+                $planner= $user;
+            }
+        } 
+        return $planner;
+    }
+
+    public function getClientName($media_plan_id){
+        $mediaPlan = MediaPlan::findorfail($media_plan_id);
+        $client_name = "";
+        $clients = new AllClient($this->companyId());
+        $clients = $clients->getAllClients();
+        foreach($clients as $client){
+            if($mediaPlan->client_id = $client->id)
+            {
+                $client_name= $client->company_name;
+            }
+        } 
+        return $client_name;
+    }
+
+    public function postRequestApproval(Request $request)
+    {
+      $mediaPlan = MediaPlan::with(['client'])->findorfail($request->media_plan_id);
+      $mediaPlan->status = 'In Review';
+      $mediaPlan->save();
+      $lo= $this->requestApproval($request->media_plan_id, $request->user_id);
+       $mediaPlanData = MediaPlan::with(['client'])->findorfail($request->media_plan_id);
+       return response()->json([
+        'status' => 'success',
+        'data' =>  $mediaPlanData
         ]);
     }
 }

@@ -1,6 +1,7 @@
 <?php
     Route::group(['namespace' => 'Dsp'], function () {
-        Route::get('health', 'AuthController@getLogin');
+      Route::get('health', 'AuthController@getLogin');
+    
         /**
          * Authentication
          */
@@ -20,6 +21,7 @@
         Route::post('/user/complete-account/store/{id}', 'UserController@processCompleteAccount');
 
     });
+
     Route::group(['middleware' => 'auth'], function () {
         Route::get('/', ['as' => 'dashboard', 'uses' => 'DashboardController@index']);
         Route::get('agency/dashboard/campaigns', 'DashboardController@dashboardCampaigns');
@@ -68,6 +70,8 @@
             Route::post('/mpo/details/{campaign_mpo_id}/adslots/delete', 'CampaignsController@deleteMultipleAdslots');
 
             Route::post('/mpo/details/{campaign_mpo_id}/adslots/update', 'CampaignsController@updateAdslots');
+
+            Route::post('/mpo/details/{campaign_mpo_id}/adslots/store', 'CampaignsController@storeAdslots');
 
         });
 
@@ -133,16 +137,14 @@
             Route::get('all/{status?}', 'MediaPlanController@index')->name('agency.media_plans');
             Route::get('/set-criterias', 'MediaPlanController@criteriaForm')->name('agency.media_plan.criteria_form')->middleware('permission:create.media_plan');
             Route::post('/create-plan', 'MediaPlanController@generateRatingsPost')->name('agency.media_plan.submit.criterias');
-            Route::get('/summary/{id}', 'MediaPlanController@summary')->name('agency.media_plan.summary')->middleware('permission:create.media_plan');
+            Route::get('/summary/{id}', 'MediaPlanController@summary')->name('agency.media_plan.summary');
             Route::get('/approve/{id}', 'MediaPlanController@approvePlan')->name('agency.media_plan.approve')->middleware('permission:create.media_plan');
             Route::get('/decline/{id}', 'MediaPlanController@declinePlan')->name('agency.media_plan.decline')->middleware('permission:create.media_plan');
-            Route::get('/customise/{id}', 'MediaPlanController@getSuggestPlanById')->name('agency.media_plan.customize')->middleware('permission:update.media_plan');
-            Route::get('/vue/customise/{id}', 'MediaPlanController@getSuggestPlanByIdVue');
-
+            Route::post('/get_approval/', 'MediaPlanController@postRequestApproval')->name('agency.media_plan.get_approval')->middleware('permission:create.media_plan');
+            Route::get('/customise/{id}', 'MediaPlanController@getSuggestPlanById')->name('agency.media_plan.customize');
             Route::post('/customise-filter', 'MediaPlanController@setPlanSuggestionFilters')->name('agency.media_plan.customize-filter');
-
-            Route::post('/select_plan', 'MediaPlanController@SelectPlanPost');
-            Route::get('/createplan/{id}', 'MediaPlanController@createPlan')->name('agency.media_plan.create')->middleware('permission:create.media_plan');
+            Route::post('/select_plan', 'MediaPlanController@SelectPlanPost')->name('agency.media_plan.select_suggestions');
+            Route::get('/createplan/{id}', 'MediaPlanController@createPlan')->name('agency.media_plan.create');
             Route::post('/finish_plan', 'MediaPlanController@completePlan')->name('agency.media_plan.submit.finish_plan');
             Route::get('/export/{id}', 'MediaPlanController@exportPlan')->name('agency.media_plan.export');
             Route::post('/store-programs', 'MediaPlanController@storePrograms')->name('media_plan.program.store');
@@ -218,13 +220,23 @@
             Route::get('/search-brands', 'BrandsController@search')->name('broadcasters.brands.search');
             Route::get('/details/{id}/{client_id}', 'BrandsController@getBrandDetails')->name('brand.details');
         });
-
+        Route::get('/check-brand-existence', 'BrandsController@checkBrandExistsWithSameInformation');
         Route::get('/presigned-url', 'S3Controller@getPresignedUrl');
          /*
          * new Client route
          */
         Route::post('/clients', 'ClientController@action')->name('new.client');
        
+
+        Route::group(['namespace' => 'Dsp'], function() {
+            //@todo possibly create another name for the index route
+            Route::get('/ad-vendors/index', 'AdVendorController@index')->name('ad-vendor.index');
+            //@todo possibly wrap the api endpoints with a versioned api
+            Route::get('/ad-vendors', 'AdVendorController@list')->name('ad-vendor.list');
+            Route::get('/ad-vendors/{id}', 'AdVendorController@get')->name('ad-vendor.get');
+            Route::post('/ad-vendors', 'AdVendorController@create')->name('ad-vendor.create');
+            Route::patch('/ad-vendors/{id}', 'AdVendorController@update')->name('ad-vendor.update');
+        });
 
     });
 

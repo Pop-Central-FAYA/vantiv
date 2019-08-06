@@ -20,26 +20,13 @@
                 <h2 class="sub_header">Summary</h2>
             </div>
         </div>
-             @php
-              $routes= array(
-                  "back" => route('agency.media_plan.create', ['id'=>$media_plan->id]),
-                  "approve" => route('agency.media_plan.approve', ['id'=>$media_plan->id]),
-                  "decline" => route('agency.media_plan.decline', ['id'=>$media_plan->id]),
-                  "export" => route('agency.media_plan.export', ['id'=>$media_plan->id]) 
-              );
-
-             @endphp
-
-
-
-           <media-plan-summary  :summary-data="{{ json_encode($summary) }}" :summary-details="{{ json_encode($media_plan) }}" :routes="{{ json_encode($routes) }}"  :permission-list="{{ json_encode(Auth::user()->getAllPermissions()) }}"></media-plan-summary>
+        
+        <media-plan-summary  
+        :summary-data="{{ json_encode($summary) }}" 
+        :summary-details="{{ json_encode($media_plan) }}" 
+        :routes="{{ json_encode($routes) }}"  
+        :permission-list="{{ json_encode(Auth::user()->getAllPermissions()->pluck('name')) }}"  
+        :user-list="{{ json_encode($users) }}"></media-plan-summary>
         <br><br><br><br><br><br><br>
     </div>
-@stop
-
-@section('scripts')
-    <!-- App.js -->
-    <script src="{{ mix('js/manifest.js') }}"></script>
-    <script src="{{ mix('js/vendor.js') }}"></script>
-    <script src="{{ mix('js/app.js') }}"></script>
 @stop

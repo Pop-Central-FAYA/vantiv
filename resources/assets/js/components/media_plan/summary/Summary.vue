@@ -7,16 +7,16 @@
                     <table class="display dashboard_campaigns">
                         <tbody>
                            <tr>
-                            <td><span class="mr-2"><b>Client Name:</b></span>  {{ summaryDetails.client.company_name }}</td>
+                            <td><span class="mr-2"><b>Client Name:</b></span>  {{ summaryDetail.client.company_name }}</td>
                            </tr>
                            <tr>
-                            <td><span class="mr-2"><b>Product Name:</b></span>  {{ summaryDetails.product_name }}</td>
+                            <td><span class="mr-2"><b>Product Name:</b></span>  {{ summaryDetail.product_name }}</td>
                            </tr>
                            <tr>
-                            <td><span class="mr-2"><b>Flight Date:</b></span> {{  dateToHumanReadable(summaryDetails.start_date) }} to {{ dateToHumanReadable(summaryDetails.end_date) }} </td>
+                            <td><span class="mr-2"><b>Flight Date:</b></span> {{  dateToHumanReadable(summaryDetail.start_date) }} to {{ dateToHumanReadable(summaryDetail.end_date) }} </td>
                            </tr>
                            <tr>
-                            <td><span class="mr-2"><b>Status:</b></span>  {{ summaryDetails.status }}</td>
+                            <td><span class="mr-2"><b>Status:</b></span>  {{ summaryDetail.status }}</td>
                            </tr>
                         </tbody>
                     </table>
@@ -47,20 +47,17 @@
                             <tr>
                                 <td>Total</td>
                                 <td></td>
-                                <td>{{ total_spots }}</td>
-                                <td>{{ numberFormat(total_gross_value) }}</td>
-                                <td>{{ numberFormat( total_net_value) }}</td>
-                                <td>{{ numberFormat(total_savings) }}</td>
+                                <td>{{ totalSpots }}</td>
+                                <td>{{ numberFormat(totalGrossValue) }}</td>
+                                <td>{{ numberFormat( totalNetValue) }}</td>
+                                <td>{{ numberFormat(totalSavings) }}</td>
                             </tr>
                         </tbody>
                     </table>
                     <!-- end -->
                 </div>
-
- 
             </div>
-         </div>
-
+        </div>
 
         <div class="container-fluid my-5">
             <div class="row">
@@ -68,59 +65,86 @@
                     <button id="back_btn" @click="buttonAction(routes.back)"  class="btn small_btn"><i class="media-plan material-icons">navigate_before</i> Back</button>
                 </div>
                 <div class="col-md-8 p-0 text-right">
-                      <span v-if="summaryDetails.status == 'Suggested'" >
-                            <button v-if="hasPermission(permissionList,'approve.media_plan')"  @click="buttonAction(routes.approve)" class="media-plan btn block_disp uppercased mr-1"><i class="media-plan material-icons">check</i>Approve Plan</button>
-                      
-                            <button v-if="hasPermission(permissionList,'decline.media_plan')"  @click="buttonAction(routes.decline)"  class="media-plan btn block_disp uppercased bg_red mr-1"><i class="media-plan material-icons">clear</i>Decline Plan</button>
-                      </span>
-                            <button v-if="hasPermission(permissionList,'export.media_plan')"  @click="buttonAction(routes.export)"  class="btn block_disp uppercased"><i class="media-plan material-icons">file_download</i>Export Plan</button>
-                     <span v-if="summaryDetails.status == 'Approved'" >
-                            <media-plan-create-campaign v-if="hasPermission(permissionList,'convert.media_plan')" :id="summaryDetails.id"></media-plan-create-campaign>
-                     </span>
+                    <span v-if="summaryDetail.status == 'In Review'" >
+                        <button v-if="hasPermission(permissionList,'approve.media_plan')"  @click="buttonAction(routes.approve, 'approve.media_plan')" class="media-plan btn block_disp uppercased mr-1 btn-sm"><i class="media-plan material-icons">check</i>Approve Plan</button>
+                    
+                        <button v-if="hasPermission(permissionList,'decline.media_plan')"  @click="buttonAction(routes.decline, 'decline.media_plan')"  class="media-plan btn block_disp uppercased bg_red mr-1  btn-sm"><i class="media-plan material-icons">clear</i>Decline Plan</button>
+                    </span>
+                    <span v-if="summaryDetail.status != 'Approved'" >
+                        <media-plan-request-approval  
+                        :users="userList"  
+                        :media-plan="summaryDetail.id" 
+                        :action-link="routes.approval"
+                        :permissionList="permissionList">
+                        </media-plan-request-approval>
+                    </span>
+                        <button v-if="hasPermission(permissionList,'export.media_plan')"  @click="buttonAction(routes.export, 'export.media_plan')"  class="btn block_disp uppercased"><i class="media-plan material-icons">file_download</i>Export Plan</button>
+                    <span v-if="summaryDetail.status == 'Approved'" >
+                        <media-plan-create-campaign 
+                        v-if="hasPermission(permissionList,'convert.media_plan')" 
+                        :id="summaryDetail.id"
+                        :permissionList="permissionList"
+                        ></media-plan-create-campaign>
+                    </span>
                 </div>
             </div>
         </div>
  </div>
 </template>
+
+<style>
+    .btn{
+    padding: 7px 10px 5px !important;
+    }
+</style>
+
 <script>
     export default {
         props: {
             summaryDetails: Object,
             summaryData: Array,
             permissionList:Array,
+            userList:Array,
             routes:Object,
         },
         data() {
             return {
-                total_spots: 0,
-                total_gross_value: 0,
-                total_net_value: 0,
-                total_savings: 0,
+                totalSpots: 0,
+                totalGrossValue: 0,
+                totalNetValue: 0,
+                totalSavings: 0,
+                summaryDetail:  this.summaryDetails
             };
         },
         mounted() {
+              this.getSums();
              console.log("Summary component mounted");
            
         },  
         created() {    
-           this.getSums();
+            var self = this;
+            Event.$on('updated-media-plan', function (mediaPlan) {
+                self.summaryDetail = mediaPlan;
 
+            });
           }, 
          methods: {
-                getSums(){
-                    let self = this;
-                    this.summaryData.forEach(function (item, key) {
-                        self.total_spots += item['total_spots']
-                        self.total_gross_value += item['gross_value']
-                        self.total_net_value += item['net_value']
-                        self.total_savings += item['savings']
-                    });
-                },
-                buttonAction(destination) {
-                    window.location = destination; 
-                },
-                   
-              
-         }
+            getSums(){
+                let self = this;
+                this.summaryData.forEach(function (item, key) {
+                    self.totalSpots += item['total_spots']
+                    self.totalGrossValue += item['gross_value']
+                    self.totalNetValue += item['net_value']
+                    self.totalSavings += item['savings']
+                });
+            },
+            buttonAction(destination, permission) {
+                if(permission != null && !this.hasPermissionAction(this.permissionList, permission)){
+                    return
+                }else{
+                    window.location = destination;
+                }
+            },      
+        }
     }
 </script>

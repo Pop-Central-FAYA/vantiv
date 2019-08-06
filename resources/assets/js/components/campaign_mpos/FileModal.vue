@@ -20,15 +20,15 @@
                                 <v-expansion-panel popout>
                                     <v-expansion-panel-content v-for="(asset,key) in groupedAssets" v-bind:key="key" expand-icon="remove_red_eye">
                                         <template v-slot:header>
-                                            <div>{{ asset[0].duration }} Secs</div>
-                                            <div>{{ asset[0].file_name }} </div>
-                                            <div>
-                                                <input type="hidden" id="file-asset" :value="asset[0].asset_url">
+                                            <div class="text-left">{{ asset.duration }} Secs</div>
+                                            <div class="text-center">{{ asset.file_name }} </div>
+                                            <div class="text-right">
+                                                <input type="hidden" id="file-asset" :value="asset.asset_url">
                                                 <v-btn color="info" @click="copyToClipboard()" small dark>copy url</v-btn>
                                             </div>
                                         </template>
                                         <v-card>
-                                            <v-card-text><video :src="asset[0].asset_url" controls></video></v-card-text>
+                                            <v-card-text><video :src="asset.asset_url" controls></video></v-card-text>
                                         </v-card>
                                     </v-expansion-panel-content>
                                 </v-expansion-panel>
@@ -74,9 +74,7 @@ export default {
         },
         filterAssetByDuration(assets, time_belts) {
             const time_belt = this.getDistinctAssetId(time_belts);
-            //this.form.duration = duration;
-            const filtered_assets = assets.filter(item => time_belt.some(resultItem => resultItem === item.id));
-            this.groupedAssets =  _.groupBy(filtered_assets, asset => asset.duration);
+            this.groupedAssets = assets.filter(item => time_belt.some(resultItem => resultItem === item.id));
         },
         copyToClipboard : function(asset_url){
             let testingCodeToCopy = document.querySelector('#file-asset')

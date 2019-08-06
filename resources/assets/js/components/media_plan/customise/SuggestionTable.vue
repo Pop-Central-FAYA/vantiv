@@ -1,63 +1,61 @@
 <template>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                <div id="suggestions-accordion">
-                    <div class="card border-0">
-                        <div class="card-header border-top rounded-0" id="headingOne">
-                            <div class="row py-1">
-                                <div class="col-md-6">
-                                    <h6>STATION</h6>
-                                </div>
-                                <div class="col-md-6">
-                                    <h6>AUDIENCE</h6>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card border-0" v-for="(timebelts,key,index) in suggestions" v-bind:key="key">
-                        <div class="card-header card-header bg-white py-2 border-bottom clickable" :id="'heading-'+index" data-toggle="collapse" :data-target="'#collapse-'+index" aria-expanded="true" :aria-controls="'collapse-'+index">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <p class="h6"><small>{{ key }}</small></p>
-                                </div>
-                                <div class="col-md-6">
-                                    <p class="h6"><small>{{ total_audience_per_station(timebelts) }}</small></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div :id="'collapse-'+index" class="collapse" :aria-labelledby="'heading-'+index" data-parent="#suggestions-accordion">
-                            <div class="card-body card-body pl-3 pr-0 pt-0 pb-1 bg-secondary">
-                                <table class="table">
-                                    <thead class="thead-light">
-                                        <tr>
-                                            <th scope="col">DAY</th>
-                                            <th scope="col">TIME BELT</th>
-                                            <th scope="col">PROGRAM</th>
-                                            <th scope="col">AUDIENCE</th>
-                                            <th scope="col"></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr v-for="(timebelt,key) in timebelts" v-bind:key="key">
-                                            <th scope="row">{{ timebelt.day}}</th>
-                                            <td>{{ format_time(timebelt.start_time) +" - "+ format_time(timebelt.end_time) }}</td>
-                                            <td>{{ timebelt.program}}</td>
-                                            <td>{{ format_audience(timebelt.total_audience) }}</td>
-                                            <td>
-                                                <button class="plus-btn" @click="add_timebelt(timebelt)" type="button"><i class="material-icons">add</i></button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <v-layout row wrap class="white-bg" px-0 pb-0>
+        <v-flex xs12 sm12 md12 lg12 px-0 pb-0>
+            <v-expansion-panel px-0>
+                <v-layout px-4 py-2>
+                    <v-flex><h4>STATION</h4></v-flex>
+                    <v-flex style="margin-left: -12px;"><h4>AUDIENCE</h4></v-flex>
+                </v-layout>
+                <v-expansion-panel-content v-for="(timebelts, key, index) in suggestions" v-bind:key="key">
+                    <template v-slot:header>
+                        <v-layout @click="renderTimeBelts(index)">
+                            <v-flex md6>{{ key }}</v-flex>
+                            <v-flex md6>{{ totalAudiencePerStation(timebelts) }}</v-flex>
+                        </v-layout>
+                    </template>
+                    <v-card v-if="stationsToggle[index]['show']">
+                        <v-card-text>
+                            <v-layout wrap style="border-bottom: 1px solid #e8e8e8;">
+                                <v-flex md12 px-0 style="overflow-x:auto;  height: 40vh;">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">DAY</th>
+                                                <th scope="col">TIME BELT</th>
+                                                <th scope="col">PROGRAM</th>
+                                                <th scope="col">AUDIENCE</th>
+                                                <th scope="col"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="(timebelt,key) in timebelts" v-bind:key="key">
+                                                <th scope="row">{{ timebelt.day}}</th>
+                                                <td>{{ format_time(timebelt.start_time) +" - "+ format_time(timebelt.end_time) }}</td>
+                                                <td>{{ timebelt.program}}</td>
+                                                <td>{{ format_audience(timebelt.total_audience) }}</td>
+                                                <td>
+                                                    <button class="plus-btn" @click="addTimebelt(timebelt)" type="button"><i class="material-icons">add</i></button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </v-flex>
+                            </v-layout>
+                        </v-card-text>
+                    </v-card>
+                </v-expansion-panel-content>
+            </v-expansion-panel>
+        </v-flex>
+    </v-layout>
 </template>
+
+<style>
+.v-expansion-panel__header {
+    /* padding: 0 !important; */
+    font-size: 14px;
+}
+</style>
+
 
 <script>
     export default {
@@ -67,26 +65,43 @@
         data() {
             return {
                 accordionCounter: 0,
-                newTimeBelt: {}
+                newTimeBelt: {},
+                curPos: 0,
+                stationsToggle: []
             };
+        },
+        created() {
+            var stations = Object.keys(this.suggestions);
+            var stationsToggle = [];
+            stations.forEach((element, key) => {
+                stationsToggle[key] = {
+                    station: element,
+                    show: false
+                }
+            });
+            this.stationsToggle = stationsToggle;
         },
         mounted() {
             console.log('Suggestions Table Component mounted.')
         },
         methods: {
-            total_audience_per_station(timeBelts) {
-                var totalAudience = 0;
-                timeBelts.forEach(function (element) {
-                    totalAudience += element.total_audience;
+            totalAudiencePerStation(time_belts) {
+                var total_audience = 0;
+                time_belts.forEach(function (element) {
+                    total_audience += element.total_audience;
                 });
-                return this.format_audience(totalAudience);
+                return this.format_audience(total_audience);
             },
-            add_timebelt(timeBelt) {
-                this.newTimeBelt = timeBelt;
-                Event.$emit('timebelt-to-add', timeBelt);
-                var time = `${this.format_time(timeBelt.start_time)} - ${this.format_time(timeBelt.end_time)}`;
-                var successMsg = `${timeBelt.station} - ${timeBelt.program}  showing on  ${timeBelt.day}  ${time} added successfully`;
+            addTimebelt(time_belt) {
+                this.newTimeBelt = time_belt;
+                Event.$emit('timebelt-to-add', time_belt);
+                var time = `${this.format_time(time_belt.start_time)} - ${this.format_time(time_belt.end_time)}`;
+                var successMsg = `${time_belt.station} - ${time_belt.program}  showing on  ${time_belt.day}  ${time} added successfully`;
                 this.sweet_alert(successMsg, 'success');
+            },
+            renderTimeBelts(position) {
+                console.log(position);
+                this.stationsToggle[position]['show'] = true;
             }
         }
     }

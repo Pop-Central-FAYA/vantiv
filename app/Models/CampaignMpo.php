@@ -14,6 +14,16 @@ class CampaignMpo extends Base
         return $this->belongsTo(Campaign::class);
     }
 
+    public function campaignMpoDetails($id)
+    {
+        return $this->find($id);
+    }
+
+    public function campaignByMpos($id)
+    {
+        return $this->where('campaign_id', $id)->get();
+    }
+
     public function campaign_mpo_time_belts()
     {
         return $this->hasMany(CampaignMpoTimeBelt::class, 'mpo_id');

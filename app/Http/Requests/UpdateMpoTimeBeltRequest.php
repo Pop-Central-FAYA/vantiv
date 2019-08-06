@@ -28,8 +28,8 @@ class UpdateMpoTimeBeltRequest extends FormRequest
             'playout_date' => 'required',
             'unit_rate' => 'required',
             'asset_id' => 'required',
-            'time_belts' => 'required|array',
-            'insertions' => 'required|array',
+            'time_belt' => 'required',
+            'insertion' => 'required',
             'volume_discount' => 'required'
         ];
     }

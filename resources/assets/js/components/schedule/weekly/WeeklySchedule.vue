@@ -82,6 +82,7 @@ export default {
                 day_number : moment().format('D'),
                 month_year : moment().format('MMM')+', '+moment().format('YYYY')
             },
+            selected_mpos : []
         } 
     },
     methods : {
@@ -147,7 +148,8 @@ export default {
                 url: '/schedule/weekly/navigate',
                 data : {
                     start_date : start_date,
-                    end_date : end_date
+                    end_date : end_date,
+                    selected_mpos : this.selected_mpos
                 }
             }).then((res) => {
                 let result = res.data.data;
@@ -237,6 +239,13 @@ export default {
             }
         }
     },
+    created () {
+        var self = this;
+        Event.$on('mpos', function (mpo) {
+            self.selected_mpos = mpo;
+            self.fetchEvent(self.startOfWeek, self.endOfWeek)
+        });  
+    },
     mounted() {
         this.current_week()
     },
@@ -254,6 +263,7 @@ export default {
     }
     .scrollable {
         overflow-y: auto;
+        height: 500px;
     }
     .hover_over {
         width: -webkit-fill-available !important;
