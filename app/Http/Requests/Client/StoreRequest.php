@@ -22,19 +22,19 @@ class StoreRequest extends Request
     public function rules()
     {
         return [
-            'name' => 'required',
-            'image_url' => 'required',
-            'street_address' => 'required',
-            'city' => 'required',
-            'state' => 'required',
-            'nationality' => 'required',
-            'client_contact.first_name' => 'required',
-            'client_contact.last_name' => 'required',
-            'client_contact.email' => 'required',
-            'client_contact.phone_number' => 'required',
-            'client_contact.is_primary' => 'required',
-            'brand_details.name' => 'required',
-            'brand_details.image_url' => 'required',
+            'name' => 'required|string',
+            'image_url' => 'required|url',
+            'street_address' => 'required|string',
+            'city' => 'required|string',
+            'state' => 'required|string',
+            'nationality' => 'required|string',
+            'contact.first_name' => 'required|string',
+            'contact.last_name' => 'required|string',
+            'contact.email' => 'required|email',
+            'contact.phone_number' => 'required|string',
+            'contact.is_primary' => 'boolean',
+            'brand_details.name' => 'required|string',
+            'brand_details.image_url' => 'required|url',
             'brand_details.status' => 'required'
         ];
     }

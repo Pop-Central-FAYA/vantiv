@@ -2,7 +2,7 @@
 
 namespace Vanguard\Services\Brands;
 
-use Vanguard\Models\Brands;
+use Vanguard\Models\Brand;
 use Vanguard\Services\IService;
 
 class StoreBrand implements IService
@@ -20,7 +20,7 @@ class StoreBrand implements IService
 
     public function run()
     {
-        $brand = new Brands();
+        $brand = new Brand();
         $brand->name = $this->brand_details->name;
         $brand->image_url = $this->brand_details->image_url;
         $brand->status = $this->brand_details->status;

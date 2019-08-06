@@ -36,12 +36,12 @@ class StoreClient implements IService
             $client->nationality = $this->client_details->nationality;
             $client->save();
 
-            $new_client_contact = new StoreClientContact($client,  $this->client_details->client_contact );
+            $new_client_contact = new StoreClientContact($client,  $this->client_details->contact);
             $result =  $new_client_contact->run();
 
-            $new_brand = new StoreBrand($this->client_details->brand_details , $client->id , $this->user );
-            $result =  $new_brand->run();
-            return true;   
+              $new_brand = new StoreBrand($this->client_details->brand_details , $client->id , $this->user );
+              $result =  $new_brand->run();
+            return  $client;   
     }
 
 }

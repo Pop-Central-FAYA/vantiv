@@ -225,7 +225,7 @@
          /*
          * new Client route
          */
-        Route::post('/clients', 'ClientController@action')->name('new.client');
+        Route::post('/clients', 'ClientController@storeClient')->name('new.client');
        
 
         Route::group(['namespace' => 'Dsp'], function() {
