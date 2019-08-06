@@ -24,7 +24,7 @@ class PublisherFeatureSeeder extends Seeder
             'view.discount', 'create.discount', 'update.discount',
             'create.user', 'view.user', 'update.user',
             'view.profile', 'update.profile',
-            'view.schedule', 'create.schedule'
+            'view.schedule', 'create.schedule', 'update.company'
         ];
 
         //store permissions
