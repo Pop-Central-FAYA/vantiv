@@ -10,6 +10,7 @@ use Vanguard\User;
 use Vanguard\Models\Company;
 use Vanguard\Http\Controllers\Traits\CompanyIdTrait;
 use Vanguard\Http\Requests\Company\UpdateRequest;
+use Vanguard\Http\Resources\CompanyResource;
 
 class CompanyController extends Controller
 {
@@ -20,14 +21,13 @@ class CompanyController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function updateDetails(UpdateRequest $request)
+    public function updateDetails(UpdateRequest $request, $id)
     {
         $company =  Company::findOrFail($this->companyId());
         $validated = $request->validated();
         $update_company_service = new UpdateCompany($company,  $request);
         $update_company_service->run();
 
-        Session::flash('success', ClassMessages::COMPANY_UPDATE_SUCCESS);
-        return redirect()->back(); 
+        return new CompanyResource(Company::find($id));
     }
 }
