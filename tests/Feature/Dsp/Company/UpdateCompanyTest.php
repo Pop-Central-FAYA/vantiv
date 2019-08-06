@@ -59,13 +59,13 @@ class UpdateCompanyTest extends TestCase
         $data = [
             '_token' => csrf_token(),
             'address' => '21 akin',
-            'logo' => "www.hhdhdhdhdh.com"
+            'logo' => "https://laravel.com"
         ];
         $user = $this->setupAuthUser();
         $response = $this->getResponse($user, $company->id, $data);
         $response->assertStatus(200);
         $response->assertJsonFragment([
-            'logo' => "www.hhdhdhdhdh.com"
+            'logo' => "https://laravel.com"
          ]);
     }
 }
