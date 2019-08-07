@@ -28,58 +28,15 @@
 
         Route::group(['namespace' => 'Dsp', 'prefix' => 'campaigns'], function () {
             Route::get('/{status?}', 'CampaignsController@index')->name('agency.campaign.all')->middleware('permission:view.campaign');
-            Route::get('/all-clients', 'CampaignsController@allClient')->name('agency.campaign.create');
-            Route::get('/all-client/data', 'CampaignsController@clientData');
-            Route::get('/campaign/step1', 'CampaignsController@getStep1')->name('agency_campaign.step1')->middleware('permission:create.campaign');
-            Route::post('/campaign/step1/store', 'CampaignsController@postStep1')->name('agency_campaign.store1');
-            Route::get('/campaigns/step2/{id}', 'CampaignsController@getStep2')->name('agency_campaign.step2');
-            Route::get('/campaign/step3/{id}', 'CampaignsController@getStep3')->name('agency_campaign.step3');
-            Route::get('/campaign/step3/store/{id}', 'CampaignsController@postStep3')->name('agency_campaign.store3');
-            Route::get('/campaign/step3/1/{id}', 'CampaignsController@getStep3_1')->name('agency_campaign.step3_1');
-            Route::get('/campaign/step3/store/1/{id}', 'CampaignsController@postStep3_1')->name('agency_campaign.store3_1');
-            Route::get('/campaign/step3/2/{id}', 'CampaignsController@getStep3_2')->name('agency_campaign.step3_2');
-            Route::post('/campaign/step3/store/2/{id}/{broadcaster}', 'CampaignsController@postStep3_2')->name('agency_campaign.store3_2');
-            Route::get('/campaign/step3/3/{id}/{broadcaster}', 'CampaignsController@getStep3_3')->name('agency_campaign.step3_3');
-            Route::post('/campaign/step3/store/3/{id}/{broadcaster}', 'CampaignsController@postStep3_3')->name('agency_campaign.store3_3');
-            Route::post('/campaign/step3/store/new-uploads/{id}/{broadcaster}', 'CampaignsController@postNewUploads')->name('new.upload');
-            Route::get('/camaigns/uploads/delete/{upload_id}/{id}', 'CampaignsController@deleteUpload')->name('agency.uploads.delete');
-            Route::get('/review-uploads/{id}/{broadcaster}', 'CampaignsController@reviewUploads')->name('agency_campaign.review_uploads');
-            Route::get('/campaign/step4/{id}/{broadcaster}/{start_date}/{end_date}', 'CampaignsController@getStep4')->name('agency_campaign.step4');
-            Route::get('/campaigns/cart/store', 'CampaignsController@postPreselectedAdslot')->name('agency_campaign.cart');
-            Route::get('/campaign/checkout/{id}', 'CampaignsController@checkout')->name('agency_campaign.checkout');
-            Route::get('/cart/remove/{id}', 'CampaignsController@removeCart')->name('agency_cart.remove');
-            Route::post('/campaign/submit/{id}', 'CampaignsController@postCampaign')->name('agency_submit.campaign');
-            Route::get('/campaign-details/{id}', 'CampaignsController@getDetails')->name('agency.campaign.details');
-            Route::get('/details/{id}', 'CampaignsController@getNewDetails')->name('agency.campaign.new.details');
-            Route::get('/filter-by-client/{id}', 'CampaignsController@getCampaignsByClient');
+            Route::get('/details/{id}', 'CampaignsController@getDetails')->name('agency.campaign.new.details');
             Route::get('/mpo-details/{id}', 'CampaignsController@mpoDetails')->name('agency.mpo.details');
-
-            Route::get('/this/campaign-details/{campaign_id}', 'CampaignsController@filterByCampaignId');
-            Route::get('/media-channel/{campaign_id}', 'CampaignsController@getMediaChannel');
-            Route::get('/compliance-graph', 'CampaignsController@campaignBudgetGraph');
-            Route::get('/compliance-graph/filter', 'CampaignsController@complianceGraph')->name('campaign_details.compliance');
-
-            Route::post('/information-update/{campaign_id}', 'CampaignsController@updateAgencyCampaignInformation')->name('agency.campaign_information.update');
-
             Route::get('/mpo/details/{campaign_mpo_id}', 'CampaignsController@campaignMpoDetails');
-
             Route::get('/mpo/export/{campaign_mpo_id}', 'CampaignsController@exportMpoAsExcel');
-
             Route::post('/mpo/associate-assets', 'CampaignsController@associateAssetsToMpo');
-
             Route::post('/mpo/details/{campaign_mpo_id}/adslots/delete', 'CampaignsController@deleteMultipleAdslots');
-
             Route::post('/mpo/details/{campaign_mpo_id}/adslots/update', 'CampaignsController@updateAdslots');
-
             Route::post('/mpo/details/{campaign_mpo_id}/adslots/store', 'CampaignsController@storeAdslots');
-
         });
-
-        Route::get('/campaign-details/{user_id}', 'Dsp\CampaignsController@filterByUser');
-        Route::get('/campaign-general-information', 'Campaign\CampaignsController@campaignGeneralInformation')
-        ->name('campaign.get_campaign_general_information')->middleware('permission:create.campaign');
-        Route::post('/campaign-general-information/store', 'Campaign\CampaignsController@storeCampaignGeneralInformation')->name('campaign.store_campaign_general_information');
-        Route::get('/advert-slot/result/{id}', 'Campaign\CampaignsController@getAdSlotResult')->name('campaign.advert_slot');
 
         /*
          * User Management

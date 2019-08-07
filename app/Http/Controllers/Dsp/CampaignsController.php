@@ -117,24 +117,11 @@ class CampaignsController extends Controller
 
     public function getDetails($id)
     {
-        //we will need to remove this later
-        $agency_id = $this->companyId();
-        $campaign_details = Utilities::campaignDetails($id, null, $agency_id);
-        $user_id = $campaign_details['campaign_det']['company_user_id'];
-        $all_campaigns = Utilities::switch_db('api')->select("SELECT * FROM campaignDetails where agency = '$agency_id' and user_id = '$user_id' GROUP BY campaign_id");
-        $all_clients = Utilities::switch_db('api')->select("SELECT * FROM walkIns where agency_id = '$agency_id'");
-        return view('agency.campaigns.campaign_details', compact('campaign_details', 'all_campaigns', 'all_clients'));
-    }
-
-    public function getNewDetails($id)
-    {
         $agency_id = $this->companyId();
         $campaign_details_service = new CampaignDetails($id);
         $campaign_details = $campaign_details_service->run();
         $campaign_details_client_id = $campaign_details->client->id;
         $campaign_details_brand_id = $campaign_details->brand->id;
-        $all_campaigns = Campaign::where('belongs_to', $agency_id)->get();
-        $all_clients = (new WalkInLists($agency_id))->getWalkInListWithMinmalDetails();
         $client_media_assets = (new GetMediaAssetByClient($campaign_details_client_id, $campaign_details_brand_id))->run();
         $campaign_files = CampaignMpoTimeBelt::with(['media_asset'])->whereNotNull('asset_id')->whereHas('campaign_mpo', function ($query) use ($id){
                 $query->whereHas('campaign', function ($query) use ($id) {
@@ -145,77 +132,12 @@ class CampaignsController extends Controller
         return view('agency.campaigns.new_campaign_details', compact('campaign_details', 'all_campaigns', 'all_clients', 'client_media_assets', 'campaign_files'));
     }
 
-    public function getCampaignsByClient($client_id)
-    {
-        $agency_id = $this->companyId();
-        $all_campaigns = Utilities::switch_db('api')->select("SELECT * FROM campaigns where belongs_to = '$agency_id' and walkin_id = '$client_id' GROUP BY id");
-        return (['campaign' => $all_campaigns]);
-    }
-
-    public function filterByUser($user_id)
-    {
-        $agency_id = $this->companyId();
-        $all_campaigns = Utilities::switch_db('api')->select("SELECT * FROM campaignDetails where agency = '$agency_id' and user_id = '$user_id' GROUP BY campaign_id");
-
-        $media_chanel = Utilities::switch_db('api')->select("SELECT * FROM broadcasters where id IN (SELECT broadcaster from campaignDetails where user_id = '$user_id')");
-        return (['campaign' => $all_campaigns, 'channel' => $media_chanel]);
-    }
-
-    public function filterByCampaignId($campaign_id)
-    {
-        $agency_id = $this->companyId();
-        $summary = Utilities::campaignDetails($campaign_id, null, $agency_id);
-        $media_chanel = Utilities::switch_db('api')->select("SELECT * FROM broadcasters where id IN (SELECT broadcaster from campaignDetails where campaign_id = '$campaign_id')");
-        return response()->json(['media_channel' => $media_chanel, 'summary' => $summary]);
-    }
-
     public function mpoDetails($id)
     {
         $agency_id = $this->companyId();
         $mpo_details = Utilities::getMpoDetails($id, $agency_id);
 
         return view('agency.mpo.mpo')->with('mpo_details', $mpo_details);
-    }
-
-    public function getMediaChannel($campaign_id)
-    {
-        $channel = request()->channel;
-        $broadcaster_retain = request()->media_channel;
-        if($channel){
-            $all_company_channels_service = new MediaMix($campaign_id, $channel, $broadcaster_retain);
-
-            return response()->json(['all_channel' => $all_company_channels_service->getAllCompanyWithChannelInCampaign(),
-                                    'media_mix' => $all_company_channels_service->getMediaMixData(),
-                                    'retained_channel' => !empty($broadcaster_retain) ? $all_company_channels_service->getRetainedCompany() : null]);
-        }else{
-            return null;
-        }
-    }
-
-    public function campaignBudgetGraph()
-    {
-        $campaign_id = request()->campaign_id;
-        $media_publishers = request()->channel;
-        if($media_publishers){
-            $compliance_graph_service = new CampaignBudgetGraph($campaign_id, $media_publishers);
-            return $compliance_graph_service->getCampaignBudgetData();
-        }else{
-            return null;
-        }
-
-    }
-
-    public function complianceGraph()
-    {
-        $campaign_id = request()->campaign_id;
-        $start_date = date('Y-m-d', strtotime(request()->start_date));
-        $stop_date = date('Y-m-d', strtotime(request()->stop_date));
-        $publisher_id = request()->media_channel;
-
-        $compliance_graph_service = new ComplianceGraph($campaign_id, $start_date, $stop_date, $publisher_id);
-
-        return response()->json(['date' => $compliance_graph_service->getComplianceDates(),
-                                'data' => $compliance_graph_service->formatDataForGraphCompatibility()]);
     }
 
     public function campaignMpoDetails($campaign_mpo_id)

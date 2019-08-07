@@ -70,6 +70,8 @@ Vue.component('media-plan-request-approval', () => import('./components/media_pl
 
 // CAMPAIGN
 Vue.component('campaign-list', () => import('./components/campaign/AllCampaigns.vue'));
+Vue.component('campaign-display', () => import('./components/campaign/DisplayCampaign.vue'));
+Vue.component('campaign-summary', () => import('./components/campaign/Summary.vue'));
 
 // ASSET MANAGEMENT
 Vue.component('media-asset-upload', () => import('./components/asset_management/Upload.vue'));
