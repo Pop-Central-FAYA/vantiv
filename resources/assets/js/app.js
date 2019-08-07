@@ -154,7 +154,7 @@ Vue.mixin({
             return number.toLocaleString();
         },
         dateToHumanReadable(date) {
-            return moment(date).format('Do-MMM-YYYY');
+            return moment(date).format('MMM DD, YYYY');
         },
         numberFormat(n) {
             return n.toFixed(2)

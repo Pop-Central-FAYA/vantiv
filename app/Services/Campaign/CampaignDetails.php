@@ -40,6 +40,7 @@ class CampaignDetails
         $campaign->created_at = date('M d, Y', strtotime($campaign->time_created));
         $audience_arr = $this->getTargetAudience(json_decode($campaign->target_audience));
         $campaign->gender = implode(', ', $audience_arr);
+        $campaign->status = ucfirst($campaign->status);
 
         if (is_array(json_decode($campaign->lsm))) {
             $campaign->lsm = implode(', ', json_decode($campaign->lsm));
