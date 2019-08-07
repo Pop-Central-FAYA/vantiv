@@ -28,7 +28,7 @@
 
         Route::group(['namespace' => 'Dsp', 'prefix' => 'campaigns'], function () {
             Route::get('/{status?}', 'CampaignsController@index')->name('agency.campaign.all')->middleware('permission:view.campaign');
-            Route::get('/details/{id}', 'CampaignsController@getDetails')->name('agency.campaign.new.details');
+            Route::get('/details/{id}', 'CampaignsController@getDetails')->name('agency.campaign.details');
             Route::get('/mpo-details/{id}', 'CampaignsController@mpoDetails')->name('agency.mpo.details');
             Route::get('/mpo/details/{campaign_mpo_id}', 'CampaignsController@campaignMpoDetails');
             Route::get('/mpo/export/{campaign_mpo_id}', 'CampaignsController@exportMpoAsExcel');

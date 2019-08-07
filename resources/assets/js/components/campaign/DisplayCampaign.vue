@@ -15,7 +15,7 @@
       </v-tab-item>
 
       <v-tab-item value="mpos-tab">
-        <campaign-mpos-list :mpos="mpos" :assets="assets" :client="client" :brand="brand"></campaign-mpos-list>
+        <campaign-mpos-list :mpos="mpos" :assets="assets" :client="client" :brand="brand" :time-belts="timeBelts"></campaign-mpos-list>
       </v-tab-item>
     </v-tabs>
   </div>
@@ -45,12 +45,13 @@
 <script>
   export default {
     props: {
-        files: Array,
+        files: [Object, Array],
         mpos: Array,
         assets: Array,
         client: String,
         brand: String,
-        campaign: Object
+        campaign: Object,
+        timeBelts: Array,
     },
     data () {
       return {

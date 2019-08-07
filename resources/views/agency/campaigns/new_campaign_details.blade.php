@@ -27,6 +27,7 @@
                         :client="{{json_encode($campaign_details->client['company_name'])}}"
                         :brand="{{json_encode($campaign_details->brand['name'])}}"
                         :campaign="{{json_encode($campaign_details)}}"
+                        :time-belts="{{json_encode($time_belts)}}"
                     ></campaign-display>
                 </v-content>
             </v-app>

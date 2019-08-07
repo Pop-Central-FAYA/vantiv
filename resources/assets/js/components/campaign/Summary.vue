@@ -73,14 +73,14 @@
                         {{ campaign.age_groups }}
                     </p>
                 </v-flex>
-                <v-flex md4 my-1 v-if="campaign.social_class != 'null'">
+                <v-flex md4 my-1 v-if="campaign.social_class != 'null' && campaign.social_class !== ''">
                     <p class="weight_medium">
                         <span class="weight_medium small_faint pr-1">Social Class:</span>
                         {{ campaign.social_class }}
                     </p>
                 </v-flex>
             </v-layout>
-            <v-layout v-if="campaign.states != 'null'">
+            <v-layout v-if="campaign.states != 'null' && campaign.states !== ''">
                 <v-flex md12 my-1>
                     <p class="weight_medium">
                         <span class="weight_medium small_faint pr-1">States:</span>
@@ -88,7 +88,7 @@
                     </p>
                 </v-flex>
             </v-layout>
-            <v-layout v-if="campaign.regions != 'null'">
+            <v-layout v-if="campaign.regions != 'null' && campaign.regions !== ''">
                 <v-flex md12 my-1>
                     <p class="weight_medium">
                         <span class="weight_medium small_faint pr-1">Regions:</span>

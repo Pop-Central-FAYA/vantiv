@@ -77,8 +77,8 @@ class CampaignsController extends Controller
                 'name' => $campaign->name,
                 'product' => $campaign->product,
                 'brand' => ucfirst($campaign->brand['name']),
-                'date_created' => date('M j, Y', strtotime($campaign->time_created)),
-                'start_date' => date('M j, Y', strtotime($campaign->start_date)),
+                'date_created' => date('Y-m-d', strtotime($campaign->time_created)),
+                'start_date' => date('Y-m-d', strtotime($campaign->start_date)),
                 'end_date' => date('Y-m-d', strtotime($campaign->stop_date)),
                 'adslots' => $campaign->ad_slots,
                 'budget' => number_format($campaign->budget,2),
@@ -109,7 +109,7 @@ class CampaignsController extends Controller
     public function generateRedirectUrl($campaign)
     {
         if ($campaign->status === "pending" || $campaign->status === "on_hold") {
-            return route('agency.campaign.new.details', ['id' => $campaign->id]);
+            return route('agency.campaign.details', ['id' => $campaign->id]);
         } else {
             return route('agency.campaign.all');
         }
@@ -129,7 +129,8 @@ class CampaignsController extends Controller
                 });
             })->get();
         $campaign_files = $campaign_files->groupBy('asset_id');
-        return view('agency.campaigns.new_campaign_details', compact('campaign_details', 'all_campaigns', 'all_clients', 'client_media_assets', 'campaign_files'));
+        $time_belts = $this->splitTimeRangeByBase('00:00:00', '23:59:59', '15');
+        return view('agency.campaigns.new_campaign_details', compact('campaign_details', 'client_media_assets', 'campaign_files', 'time_belts'));
     }
 
     public function mpoDetails($id)

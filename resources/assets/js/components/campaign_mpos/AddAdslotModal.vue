@@ -1,7 +1,9 @@
 <template>
     <v-dialog v-model="dialog" persistent max-width="500px">
         <template v-slot:activator="{ on }">
-            <v-btn color="" class="default-vue-btn" dark v-on="on">Add Adslot</v-btn>
+            <v-btn class="default-vue-btn mx-0" small dark v-on="on" @click="dialog = true">
+                <v-icon>add</v-icon> Add Adslot
+            </v-btn>
         </template>
         <v-card>
             <v-card-text>

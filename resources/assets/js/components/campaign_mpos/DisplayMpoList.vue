@@ -6,15 +6,15 @@
         <v-spacer></v-spacer>
         <v-text-field v-model="search" append-icon="search" label="Enter Keyword" single-line hide-details></v-text-field>
         </v-card-title>
-        <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="mpos" :search="search" :pagination.sync="pagination">
+        <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="mpos" :search="search" :pagination.sync="pagination" item-key="station" expand :show-expand="true">
         <template v-slot:items="props">
             <tr>
-                <td @click="adslotList(props.item.id)">
-                    <a @click="adslotList(props.item.id)" class="default-vue-link">{{ props.item.station }}</a>
+                <td @click="props.expanded = !props.expanded">
+                    <a class="default-vue-link">{{ props.item.station }}</a>
                 </td>
-                <td @click="adslotList(props.item.id)" class="text-xs-left">{{ format_audience(sumNetTotalInCampaignMpoTimeBelt(props.item.campaign_mpo_time_belts)) }}</td> 
-                <td @click="adslotList(props.item.id)" class="text-xs-left">{{ sumAdslotsInCampaignMpoTimeBelt(props.item.campaign_mpo_time_belts) }}</td>
-                <td @click="adslotList(props.item.id)" class="text-xs-left">{{ props.item.status }}</td>
+                <td @click="props.expanded = !props.expanded" class="text-xs-left">{{ format_audience(sumNetTotalInCampaignMpoTimeBelt(props.item.campaign_mpo_time_belts)) }}</td> 
+                <td @click="props.expanded = !props.expanded" class="text-xs-left">{{ sumAdslotsInCampaignMpoTimeBelt(props.item.campaign_mpo_time_belts) }}</td>
+                <td @click="props.expanded = !props.expanded" class="text-xs-left">{{ props.item.status }}</td>
                 <td class="justify-center layout px-0">
                     <v-container grid-list-md class="container-action-btn">
                         <v-layout wrap>
@@ -39,6 +39,9 @@
                 </td>
             </tr>
         </template>
+        <template slot="expand" slot-scope="props">
+            <mpo-slot-list :adslots="props.item.campaign_mpo_time_belts" :assets="assets" :time_belts="timeBelts"></mpo-slot-list>
+        </template>
         <template v-slot:no-results>
             <v-alert :value="true" color="error" icon="warning">
             Your search for "{{ search }}" found no results.
@@ -49,9 +52,9 @@
 </template>
 
 <style>
- .container-action-btn {
-     padding: 0px 24px;
- }
+    .container-action-btn {
+        padding: 0px 24px;
+    }
 </style>
 
 
@@ -64,14 +67,15 @@
             },
             assets: Array,
             client: String,
-            brand: String
+            brand: String,
+            timeBelts: Array
         },
         data () {
             return {
                 search: '',
                 headers: [
                     { text: 'Station', align: 'left', value: 'station',  width: '30%' },
-                    { text: 'Budget', value: 'budget',  width: '20%' },
+                    { text: 'Budget (₦)', value: 'budget',  width: '20%' },
                     { text: 'Exposures', value: 'ad_slots', width: '15%' },
                     { text: 'Status', value: 'status', width: '20%' },
                     { text: 'Actions', value: 'name', sortable: false , width: '15%'}
