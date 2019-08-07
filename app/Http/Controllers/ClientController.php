@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 use Vanguard\Http\Controllers\Traits\CompanyIdTrait;
 use Vanguard\Http\Requests\Client\StoreRequest;
 use Vanguard\Http\Resources\ClientResource;
+use Vanguard\Models\Client;
+use Vanguard\Models\Brand;
 
 
 class ClientController extends Controller
@@ -19,9 +21,10 @@ class ClientController extends Controller
     {
         $validated = $request->validated();
         $user = Auth::user();
-        $new_client = new StoreClient($request, $this->companyId(), $user);
-        $client = $new_client->run(); 
-        return new ClientResource($client);
+        $new_client = new StoreClient($request, $this->companyId(), $user->id);
+        $client = $new_client->run();   
+        $resource = new ClientResource(Client::with('contact', 'brand')->find($client->id));
+        return $resource->response()->setStatusCode(201);
     }
     
 }

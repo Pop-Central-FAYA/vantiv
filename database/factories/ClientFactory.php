@@ -15,16 +15,15 @@ use Faker\Generator as Faker;
 
 $factory->define(Vanguard\Models\Client::class, function (Faker $faker) {
     return [
-        'id' => $faker->word,
-        'name' => $faker->word,
-        'brand' => $faker->word,
+        'id' => uniqid(),
+        'name' => $faker->company,
+        'brand' => uniqid(),
         'image_url' => $faker->url,
-        'status' => $faker->word,
-        'created_by' => $faker->word,
-        'company_id' => $faker->word,
-        'street_address' => $faker->word,
-        'city' => $faker->word,
-        'state' => $faker->word,
-        'nationality' => $faker->word,
+        'created_by' => uniqid(),
+        'company_id' => uniqid(),
+        'street_address' => $faker->address,
+        'city' => $faker->city,
+        'state' => $faker->state,
+        'nationality' => $faker->country,
     ];
 });

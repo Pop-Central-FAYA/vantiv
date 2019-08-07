@@ -2,6 +2,6 @@
 
 namespace Vanguard\Services;
 
-interface IService {
+interface BaseServiceInterface {
     public function run();
 }

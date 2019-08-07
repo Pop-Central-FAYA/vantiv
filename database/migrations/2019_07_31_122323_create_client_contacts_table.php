@@ -20,7 +20,7 @@ class CreateClientContactsTable extends Migration
             $table->string('last_name');
             $table->string('email');
             $table->string('phone_number');
-            $table->boolean('is_primary');
+            $table->boolean('is_primary')->default(true);
             $table->timestamps();
         });
     }

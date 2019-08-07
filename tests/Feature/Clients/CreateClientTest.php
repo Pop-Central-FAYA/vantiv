@@ -16,7 +16,36 @@ class CreateClient extends TestCase
      *
      * @return void
      */
-    protected $route_name = 'new.client';
+    protected $route_name = 'client.create';
+    
+    protected function getData()
+    {
+        $faker = Factory::create();
+        $contact= [
+            'first_name' => "Dino",
+            'last_name' => "Melaye",
+            'email' => "dino@yahoo.com",
+            'phone_number' => "+23466219699",
+            'is_primary' => true,
+        ];
+        $brand=[
+            'name' => "Ayo NIG LMT",
+            'image_url' => 'https://www.turcotte.com/quae-quae-error-cum-qui-ducimus',
+            'status' =>'active',
+        ];
+        return [
+            '_token' => csrf_token(),
+            'name' => "Oluwa captain",
+            'brand' => "C and O",
+            'image_url' =>  'https://www.turcotte.com/quae-quae-error-cum-qui-ducimus',
+            'street_address' => $faker->address,
+            'city' => $faker->city,
+            'state' => $faker->state,
+            'nationality' => $faker->country,
+            'contact'=> $contact,
+            'brand_details'=>$brand
+        ];
+    }
 
     protected function getResponse($user, $data)
     {
@@ -25,71 +54,56 @@ class CreateClient extends TestCase
 
     public function test_invalid_client_data_is_validated_on_update()
     {
-       
         \Session::start();
-        $faker = Factory::create();
-        $data = [
-            '_token' => csrf_token(),
-            'name' => $faker->word,
-            'brand' => $faker->word,
-            'image_url' => $faker->url,
-            'status' => $faker->word,
-            'street_address' => $faker->word,
-            'city' => $faker->word,
-            'state' => $faker->word,
-            'nationality' => $faker->word,
-            'contact'=> [
-                'first_name' => $faker->word,
-                'last_name' => $faker->word,
-                'email' => $faker->word,
-                'phone_number' => $faker->word,
-                'is_primary' => true,
-            ],
-            'brand_details'=>[
-                'name' => $faker->word,
-                'image_url' => "",
-                'status' => "",
-            ]
-        ];
         $user = $this->setupAuthUser();
-        $response = $this->getResponse($user, $data);
+        $response = $this->getResponse($user, ['_token' => csrf_token()]);
         $response->assertStatus(422);
+        $keys = ['name', 'image_url', 'street_address', 'city', 'state', 'nationality','contact.first_name', 'contact.last_name', 'contact.email', 'contact.phone_number','contact.is_primary',  'brand_details.name','brand_details.image_url',
+         ];
+         $response->assertJsonValidationErrors($keys);
     }
 
-    public function test_authentication_user_can_create_client()
+    public function test_authenticated_user_can_create_client()
     {
              
         \Session::start();
-        $faker = Factory::create();
-        $data = [
-            '_token' => csrf_token(),
-            'name' => "Oluwa captain",
-            'brand' => "C and O",
-            'image_url' => $faker->url,
-            'status' => $faker->word,
-            'street_address' => $faker->word,
-            'city' => $faker->word,
-            'state' => $faker->word,
-            'nationality' => $faker->word,
-            'contact'=> [
-                'first_name' => $faker->word,
-                'last_name' => $faker->word,
-                'email' => $faker->email,
-                'phone_number' => $faker->word,
-                'is_primary' => true,
-            ],
-            'brand_details'=>[
-                'name' => $faker->word,
-                'image_url' => $faker->url,
-                'status' =>$faker->word,
-            ]
-        ];
+        $data = $this->getData();
         $user = $this->setupAuthUser();
         $response = $this->getResponse($user, $data);
         $response->assertStatus(201);
         $response->assertJsonFragment([
             'name' => "Oluwa captain",
-            'brand' => "C and O",
+            'image_url' =>  'https://www.turcotte.com/quae-quae-error-cum-qui-ducimus',
+        ]);
+    }
+
+    public function test_authenticated_user_can_create_client_contact()
+    {
+             
+        \Session::start();
+        $data = $this->getData();
+        $user = $this->setupAuthUser();
+        $response = $this->getResponse($user, $data);
+        $response->assertStatus(201);
+        $response->assertJsonFragment([
+                'first_name' => "Dino",
+                'last_name' => "Melaye",
+                'email' => "dino@yahoo.com",
+                'phone_number' => "+23466219699",
+        ]);
+    }
+    public function test_authenticated_user_can_create_client_brand()
+    {
+             
+        \Session::start();
+        $data = $this->getData();
+        $user = $this->setupAuthUser();
+        $response = $this->getResponse($user, $data);
+        $response->assertStatus(201);
+        $response->assertJsonFragment([
+            'name' => "Ayo NIG LMT",
+            'image_url' => 'https://www.turcotte.com/quae-quae-error-cum-qui-ducimus',
+            'status' =>'active'
         ]);
     }
 }

@@ -16,7 +16,7 @@ class CreateModifyClientsTable extends Migration
         Schema::table('clients', function (Blueprint $table) {
             $table->string('status')->change();
             $table->string('name');
-            $table->string('created_by');
+            $table->string('created_by')->index();
             $table->string('company_id')->index();
             $table->string('street_address');
             $table->string('city');

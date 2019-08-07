@@ -32,10 +32,9 @@ class StoreRequest extends Request
             'contact.last_name' => 'required|string',
             'contact.email' => 'required|email',
             'contact.phone_number' => 'required|string',
-            'contact.is_primary' => 'boolean',
+            'contact.is_primary' => 'required|boolean',
             'brand_details.name' => 'required|string',
             'brand_details.image_url' => 'required|url',
-            'brand_details.status' => 'required'
         ];
     }
 }

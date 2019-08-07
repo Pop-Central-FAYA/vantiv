@@ -3,6 +3,7 @@
 namespace Vanguard\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Vanguard\Models\Client;
 
 class ClientContact extends Base
 {
