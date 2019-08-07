@@ -25,7 +25,7 @@ class CampaignDetails
     public function getCampaignDetails()
     {
         $agency_id = \Auth::user()->companies->first()->id;
-        return Campaign::with(['client', 'brand', 'campaign_mpos.campaign_mpo_time_belts'])
+        return Campaign::with(['creator', 'client', 'brand', 'campaign_mpos.campaign_mpo_time_belts'])
                         ->where('id', $this->campaign_id)
                         ->where('belongs_to', $agency_id)
                         ->first();
@@ -34,18 +34,45 @@ class CampaignDetails
     public function formatCampaignDetails($campaign)
     {
         $campaign->budget = number_format($campaign->budget,2);
-        $campaign->channel_information = $this->getMediaChannels(json_decode($campaign->channel));
-        $campaign->audience_information = $this->getTargetAudience(json_decode($campaign->target_audience));
+        $channel_arr = $this->getMediaChannels(json_decode($campaign->channel));
+        $campaign->media_type = implode(', ', $channel_arr);
+        $campaign->flight_date = date('M d, Y', strtotime($campaign->start_date)).' to '.date('M d, Y', strtotime($campaign->stop_date));
+        $campaign->created_at = date('M d, Y', strtotime($campaign->time_created));
+        $audience_arr = $this->getTargetAudience(json_decode($campaign->target_audience));
+        $campaign->gender = implode(', ', $audience_arr);
+
+        if (is_array(json_decode($campaign->lsm))) {
+            $campaign->lsm = implode(', ', json_decode($campaign->lsm));
+        }
+        if (is_array(json_decode($campaign->social_class))) {
+            $campaign->social_class = implode(', ', json_decode($campaign->social_class));
+        }
+        if (is_array(json_decode($campaign->states))) {
+            $campaign->states = implode(', ', json_decode($campaign->states));
+        }
+        if (is_array(json_decode($campaign->regions))) {
+            $campaign->regions = implode(', ', json_decode($campaign->regions));
+        }
+        if (is_array(json_decode($campaign->age_groups))) {
+            $age_groups_str = '';
+            foreach(json_decode($campaign->age_groups) as $key=>$age_group) {
+                $age_groups_str .= $age_group->min.' - '.$age_group->max;
+                if (($key+1) < count(json_decode($campaign->age_groups))) {
+                    $age_groups_str .= ', ';
+                }
+            }
+            $campaign->age_groups = $age_groups_str;
+        }
         return $campaign;
     }
 
     public function getMediaChannels($channelIds)
     {
-        return CampaignChannel::whereIn('id', $channelIds)->get();
+        return CampaignChannel::whereIn('id', $channelIds)->get()->pluck('channel')->toArray();
     }
 
     public function getTargetAudience($audienceIds)
     {
-        return TargetAudience::whereIn('id', $audienceIds)->get();
+        return TargetAudience::whereIn('id', $audienceIds)->get()->pluck('audience')->toArray();
     }
 }

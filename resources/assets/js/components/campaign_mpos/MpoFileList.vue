@@ -28,7 +28,7 @@
         props : {
             files : {
                 required : true,
-                type : Object
+                type : Array
             }
         },
         data () {

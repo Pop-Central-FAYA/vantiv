@@ -35,6 +35,14 @@ class Campaign extends Base
     }
 
     /**
+     * Get brand details associated with the media plan.
+     */
+    public function creator()
+    {
+        return $this->belongsTo('Vanguard\User','created_by');
+    }
+
+    /**
      * get association with campaign mpos
      *
      * @return void
