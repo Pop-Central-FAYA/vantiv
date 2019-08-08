@@ -17,6 +17,13 @@
                 <div class="col-md-10">
                     <h2 class="sub_header">Ad Vendors</h2>
                 </div>
+
+                @if(Auth::user()->can('create.ad_vendor'))
+                    <div class="col-md-2 text-right px-2">
+                        <ad-vendor-create></ad-vendor-create>
+                    </div>
+                @endif
+
             </div>
             <div class="row my-5">
                 @if(Auth::user()->can('view.ad_vendor'))
