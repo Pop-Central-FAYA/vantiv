@@ -33,8 +33,6 @@ class CompanyPolicy
 
     public function update(User $user, Company $company)
     {
-    
-      //  return $this->belongsToCompany($user, $ad_vendor);
-        return false;
+       return $this->belongsToCompany($user, $company);
     }
 }

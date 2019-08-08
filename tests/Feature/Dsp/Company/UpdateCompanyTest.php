@@ -83,8 +83,8 @@ class UpdateCompanyTest extends TestCase
         
         $another_user = $this->setupAuthUser();
         $another_company = $this->setupCompany(uniqid());
+
         $response = $this->getResponse($user, $another_company->id, ['_token' => csrf_token()]);
-       dd($response);
         $response->assertStatus(403);
     }
 
