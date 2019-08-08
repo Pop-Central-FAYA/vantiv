@@ -60,6 +60,7 @@ Vue.component('media-plan-suggestion-graph', () => import('./components/media_pl
 Vue.component('media-plan-suggestion-selected', () => import('./components/media_plan/customise/SelectedSuggestions.vue'));
 Vue.component('media-plan-suggestion-filter', () => import('./components/media_plan/customise/FilterSuggestions.vue'));
 Vue.component('media-plan-suggestions', () => import('./components/media_plan/customise/Suggestions.vue'));
+Vue.component('media-plan-timebelt-table', () => import('./components/media_plan/customise/TimeBeltsTable.vue'));
 Vue.component('media-plan-create-campaign', () => import('./components/media_plan/summary/CreateCampaign.vue'));
 Vue.component('media-plan-details', () => import('./components/media_plan/complete/PlanDetails.vue'));
 Vue.component('media-plan-program-details', () => import('./components/media_plan/complete/ProgramDetails.vue'));
