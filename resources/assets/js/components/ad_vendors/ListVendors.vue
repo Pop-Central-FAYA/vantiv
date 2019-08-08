@@ -49,8 +49,8 @@
     },
     created() {
         var self = this;
-        Event.$on('latest-vendors', function (vendors) {
-            self.vendors = vendors;
+        Event.$on('latest-vendor', function (vendor) {
+            self.vendors.push(vendor);
         });
     },
     mounted() {
