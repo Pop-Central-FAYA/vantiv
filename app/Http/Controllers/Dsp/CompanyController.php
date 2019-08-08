@@ -15,15 +15,20 @@ use Vanguard\Http\Resources\CompanyResource;
 class CompanyController extends Controller
 {
     use CompanyIdTrait;
+    public function __construct()
+    {
+        $this->middleware('permission:update.company')->only(['update']);
+    }
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function updateDetails(UpdateRequest $request, $id)
+    public function update(UpdateRequest $request, $id)
     {
         $company =  Company::findOrFail($id);
+        $this->authorize('update', $company);
         $validated = $request->validated();
         $update_company_service = new UpdateCompany($company,  $request);
         $update_company_service->run();
