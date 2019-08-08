@@ -20,11 +20,22 @@ class AdVendorController extends Controller
 
     public function __construct()
     {
-        $this->middleware('permission:view.ad_vendor')->only(['list', 'get']);
+        $this->middleware('permission:view.ad_vendor')->only(['list', 'get', 'index']);
         $this->middleware('permission:create.ad_vendor')->only(['create']);
         $this->middleware('permission:update.ad_vendor')->only(['update']);
-        $this->user = \Auth::user();
     }
+
+    /*******************************
+     * BELOW ARE THE PAGES. (WHEN THIS BECOMES AN SPA, THERE SHOULD ONLY REALLY BE ONE OR TWO)
+     *******************************/
+    public function index(Request $request)
+    {   
+        return view('agency.ad_vendor.index');
+    }
+
+    /*******************************
+     *  BELOW ARE THE API ACTIONS
+     *******************************/
 
     /**
      * Return a list of ad vendors that the currently logged in user has permission to view
@@ -32,7 +43,7 @@ class AdVendorController extends Controller
      * No need for a service now, until the query gets more complicated
      */
     public function list(ListRequest $request)
-    {
+    {           
         $validated = $request->validated();
         $validated['company_id'] = $this->companyId();
         $vendor_list = AdVendor::filter($validated)->get();
@@ -56,7 +67,9 @@ class AdVendorController extends Controller
     public function create(StoreRequest $request)
     {
         $validated = $request->validated();
-        $create_service = new CreateService($validated, $this->companyId(), $this->user->id);
+        $user = auth()->user();
+        $company_id = $this->companyId();
+        $create_service = new CreateService($validated, $company_id, $user->id);
         $vendor = $create_service->run();
         
         $resource = new AdVendorResource(AdVendor::find($vendor->id));

@@ -19,15 +19,16 @@
             <v-form>
               <v-layout wrap v-for="(duration,key) in form.duration" v-bind:key="key">
                 <v-flex xs12 sm6 md2>
-                  <v-text-field label="Duration" required readonly :value="duration" v-model="form.duration[key]"></v-text-field>
+                  <span>Duration</span>
+                  <v-text-field required readonly :value="duration" v-model="form.duration[key]"></v-text-field>
                 </v-flex>
                 <v-flex xs12 sm6 md10>
+                  <span>Select File</span>
                   <v-select
                     v-model="form.asset[key]"
                     :items="groupedAssets[duration]"
                     item-text="file_name"
                     item-value="id"
-                    label="Select File"
                     :name="`file.${key}`"
                   ></v-select>
                   <span class="text-danger" v-show="errors.has(`file.${key}`)">{{ errors.first(`file.${key}`) }}</span>

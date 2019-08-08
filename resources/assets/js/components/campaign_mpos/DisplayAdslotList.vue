@@ -1,26 +1,25 @@
 <template>
     <v-app>
-        <v-card>
-            <v-card-title>
+        <v-card class="p-2" style="height: 15rem;overflow-y: scroll;">
+            <v-card-title class="px-0 py-0">
+                <v-spacer></v-spacer>
                 <add-adslot-modal
                 :assets="assets"
                 :time_belts="time_belts"
                 :mpo_id="adslots[0].mpo_id"
                 ></add-adslot-modal>
-                <v-spacer></v-spacer>
-                <v-text-field v-model="search" append-icon="search" label="Enter Keyword" single-line hide-details></v-text-field>
             </v-card-title>
-            <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="groupedAdslots" :search="search" :pagination.sync="pagination">
+            <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="groupedAdslots" hide-actions :pagination.sync="pagination">
                 <template v-slot:items="props">
                     <tr @click="openEditDialog(props.item)">
                         <td>{{ props.item.day }} ({{ props.item.playout_date }})
+                        </td>
+                        <td class="text-xs-left">{{ props.item.time_belt_start_time }}
                         </td>
                         <td class="text-xs-left">{{ props.item.program }}
                         </td>
                         <td class="text-xs-left">{{ props.item.duration }} Seconds</td>
                         <td class="text-xs-left">{{ props.item.ad_slots }} 
-                        </td>
-                        <td class="text-xs-left">{{ props.item.time_belt_start_time }}
                         </td>
                         <td class="text-xs-left">{{ format_audience(props.item.net_total) }}</td>
                         <td class="justify-center layout px-0">
@@ -37,11 +36,6 @@
         :assets="assets"
         :time_belts="time_belts"
         ></edit-slots-modal>
-        <template v-slot:no-results>
-            <v-alert :value="true" color="error" icon="warning">
-                Your search for "{{ search }}" found no results.
-            </v-alert>
-        </template>
     </v-app>
 </template>
 
@@ -67,15 +61,15 @@
                 editDialog: false,
                 headers: [
                     { text: 'Day', align: 'left', value: 'day' },
-                    { text: 'Program', value: 'program' },
-                    {text: 'Duration', value: 'duration'},
-                    {text: 'Insertions', value: 'insertions'},
                     { text: 'Program Time', value: 'program_time' },
-                    {text : 'Net Total', value : 'net_total'},
+                    { text: 'Program', value: 'program' },
+                    { text: 'Duration', value: 'duration' },
+                    { text: 'Insertions', value: 'insertions' },
+                    { text : 'Net Total (₦)', value : 'net_total' },
                     { text: 'Actions', value: 'name', sortable: false }
                 ],
                 pagination: {
-                    rowsPerPage: 10
+                    rowsPerPage: -1
                 },
                 groupedAdslots : [],
                 isHidden : true,

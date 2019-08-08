@@ -70,6 +70,8 @@ Vue.component('media-plan-request-approval', () => import('./components/media_pl
 
 // CAMPAIGN
 Vue.component('campaign-list', () => import('./components/campaign/AllCampaigns.vue'));
+Vue.component('campaign-display', () => import('./components/campaign/DisplayCampaign.vue'));
+Vue.component('campaign-summary', () => import('./components/campaign/Summary.vue'));
 
 // ASSET MANAGEMENT
 Vue.component('media-asset-upload', () => import('./components/asset_management/Upload.vue'));
@@ -92,6 +94,9 @@ Vue.component('delete-slots-modal', () => import('./components/campaign_mpos/Del
 Vue.component('edit-slots-modal', () => import('./components/campaign_mpos/EditSlotModal.vue'));
 Vue.component('campaign-file-list', () => import('./components/campaign_mpos/MpoFileList.vue'));
 Vue.component('add-adslot-modal', () => import('./components/campaign_mpos/AddAdslotModal.vue'));
+
+// AD VENDOR MANAGEMENT
+Vue.component('ad-vendor-list', () => import('./components/ad_vendors/ListVendors.vue'));
 
 Vue.mixin({
     methods: {
@@ -136,8 +141,11 @@ Vue.mixin({
             return  result
         },
         formatDate(date_str) {
-            var dateParts = date_str.split("-");
-            return `${dateParts[0]}-${dateParts[1]}-${dateParts[2].substr(0,2)}`;
+            if (date_str) {
+                var dateParts = date_str.split("-");
+                return `${dateParts[0]}-${dateParts[1]}-${dateParts[2].substr(0,2)}`;
+            }
+            return '';
         },
         shortDay(str) {
             return str.substring(0, 3);
@@ -146,7 +154,7 @@ Vue.mixin({
             return number.toLocaleString();
         },
         dateToHumanReadable(date) {
-            return moment(date).format('Do-MMM-YYYY');
+            return moment(date).format('MMM DD, YYYY');
         },
         numberFormat(n) {
             return n.toFixed(2)
