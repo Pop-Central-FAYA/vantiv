@@ -14,7 +14,6 @@ class CreateModifyClientsTable extends Migration
     public function up()
     {
         Schema::table('clients', function (Blueprint $table) {
-            $table->string('status')->change();
             $table->string('name');
             $table->string('created_by')->index();
             $table->string('company_id')->index();

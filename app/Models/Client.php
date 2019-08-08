@@ -10,12 +10,12 @@ class Client extends Base
 {
     protected $fillable = ['name', 'brand', 'image_url', 'created_by', 'company_id', 'street_address', 'city', 'state','nationality'];
 
-    public function contact()
+    public function contacts()
     {
         return $this->hasMany(ClientContact::class);
     }
 
-    public function brand()
+    public function brands()
     {
         return $this->hasMany(Brand::class);
     }
