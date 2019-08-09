@@ -20,6 +20,7 @@
                     @if(Auth::user()->hasPermissionTo('view.user'))
                     <a href="{{ route('agency.user.index') }}" class="color_dark">Users</a>
                     @endif
+                    <a href="{{ route('company.index') }}" class="color_dark">Company</a>
 
                     <a href="{{ route('auth.logout') }}" class="color_red">Logout</a>
                 </div>

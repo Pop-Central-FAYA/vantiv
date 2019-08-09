@@ -15,6 +15,11 @@ use Vanguard\Http\Resources\CompanyResource;
 class CompanyController extends Controller
 {
     use CompanyIdTrait;
+    public function index(Request $request)
+    {   
+        $company =  Company::findOrFail($this->companyId());
+        return view('agency.company.index')->with('company', $company);
+    }
     /**
      * Store a newly created resource in storage.
      *

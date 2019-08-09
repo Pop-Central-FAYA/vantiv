@@ -100,6 +100,9 @@ Vue.component('add-adslot-modal', () => import('./components/campaign_mpos/AddAd
 Vue.component('ad-vendor-list', () => import('./components/ad_vendors/ListVendors.vue'));
 Vue.component('ad-vendor-create', () => import('./components/ad_vendors/CreateVendor.vue'));
 
+// COMPANY MANAGEMENT
+Vue.component('company-index', () => import('./components/company/CompanyIndex.vue'));
+
 Vue.mixin({
     methods: {
         format_audience(number) {

@@ -190,6 +190,7 @@
          */
 
         Route::group(['namespace' => 'Dsp'], function () {
+            Route::get('/company/index', 'CompanyController@index')->name('company.index');
             Route::patch('/company/{id}', 'CompanyController@updateDetails')->name('company.update');
         });
         
