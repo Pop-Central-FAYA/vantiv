@@ -21,7 +21,6 @@ class DatabaseSeeder extends Seeder
         $this->call(StationsTableSeeder::class);
         $this->call(PublisherFeatureSeeder::class);
         $this->call(PublisherRoleSeeder::class);
-        $this->call(AgencyFeatureSeeder::class);
         $this->call(AgencyRoleSeeder::class);
         /**
          * These section were commented out because they are only used

@@ -75,7 +75,7 @@ class UpdateCompanyTest extends TestCase
          ]);
     }
 
-    public function test_403_returned_if_attempting_to_update_compnay_that_user_does_not_have_rights_to()
+    public function test_403_returned_if_attempting_to_update_company_that_user_does_not_have_rights_to_update()
     {
         \Session::start();
         $user = $this->setupUserWithPermissions();
