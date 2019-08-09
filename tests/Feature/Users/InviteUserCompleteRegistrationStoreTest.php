@@ -30,7 +30,9 @@ class InviteUserCompleteRegistrationStoreTest extends TestCase
 
     public function test_it_requires_lastname_name_when_completing_account()
     {
-        $user = factory(User::class)->create();
+        $user = factory(User::class)->create([
+            
+        ]);
         $this->ajaxPost('/user/complete-account/store/'.$user->id, [
             'firstname' => 'Ridwan'
         ])

@@ -179,6 +179,11 @@
         });
         Route::get('/check-brand-existence', 'BrandsController@checkBrandExistsWithSameInformation');
         Route::get('/presigned-url', 'S3Controller@getPresignedUrl');
+         /*
+         * new Client route
+         */
+        Route::post('/clients', 'ClientController@storeClient')->name('client.create');
+       
 
          /**
          * User Management
