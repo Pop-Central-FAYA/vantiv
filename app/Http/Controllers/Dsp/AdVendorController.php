@@ -84,9 +84,9 @@ class AdVendorController extends Controller
         $vendor = AdVendor::findOrFail($id);
         $this->authorize('update', $vendor);
 
+        $user = auth()->user();
         $validated = $request->validated();
-        (new UpdateService($vendor, $validated))->run();
-        
+        (new UpdateService($validated, $vendor, $user->id))->run();
         return new AdVendorResource(AdVendor::find($id));
     }
 }

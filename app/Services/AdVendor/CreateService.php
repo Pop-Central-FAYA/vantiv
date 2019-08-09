@@ -3,7 +3,6 @@
 namespace Vanguard\Services\AdVendor;
 
 use Vanguard\Models\AdVendor as AdVendorModel;
-use Vanguard\Models\AdVendorContact;
 use DB;
 
 /**
@@ -64,16 +63,8 @@ class CreateService
     protected function storeContact(array $contacts_list, AdVendorModel $vendor)
     {
         foreach ($contacts_list as $data) {
-            $vendor_contact = new AdVendorContact();
-            $vendor_contact->ad_vendor_id = $vendor->id;
-            $vendor_contact->created_by = $vendor->created_by;
-            $vendor_contact->first_name = $data['first_name'];
-            $vendor_contact->last_name = $data['last_name'];
-            $vendor_contact->email = $data['email'];
-            $vendor_contact->phone_number = $data['phone_number'];
-            $vendor_contact->is_primary = true;
-            $vendor_contact->save();
+            $contact_service = new CreateContactService($data, $vendor->id, $vendor->created_by);
+            $contact_service->run();
         }
-        return $vendor_contact;
     }
 }

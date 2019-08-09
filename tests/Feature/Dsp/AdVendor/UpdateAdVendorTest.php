@@ -87,12 +87,12 @@ class UpdateAdVendorTest extends AdVendorTestCase
             'city' => '',
             'state' => '',
             'country' => '',
-            'contacts' => [
+            'contacts' => [[
                 'first_name' => '',
                 'last_name' => '',
                 'email' => 'aoshiomole',
                 'phone_number' => ''
-            ]
+            ]]
         ];
 
         $user = $this->setupUserWithPermissions();
@@ -123,5 +123,30 @@ class UpdateAdVendorTest extends AdVendorTestCase
         
         $response = $this->getResponse($user, $vendor->id, []);
         $response->assertStatus(403);
+    }
+
+    public function test_can_create_a_new_vendor_contact_on_update_if_non_existent()
+    {
+        $user = $this->setupUserWithPermissions();
+        $vendor = factory(\Vanguard\Models\AdVendor::class)->create([
+            'company_id' => $user->companies->first(),
+            'created_by' => $user->id
+        ]);
+        $vendor_data = [
+            'contacts' => [[
+                'first_name' => 'Aoki',
+                'last_name' => 'Oshiomole',
+                'email' => 'aoshiomole@example.org',
+                'phone_number' => '2349031111111'
+            ]]
+        ];
+        $response = $this->getResponse($user, $vendor->id, $vendor_data);
+
+        $response->assertStatus(200);
+        
+        $actual_data = Arr::dot($vendor->with('contacts')->get()->first()->toArray());
+        $expected_data = Arr::dot($vendor_data);
+
+        $this->assertArraySubset($expected_data, $actual_data);
     }
 }

@@ -6,6 +6,9 @@
       <v-spacer></v-spacer>
       <v-text-field v-model="search" append-icon="search" label="Enter Keyword" single-line hide-details></v-text-field>
     </v-card-title>
+    
+    <ad-vendor-view></ad-vendor-view>
+
     <v-data-table class="custom-vue-table elevation-1" 
                 :headers="headers" :items="vendors" :search="search" :loading="loading" :no-data-text="noDataText" 
                 :no-results-text="noResultsText" :pagination.sync="pagination">
@@ -44,13 +47,19 @@
             sortBy: 'created_at',
             descending: true,
             rowsPerPage: 10
-        }
+        },
+        vendorVisible: false,
+        currentVendor: null
       }
     },
     created() {
         var self = this;
-        Event.$on('latest-vendor', function (vendor) {
+        Event.$on('vendor-created', function (vendor) {
             self.vendors.push(vendor);
+        });
+        Event.$on('vendor-updated', function (vendor) {
+          idx = self.vendors.findIndex(x => x.id === vendor.id);
+          self.vendors[idx] = vendor;
         });
     },
     mounted() {
@@ -70,8 +79,8 @@
               this.sweet_alert('An unknown error has occurred, vendors cannot be retrieved. Please try again', 'error');
           }).finally(() => this.loading = false);
         },
-        showDetails(item) {
-            alert(`Going to ${item.id}`);
+        showDetails(idx, item) {
+          Event.$emit('view-vendor', idx, item);
         }
     }
   }

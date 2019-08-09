@@ -19,6 +19,7 @@ class AdVendorResource extends JsonResource
         $data['contacts'] = AdVendorContactResource::collection($this->contacts);
         $data['links'] = [
             'self' => route('ad-vendor.get', ['id' => $this->id], false),
+            'update' => route('ad-vendor.update', ['id' => $this->id], false),
         ];
         return $data;
     }
