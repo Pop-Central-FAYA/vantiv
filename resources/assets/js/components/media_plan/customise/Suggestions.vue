@@ -27,7 +27,7 @@
                         <v-tab-item :value="'graph-view'" v-if="viewGraph">
                             <v-card flat tile>
                                 <v-card-text class="pb-0">
-                                    <media-plan-suggestion-graph :graph-days="graphDays" :graph-details="graphDetails"></media-plan-suggestion-graph>
+                                    <media-plan-suggestion-graph :suggestions="suggestions" :graph-days="graphDays" :graph-details="graphDetails"></media-plan-suggestion-graph>
                                 </v-card-text>
                             </v-card>
                         </v-tab-item>
@@ -59,6 +59,12 @@
     .accent {
         background-color: #44c1c9 !important;
         border-color: #44c1c9 !important;
+    }
+    .v-window__container {
+        height: 100% !important;
+    }
+    .theme--light.application {
+        background: #fafafa !important;
     }
 </style>
 
