@@ -60,7 +60,11 @@ class AgencyRoleSeeder extends Seeder
             'update.ad_vendor' => array('dsp.admin', 'dsp.media_planner', 'dsp.media_buyer'),
             'create.ad_vendor' => array('dsp.admin', 'dsp.media_planner', 'dsp.media_buyer'),
 
-            'update.company' => array('dsp.admin')
+            'update.company' => array('dsp.admin'),
+
+            'view.brand' => array('dsp.compliance', 'dsp.finance', 'dsp.admin', 'dsp.media_planner', 'dsp.media_buyer'),
+            'update.brand' => array('dsp.admin', 'dsp.media_planner', 'dsp.media_buyer'),
+            'create.brand' => array('dsp.admin', 'dsp.media_planner', 'dsp.media_buyer'),
         ];
         
         //Create the different roles if they do not exist
