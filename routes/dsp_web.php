@@ -207,6 +207,7 @@
          * new Brand route
          */
         Route::post('/brands', 'BrandController@storeBrand')->name('brand.create');
+        Route::patch('/brands/{id}', 'BrandController@update')->name('brand.update');
        
 
     });

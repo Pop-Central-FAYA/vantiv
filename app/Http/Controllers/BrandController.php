@@ -11,6 +11,7 @@ use Vanguard\Http\Controllers\Traits\CompanyIdTrait;
 use Vanguard\Http\Requests\Brand\StoreRequest;
 use Vanguard\Http\Resources\ClientResource;
 use Vanguard\Models\Brand;
+use Vanguard\Http\Requests\Brand\UpdateRequest;
 
 
 class BrandController extends Controller
@@ -18,7 +19,7 @@ class BrandController extends Controller
     use CompanyIdTrait;
     public function __construct()
     {
-        $this->middleware('permission:create.brand')->only(['storeBrand']);
+        $this->middleware('permission:create.client')->only(['storeBrand']);
     }
 
     public function storeBrand(StoreRequest $request)
@@ -33,4 +34,19 @@ class BrandController extends Controller
         return $resource->response()->setStatusCode(201);
     }
     
+      /**
+     * Update fields that have changed in ad vendors
+     */
+    public function update(UpdateRequest $request, $id)
+    {
+        $brand = Brand::findOrFail($id);
+        $this->authorize('update', $brand);
+
+        $validated = $request->validated();
+        (new UpdateBrand($brand, $validated))->run();
+
+
+        $resource = new BrandResource(Brand::find($id));
+        return $resource->response()->setStatusCode(201);
+    }
 }
