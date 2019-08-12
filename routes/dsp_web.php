@@ -183,6 +183,7 @@
          * new Client route
          */
         Route::post('/clients', 'ClientController@storeClient')->name('client.create');
+        Route::patch('/clients/{id}', 'ClientController@update')->name('client.update');
        
 
          /**
