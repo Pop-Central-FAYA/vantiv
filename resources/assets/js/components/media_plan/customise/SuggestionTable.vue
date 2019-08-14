@@ -13,32 +13,11 @@
                             <v-flex md6>{{ totalAudiencePerStation(timebelts) }}</v-flex>
                         </v-layout>
                     </template>
-                    <v-card v-if="stationsToggle[index]['show']">
+                    <v-card v-if="stationsToggle[index]['show']" outlined>
                         <v-card-text>
-                            <v-layout wrap style="border-bottom: 1px solid #e8e8e8;">
+                            <v-layout wrap>
                                 <v-flex md12 px-0 style="overflow-x:auto;  height: 40vh;">
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">DAY</th>
-                                                <th scope="col">TIME BELT</th>
-                                                <th scope="col">PROGRAM</th>
-                                                <th scope="col">AUDIENCE</th>
-                                                <th scope="col"></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr v-for="(timebelt,key) in timebelts" v-bind:key="key">
-                                                <th scope="row">{{ timebelt.day}}</th>
-                                                <td>{{ format_time(timebelt.start_time) +" - "+ format_time(timebelt.end_time) }}</td>
-                                                <td>{{ timebelt.program}}</td>
-                                                <td>{{ format_audience(timebelt.total_audience) }}</td>
-                                                <td>
-                                                    <button class="plus-btn" @click="addTimebelt(timebelt)" type="button"><i class="material-icons">add</i></button>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                    <media-plan-timebelt-table :station-time-belts="timebelts"></media-plan-timebelt-table>
                                 </v-flex>
                             </v-layout>
                         </v-card-text>
@@ -53,6 +32,9 @@
 .v-expansion-panel__header {
     /* padding: 0 !important; */
     font-size: 14px;
+}
+.v-expansion-panel__body {
+    margin: 0px 10px;
 }
 </style>
 

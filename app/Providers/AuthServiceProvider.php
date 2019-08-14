@@ -14,6 +14,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         \Vanguard\Models\AdVendor::class => \Vanguard\Policies\AdVendorPolicy::class,
+        \Vanguard\Models\Company::class => \Vanguard\Policies\CompanyPolicy::class,
     ];
 
     /**

@@ -65,6 +65,7 @@
         methods: {
             deleteTimebelt(timeBelt, index) {
                 this.timeBeltsArr.splice(index, 1);
+                Event.$emit('timebelt-unselected', timeBelt);
                 var time = `${this.format_time(timeBelt.start_time)} - ${this.format_time(timeBelt.end_time)}`;
                 var success_msg = `${timeBelt.station} - ${timeBelt.program}  showing on  ${timeBelt.day}  ${time} was removed`;
                 this.sweet_alert(success_msg, 'error');

@@ -48,7 +48,8 @@
     export default {
         props: {
             graphDays: Array,
-            graphDetails: Object
+            graphDetails: Object,
+            suggestions: Object,
         },
         data() {
             return {
@@ -96,7 +97,6 @@
         },
         mounted() {
             console.log('Suggestions Graph Component mounted.')
-            generalTimeBeltObj = this.defaultTimeBeltsObj();
             this.seriesByDay(this.computedGraphDays[0], 0);
         },
         methods: {
@@ -107,12 +107,20 @@
                 });
                 return newArray;
             },
+            newDefaultTimeBeltsObj(time_belts) {
+                var newArray = [];
+                time_belts.forEach(function (item) {
+                    newArray[item] = 0;
+                });
+                return newArray;
+            },
             seriesByDay(day, key) {
                 if (key != 0) {
                     this.activateFirstButton = '';
                 }
                 let stationTimebelts = this.graphDetails[day];
                 let seriesValues = [];
+                var self = this;
                 Object.keys(stationTimebelts).forEach(function (station) {
                     let suggestionTimebeltArr = [];
                     stationTimebelts[station].forEach(function (item, key) {
@@ -122,15 +130,37 @@
                         endTime = `${endTime[0]}:${endTime[1]}`;
                         suggestionTimebeltArr[`${startTime} - ${endTime}`] = item['total_audience'];
                     });
-                    var mergedArr = Object.assign(generalTimeBeltObj, suggestionTimebeltArr);
+                    var mergedArr = Object.assign(self.newDefaultTimeBeltsObj(generalTimeBeltValue), suggestionTimebeltArr);
                     var audiencesPerTimeBelt = Object.values(mergedArr);
                     seriesValues.push({
                         name: `${station}/${day}`,
                         data: audiencesPerTimeBelt,
                         showInLegend:true,
+                        point: {
+                            events: {
+                                click: function(e) {
+                                    self.addTimebelt(e.point.category, day, station);
+                                }
+                            }
+                        }
                     });
                 });
                 this.chartOptions.series = seriesValues;
+            },
+            addTimebelt(category, day, station) {
+                var time_arr = category.split('-');
+                var start_time = `${time_arr[0].trim()}:00`;
+                var end_time = `${time_arr[1].trim()}:00`;
+                var time_belt = this.suggestions[station].find(time_belt => {
+                    return (time_belt.day == day && time_belt.start_time == start_time);
+                });
+                if (time_belt === undefined) {
+                    return;
+                }
+                Event.$emit('timebelt-to-add', time_belt);
+                var time = `${this.format_time(time_belt.start_time)} - ${this.format_time(time_belt.end_time)}`;
+                var successMsg = `${time_belt.station} - ${time_belt.program}  showing on  ${time_belt.day}  ${time} added successfully`;
+                this.sweet_alert(successMsg, 'success');
             }
         }
     }
