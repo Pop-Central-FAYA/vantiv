@@ -209,7 +209,7 @@
         Route::group(['namespace' => 'Dsp'], function () {
             Route::post('/brands', 'BrandController@create')->name('brand.create');
             Route::patch('/brands/{id}', 'BrandController@update')->name('brand.update');
-            Route::delete('/brands/{id}', 'BrandController@delete')->name('brand.delete');
+            Route::delete('/brands/{id}', 'BrandController@destroy')->name('brand.destroy');
         });
 
     });

@@ -43,4 +43,8 @@ class BrandPolicy
     {
        return $this->belongsToUserCompany($user, $brand);    
     }
+    public function destroy(User $user, Brand $brand)
+    {
+       return $this->belongsToUserCompany($user, $brand);    
+    }
 }

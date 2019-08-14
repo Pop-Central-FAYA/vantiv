@@ -91,5 +91,6 @@ class ClassMessages
     const ADSLOT_SUCCESS = 'Adlsot created successfully';
 
     const ADSLOT_ERROR = 'There was an error creating the slot';
+    const BRAND_DELETE_SUCCESS_MESSAGE = 'Brand deleted successfully';
 
 }

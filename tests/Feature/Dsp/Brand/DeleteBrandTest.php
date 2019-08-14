@@ -9,28 +9,18 @@ use Vanguard\Services\Client\StoreClientContact;
 use Vanguard\Models\Client;
 
 
-class UpdateBrand extends TestCase
+class DeleteBrand extends TestCase
 {
     /**
      * A basic test example.
      *
      * @return void
      */
-    protected $route_name = 'brand.update';
+    protected $route_name = 'brand.destroy';
     protected function setupUserWithPermissions()
     {
         $user = $this->setupAuthUser(null, ['update.client']);
         return $user;
-    }
-    
-    protected function getData()
-    {
-        return [
-            '_token' => csrf_token(),
-            'client_id' => uniqid(),
-            'name' => "Ayo NIG LMT",
-            'image_url' => 'https://www.turcotte.com/quae-quae-error-cum-qui-ducimus',
-        ];
     }
     protected function setupBrand($user_id)
     {
@@ -55,41 +45,25 @@ class UpdateBrand extends TestCase
 
     protected function getResponse($user, $id, $data)
     {
-        return $this->actingAs($user)->patchJson(route($this->route_name, ['id' => $id]), $data);
+        return $this->actingAs($user)->deleteJson(route($this->route_name, ['id' => $id]), $data);
     }
 
-    public function test_invalid_brand_data_is_validated_on_update()
-    {
-       
-        $company_id = uniqid();
-        \Session::start();
-        $data = [
-            '_token' => csrf_token(),
-            'client_id' => "",
-            'name' => "",
-            'image_url' => '',
-        ];
-        $user = $this->setupUserWithPermissions();
-        $brand = $this->setupBrand($user->id);
-        $response = $this->getResponse($user, $brand->id, $data);
-        $response->assertStatus(422);
-    }
 
-    public function test_authentication_user_can_update_company_with_route()
+
+    public function test_authentication_user_can_delete_with_route()
     {
         \Session::start();
         $user = $this->setupUserWithPermissions();
         $brand = $this->setupClient($user);
-        $data = $this->getData();
 
-        $response = $this->getResponse($user, $brand->id, $data);
+        $response = $this->getResponse($user, $brand->id, ['_token' => csrf_token(), 'client_id' => uniqid()]);
         $response->assertStatus(201);
         $response->assertJsonFragment([
-            'image_url' => 'https://www.turcotte.com/quae-quae-error-cum-qui-ducimus'
+            'message' => 'Brand deleted successfully'
          ]);
     }
 
-    public function test_403_returned_if_attempting_to_update_brand_that_user_does_not_have_rights_to()
+    public function test_403_returned_if_attempting_to_delete_brand_that_user_does_not_have_rights_to()
     {
         $user = $this->setupUserWithPermissions();
         $brand = $this->setupClient($user);
@@ -100,7 +74,7 @@ class UpdateBrand extends TestCase
 
         $response->assertStatus(403);
     }
-    public function test_attempting_to_update_non_existent_brand_returns_404()
+    public function test_attempting_to_delete_non_existent_brand_returns_404()
     {
         $user = $this->setupUserWithPermissions();
         $brand_id = uniqid();

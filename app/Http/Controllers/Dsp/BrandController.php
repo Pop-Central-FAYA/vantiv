@@ -14,6 +14,9 @@ use Vanguard\Models\Brand;
 use Vanguard\Http\Requests\Brand\UpdateRequest;
 use Vanguard\Services\Brands\UpdateBrand;
 use Vanguard\User;
+use Illuminate\Http\Request;
+use Vanguard\Libraries\Enum\ClassMessages;
+
 
 
 class BrandController extends Controller
@@ -22,7 +25,7 @@ class BrandController extends Controller
     public function __construct()
     {
         $this->middleware('permission:create.client')->only(['create']);
-        $this->middleware('permission:update.client')->only(['update']);
+        $this->middleware('permission:update.client')->only(['update', 'destroy']);
 
     }
 
@@ -52,5 +55,20 @@ class BrandController extends Controller
 
         $resource = new BrandResource(Brand::find($id));
         return $resource->response()->setStatusCode(201);
+    }
+       /**
+     * Update fields that have changed in ad vendors
+     */
+    public function destroy(Request $request, $id)
+    {
+        $brand = Brand::findOrFail($id);
+        $this->authorize('destroy', $brand);
+        (new UpdateBrand($brand, $request))->delete();
+
+        return response()->json([
+            'status' => 'true', 
+            'message' => ClassMessages::BRAND_DELETE_SUCCESS_MESSAGE
+         ])->setStatusCode(201);
+
     }
 }
