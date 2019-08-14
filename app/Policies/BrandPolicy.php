@@ -4,6 +4,7 @@ namespace Vanguard\Policies;
 
 use Vanguard\User;
 use Vanguard\Models\Brand;
+use Vanguard\Models\Client;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class BrandPolicy
@@ -27,11 +28,13 @@ class BrandPolicy
     protected function belongsToUserCompany($user, $brand)
     {
         $user_companies = $user->companyIdList();
-        $brand_company = User::find($brand->created_by)->companyIdList();
-        return  $brand_company == $user_companies;
+        $brand_client_id =$brand->client_id;
+
+        $brand_company = Client::find($brand_client_id)->company_id;
+        return in_array($brand_company, $user_companies);
     }
 
-    public function get(User $user, Brand $ad_vendor)
+    public function get(User $user, Brand $brand)
     {
         return $this->belongsToUserCompany($user, $brand);
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Clients;
+namespace Tests\Feature\Dsp\Clients;
 
 use Faker\Factory;
 use Tests\TestCase;
@@ -37,13 +37,13 @@ class CreateBrand extends TestCase
         return $this->actingAs($user)->postJson(route($this->route_name), $data);
     }
 
-    public function test_invalid_Brand_data_is_validated_on_update()
+    public function test_invalid_brand_data_is_validated_on_update()
     {
         \Session::start();
         $user = $this->setupUserWithPermissions();
         $response = $this->getResponse($user, ['_token' => csrf_token()]);
         $response->assertStatus(422);
-        $keys = ['name', 'image_url'];
+        $keys = ['name',  'client_id','image_url'];
         $response->assertJsonValidationErrors($keys);
     }
 

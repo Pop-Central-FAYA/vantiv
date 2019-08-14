@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Clients;
+namespace Tests\Feature\Dsp\Clients;
 
 use Faker\Factory;
 use Tests\TestCase;
@@ -27,17 +27,32 @@ class CreateClient extends TestCase
     {
         return [
             '_token' => csrf_token(),
+            'client_id' => uniqid(),
             'name' => "Ayo NIG LMT",
             'image_url' => 'https://www.turcotte.com/quae-quae-error-cum-qui-ducimus',
         ];
     }
     protected function setupBrand($user_id)
     {
-        $company = factory(\Vanguard\Models\Brand::class)->create([
+        $brand = factory(\Vanguard\Models\Brand::class)->create([
             'created_by' => $user_id
         ]);
-        return $company->refresh();
+        return $brand->refresh();
     }
+
+    protected function setupClient($user)
+    {
+        $client = factory(\Vanguard\Models\Client::class)->create([
+            'company_id' => $user->companies->first(),
+            'created_by' => $user->id
+        ]);
+      $brand = factory(\Vanguard\Models\Brand::class)->create([
+            'created_by' => $user->id,
+            'client_id' => $client->id,
+        ]);
+        return $brand->refresh();
+    }
+
     protected function getResponse($user, $id, $data)
     {
         return $this->actingAs($user)->patchJson(route($this->route_name, ['id' => $id]), $data);
@@ -50,10 +65,11 @@ class CreateClient extends TestCase
         \Session::start();
         $data = [
             '_token' => csrf_token(),
+            'client_id' => "",
             'name' => "",
             'image_url' => '',
         ];
-        $user = $this->setupAuthUser();
+        $user = $this->setupUserWithPermissions();
         $brand = $this->setupBrand($user->id);
         $response = $this->getResponse($user, $brand->id, $data);
         $response->assertStatus(422);
@@ -63,7 +79,7 @@ class CreateClient extends TestCase
     {
         \Session::start();
         $user = $this->setupUserWithPermissions();
-        $brand = $this->setupBrand($user->id);
+        $brand = $this->setupClient($user);
         $data = $this->getData();
 
         $response = $this->getResponse($user, $brand->id, $data);
@@ -76,12 +92,11 @@ class CreateClient extends TestCase
     public function test_403_returned_if_attempting_to_update_brand_that_user_does_not_have_rights_to()
     {
         $user = $this->setupUserWithPermissions();
-        $brand = $this->setupBrand($user->id);
+        $brand = $this->setupClient($user);
 
         $another_user = $this->setupAuthUser();
-        $another_brand = $this->setupBrand($another_user->id);
-
-        $response = $this->getResponse($user, $another_brand->id, ['_token' => csrf_token()]);
+        $another_brand = $this->setupClient($another_user);
+        $response = $this->getResponse($user, $another_brand->id, ['_token' => csrf_token(), 'client_id' => uniqid()]);
 
         $response->assertStatus(403);
     }
@@ -89,7 +104,7 @@ class CreateClient extends TestCase
     {
         $user = $this->setupUserWithPermissions();
         $brand_id = uniqid();
-        $response = $this->getResponse($user, $brand_id, ['_token' => csrf_token()]);
+        $response = $this->getResponse($user, $brand_id, ['_token' => csrf_token(), 'client_id' => uniqid()]);
         $response->assertStatus(404);
     }
 }

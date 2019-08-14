@@ -22,6 +22,7 @@ class StoreRequest extends Request
     public function rules()
     {
         return [
+            'client_id' => 'required|string',
             'name' => 'required|string',
             'image_url' => 'required|url',
         ];

@@ -206,11 +206,11 @@
           /*
          * new Brand route
          */
-        Route::post('/brands', 'BrandController@storeBrand')->name('brand.create');
-        Route::patch('/brands/{id}', 'BrandController@update')->name('brand.update');
-        Route::delete('/brands/{id}', 'BrandController@update')->name('brand.delete');
-        Route::get('/brands/get', 'BrandController@delete')->name('brand.delete');
-       
+        Route::group(['namespace' => 'Dsp'], function () {
+            Route::post('/brands', 'BrandController@create')->name('brand.create');
+            Route::patch('/brands/{id}', 'BrandController@update')->name('brand.update');
+            Route::delete('/brands/{id}', 'BrandController@delete')->name('brand.delete');
+        });
 
     });
 

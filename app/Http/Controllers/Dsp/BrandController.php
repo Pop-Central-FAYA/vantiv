@@ -1,6 +1,6 @@
 <?php
 
-namespace Vanguard\Http\Controllers;
+namespace Vanguard\Http\Controllers\Dsp;
 
 use Session;
 use Faker\Factory;
@@ -21,10 +21,12 @@ class BrandController extends Controller
     use CompanyIdTrait;
     public function __construct()
     {
-        $this->middleware('permission:create.client')->only(['storeBrand']);
+        $this->middleware('permission:create.client')->only(['create']);
+        $this->middleware('permission:update.client')->only(['update']);
+
     }
 
-    public function storeBrand(StoreRequest $request)
+    public function create(StoreRequest $request)
     {
         $validated = $request->validated();
         $user = Auth::user();
