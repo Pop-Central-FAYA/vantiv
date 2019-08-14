@@ -1,6 +1,6 @@
 <?php
 
-namespace Vanguard\Http\Requests\Client;
+namespace Vanguard\Http\Requests\Brand;
 
 use Vanguard\Http\Requests\Request;
 

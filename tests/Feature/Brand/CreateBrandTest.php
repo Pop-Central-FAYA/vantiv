@@ -9,7 +9,7 @@ use Vanguard\Services\Client\StoreClientContact;
 use Vanguard\Models\Client;
 
 
-class CreateClient extends TestCase
+class CreateBrand extends TestCase
 {
     /**
      * A basic test example.
@@ -19,7 +19,7 @@ class CreateClient extends TestCase
     protected $route_name = 'brand.create';
     protected function setupUserWithPermissions()
     {
-        $user = $this->setupAuthUser(null, ['update.company']);
+        $user = $this->setupAuthUser(null, ['create.client']);
         return $user;
     }
     
@@ -28,6 +28,7 @@ class CreateClient extends TestCase
         return [
             'name' => "Ayo NIG LMT",
             'image_url' => 'https://www.turcotte.com/quae-quae-error-cum-qui-ducimus',
+            'client_id' => uniqid()
         ];
     }
 
@@ -36,10 +37,10 @@ class CreateClient extends TestCase
         return $this->actingAs($user)->postJson(route($this->route_name), $data);
     }
 
-    public function test_invalid_client_data_is_validated_on_update()
+    public function test_invalid_Brand_data_is_validated_on_update()
     {
         \Session::start();
-        $user = $this->setupAuthUser();
+        $user = $this->setupUserWithPermissions();
         $response = $this->getResponse($user, ['_token' => csrf_token()]);
         $response->assertStatus(422);
         $keys = ['name', 'image_url'];

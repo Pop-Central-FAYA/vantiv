@@ -8,7 +8,7 @@ use DB;
 /**
  * This service is to update a company.
  */
-class UpdateCompany
+class UpdateBrand
 { 
     const COMPANY_UPDATE_FIELDS = ['name', 'image_url'];
     protected $brand;
@@ -52,6 +52,11 @@ class UpdateCompany
         }
         //save will only actually save if the model has changed
         $model->save();
+    }
+
+    public function delete()
+    {
+        return $this->brand->delete();
     }
 }
 

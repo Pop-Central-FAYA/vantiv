@@ -38,20 +38,24 @@ class CreateClient extends TestCase
         ]);
         return $company->refresh();
     }
-    protected function getResponse($user, $data)
+    protected function getResponse($user, $id, $data)
     {
-        return $this->actingAs($user)->patchJson(route($this->route_name), $data);
+        return $this->actingAs($user)->patchJson(route($this->route_name, ['id' => $id]), $data);
     }
 
     public function test_invalid_brand_data_is_validated_on_update()
     {
+       
         $company_id = uniqid();
         \Session::start();
         $data = [
             '_token' => csrf_token(),
+            'name' => "",
+            'image_url' => '',
         ];
         $user = $this->setupAuthUser();
-        $response = $this->getResponse($user, $company_id, $data);
+        $brand = $this->setupBrand($user->id);
+        $response = $this->getResponse($user, $brand->id, $data);
         $response->assertStatus(422);
     }
 
@@ -61,7 +65,6 @@ class CreateClient extends TestCase
         $user = $this->setupUserWithPermissions();
         $brand = $this->setupBrand($user->id);
         $data = $this->getData();
-       
 
         $response = $this->getResponse($user, $brand->id, $data);
         $response->assertStatus(201);

@@ -6,7 +6,7 @@ use Vanguard\User;
 use Vanguard\Models\Brand;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class AdVendorPolicy
+class BrandPolicy
 {
     use HandlesAuthorization;
 
@@ -26,9 +26,9 @@ class AdVendorPolicy
      */
     protected function belongsToUserCompany($user, $brand)
     {
-        $user_company = $user->companies->first()->id;
-        $brand_company = User::find($brand->created_by)->companies->first()->id;
-        return $user_companies === $brand_company;
+        $user_companies = $user->companyIdList();
+        $brand_company = User::find($brand->created_by)->companyIdList();
+        return  $brand_company == $user_companies;
     }
 
     public function get(User $user, Brand $ad_vendor)
@@ -38,6 +38,6 @@ class AdVendorPolicy
 
     public function update(User $user, Brand $brand)
     {
-        return $this->belongsToUserCompany($user, $brand);
+       return $this->belongsToUserCompany($user, $brand);    
     }
 }

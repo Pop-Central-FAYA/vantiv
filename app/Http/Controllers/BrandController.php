@@ -9,9 +9,11 @@ use Vanguard\Services\Brands\StoreBrand;
 use Illuminate\Support\Facades\Auth;
 use Vanguard\Http\Controllers\Traits\CompanyIdTrait;
 use Vanguard\Http\Requests\Brand\StoreRequest;
-use Vanguard\Http\Resources\ClientResource;
+use Vanguard\Http\Resources\BrandResource;
 use Vanguard\Models\Brand;
 use Vanguard\Http\Requests\Brand\UpdateRequest;
+use Vanguard\Services\Brands\UpdateBrand;
+use Vanguard\User;
 
 
 class BrandController extends Controller
@@ -27,7 +29,7 @@ class BrandController extends Controller
         $validated = $request->validated();
         $user = Auth::user();
        
-        $new_brand = new StoreBrand($request, $reques->client_id, $user->id);
+        $new_brand = new StoreBrand($request, $request->client_id, $user->id);
         $brand = $new_brand->run();   
 
         $resource = new BrandResource(Brand::find($brand->id));

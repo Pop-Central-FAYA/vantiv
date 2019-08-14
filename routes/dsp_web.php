@@ -208,8 +208,10 @@
          */
         Route::post('/brands', 'BrandController@storeBrand')->name('brand.create');
         Route::patch('/brands/{id}', 'BrandController@update')->name('brand.update');
+        Route::delete('/brands/{id}', 'BrandController@update')->name('brand.delete');
+        Route::get('/brands/get', 'BrandController@delete')->name('brand.delete');
        
 
     });
 
-   
+ 
