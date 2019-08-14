@@ -1,10 +1,10 @@
 <?php
 
-namespace Vanguard\Http\Requests\AdVendor;
+namespace Vanguard\Http\Requests\Client;
 
-use Illuminate\Foundation\Http\FormRequest;
+use Vanguard\Http\Requests\Request;
 
-class UpdateRequest extends StoreRequest
+class UpdateRequest extends Request
 {
     /**
      * Get the validation rules that apply to the request.

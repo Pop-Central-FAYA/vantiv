@@ -182,9 +182,10 @@
          /*
          * new Client route
          */
-        Route::post('/clients', 'ClientController@storeClient')->name('client.create');
+        Route::group(['namespace' => 'Dsp'], function () {
+        Route::post('/clients', 'ClientController@create')->name('client.create');
         Route::patch('/clients/{id}', 'ClientController@update')->name('client.update');
-       
+         });
 
          /**
          * User Management

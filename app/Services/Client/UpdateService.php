@@ -1,17 +1,18 @@
 <?php
 
-namespace Vanguard\Services\AdVendor;
+namespace Vanguard\Services\Client;
 
 use Vanguard\Models\Client;
 use Vanguard\Models\ClientContact;
 use Illuminate\Support\Arr;
 use DB;
+use Vanguard\Services\BaseServiceInterface;
 
 /**
  * This service is to update a Vendor.
  * Update of a vendor might also include updating the vendor contact
  */
-class UpdateClient implements BaseServiceInterface
+class UpdateService implements BaseServiceInterface
 {
     const CLIENT_UPDATE_FIELDS = ['name', 'street_address', 'city', 'state', 'country'];
     const CLIENT_CONTACT_UPDATE_FIELDS = ['first_name', 'last_name', 'email', 'phone_number'];
@@ -45,22 +46,22 @@ class UpdateClient implements BaseServiceInterface
             $this->updateModel($this->client, static::CLIENT_UPDATE_FIELDS, $this->data);
 
             $contact = Arr::get($this->data, 'contacts.0', []);
-            $this->updateVendorContact($contact, $this->client);
+            $this->updateClientContact($contact, $this->client);
 
-            return $this->vendor;
+            return $this->client;
         });
     }
 
     /**
      * update the vendor contact information
      * @param  array $data The validated input data
-     * @param  \Vanguard\Models\AdVendor $vendor  The model holding the vendor information
-     * @return \Vanguard\Models\AdVendorContact   The updated vendor contact
+     * @param  \Vanguard\Models\Client $client  The model holding the client information
+     * @return \Vanguard\Models\ClientContact   The updated client contact
      */
-    protected function updateVendorContact(array $contact, Client $client)
+    protected function updateClientContact(array $contact, Client $client)
     {
         $client_contact = $client->contacts->first();
-        $this->updateModel($vendor_contact, static::CLIENT_CONTACT_UPDATE_FIELDS, $contact);
+        $this->updateModel($client_contact, static::CLIENT_CONTACT_UPDATE_FIELDS, $contact);
         return $client_contact;
     }
 

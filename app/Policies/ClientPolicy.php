@@ -28,6 +28,8 @@ class ClientPolicy
     {
         $user_companies = $user->companyIdList();
         $client_company = $client->company_id;
+
+        
         return in_array($client_company, $user_companies);
     }
 
@@ -38,6 +40,6 @@ class ClientPolicy
 
     public function update(User $user, Client $client)
     {
-        return $this->belongsToUserCompany($user, $client);
+      return $this->belongsToUserCompany($user, $client);
     }
 }

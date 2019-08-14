@@ -1,9 +1,8 @@
 <?php
 
-namespace Vanguard\Http\Controllers;
+namespace Vanguard\Http\Controllers\Dsp;
 
 use Session;
-use Faker\Factory;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Services\Client\StoreClient;
 use Illuminate\Support\Facades\Auth;
@@ -13,12 +12,20 @@ use Vanguard\Http\Resources\ClientResource;
 use Vanguard\Models\Client;
 use Vanguard\Models\Brand;
 use Vanguard\Http\Requests\Client\UpdateRequest;
+use Vanguard\Services\Client\UpdateService;
 
 
 class ClientController extends Controller
 {
     use CompanyIdTrait;
-    public function storeClient(StoreRequest $request)
+
+    public function __construct()
+    {
+        $this->middleware('permission:create.client')->only(['create']);
+        $this->middleware('permission:update.client')->only(['update']);
+    }
+
+    public function create(StoreRequest $request)
     {
         $validated = $request->validated();
         $user = Auth::user();
@@ -37,9 +44,11 @@ class ClientController extends Controller
         $this->authorize('update', $client);
 
         $validated = $request->validated();
-        (new UpdateService($vendor, $validated))->run();
-        
-        return new ClientResource(Client::with('contact', 'brand')->find($id));
+        (new UpdateService($client, $validated))->run();
+
+        $resource = new ClientResource(Client::with('contacts', 'brands')->find($id));
+        return $resource->response()->setStatusCode(201);
+
     }
     
 }

@@ -1,6 +1,8 @@
 <?php
 
 namespace Tests\Feature\Client;
+use Tests\TestCase;
+use Faker\Factory;
 
 use Illuminate\Support\Arr;
 
@@ -11,7 +13,7 @@ use Illuminate\Support\Arr;
  * @todo need to add support to make sure that updating the name of a field does not violate the unique reqs
  */
 
-class UpdateAdVendorTest extends AdVendorTestCase
+class UpdateClient extends TestCase 
 {
     protected $route_name = 'client.update';
     protected function getData()
@@ -33,10 +35,20 @@ class UpdateAdVendorTest extends AdVendorTestCase
             'city' => $faker->city,
             'state' => $faker->state,
             'nationality' => $faker->country,
-            'contact'=> $contact,
+            'contacts'=> $contact,
         ];
     }
-
+    protected function setupClient($user)
+    {
+        $client = factory(\Vanguard\Models\Client::class)->create([
+            'company_id' => $user->companies->first(),
+            'created_by' => $user->id
+        ]);
+       factory(\Vanguard\Models\ClientContact::class)->create([
+            'client_id' => $client->id
+        ]);
+        return $client->refresh();
+    }
     protected function setupUserWithPermissions()
     {
         $user = $this->setupAuthUser(null, ['update.client']);
@@ -47,19 +59,11 @@ class UpdateAdVendorTest extends AdVendorTestCase
     {
         return $this->actingAs($user)->patchJson(route($this->route_name, ['id' => $id]), $data);
     }
-
-    public function test_unauthenticated_user_cannot_access_client_update_route()
-    {
-        $client_id = uniqid();
-        $response = $this->patchJson(route($this->route_name, ['id' => $client_id]), [ '_token' => csrf_token()]);
-        $response->assertStatus(401);
-    }
-
     public function test_attempting_to_update_non_existent_client_returns_404()
     {
         $user = $this->setupUserWithPermissions();
-        $vendor_id = uniqid();
-        $response = $this->getResponse($user, $vendor_id, [ '_token' => csrf_token()]);
+        $client_id = uniqid();
+        $response = $this->getResponse($user, $client_id, [ '_token' => csrf_token()]);
         $response->assertStatus(404);
     }
 
@@ -81,31 +85,18 @@ class UpdateAdVendorTest extends AdVendorTestCase
             'city' => '',
             'state' => '',
             'nationality' => '',
-            'contact'=> $contact,
+            'contacts'=> $contact,
         ];
 
         $user = $this->setupUserWithPermissions();
-        $vendor = $this->setupAdVendor($user);
+        $client = $this->setupClient($user);
         
-        $response = $this->getResponse($user, $vendor->id, $vendor_data);
+        $response = $this->getResponse($user, $client->id, $client_data);
 
         $response->assertStatus(422);
     }
-//here
 
-protected function setupClient($user)
-{
-    $client = factory(\Vanguard\Models\Client::class)->create([
-        'company_id' => $user->companies->first(),
-        'created_by' => $user->id
-    ]);
-    factory(\Vanguard\Models\ClientContact::class)->create([
-        'client_id' => $ad_vendor->id,
-        'created_by' => $user->id
-    ]);
-    return $client->refresh();
-}
-    public function test_403_returned_if_attempting_to_update_client_that_user_does_not_have_rights_to()
+    public function test_403_returned_if_attempting_to_update_client_that_user_does_not_have_rights_to_update()
     {
         $user = $this->setupUserWithPermissions();
         $client = $this->setupClient($user);
@@ -126,4 +117,19 @@ protected function setupClient($user)
         $response = $this->getResponse($user, $client->id, ['_token' => csrf_token()]);
         $response->assertStatus(403);
     }
+
+    public function test_authentication_user_can_update_client_with_route()
+    {
+        \Session::start();
+        $user = $this->setupUserWithPermissions();
+        $client = $this->setupClient($user);
+        $data = $this->getData();
+
+        $response = $this->getResponse($user, $client->id, $data);
+        $response->assertStatus(201);
+        $response->assertJsonFragment([
+            'name' => "Oluwa captain",
+         ]);
+    }
+
 }
