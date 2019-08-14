@@ -12,45 +12,52 @@
                             <v-divider></v-divider>
                             <v-layout wrap>
                                 <v-flex xs12 sm6 md6>
-                                    <v-text-field required :clearable="true" :full-width="true" :label="'Vendor Name'" 
-                                                :placeholder="'Vendor Name'" :hint="'Enter the name of your vendor'" 
-                                                :solo="true" :single-line="true" 
-                                                v-validate="'required|max:255'"
-                                                :error-messages="errors.collect('name')"
-                                                v-model="vendor.name"
-                                                data-vv-name="name">
+                                    <v-text-field v-if="editMode" required :clearable="true" :full-width="true" 
+                                                :label="'Vendor Name'" :placeholder="'Vendor Name'" 
+                                                :hint="'Enter the name of your vendor'" :solo="true" :single-line="true" 
+                                                v-validate="'required|max:255'" :error-messages="errors.collect('name')"
+                                                v-model="vendor.name" data-vv-name="name">
+                                    </v-text-field>
+                                    <v-text-field v-else :full-width="true" :solo="true" :single-line="true" 
+                                                v-model="vendor.name" :readonly="true" disabled="disabled">
                                     </v-text-field>
                                 </v-flex>
                                 <v-flex xs12 sm6 md6>
-                                    <v-text-field required :clearable="true" :full-width="true" :label="'Street Address'" 
+                                    <v-text-field v-if="editMode" required :clearable="true" :full-width="true" :label="'Street Address'" 
                                                 :placeholder="'Street Address'" :hint="'Enter the street address of your vendor'" 
                                                 :solo="true" :single-line="true"
                                                 v-validate="'required|max:255'"
                                                 :error-messages="errors.collect('street_address')"
-                                                v-model="vendor.street_address"
-                                                data-vv-name="street_address">
+                                                v-model="vendor.street_address" data-vv-name="street_address">
+                                    </v-text-field>
+                                    <v-text-field v-else :full-width="true" :solo="true" :single-line="true" 
+                                                v-model="vendor.street_address" :readonly="true" disabled="disabled">
                                     </v-text-field>
                                 </v-flex>
                             </v-layout>
                             <v-layout wrap>
                                 <v-flex xs12 sm6 md6>
-                                    <v-text-field required :clearable="true" :full-width="true" :label="'City'" 
+                                    <v-text-field v-if="editMode" required :clearable="true" :full-width="true" :label="'City'" 
                                                 :placeholder="'City'" :hint="'Enter the city of your vendor'" 
                                                 :solo="true" :single-line="true"
                                                 v-validate="'required|max:255'"
                                                 :error-messages="errors.collect('city')"
-                                                v-model="vendor.city"
-                                                data-vv-name="city">
+                                                v-model="vendor.city" data-vv-name="city">
+                                    </v-text-field>
+                                    <v-text-field v-else :full-width="true" :solo="true" :single-line="true" 
+                                                v-model="vendor.city" :readonly="true" disabled="disabled">
                                     </v-text-field>
                                 </v-flex>
                                 <v-flex xs12 sm6 md6>
-                                    <v-text-field required :clearable="true" :full-width="true" :label="'State'" 
+                                    <v-text-field v-if="editMode" required :clearable="true" :full-width="true" :label="'State'" 
                                                 :placeholder="'State'" :hint="'Enter the state of your vendor'" 
                                                 :solo="true" :single-line="true"
                                                 v-validate="'required|max:255'"
                                                 :error-messages="errors.collect('state')"
-                                                v-model="vendor.state"
-                                                data-vv-name="state">
+                                                v-model="vendor.state" data-vv-name="state">
+                                    </v-text-field>
+                                    <v-text-field v-else :full-width="true" :solo="true" :single-line="true" 
+                                                v-model="vendor.state" :readonly="true" disabled="disabled">
                                     </v-text-field>
                                 </v-flex>
                             </v-layout>
@@ -58,45 +65,53 @@
                             <v-divider></v-divider>
                             <v-layout wrap>
                                 <v-flex xs12 sm6 md6>
-                                    <v-text-field required :clearable="true" :full-width="true" :label="'First Name'" 
+                                    <v-text-field v-if="editMode" required :clearable="true" :full-width="true" :label="'First Name'" 
                                                 :placeholder="'First Name'" :hint="'Enter the first name of your contact'" 
                                                 :solo="true" :single-line="true"
                                                 v-validate="'required|max:255'"
                                                 :error-messages="errors.collect('first_name')"
-                                                v-model="vendor.contacts[0].first_name"
-                                                data-vv-name="first_name">
+                                                v-model="vendor.contacts[0].first_name" data-vv-name="first_name">
+                                    </v-text-field>
+                                    <v-text-field v-else :full-width="true" :solo="true" :single-line="true" 
+                                                v-model="vendor.contacts[0].first_name" :readonly="true" disabled="disabled">
                                     </v-text-field>
                                 </v-flex>
                                 <v-flex xs12 sm6 md6>
-                                    <v-text-field required :clearable="true" :full-width="true" :label="'Last Name'" 
+                                    <v-text-field v-if="editMode" required :clearable="true" :full-width="true" :label="'Last Name'" 
                                                 :placeholder="'Last Name'" :hint="'Enter the last name of your contact'" 
                                                 :solo="true" :single-line="true"
                                                 v-validate="'required|max:255'"
                                                 :error-messages="errors.collect('last_name')"
-                                                v-model="vendor.contacts[0].last_name"
-                                                data-vv-name="last_name">
+                                                v-model="vendor.contacts[0].last_name" data-vv-name="last_name">
+                                    </v-text-field>
+                                    <v-text-field v-else :full-width="true" :solo="true" :single-line="true" 
+                                                v-model="vendor.contacts[0].last_name" :readonly="true" disabled="disabled">
                                     </v-text-field>
                                 </v-flex>
                             </v-layout>
                             <v-layout wrap>
                                 <v-flex xs12 sm6 md6>
-                                    <v-text-field required :clearable="true" :full-width="true" :label="'Email'" 
+                                    <v-text-field v-if="editMode" required :clearable="true" :full-width="true" :label="'Email'" 
                                                 :placeholder="'Email'" :hint="'Enter the email of your contact'" 
                                                 :solo="true" :single-line="true"
                                                 v-validate="'required|email'"
                                                 :error-messages="errors.collect('email')"
-                                                v-model="vendor.contacts[0].email"
-                                                data-vv-name="email">
+                                                v-model="vendor.contacts[0].email" data-vv-name="email">
+                                    </v-text-field>
+                                    <v-text-field v-else :full-width="true" :solo="true" :single-line="true" 
+                                                v-model="vendor.contacts[0].email" :readonly="true" disabled="disabled">
                                     </v-text-field>
                                 </v-flex>
                                 <v-flex xs12 sm6 md6>
-                                    <v-text-field required :clearable="true" :full-width="true" :label="'Phone Number'" 
+                                    <v-text-field v-if="editMode" required :clearable="true" :full-width="true" :label="'Phone Number'" 
                                                 :placeholder="'Phone Number'" :hint="'Enter the phone number of your contact'" 
                                                 :solo="true" :single-line="true"
                                                 v-validate="'required|numeric'"
                                                 :error-messages="errors.collect('phone_number')"
-                                                v-model="vendor.contacts[0].phone_number"
-                                                data-vv-name="phone_number">
+                                                v-model="vendor.contacts[0].phone_number" data-vv-name="phone_number">
+                                    </v-text-field>
+                                    <v-text-field v-else :full-width="true" :solo="true" :single-line="true" 
+                                                v-model="vendor.contacts[0].phone_number" :readonly="true" disabled="disabled">
                                     </v-text-field>
                                 </v-flex>
                             </v-layout>
@@ -104,7 +119,8 @@
                         <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn color="red" dark @click="closeDialog()">Close</v-btn>
-                    <v-btn color="" class="default-vue-btn" dark @click="createVendor()">Save</v-btn>
+                    <v-btn v-if="editMode" color="" class="default-vue-btn" dark @click="editVendor()">Save</v-btn>
+                    <v-btn v-else color="" class="default-vue-btn" dark @click="editMode = true">Edit</v-btn>
                     </v-card-actions>
                     </v-container>
                 </v-card-text>
@@ -145,6 +161,7 @@
             return {
                 dialog: false,
                 vendor: this.setupModel(),
+                editMode: false,
                 dictionary: {
                     custom: {
                         name: {
@@ -183,33 +200,17 @@
                 }
             };
         },
+        created() {
+            var self = this;
+            Event.$on('view-vendor', function(vendor) {
+                self.openDialog(vendor);
+            });
+        },
         mounted() {
             console.log('Create vendor Component mounted.');
             this.$validator.localize('en', this.dictionary);
         },
         methods: {
-            createVendor: function(event) {
-                self = this;
-                this.$validator.validateAll().then((result) => {
-                    if (result) {
-                        self.makeCreateRequest();
-                    }
-                });
-            },
-            makeCreateRequest: function() {
-                axios({
-                    method: 'post',
-                    url: '/ad-vendors',
-                    data: this.vendor
-                }).then((res) => {
-                    Event.$emit('vendor-created', res.data.data);
-                    this.sweet_alert('Vendor was successfully created', 'success');
-                    this.vendor = this.setupModel();
-                    this.closeDialog();
-                }).catch((error) => {
-                    this.sweet_alert('An unknown error has occurred, vendor cannot be created. Please try again', 'error');
-                });
-            },
             setupModel: function() {
                 return {
                     name: '',
@@ -227,8 +228,37 @@
                     ]
                 }
             },
+            openDialog: function(item) {
+                if (item['contacts'].length == 0) {
+                    item['contacts'] = [{}];
+                }
+                this.vendor = item;
+                this.dialog = true;
+            },
             closeDialog: function() {
+                this.vendor = this.setupModel();
                 this.dialog = false;
+            },
+            editVendor: function(event) {
+                self = this;
+                this.$validator.validateAll().then((result) => {
+                    if (result) {
+                        self.makeUpdateRequest();
+                    }
+                });
+            },
+            makeUpdateRequest: function() {
+                axios({
+                    method: 'patch',
+                    url: this.vendor.links.update,
+                    data: this.vendor
+                }).then((res) => {
+                    this.sweet_alert('Vendor was successfully created', 'success');
+                    Event.$emit('vendor-updated', res.data.data);
+                    this.closeDialog();
+                }).catch((error) => {
+                    this.sweet_alert('An unknown error has occurred, vendor cannot be updated. Please try again', 'error');
+                });
             }
         }
     }

@@ -18,11 +18,13 @@ class UpdateService
 
     protected $vendor;
     protected $data;
+    protected $user_id;
 
-    public function __construct($vendor, $data)
+    public function __construct($data, $vendor, $user_id)
     {
         $this->vendor = $vendor;
         $this->data = $data;
+        $this->user_id = $user_id;
     }
 
     /**
@@ -60,8 +62,13 @@ class UpdateService
     protected function updateVendorContact(array $contact, AdVendorModel $vendor)
     {
         $vendor_contact = $vendor->contacts->first();
-        $this->updateModel($vendor_contact, static::VENDOR_CONTACT_UPDATE_FIELDS, $contact);
-        return $vendor_contact;
+        if ($vendor_contact !== null) {
+            $this->updateModel($vendor_contact, static::VENDOR_CONTACT_UPDATE_FIELDS, $contact);
+            return $vendor_contact;
+        }
+        //vendor is non existent, so let us create a new one
+        $create_service = new CreateContactService($contact, $vendor->id, $this->user_id);
+        return $create_service->run();        
     }
 
     /**
