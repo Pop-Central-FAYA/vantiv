@@ -13,7 +13,7 @@ use Illuminate\Support\Arr;
  * @todo need to add support to make sure that updating the name of a field does not violate the unique reqs
  */
 
-class UpdateClient extends TestCase 
+class DeleteClient extends TestCase 
 {
     protected $route_name = 'client.destroy';
    
