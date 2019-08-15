@@ -75,7 +75,7 @@ class UpdateBrand extends TestCase
         $response->assertStatus(422);
     }
 
-    public function test_authentication_user_can_update_company_with_route()
+    public function test_authentication_user_can_update_brand_with_route()
     {
         \Session::start();
         $user = $this->setupUserWithPermissions();

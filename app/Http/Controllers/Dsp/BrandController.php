@@ -57,7 +57,7 @@ class BrandController extends Controller
         return $resource->response()->setStatusCode(201);
     }
        /**
-     * Update fields that have changed in ad vendors
+     * delete fields from brand
      */
     public function destroy(Request $request, $id)
     {
