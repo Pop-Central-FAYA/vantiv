@@ -22,7 +22,6 @@ class UpdateRequest extends Request
     public function rules()
     {
         return [
-            'client_id' => 'required|string',
             'name' => 'sometimes|required|string',
             'image_url' => 'sometimes|required|url',
         ];

@@ -22,7 +22,7 @@ class BrandPolicy
     }
 
      /**
-     * Determine if the given advendor can be viewed by the current user
+     * Determine if the given brand can be viewed by the current user
      * @return bool
      */
     protected function belongsToUserCompany($user, $brand)
@@ -40,10 +40,6 @@ class BrandPolicy
     }
 
     public function update(User $user, Brand $brand)
-    {
-       return $this->belongsToUserCompany($user, $brand);    
-    }
-    public function destroy(User $user, Brand $brand)
     {
        return $this->belongsToUserCompany($user, $brand);    
     }

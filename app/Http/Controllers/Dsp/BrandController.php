@@ -2,8 +2,6 @@
 
 namespace Vanguard\Http\Controllers\Dsp;
 
-use Session;
-use Faker\Factory;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Services\Brands\StoreBrand;
 use Illuminate\Support\Facades\Auth;
@@ -14,8 +12,6 @@ use Vanguard\Models\Brand;
 use Vanguard\Http\Requests\Brand\UpdateRequest;
 use Vanguard\Services\Brands\UpdateBrand;
 use Vanguard\User;
-use Illuminate\Http\Request;
-use Vanguard\Libraries\Enum\ClassMessages;
 
 
 
@@ -42,7 +38,7 @@ class BrandController extends Controller
     }
     
       /**
-     * Update fields that have changed in ad vendors
+     * Update fields that have changed in Brand
      */
     public function update(UpdateRequest $request, $id)
     {
@@ -52,23 +48,8 @@ class BrandController extends Controller
         $validated = $request->validated();
         (new UpdateBrand($brand, $validated))->run();
 
-
         $resource = new BrandResource(Brand::find($id));
-        return $resource->response()->setStatusCode(201);
+        return $resource->response()->setStatusCode(200);
     }
-       /**
-     * delete fields from brand
-     */
-    public function destroy(Request $request, $id)
-    {
-        $brand = Brand::findOrFail($id);
-        $this->authorize('destroy', $brand);
-        (new UpdateBrand($brand, $request))->delete();
-
-        return response()->json([
-            'status' => 'true', 
-            'message' => ClassMessages::BRAND_DELETE_SUCCESS_MESSAGE
-         ])->setStatusCode(201);
-
-    }
+   
 }

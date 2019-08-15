@@ -1,11 +1,8 @@
 <?php
 
-namespace Tests\Feature\Dsp\Clients;
+namespace Tests\Feature\Dsp\Brand;
 
-use Faker\Factory;
 use Tests\TestCase;
-use Vanguard\Services\Client\StoreClient;
-use Vanguard\Services\Client\StoreClientContact;
 use Vanguard\Models\Client;
 
 
@@ -25,13 +22,22 @@ class CreateBrand extends TestCase
     
     protected function getData()
     {
+      $user = $this->setupUserWithPermissions();
+       $client= $this->setupClient($user);
         return [
-            'name' => "Ayo NIG LMT",
+            'name' => 'Ayo NIG LMT',
             'image_url' => 'https://www.turcotte.com/quae-quae-error-cum-qui-ducimus',
-            'client_id' => uniqid()
-        ];
+            'client_id' => $client->id  ];
     }
 
+    protected function setupClient($user)
+    {
+        $client = factory(\Vanguard\Models\Client::class)->create([
+            'company_id' => $user->companies->first(),
+            'created_by' => $user->id
+        ]);
+        return $client->refresh();
+    }
     protected function getResponse($user, $data)
     {
         return $this->actingAs($user)->postJson(route($this->route_name), $data);

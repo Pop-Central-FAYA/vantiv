@@ -3,12 +3,13 @@
 namespace Vanguard\Services\Brands;
 use Illuminate\Support\Arr;
 use DB;
+use Vanguard\Services\BaseServiceInterface;
 
 
 /**
  * This service is to update a company.
  */
-class UpdateBrand
+class UpdateBrand implements BaseServiceInterface
 { 
     const COMPANY_UPDATE_FIELDS = ['name', 'image_url'];
     protected $brand;
@@ -52,11 +53,6 @@ class UpdateBrand
         }
         //save will only actually save if the model has changed
         $model->save();
-    }
-
-    public function delete()
-    {
-        return $this->brand->delete();
     }
 }
 

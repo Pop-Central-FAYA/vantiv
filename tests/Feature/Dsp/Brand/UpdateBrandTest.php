@@ -1,12 +1,10 @@
 <?php
 
-namespace Tests\Feature\Dsp\Clients;
+namespace Tests\Feature\Dsp\Brand;
 
 use Faker\Factory;
 use Tests\TestCase;
-use Vanguard\Services\Client\StoreClient;
-use Vanguard\Services\Client\StoreClientContact;
-use Vanguard\Models\Client;
+use Illuminate\Support\Arr;
 
 
 class UpdateBrand extends TestCase
@@ -27,7 +25,6 @@ class UpdateBrand extends TestCase
     {
         return [
             '_token' => csrf_token(),
-            'client_id' => uniqid(),
             'name' => "Ayo NIG LMT",
             'image_url' => 'https://www.turcotte.com/quae-quae-error-cum-qui-ducimus',
         ];
@@ -57,16 +54,15 @@ class UpdateBrand extends TestCase
     {
         return $this->actingAs($user)->patchJson(route($this->route_name, ['id' => $id]), $data);
     }
+   
 
     public function test_invalid_brand_data_is_validated_on_update()
     {
-       
-        $company_id = uniqid();
         \Session::start();
         $data = [
             '_token' => csrf_token(),
-            'client_id' => "",
-            'name' => "",
+            'client_id' => '',
+            'name' => '',
             'image_url' => '',
         ];
         $user = $this->setupUserWithPermissions();
@@ -74,19 +70,34 @@ class UpdateBrand extends TestCase
         $response = $this->getResponse($user, $brand->id, $data);
         $response->assertStatus(422);
     }
-
-    public function test_authentication_user_can_update_brand_with_route()
+    /**
+     * @dataProvider validUpdateDataProvider
+     */
+      public function test_band_fields_are_updated_if_value_sent_in_request($brand_data)
     {
+       
         \Session::start();
+        $brand_data['_token'] = csrf_token();
         $user = $this->setupUserWithPermissions();
         $brand = $this->setupClient($user);
-        $data = $this->getData();
 
-        $response = $this->getResponse($user, $brand->id, $data);
-        $response->assertStatus(201);
-        $response->assertJsonFragment([
-            'image_url' => 'https://www.turcotte.com/quae-quae-error-cum-qui-ducimus'
-         ]);
+        $brand_array = Arr::dot($brand->get()->first()->toArray());
+        $response = $this->getResponse($user, $brand->id, $brand_data);
+
+        $response->assertStatus(200);
+        $actual_data = Arr::dot($brand->get()->first()->toArray());
+        $expected_data = array_merge($brand_array, Arr::dot($brand_data));
+        Arr::forget($expected_data, ['updated_at', '_token']);
+        $this->assertArraySubset($expected_data, $actual_data);
+
+    }
+    public static function validUpdateDataProvider()
+    {
+        return array(
+            array(array('name' => 'My Brand',  'image_url' => 'https://www.turcotte.com/quae-quae-error-cum-qui-ducimus')),
+            array(array('name' => 'My Brand')),
+            array(array('image_url' => 'https://www.turcotte.com/quae-quae-error-cum-qui-ducimus'))
+        );
     }
 
     public function test_403_returned_if_attempting_to_update_brand_that_user_does_not_have_rights_to()
@@ -106,5 +117,13 @@ class UpdateBrand extends TestCase
         $brand_id = uniqid();
         $response = $this->getResponse($user, $brand_id, ['_token' => csrf_token(), 'client_id' => uniqid()]);
         $response->assertStatus(404);
+    }
+    public function test_403_returned_if_attempting_to_update_brand_without_update_permmision()
+    {
+        $user =  $this->setupAuthUser();
+        $brand = $this->setupClient($user);
+        $response = $this->getResponse($user, $brand->id, ['_token' => csrf_token(), 'client_id' => uniqid()]);
+
+        $response->assertStatus(403);
     }
 }
