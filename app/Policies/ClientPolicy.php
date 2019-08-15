@@ -42,4 +42,9 @@ class ClientPolicy
     {
       return $this->belongsToUserCompany($user, $client);
     }
+
+    public function destroy(User $user, Client $client)
+    {
+      return $this->belongsToUserCompany($user, $client);
+    }
 }

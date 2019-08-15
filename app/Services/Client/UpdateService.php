@@ -79,4 +79,18 @@ class UpdateService implements BaseServiceInterface
         //save will only actually save if the model has changed
         $model->save();
     }
+
+    public function delete()
+    {
+        return DB::transaction(function () {
+            $client_contact = $this->client->contacts->first();
+            $this->deleteModel($client_contact);
+            return $this->deleteModel($this->client);
+       });
+    }
+    
+    private function deleteModel($model)
+    {
+        return $model->delete();
+    }
 }

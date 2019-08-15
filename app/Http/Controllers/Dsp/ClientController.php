@@ -13,6 +13,9 @@ use Vanguard\Models\Client;
 use Vanguard\Models\Brand;
 use Vanguard\Http\Requests\Client\UpdateRequest;
 use Vanguard\Services\Client\UpdateService;
+use Illuminate\Http\Request;
+use Vanguard\Libraries\Enum\ClassMessages;
+
 
 
 class ClientController extends Controller
@@ -22,7 +25,7 @@ class ClientController extends Controller
     public function __construct()
     {
         $this->middleware('permission:create.client')->only(['create']);
-        $this->middleware('permission:update.client')->only(['update']);
+        $this->middleware('permission:update.client')->only(['update', 'destroy']);
     }
 
     public function create(StoreRequest $request)
@@ -36,7 +39,7 @@ class ClientController extends Controller
     }
 
      /**
-     * Update fields that have changed in ad vendors
+     * Update fields that have changed in client
      */
     public function update(UpdateRequest $request, $id)
     {
@@ -50,5 +53,22 @@ class ClientController extends Controller
         return $resource->response()->setStatusCode(201);
 
     }
+
+      /**
+     * delete fields in client
+     */
+    public function destroy(Request $request, $id)
+    {
+        $brand = Client::findOrFail($id);
+        $this->authorize('destroy', $brand);
+        (new UpdateService($brand, $request))->delete();
+
+        return response()->json([
+            'status' => 'true', 
+            'message' => ClassMessages::CLIENT_DELETE_SUCCESS_MESSAGE
+         ])->setStatusCode(201);
+
+    }
+
     
 }
