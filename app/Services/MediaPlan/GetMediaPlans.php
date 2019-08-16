@@ -11,10 +11,10 @@ class GetMediaPlans
 
     public function __construct($status='', $company_id)
     {
-        if ($status == MediaPlanStatus::PENDING) {
+        if (ucfirst($status) == MediaPlanStatus::PENDING) {
             $this->plan_status = [MediaPlanStatus::PENDING,MediaPlanStatus::SUGGESTED,
                                 MediaPlanStatus::SELECTED,MediaPlanStatus::IN_REVIEW];
-        } elseif ($status == MediaPlanStatus::APPROVED || $status == MediaPlanStatus::DECLINED) {
+        } elseif (ucfirst($status) == MediaPlanStatus::APPROVED || ucfirst($status) == MediaPlanStatus::DECLINED) {
             $this->plan_status = [$status];
         } 
         else {
