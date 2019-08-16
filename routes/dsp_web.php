@@ -183,10 +183,8 @@
          * new Client route
          */
         Route::group(['namespace' => 'Dsp'], function () {
-        Route::post('/clients', 'ClientController@create')->name('client.create');
-        Route::patch('/clients/{id}', 'ClientController@update')->name('client.update');
-        Route::delete('/clients/{id}', 'ClientController@destroy')->name('client.destroy');
-
+            Route::post('/clients', 'ClientController@create')->name('client.create');
+            Route::patch('/clients/{id}', 'ClientController@update')->name('client.update');
          });
 
          /**

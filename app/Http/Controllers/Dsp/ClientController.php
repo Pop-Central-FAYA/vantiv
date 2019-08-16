@@ -32,7 +32,7 @@ class ClientController extends Controller
     {
         $validated = $request->validated();
         $user = Auth::user();
-        $new_client = new StoreClient($request, $this->companyId(), $user->id);
+        $new_client = new StoreClient($validated, $this->companyId(), $user->id);
         $client = $new_client->run();   
         $resource = new ClientResource(Client::with('contact', 'brand')->find($client->id));
         return $resource->response()->setStatusCode(201);
@@ -45,30 +45,12 @@ class ClientController extends Controller
     {
         $client = Client::findOrFail($id);
         $this->authorize('update', $client);
-
         $validated = $request->validated();
         (new UpdateService($client, $validated))->run();
 
-        $resource = new ClientResource(Client::with('contacts', 'brands')->find($id));
-        return $resource->response()->setStatusCode(201);
+        $resource = new ClientResource(Client::with('contacts')->find($id));
+        return $resource->response()->setStatusCode(200);
 
     }
-
-      /**
-     * delete fields in client
-     */
-    public function destroy(Request $request, $id)
-    {
-        $brand = Client::findOrFail($id);
-        $this->authorize('destroy', $brand);
-        (new UpdateService($brand, $request))->delete();
-
-        return response()->json([
-            'status' => 'true', 
-            'message' => ClassMessages::CLIENT_DELETE_SUCCESS_MESSAGE
-         ])->setStatusCode(201);
-
-    }
-
     
 }

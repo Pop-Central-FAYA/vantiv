@@ -9,12 +9,11 @@ use DB;
 use Vanguard\Services\BaseServiceInterface;
 
 /**
- * This service is to update a Vendor.
- * Update of a vendor might also include updating the vendor contact
+ * This service is to update a Client and contact.
  */
 class UpdateService implements BaseServiceInterface
 {
-    const CLIENT_UPDATE_FIELDS = ['name', 'street_address', 'city', 'state', 'country'];
+    const CLIENT_UPDATE_FIELDS = ['name', 'street_address', 'city', 'state', 'nationality'];
     const CLIENT_CONTACT_UPDATE_FIELDS = ['first_name', 'last_name', 'email', 'phone_number'];
 
     protected $client;
@@ -29,7 +28,6 @@ class UpdateService implements BaseServiceInterface
     /**
      * Validate the data (both input and business logic wise)
      * Update the client and the client contact
-     * @return [string] the model representing the updated vendor
      */
     public function run()
     {
@@ -53,13 +51,14 @@ class UpdateService implements BaseServiceInterface
     }
 
     /**
-     * update the vendor contact information
+     * update the client contact information
      * @param  array $data The validated input data
      * @param  \Vanguard\Models\Client $client  The model holding the client information
      * @return \Vanguard\Models\ClientContact   The updated client contact
      */
     protected function updateClientContact(array $contact, Client $client)
     {
+      
         $client_contact = $client->contacts->first();
         $this->updateModel($client_contact, static::CLIENT_CONTACT_UPDATE_FIELDS, $contact);
         return $client_contact;
@@ -78,19 +77,5 @@ class UpdateService implements BaseServiceInterface
         }
         //save will only actually save if the model has changed
         $model->save();
-    }
-
-    public function delete()
-    {
-        return DB::transaction(function () {
-            $client_contact = $this->client->contacts->first();
-            $this->deleteModel($client_contact);
-            return $this->deleteModel($this->client);
-       });
-    }
-    
-    private function deleteModel($model)
-    {
-        return $model->delete();
     }
 }

@@ -92,7 +92,5 @@ class ClassMessages
 
     const ADSLOT_ERROR = 'There was an error creating the slot';
 
-    const CLIENT_DELETE_SUCCESS_MESSAGE = 'Client deleted successfully';
-
 
 }

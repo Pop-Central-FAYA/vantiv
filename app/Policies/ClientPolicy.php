@@ -21,7 +21,7 @@ class ClientPolicy
     }
 
      /**
-     * Determine if the given advendor can be viewed by the current user
+     * Determine if the given client can be viewed by the current user
      * @return bool
      */
     protected function belongsToUserCompany($user, $client)
@@ -39,11 +39,6 @@ class ClientPolicy
     }
 
     public function update(User $user, Client $client)
-    {
-      return $this->belongsToUserCompany($user, $client);
-    }
-
-    public function destroy(User $user, Client $client)
     {
       return $this->belongsToUserCompany($user, $client);
     }

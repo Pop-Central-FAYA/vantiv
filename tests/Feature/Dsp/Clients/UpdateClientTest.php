@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Dsp\Client;
 use Tests\TestCase;
-use Faker\Factory;
+
 
 use Illuminate\Support\Arr;
 
@@ -10,34 +10,12 @@ use Illuminate\Support\Arr;
  * @todo test the actual error messages (add human readable error messages)
  * @todo add permission support
  * @todo add support for only people with access rights to update a client model
- * @todo need to add support to make sure that updating the name of a field does not violate the unique reqs
  */
 
 class UpdateClient extends TestCase 
 {
     protected $route_name = 'client.update';
-    protected function getData()
-    {
-        $faker = Factory::create();
-        $contact= [
-            'first_name' => "Dino",
-            'last_name' => "Melaye",
-            'email' => "dino@yahoo.com",
-            'phone_number' => "+23466219699",
-            'is_primary' => true,
-        ];
-        return [
-            '_token' => csrf_token(),
-            'name' => "Oluwa captain",
-            'brand' => "C and O",
-            'image_url' =>  'https://www.turcotte.com/quae-quae-error-cum-qui-ducimus',
-            'street_address' => $faker->address,
-            'city' => $faker->city,
-            'state' => $faker->state,
-            'nationality' => $faker->country,
-            'contacts'=> $contact,
-        ];
-    }
+
     protected function setupClient($user)
     {
         $client = factory(\Vanguard\Models\Client::class)->create([
@@ -117,19 +95,46 @@ class UpdateClient extends TestCase
         $response = $this->getResponse($user, $client->id, ['_token' => csrf_token()]);
         $response->assertStatus(403);
     }
+    
 
-    public function test_authentication_user_can_update_client_with_route()
+      /**
+     * @dataProvider validUpdateDataProvider
+     */
+    public function test_client_and_contact_fields_are_updated_if_value_sent_in_request($client_data)
     {
         \Session::start();
         $user = $this->setupUserWithPermissions();
         $client = $this->setupClient($user);
-        $data = $this->getData();
 
-        $response = $this->getResponse($user, $client->id, $data);
-        $response->assertStatus(201);
-        $response->assertJsonFragment([
-            'name' => "Oluwa captain",
-         ]);
+        $client_array = Arr::dot($client->get()->first()->toArray());
+        $response = $this->getResponse($user, $client->id, $client_data);
+
+        $response->assertStatus(200);
+
+        
+        $actual_data = Arr::dot($client->with('contacts')->get()->first()->toArray());
+        $expected_data = array_merge($client_array, Arr::dot($client_data));
+       
+        Arr::forget($expected_data, ['updated_at', 'contacts.0.updated_at']);
+        $this->assertArraySubset($expected_data, $actual_data);
     }
 
+    public static function validUpdateDataProvider()
+    {
+        return array(
+            array(array('name' => 'Vinna')),
+            array(array('street_address' => '21 akin ogunlewe road')),
+            array(array('city' => 'Lokoja')),
+            array(array('state' => 'Kogi')),
+            array(array('nationality' => 'Nigeria')),
+            //update client contacts
+            array(array('contacts' => array(array('first_name' => 'Malaye')))),
+            array(array('contacts' => array(array('email' => 'dino@example.org')))),
+            array(array('contacts' => array(array('last_name' => 'Dino')))),
+            array(array('contacts' => array(array('phone_number' => '+2341111111111')))),
+            //multiple fields to update
+            array(array('name' => 'Vinna', 'contacts' => array(array('phone_number' => '+2341111111111')))),
+        );
+    }
+   
 }

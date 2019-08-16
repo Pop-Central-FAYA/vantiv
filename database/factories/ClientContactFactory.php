@@ -17,8 +17,8 @@ $factory->define(Vanguard\Models\ClientContact::class, function (Faker $faker) {
     return [
         'id' => uniqid(),
         'client_id' => uniqid(),
-        'first_name' =>  $faker->lastName,
-        'last_name' =>  $faker->firstName,
+        'first_name' =>  $faker->firstName(),
+        'last_name' =>  $faker->lastName,
         'email' => $faker->safeEmail,
         'phone_number' => $faker->phoneNumber,
         'is_primary' => true,
