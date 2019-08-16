@@ -35,7 +35,7 @@ class UpdateService implements BaseServiceInterface
     }
 
     /**
-     * Update the client, then update the vendor contact
+     * Update the client, then update the client contact
      * @return \Vanguard\Models\Client  The model holding the vendor
      */
     protected function update()

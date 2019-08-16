@@ -25,7 +25,6 @@ class StoreBrand implements BaseServiceInterface
         $brand = new Brand();
         $brand->name = $this->brand_details->name;
         $brand->image_url = $this->brand_details->image_url;
-        $brand->status = $this->brand_details->status;
         $brand->created_by =  $this->user_id;
         $brand->client_id = $this->client_id;
         $brand->save();

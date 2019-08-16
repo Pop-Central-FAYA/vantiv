@@ -16,6 +16,7 @@ class AuthServiceProvider extends ServiceProvider
         \Vanguard\Models\AdVendor::class => \Vanguard\Policies\AdVendorPolicy::class,
         \Vanguard\Models\Company::class => \Vanguard\Policies\CompanyPolicy::class,
         \Vanguard\Models\Client::class => \Vanguard\Policies\ClientPolicy::class,
+        \Vanguard\Models\Brand::class => \Vanguard\Policies\BrandPolicy::class,
     ];
 
     /**
