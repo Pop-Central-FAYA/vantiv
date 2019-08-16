@@ -186,7 +186,7 @@
        
 
          /**
-         * User Management
+         * Company Management
          */
 
         Route::group(['namespace' => 'Dsp'], function () {
@@ -203,6 +203,14 @@
             Route::patch('/ad-vendors/{id}', 'AdVendorController@update')->name('ad-vendor.update');
         });
 
+          /*
+         * new Brand route
+         */
+        Route::group(['namespace' => 'Dsp'], function () {
+            Route::post('/brands', 'BrandController@create')->name('brand.create');
+            Route::patch('/brands/{id}', 'BrandController@update')->name('brand.update');
+        });
+
     });
 
-   
+ 
