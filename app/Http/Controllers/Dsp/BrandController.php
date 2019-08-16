@@ -30,7 +30,7 @@ class BrandController extends Controller
         $validated = $request->validated();
         $user = Auth::user();
        
-        $new_brand = new StoreBrand($request, $request->client_id, $user->id);
+        $new_brand = new StoreBrand((object)$validated, $validated['client_id'], $user->id);
         $brand = $new_brand->run();   
 
         $resource = new BrandResource(Brand::find($brand->id));
