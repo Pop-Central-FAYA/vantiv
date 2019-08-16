@@ -2,24 +2,23 @@
  <v-container grid-list-md>
         <v-form>
             <v-layout wrap>
-            <v-flex xs12 sm4 md4>
-             
-             
-            </v-flex>
-             <v-flex xs12 sm8 md8>
-                <span>Campaign Name:</span>
-                <v-flex xs12 sm6 md6>
-                  <v-text-field v-validate="'required'" name="campaign_name" placeholder="Enter Campaign Name" ></v-text-field>
-                   <span>Campaign Name:</span>
-                   <v-text-field v-validate="'required'" name="campaign_name" placeholder="Enter Campaign Name" ></v-text-field>
+                <v-flex xs12 sm4 md4>
+                    <b-img thumbnail fluid src="https://picsum.photos/250/250/?image=54" alt="Image 1"></b-img>
                 </v-flex>
-            </v-flex>
-        </v-layout>
+                <v-flex xs12 sm8 md8>
+                    <span>Campaign Name:</span>
+                    <v-flex xs12 sm6 md6>
+                    <v-text-field v-validate="'required'" name="campaign_name" placeholder="Enter Campaign Name" ></v-text-field>
+                    <span>Campaign Address:</span>
+                    <v-text-field v-validate="'required'" name="campaign_name" placeholder="Enter Campaign Name" ></v-text-field>
+                    </v-flex>
+                </v-flex>
+          </v-layout>
         </v-form>
  </v-container>         
 </template>
 
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
+
 <style>
     .v-text-field .v-input__slot {
         padding: 0px 12px;
