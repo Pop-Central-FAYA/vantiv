@@ -23,8 +23,7 @@
                                             <div class="text-left">{{ asset.duration }} Secs</div>
                                             <div class="text-center">{{ asset.file_name }} </div>
                                             <div class="text-right">
-                                                <input type="hidden" id="file-asset" :value="asset.asset_url">
-                                                <v-btn color="info" @click="copyToClipboard()" small dark>copy url</v-btn>
+                                                <v-btn color="info" @click="copyToClipboard(asset.asset_url)" small dark>copy url</v-btn>
                                             </div>
                                         </template>
                                         <v-card>
@@ -39,11 +38,35 @@
                                 <v-card-text>You have not attached a file on this Vendor</v-card-text>
                             </v-flex>
                         </v-layout>
+                        <v-layout wrap v-if="Object.keys(shareLink).length > 0">
+                            <v-flex xs12 sm12 md12>
+                                <v-btn color="info" @click="copyToClipboard(shareLink.url)" small dark>copy share link</v-btn>
+                            </v-flex>
+                        </v-layout>
+                    </v-container>
+                </v-card-text>
+                <v-card-text>
+                    <v-container grid-list-md>
+                        <p>Generate Share Link</p>
+                        <v-form>
+                            <v-layout wrap>
+                                <v-flex xs12 sm12 md12>
+                                    <span>
+                                        Email
+                                    </span>
+                                    <v-text-field v-validate="'required|email'" 
+                                    type="text" placeholder="Vendors Email" 
+                                    name="email" v-model="email"></v-text-field>
+                                    <span class="text-danger" v-show="errors.has('email')">{{ errors.first('email') }}</span>
+                                </v-flex>
+                            </v-layout>
+                        </v-form>
                     </v-container>
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="red" dark @click="dialog = false">Close</v-btn>
+                    <v-btn color="red" class="default-vue-btn" dark @click="dialog = false">Close</v-btn>
+                    <v-btn class="default-vue-btn" dark @click="addShareLink()">Generate Link</v-btn>
                 </v-card-actions>
             </v-card>
             
@@ -63,9 +86,12 @@ export default {
         return {
             dialog: false,
             groupedAssets: [],
+            shareLink : {},
+            email : ''
         }
     },
     mounted() {
+        this.getShareLink()
         this.filterAssetByDuration(this.assets, this.mpo.campaign_mpo_time_belts);
     },
     methods : {
@@ -76,20 +102,68 @@ export default {
             const time_belt = this.getDistinctAssetId(time_belts);
             this.groupedAssets = assets.filter(item => time_belt.some(resultItem => resultItem === item.id));
         },
-        copyToClipboard : function(asset_url){
-            let testingCodeToCopy = document.querySelector('#file-asset')
-            testingCodeToCopy.setAttribute('type', 'text')
-            testingCodeToCopy.select()
+        copyToClipboard : function(url){
+            let copyListener = event => {
+                document.removeEventListener("copy", copyListener, true);
+                event.preventDefault();
+                let clipboardData = event.clipboardData;
+                clipboardData.clearData();
+                clipboardData.setData("text/plain", url);
+            };
+            document.addEventListener("copy", copyListener, true);
             try {
-                var successful = document.execCommand('copy');
-                var msg = successful ? 'successful' : 'unsuccessful';
-                this.sweet_alert('File ulr copied to clipboard ' + msg, 'success');
-            } catch (err) {
-                this.sweet_alert('Oops, unable to copy', 'error');
+                document.execCommand("copy")
+                console.log(document)
+                var message = 'copied '+url+' to clipboard'
+                this.sweet_alert(message, 'success');
+            } catch (error) {
+                this.sweet_alert('Oops, unable to copy '+error, 'error');
+                return false;
             }
+        },
+        getShareLink : function() {
+            axios({
+                method: 'get',
+                url: `/mpos/${this.mpo.id}/share-links`
+            }).then((res) => {
+                let result = res.data.data;
+                if (result != null) {
+                    this.shareLink = result;                
+                }
+            }).catch((error) => {
+                this.assets = [];
+                this.sweet_alert('An unknown error has occurred, link cannot be retrieved. Please try again', 'error');
+            });
+        },
+        addShareLink : async function (event) {
+            let isValid = await this.$validator.validate().then(valid => {
+                if (!valid) {
+                    return false;
+                } else {
+                    return true;
+                }
+            });
 
-            testingCodeToCopy.setAttribute('type', 'hidden')
-            window.getSelection().removeAllRanges()
+            if (!isValid) {
+                return false;
+            }
+            var msg = "Processing request, please wait...";
+            this.sweet_alert(msg, 'info');
+            axios({
+                method: 'POST',
+                url: `/mpos/${this.mpo.id}/share-links`,
+                data: {email : this.email}
+            }).then((res) => {
+                if (res.data.status === 'success') {
+                    this.sweet_alert(res.data.message, 'success');
+                    this.email = ''
+                    this.shareLink = res.data.data
+                } else {
+                    this.sweet_alert(res.data.message, 'error');
+                }
+            }).catch((error) => {
+                this.sweet_alert(error.response.data.message, 'error');
+            });
         }
     }
 }
