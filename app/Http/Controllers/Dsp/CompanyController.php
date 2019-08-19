@@ -18,7 +18,7 @@ class CompanyController extends Controller
 
     public function __construct()
     {
-       // $this->middleware('permission:update.company')->only(['update']);
+       $this->middleware('permission:update.company')->only(['update']);
     }
     
     public function index(Request $request)
