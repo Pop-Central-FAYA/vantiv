@@ -14,7 +14,9 @@ class MpoShareLinkController extends Controller
     {
         $mpo = CampaignMpo::findOrFail($mpo_id);
         $share_link = $mpo->active_share_link;
-        return new MpoShareLinkResource($share_link);
+        if($share_link != null){
+            return new MpoShareLinkResource($share_link);
+        }
     }
 
     public function store(StoreMpoShareLinkRequest $request, CampaignMpo $mpo, $mpo_id)

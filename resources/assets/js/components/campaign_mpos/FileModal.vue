@@ -87,12 +87,13 @@ export default {
             dialog: false,
             groupedAssets: [],
             shareLink : {},
-            email : ''
+            email : '',
+            assetData : this.assets
         }
     },
     mounted() {
         this.getShareLink()
-        this.filterAssetByDuration(this.assets, this.mpo.campaign_mpo_time_belts);
+        this.filterAssetByDuration(this.assetData, this.mpo.campaign_mpo_time_belts);
     },
     methods : {
         getDistinctAssetId(time_belts) {
@@ -131,7 +132,7 @@ export default {
                     this.shareLink = result;                
                 }
             }).catch((error) => {
-                this.assets = [];
+                this.assetData = [];
                 this.sweet_alert('An unknown error has occurred, link cannot be retrieved. Please try again', 'error');
             });
         },
