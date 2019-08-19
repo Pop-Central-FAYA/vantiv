@@ -10,6 +10,12 @@ use Tests\TestCase;
 class UpdateCompanyTest extends TestCase
 {
     protected $route_name = 'company.update';
+    protected function setupUserWithPermissions()
+    {
+        $user = $this->setupAuthUser(null, ['update.company']);
+        return $user;
+    }
+
     protected function getResponse($user, $company_id, $data)
     {
         return $this->actingAs($user)->patchJson(route($this->route_name, ['id' => $company_id]), $data);
@@ -67,5 +73,29 @@ class UpdateCompanyTest extends TestCase
         $response->assertJsonFragment([
             'logo' => "https://laravel.com"
          ]);
+    }
+
+    public function test_403_returned_if_attempting_to_update_company_that_user_does_not_have_rights_to_update()
+    {
+        \Session::start();
+        $user = $this->setupUserWithPermissions();
+        $company = $this->setupCompany(uniqid());
+        
+        $another_user = $this->setupAuthUser();
+        $another_company = $this->setupCompany(uniqid());
+
+        $response = $this->getResponse($user, $another_company->id, ['_token' => csrf_token()]);
+        $response->assertStatus(403);
+    }
+
+
+    public function test_user_without_update_permissions_cannot_access_company_update_route()
+    {
+        \Session::start();
+        $user = $this->setupAuthUser();
+        $parent_company_id = uniqid();
+        $company = $this->setupCompany($parent_company_id);
+        $response = $this->getResponse($user, $company->id, ['_token' => csrf_token()]);
+        $response->assertStatus(403);
     }
 }

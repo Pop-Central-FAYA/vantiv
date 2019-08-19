@@ -178,20 +178,22 @@
             Route::get('/details/{id}/{client_id}', 'BrandsController@getBrandDetails')->name('brand.details');
         });
         Route::get('/check-brand-existence', 'BrandsController@checkBrandExistsWithSameInformation');
-        Route::get('/presigned-url', 'S3Controller@getPresignedUrl');
+        Route::post('/presigned-url', 'S3Controller@getPresignedUrl')->name('presigned.url');
          /*
          * new Client route
          */
-        Route::post('/clients', 'ClientController@storeClient')->name('client.create');
-       
+        Route::group(['namespace' => 'Dsp'], function () {
+            Route::post('/clients', 'ClientController@create')->name('client.create');
+            Route::patch('/clients/{id}', 'ClientController@update')->name('client.update');
+         });
 
          /**
-         * User Management
+         * Company Management
          */
 
         Route::group(['namespace' => 'Dsp'], function () {
             Route::get('/company/index', 'CompanyController@index')->name('company.index');
-            Route::patch('/company/{id}', 'CompanyController@updateDetails')->name('company.update');
+            Route::patch('/company/{id}', 'CompanyController@update')->name('company.update');
         });
         
         Route::group(['namespace' => 'Dsp'], function() {
@@ -204,6 +206,14 @@
             Route::patch('/ad-vendors/{id}', 'AdVendorController@update')->name('ad-vendor.update');
         });
 
+          /*
+         * new Brand route
+         */
+        Route::group(['namespace' => 'Dsp'], function () {
+            Route::post('/brands', 'BrandController@create')->name('brand.create');
+            Route::patch('/brands/{id}', 'BrandController@update')->name('brand.update');
+        });
+
     });
 
-   
+ 

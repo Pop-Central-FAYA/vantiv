@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Clients;
+namespace Tests\Feature\Dsp\Clients;
 
 use Faker\Factory;
 use Tests\TestCase;

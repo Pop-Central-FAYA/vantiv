@@ -92,4 +92,5 @@ class ClassMessages
 
     const ADSLOT_ERROR = 'There was an error creating the slot';
 
+
 }

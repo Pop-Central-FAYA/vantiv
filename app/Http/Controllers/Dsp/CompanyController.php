@@ -15,24 +15,40 @@ use Vanguard\Http\Resources\CompanyResource;
 class CompanyController extends Controller
 {
     use CompanyIdTrait;
+
+    public function __construct()
+    {
+       // $this->middleware('permission:update.company')->only(['update']);
+    }
+    
     public function index(Request $request)
     {   
         $company =  Company::findOrFail($this->companyId());
-        return view('agency.company.index')->with('company', $company);
+        $urls = [
+            'presigned_url' => route('presigned.url'),
+            'company_update' => route('company.update', ['id'=>$this->companyId()]),
+        ];
+        return view('agency.company.index')->with('company', $company)->with('url',$urls);
     }
+   
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function updateDetails(UpdateRequest $request, $id)
+    public function update(UpdateRequest $request, $id)
     {
+
         $company =  Company::findOrFail($id);
+        $this->authorize('update', $company);
         $validated = $request->validated();
         $update_company_service = new UpdateCompany($company,  $request);
         $update_company_service->run();
 
-        return new CompanyResource(Company::find($id));
+        return [
+               'data' =>new CompanyResource(Company::find($id)),
+              'status' => 'success' 
+             ]; 
     }
 }

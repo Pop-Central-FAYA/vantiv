@@ -21,8 +21,10 @@
             <!-- main frame end -->
            <company-index  
                 :company-data="{{ json_encode($company) }}" 
+                :routes="{{ json_encode($url) }}" 
                 :permission-list="{{ json_encode(Auth::user()->getAllPermissions()->pluck('name')) }}">
             </company-index>
-            
+        </div>
+    </div>
 @stop
 
