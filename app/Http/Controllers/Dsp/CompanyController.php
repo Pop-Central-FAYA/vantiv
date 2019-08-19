@@ -46,9 +46,6 @@ class CompanyController extends Controller
         $update_company_service = new UpdateCompany($company,  $request);
         $update_company_service->run();
 
-        return [
-               'data' =>new CompanyResource(Company::find($id)),
-              'status' => 'success' 
-             ]; 
+        return new CompanyResource(Company::find($id));
     }
 }

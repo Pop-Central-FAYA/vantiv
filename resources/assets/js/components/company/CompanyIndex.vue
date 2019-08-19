@@ -141,13 +141,7 @@
                          logo: this.logoUrl
                      }
                  }).then((res) => {
-                  console.log(res.data);
-                    if (res.data.status === 'success') {
-                       // Event.$emit('latest-assets', res.data.data);
                         this.sweet_alert('Company was successfully updated', 'success');
-                    } else {
-                        this.sweet_alert('Something went wrong, company not updated. Try again!', 'error');
-                    }
                  }).catch((error) => {
                      this.sweet_alert(error.response.data.message, 'error');
                  });
