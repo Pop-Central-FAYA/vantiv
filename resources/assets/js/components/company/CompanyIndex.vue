@@ -8,10 +8,10 @@
                     <input type="file" style="display: none" ref="logo" accept="image/*" v-validate="'required|ext:png,jpeg'" name="asset" @change="on_file_change($event, 'ASSET')">
                 </v-flex>
                 <v-flex xs12 sm8 md8>
-                    <span>Campaign Name:</span>
+                    <span>Company Name:</span>
                     <v-flex xs12 sm6 md6>
                     <v-text-field v-validate="'required'" name="name" readonly placeholder="Enter Name" :value="companyData.name" ></v-text-field>
-                    <span>Campaign Address:</span>
+                    <span>Company Address:</span>
                     <v-text-field v-validate="'required'" v-model="address" name="address" placeholder="Enter Address" :value="companyData.address" ></v-text-field>
                    
                      <v-btn color="" class="default-vue-btn" dark @click="process_form()">Update</v-btn>
