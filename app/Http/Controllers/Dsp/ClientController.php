@@ -15,6 +15,7 @@ use Vanguard\Http\Requests\Client\UpdateRequest;
 use Vanguard\Services\Client\UpdateService;
 use Illuminate\Http\Request;
 use Vanguard\Libraries\Enum\ClassMessages;
+use Vanguard\Http\Requests\Client\ListRequest;
 
 
 
@@ -51,6 +52,20 @@ class ClientController extends Controller
         $resource = new ClientResource(Client::with('contacts')->find($id));
         return $resource->response()->setStatusCode(200);
 
+    }
+
+      /**
+     * Return a list of clients that the currently logged in user has permission to view
+     * Filter parameters are allowed
+     * @todo get list of client
+     * @todo get summation of total spendings
+     * @todo get date created
+     * @todo get active campaigns
+     */
+    public function list(ListRequest $request)
+    {           
+       
+        return "new AdVendorCollection";
     }
     
 }
