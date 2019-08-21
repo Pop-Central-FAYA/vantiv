@@ -171,11 +171,14 @@ class CampaignsController extends Controller
         $mpo_time_belts = new ExportCampaignMpo(
             $campaign_mpo_time_belts->groupBy(['program', 'duration'])        
         );
-
+        $total_budget = $campaign_mpo_time_belts->sum('net_total');
+        $net_total = $total_budget === 0 ? $total_budget : $total_budget - ((5/100)*$total_budget); 
         $mpo_time_belt_summary = new ExportCampaignMpoSummary($campaign_mpo_time_belts->groupBy('duration'));
         return Excel::download(new MpoExport($mpo_time_belts->run(), 
                                 $days_array, 
                                 $mpo_details,
+                                $total_budget,
+                                $net_total,
                                 $mpo_time_belt_summary->run()), str_slug($mpo_details->campaign->name).'.xlsx');
     }
 
