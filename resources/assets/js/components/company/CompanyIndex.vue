@@ -140,6 +140,7 @@
                          this.assetFile ='';
                 }).catch((error) => {
                     console.log(error);
+                     this.showProgressBar = false;
                     this.sweet_alert('An unknown error has occurred,  company not updated. Please try again', 'error');
                 });
             },
