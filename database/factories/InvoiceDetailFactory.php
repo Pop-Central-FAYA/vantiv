@@ -15,7 +15,6 @@ use Faker\Generator as Faker;
 
 $factory->define(Vanguard\Models\InvoiceDetail::class, function (Faker $faker) {
     return [
-        'id' => uniqid(),
         'invoice_id' => uniqid(),
         'user_id' => uniqid(),
         'broadcaster_id' => uniqid(),

@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class Invoice extends Base
 {
     protected $table = 'invoices';
-    protected $connection = 'api_db';
     protected $primaryKey = 'id';
     protected $keyType = 'string';
 
