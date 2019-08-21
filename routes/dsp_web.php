@@ -1,25 +1,23 @@
 <?php
+    /**
+     * Public accessed share link
+     */
+    Route::get('/mpos/share-link/{id}', 'Guest\MpoShareLinkController@index')->name('guest.mpo_share_link');
+
     Route::group(['namespace' => 'Dsp'], function () {
-      Route::get('health', 'AuthController@getLogin');
-    
+        Route::get('health', 'AuthController@getLogin');
         /**
          * Authentication
          */
         Route::get('login', 'AuthController@getLogin')->name('login');
         Route::post('login', 'AuthController@postLogin')->name('post.login');
         Route::get('logout', 'AuthController@getLogout')->name('auth.logout');
-    
-
         Route::get('/forget-password', 'AuthController@getForgetPassword')->name('password.forgot');
         Route::post('/forget-password/process', 'AuthController@processForgetPassword')->name('forget_password.process');
         Route::get('/proceed/password-change/{token}', 'AuthController@getChangePassword');
         Route::post('/change-password/process/{user_id}', 'AuthController@processChangePassword')->name('change_password.process');
-        
-
-    
         Route::get('user/complete-account/{id}', 'UserController@getCompleteAccount')->name('user.complete_registration')->middleware('signed');
         Route::post('/user/complete-account/store/{id}', 'UserController@processCompleteAccount');
-
     });
 
     Route::group(['middleware' => 'auth'], function () {
@@ -207,6 +205,11 @@
             Route::patch('/ad-vendors/{id}', 'AdVendorController@update')->name('ad-vendor.update');
         });
 
+        Route::group(['namespace' => 'Dsp'], function() {
+            Route::get('/mpos/{id}/share-links', 'MpoShareLinkController@getActiveLink');
+            Route::post('/mpos/{id}/share-links', 'MpoShareLinkController@store')->name('mpo_share_link.store')
+                                                                    ->middleware('permission:create.campaign');
+        });
           /*
          * new Brand route
          */
