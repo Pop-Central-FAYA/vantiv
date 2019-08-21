@@ -95,6 +95,7 @@ class ClientController extends Controller
                 'number_brands' => $brands, 
                 'sum_active_campaign' => $sum_active_campaign,
                 'client_spendings' => $client_spendings,  
+                'date_created' => $client->time_created, 
             );
             array_push($itemClients, $itemClient);
         }
