@@ -25,6 +25,7 @@ class ListClient extends TestCase
        factory(\Vanguard\Models\ClientContact::class)->create([
             'client_id' => $client->id
         ]);
+        $this->setupBrand($user->id, $client->id);
         return $client->refresh();
     }
 
@@ -34,7 +35,43 @@ class ListClient extends TestCase
             'created_by' => $user_id,
             'client_id' => $client_id
         ]);
+        $this->setUpCampaign($user_id, $brand->id);
+        $this->setUpActiveCampaign($user_id, $brand->id);
         return $brand->refresh();
+    }
+
+    protected function setUpCampaign($user_id,$brand_id)
+    {
+       $campaign= factory(\Vanguard\Models\CampaignDetail::class)->create([
+            'user_id' => $user_id,
+            'brand' => $brand_id,
+            "status" => "pending"
+        ]);
+        $this->setUpInvoice($campaign->id);
+       return $campaign->refresh();
+    }
+     
+    protected function setUpActiveCampaign($user_id,$brand_id)
+    {
+       $campaign= factory(\Vanguard\Models\CampaignDetail::class)->create([
+            'user_id' => $user_id,
+            'brand' => $brand_id,
+            "status" => "active"
+        ]);
+        $this->setUpInvoice($campaign->id);
+       return $campaign->refresh();
+    }
+
+    protected function setUpInvoice($campaign_id)
+    {
+        $invoice= factory(\Vanguard\Models\Invoice::class)->create([
+            'campaign_id' => $campaign_id,
+        ]);
+
+        factory(\Vanguard\Models\InvoiceDetail::class)->create([
+            'invoice_id' => $invoice->id,
+        ]);
+       return $invoice->refresh();
     }
 
     protected function setupUserWithPermissions()
@@ -51,9 +88,7 @@ class ListClient extends TestCase
     public function test_user_without_view_permissions_cannot_access_route()
     {
         $user = $this->setupAuthUser();
-
         $response = $this->getResponse($user);
-
         $response->assertStatus(403);
     }
     public function test_empty_array_returned_if_no_client_exist_that_the_user_has_access_to()
@@ -61,7 +96,7 @@ class ListClient extends TestCase
         $user = $this->setupUserWithPermissions();
         $response = $this->getResponse($user);
         $response->assertStatus(200)
-                ->assertExactJson(['data' => []]);
+                ->assertExactJson([]);
     }
     public function test_client_list_with_no_filter_params_returns_all_client_retrievable_by_user()
     {
@@ -73,7 +108,7 @@ class ListClient extends TestCase
         $response->assertStatus(200);
 
         $expected = Arr::sort([$client_one->id, $client_two->id]);
-        $actual = Arr::pluck($response->json()['data'], 'id');
+        $actual = Arr::pluck($response->json(), 'id');
         $actual = Arr::sort($actual);
         
         $this->assertEquals(\array_values($expected), \array_values($actual));
@@ -83,8 +118,7 @@ class ListClient extends TestCase
         $user = $this->setupUserWithPermissions();
         $client_one = $this->setupClient($user);
         $client_two = $this->setupClient($user);
-
-        //same company, different user that creates it
+        //different company and user
         $different_user = $this->setupAuthUser($user->companies->first());
         $client_three = $this->setupClient($different_user);
 
@@ -94,12 +128,12 @@ class ListClient extends TestCase
         $response->assertStatus(200);
 
         $expected = [$client_three->id];
-        $actual = Arr::pluck($response->json()['data'], 'id');
+        $actual = Arr::pluck($response->json(), 'id');
         $actual = Arr::sort($actual);
 
         $this->assertEquals(\array_values($expected), \array_values($actual));
     }
- 
+
     public function test_client_list_is_always_limited_to_client_that_belongs_to_users_company()
     {
         $user = $this->setupUserWithPermissions();
@@ -111,11 +145,10 @@ class ListClient extends TestCase
         $client_three = $this->setupClient($another_user);
 
         $response = $this->getResponse($user);
-        dd($response->json()['data']);
         $response->assertStatus(200);
 
         $expected = Arr::sort([$client_one->id, $client_two->id]);
-        $actual = Arr::pluck($response->json()['data'], 'id');
+        $actual = Arr::pluck($response->json(), 'id');
         $actual = Arr::sort($actual);
         
         $this->assertEquals(\array_values($expected), \array_values($actual));

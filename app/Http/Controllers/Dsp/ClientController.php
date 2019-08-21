@@ -17,7 +17,8 @@ use Illuminate\Http\Request;
 use Vanguard\Libraries\Enum\ClassMessages;
 use Vanguard\Http\Requests\Client\ListRequest;
 
-use Vanguard\Http\Resources\ClientCollection;
+use Vanguard\Models\CampaignDetail;
+use Vanguard\Models\Invoice;
 
 class ClientController extends Controller
 {
@@ -65,16 +66,63 @@ class ClientController extends Controller
      */
     public function list(ListRequest $request)
     {           
-        $itemCount =0;
+       
         $validated = $request->validated();
         $validated['company_id'] = $this->companyId();
-        $client_list = Client::with('contacts')->filter($validated)->get();
-        foreach ($client_list as $client) {
-            $itemCount = $client->contacts()->count();
-        }
-        //return new ClientCollection($client_list);
+        $client_list = Client::with('contacts', 'brands')->filter($validated)->get();
+        $client_details = $this-> getClientDetails($client_list);
+        return $client_details;
+    }
 
-        return $itemCount;
+    public function getClientDetails($client_list)
+    {
+        $itemClients = [];
+        foreach ($client_list as $client) 
+        {
+            $brands=0;
+            $sum_active_campaign=0;
+            $client_spendings = 0;
+            foreach ($client->brands as $brand) 
+            {
+                $brands++;
+                $sum_active_campaign += $this->getActiveCampaign($brand->id);
+                $client_spendings += $this->getBrandSpendings($brand->id);
+            }
+            $itemClient = array(
+                'id' => $client->id,
+                'image_url' => $client->image_url,
+                'name'=> $client->name, 
+                'number_brands' => $brands, 
+                'sum_active_campaign' => $sum_active_campaign,
+                'client_spendings' => $client_spendings,  
+            );
+            array_push($itemClients, $itemClient);
+        }
+        return $itemClients;
+        
+    }
+
+    public function getActiveCampaign($brand_id)
+    {
+        $campaigns = CampaignDetail::where([['brand', '=', $brand_id], ['status', '=', 'active']])->get()->count();
+        return $campaigns;
     }
     
+    public function getBrandSpendings($brand_id)
+    {
+        $brand_spendings = 0;
+        $campaigns = CampaignDetail::where('brand', '=', $brand_id)->get();
+        foreach ($campaigns as $campaign) 
+        {
+            $invoices = Invoice::with('details')->where('campaign_id', '=', $campaign->id)->get();
+            foreach ($invoices as $invoice) 
+            {
+                foreach ($invoice->details as $detail) 
+                {
+                    $brand_spendings += $detail->actual_amount_paid;
+                }
+            }
+        }
+        return $brand_spendings;
+    }
 }
