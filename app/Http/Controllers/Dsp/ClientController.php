@@ -53,4 +53,8 @@ class ClientController extends Controller
 
     }
     
+    public function index(Request $request)
+    {   
+        return view('agency.clients.index');
+    }
 }

@@ -183,6 +183,7 @@
         Route::group(['namespace' => 'Dsp'], function () {
             Route::post('/clients', 'ClientController@create')->name('client.create');
             Route::patch('/clients/{id}', 'ClientController@update')->name('client.update');
+            Route::get('/cli', 'ClientController@index')->name('list.create');
          });
 
          /**

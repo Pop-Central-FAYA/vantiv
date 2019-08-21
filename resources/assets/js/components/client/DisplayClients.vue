@@ -49,12 +49,9 @@
         search: '',
         headers: [
           { text: 'Name', align: 'left', value: 'name' },
-          { text: 'Brand', value: 'brand' },
-          { text: 'Start Date', value: 'start_date' },
-          { text: 'End Date', value: 'end_date' },
-          { text: 'Budget (₦)', value: 'budget' },
-          { text: 'Ad Slots', value: 'adslots' },
-          { text: 'Status', value: 'status' },
+          { text: 'Brands', value: 'brands' },
+          { text: 'Total Spend (₦)', value: 'total spend' },
+          { text: 'Active Campaigns', value: 'active campaigns' },
           { text: 'Created On', value: 'date_created' }
         ],
         pagination: {
