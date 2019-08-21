@@ -132,6 +132,8 @@
                         }.bind(this)
                     }
                 ).then((res) => {
+                        this.showProgressBar = false;
+                        this.sweet_alert('Saving company information', 'info');
                         this.logoUrl = `https:${presignedUrl.split('?')[0].substr(6)}`;
                          const output = $('#output-img');
                          output.attr('src', this.logoUrl);
