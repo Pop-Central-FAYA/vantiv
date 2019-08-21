@@ -17,7 +17,7 @@ use Illuminate\Http\Request;
 use Vanguard\Libraries\Enum\ClassMessages;
 use Vanguard\Http\Requests\Client\ListRequest;
 
-
+use Vanguard\Http\Resources\ClientCollection;
 
 class ClientController extends Controller
 {
@@ -26,7 +26,8 @@ class ClientController extends Controller
     public function __construct()
     {
         $this->middleware('permission:create.client')->only(['create']);
-        $this->middleware('permission:update.client')->only(['update', 'destroy']);
+        $this->middleware('permission:update.client')->only(['update']);
+        $this->middleware('permission:view.client')->only(['list']);
     }
 
     public function create(StoreRequest $request)
@@ -64,8 +65,16 @@ class ClientController extends Controller
      */
     public function list(ListRequest $request)
     {           
-       
-        return "new AdVendorCollection";
+        $itemCount =0;
+        $validated = $request->validated();
+        $validated['company_id'] = $this->companyId();
+        $client_list = Client::with('contacts')->filter($validated)->get();
+        foreach ($client_list as $client) {
+            $itemCount = $client->contacts()->count();
+        }
+        //return new ClientCollection($client_list);
+
+        return $itemCount;
     }
     
 }
