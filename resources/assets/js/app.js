@@ -104,6 +104,10 @@ Vue.component('ad-vendor-view', () => import('./components/ad_vendors/ViewVendor
 // COMPANY MANAGEMENT
 Vue.component('company-index', () => import('./components/company/CompanyIndex.vue'));
 
+//CLIENT MANAGEMENT
+Vue.component('clients-list', () => import('./components/client/DisplayClients.vue'));
+
+
 Vue.mixin({
     methods: {
         format_audience(number) {
