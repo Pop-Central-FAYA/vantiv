@@ -101,6 +101,9 @@ Vue.component('ad-vendor-list', () => import('./components/ad_vendors/ListVendor
 Vue.component('ad-vendor-create', () => import('./components/ad_vendors/CreateVendor.vue'));
 Vue.component('ad-vendor-view', () => import('./components/ad_vendors/ViewVendor.vue'));
 
+// COMPANY MANAGEMENT
+Vue.component('company-index', () => import('./components/company/CompanyIndex.vue'));
+
 Vue.mixin({
     methods: {
         format_audience(number) {

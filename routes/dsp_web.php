@@ -190,8 +190,10 @@
          */
 
         Route::group(['namespace' => 'Dsp'], function () {
+            Route::get('/company/index', 'CompanyController@index')->name('company.index');
             Route::patch('/company/{id}', 'CompanyController@update')->name('company.update');
         });
+        Route::post('company/presigned-url', 'S3Controller@getPresignedUrl')->name('presigned.url');
         
         Route::group(['namespace' => 'Dsp'], function() {
             //@todo possibly create another name for the index route
