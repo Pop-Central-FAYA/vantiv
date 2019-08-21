@@ -33,7 +33,7 @@ class CampaignDetails
 
     public function formatCampaignDetails($campaign)
     {
-        $campaign->budget = number_format($campaign->budget,2);
+        $campaign->budget = $campaign->budget;
         $channel_arr = $this->getMediaChannels(json_decode($campaign->channel));
         $campaign->media_type = implode(', ', $channel_arr);
         $campaign->flight_date = date('M d, Y', strtotime($campaign->start_date)).' to '.date('M d, Y', strtotime($campaign->stop_date));

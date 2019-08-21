@@ -17,8 +17,8 @@
                 </v-flex>
                 <v-flex md4 my-1>
                     <p class="weight_medium">
-                        <span class="weight_medium small_faint pr-1">Budget:</span>
-                        &#8358; {{ campaign.budget }}
+                        <span class="weight_medium small_faint pr-1">Net Total:</span>
+                        &#8358; {{ calculateTotal(campaign.budget) }}
                     </p>
                 </v-flex>
             </v-layout>
@@ -37,8 +37,8 @@
                 </v-flex>
                 <v-flex md4 my-1>
                     <p class="weight_medium">
-                        <span class="weight_medium small_faint pr-1">Status:</span>
-                        {{ campaign.status }}
+                        <span class="weight_medium small_faint pr-1">VAT:</span>
+                        5%
                     </p>
                 </v-flex>
             </v-layout>
@@ -53,6 +53,12 @@
                     <p class="weight_medium">
                         <span class="weight_medium small_faint pr-1">Created On:</span>
                         {{ campaign.created_at }}
+                    </p>
+                </v-flex>
+                <v-flex md4 my-1>
+                    <p class="weight_medium">
+                        <span class="weight_medium small_faint pr-1">Status:</span>
+                        {{ campaign.status }}
                     </p>
                 </v-flex>
             </v-layout>
@@ -110,6 +116,16 @@
       return {
         
       }
+    },
+    methods : {
+        calculateTotal : function(budget) {
+            var budget = parseInt(budget);
+            if(budget > 0){
+                return this.formatAmount(budget - ((5/100)*budget))
+            }else{
+                return this.formatAmount(budget)
+            }
+        }
     }
   }
 </script>

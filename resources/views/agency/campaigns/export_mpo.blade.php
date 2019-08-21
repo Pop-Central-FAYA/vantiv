@@ -53,6 +53,34 @@
         </tbody>
     </table>
     <table>
+        <tbody>
+            <tr>
+                <td colspan="3">
+                    Total Budget
+                </td>
+                <td colspan="3">
+                    {{ number_format($total_budget) }}
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    VAT
+                </td>
+                <td colspan="3">
+                    5%
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    Net Total
+                </td>
+                <td colspan="3">
+                    {{ number_format($net_total) }}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table>
         <thead>
             <tr>
                 <th>Programs</th>
