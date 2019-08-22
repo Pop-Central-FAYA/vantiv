@@ -9,10 +9,10 @@
     <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="clients" :search="search" :no-data-text="noDataText" :pagination.sync="pagination">
       <template v-slot:items="props">
         <tr>
-            <td class="text-xs-left">{{ dateToHumanReadable(props.item.name) }}</td>
-            <td class="text-xs-left">{{ dateToHumanReadable(props.item.number_brands) }}</td>
-            <td class="text-xs-left">{{ dateToHumanReadable(props.item.sum_active_campaign) }}</td>
-            <td class="text-xs-left">{{ dateToHumanReadable(props.item.client_spendings) }}</td>
+            <td class="text-xs-left">{{ props.item.name }}</td>
+            <td class="text-xs-left">{{ props.item.number_brands }}</td>
+            <td class="text-xs-left">{{ props.item.sum_active_campaign }}</td>
+            <td class="text-xs-left">{{ props.item.client_spendings}}</td>
           <td class="text-xs-left">{{ dateToHumanReadable(props.item.date_created) }}</td>
         </tr>
       </template>
