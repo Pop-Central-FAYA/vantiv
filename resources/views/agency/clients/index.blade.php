@@ -1,13 +1,13 @@
 @extends('dsp_layouts.faya_app')
 
 @section('title')
-    <title> Vantage | CAMPAIGNS</title>
+    <title> Vantage | Clientd</title>
 @stop
 
 @section('content')
 
     <div class="main_contain">
-        <!-- heaser -->
+        <!-- header -->
     @include('partials.new-frontend.agency.header')
 
     <!-- subheader -->
@@ -18,10 +18,10 @@
         </div>
 
         <div class="the_frame client_dets mb4">
-            <!-- campaigns table -->
+            <!-- clients table -->
             <v-app>
                 <v-content>
-                    <clients-list ></clients-list>
+                    <clients-list></clients-list>
                 </v-content>
             </v-app>
             <!-- end -->
