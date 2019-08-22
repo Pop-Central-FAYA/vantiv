@@ -6,16 +6,13 @@
       <v-spacer></v-spacer>
       <v-text-field v-model="search" append-icon="search" label="Enter Keyword" single-line hide-details></v-text-field>
     </v-card-title>
-    <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="campaigns" :search="search" :no-data-text="noDataText" :pagination.sync="pagination">
+    <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="clients" :search="search" :no-data-text="noDataText" :pagination.sync="pagination">
       <template v-slot:items="props">
-        <tr @click="campaignDetails(props.item.redirect_url)">
-          <td class="text-xs-left"><a :href="props.item.redirect_url" class="default-vue-link">{{ props.item.name }}</a></td>
-          <td class="text-xs-left">{{ props.item.brand }}</td>
-          <td class="text-xs-left">{{ dateToHumanReadable(props.item.start_date) }}</td>
-          <td class="text-xs-left">{{ dateToHumanReadable(props.item.end_date) }}</td>
-          <td class="text-xs-left">{{ props.item.budget }}</td>
-          <td class="text-xs-left">{{ props.item.adslots }}</td>
-          <td class="text-xs-left" v-html="props.item.status"></td>
+        <tr>
+            <td class="text-xs-left">{{ dateToHumanReadable(props.item.name) }}</td>
+            <td class="text-xs-left">{{ dateToHumanReadable(props.item.number_brands) }}</td>
+            <td class="text-xs-left">{{ dateToHumanReadable(props.item.sum_active_campaign) }}</td>
+            <td class="text-xs-left">{{ dateToHumanReadable(props.item.client_spendings) }}</td>
           <td class="text-xs-left">{{ dateToHumanReadable(props.item.date_created) }}</td>
         </tr>
       </template>
@@ -41,8 +38,7 @@
 <script>
   export default {
     props: {
-      companyType: String,
-      campaigns: Array
+      clients: Array
     },
     data () {
       return {
@@ -59,16 +55,13 @@
             sortBy: 'date_created',
             descending: true,
         },
-        noDataText: 'No campaign to display'
+        noDataText: 'No client to display'
       }
     },
     mounted() {
-        console.log('Display All camapaigns Component mounted.');
+        console.log('Display All client Component mounted.');
     },
     methods: {
-      campaignDetails(url) {
-        window.location = url;
-      }
     }
   }
 </script>
