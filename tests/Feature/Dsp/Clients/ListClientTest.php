@@ -97,7 +97,7 @@ class ListClient extends TestCase
         $user = $this->setupUserWithPermissions();
         $response = $this->getResponse($user);
         $response->assertStatus(200)
-                ->assertExactJson([]);
+                 ->assertExactJson(['data' => []]);
     }
     public function test_client_list_with_no_filter_params_returns_all_client_retrievable_by_user()
     {
@@ -109,7 +109,7 @@ class ListClient extends TestCase
         $response->assertStatus(200);
 
         $expected = Arr::sort([$client_one->id, $client_two->id]);
-        $actual = Arr::pluck($response->json(), 'id');
+        $actual = Arr::pluck($response->json()['data'], 'id');
         $actual = Arr::sort($actual);
         
         $this->assertEquals(\array_values($expected), \array_values($actual));
@@ -129,7 +129,7 @@ class ListClient extends TestCase
         $response->assertStatus(200);
 
         $expected = [$client_three->id];
-        $actual = Arr::pluck($response->json(), 'id');
+        $actual = Arr::pluck($response->json()['data'], 'id');
         $actual = Arr::sort($actual);
 
         $this->assertEquals(\array_values($expected), \array_values($actual));
@@ -149,7 +149,7 @@ class ListClient extends TestCase
         $response->assertStatus(200);
 
         $expected = Arr::sort([$client_one->id, $client_two->id]);
-        $actual = Arr::pluck($response->json(), 'id');
+        $actual = Arr::pluck($response->json()['data'], 'id');
         $actual = Arr::sort($actual);
         
         $this->assertEquals(\array_values($expected), \array_values($actual));

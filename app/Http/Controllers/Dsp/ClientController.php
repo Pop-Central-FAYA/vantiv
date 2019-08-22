@@ -21,6 +21,8 @@ use Vanguard\Models\Campaign;
 
 use Vanguard\Models\Invoice;
 
+use Vanguard\Http\Resources\ClientCollection;
+
 class ClientController extends Controller
 {
     use CompanyIdTrait;
@@ -71,7 +73,7 @@ class ClientController extends Controller
         $validated['company_id'] = $this->companyId();
         $client_list = Client::with('contacts', 'brands')->filter($validated)->get();
         $client_details = $this->getClientDetails($client_list);
-        return $client_details;
+        return new ClientCollection($client_details);
     }
 
     public function getClientDetails($client_list)
@@ -99,7 +101,7 @@ class ClientController extends Controller
             );
             array_push($itemClients, $itemClient);
         }
-        return $itemClients;
+        return collect($itemClients);
         
     }
 

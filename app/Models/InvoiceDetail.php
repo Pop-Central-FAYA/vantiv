@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class InvoiceDetail extends Base
 {
+    protected $table = 'invoiceDetails';
     protected $dates = [
         'time_created', 'time_modified'
     ];
