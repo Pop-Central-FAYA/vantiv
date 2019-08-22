@@ -67,11 +67,10 @@ class ClientController extends Controller
      */
     public function list(ListRequest $request)
     {           
-       
         $validated = $request->validated();
         $validated['company_id'] = $this->companyId();
         $client_list = Client::with('contacts', 'brands')->filter($validated)->get();
-        $client_details = $this-> getClientDetails($client_list);
+        $client_details = $this->getClientDetails($client_list);
         return $client_details;
     }
 
