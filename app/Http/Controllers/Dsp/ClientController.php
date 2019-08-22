@@ -17,7 +17,8 @@ use Illuminate\Http\Request;
 use Vanguard\Libraries\Enum\ClassMessages;
 use Vanguard\Http\Requests\Client\ListRequest;
 
-use Vanguard\Models\CampaignDetail;
+use Vanguard\Models\Campaign;
+
 use Vanguard\Models\Invoice;
 
 class ClientController extends Controller
@@ -105,14 +106,14 @@ class ClientController extends Controller
 
     public function getActiveCampaign($brand_id)
     {
-        $campaigns = CampaignDetail::where([['brand', '=', $brand_id], ['status', '=', 'active']])->get()->count();
+        $campaigns = Campaign::where([['brand_id', '=', $brand_id], ['status', '=', 'active']])->get()->count();
         return $campaigns;
     }
     
     public function getBrandSpendings($brand_id)
     {
         $brand_spendings = 0;
-        $campaigns = CampaignDetail::where('brand', '=', $brand_id)->get();
+        $campaigns = Campaign::where('brand_id', '=', $brand_id)->get();
         foreach ($campaigns as $campaign) 
         {
             $invoices = Invoice::with('details')->where('campaign_id', '=', $campaign->id)->get();

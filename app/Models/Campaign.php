@@ -13,7 +13,7 @@ class Campaign extends Base
     ];
 
     protected $fillable = [
-        'id', 'campaign_status', 'reference'
+        'brand_id', 'campaign_status', 'reference'
     ];
 
     public $timestamps = false;

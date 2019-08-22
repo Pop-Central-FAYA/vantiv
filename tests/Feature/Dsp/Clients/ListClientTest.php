@@ -40,24 +40,25 @@ class ListClient extends TestCase
         return $brand->refresh();
     }
 
-    protected function setUpCampaign($user_id,$brand_id)
+    protected function setUpCampaign($brand_id)
     {
-       $campaign= factory(\Vanguard\Models\CampaignDetail::class)->create([
-            'user_id' => $user_id,
-            'brand' => $brand_id,
+        $campaign= factory(\Vanguard\Models\Campaign::class)->create([
+            'brand_id' => $brand_id,
             "status" => "pending"
         ]);
+
         $this->setUpInvoice($campaign->id);
        return $campaign->refresh();
     }
      
     protected function setUpActiveCampaign($user_id,$brand_id)
     {
-       $campaign= factory(\Vanguard\Models\CampaignDetail::class)->create([
-            'user_id' => $user_id,
-            'brand' => $brand_id,
+        $campaign= factory(\Vanguard\Models\Campaign::class)->create([
+            'brand_id' => $brand_id,
             "status" => "active"
         ]);
+
+     
         $this->setUpInvoice($campaign->id);
        return $campaign->refresh();
     }
