@@ -57,13 +57,12 @@ class ClientController extends Controller
       /**
      * Return a list of clients that the currently logged in user has permission to view
      */
-    
+
     public function list(ListRequest $request)
     {           
         $validated = $request->validated();
         $validated['company_id'] = $this->companyId();
-        $client_list = Client::with('contacts', 'brands')->filter($validated)->get();
-        $new_get_client = new GetClientDetails($client_list);
+        $new_get_client = new GetClientDetails($validated);
         $client_details = $new_get_client->run(); 
         return new ClientCollection($client_details);
     }

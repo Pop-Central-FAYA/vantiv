@@ -4,22 +4,24 @@ namespace Vanguard\Services\Client;
 
 use Vanguard\Models\Campaign;
 use Vanguard\Services\BaseServiceInterface;
+use Vanguard\Models\Client;
 
 
 class GetClientDetails implements BaseServiceInterface
 {
-    protected $client_list;
+    protected $validated;
  
 
-    public function __construct($client_list)
+    public function __construct($validated)
     {
-        $this->client_list = $client_list;
+        $this->validated = $validated;
       
     }
 
     public function run()
     {
-      return $this->getClientDetails($this->client_list);
+        $client_list = Client::with('contacts', 'brands')->filter($this->validated)->get();
+        return $this->getClientDetails($client_list);
     }
 
 

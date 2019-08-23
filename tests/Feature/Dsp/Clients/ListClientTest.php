@@ -14,35 +14,31 @@ class ListClient extends TestCase
 {
     protected $route_name = 'client.list';
 
-    protected function setupClient($user, $name, $price)
+    protected function setupClient($user, $name)
     {
         $client = factory(\Vanguard\Models\Client::class)->create([
             'name'=> $name,
             'company_id' => $user->companies->first(),
             'created_by' => $user->id
         ]);
-        $this->setupBrand($user->id, $client->id, $price);
-        $this->setupBrand($user->id, $client->id, $price);
         return $client->refresh();
     }
 
-    protected function setupBrand($user_id, $client_id, $price)
+    protected function setupBrand($user_id, $client_id)
     {
         $brand = factory(\Vanguard\Models\Brand::class)->create([
             'created_by' => $user_id,
             'client_id' => $client_id
         ]);
-        $this->setUpActiveCampaign($user_id, $brand->id, $price);
-        $this->setUpActiveCampaign($user_id, $brand->id, $price);
         return $brand->refresh();
     }
 
-    protected function setUpActiveCampaign($user_id,$brand_id, $price)
+    protected function setUpCampaign($brand, $amount, $status)
     {
         $campaign= factory(\Vanguard\Models\Campaign::class)->create([
-            'brand_id' => $brand_id,
-            "status" => "active",
-            "budget" => $price
+            'brand_id' => $brand->id,
+            "status" => $status,
+            "budget" => $amount
         ]);
 
        return $campaign->refresh();
@@ -65,6 +61,8 @@ class ListClient extends TestCase
         $response = $this->getResponse($user);
         $response->assertStatus(403);
     }
+
+   
     public function test_empty_array_returned_if_no_client_exist_that_the_user_has_access_to()
     {
         $user = $this->setupUserWithPermissions();
@@ -72,11 +70,29 @@ class ListClient extends TestCase
         $response->assertStatus(200)
                  ->assertExactJson(['data' => []]);
     }
+
     public function test_client_list_with_no_filter_params_returns_all_client_retrievable_by_user()
     {
         $user = $this->setupUserWithPermissions();
-        $client_one = $this->setupClient($user, "ABC CAR", 3000);
-        $client_two = $this->setupClient($user, "ABC CAR", 3000);
+       //client two
+        $client_one = $this->setupClient($user, "ABC CAR");
+        //brand one
+        $brand_one_client_one = $this->setupBrand($user->id, $client_one->id);
+        $campaign_brand_client_active_one = $this->setUpCampaign($brand_one_client_one, 2000, "active");
+
+        $campaign_brand_client_pending_one = $this->setUpCampaign($brand_one_client_one, 2000, "pending");
+        //brand two
+        $brand_client_two = $this->setupBrand($user->id, $client_one->id);
+        $campaign_brand_two_client_active_two = $this->setUpCampaign($brand_client_two, 1000, "active");
+        $campaign_brand_two_client_pending_one = $this->setUpCampaign($brand_client_two, 2000, "pending");
+
+        //client two
+        $client_two = $this->setupClient($user, "ABC MOTOR");
+        //brand one
+        $brand_one_client_two = $this->setupBrand($user->id, $client_two->id);
+
+        $campaign_brand_client_two_active_one = $this->setUpCampaign($brand_one_client_two, 2000, "active");
+        $campaign_brand_client_two_active_two = $this->setUpCampaign($brand_one_client_two, 2000, "active");
 
         $response = $this->getResponse($user);
         $response->assertStatus(200);
@@ -87,21 +103,43 @@ class ListClient extends TestCase
         
         $this->assertEquals(\array_values($expected), \array_values($actual));
     }
+   
     public function test_client_list_with_user_id_param_returns_relevant_list()
     {
         $user = $this->setupUserWithPermissions();
-        $client_one = $this->setupClient($user, "ABC CAR", 3000);
-        $client_two = $this->setupClient($user, "ABC CAR", 3000);
-        //different company and user
-        $different_user = $this->setupAuthUser($user->companies->first());
-        $client_three = $this->setupClient($different_user, "ABC CAR", 3000);
+        //client two
+        $client_one = $this->setupClient($user, "ABC CAR");
+        //brand one
+        $brand_one_client_one = $this->setupBrand($user->id, $client_one->id);
+        $campaign_brand_client_active_one = $this->setUpCampaign($brand_one_client_one, 2000, "active");
 
-        $query_params = ['created_by' => $different_user->id];
+        $campaign_brand_client_pending_one = $this->setUpCampaign($brand_one_client_one, 2000, "pending");
+        //brand two
+        $brand_client_two = $this->setupBrand($user->id, $client_one->id);
+        $campaign_brand_two_client_active_two = $this->setUpCampaign($brand_client_two, 1000, "active");
+        $campaign_brand_two_client_pending_one = $this->setUpCampaign($brand_client_two, 2000, "pending");
+
+        //client two
+        $client_two = $this->setupClient($user, "ABC MOTOR");
+        //brand one
+        $brand_one_client_two = $this->setupBrand($user->id, $client_two->id);
+
+        $campaign_brand_client_two_active_one = $this->setUpCampaign($brand_one_client_two, 2000, "active");
+        $campaign_brand_client_two_active_two = $this->setUpCampaign($brand_one_client_two, 2000, "active");
+
+        //different company and user
+        $another_user = $this->setupAuthUser();
+        $client_another = $this->setupClient($another_user, "ABC CAR");
+          //brand one
+        $another_brand_one_client_one = $this->setupBrand($another_user->id, $client_another->id);
+        $canother_ampaign_brand_client_active_one = $this->setUpCampaign($another_brand_one_client_one, 2000, "active");
+
+        $query_params = ['created_by' => $another_user->id];
         $response = $this->getResponse($user, $query_params);
 
         $response->assertStatus(200);
 
-        $expected = [$client_three->id];
+        $expected = [$client_another->id];
         $actual = Arr::pluck($response->json()['data'], 'id');
         $actual = Arr::sort($actual);
 
@@ -111,12 +149,31 @@ class ListClient extends TestCase
     public function test_client_list_is_always_limited_to_client_that_belongs_to_users_company()
     {
         $user = $this->setupUserWithPermissions();
-        $client_one = $this->setupClient($user, "ABC CAR", 3000);
-        $client_two = $this->setupClient($user, "ABC CAR", 3000);
+               $client_one = $this->setupClient($user, "ABC CAR");
+        //brand one
+        $brand_one_client_one = $this->setupBrand($user->id, $client_one->id);
+        $campaign_brand_client_active_one = $this->setUpCampaign($brand_one_client_one, 2000, "active");
+
+        $campaign_brand_client_pending_one = $this->setUpCampaign($brand_one_client_one, 2000, "pending");
+        //brand two
+        $brand_client_two = $this->setupBrand($user->id, $client_one->id);
+        $campaign_brand_two_client_active_two = $this->setUpCampaign($brand_client_two, 1000, "active");
+        $campaign_brand_two_client_pending_one = $this->setUpCampaign($brand_client_two, 2000, "pending");
+
+        //client two
+        $client_two = $this->setupClient($user, "ABC MOTOR");
+        //brand one
+        $brand_one_client_two = $this->setupBrand($user->id, $client_two->id);
+
+        $campaign_brand_client_two_active_one = $this->setUpCampaign($brand_one_client_two, 2000, "active");
+        $campaign_brand_client_two_active_two = $this->setUpCampaign($brand_one_client_two, 2000, "active");
 
         //different company and user
         $another_user = $this->setupAuthUser();
-        $client_three = $this->setupClient($another_user, "ABC CAR", 3000);
+        $client_another = $this->setupClient($another_user, "ABC CAR");
+          //brand one
+        $another_brand_one_client_one = $this->setupBrand($another_user->id, $client_another->id);
+        $canother_ampaign_brand_client_active_one = $this->setUpCampaign($another_brand_one_client_one, 2000, "active");
 
         $response = $this->getResponse($user);
         $response->assertStatus(200);
@@ -127,25 +184,54 @@ class ListClient extends TestCase
         
         $this->assertEquals(\array_values($expected), \array_values($actual));
     }
-  
+ 
     public function test_client_list_values_are_always_accurate_and_correct()
     {
         $user = $this->setupUserWithPermissions();
-        $client_one = $this->setupClient($user, "ABC CAR", 3000);
-        $client_two = $this->setupClient($user, "ABC Motos", 2000);
+
+        $client_one = $this->setupClient($user, "ABC CAR");
+        //brand one
+        $brand_one_client_one = $this->setupBrand($user->id, $client_one->id);
+        $campaign_brand_client_active_one = $this->setUpCampaign($brand_one_client_one, 2000, "active");
+        $campaign_brand_client_active_two = $this->setUpCampaign($brand_one_client_one, 2000, "active");
+        $campaign_brand_client_pending_one = $this->setUpCampaign($brand_one_client_one, 2000, "pending");
+        //brand two
+        $brand_client_two = $this->setupBrand($user->id, $client_one->id);
+        $campaign_brand_two_client_active_two = $this->setUpCampaign($brand_client_two, 1000, "active");
+        $campaign_brand_two_client_pending_one = $this->setUpCampaign($brand_client_two, 2000, "pending");
+
+        $brand_client_three = $this->setupBrand($user->id, $client_one->id);
+
+
+        //client two
+        $client_two = $this->setupClient($user, "ABC MOTOR");
+        //brand one
+        $brand_one_client_two = $this->setupBrand($user->id, $client_two->id);
+
+        $campaign_brand_client_two_active_one = $this->setUpCampaign($brand_one_client_two, 2000, "active");
+        $campaign_brand_client_two_active_two = $this->setUpCampaign($brand_one_client_two, 2000, "active");
+        $campaign_brand_client_two_active_three = $this->setUpCampaign($brand_one_client_two, 2000, "active");
+        $campaign_brand_client_two_pending_one = $this->setUpCampaign($brand_one_client_two, 2000, "pending");
+        //brand two
+        $brand_two_client_two = $this->setupBrand($user->id, $client_two->id);
+        $campaign_brand_two_client_two_active_two = $this->setUpCampaign($brand_two_client_two, 1000, "active");
+        $campaign_brand_two_client_two_pending_one = $this->setUpCampaign($brand_two_client_two, 2000, "pending");
 
         $response = $this->getResponse($user);
         $response->assertStatus(200);
         $expected_one =[
                 "name" => "ABC CAR",
-                "name" => "ABC Motos",
+                "number_brands" => 3,
+                "sum_active_campaign" => 3,
+                "client_spendings" => 9000,
+                "name" => "ABC MOTOR",
                 "number_brands" => 2,
                 "sum_active_campaign" => 4,
-                "client_spendings" => 12000,
-                "client_spendings" => 8000,
+                "client_spendings" => 11000,
+               
             ];
         $actual = $response->json()['data'];
         $response->assertJsonFragment($expected_one);
      
-    }
+    } 
 }
