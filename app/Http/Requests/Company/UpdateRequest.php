@@ -15,7 +15,7 @@ class UpdateRequest extends FormRequest
     {
         return [
             'address' => 'sometimes|required|string',
-            'logo' => 'required|url' 
+            'logo' => 'sometimes|required|url' 
         ];
     }
 }

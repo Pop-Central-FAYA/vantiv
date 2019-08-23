@@ -184,6 +184,7 @@
             Route::post('/clients', 'ClientController@create')->name('client.create');
             Route::patch('/clients/{id}', 'ClientController@update')->name('client.update');
             Route::get('/clients', 'ClientController@list')->name('client.list');
+            Route::get('/clients', 'ClientController@index')->name('client.index');
          });
 
          /**
@@ -191,8 +192,10 @@
          */
 
         Route::group(['namespace' => 'Dsp'], function () {
+            Route::get('/company/index', 'CompanyController@index')->name('company.index');
             Route::patch('/company/{id}', 'CompanyController@update')->name('company.update');
         });
+        Route::post('company/presigned-url', 'S3Controller@getPresignedUrl')->name('presigned.url');
         
         Route::group(['namespace' => 'Dsp'], function() {
             //@todo possibly create another name for the index route

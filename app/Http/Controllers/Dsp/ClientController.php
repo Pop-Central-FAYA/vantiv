@@ -67,4 +67,9 @@ class ClientController extends Controller
         return new ClientCollection($client_details);
     }
 
+    
+    public function index(Request $request)
+    {   
+        return view('agency.clients.index');
+    }
 }
