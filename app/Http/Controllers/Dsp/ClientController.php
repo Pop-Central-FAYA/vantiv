@@ -10,17 +10,10 @@ use Vanguard\Http\Controllers\Traits\CompanyIdTrait;
 use Vanguard\Http\Requests\Client\StoreRequest;
 use Vanguard\Http\Resources\ClientResource;
 use Vanguard\Models\Client;
-use Vanguard\Models\Brand;
 use Vanguard\Http\Requests\Client\UpdateRequest;
 use Vanguard\Services\Client\UpdateService;
-use Illuminate\Http\Request;
-use Vanguard\Libraries\Enum\ClassMessages;
 use Vanguard\Http\Requests\Client\ListRequest;
-
 use Vanguard\Models\Campaign;
-
-use Vanguard\Models\Invoice;
-
 use Vanguard\Http\Resources\ClientCollection;
 
 class ClientController extends Controller
@@ -78,11 +71,11 @@ class ClientController extends Controller
 
     public function getClientDetails($client_list)
     {
-        $itemClients = [];
+        $item_clients = [];
         foreach ($client_list as $client) 
         {
-            $brands=0;
-            $sum_active_campaign=0;
+            $brands = 0;
+            $sum_active_campaign = 0;
             $client_spendings = 0;
             foreach ($client->brands as $brand) 
             {
@@ -90,7 +83,7 @@ class ClientController extends Controller
                 $sum_active_campaign += $this->getActiveCampaign($brand->id);
                 $client_spendings += $this->getBrandSpendings($brand->id);
             }
-            $itemClient = array(
+            $item_client = array(
                 'id' => $client->id,
                 'image_url' => $client->image_url,
                 'name'=> $client->name, 
@@ -99,9 +92,9 @@ class ClientController extends Controller
                 'client_spendings' => $client_spendings,  
                 'date_created' => $client->time_created, 
             );
-            array_push($itemClients, $itemClient);
+            array_push($item_clients, $item_client);
         }
-        return collect($itemClients);
+        return collect($item_clients);
         
     }
 
@@ -117,14 +110,7 @@ class ClientController extends Controller
         $campaigns = Campaign::where('brand_id', '=', $brand_id)->get();
         foreach ($campaigns as $campaign) 
         {
-            $invoices = Invoice::with('details')->where('campaign_id', '=', $campaign->id)->get();
-            foreach ($invoices as $invoice) 
-            {
-                foreach ($invoice->details as $detail) 
-                {
-                    $brand_spendings += $detail->actual_amount_paid;
-                }
-            }
+              $brand_spendings += $campaign->budget;
         }
         return $brand_spendings;
     }
