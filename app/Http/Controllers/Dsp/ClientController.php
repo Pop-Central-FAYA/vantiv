@@ -16,6 +16,8 @@ use Vanguard\Http\Requests\Client\ListRequest;
 use Vanguard\Models\Campaign;
 use Vanguard\Http\Resources\ClientCollection;
 
+use Vanguard\Services\Client\GetClientDetails;
+
 class ClientController extends Controller
 {
     use CompanyIdTrait;
@@ -54,64 +56,16 @@ class ClientController extends Controller
 
       /**
      * Return a list of clients that the currently logged in user has permission to view
-     * Filter parameters are allowed
-     * @todo get list of client
-     * @todo get summation of total spendings
-     * @todo get date created
-     * @todo get active campaigns
      */
+    
     public function list(ListRequest $request)
     {           
         $validated = $request->validated();
         $validated['company_id'] = $this->companyId();
         $client_list = Client::with('contacts', 'brands')->filter($validated)->get();
-        $client_details = $this->getClientDetails($client_list);
+        $new_get_client = new GetClientDetails($client_list);
+        $client_details = $new_get_client->run(); 
         return new ClientCollection($client_details);
     }
 
-    public function getClientDetails($client_list)
-    {
-        $item_clients = [];
-        foreach ($client_list as $client) 
-        {
-            $brands = 0;
-            $sum_active_campaign = 0;
-            $client_spendings = 0;
-            foreach ($client->brands as $brand) 
-            {
-                $brands++;
-                $sum_active_campaign += $this->getActiveCampaign($brand->id);
-                $client_spendings += $this->getBrandSpendings($brand->id);
-            }
-            $item_client = array(
-                'id' => $client->id,
-                'image_url' => $client->image_url,
-                'name'=> $client->name, 
-                'number_brands' => $brands, 
-                'sum_active_campaign' => $sum_active_campaign,
-                'client_spendings' => $client_spendings,  
-                'date_created' => $client->time_created, 
-            );
-            array_push($item_clients, $item_client);
-        }
-        return collect($item_clients);
-        
-    }
-
-    public function getActiveCampaign($brand_id)
-    {
-        $campaigns = Campaign::where([['brand_id', '=', $brand_id], ['status', '=', 'active']])->get()->count();
-        return $campaigns;
-    }
-    
-    public function getBrandSpendings($brand_id)
-    {
-        $brand_spendings = 0;
-        $campaigns = Campaign::where('brand_id', '=', $brand_id)->get();
-        foreach ($campaigns as $campaign) 
-        {
-              $brand_spendings += $campaign->budget;
-        }
-        return $brand_spendings;
-    }
 }
