@@ -119,11 +119,11 @@
                             <v-layout wrap>
                                 <v-flex xs12 sm6 md6>
                                    <v-text-field solo v-model="client_logo_input_label" prepend-icon="attach_file" name="certificate" @click="choose_file('CLIENT_LOGO')"></v-text-field>
-                                   <input type="file" style="display: none" ref="client_logo" accept=".txt,.pdf,.docx,.doc,.png,.jpeg,.jpg,.gif" @change="on_file_change($event, 'CLIENT_LOGO')">
+                                   <input type="file" style="display: none" ref="client_logo" accept=".png,.jpeg,.jpg" @change="on_file_change($event, 'CLIENT_LOGO')">
                                 </v-flex>
                                 <v-flex xs12 sm6 md6>
                                     <v-text-field solo v-model="brand_logo_input_label" prepend-icon="attach_file" name="certificate" @click="choose_file('BRAND_LOGO')"></v-text-field>
-                                    <input type="file" style="display: none" ref="brand_logo" accept=".txt,.pdf,.docx,.doc,.png,.jpeg,.jpg,.gif" @change="on_file_change($event, 'BRAND_LOGO')">
+                                    <input type="file" style="display: none" ref="brand_logo" accept=".png,.jpeg,.jpg" @change="on_file_change($event, 'BRAND_LOGO')">
                                    
                                 </v-flex>
                             </v-layout>
