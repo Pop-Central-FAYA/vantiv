@@ -42,10 +42,16 @@ class CreateClient extends TestCase
             'city' => $faker->city,
             'state' => $faker->state,
             'nationality' => $faker->country,
-            'contact'=> $contact,
-            'brand_details'=>$brand
+            'contact'=> [$contact],
+            'brand_details'=>[$brand]
         ];
     }
+    protected function setupUserWithPermissions()
+    {
+        $user = $this->setupAuthUser(null, ['create.client']);
+        return $user;
+    }
+
 
     protected function getResponse($user, $data)
     {
@@ -55,7 +61,7 @@ class CreateClient extends TestCase
     public function test_invalid_client_data_is_validated_on_update()
     {
         \Session::start();
-        $user = $this->setupAuthUser();
+        $user = $this->setupUserWithPermissions();
         $response = $this->getResponse($user, ['_token' => csrf_token()]);
         $response->assertStatus(422);
         $keys = ['name', 'image_url', 'street_address', 'city', 'state', 'nationality','contact.first_name', 'contact.last_name', 'contact.email', 'contact.phone_number','contact.is_primary',  'brand_details.name','brand_details.image_url',
@@ -68,7 +74,7 @@ class CreateClient extends TestCase
              
         \Session::start();
         $data = $this->getData();
-        $user = $this->setupAuthUser();
+        $user = $this->setupUserWithPermissions();
         $response = $this->getResponse($user, $data);
         $response->assertStatus(201);
         $response->assertJsonFragment([
@@ -82,7 +88,7 @@ class CreateClient extends TestCase
              
         \Session::start();
         $data = $this->getData();
-        $user = $this->setupAuthUser();
+        $user = $this->setupUserWithPermissions();
         $response = $this->getResponse($user, $data);
         $response->assertStatus(201);
         $response->assertJsonFragment([
@@ -97,13 +103,12 @@ class CreateClient extends TestCase
              
         \Session::start();
         $data = $this->getData();
-        $user = $this->setupAuthUser();
+        $user = $this->setupUserWithPermissions();
         $response = $this->getResponse($user, $data);
         $response->assertStatus(201);
         $response->assertJsonFragment([
             'name' => "Ayo NIG LMT",
             'image_url' => 'https://www.turcotte.com/quae-quae-error-cum-qui-ducimus',
-            'status' =>'active'
         ]);
     }
 }

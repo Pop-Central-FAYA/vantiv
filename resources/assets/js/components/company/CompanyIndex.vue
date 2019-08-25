@@ -55,7 +55,7 @@
         props: {
             companyData: Object,
             permissionList:Array,
-             routes:Object,
+            routes:Object,
         },
         data() {
           return {

@@ -106,6 +106,7 @@ Vue.component('company-index', () => import('./components/company/CompanyIndex.v
 
 //CLIENT MANAGEMENT
 Vue.component('clients-list', () => import('./components/client/DisplayClients.vue'));
+Vue.component('clients-create', () => import('./components/client/CreateClient.vue'));
 
 
 Vue.mixin({

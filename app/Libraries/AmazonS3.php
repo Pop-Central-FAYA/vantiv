@@ -15,11 +15,11 @@ Class AmazonS3
     {
         $s3Client = S3Client::factory(array(
             'region' => getenv(self::ENV_REGION),
-            'version' => '2006-03-01'
-            // 'credentials' => [
-            //     'key' => getenv('AWS_KEY'),
-            //     'secret' => getenv('AWS_SECRET')
-            // ]
+            'version' => '2006-03-01',
+             'credentials' => [
+                 'key' => getenv('AWS_KEY'),
+                 'secret' => getenv('AWS_SECRET')
+             ]
         ));
 
         return $s3Client;
