@@ -8,7 +8,7 @@ use Vanguard\Models\Brand;
 
 class Client extends Base
 {
-    protected $fillable = ['name', 'brand', 'image_url', 'created_by', 'company_id', 'street_address', 'city', 'state','nationality'];
+    protected $fillable = ['name', 'image_url', 'created_by', 'company_id', 'street_address', 'city', 'state','nationality'];
 
     public function contacts()
     {

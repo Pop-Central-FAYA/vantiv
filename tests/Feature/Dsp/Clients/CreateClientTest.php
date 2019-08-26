@@ -36,7 +36,6 @@ class CreateClient extends TestCase
         return [
             '_token' => csrf_token(),
             'name' => "Oluwa captain",
-            'brand' => "C and O",
             'image_url' =>  'https://www.turcotte.com/quae-quae-error-cum-qui-ducimus',
             'street_address' => $faker->address,
             'city' => $faker->city,

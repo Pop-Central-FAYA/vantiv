@@ -26,7 +26,6 @@ class StoreClient implements BaseServiceInterface
         return DB::transaction(function () {
             $client = new Client();
             $client->name = $this->client_details['name'];
-            $client->brand = $this->company_id;
             $client->image_url =  $this->client_details['image_url'];
             $client->created_by =  $this->user_id;
             $client->company_id = $this->company_id;
