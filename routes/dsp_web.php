@@ -2,7 +2,11 @@
     /**
      * Public accessed share link
      */
-    Route::get('/mpos/share-link/{id}', 'Guest\MpoShareLinkController@index')->name('guest.mpo_share_link');
+    Route::group(['prefix' => 'public', 'namespace' => 'Guest'], function() {
+        Route::get('/mpos/index/{id}', 'MpoController@index')->name('guest.mpo_share_link');
+        Route::get('/mpos/{id}/temporary-url', 'MpoController@getTemporaryUrl')->name('public.mpo.export.temporary_url');
+        Route::get('/mpos/{id}/export', 'MpoController@export')->name('public.mpo.export');
+    });
 
     Route::group(['namespace' => 'Dsp'], function () {
         Route::get('health', 'AuthController@getLogin');
@@ -29,7 +33,7 @@
             Route::get('/details/{id}', 'CampaignsController@getDetails')->name('agency.campaign.details');
             Route::get('/mpo-details/{id}', 'CampaignsController@mpoDetails')->name('agency.mpo.details');
             Route::get('/mpo/details/{campaign_mpo_id}', 'CampaignsController@campaignMpoDetails');
-            Route::get('/mpo/export/{campaign_mpo_id}', 'CampaignsController@exportMpoAsExcel');
+            Route::get('/mpos/{id}/export', 'CampaignsController@exportMpoAsExcel');
             Route::post('/mpo/associate-assets', 'CampaignsController@associateAssetsToMpo');
             Route::post('/mpo/details/{campaign_mpo_id}/adslots/delete', 'CampaignsController@deleteMultipleAdslots');
             Route::post('/mpo/details/{campaign_mpo_id}/adslots/update', 'CampaignsController@updateAdslots');
@@ -177,18 +181,18 @@
         });
         Route::get('/check-brand-existence', 'BrandsController@checkBrandExistsWithSameInformation');
         Route::get('/presigned-url', 'S3Controller@getPresignedUrl');
-         /*
-         * new Client route
-         */
+        /*
+        * new Client route
+        */
         Route::group(['namespace' => 'Dsp'], function () {
             Route::post('/clients', 'ClientController@create')->name('client.create');
             Route::patch('/clients/{id}', 'ClientController@update')->name('client.update');
             Route::get('/clients', 'ClientController@index')->name('client.index');
          });
 
-         /**
-         * Company Management
-         */
+        /**
+        * Company Management
+        */
 
         Route::group(['namespace' => 'Dsp'], function () {
             Route::get('/company/index', 'CompanyController@index')->name('company.index');

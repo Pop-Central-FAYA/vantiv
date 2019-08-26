@@ -56,4 +56,12 @@ class Campaign extends Base
     {
         return $this->find($id);
     }
+
+    /**
+     * Get association with company through the belongs_to column
+     */
+    public function company()
+    {
+        return $this->belongsTo(Company::class, 'belongs_to');
+    }
 }
