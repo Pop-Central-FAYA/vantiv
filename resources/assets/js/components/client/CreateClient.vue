@@ -192,7 +192,7 @@
                 logo:'',
                 show_brand_logo: false,
                 show_client_logo: false,
-                client_logo_input_label: 'Choose brand logo',
+                client_logo_input_label: 'Choose Client logo',
                 brand_logo_input_label: 'Choose brand logo',
                 client_logo_file: '',
                 brand_logo_file: '',
