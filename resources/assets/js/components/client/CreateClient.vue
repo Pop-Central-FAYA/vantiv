@@ -289,6 +289,7 @@
                 }
             },
             store_request: function() {
+                 this.show_progress_bar = false;
                   this.sweet_alert('Saving client information', 'info');
                 axios({
                     method: 'post',
