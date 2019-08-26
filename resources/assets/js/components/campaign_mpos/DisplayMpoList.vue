@@ -92,7 +92,7 @@
             exportMpo : function(mpo_id) {
                 var msg = "Generating Excel Document, Please wait";
                 this.sweet_alert(msg, 'info');
-                window.location = '/campaigns/mpo/export/'+mpo_id
+                window.location = `/campaigns/mpos/${mpo_id}/export`
                 // window.location.href = '/campaigns/mpo/export/'+mpo_id
             },
             sumAdslotsInCampaignMpoTimeBelt : function(campaign_mpo_time_belts) {

@@ -2,45 +2,26 @@
 
 namespace Vanguard\Http\Controllers\Dsp;
 
-use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
 use Vanguard\Http\Controllers\Controller;
-use Vanguard\Http\Requests\CampaignInformationUpdateRequest;
-use Vanguard\Libraries\Api;
 use Vanguard\Libraries\CampaignDate;
 use Vanguard\Libraries\Utilities;
-use Vanguard\Models\PreselectedAdslot;
-use Vanguard\Models\SelectedAdslot;
-use Vanguard\Models\Upload;
 use Vanguard\Models\Campaign;
-use Vanguard\Services\Campaign\MediaMix;
-use Vanguard\Services\Campaign\CampaignBudgetGraph;
 use Vanguard\Services\Campaign\CampaignDetails;
-use Session;
-use Vanguard\Services\Compliance\ComplianceGraph;
 use Vanguard\Models\CampaignMpo;
 use Vanguard\Models\CampaignMpoTimeBelt;
 use Illuminate\Support\Facades\DB;
-
-use Vanguard\Services\Mpo\ExportCampaignMpo;
-use Maatwebsite\Excel\Facades\Excel;
-use Vanguard\Exports\MpoExport;
-use Vanguard\Services\Mpo\ExportCampaignMpoSummary;
-use Vanguard\Services\Mpo\GetCampaignMpo;
 use PhpOffice\PhpSpreadsheet\Chart\Exception;
-use Vanguard\Services\Walkin\WalkInLists;
 use Vanguard\Services\MediaAsset\GetMediaAssetByClient;
 use Vanguard\Services\Traits\SplitTimeRange;
 use Vanguard\Http\Requests\UpdateMpoTimeBeltRequest;
 use Vanguard\Services\Mpo\DeleteMpoTimeBelt;
-use Vanguard\Services\Mpo\CreateMpoTimeBelt;
-use Vanguard\Services\Client\AllClient;
 use Vanguard\Http\Controllers\Traits\CompanyIdTrait;
 use Vanguard\Services\Mpo\UpdateCampaignMpoTimeBelt;
 use Vanguard\Http\Requests\StoreCampaignMpoAdslotRequest;
 use Vanguard\Services\Mpo\StoreCampaignMpoTimeBelt;
+use Vanguard\Services\Mpo\GetCampaignMpoTimeBelts;
+use Vanguard\Services\Mpo\ExcelMpoExport;
 
 class CampaignsController extends Controller
 {
@@ -120,15 +101,11 @@ class CampaignsController extends Controller
         $agency_id = $this->companyId();
         $campaign_details_service = new CampaignDetails($id);
         $campaign_details = $campaign_details_service->run();
+        $mpos_id = $campaign_details->campaign_mpos->pluck('id');
         $campaign_details_client_id = $campaign_details->client->id;
         $campaign_details_brand_id = $campaign_details->brand->id;
         $client_media_assets = (new GetMediaAssetByClient($campaign_details_client_id, $campaign_details_brand_id))->run();
-        $campaign_files = CampaignMpoTimeBelt::with(['media_asset'])->whereNotNull('asset_id')->whereHas('campaign_mpo', function ($query) use ($id){
-                $query->whereHas('campaign', function ($query) use ($id) {
-                    $query->where('id', $id);
-                });
-            })->get();
-        $campaign_files = $campaign_files->groupBy('asset_id');
+        $campaign_files = (new GetCampaignMpoTimeBelts($mpos_id))->run();
         $time_belts = $this->splitTimeRangeByBase('00:00:00', '23:59:59', '15');
         return view('agency.campaigns.new_campaign_details', compact('campaign_details', 'client_media_assets', 'campaign_files', 'time_belts'));
     }
@@ -156,30 +133,7 @@ class CampaignsController extends Controller
 
     public function exportMpoAsExcel($campaign_mpo_id)
     {
-        $mpo_details = CampaignMpo::with('campaign')->find($campaign_mpo_id);
-        $campaign_mpo_time_belts = DB::table('campaign_mpo_time_belts')->select(DB::raw("*,
-                                                        DATE_FORMAT(playout_date, '%Y-%m') AS month,
-                                                        DATE_FORMAT(playout_date, '%d') AS day_number"))
-                                                        ->where('mpo_id', $campaign_mpo_id)
-                                                        ->get()
-                                                        ->toArray();
-        $campaign_mpo_time_belts = collect($campaign_mpo_time_belts);
-        $days_array = [];
-        for($i = 1; $i <=31; $i++){
-            $days_array[] = $i;
-        }
-        $mpo_time_belts = new ExportCampaignMpo(
-            $campaign_mpo_time_belts->groupBy(['program', 'duration'])        
-        );
-        $total_budget = $campaign_mpo_time_belts->sum('net_total');
-        $net_total = $total_budget === 0 ? $total_budget : $total_budget - ((5/100)*$total_budget); 
-        $mpo_time_belt_summary = new ExportCampaignMpoSummary($campaign_mpo_time_belts->groupBy('duration'));
-        return Excel::download(new MpoExport($mpo_time_belts->run(), 
-                                $days_array, 
-                                $mpo_details,
-                                $total_budget,
-                                $net_total,
-                                $mpo_time_belt_summary->run()), str_slug($mpo_details->campaign->name).'.xlsx');
+        return (new ExcelMpoExport($campaign_mpo_id))->run();
     }
 
     public function associateAssetsToMpo()

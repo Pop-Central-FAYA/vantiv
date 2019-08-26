@@ -101,12 +101,9 @@ Vue.component('ad-vendor-list', () => import('./components/ad_vendors/ListVendor
 Vue.component('ad-vendor-create', () => import('./components/ad_vendors/CreateVendor.vue'));
 Vue.component('ad-vendor-view', () => import('./components/ad_vendors/ViewVendor.vue'));
 
-// COMPANY MANAGEMENT
-Vue.component('company-index', () => import('./components/company/CompanyIndex.vue'));
-
-//CLIENT MANAGEMENT
-Vue.component('clients-list', () => import('./components/client/DisplayClients.vue'));
-
+//GUEST
+Vue.component('guest-mpo', () => import('./components/guest/Mpo.vue'));
+Vue.component('guest-adslot-list', () => import('./components/guest/AdslotList.vue'));
 
 Vue.mixin({
     methods: {
