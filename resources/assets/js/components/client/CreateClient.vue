@@ -34,7 +34,7 @@
                             </v-layout>
                             <v-layout wrap>
                                 <v-flex xs12 sm6 md6>
-                                    <v-text-field required :clearable="true" :full-width="true" :label="'City'" 
+                                    <v-text-field required :clearable="true" :label="'City'" 
                                                 :placeholder="'City'" :hint="'Enter the city of your vendor'" 
                                                 :solo="true" :single-line="true"
                                                 v-validate="'required|max:255'"
@@ -44,7 +44,7 @@
                                     </v-text-field>
                                 </v-flex>
                                 <v-flex xs12 sm6 md6>
-                                    <v-text-field required :clearable="true" :full-width="true" :label="'State'" 
+                                    <v-text-field required :clearable="true" :label="'State'" 
                                                 :placeholder="'State'" :hint="'Enter the state of your vendor'" 
                                                 :solo="true" :single-line="true"
                                                 v-validate="'required|max:255'"
@@ -117,14 +117,22 @@
                                <v-subheader>Logo </v-subheader>
                             <v-divider></v-divider>
                             <v-layout wrap>
-                                <v-flex xs12 sm6 md6>
-                                   <v-text-field solo v-model="client_logo_input_label" prepend-icon="attach_file" name="certificate" @click="choose_file('CLIENT_LOGO')"></v-text-field>
-                                   <input type="file" style="display: none" ref="client_logo" accept=".png,.jpeg,.jpg" @change="on_file_change($event, 'CLIENT_LOGO')">
+                                <v-flex xs12 sm5 md5>
+                                   <v-text-field solo v-model="client_logo_input_label" prepend-icon="attach_file" name="certificate"  :error-messages="errors.collect('client_image_url')"  @click="choose_file('CLIENT_LOGO')"></v-text-field>
+                                   <input type="file" style="display: none" ref="client_logo" accept=".png,.jpeg,.jpg" v-validate="'required|ext:jpg,png,jpeg'"  data-vv-name="client_image_url" @change="on_file_change($event, 'CLIENT_LOGO')">
                                 </v-flex>
-                                <v-flex xs12 sm6 md6>
-                                    <v-text-field solo v-model="brand_logo_input_label" prepend-icon="attach_file" name="certificate" @click="choose_file('BRAND_LOGO')"></v-text-field>
-                                    <input type="file" style="display: none" ref="brand_logo" accept=".png,.jpeg,.jpg" @change="on_file_change($event, 'BRAND_LOGO')">
+                                 <v-flex xs12 sm1 md1>
+                                             <b-img thumbnail fluid v-show="show_client_logo" :src="logo"  style="width: 50px; height: 50px" id="client_logo" alt="Image 1"></b-img>
+                      
+                                </v-flex>
+                                 <v-flex xs12 sm5 md5>
+                                    <v-text-field solo v-model="brand_logo_input_label" prepend-icon="attach_file" name="certificate" :error-messages="errors.collect('brand_image_url')"  @click="choose_file('BRAND_LOGO')"></v-text-field>
+                                    <input type="file" style="display: none" ref="brand_logo" accept=".png,.jpeg,.jpg"  v-validate="'required|ext:jpg,png,jpeg'"  data-vv-name="brand_image_url"  :error-messages="errors.collect('brand_image_url')" @change="on_file_change($event, 'BRAND_LOGO')">
                                    
+                                </v-flex>
+                                  <v-flex xs12 sm1 md1>
+                                            <b-img thumbnail fluid v-show="show_brand_logo" :src="logo"  style="width: 50px; height: 50px"  id="brand_logo" alt="Image 1"></b-img>
+
                                 </v-flex>
                             </v-layout>
                              <v-layout wrap>
@@ -133,17 +141,6 @@
                                     <v-progress-linear v-model="upload_percentage" color="green"></v-progress-linear>
                                 </v-flex>
                               </v-layout>
-
-                              <v-layout wrap>
-                                <v-flex xs12 sm6 md6>
-                                 <b-img thumbnail fluid v-show="show_client_logo" :src="logo"  style="width: 400px; height: 300px" id="client_logo" alt="Image 1"></b-img>
-                      
-                                </v-flex>
-                                <v-flex xs12 sm6 md6>
-                                   <b-img thumbnail fluid v-show="show_brand_logo" :src="logo"  style="width: 400px; height: 300px"  id="brand_logo" alt="Image 1"></b-img>
-
-                                </v-flex>
-                            </v-layout>
                         </v-form>
                         <v-card-actions>
                     <v-spacer></v-spacer>
@@ -260,14 +257,19 @@
         methods: {
             create_client:async function(event) {
 
-                self = this;
-                this.$validator.validateAll().then((result) => {
-                    if (result) {
-                     
+              let isValid = await this.$validator.validate().then(valid => {
+                    if (!valid) {
+                        return false;
+                    } else {
+                        return true;
                     }
                 });
 
-              try {
+                if (!isValid) {
+                    return false;
+                }
+
+               try {
                     // generate presigned url for ciient logo upload
                        await this.generate_presigned_url(this.client_logo_file, 'client-images/');
                        await this.upload_file(this.client_logo_file, this.s3_presigned_url, 'CLIENT_LOGO');
@@ -317,7 +319,7 @@
                             last_name: '',
                             email: '',
                             is_primary: true,
-                            phone_number: this.brand_logo_url
+                            phone_number: ''
                         }
                     ],
                     brand_details: [
