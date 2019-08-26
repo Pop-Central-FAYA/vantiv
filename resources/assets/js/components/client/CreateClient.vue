@@ -226,7 +226,7 @@
                             required: () => 'Last name of client contact cannot be empty',
                             max: () => 'The last name field may not be greater than 255 characters'
                         },
-                        last_name: {
+                        email: {
                             required: () => 'Email address of client contact cannot be empty',
                             email: () => 'This must be a valid email address'
                         },
@@ -239,7 +239,7 @@
                             max: () => 'The brand name field may not be greater than 255 characters'
                         },
                         client_image_url: {
-                            required: () => 'clieny logo cannot be empty',
+                            required: () => 'Client logo cannot be empty',
                             numeric: () => 'The brand logo must be a picture'
                         },
                         brand_image_url: {
