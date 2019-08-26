@@ -20,6 +20,7 @@ class ExcelMpoExport implements BaseServiceInterface
     public function run()
     {
         $mpo_details = CampaignMpo::with('campaign')->find($this->mpo_id);
+        $company_logo = $mpo_details->campaign->company->logo;
         $campaign_mpo_time_belts = DB::table('campaign_mpo_time_belts')->select(DB::raw("*,
                                                         DATE_FORMAT(playout_date, '%Y-%m') AS month,
                                                         DATE_FORMAT(playout_date, '%d') AS day_number"))
@@ -34,11 +35,14 @@ class ExcelMpoExport implements BaseServiceInterface
         $mpo_time_belts = new ExportCampaignMpo(
             $campaign_mpo_time_belts->groupBy(['program', 'duration'])        
         );
-
+        $total_budget = $campaign_mpo_time_belts->sum('net_total');
+        $net_total = $total_budget === 0 ? $total_budget : $total_budget - ((5/100)*$total_budget);
         $mpo_time_belt_summary = new ExportCampaignMpoSummary($campaign_mpo_time_belts->groupBy('duration'));
         return Excel::download(new MpoExport($mpo_time_belts->run(), 
                                 $days_array, 
                                 $mpo_details,
-                                $mpo_time_belt_summary->run()), str_slug($mpo_details->campaign->name).'.xlsx');
+                                $total_budget,
+                                $net_total,
+                                $mpo_time_belt_summary->run(), $company_logo), str_slug($mpo_details->campaign->name).'.xlsx');
     }
 }
