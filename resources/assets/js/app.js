@@ -108,6 +108,9 @@ Vue.component('company-index', () => import('./components/company/CompanyIndex.v
 Vue.component('clients-list', () => import('./components/client/DisplayClients.vue'));
 Vue.component('clients-create', () => import('./components/client/CreateClient.vue'));
 
+//GUEST
+Vue.component('guest-mpo', () => import('./components/guest/Mpo.vue'));
+Vue.component('guest-adslot-list', () => import('./components/guest/AdslotList.vue'));
 
 Vue.mixin({
     methods: {

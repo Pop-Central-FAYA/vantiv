@@ -6,7 +6,6 @@ use Tests\TestCase;
 use Vanguard\Models\MpoShareLink;
 use Vanguard\Models\MpoShareLinkActivity;
 use Vanguard\Models\CampaignMpo;
-use Vanguard\Libraries\Enum\Status;
 use Carbon\Carbon;
 
 class MpoShareLinkTest extends TestCase

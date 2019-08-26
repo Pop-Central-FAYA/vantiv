@@ -1,28 +1,35 @@
 
-<html>    
+<html>  
     <table>
         <tr>
-            <th colspan="10"><h3>The Commercial Manager <br>UPFRONT AND PERSONAL</h3></th>
+            <th colspan="1" rowspan="3">
+                
+            </th>
+        </tr>
+    </table>
+    <table>
+        <tr>
+            <th colspan="3">The Commercial Manager UPFRONT AND PERSONAL</th>
             
-            <th colspan="11"><h4>Client: {{ $mpo_details->campaign->client->company_name }} <br>Brand: {{ $mpo_details->campaign->brand->name }} <br>
-                Campaign: {{ $mpo_details->campaign->name }} <br> Date: {{ date('Y-m-d', strtotime(now())) }} </h4>
+            <th colspan="4">Client: {{ $mpo_details->campaign->client->company_name }} Brand: {{ $mpo_details->campaign->brand->name }} 
+                Campaign: {{ $mpo_details->campaign->name }}  Date: {{ date('Y-m-d', strtotime(now())) }} 
             </th>
         </tr>
         <tr>
             <th colspan="21">
-                <p style="align : center;">Revised Media Contract</p>
+                Revised Media Contract
             </th>
         </tr>
     </table>
     <table>
         <tr>
             <th colspan="21">
-                <p>This cancels and replaces Media Contract No: ....</p>
+                This cancels and replaces Media Contract No: ....
             </th>
         </tr>
         <tr>
             <th colspan="21">
-                <p>DATES AND TIMES OF TRANSMISSION SHOULD BE CLEARLY STATED ON COTs.</p>
+                DATES AND TIMES OF TRANSMISSION SHOULD BE CLEARLY STATED ON COTs.
             </th>
         </tr>
     </table>

@@ -10,13 +10,13 @@ use Vanguard\Http\Controllers\Traits\CompanyIdTrait;
 use Vanguard\Http\Requests\Client\StoreRequest;
 use Vanguard\Http\Resources\ClientResource;
 use Vanguard\Models\Client;
-use Vanguard\Models\Brand;
 use Vanguard\Http\Requests\Client\UpdateRequest;
 use Vanguard\Services\Client\UpdateService;
-use Illuminate\Http\Request;
-use Vanguard\Libraries\Enum\ClassMessages;
+use Vanguard\Http\Requests\Client\ListRequest;
+use Vanguard\Models\Campaign;
+use Vanguard\Http\Resources\ClientCollection;
 
-
+use Vanguard\Services\Client\GetClientDetails;
 
 class ClientController extends Controller
 {
@@ -25,7 +25,8 @@ class ClientController extends Controller
     public function __construct()
     {
         $this->middleware('permission:create.client')->only(['create']);
-        $this->middleware('permission:update.client')->only(['update', 'destroy']);
+        $this->middleware('permission:update.client')->only(['update']);
+        $this->middleware('permission:view.client')->only(['list']);
     }
 
     public function create(StoreRequest $request)
@@ -52,6 +53,20 @@ class ClientController extends Controller
         return $resource->response()->setStatusCode(200);
 
     }
+
+      /**
+     * Return a list of clients that the currently logged in user has permission to view
+     */
+
+    public function list(ListRequest $request)
+    {           
+        $validated = $request->validated();
+        $validated['company_id'] = $this->companyId();
+        $new_get_client = new GetClientDetails($validated);
+        $client_details = $new_get_client->run(); 
+        return new ClientCollection($client_details);
+    }
+
     
     public function index(Request $request)
     {   

@@ -13,7 +13,7 @@ class Campaign extends Base
     ];
 
     protected $fillable = [
-        'id', 'campaign_status', 'reference'
+        'brand_id', 'campaign_status', 'reference'
     ];
 
     public $timestamps = false;
@@ -55,5 +55,13 @@ class Campaign extends Base
     public function getCampaign($id)
     {
         return $this->find($id);
+    }
+
+    /**
+     * Get association with company through the belongs_to column
+     */
+    public function company()
+    {
+        return $this->belongsTo(Company::class, 'belongs_to');
     }
 }

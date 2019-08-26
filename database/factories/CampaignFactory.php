@@ -2,6 +2,7 @@
 
 use Faker\Generator as Faker;
 use Vanguard\Models\Campaign;
+use Vanguard\Models\Company;
 use Vanguard\Libraries\Utilities;
 
 $factory->define(Campaign::class, function (Faker $faker) {
@@ -12,6 +13,7 @@ $factory->define(Campaign::class, function (Faker $faker) {
         'budget' => 1000000,
         'ad_slots' => 5,
         'status' => 'active',
-        'agency_commission' => 10
+        'agency_commission' => 10,
+        'belongs_to' => factory(Company::class)->create()->id
     ];
 });
