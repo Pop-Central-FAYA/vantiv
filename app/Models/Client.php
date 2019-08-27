@@ -10,9 +10,8 @@ use EloquentFilter\Filterable;
 class Client extends Base
 {
     use Filterable;
-
-    protected $fillable = ['name', 'brand', 'image_url', 'created_by', 'company_id', 'street_address', 'city', 'state','nationality'];
-
+    protected $fillable = ['name', 'image_url', 'created_by', 'company_id', 'street_address', 'city', 'state','nationality'];
+   
     public function modelFilter()
     {
         return $this->provideFilter(\Vanguard\ModelFilters\ClientFilter::class);

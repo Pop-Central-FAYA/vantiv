@@ -101,7 +101,12 @@ Vue.component('ad-vendor-list', () => import('./components/ad_vendors/ListVendor
 Vue.component('ad-vendor-create', () => import('./components/ad_vendors/CreateVendor.vue'));
 Vue.component('ad-vendor-view', () => import('./components/ad_vendors/ViewVendor.vue'));
 
+// COMPANY MANAGEMENT
+Vue.component('company-index', () => import('./components/company/CompanyIndex.vue'));
+
+//CLIENT MANAGEMENT
 Vue.component('clients-list', () => import('./components/client/DisplayClients.vue'));
+Vue.component('clients-create', () => import('./components/client/CreateClient.vue'));
 Vue.component('clients-edit', () => import('./components/client/EditClient.vue'));
 
 //GUEST

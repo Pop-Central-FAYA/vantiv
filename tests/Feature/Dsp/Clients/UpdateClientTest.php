@@ -47,7 +47,7 @@ class UpdateClient extends TestCase
 
     public function test_invalid_data_is_validated_on_update()
     {
-        $contact= [
+        $contacts= [
             'first_name' => '',
             'last_name' => '',
             'email' => "dino",
@@ -63,7 +63,7 @@ class UpdateClient extends TestCase
             'city' => '',
             'state' => '',
             'nationality' => '',
-            'contacts'=> $contact,
+            'contacts'=> $contacts,
         ];
 
         $user = $this->setupUserWithPermissions();

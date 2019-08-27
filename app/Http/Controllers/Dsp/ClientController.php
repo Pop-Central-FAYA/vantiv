@@ -35,7 +35,7 @@ class ClientController extends Controller
         $user = Auth::user();
         $new_client = new StoreClient($validated, $this->companyId(), $user->id);
         $client = $new_client->run();   
-        $resource = new ClientResource(Client::with('contact', 'brand')->find($client->id));
+        $resource = new ClientResource(Client::with('contacts', 'brands')->find($client->id));
         return $resource->response()->setStatusCode(201);
     }
 
