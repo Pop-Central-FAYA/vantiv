@@ -25,20 +25,18 @@ class StoreClient implements BaseServiceInterface
     {
         return DB::transaction(function () {
             $client = new Client();
-            $client->name = $this->client_details->name;
-            $client->brand = $this->client_details->brand;
-            $client->image_url =  $this->client_details->image_url;
-            $client->status = $this->client_details->status;
+            $client->name = $this->client_details['name'];
+            $client->image_url =  $this->client_details['image_url'];
             $client->created_by =  $this->user_id;
             $client->company_id = $this->company_id;
-            $client->street_address = $this->client_details->street_address;
-            $client->city = $this->client_details->city;
-            $client->state = $this->client_details->state;
-            $client->nationality = $this->client_details->nationality;
+            $client->street_address = $this->client_details['street_address'];
+            $client->city = $this->client_details['city'];
+            $client->state = $this->client_details['state'];
+            $client->nationality = $this->client_details['nationality'];
             $client->save();
-            $this->storeContact($client,  $this->client_details->contact);
-            
-            $new_brand = new StoreBrand((object)$this->client_details->brand_details, $client->id , $this->user_id );
+            $this->storeContacts($client, $this->client_details['contacts'][0]);
+
+            $new_brand = new StoreBrand($this->client_details['brands'][0], $client->id , $this->user_id );
             $result =  $new_brand->run();
             return  $client;   
 
@@ -49,9 +47,9 @@ class StoreClient implements BaseServiceInterface
 
 
 
-    public function storeContact($client, $client_contact_details)
+    public function storeContacts($client, $client_contact_details)
     { 
-       return $client->contact()->create($client_contact_details);
+       return $client->contacts()->create($client_contact_details);
     }
 
 

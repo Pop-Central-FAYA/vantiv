@@ -23,8 +23,8 @@ class StoreBrand implements BaseServiceInterface
     {
         return DB::transaction(function () {
         $brand = new Brand();
-        $brand->name = $this->brand_details->name;
-        $brand->image_url = $this->brand_details->image_url;
+        $brand->name = $this->brand_details['name'];
+        $brand->image_url = $this->brand_details['image_url'];
         $brand->created_by =  $this->user_id;
         $brand->client_id = $this->client_id;
         $brand->save();

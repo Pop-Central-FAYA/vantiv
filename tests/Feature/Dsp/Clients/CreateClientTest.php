@@ -21,14 +21,14 @@ class CreateClient extends TestCase
     protected function getData()
     {
         $faker = Factory::create();
-        $contact= [
+        $contacts= [
             'first_name' => "Dino",
             'last_name' => "Melaye",
             'email' => "dino@yahoo.com",
             'phone_number' => "+23466219699",
             'is_primary' => true,
         ];
-        $brand=[
+        $brands=[
             'name' => "Ayo NIG LMT",
             'image_url' => 'https://www.turcotte.com/quae-quae-error-cum-qui-ducimus',
             'status' =>'active',
@@ -36,16 +36,21 @@ class CreateClient extends TestCase
         return [
             '_token' => csrf_token(),
             'name' => "Oluwa captain",
-            'brand' => "C and O",
             'image_url' =>  'https://www.turcotte.com/quae-quae-error-cum-qui-ducimus',
             'street_address' => $faker->address,
             'city' => $faker->city,
             'state' => $faker->state,
             'nationality' => $faker->country,
-            'contact'=> $contact,
-            'brand_details'=>$brand
+            'contacts'=> [$contacts],
+            'brand_details'=>[$brands]
         ];
     }
+    protected function setupUserWithPermissions()
+    {
+        $user = $this->setupAuthUser(null, ['create.client']);
+        return $user;
+    }
+
 
     protected function getResponse($user, $data)
     {
@@ -55,10 +60,10 @@ class CreateClient extends TestCase
     public function test_invalid_client_data_is_validated_on_update()
     {
         \Session::start();
-        $user = $this->setupAuthUser();
+        $user = $this->setupUserWithPermissions();
         $response = $this->getResponse($user, ['_token' => csrf_token()]);
         $response->assertStatus(422);
-        $keys = ['name', 'image_url', 'street_address', 'city', 'state', 'nationality','contact.first_name', 'contact.last_name', 'contact.email', 'contact.phone_number','contact.is_primary',  'brand_details.name','brand_details.image_url',
+        $keys = ['name', 'image_url', 'street_address', 'city', 'state', 'nationality','contacts.first_name', 'contacts.last_name', 'contacts.email', 'contacts.phone_number','contacts.is_primary',  'brands.name','brands.image_url',
          ];
          $response->assertJsonValidationErrors($keys);
     }
@@ -68,7 +73,7 @@ class CreateClient extends TestCase
              
         \Session::start();
         $data = $this->getData();
-        $user = $this->setupAuthUser();
+        $user = $this->setupUserWithPermissions();
         $response = $this->getResponse($user, $data);
         $response->assertStatus(201);
         $response->assertJsonFragment([
@@ -82,7 +87,7 @@ class CreateClient extends TestCase
              
         \Session::start();
         $data = $this->getData();
-        $user = $this->setupAuthUser();
+        $user = $this->setupUserWithPermissions();
         $response = $this->getResponse($user, $data);
         $response->assertStatus(201);
         $response->assertJsonFragment([
@@ -97,13 +102,12 @@ class CreateClient extends TestCase
              
         \Session::start();
         $data = $this->getData();
-        $user = $this->setupAuthUser();
+        $user = $this->setupUserWithPermissions();
         $response = $this->getResponse($user, $data);
         $response->assertStatus(201);
         $response->assertJsonFragment([
             'name' => "Ayo NIG LMT",
             'image_url' => 'https://www.turcotte.com/quae-quae-error-cum-qui-ducimus',
-            'status' =>'active'
         ]);
     }
 }
