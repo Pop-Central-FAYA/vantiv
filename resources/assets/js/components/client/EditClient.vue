@@ -12,51 +12,51 @@
                             <v-divider></v-divider>
                             <v-layout wrap>
                                 <v-flex xs12 sm6 md6>
-                                    <v-text-field v-if="editMode" required :clearable="true" :full-width="true" 
+                                    <v-text-field v-if="editMode" required :clearable="true"   
                                                 :label="'Client Name'" :placeholder="'Client Name'" 
                                                 :hint="'Enter the name of your client'" :solo="true" :single-line="true" 
                                                 v-validate="'required|max:255'" :error-messages="errors.collect('name')"
                                                 v-model="client.name" data-vv-name="name">
                                     </v-text-field>
-                                    <v-text-field v-else :full-width="true" :solo="true" :single-line="true" 
+                                    <v-text-field v-else   :solo="true" :single-line="true" 
                                                 v-model="client.name" :readonly="true" disabled="disabled">
                                     </v-text-field>
                                 </v-flex>
                                 <v-flex xs12 sm6 md6>
-                                    <v-text-field v-if="editMode" required :clearable="true" :full-width="true" :label="'Street Address'" 
+                                    <v-text-field v-if="editMode" required :clearable="true"   :label="'Street Address'" 
                                                 :placeholder="'Street Address'" :hint="'Enter the street address of your client'" 
                                                 :solo="true" :single-line="true"
                                                 v-validate="'required|max:255'"
                                                 :error-messages="errors.collect('street_address')"
                                                 v-model="client.street_address" data-vv-name="street_address">
                                     </v-text-field>
-                                    <v-text-field v-else :full-width="true" :solo="true" :single-line="true" 
+                                    <v-text-field v-else   :solo="true" :single-line="true" 
                                                 v-model="client.street_address" :readonly="true" disabled="disabled">
                                     </v-text-field>
                                 </v-flex>
                             </v-layout>
                             <v-layout wrap>
                                 <v-flex xs12 sm6 md6>
-                                    <v-text-field v-if="editMode" required :clearable="true" :full-width="true" :label="'City'" 
+                                    <v-text-field v-if="editMode" required :clearable="true"   :label="'City'" 
                                                 :placeholder="'City'" :hint="'Enter the city of your client'" 
                                                 :solo="true" :single-line="true"
                                                 v-validate="'required|max:255'"
                                                 :error-messages="errors.collect('city')"
                                                 v-model="client.city" data-vv-name="city">
                                     </v-text-field>
-                                    <v-text-field v-else :full-width="true" :solo="true" :single-line="true" 
+                                    <v-text-field v-else   :solo="true" :single-line="true" 
                                                 v-model="client.city" :readonly="true" disabled="disabled">
                                     </v-text-field>
                                 </v-flex>
                                 <v-flex xs12 sm6 md6>
-                                    <v-text-field v-if="editMode" required :clearable="true" :full-width="true" :label="'State'" 
+                                    <v-text-field v-if="editMode" required :clearable="true"   :label="'State'" 
                                                 :placeholder="'State'" :hint="'Enter the state of your client'" 
                                                 :solo="true" :single-line="true"
                                                 v-validate="'required|max:255'"
                                                 :error-messages="errors.collect('state')"
                                                 v-model="client.state" data-vv-name="state">
                                     </v-text-field>
-                                    <v-text-field v-else :full-width="true" :solo="true" :single-line="true" 
+                                    <v-text-field v-else   :solo="true" :single-line="true" 
                                                 v-model="client.state" :readonly="true" disabled="disabled">
                                     </v-text-field>
                                 </v-flex>
@@ -65,56 +65,71 @@
                             <v-divider></v-divider>
                             <v-layout wrap>
                                 <v-flex xs12 sm6 md6>
-                                    <v-text-field v-if="editMode" required :clearable="true" :full-width="true" :label="'First Name'" 
+                                    <v-text-field v-if="editMode" required :clearable="true"   :label="'First Name'" 
                                                 :placeholder="'First Name'" :hint="'Enter the first name of your contact'" 
                                                 :solo="true" :single-line="true"
                                                 v-validate="'required|max:255'"
                                                 :error-messages="errors.collect('first_name')"
-                                                v-model="client.contacts[0].first_name" data-vv-name="first_name">
+                                                v-model="client.contact[0].first_name" data-vv-name="first_name">
                                     </v-text-field>
-                                    <v-text-field v-else :full-width="true" :solo="true" :single-line="true" 
-                                                v-model="client.contacts[0].first_name" :readonly="true" disabled="disabled">
+                                    <v-text-field v-else   :solo="true" :single-line="true" 
+                                                v-model="client.contact[0].first_name" :readonly="true" disabled="disabled">
                                     </v-text-field>
                                 </v-flex>
                                 <v-flex xs12 sm6 md6>
-                                    <v-text-field v-if="editMode" required :clearable="true" :full-width="true" :label="'Last Name'" 
+                                    <v-text-field v-if="editMode" required :clearable="true"   :label="'Last Name'" 
                                                 :placeholder="'Last Name'" :hint="'Enter the last name of your contact'" 
                                                 :solo="true" :single-line="true"
                                                 v-validate="'required|max:255'"
                                                 :error-messages="errors.collect('last_name')"
-                                                v-model="client.contacts[0].last_name" data-vv-name="last_name">
+                                                v-model="client.contact[0].last_name" data-vv-name="last_name">
                                     </v-text-field>
-                                    <v-text-field v-else :full-width="true" :solo="true" :single-line="true" 
-                                                v-model="client.contacts[0].last_name" :readonly="true" disabled="disabled">
+                                    <v-text-field v-else   :solo="true" :single-line="true" 
+                                                v-model="client.contact[0].last_name" :readonly="true" disabled="disabled">
                                     </v-text-field>
                                 </v-flex>
                             </v-layout>
                             <v-layout wrap>
                                 <v-flex xs12 sm6 md6>
-                                    <v-text-field v-if="editMode" required :clearable="true" :full-width="true" :label="'Email'" 
+                                    <v-text-field v-if="editMode" required :clearable="true"   :label="'Email'" 
                                                 :placeholder="'Email'" :hint="'Enter the email of your contact'" 
                                                 :solo="true" :single-line="true"
                                                 v-validate="'required|email'"
                                                 :error-messages="errors.collect('email')"
-                                                v-model="client.contacts[0].email" data-vv-name="email">
+                                                v-model="client.contact[0].email" data-vv-name="email">
                                     </v-text-field>
-                                    <v-text-field v-else :full-width="true" :solo="true" :single-line="true" 
-                                                v-model="client.contacts[0].email" :readonly="true" disabled="disabled">
+                                    <v-text-field v-else   :solo="true" :single-line="true" 
+                                                v-model="client.contact[0].email" :readonly="true" disabled="disabled">
                                     </v-text-field>
                                 </v-flex>
                                 <v-flex xs12 sm6 md6>
-                                    <v-text-field v-if="editMode" required :clearable="true" :full-width="true" :label="'Phone Number'" 
+                                    <v-text-field v-if="editMode" required :clearable="true"   :label="'Phone Number'" 
                                                 :placeholder="'Phone Number'" :hint="'Enter the phone number of your contact'" 
                                                 :solo="true" :single-line="true"
                                                 v-validate="'required|numeric'"
                                                 :error-messages="errors.collect('phone_number')"
-                                                v-model="client.contacts[0].phone_number" data-vv-name="phone_number">
+                                                v-model="client.contact[0].phone_number" data-vv-name="phone_number">
                                     </v-text-field>
-                                    <v-text-field v-else :full-width="true" :solo="true" :single-line="true" 
-                                                v-model="client.contacts[0].phone_number" :readonly="true" disabled="disabled">
+                                    <v-text-field v-else   :solo="true" :single-line="true" 
+                                                v-model="client.contact[0].phone_number" :readonly="true" disabled="disabled">
                                     </v-text-field>
                                 </v-flex>
                             </v-layout>
+
+                             <v-subheader>Logo </v-subheader>
+                            <v-divider></v-divider>
+                            <v-layout wrap>
+                                <v-flex xs12 sm5 md5>
+                                     <v-text-field v-if="!editMode" solo v-model="client_logo_input_label" prepend-icon="attach_file" name="certificate"  disabled="disabled"></v-text-field>
+                                     <v-text-field  v-else solo v-model="client_logo_input_label" prepend-icon="attach_file" name="certificate"  :error-messages="errors.collect('client_image_url')"  @click="choose_file()"></v-text-field>
+                                   <input type="file" style="display: none" ref="client_logo" accept=".png,.jpeg,.jpg" v-validate="'required|ext:jpg,png,jpeg'"  data-vv-name="client_image_url" @change="on_file_change($event)">
+                                </v-flex>
+                                 <v-flex xs12 sm1 md1>
+                                             <b-img thumbnail fluid :src="client.image_url"  style="width: 50px; height: 50px" id="client_logo" alt="Image 1"></b-img>
+                      
+                                </v-flex>
+                            </v-layout>
+
                         </v-form>
                         <v-card-actions>
                     <v-spacer></v-spacer>
@@ -162,6 +177,12 @@
                 dialog: false,
                 client: this.setupModel(),
                 editMode: false,
+                client_logo_file: '',
+                client_logo_url: '',
+                client_logo_input_label: '',
+                s3_presigned_url: '',
+                show_progress_bar: false,
+                upload_percentage: 0,
                 dictionary: {
                     custom: {
                         name: {
@@ -195,7 +216,11 @@
                         phone_number: {
                             required: () => 'Phone number of client contact cannot be empty',
                             numeric: () => 'Phone number must be all digits'
-                        }
+                        },
+                        client_image_url: {
+                            required: () => 'Client logo cannot be empty',
+                            numeric: () => 'The brand logo must be a picture'
+                        },
                     }
                 }
             };
@@ -204,10 +229,12 @@
             var self = this;
             Event.$on('view-client', function(client) {
                 self.openDialog(client);
+                self.client_logo_input_label =client.image_url;
             });
+          
         },
         mounted() {
-            console.log('Create client Component mounted.');
+            console.log('Edit client Component mounted.');
             this.$validator.localize('en', this.dictionary);
         },
         methods: {
@@ -218,7 +245,7 @@
                     city: '',
                     state: '',
                     country: 'Nigeria',
-                    contacts: [
+                    contact: [
                         {
                             first_name: '',
                             last_name: '',
@@ -229,8 +256,8 @@
                 }
             },
             openDialog: function(item) {
-                if (item['contacts'].length == 0) {
-                    item['contacts'] = [{}];
+                if (item['contact'].length == 0) {
+                    item['contact'] = [{}];
                 }
                 this.client = item;
                 this.dialog = true;
@@ -259,7 +286,18 @@
                 }).catch((error) => {
                     this.sweet_alert('An unknown error has occurred, client cannot be updated. Please try again', 'error');
                 });
-            }
+            },
+             choose_file() {
+                    this.$refs.client_logo.click();
+            },
+            on_file_change(event) {
+                    this.client_logo_file = event.target.files[0];
+                    this.client_logo_input_label = this.client_logo_file.name;
+                     this.show_client_logo = true;
+                    const output = $('#client_logo');
+                    output.attr('src', URL.createObjectURL(event.target.files[0]));
+            },
+
         }
     }
 </script>

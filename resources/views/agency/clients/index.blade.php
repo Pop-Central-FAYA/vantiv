@@ -1,7 +1,7 @@
 @extends('dsp_layouts.faya_app')
 
 @section('title')
-    <title> Vantage | Clientd</title>
+    <title> Vantage | Clients</title>
 @stop
 
 @section('content')

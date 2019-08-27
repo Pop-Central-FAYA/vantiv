@@ -6,6 +6,7 @@
       <v-spacer></v-spacer>
       <v-text-field v-model="search" append-icon="search" label="Enter Keyword" single-line hide-details></v-text-field>
     </v-card-title>
+     <clients-edit></clients-edit>
     <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="clients" :loading="loading" :search="search" :no-data-text="noDataText" :pagination.sync="pagination">
       <template v-slot:items="props">
         <tr @click="showDetails(props.item)">
@@ -76,9 +77,10 @@
           }).finally(() => this.loading = false);
         },
          showDetails(idx, item) {
-           console.log(idx);
+          console.log(idx);
           Event.$emit('view-client', idx, item);
-        }
+        },
+        
     }
   }
 </script>
