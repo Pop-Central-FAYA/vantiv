@@ -15,7 +15,7 @@ use Vanguard\Services\Client\UpdateService;
 use Vanguard\Http\Requests\Client\ListRequest;
 use Vanguard\Models\Campaign;
 use Vanguard\Http\Resources\ClientCollection;
-
+use Illuminate\Http\Request;
 use Vanguard\Services\Client\GetClientDetails;
 
 class ClientController extends Controller

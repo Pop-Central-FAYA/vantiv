@@ -101,6 +101,9 @@ Vue.component('ad-vendor-list', () => import('./components/ad_vendors/ListVendor
 Vue.component('ad-vendor-create', () => import('./components/ad_vendors/CreateVendor.vue'));
 Vue.component('ad-vendor-view', () => import('./components/ad_vendors/ViewVendor.vue'));
 
+Vue.component('clients-list', () => import('./components/client/DisplayClients.vue'));
+Vue.component('clients-edit', () => import('./components/client/EditClient.vue'));
+
 //GUEST
 Vue.component('guest-mpo', () => import('./components/guest/Mpo.vue'));
 Vue.component('guest-adslot-list', () => import('./components/guest/AdslotList.vue'));
