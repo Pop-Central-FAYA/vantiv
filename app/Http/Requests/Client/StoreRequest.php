@@ -28,13 +28,13 @@ class StoreRequest extends Request
             'city' => 'required|string',
             'state' => 'required|string',
             'nationality' => 'required|string',
-            'contact.*.first_name' => 'required|string',
-            'contact.*.last_name' => 'required|string',
-            'contact.*.email' => 'required|email',
-            'contact.*.phone_number' => 'required|string',
-            'contact.*.is_primary' => 'required|boolean',
-            'brand_details.*.name' => 'required|string',
-            'brand_details.*.image_url' => 'required|url',
+            'contacts.*.first_name' => 'required|string',
+            'contacts.*.last_name' => 'required|string',
+            'contacts.*.email' => 'required|email',
+            'contacts.*.phone_number' => 'required|string',
+            'contacts.*.is_primary' => 'required|boolean',
+            'brands.*.name' => 'required|string',
+            'brands.*.image_url' => 'required|url',
         ];
     }
 }

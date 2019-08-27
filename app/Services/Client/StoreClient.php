@@ -34,9 +34,9 @@ class StoreClient implements BaseServiceInterface
             $client->state = $this->client_details['state'];
             $client->nationality = $this->client_details['nationality'];
             $client->save();
-            $this->storeContact($client, $this->client_details['contact'][0]);
+            $this->storeContacts($client, $this->client_details['contacts'][0]);
 
-            $new_brand = new StoreBrand($this->client_details['brand_details'][0], $client->id , $this->user_id );
+            $new_brand = new StoreBrand($this->client_details['brands'][0], $client->id , $this->user_id );
             $result =  $new_brand->run();
             return  $client;   
 
@@ -47,7 +47,7 @@ class StoreClient implements BaseServiceInterface
 
 
 
-    public function storeContact($client, $client_contact_details)
+    public function storeContacts($client, $client_contact_details)
     { 
        return $client->contacts()->create($client_contact_details);
     }

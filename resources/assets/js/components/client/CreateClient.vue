@@ -21,19 +21,18 @@
                                                 data-vv-name="name">
                                     </v-text-field>
                                 </v-flex>
-                                <v-flex xs12 sm6 md6>
-                                    <v-text-field required :clearable="true" :label="'Street Address'" 
-                                                :placeholder="'Street Address'" :hint="'Enter the street address of your client'" 
-                                                :solo="true" :single-line="true"
-                                                v-validate="'required|max:255'"
-                                                :error-messages="errors.collect('street_address')"
-                                                v-model="client.street_address"
-                                                data-vv-name="street_address">
-                                    </v-text-field>
-                                </v-flex>
+                             
+                                 <v-flex xs12 sm5 md5>
+                                   <v-text-field solo v-model="client_logo_input_label" prepend-icon="attach_file" name="certificate"  :error-messages="errors.collect('client_image_url')"  @click="chooseFile('client_logo')"></v-text-field>
+                                   <input type="file" style="display: none" ref="client_logo" accept=".png,.jpeg,.jpg" v-validate="'required|ext:jpg,png,jpeg'"  data-vv-name="client_image_url" @change="onFileChange($event, 'client_logo')">
+                                 </v-flex>
+                                 <v-flex xs12 sm1 md1>
+                                    <b-img thumbnail fluid v-show="show_client_logo" :src="logo"  style="width: 50px; height: 50px" id="client_logo" alt="Image 1"></b-img>
+                                  </v-flex>
+
                             </v-layout>
                             <v-layout wrap>
-                                <v-flex xs12 sm6 md6>
+                                <v-flex xs12 sm3 md3>
                                     <v-text-field required :clearable="true" :label="'City'" 
                                                 :placeholder="'City'" :hint="'Enter the city of your vendor'" 
                                                 :solo="true" :single-line="true"
@@ -43,7 +42,7 @@
                                                 data-vv-name="city">
                                     </v-text-field>
                                 </v-flex>
-                                <v-flex xs12 sm6 md6>
+                                <v-flex xs12 sm3 md3>
                                     <v-text-field required :clearable="true" :label="'State'" 
                                                 :placeholder="'State'" :hint="'Enter the state of your vendor'" 
                                                 :solo="true" :single-line="true"
@@ -51,6 +50,16 @@
                                                 :error-messages="errors.collect('state')"
                                                 v-model="client.state"
                                                 data-vv-name="state">
+                                    </v-text-field>
+                                </v-flex>
+                                   <v-flex xs12 sm6 md6>
+                                    <v-text-field required :clearable="true" :label="'Street Address'" 
+                                                :placeholder="'Street Address'" :hint="'Enter the street address of your client'" 
+                                                :solo="true" :single-line="true"
+                                                v-validate="'required|max:255'"
+                                                :error-messages="errors.collect('street_address')"
+                                                v-model="client.street_address"
+                                                data-vv-name="street_address">
                                     </v-text-field>
                                 </v-flex>
                             </v-layout>
@@ -63,7 +72,7 @@
                                                 :solo="true" :single-line="true"
                                                 v-validate="'required|max:255'"
                                                 :error-messages="errors.collect('first_name')"
-                                                v-model="client.contact[0].first_name"
+                                                v-model="client.contacts[0].first_name"
                                                 data-vv-name="first_name">
                                     </v-text-field>
                                 </v-flex>
@@ -73,7 +82,7 @@
                                                 :solo="true" :single-line="true"
                                                 v-validate="'required|max:255'"
                                                 :error-messages="errors.collect('last_name')"
-                                                v-model="client.contact[0].last_name"
+                                                v-model="client.contacts[0].last_name"
                                                 data-vv-name="last_name">
                                     </v-text-field>
                                 </v-flex>
@@ -85,7 +94,7 @@
                                                 :solo="true" :single-line="true"
                                                 v-validate="'required|email'"
                                                 :error-messages="errors.collect('email')"
-                                                v-model="client.contact[0].email"
+                                                v-model="client.contacts[0].email"
                                                 data-vv-name="email">
                                     </v-text-field>
                                 </v-flex>
@@ -95,7 +104,7 @@
                                                 :solo="true" :single-line="true"
                                                 v-validate="'required|numeric'"
                                                 :error-messages="errors.collect('phone_number')"
-                                                v-model="client.contact[0].phone_number"
+                                                v-model="client.contacts[0].phone_number"
                                                 data-vv-name="phone_number">
                                     </v-text-field>
                                 </v-flex>
@@ -103,31 +112,19 @@
                             <v-subheader>Brand Information</v-subheader>
                             <v-divider></v-divider>
                             <v-layout wrap>
-                                <v-flex xs12 sm12 md12>
+                                <v-flex xs12 sm6 md6>
                                     <v-text-field required :clearable="true" :label="'Name'" 
                                                 :placeholder="'Brand Name'" :hint="'Enter the name of your brand'" 
                                                 :solo="true" :single-line="true"
                                                 v-validate="'required|max:255'"
                                                 :error-messages="errors.collect('brand_name')"
-                                                v-model="client.brand_details[0].name"
+                                                v-model="client.brands[0].name"
                                                 data-vv-name="brand_name">
                                     </v-text-field>
                                 </v-flex>
-                            </v-layout>
-                               <v-subheader>Logo </v-subheader>
-                            <v-divider></v-divider>
-                            <v-layout wrap>
-                                <v-flex xs12 sm5 md5>
-                                   <v-text-field solo v-model="client_logo_input_label" prepend-icon="attach_file" name="certificate"  :error-messages="errors.collect('client_image_url')"  @click="choose_file('CLIENT_LOGO')"></v-text-field>
-                                   <input type="file" style="display: none" ref="client_logo" accept=".png,.jpeg,.jpg" v-validate="'required|ext:jpg,png,jpeg'"  data-vv-name="client_image_url" @change="on_file_change($event, 'CLIENT_LOGO')">
-                                </v-flex>
-                                 <v-flex xs12 sm1 md1>
-                                             <b-img thumbnail fluid v-show="show_client_logo" :src="logo"  style="width: 50px; height: 50px" id="client_logo" alt="Image 1"></b-img>
-                      
-                                </v-flex>
-                                 <v-flex xs12 sm5 md5>
-                                    <v-text-field solo v-model="brand_logo_input_label" prepend-icon="attach_file" name="certificate" :error-messages="errors.collect('brand_image_url')"  @click="choose_file('BRAND_LOGO')"></v-text-field>
-                                    <input type="file" style="display: none" ref="brand_logo" accept=".png,.jpeg,.jpg"  v-validate="'required|ext:jpg,png,jpeg'"  data-vv-name="brand_image_url"  :error-messages="errors.collect('brand_image_url')" @change="on_file_change($event, 'BRAND_LOGO')">
+                                  <v-flex xs12 sm5 md5>
+                                    <v-text-field solo v-model="brand_logo_input_label" prepend-icon="attach_file" name="certificate" :error-messages="errors.collect('brand_image_url')"  @click="chooseFile('brand_logo')"></v-text-field>
+                                    <input type="file" style="display: none" ref="brand_logo" accept=".png,.jpeg,.jpg"  v-validate="'required|ext:jpg,png,jpeg'"  data-vv-name="brand_image_url"  :error-messages="errors.collect('brand_image_url')" @change="onFileChange($event, 'brand_logo')">
                                    
                                 </v-flex>
                                   <v-flex xs12 sm1 md1>
@@ -135,7 +132,7 @@
 
                                 </v-flex>
                             </v-layout>
-                             <v-layout wrap>
+                              <v-layout wrap>
                                 <v-flex xs12 sm12 md12 v-show="show_progress_bar">
                                     <p class="text-muted">{{ current_upload_title }}</p>
                                     <v-progress-linear v-model="upload_percentage" color="green"></v-progress-linear>
@@ -144,8 +141,8 @@
                         </v-form>
                         <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="red" dark @click="close_dialog()">Close</v-btn>
-                    <v-btn color="" class="default-vue-btn" dark @click="create_client()">Save</v-btn>
+                    <v-btn color="red" dark @click="closeDialog()">Close</v-btn>
+                    <v-btn color="" class="default-vue-btn" dark @click=" createClient()">Save</v-btn>
                     </v-card-actions>
                     </v-container>
                 </v-card-text>
@@ -185,11 +182,11 @@
         data() {
             return {
                 dialog: false,
-                client: this.setup_model(),
+                client: this.setupModel(),
                 logo:'',
                 show_brand_logo: false,
                 show_client_logo: false,
-                client_logo_input_label: 'Choose Client logo',
+                client_logo_input_label: 'Choose client logo',
                 brand_logo_input_label: 'Choose brand logo',
                 client_logo_file: '',
                 brand_logo_file: '',
@@ -255,7 +252,7 @@
             this.$validator.localize('en', this.dictionary);
         },
         methods: {
-            create_client:async function(event) {
+             createClient:async function(event) {
 
               let isValid = await this.$validator.validate().then(valid => {
                     if (!valid) {
@@ -271,24 +268,24 @@
 
                try {
                     // generate presigned url for ciient logo upload
-                       await this.generate_presigned_url(this.client_logo_file, 'client-images/');
-                       await this.upload_file(this.client_logo_file, this.s3_presigned_url, 'CLIENT_LOGO');
+                       await this.generatePresignedUrl(this.client_logo_file, 'client-images/');
+                       await this.uploadFile(this.client_logo_file, this.s3_presigned_url, 'client_logo');
                        console.log(this.client_logo_url);
                     // generate presigned url for brand logo upload
                     if(this.brand_logo_file) {
-                          await this.generate_presigned_url(this.brand_logo_file, 'brand-images/');
-                          await this.upload_file(this.brand_logo_file, this.s3_presigned_url, 'BRAND_LOGO');
+                          await this.generatePresignedUrl(this.brand_logo_file, 'brand-images/');
+                          await this.uploadFile(this.brand_logo_file, this.s3_presigned_url, 'brand_logo');
                       
                     }
                     // make axios call to store created asset to db
-                       await this.store_request();
+                       await this. storeRequest();
                    
                 } catch (error) {
                     console.log(error);
                     this.sweet_alert('An unknown error has occurred, asset upload failed. Please try again', 'error');
                 }
             },
-            store_request: function() {
+             storeRequest: function() {
                  this.show_progress_bar = false;
                   this.sweet_alert('Saving client information', 'info');
                 axios({
@@ -299,14 +296,18 @@
                     console.log(res.data.data);
                      Event.$emit('client-created', res.data.data);
                     this.sweet_alert('Client was successfully created', 'success');
-                    this.client = this.setup_model();
-                    this.close_dialog();
+                    this.client = this.setupModel();
+                      this.show_client_logo = false;
+                     this.show_brand_logo = false;
+                    this.client_logo_input_label= 'Choose client logo';
+                    this.brand_logo_input_label = 'Choose brand logo';
+                    this.closeDialog();
                 }).catch((error) => {
                     console.log(error);
                     this.sweet_alert('An unknown error has occurred, client cannot be created. Please try again', 'error');
                 });
             },
-            setup_model: function() {
+            setupModel: function() {
                 return {
                     name: '',
                     image_url:'',
@@ -314,7 +315,7 @@
                     city: '',
                     state: '',
                     nationality: 'Nigeria',
-                    contact: [
+                    contacts: [
                         {
                             first_name: '',
                             last_name: '',
@@ -323,7 +324,7 @@
                             phone_number: ''
                         }
                     ],
-                    brand_details: [
+                    brands: [
                         {
                             name: '',
                             image_url:'',
@@ -331,26 +332,26 @@
                     ]
                 }
             },
-            close_dialog: function() {
+            closeDialog: function() {
                 this.dialog = false;
             },
-            choose_file(upload_type) {
-                if(upload_type == 'CLIENT_LOGO') {
+            chooseFile(upload_type) {
+                if(upload_type == 'client_logo') {
                     this.$refs.client_logo.click();
                 }
-                if(upload_type == 'BRAND_LOGO') {
+                if(upload_type == 'brand_logo') {
                     this.$refs.brand_logo.click();
                 }
             },
-            on_file_change(event, uploadType) {
-                if (uploadType === 'CLIENT_LOGO') {
+            onFileChange(event, uploadType) {
+                if (uploadType === 'client_logo') {
                     this.client_logo_file = event.target.files[0];
                     this.client_logo_input_label = this.client_logo_file.name;
                      this.show_client_logo = true;
                     const output = $('#client_logo');
                     output.attr('src', URL.createObjectURL(event.target.files[0]));
 
-                } else if (uploadType === 'BRAND_LOGO') {
+                } else if (uploadType === 'brand_logo') {
                     this.brand_logo_file = event.target.files[0];
                     this.brand_logo_input_label = this.brand_logo_file.name;
                     this.show_brand_logo = true;
@@ -358,7 +359,7 @@
                     output.attr('src', URL.createObjectURL(event.target.files[0]));
                 }
             },
-            generate_presigned_url: async function(file, folder_name, uploadType) {
+            generatePresignedUrl: async function(file, folder_name, uploadType) {
                 await axios({
                         method: 'post',
                         url: '/company/presigned-url',
@@ -375,11 +376,11 @@
                     });
                 return this.s3_presigned_url;
             },
-             upload_file: async function(file, presigned_url, upload_type) {
+             uploadFile: async function(file, presigned_url, upload_type) {
                 this.show_progress_bar = true;
                 this.upload_percentage = 0;
 
-                if (upload_type === 'CLIENT_LOGO') {
+                if (upload_type === 'client_logo') {
                     this.current_upload_title = "Uploading client logo";
                 } else {
                     this.current_upload_title = "Uploading brand logo";
@@ -394,13 +395,13 @@
                         }.bind(this)
                     }
                 ).then((res) => {
-                    if (upload_type === 'CLIENT_LOGO'){
+                    if (upload_type === 'client_logo'){
                         this.client_logo_url = `https:${presigned_url.split('?')[0].substr(6)}`;
                         this.client.image_url =  this.client_logo_url;
                     }
-                    else if (upload_type === 'BRAND_LOGO'){
+                    else if (upload_type === 'brand_logo'){
                         this.brand_logo_url = `https:${presigned_url.split('?')[0].substr(6)}`;
-                         this.client.brand_details[0].image_url= this.brand_logo_url;
+                         this.client.brands[0].image_url= this.brand_logo_url;
                     }
                 }).catch((error) => {
                     console.log(error);
