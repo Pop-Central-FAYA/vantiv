@@ -26,13 +26,6 @@ class StoreShareLinkTest extends TestCase
         $response->assertStatus(401);
     }
 
-    public function test_it_validates_the_request_and_return_proper_status()
-    {
-        $user = $this->setupUserWithPermissions();
-        $response = $this->getResponse($user, [], 'ghgdgdf');
-        $response->assertStatus(422);
-    }
-
     public function test_user_with_wrong_permission_gets_necessary_status()
     {
         $user = $this->setupAuthUser();

@@ -7,7 +7,7 @@ use Carbon\Carbon;
 
 class MpoShareLink extends Base
 {
-    protected $fillable = ['mpo_id', 'email', 'url', 'expired_at'];
+    protected $fillable = ['mpo_id', 'url', 'expired_at'];
 
     public function share_link_activities()
     {

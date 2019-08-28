@@ -90,11 +90,12 @@ Vue.component('schedule-mpo-filter', () => import('./components/schedule/weekly/
 Vue.component('campaign-mpos-list', () => import('./components/campaign_mpos/DisplayMpoList.vue'));
 Vue.component('mpo-slot-list', () => import('./components/campaign_mpos/DisplayAdslotList.vue'));
 Vue.component('mpo-file-manager', () => import('./components/campaign_mpos/AssociateFiles.vue'));
-Vue.component('file-modal', () => import('./components/campaign_mpos/FileModal.vue'));
+Vue.component('submit-mpo-modal', () => import('./components/campaign_mpos/SubmitMpoModal.vue'));
 Vue.component('delete-slots-modal', () => import('./components/campaign_mpos/DeleteSlotModal.vue'));
 Vue.component('edit-slots-modal', () => import('./components/campaign_mpos/EditSlotModal.vue'));
 Vue.component('campaign-file-list', () => import('./components/campaign_mpos/MpoFileList.vue'));
 Vue.component('add-adslot-modal', () => import('./components/campaign_mpos/AddAdslotModal.vue'));
+Vue.component('share-link-modal', () => import('./components/campaign_mpos/ShareLinkModal.vue'));
 
 // AD VENDOR MANAGEMENT
 Vue.component('ad-vendor-list', () => import('./components/ad_vendors/ListVendors.vue'));
