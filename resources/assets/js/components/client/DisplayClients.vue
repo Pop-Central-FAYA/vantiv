@@ -77,7 +77,6 @@
           }).finally(() => this.loading = false);
         },
          showDetails(idx, item) {
-          console.log(idx);
           Event.$emit('view-client', idx, item);
         },
         

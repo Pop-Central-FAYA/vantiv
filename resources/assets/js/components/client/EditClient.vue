@@ -2,7 +2,6 @@
     <v-layout>
         <v-dialog v-model="dialog" persistent max-width="800px">
             <template v-slot:activator="{ on }">
-                <v-btn color="" class="default-vue-btn" dark v-on="on">Create Client</v-btn>
             </template>
             <v-card>
                 <v-card-text>
@@ -12,52 +11,59 @@
                             <v-divider></v-divider>
                             <v-layout wrap>
                                 <v-flex xs12 sm6 md6>
-                                    <v-text-field v-if="editMode" required :clearable="true"   
+                                    <v-text-field required :clearable="true"   
                                                 :label="'Client Name'" :placeholder="'Client Name'" 
                                                 :hint="'Enter the name of your client'" :solo="true" :single-line="true" 
                                                 v-validate="'required|max:255'" :error-messages="errors.collect('name')"
                                                 v-model="client.name" data-vv-name="name">
                                     </v-text-field>
-                                    <v-text-field v-else   :solo="true" :single-line="true" 
-                                                v-model="client.name" :readonly="true" disabled="disabled">
-                                    </v-text-field>
                                 </v-flex>
-                                <v-flex xs12 sm6 md6>
-                                    <v-text-field v-if="editMode" required :clearable="true"   :label="'Street Address'" 
-                                                :placeholder="'Street Address'" :hint="'Enter the street address of your client'" 
-                                                :solo="true" :single-line="true"
-                                                v-validate="'required|max:255'"
-                                                :error-messages="errors.collect('street_address')"
-                                                v-model="client.street_address" data-vv-name="street_address">
-                                    </v-text-field>
-                                    <v-text-field v-else   :solo="true" :single-line="true" 
-                                                v-model="client.street_address" :readonly="true" disabled="disabled">
-                                    </v-text-field>
+                                   <v-flex xs12 sm5 md5>
+                                     <v-text-field solo
+                                               v-model="client_logo_input_label" 
+                                               prepend-icon="attach_file" name="certificate"  
+                                               :error-messages="errors.collect('client_image_url')"  
+                                               @click="chooseFile()"></v-text-field>
+                                     <input type="file" 
+                                               style="display: none" 
+                                               ref="client_logo" 
+                                               accept=".png,.jpeg,.jpg" 
+                                               v-validate="'ext:jpg,png,jpeg'"  
+                                               data-vv-name="client_image_url" 
+                                               @change="onFileChange($event)">
                                 </v-flex>
+                                 <v-flex xs12 sm1 md1>
+                                             <b-img thumbnail fluid :src="client.image_url"  style="width: 50px; height: 50px" id="client_logo" alt="Image 1"></b-img>
+                      
+                                </v-flex>
+                               
                             </v-layout>
                             <v-layout wrap>
-                                <v-flex xs12 sm6 md6>
-                                    <v-text-field v-if="editMode" required :clearable="true"   :label="'City'" 
+                                <v-flex xs12 sm3 md3>
+                                    <v-text-field required :clearable="true"   :label="'City'" 
                                                 :placeholder="'City'" :hint="'Enter the city of your client'" 
                                                 :solo="true" :single-line="true"
                                                 v-validate="'required|max:255'"
                                                 :error-messages="errors.collect('city')"
                                                 v-model="client.city" data-vv-name="city">
                                     </v-text-field>
-                                    <v-text-field v-else   :solo="true" :single-line="true" 
-                                                v-model="client.city" :readonly="true" disabled="disabled">
-                                    </v-text-field>
                                 </v-flex>
-                                <v-flex xs12 sm6 md6>
-                                    <v-text-field v-if="editMode" required :clearable="true"   :label="'State'" 
+                                <v-flex xs12 sm3 md3>
+                                    <v-text-field required :clearable="true"   :label="'State'" 
                                                 :placeholder="'State'" :hint="'Enter the state of your client'" 
                                                 :solo="true" :single-line="true"
                                                 v-validate="'required|max:255'"
                                                 :error-messages="errors.collect('state')"
                                                 v-model="client.state" data-vv-name="state">
                                     </v-text-field>
-                                    <v-text-field v-else   :solo="true" :single-line="true" 
-                                                v-model="client.state" :readonly="true" disabled="disabled">
+                                </v-flex>
+                                 <v-flex xs12 sm6 md6>
+                                    <v-text-field required :clearable="true"   :label="'Street Address'" 
+                                                :placeholder="'Street Address'" :hint="'Enter the street address of your client'" 
+                                                :solo="true" :single-line="true"
+                                                v-validate="'required|max:255'"
+                                                :error-messages="errors.collect('street_address')"
+                                                v-model="client.street_address" data-vv-name="street_address">
                                     </v-text-field>
                                 </v-flex>
                             </v-layout>
@@ -65,77 +71,56 @@
                             <v-divider></v-divider>
                             <v-layout wrap>
                                 <v-flex xs12 sm6 md6>
-                                    <v-text-field v-if="editMode" required :clearable="true"   :label="'First Name'" 
+                                    <v-text-field  required :clearable="true"   :label="'First Name'" 
                                                 :placeholder="'First Name'" :hint="'Enter the first name of your contact'" 
                                                 :solo="true" :single-line="true"
                                                 v-validate="'required|max:255'"
                                                 :error-messages="errors.collect('first_name')"
-                                                v-model="client.contact[0].first_name" data-vv-name="first_name">
-                                    </v-text-field>
-                                    <v-text-field v-else   :solo="true" :single-line="true" 
-                                                v-model="client.contact[0].first_name" :readonly="true" disabled="disabled">
+                                                v-model="client.contacts[0].first_name" data-vv-name="first_name">
                                     </v-text-field>
                                 </v-flex>
                                 <v-flex xs12 sm6 md6>
-                                    <v-text-field v-if="editMode" required :clearable="true"   :label="'Last Name'" 
+                                    <v-text-field  required :clearable="true"   :label="'Last Name'" 
                                                 :placeholder="'Last Name'" :hint="'Enter the last name of your contact'" 
                                                 :solo="true" :single-line="true"
                                                 v-validate="'required|max:255'"
                                                 :error-messages="errors.collect('last_name')"
-                                                v-model="client.contact[0].last_name" data-vv-name="last_name">
-                                    </v-text-field>
-                                    <v-text-field v-else   :solo="true" :single-line="true" 
-                                                v-model="client.contact[0].last_name" :readonly="true" disabled="disabled">
+                                                v-model="client.contacts[0].last_name" data-vv-name="last_name">
                                     </v-text-field>
                                 </v-flex>
                             </v-layout>
                             <v-layout wrap>
                                 <v-flex xs12 sm6 md6>
-                                    <v-text-field v-if="editMode" required :clearable="true"   :label="'Email'" 
+                                    <v-text-field required :clearable="true"   :label="'Email'" 
                                                 :placeholder="'Email'" :hint="'Enter the email of your contact'" 
                                                 :solo="true" :single-line="true"
                                                 v-validate="'required|email'"
                                                 :error-messages="errors.collect('email')"
-                                                v-model="client.contact[0].email" data-vv-name="email">
-                                    </v-text-field>
-                                    <v-text-field v-else   :solo="true" :single-line="true" 
-                                                v-model="client.contact[0].email" :readonly="true" disabled="disabled">
+                                                v-model="client.contacts[0].email" data-vv-name="email">
                                     </v-text-field>
                                 </v-flex>
                                 <v-flex xs12 sm6 md6>
-                                    <v-text-field v-if="editMode" required :clearable="true"   :label="'Phone Number'" 
+                                    <v-text-field  required :clearable="true"   :label="'Phone Number'" 
                                                 :placeholder="'Phone Number'" :hint="'Enter the phone number of your contact'" 
                                                 :solo="true" :single-line="true"
                                                 v-validate="'required|numeric'"
                                                 :error-messages="errors.collect('phone_number')"
-                                                v-model="client.contact[0].phone_number" data-vv-name="phone_number">
-                                    </v-text-field>
-                                    <v-text-field v-else   :solo="true" :single-line="true" 
-                                                v-model="client.contact[0].phone_number" :readonly="true" disabled="disabled">
+                                                v-model="client.contacts[0].phone_number" data-vv-name="phone_number">
                                     </v-text-field>
                                 </v-flex>
-                            </v-layout>
-
-                             <v-subheader>Logo </v-subheader>
-                            <v-divider></v-divider>
+                            </v-layout> 
                             <v-layout wrap>
-                                <v-flex xs12 sm5 md5>
-                                     <v-text-field v-if="!editMode" solo v-model="client_logo_input_label" prepend-icon="attach_file" name="certificate"  disabled="disabled"></v-text-field>
-                                     <v-text-field  v-else solo v-model="client_logo_input_label" prepend-icon="attach_file" name="certificate"  :error-messages="errors.collect('client_image_url')"  @click="choose_file()"></v-text-field>
-                                   <input type="file" style="display: none" ref="client_logo" accept=".png,.jpeg,.jpg" v-validate="'required|ext:jpg,png,jpeg'"  data-vv-name="client_image_url" @change="on_file_change($event)">
+                                <v-flex xs12 sm12 md12 v-show="show_progress_bar">
+                                    <p class="text-muted">{{ current_upload_title }}</p>
+                                    <v-progress-linear v-model="upload_percentage" color="green"></v-progress-linear>
                                 </v-flex>
-                                 <v-flex xs12 sm1 md1>
-                                             <b-img thumbnail fluid :src="client.image_url"  style="width: 50px; height: 50px" id="client_logo" alt="Image 1"></b-img>
-                      
-                                </v-flex>
-                            </v-layout>
+                              </v-layout>
 
                         </v-form>
                         <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn color="red" dark @click="closeDialog()">Close</v-btn>
-                    <v-btn v-if="editMode" color="" class="default-vue-btn" dark @click="editVendor()">Save</v-btn>
-                    <v-btn v-else color="" class="default-vue-btn" dark @click="editMode = true">Edit</v-btn>
+                    <v-btn color="" class="default-vue-btn" dark @click="editClient()">Save</v-btn>
                     </v-card-actions>
                     </v-container>
                 </v-card-text>
@@ -183,6 +168,8 @@
                 s3_presigned_url: '',
                 show_progress_bar: false,
                 upload_percentage: 0,
+                current_upload_title: '',
+                upload_image: false,   
                 dictionary: {
                     custom: {
                         name: {
@@ -218,7 +205,6 @@
                             numeric: () => 'Phone number must be all digits'
                         },
                         client_image_url: {
-                            required: () => 'Client logo cannot be empty',
                             numeric: () => 'The brand logo must be a picture'
                         },
                     }
@@ -245,7 +231,7 @@
                     city: '',
                     state: '',
                     country: 'Nigeria',
-                    contact: [
+                    contacts: [
                         {
                             first_name: '',
                             last_name: '',
@@ -256,8 +242,8 @@
                 }
             },
             openDialog: function(item) {
-                if (item['contact'].length == 0) {
-                    item['contact'] = [{}];
+                if (item['contacts'].length == 0) {
+                    item['contacts'] = [{}];
                 }
                 this.client = item;
                 this.dialog = true;
@@ -266,18 +252,31 @@
                 this.client = this.setupModel();
                 this.dialog = false;
             },
-            editVendor: function(event) {
+            editClient:async function(event) {
                 self = this;
                 this.$validator.validateAll().then((result) => {
                     if (result) {
-                        self.makeUpdateRequest();
+                       return;
                     }
                 });
+
+                  try {
+                    // generate presigned url for ciient logo upload
+                    if(this.upload_image){
+                       await this.generatePresignedUrl(this.client_logo_file, 'client-images/');
+                       await this.uploadFile(this.client_logo_file, this.s3_presigned_url);
+                    }
+                    // make axios call to edit created client to db
+                       self.makeUpdateRequest();
+                } catch (error) {
+                    console.log(error);
+                    this.sweet_alert('An unknown error has occurred, logo upload failed. Please try again', 'error');
+                }
             },
             makeUpdateRequest: function() {
-                axios({
+                 axios({
                     method: 'patch',
-                    url: this.client.links.update,
+                    url: '/clients/'+this.client.id,
                     data: this.client
                 }).then((res) => {
                     this.sweet_alert('Client was successfully created', 'success');
@@ -286,17 +285,59 @@
                 }).catch((error) => {
                     this.sweet_alert('An unknown error has occurred, client cannot be updated. Please try again', 'error');
                 });
+                
             },
-             choose_file() {
+             chooseFile() {
                     this.$refs.client_logo.click();
             },
-            on_file_change(event) {
+            onFileChange(event) {
+                    this.upload_image = true;
                     this.client_logo_file = event.target.files[0];
                     this.client_logo_input_label = this.client_logo_file.name;
                      this.show_client_logo = true;
                     const output = $('#client_logo');
                     output.attr('src', URL.createObjectURL(event.target.files[0]));
             },
+             generatePresignedUrl: async function(file, folder_name) {
+                await axios({
+                        method: 'post',
+                        url: '/company/presigned-url',
+                        data: {
+                            filename: file.name,
+                            folder: folder_name
+                        }
+                    }).then((res) => {
+                        this.s3_presigned_url = res.data;
+                    }).catch((error) => {
+                        console.log(error.response.data);
+                        this.s3_presigned_url = "";
+                        this.sweet_alert('An unknown error has occurred, upload failed. Please try again', 'error');
+                    });
+                return this.s3_presigned_url;
+            },
+             uploadFile: async function(file, presigned_url) {
+                this.show_progress_bar = true;
+                this.upload_percentage = 0;
+                this.current_upload_title = "Uploading client logo";
+             
+                await axios.put(presigned_url, file, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        },
+                        onUploadProgress: function( progressEvent ) {
+                            this.upload_percentage = parseInt(Math.round((progressEvent.loaded * 100) / progressEvent.total));
+                        }.bind(this)
+                    }
+                ).then((res) => {
+                     this.show_progress_bar = false;
+                     this.client.image_url = `https:${presigned_url.split('?')[0].substr(6)}`;
+                    
+                    
+                }).catch((error) => {
+                    console.log(error);
+                    this.sweet_alert('An unknown error has occurred, upload failed. Please try again', 'error');
+                });
+            }
 
         }
     }
