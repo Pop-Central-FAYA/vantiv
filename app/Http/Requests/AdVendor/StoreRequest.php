@@ -30,10 +30,13 @@ class StoreRequest extends FormRequest
             'city' => 'required|string',
             'state' => 'required|string',
             'country' => 'required|string',
+            'contacts' => 'required|array',
             'contacts.*.first_name' => 'required|string',
             'contacts.*.last_name' => 'required|string',
             'contacts.*.email' => 'required|email',
-            'contacts.*.phone_number' => 'required|string'
+            'contacts.*.phone_number' => 'required|string',
+            'publishers' => 'sometimes|required|array',
+            'publishers.*' => 'string|exists:publishers,id'
         ];
     }
 }

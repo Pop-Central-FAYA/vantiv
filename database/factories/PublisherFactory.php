@@ -6,6 +6,7 @@ $factory->define(\Vanguard\Models\Publisher::class, function (Faker $faker) {
     return [
         'company_id' => factory(\Vanguard\Models\Company::class)->create()->id,
         'type' => 'tv',
+        'name' => $faker->company,
         'settings' => json_encode([
             'ad_pattern' => [
                 'length' => 4,

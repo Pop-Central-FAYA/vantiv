@@ -10,6 +10,7 @@ use Vanguard\Services\AdVendor\UpdateService;
 use Vanguard\Http\Resources\AdVendorResource;
 use Vanguard\Http\Resources\AdVendorCollection;
 use Vanguard\Models\AdVendor;
+use Vanguard\Models\Publisher;
 use Vanguard\Http\Requests\AdVendor\ListRequest;
 use Vanguard\Http\Requests\AdVendor\StoreRequest;
 use Vanguard\Http\Requests\AdVendor\UpdateRequest;
@@ -30,7 +31,11 @@ class AdVendorController extends Controller
      *******************************/
     public function index(Request $request)
     {   
-        return view('agency.ad_vendor.index');
+        $publishers = Publisher::all(['id', 'name']);
+        $vendor_list = AdVendor::filter(['company_id' => $this->companyId()])->get(['id', 'name']);
+        return view('agency.ad_vendor.index')
+                    ->with('publishers', $publishers)
+                    ->with('vendors', $vendor_list);
     }
 
     /*******************************

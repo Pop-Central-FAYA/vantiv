@@ -29,6 +29,10 @@ class Publisher extends Base
         return $this->hasMany(TvStation::class);
     }
 
+    public function ad_vendors() {
+        return $this->belongsToMany(AdVendor::class);
+    }
+
     public function time_belt_transactions()
     {
         return $this->hasMany(TimeBeltTransaction::class, 'company_id', 'company_id');
