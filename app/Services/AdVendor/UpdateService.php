@@ -3,7 +3,6 @@
 namespace Vanguard\Services\AdVendor;
 
 use Vanguard\Models\AdVendor as AdVendorModel;
-use Vanguard\Models\AdVendorContact;
 use Illuminate\Support\Arr;
 use DB;
 
@@ -49,6 +48,9 @@ class UpdateService
             $contact = Arr::get($this->data, 'contacts.0', []);
             $this->updateVendorContact($contact, $this->vendor);
 
+            $publishers = Arr::get($this->data, 'publishers', []);
+            $this->updatePublishers($publishers, $this->vendor);
+
             return $this->vendor;
         });
     }
@@ -84,5 +86,9 @@ class UpdateService
         }
         //save will only actually save if the model has changed
         $model->save();
+    }
+
+    protected function updatePublishers(array $publisher_list, AdVendorModel $vendor) {
+        $vendor->publishers()->sync($publisher_list);
     }
 }

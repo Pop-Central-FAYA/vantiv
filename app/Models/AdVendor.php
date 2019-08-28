@@ -20,6 +20,11 @@ class AdVendor extends Base
 
     public function contacts()
     {
-        return $this->hasMany('\Vanguard\Models\AdVendorContact');
+        return $this->hasMany(AdVendorContact::class);
+    }
+
+    public function publishers()
+    {
+        return $this->belongsToMany(Publisher::class);
     }
 }

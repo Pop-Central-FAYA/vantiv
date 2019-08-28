@@ -23,7 +23,9 @@ class UpdateRequest extends StoreRequest
             'contacts.*.first_name' => 'sometimes|required|string',
             'contacts.*.last_name' => 'sometimes|required|string',
             'contacts.*.email' => 'sometimes|required|email',
-            'contacts.*.phone_number' => 'sometimes|required|string'
+            'contacts.*.phone_number' => 'sometimes|required|string',
+            'publishers' => 'sometimes|array',
+            'publishers.*' => 'string|exists:publishers,id'
         ];
     }
 }

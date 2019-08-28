@@ -37,7 +37,9 @@ class IndexAdVendorTest extends AdVendorTestCase
     {
         $user = $this->setupUserWithPermissions();
         $response = $this->getResponse($user);
-        $response->assertStatus(200)->assertViewIs('agency.ad_vendor.index');
+        $response->assertStatus(200)
+                ->assertViewIs('agency.ad_vendor.index')
+                ->assertViewHas(['publishers', 'vendors']);
     }
 
 }

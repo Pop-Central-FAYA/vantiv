@@ -18,9 +18,23 @@ class CreateAdVendorTest extends AdVendorTestCase
         return $this->actingAs($user)->postJson(route($this->route_name), $data);
     }
 
-    /**
-     * @todo verify that the tiemstamp fields are saved as utc
-     */
+    /*************************
+     * Permission Tests
+     *************************/
+
+    public function test_unauthenticated_user_cannot_access_ad_vendor_creation_route()
+    {
+        $response = $this->postJson(route($this->route_name), []);
+        $response->assertStatus(401);
+    }
+
+    public function test_user_without_create_permissions_cannot_access_route()
+    {
+        $user = $this->setupAuthUser();
+        $response = $this->getResponse($user, []);
+        $response->assertStatus(403);
+    }
+
     public function test_ad_vendor_successfully_created()
     {
         $contact = [
@@ -79,34 +93,69 @@ class CreateAdVendorTest extends AdVendorTestCase
         
     }
 
-    /**
-     * @todo fix validation tests for nested fields
-     * @todo possibly get proper error messages
-     */
     public function test_invalid_data_for_vendor_returns_error_messages()
     {
+        $vendor_data = ['contacts' => [[]]];
         $user = $this->setupUserWithPermissions();
-        $response = $this->getResponse($user, []);
+        $response = $this->getResponse($user, $vendor_data);
         $response->assertStatus(422);
 
-        $keys = ['name', 'street_address', 'city', 'state', 'country'];
+        $keys = ['name', 'street_address', 'city', 'state', 'country',
+                'contacts.0.first_name', 'contacts.0.last_name',
+                'contacts.0.email', 'contacts.0.phone_number'];
         $response->assertJsonValidationErrors($keys);
-
-        // $keys = ['contacts.*.first_name', 'contacts.*.last_name', 'contacts.*.email', 'contacts.*.phone_number'];
-        // $response->assertJsonValidationErrors($keys);
     }
-    
-    public function test_unauthenticated_user_cannot_access_ad_vendor_creation_route()
+
+    public function test_ad_vendor_successfully_created_with_publisher_association()
     {
-        $response = $this->postJson(route($this->route_name), []);
-        $response->assertStatus(401);
+        $pub_one = factory(\Vanguard\Models\Publisher::class)->create();
+        $pub_two = factory(\Vanguard\Models\Publisher::class)->create();
+        
+        $vendor_data = [
+            'name' => 'AIT Broker', 'street_address' => '21 akin ogunlewe road',
+            'city' => 'Lagos', 'state' => 'Lagos', 'country' => 'Nigeria',
+            'contacts' => [[
+                'first_name' => 'Adedotun', 'last_name' => 'Oshiomole',
+                'email' => 'aoshiomole@example.org', 'phone_number' => '+2341111111111'
+            ]], 
+            'publishers' => [$pub_one->id, $pub_two->id]
+        ];
+
+        $user = $this->setupUserWithPermissions();
+        $response = $this->getResponse($user, $vendor_data);
+
+        $response->assertStatus(201);
+        $response->assertJson([
+            'data' => [
+                'publishers' => [
+                    ['id' => $pub_one->id, 'name' => $pub_one->name],
+                    ['id' => $pub_two->id, 'name' => $pub_two->name]
+                ]
+            ],
+        ]);
     }
 
-    public function test_user_without_create_permissions_cannot_access_route()
+    public function test_empty_publisher_array_throws_validation_exception_on_create()
     {
-        $user = $this->setupAuthUser();
-        $response = $this->getResponse($user, []);
-        $response->assertStatus(403);
+        $vendor_data = ['publishers' => []];
+
+        $user = $this->setupUserWithPermissions();
+        $response = $this->getResponse($user, $vendor_data);
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors(['publishers']);
     }
 
+    public function test_nonexistent_publisher_throws_validation_exception_on_create()
+    {
+        $random_pub_id = uniqid();
+        $pub_one = factory(\Vanguard\Models\Publisher::class)->create();
+        $vendor_data = ['publishers' => [$pub_one->id, $random_pub_id]];
+
+        $user = $this->setupUserWithPermissions();
+        $response = $this->getResponse($user, $vendor_data);
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors(['publishers.1']);
+    }
 }

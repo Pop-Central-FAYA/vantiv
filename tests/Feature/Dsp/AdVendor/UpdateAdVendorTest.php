@@ -5,9 +5,6 @@ namespace Tests\Feature\Dsp\AdVendor;
 use Illuminate\Support\Arr;
 
 /**
- * @todo test the actual error messages (add human readable error messages)
- * @todo add permission support
- * @todo add support for only people with access rights to update a model
  * @todo need to add support to make sure that updating the name of a field does not violate the unique reqs
  */
 class UpdateAdVendorTest extends AdVendorTestCase
@@ -149,4 +146,58 @@ class UpdateAdVendorTest extends AdVendorTestCase
 
         $this->assertArraySubset($expected_data, $actual_data);
     }
+
+    public function test_publisher_id_list_if_present_and_not_empty_is_validated_for_existence_of_ids()
+    {
+        $pub = factory(\Vanguard\Models\Publisher::class)->create();
+        $user = $this->setupUserWithPermissions();
+        $vendor = $this->setupAdVendor($user);
+        
+        $vendor_data = ['publishers' => [uniqid(), $pub->id]];
+        $response = $this->getResponse($user, $vendor->id, $vendor_data);
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors(['publishers.0']);
+    }
+
+    public function test_publisher_association_is_deleted_if_empty_publishers_array_sent()
+    {
+        $user = $this->setupUserWithPermissions();
+        $vendor = $this->setupAdVendor($user);
+        $pub_one = factory(\Vanguard\Models\Publisher::class)->create();
+        $vendor->publishers()->sync($pub_one->id);
+
+        $vendor_data = ['publishers' => []];
+        $response = $this->getResponse($user, $vendor->id, $vendor_data);
+        $response->assertStatus(200);
+
+        $publishers = $response->json()['data']['publishers'];
+        $this->assertCount(0, $publishers);
+    }
+
+    public function test_publisher_association_is_resynced_with_only_publisher_ids_present_in_update_request()
+    {
+        $user = $this->setupUserWithPermissions();
+        $vendor = $this->setupAdVendor($user);
+        $pub_one = factory(\Vanguard\Models\Publisher::class)->create();
+        $vendor->publishers()->sync($pub_one->id);
+
+        $pub_two = factory(\Vanguard\Models\Publisher::class)->create();
+        $pub_three = factory(\Vanguard\Models\Publisher::class)->create();
+
+        $vendor_data = ['publishers' => [$pub_two->id, $pub_three->id]];
+        $response = $this->getResponse($user, $vendor->id, $vendor_data);
+
+        $response->assertStatus(200);
+        $response->assertJson([
+            'data' => [
+                'publishers' => [
+                    ['id' => $pub_two->id, 'name' => $pub_two->name],
+                    ['id' => $pub_three->id, 'name' => $pub_three->name]
+                ]
+            ],
+        ]);
+    }
+
+    
 }
