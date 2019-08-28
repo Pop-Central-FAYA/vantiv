@@ -3,6 +3,8 @@
 namespace Tests\Feature\Dsp\AdVendor;
 
 use Illuminate\Support\Arr;
+use Vanguard\Models\Publisher;
+use \Vanguard\Models\AdVendor as AdVendorModel;
 
 /**
  * @todo need to add support to make sure that updating the name of a field does not violate the unique reqs
@@ -125,7 +127,7 @@ class UpdateAdVendorTest extends AdVendorTestCase
     public function test_can_create_a_new_vendor_contact_on_update_if_non_existent()
     {
         $user = $this->setupUserWithPermissions();
-        $vendor = factory(\Vanguard\Models\AdVendor::class)->create([
+        $vendor = factory(AdVendorModel::class)->create([
             'company_id' => $user->companies->first(),
             'created_by' => $user->id
         ]);
@@ -149,7 +151,7 @@ class UpdateAdVendorTest extends AdVendorTestCase
 
     public function test_publisher_id_list_if_present_and_not_empty_is_validated_for_existence_of_ids()
     {
-        $pub = factory(\Vanguard\Models\Publisher::class)->create();
+        $pub = factory(Publisher::class)->create();
         $user = $this->setupUserWithPermissions();
         $vendor = $this->setupAdVendor($user);
         
@@ -164,7 +166,7 @@ class UpdateAdVendorTest extends AdVendorTestCase
     {
         $user = $this->setupUserWithPermissions();
         $vendor = $this->setupAdVendor($user);
-        $pub_one = factory(\Vanguard\Models\Publisher::class)->create();
+        $pub_one = factory(Publisher::class)->create();
         $vendor->publishers()->sync($pub_one->id);
 
         $vendor_data = ['publishers' => []];
@@ -179,11 +181,11 @@ class UpdateAdVendorTest extends AdVendorTestCase
     {
         $user = $this->setupUserWithPermissions();
         $vendor = $this->setupAdVendor($user);
-        $pub_one = factory(\Vanguard\Models\Publisher::class)->create();
+        $pub_one = factory(Publisher::class)->create();
         $vendor->publishers()->sync($pub_one->id);
 
-        $pub_two = factory(\Vanguard\Models\Publisher::class)->create();
-        $pub_three = factory(\Vanguard\Models\Publisher::class)->create();
+        $pub_two = factory(Publisher::class)->create();
+        $pub_three = factory(Publisher::class)->create();
 
         $vendor_data = ['publishers' => [$pub_two->id, $pub_three->id]];
         $response = $this->getResponse($user, $vendor->id, $vendor_data);

@@ -2,6 +2,9 @@
 
 namespace Tests\Feature\Dsp\AdVendor;
 
+use Vanguard\Models\AdVendor as AdVendorModel;
+use Vanguard\Models\Publisher;
+
 class CreateAdVendorTest extends AdVendorTestCase
 {
 
@@ -84,7 +87,7 @@ class CreateAdVendorTest extends AdVendorTestCase
         $response->assertStatus(201);
         $data = $response->json()['data'];
 
-        $vendor = \Vanguard\Models\AdVendor::findOrFail($data['id']);
+        $vendor = AdVendorModel::findOrFail($data['id']);
         $this->assertEquals($data['created_by'], $user->id);
         $this->assertEquals(($data['company_id']), $user->companies->first()->id);
 
@@ -108,8 +111,8 @@ class CreateAdVendorTest extends AdVendorTestCase
 
     public function test_ad_vendor_successfully_created_with_publisher_association()
     {
-        $pub_one = factory(\Vanguard\Models\Publisher::class)->create();
-        $pub_two = factory(\Vanguard\Models\Publisher::class)->create();
+        $pub_one = factory(Publisher::class)->create();
+        $pub_two = factory(Publisher::class)->create();
         
         $vendor_data = [
             'name' => 'AIT Broker', 'street_address' => '21 akin ogunlewe road',
@@ -149,7 +152,7 @@ class CreateAdVendorTest extends AdVendorTestCase
     public function test_nonexistent_publisher_throws_validation_exception_on_create()
     {
         $random_pub_id = uniqid();
-        $pub_one = factory(\Vanguard\Models\Publisher::class)->create();
+        $pub_one = factory(Publisher::class)->create();
         $vendor_data = ['publishers' => [$pub_one->id, $random_pub_id]];
 
         $user = $this->setupUserWithPermissions();
