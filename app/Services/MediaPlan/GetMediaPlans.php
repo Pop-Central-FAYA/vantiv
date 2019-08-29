@@ -56,6 +56,7 @@ class GetMediaPlans
                 'media_type' => $plan->media_type,
                 'redirect_url' => $this->generateRedirectUrl($plan),
                 'status' => $this->getStatusHtml($plan),
+                'str_status' => $plan->status
             ];
         }
         return $plans;
