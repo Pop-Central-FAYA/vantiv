@@ -18,7 +18,7 @@
                 <td class="justify-center layout px-0">
                     <v-container grid-list-md class="container-action-btn">
                         <v-layout wrap>
-                            <v-flex xs12 sm6 md4>
+                            <v-flex xs12 sm6 md3>
                                 <v-layout>
                                     <v-tooltip top>
                                         <template v-slot:activator="{ on }">
@@ -28,10 +28,13 @@
                                     </v-tooltip>
                                 </v-layout>
                             </v-flex>
-                            <v-flex xs12 sm6 md4>
-                                 <file-modal :mpo="props.item" :assets="assets"></file-modal>
+                            <v-flex xs12 sm6 md3>
+                                <share-link-modal :mpo="props.item"></share-link-modal>
                             </v-flex>
-                            <v-flex xs12 sm6 md4>
+                            <v-flex xs12 sm6 md3>
+                                 <submit-mpo-modal :mpo="props.item"></submit-mpo-modal>
+                            </v-flex>
+                            <v-flex xs12 sm6 md3>
                                 <mpo-file-manager :mpo="props.item" :assets="assets" :client="client" :brand="brand"></mpo-file-manager>
                             </v-flex>
                         </v-layout>

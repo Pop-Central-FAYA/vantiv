@@ -213,8 +213,8 @@
 
         Route::group(['namespace' => 'Dsp'], function() {
             Route::get('/mpos/{id}/share-links', 'MpoShareLinkController@getActiveLink');
-            Route::post('/mpos/{id}/share-links', 'MpoShareLinkController@store')->name('mpo_share_link.store')
-                                                                    ->middleware('permission:create.campaign');
+            Route::post('/mpos/{id}/share-links', 'MpoShareLinkController@store')->name('mpo_share_link.store');
+            Route::post('/mpos/{id}/submit', 'MpoShareLinkController@submitToVendor')->name('mpo_share_link.submit');
         });
           /*
          * new Brand route

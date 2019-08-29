@@ -3,6 +3,7 @@
 namespace Vanguard\Services\AdVendor;
 
 use Vanguard\Models\AdVendor as AdVendorModel;
+use Illuminate\Support\Arr;
 use DB;
 
 /**
@@ -50,6 +51,10 @@ class CreateService
             $vendor->save();
 
             $this->storeContact($this->data['contacts'], $vendor);
+
+            $publishers = Arr::get($this->data, 'publishers', []);
+            $this->storePublishers($publishers, $vendor);
+            
             return $vendor;
         });
     }
@@ -65,6 +70,12 @@ class CreateService
         foreach ($contacts_list as $data) {
             $contact_service = new CreateContactService($data, $vendor->id, $vendor->created_by);
             $contact_service->run();
+        }
+    }
+
+    protected function storePublishers(array $publisher_list, AdVendorModel $vendor) {
+        if (count($publisher_list) > 0) {
+            $vendor->publishers()->sync($publisher_list);
         }
     }
 }

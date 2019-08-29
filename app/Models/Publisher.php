@@ -4,7 +4,7 @@ namespace Vanguard\Models;
 
 class Publisher extends Base
 {
-    protected $fillable = ['company_id', 'type', 'settings'];
+    protected $fillable = ['name', 'company_id', 'type', 'settings'];
 
     /**
      * Scope to return only publishers that belong to a list of companies
@@ -23,6 +23,14 @@ class Publisher extends Base
 
     public function company() {
         return $this->belongsTo('Vanguard\Models\Company');
+    }
+
+    public function tv_stations() {
+        return $this->hasMany(TvStation::class);
+    }
+
+    public function ad_vendors() {
+        return $this->belongsToMany(AdVendor::class);
     }
 
     public function time_belt_transactions()
