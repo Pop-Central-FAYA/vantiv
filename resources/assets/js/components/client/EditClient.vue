@@ -215,7 +215,7 @@
             var self = this;
             Event.$on('view-client', function(client) {
                 self.openDialog(client);
-                self.client_logo_input_label =client.image_url;
+                self.client_logo_input_label = client.image_url;
             });
           
         },

@@ -9,12 +9,14 @@
      <clients-edit></clients-edit>
     <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="clients" :loading="loading" :search="search" :no-data-text="noDataText" :pagination.sync="pagination">
       <template v-slot:items="props">
-        <tr @click="showDetails(props.item)">
+        <tr>
             <td class="text-xs-left">{{ props.item.name }}</td>
             <td class="text-xs-left">{{ props.item.number_brands }}</td>
             <td class="text-xs-left">{{ props.item.sum_active_campaign }}</td>
             <td class="text-xs-left">{{ props.item.client_spendings}}</td>
-          <td class="text-xs-left">{{ dateToHumanReadable(props.item.created_at) }}</td>
+          <td class="text-xs-left">{{ dateToHumanReadable(props.item.created_at.date) }}</td>
+           <td @click="showEditClient(props.item)" class="justify-center layout px-0">
+            <v-icon color="#44C1C9" v-b-tooltip.hover title="Edit client" dark right>edit</v-icon> </td>
         </tr>
       </template>
       <template v-slot:no-results>
@@ -48,7 +50,8 @@
           { text: 'Brands', value: 'brands' },
           { text: 'Total Spend (₦)', value: 'total spend' },
           { text: 'Active Campaigns', value: 'active campaigns' },
-          { text: 'Created On', value: 'date_created' }
+          { text: 'Created On', value: 'created_at' },
+           { text: 'Actions', value: 'name',  sortable: false}
         ],
         pagination: {
             rowsPerPage: 10,
@@ -61,7 +64,7 @@
     mounted() {
         console.log('Display All client Component mounted.');
          this.getClients();
-         console.log(this.clients);
+      
     },
     methods: {
        getClients() {
@@ -75,7 +78,7 @@
               this.sweet_alert('An unknown error has occurred, vendors cannot be retrieved. Please try again', 'error');
           }).finally(() => this.loading = false);
         },
-         showDetails(idx, item) {
+         showEditClient(idx, item) {
           Event.$emit('view-client', idx, item);
         },
         
