@@ -72,7 +72,6 @@
           }).then((res) => {
               this.clients = res.data.data;
           }).catch((error) => {
-              this.clients = [];
               this.sweet_alert('An unknown error has occurred, vendors cannot be retrieved. Please try again', 'error');
           }).finally(() => this.loading = false);
         },
