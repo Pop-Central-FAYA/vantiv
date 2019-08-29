@@ -49,10 +49,14 @@ class GetClientDetails implements BaseServiceInterface
                 'id' => $client->id,
                 'image_url' => $client->image_url,
                 'name'=> $client->name, 
+                'city'=> $client->city, 
+                'state'=> $client->state, 
+                'street_address'=> $client->street_address, 
                 'number_brands' => $brands, 
                 'sum_active_campaign' => $sum_active_campaign,
                 'client_spendings' => $client_spendings,  
-                'date_created' => $client->time_created, 
+                'created_at' => $client->created_at, 
+                'contacts' => $client->contacts, 
             );
             array_push($item_clients, $item_client);
         }
