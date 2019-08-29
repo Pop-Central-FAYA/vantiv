@@ -25,7 +25,7 @@
     });
 
     Route::group(['middleware' => 'auth'], function () {
-        Route::get('/', ['as' => 'dashboard', 'uses' => 'DashboardController@index']);
+        Route::get('/', 'Dsp\DashboardController@index')->name('dashboard');
         Route::get('agency/dashboard/campaigns', 'DashboardController@dashboardCampaigns');
 
         Route::group(['namespace' => 'Dsp', 'prefix' => 'campaigns'], function () {
