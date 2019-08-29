@@ -187,7 +187,13 @@ Vue.mixin({
             }
             this.sweet_alert('You dont have the permission to perform this action', 'info');
             return false
-        }
+        },
+        addTimebelt(time_belt) {
+            Event.$emit('timebelt-to-add', time_belt);
+            var time = `${this.format_time(time_belt.start_time)} - ${this.format_time(time_belt.end_time)}`;
+            var successMsg = `${time_belt.station} - ${time_belt.program}  showing on  ${time_belt.day}  ${time} added successfully`;
+            this.sweet_alert(successMsg, 'success');
+        },
     }
 })
 
