@@ -55,7 +55,7 @@ class GetClientDetails implements BaseServiceInterface
                 'number_brands' => $brands, 
                 'sum_active_campaign' => $sum_active_campaign,
                 'client_spendings' => $client_spendings,  
-                'date_created' => $client->created_at, 
+                'created_at' => $client->created_at, 
                 'contacts' => $client->contacts, 
             );
             array_push($item_clients, $item_client);
