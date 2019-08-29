@@ -74,15 +74,7 @@
                 });
                 return this.format_audience(total_audience);
             },
-            addTimebelt(time_belt) {
-                this.newTimeBelt = time_belt;
-                Event.$emit('timebelt-to-add', time_belt);
-                var time = `${this.format_time(time_belt.start_time)} - ${this.format_time(time_belt.end_time)}`;
-                var successMsg = `${time_belt.station} - ${time_belt.program}  showing on  ${time_belt.day}  ${time} added successfully`;
-                this.sweet_alert(successMsg, 'success');
-            },
             renderTimeBelts(position) {
-                console.log(position);
                 this.stationsToggle[position]['show'] = true;
             }
         }
