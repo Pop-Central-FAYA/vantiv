@@ -19,23 +19,27 @@
                 </div>
 
                 @if(Auth::user()->can('create.ad_vendor'))
-                    <div class="col-md-2 text-right px-2">
-                        <ad-vendor-create></ad-vendor-create>
-                    </div>
+                    <ad-vendor-create 
+                        :routes="{{ json_encode($routes) }}"
+                        :publishers="{{ json_encode($publishers) }}"></ad-vendor-create>
                 @endif
 
+                @if(Auth::user()->can('update.ad_vendor'))
+                    <ad-vendor-view :publishers="{{ json_encode($publishers) }}"></ad-vendor-view>
+                @endif
             </div>
             <div class="row my-5">
                 @if(Auth::user()->can('view.ad_vendor'))
                     <div class="col-md-12">
                         <v-app>
                             <v-content>
-                                <ad-vendor-list></ad-vendor-list>
+                                <ad-vendor-list :routes="{{ json_encode($routes) }}"></ad-vendor-list>
                             </v-content>
                         </v-app>
                     </div>
                 @endif
             </div>
+
         </div>
     </div>
 @stop

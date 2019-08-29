@@ -7,8 +7,6 @@
       <v-text-field v-model="search" append-icon="search" label="Enter Keyword" single-line hide-details></v-text-field>
     </v-card-title>
     
-    <ad-vendor-view></ad-vendor-view>
-
     <v-data-table class="custom-vue-table elevation-1" 
                 :headers="headers" :items="vendors" :search="search" :loading="loading" :no-data-text="noDataText" 
                 :no-results-text="noResultsText" :pagination.sync="pagination">
@@ -16,7 +14,16 @@
         <tr @click="showDetails(props.item)">
             <td class="text-xs-left">{{ props.item.name }}</td>
             <td class="text-xs-left">{{ props.item.street_address }}, {{ props.item.city }}, {{ props.item.state }}</td>
+            <td class="text-xs-left">{{ props.item.publishers.length }}</td>
             <td class="text-xs-left">{{ formatDate(props.item.created_at) }}</td>
+            <td class="justify-center layout px-0">
+                <v-tooltip top>
+                    <template v-slot:activator="{on}">
+                        <v-icon color="primary" v-on="on" dark left @click="editVendor(props.item)">fa-edit</v-icon>
+                    </template>
+                    <span>Edit the vendor information</span>
+                </v-tooltip>
+            </td>
         </tr>
       </template>
       <template v-slot:no-results>
@@ -30,24 +37,25 @@
 
 <script>
   export default {
+    props: {
+      routes: Object
+    },
     data() {
       return {
         //@todo fix this computed values issue, the value in headers should match what is in the template
         headers: [
           { text: 'Name', align: 'left', value: 'name', width: '20%' },
-          { text: 'Address', align: 'left', value: 'street_address', width: '60%' },
-          { text: 'Creation Date', value: 'created_at', width: '20%' }
+          { text: 'Address', align: 'left', value: 'street_address', width: '40%' },
+          { text: 'Num Publishers', align: 'left', value: 'publishers', width: '19%', sortable: false },
+          { text: 'Creation Date', align: 'left', value: 'created_at', width: '20%' },
+          { text: 'Actions', value: 'name', width: '1%', sortable: false }
         ],
         vendors: [],
         search: '',
         loading: false,
         noDataText: 'No Vendors Available',
         noResultsText: 'No Vendors Available',
-        pagination: {
-            sortBy: 'created_at',
-            descending: true,
-            rowsPerPage: 10
-        },
+        pagination: {sortBy: 'created_at', descending: true, rowsPerPage: 10},
         vendorVisible: false,
         currentVendor: null
       }
@@ -58,12 +66,14 @@
             self.vendors.push(vendor);
         });
         Event.$on('vendor-updated', function (vendor) {
-          idx = self.vendors.findIndex(x => x.id === vendor.id);
-          self.vendors[idx] = vendor;
+          var idx = self.vendors.findIndex(x => x.id === vendor.id);
+          if (idx >= 0) {
+            self.vendors[idx] = vendor;
+          }
         });
     },
     mounted() {
-        console.log('Display Vendors Component mounted.');
+        console.log('Display vendors component mounted.');
         this.getVendors();
     },
     methods: {
@@ -71,7 +81,7 @@
           this.loading = true;
           axios({
               method: 'get',
-              url: '/ad-vendors'
+              url: this.routes.list
           }).then((res) => {
               this.vendors = res.data.data;
           }).catch((error) => {
@@ -79,8 +89,11 @@
               this.sweet_alert('An unknown error has occurred, vendors cannot be retrieved. Please try again', 'error');
           }).finally(() => this.loading = false);
         },
-        showDetails(idx, item) {
-          Event.$emit('view-vendor', idx, item);
+        showDetails(item) {
+          // Event.$emit('view-vendor', item);
+        },
+        editVendor(item) {
+          Event.$emit('edit-vendor', item);
         }
     }
   }

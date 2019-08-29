@@ -97,9 +97,10 @@ Vue.component('campaign-file-list', () => import('./components/campaign_mpos/Mpo
 Vue.component('add-adslot-modal', () => import('./components/campaign_mpos/AddAdslotModal.vue'));
 
 // AD VENDOR MANAGEMENT
-Vue.component('ad-vendor-list', () => import('./components/ad_vendors/ListVendors.vue'));
+Vue.component('ad-vendor-list', () => import('./components/ad_vendors/VendorList.vue'));
 Vue.component('ad-vendor-create', () => import('./components/ad_vendors/CreateVendor.vue'));
 Vue.component('ad-vendor-view', () => import('./components/ad_vendors/ViewVendor.vue'));
+Vue.component('ad-vendor-publisher-list', () => import('./components/ad_vendors/PublisherList.vue'));
 
 // COMPANY MANAGEMENT
 Vue.component('company-index', () => import('./components/company/CompanyIndex.vue'));
