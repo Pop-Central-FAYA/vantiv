@@ -1,6 +1,46 @@
 {
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
     "/js/vendor.js": "/js/vendor.js?id=af9ed0d026aff6ca5b5b",
     "/js/app.js": "/js/app.js?id=a5915e7f641f907eeaf9",
+=======
+=======
+>>>>>>> fix conflict
+=======
+>>>>>>> ba338dabbef2c6dce8416446d123921b0b8ffcc6
+    "/js/vendor.js": "/js/vendor.js?id=7bec8d280fa1a1362a8c",
+<<<<<<< HEAD
+    "/js/app.js": "/js/app.js?id=e3413ed7085a8dd55a7e",
+=======
+    "/js/app.js": "/js/app.js?id=92e588095cb274583ab8",
+>>>>>>> Implemented functionality to directly download the video file
+<<<<<<< HEAD
+>>>>>>> rebase master in progress
+=======
+>>>>>>> ba338dabbef2c6dce8416446d123921b0b8ffcc6
     "/css/app.css": "/css/app.css?id=c3f94587de6f9592c36c",
+<<<<<<< HEAD
     "/js/manifest.js": "/js/manifest.js?id=a3f8e5050e1d6646c7f0"
+=======
+    "/js/manifest.js": "/js/manifest.js?id=3fbb277d73f4a77f81de"
+=======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> 5319560e7311d143dcb1cd31c54216d0c0b75c52
+>>>>>>> ba338dabbef2c6dce8416446d123921b0b8ffcc6
+    "/js/vendor.js": "/js/vendor.js",
+    "/js/app.js": "/js/app.js",
+    "/css/app.css": "/css/app.css",
+    "/js/manifest.js": "/js/manifest.js"
+<<<<<<< HEAD
+>>>>>>> fix discussion
+>>>>>>> fix conflict
+=======
+<<<<<<< HEAD
+>>>>>>> fix discussion
+=======
+>>>>>>> 5319560e7311d143dcb1cd31c54216d0c0b75c52
+>>>>>>> ba338dabbef2c6dce8416446d123921b0b8ffcc6
 }

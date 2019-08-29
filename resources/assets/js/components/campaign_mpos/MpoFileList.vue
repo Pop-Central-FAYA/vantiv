@@ -9,7 +9,9 @@
         <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="fileArr" :search="search" :pagination.sync="pagination">
         <template v-slot:items="props">
             <tr>
-                <td><media-asset-play-video :asset="props.item[0]['media_asset']"></media-asset-play-video></td>
+                <td>
+                    <media-asset-play-video :asset="props.item[0]['media_asset']"></media-asset-play-video>
+                </td>
                 <td class="text-xs-left">{{ props.item[0]['duration'] }}</td> 
                 <td class="text-xs-left">{{ sumAdslotsInCampaignMpoTimeBelt(props.item) }}</td>
                 <td class="text-xs-left" v-if="is_public">
