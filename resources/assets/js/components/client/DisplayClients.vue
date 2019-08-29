@@ -10,13 +10,13 @@
     <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="clients" :loading="loading" :search="search" :no-data-text="noDataText" :pagination.sync="pagination">
       <template v-slot:items="props">
         <tr>
-            <td class="text-xs-left">{{ props.item.name }}</td>
+            <td class="text-xs-left" ><a @click="showClientDetails(props.item.id)" class="default-vue-link">{{ props.item.name }}</a></td>
             <td class="text-xs-left">{{ props.item.number_brands }}</td>
             <td class="text-xs-left">{{ props.item.sum_active_campaign }}</td>
             <td class="text-xs-left">{{ props.item.client_spendings}}</td>
           <td class="text-xs-left">{{ dateToHumanReadable(props.item.created_at.date) }}</td>
-           <td @click="showEditClient(props.item)" class="justify-center layout px-0">
-            <v-icon color="#44C1C9" v-b-tooltip.hover title="Edit client" dark right>edit</v-icon> </td>
+           <td class="justify-center layout px-0">
+            <v-icon @click="showEditClient(props.item)" color="#44C1C9" v-b-tooltip.hover title="Edit client" dark right>fa fa-edit</v-icon> </td>
         </tr>
       </template>
       <template v-slot:no-results>
@@ -81,6 +81,10 @@
          showEditClient(idx, item) {
           Event.$emit('view-client', idx, item);
         },
+        showClientDetails(id){
+            var url= '/clients/'+id+'/details/';
+             window.location = url;
+        }
         
     }
   }

@@ -17,6 +17,7 @@ use Vanguard\Models\Campaign;
 use Vanguard\Http\Resources\ClientCollection;
 use Illuminate\Http\Request;
 use Vanguard\Services\Client\GetClientDetails;
+use Vanguard\Services\Client\GetCampaignsByClient;
 
 class ClientController extends Controller
 {
@@ -71,5 +72,18 @@ class ClientController extends Controller
     public function index(Request $request)
     {   
         return view('agency.clients.index');
+    }
+
+      /**
+     * Retrive a single client
+     */
+    public function get($id)
+    {
+        $client = Client::with('contacts', 'brands')->findOrFail($id);
+        $campaigns = new GetCampaignsByClient($id);
+        $campaign_list = $campaigns->run();
+        $this->authorize('get', $client);
+        return view('agency.clients.client')->with('client', $client)->with('campaign_list', $campaign_list);
+       
     }
 }
