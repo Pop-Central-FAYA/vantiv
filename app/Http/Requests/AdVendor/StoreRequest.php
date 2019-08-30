@@ -36,7 +36,7 @@ class StoreRequest extends FormRequest
             'contacts.*.email' => 'required|email',
             'contacts.*.phone_number' => 'required|string',
             'publishers' => 'sometimes|required|array',
-            'publishers.*' => 'string|exists:publishers,id'
+            'publishers.*.id' => 'string|exists:publishers,id'
         ];
     }
 }

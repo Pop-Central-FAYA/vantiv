@@ -1,9 +1,6 @@
 <template>
     <v-layout>
         <v-dialog v-model="dialog" persistent max-width="800px">
-            <template v-slot:activator="{ on }">
-                <v-btn color="" class="default-vue-btn" dark v-on="on">Create Vendor</v-btn>
-            </template>
             <v-card>
                 <v-card-text>
                     <v-container grid-list-md>
@@ -115,6 +112,8 @@
                                     </v-text-field>
                                 </v-flex>
                             </v-layout>
+                            <v-subheader>Publishers</v-subheader>
+                            <ad-vendor-publisher-list :publishers="publishers"></ad-vendor-publisher-list>
                         </v-form>
                         <v-card-actions>
                     <v-spacer></v-spacer>
@@ -157,6 +156,9 @@
 
 <script>
     export default {
+        props: {
+            publishers: Array
+        },
         data() {
             return {
                 dialog: false,
@@ -205,9 +207,16 @@
             Event.$on('view-vendor', function(vendor) {
                 self.openDialog(vendor);
             });
+            Event.$on('edit-vendor', function(vendor) {
+                self.editMode = true;
+                self.openDialog(vendor);
+            });
+            Event.$on('vendor-publisher-updated', function(publisher_list) {
+                self.vendor.publishers = publisher_list;
+            });
         },
         mounted() {
-            console.log('Create vendor Component mounted.');
+            console.log('Create vendor component mounted.');
             this.$validator.localize('en', this.dictionary);
         },
         methods: {
@@ -225,7 +234,8 @@
                             email: '',
                             phone_number: ''
                         }
-                    ]
+                    ],
+                    publishers: []
                 }
             },
             openDialog: function(item) {
@@ -238,6 +248,7 @@
             closeDialog: function() {
                 this.vendor = this.setupModel();
                 this.dialog = false;
+                Event.$emit('dialog-closed', []);
             },
             editVendor: function(event) {
                 self = this;
@@ -253,7 +264,7 @@
                     url: this.vendor.links.update,
                     data: this.vendor
                 }).then((res) => {
-                    this.sweet_alert('Vendor was successfully created', 'success');
+                    this.sweet_alert('Vendor was successfully updated', 'success');
                     Event.$emit('vendor-updated', res.data.data);
                     this.closeDialog();
                 }).catch((error) => {

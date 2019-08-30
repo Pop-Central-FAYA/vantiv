@@ -100,6 +100,9 @@
                                     </v-text-field>
                                 </v-flex>
                             </v-layout>
+                            <v-subheader>Publishers</v-subheader>
+                            <v-divider></v-divider>
+                            <ad-vendor-publisher-list :publishers="publishers"></ad-vendor-publisher-list>
                         </v-form>
                         <v-card-actions>
                     <v-spacer></v-spacer>
@@ -141,6 +144,10 @@
 
 <script>
     export default {
+        props: {
+            routes: Object,
+            publishers: Array
+        },
         data() {
             return {
                 dialog: false,
@@ -183,8 +190,14 @@
                 }
             };
         },
+        created() {
+            var self = this;
+            Event.$on('vendor-publisher-updated', function(publisher_list) {
+                self.vendor.publishers = publisher_list;
+            });
+        },
         mounted() {
-            console.log('Create vendor Component mounted.');
+            console.log('Create vendor component mounted.');
             this.$validator.localize('en', this.dictionary);
         },
         methods: {
@@ -199,12 +212,11 @@
             makeCreateRequest: function() {
                 axios({
                     method: 'post',
-                    url: '/ad-vendors',
+                    url: this.routes.create,
                     data: this.vendor
                 }).then((res) => {
                     Event.$emit('vendor-created', res.data.data);
                     this.sweet_alert('Vendor was successfully created', 'success');
-                    this.vendor = this.setupModel();
                     this.closeDialog();
                 }).catch((error) => {
                     this.sweet_alert('An unknown error has occurred, vendor cannot be created. Please try again', 'error');
@@ -224,11 +236,14 @@
                             email: '',
                             phone_number: ''
                         }
-                    ]
+                    ],
+                    publishers: []
                 }
             },
             closeDialog: function() {
                 this.dialog = false;
+                this.vendor = this.setupModel();
+                Event.$emit('dialog-closed', []);
             }
         }
     }

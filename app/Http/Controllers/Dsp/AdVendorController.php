@@ -31,11 +31,16 @@ class AdVendorController extends Controller
      *******************************/
     public function index(Request $request)
     {   
+        $routes = [
+            'list' => route('ad-vendor.list', [], false),
+            'create' => route('ad-vendor.create', [], false)
+        ];
         $publishers = Publisher::all(['id', 'name']);
         $vendor_list = AdVendor::filter(['company_id' => $this->companyId()])->get(['id', 'name']);
         return view('agency.ad_vendor.index')
                     ->with('publishers', $publishers)
-                    ->with('vendors', $vendor_list);
+                    ->with('vendors', $vendor_list)
+                    ->with('routes', $routes);
     }
 
     /*******************************

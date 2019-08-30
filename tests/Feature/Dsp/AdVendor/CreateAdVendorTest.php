@@ -59,6 +59,8 @@ class CreateAdVendorTest extends AdVendorTestCase
         $response = $this->getResponse($user, $vendor_data);
 
         $response->assertStatus(201);
+
+        $vendor_data['publishers'] = [];
         $response->assertJson([
             'data' => $vendor_data,
         ]);
@@ -114,6 +116,10 @@ class CreateAdVendorTest extends AdVendorTestCase
         $pub_one = factory(Publisher::class)->create();
         $pub_two = factory(Publisher::class)->create();
         
+        $publishers = [
+            ['id' => $pub_one->id, 'name' => $pub_one->name],
+            ['id' => $pub_two->id, 'name' => $pub_two->name]
+        ];
         $vendor_data = [
             'name' => 'AIT Broker', 'street_address' => '21 akin ogunlewe road',
             'city' => 'Lagos', 'state' => 'Lagos', 'country' => 'Nigeria',
@@ -121,21 +127,14 @@ class CreateAdVendorTest extends AdVendorTestCase
                 'first_name' => 'Adedotun', 'last_name' => 'Oshiomole',
                 'email' => 'aoshiomole@example.org', 'phone_number' => '+2341111111111'
             ]], 
-            'publishers' => [$pub_one->id, $pub_two->id]
+            'publishers' => $publishers
         ];
 
         $user = $this->setupUserWithPermissions();
         $response = $this->getResponse($user, $vendor_data);
 
         $response->assertStatus(201);
-        $response->assertJson([
-            'data' => [
-                'publishers' => [
-                    ['id' => $pub_one->id, 'name' => $pub_one->name],
-                    ['id' => $pub_two->id, 'name' => $pub_two->name]
-                ]
-            ],
-        ]);
+        $response->assertJson(['data' => ['publishers' => $publishers]]);
     }
 
     public function test_empty_publisher_array_throws_validation_exception_on_create()
@@ -153,12 +152,17 @@ class CreateAdVendorTest extends AdVendorTestCase
     {
         $random_pub_id = uniqid();
         $pub_one = factory(Publisher::class)->create();
-        $vendor_data = ['publishers' => [$pub_one->id, $random_pub_id]];
+
+        $publishers = [
+            ['id' => $pub_one->id, 'name' => $pub_one->name],
+            ['id' => $random_pub_id, 'name' => 'random nonexistent pub']
+        ];
+        $vendor_data = ['publishers' => $publishers];
 
         $user = $this->setupUserWithPermissions();
         $response = $this->getResponse($user, $vendor_data);
 
         $response->assertStatus(422);
-        $response->assertJsonValidationErrors(['publishers.1']);
+        $response->assertJsonValidationErrors(['publishers.1.id']);
     }
 }
