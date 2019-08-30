@@ -115,6 +115,12 @@ Vue.component('clients-edit', () => import('./components/client/EditClient.vue')
 Vue.component('guest-mpo', () => import('./components/guest/Mpo.vue'));
 Vue.component('guest-adslot-list', () => import('./components/guest/AdslotList.vue'));
 
+//Dashboard
+Vue.component('dashboard', () => import('./components/dashboard/DisplayDashboard.vue'));
+Vue.component('dashboard-campaign-summary', () => import('./components/dashboard/CampaignSummary.vue'));
+Vue.component('dashboard-mediaplan-summary', () => import('./components/dashboard/MediaPlanSummary.vue'));
+Vue.component('dashboard-campaign-summary-chart', () => import('./components/dashboard/CampaignPieChart.vue'));
+
 Vue.mixin({
     methods: {
         format_audience(number) {
