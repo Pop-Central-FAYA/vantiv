@@ -7,7 +7,7 @@
       <brand-create  :client_id="brands[0].client_id"></brand-create>
       <v-text-field v-model="search" append-icon="search" label="Enter Keyword" single-line hide-details></v-text-field>
     </v-card-title>
-     <clients-edit></clients-edit>
+     <brands-edit></brands-edit>
     <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="brands" :loading="loading" :search="search" :no-data-text="noDataText" :pagination.sync="pagination">
       <template v-slot:items="props">
         <tr>
@@ -18,7 +18,7 @@
             </td>
            <td class="text-xs-left">{{ dateToHumanReadable(props.item.created_at.date) }}</td>
            <td class="justify-center layout px-0">
-            <v-icon color="#44C1C9" v-b-tooltip.hover title="Edit client" dark right>fa fa-edit</v-icon> </td>
+            <v-icon color="#44C1C9" @click="showEditBrand(props.item)"  v-b-tooltip.hover title="Edit client" dark right>fa fa-edit</v-icon> </td>
         </tr>
       </template>
       <template v-slot:no-results>
@@ -77,6 +77,10 @@
     mounted() {
         console.log('Display All client Component mounted.');
       
+    }, methods: {
+         showEditBrand(idx, item) {
+          Event.$emit('edit-brand', idx, item);
+        }, 
     }
   }
 </script>

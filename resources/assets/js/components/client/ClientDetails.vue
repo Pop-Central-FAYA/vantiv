@@ -131,7 +131,7 @@
 <script>
   export default {
         props: {
-         clientData: {},
+         clientData: Object,
          campaigns: Array
         },
     data () {
@@ -143,17 +143,6 @@
         console.log('Display client details Component mounted.');
     },
     methods: {
-       getClients() {
-          this.loading = true;
-          axios({
-              method: 'get',
-              url: '/clients'
-          }).then((res) => {
-              this.clients = res.data.data;
-          }).catch((error) => {
-              this.sweet_alert('An unknown error has occurred, vendors cannot be retrieved. Please try again', 'error');
-          }).finally(() => this.loading = false);
-        },
          showEditClient(idx, item) {
           Event.$emit('view-client', idx, item);
         },

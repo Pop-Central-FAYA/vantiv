@@ -115,6 +115,7 @@ Vue.component('client-details', () => import('./components/client/ClientDetails.
 //BRAND MANAGEMENT
 Vue.component('brand-list', () => import('./components/brand/ListBrands.vue'));
 Vue.component('brand-create', () => import('./components/brand/CreateBrand.vue'));
+Vue.component('brands-edit', () => import('./components/brand/EditBrand.vue'));
 
 
 

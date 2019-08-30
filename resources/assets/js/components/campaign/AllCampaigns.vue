@@ -77,8 +77,6 @@
         if(!this.isClientDetails){
            header.splice(1, 0, { text: 'Brand', value: 'brand' });
           }
-       
-
         return header
       }
     }

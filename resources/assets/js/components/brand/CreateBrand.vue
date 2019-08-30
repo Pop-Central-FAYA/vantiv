@@ -115,7 +115,6 @@
         },
         methods: {
              createClient:async function(event) {
-
               let isValid = await this.$validator.validate().then(valid => {
                     if (!valid) {
                         return false;
@@ -123,19 +122,14 @@
                         return true;
                     }
                 });
-
                 if (!isValid) {
                     return false;
                 }
 
                try {
-                  
                     // generate presigned url for brand logo upload
-                    
                         await this.generatePresignedUrl(this.brand_logo_file, 'brand-images/');
                         await this.uploadFile(this.brand_logo_file, this.s3_presigned_url, 'brand_logo');
-                      
-                  
                     // make axios call to store created asset to db
                        await this. storeRequest();
                    
