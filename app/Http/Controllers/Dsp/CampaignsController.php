@@ -22,6 +22,7 @@ use Vanguard\Http\Requests\StoreCampaignMpoAdslotRequest;
 use Vanguard\Services\Mpo\StoreCampaignMpoTimeBelt;
 use Vanguard\Services\Mpo\GetCampaignMpoTimeBelts;
 use Vanguard\Services\Mpo\ExcelMpoExport;
+use Vanguard\Services\Campaign\ReformatCampaignList;
 
 class CampaignsController extends Controller
 {

@@ -1,4 +1,4 @@
-webpackJsonp([47],{
+webpackJsonp([51],{
 
 /***/ "./node_modules/bootstrap-vue/dist/bootstrap-vue.css":
 /***/ (function(module, exports, __webpack_require__) {
@@ -197,7 +197,7 @@ Vue.component('media-plan-suggestion-graph', function () {
     return __webpack_require__.e/* import() */(18).then(__webpack_require__.bind(null, "./resources/assets/js/components/media_plan/customise/SuggestionGraph.vue"));
 });
 Vue.component('media-plan-suggestion-selected', function () {
-    return __webpack_require__.e/* import() */(38).then(__webpack_require__.bind(null, "./resources/assets/js/components/media_plan/customise/SelectedSuggestions.vue"));
+    return __webpack_require__.e/* import() */(39).then(__webpack_require__.bind(null, "./resources/assets/js/components/media_plan/customise/SelectedSuggestions.vue"));
 });
 Vue.component('media-plan-suggestion-filter', function () {
     return __webpack_require__.e/* import() */(19).then(__webpack_require__.bind(null, "./resources/assets/js/components/media_plan/customise/FilterSuggestions.vue"));
@@ -209,7 +209,7 @@ Vue.component('media-plan-timebelt-table', function () {
     return __webpack_require__.e/* import() */(15).then(__webpack_require__.bind(null, "./resources/assets/js/components/media_plan/customise/TimeBeltsTable.vue"));
 });
 Vue.component('media-plan-create-campaign', function () {
-    return __webpack_require__.e/* import() */(37).then(__webpack_require__.bind(null, "./resources/assets/js/components/media_plan/summary/CreateCampaign.vue"));
+    return __webpack_require__.e/* import() */(38).then(__webpack_require__.bind(null, "./resources/assets/js/components/media_plan/summary/CreateCampaign.vue"));
 });
 Vue.component('media-plan-details', function () {
     return __webpack_require__.e/* import() */(21).then(__webpack_require__.bind(null, "./resources/assets/js/components/media_plan/complete/PlanDetails.vue"));
@@ -224,7 +224,7 @@ Vue.component('media-plan-criteria-form', function () {
     return __webpack_require__.e/* import() */(11).then(__webpack_require__.bind(null, "./resources/assets/js/components/media_plan/CriteriaForm.vue"));
 });
 Vue.component('media-plan-list', function () {
-    return __webpack_require__.e/* import() */(39).then(__webpack_require__.bind(null, "./resources/assets/js/components/media_plan/AllMediaPlans.vue"));
+    return __webpack_require__.e/* import() */(40).then(__webpack_require__.bind(null, "./resources/assets/js/components/media_plan/AllMediaPlans.vue"));
 });
 Vue.component('media-plan-request-approval', function () {
     return __webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, "./resources/assets/js/components/media_plan/summary/RequestApproval.vue"));
@@ -232,13 +232,13 @@ Vue.component('media-plan-request-approval', function () {
 
 // CAMPAIGN
 Vue.component('campaign-list', function () {
-    return __webpack_require__.e/* import() */(30).then(__webpack_require__.bind(null, "./resources/assets/js/components/campaign/AllCampaigns.vue"));
+    return __webpack_require__.e/* import() */(31).then(__webpack_require__.bind(null, "./resources/assets/js/components/campaign/AllCampaigns.vue"));
 });
 Vue.component('campaign-display', function () {
-    return __webpack_require__.e/* import() */(29).then(__webpack_require__.bind(null, "./resources/assets/js/components/campaign/DisplayCampaign.vue"));
+    return __webpack_require__.e/* import() */(30).then(__webpack_require__.bind(null, "./resources/assets/js/components/campaign/DisplayCampaign.vue"));
 });
 Vue.component('campaign-summary', function () {
-    return __webpack_require__.e/* import() */(42).then(__webpack_require__.bind(null, "./resources/assets/js/components/campaign/Summary.vue"));
+    return __webpack_require__.e/* import() */(46).then(__webpack_require__.bind(null, "./resources/assets/js/components/campaign/Summary.vue"));
 });
 
 // ASSET MANAGEMENT
@@ -246,13 +246,13 @@ Vue.component('media-asset-upload', function () {
     return __webpack_require__.e/* import() */(9).then(__webpack_require__.bind(null, "./resources/assets/js/components/asset_management/Upload.vue"));
 });
 Vue.component('media-asset-display', function () {
-    return __webpack_require__.e/* import() */(43).then(__webpack_require__.bind(null, "./resources/assets/js/components/asset_management/DisplayAssets.vue"));
+    return __webpack_require__.e/* import() */(47).then(__webpack_require__.bind(null, "./resources/assets/js/components/asset_management/DisplayAssets.vue"));
 });
 Vue.component('media-asset-delete', function () {
-    return __webpack_require__.e/* import() */(44).then(__webpack_require__.bind(null, "./resources/assets/js/components/asset_management/DeleteAsset.vue"));
+    return __webpack_require__.e/* import() */(48).then(__webpack_require__.bind(null, "./resources/assets/js/components/asset_management/DeleteAsset.vue"));
 });
 Vue.component('media-asset-play-video', function () {
-    return __webpack_require__.e/* import() */(32).then(__webpack_require__.bind(null, "./resources/assets/js/components/asset_management/PlayVideo.vue"));
+    return __webpack_require__.e/* import() */(33).then(__webpack_require__.bind(null, "./resources/assets/js/components/asset_management/PlayVideo.vue"));
 });
 
 //Schedule
@@ -260,7 +260,7 @@ Vue.component('weekly-schedule', function () {
     return __webpack_require__.e/* import() */(13).then(__webpack_require__.bind(null, "./resources/assets/js/components/schedule/weekly/WeeklySchedule.vue"));
 });
 Vue.component('ad-break-modal', function () {
-    return __webpack_require__.e/* import() */(36).then(__webpack_require__.bind(null, "./resources/assets/js/components/schedule/partials/AdbreakModal.vue"));
+    return __webpack_require__.e/* import() */(37).then(__webpack_require__.bind(null, "./resources/assets/js/components/schedule/partials/AdbreakModal.vue"));
 });
 Vue.component('schedule-mpo-filter', function () {
     return __webpack_require__.e/* import() */(10).then(__webpack_require__.bind(null, "./resources/assets/js/components/schedule/weekly/MpoFilter.vue"));
@@ -271,42 +271,42 @@ Vue.component('campaign-mpos-list', function () {
     return __webpack_require__.e/* import() */(12).then(__webpack_require__.bind(null, "./resources/assets/js/components/campaign_mpos/DisplayMpoList.vue"));
 });
 Vue.component('mpo-slot-list', function () {
-    return __webpack_require__.e/* import() */(27).then(__webpack_require__.bind(null, "./resources/assets/js/components/campaign_mpos/DisplayAdslotList.vue"));
+    return __webpack_require__.e/* import() */(28).then(__webpack_require__.bind(null, "./resources/assets/js/components/campaign_mpos/DisplayAdslotList.vue"));
 });
 Vue.component('mpo-file-manager', function () {
-    return __webpack_require__.e/* import() */(41).then(__webpack_require__.bind(null, "./resources/assets/js/components/campaign_mpos/AssociateFiles.vue"));
+    return __webpack_require__.e/* import() */(45).then(__webpack_require__.bind(null, "./resources/assets/js/components/campaign_mpos/AssociateFiles.vue"));
 });
 Vue.component('submit-mpo-modal', function () {
     return __webpack_require__.e/* import() */(4).then(__webpack_require__.bind(null, "./resources/assets/js/components/campaign_mpos/SubmitMpoModal.vue"));
 });
 Vue.component('delete-slots-modal', function () {
-    return __webpack_require__.e/* import() */(28).then(__webpack_require__.bind(null, "./resources/assets/js/components/campaign_mpos/DeleteSlotModal.vue"));
+    return __webpack_require__.e/* import() */(29).then(__webpack_require__.bind(null, "./resources/assets/js/components/campaign_mpos/DeleteSlotModal.vue"));
 });
 Vue.component('edit-slots-modal', function () {
     return __webpack_require__.e/* import() */(5).then(__webpack_require__.bind(null, "./resources/assets/js/components/campaign_mpos/EditSlotModal.vue"));
 });
 Vue.component('campaign-file-list', function () {
-    return __webpack_require__.e/* import() */(26).then(__webpack_require__.bind(null, "./resources/assets/js/components/campaign_mpos/MpoFileList.vue"));
+    return __webpack_require__.e/* import() */(27).then(__webpack_require__.bind(null, "./resources/assets/js/components/campaign_mpos/MpoFileList.vue"));
 });
 Vue.component('add-adslot-modal', function () {
     return __webpack_require__.e/* import() */(6).then(__webpack_require__.bind(null, "./resources/assets/js/components/campaign_mpos/AddAdslotModal.vue"));
 });
 Vue.component('share-link-modal', function () {
-    return __webpack_require__.e/* import() */(25).then(__webpack_require__.bind(null, "./resources/assets/js/components/campaign_mpos/ShareLinkModal.vue"));
+    return __webpack_require__.e/* import() */(26).then(__webpack_require__.bind(null, "./resources/assets/js/components/campaign_mpos/ShareLinkModal.vue"));
 });
 
 // AD VENDOR MANAGEMENT
 Vue.component('ad-vendor-list', function () {
-    return __webpack_require__.e/* import() */(34).then(__webpack_require__.bind(null, "./resources/assets/js/components/ad_vendors/VendorList.vue"));
+    return __webpack_require__.e/* import() */(35).then(__webpack_require__.bind(null, "./resources/assets/js/components/ad_vendors/VendorList.vue"));
 });
 Vue.component('ad-vendor-create', function () {
-    return __webpack_require__.e/* import() */(35).then(__webpack_require__.bind(null, "./resources/assets/js/components/ad_vendors/CreateVendor.vue"));
+    return __webpack_require__.e/* import() */(36).then(__webpack_require__.bind(null, "./resources/assets/js/components/ad_vendors/CreateVendor.vue"));
 });
 Vue.component('ad-vendor-view', function () {
-    return __webpack_require__.e/* import() */(33).then(__webpack_require__.bind(null, "./resources/assets/js/components/ad_vendors/ViewVendor.vue"));
+    return __webpack_require__.e/* import() */(34).then(__webpack_require__.bind(null, "./resources/assets/js/components/ad_vendors/ViewVendor.vue"));
 });
 Vue.component('ad-vendor-publisher-list', function () {
-    return __webpack_require__.e/* import() */(45).then(__webpack_require__.bind(null, "./resources/assets/js/components/ad_vendors/PublisherList.vue"));
+    return __webpack_require__.e/* import() */(49).then(__webpack_require__.bind(null, "./resources/assets/js/components/ad_vendors/PublisherList.vue"));
 });
 
 // COMPANY MANAGEMENT
@@ -316,7 +316,7 @@ Vue.component('company-index', function () {
 
 //CLIENT MANAGEMENT
 Vue.component('clients-list', function () {
-    return __webpack_require__.e/* import() */(23).then(__webpack_require__.bind(null, "./resources/assets/js/components/client/DisplayClients.vue"));
+    return __webpack_require__.e/* import() */(24).then(__webpack_require__.bind(null, "./resources/assets/js/components/client/DisplayClients.vue"));
 });
 Vue.component('clients-create', function () {
     return __webpack_require__.e/* import() */(3).then(__webpack_require__.bind(null, "./resources/assets/js/components/client/CreateClient.vue"));
@@ -325,12 +325,12 @@ Vue.component('clients-edit', function () {
     return __webpack_require__.e/* import() */(2).then(__webpack_require__.bind(null, "./resources/assets/js/components/client/EditClient.vue"));
 });
 Vue.component('client-details', function () {
-    return __webpack_require__.e/* import() */(24).then(__webpack_require__.bind(null, "./resources/assets/js/components/client/ClientDetails.vue"));
+    return __webpack_require__.e/* import() */(25).then(__webpack_require__.bind(null, "./resources/assets/js/components/client/ClientDetails.vue"));
 });
 
 //BRAND MANAGEMENT
 Vue.component('brand-list', function () {
-    return __webpack_require__.e/* import() */(31).then(__webpack_require__.bind(null, "./resources/assets/js/components/brand/ListBrands.vue"));
+    return __webpack_require__.e/* import() */(32).then(__webpack_require__.bind(null, "./resources/assets/js/components/brand/ListBrands.vue"));
 });
 Vue.component('brand-create', function () {
     return __webpack_require__.e/* import() */(8).then(__webpack_require__.bind(null, "./resources/assets/js/components/brand/CreateBrand.vue"));
@@ -344,7 +344,21 @@ Vue.component('guest-mpo', function () {
     return __webpack_require__.e/* import() */(22).then(__webpack_require__.bind(null, "./resources/assets/js/components/guest/Mpo.vue"));
 });
 Vue.component('guest-adslot-list', function () {
-    return __webpack_require__.e/* import() */(40).then(__webpack_require__.bind(null, "./resources/assets/js/components/guest/AdslotList.vue"));
+    return __webpack_require__.e/* import() */(41).then(__webpack_require__.bind(null, "./resources/assets/js/components/guest/AdslotList.vue"));
+});
+
+//Dashboard
+Vue.component('dashboard', function () {
+    return __webpack_require__.e/* import() */(43).then(__webpack_require__.bind(null, "./resources/assets/js/components/dashboard/DisplayDashboard.vue"));
+});
+Vue.component('dashboard-campaign-summary', function () {
+    return __webpack_require__.e/* import() */(44).then(__webpack_require__.bind(null, "./resources/assets/js/components/dashboard/CampaignSummary.vue"));
+});
+Vue.component('dashboard-mediaplan-summary', function () {
+    return __webpack_require__.e/* import() */(42).then(__webpack_require__.bind(null, "./resources/assets/js/components/dashboard/MediaPlanSummary.vue"));
+});
+Vue.component('dashboard-campaign-summary-chart', function () {
+    return __webpack_require__.e/* import() */(23).then(__webpack_require__.bind(null, "./resources/assets/js/components/dashboard/CampaignPieChart.vue"));
 });
 
 Vue.mixin({
