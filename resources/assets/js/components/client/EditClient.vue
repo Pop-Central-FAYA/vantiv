@@ -274,6 +274,7 @@
                 }
             },
             makeUpdateRequest: function() {
+                 this.sweet_alert('Updating client information', 'info');
                  axios({
                     method: 'patch',
                     url: '/clients/'+this.client.id,

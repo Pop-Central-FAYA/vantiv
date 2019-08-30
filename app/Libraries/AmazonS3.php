@@ -19,7 +19,7 @@ Class AmazonS3
             // 'credentials' => [
             //     'key' => getenv('AWS_KEY'),
             //     'secret' => getenv('AWS_SECRET')
-            // ]
+             //]
         ));
 
         return $s3Client;

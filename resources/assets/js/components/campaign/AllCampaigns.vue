@@ -10,7 +10,7 @@
       <template v-slot:items="props">
         <tr @click="campaignDetails(props.item.redirect_url)">
           <td class="text-xs-left"><a :href="props.item.redirect_url" class="default-vue-link">{{ props.item.name }}</a></td>
-          <td class="text-xs-left">{{ props.item.brand }}</td>
+          <td class="text-xs-left" v-if="!isClientDetails">{{ props.item.brand }}</td>
           <td class="text-xs-left">{{ dateToHumanReadable(props.item.start_date) }}</td>
           <td class="text-xs-left">{{ dateToHumanReadable(props.item.end_date) }}</td>
           <td class="text-xs-left">{{ props.item.budget }}</td>
@@ -42,21 +42,13 @@
   export default {
     props: {
       companyType: String,
-      campaigns: Array
+      campaigns: Array,
+      isClientDetails: Boolean,
     },
     data () {
       return {
         search: '',
-        headers: [
-          { text: 'Name', align: 'left', value: 'name' },
-          { text: 'Brand', value: 'brand' },
-          { text: 'Start Date', value: 'start_date' },
-          { text: 'End Date', value: 'end_date' },
-          { text: 'Budget (₦)', value: 'budget' },
-          { text: 'Ad Slots', value: 'adslots' },
-          { text: 'Status', value: 'status' },
-          { text: 'Created On', value: 'date_created' }
-        ],
+        headers: this.getHeader(),
         pagination: {
             rowsPerPage: 10,
             sortBy: 'date_created',
@@ -71,6 +63,21 @@
     methods: {
       campaignDetails(url) {
         window.location = url;
+      },
+      getHeader(){
+        var header =[
+          { text: 'Name', align: 'left', value: 'name' },
+          { text: 'Start Date', value: 'start_date' },
+          { text: 'End Date', value: 'end_date' },
+          { text: 'Budget (₦)', value: 'budget' },
+          { text: 'Ad Slots', value: 'adslots' },
+          { text: 'Status', value: 'status' },
+          { text: 'Created On', value: 'date_created' }
+        ];
+        if(!this.isClientDetails){
+           header.splice(1, 0, { text: 'Brand', value: 'brand' });
+          }
+        return header
       }
     }
   }
