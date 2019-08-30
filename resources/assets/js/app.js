@@ -110,7 +110,13 @@ Vue.component('clients-list', () => import('./components/client/DisplayClients.v
 Vue.component('clients-create', () => import('./components/client/CreateClient.vue'));
 Vue.component('clients-edit', () => import('./components/client/EditClient.vue'));
 Vue.component('client-details', () => import('./components/client/ClientDetails.vue'));
-Vue.component('brand-list', () => import('./components/client/ListBrands.vue'));
+
+
+//BRAND MANAGEMENT
+Vue.component('brand-list', () => import('./components/brand/ListBrands.vue'));
+Vue.component('brand-create', () => import('./components/brand/CreateBrand.vue'));
+
+
 
 //GUEST
 Vue.component('guest-mpo', () => import('./components/guest/Mpo.vue'));

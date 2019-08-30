@@ -86,7 +86,7 @@
                     </v-tab-item>
 
                     <v-tab-item value="brands-tab">
-                       <brand-list :brands="clientData.brands"></brand-list>
+                       <brand-list :brand_list="clientData.brands"></brand-list>
                     </v-tab-item>
             </v-tabs>
         </v-flex>
@@ -141,8 +141,6 @@
     },
     mounted() {
         console.log('Display client details Component mounted.');
-       console.log(this.clientData);
-      
     },
     methods: {
        getClients() {
