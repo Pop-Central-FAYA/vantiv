@@ -1,4 +1,4 @@
-webpackJsonp([46],{
+webpackJsonp([47],{
 
 /***/ "./node_modules/bootstrap-vue/dist/bootstrap-vue.css":
 /***/ (function(module, exports, __webpack_require__) {
@@ -297,13 +297,16 @@ Vue.component('share-link-modal', function () {
 
 // AD VENDOR MANAGEMENT
 Vue.component('ad-vendor-list', function () {
-    return __webpack_require__.e/* import() */(34).then(__webpack_require__.bind(null, "./resources/assets/js/components/ad_vendors/ListVendors.vue"));
+    return __webpack_require__.e/* import() */(34).then(__webpack_require__.bind(null, "./resources/assets/js/components/ad_vendors/VendorList.vue"));
 });
 Vue.component('ad-vendor-create', function () {
     return __webpack_require__.e/* import() */(35).then(__webpack_require__.bind(null, "./resources/assets/js/components/ad_vendors/CreateVendor.vue"));
 });
 Vue.component('ad-vendor-view', function () {
     return __webpack_require__.e/* import() */(33).then(__webpack_require__.bind(null, "./resources/assets/js/components/ad_vendors/ViewVendor.vue"));
+});
+Vue.component('ad-vendor-publisher-list', function () {
+    return __webpack_require__.e/* import() */(45).then(__webpack_require__.bind(null, "./resources/assets/js/components/ad_vendors/PublisherList.vue"));
 });
 
 // COMPANY MANAGEMENT

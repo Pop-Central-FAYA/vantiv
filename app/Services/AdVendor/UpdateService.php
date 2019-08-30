@@ -89,6 +89,7 @@ class UpdateService
     }
 
     protected function updatePublishers(array $publisher_list, AdVendorModel $vendor) {
-        $vendor->publishers()->sync($publisher_list);
+        $publisher_list = collect($publisher_list);
+        $vendor->publishers()->sync($publisher_list->pluck('id'));
     }
 }

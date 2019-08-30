@@ -154,12 +154,15 @@ class UpdateAdVendorTest extends AdVendorTestCase
         $pub = factory(Publisher::class)->create();
         $user = $this->setupUserWithPermissions();
         $vendor = $this->setupAdVendor($user);
-        
-        $vendor_data = ['publishers' => [uniqid(), $pub->id]];
+        $publishers = [
+            ['id' => uniqid(), 'name' => 'random nonexistent pub'],
+            ['id' => $pub->id, 'name' => $pub->name]
+        ];
+        $vendor_data = ['publishers' => $publishers];
         $response = $this->getResponse($user, $vendor->id, $vendor_data);
 
         $response->assertStatus(422);
-        $response->assertJsonValidationErrors(['publishers.0']);
+        $response->assertJsonValidationErrors(['publishers.0.id']);
     }
 
     public function test_publisher_association_is_deleted_if_empty_publishers_array_sent()
@@ -186,19 +189,16 @@ class UpdateAdVendorTest extends AdVendorTestCase
 
         $pub_two = factory(Publisher::class)->create();
         $pub_three = factory(Publisher::class)->create();
+        $publishers = [
+            ['id' => $pub_two->id, 'name' => $pub_two->name],
+            ['id' => $pub_three->id, 'name' => $pub_three->name]
+        ];
 
-        $vendor_data = ['publishers' => [$pub_two->id, $pub_three->id]];
+        $vendor_data = ['publishers' => $publishers];
         $response = $this->getResponse($user, $vendor->id, $vendor_data);
 
         $response->assertStatus(200);
-        $response->assertJson([
-            'data' => [
-                'publishers' => [
-                    ['id' => $pub_two->id, 'name' => $pub_two->name],
-                    ['id' => $pub_three->id, 'name' => $pub_three->name]
-                ]
-            ],
-        ]);
+        $response->assertJson(['data' => ['publishers' => $publishers]]);
     }
 
     

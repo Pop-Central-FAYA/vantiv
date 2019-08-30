@@ -74,8 +74,9 @@ class CreateService
     }
 
     protected function storePublishers(array $publisher_list, AdVendorModel $vendor) {
-        if (count($publisher_list) > 0) {
-            $vendor->publishers()->sync($publisher_list);
+        $publisher_list = collect($publisher_list);
+        if ($publisher_list->isNotEmpty()) {
+            $vendor->publishers()->sync($publisher_list->pluck('id'));
         }
     }
 }

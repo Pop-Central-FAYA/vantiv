@@ -1,16 +1,26 @@
 <table>
+    <tr>
+        <th colspan="1" rowspan="3">
+            
+        </th>
+    </tr>
+</table>
+<table>
     <thead>
-    <tr>
-        <th>BUDGET SUMMARY</th>
-    </tr>
-    <tr>
-        <th>Medium</th>
-        <th>Material Duration</th>
-        <th>Number of Spots/units</th>
-        <th>Gross Media Cost</th>
-        <th>Net Media Cost</th>
-        <th>Savings</th>
-    </tr>
+        <tr>
+            <th colspan="12" height="50">BUDGET SUMMARY</th>
+        </tr>
+        <tr>
+            <th colspan="12"></th>
+        </tr>
+        <tr>
+            <th>Medium</th>
+            <th>Material Duration</th>
+            <th>Number of Spots/units</th>
+            <th>Gross Media Cost</th>
+            <th>Net Media Cost</th>
+            <th>Savings</th>
+        </tr>
     </thead>
     <tbody>
         @php 

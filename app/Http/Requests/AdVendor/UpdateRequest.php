@@ -25,7 +25,7 @@ class UpdateRequest extends StoreRequest
             'contacts.*.email' => 'sometimes|required|email',
             'contacts.*.phone_number' => 'sometimes|required|string',
             'publishers' => 'sometimes|array',
-            'publishers.*' => 'string|exists:publishers,id'
+            'publishers.*.id' => 'sometimes|string|exists:publishers,id'
         ];
     }
 }

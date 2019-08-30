@@ -1,45 +1,52 @@
 <table>
     <!-- MEDIA PLAN DETAILS --> 
+    <table>
+        <tr>
+            <th colspan="1" rowspan="3">
+                
+            </th>
+        </tr>
+    </table>
     <tbody>
-        <tr></tr>
         <tr>
             <td></td>
-            <td>CLIENT:</td>
-            <td>{{ $media_plan_data->client->company_name}}</td>
+            <td colspan="12"></td>
         </tr>
         <tr>
             <td></td>
-            <td>BRAND:</td>
-            <td>{{ $media_plan_data->brand->name }}</td>
+            <td colspan="12"></td>
         </tr>
         <tr>
             <td></td>
-            <td>CAMPAIGN:</td>
-            <td>{{ $media_plan_data->campaign_name}}</td>
+            <td colspan="12">CLIENT: {{ $media_plan_data->client->company_name}}</td>
         </tr>
         <tr>
             <td></td>
-            <td>MEDIUM:</td>
-            <td>{{ $media_type }}</td>
+            <td colspan="12">BRAND: {{ $media_plan_data->brand->name }}</td>
         </tr>
         <tr>
             <td></td>
-            <td>MARKET:</td>
-            <td></td>
+            <td colspan="12">CAMPAIGN: {{ $media_plan_data->campaign_name}}</td>
         </tr>
         <tr>
             <td></td>
-            <td>DURATION:</td>
-            <td>{{ $material_length }}"</td>
+            <td colspan="12">MEDIUM: {{ $media_type }}</td>
         </tr>
         <tr>
             <td></td>
-            <td>PERIOD:</td>
-            <td></td>
+            <td colspan="12">MARKET:</td>
         </tr>
-        <tr></tr>
-        <tr></tr>
-        <tr></tr>
+        <tr>
+            <td></td>
+            <td colspan="12">DURATION: {{ $material_length }}"</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td colspan="12">PERIOD:</td>
+        </tr>
+        <tr><td colspan="12"></td></tr>
+        <tr><td colspan="12"></td></tr>
+        <tr><td colspan="12"></td></tr>
     </tbody>
 
     <thead>
