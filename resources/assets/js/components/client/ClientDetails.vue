@@ -141,12 +141,6 @@
     },
     mounted() {
         console.log('Display client details Component mounted.');
-    },
-    methods: {
-         showEditClient(idx, item) {
-          Event.$emit('view-client', idx, item);
-        },
-        
     }
   }
 </script>

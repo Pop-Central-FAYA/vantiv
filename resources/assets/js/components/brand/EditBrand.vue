@@ -222,8 +222,6 @@
                 ).then((res) => {
                      this.show_progress_bar = false;
                      this.brand.image_url = `https:${presigned_url.split('?')[0].substr(6)}`;
-                    
-                    
                 }).catch((error) => {
                     console.log(error);
                     this.sweet_alert('An unknown error has occurred, upload failed. Please try again', 'error');

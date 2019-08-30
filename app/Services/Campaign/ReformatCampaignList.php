@@ -7,12 +7,11 @@ class ReformatCampaignList implements BaseServiceInterface
 {
     protected $campaigns;
  
-
     public function __construct($campaigns)
     {
         $this->campaigns = $campaigns;
-      
     }
+    
     public function run()
     {
         $new_campaigns = [];
@@ -35,6 +34,7 @@ class ReformatCampaignList implements BaseServiceInterface
         }
         return $new_campaigns;
     }
+
     public function getCampaignStatusHtml($campaign)
     {
         // To do refactor this and push the rendering logic to vue frontend
