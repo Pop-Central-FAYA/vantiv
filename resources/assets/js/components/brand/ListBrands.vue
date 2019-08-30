@@ -7,13 +7,14 @@
       <v-spacer></v-spacer>
     </v-card-title>
       <v-layout wrap>
-        <v-flex xs12 sm7 md7>
-              <brand-create  :client_id="brands[0].client_id" fixed left></brand-create>
+        <v-flex xs12 sm6 md6>
         </v-flex>
         <v-flex xs12 sm4 md4>
               <v-text-field v-model="search" append-icon="search" label="Enter Keyword" single-line hide-details></v-text-field>
         </v-flex>
-        <v-flex xs12 sm1 md1></v-flex>
+        <v-flex xs12 sm2 md2>
+            <brand-create  :client_id="brands[0].client_id" fixed left></brand-create>
+        </v-flex>
                                  
        </v-layout>
      <brands-edit></brands-edit>
