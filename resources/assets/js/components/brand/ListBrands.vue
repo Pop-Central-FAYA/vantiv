@@ -21,11 +21,10 @@
     <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="brands" :loading="loading" :search="search" :no-data-text="noDataText" :pagination.sync="pagination">
       <template v-slot:items="props">
         <tr>
-            <td class="text-xs-left">{{ props.item.name }}</td>
-            <td class="text-xs-left">
-                  <b-img thumbnail fluid :src="props.item.image_url"  style="width: 40px; height: 40px"  id="brand_logo" alt="Image 1"></b-img>
-
-            </td>
+            <td class="text-xs-left">{{ props.item.name }}  <b-img thumbnail fluid :src="props.item.image_url"  style="width: 40px; height: 40px"  id="brand_logo" alt="Image 1"></b-img>
+</td>
+            <td class="text-xs-left"> {{props.item.campaigns_count}} </td>
+             <td class="text-xs-left"> {{numberFormat(sumBudget(props.item.campaigns))}} </td>
            <td class="text-xs-left">{{ dateToHumanReadable(props.item.created_at.date) }}</td>
            <td class="justify-center layout px-0">
             <v-icon color="#44C1C9" @click="showEditBrand(props.item)"  v-b-tooltip.hover title="Edit client" dark right>fa fa-edit</v-icon> </td>
@@ -62,8 +61,9 @@
         brands: this.brand_list,
         headers: [
            { text: 'Name', align: 'left', value: 'name' },
-           { text: 'Icon', value: 'created_at', sortable: false},
-           { text: 'Created On', value: 'created_at' },
+           { text: 'All Campaigns', value: 'all'},
+             { text: 'Total Expense (₦)', value: 'created_at' },
+            { text: 'Created On', value: 'created_at' },
            { text: 'Actions', value: 'name',  sortable: false}
         ],
         pagination: {
@@ -85,12 +85,16 @@
         });
     },
     mounted() {
-        console.log('Display All client Component mounted.');
+        console.log('Display All Brands Component mounted.');
       
     }, methods: {
          showEditBrand(idx, item) {
           Event.$emit('edit-brand', idx, item);
         }, 
+        sumBudget(arrayData, key){
+         return arrayData.map(item => item.budget).reduce((prev, curr) => prev + curr, 0);
+         
+        }
     }
   }
 </script>

@@ -2,7 +2,6 @@
 
 namespace Vanguard\Http\Controllers\Dsp;
 
-use Session;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Services\Client\StoreClient;
 use Illuminate\Support\Facades\Auth;
@@ -13,11 +12,13 @@ use Vanguard\Models\Client;
 use Vanguard\Http\Requests\Client\UpdateRequest;
 use Vanguard\Services\Client\UpdateService;
 use Vanguard\Http\Requests\Client\ListRequest;
-use Vanguard\Models\Campaign;
 use Vanguard\Http\Resources\ClientCollection;
 use Illuminate\Http\Request;
 use Vanguard\Services\Client\GetClientDetails;
-use Vanguard\Services\Client\GetCampaignsByClient;
+use Vanguard\Services\Campaign\ListingService;
+use Vanguard\Http\Resources\CampaignCollection;
+use Vanguard\Models\Brand;
+use Illuminate\Support\Arr;
 
 class ClientController extends Controller
 {
@@ -27,9 +28,53 @@ class ClientController extends Controller
     {
         $this->middleware('permission:create.client')->only(['create']);
         $this->middleware('permission:update.client')->only(['update']);
-        $this->middleware('permission:view.client')->only(['list']);
+        $this->middleware('permission:view.client')->only(['list', 'get']);
     }
 
+    /*******************************
+     * BELOW ARE THE PAGES.
+     *******************************/
+
+    public function index(Request $request)
+    {   
+        return view('agency.clients.index');
+    }
+
+    /**
+     *View showing a single client
+     */
+    public function details($id)
+    {
+        $client = Client::findOrFail($id);
+        $this->authorize('get', $client);
+        $client = new ClientResource(Client::with('contacts', 'brands')->findOrFail($id));
+        $brand_id = Arr::pluck($client->brands, 'id');
+        $brands = Brand::with('campaigns')->whereIn('id', $brand_id)->withCount('campaigns')->get();
+        $campaign_list = new ListingService(['client_id'=> [$id]]);
+        $campaigns = new CampaignCollection($campaign_list->run());
+        return view('agency.clients.client')
+        ->with('client', $client)
+        ->with('campaign_list', $campaigns)
+        ->with('brands', $brands);;
+       
+    }
+
+
+    public function getBrandDetails($brands){
+
+        $brand_id = Arr::pluck($brands, 'id');
+        $brands = Brand::with('campaigns')->whereIn('id', $brand_id)->withCount('campaigns')->get();
+
+    }
+    /*******************************
+     *  BELOW ARE THE API ACTIONS
+     *******************************/
+
+    /**
+     * Return a list of client that the currently logged in user has permission to view
+     * Filter parameters are allowed
+     */
+    
     public function create(StoreRequest $request)
     {
         $validated = $request->validated();
@@ -40,6 +85,28 @@ class ClientController extends Controller
         return $resource->response()->setStatusCode(201);
     }
 
+    /**
+     * Return a list of clients that the currently logged in user has permission to view
+     */
+    public function list(ListRequest $request)
+    {           
+        $validated = $request->validated();
+        $validated['company_id'] = $this->companyId();
+        $new_get_client = new GetClientDetails($validated);
+        $client_details = $new_get_client->run(); 
+        return new ClientCollection($client_details);
+    }
+
+    /**
+     * Api Retrive a single client
+     */
+    public function get($id)
+    {
+        $client = Client::findOrFail($id);
+        $this->authorize('get', $client);
+        return  new ClientResource(Client::with('contacts', 'brands')->findOrFail($id));
+    }
+    
      /**
      * Update fields that have changed in client
      */
@@ -53,37 +120,5 @@ class ClientController extends Controller
         $resource = new ClientResource(Client::with('contacts')->find($id));
         return $resource->response()->setStatusCode(200);
 
-    }
-
-      /**
-     * Return a list of clients that the currently logged in user has permission to view
-     */
-
-    public function list(ListRequest $request)
-    {           
-        $validated = $request->validated();
-        $validated['company_id'] = $this->companyId();
-        $new_get_client = new GetClientDetails($validated);
-        $client_details = $new_get_client->run(); 
-        return new ClientCollection($client_details);
-    }
-
-    
-    public function index(Request $request)
-    {   
-        return view('agency.clients.index');
-    }
-
-      /**
-     * Retrive a single client
-     */
-    public function get($id)
-    {
-        $client = Client::with('contacts', 'brands')->findOrFail($id);
-        $campaigns = new GetCampaignsByClient($id);
-        $campaign_list = $campaigns->run();
-        $this->authorize('get', $client);
-        return view('agency.clients.client')->with('client', $client)->with('campaign_list', $campaign_list);
-       
     }
 }

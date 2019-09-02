@@ -81,12 +81,12 @@
                     <v-tab href="#brands-tab">Brands</v-tab>
 
                     <v-tab-item value="campaigns-tab">
-                      <campaign-list :campaigns="campaigns" :isClientDetails="true"></campaign-list>
+                      <campaign-list :campaigns="campaigns"></campaign-list>
               
                     </v-tab-item>
 
                     <v-tab-item value="brands-tab">
-                       <brand-list :brand_list="clientData.brands"></brand-list>
+                       <brand-list :brand_list="brands"></brand-list>
                     </v-tab-item>
             </v-tabs>
         </v-flex>
@@ -132,7 +132,8 @@
   export default {
         props: {
          clientData: Object,
-         campaigns: Array
+         campaigns: Array,
+         brands: Array
         },
     data () {
       return {
