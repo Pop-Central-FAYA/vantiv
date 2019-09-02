@@ -17,16 +17,15 @@
             @if(Auth::user()->hasPermissionTo('view.client'))
                 <li class="clients_icon {{ Request::is('clients/*') ? 'active' : ''  }}"><a href="{{ route('clients.list') }}">Clients</a></li>
             @endif
+            @if(Auth::user()->hasPermissionTo('view.ad_vendor'))
+                <li class="ad_vendor_icon {{ Request::is('ad-vendors') ? 'active' : ''  }}"><a href="{{ route('ad-vendor.index') }}">Vendors</a></li>
+            @endif
             @if(Auth::user()->hasPermissionTo('create.asset'))
                 <li class="wallet_icon {{ Request::is('media-assets') ? 'active' :  Request::is('media-assets/*') ? 'active' : ''  }}"><a href="{{ route('agency.media_assets') }}">Media Assets</a></li>
             @endif
             @if(Auth::user()->hasPermissionTo('view.invoice'))
                 <li class="invoice_icon {{ Request::is('invoices/*') ? 'active' : ''  }}"><a href="{{ route('invoices.all') }}">Invoices</a></li>
             @endif
-            {{-- @if(Auth::user()->hasPermissionTo('view.wallet')) --}}
-                {{-- <li class="wallet_icon {{ Request::is('wallets/*') ? 'active' :  Request::is('wallets/wallet-statement') ? 'active' : ''  }}"><a href="{{ route('agency_wallet.statement') }}">Wallet</a></li> --}}
-            {{-- @endif --}}
-        <!-- <li class="settings_icon {{ Request::is('agency/user/manage') ? 'active' : '' }}"><a href="{{ route('agency.user_management') }}">User Management</a></li> -->
         </ul>
     </div>
 

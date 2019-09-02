@@ -268,7 +268,11 @@
                     Event.$emit('vendor-updated', res.data.data);
                     this.closeDialog();
                 }).catch((error) => {
-                    this.sweet_alert('An unknown error has occurred, vendor cannot be updated. Please try again', 'error');
+                    if (error.response && (error.response.status == 422)) {
+                        this.displayServerValidationErrors(error.response.data.errors);
+                    } else {
+                        this.sweet_alert('An unknown error has occurred, vendor cannot be updated. Please try again', 'error');
+                    }
                 });
             }
         }

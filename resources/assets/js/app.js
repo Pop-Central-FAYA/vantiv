@@ -151,12 +151,24 @@ Vue.mixin({
             this.$swal({
                 position: 'top-end',
                 type: type,
-                text: message,
+                html: message,
                 showConfirmButton: false,
                 toast: true,
                 background: background,
                 timer: timer
             });
+        },
+        displayServerValidationErrors(validationErrors) {
+            var err = [];
+            for (var key in validationErrors) {
+                if (validationErrors.hasOwnProperty(key)) {
+                    var errors = validationErrors[key];
+                    validationErrors[key].forEach(element => {
+                        err.push(`${key}: ${element}`);
+                    });
+                }
+            }
+            this.sweet_alert(err.join('<br>'), 'error');
         },
         groupAdslotByProgram(adslots) {
             var helper = {};

@@ -2,6 +2,7 @@
 
 namespace Vanguard\Http\Requests\AdVendor;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreRequest extends FormRequest
@@ -25,7 +26,13 @@ class StoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string',
+            'name' => [
+                'required',
+                'string',
+                Rule::unique('ad_vendors')->where(function($query) {
+                    return $query->whereIn('company_id', $this->user()->companyIdList());
+                })
+            ],
             'street_address' => 'required|string',
             'city' => 'required|string',
             'state' => 'required|string',
