@@ -16,7 +16,7 @@ use Vanguard\Http\Resources\ClientCollection;
 use Illuminate\Http\Request;
 use Vanguard\Services\Client\GetClientDetails;
 use Vanguard\Services\Campaign\ListingService;
-use Vanguard\Http\Resources\CampaignCollection;
+use Vanguard\Http\Resources\CampaignResource;
 use Vanguard\Models\Brand;
 use Illuminate\Support\Arr;
 
@@ -51,7 +51,7 @@ class ClientController extends Controller
         $brand_id = Arr::pluck($client->brands, 'id');
         $brands = Brand::with('campaigns')->whereIn('id', $brand_id)->withCount('campaigns')->get();
         $campaign_list = new ListingService(['client_id'=> [$id]]);
-        $campaigns = new CampaignCollection($campaign_list->run());
+        $campaigns =   CampaignResource::collection($campaign_list->run());
         return view('agency.clients.client')
         ->with('client', $client)
         ->with('campaign_list', $campaigns)
@@ -59,13 +59,6 @@ class ClientController extends Controller
        
     }
 
-
-    public function getBrandDetails($brands){
-
-        $brand_id = Arr::pluck($brands, 'id');
-        $brands = Brand::with('campaigns')->whereIn('id', $brand_id)->withCount('campaigns')->get();
-
-    }
     /*******************************
      *  BELOW ARE THE API ACTIONS
      *******************************/

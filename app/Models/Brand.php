@@ -20,8 +20,4 @@ class Brand extends Base
     {
         return $this->hasMany(Campaign::class);
     }
-    public function spendings()
-    {
-        return $this->campaigns->sum('budget');
-    }
 }

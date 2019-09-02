@@ -26,7 +26,7 @@ class AddClientToCampaignsTable extends Migration
     public function down()
     {
         Schema::table('campaigns', function (Blueprint $table) {
-            $table->dropColumn(['client_id']);
+            $table->dropColumn('client_id');
         });
     }
 }
