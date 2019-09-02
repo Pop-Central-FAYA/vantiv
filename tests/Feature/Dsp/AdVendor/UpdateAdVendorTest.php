@@ -201,5 +201,45 @@ class UpdateAdVendorTest extends AdVendorTestCase
         $response->assertJson(['data' => ['publishers' => $publishers]]);
     }
 
+    public function test_attempting_to_update_vendor_with_existing_name_causes_validation_error()
+    {
+        $user = $this->setupUserWithPermissions();
+
+        $old_vendor = $this->setupAdVendor($user);
+        $vendor = $this->setupAdVendor($user);
+
+        $vendor_data = ['name' => $old_vendor->name];
+
+        $response = $this->getResponse($user, $vendor->id, $vendor_data);
+
+        $response->assertStatus(422);
+    }
+
+    public function test_successful_update_despite_existence_of_identical_vendor_name_with_another_company()
+    {
+        $first_user = $this->setupUserWithPermissions();
+        $old_vendor = $this->setupAdVendor($first_user);
+        
+        $user = $this->setupUserWithPermissions();
+        $vendor = $this->setupAdVendor($user);
+
+        $vendor_data = ['name' => $old_vendor->name];
+
+        $response = $this->getResponse($user, $vendor->id, $vendor_data);
+        $response->assertStatus(200);
+    }
+
+    public function test_can_update_same_ad_vendor_with_same_name()
+    {
+        $user = $this->setupUserWithPermissions();
+        $vendor = $this->setupAdVendor($user);
+
+        $vendor_data = ['name' => $vendor->name];
+
+        $response = $this->getResponse($user, $vendor->id, $vendor_data);
+
+        $response->assertStatus(200);
+    }
+
     
 }

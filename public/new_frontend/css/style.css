@@ -124,7 +124,7 @@ button.btn.small_btn.mbl.uppercased.addTimeBelt .material-icons, button.btn.smal
 
 .side_nav .logo {
 	height: 20px;
-	
+
 }
 
 .side_nav .logo img {
@@ -449,6 +449,10 @@ h2.sub_header {
 	content: url(../img/client_icon.svg);
 }
 
+._nav li.ad_vendor_icon:before {
+	content: url(../img/client_icon.svg);
+}
+
 ._nav li.discount_icon:before {
 	content: url(../img/discount.svg);
 }
@@ -494,6 +498,9 @@ h2.sub_header {
 	content: url(../img/client_active.svg);
 }
 
+._nav li.active.ad_vendor_icon:before {
+	content: url(../img/client_active.svg);
+}
 ._plus {
 	background: url(../img/plus.svg) no-repeat;
 	display: block;

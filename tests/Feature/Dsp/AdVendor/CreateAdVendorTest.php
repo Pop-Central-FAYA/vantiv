@@ -165,4 +165,43 @@ class CreateAdVendorTest extends AdVendorTestCase
         $response->assertStatus(422);
         $response->assertJsonValidationErrors(['publishers.1.id']);
     }
+
+    public function test_validation_error_is_thrown_if_ad_vendor_with_same_name_already_exists()
+    {
+        $user = $this->setupUserWithPermissions();
+        $vendor = $this->setupAdVendor($user);
+
+        $vendor_data = [
+            'name' => $vendor->name, 'street_address' => '21 akin ogunlewe road',
+            'city' => 'Lagos', 'state' => 'Lagos', 'country' => 'Nigeria',
+            'contacts' => [[
+                'first_name' => 'Adedotun', 'last_name' => 'Oshiomole',
+                'email' => 'aoshiomole@example.org', 'phone_number' => '+2341111111111'
+            ]]
+        ];
+
+        $response = $this->getResponse($user, $vendor_data);
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors(['name']);
+    }
+
+    public function test_successful_creation_despite_existence_of_identical_vendor_name_with_another_company()
+    {
+        $first_user = $this->setupUserWithPermissions();
+        $vendor = $this->setupAdVendor($first_user);
+        
+        $user = $this->setupUserWithPermissions();
+
+        $vendor_data = [
+            'name' => $vendor->name, 'street_address' => '21 akin ogunlewe road',
+            'city' => 'Lagos', 'state' => 'Lagos', 'country' => 'Nigeria',
+            'contacts' => [[
+                'first_name' => 'Adedotun', 'last_name' => 'Oshiomole',
+                'email' => 'aoshiomole@example.org', 'phone_number' => '+2341111111111'
+            ]]
+        ];
+
+        $response = $this->getResponse($user, $vendor_data);
+        $response->assertStatus(201);
+    }
 }
