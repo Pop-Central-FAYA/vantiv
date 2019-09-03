@@ -73,7 +73,7 @@ hr {
         headers: [
            { text: 'Name', align: 'left', value: 'name' },
            { text: 'All Campaigns', value: 'all'},
-             { text: 'Total Expense (₦)', value: 'created_at' },
+             { text: 'Total Expense (₦)', value: 'expense' },
             { text: 'Created On', value: 'created_at' },
            { text: 'Actions', value: 'name',  sortable: false}
         ],
