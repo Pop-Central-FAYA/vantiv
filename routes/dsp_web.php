@@ -204,6 +204,8 @@
         
         Route::group(['namespace' => 'Dsp'], function() {
             Route::get('/ad-vendors', 'AdVendorController@index')->name('ad-vendor.index');
+            Route::get('/ad-vendors/{id}/details', 'AdVendorController@details')->name('ad-vendor.details');
+
             Route::group(['prefix' => 'api'], function () {
                 Route::get('/ad-vendors', 'AdVendorController@list')->name('ad-vendor.list');
                 Route::get('/ad-vendors/{id}', 'AdVendorController@get')->name('ad-vendor.get');

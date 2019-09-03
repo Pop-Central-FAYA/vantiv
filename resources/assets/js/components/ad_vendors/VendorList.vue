@@ -90,7 +90,8 @@
           }).finally(() => this.loading = false);
         },
         showDetails(item) {
-          // Event.$emit('view-vendor', item);
+            var url= '/ad-vendors/'+item.id+'/details/';
+             window.location = url;
         },
         editVendor(item) {
           Event.$emit('edit-vendor', item);
