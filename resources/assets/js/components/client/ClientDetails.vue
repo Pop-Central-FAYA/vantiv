@@ -1,22 +1,24 @@
 <template>
 <v-flex>
   <v-card>
-    <v-card-title>
-    </v-card-title>
+    <p></p>
      <v-layout wrap>
         <v-flex xs12 sm12 md12>
-             <v-layout>
-                <v-flex md10 my-1>
+             <v-layout  style="height: 60px; margin-Top: 10px;"> 
+                <v-flex>
+                 <v-icon color="#44C1C9" @click="goBack()"  v-b-tooltip.hover title="back" dark right>fa-arrow-left</v-icon>
+                </v-flex>
+                <v-flex md9 my-1>
                     <p class="weight_medium">
                      {{ clientData.name }}
                     </p>
-                      <p class="weight_medium small_faint">
+                    <p class="weight_medium small_faint">
                       {{ clientData.street_address }}
                     </p>
             
                 </v-flex>
                  <v-flex md2 my-1>
-                    <b-img thumbnail fluid :src="clientData.image_url"  style="width: 80px; height: 80px" id="client_logo" alt="Image 1"></b-img>
+                    <b-img :src="clientData.image_url"  style="width: 50px; height: 50px" id="client_logo" alt="Image 1"></b-img>
                                 
                 </v-flex>
             </v-layout>
@@ -25,8 +27,8 @@
     <v-divider></v-divider>
      <v-layout wrap>
         <v-flex xs12 sm12 md12>
-             <v-layout style="height: 90px" >
-                <v-flex md3 my-1>
+             <v-layout style="height: 70px" >
+                <v-flex md3 my-1 style="border-width:2px;" >
                   
                    <p class="bold small_faint">
                      Account Executive
@@ -36,8 +38,8 @@
                     </p>
             
                 </v-flex>
-                
-                  <v-flex md3 my-1>
+                <v-divider vertical></v-divider>
+                  <v-flex md4 my-1>
                      <p class="bold small_faint">
                      Email
                     </p>
@@ -45,7 +47,7 @@
                      {{ clientData.contacts[0].email }}
                     </p>
                 </v-flex>
-                
+                <v-divider vertical></v-divider>
                   <v-flex md3 my-1>
                      <p class="bold small_faint">
                     Phone
@@ -54,7 +56,7 @@
                       {{ clientData.contacts[0].phone_number }}
                     </p>
                 </v-flex>
-                 
+                 <v-divider vertical></v-divider>
                   <v-flex md3 my-1>
                      <p class="bold small_faint">
                      Joined
@@ -106,7 +108,7 @@
     background-color: rgba(0, 0, 0, 0.12);
   }
   p {
-    margin-bottom: -5px;
+    margin-bottom: -1px;
     margin-left: 30px;
   }
    .v-tabs {
@@ -142,6 +144,13 @@
     },
     mounted() {
         console.log('Display client details Component mounted.');
+    },
+    methods: {
+        goBack(id){
+            var url= '/clients/index';
+             window.location = url;
+        }
+        
     }
   }
 </script>

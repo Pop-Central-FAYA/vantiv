@@ -21,13 +21,14 @@
     <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="brands" :loading="loading" :search="search" :no-data-text="noDataText" :pagination.sync="pagination">
       <template v-slot:items="props">
         <tr>
-            <td class="text-xs-left">{{ props.item.name }}  <b-img thumbnail fluid :src="props.item.image_url"  style="width: 40px; height: 40px"  id="brand_logo" alt="Image 1"></b-img>
-</td>
+            <td class="text-xs-left"><b-img thumbnail fluid :src="props.item.image_url" class="v-icon notranslate v-icon--left mdi mdi-laptop theme--light" style="width: 30px; height: 30px"  id="brand_logo" alt="Image 1"></b-img> <span class="text1"> {{ props.item.name }}</span>
+            
+            </td>
             <td class="text-xs-left"> {{props.item.campaigns_count}} </td>
              <td class="text-xs-left"> {{numberFormat(sumBudget(props.item.campaigns))}} </td>
            <td class="text-xs-left">{{ dateToHumanReadable(props.item.created_at.date) }}</td>
            <td class="justify-center layout px-0">
-            <v-icon color="#44C1C9" @click="showEditBrand(props.item)"  v-b-tooltip.hover title="Edit client" dark right>fa fa-edit</v-icon> </td>
+            <v-icon color="#44C1C9" @click="showEditBrand(props.item)"  v-b-tooltip.hover title="Edit client" dark right>edit</v-icon> </td>
         </tr>
       </template>
       <template v-slot:no-results>
@@ -47,6 +48,16 @@
   tbody:hover {
     background-color: rgba(0, 0, 0, 0.12);
   }
+  .img-valign {
+  vertical-align: middle;
+  }
+hr {
+    margin-top: 0;
+    margin-bottom: 0;
+    border: 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
 </style>
 
 <script>
@@ -92,7 +103,7 @@
           Event.$emit('edit-brand', idx, item);
         }, 
         sumBudget(arrayData){
-         return arrayData.map(item => item.budget).reduce((prev, curr) => prev + curr, 0);
+         return arrayData.reduce((prev, curr) => prev + curr.budget, 0);
          
         }
     }
