@@ -22,6 +22,7 @@ use Vanguard\Services\Mpo\GetCampaignMpoTimeBelts;
 use Vanguard\Services\Mpo\ExcelMpoExport;
 use Vanguard\Services\Mpo\UpdateTimeBeltService;
 use Vanguard\Events\Dsp\CampaignMpoTimeBeltUpdated;
+use Vanguard\Http\Resources\CampaignResource;
 
 class CampaignsController extends Controller
 {
