@@ -26,8 +26,6 @@ class TransformWalkinsToClient extends Migration
      */
     public function down()
     {
-        Schema::table('client', function (Blueprint $table) {
-            //
-        });
+       
     }
 }
