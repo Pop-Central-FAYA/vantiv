@@ -122,6 +122,7 @@
                                 <span>
                                     Insertion
                                 </span>
+                                <p></p>
                                 <v-text-field v-validate="'required|min:1'" 
                                 type="number" placeholder="Unit Price"
                                 name="insertion" v-model="form.insertion"></v-text-field>
@@ -204,12 +205,16 @@ export default {
             this.sweet_alert(msg, 'info');
             axios({
                 method: 'POST',
-                url: '/campaigns/mpo/details/'+this.mpo_id+'/adslots/store',
+                url: `/mpos/${this.mpo_id}/adslots`,
                 data: this.form
             }).then((res) => {
                 if (res.data.status === 'success') {
                     this.sweet_alert(res.data.message, 'success');
-                    Event.$emit('updated-adslots', this.groupAdslotByProgram(res.data.data))
+                    Event.$emit('updated-adslots',this.filterMpo(
+                        res.data.data.campaign_mpos, this.mpo_id
+                        ).campaign_mpo_time_belts)
+                    Event.$emit('updated-mpos', res.data.data.campaign_mpos)
+                    Event.$emit('updated-campaign', res.data.data)
                     this.dialog = false;
                 } else {
                     this.sweet_alert(res.data.message, 'error');

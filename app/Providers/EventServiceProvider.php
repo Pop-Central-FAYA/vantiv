@@ -6,6 +6,9 @@ use Vanguard\Events\User\Registered;
 use Vanguard\Listeners\UserEventsSubscriber;
 use Vanguard\Listeners\UserWasRegisteredListener;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Vanguard\Events\Dsp\CampaignMpoTimeBeltUpdated;
+use Vanguard\Listeners\Dsp\CampaignBudgetUpdated;
+use Vanguard\Listeners\Dsp\CampaignMpoUpdated;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -16,9 +19,10 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
         Registered::class => [UserWasRegisteredListener::class],
-        'App\Events\CampaignValidity' => [
-            'App\Listener\CampaignValidityListener',
-        ],
+        CampaignMpoTimeBeltUpdated::class => [
+            CampaignMpoUpdated::class,
+            CampaignBudgetUpdated::class
+        ]
     ];
 
     /**

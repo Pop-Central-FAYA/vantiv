@@ -4,7 +4,7 @@
             <template v-slot:activator="{ on }">
                 <v-tooltip top>
                     <template v-slot:activator="{ on }">
-                        <v-icon color="success" dark left v-on="on" @click="populateModal()">fa-share</v-icon>
+                        <v-icon color="#01c4ca" dark left v-on="on" @click="populateModal()">fa-share</v-icon>
                     </template>
                     <span>Generate and copy share link</span>
                 </v-tooltip>

@@ -71,7 +71,7 @@
                 pagination: {
                     rowsPerPage: -1
                 },
-                groupedAdslots : [],
+                groupedAdslots : this.adslots,
                 isHidden : true,
                 currentItem: {},
             }
@@ -81,9 +81,6 @@
             Event.$on('updated-adslots', function (adslot) {
                 self.groupedAdslots = adslot;
             });
-        },
-        mounted () {
-            this.groupedAdslots = this.groupAdslotByProgram(this.adslots)            
         },
         methods : {
             openEditDialog : function(item) {

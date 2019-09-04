@@ -6,19 +6,19 @@
                 <v-flex md4 my-1>
                     <p class="weight_medium">
                         <span class="weight_medium small_faint pr-1">Client:</span>
-                        {{ campaign.client.company_name}}
+                        {{ campaignData.client.company_name}}
                     </p>
                 </v-flex>
                 <v-flex md4 my-1>
                     <p class="weight_medium">
                         <span class="weight_medium small_faint pr-1">Brand:</span>
-                        {{ campaign.brand.name }}
+                        {{ campaignData.brand.name }}
                     </p>
                 </v-flex>
                 <v-flex md4 my-1>
                     <p class="weight_medium">
                         <span class="weight_medium small_faint pr-1">Net Total:</span>
-                        &#8358; {{ calculateTotal(campaign.budget) }}
+                        &#8358; {{ calculateNetTotal }}
                     </p>
                 </v-flex>
             </v-layout>
@@ -26,13 +26,13 @@
                 <v-flex md4 my-1>
                     <p class="weight_medium">
                         <span class="weight_medium small_faint pr-1">Flight Date:</span>
-                        {{ campaign.flight_date }}
+                        {{ campaignData.flight_date }}
                     </p>
                 </v-flex>
                 <v-flex md4 my-1>
                     <p class="weight_medium">
                         <span class="weight_medium small_faint pr-1">Media Type:</span>
-                        {{ campaign.media_type }}
+                        {{ campaignData.media_type }}
                     </p>
                 </v-flex>
                 <v-flex md4 my-1>
@@ -46,19 +46,19 @@
                 <v-flex md4 my-1>
                     <p class="weight_medium">
                         <span class="weight_medium small_faint pr-1">Created By:</span>
-                        {{ campaign.creator.firstname }} {{ campaign.creator.lastname }}
+                        {{ campaignData.creator.firstname }} {{ campaignData.creator.lastname }}
                     </p>
                 </v-flex>
                 <v-flex md4 my-1>
                     <p class="weight_medium">
                         <span class="weight_medium small_faint pr-1">Created On:</span>
-                        {{ campaign.created_at }}
+                        {{ campaignData.created_at }}
                     </p>
                 </v-flex>
                 <v-flex md4 my-1>
                     <p class="weight_medium">
                         <span class="weight_medium small_faint pr-1">Status:</span>
-                        {{ campaign.status }}
+                        {{ campaignData.status }}
                     </p>
                 </v-flex>
             </v-layout>
@@ -70,35 +70,35 @@
                 <v-flex md4 my-1>
                     <p class="weight_medium">
                         <span class="weight_medium small_faint pr-1">Gender:</span>
-                        {{ campaign.gender}}
+                        {{ campaignData.gender}}
                     </p>
                 </v-flex>
                 <v-flex md4 my-1>
                     <p class="weight_medium">
                         <span class="weight_medium small_faint pr-1">Age Range:</span>
-                        {{ campaign.age_groups }}
+                        {{ campaignData.age_groups }}
                     </p>
                 </v-flex>
-                <v-flex md4 my-1 v-if="campaign.social_class != 'null' && campaign.social_class !== ''">
+                <v-flex md4 my-1 v-if="campaignData.social_class != 'null' && campaignData.social_class !== ''">
                     <p class="weight_medium">
                         <span class="weight_medium small_faint pr-1">Social Class:</span>
-                        {{ campaign.social_class }}
+                        {{ campaignData.social_class }}
                     </p>
                 </v-flex>
             </v-layout>
-            <v-layout v-if="campaign.states != 'null' && campaign.states !== ''">
+            <v-layout v-if="campaignData.states != 'null' && campaignData.states !== ''">
                 <v-flex md12 my-1>
                     <p class="weight_medium">
                         <span class="weight_medium small_faint pr-1">States:</span>
-                        {{ campaign.states }}
+                        {{ campaignData.states }}
                     </p>
                 </v-flex>
             </v-layout>
-            <v-layout v-if="campaign.regions != 'null' && campaign.regions !== ''">
+            <v-layout v-if="campaignData.regions != 'null' && campaignData.regions !== ''">
                 <v-flex md12 my-1>
                     <p class="weight_medium">
                         <span class="weight_medium small_faint pr-1">Regions:</span>
-                        {{ campaign.regions }}
+                        {{ campaignData.regions }}
                     </p>
                 </v-flex>
             </v-layout>
@@ -114,12 +114,18 @@
     },
     data () {
       return {
-        
+          campaignData : this.campaign
       }
     },
-    methods : {
-        calculateTotal : function(budget) {
-            var budget = parseInt(budget);
+    created() {
+        var self = this;
+        Event.$on('updated-campaign', function (campaign) {
+            self.campaignData = campaign;
+        });
+    },
+    computed : {
+        calculateNetTotal : function() {
+            var budget = parseInt(this.campaignData.budget);
             if(budget > 0){
                 return this.formatAmount(budget - ((5/100)*budget))
             }else{
