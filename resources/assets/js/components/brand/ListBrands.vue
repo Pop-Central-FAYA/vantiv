@@ -100,10 +100,6 @@ hr {
     }, methods: {
          showEditBrand(idx, item) {
           Event.$emit('edit-brand', idx, item);
-        }, 
-        sumBudget(arrayData){
-         return arrayData.reduce((prev, curr) => prev + curr.budget, 0);
-         
         }
     }
   }

@@ -97,9 +97,9 @@ class ClientController extends Controller
      */
     public function get($id)
     {
-        $client = Client::findOrFail($id);
+        $client = Client::with('contacts', 'brands')->findOrFail($id);
         $this->authorize('get', $client);
-        return  new ClientResource(Client::with('contacts', 'brands')->findOrFail($id));
+        return  new ClientResource($client);
     }
     
      /**
