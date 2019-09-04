@@ -21,7 +21,7 @@
                             <div class="col-md-12">
                                 <v-app>
                                     <v-content>
-                                    <ad-vendor-details  :ad_vendor-data="{{ json_encode($client) }}"></ad-vendor-details>
+                                    <ad-vendor-details  :ad-vendor-data="{{ json_encode($client) }}"></ad-vendor-details>
                                     </v-content>
                                 </v-app>
                             </div>
