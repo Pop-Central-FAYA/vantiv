@@ -10,10 +10,10 @@
                 </v-flex>
                 <v-flex md9 my-1>
                     <p class="weight_medium">
-                     {{ ad_vendorData.name }}
+                     {{ adVendorData.name }}
                     </p>
                     <p class="weight_medium small_faint">
-                      {{ ad_vendorData.street_address }}
+                      {{ adVendorData.street_address }}
                     </p>
             
                 </v-flex>
@@ -32,7 +32,7 @@
                      Account Executive
                     </p>
                       <p class="weight_medium">
-                     {{ ad_vendorData.contacts[0].first_name }}  {{ ad_vendorData.contacts[0].last_name }}
+                     {{ adVendorData.contacts[0].first_name }}  {{ adVendorData.contacts[0].last_name }}
                     </p>
             
                 </v-flex>
@@ -42,7 +42,7 @@
                      Email
                     </p>
                       <p class="weight_medium">
-                     {{ ad_vendorData.contacts[0].email }}
+                     {{ adVendorData.contacts[0].email }}
                     </p>
                 </v-flex>
                 <v-divider vertical></v-divider>
@@ -51,7 +51,7 @@
                     Phone
                     </p>
                       <p class="weight_medium">
-                      {{ ad_vendorData.contacts[0].phone_number }}
+                      {{ adVendorData.contacts[0].phone_number }}
                     </p>
                 </v-flex>
                  <v-divider vertical></v-divider>
@@ -60,7 +60,7 @@
                      Joined
                     </p>
                       <p class="weight_medium">
-                      {{ dateToHumanReadable(ad_vendorData.created_at)}}
+                      {{ dateToHumanReadable(adVendorData.created_at)}}
                     </p>
                 </v-flex>
 
@@ -108,7 +108,7 @@
 <script>
   export default {
         props: {
-         ad_vendorData: Object,
+         adVendorData: Object,
         },
     data () {
       return {
@@ -116,6 +116,7 @@
       }
     },
     mounted() {
+        console.log(this.adVendorData);
         console.log('Display vendor details Component mounted.');
     },
     methods: {
