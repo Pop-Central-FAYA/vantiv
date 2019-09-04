@@ -113,6 +113,7 @@
   export default {
         props: {
          adVendorData: Object,
+         routes:Object,
         },
     data () {
       return {
@@ -120,12 +121,12 @@
       }
     },
     mounted() {
+      console.log(this.routes);
         console.log('Display vendor details Component mounted.');
     },
     methods: {
         goBack(id){
-            var url= '/ad-vendors';
-             window.location = url;
+             window.location = this.routes.home;
         }
         
     }

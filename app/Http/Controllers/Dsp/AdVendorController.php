@@ -48,8 +48,11 @@ class AdVendorController extends Controller
     {
         $vendor = AdVendor::findOrFail($id);
         $this->authorize('get', $vendor);
+        $routes= array(
+            "home" => route('ad-vendor.index')
+        );
         return view('agency.ad_vendor.ad_vendor')
-        ->with('client', new AdVendorResource($vendor));
+        ->with('ad_vendor', new AdVendorResource($vendor))->with('routes', $routes);
        
     }
 
