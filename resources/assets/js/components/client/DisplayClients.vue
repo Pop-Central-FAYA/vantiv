@@ -14,9 +14,9 @@
             <td class="text-xs-left">{{ props.item.number_brands }}</td>
             <td class="text-xs-left">{{ numberFormat(props.item.client_spendings)}}</td>
             <td class="text-xs-left">{{ props.item.sum_active_campaign }}</td>
-          <td class="text-xs-left">{{ dateToHumanReadable(props.item.created_at.date) }}</td>
-           <td class="justify-center layout px-0">
-            <v-icon @click="showEditClient(props.item)" color="#44C1C9" v-b-tooltip.hover title="Edit client" dark right>fa fa-edit</v-icon> </td>
+            <td class="text-xs-left">{{ dateToHumanReadable(props.item.created_at.date) }}</td>
+            <td class="justify-center layout px-0">
+            <v-icon @click="showEditClient(props.item)" color="#44C1C9" v-b-tooltip.hover title="Edit client" dark right>edit</v-icon> </td>
         </tr>
       </template>
       <template v-slot:no-results>

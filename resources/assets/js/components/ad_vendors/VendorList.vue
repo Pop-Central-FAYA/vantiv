@@ -19,7 +19,7 @@
             <td class="justify-center layout px-0">
                 <v-tooltip top>
                     <template v-slot:activator="{on}">
-                        <v-icon color="primary" v-on="on" dark left @click="editVendor(props.item)">fa-edit</v-icon>
+                        <v-icon color="primary" v-on="on" dark left @click="editVendor(props.item)">edit</v-icon>
                     </template>
                     <span>Edit the vendor information</span>
                 </v-tooltip>

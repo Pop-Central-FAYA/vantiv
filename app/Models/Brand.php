@@ -5,6 +5,7 @@ namespace Vanguard\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Vanguard\Models\Client;
+use Vanguard\Models\Campaign;
 
 class Brand extends Base
 {
@@ -14,5 +15,9 @@ class Brand extends Base
     public function client()
     {
         return $this->belongsTo(Client::class);
+    }
+    public function campaigns()
+    {
+        return $this->hasMany(Campaign::class);
     }
 }

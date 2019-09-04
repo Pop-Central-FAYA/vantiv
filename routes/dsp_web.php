@@ -189,7 +189,8 @@
             Route::patch('/clients/{id}', 'ClientController@update')->name('client.update');
             Route::get('/clients', 'ClientController@list')->name('client.list');
             Route::get('/clients/index', 'ClientController@index')->name('client.index');
-            Route::get('/clients/{id}/details', 'ClientController@get')->name('client.get');
+            Route::get('/clients/{id}/details', 'ClientController@details')->name('client.details');
+            Route::get('/clients/{id}', 'ClientController@get')->name('client.get');
          });
 
         /**
