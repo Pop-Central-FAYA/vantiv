@@ -84,13 +84,14 @@
               url: this.routes.list
           }).then((res) => {
               this.vendors = res.data.data;
+              console.log(res.data.data);
           }).catch((error) => {
               this.vendors = [];
               this.sweet_alert('An unknown error has occurred, vendors cannot be retrieved. Please try again', 'error');
           }).finally(() => this.loading = false);
         },
         showDetails(item) {
-          // Event.$emit('view-vendor', item);
+           window.location =item.links.details;
         },
         editVendor(item) {
           Event.$emit('edit-vendor', item);

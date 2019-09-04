@@ -41,6 +41,22 @@ class AdVendorController extends Controller
                     ->with('routes', $routes);
     }
 
+     /**
+     *View showing a single ad vendor
+     */
+    public function details($id)
+    {
+        $vendor = AdVendor::findOrFail($id);
+        $this->authorize('get', $vendor);
+        $routes= array(
+            "home" => route('ad-vendor.index')
+        );
+        return view('agency.ad_vendor.ad_vendor')
+        ->with('ad_vendor', new AdVendorResource($vendor))->with('routes', $routes);
+       
+    }
+
+
     /*******************************
      *  BELOW ARE THE API ACTIONS
      *******************************/
