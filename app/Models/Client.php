@@ -7,6 +7,8 @@ use Vanguard\Models\ClientContact;
 use Vanguard\Models\Brand;
 use EloquentFilter\Filterable;
 
+use Vanguard\Models\Campaign;
+
 class Client extends Base
 {
     use Filterable;
@@ -24,5 +26,10 @@ class Client extends Base
     public function brands()
     {
         return $this->hasMany(Brand::class);
+    }
+
+    public function campaigns()
+    {
+        return $this->hasMany(Campaign::class);
     }
 }

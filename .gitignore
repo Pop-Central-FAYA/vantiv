@@ -12,7 +12,7 @@ public/.DS_Store
 public/js/*
 !public/js/dashboard-graphs.js
 /public/mix-manifest.json
-public/mix-manifest.json
+public/js/app.js
 storage/.DS_Store
 resources/.DS_Store
 resources/views/.DS_Store

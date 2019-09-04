@@ -22,7 +22,8 @@ use Vanguard\Http\Requests\StoreCampaignMpoAdslotRequest;
 use Vanguard\Services\Mpo\StoreCampaignMpoTimeBelt;
 use Vanguard\Services\Mpo\GetCampaignMpoTimeBelts;
 use Vanguard\Services\Mpo\ExcelMpoExport;
-use Vanguard\Services\Campaign\ReformatCampaignList;
+use Vanguard\Http\Resources\CampaignResource;
+
 
 class CampaignsController extends Controller
 {
@@ -39,14 +40,8 @@ class CampaignsController extends Controller
 
     public function index(Request $request)
     {
-        $agency_id = $this->companyId();
-        $campaigns = Campaign::when($request->status, function ($query) use ($request){
-                                $query->where('status', $request->status);
-                            })
-                            ->where('belongs_to',$agency_id)
-                            ->get();
-        $format_campaign = new ReformatCampaignList($campaigns);
-        $campaigns = $format_campaign->run();
+        $campaigns = Campaign::filter(['belongs_to'=> $this->companyId()])->get();
+        $campaigns =   CampaignResource::collection($campaigns);
         return view('agency.campaigns.index')->with('campaigns', $campaigns);
     }
 
