@@ -22,10 +22,9 @@
       <template v-slot:items="props">
         <tr>
             <td class="text-xs-left"><b-img thumbnail fluid :src="props.item.image_url" class="v-icon notranslate v-icon--left mdi mdi-laptop theme--light" style="width: 30px; height: 30px"  id="brand_logo" alt="Image 1"></b-img> <span class="text1"> {{ props.item.name }}</span>
-            
             </td>
             <td class="text-xs-left"> {{props.item.campaigns_count}} </td>
-             <td class="text-xs-left"> {{numberFormat(sumBudget(props.item.campaigns))}} </td>
+             <td class="text-xs-left"> {{numberFormat(props.item.campaigns_spendings)}} </td>
            <td class="text-xs-left">{{ dateToHumanReadable(props.item.created_at.date) }}</td>
            <td class="justify-center layout px-0">
             <v-icon color="#44C1C9" @click="showEditBrand(props.item)"  v-b-tooltip.hover title="Edit client" dark right>edit</v-icon> </td>

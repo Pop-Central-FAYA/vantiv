@@ -19,6 +19,8 @@ use Vanguard\Services\Campaign\ListingService;
 use Vanguard\Http\Resources\CampaignResource;
 use Vanguard\Models\Brand;
 use Illuminate\Support\Arr;
+use Vanguard\Http\Resources\BrandCollection;
+use Vanguard\Models\Campaign;
 
 class ClientController extends Controller
 {
@@ -45,13 +47,13 @@ class ClientController extends Controller
      */
     public function details($id)
     {
-        $client = Client::findOrFail($id);
+        $client = Client::with('contacts', 'brands')->findOrFail($id);
         $this->authorize('get', $client);
-        $client = new ClientResource(Client::with('contacts', 'brands')->findOrFail($id));
+        $client = new ClientResource($client);
         $brand_id = Arr::pluck($client->brands, 'id');
-        $brands = Brand::with('campaigns')->whereIn('id', $brand_id)->withCount('campaigns')->get();
-        $campaign_list = new ListingService(['client_id'=> [$id]]);
-        $campaigns =   CampaignResource::collection($campaign_list->run());
+        $brands = Brand::with('campaigns')->whereIn('id', $brand_id)->get();
+        $brands = new BrandCollection($brands);
+        $campaigns = CampaignResource::collection(Campaign::filter(['brand_id'=> $brand_id])->get());
         return view('agency.clients.client')
         ->with('client', $client)
         ->with('campaign_list', $campaigns)

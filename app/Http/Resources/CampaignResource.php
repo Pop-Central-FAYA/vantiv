@@ -17,7 +17,7 @@ class CampaignResource extends JsonResource
     {
         $format = new FormatCampaign();
         return [
-            'id' =>  $this->campaign_reference,
+            'id' =>  $this->id,
             'campaign_id' =>  $this->id,
             'name' =>  $this->name,
             'product' =>  $this->product,

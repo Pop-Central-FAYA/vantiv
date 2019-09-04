@@ -16,14 +16,14 @@ class Campaign extends Base
     ];
 
     protected $fillable = [
-        'brand_id', 'campaign_status', 'reference', 'client_id'
+        'brand_id', 'campaign_status', 'reference', 'belongs_to'
     ];
 
     public $timestamps = false;
 
     public function modelFilter()
     {
-        return $this->provideFilter(\Vanguard\ModelFilters\ClientFilter::class);
+        return $this->provideFilter(\Vanguard\ModelFilters\CampaignFilter::class);
     }
     /**
      * Get client details associated with the media plan.

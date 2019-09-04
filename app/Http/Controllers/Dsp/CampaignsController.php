@@ -40,9 +40,8 @@ class CampaignsController extends Controller
 
     public function index(Request $request)
     {
-        $agency_id = $this->companyId();
-        $campaign_list = new ListingService(['belongs_to'=> [$agency_id]]);
-        $campaigns =   CampaignResource::collection($campaign_list->run());
+        $campaigns = Campaign::filter(['belongs_to'=> $this->companyId()])->get();
+        $campaigns =   CampaignResource::collection($campaigns);
         return view('agency.campaigns.index')->with('campaigns', $campaigns);
     }
 
