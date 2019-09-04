@@ -28,8 +28,8 @@ class CampaignResource extends JsonResource
             'end_date' => date('Y-m-d', strtotime($this->stop_date)),
             'adslots' => $this->ad_slots,
             'budget' => number_format($this->budget,2),
-            'status' => $format->getCampaignStatusHtml($request),
-            'redirect_url' => $format->generateRedirectUrl($request),
+            'status' => $format->getCampaignStatusHtml($this),
+            'redirect_url' => $format->generateRedirectUrl($this),
             'station' => ''
         ];
     }
