@@ -103,6 +103,10 @@
         background-color: #01c4ca !important;
         border-color: #01c4ca !important;
     }
+    hr {
+    margin-top: 0;
+    margin-bottom: 0;
+}
 </style>
 
 <script>
@@ -116,7 +120,6 @@
       }
     },
     mounted() {
-        console.log(this.adVendorData);
         console.log('Display vendor details Component mounted.');
     },
     methods: {
