@@ -23,7 +23,7 @@ class IndexAdVendorTest extends AdVendorTestCase
     {
         $response = $this->get(route($this->route_name));
         //it should redirect to login
-        $response->assertStatus(302);
+        $response->assertStatus(302)->assertLocation('login');
     }
 
     public function test_user_without_read_permissions_cannot_access_route()
@@ -39,7 +39,7 @@ class IndexAdVendorTest extends AdVendorTestCase
         $response = $this->getResponse($user);
         $response->assertStatus(200)
                 ->assertViewIs('agency.ad_vendor.index')
-                ->assertViewHas(['publishers', 'vendors']);
+                ->assertViewHas(['publishers']);
     }
 
 }

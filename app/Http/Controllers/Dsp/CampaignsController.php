@@ -23,7 +23,7 @@ use Vanguard\Services\Mpo\StoreCampaignMpoTimeBelt;
 use Vanguard\Services\Mpo\GetCampaignMpoTimeBelts;
 use Vanguard\Services\Mpo\ExcelMpoExport;
 use Vanguard\Http\Resources\CampaignResource;
-use Vanguard\Services\Campaign\ListingService;
+
 
 class CampaignsController extends Controller
 {

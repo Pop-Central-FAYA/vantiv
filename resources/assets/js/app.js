@@ -124,6 +124,12 @@ Vue.component('brands-edit', () => import('./components/brand/EditBrand.vue'));
 Vue.component('guest-mpo', () => import('./components/guest/Mpo.vue'));
 Vue.component('guest-adslot-list', () => import('./components/guest/AdslotList.vue'));
 
+//Dashboard
+Vue.component('dashboard', () => import('./components/dashboard/DisplayDashboard.vue'));
+Vue.component('dashboard-campaign-summary', () => import('./components/dashboard/CampaignSummary.vue'));
+Vue.component('dashboard-mediaplan-summary', () => import('./components/dashboard/MediaPlanSummary.vue'));
+Vue.component('dashboard-campaign-summary-chart', () => import('./components/dashboard/CampaignPieChart.vue'));
+
 Vue.mixin({
     methods: {
         format_audience(number) {
@@ -145,12 +151,24 @@ Vue.mixin({
             this.$swal({
                 position: 'top-end',
                 type: type,
-                text: message,
+                html: message,
                 showConfirmButton: false,
                 toast: true,
                 background: background,
                 timer: timer
             });
+        },
+        displayServerValidationErrors(validationErrors) {
+            var err = [];
+            for (var key in validationErrors) {
+                if (validationErrors.hasOwnProperty(key)) {
+                    var errors = validationErrors[key];
+                    validationErrors[key].forEach(element => {
+                        err.push(`${key}: ${element}`);
+                    });
+                }
+            }
+            this.sweet_alert(err.join('<br>'), 'error');
         },
         groupAdslotByProgram(adslots) {
             var helper = {};

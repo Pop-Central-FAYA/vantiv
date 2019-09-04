@@ -5,7 +5,6 @@ namespace Vanguard\Http\Controllers\Dsp;
 use Vanguard\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Vanguard\Http\Controllers\Traits\CompanyIdTrait;
-use Vanguard\Services\Campaign\AllCampaign;
 use Vanguard\Services\MediaPlan\GetMediaPlans;
 use Vanguard\Models\Campaign;
 use Vanguard\Models\CampaignChannel;
@@ -19,11 +18,32 @@ class DashboardController extends Controller
 
     public function index()
     {
-        //TV
-        $tv_rating = $this->agencyMediaChannel('TV');
-
-        //Radio
-        $radio_rating = $this->agencyMediaChannel('Radio');
+        $media_channels = [
+            'TV' => [
+                'ratings' => $this->agencyMediaChannel('TV'),
+                'icon_url' => asset('new_frontend/img/tv.svg')
+            ],
+            'Radio' => [
+                'ratings' => $this->agencyMediaChannel('Radio'),
+                'icon_url' => asset('new_frontend/img/radio.svg')
+            ],
+            'Newspaper' => [
+                'ratings' => [],
+                'icon_url' => asset('new_frontend/img/paper.svg')
+            ],
+            'OOH' => [
+                'ratings' => [],
+                'icon_url' => asset('new_frontend/img/ooh.svg')
+            ],
+            'Desktop' => [
+                'ratings' => [],
+                'icon_url' => asset('new_frontend/img/desktop.svg')
+            ],
+            'Mobile' => [
+                'ratings' => [],
+                'icon_url' => asset('new_frontend/img/mobile.svg')
+            ],
+        ];
 
         //all clients
         $clients = new AllClient($this->companyId());
@@ -39,33 +59,44 @@ class DashboardController extends Controller
 
         //Get all campaigns
         $campaigns = Campaign::where('belongs_to', $this->companyId())->get();
-        //count campaigns on hold
         $count_campigns_on_hold = $this->countCampaignsByStatus($campaigns, 'on_hold');
-        //count active campaigns
         $count_active_campigns = $this->countCampaignsByStatus($campaigns, 'active');
-
-        //Get all media plans
-        $media_plan_service = new GetMediaPlans('', $this->companyId());
-        $media_plans = collect($media_plan_service->run());
-        //count pending media plans
-        $count_pending_media_plans = $this->countMediaPlanByStatus($media_plans, [MediaPlanStatus::PENDING,MediaPlanStatus::SUGGESTED,MediaPlanStatus::SELECTED,MediaPlanStatus::IN_REVIEW]);
-        //count approved media plans
-        $count_approved_media_plans = $this->countMediaPlanByStatus($media_plans, [MediaPlanStatus::APPROVED]);
-        //count declined media plans
-        $count_declined_media_plans = $this->countMediaPlanByStatus($media_plans, [MediaPlanStatus::DECLINED]);
-
-        return view('agency.dashboard.new_dashboard')->with([
+        $campaign_summary = [
             'count_active_campaigns' => $count_active_campigns,
             'count_campaigns_on_hold' => $count_campigns_on_hold,
             'count_all_brands' => $count_all_brands,
             'count_all_clients' => $count_all_clients,
-            'tv_rating' => $tv_rating,
-            'radio_rating' => $radio_rating,
+        ];
+
+        //Get all media plans
+        $media_plan_service = new GetMediaPlans('', $this->companyId());
+        $media_plans = collect($media_plan_service->run());
+        $count_pending_media_plans = $this->countMediaPlanByStatus($media_plans, [MediaPlanStatus::PENDING,MediaPlanStatus::SUGGESTED,MediaPlanStatus::SELECTED,MediaPlanStatus::IN_REVIEW]);
+        $count_approved_media_plans = $this->countMediaPlanByStatus($media_plans, [MediaPlanStatus::APPROVED]);
+        $count_declined_media_plans = $this->countMediaPlanByStatus($media_plans, [MediaPlanStatus::DECLINED]);
+        $media_plan_summary = [
             'count_pending_media_plans' => $count_pending_media_plans,
             'count_approved_media_plans' => $count_approved_media_plans,
-            'count_declined_media_plans' => $count_declined_media_plans
-        ]);
+            'count_declined_media_plans' => $count_declined_media_plans,
+        ];
 
+        //redirect urls
+        $redirect_urls = [
+            'active_campaigns' => route('agency.campaign.all',['status'=>'active']),
+            'campaigns_on_hold' => route('agency.campaign.all',['status'=>'on_hold']),
+            'all_clients' => route('clients.list'),
+            'all_brands' => route('brand.all'),
+            'approved_media_plans' => route('agency.media_plans', ['status'=>'approved']),
+            'pending_media_plans' => route('agency.media_plans', ['status'=>'pending']),
+            'declined_media_plans' => route('agency.media_plans', ['status'=>'declined']),
+        ];
+
+        return view('agency.dashboard.index')->with([
+            'redirect_urls' => $redirect_urls,
+            'media_channels' => $media_channels,
+            'campaign_summary' => $campaign_summary,
+            'media_plan_summary' => $media_plan_summary
+        ]);
     }
 
     public function countCampaignsByStatus($campaigns, $status)
