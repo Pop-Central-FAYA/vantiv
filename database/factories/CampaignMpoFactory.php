@@ -8,8 +8,8 @@ $factory->define(CampaignMpo::class, function (Faker $faker) {
     return [
         'campaign_id' => factory(Campaign::class)->create()->id,
         'station' => 'jrhfhjsd',
-        'ad_slots' => 6,
+        'ad_slots' => 5,
         'status' => 'active',
-        'budget' => 40000
+        'budget' => 19000
     ];
 });

@@ -6,23 +6,29 @@
         <v-spacer></v-spacer>
         <v-text-field v-model="search" append-icon="search" label="Enter Keyword" single-line hide-details></v-text-field>
         </v-card-title>
-        <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="mpos" :search="search" :pagination.sync="pagination" item-key="station" expand :show-expand="true">
+        <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="mposData" :search="search" :pagination.sync="pagination" item-key="station" expand :show-expand="true">
         <template v-slot:items="props">
             <tr>
                 <td @click="props.expanded = !props.expanded">
                     <a class="default-vue-link">{{ props.item.station }}</a>
                 </td>
                 <td @click="props.expanded = !props.expanded" class="text-xs-left">{{ format_audience(sumNetTotalInCampaignMpoTimeBelt(props.item.campaign_mpo_time_belts)) }}</td> 
-                <td @click="props.expanded = !props.expanded" class="text-xs-left">{{ sumAdslotsInCampaignMpoTimeBelt(props.item.campaign_mpo_time_belts) }}</td>
+                <td @click="props.expanded = !props.expanded" 
+                    class="text-xs-left"
+                    @updated-adslots="sumAdslotsInCampaignMpoTimeBelt(props.item.campaign_mpo_time_belts)"
+                    >{{ sumAdslotsInCampaignMpoTimeBelt(props.item.campaign_mpo_time_belts) }}</td>
                 <td @click="props.expanded = !props.expanded" class="text-xs-left">{{ props.item.status }}</td>
                 <td class="justify-center layout px-0">
                     <v-container grid-list-md class="container-action-btn">
                         <v-layout wrap>
                             <v-flex xs12 sm6 md3>
+                                <edit-volume-campaign-price :mpo="props.item"></edit-volume-campaign-price>
+                            </v-flex>
+                            <v-flex xs12 sm6 md3>
                                 <v-layout>
                                     <v-tooltip top>
                                         <template v-slot:activator="{ on }">
-                                            <v-icon color="primary" v-on="on" dark left @click="exportMpo(props.item.id)">fa-file-excel</v-icon>
+                                            <v-icon color="#01c4ca" v-on="on" dark left @click="exportMpo(props.item.id)">fa-file-excel</v-icon>
                                         </template>
                                         <span>Export MPO</span>
                                     </v-tooltip>
@@ -31,10 +37,10 @@
                             <v-flex xs12 sm6 md3>
                                 <share-link-modal :mpo="props.item"></share-link-modal>
                             </v-flex>
-                            <v-flex xs12 sm6 md3>
+                            <v-flex xs12 sm6 md2>
                                  <submit-mpo-modal :mpo="props.item"></submit-mpo-modal>
                             </v-flex>
-                            <v-flex xs12 sm6 md3>
+                            <v-flex xs12 sm6 md1>
                                 <mpo-file-manager :mpo="props.item" :assets="assets" :client="client" :brand="brand"></mpo-file-manager>
                             </v-flex>
                         </v-layout>
@@ -86,7 +92,14 @@
                 pagination: {
                     rowsPerPage: 10
                 },
+                mposData : this.mpos
             }
+        },
+        created() {
+            var self = this;
+            Event.$on('updated-mpos', function (mpos) {
+                self.mposData = mpos;
+            });
         },
         methods : {
             adslotList : function(mpo_id) {

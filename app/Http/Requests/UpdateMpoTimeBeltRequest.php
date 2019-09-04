@@ -24,13 +24,15 @@ class UpdateMpoTimeBeltRequest extends FormRequest
     public function rules()
     {
         return [
-            'program' => 'required',
-            'playout_date' => 'required',
-            'unit_rate' => 'required',
-            'asset_id' => 'required',
-            'time_belt' => 'required',
-            'insertion' => 'required',
-            'volume_discount' => 'required'
+            'id' => 'required',
+            'program' => 'required|sometimes',
+            'playout_date' => 'required|sometimes',
+            'unit_rate' => 'required|sometimes',
+            'asset_id' => 'required|sometimes',
+            'time_belt_start_time' => 'required|sometimes',
+            'ad_slots' => 'required|sometimes',
+            'volume_discount' => 'required',
+            'day' => 'required|sometimes'
         ];
     }
 }

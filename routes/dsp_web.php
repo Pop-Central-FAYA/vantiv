@@ -29,15 +29,12 @@
         Route::get('/', 'Dsp\DashboardController@index')->name('dashboard');
 
         Route::group(['namespace' => 'Dsp', 'prefix' => 'campaigns'], function () {
-            Route::get('/{status?}', 'CampaignsController@index')->name('agency.campaign.all')->middleware('permission:view.campaign');
+            Route::get('/{status?}', 'CampaignsController@index')->name('agency.campaign.all');
             Route::get('/details/{id}', 'CampaignsController@getDetails')->name('agency.campaign.details');
             Route::get('/mpo-details/{id}', 'CampaignsController@mpoDetails')->name('agency.mpo.details');
             Route::get('/mpo/details/{campaign_mpo_id}', 'CampaignsController@campaignMpoDetails');
             Route::get('/mpos/{id}/export', 'CampaignsController@exportMpoAsExcel');
             Route::post('/mpo/associate-assets', 'CampaignsController@associateAssetsToMpo');
-            Route::post('/mpo/details/{campaign_mpo_id}/adslots/delete', 'CampaignsController@deleteMultipleAdslots');
-            Route::post('/mpo/details/{campaign_mpo_id}/adslots/update', 'CampaignsController@updateAdslots');
-            Route::post('/mpo/details/{campaign_mpo_id}/adslots/store', 'CampaignsController@storeAdslots');
         });
 
         /*
@@ -217,6 +214,10 @@
             Route::get('/mpos/{id}/share-links', 'MpoShareLinkController@getActiveLink');
             Route::post('/mpos/{id}/share-links', 'MpoShareLinkController@store')->name('mpo_share_link.store');
             Route::post('/mpos/{id}/submit', 'MpoShareLinkController@submitToVendor')->name('mpo_share_link.submit');
+            Route::delete('/mpos/{mpo_id}/adslots/{adslot_id}', 'CampaignsController@deleteAdslot');
+            Route::patch('/mpos/{mpo_id}/adslots/{adslot_id}', 'CampaignsController@updateAdslot')->name('update.campaign_mpo');
+            Route::patch('/mpos/{mpo_id}', 'CampaignsController@updateMultipleAdslots');
+            Route::post('/mpos/{id}/adslots', 'CampaignsController@storeAdslot');
         });
           /*
          * new Brand route

@@ -190,22 +190,27 @@ export default {
             this.sweet_alert(msg, 'info');
 
             axios({
-                method: 'POST',
-                url: '/campaigns/mpo/details/'+this.adslot.mpo_id+'/adslots/update',
+                method: 'patch',
+                url: `/mpos/${this.adslot.mpo_id}/adslots/${this.adslot.id}`,
                 data: {
-                    id : this.adslot.id,
+                    id : [this.adslot.id],
                     program : this.adslot.program,
                     playout_date : this.adslot.playout_date,
                     asset_id : this.adslot.asset_id,
                     unit_rate : this.adslot.unit_rate,
-                    time_belt : this.adslot.time_belt_start_time,
-                    insertion: this.adslot.ad_slots,
-                    volume_discount : this.adslot.volume_discount
+                    time_belt_start_time : this.adslot.time_belt_start_time,
+                    ad_slots: this.adslot.ad_slots,
+                    volume_discount : this.adslot.volume_discount,
+                    day : this.dayName(this.adslot.playout_date)
                 }
             }).then((res) => {
                 if (res.data.status === 'success') {
+                    Event.$emit('updated-adslots',this.filterMpo(
+                        res.data.data.campaign_mpos, this.adslot.mpo_id
+                        ).campaign_mpo_time_belts)
+                    Event.$emit('updated-mpos', res.data.data.campaign_mpos)
+                    Event.$emit('updated-campaign', res.data.data)
                     this.sweet_alert(res.data.message, 'success');
-                    Event.$emit('updated-adslots', this.groupAdslotByProgram(res.data.data))
                     this.editDialog = false;
                 } else {
                     this.sweet_alert(res.data.message, 'error');

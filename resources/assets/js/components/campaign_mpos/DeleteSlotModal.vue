@@ -44,21 +44,21 @@ export default {
             var msg = "Deleting adslots, please wait";
             this.sweet_alert(msg, 'info');
             axios({
-                method: 'post',
-                url: '/campaigns/mpo/details/'+this.adslot.mpo_id+'/adslots/delete',
-                data: {
-                  program: this.adslot.program,
-                  duration: this.adslot.duration,
-                  playout_date: this.adslot.playout_date
-                }
+                method: 'delete',
+                url: `/mpos/${this.adslot.mpo_id}/adslots/${this.adslot.id}`,
+                data: {}
             }).then((res) => {
                 $('#load_this_div').css({opacity: 1});
-                if (res.data.status === "error") {
-                    this.sweet_alert(res.data.message, 'error');
-                } else {
+                if (res.data.status === "success") {
                     this.sweet_alert(res.data.message, 'success');
-                    Event.$emit('updated-adslots', this.groupAdslotByProgram(res.data.data));
+                    Event.$emit('updated-adslots',this.filterMpo(
+                        res.data.data.campaign_mpos, this.adslot.mpo_id
+                    ).campaign_mpo_time_belts)
+                    Event.$emit('updated-mpos', res.data.data.campaign_mpos)
+                    Event.$emit('updated-campaign', res.data.data)
                     this.dialog = false;
+                } else {
+                    this.sweet_alert(res.data.message, 'error');
                 }
             }).catch((error) => {
                 this.sweet_alert('An unknown error has occurred, media assets cannot be delete. Please try again', 'error');

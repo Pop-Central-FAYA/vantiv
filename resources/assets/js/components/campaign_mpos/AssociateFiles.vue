@@ -4,7 +4,7 @@
       <template v-slot:activator="{ on }">
           <v-tooltip top>
               <template v-slot:activator="{ on }">
-                  <v-icon color="primary" dark left v-on="on" @click="dialog = true">attach_files</v-icon>
+                  <v-icon color="#01c4ca" dark left v-on="on" @click="dialog = true">attach_files</v-icon>
               </template>
               <span>Attach Files to MPO</span>
           </v-tooltip>

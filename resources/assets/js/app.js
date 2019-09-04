@@ -96,6 +96,8 @@ Vue.component('edit-slots-modal', () => import('./components/campaign_mpos/EditS
 Vue.component('campaign-file-list', () => import('./components/campaign_mpos/MpoFileList.vue'));
 Vue.component('add-adslot-modal', () => import('./components/campaign_mpos/AddAdslotModal.vue'));
 Vue.component('share-link-modal', () => import('./components/campaign_mpos/ShareLinkModal.vue'));
+Vue.component('edit-volume-campaign-price', () => import('./components/campaign_mpos/EditVolumePrice.vue'));
+
 
 // AD VENDOR MANAGEMENT
 Vue.component('ad-vendor-list', () => import('./components/ad_vendors/VendorList.vue'));
@@ -158,32 +160,6 @@ Vue.mixin({
                 timer: timer
             });
         },
-        displayServerValidationErrors(validationErrors) {
-            var err = [];
-            for (var key in validationErrors) {
-                if (validationErrors.hasOwnProperty(key)) {
-                    var errors = validationErrors[key];
-                    validationErrors[key].forEach(element => {
-                        err.push(`${key}: ${element}`);
-                    });
-                }
-            }
-            this.sweet_alert(err.join('<br>'), 'error');
-        },
-        groupAdslotByProgram(adslots) {
-            var helper = {};
-            var result = adslots.reduce(function(position, adslot) {
-            var group_param = adslot.program + '-' + adslot.playout_date + '-' + adslot.duration;
-            if(!helper[group_param]) {
-                helper[group_param] = Object.assign({}, adslot); // create a copy of adslot
-                position.push(helper[group_param]);
-            } else {
-                helper[group_param].ad_slots += adslot.ad_slots;
-            }
-            return position;
-            }, []);
-            return  result
-        },
         formatDate(date_str) {
             if (date_str) {
                 var dateParts = date_str.split("-");
@@ -199,6 +175,9 @@ Vue.mixin({
         },
         dateToHumanReadable(date) {
             return moment(date).format('MMM DD, YYYY');
+        },
+        dayName (date) {
+            return moment(date).format('dddd')
         },
         numberFormat(n) {
             return n.toFixed(2)
@@ -223,6 +202,11 @@ Vue.mixin({
             var successMsg = `${time_belt.station} - ${time_belt.program}  showing on  ${time_belt.day}  ${time} added successfully`;
             this.sweet_alert(successMsg, 'success');
         },
+        filterMpo : function (mpos, mpo_id){
+            return mpos.filter(function(mpo) {
+                return mpo.id === mpo_id
+            })
+        }
     }
 })
 
