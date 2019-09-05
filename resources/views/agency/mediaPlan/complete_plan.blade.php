@@ -8,10 +8,8 @@
 <div class="main_contain">
     <!-- header -->
     @if(Session::get('broadcaster_id'))
-    @include('partials.new-frontend.broadcaster.header')
-    @include('partials.new-frontend.broadcaster.campaign_management.sidebar')
-    @else
-    @include('partials.new-frontend.agency.header')
+        @include('partials.new-frontend.broadcaster.header')
+        @include('partials.new-frontend.broadcaster.campaign_management.sidebar')
     @endif
 
     <!-- subheader -->

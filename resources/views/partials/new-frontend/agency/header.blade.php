@@ -1,36 +1,51 @@
+<div>
+    @php
+        $menu = [
+            'Profile' => [
+                'url' => route('user.profile', [], false),
+                'permission' => 'view.profile',
+                'color' => 'color_dark'
+            ],
+            'Users' => [
+                'url' => route('agency.user.index', [], false),
+                'permission' => 'view.user',
+                'color' => 'color_dark'
+            ],
+            'Company' => [
+                'url' => route('company.index', [], false),
+                'permission' => 'update.company',
+                'color' => 'color_dark'
+            ],
+            'Logout' => [
+                'url' => route('auth.logout', [], false),
+                'permission' => 'view.profile',
+                'color' => 'color_red'
+            ]
+        ];
 
-<div class="header mb3 clearfix">
+        $allowed_menu = [];
 
-    <div class="user_dets p-t col_12 column align_right">
+        $current_user_permissions = Auth::user()->getAllPermissions()->pluck('name')->toArray();
 
-        <div class="user_acct right align_left">
+        foreach($menu as $key=>$submenu) {
+            if(in_array($submenu['permission'], $current_user_permissions)) {
+                $allowed_menu[$key] = $submenu;
+            }
+        }
 
-            <span class="avatar_icon"></span>
+        $current_user = [
+            'fullname' => Auth::user()->firstname.' '.Auth::user()->lastname,
+            'username' => Auth::user()->firstname
+        ];
+    @endphp
 
-            <div class="inner_nav">
-                <p class="border_bottom">
-                    <span class="weight_bold block_disp eliptic">{{ Auth::user()->firstname }} {{ Auth::user()->lastname }}</span>
-                    <span class="block_disp small_faint">{{ Auth::user()->username ? Auth::user()->username : Auth::user()->firstname }}</span>
-                </p>
-
-                <div class="">
-                  @if(Auth::user()->hasPermissionTo('view.profile'))
-                    <a href="{{ route('user.profile') }}" class="color_dark">Profile</a>
-                    @endif
-                    @if(Auth::user()->hasPermissionTo('view.user'))
-                    <a href="{{ route('agency.user.index') }}" class="color_dark">Users</a>
-                    @endif
-                    @if(Auth::user()->hasPermissionTo('update.company'))
-                    <a href="{{ route('company.index') }}" class="color_dark">Company</a>
-                    @endif
-                    <a href="{{ route('auth.logout') }}" class="color_red">Logout</a>
-                </div>
-            </div>
+    <div class="header mb3 clearfix" style="margin-right: 30px;">
+        <div class="user_dets p-t col_12 column align_right">
+            <vantage-header
+                :authenticated-user="{{ json_encode($current_user) }}"
+                :menu="{{ json_encode($allowed_menu) }}"
+            ></vantage-header>
         </div>
-
-
-        <p class="right padd">{{ Auth::user()->username ? Auth::user()->username : Auth::user()->firstname }}</p>
-
     </div>
+    
 </div>
-

@@ -7,11 +7,8 @@
 @section('content')
     <!-- main container -->
     <div class="main_contain">
-        <!-- heaser -->
-    @include('partials.new-frontend.agency.header')
-
     <!-- subheader -->
-        <div class="sub_header clearfix mb pt">
+        <div class="sub_header clearfix mb">
             <div class="column col_6">
                 <h2 class="sub_header">INVOICE DETAILS</h2><br>
                 <a href="{{ route('invoice.export', ['id' => $invoice_details['invoice_id']]) }}" class="btn small_btn uppercased ">Export To PDF <span class=""></span></a>

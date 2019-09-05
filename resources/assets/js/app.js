@@ -133,6 +133,11 @@ Vue.component('dashboard-campaign-summary', () => import('./components/dashboard
 Vue.component('dashboard-mediaplan-summary', () => import('./components/dashboard/MediaPlanSummary.vue'));
 Vue.component('dashboard-campaign-summary-chart', () => import('./components/dashboard/CampaignPieChart.vue'));
 
+//Partials
+Vue.component('vantage-side-menu', () => import('./components/partials/Sidebar.vue'));
+Vue.component('vantage-header', () => import('./components/partials/Header.vue'));
+
+
 Vue.mixin({
     methods: {
         format_audience(number) {

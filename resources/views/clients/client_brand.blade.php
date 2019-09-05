@@ -7,11 +7,8 @@
 @section('content')
     <!-- main container -->
     <div class="main_contain">
-        <!-- heaser -->
-        @include('partials.new-frontend.agency.header')
-
         <!-- subheader -->
-        <div class="sub_header clearfix mb pt">
+        <div class="sub_header clearfix mb">
             <div class="column col_6">
                 <h2 class="sub_header">Clients</h2>
                 <p class="bread small_font"><a href="{{ route('client.show', ['id' => $client_id]) }}">{{ $client[0]->company_name }}</a> &raquo; <span class="weight_medium">{{ $this_brand[0]->name }}</span></p>
