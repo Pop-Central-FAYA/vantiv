@@ -23,7 +23,8 @@ class Kernel extends ConsoleKernel
         'Vanguard\Console\Commands\PopulateTimeBelt',
         'Vanguard\Console\Commands\AttachPermissionsToRole',
         'Vanguard\Console\Commands\PublisherSettings',
-        'Vanguard\Console\Commands\CreatePermission'
+        'Vanguard\Console\Commands\CreatePermission',
+        'Vanguard\Console\Commands\ParseMpsTvDiary'
     ];
 
     /**
