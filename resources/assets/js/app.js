@@ -186,7 +186,7 @@ Vue.mixin({
             return moment(date).format('dddd')
         },
         numberFormat(n) {
-            return n.toFixed(2)
+            return n.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
         },
         hasPermission(permissionList,search_permission){
             if(typeof search_permission === 'string'){
