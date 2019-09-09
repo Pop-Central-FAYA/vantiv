@@ -14,8 +14,8 @@ class TransformWalkinsToClient extends Migration
     public function up()
     {
         DB::statement(
-            "INSERT INTO clients ('id', 'nationality', 'name', 'created_by', 'company_id', 'street_address', 'city', 'state')
-            SELECT 'id', 'nationality', 'name', 'created_by', 'company_id', 'street_address', 'city', 'state'" 
+            "INSERT INTO clients (id, nationality, name, image_url, created_by, company_id, street_address, created_at, updated_at)
+            SELECT id, nationality, company_name, image_url, user_id, company_id, location, time_modified, time_created FROM walkins where agency_id <>''" 
         );
     }
 
@@ -26,6 +26,6 @@ class TransformWalkinsToClient extends Migration
      */
     public function down()
     {
-       
+    
     }
 }

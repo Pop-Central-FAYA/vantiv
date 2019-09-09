@@ -15,7 +15,7 @@
                 <li class="media_icon {{ Request::is('media-plan') ? 'active' :  Request::is('media-plan/*') ? 'active' : ''  }}"><a href="{{ route('agency.media_plans') }}">Media Plans</a></li>
             @endif
             @if(Auth::user()->hasPermissionTo('view.client'))
-                <li class="clients_icon {{ Request::is('clients/*') ? 'active' : ''  }}"><a href="{{ route('clients.list') }}">Clients</a></li>
+                <li class="clients_icon {{ Request::is('clients/*') ? 'active' : ''  }}"><a href="{{ route('client.index') }}">Clients</a></li>
             @endif
             @if(Auth::user()->hasPermissionTo('view.ad_vendor'))
                 <li class="ad_vendor_icon {{ Request::is('ad-vendors') ? 'active' : ''  }}"><a href="{{ route('ad-vendor.index') }}">Vendors</a></li>
