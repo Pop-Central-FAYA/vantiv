@@ -20,7 +20,7 @@
                 'active_class' => Request::is('media-plan') ? 'active' :  Request::is('media-plan/*') ? 'active' : ''
             ],
             'Clients' => [
-                'url' => route('clients.list', [], false),
+                'url' => route('client.index', [], false),
                 'permission' => 'view.client',
                 'icon_class' => 'clients_icon',
                 'active_class' => Request::is('clients/*') ? 'active' : ''
