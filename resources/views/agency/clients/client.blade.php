@@ -7,8 +7,6 @@
 @section('content')
 
     <div class="main_contain" id="load_this_div">
-        <!-- header -->
-    @include('partials.new-frontend.agency.header')
     <div class="container-fluid media-asset-management">
             <div class="row">
        <!-- subheader -->
