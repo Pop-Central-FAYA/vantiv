@@ -6,10 +6,8 @@
 
 @section('content')
     <div class="main_contain">
-        <!-- header -->
-        @include('partials.new-frontend.agency.header')
         <!-- subheader -->
-        <div class="sub_header clearfix mb pt">
+        <div class="sub_header clearfix mb">
             <div class="column col_6">
                 <h2 class="sub_header">Profile Management</h2>
             </div>

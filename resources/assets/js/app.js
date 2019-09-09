@@ -104,6 +104,7 @@ Vue.component('ad-vendor-list', () => import('./components/ad_vendors/VendorList
 Vue.component('ad-vendor-create', () => import('./components/ad_vendors/CreateVendor.vue'));
 Vue.component('ad-vendor-view', () => import('./components/ad_vendors/ViewVendor.vue'));
 Vue.component('ad-vendor-publisher-list', () => import('./components/ad_vendors/PublisherList.vue'));
+Vue.component('ad-vendor-details', () => import('./components/ad_vendors/VendorDetails.vue'));
 
 // COMPANY MANAGEMENT
 Vue.component('company-index', () => import('./components/company/CompanyIndex.vue'));
@@ -131,6 +132,11 @@ Vue.component('dashboard', () => import('./components/dashboard/DisplayDashboard
 Vue.component('dashboard-campaign-summary', () => import('./components/dashboard/CampaignSummary.vue'));
 Vue.component('dashboard-mediaplan-summary', () => import('./components/dashboard/MediaPlanSummary.vue'));
 Vue.component('dashboard-campaign-summary-chart', () => import('./components/dashboard/CampaignPieChart.vue'));
+
+//Partials
+Vue.component('vantage-side-menu', () => import('./components/partials/Sidebar.vue'));
+Vue.component('vantage-header', () => import('./components/partials/Header.vue'));
+
 
 Vue.mixin({
     methods: {

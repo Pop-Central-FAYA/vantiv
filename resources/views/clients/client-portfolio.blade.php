@@ -6,11 +6,8 @@
 
 @section('content')
     <div class="main_contain">
-        <!-- heaser -->
-        @include('partials.new-frontend.agency.header')
-
         <!-- subheader -->
-        <div class="sub_header clearfix mb pt">
+        <div class="sub_header clearfix mb">
             <div class="column col_6">
                 <h2 class="sub_header">Client</h2>
             </div>

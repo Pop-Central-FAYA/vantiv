@@ -46,11 +46,11 @@
 
 <body>
     <div id="app">
+        <!-- header -->
+        @include('partials.new-frontend.agency.header')
         <!-- side navigation -->
-        @if(Session::has('agency_id'))
-            @include('partials.new-frontend.agency.sidebar')
-        @endif
-
+        @include('partials.new-frontend.agency.sidebar')
+        <!-- main content -->
         @yield('content')
     </div>
 
