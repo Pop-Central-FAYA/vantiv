@@ -39,7 +39,7 @@
                                     <td>{{ summaryData.medium }}</td>
                                     <td> <span v-for="(list, index) in summaryData.material_durations" v-bind:key="index"> <span>{{list}}</span><span v-if="index+1 < summaryData.material_durations.length">, </span>  </span> </td>
                                     <td> {{ summaryData.total_spots }} </td>
-                                    <td>{{ numberFormat(summaryData.gross_value) }} </td>
+                                    <td>{{ numberFormat(summaryData.gross_value) }}  </td>
                                     <td> {{ numberFormat(summaryData.net_value) }}</td>
                                     <td> {{ numberFormat(summaryData.savings) }}</td>
                                 </tr>
