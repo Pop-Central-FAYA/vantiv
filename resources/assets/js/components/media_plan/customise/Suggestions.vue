@@ -48,8 +48,7 @@
             </v-flex>
             <v-flex xs12 s12 md8 class="px-0 text-right">
                 <v-btn :disabled="isRunRatings || planStatus =='Approved' ||  planStatus =='Declined'" @click="save(false)" color="default-vue-btn" large><v-icon left>save</v-icon>Save</v-btn>
-                <v-btn @click="buttonRedirect(redirectUrls.next_action)" color="default-vue-btn" v-if="planStatus == 'Approved' || planStatus == 'Declined'" large>Next<v-icon right>navigate_next</v-icon></v-btn>
-                <v-btn :disabled="isRunRatings" @click="save(true)" color="default-vue-btn" v-else large><v-icon left>library_add</v-icon>Create Plan</v-btn>
+                <v-btn @click="goToCompletePlan()" color="default-vue-btn" large>Next<v-icon right>navigate_next</v-icon></v-btn>
             </v-flex>
         </v-layout>
     </v-container>
@@ -86,7 +85,9 @@
             return {
                 timeBeltsArr: [],
                 isRunRatings: false,
-                viewGraph: false
+                viewGraph: false,
+                isSaved: false,
+                sumNewSelected: 0
             };
         },
         mounted() {
@@ -96,11 +97,24 @@
             var self = this;
             Event.$on('selected-timebelts', function (time_belts) {
                 self.timeBeltsArr = time_belts;
+                self.incrementSelection();
             });
         },
         methods: {
             buttonRedirect(url) {
                 window.location = url;
+            },
+            incrementSelection() {
+                this.sumNewSelected++;
+            },
+            goToCompletePlan() {
+                if (this.selectedSuggestions.length == 0 && this.isSaved == false) {
+                    this.sweet_alert("Select the station you want to add", 'error');
+                } else if (this.selectedSuggestions.length > 0 && this.sumNewSelected > 1 && this.isSaved == false) {
+                    this.sweet_alert("New timebelts selected. Please save!", 'info');
+                } else {
+                    window.location = this.redirectUrls.next_action;
+                }
             },
             save(isRedirect) {
                 if(this.hasPermissionAction(this.permissionList, ['create.media_plan','update.media_plan'])){
@@ -124,14 +138,10 @@
                                 mediaplan: this.planId
                             }
                         }).then((res) => {
+                            this.isSaved = true;
                             this.isRunRatings = false;
                             if (res.data.status === 'success') {
                                 this.sweet_alert("Selected suggestions successfully saved!", 'success');
-                                if (isRedirect) {
-                                    setTimeout(function () {
-                                        location.href = self.redirectUrls.next_action;
-                                    }, 2000);
-                                } 
                             } else {
                                 this.sweet_alert("Selected suggestions couldn't be saved, please try again", 'error');
                             }
