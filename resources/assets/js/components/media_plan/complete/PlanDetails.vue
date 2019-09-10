@@ -122,8 +122,7 @@
             </v-flex>
             <v-flex xs12 s12 md8 class="px-0 text-right">
                 <v-btn :disabled="isRunRatings || plan.status =='Approved' ||  plan.status =='Declined'" @click="save(false)" color="default-vue-btn" large><v-icon left>save</v-icon>Save</v-btn>
-                <v-btn @click="buttonRedirect(redirectUrls.next_action)" color="default-vue-btn" v-if="plan.status == 'Approved' || plan.status == 'Declined'" large>Next<v-icon right>navigate_next</v-icon></v-btn>
-                <v-btn :disabled="isRunRatings" @click="save(true)" color="default-vue-btn" v-else large>Summary<v-icon right>navigate_next</v-icon></v-btn>
+                <v-btn @click="goToSummary()" color="default-vue-btn" large>Summary<v-icon right>navigate_next</v-icon></v-btn>
             </v-flex>
         </v-layout>
     </v-container>
@@ -183,7 +182,8 @@
                 fayaTimebelts: this.timeBelts,
                 volumeDiscounts: [],
                 newPrograms: [],
-                isRunRatings: false
+                isRunRatings: false,
+                isSaved: false
             };
         },
         created() {
@@ -286,17 +286,36 @@
             buttonRedirect(url) {
                 window.location = url;
             },
-            save(is_redirect) {
+            getNetTotalAllDurations() {
                 var net_total_all_durations = 0;
                 this.fayaDurations.forEach(duration => {
                     net_total_all_durations += this.getNetTotalByDuration(duration);
                 });
-
+                return net_total_all_durations;
+            },
+            goToSummary() {
+                var net_total_all_durations = this.getNetTotalAllDurations();
+                if (net_total_all_durations <= 0) {
+                    this.sweet_alert("Please add at least one insertion", 'error');
+                    return;
+                } else if (net_total_all_durations > 0 && this.isSaved == false) {
+                    this.sweet_alert("Please save insertion !!", 'info');
+                    return;
+                } else {
+                    // Validate inputs using vee-validate plugin 
+                    this.$validator.validate().then(valid => {
+                        if (valid) {
+                            window.location = this.redirectUrls.next_action;
+                        }
+                    });
+                }
+            },
+            save(is_redirect) {
+                var net_total_all_durations = this.getNetTotalAllDurations();
                 if (net_total_all_durations <= 0) {
                     this.sweet_alert("Please add at least one insertion", 'error');
                     return;
                 }
-
                 // Validate inputs using vee-validate plugin 
                 this.$validator.validate().then(valid => {
                     if (!valid) {
@@ -320,12 +339,10 @@
                             }
                         }).then((res) => {
                             this.isRunRatings = false;
+                            this.isSaved = true;
                             console.log(res.data);
                             if (res.data.status === "success") {
                                 this.sweet_alert(res.data.message, 'success');
-                                if (is_redirect) {
-                                    window.location = this.redirectUrls.next_action;
-                                }
                             } else {
                                 this.sweet_alert(res.data.message, 'error');
                             }
