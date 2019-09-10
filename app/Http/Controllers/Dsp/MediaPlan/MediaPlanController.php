@@ -237,8 +237,7 @@ class MediaPlanController extends Controller
         }
         $routes= array(
             "back" => route('agency.media_plan.create', ['id'=>$media_plan_id]),
-            "approve" => route('agency.media_plan.approve', ['id'=>$media_plan_id]),
-            "decline" => route('agency.media_plan.decline', ['id'=>$media_plan_id]),
+            "change_status" => route('agency.media_plan.change_status'),
             "export" => route('agency.media_plan.export', ['id'=>$media_plan_id]),
             "approval" => route('agency.media_plan.get_approval')  
         );
@@ -277,25 +276,20 @@ class MediaPlanController extends Controller
         return Excel::download(new MediaPlanExport($media_plan_summary, $media_plan_grouped_data, $monthly_weeks_table_header, $mediaPlan), 'mediaplan.xlsx');
     }
 
-    public function approvePlan($media_plan_id)
+    public function changeMediaPlanStatus(Request $request)
     {
+        $media_plan_id = $request->media_plan_id;
+        $action = $request->action;
         $mediaPlan = MediaPlan::findorfail($media_plan_id);
-        $mediaPlan->status = 'Approved';
+        $mediaPlan->status = $action;
         $mediaPlan->save();
-        $this->sendRequestResponse($media_plan_id, "Approved");
-        Session::flash('success', 'Media plan successfully approved');
-        return redirect()->route('agency.media_plan.summary',['id'=>$mediaPlan->id]);
-    }
-
-    public function declinePlan($media_plan_id)
-    {
-        $mediaPlan = MediaPlan::findorfail($media_plan_id);
-        $mediaPlan->status = 'Declined';
-        $mediaPlan->save();
-        $this->sendRequestResponse($media_plan_id, "Rejected");
-        Session::flash('success', 'Media plan has been declined');
-        return redirect()->route('agency.media_plan.summary',['id'=>$mediaPlan->id]);
-        
+        $this->sendRequestResponse($media_plan_id, $action);
+        $mediaPlan = MediaPlan::with(['client'])->findorfail($request->media_plan_id);
+        $selectedSuggestions = $mediaPlan->suggestions->where('status', 1)->where('material_length', '!=', null);
+        return response()->json([
+            'status' => 'success',
+            'data' =>  $mediaPlan
+            ]);
     }
 
     public function totalAudienceFound($collection)
@@ -682,7 +676,7 @@ class MediaPlanController extends Controller
             "action" => $status,
             "client" =>  $this->getClientName($media_plan_id),
             "receiver_name" => $this->getPlannerDetails($mediaPlan->planner_id)['name'], 
-            "link" => route('agency.media_plan.decline', ['id'=>$media_plan_id]),
+            "link" => route('agency.media_plan.summary', ['id'=>$media_plan_id]),
             "subject" => "Your Media Plan has been ". $status
 
         );
