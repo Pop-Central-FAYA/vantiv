@@ -243,14 +243,14 @@ class MediaPlanController extends Controller
             "approval" => route('agency.media_plan.get_approval')  
         );
 
-
         $summary_service = new SummarizePlan($mediaPlan);
         $summaryData =  $summary_service->run();
         $user_list_service = new GetUserList([$this->companyId()]);
         $user_list = $user_list_service->getUserData();
-        
+        $user_list = collect($user_list);
+        $user_list_grouped = $user_list->groupBy('status');
         return view('agency.mediaPlan.summary')->with('summary', $summaryData)
-                ->with('media_plan', $mediaPlan)->with('users', $user_list)->with('routes', $routes);
+                ->with('media_plan', $mediaPlan)->with('users', $user_list_grouped['Active'])->with('routes', $routes);
     }
 
     public function exportPlan($media_plan_id)

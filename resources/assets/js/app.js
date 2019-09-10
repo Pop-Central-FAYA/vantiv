@@ -186,7 +186,7 @@ Vue.mixin({
             return moment(date).format('dddd')
         },
         numberFormat(n) {
-            return n.toFixed(2)
+            return new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN' }).format(n);
         },
         hasPermission(permissionList,search_permission){
             if(typeof search_permission === 'string'){

@@ -39,7 +39,7 @@
                                     <td>{{ summaryData.medium }}</td>
                                     <td> <span v-for="(list, index) in summaryData.material_durations" v-bind:key="index"> <span>{{list}}</span><span v-if="index+1 < summaryData.material_durations.length">, </span>  </span> </td>
                                     <td> {{ summaryData.total_spots }} </td>
-                                    <td>{{ numberFormat(summaryData.gross_value) }} </td>
+                                    <td>{{ numberFormat(summaryData.gross_value) }}  </td>
                                     <td> {{ numberFormat(summaryData.net_value) }}</td>
                                     <td> {{ numberFormat(summaryData.savings) }}</td>
                                 </tr>
@@ -65,7 +65,7 @@
                     <button id="back_btn" @click="buttonAction(routes.back)"  class="btn small_btn"><i class="media-plan material-icons">navigate_before</i> Back</button>
                 </div>
                 <div class="col-md-8 p-0 text-right">
-                    <span v-if="summaryDetail.status == 'In Review'" >
+                    <span v-if="summaryDetail.status == 'In Review'  && summaryDetail.planner_id != userId " >
                         <button v-if="hasPermission(permissionList,'approve.media_plan')"  @click="buttonAction(routes.approve, 'approve.media_plan')" class="media-plan btn block_disp uppercased mr-1 btn-sm"><i class="media-plan material-icons">check</i>Approve Plan</button>
                     
                         <button v-if="hasPermission(permissionList,'decline.media_plan')"  @click="buttonAction(routes.decline, 'decline.media_plan')"  class="media-plan btn block_disp uppercased bg_red mr-1  btn-sm"><i class="media-plan material-icons">clear</i>Decline Plan</button>
@@ -106,6 +106,7 @@
             permissionList:Array,
             userList:Array,
             routes:Object,
+            userId:String,
         },
         data() {
             return {
@@ -118,6 +119,7 @@
         },
         mounted() {
               this.getSums();
+              console.log(this.userId)
              console.log("Summary component mounted");
            
         },  
