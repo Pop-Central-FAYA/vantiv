@@ -10,7 +10,7 @@
                         <v-card>
                             <v-card-text>
                                 <v-layout wrap style="border-bottom: 1px solid #e8e8e8;">
-                                    <v-flex md12 px-0 style="overflow-x:auto;">
+                                    <v-flex md8 px-0 style="overflow-x:auto;">
                                         <table>
                                             <thead>
                                                 <tr>
@@ -22,7 +22,7 @@
                                                     <th class="fixed-side">Discount</th>
                                                     <th class="fixed-side">Net Total</th>
                                                     <th class="fixed-side">Total Exposure</th>
-                                                    <th v-for="(date, labelDateKey) in timeBelts['labeldates']" :key="labelDateKey" class="fixed-side">{{date}}</th>
+                                                    <!-- <th v-for="(date, labelDateKey) in timeBelts['labeldates']" :key="labelDateKey" class="fixed-side">{{date}}</th> -->
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -40,10 +40,10 @@
                                                     </td>
                                                     <td>{{ formatAmount(getNetTotalByTimeBelt(timebelt, timeBeltkey, duration)) }}</td>
                                                     <td>{{ getTotalExposureByTimebelt(timeBeltkey, duration) }}</td>
-                                                    <td v-for="(timebeltDate, timebeltDatekey) in fayaTimebelts['dates']" :key="timebeltDatekey" class="exposure-td">
+                                                    <!-- <td v-for="(timebeltDate, timebeltDatekey) in fayaTimebelts['dates']" :key="timebeltDatekey" class="exposure-td">
                                                         <input type="number" v-if="fayaTimebelts['days'][timebeltDatekey] == timebelt.day" v-model="fayaTimebelts['programs_stations'][timeBeltkey]['exposures'][duration]['dates'][timebeltDate]" @change="countExposureByTimeBelt(timeBeltkey, duration, timebeltDate)">
                                                         <input type="number" class="disabled_input" disabled v-else>
-                                                    </td>
+                                                    </td> -->
                                                 </tr>
                                                 <tr class="subtotal">
                                                     <td>Subtotal</td>
@@ -58,7 +58,7 @@
                                             </tbody>
                                         </table>
                                     </v-flex>
-                                    <!-- <v-flex md3 style="overflow-x:auto;">
+                                    <v-flex md4 style="overflow-x:auto;">
                                         <table class="dates">
                                             <thead>
                                                 <tr>
@@ -74,7 +74,7 @@
                                                 </tr>
                                             </tbody>
                                         </table>
-                                    </v-flex> -->
+                                    </v-flex>
                                 </v-layout>
                             </v-card-text>
                         </v-card>
