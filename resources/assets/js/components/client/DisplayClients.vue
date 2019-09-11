@@ -9,14 +9,21 @@
      <clients-edit></clients-edit>
     <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="clients" :loading="loading" :search="search" :no-data-text="noDataText" :pagination.sync="pagination">
       <template v-slot:items="props">
-        <tr>
+        <tr @click="showClientDetails(props.item.id)">
             <td class="text-xs-left" ><a @click="showClientDetails(props.item.id)" class="default-vue-link">{{ props.item.name }}</a></td>
             <td class="text-xs-left">{{ props.item.number_brands }}</td>
             <td class="text-xs-left">{{ numberFormat(props.item.client_spendings)}}</td>
             <td class="text-xs-left">{{ props.item.sum_active_campaign }}</td>
             <td class="text-xs-left">{{ dateToHumanReadable(props.item.created_at.date) }}</td>
             <td class="justify-center layout px-0">
-            <v-icon @click="showEditClient(props.item)" color="#44C1C9" v-b-tooltip.hover title="Edit client" dark right>edit</v-icon> </td>
+               <v-tooltip top>
+                    <template v-slot:activator="{on}">
+                       <v-icon  v-on="on" @click="showEditClient(props.item)" color="#44C1C9" v-b-tooltip.hover title="Edit client" dark right>edit</v-icon>
+                     </template>
+                    <span>Edit the vendor information</span>
+                </v-tooltip>
+            
+             </td>
         </tr>
       </template>
       <template v-slot:no-results>

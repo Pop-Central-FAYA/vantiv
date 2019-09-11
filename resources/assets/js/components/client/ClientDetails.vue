@@ -25,7 +25,7 @@
         </v-flex>
     </v-layout>
     <v-divider></v-divider>
-     <v-layout wrap>
+     <v-layout wrap v-if="clientData.contacts[0]" >
         <v-flex xs12 sm12 md12>
              <v-layout style="height: 70px" >
                 <v-flex md3 my-1 style="border-width:2px;" >
@@ -88,7 +88,7 @@
                     </v-tab-item>
 
                     <v-tab-item value="brands-tab">
-                       <brand-list :brand_list="brands"></brand-list>
+                       <brand-list :brand_list="brands" :client_id="clientData.id"></brand-list>
                     </v-tab-item>
             </v-tabs>
         </v-flex>
@@ -143,6 +143,7 @@
       }
     },
     mounted() {
+      console.log(this.brands);
         console.log('Display client details Component mounted.');
     },
     methods: {
