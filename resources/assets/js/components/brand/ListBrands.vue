@@ -13,7 +13,7 @@
               <v-text-field v-model="search" append-icon="search" label="Enter Keyword" single-line hide-details></v-text-field>
         </v-flex>
         <v-flex xs12 sm2 md2>
-            <brand-create  :client_id="brands[0].client_id" fixed left></brand-create>
+            <brand-create  :client_id="client_id" fixed left></brand-create>
         </v-flex>
                                  
        </v-layout>
@@ -63,6 +63,7 @@ hr {
   export default {
        props: {
          brand_list: Array,
+          client_id: String,
         },
     data () {
       return {
@@ -95,6 +96,7 @@ hr {
         });
     },
     mounted() {
+      console.log(this.client_id);
         console.log('Display All Brands Component mounted.');
       
     }, methods: {
