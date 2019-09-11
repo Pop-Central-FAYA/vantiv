@@ -185,7 +185,7 @@
             generatePresignedUrl: async function(file, folder_name, uploadType) {
                 await axios({
                         method: 'post',
-                        url: '/company/presigned-url',
+                        url: '/presigned-url',
                         data: {
                             filename: file.name,
                             folder: folder_name

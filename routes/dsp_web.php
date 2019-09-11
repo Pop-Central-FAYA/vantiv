@@ -113,7 +113,6 @@
         Route::group(['prefix' => 'media-assets'], function () {
             Route::get('/', 'MediaAssetsController@index')->name('agency.media_assets')->middleware('permission:view.asset');
             Route::post('/create', 'MediaAssetsController@createAsset')->middleware('permission:create.asset');
-            Route::post('/presigned-url', 'S3Controller@getPresignedUrl')->middleware('permission:create.asset');
             Route::get('/all', 'MediaAssetsController@getAssets')->middleware('permission:view.asset');
             Route::get('/delete/{id}', 'MediaAssetsController@deleteAsset')->middleware('permission:delete.asset');
             Route::get('/client/get-brands/{id}', 'BrandsController@getBrandsWithClients');
@@ -197,7 +196,6 @@
             Route::get('/company/index', 'CompanyController@index')->name('company.index');
             Route::patch('/company/{id}', 'CompanyController@update')->name('company.update');
         });
-        Route::post('company/presigned-url', 'S3Controller@getPresignedUrl')->name('presigned.url');
         
         Route::group(['namespace' => 'Dsp'], function() {
             Route::get('/ad-vendors', 'AdVendorController@index')->name('ad-vendor.index');
@@ -227,6 +225,8 @@
             Route::post('/brands', 'BrandController@create')->name('brand.create');
             Route::patch('/brands/{id}', 'BrandController@update')->name('brand.update');
         });
+
+        Route::post('/presigned-url', 'S3Controller@getPresignedUrl')->name('presigned.url');
 
     });
 

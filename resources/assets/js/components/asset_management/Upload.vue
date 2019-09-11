@@ -262,7 +262,7 @@
             generate_presigned_url: async function(file, folderName, uploadType) {
                 await axios({
                         method: 'post',
-                        url: '/media-assets/presigned-url',
+                        url: '/presigned-url',
                         data: {
                             filename: file.name,
                             folder: folderName
