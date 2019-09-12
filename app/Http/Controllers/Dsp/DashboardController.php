@@ -11,6 +11,7 @@ use Vanguard\Models\CampaignChannel;
 use Vanguard\Services\Client\AllClient;
 use Vanguard\Services\Client\ClientBrand;
 use Vanguard\Libraries\Enum\MediaPlanStatus;
+use Vanguard\Models\Client;
 
 class DashboardController extends Controller
 {
@@ -46,17 +47,15 @@ class DashboardController extends Controller
         ];
 
         //all clients
-        $clients = new AllClient($this->companyId());
-        $clients = $clients->getAllClients();
-        $count_all_clients = count($clients);
-
-        //all_brands
+        $new_client =  $client_list = Client::with('contacts', 'brands')->filter(['company_id' => $this->companyId()])->get();
+        $count_all_clients =$new_client->count();
+       
+       //all brands
         $count_all_brands = 0;
-        foreach ($clients as $client) {
-            $brands = new ClientBrand($client->id);
-            $count_all_brands += count($brands->run());
-        }
-
+         foreach ($new_client  as $client) {
+            $count_all_brands += $client->brands->count();
+          }
+          
         //Get all campaigns
         $campaigns = Campaign::where('belongs_to', $this->companyId())->get();
         $count_campigns_on_hold = $this->countCampaignsByStatus($campaigns, 'on_hold');
@@ -84,8 +83,8 @@ class DashboardController extends Controller
         $redirect_urls = [
             'active_campaigns' => route('agency.campaign.all',['status'=>'active']),
             'campaigns_on_hold' => route('agency.campaign.all',['status'=>'on_hold']),
-            'all_clients' => route('clients.list'),
-            'all_brands' => route('brand.all'),
+            'all_clients' => route('client.index'),
+            'all_brands' => route('client.index'),
             'approved_media_plans' => route('agency.media_plans', ['status'=>'approved']),
             'pending_media_plans' => route('agency.media_plans', ['status'=>'pending']),
             'declined_media_plans' => route('agency.media_plans', ['status'=>'declined']),
