@@ -85,12 +85,6 @@
                 mposData : this.mpos
             }
         },
-        created() {
-            var self = this;
-            Event.$on('updated-mpos', function (mpos) {
-                self.mposData = mpos;
-            });
-        },
         methods : {
             exportMpo : function(mpo_id) {
                 var msg = "Generating Excel Document, Please wait";
