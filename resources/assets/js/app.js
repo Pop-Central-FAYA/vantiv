@@ -167,12 +167,16 @@ Vue.mixin({
                 timer: timer
             });
         },
-        displayServerValidationErrors(validationErrors) {
+        displayServerValidationErrors(validationErrors, withoutKey = null) {
             var err = [];
             for (var key in validationErrors) {
                 if (validationErrors.hasOwnProperty(key)) {
                     var errors = validationErrors[key];
                     validationErrors[key].forEach(element => {
+                        if(withoutKey){
+                            err.push(element)
+                            return
+                        }
                         err.push(`${key}: ${element}`);
                     });
                 }

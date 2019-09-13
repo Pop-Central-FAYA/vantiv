@@ -14,7 +14,7 @@
                 </td>
                 <td class="text-xs-left">{{ props.item[0]['duration'] }}</td> 
                 <td class="text-xs-left">{{ props.item.length }}</td>
-                <td class="text-xs-left" v-if="is_public">
+                <td class="text-xs-left">
                     <v-tooltip top >
                         <template v-slot:activator="{ on }">
                             <v-icon color="#01c4ca" v-on="on" dark left 
