@@ -11,11 +11,11 @@
                 :headers="headers" :items="vendors" :search="search" :loading="loading" :no-data-text="noDataText" 
                 :no-results-text="noResultsText" :pagination.sync="pagination">
       <template v-slot:items="props">
-        <tr @click="showDetails(props.item)">
-            <td class="text-xs-left">{{ props.item.name }}</td>
-            <td class="text-xs-left">{{ props.item.street_address }}, {{ props.item.city }}, {{ props.item.state }}</td>
-            <td class="text-xs-left">{{ props.item.publishers.length }}</td>
-            <td class="text-xs-left">{{ formatDate(props.item.created_at) }}</td>
+        <tr>
+            <td @click="showDetails(props.item)" class="text-xs-left">{{ props.item.name }}</td>
+            <td @click="showDetails(props.item)" class="text-xs-left">{{ props.item.street_address }}, {{ props.item.city }}, {{ props.item.state }}</td>
+            <td @click="showDetails(props.item)" class="text-xs-left">{{ props.item.publishers.length }}</td>
+            <td @click="showDetails(props.item)" class="text-xs-left">{{ formatDate(props.item.created_at) }}</td>
             <td class="justify-center layout px-0">
                 <v-tooltip top>
                     <template v-slot:activator="{on}">
