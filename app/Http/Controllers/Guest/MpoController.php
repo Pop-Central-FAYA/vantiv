@@ -5,7 +5,6 @@ namespace Vanguard\Http\Controllers\Guest;
 use Illuminate\Http\Request;
 use Vanguard\Models\MpoShareLink;
 use Vanguard\Services\Mpo\StoreMpoShareLinkActivity;
-use Vanguard\Services\Mpo\GetCampaignMpoTimeBelts;
 use Illuminate\Support\Facades\URL;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Services\Mpo\ExcelMpoExport;
@@ -26,9 +25,11 @@ class MpoController extends Controller
         }
         (new StoreMpoShareLinkActivity('Link is active', $share_link->id))->run();
         $campaign_mpo = $share_link->campaign_mpo;
-        $campaign_mpo_time_belts = (new GetCampaignMpoTimeBelts([$campaign_mpo->id]))->run();
+        $campaign_mpo_time_belts = json_decode($campaign_mpo->adslots, true);
+        $campaign_files = collect($campaign_mpo_time_belts)->where('asset_id', '<>', '')->groupBy('asset_id');
         return view('guest.mpo')->with('campaign_mpo', $campaign_mpo)
                                 ->with('company', $company)
+                                ->with('files', $campaign_files)
                                 ->with('campaign_mpo_time_belts', $campaign_mpo_time_belts);
     }
 

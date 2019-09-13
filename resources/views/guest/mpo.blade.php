@@ -28,7 +28,7 @@
             <v-app>
                 <v-content>
                     <guest-mpo
-                        :adslots="{{ json_encode($campaign_mpo->campaign_mpo_time_belts) }}"
+                        :files="{{ json_encode($files) }}"
                         :mpo_id="{{ json_encode($campaign_mpo->id) }}"
                         :campaign_mpo_time_belts="{{ json_encode($campaign_mpo_time_belts) }}"
                     ></guest-mpo>

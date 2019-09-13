@@ -11,7 +11,7 @@
             </template>
             <v-card>
                 <v-card-title>
-                    <span class="headline"> {{ mpo.station }}</span>
+                    <span class="headline"> {{ mpo.vendor }}</span>
                 </v-card-title>
                 <v-card-text>
                     <div class="card">

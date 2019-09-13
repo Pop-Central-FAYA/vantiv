@@ -20,21 +20,24 @@ class ExportCampaignMpo
     public function run()
     {
         $mpos = [];
-        foreach($this->groupByDayPart() as $program => $time_belts){
-            foreach($time_belts as $duration => $slots){
-                foreach($slots as $day_part => $ads){
-                    foreach($ads as $month => $ad){
-                        $mpos[] = [
-                            'duration' => $duration,
-                            'program' => $program,
-                            'daypart' => $day_part,
-                            'time_slot' => DayPartList::DAYPARTS[$day_part],
-                            'day_range' => $this->daysRange($ad),
-                            'month' => date('M y', strtotime($month)),
-                            'slots' => $ad,
-                            'exposures' => $this->pluckExposure($ad),
-                            'total_slot' => $this->getTotalSlot($ad)
-                        ];
+        foreach($this->groupByDayPart() as $station => $station_time_belts){
+            foreach($station_time_belts as $program => $time_belts){
+                foreach($time_belts as $duration => $slots){
+                    foreach($slots as $day_part => $ads){
+                        foreach($ads as $month => $ad){
+                            $mpos[] = [
+                                'duration' => $duration,
+                                'station' => $station,
+                                'program' => $program,
+                                'daypart' => $day_part,
+                                'time_slot' => DayPartList::DAYPARTS[$day_part],
+                                'day_range' => $this->daysRange($ad),
+                                'month' => date('M y', strtotime($month)),
+                                'slots' => $ad,
+                                'exposures' => $this->pluckExposure($ad),
+                                'total_slot' => $this->getTotalSlot($ad)
+                            ];
+                        }
                     }
                 }
             }
@@ -44,11 +47,13 @@ class ExportCampaignMpo
 
     public function groupByDayPart()
     {
-        return $this->campaign_mpo_time_belts->map(function($item) {
-            return $item->map(function($ads) {
-                return $ads->map(function($ad) {
-                    return collect($ad)->put('day_part', $this->getDayPart($ad->time_belt_start_time)['name']);
-                })->groupBy(['day_part', 'month', 'playout_date']);  
+        return $this->campaign_mpo_time_belts->map(function($station_item) {
+            return $station_item->map(function($item) {
+                return $item->map(function($ads) {
+                    return $ads->map(function($ad) {
+                        return collect($ad)->put('day_part', $this->getDayPart($ad['time_belt_start_time'])['name']);
+                    })->groupBy(['day_part', 'month', 'playout_date']);  
+                });
             });
         });
     }

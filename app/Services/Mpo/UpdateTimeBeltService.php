@@ -4,13 +4,14 @@ namespace Vanguard\Services\Mpo;
 
 use DB;
 use Illuminate\Support\Arr;
-use Vanguard\Models\CampaignMpoTimeBelt;
+use Vanguard\Models\CampaignTimeBelt;
 use Vanguard\Services\BaseServiceInterface;
 
 class UpdateTimeBeltService implements BaseServiceInterface
 {
     const CAMPAIGN_MPO_TIMEBELT_UPDATE_FIELDS = ['time_belt_start_time', 'day', 'duration', 'program', 'ad_slots',
-                                                'playout_date','asset_id', 'volume_discount', 'net_total', 'unit_rate'];
+                                                'playout_date','asset_id', 'volume_discount', 'net_total', 'unit_rate',
+                                                'publisher_id', 'ad_vendor_id'];
 
     protected $data;
 
@@ -39,9 +40,9 @@ class UpdateTimeBeltService implements BaseServiceInterface
      */
     protected function updateOtherColumns()
     {
-        $data = $this->updateFields(self::CAMPAIGN_MPO_TIMEBELT_UPDATE_FIELDS, $this->data);
-        return CampaignMpoTimeBelt::whereIn('id', $this->data['id'])
-                                    ->update($data);
+        $update_data = $this->updateFields(self::CAMPAIGN_MPO_TIMEBELT_UPDATE_FIELDS, $this->data);
+        return CampaignTimeBelt::whereIn('id', $this->data['id'])
+                                    ->update($update_data);
     }
 
     /**
@@ -51,7 +52,7 @@ class UpdateTimeBeltService implements BaseServiceInterface
      */
     protected function updateNetTotal()
     {
-        return CampaignMpoTimeBelt::whereIn('id', $this->data['id'])
+        return CampaignTimeBelt::whereIn('id', $this->data['id'])
                ->update(['net_total' => DB::raw("(ad_slots * unit_rate) - ((volume_discount / 100) * (ad_slots * unit_rate))")]);
     }
 

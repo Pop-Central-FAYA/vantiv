@@ -44,4 +44,9 @@ class CampaignMpo extends Base
     {
         return $this->share_links->last();
     }
+
+    public function vendor()
+    {
+        return $this->belongsTo(AdVendor::class, 'ad_vendor_id');
+    }
 }

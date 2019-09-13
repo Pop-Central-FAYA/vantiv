@@ -2,18 +2,32 @@
 
 namespace Vanguard\Models;
 
-use Illuminate\Database\Eloquent\Model;
 
-class CampaignMpoTimeBelt extends Base
+class CampaignTimeBelt extends Base
 {
-    protected $table = 'campaign_mpo_time_belts';
+    protected $table = 'campaign_time_belts';
     protected $fillable = ['mpo_id', 'time_belt_start_time', 'time_belt_end_date', 'day', 
                         'duration', 'program', 'ad_slots', 'playout_date', 'asset_id', 
-                        'volume_discount','net_total', 'unit_rate'];
+                        'volume_discount','net_total', 'unit_rate', 'campaign_id', 'publisher_id', 'ad_vendor_id'];
 
     public function campaign_mpo()
     {
         return $this->belongsTo(CampaignMpo::class, 'mpo_id', 'id');
+    }
+
+    public function campaign()
+    {
+        return $this->belongsTo(Campaign::class, 'campaign_id');
+    }
+
+    public function vendor()
+    {
+        return $this->belongsTo(AdVendor::class, 'ad_vendor_id');
+    }
+
+    public function publisher()
+    {
+        return $this->belongsTo(Publisher::class, 'publisher_id');
     }
 
     public function media_asset()
