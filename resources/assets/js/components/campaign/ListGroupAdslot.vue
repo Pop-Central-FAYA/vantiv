@@ -135,6 +135,9 @@
             Event.$on('updated-group-adslots', function (adslot) {
                 self.campaignGroupTimeBeltsData = adslot;
             });
+            Event.$on('group', function(group) {
+                self.group_adslot = group
+            })
         },
         methods : {
             getHeader : function () {

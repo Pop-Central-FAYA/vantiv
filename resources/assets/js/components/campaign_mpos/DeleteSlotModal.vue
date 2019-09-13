@@ -58,8 +58,7 @@ export default {
                 $('#load_this_div').css({opacity: 1});
                 if (res.data.status === "success") {
                     this.sweet_alert(res.data.message, 'success');
-                    Event.$emit('updated-group-adslots',res.data.data.grouped_time_belts)
-                    Event.$emit('updated-mpos', res.data.data.campaign_mpos)
+                    Event.$emit('updated', true)
                     Event.$emit('updated-campaign', res.data.data)
                     if(this.group){
                         Event.$emit('updated-adslots-from-group', res.data.data.grouped_time_belts[this.index].time_belts)
