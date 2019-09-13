@@ -8,7 +8,7 @@
                             <h4 class="mt-4 weight_medium">AVAILABLE STATION & TIMES</h4>
                         </v-flex>
                         <v-flex md8>
-                            <media-plan-suggestion-filter :redirect-urls="redirectUrls" :plan-id="planId" :selected-filters="selectedFilters" :filter-values="filterValues"></media-plan-suggestion-filter>
+                            <media-plan-suggestion-filter :routes="redirectUrls" :selected-filters="selectedFilters" :filter-values="filterValues"></media-plan-suggestion-filter>
                         </v-flex>
                     </v-layout>
                 </v-card-title>
@@ -16,21 +16,24 @@
                     <v-tabs background-color="deep-purple accent-4" class="elevation-2" :centered="true" :grow="true">
                         <v-tabs-slider></v-tabs-slider>
                         <v-tab :href="`#table-view`"><v-icon class="mr-2">view_list</v-icon> Table</v-tab>
-                        <v-tab :href="`#graph-view`" @click="renderGraph"><v-icon class="mr-2">multiline_chart</v-icon> Graph</v-tab>
+                        <v-tab :href="`#graph-view`"><v-icon class="mr-2">multiline_chart</v-icon> Graph</v-tab>
+
                         <v-tab-item :value="'table-view'">
                             <v-card flat tile>
                                 <v-card-text class="px-1 pb-0">
-                                    <media-plan-suggestion-table :suggestions="suggestions"></media-plan-suggestion-table>
+                                    <media-plan-suggestion-table></media-plan-suggestion-table>
                                 </v-card-text>
                             </v-card>
                         </v-tab-item>
-                        <v-tab-item :value="'graph-view'" v-if="viewGraph">
+
+                        <v-tab-item :value="'graph-view'">
                             <v-card flat tile>
                                 <v-card-text class="pb-0">
-                                    <media-plan-suggestion-graph :suggestions="suggestions" :graph-days="graphDays" :graph-details="graphDetails"></media-plan-suggestion-graph>
+                                    <media-plan-suggestion-graph :graph-days="graphDays"></media-plan-suggestion-graph>
                                 </v-card-text>
                             </v-card>
                         </v-tab-item>
+
                     </v-tabs>
                 </v-card-text>
             </v-card>
@@ -70,10 +73,8 @@
 <script>
     export default {
         props: {
-            suggestions: Object,
             selectedSuggestions: Array,
             graphDays: Array,
-            graphDetails: Object,
             filterValues: Object,
             selectedFilters: [Object, Array],
             planId: String,
@@ -116,44 +117,38 @@
                     window.location = this.redirectUrls.next_action;
                 }
             },
+            /**
+             * Saving sends the entire media plan suggestion back to the backend
+             */
             save(isRedirect) {
                 if(this.hasPermissionAction(this.permissionList, ['create.media_plan','update.media_plan'])){
-                    var suggestionIds = [];
-                    var self = this;
-                    this.timeBeltsArr.forEach(function (timeBelt) {
-                        suggestionIds.push(timeBelt.id);
-                    });
-
-                    if (suggestionIds.length === 0) {
+                    if (this.isEmpty(this.timeBeltsArr)) {
                         this.sweet_alert("Select the station you want to add", 'error');
-                    }else {
-                        this.isRunRatings = true;
-                        var msg = `${self.timeBeltsArr.length} suggestion(s) selected. Saving in progress, please wait...`;
-                        this.sweet_alert(msg, 'info', null);
-                        axios({
-                            method: 'post',
-                            url: this.redirectUrls.save_action,
-                            data: {
-                                data: JSON.stringify(suggestionIds),
-                                mediaplan: this.planId
-                            }
-                        }).then((res) => {
-                            this.isSaved = true;
-                            this.isRunRatings = false;
-                            if (res.data.status === 'success') {
-                                this.sweet_alert("Selected suggestions successfully saved!", 'success');
-                            } else {
-                                this.sweet_alert("Selected suggestions couldn't be saved, please try again", 'error');
-                            }
-                        }).catch((error) => {
-                            this.isRunRatings = false;
-                            this.sweet_alert("An unknown error has occurred, please try again", 'error');
-                        });
-                    }   
+                        return;
+                    }
+
+                    this.isRunRatings = true;
+                    var msg = `${this.timeBeltsArr.length} suggestion(s) selected. Saving in progress, please wait...`;
+                    this.sweet_alert(msg, 'info', null);
+
+                    axios({
+                        method: 'post',
+                        url: this.redirectUrls.save_action,
+                        data: {'data': this.timeBeltsArr}
+                    }).then((res) => {
+                        this.isSaved = true;
+                        this.isRunRatings = false;
+                        this.timeBeltsArr = res.data.data;
+                        this.sweet_alert("Selected suggestions successfully saved!", 'success');
+                    }).catch((error) => {
+                        this.isRunRatings = false;
+                        if (error.response && (error.response.status == 422)) {
+                            this.displayServerValidationErrors(error.response.data.errors);
+                        } else {
+                            this.sweet_alert('An unknown error has occurred, please try again', 'error');
+                        }
+                    });
                 }
-            },
-            renderGraph() {
-                this.viewGraph = true;
             }
         }
     }

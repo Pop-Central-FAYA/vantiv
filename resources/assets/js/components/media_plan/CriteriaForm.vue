@@ -281,7 +281,11 @@
                 }
             }).catch((error) => {
                 this.isRunRatings = false;
-                this.sweet_alert('An unknown error has occurred, please try again', 'error');
+                if (error.response && (error.response.status == 422)) {
+                        this.displayServerValidationErrors(error.response.data.errors);
+                    } else {
+                        this.sweet_alert('An unknown error has occurred, please try again', 'error');
+                    }
             });
           }
         });

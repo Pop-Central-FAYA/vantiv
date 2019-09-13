@@ -2,15 +2,21 @@
 
 namespace Vanguard\Libraries\MpsImporter;
 
+use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Vanguard\Models\TvStation;
 use Vanguard\Models\MpsProfileActivity;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Vanguard\Libraries\Batch\LaravelBatch;
+
+// $tv_profile = new \Vanguard\Libraries\MpsImporter\TvUserActivities(now(), '/tmp/tv-diarybaNkBK'); $tv_profile->process();
 
 class TvUserActivities
 {
-    const CHUNK_BATCH = 5000;
+    // const CHUNK_BATCH = 5000;
+    const CHUNK_BATCH = 20000;
 
     public function __construct($import_time, $csv_file)
     {
@@ -20,9 +26,8 @@ class TvUserActivities
     }
 
     public function process()
-    {
+    {   
         $this->tv_station_list = TvStation::all();
-
         return DB::transaction(function(){
             $file_handle = fopen($this->csv_file, "r");
             $header = fgetcsv($file_handle);
@@ -54,12 +59,12 @@ class TvUserActivities
             foreach ($row_data as $index => $value) {
                 if ($value == 1) {
                     $key = $header[$index];
-                    $station = TvStationParser::parse($key);
+                    $station = TvStationParser::parseRgx($key);
                     if ($station->isNotEmpty()) {
-                        $current_count++;
-
                         $activity = $this->formatActivity($station);
                         if (is_array($activity)) {
+                            $current_count++;
+
                             $activity['id'] = uniqid();
                             $activity['ext_profile_id'] = $ext_profile_id;
                             $activity['wave'] = $wave;
@@ -82,19 +87,27 @@ class TvUserActivities
                 }
 
                 if (count($activity_list) >= static::CHUNK_BATCH) {
-                    MpsProfileActivity::insert($activity_list);
+                    $this->insertActivities($activity_list);
                     $activity_list = [];
                 }
             }
         }
 
-        if (count($activity_list) > 0) {
-            MpsProfileActivity::insert($activity_list);
-            $activity_list = [];
-        }
+        $this->insertActivities($activity_list);
+        $activity_list = [];
+
         echo(PHP_EOL);
         Log::info("................................END PARSING OF TV DATA................................");
         return $current_count;
+    }
+
+    protected function insertActivities(&$activity_list) {
+        if (count($activity_list) > 0) {
+            $mps_activity = new MpsProfileActivity();
+            $columns = array_keys($activity_list[0]);
+            $laravel_batch = new LaravelBatch(app('db'));
+            $result = $laravel_batch->insert($mps_activity, $columns, $activity_list, static::CHUNK_BATCH);
+        }
     }
 
     protected function formatActivity($station)
@@ -115,6 +128,7 @@ class TvUserActivities
             $formatted_timebelt = $this->formatTimeBelt($station['timebelt']);
             return [
                 "tv_station_id" => $tv_station->id,
+                "tv_station_key" => $tv_station->key,
                 "day" => $station['day'],
                 "start_time" => $formatted_timebelt[0],
                 "end_time" => $formatted_timebelt[1]

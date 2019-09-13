@@ -6,6 +6,7 @@
           <td class="text-xs-left">{{ format_time(props.item.start_time) }} - {{ format_time(props.item.end_time) }}</td>
           <td class="text-xs-left">{{ props.item.program }}</td>
           <td class="text-xs-left">{{ format_audience(props.item.total_audience) }}</td>
+          <td class="text-xs-left">{{ Math.round(props.item.rating * 100) / 100 }}</td>
           <td class="text-xs-left">
               <v-icon :disabled="props.item.is_selected" color="green" dark @click="addTimebelt(props.item)">add</v-icon>
           </td>
@@ -41,10 +42,11 @@
         timeBelts: this.stationTimeBelts,
         daysOfWeek: { Monday: 1, Tuesday: 2, Wednesday: 3, Thursday: 4, Friday: 5, Saturday: 6, Sunday: 7 },
         headers: [
-          { text: 'Day', align: 'left', value: 'number_day', width: '25%' },
+          { text: 'Day', align: 'left', value: 'number_day', width: '20%' },
           { text: 'Time Belt', value: 'end_time', width: '25%' },
           { text: 'Program', value: 'program', width: '25%' },
           { text: 'Audience', value: 'total_audience', width: '24%' },
+          { text: 'Rating', value: 'rating', width: '5%' },
           { text: 'Actions', value: 'name', width: '1%', sortable: false }
         ],
         pagination: {
@@ -78,7 +80,7 @@
         },
         addTimebelt(time_belt) {
             this.timeBelts.forEach(element => {
-                if (element.id == time_belt.id) {
+                if (element.key == time_belt.key) {
                     element.is_selected = true;
                 }
             });
@@ -90,7 +92,7 @@
         },
         unSelectTimebelt(time_belt) {
             this.timeBelts.forEach(element => {
-                if (element.id == time_belt.id) {
+                if (element.key == time_belt.key) {
                     element.is_selected = false;
                 }
             });

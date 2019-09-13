@@ -25,7 +25,7 @@
     });
 
     Route::group(['middleware' => 'auth'], function () {
-        
+
         Route::get('/', 'Dsp\DashboardController@index')->name('dashboard');
 
         Route::group(['namespace' => 'Dsp', 'prefix' => 'campaigns'], function () {
@@ -90,15 +90,23 @@
          * Sectors
          */
         Route::group(['namespace' => 'Dsp\MediaPlan', 'prefix' => 'media-plan'], function () {
+            /*** New Routes ****/
+            Route::post('/{id}/ratings', 'MediaPlanController@createStationRatings')->name('agency.media_plan.create-ratings');
+            Route::post('/{id}/suggestions', 'MediaPlanController@storeSuggestions')->name('agency.media_plan.select_suggestions');
+
+            /*** Old Routes ***/
             Route::get('all/{status?}', 'MediaPlanController@index')->name('agency.media_plans');
             Route::get('/set-criterias', 'MediaPlanController@criteriaForm')->name('agency.media_plan.criteria_form')->middleware('permission:create.media_plan');
-            Route::post('/create-plan', 'MediaPlanController@generateRatingsPost')->name('agency.media_plan.submit.criterias');
+            // Route::post('/create-plan', 'MediaPlanController@generateRatingsPost')->name('agency.media_plan.submit.criterias');
+            Route::post('/create-plan', 'MediaPlanController@createNewMediaPlan')->name('agency.media_plan.submit.criterias');
             Route::get('/summary/{id}', 'MediaPlanController@summary')->name('agency.media_plan.summary');
             Route::post('/change-status', 'MediaPlanController@changeMediaPlanStatus')->name('agency.media_plan.change_status')->middleware('permission:create.media_plan');
             Route::post('/get_approval/', 'MediaPlanController@postRequestApproval')->name('agency.media_plan.get_approval')->middleware('permission:create.media_plan');
-            Route::get('/customise/{id}', 'MediaPlanController@getSuggestPlanById')->name('agency.media_plan.customize');
+            Route::get('/customise/{id}', 'MediaPlanController@stationDetails')->name('agency.media_plan.customize');
+
+
             Route::post('/customise-filter', 'MediaPlanController@setPlanSuggestionFilters')->name('agency.media_plan.customize-filter');
-            Route::post('/select_plan', 'MediaPlanController@SelectPlanPost')->name('agency.media_plan.select_suggestions');
+            // Route::post('/select_plan', 'MediaPlanController@SelectPlanPost')->name('agency.media_plan.select_suggestions');
             Route::get('/createplan/{id}', 'MediaPlanController@createPlan')->name('agency.media_plan.create');
             Route::post('/finish_plan', 'MediaPlanController@completePlan')->name('agency.media_plan.submit.finish_plan');
             Route::get('/export/{id}', 'MediaPlanController@exportPlan')->name('agency.media_plan.export');
@@ -229,4 +237,3 @@
 
     });
 
- 

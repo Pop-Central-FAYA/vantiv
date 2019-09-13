@@ -40,13 +40,22 @@ class ParseMpsTvDiary extends Command
     public function handle()
     {
         try{
+            //example: s3://faya-global-tools/mps-data/january-tv-diary.tar.gz
+            // $bucket = $this->ask('What bucket is the file located?');
+            // $key = $this->ask('What is the key of the file in s3?');
+
+            $bucket = 'faya-global-tools';
+            $key = 'mps-data/diary.tar.gz';
+
             $start = microtime(true);
 
             $tv_importer = new TvDiary();
-            $tv_importer->import('s3://whatever');
+            $res = $tv_importer->import($bucket, $key);
 
             $time_elapsed_secs = microtime(true) - $start;
 
+            $this->info("Created {$res[0]} profiles");
+            $this->info("Created {$res[1]} activities");
             $this->info('Command executed in ' . $time_elapsed_secs . ' seconds.');
         }catch (\Exception $exception){
             $this->error($exception->getMessage());

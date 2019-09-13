@@ -52,6 +52,7 @@ class GetStationRatings
      * }
      */
     public function __construct($criteria, $request) {
+        Log::debug(json_encode($criteria));
         $this->criteria = $this->formatCriteria($criteria);
         $this->stationListing = array();
         $this->programNameMap = array();
