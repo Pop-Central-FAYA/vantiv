@@ -27,4 +27,12 @@ class AdVendor extends Base
     {
         return $this->belongsToMany(Publisher::class);
     }
+
+    /**
+     * Get association with the campaign time belts through the ad_vendor_id column
+     */
+    public function time_belts()
+    {
+        return $this->hasMany(CampaignTimeBelt::class);
+    }
 }

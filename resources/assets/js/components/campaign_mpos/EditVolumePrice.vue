@@ -10,9 +10,6 @@
                 </v-tooltip>
             </template>
             <v-card>
-                <v-card-title>
-                    <span class="headline"> {{ mpo.station }}</span>
-                </v-card-title>
                 <v-card-text>
                     <v-container grid-list-md>
                         <v-form>
@@ -25,6 +22,22 @@
                                     type="number" placeholder="Volume Discount" 
                                     name="volume_discount" v-model="volume_discount"></v-text-field>
                                     <span class="text-danger" v-show="errors.has('volume_discount')">{{ errors.first('volume_discount') }}</span>
+                                </v-flex>
+                                <v-flex xs12 sm12 md12 v-if="group === 'publisher_id' && adVendors.length > 0">
+                                    <span>
+                                        Ad Vendor
+                                    </span>
+                                    <v-select
+                                        v-model="ad_vendor"
+                                        :items="adVendors"
+                                        item-text="name"
+                                        item-value="id"
+                                        name="ad_vendor"
+                                        placeholder="Select Ad Vendor"
+                                        solo
+                                        v-validate="'required'"
+                                    ></v-select>
+                                    <span class="text-danger" v-show="errors.has('ad_vendor')">{{ errors.first('ad_vendor') }}</span>
                                 </v-flex>
                             </v-layout>
                         </v-form>
@@ -43,15 +56,17 @@
 <script>
 export default {
     props : {
-        mpo: {
-            required : true,
-            type : Object
-        }
+        campaignId : String,
+        selectedAdslots : Array,
+        adVendors : Array,
+        group : String,
+        index : Number
     },
     data() {
         return {
             dialog: false,
             volume_discount : '',
+            ad_vendor : this.getVendor(),
         }
     },
     methods : {
@@ -69,27 +84,37 @@ export default {
             this.sweet_alert('Processing request, please wait...', 'info');
             axios({
                 method: 'patch',
-                url: `/mpos/${this.mpo.id}`,
+                url: `/campaigns/${this.campaignId}`,
                 data: {
-                    id : _.map(this.mpo.campaign_mpo_time_belts, 'id'),
-                    volume_discount : this.volume_discount
+                    id : _.map(this.selectedAdslots, 'id'),
+                    volume_discount : this.volume_discount,
+                    ad_vendor_id : this.ad_vendor,
+                    group : this.group
                 }
             }).then((res) => {
                 if (res.data.status === 'success') {
-                    this.sweet_alert(res.data.message, 'success');
-                    Event.$emit('updated-adslots',this.filterMpo(
-                        res.data.data.campaign_mpos, this.mpo.id
-                    ).campaign_mpo_time_belts)
+                    this.sweet_alert(res.data.message, 'success')
                     Event.$emit('updated-mpos', res.data.data.campaign_mpos)
                     Event.$emit('updated-campaign', res.data.data)
+                    if(this.group){
+                        Event.$emit('updated-adslots-from-group', res.data.data.grouped_time_belts[this.index].time_belts)
+                    }
+                    Event.$emit('updated-adslots', res.data.data.time_belts)
                     this.volume_discount = ''
                 } else {
-                    this.sweet_alert(res.data.message, 'error');
+                    this.sweet_alert(res.data.message, 'error')
                 }
             }).catch((error) => {
                 console.log(error)
-                this.sweet_alert(error.response.data.message, 'error');
+                this.sweet_alert(error.response.data.message, 'error')
             });
+        },
+        getVendor : function () {
+            if(this.group === 'publisher_id') {
+                if(this.adVendors.length > 0){
+                    return this.adVendors[0].id
+                }
+            }
         }
     }
 }

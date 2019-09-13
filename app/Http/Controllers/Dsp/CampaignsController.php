@@ -8,21 +8,26 @@ use Vanguard\Libraries\CampaignDate;
 use Vanguard\Libraries\Utilities;
 use Vanguard\Models\Campaign;
 use Vanguard\Services\Campaign\CampaignDetails;
-use Vanguard\Models\CampaignMpo;
-use Vanguard\Models\CampaignMpoTimeBelt;
 use Illuminate\Support\Facades\DB;
-use PhpOffice\PhpSpreadsheet\Chart\Exception;
 use Vanguard\Services\MediaAsset\GetMediaAssetByClient;
 use Vanguard\Services\Traits\SplitTimeRange;
 use Vanguard\Http\Requests\UpdateMpoTimeBeltRequest;
 use Vanguard\Http\Controllers\Traits\CompanyIdTrait;
 use Vanguard\Http\Requests\StoreCampaignMpoAdslotRequest;
-use Vanguard\Services\Mpo\StoreCampaignMpoTimeBelt;
-use Vanguard\Services\Mpo\GetCampaignMpoTimeBelts;
+use Vanguard\Services\Mpo\GetCampaignTimeBelt;
 use Vanguard\Services\Mpo\ExcelMpoExport;
 use Vanguard\Services\Mpo\UpdateTimeBeltService;
 use Vanguard\Events\Dsp\CampaignMpoTimeBeltUpdated;
+use Vanguard\Http\Requests\AssociateFileToAdslotRequest;
+use Vanguard\Http\Requests\GenerateCampaignMpoRequest;
+use Vanguard\Http\Resources\CampaignMpoResource;
 use Vanguard\Http\Resources\CampaignResource;
+use Vanguard\Models\AdVendor;
+use Vanguard\Models\CampaignMpo;
+use Vanguard\Models\CampaignTimeBelt;
+use Vanguard\Models\TvStation;
+use Vanguard\Services\Mpo\StoreMpoService;
+use Vanguard\Services\Mpo\StoreTimeBeltService;
 
 class CampaignsController extends Controller
 {
@@ -46,124 +51,146 @@ class CampaignsController extends Controller
         return view('agency.campaigns.index')->with('campaigns', $campaigns);
     }
 
-    public function getDetails($id)
+    public function getDetails(Request $request, $id)
     {
-        $agency_id = $this->companyId();
+        $company_id = $this->companyId();
         $campaign_details_service = new CampaignDetails($id);
         $campaign_details = $campaign_details_service->run();
-        $mpos_id = $campaign_details->campaign_mpos->pluck('id');
         $campaign_details_client_id = $campaign_details->client->id;
         $campaign_details_brand_id = $campaign_details->brand->id;
         $client_media_assets = (new GetMediaAssetByClient($campaign_details_client_id, $campaign_details_brand_id))->run();
-        $campaign_files = (new GetCampaignMpoTimeBelts($mpos_id))->run();
-        $time_belts = $this->splitTimeRangeByBase('00:00:00', '23:59:59', '15');
-        return view('agency.campaigns.new_campaign_details', compact('campaign_details', 'client_media_assets', 'campaign_files', 'time_belts'));
+        $campaign_files = (new GetCampaignTimeBelt($campaign_details->id))->run();
+        $time_belt_range = $this->splitTimeRangeByBase('00:00:00', '23:59:59', '15');
+        $ad_vendors = AdVendor::with('publishers')->where('company_id', $company_id)->get();
+        return view('agency.campaigns.new_campaign_details', 
+        compact('campaign_details', 'client_media_assets', 'campaign_files', 'time_belt_range', 'ad_vendors'));
     }
 
-    public function exportMpoAsExcel($campaign_mpo_id)
+    public function groupCampaignTimeBelts($id, $group) 
     {
-        return (new ExcelMpoExport($campaign_mpo_id))->run();
+        return (new CampaignDetails($id, $group))->run();
     }
 
-    public function associateAssetsToMpo()
+    public function generateMpo(GenerateCampaignMpoRequest $request, $campaign_id)
     {
-        $file_durations = request()->durations;
-        $media_assets = request()->assets;
-        $mpo_id = request()->mpo_id;
+        $campaign = Campaign::findOrFail($campaign_id);
+        $this->authorize('update', $campaign);
 
-        try {
-            \DB::transaction(function () use ($file_durations, $media_assets, $mpo_id) {
-                foreach ($file_durations as $key => $duration) {
-                    if (array_key_exists($key, $media_assets)) {
-                        CampaignMpoTimeBelt::where('mpo_id', $mpo_id)->where('duration',$duration)->update(['asset_id' => $media_assets[$key]]);
-                    }
+        $validated = $request->validated();
+        return (new StoreMpoService($validated, $campaign_id))->run();   
+    }
+
+    public function exportMpoAsExcel($campaign_id, $mpo_id)
+    {
+        return (new ExcelMpoExport($mpo_id))->run();
+    }
+
+    public function listMpos($campaign_id)
+    {
+        $mpos = CampaignMpo::where('campaign_id', $campaign_id)
+                            ->where('ad_vendor_id', '<>', '')
+                            ->latest()->get()
+                            ->unique('ad_vendor_id');
+        return CampaignMpoResource::collection($mpos);
+    }
+
+    public function associateAssetsToAdslot(AssociateFileToAdslotRequest $request, $campaign_id)
+    {
+        $campaign = Campaign::findOrFail($campaign_id);
+        $this->authorize('update', $campaign);
+        $validated = $request->validated();
+        \DB::transaction(function () use ($campaign_id, $validated, $request) {
+            foreach ($validated['durations'] as $duration) {
+                if (array_key_exists($duration, $validated['assets'])) {
+                    CampaignTimeBelt::where('campaign_id', $campaign_id)
+                                    ->where('duration',$duration)
+                                    ->whereIn('id', $request->id)
+                                    ->update(['asset_id' => $validated['assets'][$duration]]);
                 }
-            });
-        } catch (Exception $ex) {
-            return response()->json([
-                'status' => 'error',
-                'data' => 'Something went wrong, Media asset cannot be associated with MPO.'.$ex->getMessage()
-            ]);
-        }
+            }
+        });
+        //this will be changed when we create a resource for the campaign
         return response()->json([
             'status' => 'success',
-            'data' => 'Media Assets successfully associated to MPO'
+            'message' => 'Adslot updated successfully',
+            'data' => (new CampaignDetails($campaign->id, $request->group))->run()
         ]);
     }
 
-    public function deleteAdslot(Request $request, $mpo_id, $adslot_id)
+    public function deleteAdslot(Request $request, $campaign_id, $adslot_id)
     {
-        $campaign_mpo_time_belt = CampaignMpoTimeBelt::findOrFail($adslot_id);
-        $campaign_mpo = $campaign_mpo_time_belt->campaign_mpo;
-        $this->authorize('delete', $campaign_mpo);
+        $campaign_mpo_time_belt = CampaignTimeBelt::findOrFail($adslot_id);
+        $campaign = $campaign_mpo_time_belt->campaign;
+        $this->authorize('delete', $campaign);
         
-        DB::transaction(function() use ($campaign_mpo_time_belt, $campaign_mpo) {
+        DB::transaction(function() use ($campaign_mpo_time_belt, $campaign) {
             $campaign_mpo_time_belt->delete();
-            event(new CampaignMpoTimeBeltUpdated($campaign_mpo));
+            event(new CampaignMpoTimeBeltUpdated($campaign));
         });
         //this will be changed when we create a resource for the campaign
         return response()->json([
             'status' => 'success',
             'message' => 'Adslot deleted successfully',
-            'data' => (new CampaignDetails($campaign_mpo->campaign_id))->run()
+            'data' => (new CampaignDetails($campaign->id, $request->group))->run()
         ]);
     }
 
-    public function updateAdslot(UpdateMpoTimeBeltRequest $request, $mpo_id, $adslot_id)
+    public function updateAdslot(UpdateMpoTimeBeltRequest $request, $campaign_id, $adslot_id)
     {
-        $campaign_mpo_time_belt = CampaignMpoTimeBelt::findOrFail($adslot_id);
-        $campaign_mpo = $campaign_mpo_time_belt->campaign_mpo;
-        $this->authorize('update', $campaign_mpo);
+        $campaign_time_belt = CampaignTimeBelt::findOrFail($adslot_id);
+        $campaign = $campaign_time_belt->campaign;
+        $this->authorize('update', $campaign);
 
         $validated = $request->validated();
 
-        DB::transaction(function() use ($validated, $campaign_mpo) {
+        DB::transaction(function() use ($validated, $campaign) {
             (new UpdateTimeBeltService($validated))->run();
-            event(new CampaignMpoTimeBeltUpdated($campaign_mpo));
+            event(new CampaignMpoTimeBeltUpdated($campaign));
         });
         //this will be changed when we create a resource for the campaign
         return response()->json([
             'status' => 'success',
             'message' => 'Adslot updated successfully',
-            'data' => (new CampaignDetails($campaign_mpo->campaign_id))->run()
+            'data' => (new CampaignDetails($campaign->id, $request->group))->run()
         ]);
     }
 
-    public function updateMultipleAdslots(UpdateMpoTimeBeltRequest $request, $mpo_id)
+    public function updateMultipleAdslots(UpdateMpoTimeBeltRequest $request, $campaign_id)
     {
-        $campaign_mpo = CampaignMpo::findOrFail($mpo_id);
-        $this->authorize('update', $campaign_mpo);
+        $campaign = Campaign::findOrFail($campaign_id);
+        $this->authorize('update', $campaign);
 
         $validated = $request->validated();
 
-        DB::transaction(function() use ($validated, $campaign_mpo) {
+        DB::transaction(function() use ($validated, $campaign) {
             (new UpdateTimeBeltService($validated))->run();
-            event(new CampaignMpoTimeBeltUpdated($campaign_mpo));
+            event(new CampaignMpoTimeBeltUpdated($campaign));
         });
         //this will be changed when we create a resource for the campaign
         return response()->json([
             'status' => 'success',
             'message' => 'Adslot updated successfully',
-            'data' => (new CampaignDetails($campaign_mpo->campaign_id))->run()
+            'data' => (new CampaignDetails($campaign->id, $request->group))->run()
         ]);  
     }
 
-    public function storeAdslot(StoreCampaignMpoAdslotRequest $request, $mpo_id)
+    public function storeAdslot(StoreCampaignMpoAdslotRequest $request, $campaign_id)
     {
-        $campaign_mpo = CampaignMpo::findOrFail($mpo_id);
-        $this->authorize('store', $campaign_mpo);
+        $campaign = Campaign::findOrFail($campaign_id);
+        $this->authorize('store', $campaign);
 
         $validated = $request->validated();
 
-        DB::transaction(function() use ($validated, $campaign_mpo, $mpo_id) {
-            (new StoreCampaignMpoTimeBelt($validated, $mpo_id))->run();
-            event(new CampaignMpoTimeBeltUpdated($campaign_mpo));
+        DB::transaction(function() use ($validated, $campaign, $campaign_id) {
+            (new StoreTimeBeltService($validated, $campaign_id))->run();
+            event(new CampaignMpoTimeBeltUpdated($campaign));
         });
         //this will be changed when we create a resource for the campaign
         return response()->json([
             'status' => 'success',
             'message' => 'Adslot updated successfully',
-            'data' => (new CampaignDetails($campaign_mpo->campaign_id))->run()
+            'data' => (new CampaignDetails($campaign->id))->run()
         ]);
     }
+    
 }

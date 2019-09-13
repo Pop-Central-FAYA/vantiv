@@ -27,9 +27,8 @@ class CampaignBudgetUpdated
      */
     public function handle(CampaignMpoTimeBeltUpdated $event)
     {
-        $campaign = $event->campaign_mpo->campaign;
-        $campaign_mpos = $campaign->campaign_mpos;
-        $sum_budget = $campaign_mpos->sum('budget');
+        $campaign = $event->campaign;
+        $sum_budget = $campaign->time_belts->sum('net_total');
         return (new UpdateCampaignService($campaign, ['budget' => $sum_budget]))->run();
     }
 }

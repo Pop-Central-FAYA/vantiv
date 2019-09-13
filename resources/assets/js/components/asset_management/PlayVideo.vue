@@ -4,14 +4,6 @@
         <template v-slot:activator="{ on }">
             <a v-on="on" class="default-vue-link">{{ asset.file_name}}</a>
             <v-spacer></v-spacer>
-            <span>
-                <v-tooltip top >
-                    <template v-slot:activator="{ on }">
-                        <v-icon color="primary" v-on="on" dark left @click="downloadFile()" >fa-file-download</v-icon>
-                    </template>
-                    <span>Download file</span>
-                </v-tooltip>
-            </span>
         </template>
         <v-card>
             <v-card-text class="px-2 pt-2 pb-0">
@@ -51,16 +43,6 @@
         },
         mounted() {
             console.log('Play Video Component mounted.');
-        },
-        methods : {
-            downloadFile : function() {
-                this.sweet_alert('Processing request, please wait...', 'info');
-                const link = document.createElement('a');
-                link.href = this.asset.asset_url;
-                link.setAttribute('download', this.asset.file_name); //or any other extension
-                document.body.appendChild(link);
-                link.click();
-            }
         }
     }
 </script>

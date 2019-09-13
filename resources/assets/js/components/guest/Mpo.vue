@@ -6,11 +6,11 @@
         <v-tab href="#files-tab">Files</v-tab>
 
         <v-tab-item value="adslot-tab">
-            <guest-adslot-list :adslots="adslots" :mpo_id="mpo_id"></guest-adslot-list>
+            <guest-adslot-list :adslots="campaign_mpo_time_belts" :mpo_id="mpo_id"></guest-adslot-list>
         </v-tab-item>
 
         <v-tab-item value="files-tab">
-            <campaign-file-list :files="campaign_mpo_time_belts" :is_public="true"></campaign-file-list>
+            <campaign-file-list :files="files" :is_public="true"></campaign-file-list>
         </v-tab-item>
     </v-tabs>
   </div>
@@ -18,15 +18,15 @@
 <script>
 export default {
     props : {
-        adslots : {
-            required : true,
-            type : Array
-        },
         mpo_id : {
             required : true,
             type : String
         },
         campaign_mpo_time_belts : {
+            required : true,
+            type : [Array, Object]
+        },
+        files : {
             required : true,
             type : [Array, Object]
         }

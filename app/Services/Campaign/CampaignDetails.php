@@ -9,23 +9,26 @@ use Vanguard\Models\TargetAudience;
 class CampaignDetails
 {
     protected $campaign_id;
+    protected $group_parameter;
 
-    public function __construct($campaign_id)
+    public function __construct($campaign_id, $group_parameter = null)
     {
         $this->campaign_id = $campaign_id;
+        $this->group_parameter = $group_parameter === 'publisher_id' ? 'publisher_id' : 'ad_vendor_id';
     }
 
     public function run()
     {
         $details = $this->getCampaignDetails();
-        $details = $this->formatCampaignDetails($details);
-        return $details;
+        $formatted_details = $this->formatCampaignDetails($details);
+        return $formatted_details;
     }
 
     public function getCampaignDetails()
     {
         $agency_id = \Auth::user()->companies->first()->id;
-        return Campaign::with(['creator', 'client', 'brand', 'campaign_mpos.campaign_mpo_time_belts'])
+        return Campaign::with(['creator', 'client', 'brand', 'time_belts.publisher', 'time_belts.vendor', 'time_belts.media_asset',
+                            'time_belts.publisher.ad_vendors'])
                         ->where('id', $this->campaign_id)
                         ->where('belongs_to', $agency_id)
                         ->first();
@@ -64,6 +67,7 @@ class CampaignDetails
             }
             $campaign->age_groups = $age_groups_str;
         }
+        $campaign['grouped_time_belts'] = $this->groupTimeBelts($campaign);
         return $campaign;
     }
 
@@ -75,5 +79,20 @@ class CampaignDetails
     public function getTargetAudience($audienceIds)
     {
         return TargetAudience::whereIn('id', $audienceIds)->get()->pluck('audience')->toArray();
+    }
+
+    public function groupTimeBelts($campaign)
+    {
+        $format_grouped_time_belts = [];
+        $grouped_time_belts = $campaign->time_belts->groupBy($this->group_parameter);
+        foreach($grouped_time_belts as $key => $group_time_belt){
+            $format_grouped_time_belts[] = [
+                $this->group_parameter => $key,
+                'insertions' => $group_time_belt->sum('ad_slots'),
+                'net_total' => $group_time_belt->sum('net_total'),
+                'time_belts' => $group_time_belt
+            ];
+        }
+        return $format_grouped_time_belts;
     }
 }

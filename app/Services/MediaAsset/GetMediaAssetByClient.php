@@ -21,10 +21,6 @@ class GetMediaAssetByClient
 
     public function run()
     {
-        // return DB::table('media_assets')->where([
-        //     ['client_id', $this->client_id],
-        //     ['brand_id', $this->brand_id]
-        // ])->get();
         return MediaAsset::where('client_id', $this->client_id)
                         ->where('brand_id', $this->brand_id)
                         ->get();

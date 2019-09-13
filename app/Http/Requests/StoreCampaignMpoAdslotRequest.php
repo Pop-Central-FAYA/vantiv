@@ -22,6 +22,8 @@ class StoreCampaignMpoAdslotRequest extends UpdateAdslotsRequest
     public function rules()
     {
         return [
+            'publisher' => 'required',
+            'ad_vendor' => 'required',
             'program' => 'required',
             'playout_date' => 'required',
             'unit_rate' => 'required',
