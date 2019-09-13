@@ -17,6 +17,8 @@ use Vanguard\Services\Validator\ValidateUserInviteRequest;
 use Vanguard\Support\Enum\UserStatus;
 use Vanguard\User;
 use \Illuminate\Support\Facades\URL;
+use Session;
+use Vanguard\Libraries\Enum\Status;
 use Yajra\DataTables\DataTables;
 use Vanguard\Services\Mail\MailFormat;
 
@@ -106,6 +108,11 @@ class UserController extends Controller
             return redirect()->route('login');
         }
         $user = User::findOrFail($id);
+        if($user->status !== UserStatus::UNCONFIRMED ){
+            Session::flash('error', 'You have already completed your registration, please login with your credentials');
+            return redirect()->route('login');
+        }
+
         return view('auth.dsp.complete_registration')->with('user', $user);
     }
 
