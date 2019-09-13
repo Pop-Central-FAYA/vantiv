@@ -5,12 +5,13 @@ namespace Vanguard\Services\AdVendor;
 use Vanguard\Models\AdVendor as AdVendorModel;
 use Illuminate\Support\Arr;
 use DB;
+use Vanguard\Services\BaseServiceInterface;
 
 /**
  * This service is to create a Vendor.
  * Creation of a Vendor will create both the Vendor and the VendorContact
  */
-class CreateService
+class CreateService implements BaseServiceInterface
 {
     protected $company_id;
     protected $data;

@@ -18,13 +18,14 @@ class TvStationTableSeeder extends Seeder
     public function run()
     {
         $station_list = $this->getTVStationList();
-        foreach ($station_list as $station_info) {
+        foreach ($station_list as $station) {
             $station_attrs = array(
-                'name' => $station_info['station'],
-                'type' => $station_info['station_type'],
-                'state' => $station_info['state'],
-                'city' => $station_info['city'],
-                'region' => $station_info['region']
+                'name' => $station['station'],
+                'type' => $station['station_type'],
+                'state' => $station['state'],
+                'city' => $station['city'],
+                'region' => $station['region'],
+                'key' => md5("{$station['station']}-{$station['station_type']}-{$station['state']}-{$station['city']}-{$station['region']}")
             );
             TvStation::firstOrCreate($station_attrs);
         }
@@ -2577,6 +2578,123 @@ class TvStationTableSeeder extends Seeder
         );
         return $station_list;
     }
+
+    protected function getRegionalTvStations()
+    {
+        return [
+            ['name' => 'BCA TV','type' => 'Regional', 'state' => 'Abia', 'city' => 'Umuahia', 'region' => 'South East'],
+            ['name' => 'NTA', 'type' => 'Regional', 'state' => 'Abia', 'city' => 'Aba', 'region' => 'South East'],
+            ['name' => 'NTA', 'type' => 'Regional', 'state' => 'Abia', 'city' => 'Umuahia', 'region' => 'South East'],
+
+            ['name' => 'AIT', 'type' => 'Regional', 'state' => 'Abuja', 'city' => 'Abuja', 'region' => 'North Central'],
+            ['name' => 'Channels TV', 'type' => 'Regional', 'state' => 'Abuja', 'city' => 'Abuja', 'region' => 'North Central'],
+            ['name' => 'ITV', 'type' => 'Regional', 'state' => 'Abuja', 'city' => 'Abuja', 'region' => 'North Central'],
+            ['name' => 'Silverbird TV', 'type' => 'Regional', 'state' => 'Abuja', 'city' => 'Abuja', 'region' => 'North Central'],
+            ['name' => 'Wazobia Max', 'type' => 'Regional', 'state' => 'Abuja', 'city' => 'Abuja', 'region' => 'North Central'],
+
+            ['name' => 'ABS', 'type' => 'Regional', 'state' => 'Anambra', 'city' => 'Onitsha', 'region' => 'South East'],
+            ['name' => 'ABS', 'type' => 'Regional', 'state' => 'Anambra', 'city' => 'Awka', 'region' => 'South East'],
+            ['name' => 'MST', 'type' => 'Regional', 'state' => 'Anambra', 'city' => 'Obosi', 'region' => 'South East'],
+            ['name' => 'NTA', 'type' => 'Regional', 'state' => 'Anambra', 'city' => 'Awka', 'region' => 'South East'],
+            ['name' => 'NTA', 'type' => 'Regional', 'state' => 'Anambra', 'city' => 'Onitsha', 'region' => 'South East'],
+
+            ['name' => 'AIT', 'type' => 'Regional', 'state' => 'Bauchi', 'city' => 'Bauchi', 'region' => 'North East'],
+            ['name' => 'BATV', 'type' => 'Regional', 'state' => 'Bauchi', 'city' => 'Bauchi', 'region' => 'North East'],
+            ['name' => 'NTA', 'type' => 'Regional', 'state' => 'Bauchi', 'city' => 'Bauchi', 'region' => 'North East'],
+
+            ['name' => 'AIT', 'type' => 'Regional', 'state' => 'Borno', 'city' => 'Borno', 'region' => 'North East'],
+            ['name' => 'BRTV', 'type' => 'Regional', 'state' => 'Borno', 'city' => 'Maiduguri', 'region' => 'North East'],
+            ['name' => 'NTA', 'type' => 'Regional', 'state' => 'Borno', 'city' => 'Maiduguri', 'region' => 'North East'],
+
+            ['name' => 'CRTV', 'type' => 'Regional', 'state' => 'Cross River', 'city' => 'Calabar', 'region' => 'South South'],
+            ['name' => 'CRTV', 'type' => 'Regional', 'state' => 'Cross River', 'city' => 'Ikom', 'region' => 'South South'],
+            ['name' => 'NTA', 'type' => 'Regional', 'state' => 'Cross River', 'city' => 'Calabar', 'region' => 'South South'],
+
+            ['name' => 'AIT', 'type' => 'Regional', 'state' => 'Edo', 'city' => 'Benin', 'region' => 'South South'],
+            ['name' => 'Channels TV', 'type' => 'Regional', 'state' => 'Edo', 'city' => '', 'region' => 'South South'],
+            ['name' => 'EBS', 'type' => 'Regional', 'state' => 'Edo', 'city' => 'Benin', 'region' => 'South South'],
+            ['name' => 'ITV', 'type' => 'Regional', 'state' => 'Edo', 'city' => 'Benin', 'region' => 'South South'],
+            ['name' => 'NTA', 'type' => 'Regional', 'state' => 'Edo', 'city' => 'Benin', 'region' => 'South South'],
+            ['name' => 'Silverbird TV', 'type' => 'Regional', 'state' => 'Edo', 'city' => 'Benin', 'region' => 'South South'],
+
+            ['name' => 'Ekiti State Televison', 'type' => 'Regional', 'state' => 'Ekiti', 'city' => '', 'region' => 'South West'],
+            ['name' => 'NTA', 'type' => 'Regional', 'state' => 'Ekiti', 'city' => 'Ado-Ekiti', 'region' => 'South West'],
+
+            ['name' => 'AIT', 'type' => 'Regional', 'state' => 'Enugu', 'city' => 'Enugu', 'region' => 'South East'],
+            ['name' => 'ETV', 'type' => 'Regional', 'state' => 'Enugu', 'city' => 'Enugu', 'region' => 'South East'],
+            ['name' => 'NTA', 'type' => 'Regional', 'state' => 'Enugu', 'city' => 'Enugu', 'region' => 'South East'],
+
+            ['name' => 'AIT', 'type' => 'Regional', 'state' => 'Kaduna', 'city' => 'Kaduna', 'region' => 'North West'],
+            ['name' => 'Capital TV', 'type' => 'Regional', 'state' => 'Kaduna', 'city' => 'Kaduna', 'region' => 'North West'],
+            ['name' => 'DITV', 'type' => 'Regional', 'state' => 'Kaduna', 'city' => 'Kaduna', 'region' => 'North West'],
+            ['name' => 'KSTV', 'type' => 'Regional', 'state' => 'Kaduna', 'city' => 'Kaduna', 'region' => 'North West'],
+            ['name' => 'Liberty TV', 'type' => 'Regional', 'state' => 'Kaduna', 'city' => 'Kaduna', 'region' => 'North West'],
+            ['name' => 'NTA', 'type' => 'Regional', 'state' => 'Kaduna', 'city' => 'Kaduna', 'region' => 'North West'],
+            ['name' => 'NTA', 'type' => 'Regional', 'state' => 'Kaduna', 'city' => 'Kafanchan', 'region' => 'North West'],
+            ['name' => 'NTA', 'type' => 'Regional', 'state' => 'Kaduna', 'city' => 'Zaria', 'region' => 'North West'],
+            ['name' => 'NTA', 'type' => 'Regional', 'state' => 'Kaduna', 'city' => 'Birnin-Gwari', 'region' => 'North West'],
+
+            ['name' => 'AIT', 'type' => 'Regional', 'state' => 'Kano', 'city' => 'Kano', 'region' => 'North West'],
+            ['name' => 'NTA', 'type' => 'Regional', 'state' => 'Kano', 'city' => 'Kano', 'region' => 'North West'],
+            ['name' => 'CTV', 'type' => 'Regional', 'state' => 'Kano', 'city' => 'Kano', 'region' => 'North West'],
+
+            ['name' => 'AIT', 'type' => 'Regional', 'state' => 'Kwara', 'city' => 'Ilorin', 'region' => 'North Central'],
+            ['name' => 'KTV', 'type' => 'Regional', 'state' => 'Kwara', 'city' => 'Ilorin', 'region' => 'North Central'],
+            ['name' => 'NTA', 'type' => 'Regional', 'state' => 'Kwara', 'city' => 'Ilorin', 'region' => 'North Central'],
+
+            ['name' => 'AIT', 'type' => 'Regional', 'state' => 'Lagos', 'city' => 'Lagos', 'region' => 'Lagos'],
+            ['name' => 'Channels TV', 'type' => 'Regional', 'state' => 'Lagos', 'city' => 'Lagos', 'region' => 'Lagos'],
+            ['name' => 'Galaxy TV', 'type' => 'Regional', 'state' => 'Lagos', 'city' => 'Lagos', 'region' => 'Lagos'],
+            ['name' => 'Kwese Free Sports', 'type' => 'Regional', 'state' => 'Lagos', 'city' => 'Lagos', 'region' => 'Lagos'],
+            ['name' => 'Lagos Continental', 'type' => 'Regional', 'state' => 'Lagos', 'city' => '', 'region' => 'Lagos'],
+            ['name' => 'LTV', 'type' => 'Regional', 'state' => 'Lagos', 'city' => 'Lagos', 'region' => 'Lagos'],
+            ['name' => 'MITV', 'type' => 'Regional', 'state' => 'Lagos', 'city' => 'Lagos', 'region' => 'Lagos'],
+            ['name' => 'NTA', 'type' => 'Regional', 'state' => 'Lagos', 'city' => 'Lagos', 'region' => 'Lagos'],
+            ['name' => 'NTA 2', 'type' => 'Regional', 'state' => 'Lagos', 'city' => 'Lagos', 'region' => 'Lagos'],
+            ['name' => 'ONTV', 'type' => 'Regional', 'state' => 'Lagos', 'city' => 'Lagos', 'region' => 'Lagos'],
+            ['name' => 'Silverbird TV', 'type' => 'Regional', 'state' => 'Lagos', 'city' => 'Lagos', 'region' => 'Lagos'],
+            ['name' => 'Super Screen', 'type' => 'Regional', 'state' => 'Lagos', 'city' => '', 'region' => 'Lagos'],
+            ['name' => 'Wazobia Max', 'type' => 'Regional', 'state' => 'Lagos', 'city' => 'Lagos', 'region' => 'Lagos'],
+
+            ['name' => 'NSTV', 'type' => 'Regional', 'state' => 'Niger', 'city' => 'Minna', 'region' => 'North Central'],
+            ['name' => 'NTA', 'type' => 'Regional', 'state' => 'Niger', 'city' => 'Minna', 'region' => 'North Central'],
+
+            ['name' => 'AIT', 'type' => 'Regional', 'state' => 'Oyo', 'city' => 'Ibadan', 'region' => 'South West'],
+            ['name' => 'BCOS', 'type' => 'Regional', 'state' => 'Oyo', 'city' => 'Ibadan', 'region' => 'South West'],
+            ['name' => 'Galaxy TV', 'type' => 'Regional', 'state' => 'Oyo', 'city' => 'Ibadan', 'region' => 'South West'],
+            ['name' => 'MITV', 'type' => 'Regional', 'state' => 'Oyo', 'city' => 'Ibadan', 'region' => 'South West'],
+            ['name' => 'NTA', 'type' => 'Regional', 'state' => 'Oyo', 'city' => 'Ibadan', 'region' => 'South West'],
+
+            ['name' => 'AIT', 'type' => 'Regional', 'state' => 'Plateau', 'city' => 'Jos', 'region' => 'North Central'],
+            ['name' => 'NTA', 'type' => 'Regional', 'state' => 'Plateau', 'city' => 'Jos', 'region' => 'North Central'],
+            ['name' => 'PRTV', 'type' => 'Regional', 'state' => 'Plateau', 'city' => 'Jos', 'region' => 'North Central'],
+            ['name' => 'Silverbird TV', 'type' => 'Regional', 'state' => 'Plateau', 'city' => 'Jos', 'region' => 'North Central'],
+
+            ['name' => 'AIT', 'type' => 'Regional', 'state' => 'Rivers', 'city' => 'Port Harcourt', 'region' => 'South South'],
+            ['name' => 'NTA', 'type' => 'Regional', 'state' => 'Rivers', 'city' => 'Port Harcourt', 'region' => 'South South'],
+            ['name' => 'RSTV', 'type' => 'Regional', 'state' => 'Rivers', 'city' => 'Port Harcourt', 'region' => 'South South'],
+            ['name' => 'Silverbird TV', 'type' => 'Regional', 'state' => 'Rivers', 'city' => 'Port Harcourt', 'region' => 'South South'],
+            ['name' => 'Wazobia Max', 'type' => 'Regional', 'state' => 'Rivers', 'city' => 'Port Harcourt', 'region' => 'South South'],
+
+            ['name' => 'NTA', 'type' => 'Regional', 'state' => 'Sokoto', 'city' => 'Sokoto', 'region' => 'North West'],
+            ['name' => 'Sokoto State Television', 'type' => 'Regional', 'state' => 'Sokoto', 'city' => '', 'region' => 'North West']
+        ];
+    }
+
+    protected function getNationalTvStations()
+    {
+        return [
+            ['name' => 'ABS TV','type' => 'Network', 'state' => '', 'city' => '', 'region' => ''],
+            ['name' => 'CRTV','type' => 'Network', 'state' => '', 'city' => '', 'region' => ''],
+            ['name' => 'OSBC','type' => 'Network', 'state' => '', 'city' => '', 'region' => ''],
+            ['name' => 'KTV','type' => 'Network', 'state' => '', 'city' => '', 'region' => ''],
+            ['name' => 'CTV','type' => 'Network', 'state' => '', 'city' => '', 'region' => ''],
+            ['name' => 'KSTV','type' => 'Network', 'state' => '', 'city' => '', 'region' => ''],
+            ['name' => 'Silverbird TV','type' => 'Network', 'state' => '', 'city' => '', 'region' => ''],
+            ['name' => 'AIT','type' => 'Network', 'state' => '', 'city' => '', 'region' => ''],
+        ];
+    }
 }
+
 
 // php artisan db:seed --class=TvStationTableSeeder

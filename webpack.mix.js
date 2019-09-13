@@ -16,7 +16,8 @@ mix.options({
 mix.webpackConfig({
     output: {
         publicPath: '/',
-        chunkFilename: 'js/[name].js',
+        filename: '[name].js?id=[hash]',
+        chunkFilename: 'js/[name].[chunkhash].js'
     }
 });
 

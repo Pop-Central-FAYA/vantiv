@@ -47,11 +47,11 @@
     export default {
         props: {
             graphDays: Array,
-            graphDetails: Object,
-            suggestions: Object,
         },
         data() {
             return {
+                graphDetails: {},
+                suggestions: {},
                 activateFirstButton: 'v-btn--active',
                 hcInstance: Highcharts,
                 chartOptions: {
@@ -95,10 +95,23 @@
             }
         },
         mounted() {
-            console.log('Suggestions Graph Component mounted.')
-            this.seriesByDay(this.computedGraphDays[0], 0);
+            console.log('Suggestions Graph Component mounted.');
+        },
+        created() {
+            var self = this;
+            //Render the table whenever suggestions is updated
+            Event.$on('ratings-created', function (data) {
+                self.resetGraphs(data);
+            });
         },
         methods: {
+            resetGraphs(data) {
+                this.suggestions = data.stations || {};
+                this.graphDetails = data.total_graph || {};
+                if (this.computedGraphDays.length > 0) {
+                    this.seriesByDay(this.computedGraphDays[0], 0);
+                }
+            },
             intializeGeneralTimeBelts() {
                 let newArray = [];
                 generalTimeBeltValue.forEach(function (item) {

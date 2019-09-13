@@ -10,7 +10,7 @@
                         <v-card>
                             <v-card-text>
                                 <v-layout wrap style="border-bottom: 1px solid #e8e8e8;">
-                                    <v-flex md8 px-0 style="overflow-x:auto;">
+                                    <v-flex md9 px-0 style="overflow-x:auto;">
                                         <table>
                                             <thead>
                                                 <tr>
@@ -18,6 +18,8 @@
                                                     <th class="fixed-side">Day</th>
                                                     <th class="fixed-side">Time Belt</th>
                                                     <th class="fixed-side">Program</th>
+                                                    <th class="fixed-side">Reach</th>
+                                                    <th class="fixed-side">GRP</th>
                                                     <th class="fixed-side">Unit Rate</th>
                                                     <th class="fixed-side">Discount</th>
                                                     <th class="fixed-side">Net Total</th>
@@ -32,6 +34,12 @@
                                                     <td>{{ format_time(timebelt.start_time) }} {{ format_time(timebelt.end_time)}}</td>
                                                     <td>
                                                         <media-plan-program-details :time-belt="timebelt"></media-plan-program-details>
+                                                    </td>
+                                                    <td>
+                                                        {{ timebelt.rating }}
+                                                    </td>
+                                                    <td>
+                                                        {{ calculateGrp(timebelt.rating, getTotalExposureByTimebelt(timeBeltkey, duration)) }}
                                                     </td>
                                                     <td>{{ formatAmount(getUnitRate(timebelt, duration)) }}</td>
                                                     <td>
@@ -58,7 +66,7 @@
                                             </tbody>
                                         </table>
                                     </v-flex>
-                                    <v-flex md4 style="overflow-x:auto;">
+                                    <v-flex md3 style="overflow-x:auto;">
                                         <table class="dates">
                                             <thead>
                                                 <tr>
@@ -340,7 +348,6 @@
                         }).then((res) => {
                             this.isRunRatings = false;
                             this.isSaved = true;
-                            console.log(res.data);
                             if (res.data.status === "success") {
                                 this.sweet_alert(res.data.message, 'success');
                             } else {
@@ -352,6 +359,9 @@
                         });
                     }
                 });
+            },
+            calculateGrp(reach, exposures) {
+                return 100 * reach * exposures;
             }
         }
     }

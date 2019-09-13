@@ -5,12 +5,13 @@ namespace Vanguard\Services\AdVendor;
 use Vanguard\Models\AdVendor as AdVendorModel;
 use Illuminate\Support\Arr;
 use DB;
+use Vanguard\Services\BaseServiceInterface;
 
 /**
  * This service is to update a Vendor.
  * Update of a vendor might also include updating the vendor contact
  */
-class UpdateService
+class UpdateService implements BaseServiceInterface
 {
     const VENDOR_UPDATE_FIELDS = ['name', 'street_address', 'city', 'state', 'country'];
     const VENDOR_CONTACT_UPDATE_FIELDS = ['first_name', 'last_name', 'email', 'phone_number'];

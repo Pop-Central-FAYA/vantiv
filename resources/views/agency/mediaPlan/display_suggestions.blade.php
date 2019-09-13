@@ -16,15 +16,13 @@
          <v-app>
             <v-content>
                 <media-plan-suggestions 
-                :selected-suggestions="{{ json_encode($fayaFound['selected']) }}" 
-                :plan-status="{{ json_encode($mediaPlanStatus) }}" 
-                :redirect-urls="{{ json_encode($redirectUrls) }}" 
-                :plan-id="{{ json_encode($mediaPlanId) }}" 
-                :selected-filters="{{ json_encode($selectedFilters) }}" 
-                :filter-values="{{ json_encode($filterValues) }}" 
-                :suggestions="{{ $fayaFound['stations'] }}" 
-                :graph-days="{{ json_encode($fayaFound['days']) }}" 
-                :graph-details="{{ $fayaFound['total_graph'] }}"
+                :selected-suggestions="{{ json_encode($selected) }}" 
+                :plan-status="{{ json_encode($media_plan->status) }}" 
+                :redirect-urls="{{ json_encode($routes) }}" 
+                :plan-id="{{ json_encode($media_plan->id) }}" 
+                :selected-filters="{{ json_encode($selected_filters) }}" 
+                :filter-values="{{ json_encode($filter_values) }}" 
+                :graph-days="{{ json_encode($days) }}" 
                 :permission-list="{{ json_encode(Auth::user()->getAllPermissions()->pluck('name')) }}" 
                 ></media-plan-suggestions>
             </v-content>

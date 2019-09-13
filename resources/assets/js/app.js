@@ -166,6 +166,18 @@ Vue.mixin({
                 timer: timer
             });
         },
+        displayServerValidationErrors(validationErrors) {
+            var err = [];
+            for (var key in validationErrors) {
+                if (validationErrors.hasOwnProperty(key)) {
+                    var errors = validationErrors[key];
+                    validationErrors[key].forEach(element => {
+                        err.push(`${key}: ${element}`);
+                    });
+                }
+            }
+            this.sweet_alert(err.join('<br>'), 'error');
+        },
         formatDate(date_str) {
             if (date_str) {
                 var dateParts = date_str.split("-");
@@ -212,6 +224,19 @@ Vue.mixin({
             return mpos.filter(function(mpo) {
                 return mpo.id === mpo_id
             })
+        },
+        /**
+         * @todo This assumes if input is not array it is object, this is an assumption that could cause issues
+         * @param  testInput 
+         */
+        isNotEmpty(testInput){
+            if (Array.isArray(testInput)) {
+                return testInput.length > 0;
+            }
+            return Object.keys(testInput).length > 0;
+        },
+        isEmpty(testInput){
+            return this.isNotEmpty(testInput) === false;
         }
     }
 })

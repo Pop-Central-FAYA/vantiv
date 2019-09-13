@@ -54,16 +54,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.110.10",
+            "version": "3.111.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "705fc1ffe05747e6789b19480764ebcd06995911"
+                "reference": "5e80d4bec17e197be494af4f38e1fcd17f728138"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/705fc1ffe05747e6789b19480764ebcd06995911",
-                "reference": "705fc1ffe05747e6789b19480764ebcd06995911",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/5e80d4bec17e197be494af4f38e1fcd17f728138",
+                "reference": "5e80d4bec17e197be494af4f38e1fcd17f728138",
                 "shasum": ""
             },
             "require": {
@@ -133,7 +133,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2019-09-05T18:11:21+00:00"
+            "time": "2019-09-11T18:16:47+00:00"
         },
         {
             "name": "carlos-meneses/laravel-mpdf",
@@ -1862,8 +1862,8 @@
             "authors": [
                 {
                     "name": "Luís Otávio Cobucci Oblonczyk",
-                    "role": "Developer",
-                    "email": "lcobucci@gmail.com"
+                    "email": "lcobucci@gmail.com",
+                    "role": "Developer"
                 }
             ],
             "description": "A simple library to work with JSON Web Token and JSON Web Signature",
@@ -1998,9 +1998,9 @@
             "authors": [
                 {
                     "name": "Ben Corlett",
+                    "role": "Developer",
                     "email": "bencorlett@me.com",
-                    "homepage": "http://www.webcomm.com.au",
-                    "role": "Developer"
+                    "homepage": "http://www.webcomm.com.au"
                 }
             ],
             "description": "OAuth 1.0 Client Library",
@@ -2255,16 +2255,16 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "1.24.0",
+            "version": "1.25.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "bfc9ebb28f97e7a24c45bdc3f0ff482e47bb0266"
+                "reference": "70e65a5470a42cfec1a7da00d30edb6e617e8dcf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/bfc9ebb28f97e7a24c45bdc3f0ff482e47bb0266",
-                "reference": "bfc9ebb28f97e7a24c45bdc3f0ff482e47bb0266",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/70e65a5470a42cfec1a7da00d30edb6e617e8dcf",
+                "reference": "70e65a5470a42cfec1a7da00d30edb6e617e8dcf",
                 "shasum": ""
             },
             "require": {
@@ -2329,7 +2329,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2018-11-05T09:00:11+00:00"
+            "time": "2019-09-06T13:49:17+00:00"
         },
         {
             "name": "mpdf/mpdf",
@@ -5524,9 +5524,9 @@
             "authors": [
                 {
                     "name": "Christoph Kempen",
+                    "role": "developer",
                     "email": "christoph@downsized.nl",
-                    "homepage": "http://downsized.nl/",
-                    "role": "developer"
+                    "homepage": "http://downsized.nl/"
                 },
                 {
                     "name": "Paul Kievits",
@@ -5830,37 +5830,34 @@
         },
         {
             "name": "barryvdh/laravel-ide-helper",
-            "version": "v2.6.4",
+            "version": "v2.6.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/barryvdh/laravel-ide-helper.git",
-                "reference": "16eb4f65ee0d51b1f1182d56ae28ee00a70ce75a"
+                "reference": "8740a9a158d3dd5cfc706a9d4cc1bf7a518f99f3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/barryvdh/laravel-ide-helper/zipball/16eb4f65ee0d51b1f1182d56ae28ee00a70ce75a",
-                "reference": "16eb4f65ee0d51b1f1182d56ae28ee00a70ce75a",
+                "url": "https://api.github.com/repos/barryvdh/laravel-ide-helper/zipball/8740a9a158d3dd5cfc706a9d4cc1bf7a518f99f3",
+                "reference": "8740a9a158d3dd5cfc706a9d4cc1bf7a518f99f3",
                 "shasum": ""
             },
             "require": {
                 "barryvdh/reflection-docblock": "^2.0.6",
                 "composer/composer": "^1.6",
+                "doctrine/dbal": "~2.3",
                 "illuminate/console": "^5.5|^6",
                 "illuminate/filesystem": "^5.5|^6",
                 "illuminate/support": "^5.5|^6",
                 "php": ">=7"
             },
             "require-dev": {
-                "doctrine/dbal": "~2.3",
                 "illuminate/config": "^5.5|^6",
                 "illuminate/view": "^5.5|^6",
                 "phpro/grumphp": "^0.14",
                 "phpunit/phpunit": "4.*",
                 "scrutinizer/ocular": "~1.1",
                 "squizlabs/php_codesniffer": "^3"
-            },
-            "suggest": {
-                "doctrine/dbal": "Load information from the database about models for phpdocs (~2.3)"
             },
             "type": "library",
             "extra": {
@@ -5900,7 +5897,7 @@
                 "phpstorm",
                 "sublime"
             ],
-            "time": "2019-09-03T17:51:13+00:00"
+            "time": "2019-09-08T09:56:38+00:00"
         },
         {
             "name": "barryvdh/reflection-docblock",
@@ -6415,8 +6412,8 @@
             "authors": [
                 {
                     "name": "Filipe Dobreira",
-                    "role": "Developer",
-                    "homepage": "https://github.com/filp"
+                    "homepage": "https://github.com/filp",
+                    "role": "Developer"
                 }
             ],
             "description": "php error handling for cool kids",
@@ -6834,27 +6831,27 @@
         },
         {
             "name": "orangehill/iseed",
-            "version": "v2.6.1",
+            "version": "v2.6.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/orangehill/iseed.git",
-                "reference": "360ba1314e1dc950438bbb8006fc220de47dca00"
+                "reference": "fe8fbf51ab57bcc28282c6b1109e610c4a44fad9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/orangehill/iseed/zipball/360ba1314e1dc950438bbb8006fc220de47dca00",
-                "reference": "360ba1314e1dc950438bbb8006fc220de47dca00",
+                "url": "https://api.github.com/repos/orangehill/iseed/zipball/fe8fbf51ab57bcc28282c6b1109e610c4a44fad9",
+                "reference": "fe8fbf51ab57bcc28282c6b1109e610c4a44fad9",
                 "shasum": ""
             },
             "require": {
-                "illuminate/support": "^5.3.8",
-                "php": ">=5.4.0"
+                "illuminate/support": "~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0",
+                "php": "^7.2"
             },
             "require-dev": {
-                "illuminate/filesystem": "5.x",
-                "laravel/framework": "^5.3.8",
-                "mockery/mockery": "dev-master",
-                "phpunit/phpunit": "^5.7"
+                "illuminate/filesystem": "~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0",
+                "laravel/framework": "~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0",
+                "mockery/mockery": "^1.0.0",
+                "phpunit/phpunit": "^8.0"
             },
             "type": "library",
             "extra": {
@@ -6889,7 +6886,7 @@
                 "laravel",
                 "seed"
             ],
-            "time": "2018-12-07T08:06:29+00:00"
+            "time": "2019-09-09T13:18:41+00:00"
         },
         {
             "name": "phar-io/manifest",
