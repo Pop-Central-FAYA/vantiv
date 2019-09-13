@@ -178,8 +178,11 @@
                     Event.$emit('updated', true);
                     this.sweet_alert('Mpo Generated successfully', 'success');
                 }).catch((error) => {
-                    console.log(error)
-                    this.sweet_alert('An unknown error has occurred, vendors cannot be retrieved. Please try again', 'error');
+                    if (error.response && (error.response.status == 422)) {
+                        this.displayServerValidationErrors(error.response.data.errors, true);
+                    } else {
+                        this.sweet_alert('An unknown error has occurred, vendor cannot be created. Please try again', 'error');
+                    }
                 });
             },
             getVendor : function (time_belts) {
