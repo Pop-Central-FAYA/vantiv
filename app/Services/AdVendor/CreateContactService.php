@@ -4,11 +4,12 @@ namespace Vanguard\Services\AdVendor;
 
 use Vanguard\Models\AdVendorContact;
 use DB;
+use Vanguard\Services\BaseServiceInterface;
 
 /**
  * This service is to create a Vendor contact
  */
-class CreateContactService
+class CreateContactService implements BaseServiceInterface
 {
     protected $vendor_id;
     protected $data;

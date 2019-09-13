@@ -3,7 +3,6 @@
 namespace Vanguard\Http\Controllers\Dsp\MediaPlan;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Http\Controllers\Traits\CompanyIdTrait;
 use Vanguard\Models\Criteria;
@@ -14,16 +13,10 @@ use Vanguard\Services\Client\ClientBrand;
 use Vanguard\Services\Inventory\StoreMediaPlanProgram;
 use Vanguard\Services\MediaPlan\GetSuggestionListWithProgramRating;
 use Vanguard\Services\MediaPlan\StoreMediaPlanVolumeDiscount;
-use Vanguard\Services\MediaPlan\ValidateCriteriaForm;
-use Vanguard\Services\MediaPlan\SuggestPlan;
-use Vanguard\Services\MediaPlan\StorePlanningSuggestions;
-use Illuminate\Support\Facades\DB;
 use Vanguard\Services\MediaPlan\GetMediaPlans;
 use Vanguard\Services\MediaPlan\SummarizePlan;
-use Vanguard\Services\MediaPlan\GetSuggestedPlans;
 use Vanguard\Services\MediaPlan\ExportPlan;
 use Vanguard\Services\Client\AllClient;
-use Session;
 use Maatwebsite\Excel\Facades\Excel;
 use Vanguard\Exports\MediaPlanExport;
 use Vanguard\Services\Traits\DefaultMaterialLength;
@@ -33,6 +26,8 @@ use Log;
 use Vanguard\Services\MediaPlan\StoreCampaign;
 use Vanguard\Services\MediaPlan\StoreMpo;
 use Carbon\Carbon;
+use Illuminate\Support\Arr;
+use Vanguard\Http\Requests\MediaPlan\CreateStationRatingRequest;
 use Vanguard\Services\MediaPlan\GetSuggestionListByDuration;
 use Vanguard\Libraries\Enum\MediaPlanStatus;
 use Vanguard\Libraries\DayPartList;
@@ -41,6 +36,12 @@ use Vanguard\Services\CampaignChannels\GetChannelByName;
 use Vanguard\Services\User\GetUserList;
 use Vanguard\Mail\MailForApproval;
 use Vanguard\Mail\ApprovalNotification;
+use Vanguard\Http\Requests\MediaPlan\StorePlanRequest;
+use Vanguard\Http\Requests\MediaPlan\StorePlanSuggestionsRequest;
+use Vanguard\Http\Resources\MediaPlanSuggestionCollection;
+use Vanguard\Services\MediaPlan\GetStationRatingService;
+use Vanguard\Services\MediaPlan\StoreMediaPlanService;
+use Vanguard\Services\MediaPlan\StoreMediaPlanSuggestionService;
 
 class MediaPlanController extends Controller
 {
@@ -48,22 +49,158 @@ class MediaPlanController extends Controller
     use DefaultMaterialLength;
     use CompanyIdTrait;
 
+    /**
+     * Load up the page that displays the timebelts to be chosen etc.
+     * The page will be empty.
+     * @todo Make this a bit cleaner, move generation of selected timebelts to a service/resource
+     * @todo Add the appropriate permissions
+     */
+    public function stationDetails(Request $request, $id)
+    {
+        $media_plan = MediaPlan::findOrFail($id);
+
+        $routes = [
+            'back_action' => route('agency.media_plans', [], false),
+            'next_action' => route('agency.media_plan.create', ['id' => $media_plan->id], false),
+            'save_action' => route('agency.media_plan.select_suggestions', ['id' => $media_plan->id], false),
+            'new_ratings_action' => route('agency.media_plan.create-ratings', ['id' => $media_plan->id], false)
+        ];
+        $selected = new MediaPlanSuggestionCollection($media_plan->suggestions->where('status', 1));
+
+        return view('agency.mediaPlan.display_suggestions')
+            ->with('routes', $routes)
+            ->with('filter_values', $this->getTimebeltFilters($media_plan))
+            ->with('selected_filters', $this->getSavedTimebeltFilters($media_plan))
+            ->with('media_plan', $media_plan)
+            ->with('selected', $selected)
+            ->with('stations', [])
+            ->with('total_graph', [])
+            ->with('days', ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]);
+    }
+
+    protected function getSavedTimebeltFilters($media_plan) {
+        $saved_filters = json_decode($media_plan->filters, true);
+        if (!$saved_filters) {
+            $saved_filters = array();
+        }
+        //set the default values
+        $fields = ['day_part', 'state', 'day'];
+        foreach ($fields as $key) {
+            if (!Arr::has($saved_filters, $key)) {
+                $saved_filters[$key] = 'all';
+            }
+        }
+        //for backwards compatibility, make sure to lower case station_type
+        $saved_filters['station_type'] = strtolower($saved_filters['station_type']);
+        if ($saved_filters['day_part'] == 'All') {
+            $saved_filters['day_part'] = 'all';
+        }
+        if ($saved_filters['day'] == 'All') {
+            $saved_filters['day'] = 'all';
+        }
+        return $saved_filters;
+    }
+
+    /**
+     * Return the values that should be used to populate the filter fields
+     * i.e dayparts, and states (that were part of what was found)
+     * @todo not the biggest fan of how this is done, but it should work for now
+     */
+    protected function getTimebeltFilters($media_plan) {
+        //Get the states associated with the plan criteria
+        //If no state is present, then grab the full list of states from the sub criterias table
+        $state_list = json_decode($media_plan->criteria_state, true);
+        if (!$state_list || count($state_list) == 0) {
+            $state_criteria_model = Criteria::with('subCriterias')->where('name', 'states')->first();
+            $state_list = $state_criteria_model->subCriterias->sortBy('name')->pluck('name');
+        }
+        $state_list = collect($state_list)->map(function($item) {
+            return ["text" => $item, "value" => $item];
+        })->prepend(["text" => "All", "value" => "all"]);
+
+        //Setup the dayparts filter
+        $day_parts = collect(DayPartList::DAYPARTS)->keys()->sort()->values()->map(function($item) {
+            return ["text" => $item, "value" => $item];
+        })->prepend(["text" => "All", "value" => "all"]);
+
+        return [
+            "day_part" => $day_parts->toArray(),
+            "state" => $state_list->toArray(),
+            "day" => [
+                ["text" => "All", "value" => "all"],
+                ["text" => "Monday", "value" => "Mon"],
+                ["text" => "Tuesday", "value" => "Tue"],
+                ["text" => "Wednesday", "value" => "Wed"],
+                ["text" => "Thursday", "value" => "Thu"],
+                ["text" => "Friday", "value" => "Fri"],
+                ["text" => "Saturday", "value" => "Sat"],
+                ["text" => "Sunday", "value" => "Sun"]
+            ],
+            "station_type" => [
+                ["text" => "All", "value" => "all"],
+                ["text" => "Network", "value" => "network"],
+                ["text" => "Regional", "value" => "regional"],
+                ["text" => "Satellite", "value" => "satellite"]
+            ]
+        ];
+    }
+
+    /*
+     * *************************** API METHODS *****************************
+     */
+
+    /**
+     * Generate and return new ratings based on filters passed in the request
+     */
+    public function createStationRatings(CreateStationRatingRequest $request, $id)
+    {
+        $validated = $request->validated();
+        $media_plan = MediaPlan::findOrFail($id);
+
+        //run the request to generate the new ratings and return the value to the frontend
+        $timebelts_service = new GetStationRatingService($validated, $media_plan);
+        $data = $timebelts_service->run();
+
+        if (count($data) > 0) {
+            $media_plan->filters = json_encode($validated);
+            $media_plan->save();
+
+            return response()->json(array(
+                'status' => 'success',
+                'message' => 'Ratings created',
+                'data' => $data
+            ));
+        }
+        return response()->json(array(
+            'status' => 'error',
+            'message' => 'No results for the given filters',
+            'data' => $data
+        ));
+    }
+
+    /**
+     * Choose suggestions based on information from the frontend
+     */
+    public function storeSuggestions(StorePlanSuggestionsRequest $request, $id)
+    {
+        $validated = $request->validated();
+        $media_plan = MediaPlan::findOrFail($id);
+
+        $store_suggestions_service = new StoreMediaPlanSuggestionService($validated['data'], $media_plan);
+        $data = $store_suggestions_service->run();
+
+        return new MediaPlanSuggestionCollection($data);
+    }
+
+    /**
+     * ****************** BELOW ARE THE OLD METHODS *****************
+     */
     public function index(Request $request)
     {
         $company_id = $this->companyId();
         $media_plan_service = new GetMediaPlans($request->status, $company_id);
         $plans = $media_plan_service->run();
         return view('agency.mediaPlan.index')->with('plans', $plans);
-    }
-
-    public function customisPlan()
-    {
-        return view('agency.mediaPlan.custom_plan');
-    }
-
-    public function getSuggestionsByPlanId($id='')
-    {
-        return "got here";
     }
 
     public function criteriaForm(Request $request)
@@ -81,115 +218,6 @@ class MediaPlanController extends Controller
         // return criterias array with the frontend view, in order to populate criteria inputs
         return view('agency.mediaPlan.create_plan')->with('criterias', $new_criterias)
                                                     ->with('redirect_urls', ['submit_form' => route('agency.media_plan.submit.criterias')]);
-    }
-
-    public function suggestPlan(Request $request)
-    {
-        // validate criteria form request
-        $validateCriteriaFormService = new ValidateCriteriaForm($request->all());
-        $validation = $validateCriteriaFormService->validateCriteria();
-
-        if ($validation->fails()) {
-            // var_dump($validation->errors()); return;
-            return back()->withErrors($validation)->withInput();
-        }
-        // Fetch mps audiences, programs, stations, time duration, based on criteria
-        $suggestPlanService = new SuggestPlan($request);
-          $suggestions = $suggestPlanService->suggestPlan();
-        if ($suggestions->isNotEmpty()) {
-            // store planning criteria and suggestions
-            $storeSuggestionsService = new StorePlanningSuggestions($request, $suggestions, $this->companyId());
-            $newMediaPlan = $storeSuggestionsService->storePlanningSuggestions();
-            return redirect()->action(
-                'MediaPlan\MediaPlanController@getSuggestPlanById', ['id' => $newMediaPlan->id]
-            );
-        }else{
-            Session::flash('success', 'No results came back for your criteria');
-            return redirect()->action(
-                'MediaPlan\MediaPlanController@criteriaForm'
-            );
-        }
-    }
-
-    /**
-     * This is the page that returns the suggested plan. (When this page loads it should also load up the filter values)
-     * @todo This is kinda inefficient right now because the states list is being regenerated each time, but it will do
-     * @todo Fix tis and the one below (getSuggestPlansByIdAndFilters)
-     */
-    public function getSuggestPlanById($id)
-    {
-        // Get the filter values
-        $savedFilters = json_decode(MediaPlan::findOrFail($id)->filters, true);
-        if (!$savedFilters) {
-            $savedFilters = array();
-        }
-        $suggestedPlansService = new GetSuggestedPlans($id, $savedFilters);
-        $plans = $suggestedPlansService->get();
-        $redirect_urls = [
-            'back_action' => route('agency.media_plans'),
-            'next_action' => route('agency.media_plan.create',['id'=>$id]),
-            'save_action' => route('agency.media_plan.select_suggestions'),
-            'filter_action' => route('agency.media_plan.customize-filter')
-        ];
-        return view('agency.mediaPlan.display_suggestions')
-            ->with('mediaPlanId', $id)
-            ->with('mediaPlanStatus', MediaPlan::findOrFail($id)->status)
-            ->with('fayaFound', $plans)
-            ->with('filterValues', $this->getFilterFieldValues($id))
-            ->with('redirectUrls', $redirect_urls)
-            ->with('selectedFilters', $savedFilters);
-    }
-
-    /**
-     * Get the ratings per filter (Not quite sure how to complete this)
-     * So, save the filters the user selected, then the page will be reloaded
-     * @todo add proper validation
-     */
-    public function setPlanSuggestionFilters(Request $request)
-    {
-        try {
-            $media_plan_id = $request->get('mediaPlanId');
-            $expected_fields = array('states', 'day_parts', 'days', 'station_type');
-            $filters = array();
-            foreach($expected_fields as $field) {
-                $value = $request->input($field);
-                if ($value && $value != 'all') {
-                    $filters[$field] = $value;
-                }
-            }
-            $media_plan = MediaPlan::findOrFail($media_plan_id);
-            $media_plan->filters = json_encode($filters);
-            $media_plan->save();
-            return response()->json(array(
-                'status' => 'success',
-                'message' => 'Filters successfully saved',
-                'redirect_url' => route('agency.media_plan.customize',['id'=>$media_plan_id])
-            ));
-        } catch (\Exception $exception) {
-            Log::error($exception);
-            return response()->json(array(
-                'status' => 'error',
-                'message' => 'Unknown error occurred'
-            ));
-        }
-    }
-    /**
-     * Return the values that should be used to populate the filter fields
-     * i.e dayparts, and states (that were part of what was found)
-     * @todo not the biggest fan of how this is done, but it should work for now
-     */
-    protected function getFilterFieldValues($mediaPlanId) {
-        $state_list = array();
-        $saved_state_list = MediaPlan::find($mediaPlanId)->state_list;
-        if (strlen($saved_state_list) > 0) {
-            $state_list = json_decode($saved_state_list, true);
-        }
-        return array(
-            "day_parts" => collect(DayPartList::DAYPARTS)->keys()->sort()->toArray(),
-            "state_list" => $state_list,
-            "days" => array("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"),
-            "station_type" => array("Network", "Regional", "Satellite")
-        );
     }
 
     public function groupSuggestions($query)
@@ -218,14 +246,6 @@ class MediaPlanController extends Controller
         return $collection->where('media_type', $media_type)->sum('audience');
     }
 
-    /**
-     * This is a function to filter suggestions and reload the page with the new filtered suggestions.
-     * The filters are:
-     * 1. day parts --> i.e Morning, Afternoon, Night etc
-     * 2. days --> i.e Monday, Tuesday etc
-     * 3. states --> i.e Abuja, Kaduna etc
-     * If there are no filters, then the full media plan suggestions get returned (which is the default)
-     */
     public function summary($media_plan_id)
     {
         $mediaPlan = MediaPlan::with(['client'])->findorfail($media_plan_id);
@@ -239,7 +259,7 @@ class MediaPlanController extends Controller
             "back" => route('agency.media_plan.create', ['id'=>$media_plan_id]),
             "change_status" => route('agency.media_plan.change_status'),
             "export" => route('agency.media_plan.export', ['id'=>$media_plan_id]),
-            "approval" => route('agency.media_plan.get_approval')  
+            "approval" => route('agency.media_plan.get_approval')
         );
 
         $summary_service = new SummarizePlan($mediaPlan);
@@ -295,33 +315,6 @@ class MediaPlanController extends Controller
     public function totalAudienceFound($collection)
     {
         return $collection->sum('audience');
-    }
-
-
-    public function SelectPlanPost(Request $request)
-    {
-
-        $programs_id = json_decode($request->get('data'));
-         $media_plan_id = $request->get('mediaplan');
-            $value = "";
-            try{
-                Utilities::switch_db('api')->transaction(function () use($programs_id, $media_plan_id, $value) {
-
-                    DB::table('media_plan_suggestions')
-                    ->where('media_plan_id', $media_plan_id)
-                    ->whereNotIn('id', $programs_id)
-                    ->update(['status' => 0, 'material_length' => $value]);
-                    DB::table('media_plan_suggestions')
-                    ->whereIn('id', $programs_id)
-                    ->update(['status' => 1]);
-
-                });
-            }catch (\Exception $exception){
-                return response()->json(['status'=>'failed', 'message'=> "The current operation failed" ]);
-            }
-        return response()->json(['status'=>'success', 'message'=> "Plan Selected successfully" ]);
-
-
     }
 
     public function createPlan($id)
@@ -515,6 +508,7 @@ class MediaPlanController extends Controller
                     $gross_total = (INT)$unit_rate * (INT)$exposure;
                     $deducted_value = ((INT)$suggestion['volume_discount']/100) * $gross_total;
                     $net_total = $gross_total - $deducted_value;
+                    $grp = 100 * (double)$suggestion['rating'] * $exposure;
 
                     $material_lengths[$duration][] = [
                         'id' => $suggestion['id'],
@@ -525,7 +519,8 @@ class MediaPlanController extends Controller
                         'day' => $suggestion['day'],
                         'slot' => (INT)$exposure,
                         'exposure' => (INT)$exposure,
-                        'net_total' => $net_total
+                        'net_total' => $net_total,
+                        'grp' => $grp
                     ];
                 }
             }
@@ -571,27 +566,26 @@ class MediaPlanController extends Controller
         }
     }
 
-    public function generateRatingsPost(Request $request)
+    /**
+    * This method will create a new media plan if there are ratings for it.
+    * Note that this method replaces the generateRatingsPost method, so get rid of that one
+    * @todo use a proper media plan resource with redirect links etc here
+    */
+    public function createNewMediaPlan(StorePlanRequest $request)
     {
-        // validate criteria form request
-        $validateCriteriaFormService = new ValidateCriteriaForm($request->all());
-        $validation = $validateCriteriaFormService->validateCriteria();
+        $validated = $request->validated();
+        $user = auth()->user();
+        $company_id = $this->companyId();
+        $create_plan_service = new StoreMediaPlanService($validated, $company_id, $user->id);
+        $media_plan = $create_plan_service->run();
 
-        if ($validation->fails()) {
-            Session::flash('error', 'Please make sure the required parameters are filled out');
-            return ['status'=>"error", 'message'=> "Please make sure the required parameters are filled out" ];
-        }
-        // Fetch mps audiences, programs, stations, time duration, based on criteria
-        $suggestPlanService = new SuggestPlan($request);
-        $suggestions = $suggestPlanService->suggestPlan();
-        if ($suggestions) {
+        if ($media_plan) {
             return [
                 'status'=>"success",
                 'message'=> "Ratings successfully generated, going to next page",
-                'redirect_url' => route('agency.media_plan.customize',['id'=>$suggestions->id])
+                'redirect_url' => route('agency.media_plan.customize',['id'=>$media_plan->id], false)
             ];
         } else {
-            Session::flash('error', 'No results came back for your criteria');
             return [
                 'status'=>"error",
                 'message'=> "No results came back for your criteria"
@@ -645,7 +639,7 @@ class MediaPlanController extends Controller
                 $ad_slots = $suggestion_service->getTotalAdSlotPerPlan($suggestions);
                 $store_campaign_service = new StoreCampaign($now, $campaign_reference, $channel, $target_audience, $created_by, $belongs_to, $media_plan, $budget, $ad_slots);
                 $campaign = $store_campaign_service->run();
-                $campaign_id = $campaign->id; 
+                $campaign_id = $campaign->id;
 
                 // create MPO for each station in the Media plan
                 // get the media plan program details
@@ -672,7 +666,7 @@ class MediaPlanController extends Controller
 
        $mediaPlan = MediaPlan::findorfail($media_plan_id);
        $user_mail_content_array = array(
-            "sender_name" => \Auth::user()->firstname.  " ". \Auth::user()->lastname, 
+            "sender_name" => \Auth::user()->firstname.  " ". \Auth::user()->lastname,
             "action" => $status,
             "client" =>  $this->getClientName($media_plan_id),
             "receiver_name" => $this->getPlannerDetails($mediaPlan->planner_id)['name'], 
@@ -681,19 +675,19 @@ class MediaPlanController extends Controller
 
         );
         $send_mail = \Mail::to($this->getPlannerDetails($mediaPlan->planner_id)['email'])->send(new ApprovalNotification($user_mail_content_array));
-           
+
     }
 
     public function requestApproval($media_plan_id, $user_id)
-    {       
+    {
 
           $user_mail_content_array = array(
-            "sender_name" => \Auth::user()->firstname.  " ". \Auth::user()->lastname, 
+            "sender_name" => \Auth::user()->firstname.  " ". \Auth::user()->lastname,
             "client" => $this->getClientName($media_plan_id),
             "receiver_name" => $this->getPlannerDetails($user_id)['name'],
             "link" => $media_plan_id,
             "subject" => "Request For Approval"
-           
+
           );
             $send_mail = \Mail::to($this->getPlannerDetails($user_id)['email'])->send(new MailForApproval($user_mail_content_array));
     }
@@ -707,7 +701,7 @@ class MediaPlanController extends Controller
             {
                 $planner= $user;
             }
-        } 
+        }
         return $planner;
     }
 
@@ -721,7 +715,7 @@ class MediaPlanController extends Controller
             {
                 $client_name= $client->company_name;
             }
-        } 
+        }
         return $client_name;
     }
 

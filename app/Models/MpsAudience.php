@@ -2,11 +2,14 @@
 
 namespace Vanguard\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Vanguard\Models\MpsAudienceProgramActivity;
+
+use EloquentFilter\Filterable;
 
 class MpsAudience extends Base
 {
+    use Filterable;
+
 	protected $table = 'mps_audiences';
     protected $primaryKey = 'id';
     protected $keyType = 'string';

@@ -3,14 +3,14 @@
         <v-flex xs12 sm12 md12 lg12 px-0 pb-0>
             <v-expansion-panel px-0>
                 <v-layout px-4 py-2>
-                    <v-flex><h4>STATION</h4></v-flex>
-                    <v-flex style="margin-left: -12px;"><h4>AUDIENCE</h4></v-flex>
+                    <v-flex md6><h4>STATION</h4></v-flex>
+                    <v-flex md6 pl-0><h4>AUDIENCE</h4></v-flex>
                 </v-layout>
                 <v-expansion-panel-content v-for="(timebelts, key, index) in suggestions" v-bind:key="key">
                     <template v-slot:header>
                         <v-layout @click="renderTimeBelts(index)">
                             <v-flex md6>{{ key }}</v-flex>
-                            <v-flex md6>{{ totalAudiencePerStation(timebelts) }}</v-flex>
+                            <v-flex md6><span class="pl-2">{{ totalAudiencePerStation(timebelts) }}</span></v-flex>
                         </v-layout>
                     </template>
                     <v-card v-if="stationsToggle[index]['show']" outlined>
@@ -41,11 +41,9 @@
 
 <script>
     export default {
-        props: {
-            suggestions: Object,
-        },
         data() {
             return {
+                suggestions: {},
                 accordionCounter: 0,
                 newTimeBelt: {},
                 curPos: 0,
@@ -53,26 +51,32 @@
             };
         },
         created() {
-            var stations = Object.keys(this.suggestions);
-            var stationsToggle = [];
-            stations.forEach((element, key) => {
-                stationsToggle[key] = {
-                    station: element,
-                    show: false
-                }
+            var self = this;
+            //Render the table whenever suggestions is updated
+            Event.$on('ratings-created', function (data) {
+                self.resetSuggestionsList(data.stations);
             });
-            this.stationsToggle = stationsToggle;
         },
         mounted() {
             console.log('Suggestions Table Component mounted.')
+            this.resetSuggestionsList(this.suggestions);
         },
         methods: {
-            totalAudiencePerStation(time_belts) {
-                var total_audience = 0;
-                time_belts.forEach(function (element) {
-                    total_audience += element.total_audience;
+            resetSuggestionsList(suggestions) {
+                this.suggestions = suggestions
+                var stations = Object.keys(this.suggestions);
+                var stationsToggle = [];
+                stations.forEach((element, key) => {
+                    stationsToggle[key] = {station: element, show: false}
                 });
-                return this.format_audience(total_audience);
+                this.stationsToggle = stationsToggle;
+            },
+            totalAudiencePerStation(timeBelts) {
+                var totalAudience = 0;
+                timeBelts.forEach(function (element) {
+                    totalAudience += element.total_audience;
+                });
+                return this.format_audience(Math.round(totalAudience));
             },
             renderTimeBelts(position) {
                 this.stationsToggle[position]['show'] = true;

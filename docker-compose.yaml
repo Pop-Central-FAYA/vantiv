@@ -40,6 +40,8 @@ services:
       - MEDIA_BUCKET=faya-dev-us-east-1-media
       - PHP_MEMORY_LIMIT=256M
       - MAIL_DRIVER=log
+      - CACHE_DRIVER=database
+      - DEBUGBAR_ENABLED=false
     volumes:
       - $HOME/.aws:/home/.aws:delegated
       - ./:/var/www:delegated
@@ -77,6 +79,8 @@ services:
       - MEDIA_BUCKET=faya-dev-us-east-1-media
       - PHP_MEMORY_LIMIT=256M
       - MAIL_DRIVER=log
+      - CACHE_DRIVER=database
+      - DEBUGBAR_ENABLED=false
     volumes:
       - $HOME/.aws:/home/.aws:delegated
       - ./:/var/www:delegated

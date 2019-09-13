@@ -4,10 +4,13 @@ namespace Vanguard\Libraries\MpsImporter;
 
 use Vanguard\Models\MpsProfile;
 use Illuminate\Support\Facades\DB;
+use Vanguard\Libraries\Batch\LaravelBatch;
+
+// $tv_profile = new \Vanguard\Libraries\MpsImporter\TvUserProfile(now(), '/tmp/tv-diarybaNkBK'); $tv_profile->process();
 
 class TvUserProfile
 {
-    const CHUNK_BATCH = 5000;
+    const CHUNK_BATCH = 20000;
 
     public function __construct($import_time, $csv_file)
     {
@@ -69,19 +72,26 @@ class TvUserProfile
             echo('.');
 
             if (count($profile_list) >= static::CHUNK_BATCH) {
-                MpsProfile::insert($profile_list);
+                $this->insertProfiles($profile_list);
                 $profile_list = [];
             }
         }
+        $this->insertProfiles($profile_list);
+        $profile_list = [];
 
-        if (count($profile_list) > 0) {
-            MpsProfile::insert($profile_list);
-            $profile_list = [];
-        }
         echo(PHP_EOL);
         return $current_count;
     }
 
+    protected function insertProfiles($profile_list) {
+        if (count($profile_list) > 0) {
+            $mps_profile = new MpsProfile();
+            $columns = array_keys($profile_list[0]);
+            $laravel_batch = new LaravelBatch(app('db'));
+            $result = $laravel_batch->insert($mps_profile, $columns, $profile_list, static::CHUNK_BATCH);
+        }
+    }
+    
     protected function normalizeState($value) {
         if ($value == 'CrossRiver') {
             $value = 'Cross River';
