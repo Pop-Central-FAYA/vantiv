@@ -90,6 +90,10 @@ class MediaPlanController extends Controller
                 $saved_filters[$key] = 'all';
             }
         }
+
+        if (!Arr::has($saved_filters, 'station_type')) {
+            $saved_filters['station_type'] = 'network';
+        }
         //for backwards compatibility, make sure to lower case station_type
         $saved_filters['station_type'] = strtolower($saved_filters['station_type']);
         if ($saved_filters['day_part'] == 'All') {
