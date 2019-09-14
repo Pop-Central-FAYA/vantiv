@@ -353,7 +353,7 @@ class MediaPlanController extends Controller
             'labeldates' => $label_dates,
             'days' => $days,
         );
-        $clients =  $client_list = Client::with('brands')->filter(['company_id' => $this->companyId()])->get();
+        $clients = Client::with('brands')->filter(['company_id' => $this->companyId()])->get();
         $redirect_urls = [
             'back_action' => route('agency.media_plan.customize', ['id'=>$id]),
             'next_action' => route('agency.media_plan.summary', ['id'=>$id]),
