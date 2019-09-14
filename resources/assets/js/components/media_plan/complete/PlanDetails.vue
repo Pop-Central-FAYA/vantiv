@@ -191,7 +191,8 @@
                 volumeDiscounts: [],
                 newPrograms: [],
                 isRunRatings: false,
-                isSaved: false
+                isSaved: false,
+                isNewInsertion: false,
             };
         },
         created() {
@@ -232,6 +233,7 @@
                 }
             },
             countExposureByTimeBelt(time_belt_pos, duration, exposure_date) {
+                this.isNewInsertion = true;
                 var exposure_date_value = this.fayaTimebelts['programs_stations'][time_belt_pos]['exposures'][duration]['dates'][exposure_date];
                 if (exposure_date_value == "" || exposure_date_value < 0) {
                     this.fayaTimebelts['programs_stations'][time_belt_pos]['exposures'][duration]['dates'][exposure_date] = 0;
@@ -303,10 +305,15 @@
             },
             goToSummary() {
                 var net_total_all_durations = this.getNetTotalAllDurations();
-                if (net_total_all_durations <= 0) {
+                if (this.plan.status == "Approved" || this.plan.status == "Declined") {
+                    window.location = this.redirectUrls.next_action;
+                } else if (net_total_all_durations <= 0 && this.isNewInsertion == false) {
                     this.sweet_alert("Please add at least one insertion", 'error');
                     return;
-                } else if (net_total_all_durations > 0 && this.isSaved == false) {
+                } else if (net_total_all_durations <= 0 && this.isNewInsertion == true) {
+                    this.sweet_alert("One or more insertions does not have unit rate", 'error');
+                    return;
+                } else if (net_total_all_durations > 0 && this.isNewInsertion == true && this.isSaved == false) {
                     this.sweet_alert("Please save insertion !!", 'info');
                     return;
                 } else {
@@ -320,8 +327,11 @@
             },
             save(is_redirect) {
                 var net_total_all_durations = this.getNetTotalAllDurations();
-                if (net_total_all_durations <= 0) {
+                if (net_total_all_durations <= 0 && this.isNewInsertion == false) {
                     this.sweet_alert("Please add at least one insertion", 'error');
+                    return;
+                } else if (net_total_all_durations <= 0 && this.isNewInsertion == true) {
+                    this.sweet_alert("One or more insertions does not have unit rate", 'error');
                     return;
                 }
                 // Validate inputs using vee-validate plugin 
