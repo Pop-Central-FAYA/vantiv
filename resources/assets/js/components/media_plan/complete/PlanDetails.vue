@@ -96,7 +96,7 @@
                 <v-select
                     v-model="client"
                     :items="clients"
-                    item-text="company_name"
+                    item-text="name"
                     item-value="id"
                     v-validate="'required'"
                     name="client"
@@ -177,7 +177,6 @@
             timeBelts: Object,
             plan: Object,
             clients: Array,
-            brands: Object,
             redirectUrls: Object
         },
         data() {
@@ -204,13 +203,14 @@
         },
         mounted() {
             console.log('Media Plan Details Component mounted.');
-            if (this.client) {
-                this.getBrands();
-            }
         },
         methods: {
             getBrands() {
-                this.filteredBrands = this.brands[this.client];
+               var client = this.client;
+               var filtered = this.clients.filter(function(clients) {
+                      return clients.id === client;
+                    });
+                this.filteredBrands = filtered[0].brands;
             },
             getUnitRate(time_belt, duration) {
                 if (time_belt.duration_lists != '[null]' && time_belt.rate_lists != '[null]') {
