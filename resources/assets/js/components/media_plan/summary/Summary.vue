@@ -65,7 +65,7 @@
                     <button id="back_btn" @click="buttonAction(routes.back)"  class="btn small_btn"><i class="media-plan material-icons">navigate_before</i> Back</button>
                 </div>
                 <div class="col-md-8 p-0 text-right">
-                    <span v-if="summaryDetail.status == 'In Review'  && summaryDetail.planner_id != userId">
+                    <span v-if="summaryDetail.status == 'In Review'">
                         <button v-if="hasPermission(permissionList,'approve.media_plan')"  @click="changeStatus('Approved')" class="media-plan btn block_disp uppercased mr-1 btn-sm"><i class="media-plan material-icons">check</i>Approve Plan</button>
                     
                         <button v-if="hasPermission(permissionList,'decline.media_plan')"  @click="changeStatus('Declined')"  class="media-plan btn block_disp uppercased bg_red mr-1  btn-sm"><i class="media-plan material-icons">clear</i>Decline Plan</button>
@@ -78,7 +78,7 @@
                         :permissionList="permissionList">
                         </media-plan-request-approval>
                     </span>
-                     <span v-if="summaryDetail.status == 'Approved'" >
+                     <span>
                         <button v-if="hasPermission(permissionList,'export.media_plan')"  @click="buttonAction(routes.export, 'export.media_plan')"  class="btn block_disp uppercased"><i class="media-plan material-icons">file_download</i>Export Plan</button>
                           </span>
                     <span v-if="summaryDetail.status == 'Approved'" >
@@ -108,7 +108,6 @@
             permissionList:Array,
             userList:Array,
             routes:Object,
-            userId:String,
         },
         data() {
             return {
@@ -121,7 +120,6 @@
         },
         mounted() {
               this.getSums();
-              console.log(this.userId)
              console.log("Summary component mounted");
            
         },  
