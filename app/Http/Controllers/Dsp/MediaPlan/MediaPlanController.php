@@ -43,6 +43,11 @@ use Vanguard\Services\MediaPlan\GetStationRatingService;
 use Vanguard\Services\MediaPlan\StoreMediaPlanService;
 use Vanguard\Services\MediaPlan\StoreMediaPlanSuggestionService;
 
+use Vanguard\Models\Client;
+use Vanguard\Models\Brand;
+use Vanguard\Http\Resources\BrandCollection;
+
+
 class MediaPlanController extends Controller
 {
     use ListDayTrait;
@@ -329,8 +334,6 @@ class MediaPlanController extends Controller
         }
         $get_suggestion_with_ratings = new GetSuggestionListWithProgramRating($id);
         $plans = $get_suggestion_with_ratings->getMediaPlanSuggestionWithProgram();
-        $clients = new AllClient($this->companyId());
-        $clients = $clients->getAllClients();
         if(count($plans) == 0 ){
             return redirect()->route("agency.media_plan.criteria_form");
         }
@@ -350,11 +353,7 @@ class MediaPlanController extends Controller
             'labeldates' => $label_dates,
             'days' => $days,
         );
-        $client_brands = [];
-        foreach ($clients as $client) {
-            $brands = new ClientBrand($client->id);
-            $client_brands[$client->id] = $brands->run();
-        }
+        $clients =  $client_list = Client::with('brands')->filter(['company_id' => $this->companyId()])->get();
         $redirect_urls = [
             'back_action' => route('agency.media_plan.customize', ['id'=>$id]),
             'next_action' => route('agency.media_plan.summary', ['id'=>$id]),
@@ -363,7 +362,6 @@ class MediaPlanController extends Controller
 
         return view('agency.mediaPlan.complete_plan')->with('fayaFound', $fayaFound)
                                                     ->with('clients', $clients)
-                                                    ->with('client_brands', $client_brands)
                                                     ->with('days', $this->listDays())
                                                     ->with('default_material_length', $this->getDefaultMaterialLength())
                                                     ->with('plan_id', $id)

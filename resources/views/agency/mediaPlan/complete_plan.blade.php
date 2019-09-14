@@ -27,7 +27,6 @@
                     :time-belts="{{ json_encode($fayaFound) }}"
                     :plan="{{ json_encode($media_plan) }}"
                     :clients="{{ json_encode($clients) }}"
-                    :brands="{{ json_encode($client_brands) }}"
                     :redirect-urls="{{ json_encode($redirect_urls) }}"
                 >
                 </media-plan-details>
