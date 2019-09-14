@@ -5,6 +5,10 @@ namespace Vanguard\Libraries\MpsImporter;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
+/**
+ * @todo There are some stations that have not been inputted for one reason or the other
+ * i.e NTA International
+ */
 class TvStationParser
 {
         
@@ -35,6 +39,7 @@ class TvStationParser
         "Oyo" => "Ibadan"
     ];
 
+    // "NTA International" => "NTA",
     const NAME_MAP = [
         "ABS TV" => "ABS",
         "AIT Port" => "AIT",
@@ -48,7 +53,6 @@ class TvStationParser
         "RSTV Port" => "RSTV",
         "On TV" => "ONTV",
         "NTA Port" => "NTA",
-        // "NTA International" => "NTA",
         "NTA Channel 35" => "NTA",
         "NTA CH 45 & 7" => "NTA",
         "NTA 2CH" => "NTA 2",
@@ -56,11 +60,46 @@ class TvStationParser
         "NTA CH" => "NTA",
         "NSTV (NTA Station)" => "NSTV",
         "Kwese Free Sports (KFS) UHF 32" => "Kwese Free Sports",
+        "Kwese Free Sports Nigeria ch. 290" => "Kwese Free Sports",
+        "Kwese Sports 1 ch. 301" => "Kwese Sports 1",
+        "Kwese Sports 2 ch. 302" => "Kwese Sports 2",
+        "Kwese Int" => "Kwese International",
         "Sokoto State" => "Sokoto State Television",
         "Super" => "Super Screen",
-        "TV" => "Lagos Continental"
-
+        "TV" => "Lagos Continental",
+        "AIT (Natl)" => "AIT",
+        "Silverbird (STV)" => "Silverbird TV",
+        "Africa Magic Igbo" => "Africa Magic (Igbo)",
+        "Discovery" => "Discovery Channel",
+        "FOX Int (GOtv)" => "Fox",
+        "Nat Geographic" => "National Geographic",
+        "NTA Parliamentary" => "NTA Parliament",
+        "Silverbird International (STV)" => "Silverbird International",
+        "SS 1 Africa (DStv)" => "SuperSport 1",
+        "SS 2 Africa (DStv)" => "SuperSport 2",
+        "SS 3 Nigeria (DStv)" => "SuperSport 3",
+        "SS 4 Africa (DStv)" => "SuperSport 4",
+        "SS 5 Nigeria (DStv)" => "SuperSport 5",
+        "SS 6 Africa (DStv)" => "SuperSport 6",
+        "SS 7 Nigeria (DStv)" => "SuperSport 7",
+        "SS 8 Nigeria (DStv)" => "SuperSport 8",
+        "SS 9 Africa (DStv)" => "SuperSport 9",
+        "SS 10 Nigeria (DStv)" => "SuperSport 10",
+        "SS 11 Nigeria (DStv)" => "SuperSport 11",
+        "SS 12 Nigeria (DStv)" => "SuperSport 12",
+        "SS Blitz (DStv)" => "SuperSport Blitz",
+        "SS Select 4 Africa (GOtv)" => "SuperSport Select 4",
+        "SuperSport Select 1 (GOtv)" => "SuperSport Select 1",
+        "SuperSport 2 (GOtv)" => "SuperSport 2",
+        "SuperSport 3 (GOtv)" => "SuperSport 3",
+        "SuperSport Blitz (GOtv)" => "SuperSport Blitz",
+        "SS (GOTV)" => "SuperSport 1",
+        "SS (DSTV)" => "SuperSport 1",
+        "Star life" => "Star Life",
+        "Trace" => "Trace Naija",
+        "Vuzu Amp" => "Vuzu"
     ];
+
 
     public static function parse($key) 
     {
