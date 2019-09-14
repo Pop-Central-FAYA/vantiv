@@ -10,14 +10,14 @@
                 <v-container grid-list-md class="pa-0">
                     <v-layout wrap>
                         <v-flex xs12 sm12 md12>
-                            <video class="video" :src="asset.asset_url" controls></video>
+                            <video ref="video" class="video" :src="asset.asset_url" controls></video>
                         </v-flex>
                     </v-layout>
                 </v-container>
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="" class="default-vue-btn" dark @click="dialog = false">Close</v-btn>
+                <v-btn color="" class="default-vue-btn" dark @click="stopVideo()">Close</v-btn>
             </v-card-actions>
         </v-card>
         </v-dialog>
@@ -38,11 +38,18 @@
         },
         data() {
             return {
-                dialog: false
+                dialog: false,
             };
         },
         mounted() {
             console.log('Play Video Component mounted.');
+        },
+        methods: {
+            stopVideo() {
+                var video = this.$refs.video; 
+                video.pause(); 
+                this.dialog = false;
+            }
         }
     }
 </script>
