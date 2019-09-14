@@ -4,7 +4,7 @@
             <template v-slot:activator="{ on }">
                 <v-tooltip top>
                     <template v-slot:activator="{ on }">
-                        <v-icon color="#01c4ca" dark left v-on="on" @click="dialog = true">fa fa-edit</v-icon>
+                        <v-icon color="#01c4ca" dark left v-on="on" @click="dialog = true">edit</v-icon>
                     </template>
                     <span>Edit campaign volume prices</span>
                 </v-tooltip>
