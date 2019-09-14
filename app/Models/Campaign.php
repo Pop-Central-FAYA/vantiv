@@ -71,4 +71,12 @@ class Campaign extends Base
     {
         return $this->belongsTo(Company::class, 'belongs_to');
     }
+
+    /**
+     * Get association with campaign time belt through the campaign id column
+     */
+    public function time_belts()
+    {
+        return $this->hasMany(CampaignTimeBelt::class);
+    }
 }

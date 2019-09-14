@@ -48,7 +48,8 @@
         <tbody>
             @foreach($time_belt_summary as $summary)
             <tr>
-                <td colspan="3">{{ date('Y', strtotime($mpo_details->campaign_mpo_time_belts()->first()->playout_date)) }}</td>
+                <td colspan="3">{{ date('Y', 
+                    strtotime(json_decode($mpo_details->adslots, true)[0]['playout_date'])) }}</td>
                 <td colspan="3">{{ $mpo_details->station }}</td>
                 <td colspan="3">{{ $summary['duration'].' seconds' }} <br> {{ $summary['day_part'] }}</td>
                 <td colspan="3">{{ $summary['total_spot'] }}</td>
@@ -90,6 +91,7 @@
     <table>
         <thead>
             <tr>
+                <th>Station</th>
                 <th>Programs</th>
                 <th>Positions</th>
                 <th>Month</th>
@@ -101,6 +103,7 @@
         <tbody>
             @foreach($mpos as $mpo)
                 <tr>
+                    <th>{{ $mpo['station'] }}</th>
                     <td>{{ $mpo['program'] }} <br> {{ $mpo['duration'] }} Seconds <br> {{ $mpo['daypart'] }} </td>
                     <td>{{ $mpo['day_range'] }} <br> {{ $mpo['time_slot'][0] .'-'. $mpo['time_slot'][1] }}</td>
                     <td>{{ $mpo['month'] }}</td>

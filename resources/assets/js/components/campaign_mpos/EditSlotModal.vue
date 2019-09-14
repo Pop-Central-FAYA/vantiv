@@ -1,5 +1,10 @@
 <template>
-    <v-dialog v-model="editDialog" persistent max-width="500px">
+    <v-dialog v-model="dialog" persistent max-width="500px">
+        <template v-slot:activator="{ on }">
+            <v-icon color="#01c4ca" dark v-on="on" @click="dialog = true" 
+            :disabled="selectedAdslots.length > 0"
+            right>edit</v-icon>
+        </template>
         <v-card>
             <v-card-title>
                 <span class="headline"> {{ adslot.program }} 
@@ -11,6 +16,43 @@
             <v-card-text>
                 <v-container grid-list-md>
                     <v-form>
+                        <v-layout wrap>
+                            <v-flex xs12 sm12 md6>
+                                <span>
+                                    Ad Vendor
+                                </span>
+                                <v-select
+                                    v-model="adslot.ad_vendor_id"
+                                    :items="vendorData"
+                                    item-text="name"
+                                    item-value="id"
+                                    v-validate="'required'"
+                                    name="ad_vendor"
+                                    placeholder="Select Ad Vendor"
+                                    solo
+                                ></v-select>
+                                <span v-if="adslot.ad_vendor_id === null" class="text-danger">
+                                    Add a vendor for this publisher
+                                </span><br>
+                                <span class="text-danger" v-show="errors.has('ad_vendor')">{{ errors.first('ad_vendor') }}</span>
+                            </v-flex>
+                            <v-flex xs12 sm12 md6>
+                                <span>
+                                    Publisher
+                                </span>
+                                <v-select
+                                    v-model="adslot.publisher_id"
+                                    :items="publisherData"
+                                    item-text="name"
+                                    item-value="id"
+                                    v-validate="'required'"
+                                    name="publisher"
+                                    placeholder="Select Publisher"
+                                    solo
+                                ></v-select>
+                                <span class="text-danger" v-show="errors.has('publisher')">{{ errors.first('publisher') }}</span>
+                            </v-flex>
+                        </v-layout>
                         <v-layout wrap>
                             <v-flex xs12 sm12 md12>
                                 <span>
@@ -97,7 +139,7 @@
                                 <p></p>
                                 <v-select
                                     v-model="adslot.time_belt_start_time"
-                                    :items="time_belts"
+                                    :items="timeBeltRange"
                                     item-text="start_time"
                                     item-value="start_time"
                                     v-validate="'required'"
@@ -122,7 +164,7 @@
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="red" class="default-vue-btn" dark @click="editDialog = false">Close</v-btn>
+                <v-btn color="red" class="default-vue-btn" dark @click="dialog = false">Close</v-btn>
                 <v-btn class="default-vue-btn" dark @click="updateSlot()">Update</v-btn>
             </v-card-actions>
         </v-card>
@@ -139,16 +181,23 @@ export default {
             required : true,
             type : Array
         },
-        time_belts : {
+        timeBeltRange : {
             required : true,
             type : Array
-        }
+        },
+        publisher : Object,
+        adVendor : Object,
+        group : String,
+        index : Number,
+        selectedAdslots : Array
     },
     data () {
         return {
-            editDialog : false,
+            dialog : false,
             media_asset_id : null,
             dateMenu: false,
+            publisherData : [this.publisher],
+            vendorData : [this.adVendor]
         }
     },
     mounted() {
@@ -160,12 +209,6 @@ export default {
             }
         };
         this.$validator.localize('en', dictionay);
-    },
-    created () {
-        var self = this
-        Event.$on('edit-dialog-modal', function(modal) {
-            self.editDialog = modal
-        })
     },
     computed : {
         newTotalInsertions : function (){
@@ -191,7 +234,7 @@ export default {
 
             axios({
                 method: 'patch',
-                url: `/mpos/${this.adslot.mpo_id}/adslots/${this.adslot.id}`,
+                url: `/campaigns/${this.adslot.campaign_id}/adslots/${this.adslot.id}`,
                 data: {
                     id : [this.adslot.id],
                     program : this.adslot.program,
@@ -201,17 +244,21 @@ export default {
                     time_belt_start_time : this.adslot.time_belt_start_time,
                     ad_slots: this.adslot.ad_slots,
                     volume_discount : this.adslot.volume_discount,
-                    day : this.dayName(this.adslot.playout_date)
+                    day : this.dayName(this.adslot.playout_date),
+                    ad_vendor_id : this.adslot.ad_vendor_id,
+                    publisher_id : this.adslot.publisher_id,
+                    group : this.group
                 }
             }).then((res) => {
                 if (res.data.status === 'success') {
-                    Event.$emit('updated-adslots',this.filterMpo(
-                        res.data.data.campaign_mpos, this.adslot.mpo_id
-                        ).campaign_mpo_time_belts)
-                    Event.$emit('updated-mpos', res.data.data.campaign_mpos)
+                    Event.$emit('updated', true)
                     Event.$emit('updated-campaign', res.data.data)
+                    if(this.group){
+                        Event.$emit('updated-adslots-from-group', res.data.data.grouped_time_belts[this.index].time_belts)
+                    }
+                    Event.$emit('updated-adslots', res.data.data.time_belts)
                     this.sweet_alert(res.data.message, 'success');
-                    this.editDialog = false;
+                    this.dialog = false;
                 } else {
                     this.sweet_alert(res.data.message, 'error');
                     this.isHidden = true

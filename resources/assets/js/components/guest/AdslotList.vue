@@ -6,7 +6,7 @@
                     Export Mpo
                 </v-btn>
             </v-card-title>
-            <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="groupedAdslots" hide-actions :pagination.sync="pagination">
+            <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="adslotData" hide-actions :pagination.sync="pagination">
                 <template v-slot:items="props">
                     <tr>
                         <td>{{ props.item.day }} ({{ props.item.playout_date }})
@@ -52,11 +52,11 @@ export default {
             pagination: {
                 rowsPerPage: -1
             },
-            groupedAdslots : [],
+            adslotData : [],
         }
     },
     mounted () {
-        this.groupedAdslots = this.groupAdslotByProgram(this.adslots)            
+        this.adslotData = this.adslots            
     },
     methods : {
         exportMpo : function() {

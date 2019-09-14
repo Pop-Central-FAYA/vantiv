@@ -2,7 +2,9 @@
     <v-layout>
         <v-dialog v-model="dialog" persistent max-width="400px">
             <template v-slot:activator="{ on }">
-                <v-icon color="red" dark v-on="on" right>delete</v-icon>
+                <v-icon color="red" dark v-on="on" right
+                :disabled="selectedAdslots.length > 0"
+                >delete</v-icon>
             </template>
             <v-card>
                 <v-card-title>
@@ -37,7 +39,10 @@ export default {
         adslot : {
             required : true,
             type : Object
-        }
+        },
+        group : String,
+        index : Number,
+        selectedAdslots : Array
     },
     methods : {
         deleteSlots : function(){
@@ -45,22 +50,26 @@ export default {
             this.sweet_alert(msg, 'info');
             axios({
                 method: 'delete',
-                url: `/mpos/${this.adslot.mpo_id}/adslots/${this.adslot.id}`,
-                data: {}
+                url: `/campaigns/${this.adslot.campaign_id}/adslots/${this.adslot.id}`,
+                data: {
+                    group : this.group
+                }
             }).then((res) => {
                 $('#load_this_div').css({opacity: 1});
                 if (res.data.status === "success") {
                     this.sweet_alert(res.data.message, 'success');
-                    Event.$emit('updated-adslots',this.filterMpo(
-                        res.data.data.campaign_mpos, this.adslot.mpo_id
-                    ).campaign_mpo_time_belts)
-                    Event.$emit('updated-mpos', res.data.data.campaign_mpos)
+                    Event.$emit('updated', true)
                     Event.$emit('updated-campaign', res.data.data)
+                    if(this.group){
+                        Event.$emit('updated-adslots-from-group', res.data.data.grouped_time_belts[this.index].time_belts)
+                    }
+                    Event.$emit('updated-adslots', res.data.data.time_belts)
                     this.dialog = false;
                 } else {
                     this.sweet_alert(res.data.message, 'error');
                 }
             }).catch((error) => {
+                console.log(error)
                 this.sweet_alert('An unknown error has occurred, media assets cannot be delete. Please try again', 'error');
             });
         }

@@ -97,7 +97,8 @@ Vue.component('campaign-file-list', () => import('./components/campaign_mpos/Mpo
 Vue.component('add-adslot-modal', () => import('./components/campaign_mpos/AddAdslotModal.vue'));
 Vue.component('share-link-modal', () => import('./components/campaign_mpos/ShareLinkModal.vue'));
 Vue.component('edit-volume-campaign-price', () => import('./components/campaign_mpos/EditVolumePrice.vue'));
-
+Vue.component('list-campaign-adslot', () => import('./components/campaign/ListCampaignAdslot.vue'));
+Vue.component('list-group-adslot', () => import('./components/campaign/ListGroupAdslot.vue'));
 
 // AD VENDOR MANAGEMENT
 Vue.component('ad-vendor-list', () => import('./components/ad_vendors/VendorList.vue'));
@@ -166,12 +167,16 @@ Vue.mixin({
                 timer: timer
             });
         },
-        displayServerValidationErrors(validationErrors) {
+        displayServerValidationErrors(validationErrors, withoutKey = null) {
             var err = [];
             for (var key in validationErrors) {
                 if (validationErrors.hasOwnProperty(key)) {
                     var errors = validationErrors[key];
                     validationErrors[key].forEach(element => {
+                        if(withoutKey){
+                            err.push(element)
+                            return
+                        }
                         err.push(`${key}: ${element}`);
                     });
                 }

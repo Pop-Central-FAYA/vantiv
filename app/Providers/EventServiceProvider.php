@@ -20,7 +20,7 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         Registered::class => [UserWasRegisteredListener::class],
         CampaignMpoTimeBeltUpdated::class => [
-            CampaignMpoUpdated::class,
+            //CampaignMpoUpdated::class,
             CampaignBudgetUpdated::class
         ]
     ];

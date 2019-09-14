@@ -32,7 +32,8 @@ class UpdateMpoTimeBeltRequest extends FormRequest
             'time_belt_start_time' => 'required|sometimes',
             'ad_slots' => 'required|sometimes',
             'volume_discount' => 'required',
-            'day' => 'required|sometimes'
+            'day' => 'required|sometimes',
+            'ad_vendor_id' => 'nullable',
         ];
     }
 }

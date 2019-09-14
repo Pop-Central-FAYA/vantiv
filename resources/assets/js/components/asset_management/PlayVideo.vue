@@ -4,28 +4,20 @@
         <template v-slot:activator="{ on }">
             <a v-on="on" class="default-vue-link">{{ asset.file_name}}</a>
             <v-spacer></v-spacer>
-            <span>
-                <v-tooltip top >
-                    <template v-slot:activator="{ on }">
-                        <v-icon color="primary" v-on="on" dark left @click="downloadFile()" >fa-file-download</v-icon>
-                    </template>
-                    <span>Download file</span>
-                </v-tooltip>
-            </span>
         </template>
         <v-card>
             <v-card-text class="px-2 pt-2 pb-0">
                 <v-container grid-list-md class="pa-0">
                     <v-layout wrap>
                         <v-flex xs12 sm12 md12>
-                            <video class="video" :src="asset.asset_url" controls></video>
+                            <video ref="video" class="video" :src="asset.asset_url" controls></video>
                         </v-flex>
                     </v-layout>
                 </v-container>
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="" class="default-vue-btn" dark @click="dialog = false">Close</v-btn>
+                <v-btn color="" class="default-vue-btn" dark @click="stopVideo()">Close</v-btn>
             </v-card-actions>
         </v-card>
         </v-dialog>
@@ -46,20 +38,17 @@
         },
         data() {
             return {
-                dialog: false
+                dialog: false,
             };
         },
         mounted() {
             console.log('Play Video Component mounted.');
         },
-        methods : {
-            downloadFile : function() {
-                this.sweet_alert('Processing request, please wait...', 'info');
-                const link = document.createElement('a');
-                link.href = this.asset.asset_url;
-                link.setAttribute('download', this.asset.file_name); //or any other extension
-                document.body.appendChild(link);
-                link.click();
+        methods: {
+            stopVideo() {
+                var video = this.$refs.video; 
+                video.pause(); 
+                this.dialog = false;
             }
         }
     }

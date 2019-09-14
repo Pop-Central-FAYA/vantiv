@@ -57,6 +57,8 @@ class GetSuggestionListByDuration
 
                 $new_array[] = [
                     'station' => $suggestion->station,
+                    'type' => $suggestion->station_type,
+                    'station_type' => $suggestion->station.'_'.$suggestion->station_type,
                     'program' => $suggestion->program,
                     'duration' => $key,
                     'day' => $value->day,

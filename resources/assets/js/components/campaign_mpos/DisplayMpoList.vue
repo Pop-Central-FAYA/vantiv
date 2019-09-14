@@ -10,20 +10,15 @@
         <template v-slot:items="props">
             <tr>
                 <td @click="props.expanded = !props.expanded">
-                    <a class="default-vue-link">{{ props.item.station }}</a>
+                    <a class="default-vue-link">{{ props.item.vendor }}</a>
                 </td>
-                <td @click="props.expanded = !props.expanded" class="text-xs-left">{{ format_audience(sumNetTotalInCampaignMpoTimeBelt(props.item.campaign_mpo_time_belts)) }}</td> 
+                <td @click="props.expanded = !props.expanded" class="text-xs-left">{{ format_audience(props.item.net_total) }}</td> 
                 <td @click="props.expanded = !props.expanded" 
                     class="text-xs-left"
-                    @updated-adslots="sumAdslotsInCampaignMpoTimeBelt(props.item.campaign_mpo_time_belts)"
-                    >{{ sumAdslotsInCampaignMpoTimeBelt(props.item.campaign_mpo_time_belts) }}</td>
-                <td @click="props.expanded = !props.expanded" class="text-xs-left">{{ props.item.status }}</td>
+                    >{{ props.item.insertions }}</td>
                 <td class="justify-center layout px-0">
                     <v-container grid-list-md class="container-action-btn">
                         <v-layout wrap>
-                            <v-flex xs12 sm6 md3>
-                                <edit-volume-campaign-price :mpo="props.item"></edit-volume-campaign-price>
-                            </v-flex>
                             <v-flex xs12 sm6 md3>
                                 <v-layout>
                                     <v-tooltip top>
@@ -39,9 +34,6 @@
                             </v-flex>
                             <v-flex xs12 sm6 md2>
                                  <submit-mpo-modal :mpo="props.item"></submit-mpo-modal>
-                            </v-flex>
-                            <v-flex xs12 sm6 md1>
-                                <mpo-file-manager :mpo="props.item" :assets="assets" :client="client" :brand="brand"></mpo-file-manager>
                             </v-flex>
                         </v-layout>
                     </v-container>
@@ -74,19 +66,17 @@
                 required : true,
                 type : Array
             },
-            assets: Array,
             client: String,
             brand: String,
-            timeBelts: Array
+            campaignId : String
         },
         data () {
             return {
                 search: '',
                 headers: [
-                    { text: 'Station', align: 'left', value: 'station',  width: '30%' },
-                    { text: 'Budget (₦)', value: 'budget',  width: '20%' },
-                    { text: 'Exposures', value: 'ad_slots', width: '15%' },
-                    { text: 'Status', value: 'status', width: '20%' },
+                    { text: 'Vendor', align: 'left', value: 'vendor',  width: '30%' },
+                    { text: 'Net Total (₦)', value: 'net_total',  width: '20%' },
+                    { text: 'Exposures', value: 'insertions', width: '15%' },
                     { text: 'Actions', value: 'name', sortable: false , width: '15%'}
                 ],
                 pagination: {
@@ -95,27 +85,11 @@
                 mposData : this.mpos
             }
         },
-        created() {
-            var self = this;
-            Event.$on('updated-mpos', function (mpos) {
-                self.mposData = mpos;
-            });
-        },
         methods : {
-            adslotList : function(mpo_id) {
-                return window.location.href = '/campaigns/mpo/details/'+mpo_id
-            },
             exportMpo : function(mpo_id) {
                 var msg = "Generating Excel Document, Please wait";
                 this.sweet_alert(msg, 'info');
-                window.location = `/campaigns/mpos/${mpo_id}/export`
-                // window.location.href = '/campaigns/mpo/export/'+mpo_id
-            },
-            sumAdslotsInCampaignMpoTimeBelt : function(campaign_mpo_time_belts) {
-                return campaign_mpo_time_belts.reduce((prev, cur) => prev + cur.ad_slots, 0);
-            },
-            sumNetTotalInCampaignMpoTimeBelt : function(campaign_mpo_time_belts) {
-                return campaign_mpo_time_belts.reduce((prev, cur) => prev + cur.net_total, 0);
+                window.location = `/campaigns/${this.campaignId}/mpos/${mpo_id}/export`
             }
         }
     }

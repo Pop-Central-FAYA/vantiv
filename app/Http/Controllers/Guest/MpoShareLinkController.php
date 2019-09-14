@@ -15,10 +15,10 @@ class MpoShareLinkController extends Controller
         $share_link = MpoShareLink::findOrFail($id);
         if ($share_link->isExpired($id) || !$request->hasValidSignature()) {
             Session::flash('error', 'Link expired');
-            (new StoreMpoShareLinkActivity('Link expired'))->run();
+            (new StoreMpoShareLinkActivity('Link expired', $share_link->id))->run();
             return view('errors.expired_link'); //this is a newly created page
         }
-        (new StoreMpoShareLinkActivity('Link is active'))->run();
+        (new StoreMpoShareLinkActivity('Link is active', $share_link->id))->run();
         return view('guest.mpo')->with('share_link', $share_link);
     }
 }

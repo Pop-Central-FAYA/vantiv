@@ -8,16 +8,27 @@
         </v-card-title>
         <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="fileArr" :search="search" :pagination.sync="pagination">
         <template v-slot:items="props">
-            <tr>
+            <tr v-if="props.item.length != 0">
                 <td>
                     <media-asset-play-video :asset="props.item[0]['media_asset']"></media-asset-play-video>
                 </td>
                 <td class="text-xs-left">{{ props.item[0]['duration'] }}</td> 
-                <td class="text-xs-left">{{ sumAdslotsInCampaignMpoTimeBelt(props.item) }}</td>
-                <td class="text-xs-left" v-if="is_public">
+                <td class="text-xs-left">{{ props.item.length }}</td>
+                <td class="text-xs-left">
+                    <v-tooltip top >
+                        <template v-slot:activator="{ on }">
+                            <v-icon color="#01c4ca" v-on="on" dark left 
+                            @click="downloadFile(props.item[0]['media_asset'].asset_url,
+                            props.item[0]['media_asset'].file_name)" 
+                            >fa-file-download</v-icon>
+                        </template>
+                        <span>Download Asset</span>
+                    </v-tooltip>
                     <v-tooltip top>
                         <template v-slot:activator="{ on }">
-                            <v-icon color="primary" v-on="on" dark left @click="downloadCertificate(props.item[0]['media_asset'].regulatory_cert_url)">fa-file-download</v-icon>
+                            <v-icon color="red" v-on="on" dark left 
+                            @click="downloadCertificate(props.item[0]['media_asset'].regulatory_cert_url)">
+                            fa-file-download</v-icon>
                         </template>
                         <span>Download certificate</span>
                     </v-tooltip>
@@ -47,7 +58,12 @@
         data () {
             return {
                 search: '',
-                headers: this.getHeaders(),
+                headers: [
+                            { text: 'File Name', align: 'left', value: 'station' },
+                            { text: 'Duration', value: 'budget' },
+                            { text: 'Insertions', value: 'ad_slots' },
+                            { text: 'Action', value: 'action', sortable: false , width: '20%'}
+                        ],
                 pagination: {
                     rowsPerPage: 10
                 },
@@ -61,28 +77,20 @@
             convertFilesObjToArr : function(){
                 this.fileArr = Object.values(this.files);
             },
-            sumAdslotsInCampaignMpoTimeBelt : function(campaign_mpo_time_belts) {
-                return campaign_mpo_time_belts.reduce((prev, cur) => prev + cur.ad_slots, 0);
-            },
-            getHeaders : function() {
-                var headers = [
-                                { text: 'File Name', align: 'left', value: 'station' },
-                                { text: 'Duration', value: 'budget' },
-                                { text: 'Insertions', value: 'ad_slots' }
-                            ]
-                if(this.is_public){
-                    headers.push({
-                        text: 'Certificate', value: 'certificate'
-                    })
-                }
-                return headers
-            },
             downloadCertificate : function(url) {
                 if(url === ""){
                     this.sweet_alert('No regulatory certificate uploaded for this file', 'info');
                     return
                 }
                 window.open(url, '_blank')
+            },
+            downloadFile : function(url, file_name) {
+                this.sweet_alert('Processing request, please wait...', 'info');
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', file_name); //or any other extension
+                document.body.appendChild(link);
+                link.click();
             }
         }
     }

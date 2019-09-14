@@ -1,14 +1,47 @@
 <template>
     <v-dialog v-model="dialog" persistent max-width="500px">
         <template v-slot:activator="{ on }">
-            <v-btn class="default-vue-btn mx-0" small dark v-on="on" @click="dialog = true">
-                <v-icon>add</v-icon> Add Adslot
-            </v-btn>
+            <v-icon color="#01c4ca" dark v-on="on" @click="dialog = true" left>add</v-icon>
         </template>
         <v-card>
             <v-card-text>
                 <v-container grid-list-md>
                     <v-form>
+                        <v-layout wrap>
+                            <v-flex xs12 sm12 md6>
+                                <span>
+                                    Ad Vendor
+                                </span>
+                                <v-select
+                                    v-model="ad_vendor"
+                                    :items="adVendors"
+                                    item-text="name"
+                                    item-value="id"
+                                    v-validate="'required'"
+                                    name="ad_vendor"
+                                    placeholder="Select Ad Vendor"
+                                    solo
+                                    return-object
+                                ></v-select>
+                                <span class="text-danger" v-show="errors.has('ad_vendor')">{{ errors.first('ad_vendor') }}</span>
+                            </v-flex>
+                            <v-flex xs12 sm12 md6>
+                                <span>
+                                    Publisher
+                                </span>
+                                <v-select
+                                    v-model="publisher"
+                                    :items="ad_vendor.publishers"
+                                    item-text="name"
+                                    item-value="id"
+                                    v-validate="'required'"
+                                    name="publisher"
+                                    placeholder="Select Publisher"
+                                    solo
+                                ></v-select>
+                                <span class="text-danger" v-show="errors.has('publisher')">{{ errors.first('publisher') }}</span>
+                            </v-flex>
+                        </v-layout>
                         <v-layout wrap>
                             <v-flex xs12 sm12 md12>
                                 <span>
@@ -16,7 +49,7 @@
                                 </span>
                                 <v-text-field v-validate="'required'" 
                                 type="text" placeholder="Program name" 
-                                name="program" v-model="form.program"></v-text-field>
+                                name="program" v-model="program"></v-text-field>
                                 <span class="text-danger" v-show="errors.has('progeam')">{{ errors.first('progeam') }}</span>
                             </v-flex>
                         </v-layout>
@@ -36,14 +69,14 @@
                                 >
                                     <template v-slot:activator="{ on }">
                                         <v-text-field
-                                        v-model="form.playout_date"
+                                        v-model="playout_date"
                                         name="date"
                                         v-validate="'required|date_format:yyyy-MM-dd'"
                                         placeholder="DD/MM/YYYY"
                                         v-on="on"
                                         ></v-text-field>
                                     </template>
-                                    <v-date-picker v-model="form.playout_date" no-title @input="dateMenu = false"></v-date-picker>
+                                    <v-date-picker v-model="playout_date" no-title @input="dateMenu = false"></v-date-picker>
                                 </v-menu>
                                 <span class="text-danger" v-show="errors.has('date')">{{ errors.first('date') }}</span>
                             </v-flex>
@@ -55,7 +88,7 @@
                                 </span>
                                 <v-text-field v-validate="'required|min:1'" 
                                 type="number" placeholder="Unit Price" 
-                                name="unit_price" v-model="form.unit_rate"></v-text-field>
+                                name="unit_price" v-model="unit_rate"></v-text-field>
                                 <span class="text-danger" v-show="errors.has('unit_price')">{{ errors.first('unit_price') }}</span>
                             </v-flex>
                             <v-flex xs12 sm12 md6>
@@ -64,7 +97,7 @@
                                 </span>
                                 <v-text-field v-validate="'required|min:1'" 
                                 type="number" placeholder="Unit Price"
-                                name="volume_discount" v-model="form.volume_discount"></v-text-field>
+                                name="volume_discount" v-model="volume_discount"></v-text-field>
                                 <span class="text-danger" v-show="errors.has('volume_discount')">{{ errors.first('volume_discount') }}</span>
                             </v-flex>
                         </v-layout>
@@ -74,7 +107,7 @@
                                     Duration
                                 </span>
                                 <v-select
-                                    v-model="form.duration"
+                                    v-model="duration"
                                     :items="durations"
                                     v-validate="'required'"
                                     name="duration"
@@ -88,8 +121,8 @@
                                     Media Asset
                                 </span>
                                 <v-select
-                                    v-model="form.asset_id"
-                                    :items="filterAssetByDuration(assets, form.duration)"
+                                    v-model="asset_id"
+                                    :items="filterAssetByDuration(assets, duration)"
                                     item-text="file_name"
                                     item-value="id"
                                     v-validate="'required'"
@@ -107,8 +140,8 @@
                                 </span>
                                 <p></p>
                                 <v-select
-                                    v-model="form.time_belt"
-                                    :items="time_belts"
+                                    v-model="time_belt"
+                                    :items="timeBeltRange"
                                     item-text="start_time"
                                     item-value="start_time"
                                     v-validate="'required'"
@@ -122,10 +155,9 @@
                                 <span>
                                     Insertion
                                 </span>
-                                <p></p>
                                 <v-text-field v-validate="'required|min:1'" 
                                 type="number" placeholder="Unit Price"
-                                name="insertion" v-model="form.insertion"></v-text-field>
+                                name="insertion" v-model="insertion"></v-text-field>
                                 <span class="text-danger" v-show="errors.has('insertion')">{{ errors.first('insertion') }}</span>
                             </v-flex>
                         </v-layout>
@@ -147,31 +179,30 @@ export default {
             required : true,
             type : Array
         },
-        mpo_id : {
-            required : true,
-            type : String
-        },
-        time_belts : {
+        timeBeltRange : {
             required : true,
             type : Array
-        }
+        },
+        adVendors : Array,
+        campaignId : String,
+        group : String
     },
     data () {
         return {
             dialog : false,
             media_asset_id : null,
             dateMenu: false,
-            form : {
-                program : '',
-                playout_date : '',
-                unit_price : 0,
-                volume_discount : 0,
-                asset_id : '',
-                time_belt : '',
-                insertion : 0,
-                duration : '',
-                mpo_id : this.mpo_id
-            },
+            publisher : '',
+            ad_vendor : {},
+            program : '',
+            playout_date : '',
+            unit_rate : 0,
+            volume_discount : 0,
+            asset_id : '',
+            time_belt : '',
+            insertion : 0,
+            duration : '',
+            mpo_id : this.mpo_id,
             durations : [15, 30, 45, 60]
         }
     },
@@ -205,16 +236,29 @@ export default {
             this.sweet_alert(msg, 'info');
             axios({
                 method: 'POST',
-                url: `/mpos/${this.mpo_id}/adslots`,
-                data: this.form
+                url: `/campaigns/${this.campaignId}/adslots`,
+                data: {
+                    publisher : this.publisher,
+                    ad_vendor : this.ad_vendor.id,
+                    program : this.program,
+                    playout_date : this.playout_date,
+                    unit_rate : this.unit_rate,
+                    volume_discount : this.volume_discount,
+                    asset_id : this.asset_id,
+                    time_belt : this.time_belt,
+                    insertion : this.insertion,
+                    duration : this.duration,
+                    mpo_id : this.mpo_id,
+                    group : this.group
+                }
             }).then((res) => {
                 if (res.data.status === 'success') {
                     this.sweet_alert(res.data.message, 'success');
-                    Event.$emit('updated-adslots',this.filterMpo(
-                        res.data.data.campaign_mpos, this.mpo_id
-                        ).campaign_mpo_time_belts)
-                    Event.$emit('updated-mpos', res.data.data.campaign_mpos)
+                    Event.$emit('updated-group-adslots',res.data.data.grouped_time_belts)
+                    Event.$emit('updated', true)
                     Event.$emit('updated-campaign', res.data.data)
+                    Event.$emit('updated-adslots', res.data.data.time_belts)
+                    Event.$emit('group', 'ad_vendor_id')
                     this.dialog = false;
                 } else {
                     this.sweet_alert(res.data.message, 'error');
