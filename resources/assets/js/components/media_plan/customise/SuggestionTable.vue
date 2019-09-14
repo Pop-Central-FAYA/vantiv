@@ -7,6 +7,9 @@
                     <v-flex md6 pl-0><h4>AUDIENCE</h4></v-flex>
                 </v-layout>
                 <v-expansion-panel-content v-for="(timebelts, key, index) in suggestions" v-bind:key="key">
+                    <template v-slot:actions>
+                        <v-icon color="secondary" @click="renderTimeBelts(index)">$vuetify.icons.expand</v-icon>
+                    </template>
                     <template v-slot:header>
                         <v-layout @click="renderTimeBelts(index)">
                             <v-flex md6>{{ key }}</v-flex>
