@@ -3,10 +3,10 @@
         <v-flex xs12 sm12 md12 lg12 class="day-toggle">
             <v-btn-toggle>
                 <div v-for="(day, key) in computedGraphDays" v-bind:key="key">
-                    <v-btn text :class="`${activateFirstButton} px-4 mr-3`" @click="seriesByDay(day, key)" v-if="key == 0">
+                    <v-btn text :class="`${activateFirstButton} px-4 mr-3`" @click="loadSeriesByDay(day, key)" v-if="key == 0">
                         {{ shortDay(day) }}
                     </v-btn>
-                    <v-btn text class="px-4 mr-3" @click="seriesByDay(day)" v-else>
+                    <v-btn text class="px-4 mr-3" @click="loadSeriesByDay(day, key)" v-else>
                         {{ shortDay(day) }}
                     </v-btn>
                 </div>
@@ -47,6 +47,7 @@
     export default {
         props: {
             graphDays: Array,
+            routes: Object
         },
         data() {
             return {
@@ -90,8 +91,13 @@
         },
         computed: {
             computedGraphDays: function () {
-                let graphDetailsFoundDays = Object.keys(this.graphDetails);
-                return this.graphDays.filter(f => graphDetailsFoundDays.includes(f));
+                var dayObj = {}
+                this.graphDays.forEach(function (day, idx) {
+                    dayObj[idx] = day;
+                });
+                return dayObj;
+                // let graphDetailsFoundDays = Object.keys(this.graphDetails);
+                // return this.graphDays.filter(f => graphDetailsFoundDays.includes(f));
             }
         },
         mounted() {
@@ -101,17 +107,10 @@
             var self = this;
             //Render the table whenever suggestions is updated
             Event.$on('ratings-created', function (data) {
-                self.resetGraphs(data);
+                self.graphDetails = {}
             });
         },
         methods: {
-            resetGraphs(data) {
-                this.suggestions = data.stations || {};
-                this.graphDetails = data.total_graph || {};
-                if (this.computedGraphDays.length > 0) {
-                    this.seriesByDay(this.computedGraphDays[0], 0);
-                }
-            },
             intializeGeneralTimeBelts() {
                 let newArray = [];
                 generalTimeBeltValue.forEach(function (item) {
@@ -120,6 +119,7 @@
                 return newArray;
             },
             seriesByDay(day, key) {
+                key = parseInt(key);
                 if (key != 0) {
                     this.activateFirstButton = '';
                 }
@@ -138,7 +138,7 @@
                     var mergedArr = Object.assign(self.intializeGeneralTimeBelts(), suggestionTimebeltArr);
                     var audiencesPerTimeBelt = Object.values(mergedArr);
                     seriesValues.push({
-                        name: `${station}/${day}`,
+                        name: `${station}`,
                         data: audiencesPerTimeBelt,
                         showInLegend:true,
                         point: {
@@ -152,14 +152,44 @@
                 });
                 this.chartOptions.series = seriesValues;
             },
+            loadSeriesByDay(day, key) {
+                var stationTimebelts = this.graphDetails[day];
+                if (this.isEmpty(this.stationTimebelts)) {
+                    this.createNewTimeBeltRatings(day, key)
+                } else {
+                    this.seriesByDay(day, key);
+                }
+            },
+            createNewTimeBeltRatings(day, key) {
+                var msg = "Loading graph data";
+                this.sweet_alert(msg, 'info', 60000);
+                axios({
+                    method: 'post',
+                    url: this.routes.timebelt_graph_action,
+                    data: {'day': day}
+                }).then((res) => {
+                    this.sweet_alert('Graph data retrieved', 'success');
+                    this.graphDetails[day] = res.data.data;
+                    this.seriesByDay(day, key);
+                }).catch((error) => {
+                    if (error.response && (error.response.status == 422)) {
+                        this.displayServerValidationErrors(error.response.data.errors);
+                    } else {
+                        this.sweet_alert('An unknown error has occurred, please try again', 'error');
+                    }
+                })
+            },
+            /**
+             * @todo proper checks need to be added here, it is very easy to get an undefined error
+             */
             getTimebeltFromCategory(category, day, station) {
                 var time_arr = category.split('-');
                 var start_time = `${time_arr[0].trim()}:00`;
                 var end_time = `${time_arr[1].trim()}:00`;
-                var time_belt = this.suggestions[station].find(time_belt => {
-                    return (time_belt.day == day && time_belt.start_time == start_time);
+                var timeBelt = this.graphDetails[day][station].find(function(item) {
+                    return (item.day == day && item.start_time == start_time)
                 });
-                return time_belt;
+                return timeBelt;
             },
             selectTimeBelt(category, day, station) {
                 var time_belt = this.getTimebeltFromCategory(category, day, station);

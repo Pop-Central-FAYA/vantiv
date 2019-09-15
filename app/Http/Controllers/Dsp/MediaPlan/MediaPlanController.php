@@ -39,7 +39,12 @@ use Vanguard\Mail\ApprovalNotification;
 use Vanguard\Http\Requests\MediaPlan\StorePlanRequest;
 use Vanguard\Http\Requests\MediaPlan\StorePlanSuggestionsRequest;
 use Vanguard\Http\Resources\MediaPlanSuggestionCollection;
+use Vanguard\Http\Resources\TvStationRatingCollection;
+use Vanguard\Http\Resources\TvStationTimeBeltRatingCollection;
+use Vanguard\Http\Resources\TvStationTimeBeltRatingGraphResource;
+use Vanguard\Libraries\TimeBelt;
 use Vanguard\Services\MediaPlan\GetStationRatingService;
+use Vanguard\Services\MediaPlan\GetStationTimeBeltRatingService;
 use Vanguard\Services\MediaPlan\StoreMediaPlanService;
 use Vanguard\Services\MediaPlan\StoreMediaPlanSuggestionService;
 
@@ -68,7 +73,8 @@ class MediaPlanController extends Controller
             'back_action' => route('agency.media_plans', [], false),
             'next_action' => route('agency.media_plan.create', ['id' => $media_plan->id], false),
             'save_action' => route('agency.media_plan.select_suggestions', ['id' => $media_plan->id], false),
-            'new_ratings_action' => route('agency.media_plan.create-ratings', ['id' => $media_plan->id], false)
+            'new_ratings_action' => route('agency.media_plan.create-ratings', ['id' => $media_plan->id], false),
+            'timebelt_graph_action' => route('agency.media_plan.create-timebelt-graph', ['id' => $media_plan->id], false)
         ];
         $selected = new MediaPlanSuggestionCollection($media_plan->suggestions->where('status', 1));
 
@@ -95,7 +101,6 @@ class MediaPlanController extends Controller
                 $saved_filters[$key] = 'all';
             }
         }
-
         if (!Arr::has($saved_filters, 'station_type')) {
             $saved_filters['station_type'] = 'network';
         }
@@ -157,34 +162,43 @@ class MediaPlanController extends Controller
     /*
      * *************************** API METHODS *****************************
      */
-
-    /**
-     * Generate and return new ratings based on filters passed in the request
-     */
     public function createStationRatings(CreateStationRatingRequest $request, $id)
     {
         $validated = $request->validated();
         $media_plan = MediaPlan::findOrFail($id);
 
-        //run the request to generate the new ratings and return the value to the frontend
-        $timebelts_service = new GetStationRatingService($validated, $media_plan);
-        $data = $timebelts_service->run();
+        $rating_service = new GetStationRatingService($validated, $media_plan);
+        $data = $rating_service->run();
 
         if (count($data) > 0) {
             $media_plan->filters = json_encode($validated);
             $media_plan->save();
-
-            return response()->json(array(
-                'status' => 'success',
-                'message' => 'Ratings created',
-                'data' => $data
-            ));
         }
-        return response()->json(array(
-            'status' => 'error',
-            'message' => 'No results for the given filters',
-            'data' => $data
-        ));
+        return new TvStationRatingCollection($data);
+    }
+
+    public function createStationTimeBeltRatings($id, $station_key)
+    {
+        $media_plan = MediaPlan::findOrFail($id);
+
+        //run the request to generate the new ratings and return the value to the frontend
+        $filter = ["tv_station_key" => $station_key];
+        $timebelts_service = new GetStationTimeBeltRatingService($filter, $media_plan);
+        $data = $timebelts_service->run();
+
+        return new TvStationTimeBeltRatingCollection($data);
+    }
+
+    public function createTimeBeltRatingsGraph(Request $request, $id)
+    {
+        $media_plan = MediaPlan::findOrFail($id);
+
+        //get the day and put that in the filters
+        $filter = ["day" => TimeBelt::shortenDay($request->day)];
+        $timebelts_service = new GetStationTimeBeltRatingService($filter, $media_plan);
+        $data = $timebelts_service->run();
+
+        return new TvStationTimeBeltRatingGraphResource($data);
     }
 
     /**
