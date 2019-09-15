@@ -132,8 +132,13 @@
                 } 
             },
             updateProgramDetails() {
-                Event.$emit('update-program-details', this.reformatNewProgram(this.selectedValues));
-                this.dialog = false;
+                if (this.selectedValues.program == "Unknown Program" || this.selectedValues.program == '') {
+                    this.sweet_alert("Unknown program name!", 'error');
+                    return;
+                } else {
+                    Event.$emit('update-program-details', this.reformatNewProgram(this.selectedValues));
+                    this.dialog = false;
+                }
             },
             reformatNewProgram(details) {
                 var start_time_arr = [];
