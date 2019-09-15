@@ -203,6 +203,7 @@
         },
         mounted() {
             console.log('Media Plan Details Component mounted.');
+            this.getBrands();
         },
         methods: {
             getBrands() {
@@ -272,7 +273,7 @@
             },
             storeVolumeDiscount(station, evt) {
                 var discount = evt.target.value;
-                if (discount > 0 && discount <= 100) {
+                if (discount >= 0 && discount <= 100) {
                     this.volumeDiscounts.push({discount: discount, station: station});
                     this.fayaTimebelts.programs_stations.forEach(element => {
                         if (element.station == station) {
