@@ -105,10 +105,15 @@ class TvRatingsList implements BaseServiceInterface
     protected function filterForRequestedAudience() {
         $days = Arr::get($this->filters, 'day');
         $day_parts = Arr::get($this->filters, 'day_part');
+        $station_type = Arr::get($this->filters, 'station_type');
         return MpsProfile::filter($this->filters)
             ->join('mps_profile_activities as mpa', 'mpa.ext_profile_id', '=', 'mps_profiles.ext_profile_id')
+            ->join('tv_stations as ts', 'ts.key', '=', 'mpa.tv_station_key')
             ->when($days, function($query) use ($days) {
                 $query->where('mpa.day', $days);
+            })
+            ->when($station_type, function($query) use ($station_type) {
+                $query->where('ts.type', strtolower($station_type));
             })
             ->when($day_parts, function($query) use ($day_parts) {
                 $query->whereBetween("mpa.start_time", DayPartList::DAYPARTS[$day_parts]);

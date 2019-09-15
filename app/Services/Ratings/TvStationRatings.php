@@ -22,16 +22,10 @@ class TvStationRatings extends TvRatingsList
     
     protected function calculateRatings() {
         $universe_size = $this->getUniverseSize();
-
-        $station_type = Arr::get($this->filters, 'station_type');
         
         $sub_query_cols = 'ts.name, ts.state, ts.type, ts.key, mpa.tv_station_id, mps_profiles.pop_weight';
         $sub_query = $this->filterForRequestedAudience()
             ->select(DB::raw($sub_query_cols))
-            ->join('tv_stations as ts', 'ts.key', '=', 'mpa.tv_station_key')
-            ->when($station_type, function($query) use ($station_type) {
-                $query->where('ts.type', strtolower($station_type));
-            })
             ->groupBy('mpa.tv_station_key', 'mpa.ext_profile_id');
 
         $query_cols = 'name as station_name, state as station_state, type as station_type, `key`, tv_station_id, SUM(pop_weight) as total_audience';

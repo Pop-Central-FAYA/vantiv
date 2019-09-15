@@ -4,6 +4,7 @@ namespace Vanguard\Services\Ratings;
 
 use DB;
 use Illuminate\Support\Arr;
+use Log;
 
 // 
 /**
@@ -24,30 +25,30 @@ class TvStationTimeBeltRatings extends TvRatingsList
     protected function calculateRatings() {
         $universe_size = $this->getUniverseSize();
 
+        // DB::enableQueryLog();
+
         $tv_station_key = Arr::get($this->filters, 'tv_station_key');
 
+        $station_cols = 'ts.name as station_name, ts.state as station_state, ts.id as station_id, ts.type as station_type';
         $sub_query_cols = 'mpa.tv_station_key, mpa.day, mpa.start_time, mpa.end_time, mps_profiles.pop_weight';
         $sub_query = $this->filterForRequestedAudience()
-            ->select(DB::raw($sub_query_cols))
+            ->select(DB::raw("{$sub_query_cols},{$station_cols}"))
             ->when($tv_station_key, function($query) use ($tv_station_key) {
                 $query->where('mpa.tv_station_key', $tv_station_key);
             })
             ->groupBy('mpa.day', 'mpa.start_time', 'mpa.ext_profile_id');
-
-            // 'media_type' => 'tv',
-            // 'station_id' => $timebelt['station_id'],
-            // 'station' => $timebelt['station'],
-            // 'state' => $timebelt['state'],
-            // 'station_type' => $timebelt['station_type']
         
-        $station_cols = 'ts.name as station_name, ts.state as station_state, ts.id as station_id, ts.type as station_type';
+        $final_station_cols = 'station_name, station_state, station_id, station_type';
         $query_cols = 'tv_station_key, day, start_time, end_time, SUM(tbl.pop_weight) as total_audience';
         $main_query = DB::query()->fromSub($sub_query, 'tbl')
-            ->selectRaw("{$query_cols},{$station_cols}")
-            ->join('tv_stations as ts', 'ts.key', '=', 'tbl.tv_station_key')
+            ->selectRaw("{$query_cols},{$final_station_cols}")
             ->groupBy("tbl.day", "tbl.start_time")
             ->orderBy('total_audience', 'desc');
+
         $timebelt_results = $main_query->get();
+
+        // Log::info(DB::getQueryLog());
+
         $ratings = $this->generateRatings($timebelt_results, $universe_size);
         return collect($ratings);
     }
