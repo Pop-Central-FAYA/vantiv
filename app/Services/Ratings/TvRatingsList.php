@@ -51,8 +51,13 @@ class TvRatingsList implements BaseServiceInterface
      * grab the ratings from cache/cache the ratings
      */
     protected function getHashKey() {
+        $this->filters['query_type'] = $this->getQueryType();
         $filter_str = json_encode($this->filters);
         return md5($filter_str);
+    }
+
+    protected function getQueryType() {
+        return "full_list";
     }
 
     public function run() {

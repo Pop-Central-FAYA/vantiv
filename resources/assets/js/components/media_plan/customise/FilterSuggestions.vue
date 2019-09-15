@@ -56,24 +56,24 @@
         },
         methods: {
             createNewRatings() {
-                this.sweet_alert('Getting station list based on filters', 'info');
+                this.sweet_alert('Getting station list based on filters', 'info', 60000);
                 axios({
                     method: 'post',
                     url: this.routes.new_ratings_action,
                     data: this.selectedFilters
                 }).then((res) => {
-                    if (res.data.status === 'success') {
-                        this.sweet_alert('Ratings retrieved', 'success', 60000);
-                        if (this.isNotEmpty(res.data.data)) {
-                            Event.$emit('ratings-created', res.data.data);
-                        } else {
-                            this.sweet_alert('No results found, please try another filter', 'error');
-                        }
+                    if (this.isNotEmpty(res.data.data)) {
+                        this.sweet_alert('Ratings retrieved', 'success');
+                        Event.$emit('ratings-created', res.data.data);
+                    } else {
+                        this.sweet_alert('No results found, please try another filter', 'error');
+                    }
+                 }).catch((error) => {
+                     if (error.response && (error.response.status == 422)) {
+                        this.displayServerValidationErrors(error.response.data.errors);
                     } else {
                         this.sweet_alert('An unknown error has occurred, please try again', 'error');
                     }
-                 }).catch((error) => {
-                     this.sweet_alert('An unknown error has occurred, please try again', 'error');
                  })
             }
         }

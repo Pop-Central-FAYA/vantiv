@@ -10,16 +10,11 @@ namespace Vanguard\Services\Ratings;
  */
 class TvRatingsCount extends TvRatingsList
 {
-
-    /**
-     * Convert the filter array to md5, this is the key that will be used to 
-     * grab the ratings from cache/cache the ratings
-     */
-    protected function getHashKey() {
-        $this->filters['count'] = true;
-        return parent::getHashKey();
-    }
     
+    protected function getQueryType() {
+        return "availability_count";
+    }
+
     protected function calculateRatings() {
         $query = $this->filterForRequestedAudience();
         return $query->count();
