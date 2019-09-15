@@ -8,7 +8,6 @@ use Vanguard\Http\Controllers\Traits\CompanyIdTrait;
 use Vanguard\Services\MediaPlan\GetMediaPlans;
 use Vanguard\Models\Campaign;
 use Vanguard\Models\CampaignChannel;
-use Vanguard\Services\Client\AllClient;
 use Vanguard\Services\Client\ClientBrand;
 use Vanguard\Libraries\Enum\MediaPlanStatus;
 use Vanguard\Models\Client;
@@ -49,13 +48,13 @@ class DashboardController extends Controller
         //all clients
         $new_client =  $client_list = Client::with('contacts', 'brands')->filter(['company_id' => $this->companyId()])->get();
         $count_all_clients =$new_client->count();
-       
+
        //all brands
         $count_all_brands = 0;
          foreach ($new_client  as $client) {
             $count_all_brands += $client->brands->count();
           }
-          
+
         //Get all campaigns
         $campaigns = Campaign::where('belongs_to', $this->companyId())->get();
         $count_campigns_on_hold = $this->countCampaignsByStatus($campaigns, 'on_hold');

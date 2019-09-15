@@ -1,34 +1,38 @@
 <?php
 
 namespace Vanguard\Http\Controllers;
-use Illuminate\Http\Request;
-use Vanguard\Services\Client\AllClient;
+
+use Vanguard\Http\Controllers\Traits\CompanyIdTrait;
 use Vanguard\Http\Requests\StoreMediaAsset;
 use Vanguard\Services\MediaAsset\CreateMediaAsset;
 use Vanguard\Services\MediaAsset\GetMediaAssets;
 use Vanguard\Models\MediaAsset;
-use Vanguard\Services\Client\ClientBrand;
+use Vanguard\Models\Client;
 
 class MediaAssetsController extends Controller
 {
+
+    use CompanyIdTrait;
+
     public function index()
     {
         // get clients associated with the logged in user company
-        $clients = new AllClient(\Auth::user()->companies->first()->id);
-        $clients = $clients->getAllClients();
+        $clients = Client::with('brands')->filter(['company_id' => $this->companyId()])->get();
         $client_brands = [];
+        $client_list = [];
         foreach ($clients as $client) {
-            $brands = new ClientBrand($client->id);
-            $client_brands[$client->id] = $brands->run();
-        }
-        return view('agency.media_assets.index')->with('clients', $clients)->with('brands', $client_brands);
-    }
+            $brand_list = [];
+            foreach ($client->brands as $brand) {
+                $brand_list[] = ["name" => $brand->name, "id" => $brand->id];
+            }
+            //this is because we currently have some clients without brands
+            if (count($brand_list) > 0) {
+                $client_brands[$client->id] = $brand_list;
+                $client_list[] = ["company_name" => $client->name, "id" => $client->id];
+            }
 
-    public function getBrandsWithClients($id)
-    {
-        $client_brands = new ClientBrand($id);
-        $brands = $client_brands->run();
-        return response()->json(['brands' => $brands]);
+        }
+        return view('agency.media_assets.index')->with('clients', $client_list)->with('brands', $client_brands);
     }
 
     public function createAsset(StoreMediaAsset $request)

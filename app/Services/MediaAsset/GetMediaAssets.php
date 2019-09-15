@@ -3,7 +3,7 @@
 namespace Vanguard\Services\MediaAsset;
 use Vanguard\Models\MediaAsset;
 use Auth;
-
+use Log;
 class GetMediaAssets
 {
     public function __construct()
@@ -18,8 +18,19 @@ class GetMediaAssets
 
     public function getMediaAssetByCompany()
     {
-        return MediaAsset::with(['client', 'brand'])
-                        ->where('company_id', Auth::user()->companies->first()->id)
-                        ->latest()->get();
-    }
+        $company_id = Auth::user()->companies->first()->id;
+        $media_assets = MediaAsset::with(['client:id,name','brand:id,name'])
+            ->where('company_id', $company_id)
+            ->get()
+            ->toArray();
+        $final_assets = [];
+        foreach ($media_assets as $asset) {
+           if ($asset['client'] == null || $asset['brand'] == null) {
+               Log::warning("Client for media asset {$asset['id']} is null");
+           } else {
+               $final_assets[] = $asset;
+           }
+        }
+        return $final_assets;
+    }    
 }

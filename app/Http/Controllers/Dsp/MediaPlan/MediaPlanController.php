@@ -9,14 +9,12 @@ use Vanguard\Models\Criteria;
 use Vanguard\Models\MediaPlan;
 use Vanguard\Models\MediaPlanProgramRating;
 use Vanguard\Models\MediaPlanSuggestion;
-use Vanguard\Services\Client\ClientBrand;
 use Vanguard\Services\Inventory\StoreMediaPlanProgram;
 use Vanguard\Services\MediaPlan\GetSuggestionListWithProgramRating;
 use Vanguard\Services\MediaPlan\StoreMediaPlanVolumeDiscount;
 use Vanguard\Services\MediaPlan\GetMediaPlans;
 use Vanguard\Services\MediaPlan\SummarizePlan;
 use Vanguard\Services\MediaPlan\ExportPlan;
-use Vanguard\Services\Client\AllClient;
 use Maatwebsite\Excel\Facades\Excel;
 use Vanguard\Exports\MediaPlanExport;
 use Vanguard\Services\Traits\DefaultMaterialLength;
@@ -47,11 +45,7 @@ use Vanguard\Services\MediaPlan\GetStationRatingService;
 use Vanguard\Services\MediaPlan\GetStationTimeBeltRatingService;
 use Vanguard\Services\MediaPlan\StoreMediaPlanService;
 use Vanguard\Services\MediaPlan\StoreMediaPlanSuggestionService;
-
 use Vanguard\Models\Client;
-use Vanguard\Models\Brand;
-use Vanguard\Http\Resources\BrandCollection;
-
 
 class MediaPlanController extends Controller
 {
@@ -685,7 +679,7 @@ class MediaPlanController extends Controller
             "sender_name" => \Auth::user()->firstname.  " ". \Auth::user()->lastname,
             "action" => $status,
             "client" =>  $this->getClientName($media_plan_id),
-            "receiver_name" => $this->getPlannerDetails($mediaPlan->planner_id)['name'], 
+            "receiver_name" => $this->getPlannerDetails($mediaPlan->planner_id)['name'],
             "link" => route('agency.media_plan.summary', ['id'=>$media_plan_id]),
             "subject" => "Your Media Plan has been ". $status
 
@@ -722,17 +716,9 @@ class MediaPlanController extends Controller
     }
 
     public function getClientName($media_plan_id){
-        $mediaPlan = MediaPlan::findorfail($media_plan_id);
-        $client_name = "";
-        $clients = new AllClient($this->companyId());
-        $clients = $clients->getAllClients();
-        foreach($clients as $client){
-            if($mediaPlan->client_id = $client->id)
-            {
-                $client_name= $client->company_name;
-            }
-        }
-        return $client_name;
+        $media_plan = MediaPlan::findOrFail($media_plan_id);
+        $client = Client::findOrFail($media_plan->client_id);
+        return $client->name;
     }
 
     public function postRequestApproval(Request $request)

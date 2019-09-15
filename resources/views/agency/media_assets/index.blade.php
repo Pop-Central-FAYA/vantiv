@@ -23,7 +23,7 @@
                     <div class="col-md-2 text-right px-2">
                         <media-asset-upload 
                             :clients="{{ json_encode($clients) }}"
-                            :brands="{{ json_encode($brands) }}"
+                            :brands="{{ json_encode($brands, JSON_FORCE_OBJECT) }}"
                         >
                         </media-asset-upload>
                     </div>
