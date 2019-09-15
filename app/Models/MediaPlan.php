@@ -22,12 +22,9 @@ class MediaPlan extends Base
         return $this->hasMany(MediaPlanSuggestion::class);
     }
 
-    /**
-     * Get client details associated with the media plan.
-     */
     public function client()
     {
-        return $this->belongsTo('Vanguard\Models\WalkIns','client_id');
+        return $this->belongsTo(Client::class);
     }
 
     /**

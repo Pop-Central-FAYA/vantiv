@@ -9,7 +9,7 @@
     <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="assets" :search="search" :loading="loading" :no-data-text="noDataText" :pagination.sync="pagination">
       <template v-slot:items="props">
         <td><media-asset-play-video :asset="props.item"></media-asset-play-video></td>
-        <td class="text-xs-left">{{ props.item.client.company_name }}</td>
+        <td class="text-xs-left">{{ props.item.client.name }}</td>
         <td class="text-xs-left">{{ props.item.brand.name }}</td>
         <td class="text-xs-left">{{ props.item.media_type }}</td>
         <td class="text-xs-left">{{ props.item.duration }}</td>
@@ -34,7 +34,7 @@
         search: '',
         headers: [
           { text: 'File Name', align: 'left', value: 'file_name', width: '46%' },
-          { text: 'Client', value: 'client.company_name', width: '25%' },
+          { text: 'Client', value: 'client.name', width: '25%' },
           { text: 'Brand', value: 'brand.name', width: '25%' },
           { text: 'Media Type', value: 'media_type', width: '1%' },
           { text: 'Duration', value: 'duration', width: '1%' },
