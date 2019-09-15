@@ -8,11 +8,13 @@
     </v-card-title>
     <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="plans" :search="search" :no-data-text="noDataText" :pagination.sync="pagination">
       <template v-slot:items="props">
-        <td class="text-xs-left"><a :href="props.item.redirect_url" class="default-vue-link">{{ props.item.campaign_name }}</a></td>
-        <td class="text-xs-left">{{ props.item.media_type }}</td>
-        <td class="text-xs-left">{{ props.item.start_date }}</td>
-        <td class="text-xs-left">{{ props.item.end_date }}</td>
-        <td class="text-xs-left" v-html="props.item.status"></td>
+        <tr @click="goToPlanActivities(props.item.redirect_url)">
+          <td class="text-xs-left"><a :href="props.item.redirect_url" class="default-vue-link">{{ props.item.campaign_name }}</a></td>
+          <td class="text-xs-left">{{ props.item.media_type }}</td>
+          <td class="text-xs-left">{{ props.item.start_date+" - "+props.item.end_date }}</td>
+          <td class="text-xs-left" v-html="props.item.status"></td>
+          <td class="text-xs-left">{{ props.item.date_created }}</td>
+        </tr>
       </template>
       <template v-slot:no-results>
         <v-alert :value="true" color="error" icon="warning">
@@ -22,6 +24,16 @@
     </v-data-table>
   </v-card>
 </template>
+
+<style>
+  tbody tr:hover {
+    background-color: transparent !important;
+    cursor: pointer;
+  }
+  tbody:hover {
+    background-color: rgba(0, 0, 0, 0.12);
+  }
+</style>
 
 <script>
   export default {
@@ -34,18 +46,25 @@
         headers: [
           { text: 'Name', align: 'left', value: 'campaign_name' },
           { text: 'Media Type', value: 'media_type' },
-          { text: 'Start Date', value: 'start_date' },
-          { text: 'End Date', value: 'end_date' },
-          { text: 'Status', value: 'status' }
+          { text: 'Flight Date', value: 'start_date' },
+          { text: 'Status', value: 'status' },
+          { text: 'Created On', value: 'date_created' }
         ],
         pagination: {
-            rowsPerPage: 10
+            rowsPerPage: 10,
+            sortBy: 'date_created',
+            descending: true,
         },
         noDataText: 'No media plan was found'
       }
     },
     mounted() {
         console.log('Display All media plans Component mounted.');
+    },
+    methods: {
+      goToPlanActivities(url) {
+        window.location = url;
+      }
     }
   }
 </script>
