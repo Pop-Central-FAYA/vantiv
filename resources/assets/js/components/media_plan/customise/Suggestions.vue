@@ -21,7 +21,7 @@
                         <v-tab-item :value="'table-view'">
                             <v-card flat tile>
                                 <v-card-text class="px-1 pb-0">
-                                    <media-plan-suggestion-table></media-plan-suggestion-table>
+                                    <media-plan-station-rating-table></media-plan-station-rating-table>
                                 </v-card-text>
                             </v-card>
                         </v-tab-item>
@@ -29,7 +29,7 @@
                         <v-tab-item :value="'graph-view'">
                             <v-card flat tile>
                                 <v-card-text class="pb-0">
-                                    <media-plan-suggestion-graph :graph-days="graphDays"></media-plan-suggestion-graph>
+                                    <media-plan-suggestion-graph :routes="redirectUrls" :graph-days="graphDays"></media-plan-suggestion-graph>
                                 </v-card-text>
                             </v-card>
                         </v-tab-item>
@@ -92,7 +92,7 @@
             };
         },
         mounted() {
-            console.log('Suggestions Table Component mounted.')
+            console.log('Full Suggestions Table Component mounted.')
         },
         created() {
             var self = this;
