@@ -3,31 +3,22 @@
         <v-card-title>
             <h5>SELECTED STATIONS AND TIMES</h5>
         </v-card-title>
-        <v-card-text class="px-0 pt-0 pb-0">
-            <table class="table mb-0">
-                <thead class="thead-light">
+        <v-card-text class="px-0 pt-0 pb-0" style="height:45vh; overflow: auto">
+            <v-data-table class="custom-vue-table elevation-1" :headers="headers" hide-actions :items="timeBeltsArr" :pagination.sync="pagination">
+                <template v-slot:items="props">
                     <tr>
-                        <th scope="col">STATION</th>
-                        <th scope="col">DAY</th>
-                        <th scope="col">TIME BELT</th>
-                        <th scope="col">PROGRAM</th>
-                        <th scope="col">AUDIENCE</th>
-                        <th scope="col"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(timebelt,key) in timeBeltsArr" v-bind:key="key">
-                        <th scope="row">{{ timebelt.station}}</th>
-                        <td>{{ timebelt.day}}</td>
-                        <td>{{ format_time(timebelt.start_time) +" - "+ format_time(timebelt.end_time) }}</td>
-                        <td>{{ timebelt.program}}</td>
-                        <td>{{ format_audience(timebelt.total_audience) }}</td>
-                        <td>
-                            <button class="plus-btn" @click="deleteTimebelt(timebelt, key)" type="button"><i class="material-icons" style="color: red">delete</i></button>
+                        <td class="text-xs-left">{{ props.item.station }}</td>
+                        <td class="text-xs-left">{{ props.item.day }}</td>
+                        <td class="text-xs-left">{{ format_time(props.item.start_time) }} - {{ format_time(props.item.end_time) }}</td>
+                        <td class="text-xs-left">{{ props.item.program }}</td>
+                        <td class="text-xs-left">{{ format_audience(props.item.total_audience) }}</td>
+                        <td class="text-xs-left">{{ props.item.rating }}</td>
+                        <td class="text-xs-left">
+                            <v-icon color="danger" style="color: red !important" dark @click="deleteTimebelt(props.item, props.index)">delete</v-icon>
                         </td>
                     </tr>
-                </tbody>
-            </table>
+                </template>
+            </v-data-table>
         </v-card-text>
     </v-card>
 </template>
@@ -41,8 +32,19 @@
         },
         data() {
             return {
-                accordionCounter: 0,
-                timeBeltsArr: this.selectedTimeBelts
+                timeBeltsArr: this.selectedTimeBelts,
+                headers: [
+                    { text: 'Station', align: 'left', value: 'station', width: '20%' },
+                    { text: 'Day', align: 'left', value: 'day', width: '20%' },
+                    { text: 'Time Belt', value: 'end_time', width: '25%' },
+                    { text: 'Program', value: 'program', width: '25%' },
+                    { text: 'Audience', value: 'total_audience', width: '24%' },
+                    { text: 'Rating', value: 'rating', width: '5%' },
+                    { text: 'Actions', value: 'name', width: '1%', sortable: false }
+                ],
+                pagination: {
+                    rowsPerPage: -1
+                },
             };
         },
         watch: {

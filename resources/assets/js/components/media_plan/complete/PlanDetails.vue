@@ -1,7 +1,7 @@
 <template>
     <v-container grid-list-md class="pt-0 pb-3 px-0">
         <v-layout row wrap class="white-bg">
-            <v-flex xs12 sm12 md12 lg12 mb-3>
+            <v-flex xs12 sm12 md12 lg12 mb-2>
                 <v-expansion-panel popout>
                     <v-expansion-panel-content v-for="(duration, durationkey) in fayaDurations" :key="durationkey" class="py-2">
                         <template v-slot:header>
@@ -18,8 +18,8 @@
                                                     <th class="fixed-side">Day</th>
                                                     <th class="fixed-side">Time Belt</th>
                                                     <th class="fixed-side">Program</th>
-                                                    <th class="fixed-side">Reach</th>
-                                                    <th class="fixed-side">GRP</th>
+                                                    <th class="fixed-side">Rating</th>
+                                                    <th class="fixed-side">Grp</th>
                                                     <th class="fixed-side">Unit Rate</th>
                                                     <th class="fixed-side">Discount</th>
                                                     <th class="fixed-side">Net Total</th>
@@ -60,6 +60,8 @@
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
+                                                    <td></td>
+                                                    <td></td>
                                                     <td>{{ formatAmount(getNetTotalByDuration(duration)) }}</td>
                                                     <td></td>
                                                 </tr>
@@ -88,6 +90,9 @@
                         </v-card>
                     </v-expansion-panel-content>
                 </v-expansion-panel>
+            </v-flex>
+            <v-flex xs12 sm12 md12 lg12 mb-4 ml-5>
+                Total GRP: {{ getTotalGrps() }}
             </v-flex>
         </v-layout>
         <v-layout row wrap class="px-4 pb-3 white-bg">
@@ -372,7 +377,27 @@
                 });
             },
             calculateGrp(reach, exposures) {
-                return 100 * reach * exposures;
+                var grp = parseFloat(reach) * parseInt(exposures);
+                return grp.toFixed(2);
+            },
+            getTotalGrpByDuration(search_duration) {
+                var grp_total = parseFloat(0);
+                this.fayaTimebelts['programs_stations'].forEach(program_station => {
+                    Object.keys(program_station.exposures).forEach(duration => {
+                        if (search_duration == duration) {
+                            var grp = this.calculateGrp(program_station.rating, program_station.exposures[search_duration]['total_exposures']);
+                            grp_total += parseFloat(grp);
+                        }
+                    });
+                });
+                return grp_total.toFixed(2);
+            },
+            getTotalGrps() {
+                var total_grp = parseFloat(0);
+                this.fayaDurations.forEach(duration => {
+                    total_grp += parseFloat(this.getTotalGrpByDuration(duration));
+                });
+                return total_grp.toFixed(2);
             }
         }
     }
