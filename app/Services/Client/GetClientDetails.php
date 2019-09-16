@@ -20,7 +20,7 @@ class GetClientDetails implements BaseServiceInterface
 
     public function run()
     {
-        $client_list = Client::with('contacts', 'brands')->filter($this->validated)->get();
+        $client_list = Client::with('contacts', 'brands')->orderBy('created_at','desc')->filter($this->validated)->get();
         return $this->getClientDetails($client_list);
     }
 
