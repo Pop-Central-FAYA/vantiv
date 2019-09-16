@@ -21,8 +21,9 @@ class MediaPlanMediaLengthExport implements FromView, ShouldAutoSize, WithTitle
     protected $station_programs;
     protected $monthly_weeks;
     protected $media_plan_data;
+    protected $media_plan_period;
     
-    public function __construct($media_type, $material_length, $station_programs, $monthly_weeks, $summary, $media_plan_data)
+    public function __construct($media_type, $material_length, $station_programs, $monthly_weeks, $summary, $media_plan_data, $media_plan_period)
     {
         $this->summary = $summary;
         $this->media_type = $media_type;
@@ -30,6 +31,7 @@ class MediaPlanMediaLengthExport implements FromView, ShouldAutoSize, WithTitle
         $this->station_programs = $station_programs;
         $this->monthly_weeks = $monthly_weeks;
         $this->media_plan_data = $media_plan_data;
+        $this->media_plan_period = $media_plan_period;
     }
 
     public function view(): View
@@ -42,7 +44,8 @@ class MediaPlanMediaLengthExport implements FromView, ShouldAutoSize, WithTitle
             'monthly_weeks' => json_decode($this->monthly_weeks),
             'media_plan_data' => $this->media_plan_data,
             'media_type' => $this->media_type,
-            'material_length' => $this->material_length
+            'material_length' => $this->material_length,
+            'media_plan_period' => $this->media_plan_period
         ]);
     }
 

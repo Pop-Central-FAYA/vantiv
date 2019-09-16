@@ -13,13 +13,15 @@ class MediaPlanExport implements WithMultipleSheets
 	protected $station_data;
 	protected $monthly_weeks;
     protected $media_plan_data;
+    protected $media_plan_period;
 
-    public function __construct($summary, $station_data, $monthly_weeks, $media_plan_data)
+    public function __construct($summary, $station_data, $monthly_weeks, $media_plan_data, $media_plan_period)
     {
         $this->summary = $summary;
         $this->station_data = $station_data;
         $this->monthly_weeks = $monthly_weeks;
         $this->media_plan_data = $media_plan_data;
+        $this->media_plan_period = $media_plan_period;
     }
 
     /**
@@ -33,7 +35,7 @@ class MediaPlanExport implements WithMultipleSheets
 
         foreach ($this->station_data as $media_type => $material_lengths) {
             foreach ($material_lengths as $material_length => $station_programs) {
-                $sheets[] = new MediaPlanMediaLengthExport($media_type, $material_length, $station_programs, $this->monthly_weeks, $this->summary, $this->media_plan_data);
+                $sheets[] = new MediaPlanMediaLengthExport($media_type, $material_length, $station_programs, $this->monthly_weeks, $this->summary, $this->media_plan_data, $this->media_plan_period);
             }
         }
 
