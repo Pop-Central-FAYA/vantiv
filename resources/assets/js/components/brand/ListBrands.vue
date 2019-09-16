@@ -18,14 +18,14 @@
                                  
        </v-layout>
      <brands-edit></brands-edit>
-    <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="brands" :loading="loading" :search="search" :no-data-text="noDataText" :pagination.sync="pagination">
+    <v-data-table :headers="headers" :items="brands" :loading="loading" :search="search" :no-data-text="noDataText" :pagination.sync="pagination">
       <template v-slot:items="props">
         <tr>
-            <td class="text-xs-left"><b-img thumbnail fluid :src="props.item.image_url" class="v-icon notranslate v-icon--left mdi mdi-laptop theme--light" style="width: 30px; height: 30px"  id="brand_logo" alt="Image 1"></b-img> <span class="text1"> {{ props.item.name }}</span>
+            <td class="text-xs-left clickable"><b-img thumbnail fluid :src="props.item.image_url" class="v-icon notranslate v-icon--left mdi mdi-laptop theme--light" style="width: 30px; height: 30px"  id="brand_logo" alt="Image 1"></b-img> <span class="text1"> {{ props.item.name }}</span>
             </td>
-            <td class="text-xs-left"> {{props.item.campaigns_count}} </td>
-             <td class="text-xs-left"> {{numberFormat(props.item.campaigns_spendings)}} </td>
-           <td class="text-xs-left">{{ dateToHumanReadable(props.item.created_at.date) }}</td>
+            <td class="text-xs-left clickable"> {{props.item.campaigns_count}} </td>
+             <td class="text-xs-left clickable"> {{numberFormat(props.item.campaigns_spendings)}} </td>
+           <td class="text-xs-left clickable">{{ dateToHumanReadable(props.item.created_at.date) }}</td>
            <td class="justify-center layout px-0">
             <v-icon color="#44C1C9" @click="showEditBrand(props.item)"  v-b-tooltip.hover title="Edit client" dark right>edit</v-icon> </td>
         </tr>
@@ -40,14 +40,10 @@
 </template>
 
 <style>
-  tbody tr:hover {
-    background-color: transparent !important;
-    cursor: pointer;
-  }
-  tbody:hover {
-    background-color: rgba(0, 0, 0, 0.12);
-  }
-  .img-valign {
+table.v-table tbody tr td.clickable {
+    pointer-events: none;
+}
+ .img-valign {
   vertical-align: middle;
   }
 hr {
@@ -90,9 +86,9 @@ hr {
         Event.$on('brand-created', function (brand) {
            self.brands.push(brand);
         });
-        Event.$on('vendor-updated', function (vendor) {
-          idx = self.vendors.findIndex(x => x.id === vendor.id);
-          self.vendors[idx] = vendor;
+        Event.$on('brand-updated', function (vendor) {
+          idx = self.brands.findIndex(x => x.id === brands.id);
+          self.brands[idx] = brands;
         });
     },
     mounted() {

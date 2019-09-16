@@ -9,7 +9,7 @@
                      <v-card-text>
                             <v-layout row wrap>
                                 <v-flex xs12 sm12 md12 text-left>
-                                    <span>Select user: </span>
+                                    <span>Choose the user to request approval from: </span>
                                     <v-select
                                         placeholder="Select user"
                                         v-model="user"
