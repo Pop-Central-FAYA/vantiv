@@ -15,11 +15,13 @@
                 Campaign: {{ $mpo_details->campaign->name }}  Date: {{ date('Y-m-d', strtotime(now())) }} 
             </th>
         </tr>
-        <tr>
-            <th colspan="21">
-                Revised Media Contract
-            </th>
-        </tr>
+        @if($previous_reference)
+            <tr>
+                <th colspan="21">
+                    Revised Media Contract
+                </th>
+            </tr>
+        @endif
     </table>
     <table>
         @if($previous_reference)
