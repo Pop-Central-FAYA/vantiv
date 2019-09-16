@@ -6,7 +6,7 @@
                 <v-flex md4 my-1>
                     <p class="weight_medium">
                         <span class="weight_medium small_faint pr-1">Client:</span>
-                        {{ campaignData.client.company_name}}
+                        {{ campaignData.client.name}}
                     </p>
                 </v-flex>
                 <v-flex md4 my-1>
