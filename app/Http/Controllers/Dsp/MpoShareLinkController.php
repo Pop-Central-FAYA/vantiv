@@ -48,8 +48,10 @@ class MpoShareLinkController extends Controller
     public function submitToVendor(StoreMpoShareLinkRequest $request, $mpo_id)
     {
         $validated = $request->validated();
+        $cmapaign_mpo = CampaignMpo::findOrFail($mpo_id);
+        $campaign_name = $cmapaign_mpo->campaign->name;
         try {
-            $this->sendVendorMail($validated['url'], $validated['email']);
+            $this->sendVendorMail($validated['url'], $validated['email'], $campaign_name);
             return response()->json([
                 'status' => 'success',
                 'message' => 'Link submitted to vendor',
@@ -62,21 +64,26 @@ class MpoShareLinkController extends Controller
         }
     } 
 
-    private function sendVendorMail($url, $email)
+    private function sendVendorMail($url, $email, $campaign_name)
     {
         $user = Auth::user();
-        Mail::send('mail.vendor_mpo_mail', $this->emailData($url), function ($message) use($user, $email) {
+        $company = $user->companies->first()->name;
+        Mail::send('mail.vendor_mpo_mail', 
+        $this->emailData($url, $user, $company, $campaign_name), function ($message) use($user, $email, $company) {
             $message->from($user->email, $user->full_name);
-            $message->subject('View Mpo');
+            $message->subject('MPO from '.$company);
             $message->to($email);
             $message->replyTo($user->email);
         });
     }
 
-    private function emailData($url)
+    private function emailData($url, $user, $company, $campaign_name)
     {
         return [
-            'mpo_url' => $url
+            'mpo_url' => $url,
+            'user' => $user,
+            'company_name' => $company,
+            'campaign_name' => $campaign_name
         ];
     }
 }
