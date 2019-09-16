@@ -62,10 +62,6 @@
 <script>
   export default {
         props : {
-            mpos : {
-                required : true,
-                type : Array
-            },
             client: String,
             brand: String,
             campaignId : String
@@ -82,10 +78,11 @@
                 pagination: {
                     rowsPerPage: 10
                 },
-                mposData : this.mpos
+                mposData : []
             }
         },
         mounted () {
+            this.fetchMpo()
             var self = this
             Event.$on('update-campaign-mpo', function(mpo) {
                 self.mposData = mpo
@@ -96,6 +93,16 @@
                 var msg = "Generating Excel Document, Please wait";
                 this.sweet_alert(msg, 'info');
                 window.location = `/campaigns/${this.campaignId}/mpos/${mpo_id}/export`
+            },
+            fetchMpo : function() {
+                axios({
+                    method: 'get',
+                    url: `/campaigns/${this.campaignId}/mpos`
+                }).then((res) => {
+                    this.mposData = res.data.data
+                }).catch((error) => {
+                    console.log(error)
+                });
             }
         }
     }

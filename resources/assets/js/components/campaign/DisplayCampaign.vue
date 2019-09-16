@@ -34,8 +34,8 @@
         ></list-campaign-adslot>
       </v-tab-item>
       
-      <v-tab-item value="mpos-tab" v-if="campaignMpos.length > 0">
-        <campaign-mpos-list :mpos="campaignMpos" :client="client" :brand="brand" :campaign-id="campaignId" ></campaign-mpos-list>
+      <v-tab-item value="mpos-tab">
+        <campaign-mpos-list :client="client" :brand="brand" :campaign-id="campaignId" ></campaign-mpos-list>
       </v-tab-item>
 
     </v-tabs>
@@ -80,22 +80,7 @@
     },
     data () {
       return {
-        campaignMpos : []
-      }
-    },
-    created () {
-      this.fetchMpo()
-    },
-    methods : {
-      fetchMpo : function() {
-        axios({
-            method: 'get',
-            url: `/campaigns/${this.campaignId}/mpos`
-        }).then((res) => {
-            this.campaignMpos = res.data.data
-        }).catch((error) => {
-            console.log(error)
-        });
+
       }
     }
   }
