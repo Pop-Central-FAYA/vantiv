@@ -102,6 +102,7 @@ export default {
                     Event.$emit('updated-group-adslots', res.data.data.grouped_time_belts)
                     Event.$emit('updated-adslots', res.data.data.time_belts)
                     this.volume_discount = ''
+                    this.dialog = false
                 } else {
                     this.sweet_alert(res.data.message, 'error')
                 }
