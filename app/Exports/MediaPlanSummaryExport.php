@@ -42,21 +42,26 @@ class MediaPlanSummaryExport implements FromView, ShouldAutoSize, WithTitle, Wit
 
     public function registerEvents(): array
     {
-        $spread_sheet_image = new AddImageToSpreadSheet($this->media_plan_data->client->company_logo);
-        $path = $spread_sheet_image->run();
-        $style = $spread_sheet_image->styleArray();
-        return [ 
-            AfterSheet::class => function(AfterSheet $event) use($path, $style) {
-                $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
-                $drawing->setName('Logo');
-                $drawing->setDescription('Logo');
-                $drawing->setPath($path);
-                $drawing->setCoordinates('A1');
-                $drawing->setHeight(65);
-                $drawing->setWidth(55);
-                $drawing->setWorksheet($event->sheet->getDelegate());
-                $event->sheet->getDelegate()->getStyle('B3:G3')->applyFromArray($style);
-            },
-        ];
+        $company_logo = $this->media_plan_data->company->logo;
+        if ($company_logo) {
+            $spread_sheet_image = new AddImageToSpreadSheet($company_logo);
+            $path = $spread_sheet_image->run();
+            $style = $spread_sheet_image->styleArray();
+            return [ 
+                AfterSheet::class => function(AfterSheet $event) use($path, $style) {
+                    $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
+                    $drawing->setName('Logo');
+                    $drawing->setDescription('Logo');
+                    $drawing->setPath($path);
+                    $drawing->setCoordinates('A1');
+                    $drawing->setHeight(100);
+                    $drawing->setWidth(100);
+                    $drawing->setWorksheet($event->sheet->getDelegate());
+                    $event->sheet->getDelegate()->getStyle('B3:G3')->applyFromArray($style);
+                },
+            ];
+        } else {
+            return [];
+        }
     }
 }

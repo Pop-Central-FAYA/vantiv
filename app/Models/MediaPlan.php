@@ -34,4 +34,9 @@ class MediaPlan extends Base
     {
         return $this->belongsTo('Vanguard\Models\Brand','brand_id');
     }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
 }

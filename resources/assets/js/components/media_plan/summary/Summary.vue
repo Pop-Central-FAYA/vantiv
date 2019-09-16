@@ -7,7 +7,7 @@
                     <table class="display dashboard_campaigns">
                         <tbody>
                            <tr>
-                            <td><span class="mr-2"><b>Client Name:</b></span>  {{ summaryDetail.client.company_name }}</td>
+                            <td><span class="mr-2"><b>Client Name:</b></span>  {{ summaryDetail.client.name }}</td>
                            </tr>
                            <tr>
                             <td><span class="mr-2"><b>Product Name:</b></span>  {{ summaryDetail.product_name }}</td>
