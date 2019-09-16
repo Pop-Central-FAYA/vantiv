@@ -40,9 +40,7 @@
                 </td>
             </tr>
         </template>
-        <template slot="expand" slot-scope="props">
-            <mpo-slot-list :adslots="props.item.campaign_mpo_time_belts" :assets="assets" :time_belts="timeBelts"></mpo-slot-list>
-        </template>
+        
         <template v-slot:no-results>
             <v-alert :value="true" color="error" icon="warning">
             Your search for "{{ search }}" found no results.

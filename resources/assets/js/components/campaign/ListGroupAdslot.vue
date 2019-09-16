@@ -184,6 +184,7 @@
                         return
                     }
                     Event.$emit('update-campaign-mpo', res.data.data);
+                    Event.$emit('update-share-link', true)
                     this.sweet_alert('Mpo Generated successfully', 'success');
                 }).catch((error) => {
                     if (error.response && (error.response.status == 422)) {
