@@ -31,6 +31,9 @@
         background: #44c1c9;
         color: #ffffff !important;
     }
+    .highcharts-credits {
+        display: none !important;
+    }
 </style>
 
 
