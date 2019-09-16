@@ -6,7 +6,8 @@
               <template v-slot:activator="{ on }">
                   <v-icon color="#01c4ca" dark left v-on="on" @click="prepareData()">attach_files</v-icon>
               </template>
-              <span>Attach Files to MPO</span>
+              <span v-if="group === 'publisher_id'">Attach assets</span>
+              <span v-else>Attach Files to MPO</span>
           </v-tooltip>
       </template>
       <v-card>

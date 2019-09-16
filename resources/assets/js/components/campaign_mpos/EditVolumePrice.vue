@@ -6,7 +6,8 @@
                     <template v-slot:activator="{ on }">
                         <v-icon color="#01c4ca" dark left v-on="on" @click="dialog = true">edit</v-icon>
                     </template>
-                    <span>Edit campaign volume prices</span>
+                    <span v-if="group === 'publisher_id'">Edit adslots</span>
+                    <span v-else>Edit campaign volume prices</span>
                 </v-tooltip>
             </template>
             <v-card>
