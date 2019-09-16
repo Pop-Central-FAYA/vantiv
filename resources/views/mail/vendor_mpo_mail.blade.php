@@ -12,7 +12,8 @@
     <tr style="border-collapse:collapse;"> 
         <td align="center" style="padding:0;Margin:0;padding-top:10px;padding-bottom:10px;"> 
             <p style="Margin:0;font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;">
-                Please click on the button above to view the mpo<br>
+                {{ $user->firstname }} {{ $user->lastname }} from {{ $company_name }} has sent you an MPO for Campaign {{ $campaign_name }}<br>
+                Please click the button above to view the MPO
             </p>
         </td> 
     </tr> 
