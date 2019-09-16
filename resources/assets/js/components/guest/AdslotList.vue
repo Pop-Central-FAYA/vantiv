@@ -9,6 +9,13 @@
             <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="adslotData" hide-actions :pagination.sync="pagination">
                 <template v-slot:items="props">
                     <tr>
+                        <td>
+                            {{ props.item.publisher.name }}
+                        </td>
+                        <td v-if="props.item.ad_vendor_id">
+                            {{ props.item.vendor.name }}
+                        </td>
+                        <td v-else> No Vendor </td>
                         <td>{{ props.item.day }} ({{ props.item.playout_date }})
                         </td>
                         <td class="text-xs-left">{{ props.item.time_belt_start_time }}
@@ -42,6 +49,8 @@ export default {
             search: '',
             editDialog: false,
             headers: [
+                { text : 'Publisher', value: 'publisher.name' },
+                { text : 'Vendor', value : 'vendor.name'},
                 { text: 'Day', align: 'left', value: 'day' },
                 { text: 'Program Time', value: 'program_time' },
                 { text: 'Program', value: 'program' },

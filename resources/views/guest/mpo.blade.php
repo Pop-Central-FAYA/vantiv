@@ -13,7 +13,7 @@
         </div>
         <div class="column col_4">
             <h2 class="sub_header text-center">
-                <p>Campaign Mpo</p>
+                <p>{{ $campaign->name }}</p>
             </h2>
         </div>
         <div class="column col_4">
