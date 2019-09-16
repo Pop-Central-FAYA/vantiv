@@ -128,8 +128,8 @@
     const DECREASE_DURATION = 2;
     export default {
         props: {
-            clients: Array,
-            brands: Object
+            clients: [Array, Object],
+            brands: [Array, Object]
         },
         data() {
             return {
