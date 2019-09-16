@@ -99,6 +99,7 @@ export default {
                     if(this.group){
                         Event.$emit('updated-adslots-from-group', res.data.data.grouped_time_belts[this.index].time_belts)
                     }
+                    Event.$emit('updated-group-adslots', res.data.data.grouped_time_belts)
                     Event.$emit('updated-adslots', res.data.data.time_belts)
                     this.volume_discount = ''
                 } else {

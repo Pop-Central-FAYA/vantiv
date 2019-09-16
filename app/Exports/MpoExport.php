@@ -15,16 +15,19 @@ class MpoExport implements FromView, WithEvents
     protected $exportable_mpos;
     protected $day_numbers;
     protected $mpo_details;
+    protected $previous_reference;
     protected $summary;
     protected $total_budget;
     protected $net_total;
     protected $company_logo;
 
-    public function __construct($exportable_mpos, $day_numbers, $mpo_details, $total_budget, $net_total, $summary, $company_logo)
+    public function __construct($exportable_mpos, $day_numbers, $mpo_details, $previous_reference, 
+                                $total_budget, $net_total, $summary, $company_logo)
     {
         $this->exportable_mpos = $exportable_mpos;
         $this->day_numbers = $day_numbers;
         $this->mpo_details = $mpo_details;
+        $this->previous_reference = $previous_reference;
         $this->total_budget = $total_budget;
         $this->net_total = $net_total;
         $this->summary = $summary;
@@ -37,6 +40,7 @@ class MpoExport implements FromView, WithEvents
             'mpos' => $this->exportable_mpos,
             'day_numbers' =>$this->day_numbers,
             'mpo_details' => $this->mpo_details,
+            'previous_reference' => $this->previous_reference,
             'time_belt_summary' => $this->summary,
             'total_budget' => $this->total_budget,
             'net_total' => $this->net_total

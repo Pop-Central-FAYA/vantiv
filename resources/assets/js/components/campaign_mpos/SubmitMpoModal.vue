@@ -11,20 +11,14 @@
             </template>
             <v-card>
                 <v-card-title>
-                    <span class="headline"> {{ mpo.station }}</span>
+                    <span class="headline"> Submit MPO</span>
                 </v-card-title>
                 <v-card-text>
                     <v-container grid-list-md>
                         <v-form>
                             <v-layout wrap>
                                 <v-flex xs12 sm12 md12>
-                                    <span>
-                                        Email
-                                    </span>
-                                    <v-text-field v-validate="'required|email'" 
-                                    type="text" placeholder="Vendor's Email" 
-                                    name="email" v-model="email"></v-text-field>
-                                    <span class="text-danger" v-show="errors.has('email')">{{ errors.first('email') }}</span>
+                                    <p>You are about to submit your mpo to <b>{{ mpo.vendor }}</b> , click submit to continue</p>
                                 </v-flex>
                             </v-layout>
                         </v-form>
@@ -51,7 +45,6 @@ export default {
     data() {
         return {
             dialog: false,
-            email : '',
             shareLink : {},
         }
     },
@@ -73,22 +66,12 @@ export default {
             });
         },
         submitToVendor : async function () {
-            let isValid = await this.$validator.validate().then(valid => {
-                if (!valid) {
-                    return false;
-                } else {
-                    return true;
-                }
-            });
-            if (!isValid) {
-                return false;
-            }
             var msg = "Processing request, please wait...";
             this.sweet_alert(msg, 'info');
             if(this.shareLink.is_expired || Object.keys(this.shareLink).length === 0){
                 this.addShareLink()
             }else{
-                this.submit(this.shareLink)
+                this.submit(this.shareLink.url)
             }
         },
         addShareLink : function () {
@@ -111,7 +94,7 @@ export default {
             axios({
                 method: 'POST',
                 url: `/mpos/${this.mpo.id}/submit`,
-                data: {url : url, email : this.email}
+                data: {url : url, email : this.mpo.email}
             }).then((res) => {
                 if (res.data.status === 'success') {
                     this.sweet_alert(res.data.message, 'success');
