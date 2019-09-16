@@ -70,7 +70,7 @@
                     
                         <button v-if="hasPermission(permissionList,'decline.media_plan')"  @click="changeStatus('Declined')"  class="media-plan btn block_disp uppercased bg_red mr-1  btn-sm"><i class="media-plan material-icons">clear</i>Decline Plan</button>
                     </span>
-                    <span v-if="summaryDetail.status === 'Suggested' || summaryDetail.status === 'Selected' && summaryDetail.status === 'Pending'" >
+                    <span v-if="summaryDetail.status === 'Suggested' || summaryDetail.status === 'Selected' || summaryDetail.status === 'Pending'" >
                         <media-plan-request-approval  
                         :users="userList"  
                         :media-plan="summaryDetail.id" 

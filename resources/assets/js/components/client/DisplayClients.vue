@@ -9,12 +9,12 @@
      <clients-edit></clients-edit>
     <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="clients" :loading="loading" :search="search" :no-data-text="noDataText" :pagination.sync="pagination">
       <template v-slot:items="props">
-        <tr @click="showClientDetails(props.item.id)">
-            <td class="text-xs-left" ><a @click="showClientDetails(props.item.id)" class="default-vue-link">{{ props.item.name }}</a></td>
-            <td class="text-xs-left">{{ props.item.number_brands }}</td>
-            <td class="text-xs-left">{{ numberFormat(props.item.client_spendings)}}</td>
-            <td class="text-xs-left">{{ props.item.sum_active_campaign }}</td>
-            <td class="text-xs-left">{{ dateToHumanReadable(props.item.created_at.date) }}</td>
+        <tr>
+            <td @click="showClientDetails(props.item.id)" class="text-xs-left" >{{ props.item.name }}</td>
+            <td @click="showClientDetails(props.item.id)" class="text-xs-left">{{ props.item.number_brands }}</td>
+            <td @click="showClientDetails(props.item.id)" class="text-xs-left">{{ numberFormat(props.item.client_spendings)}}</td>
+            <td @click="showClientDetails(props.item.id)" class="text-xs-left">{{ props.item.sum_active_campaign }}</td>
+            <td @click="showClientDetails(props.item.id)" class="text-xs-left">{{ dateToHumanReadable(props.item.created_at.date) }}</td>
             <td class="justify-center layout px-0">
                <v-tooltip top>
                     <template v-slot:activator="{on}">
@@ -54,10 +54,10 @@
         loading: false,
         headers: [
           { text: 'Name', align: 'left', value: 'name' },
-          { text: 'Brands', value: 'brands' },
-          { text: 'Total Spend (₦)', value: 'total spend' },
-          { text: 'Active Campaigns', value: 'active campaigns' },
-          { text: 'Created On', value: 'created_at' },
+          { text: 'Brands', value: 'number_brands' },
+          { text: 'Total Spend (₦)', value: 'client_spendings' },
+          { text: 'Active Campaigns', value: 'sum_active_campaign' },
+          { text: 'Created On', value: 'created_at.date' },
            { text: 'Actions', value: 'name',  sortable: false}
         ],
         pagination: {
@@ -68,10 +68,28 @@
         noDataText: 'No client to display'
       }
     },
+     created() {
+        var self = this;
+        Event.$on('client-created', function (client) {
+            var  newclient  = { 
+                id: client.id,
+                image_url: client.image_url,
+                name: client.name, 
+                city: client.city, 
+                state: client.state, 
+                street_address: client.street_address, 
+                number_brands : 1, 
+                sum_active_campaign : 0,
+                client_spendings : 0,  
+                created_at : client.created_at, 
+                contacts : 1, 
+                }
+           self.clients.push(newclient);
+        });
+    },
     mounted() {
         console.log('Display All client Component mounted.');
          this.getClients();
-      
     },
     methods: {
        getClients() {

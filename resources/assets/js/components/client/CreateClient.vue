@@ -27,14 +27,14 @@
                                    <input type="file" style="display: none" ref="client_logo" accept=".png,.jpeg,.jpg" v-validate="'required|ext:jpg,png,jpeg'"  data-vv-name="client_image_url" @change="onFileChange($event, 'client_logo')">
                                  </v-flex>
                                  <v-flex xs12 sm1 md1>
-                                    <b-img thumbnail fluid v-show="show_client_logo" :src="logo"  style="width: 50px; height: 50px" id="client_logo" alt="Image 1"></b-img>
+                                    <b-img thumbnail fluid v-show="show_client_logo" :src="logo"  style="width: 50px; height: 50px" id="client_logo_one" alt="Image 1"></b-img>
                                   </v-flex>
 
                             </v-layout>
                             <v-layout wrap>
                                 <v-flex xs12 sm3 md3>
                                     <v-text-field required :clearable="true" :label="'City'" 
-                                                :placeholder="'City'" :hint="'Enter the city of your vendor'" 
+                                                :placeholder="'City'" :hint="'Enter the city of your client'" 
                                                 :solo="true" :single-line="true"
                                                 v-validate="'required|max:255'"
                                                 :error-messages="errors.collect('city')"
@@ -44,7 +44,7 @@
                                 </v-flex>
                                 <v-flex xs12 sm3 md3>
                                     <v-text-field required :clearable="true" :label="'State'" 
-                                                :placeholder="'State'" :hint="'Enter the state of your vendor'" 
+                                                :placeholder="'State'" :hint="'Enter the state of your client'" 
                                                 :solo="true" :single-line="true"
                                                 v-validate="'required|max:255'"
                                                 :error-messages="errors.collect('state')"
@@ -297,7 +297,7 @@
                      Event.$emit('client-created', res.data.data);
                     this.sweet_alert('Client was successfully created', 'success');
                     this.client = this.setupModel();
-                      this.show_client_logo = false;
+                    this.show_client_logo = false;
                      this.show_brand_logo = false;
                     this.client_logo_input_label= 'Choose client logo';
                     this.brand_logo_input_label = 'Choose brand logo';
@@ -348,7 +348,7 @@
                     this.client_logo_file = event.target.files[0];
                     this.client_logo_input_label = this.client_logo_file.name;
                      this.show_client_logo = true;
-                    const output = $('#client_logo');
+                    const output = $('#client_logo_one');
                     output.attr('src', URL.createObjectURL(event.target.files[0]));
 
                 } else if (uploadType === 'brand_logo') {

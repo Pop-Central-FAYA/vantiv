@@ -27,7 +27,7 @@
                                    
                                 </v-flex>
                                   <v-flex xs12 sm1 md1>
-                                            <b-img thumbnail fluid v-show="show_brand_logo" :src="logo"  style="width: 50px; height: 50px"  id="brand_logo" alt="Image 1"></b-img>
+                                            <b-img thumbnail fluid v-show="show_brand_logo" :src="logo"  style="width: 50px; height: 50px"  id="brand_logo_view" alt="Image 1"></b-img>
 
                                 </v-flex>
                             </v-layout>
@@ -178,7 +178,7 @@
                     this.brand_logo_file = event.target.files[0];
                     this.brand_logo_input_label = this.brand_logo_file.name;
                     this.show_brand_logo = true;
-                    const output = $('#brand_logo');
+                    const output = $('#brand_logo_view');
                     output.attr('src', URL.createObjectURL(event.target.files[0]));
 
             },
