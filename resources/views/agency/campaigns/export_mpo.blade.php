@@ -11,7 +11,7 @@
         <tr>
             <th colspan="3">The Commercial Manager UPFRONT AND PERSONAL</th>
             
-            <th colspan="4">Client: {{ $mpo_details->campaign->client->company_name }} Brand: {{ $mpo_details->campaign->brand->name }} 
+            <th colspan="4">Client: {{ $mpo_details->campaign->client->name }} Brand: {{ $mpo_details->campaign->brand->name }} 
                 Campaign: {{ $mpo_details->campaign->name }}  Date: {{ date('Y-m-d', strtotime(now())) }} 
             </th>
         </tr>

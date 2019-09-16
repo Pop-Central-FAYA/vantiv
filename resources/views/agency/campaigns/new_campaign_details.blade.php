@@ -22,7 +22,7 @@
                         :campaign-time-belts="{{ json_encode($campaign_details->time_belts) }}"
                         :grouped-campaign-time-belts="{{ json_encode($campaign_details->grouped_time_belts) }}"
                         :assets="{{json_encode($client_media_assets)}}"
-                        :client="{{json_encode($campaign_details->client['company_name'])}}"
+                        :client="{{json_encode($campaign_details->client->name)}}"
                         :brand="{{json_encode($campaign_details->brand['name'])}}"
                         :campaign="{{json_encode($campaign_details)}}"
                         :time-belts="{{json_encode($time_belt_range)}}"
