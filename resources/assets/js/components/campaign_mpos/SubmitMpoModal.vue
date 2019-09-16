@@ -10,7 +10,7 @@
                 </v-tooltip>
             </template>
             <v-card>
-                <v-card-title>
+                <v-card-title class="justify-center">
                     <span class="headline"> Submit MPO</span>
                 </v-card-title>
                 <v-card-text>
@@ -98,7 +98,7 @@ export default {
             }).then((res) => {
                 if (res.data.status === 'success') {
                     this.sweet_alert(res.data.message, 'success');
-                    this.email = ''
+                    this.dialog = false
                 } else {
                     this.sweet_alert(res.data.message, 'error');
                 }
