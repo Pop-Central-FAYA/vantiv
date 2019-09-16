@@ -10,7 +10,7 @@
           </v-tooltip>
       </template>
       <v-card>
-        <v-card-text>Media assets below are for brand {{ brand }} which to belongs to client {{ client }}.</v-card-text>
+        <v-card-text>Media assets below are for brand <b>{{ brand }}</b>  which to belongs to client <b>{{ client }}</b> .</v-card-text>
         <v-card-text>
           <v-container grid-list-md>
             <v-form>
