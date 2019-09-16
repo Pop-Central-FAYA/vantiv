@@ -18,7 +18,8 @@ class MpoController extends Controller
         }
         $share_link = MpoShareLink::findOrFail($id);
         $campaign_mpo = $share_link->campaign_mpo;
-        $company = $campaign_mpo->campaign->company;
+        $campaign = $campaign_mpo->campaign;
+        $company = $campaign->company;
         if ($share_link->isExpired()) {
             (new StoreMpoShareLinkActivity('Link expired', $share_link->id))->run();
             return response()->view('guest.errors.expired_link', ['company_name' => $company->name], 410);
@@ -30,6 +31,7 @@ class MpoController extends Controller
         return view('guest.mpo')->with('campaign_mpo', $campaign_mpo)
                                 ->with('company', $company)
                                 ->with('files', $campaign_files)
+                                ->with('campaign', $campaign)
                                 ->with('campaign_mpo_time_belts', $campaign_mpo_time_belts);
     }
 
