@@ -21,7 +21,7 @@ class MpoExport implements FromView, WithEvents
     protected $net_total;
     protected $company_logo;
 
-    public function __construct($exportable_mpos, $day_numbers, $mpo_details, $previous_reference, 
+    public function __construct($exportable_mpos, $day_numbers, $mpo_details, $previous_reference,
                                 $total_budget, $net_total, $summary, $company_logo)
     {
         $this->exportable_mpos = $exportable_mpos;
@@ -49,23 +49,27 @@ class MpoExport implements FromView, WithEvents
 
     public function registerEvents(): array
     {
-        $path = $this->storeFileInTmp($this->company_logo);
-        return [ 
-            AfterSheet::class => function(AfterSheet $event) use($path) {
-                $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
-                $drawing->setName('Logo');
-                $drawing->setDescription('Logo');
-                $drawing->setPath($path);
-                $drawing->setCoordinates('A1');
-                $drawing->setHeight(65);
-                $drawing->setWidth(55);
-                $drawing->setWorksheet($event->sheet->getDelegate());
-                $event->sheet->getDelegate()->getStyle('B3:G3')->applyFromArray($this->styleArray());
-                $event->sheet->getDelegate()->getStyle('A4')->applyFromArray($this->styleArray());
-                $event->sheet->getDelegate()->getStyle('A6')->applyFromArray($this->styleArray());
-                $event->sheet->getDelegate()->getStyle('A7')->applyFromArray($this->styleArray());
-            },
-        ];
+        if ($this->company_logo) {
+            $path = $this->storeFileInTmp($this->company_logo);
+            return [
+                AfterSheet::class => function(AfterSheet $event) use($path) {
+                    $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
+                    $drawing->setName('Logo');
+                    $drawing->setDescription('Logo');
+                    $drawing->setPath($path);
+                    $drawing->setCoordinates('A1');
+                    $drawing->setHeight(65);
+                    $drawing->setWidth(55);
+                    $drawing->setWorksheet($event->sheet->getDelegate());
+                    $event->sheet->getDelegate()->getStyle('B3:G3')->applyFromArray($this->styleArray());
+                    $event->sheet->getDelegate()->getStyle('A4')->applyFromArray($this->styleArray());
+                    $event->sheet->getDelegate()->getStyle('A6')->applyFromArray($this->styleArray());
+                    $event->sheet->getDelegate()->getStyle('A7')->applyFromArray($this->styleArray());
+                },
+            ];
+        } else {
+            return [];
+        }
     }
 
     private function storeFileInTmp($url)
