@@ -60,12 +60,13 @@ export default {
         selectedAdslots : Array,
         adVendors : Array,
         group : String,
-        index : Number
+        index : Number,
+        volumeDiscount : Number
     },
     data() {
         return {
             dialog: false,
-            volume_discount : '',
+            volume_discount : this.volumeDiscount,
             ad_vendor : this.getVendor(),
         }
     },
@@ -101,7 +102,6 @@ export default {
                     }
                     Event.$emit('updated-group-adslots', res.data.data.grouped_time_belts)
                     Event.$emit('updated-adslots', res.data.data.time_belts)
-                    this.volume_discount = ''
                     this.dialog = false
                 } else {
                     this.sweet_alert(res.data.message, 'error')

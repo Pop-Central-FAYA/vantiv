@@ -46,6 +46,7 @@
                                     :campaign-id="campaignId"
                                     :selected-adslots="props.item.time_belts"
                                     :ad-vendors="props.item.time_belts[0].publisher.ad_vendors"
+                                    :volume-discount="props.item.time_belts[0].volume_discount"
                                     :group="group_adslot"
                                     :index="props.index"
                                     ></edit-volume-campaign-price>
