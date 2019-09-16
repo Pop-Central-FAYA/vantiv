@@ -18,7 +18,7 @@
         </tr>
         <tr>
             <td></td>
-            <td colspan="12">CLIENT: {{ $media_plan_data->client->company_name}}</td>
+            <td colspan="12">CLIENT: {{ $media_plan_data->client->name}}</td>
         </tr>
         <tr>
             <td></td>

@@ -32,4 +32,9 @@ class Client extends Base
     {
         return $this->hasMany(Campaign::class);
     }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
 }
