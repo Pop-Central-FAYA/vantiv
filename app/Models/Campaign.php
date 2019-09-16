@@ -30,7 +30,7 @@ class Campaign extends Base
      */
     public function client()
     {
-        return $this->belongsTo('Vanguard\Models\WalkIns','walkin_id');
+        return $this->belongsTo('Vanguard\Models\Client','walkin_id');
     }
 
     /**
