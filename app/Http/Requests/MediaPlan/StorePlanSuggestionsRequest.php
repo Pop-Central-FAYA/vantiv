@@ -34,7 +34,7 @@ class StorePlanSuggestionsRequest extends FormRequest
             'data.*.station_id' => 'required|string',
             'data.*.rating' => 'required|numeric',
             'data.*.station' => 'required|string',
-            'data.*.state' => 'optional|nullable|string',
+            'data.*.state' => 'sometimes|nullable|string',
             'data.*.station_type' => 'required|string'
         ];
     }

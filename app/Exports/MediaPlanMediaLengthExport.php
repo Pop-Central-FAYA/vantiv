@@ -36,8 +36,8 @@ class MediaPlanMediaLengthExport implements FromView, ShouldAutoSize, WithTitle
     {
         return view('agency.mediaPlan.export.mediaDuration', [
             'data' => collect($this->station_programs),
-            'national_stations' => $this->groupByStationType($this->station_programs, 'network'),
-            'cable_stations' => $this->groupByStationType($this->station_programs, 'cable'),
+            'national_stations' => $this->groupByStationType($this->station_programs, ['network', 'Network']),
+            'cable_stations' => $this->groupByStationType($this->station_programs, ['cable', 'satellite', 'Satellite']),
             'regional_stations' => $this->groupByRegions($this->station_programs),
             'monthly_weeks' => json_decode($this->monthly_weeks),
             'media_plan_data' => $this->media_plan_data,
@@ -49,13 +49,13 @@ class MediaPlanMediaLengthExport implements FromView, ShouldAutoSize, WithTitle
 
     public function groupByStationType($suggestions, $station_type)
     {
-        $suggestions = $suggestions->where('station_type', $station_type);
+        $suggestions = $suggestions->whereIn('station_type', $station_type);
         return $suggestions->groupBy('station');
     }
 
     public function groupByRegions($suggestions)
     {
-        $suggestions = $suggestions->where('station_type', 'terrestrial');
+        $suggestions = $suggestions->whereIn('station_type', ['terrestrial', 'regional', 'Regional']);
         return $suggestions->groupBy(['station_region', 'station']);
     }
 
