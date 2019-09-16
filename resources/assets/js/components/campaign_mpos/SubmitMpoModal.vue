@@ -50,6 +50,10 @@ export default {
     },
     mounted() {
         this.getShareLink()
+        var self = this
+        Event.$on('update-share-link', function() {
+            self.getShareLink()
+        })
     },
     methods : {
         getShareLink : function() {
