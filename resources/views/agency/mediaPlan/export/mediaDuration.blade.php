@@ -42,7 +42,7 @@
         </tr>
         <tr>
             <td></td>
-            <td colspan="12">PERIOD:</td>
+            <td colspan="12">PERIOD: {{ $media_plan_period }} {{ ($media_plan_period > 1) ? "weeks":"week" }}</td>
         </tr>
         <tr><td colspan="12"></td></tr>
         <tr><td colspan="12"></td></tr>

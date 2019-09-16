@@ -305,6 +305,10 @@ class MediaPlanController extends Controller
         $summary_service = new SummarizePlan($mediaPlan);
         $media_plan_summary =  $summary_service->run();
 
+        $media_plan_start_date = Carbon::parse($mediaPlan->start_date);
+        $media_plan_end_date = Carbon::parse($mediaPlan->end_date);
+        $media_plan_period = $media_plan_start_date->diffInWeeks($media_plan_end_date);
+
         $export_service = new ExportPlan($mediaPlan);
         $media_plan_grouped_data = $export_service->run();
 
@@ -312,7 +316,7 @@ class MediaPlanController extends Controller
 
         $file_name = str_slug($mediaPlan->campaign_name).'.xlsx';
 
-        return Excel::download(new MediaPlanExport($media_plan_summary, $media_plan_grouped_data, $monthly_weeks_table_header, $mediaPlan), $file_name);
+        return Excel::download(new MediaPlanExport($media_plan_summary, $media_plan_grouped_data, $monthly_weeks_table_header, $mediaPlan, $media_plan_period), $file_name);
     }
 
     public function changeMediaPlanStatus(Request $request)

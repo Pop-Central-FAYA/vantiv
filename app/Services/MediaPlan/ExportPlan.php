@@ -49,7 +49,7 @@ class ExportPlan
                     'station' => $suggestion->station,
                     'station_type' => $suggestion->station_type,
                     'station_region' => $suggestion->region,
-                    'program' => $suggestion->program.' '.date('ha', strtotime($suggestion->start_time)).' - '.date('ha', strtotime($suggestion->end_time)),
+                    'program' => $suggestion->program.' '.date('h:ia', strtotime($suggestion->start_time)).' - '.date('h:ia', strtotime($suggestion->end_time)),
                     'week_days' => $this->days_of_the_week($suggestion->day),
                     'media_type' => $suggestion->media_type,
                     'gross_unit_rate' => $gross_unit_rate,
