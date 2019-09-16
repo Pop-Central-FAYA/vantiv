@@ -19,6 +19,7 @@
       <v-tab-item value="grouped-adslots">
         <list-group-adslot :assets="assets" :grouped-campaign-time-belts="groupedCampaignTimeBelts"
         :time-belt-range="timeBelts" :ad-vendors="adVendors"
+        :client="client" :brand="brand"
         :campaign-id="campaignId"></list-group-adslot>
       </v-tab-item>
 
