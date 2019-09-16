@@ -85,10 +85,6 @@
     },
     created () {
       this.fetchMpo()
-      var self = this
-      Event.$on('updated', function() {
-        self.fetchMpo()
-      })
     },
     methods : {
       fetchMpo : function() {

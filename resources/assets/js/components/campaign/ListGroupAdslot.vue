@@ -178,7 +178,11 @@
                         adslots : group_time_belt.time_belts
                     }
                 }).then((res) => {
-                    Event.$emit('updated', true);
+                    if(res.data === 'exists'){
+                        this.sweet_alert('You have just generated an mpo with the exact record', 'error');
+                        return
+                    }
+                    Event.$emit('update-campaign-mpo', res.data.data);
                     this.sweet_alert('Mpo Generated successfully', 'success');
                 }).catch((error) => {
                     if (error.response && (error.response.status == 422)) {

@@ -22,11 +22,13 @@
         </tr>
     </table>
     <table>
-        <tr>
-            <th colspan="21">
-                This cancels and replaces Media Contract No: ....
-            </th>
-        </tr>
+        @if($previous_reference)
+            <tr>
+                <th colspan="21">
+                    This cancels and replaces Media Contract No: {{ $previous_reference }}
+                </th>
+            </tr>
+        @endif
         <tr>
             <th colspan="21">
                 DATES AND TIMES OF TRANSMISSION SHOULD BE CLEARLY STATED ON COTs.

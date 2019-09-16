@@ -85,6 +85,12 @@
                 mposData : this.mpos
             }
         },
+        mounted () {
+            var self = this
+            Event.$on('update-campaign-mpo', function(mpo) {
+                self.mposData = mpo
+            })
+        },
         methods : {
             exportMpo : function(mpo_id) {
                 var msg = "Generating Excel Document, Please wait";

@@ -8,7 +8,7 @@ use Vanguard\Libraries\Enum\Status;
 class CampaignMpo extends Base
 {
     protected $table = 'campaign_mpos';
-    protected $fillable = ['campaign_id', 'station', 'ad_slots', 'budget'];
+    protected $fillable = ['campaign_id', 'ad_vendor_id', 'insertions', 'net_total', 'adslots', 'reference_number'];
 
     public function campaign()
     {

@@ -4,6 +4,7 @@ namespace Vanguard\Services\Mpo;
 
 use Vanguard\Models\CampaignMpo;
 use Vanguard\Services\BaseServiceInterface;
+use Vanguard\Libraries\Utilities;
 
 class StoreMpoService implements BaseServiceInterface
 {
@@ -24,6 +25,7 @@ class StoreMpoService implements BaseServiceInterface
         $campaign_mpo->insertions = $this->data['insertions'];
         $campaign_mpo->net_total = $this->data['net_total'];
         $campaign_mpo->adslots = json_encode($this->data['adslots']);
+        $campaign_mpo->reference_number = Utilities::generateReference();
         $campaign_mpo->save();
         return $campaign_mpo;
     }

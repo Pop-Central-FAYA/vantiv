@@ -2,6 +2,7 @@
 
 namespace Vanguard\Http\Controllers\Dsp;
 
+use Hash;
 use Illuminate\Http\Request;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Libraries\CampaignDate;
@@ -77,7 +78,36 @@ class CampaignsController extends Controller
         $this->authorize('update', $campaign);
 
         $validated = $request->validated();
-        return (new StoreMpoService($validated, $campaign_id))->run();   
+
+        // //get the last mpo
+        // $last_mpo = $campaign->campaign_mpos->last();
+        // //convert the adslot to array
+        // $last_adslot_array = json_decode($last_mpo->adslots, true);
+        // //sort the adslot with duration is ascending order
+        // $sorted_adslots = $this->sortAdslot($last_adslot_array);
+        // //hash last mpo
+        // $hashed_adslot = Hash::make(json_encode($sorted_adslots));
+        // //sort incoming adslots
+        // $sort_incoming_adslot = $this->sortAdslot($validated['adslots']);
+        // //compare the two hashes
+        // // dd(json_encode($sorted_adslots), json_encode($sort_incoming_adslot));
+        // dd(Hash::check(json_encode($sort_incoming_adslot), $hashed_adslot));
+        // if(Hash::check(json_encode($sort_incoming_adslot), $hashed_adslot)){
+        //     return 'exists';
+        // }
+
+        //generate mpo
+        (new StoreMpoService($validated, $campaign_id))->run();
+
+        return $this->listMpos($campaign_id);   
+    }
+
+    private function sortAdslot($adslots)
+    {
+        array_multisort(array_map(function($element) {
+            return $element['duration'];
+        }, $adslots), SORT_ASC, $adslots);
+        return $adslots;
     }
 
     public function exportMpoAsExcel($campaign_id, $mpo_id)
@@ -87,7 +117,7 @@ class CampaignsController extends Controller
 
     public function listMpos($campaign_id)
     {
-        $mpos = CampaignMpo::where('campaign_id', $campaign_id)
+        $mpos = CampaignMpo::with('vendor.contacts')->where('campaign_id', $campaign_id)
                             ->where('ad_vendor_id', '<>', '')
                             ->latest()->get()
                             ->unique('ad_vendor_id');

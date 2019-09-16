@@ -2,6 +2,7 @@
 
 namespace Vanguard\Services\Mpo;
 
+use Illuminate\Support\Arr;
 use Vanguard\Services\BaseServiceInterface;
 use Vanguard\Models\CampaignMpo;
 use Vanguard\Exports\MpoExport;
@@ -19,7 +20,9 @@ class ExcelMpoExport implements BaseServiceInterface
     public function run()
     {
         $mpo_details = CampaignMpo::with('campaign', 'vendor')->find($this->mpo_id);
-        $company_logo = $mpo_details->campaign->company->logo;
+        $campaign = $mpo_details->campaign;
+        $company_logo = $campaign->company->logo;
+        $previous_reference = $this->getPreviousReference($campaign, $mpo_details);
         $campaign_mpo_time_belts = json_decode($mpo_details->adslots, true);
         $campaign_time_belts_data = $this->formatTimeBelt($campaign_mpo_time_belts);
         $campaign_mpo_time_belts = collect($campaign_time_belts_data);
@@ -36,6 +39,7 @@ class ExcelMpoExport implements BaseServiceInterface
         return Excel::download(new MpoExport($mpo_time_belts->run(), 
                                 $days_array, 
                                 $mpo_details,
+                                $previous_reference,
                                 $total_budget,
                                 $net_total,
                                 $mpo_time_belt_summary->run(), $company_logo), 
@@ -69,5 +73,17 @@ class ExcelMpoExport implements BaseServiceInterface
             ];
         }
         return $campaign_time_belts_data;
+    }
+
+    private function getPreviousReference($campaign, $mpo_details)
+    {
+        $mpo_references = $campaign->campaign_mpos->where('ad_vendor_id', $mpo_details->ad_vendor_id)
+                                                    ->pluck('reference_number')
+                                                    ->toArray();
+        //remove the current reference from the array
+        if (($key = array_search($mpo_details->reference_number, $mpo_references)) !== false) {
+            unset($mpo_references[$key]);
+        }
+        return Arr::last($mpo_references);
     }
 }
