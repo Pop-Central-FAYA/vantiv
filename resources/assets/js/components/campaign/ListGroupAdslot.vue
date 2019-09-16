@@ -63,7 +63,7 @@
                                 <v-flex xs12 sm6 md3 v-if="group_adslot === 'ad_vendor_id' && props.item.time_belts[0].vendor != null">
                                     <v-tooltip top>
                                         <template v-slot:activator="{ on }">
-                                            <v-icon color="#01c4ca" dark right v-on="on" @click="generateMpo(props.item)">save</v-icon>
+                                            <v-icon color="#01c4ca" dark left v-on="on" @click="generateMpo(props.item)">save</v-icon>
                                         </template>
                                         <span>Generate MPO</span>
                                     </v-tooltip>
