@@ -101,6 +101,7 @@ Vue.component('share-link-modal', () => import('./components/campaign_mpos/Share
 Vue.component('edit-volume-campaign-price', () => import('./components/campaign_mpos/EditVolumePrice.vue'));
 Vue.component('list-campaign-adslot', () => import('./components/campaign/ListCampaignAdslot.vue'));
 Vue.component('list-group-adslot', () => import('./components/campaign/ListGroupAdslot.vue'));
+Vue.component('mpo-list', () => import('./components/campaign_mpos/MpoList.vue'));
 
 // AD VENDOR MANAGEMENT
 Vue.component('ad-vendor-list', () => import('./components/ad_vendors/VendorList.vue'));
@@ -205,7 +206,7 @@ Vue.mixin({
             return moment(date).format('dddd')
         },
         numberFormat(n) {
-            return new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN' }).format(n);
+            return new Intl.NumberFormat('en-NG').format(n);
         },
         hasPermission(permissionList,search_permission){
             if(typeof search_permission === 'string'){

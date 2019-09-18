@@ -70,7 +70,23 @@
         </v-flex>
     </v-layout>
   </v-card>
+  <v-card style="margin-top: 20px;"  >
+    <v-card-title>
+    </v-card-title>
+     <v-layout wrap>
+        <v-flex xs12 sm12 md12>
+            <v-tabs>
+                    <v-tabs-slider></v-tabs-slider>
+                    <v-tab href="#campaigns-tab">Mpos</v-tab>
+                    <v-tab-item value="campaigns-tab">
+                       <mpo-list :mpos="mpos"></mpo-list>
+                    </v-tab-item>
+            </v-tabs>
+        </v-flex>
+    </v-layout>
+  </v-card>
 
+  
   </v-flex>
 </template>
 
@@ -114,6 +130,7 @@
         props: {
          adVendorData: Object,
          routes:Object,
+         mpos:Array
         },
     data () {
       return {

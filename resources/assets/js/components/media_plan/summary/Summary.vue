@@ -29,9 +29,9 @@
                             <th>Medium</th>
                             <th>Material Duration</th>
                             <th>Number of Spots/units</th>
-                            <th>Gross Media Cost</th>
-                            <th>Net Media Cost</th>
-                            <th>Savings</th>
+                            <th>Gross Media Cost (₦)</th>
+                            <th>Net Media Cost (₦)</th>
+                            <th>Savings (₦)</th>
                         </tr>
                         </thead>
                         <tbody>
