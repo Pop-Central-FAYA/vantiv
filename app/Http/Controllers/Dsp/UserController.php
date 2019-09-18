@@ -97,6 +97,7 @@ class UserController extends Controller
             $email_invitation_service = new UserInvitationMail($user_mail_content_array);
             $email_invitation_service->sendInvitationMail();
         });
+        
         return ['status'=>"success", 'message'=> "User(s) invited successfully, and emails sent"];
     }
 
