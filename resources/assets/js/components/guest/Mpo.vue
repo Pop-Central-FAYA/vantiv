@@ -2,7 +2,7 @@
     <div>
     <v-tabs>
         <v-tabs-slider></v-tabs-slider>
-        <v-tab href="#adslot-tab">Adslot</v-tab>
+        <v-tab href="#adslot-tab">Spots</v-tab>
         <v-tab href="#files-tab">Files</v-tab>
 
         <v-tab-item value="adslot-tab">
