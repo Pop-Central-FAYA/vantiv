@@ -125,7 +125,7 @@
 </style>
 
 <script>
-    const DECREASE_DURATION = 2;
+    const BUFFER_DURATION = 5;
     export default {
         props: {
             clients: [Array, Object],
@@ -208,28 +208,31 @@
                 }
 
                 // validate media asset duration
-                if (this.uploadedMediaAssetDuration < this.duration - DECREASE_DURATION || this.uploadedMediaAssetDuration > this.duration) {
+                var greaterThan = parseInt(this.duration) + BUFFER_DURATION;
+                var lessThan = parseInt(this.duration) - BUFFER_DURATION;
+                if ((this.uploadedMediaAssetDuration >= lessThan) && 
+                    (this.uploadedMediaAssetDuration <= greaterThan)) {
+                        try {
+                        // generate presigned url for asset upload
+                        await this.generate_presigned_url(this.assetFile, 'media-assets/');
+                        await this.upload_file(this.assetFile, this.s3PresignedUrl, 'ASSET');
+                        console.log(this.assetUrl);
+                        // generate presigned url for regulatory certificate upload
+                        if(this.regulatoryCertFile) {
+                            await this.generate_presigned_url(this.regulatoryCertFile, 'regulatory-certificates/');
+                            await this.upload_file(this.assetFile, this.s3PresignedUrl, 'REG_CERT');
+                            console.log(this.regulatoryCertUrl);
+                        }
+                        // make axios call to store created asset to db
+                        await this.store_uploaded_asset();
+                    } catch (error) {
+                        console.log(error);
+                        this.sweet_alert('An unknown error has occurred, asset upload failed. Please try again', 'error');
+                    }
+                }else{
                     let msg = `You are trying to upload a file of ${this.uploadedMediaAssetDuration} seconds into a duration of ${this.duration} seconds`;
                     this.sweet_alert(msg, 'error');
                     return;
-                }
-
-                try {
-                    // generate presigned url for asset upload
-                    await this.generate_presigned_url(this.assetFile, 'media-assets/');
-                    await this.upload_file(this.assetFile, this.s3PresignedUrl, 'ASSET');
-                    console.log(this.assetUrl);
-                    // generate presigned url for regulatory certificate upload
-                    if(this.regulatoryCertFile) {
-                        await this.generate_presigned_url(this.regulatoryCertFile, 'regulatory-certificates/');
-                        await this.upload_file(this.assetFile, this.s3PresignedUrl, 'REG_CERT');
-                        console.log(this.regulatoryCertUrl);
-                    }
-                    // make axios call to store created asset to db
-                    await this.store_uploaded_asset();
-                } catch (error) {
-                    console.log(error);
-                    this.sweet_alert('An unknown error has occurred, asset upload failed. Please try again', 'error');
                 }
             },
             store_uploaded_asset: async function(event) {
