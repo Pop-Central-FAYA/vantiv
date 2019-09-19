@@ -21,7 +21,7 @@
                         <v-tab-item :value="'table-view'">
                             <v-card flat tile>
                                 <v-card-text class="px-1 pb-0">
-                                    <media-plan-station-rating-table></media-plan-station-rating-table>
+                                    <media-plan-station-rating-table :selected-time-belts="selectedSuggestions"></media-plan-station-rating-table>
                                 </v-card-text>
                             </v-card>
                         </v-tab-item>

@@ -26,7 +26,7 @@
                                 <v-card-text>
                                     <v-layout wrap>
                                         <v-flex md12 px-0 style="overflow-x:auto;  height: 40vh;">
-                                            <media-plan-timebelt :station="item"></media-plan-timebelt>
+                                            <media-plan-timebelt :station="item" :selected-time-belts="selectedTimeBelts"></media-plan-timebelt>
                                         </v-flex>
                                     </v-layout>
                                 </v-card-text>
@@ -57,6 +57,9 @@
 
 <script>
     export default {
+        props: {
+            selectedTimeBelts: Array,
+        },
         data() {
             return {
                 stationsList: [],

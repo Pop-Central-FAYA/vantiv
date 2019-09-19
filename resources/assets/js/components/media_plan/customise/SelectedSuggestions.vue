@@ -14,7 +14,7 @@
                         <td class="text-xs-left">{{ format_audience(props.item.total_audience) }}</td>
                         <td class="text-xs-left">{{ props.item.rating }}</td>
                         <td class="text-xs-left">
-                            <v-icon color="danger" style="color: red !important" dark @click="deleteTimebelt(props.item, props.index)">delete</v-icon>
+                            <v-icon color="danger" style="color: red !important" dark @click="deleteTimebelt(props.item)">delete</v-icon>
                         </td>
                     </tr>
                 </template>
@@ -65,7 +65,10 @@
             })
         },
         methods: {
-            deleteTimebelt(timeBelt, index) {
+            deleteTimebelt(timeBelt) {
+                let index = this.timeBeltsArr.findIndex((element)=>{
+                    return  (timeBelt['key'] === element.key);
+                });  
                 this.timeBeltsArr.splice(index, 1);
                 Event.$emit('timebelt-unselected', timeBelt);
                 var time = `${this.format_time(timeBelt.start_time)} - ${this.format_time(timeBelt.end_time)}`;
