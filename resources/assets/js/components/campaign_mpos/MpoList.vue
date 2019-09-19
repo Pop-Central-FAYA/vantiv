@@ -62,7 +62,7 @@
       },
       getHeader(){
         var header =[
-          { text: 'Campaign Name', align: 'left', value: 'name' },
+          { text: 'Campaign Name', align: 'left', value: 'campaign.name' },
           { text: 'Insertions', value: 'insertions' },
           { text: 'Net Total (₦)', value: 'net_total'},
           { text: 'Ad Slots', value: 'adslots' },

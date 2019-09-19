@@ -50,9 +50,7 @@ class AdVendorController extends Controller
         $vendor = AdVendor::findOrFail($id);
         $this->authorize('get', $vendor);
         $mpos = CampaignMpo::with('campaign')->where('ad_vendor_id', $id)->get();
-        $routes= array(
-            "home" => route('ad-vendor.index')
-        );
+        $routes= array( "home" => route('ad-vendor.index') );
         return view('agency.ad_vendor.ad_vendor')
         ->with('ad_vendor', new AdVendorResource($vendor))->with('routes', $routes)->with('mpos', $mpos);
     }
