@@ -14,7 +14,7 @@ class TransformOldBrandToNewBrand extends Migration
     public function up()
     {
         DB::statement(
-            "UPDATE brands SET client_id=(SELECT client_id FROM brand_client WHERE brands.id = brand_client.brand_id AND brand_client.media_buyer = 'Agency'), created_by=(SELECT created_by FROM brand_client WHERE brands.id = brand_client.brand_id AND brand_client.media_buyer = 'Agency')" 
+            "UPDATE brands AS b JOIN brand_client AS bc ON b.id = bc.brand_id SET b.client_id = bc.client_id, b.created_by = bc.created_by WHERE bc.media_buyer = 'Agency'" 
         );
     }
 
