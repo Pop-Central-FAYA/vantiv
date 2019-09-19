@@ -37,7 +37,6 @@
                         <div class="select_wrap">
                             <select class="js-example-basic-multiple" id="roles" name="roles[]" multiple="multiple" >
                                 <option value=""></option>
-                                <option value="boss"></option>
                                 @foreach($roles as $role)
                                     <option value="{{ $role['role'] }}">
                                         {{ $role['label'] }}
