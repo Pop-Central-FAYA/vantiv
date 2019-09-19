@@ -46,10 +46,10 @@
         headers: this.getHeader(),
         pagination: {
             rowsPerPage: 10,
-            sortBy: 'date_created',
+            sortBy: 'created_at',
             descending: true,
         },
-        noDataText: 'No campaign to display'
+        noDataText: 'No Mpo to display'
       }
     },
     mounted() {
