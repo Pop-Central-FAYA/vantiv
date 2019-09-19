@@ -241,12 +241,5 @@
 
         Route::post('/presigned-url', 'S3Controller@getPresignedUrl')->name('presigned.url');
 
-        /*
-        * new user management route
-        */
-        Route::group(['namespace' => 'Dsp'], function () {
-            Route::post('/users/invite', 'UsersController@create')->name('user.invite');
-           
-         });
     });
 
