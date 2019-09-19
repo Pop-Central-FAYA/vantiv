@@ -30,14 +30,59 @@
                         :group="group"
                     ></mpo-file-manager>
                     </v-flex>
+                    <v-flex xs3>
+                        <v-select
+                            v-model="selected"
+                            :items="filterParameters"
+                            item-text="name"
+                            item-value="id"
+                            placeholder="Select a filter criteria"
+                            @change="processFilter()"
+                        ></v-select>
+                    </v-flex>
+                    <v-flex xs2>
+                    </v-flex>
+                    <v-flex xs4>
+                        <v-text-field v-model="search" append-icon="search" label="Enter Keyword" single-line hide-details></v-text-field>
+                    </v-flex>
                 </v-layout>
-                <v-spacer></v-spacer>
-                <v-text-field v-model="search" append-icon="search" label="Enter Keyword" single-line hide-details></v-text-field>
             </v-card-title>
-            <v-data-table class="custom-vue-table elevation-1" :headers="getHeader()" :items="campaignTimeBeltsData" :search="search" :pagination.sync="pagination" item-key="station" expand :show-expand="true">
-            <template v-slot:items="props">
+            <v-data-table class="custom-vue-table elevation-1" 
+                :headers="getHeader()" 
+                :items="campaignTimeBeltsData" 
+                :search="search" :pagination.sync="pagination" 
+                item-key="station" expand :show-expand="true"
+                v-model="selectedAdslots"
+            >
+            <template v-slot:headers="props">
                 <tr>
-                    <td v-if="!group"><input v-model="selectedAdslots" :value="props.item" type="checkbox"></td>
+                    <th>
+                        <v-checkbox
+                        primary
+                        hide-details
+                        @click.native="toggleAll"
+                        :input-value="props.all"
+                        :indeterminate="props.indeterminate"
+                        ></v-checkbox>
+                    </th>
+                    <th v-for="header in props.headers" :key="header.text"
+                        :class="['column sortable', pagination.descending ? 'desc' : 'asc', header.value === pagination.sortBy ? 'active' : '']"
+                        @click="changeSort(header.value)"
+                    >
+                        <v-icon>arrow_upward</v-icon>
+                        {{ header.text }}
+                    </th>
+                </tr>
+            </template>
+            <template v-slot:items="props">
+                <tr :active="props.selectedAdslots" @click="props.selectedAdslots = !props.selectedAdslots">
+                    <td>
+                        <v-checkbox
+                        primary
+                        hide-details
+                        :input-value="props.selected"
+                        ></v-checkbox>
+                    </td>
                     <td  class="text-xs-left">{{ props.item.publisher.name }}
                     </td>
                     <td  class="text-xs-left" v-if="props.item.vendor">{{ props.item.vendor.name }}
@@ -55,7 +100,6 @@
                     <td  class="text-xs-left">{{ props.item.ad_slots }} 
                     </td>
                     <td  class="text-xs-left">{{ format_audience(props.item.net_total) }}
-
                     </td>
                     <td class="justify-center layout px-0">
                         <edit-slots-modal
@@ -118,7 +162,18 @@
                 isHidden : true,
                 selectedAdslots : [],
                 adVendorData : [],
-                click : 0
+                click : 0,
+                filterParameters : [
+                    {
+                        'name' : 'With Asset',
+                        'id' : 'with_asset'
+                    },
+                    {
+                        'name' : 'Without Asset',
+                        'id' : 'without_asset'
+                    }
+                ],
+                selected : ''
             }
         },
         mounted () {
@@ -145,12 +200,35 @@
                     { text: 'Insertions', value: 'ad_slots', width: "1%"},
                     { text : 'Net Total (₦)', value : 'net_total' },
                     { text: 'Actions', value: 'name', sortable: false }]
-                if(!this.group){
-                    header.splice(0, 0, {
-                        sortable : false
-                    })
-                }
                 return header;
+            },
+            toggleAll : function() {
+                if (this.selectedAdslots.length){
+                    this.selectedAdslots = []
+                }else {
+                    this.selectedAdslots = this.campaignTimeBeltsData.slice()
+                }
+            },
+            changeSort (column) {
+                if (this.pagination.sortBy === column) {
+                    this.pagination.descending = !this.pagination.descending
+                } else {
+                    this.pagination.sortBy = column
+                    this.pagination.descending = false
+                }
+            },
+            processFilter : function () {
+                this.sweet_alert('Processing...', 'info')
+                var self = this
+                var found = this.campaignTimeBelts.filter(function(time_belt) {
+                    if(self.selected === 'with_asset'){
+                        return time_belt.asset_id != null
+                    }else{
+                        return time_belt.asset_id === null
+                    }
+                });
+                this.sweet_alert('Filterec successfully', 'success', 2000)
+                this.campaignTimeBeltsData = found
             }
         }
     }
