@@ -245,8 +245,8 @@
         * new user management route
         */
         Route::group(['namespace' => 'Dsp'], function () {
-            Route::post('/users/invite', 'UsersController@create')->name('user.invite');
-           
+            Route::get('/users', 'UsersController@list')->name('user.list');
+            Route::post('/users/invite', 'UsersController@create')->name('user.invite');  
          });
 
     });
