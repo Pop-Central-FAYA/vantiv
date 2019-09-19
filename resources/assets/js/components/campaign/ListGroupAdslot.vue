@@ -115,18 +115,18 @@
         },
         data () {
             return {
-                group_adslot : 'ad_vendor_id',
+                group_adslot : 'publisher_id',
                 search: '',
                 pagination: {
                     rowsPerPage: 10
                 },
                 campaignGroupTimeBeltsData : this.groupedCampaignTimeBelts,
                 group_parameter : [{
-                                    'id' : 'ad_vendor_id',
-                                    'name' : 'Vendor'
-                                },{
                                     'id' : 'publisher_id',
                                     'name' : 'Publisher'
+                                },{
+                                    'id' : 'ad_vendor_id',
+                                    'name' : 'Vendor'
                                 }],
             }
         },

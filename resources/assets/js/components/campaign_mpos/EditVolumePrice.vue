@@ -40,6 +40,9 @@
                                     ></v-select>
                                     <span class="text-danger" v-show="errors.has('ad_vendor')">{{ errors.first('ad_vendor') }}</span>
                                 </v-flex>
+                                <v-flex v-else>
+                                    <span class="text-danger">Please add a vendor for this publisher...</span>
+                                </v-flex>
                             </v-layout>
                         </v-form>
                     </v-container>

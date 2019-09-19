@@ -258,7 +258,7 @@ export default {
                     Event.$emit('updated', true)
                     Event.$emit('updated-campaign', res.data.data)
                     Event.$emit('updated-adslots', res.data.data.time_belts)
-                    Event.$emit('group', 'ad_vendor_id')
+                    Event.$emit('group', 'publisher_id')
                     this.dialog = false;
                 } else {
                     this.sweet_alert(res.data.message, 'error');
