@@ -1,0 +1,22 @@
+- raw_name: "ABS TV Nett"
+  name: ABS TV
+- raw_name: "AIT (Natl) Nett"
+  name: AIT
+- raw_name: "CRTV Nett"
+  name: CRTV
+- raw_name: "CTV Nett"
+  name: CTV
+- raw_name: "KSTV Nett"
+  name: KSTV
+- raw_name: "KTV Nett"
+  name: KTV
+- raw_name: "NTA (Natl Nett)"
+  name: NTA
+- raw_name: "OSBC Nett"
+  name: OSBC
+  state: Osun
+  city: Osogbo
+- raw_name: "Silverbird (Natl Nett)"
+  name: Silverbird Television
+- raw_name: "Wazobia Max Nett"
+  name: Wazobia Max

@@ -48,9 +48,9 @@ class TvStationTableSeeder extends Seeder
             ['name' => 'NTA', 'type' => 'Regional', 'state' => 'Abia', 'city' => 'Umuahia', 'region' => 'South East'],
 
             ['name' => 'AIT', 'type' => 'Regional', 'state' => 'Abuja', 'city' => 'Abuja', 'region' => 'North Central'],
-            ['name' => 'Channels TV', 'type' => 'Regional', 'state' => 'Abuja', 'city' => 'Abuja', 'region' => 'North Central'],
+            ['name' => 'Channels Television', 'type' => 'Regional', 'state' => 'Abuja', 'city' => 'Abuja', 'region' => 'North Central'],
             ['name' => 'ITV', 'type' => 'Regional', 'state' => 'Abuja', 'city' => 'Abuja', 'region' => 'North Central'],
-            ['name' => 'Silverbird TV', 'type' => 'Regional', 'state' => 'Abuja', 'city' => 'Abuja', 'region' => 'North Central'],
+            ['name' => 'Silverbird Television', 'type' => 'Regional', 'state' => 'Abuja', 'city' => 'Abuja', 'region' => 'North Central'],
             ['name' => 'Wazobia Max', 'type' => 'Regional', 'state' => 'Abuja', 'city' => 'Abuja', 'region' => 'North Central'],
             ['name' => 'NTA', 'type' => 'Regional', 'state' => 'Abuja', 'city' => 'Abuja', 'region' => 'North Central'],
 
