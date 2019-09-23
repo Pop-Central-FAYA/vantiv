@@ -24,7 +24,7 @@ class UserInvitationMail
                             '-email-' => $mail_content['recipient'],
                             '-inviter-' => $mail_content['inviter'],
                             '-company-' => $mail_content['companies'],
-                            '-valid_duration-' => Config::get('app.valid_duration'). " hour(s)",
+                            '-valid_duration-' => env('INVITATION_LINK_USAGE_DURATION', 24). " hour(s)",
                             '-date_time-' => date('F j, Y | G:i A T')
                         ],
                         $mail_content['subject']

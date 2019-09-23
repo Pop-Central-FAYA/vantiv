@@ -269,10 +269,4 @@ return [
         'AssetsHelper' => Vanguard\Helpers\AssetsHelper::class
 
     ],
-
-        /*
-         * Inviataion mail duratio vality
-         */
-
-        'valid_duration' => 24,
 ];
