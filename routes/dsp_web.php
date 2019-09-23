@@ -246,7 +246,7 @@
         */
         Route::group(['namespace' => 'Dsp'], function () {
             Route::get('/users', 'UsersController@list')->name('user.list');
-            Route::get('/users/index', 'UsersController@create')->name('client.index');
+            Route::get('/users/index', 'UsersController@index')->name('client.index');
             Route::post('/users/invite', 'UsersController@create')->name('user.invite');  
          });
 
