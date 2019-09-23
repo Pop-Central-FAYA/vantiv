@@ -3,7 +3,6 @@
 namespace Vanguard\Services\Mail;
 
 use \Illuminate\Support\Facades\URL;
-use Illuminate\Support\Facades\Config;
 
 class MailFormat
 {

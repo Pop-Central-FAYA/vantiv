@@ -1,7 +1,6 @@
 <?php
 
 namespace Vanguard\Services\Mail;
-use Illuminate\Support\Facades\Config;
 class UserInvitationMail
 {
     protected $mail_content_array;
