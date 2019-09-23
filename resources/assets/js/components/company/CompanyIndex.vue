@@ -4,7 +4,7 @@
         <v-form>
             <v-layout wrap>
                 <v-flex xs12 sm4 md4>
-                    <b-img thumbnail fluid :src="companyData.logo"  style="width: 400px; height: 300px"  @click="chooseFile()" id="output-img" v-b-tooltip.hover title="Click logo to update" alt="Image 1"></b-img>
+                    <b-img thumbnail fluid :src="companyData.logo"  style="width: 400px; height: 300px"  @click="chooseFile()" id="company_logo" v-b-tooltip.hover title="Click logo to update" alt="Image 1"></b-img>
                     <input type="file" style="display: none" ref="logo" accept="image/*" v-validate="'required|ext:png,jpeg,mp4,3gp'" name="asset" @change="on_file_change($event)">
                      <v-btn color="" style="width: 95%" class="default-vue-btn" @click="chooseFile()">Choose image</v-btn>
                   </v-flex>
@@ -84,6 +84,8 @@
             },
             on_file_change: async function(event) {
                 this.assetFile = event.target.files[0];
+                 const output = $('#company_logo');
+                    output.attr('src', URL.createObjectURL(event.target.files[0]));
             },
 
             process_form: async function(event) {
@@ -155,8 +157,12 @@
                  }).then((res) => {
                         this.sweet_alert('Company was successfully updated', 'success');
                  }).catch((error) => {
-                     this.sweet_alert(error.response.data.message, 'error');
-                 });
+                    if (error.response && (error.response.status == 422)) {
+                        this.displayServerValidationErrors(error.response.data.errors);
+                    } else {
+                        this.sweet_alert('An unknown error has occurred, vendor cannot be created. Please try again', 'error');
+                    }
+                });
             },
         }
     }
