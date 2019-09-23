@@ -1,7 +1,7 @@
 <?php
 
 namespace Vanguard\Services\Mail;
-
+use Illuminate\Support\Facades\Config;
 class UserInvitationMail
 {
     protected $mail_content_array;
@@ -24,6 +24,7 @@ class UserInvitationMail
                             '-email-' => $mail_content['recipient'],
                             '-inviter-' => $mail_content['inviter'],
                             '-company-' => $mail_content['companies'],
+                            '-valid_duration-' => Config::get('app.valid_duration'). " hour(s)",
                             '-date_time-' => date('F j, Y | G:i A T')
                         ],
                         $mail_content['subject']

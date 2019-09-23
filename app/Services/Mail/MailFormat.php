@@ -3,6 +3,7 @@
 namespace Vanguard\Services\Mail;
 
 use \Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Config;
 
 class MailFormat
 {
@@ -27,7 +28,7 @@ class MailFormat
             'subject' => $this->subject,
             'inviter' =>  $this->inviter_name,
             'user_id' =>  $this->invited_user->id,
-            'link' =>  URL::temporarySignedRoute('user.complete_registration', now()->addHour(24),
+            'link' =>  URL::temporarySignedRoute('user.complete_registration', now()->addHour(Config::get('app.valid_duration')),
                 ['id'=>  $this->invited_user->id])
         ];
     }

@@ -270,4 +270,9 @@ return [
 
     ],
 
+        /*
+         * Inviataion mail duratio vality
+         */
+
+        'valid_duration' => 24,
 ];
