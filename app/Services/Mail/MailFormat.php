@@ -27,7 +27,7 @@ class MailFormat
             'subject' => $this->subject,
             'inviter' =>  $this->inviter_name,
             'user_id' =>  $this->invited_user->id,
-            'link' =>  URL::temporarySignedRoute('user.complete_registration', now()->addHour(1),
+            'link' =>  URL::temporarySignedRoute('user.complete_registration', now()->addHour(24),
                 ['id'=>  $this->invited_user->id])
         ];
     }
