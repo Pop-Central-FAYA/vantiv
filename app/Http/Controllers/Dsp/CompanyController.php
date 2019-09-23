@@ -45,7 +45,6 @@ class CompanyController extends Controller
         $validated = $request->validated();
         $update_company_service = new UpdateCompany($company,  $request);
         $update_company_service->run();
-
-        return new CompanyResource(Company::find($id));
+        return new CompanyResource( Company::findOrFail($id));
     }
 }

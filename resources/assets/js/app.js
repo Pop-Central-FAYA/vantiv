@@ -111,6 +111,8 @@ Vue.component('ad-vendor-details', () => import('./components/ad_vendors/VendorD
 
 // COMPANY MANAGEMENT
 Vue.component('company-index', () => import('./components/company/CompanyIndex.vue'));
+Vue.component('company-details', () => import('./components/company/CompanyDetails.vue'));
+Vue.component('company-edit', () => import('./components/company/EditCompany.vue'));
 
 //CLIENT MANAGEMENT
 Vue.component('clients-list', () => import('./components/client/DisplayClients.vue'));

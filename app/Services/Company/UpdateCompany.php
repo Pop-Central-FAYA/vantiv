@@ -3,14 +3,14 @@
 namespace Vanguard\Services\Company;
 use Illuminate\Support\Arr;
 use DB;
-
+use Vanguard\Services\BaseServiceInterface;
 
 /**
  * This service is to update a company.
  */
-class UpdateCompany
+class UpdateCompany implements BaseServiceInterface
 { 
-    const COMPANY_UPDATE_FIELDS = ['logo', 'address'];
+    const COMPANY_UPDATE_FIELDS = ['logo', 'address','city', 'state', 'website', 'company_rc','email', 'phone_number'];
     protected $company;
     protected $data;
 
@@ -36,7 +36,6 @@ class UpdateCompany
             return $this->company;
         });
     }
-
 
 
      /**

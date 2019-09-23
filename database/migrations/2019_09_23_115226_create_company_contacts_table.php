@@ -13,17 +13,15 @@ class CreateCompanyContactsTable extends Migration
      */
     public function up()
     {
-        Schema::create('company_contacts', function (Blueprint $table) {
-            $table->string('id', 25)->unique();
-            $table->string('company_id', 25)->index();
+        Schema::table('companies', function (Blueprint $table) {
             $table->string('company_rc');
             $table->string('email');
             $table->string('phone_number');
+            $table->string('website');
+            $table->string('color');
             $table->string('city');
             $table->string('state');
             $table->string('country');
-            $table->string('created_by')->index();
-            $table->timestamps();
         });
     }
 
@@ -34,6 +32,10 @@ class CreateCompanyContactsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('company_contacts');
+        Schema::table('companies', function (Blueprint $table) {
+            $table->dropColumn(['company_rc', 'email','phone_number', 'website', 'color','city','state', 'country']);
+        });
+
+        
     }
 }

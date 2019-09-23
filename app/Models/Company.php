@@ -11,7 +11,7 @@ class Company extends Base
 {
     protected $primaryKey = 'id';
 
-    protected $fillable = ['id', 'name', 'parent_company_id', 'address', 'logo'];
+    protected $fillable = ['id', 'name', 'parent_company_id', 'address', 'logo','company_rc', 'email','phone_number', 'website', 'city','state', 'country'];
 
     public function parent_company()
     {
