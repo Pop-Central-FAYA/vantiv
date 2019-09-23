@@ -9,6 +9,8 @@ use Vanguard\Services\User\InviteService;
 use Vanguard\Http\Requests\User\ListRequest;
 use Vanguard\Services\User\UserListService;
 use Vanguard\Http\Resources\UserResource;
+use Vanguard\Http\Resources\UserCollection;
+use Illuminate\Http\Request;
 
 
 class UsersController extends Controller
@@ -28,7 +30,7 @@ class UsersController extends Controller
 
     public function index(Request $request)
     {   
-       
+        return view('agency.user.index');
     }
 
 
@@ -39,14 +41,22 @@ class UsersController extends Controller
     /**
      * Return a list of client that the currently logged in user has permission to view
      * Filter parameters are allowed
+     * UserInviteRequest $request
      */
     
-    public function create(UserInviteRequest $request)
+    public function create()
     {
-        $validated = $request->validated();
-        $invite_user = new InviteService($validated, $this->companyId(), 'web');
+        $details = [
+            'email'=> array('pechbusorg@gmail.com'),
+            'roles'=> array('dsp.admin')
+        ];
+        $request = new Request($details);
+        /*
+        $validated = $request->validated();  */
+        $invite_user = new InviteService($request, $this->companyId(), 'web');
         $new_user = $invite_user->run();   
-        return response()->setStatusCode(201);
+        return "GOoodw";
+      
     }
 
      /**
@@ -55,18 +65,12 @@ class UsersController extends Controller
      * No need for a service now, until the query gets more complicated
      */
     public function list(ListRequest $request)
-    {           
+    {        
+        $validated = $request->validated();
+        $validated['company_id'] = $this->companyId();   
         $user_list_service = new UserListService($this->getCompanyIdsList());
         $user_list = $user_list_service->run();
-
-        dd(UserResource::collection($user_list));
-     //   return new UserResource::collection($user_list);
-
-
-        $validated = $request->validated();
-        $validated['company_id'] = $this->companyId();
-        $vendor_list = AdVendor::filter($validated)->get();
-        return new AdVendorCollection($vendor_list);
+        return new UserCollection($user_list);
     }
 
    
