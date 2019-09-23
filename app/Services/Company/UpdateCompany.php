@@ -31,10 +31,10 @@ class UpdateCompany
      */
     protected function update()
     {
-       // return DB::transaction(function () {
+        return DB::transaction(function () {
             $this->updateModel($this->company, static::COMPANY_UPDATE_FIELDS, $this->data);
             return $this->company;
-       // });
+        });
     }
 
 
