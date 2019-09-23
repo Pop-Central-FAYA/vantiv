@@ -36,6 +36,8 @@ storage/*.key
 resources/assets/.DS_Store
 app/.DS_Store
 *.out
+/docs/phpmd.html
+/docs/phpmetrics
 
 diary.csv
 diary.tar.gz
