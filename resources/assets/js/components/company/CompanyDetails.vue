@@ -4,19 +4,18 @@
     <p></p>
      <v-layout wrap>
         <v-flex xs12 sm12 md12>
-             <v-layout  style="height: 70px; margin-Top: 10px;"> 
-                <v-flex md9 my-1>
+             <v-layout  style="height: 80px; margin-Top: 10px; margin-right: -70px;"> 
+                <v-flex md11 my-1>
                     <p class="weight_medium">
                      {{ company.name }})
                     </p>
                     <p class="weight_medium small_faint">
-                      {{ company.address }}
+                      {{ company.address }},  {{ company.city }} , {{ company.state }},  {{ company.country }}
                     </p>
             
                 </v-flex>
                  <v-flex md2 my-1>
-                    <b-img :src="company.logo"  style="width: 60px; height: 60px" id="client_logo" alt="Image 1"></b-img>
-                                
+                    <b-img :src="company.logo"  style="width: 70px; height: 70px" id="client_logo" alt="Image 1"></b-img>       
                 </v-flex>
             </v-layout>
         </v-flex>
@@ -27,7 +26,7 @@
              <v-layout style="height: 70px" >
                 <v-flex md4 my-1 style="border-width:2px;" >
                     <p class="bold small_faint">
-                     RC
+                     Registration Certificate
                     </p>
                       <p class="weight_medium">
                       {{ company.company_rc}}
@@ -62,7 +61,7 @@
      <v-layout wrap >
         <v-flex xs12 sm12 md12>
              <v-layout style="height: 70px" >
-                  <v-flex md4 my-1>
+                  <v-flex md8 my-1>
                        
                    <p class="bold small_faint">
                      Website
@@ -70,31 +69,24 @@
                       <p class="weight_medium">
                      {{ company.website }}  
                     </p>
-                </v-flex>
+                   </v-flex>
+                     <v-divider vertical></v-divider>
+                  <v-flex md4 my-1>
+                     <p class="bold small_faint">
+                     Company color
+                    </p>
+                    <p> <v-btn :color="company.color"  dark v-on="on"></v-btn></p>
+                   </v-flex>
 
-                <v-divider vertical></v-divider>
-                  <v-flex md4 my-1>
-                     <p class="bold small_faint">
-                     City
-                    </p>
-                      <p class="weight_medium">
-                     {{ company.city }}
-                    </p>
-                </v-flex>
-                <v-divider vertical></v-divider>
-                  <v-flex md4 my-1>
-                     <p class="bold small_faint">
-                    State
-                    </p>
-                      <p class="weight_medium">
-                      {{ company.state }}
-                    </p>
-                </v-flex>
+                
             </v-layout>
         </v-flex>
     </v-layout>
   </v-card> 
+
+  
   </v-flex>
+
 </template>
 
 <style>
@@ -136,6 +128,8 @@
   export default {
         props: {
          companyData: Object,
+          permissionList:Array,
+          routes:Object,
         },
     data () {
       return {

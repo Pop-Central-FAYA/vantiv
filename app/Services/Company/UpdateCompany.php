@@ -10,7 +10,7 @@ use Vanguard\Services\BaseServiceInterface;
  */
 class UpdateCompany implements BaseServiceInterface
 { 
-    const COMPANY_UPDATE_FIELDS = ['logo', 'address','city', 'state', 'website', 'company_rc','email', 'phone_number'];
+    const COMPANY_UPDATE_FIELDS = ['logo', 'address','city', 'state', 'country','website', 'color', 'company_rc','email', 'phone_number'];
     protected $company;
     protected $data;
 

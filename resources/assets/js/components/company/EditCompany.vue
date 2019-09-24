@@ -2,7 +2,7 @@
     <v-layout>
         <v-dialog v-model="dialog" persistent max-width="800px">
              <template v-slot:activator="{ on }">
-                <v-btn color="" class="default-vue-btn" dark v-on="on">Edit Company</v-btn>
+                <v-btn color="" class="default-vue-btn" dark v-on="on">Edit</v-btn>
             </template>
             <v-card>
                 <v-card-text>
@@ -92,8 +92,8 @@
                                 </v-flex>
                             </v-layout>
 
-                              <v-layout>
-                                <v-flex xs12 sm6 md6>
+                              <v-layout wrap>
+                                <v-flex xs12 sm4 md4>
                                     <v-text-field  required :clearable="true"   :label="'Website'" 
                                                 :placeholder="'Websire'" :hint="'Enter the website of your company'" 
                                                 :solo="true" :single-line="true"
@@ -102,7 +102,7 @@
                                                 v-model="company.website" data-vv-name="website">
                                     </v-text-field>
                                 </v-flex>
-                                <v-flex xs12 sm6 md6>
+                                <v-flex xs12 sm4 md4>
                                     <v-text-field  required :clearable="true"   :label="'Company RC'" 
                                                 :placeholder="'Company RC'" :hint="'Enter the company rc of your company'" 
                                                 :solo="true" :single-line="true"
@@ -111,9 +111,29 @@
                                                 v-model="company.company_rc" data-vv-name="last_name">
                                     </v-text-field>
                                 </v-flex>
+
+                                 <v-flex xs12 sm3 md3>
+                                    <v-text-field  required :clearable="true"   :label="'Company Color'" 
+                                                :placeholder="'Company RC'" :hint="'Enter the color of your company'" 
+                                                :solo="true" :single-line="true"
+                                                v-validate="'required|max:255'"
+                                                :error-messages="errors.collect('color')"
+                                                v-model="company.color" data-vv-name="color">
+                                    </v-text-field>
+
+                                 </v-flex>
+
+                                <v-flex xs12 sm1 md1>
+                                   <input  v-model="company.color" type="color">
+                                 </v-flex>
                             </v-layout>
 
                             <v-layout wrap>
+
+
+                          
+
+
                                 <v-flex xs12 sm12 md12 v-show="show_progress_bar">
                                     <p class="text-muted">{{ current_upload_title }}</p>
                                     <v-progress-linear v-model="upload_percentage" color="green"></v-progress-linear>
@@ -169,7 +189,7 @@
         data() {
             return {
                 dialog: false,
-                company: this.companyData,
+                company: this.setupModel(),
                 editMode: false,
                 company_logo_file: '',
                 company_logo_url: '',
@@ -198,22 +218,26 @@
                             max: 'The state field may not be greater than 255 characters'
                         },
                         first_name: {
-                            required: () => 'Website of company contact cannot be empty',
+                            required: () => 'Website of company cannot be empty',
                             max: () => 'The first name field may not be greater than 255 characters'
                         },
                         last_name: {
-                            required: () => 'Company rc of company contact cannot be empty',
+                            required: () => 'Company Registration Certificate of company cannot be empty',
                             max: () => 'The last name field may not be greater than 255 characters'
                         },
                         last_name: {
-                            required: () => 'Email address of company contact cannot be empty',
+                            required: () => 'Email address of company cannot be empty',
                             email: () => 'This must be a valid email address'
                         },
                         phone_number: {
-                            required: () => 'Phone number of company contact cannot be empty',
+                            required: () => 'Phone number of company cannot be empty',
                             numeric: () => 'Phone number must be all digits'
                         },
-                        client_image_url: {
+                         color: {
+                            required: () => 'Phone number of company cannot be empty',
+                            numeric: () => 'Phone number must be all digits'
+                        },
+                        logo: {
                             numeric: () => 'The company logo must be a picture'
                         },
                     }
@@ -222,6 +246,7 @@
         },
         created() {
             var self = this;
+             self.company= this.companyData,
             Event.$on('view-company', function(company) {
                 self.openDialog(company);
                 self.company_logo_input_label = company.logo;
@@ -245,7 +270,7 @@
                     city: '',
                     state: '',
                     country: 'Nigeria', 
-                    color: ''
+                    color: '#ffff00'
                 }
             },
             openDialog: function(item) {
@@ -260,9 +285,6 @@
             },
             editCompany:async function(event) {
                 self = this;
-
-                console.log(self.company)
-                /*
                this.$validator.validateAll().then((result) => {
                     if (result) {
                        return;
@@ -282,11 +304,13 @@
                     this.sweet_alert('An unknown error has occurred, logo upload failed. Please try again', 'error');
                 }
 
-                */
+              
             
             },
             makeUpdateRequest: function() {
                  this.sweet_alert('Updating company information', 'info');
+               this.company.country= 'Nigeria', 
+                  console.log(this.company);
                  axios({
                     method: 'patch',
                      url: this.routes.company_update,
@@ -298,7 +322,7 @@
                     this.closeDialog();
                 }).catch((error) => {
                     this.sweet_alert('An unknown error has occurred, company cannot be updated. Please try again', 'error');
-                });
+                })
                 
             },
              chooseFile() {
