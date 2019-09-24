@@ -1,0 +1,7 @@
+# This is on startimes
+- name: Kwese Free Sports
+  state: Lagos
+  city: Lagos
+  region: South West
+  type: Regional
+  broadcast: Terrestial

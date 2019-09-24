@@ -1,0 +1,119 @@
+- name: NTA
+  state: Abia
+  city: Aba
+  region: South East
+  type: Regional
+  broadcast: Terrestial
+- name: NTA
+  state: Abia
+  city: Umuahia
+  region: South East
+  type: Regional
+  broadcast: Terrestial
+- name: NTA
+  state: Abuja
+  city: Abuja
+  region: North Central
+  type: Regional
+  broadcast: Terrestial
+#@todo need to figure out if this is terrestrial or not
+- raw_name: "Abuja_NTA International Abuja"
+  name: NTA International
+  state: Abuja
+  city: Abuja
+- raw_name: "Anambra_NTA Awka"
+  name: NTA
+  state: Anambra
+  city: Awka
+- raw_name: "Anambra_NTA Channel 35 Onitsha"
+  name: NTA
+  state: Anambra
+  city: Onitsha
+- raw_name: "Bauchi_NTA Bauchi"
+  name: NTA
+  state: Bauchi
+  city: Bauchi
+- raw_name: "Borno_NTA Maiduguri"
+  name: NTA
+  state: Borno
+  city: Maiduguri
+- raw_name: "CrossRiver_NTA Calabar"
+  name: NTA
+  state: Cross River
+  city: Calabar
+- raw_name: "Edo_NTA Benin"
+  name: NTA
+  state: Edo
+  city: Benin
+- raw_name: "Ekiti_NTA Ado-Ekiti"
+  name: NTA
+  state: Ekiti
+  city: Ado-Ekiti
+- raw_name: "Enugu_NTA Enugu"
+  name: NTA
+  state: Enugu
+  city: Enugu
+- raw_name: "Ilorin_NTA Ilorin"
+  name: NTA
+  state: Kwara
+  city: Ilorin
+- raw_name: "Kaduna_NTA Birnin-Gwari"
+  name: NTA
+  state: Kaduna
+  city: Birnin-Gwari
+- raw_name: "Kaduna_NTA Kaduna"
+  name: NTA
+  state: Kaduna
+  city: Kaduna
+- raw_name: "Kaduna_NTA Kafanchan"
+  name: NTA
+  state: Kaduna
+  city: Kafanchan
+- raw_name: "Kaduna_NTA Zaria"
+  name: NTA
+  state: Kaduna
+  city: Zaria
+- raw_name: "Kano_NTA Kano"
+  name: NTA
+  state: Kano
+  city: Kano
+- raw_name: "Lagos_NTA 2  CH 5"
+  name: NTA 2
+  state: Lagos
+  city: Lagos
+- raw_name: "Lagos_NTA CH 10"
+  name: NTA
+  state: Lagos
+  city: Lagos
+- raw_name: "Niger_NSTV (NTA Station) Minna"
+  name: NSTV
+  state: Niger
+  city: Minna
+- raw_name: "Niger_NTA Minna"
+  name: NTA
+  state: Niger
+  city: Minna
+- raw_name: "Oyo_NTA CH 45 & 7 Ibadan"
+  name: NTA 45 & 7
+  state: Oyo
+  city: Ibadan
+- raw_name: "Oyo_NTA Oyo"
+  name: NTA
+  state: Oyo
+  city: Ibadan
+- raw_name: "Plateau_NTA Jos"
+  name: NTA
+  state: Plateau
+  city: Jos
+- raw_name: "Rivers_NTA Port Harcourt"
+  name: NTA
+  state: Rivers
+  city: Port Harcourt
+- raw_name: "Sokoto_NTA Gusau"
+  name: NTA
+  state: Sokoto
+  city: Gusau
+- raw_name: "Sokoto_NTA Sokoto"
+  name: NTA
+  state: Sokoto
+  city: Sokoto
