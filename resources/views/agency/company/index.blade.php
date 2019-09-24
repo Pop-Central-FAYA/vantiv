@@ -23,13 +23,26 @@
                 :permission-list="{{ json_encode(Auth::user()->getAllPermissions()->pluck('name')) }}">
             </company-details>
         </div>
+        <div class="row">
+       <!-- subheader -->
+                <div class="col-md-10">
+                   
+                </div>
+
+                @if(Auth::user()->can('update.company'))
+                    <div class="col-md-2 text-right px-2">
+                        <company-edit 
+                            :company-data="{{ json_encode($company) }}" 
+                            :routes="{{ json_encode($url) }}" 
+                            :permission-list="{{ json_encode(Auth::user()->getAllPermissions()->pluck('name')) }}">
+                        </company-edit>
+                    </div>
+                @endif
+
+            </div>
 
           <!-- main frame end -->
-          <company-edit 
-                :company-data="{{ json_encode($company) }}" 
-                :routes="{{ json_encode($url) }}" 
-                :permission-list="{{ json_encode(Auth::user()->getAllPermissions()->pluck('name')) }}">
-            </company-edit>
+         
     </div>
 @stop
 

@@ -104,11 +104,11 @@
                                 </v-flex>
                                 <v-flex xs12 sm4 md4>
                                     <v-text-field  required :clearable="true"   :label="'Company RC'" 
-                                                :placeholder="'Company RC'" :hint="'Enter the company rc of your company'" 
+                                                :placeholder="'Company RC'" :hint="'Enter the  registration certificate of your company'" 
                                                 :solo="true" :single-line="true"
                                                 v-validate="'required|max:255'"
                                                 :error-messages="errors.collect('last_name')"
-                                                v-model="company.company_rc" data-vv-name="last_name">
+                                                v-model="company.company_rc" data-vv-name="company_rc">
                                     </v-text-field>
                                 </v-flex>
 
@@ -129,12 +129,7 @@
                             </v-layout>
 
                             <v-layout wrap>
-
-
-                          
-
-
-                                <v-flex xs12 sm12 md12 v-show="show_progress_bar">
+                              <v-flex xs12 sm12 md12 v-show="show_progress_bar">
                                     <p class="text-muted">{{ current_upload_title }}</p>
                                     <v-progress-linear v-model="upload_percentage" color="green"></v-progress-linear>
                                 </v-flex>
@@ -217,15 +212,15 @@
                             required: () => 'Company state cannot be empty',
                             max: 'The state field may not be greater than 255 characters'
                         },
-                        first_name: {
+                        website: {
                             required: () => 'Website of company cannot be empty',
                             max: () => 'The first name field may not be greater than 255 characters'
                         },
-                        last_name: {
+                        company_rc: {
                             required: () => 'Company Registration Certificate of company cannot be empty',
                             max: () => 'The last name field may not be greater than 255 characters'
                         },
-                        last_name: {
+                        email: {
                             required: () => 'Email address of company cannot be empty',
                             email: () => 'This must be a valid email address'
                         },
@@ -274,9 +269,6 @@
                 }
             },
             openDialog: function(item) {
-                if (item['contacts'].length == 0) {
-                    item['contacts'] = [{}];
-                }
                 this.company = item;
                 this.dialog = true;
             },
