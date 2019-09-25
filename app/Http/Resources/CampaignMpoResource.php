@@ -21,7 +21,10 @@ class CampaignMpoResource extends JsonResource
             'net_total' => $this->net_total,
             'insertions' => $this->insertions,
             'email' => $this->vendor->contacts->where('is_primary', 1)[0]->email,
-            'export_url' => route('export.mpos', ['campaign_id' =>  $this->campaign_id, 'mpo_id' => $this->id])
+            'links' => [
+                'export' => route('mpos.export', ['mpo_id' => $this->id], true),
+                'details' => route('mpos.details', ['mpo_id' => $this->id], true)
+            ]
         ];
     }
 }

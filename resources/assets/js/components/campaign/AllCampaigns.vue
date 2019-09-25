@@ -14,7 +14,7 @@
             <td class="text-xs-left">{{ props.item.product }}</td>
           <td class="text-xs-left">{{ dateToHumanReadable(props.item.start_date) }}</td>
           <td class="text-xs-left">{{ dateToHumanReadable(props.item.end_date) }}</td>
-          <td class="text-xs-left">{{ props.item.budget }}</td>
+          <td class="text-xs-left">{{ formatAmount(props.item.budget) }}</td>
           <td class="text-xs-left">{{ props.item.adslots }}</td>
           <td class="text-xs-left" v-html="props.item.status"></td>
           <td class="text-xs-left">{{ dateToHumanReadable(props.item.date_created) }}</td>

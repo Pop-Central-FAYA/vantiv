@@ -31,17 +31,17 @@
         Route::group(['namespace' => 'Dsp', 'prefix' => 'campaigns'], function () {
             Route::get('/{status?}', 'CampaignsController@index')->name('agency.campaign.all');
             Route::get('/details/{id}/{group?}', 'CampaignsController@getDetails')->name('agency.campaign.details');
-            Route::get('/mpo-details/{id}', 'CampaignsController@mpoDetails')->name('agency.mpo.details');
-            Route::get('/mpo/details/{campaign_mpo_id}', 'CampaignsController@campaignMpoDetails');
-            Route::get('/{campaign_id}/mpos/{mpo_id}/export', 'CampaignsController@exportMpoAsExcel')->name('export.mpos');
-            Route::post('/{campaign_id}/associate-assets', 'CampaignsController@associateAssetsToAdslot');
-            Route::delete('/{campaign_id}/adslots/{adslot_id}', 'CampaignsController@deleteAdslot');
-            Route::post('/{campaign_id}/adslots', 'CampaignsController@storeAdslot');
-            Route::patch('/{campaign_id}/adslots/{adslot_id}', 'CampaignsController@updateAdslot')->name('update.campaign_mpo');
-            Route::patch('/{campaign_id}', 'CampaignsController@updateMultipleAdslots');
+            
+            #api
             Route::get('/{campaign_id}/groups/{group_param}', 'CampaignsController@groupCampaignTimeBelts');
-            Route::post('/{campaign_id}/mpos', 'CampaignsController@generateMpo');
-            Route::get('/{campaign_id}/mpos', 'CampaignsController@listMpos');
+            Route::post('/{campaign_id}/adslots', 'CampaignsController@storeAdslot');
+            Route::patch('/{campaign_id}', 'CampaignsController@updateMultipleAdslots');
+            Route::patch('/{campaign_id}/adslots/{adslot_id}', 'CampaignsController@updateAdslot')->name('update.campaign_mpo');
+            Route::delete('/{campaign_id}/adslots/{adslot_id}', 'CampaignsController@deleteAdslot');
+            Route::post('/{campaign_id}/associate-assets', 'CampaignsController@associateAssetsToAdslot');
+
+            Route::get('/{campaign_id}/mpos', 'MpoController@list')->name('mpos.list');
+            Route::post('/{campaign_id}/mpos', 'MpoController@generateMpo')->name('mpos.store');
         });
 
         /*
@@ -227,9 +227,15 @@
         });
 
         Route::group(['namespace' => 'Dsp'], function() {
-            Route::get('/mpos/{id}/share-links', 'MpoShareLinkController@getActiveLink');
-            Route::post('/mpos/{id}/share-links', 'MpoShareLinkController@store')->name('mpo_share_link.store');
-            Route::post('/mpos/{id}/submit', 'MpoShareLinkController@submitToVendor')->name('mpo_share_link.submit');
+            Route::get('/mpos/{mpo_id}', 'MpoController@details')->name('mpos.details');
+            Route::get('/mpos/{mpo_id}/export', 'MpoController@exportMpoAsExcel')->name('mpos.export');
+
+            #api
+            Route::group(['prefix' => 'api'], function() {
+                Route::get('/mpos/{id}/share-links', 'MpoController@getActiveLink');
+                Route::post('/mpos/{id}/share-links', 'MpoController@storeLink')->name('mpo_share_link.store');
+                Route::post('/mpos/{id}/submit', 'MpoController@submitToVendor')->name('mpo_share_link.submit');
+            });
         });
           /*
          * new Brand route

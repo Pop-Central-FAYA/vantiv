@@ -21,16 +21,32 @@ class CampaignResource extends JsonResource
             'campaign_id' =>  $this->id,
             'name' =>  $this->name,
             'product' =>  $this->product,
-            'brand' => ucfirst($this->brand['name']),
+            'brand' => ucfirst($this->brand->name),
             'campaign_reference' => $this->campaign_reference,
             'date_created' => date('Y-m-d', strtotime($this->time_created)),
             'start_date' => date('Y-m-d', strtotime($this->start_date)),
             'end_date' => date('Y-m-d', strtotime($this->stop_date)),
             'adslots' => $this->ad_slots,
-            'budget' => number_format($this->budget,2),
+            'budget' => $this->budget,
             'status' => $format->getCampaignStatusHtml($this),
             'redirect_url' => $format->generateRedirectUrl($this),
-            'station' => ''
+            'media_type' => $this->media_type,
+            'flight_date' => $this->flight_date,
+            'created_at' => $this->created_at,
+            'gender' => $this->gender,
+            'campaign_status' => $this->status,
+            'lsm' => $this->lsm,
+            'social_class' => $this->social_class,
+            'states' => $this->states,
+            'regions' => $this->regions,
+            'age_groups' => $this->age_groups,
+            'grouped_time_belts' => $this->grouped_time_belts,
+            'client' => $this->client,
+            'creator' => $this->creator,
+            'station' => '',
+            'links' => [
+                'mpos' => route('mpos.list', ['campaign_id' => $this->id])
+            ]
         ];
     }
 }

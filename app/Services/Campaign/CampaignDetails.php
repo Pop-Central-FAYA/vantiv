@@ -68,6 +68,7 @@ class CampaignDetails
             $campaign->age_groups = $age_groups_str;
         }
         $campaign['grouped_time_belts'] = $this->groupTimeBelts($campaign);
+        
         return $campaign;
     }
 

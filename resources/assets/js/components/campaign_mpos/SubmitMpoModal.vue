@@ -59,7 +59,7 @@ export default {
         getShareLink : function() {
             axios({
                 method: 'get',
-                url: `/mpos/${this.mpo.id}/share-links`
+                url: `/api/mpos/${this.mpo.id}/share-links`
             }).then((res) => {
                 let result = res.data.data;
                 if (result != null) {
@@ -81,7 +81,7 @@ export default {
         addShareLink : function () {
             axios({
                 method: 'POST',
-                url: `/mpos/${this.mpo.id}/share-links`,
+                url: `/api/mpos/${this.mpo.id}/share-links`,
                 data: {}
             }).then((res) => {
                 if (res.data.status === 'success') {
@@ -97,7 +97,7 @@ export default {
         submit : function(url) {
             axios({
                 method: 'POST',
-                url: `/mpos/${this.mpo.id}/submit`,
+                url: `/api/mpos/${this.mpo.id}/submit`,
                 data: {url : url, email : this.mpo.email}
             }).then((res) => {
                 if (res.data.status === 'success') {

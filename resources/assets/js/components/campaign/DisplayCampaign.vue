@@ -36,7 +36,7 @@
       </v-tab-item>
       
       <v-tab-item value="mpos-tab">
-        <campaign-mpos-list :client="client" :brand="brand" :campaign-id="campaignId" ></campaign-mpos-list>
+        <campaign-mpos-list :client="client" :brand="brand" :campaign="campaign" ></campaign-mpos-list>
       </v-tab-item>
 
     </v-tabs>

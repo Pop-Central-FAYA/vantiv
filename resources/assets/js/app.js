@@ -103,6 +103,14 @@ Vue.component('list-campaign-adslot', () => import('./components/campaign/ListCa
 Vue.component('list-group-adslot', () => import('./components/campaign/ListGroupAdslot.vue'));
 Vue.component('ad-vendor-mpo-list', () => import('./components/campaign_mpos/VendorMpoList.vue'));
 
+//Preview Mpo
+Vue.component('mpo-details', () => import('./components/mpo/MpoDetails.vue'));
+Vue.component('mpo-header', () => import('./components/mpo/MpoHeader.vue'));
+Vue.component('mpo-summary', () => import('./components/mpo/MpoSummary.vue'));
+Vue.component('mpo-time-belts', () => import('./components/mpo/MpoTimeBelts.vue'));
+Vue.component('mpo-terms', () => import('./components/mpo/MpoTerms.vue'));
+Vue.component('mpo-action', () => import('./components/mpo/MpoAction.vue'));
+
 // AD VENDOR MANAGEMENT
 Vue.component('ad-vendor-list', () => import('./components/ad_vendors/VendorList.vue'));
 Vue.component('ad-vendor-create', () => import('./components/ad_vendors/CreateVendor.vue'));
@@ -201,6 +209,9 @@ Vue.mixin({
         },
         dateToHumanReadable(date) {
             return moment(date).format('MMM DD, YYYY');
+        },
+        currentDate(date) {
+            return moment().format('MMM DD, YYYY');
         },
         dayName (date) {
             return moment(date).format('dddd')

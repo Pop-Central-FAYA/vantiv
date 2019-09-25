@@ -12,7 +12,7 @@
                 <v-flex md4 my-1>
                     <p class="weight_medium">
                         <span class="weight_medium small_faint pr-1">Brand:</span>
-                        {{ campaignData.brand.name }}
+                        {{ campaignData.brand }}
                     </p>
                 </v-flex>
                 <v-flex md4 my-1>

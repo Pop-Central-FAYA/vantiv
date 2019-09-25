@@ -1,0 +1,38 @@
+<template>
+    <div>
+        <mpo-header
+            :mpo-details="mpo.mpo_details"
+            :previous-reference="mpo.previous_reference"
+            :previous-mpo="mpo.previous_mpo"
+            :company="mpo.company"
+            :vendor="mpo.mpo_details.vendor"
+        ></mpo-header>
+        <mpo-time-belts
+            :day-numbers="mpo.day_numbers"
+            :time-belts="mpo.time_belts"
+        ></mpo-time-belts>
+        <mpo-summary
+            :time-belt-summary="mpo.time_belt_summary"
+            :total-budget="mpo.total_budget"
+            :net-total="mpo.net_total"
+            :mpo-details="mpo.mpo_details"
+        >
+        </mpo-summary>
+        <mpo-terms
+            :media-buyer="mpo.mpo_details.campaign.creator"
+            :company="mpo.company"
+            :net-total-word="mpo.net_total_word"
+        ></mpo-terms>
+        <mpo-action
+            :campaign-id="mpo.mpo_details.campaign_id"
+            :mpo-id="mpo.mpo_details.id"
+        ></mpo-action>
+    </div>
+</template>
+<script>
+export default {
+    props : {
+        mpo : Object,
+    }
+}
+</script>

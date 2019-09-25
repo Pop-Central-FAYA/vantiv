@@ -12,7 +12,7 @@
             <th colspan="3">The Commercial Manager UPFRONT AND PERSONAL</th>
             
             <th colspan="4">Client: {{ $mpo_details->campaign->client->name }} Brand: {{ $mpo_details->campaign->brand->name }} 
-                Campaign: {{ $mpo_details->campaign->name }}  Date: {{ date('Y-m-d', strtotime(now())) }} 
+                Campaign: {{ $mpo_details->campaign->name }}  Date: {{ date('M d, Y', strtotime(now())) }} 
             </th>
         </tr>
         @if($previous_reference)
@@ -52,9 +52,8 @@
         <tbody>
             @foreach($time_belt_summary as $summary)
             <tr>
-                <td colspan="3">{{ date('Y', 
-                    strtotime(json_decode($mpo_details->adslots, true)[0]['playout_date'])) }}</td>
-                <td colspan="3">{{ $mpo_details->station }}</td>
+                <td colspan="3">{{ $summary['year'] }}</td>
+                <td colspan="3">{{ $summary['publisher_name'] }}</td>
                 <td colspan="3">{{ $summary['duration'].' seconds' }} <br> {{ $summary['day_part'] }}</td>
                 <td colspan="3">{{ $summary['total_spot'] }}</td>
                 <td colspan="3">{{ $summary['volume_percent'] }}%</td>
@@ -105,20 +104,20 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($mpos as $mpo)
+            @foreach($time_belts as $time_belt)
                 <tr>
-                    <th>{{ $mpo['station'] }}</th>
-                    <td>{{ $mpo['program'] }} <br> {{ $mpo['duration'] }} Seconds <br> {{ $mpo['daypart'] }} </td>
-                    <td>{{ $mpo['day_range'] }} <br> {{ $mpo['time_slot'][0] .'-'. $mpo['time_slot'][1] }}</td>
-                    <td>{{ $mpo['month'] }}</td>
+                    <th>{{ $time_belt['station'] }}</th>
+                    <td>{{ $time_belt['program'] }} <br> {{ $time_belt['duration'] }} Seconds <br> {{ $time_belt['daypart'] }} </td>
+                    <td>{{ $time_belt['day_range'] }} <br> {{ $time_belt['time_slot'][0] .'-'. $time_belt['time_slot'][1] }}</td>
+                    <td>{{ $time_belt['month'] }}</td>
                         @foreach($day_numbers as $day)
-                            @if(isset($mpo['exposures'][$day]))
-                                <td>{{ $mpo['exposures'][$day] }}</td>
+                            @if(isset($time_belt['exposures'][$day]))
+                                <td>{{ $time_belt['exposures'][$day] }}</td>
                             @else
                                 <td></td>
                             @endif
                         @endforeach
-                    <td><b>{{ $mpo['total_slot'] }}</b></td>
+                    <td><b>{{ $time_belt['total_slot'] }}</b></td>
                 </tr>
             @endforeach
         </tbody>
