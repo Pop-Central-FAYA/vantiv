@@ -14,6 +14,7 @@ use Vanguard\Models\Publisher;
 use Vanguard\Http\Requests\AdVendor\ListRequest;
 use Vanguard\Http\Requests\AdVendor\StoreRequest;
 use Vanguard\Http\Requests\AdVendor\UpdateRequest;
+use Vanguard\Models\CampaignMpo;
 
 class AdVendorController extends Controller
 {
@@ -48,12 +49,10 @@ class AdVendorController extends Controller
     {
         $vendor = AdVendor::findOrFail($id);
         $this->authorize('get', $vendor);
-        $routes= array(
-            "home" => route('ad-vendor.index')
-        );
+        $mpos = CampaignMpo::with(['campaign:id,name'])->where('ad_vendor_id', $id)->get();
         return view('agency.ad_vendor.ad_vendor')
-        ->with('ad_vendor', new AdVendorResource($vendor))->with('routes', $routes);
-       
+                ->with('ad_vendor', new AdVendorResource($vendor))
+                ->with('mpos', $mpos);
     }
 
 

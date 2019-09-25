@@ -70,7 +70,23 @@
         </v-flex>
     </v-layout>
   </v-card>
+  <v-card style="margin-top: 20px;"  >
+    <v-card-title>
+    </v-card-title>
+     <v-layout wrap>
+        <v-flex xs12 sm12 md12>
+            <v-tabs>
+                    <v-tabs-slider></v-tabs-slider>
+                    <v-tab href="#mpos-tab">Mpos</v-tab>
+                    <v-tab-item value="mpos-tab">
+                       <ad-vendor-mpo-list :mpos="mpos"></ad-vendor-mpo-list>
+                    </v-tab-item>
+            </v-tabs>
+        </v-flex>
+    </v-layout>
+  </v-card>
 
+  
   </v-flex>
 </template>
 
@@ -113,7 +129,7 @@
   export default {
         props: {
          adVendorData: Object,
-         routes:Object,
+         mpos:Array
         },
     data () {
       return {
@@ -121,12 +137,11 @@
       }
     },
     mounted() {
-      console.log(this.routes);
         console.log('Display vendor details Component mounted.');
     },
     methods: {
         goBack(id){
-             window.location = this.routes.home;
+             window.location = this.adVendorData.links.index;
         }
         
     }

@@ -25,6 +25,7 @@ class AdVendorResource extends JsonResource
             'self' => route('ad-vendor.get', ['id' => $this->id], false),
             'update' => route('ad-vendor.update', ['id' => $this->id], false),
             'details' => route('ad-vendor.details', ['id' => $this->id], false),
+            'index' => route('ad-vendor.index', false),
         ];
         return $data;
     }

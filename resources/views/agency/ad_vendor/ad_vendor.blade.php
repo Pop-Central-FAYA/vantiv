@@ -19,7 +19,7 @@
                             <div class="col-md-12">
                                 <v-app>
                                     <v-content>
-                                    <ad-vendor-details :ad-vendor-data="{{ json_encode($ad_vendor) }}" :routes="{{ json_encode($routes) }}" ></ad-vendor-details>
+                                    <ad-vendor-details :ad-vendor-data="{{ json_encode($ad_vendor) }}" :mpos="{{ json_encode($mpos) }}"></ad-vendor-details>
                                     </v-content>
                                 </v-app>
                             </div>

@@ -35,4 +35,9 @@ class AdVendor extends Base
     {
         return $this->hasMany(CampaignTimeBelt::class);
     }
+
+    public function mpos()
+    {
+        return $this->hasMany(CampaignMpo::class);
+    }
 }
