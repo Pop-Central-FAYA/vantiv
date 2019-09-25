@@ -12,45 +12,30 @@ use PhpOffice\PhpSpreadsheet\Style\Alignment;
 
 class MpoExport implements FromView, WithEvents
 {
-    protected $exportable_mpos;
-    protected $day_numbers;
-    protected $mpo_details;
-    protected $previous_reference;
-    protected $summary;
-    protected $total_budget;
-    protected $net_total;
-    protected $company_logo;
+    protected $mpo;
 
-    public function __construct($exportable_mpos, $day_numbers, $mpo_details, $previous_reference,
-                                $total_budget, $net_total, $summary, $company_logo)
+    public function __construct($mpo)
     {
-        $this->exportable_mpos = $exportable_mpos;
-        $this->day_numbers = $day_numbers;
-        $this->mpo_details = $mpo_details;
-        $this->previous_reference = $previous_reference;
-        $this->total_budget = $total_budget;
-        $this->net_total = $net_total;
-        $this->summary = $summary;
-        $this->company_logo = $company_logo;
+        $this->mpo = $mpo;
     }
 
     public function view(): View
     {
-        return view('agency.campaigns.export_mpo', [
-            'mpos' => $this->exportable_mpos,
-            'day_numbers' =>$this->day_numbers,
-            'mpo_details' => $this->mpo_details,
-            'previous_reference' => $this->previous_reference,
-            'time_belt_summary' => $this->summary,
-            'total_budget' => $this->total_budget,
-            'net_total' => $this->net_total
+        return view('agency.mpo.export', [
+            'time_belts' => $this->mpo['time_belts'],
+            'day_numbers' =>$this->mpo['day_numbers'],
+            'mpo_details' => $this->mpo['mpo_details'],
+            'previous_reference' => $this->mpo['previous_reference'],
+            'time_belt_summary' => $this->mpo['time_belt_summary'],
+            'total_budget' => $this->mpo['total_budget'],
+            'net_total' => $this->mpo['net_total']
         ]);
     }
 
     public function registerEvents(): array
     {
-        if ($this->company_logo) {
-            $path = $this->storeFileInTmp($this->company_logo);
+        if ($this->mpo['company']->logo) {
+            $path = $this->storeFileInTmp($this->mpo['company']->logo);
             return [
                 AfterSheet::class => function(AfterSheet $event) use($path) {
                     $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();

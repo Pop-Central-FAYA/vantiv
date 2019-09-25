@@ -2,20 +2,66 @@
 
 namespace Vanguard\Http\Controllers\Dsp;
 
+use Vanguard\Http\Controllers\Controller;
 use Auth;
 use Mail;
-use Vanguard\Http\Controllers\Controller;
 use Vanguard\Http\Requests\StoreMpoShareLinkRequest;
 use Vanguard\Models\CampaignMpo;
 use Vanguard\Services\Mpo\StoreMpoShareLink;
 use Vanguard\Http\Resources\MpoShareLinkResource;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use Vanguard\Exports\MpoExport;
+use Vanguard\Models\Campaign;
+use Vanguard\Services\Mpo\MpoDetailsService;
+use Vanguard\Http\Requests\GenerateCampaignMpoRequest;
+use Vanguard\Http\Resources\CampaignMpoResource;
+use Vanguard\Services\Mpo\StoreMpoService;
 
-class MpoShareLinkController extends Controller
+class MpoController extends Controller
 {
     public function __construct()
     {
         $this->middleware('permission:create.campaign')->only(['getActiveLink', 'store', 'submitToVendor']);
+    }
+
+    public function list($campaign_id)
+    {
+        $mpos = CampaignMpo::with('vendor.contacts')->where('campaign_id', $campaign_id)
+                            ->where('ad_vendor_id', '<>', '')
+                            ->latest()->get()
+                            ->unique('ad_vendor_id');
+        return CampaignMpoResource::collection($mpos);
+    }
+
+    public function generateMpo(GenerateCampaignMpoRequest $request, $campaign_id)
+    {
+        $campaign = Campaign::findOrFail($campaign_id);
+        $this->authorize('update', $campaign);
+        $validated = $request->validated();
+
+        //generate mpo
+        (new StoreMpoService($validated, $campaign_id))->run();
+        return $this->list($campaign_id);   
+    }
+
+    public function details($mpo_id)
+    {
+        $mpo = CampaignMpo::findOrFail($mpo_id);
+        $this->authorize('details', $mpo);
+
+        $formatted_mpo = (new MpoDetailsService($mpo_id))->run();
+        return view('agency.mpo.details')->with('mpo', $formatted_mpo);
+    }
+
+    public function exportMpoAsExcel($mpo_id)
+    {
+        $mpo = CampaignMpo::findOrFail($mpo_id);
+        $this->authorize('details', $mpo);
+        
+        $export_name =  str_slug($mpo->campaign->name).'_'.str_slug($mpo->vendor->name);
+        $formatted_mpo = (new MpoDetailsService($mpo_id))->run();
+        return Excel::download(new MpoExport($formatted_mpo),$export_name.'.xlsx');
     }
 
     public function getActiveLink($mpo_id)
@@ -27,7 +73,7 @@ class MpoShareLinkController extends Controller
         }
     }
 
-    public function store(Request $request, CampaignMpo $mpo, $mpo_id)
+    public function storeLink(Request $request, CampaignMpo $mpo, $mpo_id)
     {
         try {
             $campaign = $mpo->getCampaign($mpo_id);
@@ -68,13 +114,14 @@ class MpoShareLinkController extends Controller
     {
         $user = Auth::user();
         $company = $user->companies->first()->name;
-        Mail::send('mail.vendor_mpo_mail', 
-        $this->emailData($url, $user, $company, $campaign_name), function ($message) use($user, $email, $company) {
-            $message->from($user->email, $user->full_name);
-            $message->subject('MPO from '.$company);
-            $message->to($email);
-            $message->replyTo($user->email);
-        });
+        Mail::send('mail.vendor_mpo_mail', $this->emailData($url, $user, $company, $campaign_name), 
+            function ($message) use($user, $email, $company) {
+                $message->from($user->email, $user->full_name);
+                $message->subject('MPO from '.$company);
+                $message->to($email);
+                $message->replyTo($user->email);
+            }
+        );
     }
 
     private function emailData($url, $user, $company, $campaign_name)

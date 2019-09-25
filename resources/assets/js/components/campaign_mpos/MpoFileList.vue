@@ -9,11 +9,9 @@
         <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="fileArr" :search="search" :pagination.sync="pagination">
         <template v-slot:items="props">
             <tr v-if="props.item.length != 0">
-                <td>
-                    <media-asset-play-video :asset="props.item[0]['media_asset']"></media-asset-play-video>
-                </td>
-                <td class="text-xs-left">{{ props.item[0]['duration'] }}</td> 
-                <td class="text-xs-left">{{ props.item.length }}</td>
+                <td class="text-xs-left" @click="openPlayModal(props.item[0]['media_asset'])">{{ props.item[0]['media_asset']['file_name'] }}</td> 
+                <td class="text-xs-left" @click="openPlayModal(props.item[0]['media_asset'])">{{ props.item[0]['duration'] }}</td> 
+                <td class="text-xs-left" @click="openPlayModal(props.item[0]['media_asset'])">{{ props.item.length }}</td>
                 <td class="text-xs-left">
                     <v-tooltip top >
                         <template v-slot:activator="{ on }">
@@ -41,6 +39,7 @@
             </v-alert>
         </template>
         </v-data-table>
+        <media-asset-play-video :asset="currentAsset"></media-asset-play-video>
     </v-card>
 </template>
 
@@ -68,6 +67,7 @@
                     rowsPerPage: 10
                 },
                 fileArr: [],
+                currentAsset : {}
             }
         },
         mounted() {
@@ -91,6 +91,10 @@
                 link.setAttribute('download', file_name); //or any other extension
                 document.body.appendChild(link);
                 link.click();
+            },
+            openPlayModal : function(asset) {
+                this.currentAsset = asset
+                Event.$emit('play-modal', true)
             }
         }
     }
