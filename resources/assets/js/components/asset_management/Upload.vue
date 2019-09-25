@@ -231,7 +231,7 @@
                     }
                 }else{
                     let msg = `You are trying to upload a file of ${this.uploadedMediaAssetDuration} seconds into a duration of ${this.duration} seconds`;
-                    this.sweet_alert(msg, 'error');
+                    this.sweet_alert(msg, 'error', 2000);
                     return;
                 }
             },
