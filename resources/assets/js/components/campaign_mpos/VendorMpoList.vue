@@ -9,11 +9,11 @@
     <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="mpos" :search="search" :no-data-text="noDataText" :pagination.sync="pagination">
       <template v-slot:items="props">
         <tr>
-          <td class="text-xs-left">{{ props.item.campaign.name }}</td>
-          <td class="text-xs-left">{{ props.item.insertions }}</td>
-          <td class="text-xs-left">{{ numberFormat(props.item.net_total) }}</td>
-          <td class="text-xs-left">{{ props.item.adslots }}</td>
-          <td class="text-xs-left">{{ dateToHumanReadable(props.item.created_at) }}</td>
+          <td class="text-xs-left clickable">{{ props.item.campaign.name }}</td>
+          <td class="text-xs-left clickable">{{ props.item.adslots }}</td>
+          <td class="text-xs-left clickable">{{ props.item.insertions }}</td>
+          <td class="text-xs-left clickable">{{ numberFormat(props.item.net_total) }}</td>
+          <td class="text-xs-left clickable">{{ dateToHumanReadable(props.item.created_at) }}</td>
         </tr>
       </template>
       <template v-slot:no-results>
@@ -26,6 +26,9 @@
 </template>
 
 <style>
+table.v-table tbody tr td.clickable {
+    pointer-events: none;
+}
   tbody tr:hover {
     background-color: transparent !important;
     cursor: pointer;
@@ -63,9 +66,9 @@
       getHeader(){
         var header =[
           { text: 'Campaign Name', align: 'left', value: 'campaign.name' },
-          { text: 'Insertions', value: 'insertions' },
+           { text: 'Ad Slots', value: 'adslots' },
+          { text: 'Total Insertions', value: 'insertions' },
           { text: 'Net Total (₦)', value: 'net_total'},
-          { text: 'Ad Slots', value: 'adslots' },
           { text: 'Created On', value: 'created_at' }
         ];
         return header
