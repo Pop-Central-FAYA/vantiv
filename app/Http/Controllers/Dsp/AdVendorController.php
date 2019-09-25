@@ -53,7 +53,7 @@ class AdVendorController extends Controller
             $query->select('id','name');
         }))->where('ad_vendor_id', $id)->get();
         return view('agency.ad_vendor.ad_vendor')
-        ->with('ad_vendor', new AdVendorResource($vendor))->with('routes', $routes)->with('mpos', $mpos);
+        ->with('ad_vendor', new AdVendorResource($vendor))->with('mpos', $mpos);
     }
 
 
