@@ -63,7 +63,10 @@ class TvRatingsList implements BaseServiceInterface
     public function run() {
         $expire_at = now()->addDays(7);
         $rating_data = cache()->remember($this->hash_key, $expire_at, function() {
-            return $this->calculateRatings();
+            // DB::enableQueryLog();
+            $data = $this->calculateRatings();
+            // Log::info(DB::getQueryLog());
+            return $data;
         });
         return $rating_data;
     }
