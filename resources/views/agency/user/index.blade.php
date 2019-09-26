@@ -17,7 +17,9 @@
 
                 @if(Auth::user()->can('create.user'))
                     <div class="col-md-2 text-right px-2">
-                        <clients-create></clients-create>
+                        <invite-user  :roles="{{ json_encode($roles) }}"
+                                      :permission-list="{{ json_encode(Auth::user()->getAllPermissions()->pluck('name')) }}">
+                        ></invite-user>
                     </div>
                 @endif
 

@@ -30,13 +30,15 @@ class InviteService implements BaseServiceInterface
     public function processInvite($request, $companies, $inviter_name)
     {
 
-        $companies = $this->getCompany($request->companies);
         $inviter_name = \Auth::user()->full_name;
-        
         \DB::transaction(function () use ($request, $companies, $inviter_name) {
             $user_mail_content_array = [];
-            foreach ($request->email as $email) {
-                $invited_user = $this->createUnconfirmedUser($request->roles, $companies, $email, "web");
+            $roles = [];
+            foreach($request->roles as $role) {
+                array_push($roles, $role['role']);
+            }
+            foreach (explode(',', $request->email) as $email) {
+                $invited_user = $this->createUnconfirmedUser($roles, $companies, $email, "web");
                 $subject="Invitation to join Vantage";
                 $email_format = new MailFormat($invited_user, $inviter_name, $subject);
                 $user_mail_content_array[] = $email_format->emailFormat();

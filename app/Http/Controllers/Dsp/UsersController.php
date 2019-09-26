@@ -11,6 +11,7 @@ use Vanguard\Services\User\UserListService;
 use Vanguard\Http\Resources\UserResource;
 use Vanguard\Http\Resources\UserCollection;
 use Illuminate\Http\Request;
+use Vanguard\Services\RolesPermission\ListRoleGroup;
 
 
 class UsersController extends Controller
@@ -29,8 +30,11 @@ class UsersController extends Controller
      *******************************/
 
     public function index(Request $request)
-    {   
-        return view('agency.user.index');
+    {    
+        $role_list_services = new ListRoleGroup('dsp');
+        $roles = $role_list_services->getRoles();
+        return view('agency.user.index')
+               ->with('roles', $roles);
     }
 
 
@@ -44,18 +48,12 @@ class UsersController extends Controller
      * UserInviteRequest $request
      */
     
-    public function create()
+    public function create(UserInviteRequest $request)
     {
-        $details = [
-            'email'=> array('pechbusorg@gmail.com'),
-            'roles'=> array('dsp.admin')
-        ];
-        $request = new Request($details);
-        /*
-        $validated = $request->validated();  */
+        $validated = $request->validated(); 
         $invite_user = new InviteService($request, $this->companyId(), 'web');
         $new_user = $invite_user->run();   
-        return "GOoodw";
+        return ['status'=>"success", 'message'=> "User(s) invited successfully, and emails sent"];
       
     }
 

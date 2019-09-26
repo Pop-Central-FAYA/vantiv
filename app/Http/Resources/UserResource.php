@@ -25,7 +25,8 @@ class UserResource extends JsonResource
             'company' => $format->getCompanyName($this->company_id),
             'company_id' => $this->company_id,
             'status' => $this->status,
-            'created_at' => $this->created_at
+            'created_at' => $this->created_at,
+            'jj'=> $format->formatLable($this->roles)
         ];
     }
 }

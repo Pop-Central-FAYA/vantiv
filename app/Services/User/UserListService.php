@@ -28,23 +28,6 @@ class UserListService implements BaseServiceInterface
                     ->groupBy('users.id')
                     ->get();
                     return $users;
-    }
-
-    private function getCompanyName($company_id_list)
-    {
-        if ($company_id_list) {
-            $companies = Company::select('name')->whereIn('id', $company_id_list)->get();
-            return $companies->implode("name", ", ");
-        }
-        return "";
-    }
-
-    private function roleLabel($roles)
-    {
-        $role_label = [];
-        foreach ($roles as $role){
-            $role_label[] = $role ? ucwords(str_replace('_',' ', explode('.', $role)[1])) : '';
-        }
-        return $role_label;
+                    
     }
 }

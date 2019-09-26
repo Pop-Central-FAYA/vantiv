@@ -22,5 +22,18 @@ class FormatUserList
         }
         return $role_label;
     }
+
+    public function formatLable($roles)
+    {
+        $roles = [];
+        foreach ($roles as $role){
+        $new = [
+               'name' => $role->name,
+               'label' => ucwords(str_replace('_',' ', explode('.', $role)[1])),
+        ];
+        array_push($roles, $new);
+        }
+        return $roles;
+    }
    
 }

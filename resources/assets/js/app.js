@@ -140,8 +140,10 @@ Vue.component('dashboard-campaign-summary-chart', () => import('./components/das
 Vue.component('vantage-side-menu', () => import('./components/partials/Sidebar.vue'));
 Vue.component('vantage-header', () => import('./components/partials/Header.vue'));
 
-//CLIENT MANAGEMENT
+//USER MANAGEMENT
 Vue.component('users-list', () => import('./components/user/UserList.vue'));
+Vue.component('invite-user', () => import('./components/user/CreateUser.vue'));
+Vue.component('edit-user', () => import('./components/user/EditUser.vue'));
 
 
 Vue.mixin({
