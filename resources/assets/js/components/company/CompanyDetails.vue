@@ -15,7 +15,7 @@
             
                 </v-flex>
                  <v-flex md2 my-1>
-                    <b-img :src="company.logo"  style="width: 70px; height: 70px" id="client_logo" alt="Image 1"></b-img>       
+                    <b-img :src="company.logo"  style="width: 70px; height: 70px" alt="Image 1"></b-img>       
                 </v-flex>
             </v-layout>
         </v-flex>
