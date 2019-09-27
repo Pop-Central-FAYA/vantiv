@@ -37,6 +37,7 @@ class MediaPlanExport implements WithMultipleSheets
             foreach ($material_lengths as $material_length => $station_programs) {
                 $sheets[] = new MediaPlanMediaLengthExport($media_type, $material_length, $station_programs, $this->monthly_weeks, $this->summary, $this->media_plan_data, $this->media_plan_period);
             }
+            $sheets[] = new MediaPlanMediaTypeSummaryExport($media_type, $material_lengths, $this->media_plan_period);
         }
 
         return $sheets;
