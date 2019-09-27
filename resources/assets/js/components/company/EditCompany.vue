@@ -95,7 +95,7 @@
                               <v-layout wrap>
                                 <v-flex xs12 sm4 md4>
                                     <v-text-field  required :clearable="true"   :label="'Website'" 
-                                                :placeholder="'Websire'" :hint="'Enter the website of your company'" 
+                                                :placeholder="'Website'" :hint="'Enter the website of your company'" 
                                                 :solo="true" :single-line="true"
                                                 v-validate="'required|max:255'"
                                                 :error-messages="errors.collect('website')"
