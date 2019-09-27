@@ -27,7 +27,10 @@
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn color="red" class="default-vue-btn" dark @click="dialog = false">Close</v-btn>
-                    <v-btn color="green" class="default-vue-btn" dark @click="submitToVendor()"> Submit</v-btn>
+                    <v-btn color="green" class="default-vue-btn" dark @click="submitToVendor()"> 
+                        <span v-if="status === 'accepted'">Re Submit</span>
+                        <span v-else > Submit</span>  
+                    </v-btn>
                 </v-card-actions>
             </v-card>
             
@@ -46,6 +49,7 @@ export default {
         return {
             dialog: false,
             shareLink : {},
+            status : this.mpo.status.toLowerCase()
         }
     },
     mounted() {

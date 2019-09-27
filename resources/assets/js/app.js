@@ -143,6 +143,9 @@ Vue.component('brands-edit', () => import('./components/brand/EditBrand.vue'));
 //GUEST
 Vue.component('guest-mpo', () => import('./components/guest/Mpo.vue'));
 Vue.component('guest-adslot-list', () => import('./components/guest/AdslotList.vue'));
+Vue.component('accept-mpo', () => import('./components/guest/AcceptMpo.vue'));
+Vue.component('guest-mpo-details', () => import('./components/guest/MpoDetails.vue'));
+
 
 //Dashboard
 Vue.component('dashboard', () => import('./components/dashboard/DisplayDashboard.vue'));

@@ -25,7 +25,7 @@
         ></mpo-terms>
         <mpo-action
             :campaign-id="mpo.mpo_details.campaign_id"
-            :mpo-id="mpo.mpo_details.id"
+            :mpo="mpo"
         ></mpo-action>
     </div>
 </template>

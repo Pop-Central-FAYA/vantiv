@@ -4,6 +4,7 @@ namespace Vanguard\Http\Controllers\Dsp;
 
 use Vanguard\Http\Controllers\Controller;
 use Auth;
+use Carbon\Carbon;
 use Mail;
 use Vanguard\Http\Requests\StoreMpoShareLinkRequest;
 use Vanguard\Models\CampaignMpo;
@@ -16,6 +17,7 @@ use Vanguard\Models\Campaign;
 use Vanguard\Services\Mpo\MpoDetailsService;
 use Vanguard\Http\Requests\GenerateCampaignMpoRequest;
 use Vanguard\Http\Resources\CampaignMpoResource;
+use Vanguard\Libraries\Enum\MpoStatus;
 use Vanguard\Services\Mpo\StoreMpoService;
 
 class MpoController extends Controller
@@ -59,7 +61,7 @@ class MpoController extends Controller
         $mpo = CampaignMpo::findOrFail($mpo_id);
         $this->authorize('details', $mpo);
         
-        $export_name =  str_slug($mpo->campaign->name).'_'.str_slug($mpo->vendor->name);
+        $export_name = str_slug($mpo->campaign->name).'_'.str_slug($mpo->vendor->name);
         $formatted_mpo = (new MpoDetailsService($mpo_id))->run();
         return Excel::download(new MpoExport($formatted_mpo),$export_name.'.xlsx');
     }
@@ -94,10 +96,11 @@ class MpoController extends Controller
     public function submitToVendor(StoreMpoShareLinkRequest $request, $mpo_id)
     {
         $validated = $request->validated();
-        $cmapaign_mpo = CampaignMpo::findOrFail($mpo_id);
-        $campaign_name = $cmapaign_mpo->campaign->name;
+        $campaign_mpo = CampaignMpo::findOrFail($mpo_id);
+        $campaign_name = $campaign_mpo->campaign->name;
         try {
             $this->sendVendorMail($validated['url'], $validated['email'], $campaign_name);
+            $this->updateMpo($campaign_mpo);
             return response()->json([
                 'status' => 'success',
                 'message' => 'Link submitted to vendor',
@@ -108,7 +111,18 @@ class MpoController extends Controller
                 'message' => 'An error occured while performing your request'
             ], 500);
         }
-    } 
+    }
+    
+    private function updateMpo($campaign_mpo) 
+    {
+        if($campaign_mpo->status === MpoStatus::ACCEPTED){
+            return;
+        }
+        $campaign_mpo->status = MpoStatus::SUBMITTED;
+        $campaign_mpo->submitted_by = Auth::user()->id;
+        $campaign_mpo->submitted_at = Carbon::now();
+        $campaign_mpo->save(); 
+    }
 
     private function sendVendorMail($url, $email, $campaign_name)
     {
