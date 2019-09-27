@@ -6,13 +6,13 @@ use Vanguard\Models\MediaPlanSuggestion;
 
 class MediaPlan extends Base
 {
-	protected $table = 'media_plans';
-    protected $primaryKey = 'id';
-    protected $keyType = 'string';
 
-    protected $fillable = ['budget', 'criteria_gender', 'criteria_lsm', 'criteria_social_class', 'criteria_region', 'criteria_state', 
+    protected $fillable = [
+        'budget', 'criteria_gender', 'criteria_lsm', 'criteria_social_class', 'criteria_region', 'criteria_state', 
         'criteria_age_groups', 'start_date', 'end_date', 'planner_id', 'status', 'agency_commission', 
-        'campaign_name', 'client_id', 'brand_id', 'product_name', 'media_type', 'state_list', 'filters', 'gender'];
+        'campaign_name', 'client_id', 'brand_id', 'product_name', 'media_type', 'state_list', 'filters', 'gender',
+        'total_insertions','gross_impressions', 'total_grp', 'net_reach', 'avg_frequency', 'net_media_cost', 'cpm', 'cpp'
+    ];
 
     /**
      * Get suggestions associated with the media plan.

@@ -1,5 +1,6 @@
 <template>
     <v-container grid-list-md class="pt-0 pb-3 px-0">
+        <media-plan-deliverables :media-plan="mediaPlan"></media-plan-deliverables>
         <v-layout row wrap class="white-bg">
             <v-flex xs12 sm12 md12 lg12 mb-2>
                 <v-expansion-panel popout>
@@ -90,9 +91,6 @@
                         </v-card>
                     </v-expansion-panel-content>
                 </v-expansion-panel>
-            </v-flex>
-            <v-flex xs12 sm12 md12 lg12 mb-4 ml-5>
-                Total GRP: {{ getTotalGrps() }}
             </v-flex>
         </v-layout>
         <v-layout row wrap class="px-4 pb-3 white-bg">
@@ -197,6 +195,7 @@
                 isRunRatings: false,
                 isSaved: false,
                 isNewInsertion: false,
+                mediaPlan: JSON.parse(JSON.stringify(this.plan))
             };
         },
         created() {
@@ -366,6 +365,8 @@
                             this.isSaved = true;
                             if (res.data.status === "success") {
                                 this.sweet_alert(res.data.message, 'success');
+                                //update the plan model with the new data
+                                this.mediaPlan = res.data.media_plan
                             } else {
                                 this.sweet_alert(res.data.message, 'error');
                             }
@@ -391,13 +392,6 @@
                     });
                 });
                 return grp_total.toFixed(2);
-            },
-            getTotalGrps() {
-                var total_grp = parseFloat(0);
-                this.fayaDurations.forEach(duration => {
-                    total_grp += parseFloat(this.getTotalGrpByDuration(duration));
-                });
-                return total_grp.toFixed(2);
             }
         }
     }
