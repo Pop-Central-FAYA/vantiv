@@ -53,11 +53,26 @@ class MediaPlanSummaryExport implements FromView, ShouldAutoSize, WithTitle, Wit
                     $drawing->setName('Logo');
                     $drawing->setDescription('Logo');
                     $drawing->setPath($path);
-                    $drawing->setCoordinates('A1');
-                    $drawing->setHeight(100);
-                    $drawing->setWidth(100);
+                    $drawing->setCoordinates('B1');
+                    $drawing->setResizeProportional(false);
+                    $drawing->setWidth(140);
+                    $drawing->setHeight(70);
                     $drawing->setWorksheet($event->sheet->getDelegate());
-                    $event->sheet->getDelegate()->getStyle('B3:G3')->applyFromArray($style);
+
+                    $styleArrayAllBorders = [
+                        'borders' => [
+                            'allBorders' => [
+                                'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_MEDIUM,
+                            ],
+                        ],
+                    ];
+                    $event->sheet->getColumnDimension('B')->setAutoSize(false);
+                    $event->sheet->getColumnDimension('B')->setWidth(15);
+                    $event->sheet->getColumnDimension('C')->setAutoSize(false);
+                    $event->sheet->getColumnDimension('C')->setWidth(25);
+                    $event->sheet->getStyle('B5:'.$event->sheet->getHighestColumn(). ($event->sheet->getHighestRow() - 2))->applyFromArray($styleArrayAllBorders);
+                    $event->sheet->getStyle('B4:G4')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('b31b1b');
+                    $event->sheet->getStyle('B4:G4')->getFont()->getColor()->setARGB('ffffff');
                 },
             ];
         } else {
