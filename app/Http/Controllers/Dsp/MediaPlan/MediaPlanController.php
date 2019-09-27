@@ -266,7 +266,7 @@ class MediaPlanController extends Controller
 
     public function summary($media_plan_id)
     {
-        $mediaPlan = MediaPlan::with(['client'])->findorfail($media_plan_id);
+        $mediaPlan = MediaPlan::with(['client', 'brand', 'company'])->findorfail($media_plan_id);
         $selectedSuggestions = $mediaPlan->suggestions->where('status', 1)->where('material_length', '!=', null);
 
         if (count($selectedSuggestions) === 0) {
@@ -280,14 +280,117 @@ class MediaPlanController extends Controller
             "approval" => route('agency.media_plan.get_approval')
         );
 
+        $plan_start_date = $mediaPlan->start_date;
+        $plan_end_date = $mediaPlan->end_date;
+
         $summary_service = new SummarizePlan($mediaPlan);
-        $summaryData =  $summary_service->run();
+        $media_plan_summary =  $summary_service->run();
+
+        $media_plan_start_date = Carbon::parse($mediaPlan->start_date);
+        $media_plan_end_date = Carbon::parse($mediaPlan->end_date);
+        $media_plan_period = $media_plan_start_date->diffInWeeks($media_plan_end_date);
+
+        $export_service = new ExportPlan($mediaPlan);
+        $media_plan_grouped_data = $export_service->run();
+
+        $monthly_weeks_table_header = json_encode($export_service->monthly_weeks_campaign_duration($plan_start_date, $plan_end_date));
+
+        $station_data = [];
+        foreach ($media_plan_grouped_data as $media_type => $all_timebelts) {
+            $station_data[$media_type.' summary'] = $this->computeSummaryByMediaType($all_timebelts, $media_plan_period);
+            foreach ($all_timebelts as $duration => $timebelts) {
+                $station_data[$media_type.' '.$duration.'"'] = [
+                    'national_stations' => $this->filterByStationType($timebelts, ['network', 'Network'])->groupBy('station'),
+                    'cable_stations' => $this->filterByStationType($timebelts, ['cable', 'satellite', 'Satellite'])->groupBy('station'),
+                    'regional_stations' => $this->filterByStationType($timebelts, ['terrestrial', 'regional', 'Regional'])->groupBy('station'),
+                    'monthly_weeks' => json_decode($monthly_weeks_table_header),
+                    'duration' => $duration
+                ];
+            }
+        }
+
+        $full_plan_details = [
+            'station_data' => $station_data,
+            'plan_period' => $media_plan_period,
+            'monthly_weeks_table_header' => $monthly_weeks_table_header
+        ];
         $user_list_service = new GetUserList([$this->companyId()]);
         $user_list = $user_list_service->getUserData();
         $user_list = collect($user_list);
         $user_list_grouped = $user_list->groupBy('status');
-        return view('agency.mediaPlan.summary')->with('summary', $summaryData)
+        return view('agency.mediaPlan.summary')->with('summary', $media_plan_summary)
+                ->with('full_plan_details', $full_plan_details)
                 ->with('media_plan', $mediaPlan)->with('users', $user_list_grouped['Active'])->with('routes', $routes);
+    }
+
+    public function filterByStationType($suggestions, $station_type)
+    {
+        $suggestions = $suggestions->whereIn('station_type', $station_type);
+        return $suggestions;
+    }
+
+    // public function groupByRegions($suggestions)
+    // {
+    //     $suggestions = $suggestions->whereIn('station_type', ['terrestrial', 'regional', 'Regional']);
+    //     return $suggestions->groupBy(['station_region', 'station']);
+    // }
+
+    public function computeSummaryByMediaType($material_lengths, $media_plan_period)
+    {
+        $durations = [];
+        $station_types = [];
+
+        foreach ($material_lengths as $length => $timebelts) {
+            $durations['data'][] = collect([
+                'length' => $length,
+                'total_spots' => $timebelts->sum('total_spots'),
+                'gross_total' => $timebelts->sum('gross_value'),
+                'net_total' => $timebelts->sum('net_value'),
+                'duration' => $media_plan_period
+            ]);
+        }
+
+        $durations['totals'] = [
+            'total_spots' => collect($durations['data'])->sum('total_spots'),
+            'gross_total' => collect($durations['data'])->sum('gross_total'),
+            'net_total' => collect($durations['data'])->sum('net_total'),
+            'vat' => collect($durations['data'])->sum('net_total') * 0.05
+        ]; 
+
+        foreach ($material_lengths as $length => $timebelts) {
+            $national_stations = $this->filterByStationType($timebelts, ['network', 'Network']);
+            $cable_stations = $this->filterByStationType($timebelts, ['cable', 'satellite', 'Satellite']);
+            $regional_stations = $this->filterByStationType($timebelts, ['terrestrial', 'regional', 'Regional']);
+
+            if ($national_stations->sum('total_spots') > 0) {
+                $station_types['data'][] = [
+                    'duration' => $length, 'station_type' => 'National', 
+                    'total_spots' => $national_stations->sum('total_spots'),
+                    'net_total' => $national_stations->sum('net_value'),
+                ];
+            }
+            if ($cable_stations->sum('total_spots') > 0) {
+                $station_types['data'][] = [
+                    'duration' => $length, 'station_type' => 'Cable', 
+                    'total_spots' => $cable_stations->sum('total_spots'),
+                    'net_total' => $cable_stations->sum('net_value'),
+                ];
+            }
+            if ($regional_stations->sum('total_spots') > 0) {
+                $station_types['data'][] = [
+                    'duration' => $length, 'station_type' => 'National', 
+                    'total_spots' => $regional_stations->sum('total_spots'),
+                    'net_total' => $regional_stations->sum('net_value'),
+                ];
+            }
+        }
+
+        $station_types['totals'] = [
+            'total_spots' => collect($station_types['data'])->sum('total_spots'),
+            'net_total' => collect($station_types['data'])->sum('net_total')
+        ]; 
+
+        return ['durations' => $durations, 'station_types' => $station_types];
     }
 
     public function exportPlan($media_plan_id)
