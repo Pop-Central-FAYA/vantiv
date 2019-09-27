@@ -46,6 +46,7 @@ use Vanguard\Services\MediaPlan\GetStationTimeBeltRatingService;
 use Vanguard\Services\MediaPlan\StoreMediaPlanService;
 use Vanguard\Services\MediaPlan\StoreMediaPlanSuggestionService;
 use Vanguard\Models\Client;
+use Vanguard\Services\Ratings\StoreMediaPlanDeliverables;
 
 class MediaPlanController extends Controller
 {
@@ -491,12 +492,22 @@ class MediaPlanController extends Controller
                     'brand_id' => $request->brand_id,
                     'product_name' => $request->product_name
                 ]);
+
+                //store the media plan deliverables
+                //@todo need to make this much better than it is currently
+                $media_plan = MediaPlan::findOrFail($request->plan_id);
+                $deliverables_service = new StoreMediaPlanDeliverables($media_plan);
+                $deliverables_service->run();
             });
         }catch (\Exception $exception){
             Log::error($exception);
             return response()->json(['status'=>'error', 'message'=> "The current operation failed."]);
         }
-        return response()->json(['message'=>"Media plan updated", "status" => "success"]);
+        return response()->json([
+            'message'=>"Media plan updated", 
+            "status" => "success",
+            "media_plan" => MediaPlan::find($request->plan_id)->toArray() //this is a stop gap, we need to use resources
+        ]);
     }
 
     public function computeMaterialLengthsForSuggestion($suggestion)

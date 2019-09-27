@@ -70,6 +70,7 @@ Vue.component('media-plan-summary', () => import('./components/media_plan/summar
 Vue.component('media-plan-criteria-form', () => import('./components/media_plan/CriteriaForm.vue'));
 Vue.component('media-plan-list', () => import('./components/media_plan/AllMediaPlans.vue'));
 Vue.component('media-plan-request-approval', () => import('./components/media_plan/summary/RequestApproval'));
+Vue.component('media-plan-deliverables', () => import('./components/media_plan/Deliverables'));
 
 // CAMPAIGN
 Vue.component('campaign-list', () => import('./components/campaign/AllCampaigns.vue'));
