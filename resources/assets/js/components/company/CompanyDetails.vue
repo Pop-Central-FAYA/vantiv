@@ -75,7 +75,7 @@
                      <p class="bold small_faint">
                      Company color
                     </p>
-                    <p> <v-btn :color="company.color"  dark v-on="on"></v-btn></p>
+                    <p> <v-btn class="clickable" :color="company.color"  dark v-on="on"></v-btn></p>
                    </v-flex>
 
                 
@@ -121,6 +121,9 @@
     hr {
     margin-top: 0;
     margin-bottom: 0;
+}
+button.clickable {
+    pointer-events: none;
 }
 </style>
 
