@@ -6,7 +6,7 @@
       <v-spacer></v-spacer>
       <v-text-field v-model="search" append-icon="search" label="Enter Keyword" single-line hide-details></v-text-field>
     </v-card-title>
-     <edit-user></edit-user>
+     <edit-user :roles="roles"></edit-user>
     <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="users" :loading="loading" :search="search" :no-data-text="noDataText" :pagination.sync="pagination">
       <template v-slot:items="props">
         <tr>
@@ -47,6 +47,10 @@
 
 <script>
   export default {
+     props: {
+        roles:Array,
+        permissionList:Array
+        },
     data () {
       return {
         users: [],
@@ -93,8 +97,7 @@
         },
 
         showEditUser(idx, item) {
-          console.log(idx);
-         // Event.$emit('edit-user', idx, item);
+          Event.$emit('edit-user', idx, item);
         },
         showClientDetails(id){
             var url= '/clients/'+id+'/details/';

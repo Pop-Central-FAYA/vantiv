@@ -30,7 +30,7 @@
                             <div class="col-md-12">
                                 <v-app>
                                     <v-content>
-                                       <users-list></users-list>
+                                       <users-list :roles="{{ json_encode($roles) }}"></users-list>
                                     </v-content>
                                 </v-app>
                             </div>

@@ -9,14 +9,22 @@
                             <v-subheader>User Information</v-subheader>
                             <v-divider></v-divider>
                             <v-layout wrap>
-                                <v-flex xs12 sm12 md12>
+                                <v-flex xs12 sm3 md3>
+                                     <p class="weight_medium">
+                                      {{ user.name }}
+                                     </p>
+                                  </v-flex>
+                                      </v-layout>
+                             <v-layout row wrap>
+                                   <v-flex xs12 sm12 md12>
                                     <v-text-field required :clearable="true"  :label="'Email'" 
                                                 :placeholder="'Email'" :hint="'Enter the email of the user'" 
                                                 :single-line="true"
                                                 v-validate="'required|email'"
                                                 :error-messages="errors.collect('email')"
                                                 v-model="user.email"
-                                                data-vv-name="email">
+                                                data-vv-name="email"
+                                                disabled>
                                     </v-text-field>
                                 </v-flex>
                             </v-layout>
@@ -41,7 +49,7 @@
                         <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn color="red" dark @click="closeDialog()">Close</v-btn>
-                    <v-btn color="" class="default-vue-btn" dark @click=" inviteUser()">Invite</v-btn>
+                    <v-btn color="" class="default-vue-btn" dark @click="inviteUser()">Invite</v-btn>
                     </v-card-actions>
                     </v-container>
                 </v-card-text>
@@ -87,22 +95,24 @@
             var self = this;
             Event.$on('edit-user', function(user) {
                self.openDialog(user);
-            });
-          
+            }); 
         },
         mounted() {
-            console.log('finance Component mounted.');
+            console.log('edit user Component mounted.');
         },
         methods:{
             setupModel: function() {
                 return {
                             roles: [],
                             email: '',
+                            name: '',
                          }  
              },
             openDialog: function(item) {
-               // this.user = item;
-               console.log(item)
+                this.user.roles = item.role_name;
+                this.user.email = item.email;
+                 this.user.name = item.name;
+                console.log(item)
                 this.dialog = true;
             },
             inviteUser: async function(event) {
@@ -145,7 +155,7 @@
                 this.dialog = false;
             },
              setRole() {
-             this.role_list[0] = this.roles;
+                 this.role_list[0] = this.roles;
               },
         }
     }

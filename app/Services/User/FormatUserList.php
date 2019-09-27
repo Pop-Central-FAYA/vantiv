@@ -25,15 +25,15 @@ class FormatUserList
 
     public function formatLable($roles)
     {
-        $roles = [];
+        $rolex = [];
         foreach ($roles as $role){
-        $new = [
-               'name' => $role->name,
+        $new = (object)[
+               'name' => $role,
                'label' => ucwords(str_replace('_',' ', explode('.', $role)[1])),
         ];
-        array_push($roles, $new);
+        array_push($rolex, $new);
         }
-        return $roles;
+        return $rolex;
     }
    
 }

@@ -21,12 +21,11 @@ class UserResource extends JsonResource
             'name' => $this->full_name,
             'email' => $this->email,
             'roles' => $format->roleLabel($this->getRoleNames()),
-            'role_name' => $this->getRoleNames(),
+            'role_name' => $format->formatLable($this->getRoleNames()),
             'company' => $format->getCompanyName($this->company_id),
             'company_id' => $this->company_id,
             'status' => $this->status,
             'created_at' => $this->created_at,
-            'jj'=> $format->formatLable($this->roles)
         ];
     }
 }
