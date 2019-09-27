@@ -16,6 +16,10 @@
                 <td @click="getMpo(props.item.links.details)" 
                     class="text-xs-left"
                     >{{ props.item.insertions }}</td>
+                <td @click="getMpo(props.item.links.details)" 
+                    class="text-xs-left transform"
+                    :style="{ 'color' : statusColor(props.item.status)}"
+                    >{{ props.item.status }}</td>    
                 <td class="justify-center layout px-0">
                     <v-container grid-list-md class="container-action-btn">
                         <v-layout wrap>
@@ -71,6 +75,7 @@
                     { text: 'Vendor', align: 'left', value: 'vendor',  width: '30%' },
                     { text: 'Net Total (₦)', value: 'net_total',  width: '20%' },
                     { text: 'Exposures', value: 'insertions', width: '15%' },
+                    { text: 'Status', value: 'status', width : '15%'},
                     { text: 'Actions', value: 'name', sortable: false , width: '15%'}
                 ],
                 pagination: {
@@ -87,8 +92,18 @@
             })
         },
         methods : {
-            openPreview : function(mpo_id) {
-
+            statusColor : function(status) {
+                var status = status.toLowerCase()
+                switch (status) {
+                    case 'accepted':
+                        return 'green'
+                        break;
+                    case 'submitted':
+                        return 'orange'
+                        break;
+                    default :
+                        return 'grey'
+                }
             },
             getMpo : function(details_link) {
                 var msg = "Generating document for preview, Please wait";
@@ -115,6 +130,9 @@
     }
     tbody:hover {
     background-color: rgba(0, 0, 0, 0.12);
+    }
+    .transform {
+        text-transform: capitalize
     }
 </style>
 

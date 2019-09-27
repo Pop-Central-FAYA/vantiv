@@ -45,7 +45,13 @@ class MpoDetailsService implements BaseServiceInterface
             'net_total' => $net_total,
             'time_belt_summary' => $mpo_time_belt_summary,
             'company' => $company,
-            'net_total_word' => $this->formatNetTotalToWord($net_total)
+            'net_total_word' => $this->formatNetTotalToWord($net_total),
+            'links' => [
+                'export' => route('mpos.export', ['mpo_id' => $this->mpo_id], true),
+                'details' => route('mpos.details', ['mpo_id' => $this->mpo_id], true),
+                'accept' => route('mpos.accept', ['mpo_id' => $this->mpo_id], true),
+                'campaign_details' => route('agency.campaign.details', ['campaign_id' => $campaign->id])
+            ]
         ];
     }
 

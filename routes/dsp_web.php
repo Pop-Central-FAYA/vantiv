@@ -6,6 +6,10 @@
         Route::get('/mpos/index/{id}', 'MpoController@index')->name('guest.mpo_share_link');
         Route::get('/mpos/{id}/temporary-url', 'MpoController@getTemporaryUrl')->name('public.mpo.export.temporary_url');
         Route::get('/mpos/{id}/export', 'MpoController@export')->name('public.mpo.export');
+
+        Route::group(['prefix' => 'api'], function() {
+            Route::post('/mpos/{mpo_id}', 'MpoController@acceptMpo')->name('mpos.accept');
+        });
     });
 
     Route::group(['namespace' => 'Dsp'], function () {

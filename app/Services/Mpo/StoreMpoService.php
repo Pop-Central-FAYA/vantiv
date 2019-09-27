@@ -2,6 +2,7 @@
 
 namespace Vanguard\Services\Mpo;
 
+use Vanguard\Libraries\Enum\MpoStatus;
 use Vanguard\Models\CampaignMpo;
 use Vanguard\Services\BaseServiceInterface;
 use Vanguard\Libraries\Utilities;
@@ -26,6 +27,7 @@ class StoreMpoService implements BaseServiceInterface
         $campaign_mpo->net_total = $this->data['net_total'];
         $campaign_mpo->adslots = json_encode($this->data['adslots']);
         $campaign_mpo->reference_number = Utilities::generateReference();
+        $campaign_mpo->status = MpoStatus::PENDING;
         $campaign_mpo->save();
         return $campaign_mpo;
     }

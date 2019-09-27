@@ -60,7 +60,10 @@
         <v-layout>
             <v-flex v-if="previousReference">
                 <h3 class="text-center"><b>Revised Media Contract</b></h3><br>
-                <p class="text-center">This cancels and replaces Media Contract No: <a :href="previousMpo" target="_blank">{{ previousReference }}</a></p>
+                <p class="text-center">This cancels and replaces Media Contract No: 
+                    <span v-if="isPublic">{{ previousReference }}</span>
+                    <a :href="previousMpo" target="_blank" v-else>{{ previousReference }}</a>
+                    </p>
             </v-flex>
         </v-layout>
     </v-card>
@@ -72,8 +75,9 @@ export default {
         previousReference : Number,
         company : Object,
         vendor : Object,
-        previousMpo : String
-    },
+        previousMpo : String,
+        isPublic : Boolean
+    }
 }
 </script>
 <style >
