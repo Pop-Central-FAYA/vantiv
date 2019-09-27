@@ -7,7 +7,7 @@
              <v-layout  style="height: 80px; margin-Top: 10px; margin-right: -70px;"> 
                 <v-flex md11 my-1>
                     <p class="weight_medium">
-                     {{ company.name }})
+                     {{ company.name }}
                     </p>
                     <p class="weight_medium small_faint">
                       {{ company.address }},  {{ company.city }} , {{ company.state }},  {{ company.country }}
