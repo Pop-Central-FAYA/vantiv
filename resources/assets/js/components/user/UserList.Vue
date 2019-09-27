@@ -6,7 +6,7 @@
       <v-spacer></v-spacer>
       <v-text-field v-model="search" append-icon="search" label="Enter Keyword" single-line hide-details></v-text-field>
     </v-card-title>
-     <edit-user :roles="roles"></edit-user>
+     <edit-user :roles="roles" :permissionList="permissionList"></edit-user>
     <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="users" :loading="loading" :search="search" :no-data-text="noDataText" :pagination.sync="pagination">
       <template v-slot:items="props">
         <tr>
@@ -95,7 +95,6 @@
               this.sweet_alert('An unknown error has occurred, vendors cannot be retrieved. Please try again', 'error');
           }).finally(() => this.loading = false);
         },
-
         showEditUser(idx, item) {
           Event.$emit('edit-user', idx, item);
         },

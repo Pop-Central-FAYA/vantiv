@@ -28,7 +28,7 @@ class FormatUserList
         $rolex = [];
         foreach ($roles as $role){
         $new = (object)[
-               'name' => $role,
+               'role' => $role,
                'label' => ucwords(str_replace('_',' ', explode('.', $role)[1])),
         ];
         array_push($rolex, $new);

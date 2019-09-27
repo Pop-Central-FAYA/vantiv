@@ -12,8 +12,8 @@ use Vanguard\Http\Resources\UserResource;
 use Vanguard\Http\Resources\UserCollection;
 use Illuminate\Http\Request;
 use Vanguard\Services\RolesPermission\ListRoleGroup;
-
-
+use Vanguard\Http\Requests\User\UpdateUserRequest;
+use Vanguard\Services\User\UpdateService;
 class UsersController extends Controller
 {
     use CompanyIdTrait;
@@ -43,8 +43,6 @@ class UsersController extends Controller
      *******************************/
 
     /**
-     * Return a list of client that the currently logged in user has permission to view
-     * Filter parameters are allowed
      * UserInviteRequest $request
      */
     
@@ -54,13 +52,10 @@ class UsersController extends Controller
         $invite_user = new InviteService($request, $this->companyId(), 'web');
         $new_user = $invite_user->run();   
         return ['status'=>"success", 'message'=> "User(s) invited successfully, and emails sent"];
-      
     }
 
      /**
-     * Return a list of ad vendors that the currently logged in user has permission to view
-     * Filter parameters are allowed
-     * No need for a service now, until the query gets more complicated
+     * Return a list of user that the currently logged in user has permission to view
      */
     public function list(ListRequest $request)
     {        
@@ -69,6 +64,19 @@ class UsersController extends Controller
         $user_list_service = new UserListService($this->getCompanyIdsList());
         $user_list = $user_list_service->run();
         return new UserCollection($user_list);
+    }
+
+     /**
+     * UserInviteRequest $request
+     */
+    
+    public function update(UpdateUserRequest $request, $id)
+    {
+        $validated = $request->validated(); 
+        $update_user_service = new UpdateService($validated, $this->companyId(), $id, 'web');
+        $updated_user = $update_user_service->run();
+        dd(new UserResource($updated_user));
+        return ['status'=>"success", 'message'=> "User updated successfully"];
     }
 
    

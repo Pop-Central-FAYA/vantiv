@@ -20,6 +20,7 @@
                                     <v-text-field required :clearable="true"  :label="'Email'" 
                                                 :placeholder="'Email'" :hint="'Enter the email of the user'" 
                                                 :single-line="true"
+                                                solo
                                                 v-validate="'required|email'"
                                                 :error-messages="errors.collect('email')"
                                                 v-model="user.email"
@@ -31,7 +32,7 @@
                              <v-layout row wrap>
                                 <v-flex xs12 sm12 md12 text-left>
                                     <multiselect 
-                                        v-model="user.roles" 
+                                        v-model="user.role_name" 
                                         :options="roles" 
                                         :close-on-select="true" 
                                         :hide-selected="true" 
@@ -39,6 +40,7 @@
                                         placeholder="Pick role(s)" 
                                         label="label" 
                                         track-by="label" 
+                                        solo
                                         :searchable="false" 
                                         :multiple="true" 
                                     >
@@ -49,7 +51,7 @@
                         <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn color="red" dark @click="closeDialog()">Close</v-btn>
-                    <v-btn color="" class="default-vue-btn" dark @click="inviteUser()">Invite</v-btn>
+                    <v-btn color="" class="default-vue-btn" dark @click="updateUser()">Update</v-btn>
                     </v-card-actions>
                     </v-container>
                 </v-card-text>
@@ -62,7 +64,6 @@
         padding: 0px 12px;
         min-height: 45px;
         margin-bottom: 0px;
-        border: 1px solid #ccc;
         border-radius: 5px;
         /* box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12); */
     }
@@ -103,20 +104,18 @@
         methods:{
             setupModel: function() {
                 return {
-                            roles: [],
+                            role_name: [],
                             email: '',
                             name: '',
+                            id: ''
                          }  
              },
             openDialog: function(item) {
-                this.user.roles = item.role_name;
-                this.user.email = item.email;
-                 this.user.name = item.name;
-                console.log(item)
+                this.user = item;
                 this.dialog = true;
             },
-            inviteUser: async function(event) {
-                if(this.hasPermissionAction(this.permissionList, ['create.user'])){
+            updateUser: async function(event) {
+                if(this.hasPermissionAction(this.permissionList, ['update.user'])){
                     // Validate inputs using vee-validate plugin 
                     let isValid = await this.$validator.validate().then(valid => {
                         if (!valid) {
@@ -129,18 +128,15 @@
                     if (!isValid) {
                         return false;
                     } 
+                     this.sweet_alert('Saving user information', 'info');
                     axios({
-                        method: 'post',
-                        url: '/users/invite',
+                        method: 'patch',
+                        url: '/users/'+this.user.id,
                         data:  this.user
                     }).then((res) => {
-                    if (res.data.status === 'success') {
                         this.dialog = false;
                         Event.$emit('user-created', res.data.data);
-                        this.sweet_alert('Request sent successfully', 'success');
-                    } else {
-                        this.sweet_alert('Something went wrong, Try again!', 'error');
-                    }
+                        this.sweet_alert('User updated successfully', 'success');
                     }).catch((error) => {
                         if (error.response && (error.response.status == 422)) {
                             this.displayServerValidationErrors(error.response.data.errors);
@@ -154,9 +150,6 @@
              closeDialog: function() {
                 this.dialog = false;
             },
-             setRole() {
-                 this.role_list[0] = this.roles;
-              },
         }
     }
 </script>

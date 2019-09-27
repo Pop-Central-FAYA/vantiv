@@ -17,8 +17,9 @@
 
                 @if(Auth::user()->can('create.user'))
                     <div class="col-md-2 text-right px-2">
-                        <invite-user  :roles="{{ json_encode($roles) }}"
-                                      :permission-list="{{ json_encode(Auth::user()->getAllPermissions()->pluck('name')) }}">
+                        <invite-user  
+                                :roles="{{ json_encode($roles) }}"
+                                :permission-list="{{ json_encode(Auth::user()->getAllPermissions()->pluck('name')) }}">
                         ></invite-user>
                     </div>
                 @endif
@@ -30,7 +31,10 @@
                             <div class="col-md-12">
                                 <v-app>
                                     <v-content>
-                                       <users-list :roles="{{ json_encode($roles) }}"></users-list>
+                                       <users-list 
+                                            :roles="{{ json_encode($roles) }}"
+                                            :permission-list="{{ json_encode(Auth::user()->getAllPermissions()->pluck('name')) }}">
+                                     </users-list>
                                     </v-content>
                                 </v-app>
                             </div>
