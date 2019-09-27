@@ -18,8 +18,9 @@
                 <h2 class="sub_header">Summary</h2>
             </div>
         </div>
-        
-        <media-plan-summary  
+
+        <media-plan-summary
+        :full-station-data="{{ json_encode($full_plan_details) }}"
         :summary-data="{{ json_encode($summary) }}" 
         :summary-details="{{ json_encode($media_plan) }}" 
         :routes="{{ json_encode($routes) }}"  
