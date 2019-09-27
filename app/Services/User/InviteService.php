@@ -31,6 +31,7 @@ class InviteService implements BaseServiceInterface
     {
 
         $inviter_name = \Auth::user()->full_name;
+        $new_user = '';
         \DB::transaction(function () use ($request, $companies, $inviter_name) {
             $user_mail_content_array = [];
             $roles = [];
@@ -43,12 +44,14 @@ class InviteService implements BaseServiceInterface
                 $email_format = new MailFormat($invited_user, $inviter_name, $subject);
                 $user_mail_content_array[] = $email_format->emailFormat();
             }
+            $new_user = $invited_user;
             $email_invitation_service = new UserInvitationMail($user_mail_content_array);
             $email_invitation_service->sendInvitationMail();  
         });
         
-        return ['status'=>"success", 'message'=> "User(s) invited successfully, and emails sent"];
+        return $new_user;
     }
+
      private function getCompany($request)
     {
         if(isset($request->companies)) {

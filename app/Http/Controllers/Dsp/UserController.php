@@ -29,7 +29,7 @@ class UserController extends Controller
     // This fub=nction will return a view with the lis of users
     public function index()
     {
-       $user_list_service = new GetUserList($this->getCompanyIdsList());
+     $user_list_service = new GetUserList($this->getCompanyIdsList());
        $user_list = $user_list_service->getUserData();
        return view('agency.user-management.index')->with('users', $user_list);
     }

@@ -22,7 +22,7 @@ class UsersController extends Controller
     {
         $this->middleware('permission:create.user')->only(['create']);
         $this->middleware('permission:update.user')->only(['update']);
-        $this->middleware('permission:view.user')->only(['list', 'get']);
+        $this->middleware('permission:view.user')->only(['list']);
     }
 
     /*******************************
@@ -75,8 +75,7 @@ class UsersController extends Controller
         $validated = $request->validated(); 
         $update_user_service = new UpdateService($validated, $this->companyId(), $id, 'web');
         $updated_user = $update_user_service->run();
-        dd(new UserResource($updated_user));
-        return ['status'=>"success", 'message'=> "User updated successfully"];
+        return new UserResource($updated_user);
     }
 
    
