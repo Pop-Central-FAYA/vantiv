@@ -29,6 +29,7 @@ class InviteUser extends Mailable
     public function build()
     {
         return $this->view('mail.invite_user')
+                     ->subject($this->user_mail_content_array['subject'])
                     ->with('user_mail_content', $this->user_mail_content_array);
     }
 }

@@ -9,6 +9,10 @@ use DB;
 use Vanguard\Support\Enum\UserStatus;
 use Vanguard\User;
 
+
+use Vanguard\Services\Mail\InviteUserMailFormat;
+use Vanguard\Mail\InviteUser;
+
 class InviteService implements BaseServiceInterface
 {
     protected $companies_id;
@@ -29,32 +33,21 @@ class InviteService implements BaseServiceInterface
 
     public function processInvite($request, $companies, $inviter_name)
     {
-
         $inviter_name = \Auth::user()->full_name;
         $new_user = '';
         \DB::transaction(function () use ($request, $companies, $inviter_name) {
-            $user_mail_content_array = [];
             $roles = [];
             foreach($request->roles as $role) {
                 array_push($roles, $role['role']);
             }
             foreach (explode(',', $request->email) as $email) {
                 $invited_user = $this->createUnconfirmedUser($roles, $companies, $email, "web");
-
                 $subject="Invitation to join Vantage";
-
-                
-                $email_format = new MailFormat($invited_user, $inviter_name, $subject);
-                $user_mail_content_array[] = $email_format->emailFormat();
+                $email_format = new InviteUserMailFormat($invited_user, $inviter_name, $subject);
+                $user_mail_content_array = $email_format->run();
+                $send_mail = \Mail::to($user_mail_content_array['recipient'])->send(new InviteUser($user_mail_content_array));
             }
-
-
-
             $new_user = $invited_user;
-            $email_invitation_service = new UserInvitationMail($user_mail_content_array);
-            $email_invitation_service->sendInvitationMail();  
-
-
         });
         
         return $new_user;

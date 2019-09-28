@@ -28,12 +28,9 @@ class ReinviteService implements BaseServiceInterface
 
     public function processInvite()
     {
-
-        
         $email_format = new InviteUserMailFormat($this->user, \Auth::user()->full_name, $this->subject);
         $user_mail_content_array = $email_format->run();
-        $send_mail = \Mail::to($user_mail_content_array['recipient'])->send(  new InviteUser($user_mail_content_array));
-        dd($send_mail);
+        $send_mail = \Mail::to($user_mail_content_array['recipient'])->send(new InviteUser($user_mail_content_array));
         return $this->user;
     }
 
