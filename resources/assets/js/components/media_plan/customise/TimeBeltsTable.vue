@@ -35,7 +35,8 @@
 <script>
   export default {
     props: {
-      station: Object
+      station: Object,
+      selectedTimeBelts: Array,
     },
     data () {
       return {
@@ -58,6 +59,7 @@
     },
     created() {
         var self = this;
+
         Event.$on('timebelt-unselected', function (timeBelt) {
             self.unSelectTimebelt(timeBelt);
         });
@@ -91,7 +93,12 @@
             var self = this;
             this.timeBeltList.forEach(element => {
                 element.number_day = self.daysOfWeek[element.day];
-                element.is_selected = false;
+                let is_selected = this.selectedTimeBelts.some(timebelt => (timebelt['key'] === element.key));
+                if (is_selected) {
+                  element.is_selected = true;
+                } else {
+                  element.is_selected = false;
+                }
             });
         },
         addTimebelt(timeBelt) {

@@ -23,38 +23,7 @@
                 </div>
 
                  <div class="the_frame client_dets mb4">
-                    <table class="display dashboard_campaigns">
-                        <thead>
-                        <tr>
-                            <th>Medium</th>
-                            <th>Material Duration</th>
-                            <th>Number of Spots/units</th>
-                            <th>Gross Media Cost</th>
-                            <th>Net Media Cost</th>
-                            <th>Savings</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                                <tr v-for="(summaryData,key) in summaryData" v-bind:key="key">
-                                    <td>{{ summaryData.medium }}</td>
-                                    <td> <span v-for="(list, index) in summaryData.material_durations" v-bind:key="index"> <span>{{list}}</span><span v-if="index+1 < summaryData.material_durations.length">, </span>  </span> </td>
-                                    <td> {{ summaryData.total_spots }} </td>
-                                    <td>{{ numberFormat(summaryData.gross_value) }}  </td>
-                                    <td> {{ numberFormat(summaryData.net_value) }}</td>
-                                    <td> {{ numberFormat(summaryData.savings) }}</td>
-                                </tr>
-                          
-                            <tr>
-                                <td>Total</td>
-                                <td></td>
-                                <td>{{ totalSpots }}</td>
-                                <td>{{ numberFormat(totalGrossValue) }}</td>
-                                <td>{{ numberFormat( totalNetValue) }}</td>
-                                <td>{{ numberFormat(totalSavings) }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <!-- end -->
+                    <media-plan-summary-sections :summary-data="summaryData" :full-station-data="fullStationData"></media-plan-summary-sections>
                 </div>
             </div>
         </div>
@@ -103,6 +72,7 @@
 <script>
     export default {
         props: {
+            fullStationData: Object,
             summaryDetails: Object,
             summaryData: Array,
             permissionList:Array,

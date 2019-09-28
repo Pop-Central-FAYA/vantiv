@@ -269,5 +269,4 @@ return [
         'AssetsHelper' => Vanguard\Helpers\AssetsHelper::class
 
     ],
-
 ];

@@ -4,6 +4,9 @@ use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
+/**
+ * @todo Make sure that permissions are not just updated or created, but removed too as needed
+ */
 class AgencyRoleSeeder extends Seeder
 {
     /**
@@ -18,49 +21,49 @@ class AgencyRoleSeeder extends Seeder
 
         // php artisan db:seed --class=AgencyRoleSeeder
         $vantagePermissions = [
-            'create.media_plan' => array('dsp.admin', 'dsp.media_planner'),
-            'update.media_plan' => array('dsp.admin', 'dsp.media_planner'),
-            'submit.media_plan' => array('dsp.admin', 'dsp.media_planner'),
-            'view.media_plan' => array('dsp.compliance', 'dsp.finance', 'dsp.admin', 'dsp.media_planner', 'dsp.media_buyer'),
-            'approve.media_plan' => array('dsp.finance', 'dsp.admin'),
-            'decline.media_plan' => array('dsp.finance', 'dsp.admin'),
-            'export.media_plan' => array('dsp.compliance', 'dsp.finance', 'dsp.admin', 'dsp.media_planner', 'dsp.media_buyer'),
-            'convert.media_plan' => array('dsp.admin', 'dsp.media_planner', 'dsp.media_buyer'),
-            'delete.media_plan' => array('dsp.admin', 'dsp.media_planner'),
+            'create.media_plan' => ['dsp.admin', 'dsp.media_planner'],
+            'update.media_plan' => ['dsp.admin', 'dsp.media_planner'],
+            'submit.media_plan' => ['dsp.admin', 'dsp.media_planner'],
+            'view.media_plan' => ['dsp.compliance', 'dsp.finance', 'dsp.admin', 'dsp.media_planner', 'dsp.media_buyer', 'dsp.head_media_planner', 'dsp.head_media_buyer'],
+            'approve.media_plan' => ['dsp.finance', 'dsp.admin', 'dsp.head_media_planner'],
+            'decline.media_plan' => ['dsp.finance', 'dsp.admin', 'dsp.head_media_planner'],
+            'export.media_plan' => ['dsp.compliance', 'dsp.finance', 'dsp.admin', 'dsp.media_planner', 'dsp.media_buyer', 'dsp.head_media_planner', 'dsp.head_media_buyer'],
+            'convert.media_plan' => ['dsp.admin', 'dsp.media_planner', 'dsp.media_buyer'],
+            'delete.media_plan' => ['dsp.admin', 'dsp.media_planner'],
 
-            'view.invoice' => array('dsp.finance', 'dsp.admin', 'dsp.media_buyer'),
+            'view.invoice' => ['dsp.finance', 'dsp.admin', 'dsp.media_buyer', 'dsp.head_media_planner', 'dsp.head_media_buyer'],
 
-            'view.wallet' => array('dsp.finance', 'dsp.admin', 'dsp.media_buyer'),
-            'create.wallet' => array('dsp.finance', 'dsp.admin', 'dsp.media_buyer'),
+            'view.wallet' => ['dsp.finance', 'dsp.admin', 'dsp.media_buyer'],
+            'create.wallet' => ['dsp.finance', 'dsp.admin', 'dsp.media_buyer'],
 
-            'create.asset' => array('dsp.admin', 'dsp.media_planner', 'dsp.media_buyer'),
-            'view.asset' => array('dsp.compliance', 'dsp.finance', 'dsp.admin', 'dsp.media_planner', 'dsp.media_buyer'),
-            'update.asset' => array('dsp.admin', 'dsp.media_planner', 'dsp.media_buyer'),
-            'delete.asset' => array('dsp.admin', 'dsp.media_planner', 'dsp.media_buyer'),
+            'create.asset' => ['dsp.admin', 'dsp.media_planner', 'dsp.media_buyer'],
+            'view.asset' => ['dsp.compliance', 'dsp.finance', 'dsp.admin', 'dsp.media_planner', 'dsp.media_buyer', 'dsp.head_media_planner', 'dsp.head_media_buyer'],
+            'update.asset' => ['dsp.admin', 'dsp.media_planner', 'dsp.media_buyer'],
+            'delete.asset' => ['dsp.admin', 'dsp.media_planner', 'dsp.media_buyer'],
 
-            'create.user' => array('dsp.admin'),
-            'view.user' => array('dsp.compliance', 'dsp.finance', 'dsp.admin', 'dsp.media_planner', 'dsp.media_buyer'),
-            'update.user' => array('dsp.admin'),
+            'create.user' => ['dsp.admin'],
+            'view.user' => ['dsp.compliance', 'dsp.finance', 'dsp.admin', 'dsp.media_planner', 'dsp.media_buyer', 'dsp.head_media_planner', 'dsp.head_media_buyer'],
+            'update.user' => ['dsp.admin'],
 
-            'view.campaign' => array('dsp.compliance', 'dsp.finance', 'dsp.admin', 'dsp.media_planner', 'dsp.media_buyer'),
-            'submit.campaign' => array('dsp.admin', 'dsp.media_buyer'),
-            'create.campaign' => array('dsp.admin', 'dsp.media_buyer'),
-            'update.campaign' => array('dsp.admin', 'dsp.media_buyer'),
+            'view.campaign' => ['dsp.compliance', 'dsp.finance', 'dsp.admin', 'dsp.media_planner', 'dsp.media_buyer', 'dsp.head_media_planner', 'dsp.head_media_buyer'],
+            'submit.campaign' => ['dsp.admin', 'dsp.media_buyer'],
+            'create.campaign' => ['dsp.admin', 'dsp.media_buyer'],
+            'update.campaign' => ['dsp.admin', 'dsp.media_buyer'],
 
-            'view.profile' => array('dsp.compliance', 'dsp.finance', 'dsp.admin', 'dsp.media_planner', 'dsp.media_buyer'),
-            'update.profile' => array('dsp.compliance', 'dsp.finance', 'dsp.admin', 'dsp.media_planner', 'dsp.media_buyer'),
+            'view.profile' => ['dsp.compliance', 'dsp.finance', 'dsp.admin', 'dsp.media_planner', 'dsp.media_buyer', 'dsp.head_media_planner', 'dsp.head_media_buyer'],
+            'update.profile' => ['dsp.compliance', 'dsp.finance', 'dsp.admin', 'dsp.media_planner', 'dsp.media_buyer', 'dsp.head_media_planner', 'dsp.head_media_buyer'],
 
-            'view.report' => array('dsp.compliance', 'dsp.finance', 'dsp.admin', 'dsp.media_planner', 'dsp.media_buyer'),
+            'view.report' => ['dsp.compliance', 'dsp.finance', 'dsp.admin', 'dsp.media_planner', 'dsp.media_buyer', 'dsp.head_media_planner', 'dsp.head_media_buyer'],
 
-            'view.client' => array('dsp.compliance', 'dsp.finance', 'dsp.admin', 'dsp.media_planner', 'dsp.media_buyer'),
-            'update.client' => array('dsp.admin', 'dsp.media_planner', 'dsp.media_buyer'),
-            'create.client' => array('dsp.admin', 'dsp.media_planner', 'dsp.media_buyer'),
+            'view.client' => ['dsp.compliance', 'dsp.finance', 'dsp.admin', 'dsp.media_planner', 'dsp.media_buyer', 'dsp.head_media_planner', 'dsp.head_media_buyer'],
+            'update.client' => ['dsp.admin', 'dsp.head_media_planner', 'dsp.head_media_buyer'],
+            'create.client' => ['dsp.admin', 'dsp.head_media_planner', 'dsp.head_media_buyer'],
 
-            'view.ad_vendor' => array('dsp.compliance', 'dsp.finance', 'dsp.admin', 'dsp.media_planner', 'dsp.media_buyer'),
-            'update.ad_vendor' => array('dsp.admin', 'dsp.media_planner', 'dsp.media_buyer'),
-            'create.ad_vendor' => array('dsp.admin', 'dsp.media_planner', 'dsp.media_buyer'),
+            'view.ad_vendor' => ['dsp.compliance', 'dsp.finance', 'dsp.admin', 'dsp.media_planner', 'dsp.media_buyer', 'dsp.head_media_planner', 'dsp.head_media_buyer'],
+            'update.ad_vendor' => ['dsp.admin', 'dsp.head_media_planner', 'dsp.head_media_buyer'],
+            'create.ad_vendor' => ['dsp.admin', 'dsp.head_media_planner', 'dsp.head_media_buyer'],
 
-            'update.company' => array('dsp.admin')
+            'update.company' => ['dsp.admin']
         ];
         
         //Create the different roles if they do not exist

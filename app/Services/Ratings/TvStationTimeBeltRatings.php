@@ -25,8 +25,6 @@ class TvStationTimeBeltRatings extends TvRatingsList
     protected function calculateRatings() {
         $universe_size = $this->getUniverseSize();
 
-        // DB::enableQueryLog();
-
         $tv_station_key = Arr::get($this->filters, 'tv_station_key');
 
         $station_cols = 'ts.name as station_name, ts.state as station_state, ts.id as station_id, ts.type as station_type';
@@ -36,18 +34,16 @@ class TvStationTimeBeltRatings extends TvRatingsList
             ->when($tv_station_key, function($query) use ($tv_station_key) {
                 $query->where('mpa.tv_station_key', $tv_station_key);
             })
-            ->groupBy('mpa.day', 'mpa.start_time', 'mpa.ext_profile_id');
+            ->groupBy('mpa.tv_station_key', 'mpa.day', 'mpa.start_time', 'mpa.ext_profile_id');
         
         $final_station_cols = 'station_name, station_state, station_id, station_type';
         $query_cols = 'tv_station_key, day, start_time, end_time, SUM(tbl.pop_weight) as total_audience';
         $main_query = DB::query()->fromSub($sub_query, 'tbl')
             ->selectRaw("{$query_cols},{$final_station_cols}")
-            ->groupBy("tbl.day", "tbl.start_time")
+            ->groupBy('tbl.tv_station_key', "tbl.day", "tbl.start_time")
             ->orderBy('total_audience', 'desc');
 
         $timebelt_results = $main_query->get();
-
-        // Log::info(DB::getQueryLog());
 
         $ratings = $this->generateRatings($timebelt_results, $universe_size);
         return collect($ratings);

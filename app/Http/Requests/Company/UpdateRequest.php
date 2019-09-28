@@ -15,7 +15,16 @@ class UpdateRequest extends FormRequest
     {
         return [
             'address' => 'sometimes|required|string',
-            'logo' => 'sometimes|required|url' 
+            'logo' => 'sometimes|required|url',
+            'city' => 'sometimes|required|string',
+            'state' => 'sometimes|required|string',
+            'country' => 'sometimes|required|string',
+            'company_rc' => 'sometimes|required|string',
+            'email' => 'sometimes|required|email',
+            'phone_number' => 'sometimes|required|string',
+            'color' => 'sometimes|required|string',
+            'website' => 'sometimes|required|string',
+
         ];
     }
 }

@@ -17,9 +17,9 @@ Class AmazonS3
             'region' => getenv(self::ENV_REGION),
             'version' => '2006-03-01'
             // 'credentials' => [
-            //     'key' => getenv('AWS_KEY'),
-            //     'secret' => getenv('AWS_SECRET')
-             //]
+            //   'key' => getenv('AWS_KEY'),
+            //   'secret' => getenv('AWS_SECRET')
+             // ]
         ));
 
         return $s3Client;

@@ -8,15 +8,17 @@
     </v-card-title>
     <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="assets" :search="search" :loading="loading" :no-data-text="noDataText" :pagination.sync="pagination">
       <template v-slot:items="props">
-        <td><media-asset-play-video :asset="props.item"></media-asset-play-video></td>
-        <td class="text-xs-left">{{ props.item.client.name }}</td>
-        <td class="text-xs-left">{{ props.item.brand.name }}</td>
-        <td class="text-xs-left">{{ props.item.media_type }}</td>
-        <td class="text-xs-left">{{ props.item.duration }}</td>
-        <td class="text-xs-left">{{ formatDate(props.item.created_at) }}</td>
-        <td class="justify-center layout px-0">
-          <media-asset-delete :asset="props.item"></media-asset-delete>
-        </td>
+        <tr>
+          <td class="text-xs-left" @click="openPlayModal(props.item)">{{ props.item.file_name }}</td>
+          <td class="text-xs-left" @click="openPlayModal(props.item)">{{ props.item.client.name }}</td>
+          <td class="text-xs-left" @click="openPlayModal(props.item)">{{ props.item.brand.name }}</td>
+          <td class="text-xs-left" @click="openPlayModal(props.item)">{{ props.item.media_type }}</td>
+          <td class="text-xs-left" @click="openPlayModal(props.item)">{{ props.item.duration }}</td>
+          <td class="text-xs-left" @click="openPlayModal(props.item)">{{ formatDate(props.item.created_at) }}</td>
+          <td class="justify-center layout px-0">
+            <media-asset-delete :asset="props.item"></media-asset-delete>
+          </td>
+        </tr>
       </template>
       <template v-slot:no-results>
         <v-alert :value="true" color="error" icon="warning">
@@ -24,6 +26,7 @@
         </v-alert>
       </template>
     </v-data-table>
+    <media-asset-play-video :asset="currentAsset"></media-asset-play-video>
   </v-card>
 </template>
 
@@ -46,7 +49,8 @@
         },
         loading: true,
         noDataText: 'Processing',
-        assets: []
+        assets: [],
+        currentAsset : {}
       }
     },
     created() {
@@ -80,7 +84,20 @@
               this.assets = [];
               this.sweet_alert('An unknown error has occurred, assets cannot be retrieved. Please try again', 'error');
           });
+        },
+        openPlayModal : function(asset) {
+          this.currentAsset = asset
+          Event.$emit('play-modal', true)
         }
     }
   }
 </script>
+<style>
+    tbody tr:hover {
+        background-color: transparent !important;
+        cursor: pointer;
+    }
+    tbody:hover {
+    background-color: rgba(0, 0, 0, 0.12);
+    }
+</style>

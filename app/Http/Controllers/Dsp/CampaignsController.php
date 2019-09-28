@@ -2,7 +2,6 @@
 
 namespace Vanguard\Http\Controllers\Dsp;
 
-use Hash;
 use Illuminate\Http\Request;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Libraries\CampaignDate;
@@ -16,18 +15,13 @@ use Vanguard\Http\Requests\UpdateMpoTimeBeltRequest;
 use Vanguard\Http\Controllers\Traits\CompanyIdTrait;
 use Vanguard\Http\Requests\StoreCampaignMpoAdslotRequest;
 use Vanguard\Services\Mpo\GetCampaignTimeBelt;
-use Vanguard\Services\Mpo\ExcelMpoExport;
 use Vanguard\Services\Mpo\UpdateTimeBeltService;
 use Vanguard\Events\Dsp\CampaignMpoTimeBeltUpdated;
 use Vanguard\Http\Requests\AssociateFileToAdslotRequest;
-use Vanguard\Http\Requests\GenerateCampaignMpoRequest;
-use Vanguard\Http\Resources\CampaignMpoResource;
 use Vanguard\Http\Resources\CampaignResource;
 use Vanguard\Models\AdVendor;
 use Vanguard\Models\CampaignMpo;
 use Vanguard\Models\CampaignTimeBelt;
-use Vanguard\Models\TvStation;
-use Vanguard\Services\Mpo\StoreMpoService;
 use Vanguard\Services\Mpo\StoreTimeBeltService;
 
 class CampaignsController extends Controller
@@ -63,6 +57,7 @@ class CampaignsController extends Controller
         $campaign_files = (new GetCampaignTimeBelt($campaign_details->id))->run();
         $time_belt_range = $this->splitTimeRangeByBase('00:00:00', '23:59:59', '15');
         $ad_vendors = AdVendor::with('publishers')->where('company_id', $company_id)->get();
+        $campaign_details = new CampaignResource($campaign_details);
         return view('agency.campaigns.new_campaign_details', 
         compact('campaign_details', 'client_media_assets', 'campaign_files', 'time_belt_range', 'ad_vendors'));
     }
@@ -72,56 +67,12 @@ class CampaignsController extends Controller
         return (new CampaignDetails($id, $group))->run();
     }
 
-    public function generateMpo(GenerateCampaignMpoRequest $request, $campaign_id)
-    {
-        $campaign = Campaign::findOrFail($campaign_id);
-        $this->authorize('update', $campaign);
-
-        $validated = $request->validated();
-
-        // //get the last mpo
-        // $last_mpo = $campaign->campaign_mpos->last();
-        // //convert the adslot to array
-        // $last_adslot_array = json_decode($last_mpo->adslots, true);
-        // //sort the adslot with duration is ascending order
-        // $sorted_adslots = $this->sortAdslot($last_adslot_array);
-        // //hash last mpo
-        // $hashed_adslot = Hash::make(json_encode($sorted_adslots));
-        // //sort incoming adslots
-        // $sort_incoming_adslot = $this->sortAdslot($validated['adslots']);
-        // //compare the two hashes
-        // // dd(json_encode($sorted_adslots), json_encode($sort_incoming_adslot));
-        // dd(Hash::check(json_encode($sort_incoming_adslot), $hashed_adslot));
-        // if(Hash::check(json_encode($sort_incoming_adslot), $hashed_adslot)){
-        //     return 'exists';
-        // }
-
-        //generate mpo
-        (new StoreMpoService($validated, $campaign_id))->run();
-
-        return $this->listMpos($campaign_id);   
-    }
-
     private function sortAdslot($adslots)
     {
         array_multisort(array_map(function($element) {
             return $element['duration'];
         }, $adslots), SORT_ASC, $adslots);
         return $adslots;
-    }
-
-    public function exportMpoAsExcel($campaign_id, $mpo_id)
-    {
-        return (new ExcelMpoExport($mpo_id))->run();
-    }
-
-    public function listMpos($campaign_id)
-    {
-        $mpos = CampaignMpo::with('vendor.contacts')->where('campaign_id', $campaign_id)
-                            ->where('ad_vendor_id', '<>', '')
-                            ->latest()->get()
-                            ->unique('ad_vendor_id');
-        return CampaignMpoResource::collection($mpos);
     }
 
     public function associateAssetsToAdslot(AssociateFileToAdslotRequest $request, $campaign_id)

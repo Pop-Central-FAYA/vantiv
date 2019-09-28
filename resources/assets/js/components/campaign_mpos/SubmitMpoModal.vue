@@ -27,7 +27,10 @@
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn color="red" class="default-vue-btn" dark @click="dialog = false">Close</v-btn>
-                    <v-btn color="green" class="default-vue-btn" dark @click="submitToVendor()"> Submit</v-btn>
+                    <v-btn color="green" class="default-vue-btn" dark @click="submitToVendor()"> 
+                        <span v-if="status === 'accepted'">Re Submit</span>
+                        <span v-else > Submit</span>  
+                    </v-btn>
                 </v-card-actions>
             </v-card>
             
@@ -46,6 +49,7 @@ export default {
         return {
             dialog: false,
             shareLink : {},
+            status : this.mpo.status.toLowerCase()
         }
     },
     mounted() {
@@ -59,7 +63,7 @@ export default {
         getShareLink : function() {
             axios({
                 method: 'get',
-                url: `/mpos/${this.mpo.id}/share-links`
+                url: `/api/mpos/${this.mpo.id}/share-links`
             }).then((res) => {
                 let result = res.data.data;
                 if (result != null) {
@@ -81,7 +85,7 @@ export default {
         addShareLink : function () {
             axios({
                 method: 'POST',
-                url: `/mpos/${this.mpo.id}/share-links`,
+                url: `/api/mpos/${this.mpo.id}/share-links`,
                 data: {}
             }).then((res) => {
                 if (res.data.status === 'success') {
@@ -97,7 +101,7 @@ export default {
         submit : function(url) {
             axios({
                 method: 'POST',
-                url: `/mpos/${this.mpo.id}/submit`,
+                url: `/api/mpos/${this.mpo.id}/submit`,
                 data: {url : url, email : this.mpo.email}
             }).then((res) => {
                 if (res.data.status === 'success') {

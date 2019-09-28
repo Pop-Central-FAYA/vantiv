@@ -115,18 +115,18 @@
         },
         data () {
             return {
-                group_adslot : 'ad_vendor_id',
+                group_adslot : 'publisher_id',
                 search: '',
                 pagination: {
                     rowsPerPage: 10
                 },
                 campaignGroupTimeBeltsData : this.groupedCampaignTimeBelts,
                 group_parameter : [{
-                                    'id' : 'ad_vendor_id',
-                                    'name' : 'Vendor'
-                                },{
                                     'id' : 'publisher_id',
                                     'name' : 'Publisher'
+                                },{
+                                    'id' : 'ad_vendor_id',
+                                    'name' : 'Vendor'
                                 }],
             }
         },
@@ -169,6 +169,13 @@
             },
             generateMpo : function (group_time_belt) {
                 this.sweet_alert('Processing...', 'info');
+                var found = group_time_belt.time_belts.find(function(time_belt) {
+                    return time_belt.asset_id === '' || time_belt.asset_id === null
+                })
+                if(found) {
+                    this.sweet_alert('Please attach assets to all your slots', 'error')
+                    return
+                }
                 axios({
                     method: 'POST',
                     url: `/campaigns/${this.campaignId}/mpos`,

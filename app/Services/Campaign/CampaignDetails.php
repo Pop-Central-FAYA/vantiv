@@ -14,7 +14,7 @@ class CampaignDetails
     public function __construct($campaign_id, $group_parameter = null)
     {
         $this->campaign_id = $campaign_id;
-        $this->group_parameter = $group_parameter === 'publisher_id' ? 'publisher_id' : 'ad_vendor_id';
+        $this->group_parameter = $group_parameter === 'ad_vendor_id' ? 'ad_vendor_id' : 'publisher_id';
     }
 
     public function run()
@@ -68,6 +68,7 @@ class CampaignDetails
             $campaign->age_groups = $age_groups_str;
         }
         $campaign['grouped_time_belts'] = $this->groupTimeBelts($campaign);
+        
         return $campaign;
     }
 

@@ -9,13 +9,17 @@
         <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="mposData" :search="search" :pagination.sync="pagination" item-key="station" expand :show-expand="true">
         <template v-slot:items="props">
             <tr>
-                <td @click="props.expanded = !props.expanded">
+                <td @click="getMpo(props.item.links.details)">
                     <a class="default-vue-link">{{ props.item.vendor }}</a>
                 </td>
-                <td @click="props.expanded = !props.expanded" class="text-xs-left">{{ format_audience(props.item.net_total) }}</td> 
-                <td @click="props.expanded = !props.expanded" 
+                <td @click="getMpo(props.item.links.details)" class="text-xs-left">{{ format_audience(props.item.net_total) }}</td> 
+                <td @click="getMpo(props.item.links.details)" 
                     class="text-xs-left"
                     >{{ props.item.insertions }}</td>
+                <td @click="getMpo(props.item.links.details)" 
+                    class="text-xs-left transform"
+                    :style="{ 'color' : statusColor(props.item.status)}"
+                    >{{ props.item.status }}</td>    
                 <td class="justify-center layout px-0">
                     <v-container grid-list-md class="container-action-btn">
                         <v-layout wrap>
@@ -23,9 +27,9 @@
                                 <v-layout>
                                     <v-tooltip top>
                                         <template v-slot:activator="{ on }">
-                                            <v-icon color="#01c4ca" v-on="on" dark left @click="exportMpo(props.item.id)">fa-file-excel</v-icon>
+                                            <v-icon color="#01c4ca" v-on="on" dark left @click="getMpo(props.item.links.details)">fa-file-excel</v-icon>
                                         </template>
-                                        <span>Export MPO</span>
+                                        <span>Preview Mpo</span>
                                     </v-tooltip>
                                 </v-layout>
                             </v-flex>
@@ -62,7 +66,7 @@
         props : {
             client: String,
             brand: String,
-            campaignId : String
+            campaign : Object
         },
         data () {
             return {
@@ -71,6 +75,7 @@
                     { text: 'Vendor', align: 'left', value: 'vendor',  width: '30%' },
                     { text: 'Net Total (₦)', value: 'net_total',  width: '20%' },
                     { text: 'Exposures', value: 'insertions', width: '15%' },
+                    { text: 'Status', value: 'status', width : '15%'},
                     { text: 'Actions', value: 'name', sortable: false , width: '15%'}
                 ],
                 pagination: {
@@ -87,15 +92,28 @@
             })
         },
         methods : {
-            exportMpo : function(mpo_id) {
-                var msg = "Generating Excel Document, Please wait";
+            statusColor : function(status) {
+                var status = status.toLowerCase()
+                switch (status) {
+                    case 'accepted':
+                        return 'green'
+                        break;
+                    case 'submitted':
+                        return 'orange'
+                        break;
+                    default :
+                        return 'grey'
+                }
+            },
+            getMpo : function(details_link) {
+                var msg = "Generating document for preview, Please wait";
                 this.sweet_alert(msg, 'info');
-                window.location = `/campaigns/${this.campaignId}/mpos/${mpo_id}/export`
+                window.location = details_link
             },
             fetchMpo : function() {
                 axios({
                     method: 'get',
-                    url: `/campaigns/${this.campaignId}/mpos`
+                    url: this.campaign.links.mpos
                 }).then((res) => {
                     this.mposData = res.data.data
                 }).catch((error) => {
@@ -112,6 +130,9 @@
     }
     tbody:hover {
     background-color: rgba(0, 0, 0, 0.12);
+    }
+    .transform {
+        text-transform: capitalize
     }
 </style>
 

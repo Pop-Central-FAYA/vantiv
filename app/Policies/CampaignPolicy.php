@@ -41,6 +41,11 @@ class CampaignPolicy
         return $this->belongsToUserCompany($user, $campaign);
     }
 
+    public function details(User $user, Campaign $campaign)
+    {
+        return $this->belongsToUserCompany($user, $campaign);
+    }
+
     public function store(User $user, Campaign $campaign)
     {
         return $this->belongsToUserCompany($user, $campaign);

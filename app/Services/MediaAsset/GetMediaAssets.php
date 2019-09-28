@@ -21,6 +21,7 @@ class GetMediaAssets
         $company_id = Auth::user()->companies->first()->id;
         $media_assets = MediaAsset::with(['client:id,name','brand:id,name'])
             ->where('company_id', $company_id)
+            ->orderBy('created_at', 'desc')
             ->get()
             ->toArray();
         $final_assets = [];

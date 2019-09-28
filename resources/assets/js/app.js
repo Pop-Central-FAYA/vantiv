@@ -70,6 +70,10 @@ Vue.component('media-plan-summary', () => import('./components/media_plan/summar
 Vue.component('media-plan-criteria-form', () => import('./components/media_plan/CriteriaForm.vue'));
 Vue.component('media-plan-list', () => import('./components/media_plan/AllMediaPlans.vue'));
 Vue.component('media-plan-request-approval', () => import('./components/media_plan/summary/RequestApproval'));
+Vue.component('media-plan-summary-sections', () => import('./components/media_plan/summary/SummarySections.vue'));
+Vue.component('media-plan-media-type-summary', () => import('./components/media_plan/summary/MediaTypeSummary.vue'));
+Vue.component('media-plan-media-type-duration-summary', () => import('./components/media_plan/summary/MediaTypeDuration.vue'));
+Vue.component('media-plan-deliverables', () => import('./components/media_plan/Deliverables'));
 
 // CAMPAIGN
 Vue.component('campaign-list', () => import('./components/campaign/AllCampaigns.vue'));
@@ -101,6 +105,15 @@ Vue.component('share-link-modal', () => import('./components/campaign_mpos/Share
 Vue.component('edit-volume-campaign-price', () => import('./components/campaign_mpos/EditVolumePrice.vue'));
 Vue.component('list-campaign-adslot', () => import('./components/campaign/ListCampaignAdslot.vue'));
 Vue.component('list-group-adslot', () => import('./components/campaign/ListGroupAdslot.vue'));
+Vue.component('ad-vendor-mpo-list', () => import('./components/campaign_mpos/VendorMpoList.vue'));
+
+//Preview Mpo
+Vue.component('mpo-details', () => import('./components/mpo/MpoDetails.vue'));
+Vue.component('mpo-header', () => import('./components/mpo/MpoHeader.vue'));
+Vue.component('mpo-summary', () => import('./components/mpo/MpoSummary.vue'));
+Vue.component('mpo-time-belts', () => import('./components/mpo/MpoTimeBelts.vue'));
+Vue.component('mpo-terms', () => import('./components/mpo/MpoTerms.vue'));
+Vue.component('mpo-action', () => import('./components/mpo/MpoAction.vue'));
 
 // AD VENDOR MANAGEMENT
 Vue.component('ad-vendor-list', () => import('./components/ad_vendors/VendorList.vue'));
@@ -110,7 +123,8 @@ Vue.component('ad-vendor-publisher-list', () => import('./components/ad_vendors/
 Vue.component('ad-vendor-details', () => import('./components/ad_vendors/VendorDetails.vue'));
 
 // COMPANY MANAGEMENT
-Vue.component('company-index', () => import('./components/company/CompanyIndex.vue'));
+Vue.component('company-details', () => import('./components/company/CompanyDetails.vue'));
+Vue.component('company-edit', () => import('./components/company/EditCompany.vue'));
 
 //CLIENT MANAGEMENT
 Vue.component('clients-list', () => import('./components/client/DisplayClients.vue'));
@@ -129,6 +143,9 @@ Vue.component('brands-edit', () => import('./components/brand/EditBrand.vue'));
 //GUEST
 Vue.component('guest-mpo', () => import('./components/guest/Mpo.vue'));
 Vue.component('guest-adslot-list', () => import('./components/guest/AdslotList.vue'));
+Vue.component('accept-mpo', () => import('./components/guest/AcceptMpo.vue'));
+Vue.component('guest-mpo-details', () => import('./components/guest/MpoDetails.vue'));
+
 
 //Dashboard
 Vue.component('dashboard', () => import('./components/dashboard/DisplayDashboard.vue'));
@@ -207,11 +224,14 @@ Vue.mixin({
         dateToHumanReadable(date) {
             return moment(date).format('MMM DD, YYYY');
         },
+        currentDate(date) {
+            return moment().format('MMM DD, YYYY');
+        },
         dayName (date) {
             return moment(date).format('dddd')
         },
         numberFormat(n) {
-            return new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN' }).format(n);
+            return new Intl.NumberFormat('en-NG').format(n);
         },
         hasPermission(permissionList,search_permission){
             if(typeof search_permission === 'string'){

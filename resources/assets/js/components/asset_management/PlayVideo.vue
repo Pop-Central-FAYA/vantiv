@@ -1,7 +1,7 @@
 <template>
     <v-layout>
-        <v-dialog v-model="dialog" persistent max-width="600px">
-        <template v-slot:activator="{ on }">
+        <v-dialog v-model="playDialog" persistent max-width="600px">
+        <template v-slot:activator="{ on }" v-if="playDialog">
             <a v-on="on" class="default-vue-link">{{ asset.file_name}}</a>
             <v-spacer></v-spacer>
         </template>
@@ -38,17 +38,21 @@
         },
         data() {
             return {
-                dialog: false,
+                playDialog: false,
             };
         },
         mounted() {
             console.log('Play Video Component mounted.');
+            var self = this
+            Event.$on('play-modal', function(modal) {
+                self.playDialog = modal
+            })
         },
         methods: {
             stopVideo() {
                 var video = this.$refs.video; 
                 video.pause(); 
-                this.dialog = false;
+                this.playDialog = false;
             }
         }
     }
