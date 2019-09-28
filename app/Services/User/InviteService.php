@@ -40,13 +40,21 @@ class InviteService implements BaseServiceInterface
             }
             foreach (explode(',', $request->email) as $email) {
                 $invited_user = $this->createUnconfirmedUser($roles, $companies, $email, "web");
+
                 $subject="Invitation to join Vantage";
+
+                
                 $email_format = new MailFormat($invited_user, $inviter_name, $subject);
                 $user_mail_content_array[] = $email_format->emailFormat();
             }
+
+
+
             $new_user = $invited_user;
             $email_invitation_service = new UserInvitationMail($user_mail_content_array);
             $email_invitation_service->sendInvitationMail();  
+
+
         });
         
         return $new_user;

@@ -144,6 +144,7 @@ Vue.component('vantage-header', () => import('./components/partials/Header.vue')
 Vue.component('users-list', () => import('./components/user/UserList.vue'));
 Vue.component('invite-user', () => import('./components/user/CreateUser.vue'));
 Vue.component('edit-user', () => import('./components/user/EditUser.vue'));
+Vue.component('reinvite-user', () => import('./components/user/ReInviteUser.vue'));
 
 
 Vue.mixin({

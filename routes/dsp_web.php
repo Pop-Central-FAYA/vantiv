@@ -248,7 +248,8 @@
             Route::get('/users', 'UsersController@list')->name('user.list');
             Route::get('/users/index', 'UsersController@index')->name('client.index');
             Route::post('/users/invite', 'UsersController@create')->name('user.invite');  
-            Route::patch('/users/{id}', 'UsersController@update')->name('user.update');  
+            Route::patch('/users/{id}', 'UsersController@update')->name('user.update'); 
+            Route::get('/users/invite/{id}', 'UsersController@resend')->name('user.reinvite'); 
          });
 
     });

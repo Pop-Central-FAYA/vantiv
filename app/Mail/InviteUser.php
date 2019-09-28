@@ -10,17 +10,15 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 class InviteUser extends Mailable
 {
     use Queueable, SerializesModels;
-    protected $inviter_name;
-    protected $user;
+    protected $user_mail_content_array;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($inviter_name, $user)
+    public function __construct($user_mail_content_array)
     {
-        $this->inviter_name = $inviter_name;
-        $this->user = $user;
+        $this->user_mail_content_array = $user_mail_content_array;
     }
 
     /**
@@ -31,7 +29,6 @@ class InviteUser extends Mailable
     public function build()
     {
         return $this->view('mail.invite_user')
-                    ->with('inviter_name', $this->inviter_name)
-                    ->with('user', $this->user);
+                    ->with('user_mail_content', $this->user_mail_content_array);
     }
 }

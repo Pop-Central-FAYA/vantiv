@@ -7,22 +7,26 @@
       <v-text-field v-model="search" append-icon="search" label="Enter Keyword" single-line hide-details></v-text-field>
     </v-card-title>
      <edit-user :roles="roles" :permissionList="permissionList"></edit-user>
+      <reinvite-user :roles="roles" :permissionList="permissionList"></reinvite-user>
     <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="users" :loading="loading" :search="search" :no-data-text="noDataText" :pagination.sync="pagination">
       <template v-slot:items="props">
         <tr>
-            <td @click="showClientDetails(props.item.id)" class="text-xs-left" >{{ props.item.name }}</td>
-            <td @click="showClientDetails(props.item.id)" class="text-xs-left">{{ props.item.email }}</td>
-            <td @click="showClientDetails(props.item.id)" class="text-xs-left"><span v-for="(list, index) in props.item.roles" v-bind:key="index"> <span>{{list}}</span> <span v-if="index+1 < props.item.roles.length">, </span>  </span>     </td>
-            <td @click="showClientDetails(props.item.id)" class="text-xs-left">{{ props.item.status}}</td>
-            <td @click="showClientDetails(props.item.id)" class="text-xs-left">{{ dateToHumanReadable(props.item.created_at.date) }}</td>
-            <td class="justify-center layout px-0">
+            <td class="text-xs-left clickable" >{{ props.item.name }}</td>
+            <td class="text-xs-left clickable">{{ props.item.email }}</td>
+            <td class="text-xs-left clickable"><span v-for="(list, index) in props.item.roles" v-bind:key="index"> <span>{{list}}</span> <span v-if="index+1 < props.item.roles.length">, </span>  </span>     </td>
+            <td class="text-xs-left">
+               <span v-if="props.item.status== 'Active'" > {{ props.item.status}} </span>
+               <span v-else> <a @click="showResend(props.item)"  class="default-vue-link">{{ props.item.status}} </a>  </span>
+            </td>
+            <td class="text-xs-left clickable">{{ dateToHumanReadable(props.item.created_at.date) }}</td>
+            <td class="justify-center layout px-0 ">
                <v-tooltip top>
                     <template v-slot:activator="{on}">
                        <v-icon  v-on="on" @click="showEditUser(props.item)" color="#44C1C9" v-b-tooltip.hover title="Edit client" dark right>edit</v-icon>
                      </template>
                     <span>Edit the vendor information</span>
                 </v-tooltip>
-            
+
              </td>
         </tr>
       </template>
@@ -43,6 +47,9 @@
   tbody:hover {
     background-color: rgba(0, 0, 0, 0.12);
   }
+  table.v-table tbody tr td.clickable {
+    pointer-events: none;
+}
 </style>
 
 <script>
@@ -98,9 +105,9 @@
         showEditUser(idx, item) {
           Event.$emit('edit-user', idx, item);
         },
-        showClientDetails(id){
-            var url= '/clients/'+id+'/details/';
-             window.location = url;
+        showResend(idx, item){
+           Event.$emit('reinvite-user', idx, item);
+            
         }
         
     }

@@ -14,6 +14,8 @@ use Illuminate\Http\Request;
 use Vanguard\Services\RolesPermission\ListRoleGroup;
 use Vanguard\Http\Requests\User\UpdateUserRequest;
 use Vanguard\Services\User\UpdateService;
+use Vanguard\Services\User\ReinviteService;
+use Vanguard\User;
 class UsersController extends Controller
 {
     use CompanyIdTrait;
@@ -76,6 +78,15 @@ class UsersController extends Controller
         $update_user_service = new UpdateService($validated, $this->companyId(), $id, 'web');
         $updated_user = $update_user_service->run();
         return new UserResource($updated_user);
+    }
+
+    public function resend($id)
+    {
+        $user = User::findOrFail($id);
+        $subject="Invitation to join Vantage";
+        $reinvite = new ReinviteService($user, $subject);
+        $user_reinvite = $reinvite->run();        
+        return  $user_reinvite; 
     }
 
    
