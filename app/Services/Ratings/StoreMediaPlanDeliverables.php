@@ -147,13 +147,13 @@ class StoreMediaPlanDeliverables implements BaseServiceInterface
             ->join('mps_profile_activities as mpa', 'mpa.ext_profile_id', '=', 'mps_profiles.ext_profile_id')
             ->groupBy('mps_profiles.ext_profile_id')
             ->where(function($query) {
-                $query->orWhere(function($sub) {
-                    foreach ($this->suggestions as $item) {
+                foreach ($this->suggestions as $item) {
+                    $query->orWhere(function($sub) use ($item) {
                         $sub->where('mpa.tv_station_id', $item['station_id'])
                             ->where('mpa.day', TimeBelt::shortenDay($item['day']))
                             ->where('mpa.start_time', $item['start_time']);
-                    }
-                });
+                    });
+                }
             });
         
         return round(DB::query()->fromSub($sub_query, 'tbl')->sum('pop_weight'));
