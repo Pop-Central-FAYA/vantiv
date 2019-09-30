@@ -99,8 +99,6 @@
                     dayObj[idx] = day;
                 });
                 return dayObj;
-                // let graphDetailsFoundDays = Object.keys(this.graphDetails);
-                // return this.graphDays.filter(f => graphDetailsFoundDays.includes(f));
             }
         },
         mounted() {
@@ -110,7 +108,8 @@
             var self = this;
             //Render the table whenever suggestions is updated
             Event.$on('ratings-created', function (data) {
-                self.graphDetails = {}
+                self.graphDetails = {};
+                self.chartOptions.series = [];
             });
         },
         methods: {
