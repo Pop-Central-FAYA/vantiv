@@ -6,8 +6,9 @@
       <v-spacer></v-spacer>
       <v-text-field v-model="search" append-icon="search" label="Enter Keyword" single-line hide-details></v-text-field>
     </v-card-title>
-     <edit-user :roles="roles" :permissionList="permissionList"></edit-user>
-      <reinvite-user :roles="roles" :permissionList="permissionList"></reinvite-user>
+    <edit-user :roles="roles" :permissionList="permissionList"></edit-user>
+    <reinvite-user :roles="roles" :permissionList="permissionList"></reinvite-user>
+    <delete-user :roles="roles" :permissionList="permissionList"></delete-user>
     <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="users" :loading="loading" :search="search" :no-data-text="noDataText" :pagination.sync="pagination">
       <template v-slot:items="props">
         <tr>
@@ -19,12 +20,18 @@
                <span v-else> <a @click="showResend(props.item)"  class="default-vue-link">{{ props.item.status}} </a>  </span>
             </td>
             <td class="text-xs-left clickable">{{ dateToHumanReadable(props.item.created_at.date) }}</td>
-            <td class="justify-center layout px-0 ">
+            <td class="justify-lefr layout px-0 ">
                <v-tooltip top>
                     <template v-slot:activator="{on}">
                        <v-icon  v-on="on" @click="showEditUser(props.item)" color="#44C1C9" v-b-tooltip.hover title="Edit client" dark right>edit</v-icon>
                      </template>
-                    <span>Edit the vendor information</span>
+                    <span>Edit the user information</span>
+                </v-tooltip>
+                  <v-tooltip top v-if="props.item.status== 'Unconfirmed'">
+                    <template v-slot:activator="{on}">
+                       <v-icon  v-on="on" @click="showDeleteUser(props.item)" color="red" v-b-tooltip.hover title="Edit client" dark right>delete</v-icon>
+                     </template>
+                    <span>Edit the user information</span>
                 </v-tooltip>
 
              </td>
@@ -106,9 +113,11 @@
           Event.$emit('edit-user', idx, item);
         },
         showResend(idx, item){
-           Event.$emit('reinvite-user', idx, item);
-            
-        }
+           Event.$emit('reinvite-user', idx, item); 
+        },
+         showDeleteUser(idx, item) {
+          Event.$emit('delete-user', idx, item);
+        },
         
     }
   }

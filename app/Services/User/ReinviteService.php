@@ -32,11 +32,5 @@ class ReinviteService implements BaseServiceInterface
         $user_mail_content_array = $email_format->run();
         $send_mail = \Mail::to($user_mail_content_array['recipient'])->send(new InviteUser($user_mail_content_array));
         return $this->user;
-    }
-
-   
+    }   
 }
-
-
-
-

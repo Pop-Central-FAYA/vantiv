@@ -89,5 +89,11 @@ class UsersController extends Controller
         return  $user_reinvite; 
     }
 
+    public function delete($id)
+    {
+        $user = User::findOrFail($id);
+        $user->delete();
+        return ['status'=>"success", 'message'=> "User deleted successfully"];
+    }
    
 }
