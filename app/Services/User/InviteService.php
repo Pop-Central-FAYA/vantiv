@@ -1,16 +1,11 @@
 <?php
 
 namespace Vanguard\Services\User;
-
 use Vanguard\Services\BaseServiceInterface;
-use Vanguard\Services\Mail\UserInvitationMail;
-use Vanguard\Services\Mail\MailFormat;
 use DB;
 use Vanguard\Support\Enum\UserStatus;
 use Vanguard\User;
 use Illuminate\Support\Arr;
-
-
 use Vanguard\Services\Mail\InviteUserMailFormat;
 use Vanguard\Mail\InviteUser;
 
@@ -37,13 +32,13 @@ class InviteService implements BaseServiceInterface
     public function processInvite()
     {
         $inviter_name = \Auth::user()->full_name;
-        $new_user = '';
+         $new_user = '';
         \DB::transaction(function () use ($inviter_name) {
             $roles = Arr::pluck($this->data['roles'], 'role');
             foreach (explode(',', $this->data['email']) as $email) {
                 $invited_user = $this->createUnconfirmedUser($roles, $this->companies_id, $email, $this->guard);
                 $send_mail = \Mail::to($email)->send(new InviteUser($invited_user, $inviter_name, $this->subject));
-            }
+             }
             $new_user = $invited_user;
         });
         return $new_user;

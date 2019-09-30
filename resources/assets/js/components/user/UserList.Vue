@@ -24,18 +24,18 @@
                      </template>
                     <span>Edit the user information</span>
                 </v-tooltip>
-                  <v-tooltip top v-if="props.item.status== 'Unconfirmed'">
-                    <template v-slot:activator="{on}">
-                       <v-icon  v-on="on" @click="showDeleteUser(props.item)" color="red" v-b-tooltip.hover title="Delete user" dark right>delete</v-icon>
-                     </template>
-                    <span>Edit the user information</span>
-                </v-tooltip>
                    <v-tooltip top v-if="props.item.status== 'Unconfirmed'">
                     <template v-slot:activator="{on}">
                        <v-icon  v-on="on" @click="showResend(props.item)" color="#44C1C9" v-b-tooltip.hover title="Resend invitation" dark right>send</v-icon>
                      </template>
                     <span>Edit the user information</span>
                    </v-tooltip>
+                     <v-tooltip top v-if="props.item.status== 'Unconfirmed'">
+                    <template v-slot:activator="{on}">
+                       <v-icon  v-on="on" @click="showDeleteUser(props.item)" color="red" v-b-tooltip.hover title="Delete user" dark right>delete</v-icon>
+                     </template>
+                    <span>Edit the user information</span>
+                </v-tooltip>
 
              </td>
         </tr>

@@ -6,8 +6,6 @@ use Vanguard\Http\Controllers\Controller;
 use Vanguard\Http\Controllers\Traits\CompanyIdTrait;
 use Vanguard\Http\Requests\User\UserInviteRequest;
 use Vanguard\Services\User\InviteService;
-use Vanguard\Http\Requests\User\ListRequest;
-use Vanguard\Services\User\UserListService;
 use Vanguard\Http\Resources\UserResource;
 use Vanguard\Http\Resources\UserCollection;
 use Illuminate\Http\Request;
@@ -37,7 +35,8 @@ class UsersController extends Controller
     {    
         $role_list_services = new ListRoleGroup('dsp');
         $roles = $role_list_services->getRoles();
-        $urls = ['list' => route('users.list'),
+        $urls = [
+                 'list' => route('users.list'),
                  'create' => route('users.invite')
                 ];
         return view('agency.user.index')
@@ -76,14 +75,14 @@ class UsersController extends Controller
     }
 
      /**
-     * UserInviteRequest $request
+     * Update the user
      */
     
     public function update(UpdateUserRequest $request, $id)
     {
         $validated = $request->validated(); 
         $user = User::findOrFail($id);
-        $this->authorize('get', $user);
+        $this->authorize('update', $user);
         $update_user_service = new UpdateService($validated, $this->companyId(), $id, 'web');
         $updated_user = $update_user_service->run();
         return new UserResource($updated_user);
@@ -92,7 +91,7 @@ class UsersController extends Controller
     public function resend($id)
     {
         $user = User::findOrFail($id);
-        $this->authorize('get', $user);
+        $this->authorize('update', $user);
         $reinvite = new ReinviteService($user, self::EMAIL_SUBJECT);
         $user_reinvite = $reinvite->run();        
         return  $user_reinvite; 
@@ -101,7 +100,7 @@ class UsersController extends Controller
     public function delete($id)
     {
         $user = User::findOrFail($id);
-        $this->authorize('get', $user);
+        $this->authorize('delete', $user);
         $user->delete();
         return ['status'=>"success", 'message'=> "User deleted successfully"];
     }

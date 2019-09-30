@@ -41,4 +41,8 @@ class UserPolicy
     {
        return $this->belongsToCompany($user, $active_user);
     }
+    public function delete(User $user, User $active_user)
+    {
+       return $this->belongsToCompany($user, $active_user);
+    }
 }
