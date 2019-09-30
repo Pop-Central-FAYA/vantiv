@@ -8,28 +8,31 @@
                         <v-form>
                             <v-subheader>Delete User</v-subheader>
                             <v-divider></v-divider>
-                            <v-layout wrap>
-                                <v-flex xs12 sm12 md12>
-                                     <p  class="weight_medium text-xs-left">
-                                     Are you sure you want to delete
-                                     </p>
-                                     <p class="weight_medium text-xs-left">
-                                      {{ user.email }}
-                                     </p>
-                                  </v-flex>
-                                      </v-layout>
+                            <v-layout row wrap>
+                                 <v-flex xs12 sm12 md12>
+                                    <v-text-field required :clearable="true"  :label="'Email'" 
+                                                :placeholder="'Email'" :hint="'Enter the email of the user'" 
+                                                :single-line="true"
+                                                solo
+                                                v-validate="'required|email'"
+                                                :error-messages="errors.collect('email')"
+                                                v-model="user.email"
+                                                data-vv-name="email"
+                                                disabled>
+                                    </v-text-field>
+                                </v-flex>
+                            </v-layout>
                         </v-form>
                         <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn color="red" dark @click="closeDialog()">Close</v-btn>
-                    <v-btn color="" class="default-vue-btn" dark @click="updateUser()">Delete</v-btn>
+                    <v-btn color="" class="default-vue-btn" dark @click="deletUser()">Delete</v-btn>
                     </v-card-actions>
                     </v-container>
                 </v-card-text>
             </v-card>
         </v-dialog>
 </template>
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style>
       .v-text-field .v-input__slot {
         padding: 0px 12px;
@@ -40,11 +43,6 @@
     }
     .v-text-field>.v-input__control>.v-input__slot:after, .v-text-field>.v-input__control>.v-input__slot:before {
         content: none;
-    }
-      .multiselect__tags {
-        min-height: 45px;
-        border: 1px solid #ccc;
-        margin-top: 16px;
     }
   
 </style>
@@ -85,15 +83,15 @@
                 this.user = item;
                 this.dialog = true;
             },
-            updateUser: async function(event) {
+            deletUser: async function(event) {
                 if(this.hasPermissionAction(this.permissionList, ['update.user'])){
-                     this.sweet_alert('Saving user information', 'info');
+                     this.sweet_alert('deleting user information', 'info');
                     axios({
                         method: 'delete',
-                        url: '/users/'+this.user.id,
+                        url: this.user.links.delete,
                     }).then((res) => {
                         this.dialog = false;
-                        Event.$emit('user-created', res.data.data);
+                        Event.$emit('user-created', "success");
                         this.sweet_alert('User deleted successfully', 'success');
                     }).catch((error) => {
                         if (error.response && (error.response.status == 422)) {

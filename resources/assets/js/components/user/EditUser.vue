@@ -6,17 +6,10 @@
                 <v-card-text>
                     <v-container grid-list-md>
                         <v-form>
-                            <v-subheader>User Information</v-subheader>
+                            <v-subheader>Update user</v-subheader>
                             <v-divider></v-divider>
-                            <v-layout wrap>
-                                <v-flex xs12 sm3 md3>
-                                     <p class="weight_medium">
-                                      {{ user.name }}
-                                     </p>
-                                  </v-flex>
-                                      </v-layout>
                              <v-layout row wrap>
-                                   <v-flex xs12 sm12 md12>
+                                 <v-flex xs12 sm12 md12>
                                     <v-text-field required :clearable="true"  :label="'Email'" 
                                                 :placeholder="'Email'" :hint="'Enter the email of the user'" 
                                                 :single-line="true"
@@ -115,7 +108,7 @@
                 this.dialog = true;
             },
             updateUser: async function(event) {
-                if(this.hasPermissionAction(this.permissionList, ['update.user'])){
+               if(this.hasPermissionAction(this.permissionList, ['update.user'])){
                     // Validate inputs using vee-validate plugin 
                     let isValid = await this.$validator.validate().then(valid => {
                         if (!valid) {
@@ -128,23 +121,25 @@
                     if (!isValid) {
                         return false;
                     } 
+                    console.log(this.user.links.index);
+                    
                      this.sweet_alert('Saving user information', 'info');
                     axios({
                         method: 'patch',
-                        url: '/users/'+this.user.id,
+                        url: this.user.links.update,
                         data:  this.user
                     }).then((res) => {
                         this.dialog = false;
-                        Event.$emit('user-created', res.data.data);
+                        Event.$emit('user-created', "success");
+                        this.setupModel()
                         this.sweet_alert('User updated successfully', 'success');
                     }).catch((error) => {
                         if (error.response && (error.response.status == 422)) {
                             this.displayServerValidationErrors(error.response.data.errors);
                         } else {
-                            this.sweet_alert('An unknown error has occurred, vendor cannot be created. Please try again', 'error');
+                            this.sweet_alert('An unknown error has occurred. Please try again', 'error');
                         }
                     });
-
                 }
             },
              closeDialog: function() {

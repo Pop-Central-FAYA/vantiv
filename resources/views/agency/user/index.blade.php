@@ -19,6 +19,7 @@
                     <div class="col-md-2 text-right px-2">
                         <invite-user  
                                 :roles="{{ json_encode($roles) }}"
+                                :routes="{{ json_encode($url) }}" 
                                 :permission-list="{{ json_encode(Auth::user()->getAllPermissions()->pluck('name')) }}">
                         ></invite-user>
                     </div>
@@ -33,6 +34,7 @@
                                     <v-content>
                                        <users-list 
                                             :roles="{{ json_encode($roles) }}"
+                                            :routes="{{ json_encode($url) }}" 
                                             :permission-list="{{ json_encode(Auth::user()->getAllPermissions()->pluck('name')) }}">
                                      </users-list>
                                     </v-content>

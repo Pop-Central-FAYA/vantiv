@@ -8,13 +8,20 @@
                         <v-form>
                             <v-subheader>Resend Invitation</v-subheader>
                             <v-divider></v-divider>
-                            <v-layout wrap>
-                                <v-flex xs12 sm3 md3>
-                                     <p class="weight_medium">
-                                      {{ user.email }}
-                                     </p>
-                                  </v-flex>
-                                      </v-layout>
+                             <v-layout row wrap>
+                                 <v-flex xs12 sm12 md12>
+                                    <v-text-field required :clearable="true"  :label="'Email'" 
+                                                :placeholder="'Email'" :hint="'Enter the email of the user'" 
+                                                :single-line="true"
+                                                solo
+                                                v-validate="'required|email'"
+                                                :error-messages="errors.collect('email')"
+                                                v-model="user.email"
+                                                data-vv-name="email"
+                                                disabled>
+                                    </v-text-field>
+                                </v-flex>
+                            </v-layout>
                         </v-form>
                         <v-card-actions>
                     <v-spacer></v-spacer>
@@ -26,7 +33,6 @@
             </v-card>
         </v-dialog>
 </template>
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style>
       .v-text-field .v-input__slot {
         padding: 0px 12px;
@@ -37,11 +43,6 @@
     }
     .v-text-field>.v-input__control>.v-input__slot:after, .v-text-field>.v-input__control>.v-input__slot:before {
         content: none;
-    }
-      .multiselect__tags {
-        min-height: 45px;
-        border: 1px solid #ccc;
-        margin-top: 16px;
     }
   
 </style>
@@ -56,8 +57,7 @@
             return {
                 role:'',
                 dialog: false,
-                user: this.setupModel(),
-
+               user: {},
             };
         },
          created() {
@@ -70,14 +70,6 @@
             console.log('reinvite user Component mounted.');
         },
         methods:{
-            setupModel: function() {
-                return {
-                            role_name: [],
-                            email: '',
-                            name: '',
-                            id: ''
-                         }  
-             },
             openDialog: function(item) {
                 this.user = item;
                 this.dialog = true;
@@ -87,11 +79,11 @@
                      this.sweet_alert('Saving user information', 'info');
                     axios({
                         method: 'get',
-                        url: '/users/invite/'+this.user.id,
+                        url: this.user.links.reinvite,
                     }).then((res) => {
                         this.dialog = false;
                         Event.$emit('user-created', res.data.data);
-                        this.sweet_alert('User updated successfully', 'success');
+                        this.sweet_alert('Invite sent successfully', 'success');
                     }).catch((error) => {
                         if (error.response && (error.response.status == 422)) {
                             this.displayServerValidationErrors(error.response.data.errors);

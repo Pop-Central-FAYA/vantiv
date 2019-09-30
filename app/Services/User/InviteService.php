@@ -8,6 +8,7 @@ use Vanguard\Services\Mail\MailFormat;
 use DB;
 use Vanguard\Support\Enum\UserStatus;
 use Vanguard\User;
+use Illuminate\Support\Arr;
 
 
 use Vanguard\Services\Mail\InviteUserMailFormat;
@@ -16,61 +17,44 @@ use Vanguard\Mail\InviteUser;
 class InviteService implements BaseServiceInterface
 {
     protected $companies_id;
-    protected $user_detail;
+    protected $data;
     protected $guard;
+    protected $subject;
     
-    public function __construct($user_detail, $companies_id, $guard)
+    public function __construct($data, $companies_id, $guard, $subject)
     {
-        $this->user_detail = $user_detail;
+        $this->data = $data;
         $this->companies_id = $companies_id;
         $this->guard = $guard;
+        $this->subject = $subject;
     }
 
     public function run()
     {
-        return $this->processInvite($this->user_detail,$this->companies_id, $this->guard);
+        return $this->processInvite();
     }
 
-    public function processInvite($request, $companies, $inviter_name)
+    public function processInvite()
     {
         $inviter_name = \Auth::user()->full_name;
         $new_user = '';
-        \DB::transaction(function () use ($request, $companies, $inviter_name) {
-            $roles = [];
-            foreach($request->roles as $role) {
-                array_push($roles, $role['role']);
-            }
-            foreach (explode(',', $request->email) as $email) {
-                $invited_user = $this->createUnconfirmedUser($roles, $companies, $email, "web");
-                $subject="Invitation to join Vantage";
-                $email_format = new InviteUserMailFormat($invited_user, $inviter_name, $subject);
-                $user_mail_content_array = $email_format->run();
-                $send_mail = \Mail::to($user_mail_content_array['recipient'])->send(new InviteUser($user_mail_content_array));
+        \DB::transaction(function () use ($inviter_name) {
+            $roles = Arr::pluck($this->data['roles'], 'role');
+            foreach (explode(',', $this->data['email']) as $email) {
+                $invited_user = $this->createUnconfirmedUser($roles, $this->companies_id, $email, $this->guard);
+                $send_mail = \Mail::to($email)->send(new InviteUser($invited_user, $inviter_name, $this->subject));
             }
             $new_user = $invited_user;
         });
-        
         return $new_user;
-    }
-
-     private function getCompany($request)
-    {
-        if(isset($request->companies)) {
-            $companies = $request->companies;
-        }else{
-            $companies = \Auth::user()->companies->first()->id;
-        }
-        return $companies;
     }
 
     public function createUnconfirmedUser($roles, $companies, $email, $guard)
     {
-        \DB::transaction(function () use (&$user, $roles, $companies, $email, $guard) {
             $user = $this->createUser($email);
             $user->companies()->attach($companies);
             $user->assignRole($roles, $guard);
-        });
-        return $user;
+            return $user;
     }
 
     private function createUser($email)

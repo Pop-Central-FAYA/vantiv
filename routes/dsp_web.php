@@ -255,12 +255,15 @@
         * new user management route
         */
         Route::group(['namespace' => 'Dsp'], function () {
-            Route::get('/users', 'UsersController@list')->name('user.list');
-            Route::get('/users/index', 'UsersController@index')->name('client.index');
-            Route::post('/users/invite', 'UsersController@create')->name('user.invite');  
-            Route::patch('/users/{id}', 'UsersController@update')->name('user.update'); 
-            Route::get('/users/invite/{id}', 'UsersController@resend')->name('user.reinvite'); 
-            Route::delete('/users/{id}', 'UsersController@delete')->name('user.reinvite'); 
+            Route::get('/users/index', 'UsersController@index')->name('users.index');
+
+            Route::group(['prefix' => 'api'], function () {
+                Route::get('/users', 'UsersController@list')->name('users.list');
+                Route::post('/users', 'UsersController@create')->name('users.invite');  
+                Route::patch('/users/{id}', 'UsersController@update')->name('users.update'); 
+                Route::get('/users/invite/{id}', 'UsersController@resend')->name('users.reinvite'); 
+                Route::delete('/users/{id}', 'UsersController@delete')->name('users.delete'); 
+            });
          });
 
     });

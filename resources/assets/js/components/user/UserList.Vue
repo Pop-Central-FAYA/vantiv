@@ -15,24 +15,27 @@
             <td class="text-xs-left clickable" >{{ props.item.name }}</td>
             <td class="text-xs-left clickable">{{ props.item.email }}</td>
             <td class="text-xs-left clickable"><span v-for="(list, index) in props.item.roles" v-bind:key="index"> <span>{{list}}</span> <span v-if="index+1 < props.item.roles.length">, </span>  </span>     </td>
-            <td class="text-xs-left">
-               <span v-if="props.item.status== 'Active'" > {{ props.item.status}} </span>
-               <span v-else> <a @click="showResend(props.item)"  class="default-vue-link">{{ props.item.status}} </a>  </span>
-            </td>
+            <td class="text-xs-left">{{ props.item.status}} </td>
             <td class="text-xs-left clickable">{{ dateToHumanReadable(props.item.created_at.date) }}</td>
             <td class="justify-lefr layout px-0 ">
                <v-tooltip top>
                     <template v-slot:activator="{on}">
-                       <v-icon  v-on="on" @click="showEditUser(props.item)" color="#44C1C9" v-b-tooltip.hover title="Edit client" dark right>edit</v-icon>
+                       <v-icon  v-on="on" @click="showEditUser(props.item)" color="#44C1C9" v-b-tooltip.hover title="Edit user" dark right>edit</v-icon>
                      </template>
                     <span>Edit the user information</span>
                 </v-tooltip>
                   <v-tooltip top v-if="props.item.status== 'Unconfirmed'">
                     <template v-slot:activator="{on}">
-                       <v-icon  v-on="on" @click="showDeleteUser(props.item)" color="red" v-b-tooltip.hover title="Edit client" dark right>delete</v-icon>
+                       <v-icon  v-on="on" @click="showDeleteUser(props.item)" color="red" v-b-tooltip.hover title="Delete user" dark right>delete</v-icon>
                      </template>
                     <span>Edit the user information</span>
                 </v-tooltip>
+                   <v-tooltip top v-if="props.item.status== 'Unconfirmed'">
+                    <template v-slot:activator="{on}">
+                       <v-icon  v-on="on" @click="showResend(props.item)" color="#44C1C9" v-b-tooltip.hover title="Resend invitation" dark right>send</v-icon>
+                     </template>
+                    <span>Edit the user information</span>
+                   </v-tooltip>
 
              </td>
         </tr>
@@ -63,7 +66,8 @@
   export default {
      props: {
         roles:Array,
-        permissionList:Array
+        permissionList:Array,
+        routes:Object,
         },
     data () {
       return {
@@ -74,7 +78,7 @@
           { text: 'Name', align: 'left', value: 'name' },
           { text: 'Email', value: 'email' },
           { text: 'Role(s)', value: 'roles' },
-          { text: 'Status', value: 'sum_active_campaign' },
+          { text: 'Status', value: 'status' },
           { text: 'Created On', value: 'created_at.date' },
           { text: 'Actions', value: 'name',  sortable: false}
         ],
@@ -93,6 +97,7 @@
         });
     },
     mounted() {
+        console.log(this.routes);
         console.log('Display All client Component mounted.');
          this.getUsers();
     },
@@ -101,7 +106,7 @@
           this.loading = true;
           axios({
               method: 'get',
-              url: '/users'
+              url: this.routes.list
           }).then((res) => {
               this.users = res.data.data;
               console.log(this.users)

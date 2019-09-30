@@ -164,7 +164,6 @@ Vue.component('edit-user', () => import('./components/user/EditUser.vue'));
 Vue.component('reinvite-user', () => import('./components/user/ReInviteUser.vue'));
 Vue.component('delete-user', () => import('./components/user/DeleteUser.vue'));
 
-
 Vue.mixin({
     methods: {
         format_audience(number) {

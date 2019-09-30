@@ -74,16 +74,14 @@
     export default {
         props: {
         roles:Array,
-        permissionList:Array
+        permissionList:Array,
+        routes:Object,
         },
         data() {
             return {
                 role:'',
                 dialog: false,
-                 user: {
-                   roles: [],
-                   email: '',
-                   },
+                 user: this.setupModel(),
                   
 
             };
@@ -92,6 +90,12 @@
             console.log('finance Component mounted.');
         },
         methods:{
+             setupModel: function() {
+                return {
+                       roles: [],
+                       email: '',
+                         }  
+             },
             inviteUser: async function(event) {
                 if(this.hasPermissionAction(this.permissionList, ['create.user'])){
                     // Validate inputs using vee-validate plugin 
@@ -109,12 +113,13 @@
                      this.sweet_alert('Saving user information and sending invite', 'info');
                     axios({
                         method: 'post',
-                        url: '/users/invite',
+                        url: this.routes.create,
                         data:  this.user
                     }).then((res) => {
                     if (res.data.status === 'success') {
                         this.dialog = false;
                         Event.$emit('user-created', res.data.data);
+                        this.setupModel()
                         this.sweet_alert('Request sent successfully', 'success');
                     } else {
                         this.sweet_alert('Something went wrong, Try again!', 'error');
@@ -131,10 +136,7 @@
             },
              closeDialog: function() {
                 this.dialog = false;
-            },
-             setRole() {
-             this.role_list[0] = this.roles;
-              },
+            }
         }
     }
 </script>

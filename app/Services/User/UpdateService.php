@@ -5,6 +5,7 @@ namespace Vanguard\Services\User;
 use Vanguard\User;
 
 use Vanguard\Services\BaseServiceInterface;
+use Illuminate\Support\Arr;
 
 class UpdateService implements BaseServiceInterface
 {
@@ -28,23 +29,12 @@ class UpdateService implements BaseServiceInterface
 
     public function updateUser()
     {
-        $roles = $this->getRoleName($this->validated['role_name']);
-        $user = User::find($this->user_id);
+        $roles = Arr::pluck($this->validated['role_name'], 'role');
+        $user = User::findOrFail($this->user_id);
         \DB::transaction(function () use ($user, $roles) {
-           $user->syncRoles($roles, $this->guard);
-           if($this->companies!== ''){
-               $user->companies()->sync($this->companies);
-           }
+        $user->syncRoles($roles, $this->guard);
         });
         return $user;
     }
 
-    public function getRoleName($roles)
-    {
-        $role_name=[];
-        foreach($roles as $role){
-                array_push($role_name, $role['role']);
-        }
-        return $role_name;
-    }
 }
