@@ -11,9 +11,9 @@
 - raw_name: "(A-C)_Activate"
   name: Activate
 - raw_name: "(A-C)_Africa Magic (Hausa)"
-  name: Africa Magic (Hausa)
+  name: Africa Magic Hausa
 - raw_name: "(A-C)_Africa Magic (Yoruba)"
-  name: Africa Magic (Yoruba)
+  name: Africa Magic Yoruba
 - raw_name: "(A-C)_Africa Magic Epic"
   name: Africa Magic Epic
 - raw_name: "(A-C)_Africa Magic Family"
@@ -31,7 +31,7 @@
 - raw_name: "(A-C)_BBC Lifestyle"
   name: BBC Lifestyle
 - raw_name: "(A-C)_BBC News"
-  name: BBC News
+  name: BBC World News
 - raw_name: "(A-C)_BET"
   name: BET
 - raw_name: "(A-C)_Big Brother Naija"
@@ -41,7 +41,7 @@
 - raw_name: "(A-C)_CCTV 4"
   name: CCTV 4
 - raw_name: "(A-C)_CNN"
-  name: CNN
+  name: CNN International
 - raw_name: "(A-C)_Cartoon Network"
   name: Cartoon Network
 - raw_name: "(A-C)_Channels TV"
@@ -53,11 +53,11 @@
 - raw_name: "(D-L)_Discovery Family"
   name: Discovery Family
 - raw_name: "(D-L)_Discovery Idx"
-  name: Discovery Idx
+  name: Investigation Discovery
 - raw_name: "(D-L)_Discovery Science"
   name: Discovery Science
 - raw_name: "(D-L)_E! Entertainment"
-  name: E! Entertainment
+  name: E! Entertainment Television
 - raw_name: "(D-L)_FOX Int (GOtv)"
   name: FOX Int (GOtv)
 - raw_name: "(D-L)_Fox Business"
@@ -85,7 +85,7 @@
 - raw_name: "(D-L)_Kwese Sports 2 ch. 302"
   name: Kwese Sports 2
 - raw_name: "(D-L)_LTV"
-  name: LTV
+  name: Lagos TV
 - raw_name: "(M)_M-Net Movies Action"
   name: M-Net Movies Action
 - raw_name: "(M)_M-Net Movies City"
@@ -149,7 +149,7 @@
 - raw_name: "(N-R)_Nickelodeon"
   name: Nickelodeon
 - raw_name: "(N-R)_PIUS TV Africa"
-  name: PIUS TV Africa
+  name: PLUS TV Africa
 - raw_name: "(N-R)_RFI (France) Hausa Service"
   name: RFI (France) Hausa Service
 - raw_name: "(N-R)_RFI (France) World Service"

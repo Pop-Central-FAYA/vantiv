@@ -26,10 +26,14 @@
   name: NTA
   state: Abuja
   city: Abuja
+# - raw_name: "Abuja_NTA International Abuja"
+#   name: NTA International
+#   state: Abuja
+#   city: Abuja
+# - raw_name: "Abuja_Silverbird Abuja"
 - raw_name: "Abuja_NTA International Abuja"
   name: NTA International
-  state: Abuja
-  city: Abuja
+  
 - raw_name: "Abuja_Silverbird Abuja"
   name: Silverbird Television
   state: Abuja
@@ -223,7 +227,7 @@
   state: Lagos
   city: Lagos
 - raw_name: "Lagos_LTV Lagos"
-  name: LTV
+  name: Lagos TV
   state: Lagos
   city: Lagos
 - raw_name: "Lagos_MITV Lagos"

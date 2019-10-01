@@ -3,7 +3,6 @@
 - name: Activate
 - name: Alpha TV Channel 113
 - name: Bollywood
-- name: Discovery Idx
 - name: Fox Business
 - name: Fox Crime
 - name: Fox Movie
@@ -22,3 +21,6 @@
 - name: Star World
 - name: V.O.A. (Voice Of America)
 - name: V.O.N. (Voice Of Nigeria), Lagos
+
+- name: RFI (France) Hausa Service
+- name: RFI (France) World Service
