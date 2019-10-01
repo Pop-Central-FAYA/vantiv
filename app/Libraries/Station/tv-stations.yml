@@ -1,0 +1,259 @@
+# Regional TV Stations Here
+- name: BCA
+  state: Abia
+  city: Umuahia
+  region: South East
+  type: Regional
+  broadcast: Terrestrial
+  publisher: BCA
+  publisher_full: Broadcasting Corporation of Abia State
+
+- name: MST
+  state: Anambra
+  city: Obosi
+  region: South East
+  type: Regional
+  broadcast: Terrestrial
+  publisher: MST
+  publisher_full: Minaj Systems Television
+
+- name: BATV
+  state: Bauchi
+  city: Bauchi
+  region: North East
+  type: Regional
+  broadcast: Terrestrial
+  publisher: BATV
+  publisher_full: Bauchi State Television Authority
+
+- name: BRTV
+  state: Borno
+  city: Maiduguri
+  region: North East
+  type: Regional
+  broadcast: Terrestrial
+  publisher: BRTV
+  publisher_full: Borno Radio Television
+
+- name: EBS
+  state: Edo
+  city: Benin
+  region: South South
+  type: Regional
+  broadcast: Terrestrial
+  publisher: EBS
+  publisher_full: Edo Broadcasting Service
+
+- name: Ekiti TV
+  state: Ekiti
+  city: Ado-Ekiti
+  region: South West
+  type: Regional
+  broadcast: Terrestrial
+  publisher: Ekiti TV
+  publisher_full: Ekiti State Television
+
+- name: ETV
+  state: Enugu
+  city: Enugu
+  region: South East
+  type: Regional
+  broadcast: Terrestrial
+  publisher: ETV
+  publisher_full: ETV
+
+- name: KTV
+  state: Kwara
+  city: Ilorin
+  region: North Central
+  type: Regional
+  broadcast: Terrestrial
+  publisher: KTV
+  publisher_full: Kwara State Television Authority
+
+- name: Capital TV
+  state: Kaduna
+  city: Kaduna
+  region: North West
+  type: Regional
+  broadcast: Terrestrial
+  publisher: Capital TV
+  publisher_full: Capital TV
+- name: DITV
+  state: Kaduna
+  city: Kaduna
+  region: North West
+  type: Regional
+  broadcast: Terrestrial
+  publisher: DITV
+  publisher_full: Desmims Independent Television
+- name: KSTV
+  state: Kaduna
+  city: Kaduna
+  region: North West
+  type: Regional
+  broadcast: Terrestrial
+  publisher: KSTV
+  publisher_full: Kaduna State Media Corporation TV
+- name: Liberty TV
+  state: Kaduna
+  city: Kaduna
+  region: North West
+  type: Regional
+  broadcast: Terrestrial
+  publisher: Liberty TV
+  publisher_full: Liberty TV
+
+- name: CTV
+  state: Kano
+  city: Kano
+  region: North West
+  type: Regional
+  broadcast: Terrestrial
+  publisher: CTV
+  publisher_full: CTV
+
+- name: DMS TV
+  state: Lagos
+  city: Lagos
+  region: South West
+  type: Regional
+  broadcast: Terrestrial
+  publisher: DMS TV
+  publisher_full: DMS TV
+- name: LTV
+  state: Lagos
+  city: Lagos
+  region: South West
+  type: Regional
+  broadcast: Terrestrial
+  publisher: LTV
+  publisher_full: Lagos Television
+- name: ONTV
+  state: Lagos
+  city: Lagos
+  region: South West
+  type: Regional
+  broadcast: Terrestrial
+  publisher: ONTV
+  publisher_full: ONTV Nigeria
+- name: Super Screen TV
+  state: Lagos
+  city: Lagos
+  region: South West
+  type: Regional
+  broadcast: Terrestrial
+  publisher: Super Screen TV
+  publisher_full: Super Screen TV
+- name: TVC
+  state: Lagos
+  city: Lagos
+  region: South West
+  type: Regional
+  broadcast: Terrestrial
+  publisher: TVC
+  publisher_full: TVC
+
+- name: BCOS
+  state: Oyo
+  city: Ibadan
+  region: South West
+  type: Regional
+  broadcast: Terrestrial
+  publisher: BCOS
+  publisher_full: Broadcasting Corporation of Oyo State
+
+- name: PRTV
+  state: Plateau
+  city: Jos
+  region: North Central
+  type: Regional
+  broadcast: Terrestrial
+  publisher: PRTV
+  publisher_full: Plateau Radio Television Corporation
+
+- name: RSTV
+  state: Rivers
+  city: Port Harcourt
+  region: South South
+  type: Regional
+  broadcast: Terrestrial
+  publisher: RSTV
+  publisher_full: Rivers State Television
+
+- name: Sokoto State Television
+  state: Sokoto
+  city: Sokoto
+  region: North West
+  type: Regional
+  broadcast: Terrestrial
+  publisher: Sokoto State Television
+  publisher_full: Sokoto State Television
+
+- name: ABS TV
+  state: Anambra
+  city: Awka
+  region: South East
+  type: Regional
+  broadcast: Terrestrial
+  publisher: ABS TV
+  publisher_full: ABS TV
+- name: ABS TV
+  state: Anambra
+  city: Onitsha
+  region: South East
+  type: Regional
+  broadcast: Terrestrial
+  publisher: ABS TV
+  publisher_full: Anambra Broadcasting Service
+
+- name: CRTV
+  state: Cross River
+  city: Calabar
+  region: South South
+  type: Regional
+  broadcast: Terrestrial
+  publisher: CRTV
+  publisher_full: CRTV
+- name: CRTV
+  state: Cross River
+  city: Ikom
+  region: South South
+  type: Regional
+  broadcast: Terrestrial
+  publisher: CRTV
+  publisher_full: CRTV
+
+- name: ITV
+  state: Edo
+  city: Benin
+  region: South South
+  type: Regional
+  broadcast: Terrestrial
+  publisher: ITV
+  publisher_full: Independent Television and Radio
+- name: ITV
+  state: Abuja
+  city: Abuja
+  region: North Central
+  type: Regional
+  broadcast: Terrestrial
+  publisher: ITV
+  publisher_full: Independent Television and Radio
+
+- name: MITV
+  state: Lagos
+  city: Lagos
+  region: South West
+  type: Regional
+  broadcast: Terrestrial
+  publisher: MITV
+  publisher_full: Muri International Television
+- name: MITV
+  state: Oyo
+  city: Ibadan
+  region: South West
+  type: Regional
+  broadcast: Terrestrial
+  publisher: MITV
+  publisher_full: Muri International Television

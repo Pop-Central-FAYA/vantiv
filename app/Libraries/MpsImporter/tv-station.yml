@@ -1,429 +1,1017 @@
-# Regional TV Stations Here
-- name: BCA
-  state: Abia
-  city: Umuahia
-  region: South East
-  type: Regional
-  broadcast: Terrestial
+--- 
+  # Regional TV Stations Here
+  - name: BCA
+    state: Abia
+    city: Umuahia
+    region: South East
+    type: Regional
+    broadcast: Terrestial
+    publisher: BCA
+    publisher_full: Broadcasting Corporation of Abia State
 
-- name: MST
-  state: Anambra
-  city: Obosi
-  region: South East
-  type: Regional
-  broadcast: Terrestial
+  - name: MST
+    state: Anambra
+    city: Obosi
+    region: South East
+    type: Regional
+    broadcast: Terrestial
+    publisher: MST
+    publisher_full: Minaj Systems Television
 
-- name: BATV
-  state: Bauchi
-  city: Bauchi
-  region: North East
-  type: Regional
-  broadcast: Terrestial
+  - name: BATV
+    state: Bauchi
+    city: Bauchi
+    region: North East
+    type: Regional
+    broadcast: Terrestial
+    publisher: BATV
+    publisher_full: Bauchi State Television Authority
 
-- name: BRTV
-  state: Borno
-  city: Maiduguri
-  region: North East
-  type: Regional
-  broadcast: Terrestial
+  - name: BRTV
+    state: Borno
+    city: Maiduguri
+    region: North East
+    type: Regional
+    broadcast: Terrestial
+    publisher: BRTV
+    publisher_full: Borno Radio Television
 
-- name: EBS
-  state: Edo
-  city: Benin
-  region: South South
-  type: Regional
-  broadcast: Terrestial
+  - name: EBS
+    state: Edo
+    city: Benin
+    region: South South
+    type: Regional
+    broadcast: Terrestial
+    publisher: EBS
+    publisher_full: Edo Broadcasting Service
 
-- name: Ekiti State Television
-  state: Ekiti
-  city: Ado-Ekiti
-  region: South West
-  type: Regional
-  broadcast: Terrestial
+  - name: Ekiti TV
+    state: Ekiti
+    city: Ado-Ekiti
+    region: South West
+    type: Regional
+    broadcast: Terrestial
+    publisher: Ekiti TV
+    publisher_full: Ekiti State Television
 
-- name: ETV
-  state: Enugu
-  city: Enugu
-  region: South East
-  type: Regional
-  broadcast: Terrestial
+  - name: ETV
+    state: Enugu
+    city: Enugu
+    region: South East
+    type: Regional
+    broadcast: Terrestial
+    publisher: ETV
+    publisher_full: ETV
 
-- name: KTV
-  state: Kwara
-  city: Ilorin
-  region: North Central
-  type: Regional
-  broadcast: Terrestial
+  - name: KTV
+    state: Kwara
+    city: Ilorin
+    region: North Central
+    type: Regional
+    broadcast: Terrestial
+    publisher: KTV
+    publisher_full: Kwara State Television Authority
 
-- name: Capital TV
-  state: Kaduna
-  city: Kaduna
-  region: North West
-  type: Regional
-  broadcast: Terrestial
-- name: DITV
-  state: Kaduna
-  city: Kaduna
-  region: North West
-  type: Regional
-  broadcast: Terrestial
-- name: KSTV
-  state: Kaduna
-  city: Kaduna
-  region: North West
-  type: Regional
-  broadcast: Terrestial
-- name: Liberty TV
-  state: Kaduna
-  city: Kaduna
-  region: North West
-  type: Regional
-  broadcast: Terrestial
+  - name: Capital TV
+    state: Kaduna
+    city: Kaduna
+    region: North West
+    type: Regional
+    broadcast: Terrestial
+    publisher: Capital TV
+    publisher_full: Capital TV
+  - name: DITV
+    state: Kaduna
+    city: Kaduna
+    region: North West
+    type: Regional
+    broadcast: Terrestial
+    publisher: DITV
+    publisher_full: Desmims Independent Television
+  - name: KSTV
+    state: Kaduna
+    city: Kaduna
+    region: North West
+    type: Regional
+    broadcast: Terrestial
+    publisher: KSTV
+    publisher_full: Kaduna State Media Corporation TV
+  - name: Liberty TV
+    state: Kaduna
+    city: Kaduna
+    region: North West
+    type: Regional
+    broadcast: Terrestial
+    publisher: Liberty TV
+    publisher_full: Liberty TV
 
-- name: CTV
-  state: Kano
-  city: Kano
-  city: Kaduna
-  region: North West
-  type: Regional
-  broadcast: Terrestial
+  - name: CTV
+    state: Kano
+    city: Kano
+    city: Kaduna
+    region: North West
+    type: Regional
+    broadcast: Terrestial
+    publisher: CTV
+    publisher_full: CTV
 
-- name: DMS
-  state: Lagos
-  city: Lagos
-  region: South West
-  type: Regional
-  broadcast: Terrestial
+  - name: DMS TV
+    state: Lagos
+    city: Lagos
+    region: South West
+    type: Regional
+    broadcast: Terrestial
+    publisher: DMS TV
+    publisher_full: DMS TV
+  - name: LTV
+    state: Lagos
+    city: Lagos
+    region: South West
+    type: Regional
+    broadcast: Terrestial
+    publisher: LTV
+    publisher_full: Lagos Television
+  - name: ONTV
+    state: Lagos
+    city: Lagos
+    region: South West
+    type: Regional
+    broadcast: Terrestial
+    publisher: ONTV
+    publisher_full: ONTV Nigeria
+  - name: Super Screen TV
+    state: Lagos
+    city: Lagos
+    region: South West
+    type: Regional
+    broadcast: Terrestial
+    publisher: Super Screen TV
+    publisher_full: Super Screen TV
+  - name: TVC
+    state: Lagos
+    city: Lagos
+    region: South West
+    type: Regional
+    broadcast: Terrestial
+    publisher: TVC
+    publisher_full: TVC
 
-- name: LTV
-  state: Lagos
-  city: Lagos
-  region: South West
-  type: Regional
-  broadcast: Terrestial
-- name: ONTV
-  state: Lagos
-  city: Lagos
-  region: South West
-  type: Regional
-  broadcast: Terrestial
-- name: Super Screen Television
-  state: Lagos
-  city: Lagos
-  region: South West
-  type: Regional
-  broadcast: Terrestial
-- name: TVC
-  state: Lagos
-  city: Lagos
-  region: South West
-  type: Regional
-  broadcast: Terrestial
+  - name: BCOS
+    state: Oyo
+    city: Ibadan
+    region: South West
+    type: Regional
+    broadcast: Terrestial
+    publisher: BCOS
+    publisher_full: Broadcasting Corporation of Oyo State
 
-- name: BCOS
-  state: Oyo
-  city: Ibadan
-  region: South West
-  type: Regional
-  broadcast: Terrestial
+  - name: PRTV
+    state: Plateau
+    city: Jos
+    region: North Central
+    type: Regional
+    broadcast: Terrestial
+    publisher: PRTV
+    publisher_full: Plateau Radio Television Corporation
 
-- name: PRTV
-  state: Plateau
-  city: Jos
-  region: North Central
-  type: Regional
-  broadcast: Terrestial
+  - name: RSTV
+    state: Rivers
+    city: Port Harcourt
+    region: South South
+    type: Regional
+    broadcast: Terrestial
+    publisher: RSTV
+    publisher_full: Rivers State Television
 
-- name: RSTV
-  state: Rivers
-  city: Port Harcourt
-  region: South South
-  type: Regional
-  broadcast: Terrestial
+  - name: Sokoto State Television
+    state: Sokoto
+    city: Sokoto
+    region: North West
+    type: Regional
+    broadcast: Terrestial
+    publisher: Sokoto State Television
+    publisher_full: Sokoto State Television
 
-- name: Sokoto State Television
-  state: Sokoto
-  city: Sokoto
-  region: North West
-  type: Regional
-  broadcast: Terrestial
+  - name: ABS TV
+    state: Anambra
+    city: Awka
+    region: South East
+    type: Regional
+    broadcast: Terrestial
+    publisher: ABS TV
+    publisher_full: ABS TV
+  - name: ABS TV
+    state: Anambra
+    city: Onitsha
+    region: South East
+    type: Regional
+    publisher: ABS TV
+    publisher_full: Anambra Broadcasting Service
 
-- name: ABS TV
-  state: Anambra
-  city: Awka
-  region: South East
-  type: Regional
-  broadcast: Terrestial
-- name: ABS TV
-  state: Anambra
-  city: Onitsha
-  region: South East
-  type: Regional
+  - name: CRTV
+    state: Cross River
+    city: Calabar
+    region: South South
+    type: Regional
+    broadcast: Terrestial
+    publisher: CRTV
+    publisher_full: CRTV
+  - name: CRTV
+    state: Cross River
+    city: Ikom
+    region: South South
+    type: Regional
+    broadcast: Terrestial
+    publisher: CRTV
+    publisher_full: CRTV
 
-- name: CRTV
-  state: Cross River
-  city: Calabar
-  region: South South
-  type: Regional
-  broadcast: Terrestial
-- name: CRTV
-  state: Cross River
-  city: Ikom
-  region: South South
-  type: Regional
-  broadcast: Terrestial
+  - name: ITV
+    state: Edo
+    city: Benin
+    region: South South
+    type: Regional
+    broadcast: Terrestial
+    publisher: ITV
+    publisher_full: Independent Television and Radio
+  - name: ITV
+    state: Abuja
+    city: Abuja
+    region: North Central
+    type: Regional
+    broadcast: Terrestial
+    publisher: ITV
+    publisher_full: Independent Television and Radio
 
-- name: ITV
-  state: Edo
-  city: Benin
-  region: South South
-  type: Regional
-  broadcast: Terrestial
-- name: ITV
-  state: Abuja
-  city: Abuja
-  region: North Central
-  type: Regional
-  broadcast: Terrestial
+  - name: MITV
+    state: Lagos
+    city: Lagos
+    region: South West
+    type: Regional
+    broadcast: Terrestial
+    publisher: MITV
+    publisher_full: Muri International Television
+  - name: MITV
+    state: Oyo
+    city: Ibadan
+    region: South West
+    type: Regional
+    broadcast: Terrestial
+    publisher: MITV
+    publisher_full: Muri International Television
 
-- name: Wazobia Max
-  state: Abuja
-  city: Abuja
-  region: North Central
-  type: Regional
-  broadcast: Terrestial
-- name: Wazobia Max
-  state: Lagos
-  city: Lagos
-  region: North Central
-  type: Regional
-  broadcast: Terrestial
-- name: Wazobia Max
-  state: Rivers
-  city: Port Harcourt
-  region: North Central
-  type: Regional
-  broadcast: Terrestial
+  ### I STOPPED HERE
 
-- name: MITV
-  state: Lagos
-  city: Lagos
-  region: South West
-  type: Regional
-  broadcast: Terrestial
-- name: MITV
-  state: Oyo
-  city: Ibadan
-  region: South West
-  type: Regional
-  broadcast: Terrestial
+  ## International Stations
+  - name: AMC Movies
+    type: International
+    broadcast: Satellite
+    vendor: [Startimes]
+  - name: AMC Series
+    type: International
+    broadcast: Satellite
+    vendor: [Startimes]
+  - name: AMC
+    type: International
+    broadcast: Satellite
+    vendor: [Startimes]
 
-- name: Galaxy TV
-  state: Lagos
-  city: Lagos
-  region: South West
-  type: Regional
-  broadcast: Terrestial
-- name: Galaxy TV
-  state: Oyo
-  city: Ibadan
-  region: South West
-  type: Regional
-  broadcast: Terrestial
+  - name: Africa Magic Hausa
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv, Gotv]
+  - name: Africa Magic Yoruba
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv, Gotv]
+  - name: Africa Magic Epic
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv, Gotv]
+  - name: Africa Magic Family
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv, Gotv]
+  - name: Africa Magic Igbo
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv, Gotv]
+  - name: Africa Magic Showcase
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv]
+  - name: Africa Magic Urban
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv]
+
+  - name: Arewa 24
+    type: International
+    broadcast: Satellite
+    vendor: [Startimes]
+
+  - name: BBC Lifestyle
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv]
+  #@todo change this to bbc world news
+  - name: BBC News
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv, Gotv, Startimes]
+
+  - name: BET
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv, Gotv]
+
+  - name: Big Brother Naija
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv, Gotv]
+
+  - name: CCTV 4
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv]
+
+  #@todo change this to cnn international
+  - name: CNN
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv, Gotv]
+
+  - name: Cartoon Network
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv]
+
+  - name: Comedy Central
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv]
+
+  - name: Discovery Channel
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv]
+  - name: Discovery Family
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv, Gotv]
+  - name: Discovery Science
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv, Gotv, Startimes]
+
+  #@todo change this to E! Entertainment Television
+  - name: E! Entertainment
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv, Gotv, Startimes]
+
+  #@todo LTV is an abbreviated form of Lagos TV
+  - name: Lagos TV
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv]
+
+  - name: M-Net Movies Action
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv]
+  - name: M-Net Movies City
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv]
+  - name: M-Net Movies Premiere
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv]
+  - name: M-Net Movies Showcase
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv]
+  - name: M-Net Movies Star
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv]
+  - name: M-Net Movies Zone
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv, Gotv]
+  - name: M-Net Smile
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv, Gotv]
+  - name: M-Net West
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv]
+
+  - name: MBC 1
+    type: International
+    broadcast: Satellite
+    vendor: [Tstv]
+  - name: MBC 3
+    type: International
+    broadcast: Satellite
+    vendor: [Tstv]
+  - name: MBC 4
+    type: International
+    broadcast: Satellite
+    vendor: [Tstv]
+  - name: MBC Action
+    type: International
+    broadcast: Satellite
+    vendor: [Tstv]
+  - name: MBC Max
+    type: International
+    broadcast: Satellite
+    vendor: [Tstv]
 
 
-## International Stations
-- name: AMC Movies
-  type: International
-  broadcast: Satellite
-  vendor: [Startimes]
-- name: AMC Series
-  type: International
-  broadcast: Satellite
-  vendor: [Startimes]
-- name: AMC
-  type: International
-  broadcast: Satellite
-  vendor: [Startimes]
+  - name: MTV Base
+    type: International
+    broadcast: Satellite
+    vendor: [Startimes, Gotv, Dstv]
+  - name: MTV
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv]
 
-- name: Africa Magic Hausa
-  type: International
-  broadcast: Satellite
-  vendor: [Dstv, Gotv]
-- name: Africa Magic Yoruba
-  type: International
-  broadcast: Satellite
-  vendor: [Dstv, Gotv]
-- name: Africa Magic Epic
-  type: International
-  broadcast: Satellite
-  vendor: [Dstv, Gotv]
-- name: Africa Magic Family
-  type: International
-  broadcast: Satellite
-  vendor: [Dstv, Gotv]
-- name: Africa Magic Igbo
-  type: International
-  broadcast: Satellite
-  vendor: [Dstv, Gotv]
-- name: Africa Magic Showcase
-  type: International
-  broadcast: Satellite
-  vendor: [Dstv]
-- name: Africa Magic Urban
-  type: International
-  broadcast: Satellite
-  vendor: [Dstv]
+  - name: My TV Hausa
+    type: International
+    broadcast: Satellite
+    vendor: [MyTv]
+  - name: My TV Yoruba
+    type: International
+    broadcast: Satellite
+    vendor: [MyTv]
+  - name: My TV Africa
+    type: International
+    broadcast: Satellite
+    vendor: [MyTv]
+  - name: My TV Series
+    type: International
+    broadcast: Satellite
+    vendor: [MyTv]
 
-- name: Arewa 24
-  type: International
-  broadcast: Satellite
-  vendor: [Startimes]
+  - name: National Geographic Wild
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv, Gotv]
+  - name: National Geographic
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv]
 
-- name: BBC Lifestyle
-  type: International
-  broadcast: Satellite
-  vendor: [Dstv]
-#@todo change this to bbc world news
-- name: BBC News
-  type: International
-  broadcast: Satellite
-  vendor: [Dstv, Gotv, Startimes]
+  - name: Nick Jr
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv]
+  - name: Nick Toons
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv]
+  - name: Nickelodeon
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv, Startimes, Gotv]
 
-- name: BET
-  type: International
-  broadcast: Satellite
-  vendor: [Dstv, Gotv]
+  #@todo Change PIUS to PLUS
+  - name: PIUS TV Africa
+    type: International
+    broadcast: Satellite
+    vendor: [Startimes]
 
-- name: Big Brother Naija
-  type: International
-  broadcast: Satellite
-  vendor: [Dstv, Gotv]
+  - name: RFI (France) Hausa Service
+  - name: RFI (France) World Service
 
-- name: CCTV 4
-  type: International
-  broadcast: Satellite
-  vendor: [Dstv]
+  - name: ROK 2
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv, Gotv]
+  - name: ROK 3
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv, Gotv]
 
-#@todo change this to cnn international
-- name: CNN
-  type: International
-  broadcast: Satellite
-  vendor: [Dstv, Gotv]
+  - name: SuperSport 1
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv]
+  - name: SuperSport 10
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv]
+  - name: SuperSport 11
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv]
+  - name: SuperSport 12
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv]
+  - name: SuperSport 2
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv]
+  - name: SuperSport 3
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv]
+  - name: SuperSport 4
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv]
+  - name: SuperSport 5
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv]
+  - name: SuperSport 6
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv]
+  - name: SuperSport 7
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv]
+  - name: SuperSport 8
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv]
+  - name: SuperSport 9
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv]
+  - name: SuperSport Blitz
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv, Gotv]
+  - name: SuperSport Select 1
+    type: International
+    broadcast: Satellite
+    vendor: [Gotv]
+  - name: SuperSport Select 4
+    type: International
+    broadcast: Satellite
+    vendor: [Gotv]
 
-- name: Cartoon Network
-  type: International
-  broadcast: Satellite
-  vendor: [Dstv]
+  - name: Sky News
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv]
 
-- name: Comedy Central
-  type: International
-  broadcast: Satellite
-  vendor: [Dstv]
+  - name: Sound City
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv, Gotv]
 
-- name: Discovery Channel
-  type: International
-  broadcast: Satellite
-  vendor: [Dstv]
-- name: Discovery Family
-  type: International
-  broadcast: Satellite
-  vendor: [Dstv, Gotv]
-- name: Discovery Science
-  type: International
-  broadcast: Satellite
-  vendor: [Dstv, Gotv, Startimes]
+  - name: Star Life
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv, Gotv, Startimes]
 
-#@todo change this to E! Entertainment Television
-- name: E! Entertainment
-  type: International
-  broadcast: Satellite
-  vendor: [Dstv, Gotv, Startimes]
+  - name: Startimes Bollywood Africa
+    type: International
+    broadcast: Satellite
+    vendor: [Startimes]
+  - name: Startimes Bollywood
+    type: International
+    broadcast: Satellite
+    vendor: [Startimes]
+  - name: Startimes Orisun
+    type: International
+    broadcast: Satellite
+    vendor: [Startimes]
+  - name: Startimes Yoruba
+    type: International
+    broadcast: Satellite
+    vendor: [Startimes]
 
-- name: FOX Int (GOtv)
-- name: Fox Entertainment
-- name: Fox News
+  - name: Studio Universal
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv]
 
-- name: Iroko 1
-- name: Iroko 2
-- name: Kwese Free Sports Nigeria ch. 290
-- name: Kwese Free Sports
-- name: Kwese Sports 1
-- name: Kwese Sports 2
-- name: LTV
-- name: M-Net Movies Action
-- name: M-Net Movies City
-- name: M-Net Movies Premiere
-- name: M-Net Movies Showcase
-- name: M-Net Movies Star
-- name: M-Net Movies Zone
-- name: M-Net Smile
-- name: M-Net West
-- name: MBC 1
-- name: MBC 3
-- name: MBC 4
-- name: MBC Action
-- name: MBC Max
-- name: MTV Base
-- name: MTV
-- name: My TV Hausa
-- name: My TV Yoruba
-- name: NTA Entertainment
-- name: NTA Hausa
-- name: NTA Igbo
-- name: NTA Knowledge
-- name: NTA Lagos
-- name: NTA News 24
-- name: NTA Parliamentary
-- name: NTA Sports
-- name: NTA Yoruba
-- name: National Geographic Wild
-- name: National Geographic
-- name: Nick Jr
-- name: Nick Toons
-- name: Nickelodeon
-- name: PIUS TV Africa
-- name: RFI (France) Hausa Service
-- name: RFI (France) World Service
-- name: ROK 2
-- name: ROK 3
-- name: SuperSport 1
-- name: SuperSport 10
-- name: SuperSport 11
-- name: SuperSport 12
-- name: SuperSport 2
-- name: SuperSport 3
-- name: SuperSport 4
-- name: SuperSport 5
-- name: SuperSport 6
-- name: SuperSport 7
-- name: SuperSport 8
-- name: SuperSport 9
-- name: SuperSport Blitz
-- name: SuperSport Select 4
-- name: Silverbird International
-- name: Silverbird
-- name: Sky News
-- name: Sound City
-- name: Star World
-- name: Star Life
-- name: Startimes Bollywood Africa
-- name: Startimes Bollywood
-- name: Startimes Orisun
-- name: Startimes Yoruba
-- name: Studio Universal
-- name: SuperSport 2
-- name: SuperSport 3
-- name: SuperSport Blitz
-- name: SuperSport Select 1
-- name: Telemundo
-- name: Trace Naija
-- name: V.O.A. (Voice Of America)
-- name: V.O.N. (Voice Of Nigeria), Lagos
-- name: Vuzu Amp
-- name: WAP TV
-- name: Wazobia TV
-- name: Zee World
-- name: My TV Africa
-- name: My TV Series
-- name: SuperSport Select 4 Africa
+  - name: Telemundo
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv, Gotv]
+
+  - name: Trace Naija
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv]
+
+  - name: Vuzu Amp
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv]
+
+  - name: WAP TV
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv, Gotv, Startimes, Tstv]
+
+  - name: Zee World
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv, Gotv]
+
+  #### WAZOBIA STATIONS
+  - name: Wazobia TV
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv, Gotv, Startimes, Tstv]
+  - name: Wazobia Max
+    state: Abuja
+    city: Abuja
+    region: North Central
+    type: Regional
+    broadcast: Terrestial
+  - name: Wazobia Max
+    state: Lagos
+    city: Lagos
+    region: North Central
+    type: Regional
+    broadcast: Terrestial
+  - name: Wazobia Max
+    state: Rivers
+    city: Port Harcourt
+    region: North Central
+    type: Regional
+    broadcast: Terrestial
+
+  #### AIT STATIONS
+  - name: AIT
+    state: Abuja
+    city: Abuja
+    region: North Central
+    type: Regional
+    broadcast: Terrestial
+  - name: AIT
+    state: Bauchi
+    city: Bauchi
+    region: North East
+    type: Regional
+    broadcast: Terrestial
+  - name: AIT
+    state: Borno
+    city: Borno
+    region: North East
+    type: Regional
+    broadcast: Terrestial
+  - name: AIT
+    state: Edo
+    city: Benin
+    region: South South
+    type: Regional
+    broadcast: Terrestial
+  - name: AIT
+    state: Enugu
+    city: Enugu
+    region: South East
+    type: Regional
+    broadcast: Terrestial
+  - name: AIT
+    state: Kwara
+    city: Ilorin
+    region: North Central
+    type: Regional
+    broadcast: Terrestial
+  - name: AIT
+    state: Kaduna
+    city: Kaduna
+    region: North West
+    type: Regional
+    broadcast: Terrestial
+  - name: AIT
+    state: Kano
+    city: Kano
+    region: North West
+    type: Regional
+    broadcast: Terrestial
+  - name: AIT
+    state: Lagos
+    city: Lagos
+    region: South West
+    type: Regional
+    broadcast: Terrestial
+  - name: AIT
+    state: Oyo
+    city: Ibadan
+    region: South West
+    type: Regional
+    broadcast: Terrestial
+  - name: AIT
+    state: Plateau
+    city: Jos
+    region: North Central
+    type: Regional
+    broadcast: Terrestial
+  - name: AIT
+    state: Rivers
+    city: Port Harcourt
+    region: South South
+    type: Regional
+    broadcast: Terrestial
+  - name: AIT International
+    type: International
+    broadcast: Satellite
+  - name: AIT
+    type: Network
+    broadcast: Terrestial
+
+  ### SILVERBIRD STATIONS
+  - name: Silverbird Television
+    state: Abuja
+    city: Abuja
+    region: North Central
+    type: Regional
+    broadcast: Terrestial
+  - state: Anambra
+    city: Awka
+    region: South East
+    type: Regional
+    broadcast: Terrestial
+  - name: Silverbird Television
+    state: Edo
+    city: Benin
+    region: South South
+    type: Regional
+    broadcast: Terrestial
+  - name: Silverbird Television
+    state: Lagos
+    city: Lagos
+    region: South West
+    type: Regional
+    broadcast: Terrestial
+  - name: Silverbird Television
+    state: Plateau
+    city: Jos
+    region: North Central
+    type: Regional
+    broadcast: Terrestial
+  - name: Silverbird Television
+    state: Rivers
+    city: Port Harcourt
+    region: South South
+    type: Regional
+    broadcast: Terrestial
+  - name: Silverbird International
+    type: International
+    broadcast: Satellite
+  - name: Silverbird Television
+    type: Network
+    broadcast: Terrestial
+
+  ### CHANNELS STATIONS
+  - name: Channels Television
+    state: Abuja
+    city: Abuja
+    region: North Central
+    type: Regional
+    broadcast: Terrestial
+  - name: Channels Television
+    state: Edo
+    city: Benin
+    region: South South
+    type: Regional
+    broadcast: Terrestial
+  - name: Channels Television
+    state: Lagos
+    city: Lagos
+    region: South West
+    type: Regional
+    broadcast: Terrestial
+  - name: Channels TV
+    type: International
+    broadcast: Satellite
+    vendor: [Dstv, Gotv, Startimes]
+
+  ### NTA STATIONS
+  - name: NTA
+    state: Abia
+    city: Aba
+    region: South East
+    type: Regional
+    broadcast: Terrestial
+  - name: NTA
+    state: Abia
+    city: Umuahia
+    region: South East
+    type: Regional
+    broadcast: Terrestial
+  - name: NTA
+    state: Abuja
+    city: Abuja
+    region: North Central
+    type: Regional
+    broadcast: Terrestial
+  - name: NTA
+    state: Anambra
+    city: Awka
+    region: South East
+    type: Regional
+    broadcast: Terrestial
+  - name: NTA
+    state: Anambra
+    city: Onitsha
+    city: Awka
+    region: South East
+    type: Regional
+    broadcast: Terrestial
+  - name: NTA
+    state: Bauchi
+    city: Bauchi
+    region: North East
+    type: Regional
+    broadcast: Terrestial
+  - name: NTA
+    state: Borno
+    city: Maiduguri
+    region: North East
+    type: Regional
+    broadcast: Terrestial
+  - name: NTA
+    state: Cross River
+    city: Calabar
+    region: South South
+    type: Regional
+    broadcast: Terrestial
+  - name: NTA
+    state: Edo
+    city: Benin
+    region: South South
+    type: Regional
+    broadcast: Terrestial
+  - name: NTA
+    state: Ekiti
+    city: Ado-Ekiti
+    region: South West
+    type: Regional
+    broadcast: Terrestial
+  - name: NTA
+    state: Enugu
+    city: Enugu
+    region: South East
+    type: Regional
+    broadcast: Terrestial
+  - name: NTA
+    state: Kwara
+    city: Ilorin
+    region: North Central
+    type: Regional
+    broadcast: Terrestial
+  - name: NTA
+    state: Kaduna
+    city: Birnin-Gwari
+    region: North West
+    type: Regional
+    broadcast: Terrestial
+  - name: NTA
+    state: Kaduna
+    city: Kaduna
+    region: North West
+    type: Regional
+    broadcast: Terrestial
+  - name: NTA
+    state: Kaduna
+    city: Kafanchan
+    region: North West
+    type: Regional
+    broadcast: Terrestial
+  - name: NTA
+    state: Kaduna
+    city: Zaria
+    region: North West
+    type: Regional
+    broadcast: Terrestial
+  - name: NTA
+    state: Kano
+    city: Kano
+    region: North West
+    type: Regional
+    broadcast: Terrestial
+  - name: NTA 2
+    state: Lagos
+    city: Lagos
+    region: South West
+    type: Regional
+    broadcast: Terrestial
+  - name: NTA
+    state: Lagos
+    city: Lagos
+    region: South West
+    type: Regional
+    broadcast: Terrestial
+  - name: NSTV
+    state: Niger
+    city: Minna
+    region: North Central
+    type: Regional
+    broadcast: Terrestial
+  - name: NTA
+    state: Niger
+    city: Minna
+    region: North Central
+    type: Regional
+    broadcast: Terrestial
+  - name: NTA 45 & 7
+    state: Oyo
+    city: Ibadan
+    region: South West
+    type: Regional
+    broadcast: Terrestial
+  - name: NTA
+    state: Oyo
+    city: Ibadan
+    region: South West
+    type: Regional
+    broadcast: Terrestial
+  - name: NTA
+    state: Plateau
+    city: Jos
+    region: North Central
+    type: Regional
+    broadcast: Terrestial
+  - name: NTA
+    state: Rivers
+    city: Port Harcourt
+    region: South South
+    type: Regional
+    broadcast: Terrestial
+  - name: NTA
+    state: Sokoto
+    city: Gusau
+    region: North West
+    type: Regional
+    broadcast: Terrestial
+  - name: NTA
+    state: Sokoto
+    city: Sokoto
+    city: Gusau
+    region: North West
+    type: Regional
+    broadcast: Terrestial
+  - name: NTA Entertainment
+    type: International
+    broadcast: Satellite
+    vendor: [Startimes]
+  - name: NTA Hausa
+    type: International
+    broadcast: Satellite
+    vendor: [Startimes]
+  - name: NTA Igbo
+    type: International
+    broadcast: Satellite
+    vendor: [Startimes]
+  - name: NTA Knowledge
+    type: International
+    broadcast: Satellite
+    vendor: [Startimes]
+  - name: NTA Lagos
+    type: International
+    broadcast: Satellite
+    vendor: [Startimes]
+  - name: NTA News 24
+    type: International
+    broadcast: Satellite
+    vendor: [Startimes, Gotv, Dstv]
+  - name: NTA Parliamentary
+    type: International
+    broadcast: Satellite
+    vendor: [Startimes, Gotv, Dstv]
+  - name: NTA Sports
+    type: International
+    broadcast: Satellite
+    vendor: [Startimes]
+  - name: NTA Yoruba
+    type: International
+    broadcast: Satellite
+    vendor: [Startimes]
+  #@todo need to figure out if this is terrestrial or not
+  - name: NTA International
+    type: International
+    broadcast: Satellite
+
+  #### GALAXY TV STATIONS
+  - name: Galaxy TV
+    state: Lagos
+    city: Lagos
+    region: South West
+    type: Regional
+    broadcast: Terrestial
+  - name: Galaxy TV
+    state: Oyo
+    city: Ibadan
+    region: South West
+    type: Regional
+    broadcast: Terrestial
+  - name: OSBC
+    state: Osun
+    city: Osogbo
+    region: South West
+    type: Regional
+    broadcast: Terrestial

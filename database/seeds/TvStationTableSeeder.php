@@ -1,9 +1,10 @@
 <?php
 
 use Illuminate\Database\Seeder;
-
+use Illuminate\Support\Arr;
 use Vanguard\Models\TvStation;
-
+use Vanguard\Models\Publisher;
+use Vanguard\Libraries\Station\Reader as StationReader;
 /**
  * This will loop through and create a tv station and associate with a publisher
  * (If that tv station and publisher is not created yet)
@@ -17,27 +18,48 @@ class TvStationTableSeeder extends Seeder
      */
     public function run()
     {
-        $regional_stations = $this->getRegionalTvStations();
-        $national_stations = $this->getNationalTvStations();
-        $satellite_stations = $this->getSatelliteTVStations();
+        
+        DB::transaction(function() {
+            $publishers = $this->getTvStationPublishers();
+            $stations = StationReader::getTvStationList();
+            $this->create($stations, $publishers);
+        });
+        
+        // $regional_stations = $this->getRegionalTvStations();
+        // $national_stations = $this->getNationalTvStations();
+        // $satellite_stations = $this->getSatelliteTVStations();
 
-        $this->create($regional_stations);
-        $this->create($national_stations);
-        $this->create($satellite_stations);
+        // $this->create($regional_stations);
+        // $this->create($national_stations);
+        // $this->create($satellite_stations);
     }
 
-    protected function create($station_list) {
+    protected function create($station_list, $publishers) {
         foreach ($station_list as $station) {
-            $key = md5("{$station['name']}-{$station['type']}-{$station['state']}-{$station['city']}-{$station['region']}");
+            $name = $station['name'];
+            $type = $station['type'];
+            $state = Arr::get($station, 'state', '');
+            $city = Arr::get($station, 'city', '');
+            $region = Arr::get($station, 'region', '');
+            
+            $key = md5("{$name}-{$type}-{$state}-{$city}-{$region}");
             $station_attrs = array(
-                'name' => $station['name'],
-                'type' => $station['type'],
-                'state' => $station['state'],
-                'city' => $station['city'],
-                'region' => $station['region']
+                'publisher_id' => $publishers[$name][0]['id'],
+                'name' => $name,
+                'type' => $type,
+                'state' => $state,
+                'city' => $city,
+                'region' => $region,
+                'broadcast' => $station['broadcast']
             );
-            TvStation::firstOrCreate(['key' => $key], $station_attrs);
+            TvStation::updateOrCreate(['key' => $key], $station_attrs);
         }
+    }
+
+    protected function getTvStationPublishers()
+    {
+        $publishers = Publisher::select('name', 'long_name', 'id')->where('type', 'tv')->get();
+        return $publishers->groupBy('name');
     }
 
     protected function getRegionalTvStations()
