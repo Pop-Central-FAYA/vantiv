@@ -36,7 +36,7 @@
                                         :searchable="false" 
                                         :multiple="true" 
                                         v-validate="'required'"
-                                        :error-messages="errors.collect('email')"
+                                        data-vv-name="roles"
                                     >
                                   </multiselect>
                                 </v-flex>
