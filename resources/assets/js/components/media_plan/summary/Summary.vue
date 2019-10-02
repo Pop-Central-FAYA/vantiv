@@ -129,7 +129,7 @@
                     }).then((res) => {
                     if (res.data.status === 'success') {
                         Event.$emit('updated-media-plan', res.data.data);
-                        this.sweet_alert('Mediaplan was '+ action+' successfully', 'success');
+                        this.sweet_alert('Media Plan was '+ action.toLowerCase()+' successfully', 'success');
                     } else {
                         this.sweet_alert('Something went wrong, Try again!', 'error');
                     }
