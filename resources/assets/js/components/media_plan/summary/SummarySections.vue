@@ -7,6 +7,7 @@
         {{ durationKey }}
       </v-tab>
       <v-tab-item value="summary-tab">
+        <media-plan-deliverables :media-plan="plan"></media-plan-deliverables>
         <table class="display dashboard_campaigns">
             <thead>
             <tr>
@@ -79,6 +80,7 @@
     props: {
         summaryData: Array,
         fullStationData: Object,
+        plan: Object,
     },
     data () {
       return {

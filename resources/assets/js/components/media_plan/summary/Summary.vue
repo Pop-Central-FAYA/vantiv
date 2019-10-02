@@ -23,7 +23,7 @@
                 </div>
 
                  <div class="the_frame client_dets mb4">
-                    <media-plan-summary-sections :summary-data="summaryData" :full-station-data="fullStationData"></media-plan-summary-sections>
+                    <media-plan-summary-sections :plan="summaryDetails" :summary-data="summaryData" :full-station-data="fullStationData"></media-plan-summary-sections>
                 </div>
             </div>
         </div>
