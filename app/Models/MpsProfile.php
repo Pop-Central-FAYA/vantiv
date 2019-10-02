@@ -8,8 +8,7 @@ class MpsProfile extends Base
     use Filterable;
 
     protected $fillable = [
-        'id', 'ext_profile_id', 'age', 'gender', 'region', 'state', 'wave',
-        'social_class', 'pop_weight', 'created_at', 'updated_at'
+        'ext_profile_id', 'wave', 'age', 'gender', 'region', 'state', 'social_class', 'pop_weight', 'created_at'
     ];
 
     public function modelFilter()

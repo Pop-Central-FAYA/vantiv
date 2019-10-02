@@ -2,30 +2,37 @@
   name: BCA
   state: Abia
   city: Umuahia
+  broadcast_type: Regional
 - raw_name: "Abia_NTA Aba"
   name: NTA
   state: Abia
   city: Aba
+  broadcast_type: Regional
 - raw_name: "Abia_NTA Umuahia"
   name: NTA
   state: Abia
   city: Umuahia
+  broadcast_type: Regional
 - raw_name: "Abuja_AIT Abuja"
   name: AIT
   state: Abuja
   city: Abuja
+  broadcast_type: Regional
 - raw_name: "Abuja_Channels TV Abuja"
   name: Channels Television
   state: Abuja
   city: Abuja
+  broadcast_type: Regional
 - raw_name: "Abuja_ITV Abuja"
   name: ITV
   state: Abuja
   city: Abuja
+  broadcast_type: Regional
 - raw_name: "Abuja_NTA Abuja"
   name: NTA
   state: Abuja
   city: Abuja
+  broadcast_type: Regional
 # - raw_name: "Abuja_NTA International Abuja"
 #   name: NTA International
 #   state: Abuja
@@ -33,313 +40,391 @@
 # - raw_name: "Abuja_Silverbird Abuja"
 - raw_name: "Abuja_NTA International Abuja"
   name: NTA International
+  broadcast_type: International
   
 - raw_name: "Abuja_Silverbird Abuja"
   name: Silverbird Television
   state: Abuja
   city: Abuja
+  broadcast_type: Regional
 - raw_name: "Abuja_Wazobia Max Abuja"
   name: Wazobia Max
   state: Abuja
   city: Abuja
+  broadcast_type: Regional
 - raw_name: "Anambra_ABS Awka"
   name: ABS TV
   state: Anambra
   city: Awka
+  broadcast_type: Regional
 - raw_name: "Anambra_ABS TV Onitsha"
   name: ABS TV
   state: Anambra
   city: Onitsha
+  broadcast_type: Regional
 - raw_name: "Anambra_MST Obosi"
   name: MST
   state: Anambra
   city: Obosi
+  broadcast_type: Regional
 - raw_name: "Anambra_NTA Awka"
   name: NTA
   state: Anambra
   city: Awka
+  broadcast_type: Regional
 - raw_name: "Anambra_NTA Channel 35 Onitsha"
   name: NTA
   state: Anambra
   city: Onitsha
+  broadcast_type: Regional
 - raw_name: "Anambra_STV Awka"
   name: Silverbird Television
   state: Anambra
   city: Awka
+  broadcast_type: Regional
 - raw_name: "Bauchi_AIT Bauchi"
   name: AIT
   state: Bauchi
   city: Bauchi
+  broadcast_type: Regional
 - raw_name: "Bauchi_BATV Bauchi"
   name: BATV
   state: Bauchi
   city: Bauchi
+  broadcast_type: Regional
 - raw_name: "Bauchi_NTA Bauchi"
   name: NTA
   state: Bauchi
   city: Bauchi
+  broadcast_type: Regional
 - raw_name: "Borno_AIT Borno"
   name: AIT
   state: Borno
   city: Borno
+  broadcast_type: Regional
 - raw_name: "Borno_BRTV Maiduguri"
   name: BRTV
   state: Borno
   city: Maiduguri
+  broadcast_type: Regional
 - raw_name: "Borno_NTA Maiduguri"
   name: NTA
   state: Borno
   city: Maiduguri
+  broadcast_type: Regional
 - raw_name: "CrossRiver_CRTV Calabar"
   name: CRTV
   state: Cross River
   city: Calabar
+  broadcast_type: Regional
 - raw_name: "CrossRiver_CRTV Ikom"
   name: CRTV
   state: Cross River
   city: Ikom
+  broadcast_type: Regional
 - raw_name: "CrossRiver_NTA Calabar"
   name: NTA
   state: Cross River
   city: Calabar
+  broadcast_type: Regional
 - raw_name: "Edo_AIT Benin"
   name: AIT
   state: Edo
   city: Benin
+  broadcast_type: Regional
 - raw_name: "Edo_Channels TV Edo"
   name: Channels Television
   state: Edo
   city: Benin
+  broadcast_type: Regional
 - raw_name: "Edo_EBS CH 55 Benin"
   name: EBS
   state: Edo
   city: Benin
+  broadcast_type: Regional
 - raw_name: "Edo_ITV Benin"
   name: ITV
   state: Edo
   city: Benin
+  broadcast_type: Regional
 - raw_name: "Edo_NTA Benin"
   name: NTA
   state: Edo
   city: Benin
+  broadcast_type: Regional
 - raw_name: "Edo_Silverbird TV Benin"
   name: Silverbird Television
   state: Edo
   city: Benin
+  broadcast_type: Regional
 - raw_name: "Ekiti_Ekiti TV"
   name: Ekiti State Television
   state: Ekiti
   city: Ado-Ekiti
+  broadcast_type: Regional
 - raw_name: "Ekiti_NTA Ado-Ekiti"
   name: NTA
   state: Ekiti
   city: Ado-Ekiti
+  broadcast_type: Regional
 - raw_name: "Enugu_AIT Enugu"
   name: AIT
   state: Enugu
   city: Enugu
+  broadcast_type: Regional
 - raw_name: "Enugu_ETV Enugu"
   name: ETV
   state: Enugu
   city: Enugu
+  broadcast_type: Regional
 - raw_name: "Enugu_NTA Enugu"
   name: NTA
   state: Enugu
   city: Enugu
+  broadcast_type: Regional
 - raw_name: "Ilorin_AIT Ilorin"
   name: AIT
   state: Kwara
   city: Ilorin
+  broadcast_type: Regional
 - raw_name: "Ilorin_KTV Ilorin"
   name: KTV
   state: Kwara
   city: Ilorin
+  broadcast_type: Regional
 - raw_name: "Ilorin_NTA Ilorin"
   name: NTA
   state: Kwara
   city: Ilorin
+  broadcast_type: Regional
 - raw_name: "Kaduna_AIT Kaduna"
   name: AIT
   state: Kaduna
   city: Kaduna
+  broadcast_type: Regional
 - raw_name: "Kaduna_Capital TV Kaduna"
   name: Capital TV
   state: Kaduna
   city: Kaduna
+  broadcast_type: Regional
 - raw_name: "Kaduna_DITV Kaduna"
   name: DITV
   state: Kaduna
   city: Kaduna
+  broadcast_type: Regional
 - raw_name: "Kaduna_KSTV Kaduna"
   name: KSTV
   state: Kaduna
   city: Kaduna
+  broadcast_type: Regional
 - raw_name: "Kaduna_Liberty TV Kaduna"
   name: Liberty TV
   state: Kaduna
   city: Kaduna
+  broadcast_type: Regional
 - raw_name: "Kaduna_NTA Birnin-Gwari"
   name: NTA
   state: Kaduna
   city: Birnin-Gwari
+  broadcast_type: Regional
 - raw_name: "Kaduna_NTA Kaduna"
   name: NTA
   state: Kaduna
   city: Kaduna
+  broadcast_type: Regional
 - raw_name: "Kaduna_NTA Kafanchan"
   name: NTA
   state: Kaduna
   city: Kafanchan
+  broadcast_type: Regional
 - raw_name: "Kaduna_NTA Zaria"
   name: NTA
   state: Kaduna
   city: Zaria
+  broadcast_type: Regional
 - raw_name: "Kano_AIT Kano"
   name: AIT
   state: Kano
   city: Kano
+  broadcast_type: Regional
 - raw_name: "Kano_CTV Channel 67 Kano"
   name: CTV
   state: Kano
   city: Kano
+  broadcast_type: Regional
 - raw_name: "Kano_NTA Kano"
   name: NTA
   state: Kano
   city: Kano
+  broadcast_type: Regional
 - raw_name: "Lagos_AIT Lagos"
   name: AIT
   state: Lagos
   city: Lagos
+  broadcast_type: Regional
 - raw_name: "Lagos_Channels TV Lagos"
   name: Channels Television
   state: Lagos
   city: Lagos
+  broadcast_type: Regional
 - raw_name: "Lagos_DMS Lagos"
   name: DMS
   state: Lagos
   city: Lagos
+  broadcast_type: Regional
 - raw_name: "Lagos_Galaxy TV Lagos"
   name: Galaxy TV
   state: Lagos
   city: Lagos
+  broadcast_type: Regional
 - raw_name: "Lagos_Kwese Free Sports (KFS) UHF 32 Lagos"
   name: Kwese Free Sports
   state: Lagos
   city: Lagos
+  broadcast_type: Regional
 - raw_name: "Lagos_LTV Lagos"
   name: Lagos TV
   state: Lagos
   city: Lagos
+  broadcast_type: Regional
 - raw_name: "Lagos_MITV Lagos"
   name: MITV
   state: Lagos
   city: Lagos
+  broadcast_type: Regional
 - raw_name: "Lagos_NTA 2  CH 5"
   name: NTA 2
   state: Lagos
   city: Lagos
+  broadcast_type: Regional
 - raw_name: "Lagos_NTA CH 10"
   name: NTA
   state: Lagos
   city: Lagos
+  broadcast_type: Regional
 - raw_name: "Lagos_On TV Lagos"
   name: OnTv
   state: Lagos
   city: Lagos
+  broadcast_type: Regional
 - raw_name: "Lagos_Silverbird Television Lagos"
   name: Silverbird Television
   state: Lagos
   city: Lagos
+  broadcast_type: Regional
 - raw_name: "Lagos_Super Screen"
   name: Super Screen
   state: Lagos
   city: Lagos
+  broadcast_type: Regional
 - raw_name: "Lagos_TV Continental"
   name: TV Continental
   state: Lagos
   city: Lagos
+  broadcast_type: Regional
 - raw_name: "Lagos_Wazobia Max Lagos"
   name: Wazobia Max
   state: Lagos
   city: Lagos
+  broadcast_type: Regional
 - raw_name: "Niger_NSTV (NTA Station) Minna"
   name: NSTV
   state: Niger
   city: Minna
+  broadcast_type: Regional
 - raw_name: "Niger_NTA Minna"
   name: NTA
   state: Niger
   city: Minna
+  broadcast_type: Regional
 - raw_name: "Oyo_AIT Ibadan"
   name: AIT
   state: Oyo
   city: Ibadan
+  broadcast_type: Regional
 - raw_name: "Oyo_BCOS CH 28 Ibadan"
   name: BCOS
   state: Oyo
   city: Ibadan
+  broadcast_type: Regional
 - raw_name: "Oyo_Galaxy TV Ibadan"
   name: Galaxy TV
   state: Oyo
   city: Ibadan
+  broadcast_type: Regional
 - raw_name: "Oyo_MITV Ibadan"
   name: MITV
   state: Oyo
   city: Ibadan
+  broadcast_type: Regional
 - raw_name: "Oyo_NTA CH 45 & 7 Ibadan"
   name: NTA 45 & 7
   state: Oyo
   city: Ibadan
+  broadcast_type: Regional
 - raw_name: "Oyo_NTA Oyo"
   name: NTA
   state: Oyo
   city: Ibadan
+  broadcast_type: Regional
 - raw_name: "Plateau_AIT Jos"
   name: AIT
   state: Plateau
   city: Jos
+  broadcast_type: Regional
 - raw_name: "Plateau_NTA Jos"
   name: NTA
   state: Plateau
   city: Jos
+  broadcast_type: Regional
 - raw_name: "Plateau_PRTV Jos"
   name: PRTV
   state: Plateau
   city: Jos
+  broadcast_type: Regional
 - raw_name: "Plateau_Silverbird TV Jos"
   name: Silverbird Television
   state: Plateau
   city: Jos
+  broadcast_type: Regional
 - raw_name: "Rivers_AIT Port Harcourt"
   name: AIT
   state: Rivers
   city: Port Harcourt
+  broadcast_type: Regional
 - raw_name: "Rivers_NTA Port Harcourt"
   name: NTA
   state: Rivers
   city: Port Harcourt
+  broadcast_type: Regional
 - raw_name: "Rivers_RSTV Port Harcourt"
   name: RSTV
   state: Rivers
   city: Port Harcourt
+  broadcast_type: Regional
 - raw_name: "Rivers_Silverbird TV CH 31 P/Harcourt"
   name: Silverbird Television
   state: Rivers
   city: Port Harcourt
+  broadcast_type: Regional
 - raw_name: "Rivers_Wazobia Max P/H"
   name: Wazobia Max
   state: Rivers
   city: Port Harcourt
+  broadcast_type: Regional
 - raw_name: "Sokoto_NTA Gusau"
   name: NTA
   state: Sokoto
   city: Gusau
+  broadcast_type: Regional
 - raw_name: "Sokoto_NTA Sokoto"
   name: NTA
   state: Sokoto
   city: Sokoto
+  broadcast_type: Regional
 - raw_name: "Sokoto_Sokoto State Television"
   name: Sokoto State Television
   state: Sokoto
   city: Sokoto
+  broadcast_type: Regional
 

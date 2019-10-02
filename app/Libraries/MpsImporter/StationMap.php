@@ -17,6 +17,11 @@ class StationMap
         $this->station_map = $national_map->merge($network_map)->merge($international_map);
     }
 
+    public function get($key)
+    {
+        return $this->station_map->get($key, null);
+    }
+
     protected function parseYaml($file_name)
     {
         $res = Yaml::parseFile($this->getFilePath($file_name));

@@ -1,22 +1,32 @@
 - raw_name: "ABS TV Nett"
   name: ABS TV
+  broadcast_type: Network
 - raw_name: "AIT (Natl) Nett"
   name: AIT
+  broadcast_type: Network
 - raw_name: "CRTV Nett"
   name: CRTV
+  broadcast_type: Network
 - raw_name: "CTV Nett"
   name: CTV
+  broadcast_type: Network
 - raw_name: "KSTV Nett"
   name: KSTV
+  broadcast_type: Network
 - raw_name: "KTV Nett"
   name: KTV
+  broadcast_type: Network
 - raw_name: "NTA (Natl Nett)"
   name: NTA
+  broadcast_type: Network
 - raw_name: "OSBC Nett"
   name: OSBC
   state: Osun
   city: Osogbo
+  broadcast_type: Regional
 - raw_name: "Silverbird (Natl Nett)"
   name: Silverbird Television
+  broadcast_type: Network
 - raw_name: "Wazobia Max Nett"
   name: Wazobia Max
+  broadcast_type: Network

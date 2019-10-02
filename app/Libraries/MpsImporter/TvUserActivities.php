@@ -2,6 +2,7 @@
 
 namespace Vanguard\Libraries\MpsImporter;
 
+use Carbon\Carbon;
 use Vanguard\Models\TvStation;
 use Vanguard\Models\MpsProfileActivity;
 use Illuminate\Support\Facades\DB;
@@ -9,7 +10,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Vanguard\Libraries\Batch\LaravelBatch;
 
-// $tv_profile = new \Vanguard\Libraries\MpsImporter\TvUserActivities(now(), '/tmp/tv-diarybaNkBK'); $tv_profile->process();
+// $tv_profile = new \Vanguard\Libraries\MpsImporter\TvUserActivities(now(), '/var/www/diary.csv'); $tv_profile->process();
 
 class TvUserActivities
 {
@@ -53,6 +54,8 @@ class TvUserActivities
         $activity_list = [];
         $current_count = 0;
 
+        $parser = new TvStationParser();
+
         Log::info("................................BEGIN PARSING OF TV DATA ACTIVITIES................................");
 
         while (($row_data = fgetcsv($file_handle)) !== false) {
@@ -67,13 +70,14 @@ class TvUserActivities
             foreach ($row_data as $index => $value) {
                 if ($value == 1) {
                     $key = $header[$index];
-                    $parsed_info = TvStationParser::parse($key);
+                    $parsed_info = $parser->parse($key);
                     
                     if ($parsed_info === null) {
                         continue;
                     }
 
                     $activity = $this->getModelAttributes($parsed_info, $ext_profile_id, $wave);
+                    dd($activity);
                     if ($activity) {
                         $activity_list[] = $activity;
                         $current_count++;
@@ -104,7 +108,9 @@ class TvUserActivities
         if ($this->wave === null) {
             foreach ($header as $index => $field_name) {
                 if ($field_name == 'Wave') {
-                    $this->wave = $row[$index];
+                    $wave = $row[$index];
+                    $wave = $wave . " 01";
+                    $this->wave = Carbon::createFromFormat("F 'y d", $wave)->toDateString(); 
                     break;
                 }
             }
@@ -128,7 +134,6 @@ class TvUserActivities
             "broadcast_type" => $parsed_info["broadcast_type"],
             "start_time" => $this->formatTimeBelt($parsed_info["start_time"]),
             "end_time" => $this->formatTimeBelt($parsed_info["end_time"]),
-            "media_type" => "Tv",
             "created_at" => $this->formatted_time
         ];
     }

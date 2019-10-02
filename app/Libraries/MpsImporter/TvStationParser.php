@@ -3,6 +3,7 @@
 namespace Vanguard\Libraries\MpsImporter;
 
 use Log;
+use Illuminate\Support\Arr;
 
 class TvStationParser
 {
@@ -20,21 +21,21 @@ class TvStationParser
         if ($matches === null) {
             return null;
         }
-
         $raw_name = $matches["raw_name"];
         $data = $this->raw_station_map->get($raw_name);
+
         if ($data === null) {
             Log::warning("Station {$key} with {$raw_name} not found in mapping");
             return null;
         }
         $activity_info = [
-            "name" => $data["name"],
+            "name" => $data[0]["name"],
             "day" => $matches["day"], 
             "start_time" => $matches["start_time"],
             "end_time" => $matches["end_time"],
-            "state" => $data["state"],
-            "city" => $data["city"],
-            "broadcast_type" => $data["broadcast_type"]
+            "state" => Arr::get($data[0], "state", ""),
+            "city" => Arr::get($data[0], "city", ""),
+            "broadcast_type" => $data[0]["broadcast_type"]
         ];
         return collect($activity_info);
     }
