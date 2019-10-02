@@ -46,6 +46,7 @@ use Vanguard\Services\MediaPlan\GetStationTimeBeltRatingService;
 use Vanguard\Services\MediaPlan\StoreMediaPlanService;
 use Vanguard\Services\MediaPlan\StoreMediaPlanSuggestionService;
 use Vanguard\Models\Client;
+use Vanguard\User;
 use Vanguard\Services\Ratings\StoreMediaPlanDeliverables;
 
 class MediaPlanController extends Controller
@@ -314,13 +315,22 @@ class MediaPlanController extends Controller
             'plan_period' => $media_plan_period,
             'monthly_weeks_table_header' => $monthly_weeks_table_header
         ];
-        $user_list_service = new GetUserList([$this->companyId()]);
-        $user_list = $user_list_service->getUserData();
-        $user_list = collect($user_list);
-        $user_list_grouped = $user_list->groupBy('status');
+          /*
+        * This way of get users that have a particular permission is not the most efficient way to do this, 
+        * moving forward we will have to review this.
+        */
+        
+        $users = User::where('status', 'Active')->permission(['approve.media_plan', 'decline.media_plan'])->get(); 
+        $filtered_users = $users->filter(function ($item) {
+            if($item->companies->first()->id == $this->companyId()){
+                return $item;
+            }
+        })->values();
+        $users =  $filtered_users->all();
+
         return view('agency.mediaPlan.summary')->with('summary', $media_plan_summary)
                 ->with('full_plan_details', $full_plan_details)
-                ->with('media_plan', $mediaPlan)->with('users', $user_list_grouped['Active'])->with('routes', $routes);
+                ->with('media_plan', $mediaPlan)->with('users', $users)->with('routes', $routes);
     }
 
     public function filterByStationType($suggestions, $station_type)

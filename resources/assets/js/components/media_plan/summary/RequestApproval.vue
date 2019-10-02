@@ -14,7 +14,7 @@
                                         placeholder="Select user"
                                         v-model="user"
                                         :items="users"
-                                        item-text="name"
+                                        item-text="firstname"
                                         item-value="id"
                                         v-validate="'required'"
                                         name="user"
@@ -63,6 +63,7 @@
             };
         },
         mounted() {
+            console.log(this.users);
             console.log('finance Component mounted.');
         },
         methods:{
