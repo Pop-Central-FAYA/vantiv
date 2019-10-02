@@ -63,7 +63,6 @@
             };
         },
         mounted() {
-            console.log(this.users);
             console.log('finance Component mounted.');
         },
         methods:{
