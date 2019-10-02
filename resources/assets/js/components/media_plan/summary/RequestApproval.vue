@@ -14,7 +14,7 @@
                                         placeholder="Select user"
                                         v-model="user"
                                         :items="users"
-                                        item-text="firstname"
+                                        item-text="name"
                                         item-value="id"
                                         v-validate="'required'"
                                         name="user"

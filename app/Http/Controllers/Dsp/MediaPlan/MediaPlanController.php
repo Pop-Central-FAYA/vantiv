@@ -48,6 +48,7 @@ use Vanguard\Services\MediaPlan\StoreMediaPlanSuggestionService;
 use Vanguard\Models\Client;
 use Vanguard\User;
 use Vanguard\Services\Ratings\StoreMediaPlanDeliverables;
+use Vanguard\Http\Resources\UserCollection;
 
 class MediaPlanController extends Controller
 {
@@ -326,7 +327,7 @@ class MediaPlanController extends Controller
                 return $item;
             }
         })->values();
-       $users =  $filtered_users->all();
+       $users =   new UserCollection($filtered_users);
 
         return view('agency.mediaPlan.summary')->with('summary', $media_plan_summary)
                 ->with('full_plan_details', $full_plan_details)
