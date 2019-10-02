@@ -69,7 +69,7 @@
                 if(this.hasPermissionAction(this.permissionList, ['update.user'])){
                      this.sweet_alert('Resending Invitaion to user', 'info');
                     axios({
-                        method: 'get',
+                        method: 'post',
                         url: this.user.links.reinvite,
                     }).then((res) => {
                         this.dialog = false;

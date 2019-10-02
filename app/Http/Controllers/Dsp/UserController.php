@@ -94,8 +94,8 @@ class UserController extends Controller
         return new UserResource($updated_user);
     }
 
-    public function resend($id)
-    {
+    public function resend(Request $request, $id)
+    {  
         $user = User::findOrFail($id);
         $this->authorize('update', $user);
         $send_mail = \Mail::to($user->email)->send(new SendUserInvitationMail($user, $user->full_name));

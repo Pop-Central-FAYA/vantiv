@@ -250,7 +250,7 @@
                 Route::get('/users', 'UserController@list')->name('users.list');
                 Route::post('/users', 'UserController@create')->name('users.invite');  
                 Route::patch('/users/{id}', 'UserController@update')->name('users.update'); 
-                Route::get('/users/{id}/resend-invitaion', 'UserController@resend')->name('users.reinvite'); 
+                Route::post('/users/{id}/resend-invitaion', 'UserController@resend')->name('users.reinvite'); 
                 Route::delete('/users/{id}', 'UserController@delete')->name('users.delete'); 
             });
          });
