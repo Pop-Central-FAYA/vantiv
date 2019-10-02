@@ -327,7 +327,7 @@ class MediaPlanController extends Controller
                 return $item;
             }
         })->values();
-       $users =   new UserCollection($filtered_users);
+        $users = new UserCollection($filtered_users);
 
         return view('agency.mediaPlan.summary')->with('summary', $media_plan_summary)
                 ->with('full_plan_details', $full_plan_details)
