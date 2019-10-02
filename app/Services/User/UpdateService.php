@@ -27,7 +27,7 @@ class UpdateService implements BaseServiceInterface
         return $this->updateUser();
     }
 
-    public function updateUser()
+    private function updateUser()
     {
         $roles = Arr::pluck($this->validated['role_name'], 'role');
         $user = User::findOrFail($this->user_id);

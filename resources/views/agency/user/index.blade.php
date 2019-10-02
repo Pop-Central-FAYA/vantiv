@@ -12,7 +12,7 @@
             <div class="row">
        <!-- subheader -->
        <div class="col-md-10">
-                    <h2 class="sub_header">All Users</h2>
+                    <h2 class="sub_header">Users</h2>
                 </div>
 
                 @if(Auth::user()->can('create.user'))

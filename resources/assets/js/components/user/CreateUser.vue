@@ -7,7 +7,7 @@
                 <v-card-text>
                     <v-container grid-list-md>
                         <v-form>
-                            <v-subheader>User Information</v-subheader>
+                            <v-subheader>Create New User</v-subheader>
                             <v-divider></v-divider>
                             <v-layout wrap>
                                 <v-flex xs12 sm12 md12>
@@ -35,12 +35,14 @@
                                         track-by="label" 
                                         :searchable="false" 
                                         :multiple="true" 
+                                        v-validate="'required'"
+                                        :error-messages="errors.collect('email')"
                                     >
                                   </multiselect>
                                 </v-flex>
                             </v-layout>
                         </v-form>
-                        <v-card-actions>
+                    <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn color="red" dark @click="closeDialog()">Close</v-btn>
                     <v-btn color="" class="default-vue-btn" dark @click="inviteUser()">Invite</v-btn>
@@ -56,6 +58,25 @@
         min-height: 45px;
         border: 1px solid #ccc;
         margin-top: 16px;
+    }
+     .default-vue-btn {
+        color: #fff;
+        cursor: pointer;
+        background: #44C1C9 !important;
+        -webkit-appearance: none;
+        font-family: "Roboto", sans-serif;
+        font-weight: 500;
+        border: 0;
+        font-size: 15px;
+        -webkit-border-radius: 2px;
+        -moz-border-radius: 2px;
+        border-radius: 2px;
+        -webkit-box-shadow: 9px 10px 20px 1px rgba(0,159,160,0.21);
+        -moz-box-shadow: 9px 10px 20px 1px rgba(0,159,160,0.21);
+        box-shadow: 9px 10px 20px 1px rgba(0,159,160,0.21);
+        position: relative;
+        display: inline-block;
+        text-transform: uppercase;
     }
   
 </style>
@@ -104,14 +125,10 @@
                         url: this.routes.create,
                         data:  this.user
                     }).then((res) => {
-                    if (res.data.status === 'success') {
+                         this.sweet_alert('User Invited Successfully', 'success');
                         this.dialog = false;
                         Event.$emit('user-created', res.data.data);
                         this.setupModel()
-                        this.sweet_alert('Request sent successfully', 'success');
-                    } else {
-                        this.sweet_alert('Something went wrong, Try again!', 'error');
-                    }
                     }).catch((error) => {
                         if (error.response && (error.response.status == 422)) {
                             this.displayServerValidationErrors(error.response.data.errors);

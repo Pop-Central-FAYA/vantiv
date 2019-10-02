@@ -6,11 +6,11 @@
                 <v-card-text>
                     <v-container grid-list-md>
                         <v-form>
-                            <v-subheader>Resend Invitation</v-subheader>
+                            <v-subheader>Resend User Invitation</v-subheader>
                             <v-divider></v-divider>
                              <v-layout row wrap>
                                  <v-flex xs12 sm12 md12>
-                                    <v-text-field required :clearable="true"  :label="'Email'" 
+                                    <v-text-field required  :label="'Email'" 
                                                 :placeholder="'Email'" :hint="'Enter the email of the user'" 
                                                 :single-line="true"
                                                 solo
@@ -67,13 +67,13 @@
             },
             updateUser: async function(event) {
                 if(this.hasPermissionAction(this.permissionList, ['update.user'])){
-                     this.sweet_alert('Saving user information', 'info');
+                     this.sweet_alert('Resending Invitaion to user', 'info');
                     axios({
                         method: 'get',
                         url: this.user.links.reinvite,
                     }).then((res) => {
                         this.dialog = false;
-                        this.sweet_alert('Invite sent successfully', 'success');
+                        this.sweet_alert('Invitaion resent successfully', 'success');
                     }).catch((error) => {
                         if (error.response && (error.response.status == 422)) {
                             this.displayServerValidationErrors(error.response.data.errors);

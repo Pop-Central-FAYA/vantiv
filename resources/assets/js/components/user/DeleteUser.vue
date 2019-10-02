@@ -6,11 +6,11 @@
                 <v-card-text>
                     <v-container grid-list-md>
                         <v-form>
-                            <v-subheader>Delete User</v-subheader>
+                            <v-subheader>Are You Sure You Want To Delete The User</v-subheader>
                             <v-divider></v-divider>
                             <v-layout row wrap>
                                  <v-flex xs12 sm12 md12>
-                                    <v-text-field required :clearable="true"  :label="'Email'" 
+                                    <v-text-field required :label="'Email'" 
                                                 :placeholder="'Email'" :hint="'Enter the email of the user'" 
                                                 :single-line="true"
                                                 solo
@@ -68,13 +68,14 @@
             },
             deletUser: async function(event) {
                 if(this.hasPermissionAction(this.permissionList, ['update.user'])){
-                     this.sweet_alert('deleting user information', 'info');
+                     this.sweet_alert('Deleting user information', 'info');
                     axios({
                         method: 'delete',
                         url: this.user.links.delete,
                     }).then((res) => {
+                        console.log(res);
                         this.dialog = false;
-                        Event.$emit('user-created', "success");
+                        Event.$emit('user-deleted',this.user.id);
                         this.sweet_alert('User deleted successfully', 'success');
                     }).catch((error) => {
                         if (error.response && (error.response.status == 422)) {

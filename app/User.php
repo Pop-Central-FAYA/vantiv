@@ -223,4 +223,9 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract
 
         return $this->assignRole($roles, $guard);
     }
+    public function getCompanyName()
+    {
+        $company_name = Company::select('name')->where('id', $this->companies->first()->id)->get();
+        return $company_name->implode("name", ", ");
+    }
 }

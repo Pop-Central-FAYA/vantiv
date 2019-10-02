@@ -2,102 +2,116 @@
 
 namespace Vanguard\Http\Controllers\Dsp;
 
-use Illuminate\Http\Request;
 use Vanguard\Http\Controllers\Controller;
-use Vanguard\Services\User\GetUserList;
 use Vanguard\Http\Controllers\Traits\CompanyIdTrait;
-use Vanguard\Services\Mail\UserInvitationMail;
-use Vanguard\Services\User\InviteUser;
+use Vanguard\Http\Requests\User\UserInviteRequest;
+use Vanguard\Services\User\InviteService;
+use Vanguard\Http\Resources\UserResource;
+use Vanguard\Http\Resources\UserCollection;
+use Illuminate\Http\Request;
 use Vanguard\Services\RolesPermission\ListRoleGroup;
-use Vanguard\Services\User\UpdateUser;
-use Vanguard\Services\User\UpdateUserService;
-use Vanguard\Services\Validator\UpdateUserValidation;
-use Vanguard\Services\Validator\ValidateUserCompleteAccount;
-use Vanguard\Services\Validator\ValidateUserInviteRequest;
-use Vanguard\Support\Enum\UserStatus;
+use Vanguard\Http\Requests\User\UpdateUserRequest;
+use Vanguard\Services\User\UpdateService;
+use Vanguard\Services\User\ReinviteService;
 use Vanguard\User;
-use \Illuminate\Support\Facades\URL;
+use Vanguard\Models\Company;
+use Vanguard\Mail\SendUserInvitationMail;
+use Vanguard\Support\Enum\UserStatus;
+use Vanguard\Services\Validator\ValidateUserCompleteAccount;
 use Session;
-use Vanguard\Libraries\Enum\Status;
-use Yajra\DataTables\DataTables;
-use Vanguard\Services\Mail\MailFormat;
-
+use Vanguard\Services\User\UpdateUser;
 class UserController extends Controller
 {
     use CompanyIdTrait;
 
-    // This fub=nction will return a view with the lis of users
-    public function index()
+    public function __construct()
     {
-     $user_list_service = new GetUserList($this->getCompanyIdsList());
-       $user_list = $user_list_service->getUserData();
-       return view('agency.user-management.index')->with('users', $user_list);
+        $this->middleware('permission:create.user')->only(['create']);
+        $this->middleware('permission:update.user')->only(['update']);
+        $this->middleware('permission:view.user')->only(['list']);
     }
 
-    public function getDatatable(DataTables $dataTables)
-    {
-        $user_list_service = new GetUserList($this->getCompanyIdsList());
-        $user_list = $user_list_service->getUserData();
-        $statuses = UserStatus::lists();
-        return $dataTables->collection($user_list)
+    /*******************************
+     * BELOW ARE THE PAGES.
+     *******************************/
 
-            ->addColumn('edit', function ($user_list) {
-                if(!\Auth::user()->hasPermissionTo('update.user')){
-                    return '';
-                }else{
-                    return '<a href="'.route('agency.user.edit', ['id' => $user_list['id']]).'" class="weight_medium">Edit</a>';
-                }
-            })
-
-            ->addColumn('status', function ($user_list) use($statuses) {
-
-                if($user_list['status'] === UserStatus::UNCONFIRMED){
-                    return '<a href="#user_modal_'.$user_list['id'].'" class="weight_medium modal_user_click">'.$user_list['status'].'</a>';
-                }else{
-                    if(!\Auth::user()->hasPermissionTo('create.user')){
-                        return '';
-                    }else{
-                        return view('users.status', ['user_status' => $user_list['status'], 'statuses' => $statuses, 'id' => $user_list['id']]);
-                    }
-                }
-
-            })
-            ->rawColumns(['edit' => 'edit', 'status' => 'status'])->addIndexColumn()
-            ->make(true);
-    }
-    public function inviteUser()
-    {
+    public function index(Request $request)
+    {    
+        $user = \Auth::user()->getCompanyName();
         $role_list_services = new ListRoleGroup('dsp');
         $roles = $role_list_services->getRoles();
-        return view('agency.user-management.invite_user')
-                    ->with('roles', $roles)
-                    ->with('companies', $this->getCompaniesDetails($this->companyId()));
+        $routes = [
+                 'list' => route('users.list'),
+                 'create' => route('users.invite')
+                ];
+        return view('agency.user.index')
+               ->with('roles', $roles)
+               ->with('routes', $routes);
     }
 
-    public function processInvite(Request $request)
+
+    /*******************************
+     *  BELOW ARE THE API ACTIONS
+     *******************************/
+
+    /**
+     * UserInviteRequest $request
+     */
+    
+    public function create(UserInviteRequest $request)
     {
-        
-        $validate_request_service = new ValidateUserInviteRequest($request->all());
-        $validate_request = $validate_request_service->validateRequest();
-        if($validate_request->fails()){
-            return ['status'=>"error", 'message'=> $validate_request->errors()->first()];
-        }
-        $companies = $this->getCompany($request->companies);
-        $inviter_name = \Auth::user()->full_name;
-        
-        \DB::transaction(function () use ($request, $companies, $inviter_name) {
-            $user_mail_content_array = [];
-            foreach ($request->email as $email) {
-                $invite_user_service = new InviteUser($request->roles, $companies, $email, "web");
-                $invited_user = $invite_user_service->createUnconfirmedUser();
-                $subject="Invitation to join Vantage";
-                $email_format = new MailFormat($invited_user, $inviter_name, $subject);
-                $user_mail_content_array[] = $email_format->emailFormat();
-            }
-            $email_invitation_service = new UserInvitationMail($user_mail_content_array);
-            $email_invitation_service->sendInvitationMail();
-        });
-        return ['status'=>"success", 'message'=> "User(s) invited successfully, and emails sent"];
+       
+        $validated = $request->validated(); 
+        $user = \Auth::user();
+        $invite_user = new InviteService($validated, $user);
+        $new_user = $invite_user->run();   
+        return new UserResource($new_user);
+    }
+
+     /**
+     * Return a list of user that the currently logged in user has permission to view
+     */
+    public function list()
+    {        
+        $user = \Auth::user();
+        $this->authorize('get', $user);
+        $company_user = Company::with('users')->findOrFail($this->companyId());
+        $user_list = $company_user->users;
+        return new UserCollection($user_list);
+    }
+
+     /**
+     * Update the user
+     */
+    
+    public function update(UpdateUserRequest $request, $id)
+    {
+        $validated = $request->validated(); 
+        $user = User::findOrFail($id);
+        $this->authorize('update', $user);
+        $update_user_service = new UpdateService($validated, $this->companyId(), $id, 'web');
+        $updated_user = $update_user_service->run();
+        return new UserResource($updated_user);
+    }
+
+    public function resend($id)
+    {
+        $user = User::findOrFail($id);
+        $this->authorize('update', $user);
+        $send_mail = \Mail::to($user->email)->send(new SendUserInvitationMail($user, $user->full_name));
+        return response()->json(array(
+            'code' =>  204,
+           ),204); 
+    }
+
+    public function delete($id)
+    {
+        $user = User::findOrFail($id);
+        $this->authorize('delete', $user);
+        $user->delete();
+       return response()->json(array(
+                 'code' =>  204,
+                ),204); 
     }
 
     public function getCompleteAccount(Request $request, $id)
@@ -132,63 +146,6 @@ class UserController extends Controller
 
         return ['status'=>"success", 'message'=> "Thank you for completing your registration, you can now login with your credentials"];
     }
-// retun the view to add role to a member
-    public function editUser($id)
-    {
-        $user = User::find($id)->load('companies');
-        $roles_service = new ListRoleGroup('dsp');
-        return view('agency.user-management.edit')->with('roles', $roles_service->getRoles())
-                                        ->with('companies', $this->getCompaniesDetails($this->companyId()))
-                                        ->with('user', $user);
-    }
 
-    public function updateUser($id, Request $request)
-    {
-        $validate_request_service = new UpdateUserValidation($request->all());
-        $validate_request = $validate_request_service->validateRequest();
-        if($validate_request->fails()){
-            return ['status'=>"error", 'message'=> $validate_request->errors()->first()];
-        }
-
-        $update_user_service = new UpdateUserService($request->roles, $this->getCompany($request->companies), $request->user_id, 'web');
-        $update_user_service->updateUser();
-        return ['status'=>"success", 'message'=> "User updated successfully"];
-    }
-
-    private function getCompany($request)
-    {
-        if(isset($request->companies)) {
-            $companies = $request->companies;
-        }else{
-            $companies = \Auth::user()->companies->first()->id;
-        }
-        return $companies;
-    }
-
-    public function resendInvitation(Request $request)
-    {
-        $user = User::find($request->user_id);
-        $subject="Invitation to join Vantage";
-        $email_format = new MailFormat($user, \Auth::user()->full_name, $subject);
-        $user_mail_content_array[] = $email_format->emailFormat();
-
-        $email_invitation_service = new UserInvitationMail($user_mail_content_array);
-        $email_invitation_service->sendInvitationMail();
-        return ['status'=>"success", 'message'=> "Invitation has been sent to the user"];
-    }
-
-    public function updateStatus(Request $request)
-    {
-        try{
-            $user = User::findOrFail($request->user_id);
-            $user->status = $request->status;
-            $user->save();
-        }catch (\Exception $exception){
-            \Log::error($exception);
-            return ['status'=>"error", 'message'=> 'An error occurred while performing your request, please contact admin'];
-        }
-        return ['status'=>"success", 'message'=> "Status updated successfully"];
-    }
-
+   
 }
-?>

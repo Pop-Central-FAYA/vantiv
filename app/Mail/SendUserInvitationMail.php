@@ -8,7 +8,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use \Illuminate\Support\Facades\URL;
 
-class InviteUser extends Mailable
+class SendUserInvitationMail extends Mailable
 {
     use Queueable, SerializesModels;
     public $invited_user;
@@ -19,11 +19,10 @@ class InviteUser extends Mailable
      *
      * @return void
      */
-    public function __construct($invited_user, $inviter_name, $subject)
+    public function __construct($invited_user, $inviter_name)
     {
         $this->invited_user = $invited_user;
         $this->inviter_name = $inviter_name;
-        $this->subject = $subject;
     }
 
     /**
@@ -34,20 +33,20 @@ class InviteUser extends Mailable
     public function build()
     {
         return $this->view('mail.invite_user')
-                     ->subject($this->format()['subject'])
-                    ->with('user_mail_content', $this->format());
+                     ->subject("Invitation to join Vantage")
+                     ->with('user_mail_content', $this->mailData());
     }
 
-    public function format()
+    private function mailData()
     {
+        $expire_time =  env('INVITATION_LINK_USAGE_DURATION', 24);
         return [
             'companies' => collect( $this->invited_user->companies()->pluck('name'))->implode(', '),
             'recipient' =>   $this->invited_user->email,
             'subject' => $this->subject,
             'inviter' =>  $this->inviter_name,
-            'user_id' =>  $this->invited_user->id,
-            'valid_duration' => env('INVITATION_LINK_USAGE_DURATION', 24). " hour(s)",
-            'link' =>  URL::temporarySignedRoute('user.complete_registration', now()->addHour(env('INVITATION_LINK_USAGE_DURATION', 24)),
+            'valid_duration' => $expire_time. " hours",
+            'link' =>  URL::temporarySignedRoute('user.complete_registration', now()->addHour($expire_time),
                 ['id'=>  $this->invited_user->id])
         ];
     }

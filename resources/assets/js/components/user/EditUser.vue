@@ -6,11 +6,11 @@
                 <v-card-text>
                     <v-container grid-list-md>
                         <v-form>
-                            <v-subheader>Update user</v-subheader>
+                            <v-subheader>Edit User</v-subheader>
                             <v-divider></v-divider>
                              <v-layout row wrap>
                                  <v-flex xs12 sm12 md12>
-                                    <v-text-field required :clearable="true"  :label="'Email'" 
+                                    <v-text-field required :label="'Email'" 
                                                 :placeholder="'Email'" :hint="'Enter the email of the user'" 
                                                 :single-line="true"
                                                 solo
@@ -100,15 +100,13 @@
                     } 
                     console.log(this.user.links.index);
                     
-                     this.sweet_alert('Saving user information', 'info');
+                     this.sweet_alert('Updating User Information', 'info');
                     axios({
                         method: 'patch',
                         url: this.user.links.update,
                         data:  this.user
                     }).then((res) => {
                         this.dialog = false;
-                        Event.$emit('user-created', "success");
-                        this.setupModel()
                         this.sweet_alert('User updated successfully', 'success');
                     }).catch((error) => {
                         if (error.response && (error.response.status == 422)) {

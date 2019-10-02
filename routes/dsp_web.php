@@ -161,17 +161,6 @@
             'uses' => 'ProfileManagementsController@updateDetails',
             'middleware' => 'permission:update.profile',
         ]);
-
-        Route::group(['namespace' => 'Dsp', 'prefix' => 'user'], function () {
-            Route::get('/all', 'UserController@index')->name('agency.user.index')->middleware('permission:view.user');
-            Route::get('/invite', 'UserController@inviteUser')->name('agency.user.invite')->middleware('permission:create.user');
-            Route::get('/edit/{id}', 'UserController@editUser')->name('agency.user.edit')->middleware('permission:update.user');
-            Route::post('/update/{id}', 'UserController@updateUser');
-            Route::post('/invite/store', 'UserController@processInvite');
-            Route::get('/data-table', 'UserController@getDatatable');
-            Route::post('/resend/invitation', 'UserController@resendInvitation')->middleware('permission:update.user');
-            Route::get('/status/update', 'UserController@updateStatus')->middleware('permission:update.user');
-        });
  /*
          * WalkIns Management
          */
@@ -255,14 +244,14 @@
         * new user management route
         */
         Route::group(['namespace' => 'Dsp'], function () {
-            Route::get('/users/index', 'UsersController@index')->name('users.index');
+            Route::get('/users', 'UserController@index')->name('users.index');
 
             Route::group(['prefix' => 'api'], function () {
-                Route::get('/users', 'UsersController@list')->name('users.list');
-                Route::post('/users', 'UsersController@create')->name('users.invite');  
-                Route::patch('/users/{id}', 'UsersController@update')->name('users.update'); 
-                Route::get('/users/invite/{id}', 'UsersController@resend')->name('users.reinvite'); 
-                Route::delete('/users/{id}', 'UsersController@delete')->name('users.delete'); 
+                Route::get('/users', 'UserController@list')->name('users.list');
+                Route::post('/users', 'UserController@create')->name('users.invite');  
+                Route::patch('/users/{id}', 'UserController@update')->name('users.update'); 
+                Route::get('/users/{id}/resend-invitaion', 'UserController@resend')->name('users.reinvite'); 
+                Route::delete('/users/{id}', 'UserController@delete')->name('users.delete'); 
             });
          });
 

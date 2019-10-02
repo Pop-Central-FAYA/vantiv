@@ -7,21 +7,20 @@ use Vanguard\Support\Enum\UserStatus;
 use Vanguard\User;
 use Illuminate\Support\Arr;
 use Vanguard\Services\Mail\InviteUserMailFormat;
-use Vanguard\Mail\InviteUser;
+use Vanguard\Mail\SendUserInvitationMail;
 
 class InviteService implements BaseServiceInterface
 {
-    protected $companies_id;
+    protected $user;
     protected $data;
     protected $guard;
     protected $subject;
     
-    public function __construct($data, $companies_id, $guard, $subject)
+    public function __construct($data, $user)
     {
         $this->data = $data;
-        $this->companies_id = $companies_id;
-        $this->guard = $guard;
-        $this->subject = $subject;
+        $this->user = $user;
+
     }
 
     public function run()
@@ -29,22 +28,18 @@ class InviteService implements BaseServiceInterface
         return $this->processInvite();
     }
 
-    public function processInvite()
+    private function processInvite()
     {
-        $inviter_name = \Auth::user()->full_name;
-         $new_user = '';
-        \DB::transaction(function () use ($inviter_name) {
-            $roles = Arr::pluck($this->data['roles'], 'role');
-            foreach (explode(',', $this->data['email']) as $email) {
-                $invited_user = $this->createUnconfirmedUser($roles, $this->companies_id, $email, $this->guard);
-                $send_mail = \Mail::to($email)->send(new InviteUser($invited_user, $inviter_name, $this->subject));
-             }
-            $new_user = $invited_user;
-        });
-        return $new_user;
+          return  \DB::transaction(function (){
+                $roles = Arr::pluck($this->data['roles'], 'role');
+                $invited_user = $this->createUnconfirmedUser($roles, $this->user->companies->first()->id, $this->data['email'], 'web');
+                $send_mail = \Mail::to($this->data['email'])->send(new SendUserInvitationMail($invited_user, $this->user->full_name));
+                return $invited_user;
+             });
+
     }
 
-    public function createUnconfirmedUser($roles, $companies, $email, $guard)
+    private function createUnconfirmedUser($roles, $companies, $email, $guard)
     {
             $user = $this->createUser($email);
             $user->companies()->attach($companies);

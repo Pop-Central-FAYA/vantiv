@@ -14,7 +14,7 @@
         <tr>
             <td class="text-xs-left clickable" >{{ props.item.name }}</td>
             <td class="text-xs-left clickable">{{ props.item.email }}</td>
-            <td class="text-xs-left clickable"><span v-for="(list, index) in props.item.roles" v-bind:key="index"> <span>{{list}}</span> <span v-if="index+1 < props.item.roles.length">, </span>  </span>     </td>
+            <td class="text-xs-left clickable"><span v-for="(list, index) in props.item.role_name" v-bind:key="index"> <span>{{list.label}}</span> <span v-if="index+1 < props.item.role_name.length">, </span>  </span>     </td>
             <td class="text-xs-left">{{ props.item.status}} </td>
             <td class="text-xs-left clickable">{{ dateToHumanReadable(props.item.created_at) }}</td>
             <td class="justify-lefr layout px-0 ">
@@ -96,12 +96,16 @@
     },
      created() {
         var self = this;
-        Event.$on('user-created', function (client) {
-            self.getUsers();
+        Event.$on('user-created', function (user) {
+           self.users.push(user);
+        });
+         Event.$on('user-deleted', function (user) {
+           const filteredArray =  self.users.filter(element => element.id !== user)
+           self.users =filteredArray;
         });
     },
     mounted() {
-        console.log('Display All client Component mounted.');
+        console.log('Display All user Component mounted.');
          this.getUsers();
     },
     methods: {
@@ -113,7 +117,7 @@
           }).then((res) => {
               this.users = res.data.data;
           }).catch((error) => {
-              this.sweet_alert('An unknown error has occurred, vendors cannot be retrieved. Please try again', 'error');
+              this.sweet_alert('An unknown error has occurred. Please try again', 'error');
           }).finally(() => this.loading = false);
         },
         showEditUser(idx, item) {
