@@ -17,6 +17,19 @@
     </v-container>
 </template>
 
+<style>
+    th.column.text-xs-left {
+        font-size: 14px;
+        font-weight: 500;
+        color: rgba(0,0,0,0.87) !important;
+    }
+    table.v-table tbody td {
+        font-weight: 400;
+        font-size: 14px;
+        color: rgba(0,0,0,0.87) !important;
+    }
+</style>
+
 <script>
     export default {
         props: {
