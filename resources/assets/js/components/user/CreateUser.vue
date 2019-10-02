@@ -15,7 +15,7 @@
                                                 :placeholder="'Email'" :hint="'Enter the email of the user'" 
                                                 :single-line="true"
                                                 v-validate="'required|email'"
-                                                 solo
+                                                solo
                                                 :error-messages="errors.collect('email')"
                                                 v-model="user.email"
                                                 data-vv-name="email">
@@ -43,7 +43,7 @@
                         <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn color="red" dark @click="closeDialog()">Close</v-btn>
-                    <v-btn color="" class="default-vue-btn" dark @click=" inviteUser()">Invite</v-btn>
+                    <v-btn color="" class="default-vue-btn" dark @click="inviteUser()">Invite</v-btn>
                     </v-card-actions>
                     </v-container>
                 </v-card-text>
@@ -81,13 +81,11 @@
             return {
                 role:'',
                 dialog: false,
-                 user: this.setupModel(),
-                  
-
+                user: this.setupModel(),
             };
         },
         mounted() {
-            console.log('finance Component mounted.');
+            console.log('Add user Component mounted.');
         },
         methods:{
              setupModel: function() {
@@ -110,7 +108,7 @@
                     if (!isValid) {
                         return false;
                     } 
-                     this.sweet_alert('Saving user information and sending invite', 'info');
+                    this.sweet_alert('Saving user information and sending invite', 'info');
                     axios({
                         method: 'post',
                         url: this.routes.create,
@@ -128,7 +126,7 @@
                         if (error.response && (error.response.status == 422)) {
                             this.displayServerValidationErrors(error.response.data.errors);
                         } else {
-                            this.sweet_alert('An unknown error has occurred, vendor cannot be created. Please try again', 'error');
+                            this.sweet_alert('An unknown error has occurred. Please try again', 'error');
                         }
                     });
 
