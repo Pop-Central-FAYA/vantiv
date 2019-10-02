@@ -34,7 +34,7 @@
                                     <v-content>
                                        <users-list 
                                             :roles="{{ json_encode($roles) }}"
-                                            :routes="{{ json_encode($url) }}" 
+                                            :routes="{{ json_encode($routes) }}" 
                                             :permission-list="{{ json_encode(Auth::user()->getAllPermissions()->pluck('name')) }}">
                                      </users-list>
                                     </v-content>

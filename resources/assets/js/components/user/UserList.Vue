@@ -2,13 +2,13 @@
   <v-card>
     <v-card-title>
       <v-spacer></v-spacer>
+    <edit-user :roles="roles" :permissionList="permissionList"></edit-user>
+    <reinvite-user :roles="roles" :permissionList="permissionList"></reinvite-user>
+    <delete-user :roles="roles" :permissionList="permissionList"></delete-user>
       <v-spacer></v-spacer>
       <v-spacer></v-spacer>
       <v-text-field v-model="search" append-icon="search" label="Enter Keyword" single-line hide-details></v-text-field>
     </v-card-title>
-    <edit-user :roles="roles" :permissionList="permissionList"></edit-user>
-    <reinvite-user :roles="roles" :permissionList="permissionList"></reinvite-user>
-    <delete-user :roles="roles" :permissionList="permissionList"></delete-user>
     <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="users" :loading="loading" :search="search" :no-data-text="noDataText" :pagination.sync="pagination">
       <template v-slot:items="props">
         <tr>
@@ -16,7 +16,7 @@
             <td class="text-xs-left clickable">{{ props.item.email }}</td>
             <td class="text-xs-left clickable"><span v-for="(list, index) in props.item.roles" v-bind:key="index"> <span>{{list}}</span> <span v-if="index+1 < props.item.roles.length">, </span>  </span>     </td>
             <td class="text-xs-left">{{ props.item.status}} </td>
-            <td class="text-xs-left clickable">{{ dateToHumanReadable(props.item.created_at.date) }}</td>
+            <td class="text-xs-left clickable">{{ dateToHumanReadable(props.item.created_at) }}</td>
             <td class="justify-lefr layout px-0 ">
                <v-tooltip top>
                     <template v-slot:activator="{on}">
@@ -60,6 +60,10 @@
   table.v-table tbody tr td.clickable {
     pointer-events: none;
 }
+  .v-text-field {
+        padding-top: 2px;
+        margin-top: 0px;
+    }
 </style>
 
 <script>
@@ -79,7 +83,7 @@
           { text: 'Email', value: 'email' },
           { text: 'Role(s)', value: 'roles' },
           { text: 'Status', value: 'status' },
-          { text: 'Created On', value: 'created_at.date' },
+          { text: 'Created On', value: 'created_at' },
           { text: 'Actions', value: 'name',  sortable: false}
         ],
         pagination: {
@@ -97,7 +101,6 @@
         });
     },
     mounted() {
-        console.log(this.routes);
         console.log('Display All client Component mounted.');
          this.getUsers();
     },
@@ -109,7 +112,6 @@
               url: this.routes.list
           }).then((res) => {
               this.users = res.data.data;
-              console.log(this.users)
           }).catch((error) => {
               this.sweet_alert('An unknown error has occurred, vendors cannot be retrieved. Please try again', 'error');
           }).finally(() => this.loading = false);

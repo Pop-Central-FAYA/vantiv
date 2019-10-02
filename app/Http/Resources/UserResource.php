@@ -30,7 +30,7 @@ class UserResource extends JsonResource
             'status' => $this->status,
             'avatar' => $this->avatar,
             'address' => $this->address,
-            'created_at' => $this->created_at,
+            'created_at' => $this->created_at->toDateTimeString(),
             'links'=> [
                 'update' => route('users.update', ['id' => $this->id], false),
                 'reinvite' => route('users.reinvite', ['id' => $this->id], false),

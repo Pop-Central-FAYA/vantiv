@@ -7,7 +7,7 @@
                 'color' => 'color_dark'
             ],
             'Users' => [
-                'url' => route('agency.user.index', [], false),
+                'url' => route('users.index', [], false),
                 'permission' => 'view.user',
                 'color' => 'color_dark'
             ],

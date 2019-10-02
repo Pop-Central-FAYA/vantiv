@@ -34,16 +34,7 @@
         </v-dialog>
 </template>
 <style>
-      .v-text-field .v-input__slot {
-        padding: 0px 12px;
-        min-height: 45px;
-        margin-bottom: 0px;
-        border-radius: 5px;
-        /* box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12); */
-    }
-    .v-text-field>.v-input__control>.v-input__slot:after, .v-text-field>.v-input__control>.v-input__slot:before {
-        content: none;
-    }
+    
   
 </style>
 
@@ -82,7 +73,6 @@
                         url: this.user.links.reinvite,
                     }).then((res) => {
                         this.dialog = false;
-                        Event.$emit('user-created', res.data.data);
                         this.sweet_alert('Invite sent successfully', 'success');
                     }).catch((error) => {
                         if (error.response && (error.response.status == 422)) {
