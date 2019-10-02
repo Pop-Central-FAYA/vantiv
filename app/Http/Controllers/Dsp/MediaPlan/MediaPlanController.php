@@ -319,14 +319,14 @@ class MediaPlanController extends Controller
         * This way of get users that have a particular permission is not the most efficient way to do this, 
         * moving forward we will have to review this.
         */
-        
         $users = User::where('status', 'Active')->permission(['approve.media_plan', 'decline.media_plan'])->get(); 
-        $filtered_users = $users->filter(function ($item) {
-            if($item->companies->first()->id == $this->companyId()){
+        $company_id =$this->companyId();
+        $filtered_users = $users->filter(function ($item) use ($company_id){
+            if($item->companies->first()->id == $company_id){
                 return $item;
             }
         })->values();
-        $users =  $filtered_users->all();
+       $users =  $filtered_users->all();
 
         return view('agency.mediaPlan.summary')->with('summary', $media_plan_summary)
                 ->with('full_plan_details', $full_plan_details)
