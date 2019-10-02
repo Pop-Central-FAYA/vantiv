@@ -19,7 +19,7 @@
                     <div class="col-md-2 text-right px-2">
                         <invite-user  
                                 :roles="{{ json_encode($roles) }}"
-                                :routes="{{ json_encode($url) }}" 
+                                :routes="{{ json_encode($routes) }}" 
                                 :permission-list="{{ json_encode(Auth::user()->getAllPermissions()->pluck('name')) }}">
                         ></invite-user>
                     </div>

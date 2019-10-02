@@ -81,7 +81,7 @@
             return {
                 role:'',
                 dialog: false,
-                user: this.setupModel(),
+                user: {},
 
             };
         },
@@ -95,14 +95,6 @@
             console.log('edit user Component mounted.');
         },
         methods:{
-            setupModel: function() {
-                return {
-                            role_name: [],
-                            email: '',
-                            name: '',
-                            id: ''
-                         }  
-             },
             openDialog: function(item) {
                 this.user = item;
                 this.dialog = true;

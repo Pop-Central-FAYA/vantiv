@@ -35,13 +35,13 @@ class UsersController extends Controller
     {    
         $role_list_services = new ListRoleGroup('dsp');
         $roles = $role_list_services->getRoles();
-        $urls = [
+        $routes = [
                  'list' => route('users.list'),
                  'create' => route('users.invite')
                 ];
         return view('agency.user.index')
                ->with('roles', $roles)
-               ->with('url', $urls);
+               ->with('routes', $routes);
     }
 
 
