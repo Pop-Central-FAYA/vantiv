@@ -166,7 +166,7 @@
             editMode: false,
             avatar_file: "",
             avatar_url: "",
-            avatar_input_label: "hhhhh",
+            avatar_input_label: "",
             s3_presigned_url: "",
             show_progress_bar: false,
             upload_percentage: 0,
@@ -219,35 +219,34 @@
             };
             },
             openDialog: function(item) {
-            //  this.user = item;
-            this.dialog = true;
+              this.dialog = true;
             },
             closeDialog: function() {
-            this.dialog = false;
+              this.dialog = false;
             },
             editUser: async function(event) {
-            self = this;
-            this.$validator.validateAll().then(result => {
-                if (result) {
-                return;
-                }
-            });
+                self = this;
+                this.$validator.validateAll().then(result => {
+                    if (result) {
+                    return;
+                    }
+                });
 
-            try {
-                // generate presigned url for ciient logo upload
-                if (this.upload_image) {
-                await this.generatePresignedUrl(this.avatar_file, "user-images/");
-                await this.uploadFile(this.avatar_file, this.s3_presigned_url);
+                try {
+                    // generate presigned url for ciient logo upload
+                    if (this.upload_image) {
+                    await this.generatePresignedUrl(this.avatar_file, "user-images/");
+                    await this.uploadFile(this.avatar_file, this.s3_presigned_url);
+                    }
+                    // make axios call to edit created company to db
+                    self.makeUpdateRequest();
+                } catch (error) {
+                    console.log(error);
+                    this.sweet_alert(
+                    "An unknown error has occurred, logo upload failed. Please try again",
+                    "error"
+                    );
                 }
-                // make axios call to edit created company to db
-                self.makeUpdateRequest();
-            } catch (error) {
-                console.log(error);
-                this.sweet_alert(
-                "An unknown error has occurred, logo upload failed. Please try again",
-                "error"
-                );
-            }
             },
             makeUpdateRequest: function() {
             this.sweet_alert("Updating user information", "info");
@@ -272,12 +271,12 @@
             this.$refs.avatar.click();
             },
             onFileChange(event) {
-            this.upload_image = true;
-            this.avatar_file = event.target.files[0];
-            this.avatar_input_label = this.avatar_file.name;
-            console.log(this.avatar_input_label);
-            const output = $("#avatar");
-            output.attr("src", URL.createObjectURL(event.target.files[0]));
+                this.upload_image = true;
+                this.avatar_file = event.target.files[0];
+                this.avatar_input_label = this.avatar_file.name;
+                console.log(this.avatar_input_label);
+                const output = $("#avatar");
+                output.attr("src", URL.createObjectURL(event.target.files[0]));
             },
             generatePresignedUrl: async function(file, folder_name) {
             await axios({
@@ -289,45 +288,45 @@
                 }
             })
                 .then(res => {
-                this.s3_presigned_url = res.data;
-                })
-                .catch(error => {
-                console.log(error.response.data);
-                this.s3_presigned_url = "";
-                this.sweet_alert(
-                    "An unknown error has occurred, upload failed. Please try again",
-                    "error"
-                );
+                    this.s3_presigned_url = res.data;
+                    })
+                    .catch(error => {
+                    console.log(error.response.data);
+                    this.s3_presigned_url = "";
+                    this.sweet_alert(
+                        "An unknown error has occurred, upload failed. Please try again",
+                        "error"
+                    );
                 });
             return this.s3_presigned_url;
             },
             uploadFile: async function(file, presigned_url) {
-            this.show_progress_bar = true;
-            this.upload_percentage = 0;
-            this.current_upload_title = "Uploading Avatar";
+                this.show_progress_bar = true;
+                this.upload_percentage = 0;
+                this.current_upload_title = "Uploading Avatar";
 
-            await axios
-                .put(presigned_url, file, {
-                headers: {
-                    "Content-Type": "multipart/form-data"
-                },
-                onUploadProgress: function(progressEvent) {
-                    this.upload_percentage = parseInt(
-                    Math.round((progressEvent.loaded * 100) / progressEvent.total)
-                    );
-                }.bind(this)
-                })
-                .then(res => {
-                this.show_progress_bar = false;
-                this.user.avatar = `https:${presigned_url.split("?")[0].substr(6)}`;
-                })
-                .catch(error => {
-                console.log(error);
-                this.sweet_alert(
-                    "An unknown error has occurred, upload failed. Please try again",
-                    "error"
-                );
-                });
+                await axios
+                    .put(presigned_url, file, {
+                    headers: {
+                        "Content-Type": "multipart/form-data"
+                    },
+                    onUploadProgress: function(progressEvent) {
+                        this.upload_percentage = parseInt(
+                        Math.round((progressEvent.loaded * 100) / progressEvent.total)
+                        );
+                    }.bind(this)
+                    })
+                    .then(res => {
+                        this.show_progress_bar = false;
+                        this.user.avatar = `https:${presigned_url.split("?")[0].substr(6)}`;
+                    })
+                    .catch(error => {
+                        console.log(error);
+                        this.sweet_alert(
+                            "An unknown error has occurred, upload failed. Please try again",
+                            "error"
+                        );
+                    });
             }
         }
     };
