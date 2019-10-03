@@ -102,7 +102,7 @@
                     fluid
                     :src="user.avatar"
                     style="width: 50px; height: 50px"
-                    id="company_logo"
+                    id="avatar"
                     alt="Image 1"
                   ></b-img>
                 </v-flex>
@@ -166,7 +166,7 @@
             editMode: false,
             avatar_file: "",
             avatar_url: "",
-            avatar_input_label: "",
+            avatar_input_label: "hhhhh",
             s3_presigned_url: "",
             show_progress_bar: false,
             upload_percentage: 0,
@@ -198,12 +198,11 @@
             };
         },
         created() {
+            console.log("bessss");
             var self = this;
-            (self.user = this.userData), console.log(this.userData);
-            Event.$on("view-profile", function(user) {
-            self.openDialog(user);
-            self.avatar_input_label = user.avatar;
-            });
+            (self.user = this.userData);
+             self.avatar_input_label = self.user.avatar;
+          
         },
         mounted() {
             console.log("Edit profile Component mounted.");
@@ -276,6 +275,7 @@
             this.upload_image = true;
             this.avatar_file = event.target.files[0];
             this.avatar_input_label = this.avatar_file.name;
+            console.log(this.avatar_input_label);
             const output = $("#avatar");
             output.attr("src", URL.createObjectURL(event.target.files[0]));
             },

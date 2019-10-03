@@ -93,11 +93,9 @@
         var self = this;
         Event.$on("user-updated", function(user) {
           self.user = user;
-          console.log();
         });
       },
       mounted() {
-        console.log(this.brands);
         console.log("Display user details Component mounted.");
       }
     };
