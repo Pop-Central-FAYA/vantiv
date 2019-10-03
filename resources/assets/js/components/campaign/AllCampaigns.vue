@@ -16,7 +16,7 @@
           <td class="text-xs-left">{{ dateToHumanReadable(props.item.end_date) }}</td>
           <td class="text-xs-left">{{ formatAmount(props.item.budget) }}</td>
           <td class="text-xs-left">{{ props.item.adslots }}</td>
-          <td class="text-xs-left" v-html="props.item.status"></td>
+          <td class="text-xs-left" v-html="props.item.styled_status"></td>
           <td class="text-xs-left">{{ dateToHumanReadable(props.item.date_created) }}</td>
         </tr>
       </template>
@@ -68,7 +68,7 @@
         var header =[
           { text: 'Name', align: 'left', value: 'name' },
           { text: 'Brand', value: 'brand' },
-           { text: 'Product', value: 'product' },
+          { text: 'Product', value: 'product' },
           { text: 'Start Date', value: 'start_date' },
           { text: 'End Date', value: 'end_date' },
           { text: 'Budget (₦)', value: 'budget' },

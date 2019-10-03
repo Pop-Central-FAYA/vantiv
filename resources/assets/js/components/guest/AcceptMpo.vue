@@ -34,7 +34,7 @@
                             </v-flex>
                         </v-layout>
                         <v-layout wrap>
-                            <v-flex xs12 sm12 md12>
+                            <v-flex xs12 sm12 md6>
                                 <span>
                                     Email
                                 </span>
@@ -42,6 +42,15 @@
                                 type="text" placeholder="Email" 
                                 name="email" v-model="model.email"></v-text-field>
                                 <span class="text-danger" v-show="errors.has('email')">{{ errors.first('email') }}</span>
+                            </v-flex>
+                            <v-flex xs12 sm12 md6>
+                                <span>
+                                    Phone Number
+                                </span>
+                                <v-text-field v-validate="'required'" 
+                                type="text" placeholder="Phone Number" 
+                                name="phone_number" v-model="model.phone_number"></v-text-field>
+                                <span class="text-danger" v-show="errors.has('phone_number')">{{ errors.first('phone_number') }}</span>
                             </v-flex>
                         </v-layout>
                     </v-form>
@@ -72,6 +81,10 @@ export default {
                         },
                         last_name: {
                             required: () => 'Last name cannot be empty',
+                            max: () => 'The last name field may not be greater than 255 characters'
+                        },
+                        last_name: {
+                            required: () => 'Phone Number cannot be empty',
                             max: () => 'The last name field may not be greater than 255 characters'
                         },
                         email: {
@@ -116,6 +129,7 @@ export default {
                 first_name: '',
                 last_name: '',
                 email: '',
+                phone_number : '',
                 mpo_id: this.mpo.mpo_details.id,
             }
         },

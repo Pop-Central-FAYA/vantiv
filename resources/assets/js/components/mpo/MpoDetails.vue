@@ -22,6 +22,7 @@
             :media-buyer="mpo.mpo_details.campaign.creator"
             :company="mpo.company"
             :net-total-word="mpo.net_total_word"
+            :mpo="mpo"
         ></mpo-terms>
         <mpo-action
             :campaign-id="mpo.mpo_details.campaign_id"

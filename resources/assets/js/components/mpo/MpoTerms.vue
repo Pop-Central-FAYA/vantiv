@@ -47,15 +47,25 @@
             <v-layout>
                 <v-flex xs1></v-flex>
                 <v-flex xs4>
-                    _________________________________________ <br>
-                    <p>Media Buyer : {{ mediaBuyer.firstname }} {{ mediaBuyer.lastname }}</p>
-                    <p v-if="mediaBuyer.phone_number">Tel : {{ mediaBuyer.phone_number }}</p>
-                    <p>Email : {{ mediaBuyer.email }}</p>
+                    <h3 class=" text-center signature"><span class="name">{{ fullName(mediaBuyer.firstname,mediaBuyer.lastname) }}</span> ,
+                        <span class="date" v-if="mpo.mpo_details.submitted_at != '0000-00-00 00:00:00'">{{ dateToHumanReadable(mpo.mpo_details.submitted_at) }},</span> <br>
+                        <span class="date">{{ mediaBuyer.email }}</span> <span v-if="mediaBuyer.phone_number">,</span><br>
+                        <span class="date" v-if="mediaBuyer.phone_number">{{ mediaBuyer.phone_number }}</span>
+                    </h3>
+                    <span>___________________________________________________</span>
                 </v-flex>
                 <v-flex xs2></v-flex>
                 <v-flex xs4 class="text-right">
-                    _________________________________________ <br>
-                    <p>Media House Rep (Name, Sign, TelNo, Email)</p>
+                    <h3 class="text-center signature" v-if="mpo.mpo_details.mpo_accepter">
+                        <span class="name">{{ fullName(mpo.mpo_details.mpo_accepter.first_name, mpo.mpo_details.mpo_accepter.last_name) }}</span> ,
+                        <span class="date">{{ dateToHumanReadable(mpo.mpo_details.accepted_at) }}</span>, <br>
+                        <span class="date">{{ mpo.mpo_details.mpo_accepter.email }}</span>,<br>
+                        <span class="date">{{ mpo.mpo_details.mpo_accepter.phone_number }}</span> <br>
+                    </h3>
+                    <h4 v-else>
+                        Media House Rep (Name, Sign, TelNo, Email)
+                    </h4>
+                    <span>__________________________________________________</span>
                 </v-flex>
                 <v-flex xs1></v-flex>
             </v-layout>
@@ -67,7 +77,13 @@ export default {
     props : {
         mediaBuyer : Object,
         company : Object,
-        netTotalWord : String
+        netTotalWord : String,
+        mpo : Object
+    },
+    methods : {
+        fullName(firstName, lastName) {
+            return `${firstName} ${lastName}`
+        }
     }
 }
 </script>
@@ -79,5 +95,15 @@ export default {
         margin-bottom: -5px;
         margin-top: -24px;
         text-transform: capitalize
+    }
+    .date {
+        font-size: 12px;
+        font-style: italic
+    }
+    .name {
+        font-family: cursive
+    }
+    .signature {
+        margin-bottom: -16px;
     }
 </style>

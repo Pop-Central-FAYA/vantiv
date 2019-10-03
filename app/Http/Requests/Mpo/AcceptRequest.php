@@ -27,6 +27,7 @@ class AcceptRequest extends FormRequest
             'first_name' => 'required',
             'last_name' => 'required',
             'email' => 'required|email',
+            'phone_number' => 'required',
             'mpo_id' => 'unique:mpo_accepters,mpo_id'
         ];
     }

@@ -98,7 +98,8 @@ class MpoDetailsService implements BaseServiceInterface
 
     protected function getMpo()
     {
-        return CampaignMpo::with('campaign.client', 'campaign.brand', 'vendor', 'campaign.creator')->find($this->mpo_id);
+        return CampaignMpo::with('campaign.client', 'campaign.brand', 'vendor', 'campaign.creator', 'mpo_accepter')
+                ->findOrFail($this->mpo_id);
     }
 
     protected function formatTimeBelt($campaign_mpo_time_belts)
