@@ -9,6 +9,7 @@ use Vanguard\Http\Requests\Profile\UpdateRequest;
 use Vanguard\Http\Resources\UserResource;
 use Vanguard\Services\Profile\UpdateService;
 use Vanguard\User;
+use Vanguard\Http\Requests\Profile\PasswordRequest;
 
 class ProfileController extends Controller
 {
@@ -50,6 +51,18 @@ class ProfileController extends Controller
     }
 
     public function update(UpdateRequest $request, $id)
+    {
+        $validated = $request->validated();
+        $user = \Auth::user();
+        $this->authorize('update', $user);
+        (new UpdateService($user, $validated))->run();
+
+        $resource = new UserResource(User::find($id));
+        return $resource->response()->setStatusCode(200);
+
+    }
+
+    public function updatepassword(PasswordRequest $request, $id)
     {
         $validated = $request->validated();
         $user = \Auth::user();

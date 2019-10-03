@@ -162,7 +162,13 @@
         data() {
             return {
             dialog: false,
-            user: this.setupModel(),
+            user: {
+                firstname: "",
+                lastname: "",
+                avatar: "",
+                email: "",
+                phone_number: ""
+            },
             editMode: false,
             avatar_file: "",
             avatar_url: "",
@@ -209,15 +215,6 @@
             this.$validator.localize("en", this.dictionary);
         },
         methods: {
-            setupModel: function() {
-            return {
-                firstname: "",
-                lastname: "",
-                avatar: "",
-                email: "",
-                phone_number: ""
-            };
-            },
             openDialog: function(item) {
               this.dialog = true;
             },
@@ -255,12 +252,12 @@
                 url: this.user.links.profile_update,
                 data: this.user
             })
-                .then(res => {
-                this.sweet_alert("User was successfully created", "success");
-                Event.$emit("user-updated", res.data.data);
+            .then(res => {
+                    this.sweet_alert("User was successfully created", "success");
+                    Event.$emit("user-updated", res.data.data);
                 this.closeDialog();
                 })
-                .catch(error => {
+            .catch(error => {
                 this.sweet_alert(
                     "An unknown error has occurred, user cannot be updated. Please try again",
                     "error"
@@ -268,7 +265,7 @@
                 });
             },
             chooseFile() {
-            this.$refs.avatar.click();
+                this.$refs.avatar.click();
             },
             onFileChange(event) {
                 this.upload_image = true;

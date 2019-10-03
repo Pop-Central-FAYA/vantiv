@@ -264,6 +264,7 @@
             Route::group(['prefix' => 'api'], function () {
                 Route::get('/profile', 'ProfileController@get')->name('profile.get');
                 Route::patch('/profile/{id}', 'ProfileController@update')->name('profile.update'); 
+                Route::patch('/profile/{id}/password', 'ProfileController@update')->name('profile.password.update'); 
              });
          });
 
