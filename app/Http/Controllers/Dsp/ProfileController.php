@@ -18,6 +18,7 @@ class ProfileController extends Controller
     public function __construct()
     {
         $this->middleware('permission:view.profile')->only(['get']);
+        $this->middleware('permission:view.profile')->only(['update', 'updatePassword']);
     }
 
     /*******************************
@@ -62,7 +63,7 @@ class ProfileController extends Controller
 
     }
 
-    public function updatepassword(PasswordRequest $request, $id)
+    public function updatePassword(PasswordRequest $request, $id)
     {
         $validated = $request->validated();
         $user = \Auth::user();
