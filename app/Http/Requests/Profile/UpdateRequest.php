@@ -14,8 +14,8 @@ class UpdateRequest extends Request
     public function rules()
     {
         return [
-            'first_name' => 'sometimes|required|string',
-            'last_name' => 'sometimes|required|string',
+            'firstname' => 'sometimes|required|string',
+            'lastname' => 'sometimes|required|string',
             'email' => 'sometimes|required|email',
             'phone_number' => 'sometimes|required|string',
             'avatar' => 'sometimes|required|url',

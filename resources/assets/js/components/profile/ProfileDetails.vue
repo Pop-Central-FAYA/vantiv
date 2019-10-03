@@ -98,6 +98,7 @@
         var self = this;
         Event.$on('user-updated', function (user) {
            self.user = user;
+           console.log()
         });
     },
     mounted() {

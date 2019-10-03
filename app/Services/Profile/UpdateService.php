@@ -12,7 +12,7 @@ use Vanguard\Services\BaseServiceInterface;
  */
 class UpdateService implements BaseServiceInterface
 {
-    const USER_UPDATE_FIELDS = ['first_name', 'last_name', 'phone_number', 'avatar'];
+    const USER_UPDATE_FIELDS = ['firstname', 'lastname', 'phone_number', 'avatar'];
 
     protected $user;
     protected $data;
@@ -38,7 +38,7 @@ class UpdateService implements BaseServiceInterface
     protected function update()
     {
         return DB::transaction(function () {
-            $this->updateModel($this->user, static::CLIENT_UPDATE_FIELDS, $this->data);
+            $this->updateModel($this->user, static::USER_UPDATE_FIELDS, $this->data);
             return $this->user;
         });
     }
