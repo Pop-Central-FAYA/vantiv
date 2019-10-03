@@ -26,6 +26,7 @@ class AcceptService implements BaseServiceInterface
             $mpo_accepter->first_name = $this->data['first_name'];
             $mpo_accepter->last_name = $this->data['last_name'];
             $mpo_accepter->email = $this->data['email'];
+            $mpo_accepter->phone_number = $this->data['phone_number'];
             $mpo_accepter->mpo_id = $this->mpo->id;
             $mpo_accepter->save();
 

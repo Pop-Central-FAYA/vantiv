@@ -50,8 +50,8 @@ class CampaignMpo extends Base
         return $this->belongsTo(AdVendor::class, 'ad_vendor_id');
     }
 
-    public function mpo_accepters()
+    public function mpo_accepter()
     {
-        return $this->hasOne(MpoAccepter::class);
+        return $this->hasOne(MpoAccepter::class, 'mpo_id');
     }
 }

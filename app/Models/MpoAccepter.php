@@ -11,6 +11,6 @@ class MpoAccepter extends Base
      */
     public function mpo()
     {
-        return $this->belongsTo(CampaignMpo::class, 'mpo_id');
+        return $this->belongsTo(CampaignMpo::class);
     }
 }

@@ -12,9 +12,9 @@
         </v-flex>
         <v-flex v-if="isPublic" xs9></v-flex>
         <v-flex xs10 v-else></v-flex>
-        <v-flex xs1 v-if="isPublic">
+        <v-flex xs1 v-if="isPublic && mpo.mpo_details.status.toLowerCase() != 'accepted' ">
             <accept-mpo
-            :mpo="mpo"
+                :mpo="mpo"
             ></accept-mpo>
         </v-flex>
         <v-flex xs1>
