@@ -48,6 +48,7 @@
     </v-data-table>
   </v-card>
 </template>
+
 <style>
   tbody tr:hover {
     background-color: transparent !important;
