@@ -2,7 +2,7 @@
     @php
         $menu = [
             'Profile' => [
-                'url' => route('user.profile', [], false),
+                'url' => route('profile.index', [], false),
                 'permission' => 'view.profile',
                 'color' => 'color_dark'
             ],

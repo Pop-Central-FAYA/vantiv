@@ -255,5 +255,19 @@
             });
          });
 
+          /*
+        * new user management route
+        */
+        Route::group(['namespace' => 'Dsp'], function () {
+            Route::get('/profile', 'ProfileController@index')->name('profile.index');
+            
+            Route::group(['prefix' => 'api'], function () {
+                Route::get('/profile', 'ProfileController@get')->name('profile.get');
+                Route::patch('/users/{id}', 'ProfileController@update')->name('profile.update'); 
+             });
+         });
+
+        
+
     });
 
