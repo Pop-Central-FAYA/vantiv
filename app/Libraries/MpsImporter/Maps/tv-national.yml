@@ -158,7 +158,7 @@
   city: Benin
   broadcast_type: Regional
 - raw_name: "Ekiti_Ekiti TV"
-  name: Ekiti State Television
+  name: Ekiti TV
   state: Ekiti
   city: Ado-Ekiti
   broadcast_type: Regional
@@ -303,7 +303,7 @@
   city: Lagos
   broadcast_type: Regional
 - raw_name: "Lagos_On TV Lagos"
-  name: OnTv
+  name: ONTV
   state: Lagos
   city: Lagos
   broadcast_type: Regional
@@ -313,12 +313,12 @@
   city: Lagos
   broadcast_type: Regional
 - raw_name: "Lagos_Super Screen"
-  name: Super Screen
+  name: Super Screen TV
   state: Lagos
   city: Lagos
   broadcast_type: Regional
 - raw_name: "Lagos_TV Continental"
-  name: TV Continental
+  name: TVC
   state: Lagos
   city: Lagos
   broadcast_type: Regional

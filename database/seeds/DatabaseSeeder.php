@@ -16,8 +16,6 @@ class DatabaseSeeder extends Seeder
         $this->call(CriteriasTableSeeder::class);
         $this->call(MpsTableSeeder::class);
         $this->call(StatePopulationsTableSeeder::class);
-        $this->call(MpsAudiencesTableSeeder::class);
-        $this->call(MpsAudienceProgramActivitiesTableSeeder::class);
         $this->call(StationsTableSeeder::class);
         $this->call(PublisherFeatureSeeder::class);
         $this->call(PublisherRoleSeeder::class);

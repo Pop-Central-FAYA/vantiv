@@ -70,6 +70,11 @@
   broadcast: Terrestrial
   publisher: KTV
   publisher_full: Kwara State Television Authority
+- name: KTV
+  type: Network
+  broadcast: Terrestrial
+  publisher: KTV
+  publisher_full: Kwara State Television Authority
 
 - name: Capital TV
   state: Kaduna
@@ -95,6 +100,11 @@
   broadcast: Terrestrial
   publisher: KSTV
   publisher_full: Kaduna State Media Corporation TV
+- name: KSTV
+  type: Network
+  broadcast: Terrestrial
+  publisher: KSTV
+  publisher_full: Kaduna State Media Corporation TV
 - name: Liberty TV
   state: Kaduna
   city: Kaduna
@@ -109,6 +119,11 @@
   city: Kano
   region: North West
   type: Regional
+  broadcast: Terrestrial
+  publisher: CTV
+  publisher_full: CTV
+- name: CTV
+  type: Network
   broadcast: Terrestrial
   publisher: CTV
   publisher_full: CTV
@@ -206,6 +221,11 @@
   broadcast: Terrestrial
   publisher: ABS TV
   publisher_full: Anambra Broadcasting Service
+- name: ABS TV
+  type: Network
+  broadcast: Terrestrial
+  publisher: ABS TV
+  publisher_full: Anambra Broadcasting Service
 
 - name: CRTV
   state: Cross River
@@ -220,6 +240,11 @@
   city: Ikom
   region: South South
   type: Regional
+  broadcast: Terrestrial
+  publisher: CRTV
+  publisher_full: CRTV
+- name: CRTV
+  type: Network
   broadcast: Terrestrial
   publisher: CRTV
   publisher_full: CRTV
@@ -803,6 +828,11 @@
   broadcast: Terrestial
   publisher: Wazobia
   publisher_full: Wazobia
+- name: Wazobia Max
+  type: Network
+  broadcast: Terrestial
+  publisher: Wazobia
+  publisher_full: Wazobia
 
 #### AIT STATIONS
 - name: AIT
@@ -997,7 +1027,7 @@
   broadcast: Terrestial
   publisher: Channels TV
   publisher_full: Channels TV
-- name: Channels TV
+- name: Channels Television
   type: International
   broadcast: Satellite
   vendor: [Dstv, Gotv, Startimes]
@@ -1280,6 +1310,11 @@
 - name: NTA International
   type: International
   broadcast: Satellite
+  publisher: NTA
+  publisher_full: Nigerian Television Authority
+- name: NTA
+  type: Network
+  broadcast: Terrestial
   publisher: NTA
   publisher_full: Nigerian Television Authority
 

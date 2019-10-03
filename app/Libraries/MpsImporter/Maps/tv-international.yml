@@ -253,16 +253,25 @@
 - raw_name: "(S-Z)_SS 2 Nigeria (DStv)"
   name: SuperSport 2
   broadcast_type: International
+- raw_name: "(S-Z)_SS 2 Africa (DStv)"
+  name: SuperSport 2
+  broadcast_type: International
 - raw_name: "(S-Z)_SS 3 Nigeria (DStv)"
   name: SuperSport 3
   broadcast_type: International
 - raw_name: "(S-Z)_SS 4 Nigeria (DStv)"
   name: SuperSport 4
   broadcast_type: International
+- raw_name: "(S-Z)_SS 4 Africa (DStv)"
+  name: SuperSport 4
+  broadcast_type: International
 - raw_name: "(S-Z)_SS 5 Nigeria (DStv)"
   name: SuperSport 5
   broadcast_type: International
 - raw_name: "(S-Z)_SS 6 Nigeria (DStv)"
+  name: SuperSport 6
+  broadcast_type: International
+- raw_name: "(S-Z)_SS 6 Africa (DStv)"
   name: SuperSport 6
   broadcast_type: International
 - raw_name: "(S-Z)_SS 7 Nigeria (DStv)"
@@ -272,6 +281,9 @@
   name: SuperSport 8
   broadcast_type: International
 - raw_name: "(S-Z)_SS 9 Nigeria (DStv)"
+  name: SuperSport 9
+  broadcast_type: International
+- raw_name: "(S-Z)_SS 9 Africa (DStv)"
   name: SuperSport 9
   broadcast_type: International
 - raw_name: "(S-Z)_SS Blitz (DStv)"
@@ -284,7 +296,7 @@
   name: Silverbird International
   broadcast_type: International
 - raw_name: "(S-Z)_Silverbird"
-  name: Silverbird
+  name: Silverbird International
   broadcast_type: International
 - raw_name: "(S-Z)_Sky News"
   name: Sky News
@@ -356,7 +368,7 @@
   name: My TV Series
   broadcast_type: International
 - raw_name: "(N-R)_SS Select 4 Africa (GOtv)"
-  name: SuperSport Select 4 Africa
+  name: SuperSport Select 4
   broadcast_type: International
 
 

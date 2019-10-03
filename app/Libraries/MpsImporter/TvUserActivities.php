@@ -14,7 +14,33 @@ use Vanguard\Libraries\Batch\LaravelBatch;
 
 class TvUserActivities
 {
-    const CHUNK_BATCH = 20000;
+    const CHUNK_BATCH = 30000;
+
+    //Below are non existent stations. Not quite sure what they are, so just skip
+    const SKIPPED_STATIONS = [
+        'AMC Music',
+        'Activate',
+        'Alpha TV Channel 113',
+        'Bollywood',
+        'Fox Business',
+        'Fox Crime',
+        'Fox Movie',
+        'Fox Sports',
+        'FOX Int (GOtv)',
+        'Fox Entertainment',
+        'Fox News',
+        'Iroko 1',
+        'Iroko 2',
+        'Kwese Free Sports Nigeria ch. 290',
+        'Kwese Free Sports',
+        'Kwese Sports 1',
+        'Kwese Sports 2',
+        'Star World',
+        'V.O.A. (Voice Of America)',
+        'V.O.N. (Voice Of Nigeria), Lagos',
+        'RFI (France) Hausa Service',
+        'RFI (France) World Service',
+    ];
 
     public function __construct($import_time, $csv_file)
     {
@@ -41,9 +67,18 @@ class TvUserActivities
      */
     private function getTvStationMap()
     {
-        return TvStation::all()->groupBy(function($item) {
+        $res = TvStation::select('key', 'name', 'state', 'city')->get()->groupBy(function($item) {
             return $this->generateTvStationKey($item);
         });
+
+        $res = $res->map(function($item) {
+            if ($item->count() > 1) {
+                throw new \Exception("Item count for tv station map should only be one", 1);
+            }
+            return $item[0]->key;
+        });
+
+        return collect($res);
     }
 
     private function generateTvStationKey($item) {
@@ -77,7 +112,6 @@ class TvUserActivities
                     }
 
                     $activity = $this->getModelAttributes($parsed_info, $ext_profile_id, $wave);
-                    dd($activity);
                     if ($activity) {
                         $activity_list[] = $activity;
                         $current_count++;
@@ -87,7 +121,9 @@ class TvUserActivities
                         }
                         echo("{$current_count} ");
                     } else {
-                        Log::warning("Could not parse: {$key}");
+                        if (in_array($parsed_info['name'], static::SKIPPED_STATIONS) == false) {
+                            Log::warning("Could not parse: {$key}");
+                        }
                     } 
                 }
             }
@@ -121,15 +157,16 @@ class TvUserActivities
     private function getModelAttributes($parsed_info, $ext_profile_id, $wave)
     {
         $key = $this->generateTvStationKey($parsed_info);
-        $tv_station = $this->tv_station_map->get($key);
+        $tv_station_key = $this->tv_station_map->get($key);
 
-        if ($tv_station === null) {
+        if ($tv_station_key === null) {
             return null;
         }
+
         return [
             "ext_profile_id" => $ext_profile_id,
             "wave" => $wave,
-            "tv_station_key" => $tv_station["key"],
+            "tv_station_key" => $tv_station_key,
             "day" => $parsed_info["day"],
             "broadcast_type" => $parsed_info["broadcast_type"],
             "start_time" => $this->formatTimeBelt($parsed_info["start_time"]),
