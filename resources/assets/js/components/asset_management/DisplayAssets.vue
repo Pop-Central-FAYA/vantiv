@@ -75,7 +75,6 @@
               let result = res.data.data;
               if (result.length === 0) {
                   this.noDataText = "No data available";
-                  this.sweet_alert('No Media asset was found', 'info');
                   return;
               } else {
                   this.assets = result;

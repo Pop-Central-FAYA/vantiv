@@ -10,8 +10,11 @@
       <template v-slot:items="props">
         <tr @click="goToPlanActivities(props.item.redirect_url)">
           <td class="text-xs-left"><a :href="props.item.redirect_url" class="default-vue-link">{{ props.item.campaign_name }}</a></td>
+          <td class="text-xs-left">{{ (props.item.product_name) ? props.item.product_name:'NA' }}</td>
+          <td class="text-xs-left">{{ (props.item.brand) ? props.item.brand.name:'NA' }}</td>
           <td class="text-xs-left">{{ props.item.media_type }}</td>
           <td class="text-xs-left">{{ props.item.start_date+" - "+props.item.end_date }}</td>
+          <td class="text-xs-left">{{ numberFormat(props.item.net_media_cost) }}</td>
           <td class="text-xs-left" v-html="props.item.status"></td>
           <td class="text-xs-left">{{ props.item.date_created }}</td>
         </tr>
@@ -45,8 +48,11 @@
         search: '',
         headers: [
           { text: 'Name', align: 'left', value: 'campaign_name' },
+          { text: 'Product', align: 'left', value: 'product_name' },
+          { text: 'Brand', align: 'left', value: 'brand' },
           { text: 'Media Type', value: 'media_type' },
           { text: 'Flight Date', value: 'start_date' },
+          { text: 'Net Media Cost', value: 'start_date' },
           { text: 'Status', value: 'status' },
           { text: 'Created On', value: 'date_created' }
         ],
@@ -60,6 +66,7 @@
     },
     mounted() {
         console.log('Display All media plans Component mounted.');
+        console.log(this.plans);
     },
     methods: {
       goToPlanActivities(url) {
