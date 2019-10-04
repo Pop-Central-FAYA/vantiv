@@ -35,6 +35,9 @@ class GetStationRatingService implements BaseServiceInterface
 {
 
     protected $filters = [];
+    protected $profile_tbl_name = "";
+    protected $activities_tbl_name = "";
+    protected $station_tbl_name = "";
 
     // $filters = ["state" => ["Abuja"], "social_class" => ["A", "B", "C"], "gender" => ["Male", "Female"]];
     /**
@@ -49,70 +52,19 @@ class GetStationRatingService implements BaseServiceInterface
     public function __construct(array $filters) 
     {
         $this->filters = $filters;
-    }
 
-    /**
-     * For timebelts listing
-     */
-    protected function calculateRatings() {
-        $universe_size = $this->getUniverseSize();
-
-        $tv_station_key = Arr::get($this->filters, 'tv_station_key');
-
-        $station_cols = 'ts.name as station_name, ts.state as station_state, ts.id as station_id, ts.type as station_type';
-        $sub_query_cols = 'mpa.tv_station_key, mpa.day, mpa.start_time, mpa.end_time, mps_profiles.pop_weight';
-        $sub_query = $this->filterForRequestedAudience()
-            ->select(DB::raw("{$sub_query_cols},{$station_cols}"))
-            ->when($tv_station_key, function($query) use ($tv_station_key) {
-                $query->where('mpa.tv_station_key', $tv_station_key);
-            })
-            ->groupBy('mpa.tv_station_key', 'mpa.day', 'mpa.start_time', 'mpa.ext_profile_id');
-        
-        $final_station_cols = 'station_name, station_state, station_id, station_type';
-        $query_cols = 'tv_station_key, day, start_time, end_time, SUM(tbl.pop_weight) as total_audience';
-        $main_query = DB::query()->fromSub($sub_query, 'tbl')
-            ->selectRaw("{$query_cols},{$final_station_cols}")
-            ->groupBy('tbl.tv_station_key', "tbl.day", "tbl.start_time")
-            ->orderBy('total_audience', 'desc');
-
-        $timebelt_results = $main_query->get();
-
-        $ratings = $this->generateRatings($timebelt_results, $universe_size);
-        return collect($ratings);
-    }
-
-    // $profile_cols = "SUM(mp.pop_weight) as total_audience";
-    // $activities_cols = "mpa.day, mpa.start_time, mpa.broadcast_type";
-    // $station_cols = "ts.id as station_id, ts.type as station_type, ts.name as station_name, ts.state as station_state, ts.key as station_key";
-
-
-    /**
-     * For just stations listing
-     */
-    protected function calculateRatings() {
-        $universe_size = $this->getUniverseSize();
-        
-        $sub_query_cols = 'ts.name, ts.state, ts.type, ts.key, mpa.tv_station_id, mps_profiles.pop_weight';
-        $sub_query = $this->filterForRequestedAudience()
-            ->select(DB::raw($sub_query_cols))
-            ->groupBy('mpa.tv_station_key', 'mpa.ext_profile_id');
-
-        $query_cols = 'name as station_name, state as station_state, type as station_type, `key`, tv_station_id, SUM(pop_weight) as total_audience';
-        $main_query = DB::query()->fromSub($sub_query, 'tbl')
-            ->selectRaw($query_cols)
-            ->groupBy("key")
-            ->orderBy('total_audience', 'desc');
-        $timebelt_results = $main_query->get();
-
-        $ratings = $this->generateRatings($timebelt_results, $universe_size);
-        return collect($ratings);
+        $this->profile_tbl_name = "mps_profiles";
+        $this->activities_tbl_name = "mps_profile_activities";
+        $this->station_tbl_name = "tv_stations";
     }
 
     public function run() {
         $query = $this->generateQuery();
-
+        $query = $this->modifyQuery($query);
         $raw_sql = Query::getSql($query);
+
         Log::info($raw_sql);
+        dd('done');
         $hash_key = $this->generateHash($raw_sql);
         $expire_at = now()->addDays(7);
 
@@ -126,25 +78,35 @@ class GetStationRatingService implements BaseServiceInterface
      * This should just return a query object which has been properly generated with the proper bindings etc
      */
     protected function generateQuery() {
-        $profile_model = new MpsProfile();
-        $profile_table = $profile_model->getTable();
+       
+        $query = MpsProfile::filter($this->filters)
+                        ->join("mps_profile_activities", "mps_profile_activities.ext_profile_id", "=", "mps_profiles.ext_profile_id")
+                        ->join("tv_stations", "tv_stations.key", "=", "mps_profile_activities.tv_station_key");
 
-        $activities_model = new MpsProfileActivity();
-        $activities_table = $activities_model->getTable();
+        $activities_cols = [
+            "mps_profile_activities.day", "mps_profile_activities.start_time", "mps_profile_activities.broadcast_type"
+        ];
+        $station_cols = [
+            "tv_stations.id as station_id", "tv_stations.type as station_type", "tv_stations.name as station_name", 
+            "tv_stations.state as station_state", "tv_stations.key as station_key"
+        ];
+        $profile_cols = ["mps_profiles.pop_weight"];
 
-        $station_model = new TvStation();
-        $station_table = $station_model->getTable();
+        $query = $query->addSelect($activities_cols)
+                        ->addSelect($station_cols)
+                        ->addSelect($profile_cols);
+        return $query;
+    }
 
-        $query = MpsProfile::from("{$profile_table} as mp")
-                        ->filter($this->filters)
-                        ->join("{$activities_table} as mpa", "mpa.ext_profile_id", "=", "mp.ext_profile_id")
-                        ->join("{$station_table} as ts", "ts.key", "=", "mpa.tv_station_key");
-
-        $profile_cols = "SUM(mp.pop_weight) as total_audience";
-        $activities_cols = "mpa.day, mpa.start_time, mpa.broadcast_type";
-        $station_cols = "ts.id as station_id, ts.type as station_type, ts.name as station_name, ts.state as station_state, ts.key as station_key";
-        
-        $query = $query->selectRaw("{$profile_cols},{$activities_cols},{$station_cols}");
+    /**
+     * This is the method that will be overwritten to add extra clauses, select fields 
+     * to the generic generated query.
+     * For instance, depending on the request type, the groupBy's can be different
+     * The fields returned can be different etc
+     */
+    protected function modifyQuery($query)
+    {
+        $query = $query->groupBy("tv_stations.key", "mps_profile_activities.ext_profile_id");
         return $query;
     }
 
