@@ -49,6 +49,7 @@ use Vanguard\Models\Client;
 use Vanguard\User;
 use Vanguard\Services\Ratings\StoreMediaPlanDeliverables;
 use Vanguard\Http\Resources\UserCollection;
+use Vanguard\Http\Resources\MediaPlanResource;
 
 class MediaPlanController extends Controller
 {
@@ -275,12 +276,6 @@ class MediaPlanController extends Controller
             // redirect to review suggestions page for user to select suggestions
             return redirect()->route('agency.media_plan.create', ['id'=> $mediaPlan->id]);
         }
-        $routes= array(
-            "back" => route('agency.media_plan.create', ['id'=>$media_plan_id]),
-            "change_status" => route('agency.media_plan.change_status'),
-            "export" => route('agency.media_plan.export', ['id'=>$media_plan_id]),
-            "approval" => route('agency.media_plan.get_approval')
-        );
 
         $plan_start_date = $mediaPlan->start_date;
         $plan_end_date = $mediaPlan->end_date;
@@ -331,7 +326,7 @@ class MediaPlanController extends Controller
 
         return view('agency.mediaPlan.summary')->with('summary', $media_plan_summary)
                 ->with('full_plan_details', $full_plan_details)
-                ->with('media_plan', $mediaPlan)->with('users', $users)->with('routes', $routes);
+                ->with('media_plan', new MediaPlanResource($mediaPlan))->with('users', $users);
     }
 
     public function filterByStationType($suggestions, $station_type)
@@ -483,20 +478,12 @@ class MediaPlanController extends Controller
             'days' => $days,
         );
         $clients = Client::with('brands')->filter(['company_id' => $this->companyId()])->get();
-        $redirect_urls = [
-            'back_action' => route('agency.media_plan.customize', ['id'=>$id]),
-            'next_action' => route('agency.media_plan.summary', ['id'=>$id]),
-            'save_action' => route('agency.media_plan.submit.finish_plan')
-        ];
-
         return view('agency.mediaPlan.complete_plan')->with('fayaFound', $fayaFound)
                                                     ->with('clients', $clients)
                                                     ->with('days', $this->listDays())
                                                     ->with('default_material_length', $this->getDefaultMaterialLength())
                                                     ->with('plan_id', $id)
-                                                    ->with('media_plan', $media_plan)
-                                                    ->with('redirect_urls', $redirect_urls);
-
+                                                    ->with('media_plan', new MediaPlanResource($media_plan));
     }
 
     public function initializePlansWithExposures($suggestions, $dates, $durations)

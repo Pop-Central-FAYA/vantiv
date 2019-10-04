@@ -157,6 +157,9 @@ Vue.component('dashboard-campaign-summary-chart', () => import('./components/das
 Vue.component('vantage-side-menu', () => import('./components/partials/Sidebar.vue'));
 Vue.component('vantage-header', () => import('./components/partials/Header.vue'));
 
+//Comment
+Vue.component('comment', () => import('./components/comment/AllComments.vue'));
+
 //USER MANAGEMENT
 Vue.component('users-list', () => import('./components/user/UserList.vue'));
 Vue.component('invite-user', () => import('./components/user/CreateUser.vue'));
@@ -226,6 +229,9 @@ Vue.mixin({
         },
         currentDate(date) {
             return moment().format('MMM DD, YYYY');
+        },
+        timeAgo(date) {
+            return moment(date).fromNow();
         },
         dayName (date) {
             return moment(date).format('dddd')

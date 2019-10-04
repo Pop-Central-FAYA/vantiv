@@ -1,6 +1,13 @@
 <template>
     <v-container grid-list-md class="pt-0 pb-3 px-0">
-        <media-plan-deliverables :media-plan="mediaPlan"></media-plan-deliverables>
+        <v-layout row wrap class="px-4 pb-3 white-bg">
+            <v-flex xs12 style="min-height: 70px">
+                <comment :model-id="plan.id" :routes="plan.routes.comments"></comment>
+            </v-flex>
+            <v-flex xs12>
+                <media-plan-deliverables :media-plan="mediaPlan"></media-plan-deliverables>
+            </v-flex>
+        </v-layout>
         <v-layout row wrap class="white-bg">
             <v-flex xs12 sm12 md12 lg12 mb-2>
                 <v-expansion-panel popout>
@@ -129,7 +136,7 @@
         </v-layout>
         <v-layout row wrap class="px-0 py-5">
             <v-flex xs12 sm12 md4 class="px-0">
-                <v-btn @click="buttonRedirect(redirectUrls.back_action)" color="vue-back-btn" large><v-icon left>navigate_before</v-icon>Back</v-btn>
+                <v-btn @click="buttonRedirect(plan.routes.insertions.back_action)" color="vue-back-btn" large><v-icon left>navigate_before</v-icon>Back</v-btn>
             </v-flex>
             <v-flex xs12 s12 md8 class="px-0 text-right">
                 <v-btn :disabled="isRunRatings || plan.status =='Approved' ||  plan.status =='Declined'" @click="save(false)" color="default-vue-btn" large><v-icon left>save</v-icon>Save</v-btn>
@@ -180,7 +187,6 @@
             timeBelts: Object,
             plan: Object,
             clients: Array,
-            redirectUrls: Object
         },
         data() {
             return {
@@ -311,7 +317,7 @@
             goToSummary() {
                 var net_total_all_durations = this.getNetTotalAllDurations();
                 if (this.plan.status == "Approved" || this.plan.status == "Declined") {
-                    window.location = this.redirectUrls.next_action;
+                    window.location = this.plan.routes.insertions.next_action;
                 } else if (net_total_all_durations <= 0 && this.isNewInsertion == false) {
                     this.sweet_alert("Please add at least one insertion", 'error');
                     return;
@@ -325,7 +331,7 @@
                     // Validate inputs using vee-validate plugin 
                     this.$validator.validate().then(valid => {
                         if (valid) {
-                            window.location = this.redirectUrls.next_action;
+                            window.location = this.plan.routes.insertions.next_action;
                         }
                     });
                 }
@@ -350,7 +356,7 @@
                         this.sweet_alert(msg, 'info', 60000);
                         axios({
                             method: 'post',
-                            url: this.redirectUrls.save_action,
+                            url: this.plan.routes.insertions.save_action,
                             data: {
                                 new_programs: this.newPrograms,
                                 new_volume_discounts: this.volumeDiscounts,

@@ -17,6 +17,7 @@ use Illuminate\Auth\Passwords\CanResetPassword;
 use Laracasts\Presenter\PresentableTrait;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Models\Role;
+use Actuallymab\LaravelComment\CanComment;
 
 class User extends Authenticatable implements TwoFactorAuthenticatableContract
 {
@@ -24,7 +25,7 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract
     protected $keyType = 'string';
     public $incrementing = false;
 
-    use TwoFactorAuthenticatable, CanResetPassword, PresentableTrait, Notifiable, HasRoles;
+    use TwoFactorAuthenticatable, CanResetPassword, PresentableTrait, Notifiable, HasRoles, CanComment;
 
     protected $presenter = UserPresenter::class;
 
