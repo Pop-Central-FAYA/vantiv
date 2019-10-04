@@ -4,6 +4,7 @@ namespace Vanguard\ModelFilters;
 
 use EloquentFilter\ModelFilter;
 use Illuminate\Support\Arr;
+use Vanguard\Libraries\DayPartList;
 
 class MpsProfileFilter extends ModelFilter
 {
@@ -79,5 +80,29 @@ class MpsProfileFilter extends ModelFilter
         }
         return $this->whereIn('mps_profiles.region', $mapped_regions);
     }
+
+    /** THE BELOW FUNCTIONS REQUIRE THAT IN THE QUERY ABOVE A JOIN IS PERFORMED ON MPS_PROFILE_ACTIVITIES */
+    public function day($day)
+    {
+        return $this->where('mps_profile_activities.day', $day);
+    } 
     
+    public function broadcastType($broadcast_type_list)
+    {
+        return $this->whereIn('mps_profile_activities.broadcast', $broadcast_type_list);
+    }
+
+    /**
+     * Just call broadcastType for now
+     * @todo should remove this
+     */
+    public function stationType($station_type_list)
+    {
+        return $this->broadcastType($station_type_list);
+    }
+
+    public function dayPart($day_part)
+    {
+        return $this->whereBetween('mps_profile_activities.start_time', DayPartList::DAYPARTS[$day_part]);
+    }
 }

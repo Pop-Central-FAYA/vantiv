@@ -10,6 +10,18 @@ use Log;
 use Vanguard\Libraries\DayPartList;
 use Vanguard\Services\BaseServiceInterface;
 
+// \DB::listen(function($sql, $bindings, $time) {
+//     var_dump($sql);
+//     var_dump($bindings);
+//     var_dump($time);
+// });
+
+// DB::listen(function ($query) {
+//     $query->sql;
+//     $query->bindings;
+//     $query->time;
+// });
+
 /**
  * This class should given a few demographic parameters returns ratings grouped in a certain way
  * @todo log how long it takes to calculate these counts
