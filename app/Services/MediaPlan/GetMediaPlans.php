@@ -32,7 +32,7 @@ class GetMediaPlans
     public function fetchMediaPlans()
     {
         $status = $this->plan_status;
-        $plans =  MediaPlan::where('company_id', $this->company_id)
+        $plans =  MediaPlan::with(['brand'])->where('company_id', $this->company_id)
                     ->whereIn('status', $status)
                     ->get();
         $plans = $this->reformatMediaPlans($plans);
@@ -56,7 +56,10 @@ class GetMediaPlans
                 'media_type' => $plan->media_type,
                 'redirect_url' => $this->generateRedirectUrl($plan),
                 'status' => $this->getStatusHtml($plan),
-                'str_status' => $plan->status
+                'str_status' => $plan->status,
+                'product_name' => $plan->product_name,
+                'net_media_cost' => $plan->net_media_cost,
+                'brand' => $plan->brand
             ];
         }
         return $plans;
