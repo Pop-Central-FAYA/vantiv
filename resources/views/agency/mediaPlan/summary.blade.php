@@ -23,7 +23,6 @@
         :full-station-data="{{ json_encode($full_plan_details) }}"
         :summary-data="{{ json_encode($summary) }}" 
         :summary-details="{{ json_encode($media_plan) }}" 
-        :routes="{{ json_encode($routes) }}"  
         :permission-list="{{ json_encode(Auth::user()->getAllPermissions()->pluck('name')) }}"    
         :user-list="{{ json_encode($users) }}"></media-plan-summary>
         <br><br><br><br><br><br><br>

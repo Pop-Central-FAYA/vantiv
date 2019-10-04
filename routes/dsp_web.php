@@ -118,7 +118,6 @@
             Route::post('/get_approval/', 'MediaPlanController@postRequestApproval')->name('agency.media_plan.get_approval')->middleware('permission:create.media_plan');
             Route::get('/customise/{id}', 'MediaPlanController@stationDetails')->name('agency.media_plan.customize');
 
-
             Route::post('/customise-filter', 'MediaPlanController@setPlanSuggestionFilters')->name('agency.media_plan.customize-filter');
             // Route::post('/select_plan', 'MediaPlanController@SelectPlanPost')->name('agency.media_plan.select_suggestions');
             Route::get('/createplan/{id}', 'MediaPlanController@createPlan')->name('agency.media_plan.create');
@@ -127,6 +126,11 @@
             Route::post('/store-programs', 'MediaPlanController@storePrograms')->name('media_plan.program.store');
             Route::post('/store-volume-discount', 'MediaPlanController@storeVolumeDiscount')->name('media_plan.volume_discount.store');
             Route::get('/convert-to-campaign/{id}', 'MediaPlanController@convertPlanToCampaign')->name('media_plan.campaign.create');
+
+            Route::group(['prefix' => 'api'], function() {
+                Route::post('/{id}/comments', 'MediaPlanCommentController@createComment')->name('agency.media_plan.comment.store');
+                Route::get('/{id}/comments', 'MediaPlanCommentController@getComments')->name('agency.media_plan.comment.all');
+            });
         });
 
         /**

@@ -190,7 +190,7 @@ return [
         Meneses\LaravelMpdf\LaravelMpdfServiceProvider::class,
         Riskihajar\Terbilang\TerbilangServiceProvider::class,
         EloquentFilter\ServiceProvider::class,
-
+        Actuallymab\LaravelComment\LaravelCommentServiceProvider::class,
 
 
         /*

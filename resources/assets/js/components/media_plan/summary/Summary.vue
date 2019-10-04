@@ -1,8 +1,10 @@
 <template>
      <div>
         <div class="the_frame clearfix mb border_top_color load_stuff">
-
             <div class="margin_center col_10 clearfix create_fields">
+                <div class="clearfix mb4 mt2" style="position: relative; margin-bottom: 4rem;">
+                    <comment :model-id="summaryDetail.id" :routes="summaryDetail.routes.comments"></comment>
+                </div>
                 <div class="the_stats the_frame clearfix mb4 mt4">
                     <table class="display dashboard_campaigns">
                         <tbody>
@@ -31,7 +33,7 @@
         <div class="container-fluid my-5">
             <div class="row">
                 <div class="col-md-4 p-0">
-                    <button id="back_btn" @click="buttonAction(routes.back)"  class="btn small_btn"><i class="media-plan material-icons">navigate_before</i> Back</button>
+                    <button id="back_btn" @click="buttonAction(summaryDetail.routes.summary.back)"  class="btn small_btn"><i class="media-plan material-icons">navigate_before</i> Back</button>
                 </div>
                 <div class="col-md-8 p-0 text-right">
                     <span v-if="summaryDetail.status == 'In Review'">
@@ -43,12 +45,12 @@
                         <media-plan-request-approval  
                         :users="userList"  
                         :media-plan="summaryDetail.id" 
-                        :action-link="routes.approval"
+                        :action-link="summaryDetail.routes.summary.approval"
                         :permissionList="permissionList">
                         </media-plan-request-approval>
                     </span>
                      <span>
-                        <button v-if="hasPermission(permissionList,'export.media_plan')"  @click="buttonAction(routes.export, 'export.media_plan')"  class="btn block_disp uppercased"><i class="media-plan material-icons">file_download</i>Export Plan</button>
+                        <button v-if="hasPermission(permissionList,'export.media_plan')"  @click="buttonAction(summaryDetail.routes.summary.export, 'export.media_plan')"  class="btn block_disp uppercased"><i class="media-plan material-icons">file_download</i>Export Plan</button>
                           </span>
                     <span v-if="summaryDetail.status == 'Approved'" >
                         <media-plan-create-campaign 
@@ -77,7 +79,6 @@
             summaryData: Array,
             permissionList:Array,
             userList:Array,
-            routes:Object,
         },
         data() {
             return {
@@ -121,7 +122,7 @@
                 if(this.hasPermissionAction(this.permissionList, ['create.media_plan', 'update.media_plan'])){                    
                     axios({
                         method: 'post',
-                        url: this.routes.change_status,
+                        url: this.summaryDetail.routes.summary.change_status,
                         data: {
                             media_plan_id: this.summaryDetail.id,
                             action: action

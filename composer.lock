@@ -7,6 +7,64 @@
     "content-hash": "ce62c2ca5fae813d521d0fadb46a930f",
     "packages": [
         {
+            "name": "actuallymab/laravel-comment",
+            "version": "1.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/actuallymab/laravel-comment.git",
+                "reference": "9eb3455131879c39001e0f1c3f9149679634c350"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/actuallymab/laravel-comment/zipball/9eb3455131879c39001e0f1c3f9149679634c350",
+                "reference": "9eb3455131879c39001e0f1c3f9149679634c350",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/database": "~5.5.0|~5.6.0|~5.7.0|~5.8.0|~6.0.0",
+                "php": "^7.1.3"
+            },
+            "require-dev": {
+                "fzaninotto/faker": "^1.8",
+                "orchestra/testbench": "~3.5.0|~3.6.0|~3.7.0|~3.8.0|~4.0.0",
+                "phpunit/phpunit": "^7.4",
+                "scrutinizer/ocular": "^1.5"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                },
+                "laravel": {
+                    "providers": [
+                        "\\Actuallymab\\LaravelComment\\LaravelCommentServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Actuallymab\\LaravelComment\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mehmet Aydin Bahadir",
+                    "email": "mehmet.aydin.bahadir@gmail.com"
+                }
+            ],
+            "description": "Just another comment system for your awesome Laravel project.",
+            "homepage": "https://github.com/actuallymab/laravel-comment",
+            "keywords": [
+                "actuallymab",
+                "laravel-comment"
+            ],
+            "time": "2019-09-13T15:01:05+00:00"
+        },
+        {
             "name": "anlutro/l4-settings",
             "version": "0.4.9",
             "source": {
@@ -54,16 +112,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.112.0",
+            "version": "3.112.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "1e21446c6780a3b9b5e4315bd6d4347d2c3381eb"
+                "reference": "d744986383812c6a9e52134adabbb5683e6750fe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/1e21446c6780a3b9b5e4315bd6d4347d2c3381eb",
-                "reference": "1e21446c6780a3b9b5e4315bd6d4347d2c3381eb",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/d744986383812c6a9e52134adabbb5683e6750fe",
+                "reference": "d744986383812c6a9e52134adabbb5683e6750fe",
                 "shasum": ""
             },
             "require": {
@@ -133,7 +191,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2019-09-12T18:09:53+00:00"
+            "time": "2019-09-27T18:09:39+00:00"
         },
         {
             "name": "carlos-meneses/laravel-mpdf",
@@ -1998,9 +2056,9 @@
             "authors": [
                 {
                     "name": "Ben Corlett",
+                    "role": "Developer",
                     "email": "bencorlett@me.com",
-                    "homepage": "http://www.webcomm.com.au",
-                    "role": "Developer"
+                    "homepage": "http://www.webcomm.com.au"
                 }
             ],
             "description": "OAuth 1.0 Client Library",
@@ -5524,9 +5582,9 @@
             "authors": [
                 {
                     "name": "Christoph Kempen",
+                    "role": "developer",
                     "email": "christoph@downsized.nl",
-                    "homepage": "http://downsized.nl/",
-                    "role": "developer"
+                    "homepage": "http://downsized.nl/"
                 },
                 {
                     "name": "Paul Kievits",
@@ -7675,16 +7733,16 @@
         },
         {
             "name": "phpunit/php-token-stream",
-            "version": "3.1.0",
+            "version": "3.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-token-stream.git",
-                "reference": "e899757bb3df5ff6e95089132f32cd59aac2220a"
+                "reference": "995192df77f63a59e47f025390d2d1fdf8f425ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-token-stream/zipball/e899757bb3df5ff6e95089132f32cd59aac2220a",
-                "reference": "e899757bb3df5ff6e95089132f32cd59aac2220a",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-token-stream/zipball/995192df77f63a59e47f025390d2d1fdf8f425ff",
+                "reference": "995192df77f63a59e47f025390d2d1fdf8f425ff",
                 "shasum": ""
             },
             "require": {
@@ -7720,7 +7778,7 @@
             "keywords": [
                 "tokenizer"
             ],
-            "time": "2019-07-25T05:29:42+00:00"
+            "time": "2019-09-17T06:23:10+00:00"
         },
         {
             "name": "phpunit/phpunit",
@@ -8506,16 +8564,16 @@
         },
         {
             "name": "squizlabs/php_codesniffer",
-            "version": "3.4.2",
+            "version": "3.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "b8a7362af1cc1aadb5bd36c3defc4dda2cf5f0a8"
+                "reference": "0afebf16a2e7f1e434920fa976253576151effe9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/b8a7362af1cc1aadb5bd36c3defc4dda2cf5f0a8",
-                "reference": "b8a7362af1cc1aadb5bd36c3defc4dda2cf5f0a8",
+                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/0afebf16a2e7f1e434920fa976253576151effe9",
+                "reference": "0afebf16a2e7f1e434920fa976253576151effe9",
                 "shasum": ""
             },
             "require": {
@@ -8553,7 +8611,7 @@
                 "phpcs",
                 "standards"
             ],
-            "time": "2019-04-10T23:49:02+00:00"
+            "time": "2019-09-26T23:12:26+00:00"
         },
         {
             "name": "symfony/config",

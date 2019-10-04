@@ -29,7 +29,8 @@
         "riskihajar/terbilang": "^1.2",
         "sendgrid/php-http-client": "~3.9.6",
         "sendgrid/sendgrid": "~7",
-        "tucker-eric/eloquentfilter": "^1.4"
+        "tucker-eric/eloquentfilter": "^1.4",
+        "actuallymab/laravel-comment": "^1.0"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",
