@@ -28,7 +28,7 @@
                    
                 </div>
                @if(Auth::user()->can('update.profile'))
-                    <div class="col-md-1 text-right px-1">
+                    <div class="col-md-1 text-right px-1" style="text-align: center; padding-left: 50px!important;">
                             <v-content>
                                 <edit-profile 
                                     :user-data="{{ json_encode($user) }}" 
