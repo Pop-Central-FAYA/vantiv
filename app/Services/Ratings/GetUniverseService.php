@@ -5,8 +5,7 @@ namespace Vanguard\Services\Ratings;
 use DB;
 use Vanguard\Models\MpsProfile;
 
-// use Vanguard\Services\Ratings\GetUniverseService; $filters = ["state" => ["Abuja"], "social_class" => ["A", "B", "C"], "gender" => ["Male", "Female"]];$service = new GetUniverseService($filters); $service->run()
-
+// use Vanguard\Services\Ratings\GetUniverseService; $filters = ["region" => ['North West', 'North East', 'North Central', 'South West', 'South East', 'South South'], "social_class" => ["D", "B", "C"], "gender" => ["Male", "Female"]];$service = new GetUniverseService($filters); $service->run()
 class GetUniverseService extends AbstractRatingService
 {
 

@@ -102,7 +102,6 @@
          */
         Route::group(['namespace' => 'Dsp\MediaPlan', 'prefix' => 'media-plan'], function () {
             /*** New Routes ****/
-            // Route::post('/{id}/ratings', 'MediaPlanController@createStationRatings')->name('agency.media_plan.create-ratings');
             Route::post('/{id}/ratings', 'MediaPlanController@createStationRatings')->name('agency.media_plan.create-ratings');
             Route::post('/{id}/ratings/{station_key}/timebelts', 'MediaPlanController@createStationTimeBeltRatings')->name('agency.media_plan.create-timebelt-ratings');
             Route::post('/{id}/graph-ratings', 'MediaPlanController@createTimeBeltRatingsGraph')->name('agency.media_plan.create-timebelt-graph');
@@ -242,7 +241,15 @@
             Route::patch('/brands/{id}', 'BrandController@update')->name('brand.update');
         });
 
-        Route::post('/presigned-url', 'S3Controller@getPresignedUrl')->name('presigned.url');
+        /**
+         * Generation of REACH routes
+         */
+        Route::group(['namespace' => 'Dsp'], function() {
+            Route::group(['prefix' => 'api'], function() {
+                Route::get('/reach', 'ReachController@getReach')->name('reach.get');
+                Route::get('/reach/{station_key}/timebelts', 'ReachController@getStationTimebeltReach')->name('reach.get-timebelts');
+            });
+        });
 
         /*
         * new user management route
@@ -272,9 +279,6 @@
              });
          });
 
-        
-
-    });
 
      Route::group(['namespace' => 'Dsp'], function () {
         Route::get('/password/{token}', 'ProfileController@resetPassword')->name('password.reset');
@@ -283,3 +287,5 @@
          });
      });
 
+    Route::post('/presigned-url', 'S3Controller@getPresignedUrl')->name('presigned.url');
+});
