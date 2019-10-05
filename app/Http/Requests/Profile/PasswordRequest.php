@@ -14,7 +14,9 @@ class PasswordRequest extends Request
     public function rules()
     {
         return [
-            'password' => 'required|string',
+            'password' => 'required|min:6',
+            'confirm_password' => 'required|same:password',
+            'id'=>'required|string',
         ];
     }
 }

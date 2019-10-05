@@ -182,11 +182,11 @@
                 custom: {
                 lastname: {
                     required: () => "Last name cannot be empty",
-                    max: "The company name field may not be greater than 255 characters"
+                    max: "The first name field may not be greater than 255 characters"
                 },
                 firstname: {
                     required: () => " First name cannot be empty",
-                    max: "The company name field may not be greater than 255 characters"
+                    max: "The last name field may not be greater than 255 characters"
                 },
                 email: {
                     required: () => "Email address cannot be empty",
@@ -204,7 +204,6 @@
             };
         },
         created() {
-            console.log("bessss");
             var self = this;
             (self.user = this.userData);
              self.avatar_input_label = self.user.avatar;
@@ -318,11 +317,11 @@
                         this.user.avatar = `https:${presigned_url.split("?")[0].substr(6)}`;
                     })
                     .catch(error => {
-                        console.log(error);
-                        this.sweet_alert(
-                            "An unknown error has occurred, upload failed. Please try again",
-                            "error"
-                        );
+                         if (error.response && (error.response.status == 422)) {
+                            this.displayServerValidationErrors(error.response.data.errors);
+                        } else {
+                            this.sweet_alert('An unknown error has occurred. Please try again', 'error');
+                        }
                     });
             }
         }

@@ -28,12 +28,14 @@
                    
                 </div>
                @if(Auth::user()->can('update.profile'))
-                    <div class="col-md-2 text-right px-2">
-                        <edit-profile 
-                            :user-data="{{ json_encode($user) }}" 
-                            :routes="{{ json_encode($routes) }}" 
-                            :permission-list="{{ json_encode(Auth::user()->getAllPermissions()->pluck('name')) }}">
-                        </edit-profile>
+                    <div class="col-md-1 text-right px-1">
+                            <v-content>
+                                <edit-profile 
+                                    :user-data="{{ json_encode($user) }}" 
+                                    :routes="{{ json_encode($routes) }}" 
+                                    :permission-list="{{ json_encode(Auth::user()->getAllPermissions()->pluck('name')) }}">
+                                </edit-profile>
+                            </v-content>
                     </div>
                 @endif
 

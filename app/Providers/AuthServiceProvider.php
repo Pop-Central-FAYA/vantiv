@@ -20,6 +20,7 @@ class AuthServiceProvider extends ServiceProvider
         \Vanguard\Models\Campaign::class => \Vanguard\Policies\CampaignPolicy::class,
         \Vanguard\Models\CampaignMpo::class => \Vanguard\Policies\MpoPolicy::class,
         \Vanguard\User::class => \Vanguard\Policies\UserPolicy::class,
+        \Vanguard\User::class => \Vanguard\Policies\ProfilePolicy::class,
     ];
 
     /**
