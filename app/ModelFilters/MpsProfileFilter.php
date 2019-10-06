@@ -115,13 +115,16 @@ class MpsProfileFilter extends ModelFilter
         return $this->whereIn('mps_profile_activities.broadcast', $broadcast_type_list);
     }
 
-    /**
-     * Just call broadcastType for now
-     * @todo should remove this
-     */
     public function stationType($station_type_list)
     {
-        return $this->broadcastType($station_type_list);
+        if (is_array($station_type_list) && count($station_type_list) == 0) {
+            return $this;
+        }
+
+        if (!is_array($station_type_list)) {
+            $station_type_list = [$station_type_list];
+        }
+        return $this->whereIn('tv_stations.type', $station_type_list);
     }
 
     public function dayPart($day_part)

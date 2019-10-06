@@ -43,7 +43,7 @@ class GetReachRequest extends FormRequest
             'station_type' => [
                 'required',
                 'string',
-                Rule::in(["all", "network", "regional", "satellite"])
+                Rule::in(["all", "network", "regional", "international"])
             ],
         ];
     }
