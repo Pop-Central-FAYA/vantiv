@@ -71,6 +71,20 @@ return [
             'strict'    => false
         ],
 
+        'mysql_test' => [
+            'driver'    => 'mysql',
+            'engine'    => 'InnoDB',
+            'host'      => env('DB_HOST', 'localhost'),
+            // 'database'  => env('DB_DATABASE', 'api_db'),
+            'database'  => 'faya_test',
+            'username'  => env('DB_USERNAME', 'forge'),
+            'password'  => env('DB_PASSWORD', ''),
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => env('DB_PREFIX', ''),
+            'strict'    => false
+        ],
+
         'pgsql' => [
             'driver'   => 'pgsql',
             'host'     => env('DB_HOST', 'localhost'),
