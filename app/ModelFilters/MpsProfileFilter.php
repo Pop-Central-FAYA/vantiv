@@ -129,7 +129,7 @@ class MpsProfileFilter extends ModelFilter
 
     public function dayPart($day_part)
     {
-        return $this->whereBetween('mps_profile_activities.start_time', DayPartList::DAYPARTS[$day_part]);
+        return $this->whereBetween('mps_profile_activities.start_time', DayPartList::DAYPARTLIST[$day_part]);
     }
 
     public function stationKey($station_key)

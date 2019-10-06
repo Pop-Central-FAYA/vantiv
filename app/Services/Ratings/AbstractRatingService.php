@@ -46,7 +46,6 @@ abstract class AbstractRatingService implements BaseServiceInterface
         $query_res = cache()->remember($hash_key, $expire_at, function() use ($query) {
             return $query->get();
         });
-
         return collect($this->formatResponse($query_res));
     }
 

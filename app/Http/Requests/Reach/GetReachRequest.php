@@ -58,7 +58,7 @@ class GetReachRequest extends FormRequest
 
     protected function getDayParts()
     {
-        $day_parts = array_keys(DayPartList::DAYPARTS);
+        $day_parts = array_keys(DayPartList::DAYPARTLIST);
         $day_parts[] = 'all';
         return $day_parts;
     }
