@@ -15,7 +15,7 @@
               :append-icon="show ? 'visibility' : 'visibility_off'"
               :type="show ? 'text' : 'password'"
               @click:append="show = !show"
-              label="password"
+              label="Password"
               solo
                :error-messages="errors.collect('password')"
             ></v-text-field>
@@ -80,7 +80,7 @@ export default {
   data() {
     return {
       user: {
-        id: "jjjjj",
+        id: "",
         password: "",
         confirm_password: ""
       },
@@ -117,7 +117,7 @@ export default {
 
                   this.sweet_alert("Updating user password", "info");
                     // make axios call to update password to db
-                  // self.makeUpdateRequest();
+                   self.makeUpdateRequest();
             },
             makeUpdateRequest: function() {
             this.sweet_alert("Updating user password", "info");
@@ -138,7 +138,7 @@ export default {
                             this.sweet_alert('An unknown error has occurred. Please try again', 'error');
                         }
                 });
-            },
+         },
   }
 };
 </script>

@@ -25,7 +25,11 @@
         <div class="row">
        <!-- subheader -->
                 <div class="col-md-10">
-                   
+                <profile-change-password
+                :user-data="{{ json_encode($user) }}" 
+                :routes="{{ json_encode($routes) }}" 
+                :permission-list="{{ json_encode(Auth::user()->getAllPermissions()->pluck('name')) }}">
+                     </profile-change-password>
                 </div>
                @if(Auth::user()->can('update.profile'))
                     <div class="col-md-1 text-right px-1" style="text-align: center; padding-left: 50px!important;">

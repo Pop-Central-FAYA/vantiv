@@ -31,6 +31,7 @@ class ProfileController extends Controller
         $user = \Auth::user();
         $routes = [
             'presigned_url' => route('presigned.url'),
+            'change_password' => route('password.update'),
         ];
         return view('agency.profile.index')
             ->with('routes', $routes)

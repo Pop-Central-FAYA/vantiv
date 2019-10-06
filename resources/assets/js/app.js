@@ -168,6 +168,7 @@ Vue.component('delete-user', () => import('./components/user/DeleteUser.vue'));
 Vue.component('profile-details', () => import('./components/profile/ProfileDetails.vue'));
 Vue.component('edit-profile', () => import('./components/profile/EditProfile.vue'));
 Vue.component('change-password', () => import('./components/profile/ChangePassword.vue'));
+Vue.component('profile-change-password', () => import('./components/profile/ProfileChangePassword.vue'));
 
 Vue.mixin({
     methods: {

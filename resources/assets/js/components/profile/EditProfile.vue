@@ -1,5 +1,5 @@
 <template>
-  <v-layout>
+  <v-layout>              
     <v-dialog v-model="dialog" persistent max-width="800px">
       <template v-slot:activator="{ on }">
         <v-btn color class="default-vue-btn" dark v-on="on">Edit</v-btn>
@@ -118,6 +118,7 @@
               <v-spacer></v-spacer>
               <v-btn color="red" dark @click="closeDialog()">Close</v-btn>
               <v-btn color class="default-vue-btn" dark @click="editUser()">Save</v-btn>
+              <v-btn color class="default-vue-btn" dark @click="showEditPassword()">Update Password</v-btn>
             </v-card-actions>
           </v-container>
         </v-card-text>
@@ -270,7 +271,6 @@
                 this.upload_image = true;
                 this.avatar_file = event.target.files[0];
                 this.avatar_input_label = this.avatar_file.name;
-                console.log(this.avatar_input_label);
                 const output = $("#avatar");
                 output.attr("src", URL.createObjectURL(event.target.files[0]));
             },
@@ -323,7 +323,10 @@
                             this.sweet_alert('An unknown error has occurred. Please try again', 'error');
                         }
                     });
-            }
+            },
+            showEditPassword() {
+              Event.$emit('edit-password', this.userData);
+            },
         }
     };
 </script>
