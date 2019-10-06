@@ -4,7 +4,7 @@ namespace Vanguard\Http\Requests\Profile;
 
 use Vanguard\Http\Requests\Request;
 
-class PasswordRequest extends Request
+class ResetPasswordRequest extends Request
 {
     /**
      * Get the validation rules that apply to the request.
@@ -16,7 +16,7 @@ class PasswordRequest extends Request
         return [
             'password' => 'required|min:6',
             'confirm_password' => 'required|same:password',
-            'id'=>'required|string',
+            'token'=>'required|string',
         ];
     }
 }

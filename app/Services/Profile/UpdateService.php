@@ -12,7 +12,7 @@ use Vanguard\Services\BaseServiceInterface;
  */
 class UpdateService implements BaseServiceInterface
 {
-    const USER_UPDATE_FIELDS = ['password', 'firstname', 'lastname', 'phone_number', 'avatar'];
+    const USER_UPDATE_FIELDS = ['firstname', 'lastname', 'phone_number', 'avatar'];
 
     protected $user;
     protected $data;

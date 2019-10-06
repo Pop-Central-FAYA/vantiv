@@ -73,7 +73,6 @@ export default {
     return {
       dialog: false,
       user: {
-        id: "",
         password: "",
         confirm_password: ""
       },

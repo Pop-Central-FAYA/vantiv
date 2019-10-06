@@ -6,16 +6,16 @@
 
     <div class="form-wrap col-md-6 auth-form" id="login">
         <div style="text-align: center; margin-bottom: 25px;">
-            <a href="{{ route('dashboard') }}">{!! AssetsHelper::logo() !!}</a>
+            <a href="{{ route('dashboard', false) }}">{!! AssetsHelper::logo() !!}</a>
         </div>
 
         {{--@include('partials/messages')--}}
 
                     <v-content>
                         <change-password
-                                :user-data="{{ json_encode($user) }}" 
+                                :token="{{ json_encode($token) }}" 
                                 :routes="{{ json_encode($routes) }}" 
-                                :permission-list="{{ json_encode($permissions) }}">
+                                >
                         </change-password>
                     </v-content>
 

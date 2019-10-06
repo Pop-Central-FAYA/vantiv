@@ -106,7 +106,7 @@ class AssetsHelper
                 return  URL::to('proceed/password-change/' . $token) ;
             break;
             default:
-                return route('password.change', ['token' => $token]);
+                return route('password.reset', ['token' => $token]);
             break;
         }
     }

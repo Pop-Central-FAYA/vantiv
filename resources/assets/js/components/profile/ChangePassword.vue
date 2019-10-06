@@ -73,14 +73,14 @@
 <script>
 export default {
   props: {
-        userData: Object,
+        token: String,
         permissionList: Array,
         routes: Object
   },
   data() {
     return {
       user: {
-        id: "",
+        token: this.token,
         password: "",
         confirm_password: ""
       },
@@ -121,7 +121,6 @@ export default {
             },
             makeUpdateRequest: function() {
             this.sweet_alert("Updating user password", "info");
-            this.user.id =this.userData.id
               console.log(this.user);
             axios({
                 method: "post",

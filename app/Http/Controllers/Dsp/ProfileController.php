@@ -9,8 +9,9 @@ use Vanguard\Http\Requests\Profile\UpdateRequest;
 use Vanguard\Http\Resources\UserResource;
 use Vanguard\Services\Profile\UpdateService;
 use Vanguard\User;
-use Vanguard\Http\Requests\Profile\PasswordRequest;
 use Vanguard\Services\Profile\UpdatePassword;
+use Vanguard\Http\Requests\Profile\UpdatePasswordRequest;
+use Vanguard\Http\Requests\Profile\ResetPasswordRequest;
 
 class ProfileController extends Controller
 {
@@ -30,26 +31,23 @@ class ProfileController extends Controller
     {
         $user = \Auth::user();
         $routes = [
-            'presigned_url' => route('presigned.url'),
-            'change_password' => route('password.update'),
+            'presigned_url' => route('presigned.url', false),
+            'change_password' => route('password.update', false),
         ];
         return view('agency.profile.index')
             ->with('routes', $routes)
             ->with('user', new UserResource($user));
     }
 
-    public function changePassword(Request $request,$token)
+    public function resetPassword(Request $request,$token)
     {
-        $user_id = decrypt($token);
-        $user= User::findOrFail($user_id);
         $routes = [
-            'change_password' => route('password.update'),
-            'login' => route('login'),
+            'change_password' => route('process.password.reset', false),
+            'login' => route('login', false),
         ];
         return view('agency.profile.change_password')
             ->with('routes', $routes)
-            ->with('permissions', $user->getAllPermissions()->pluck('name'))
-            ->with('user', new UserResource($user));
+            ->with('token', $token);
     }
     /*******************************
      *  BELOW ARE THE API ACTIONS
@@ -72,22 +70,31 @@ class ProfileController extends Controller
         $user = \Auth::user();
         $this->authorize('updateProfile', $user);
         (new UpdateService($user, $validated))->run();
-
         $resource = new UserResource(User::find($id));
         return $resource->response()->setStatusCode(200);
 
     }
 
-    public function updatePassword(PasswordRequest $request)
+    public function updatePassword(UpdatePasswordRequest $request)
     {
         $validated = $request->validated();
-        $user = User::findOrFail($validated['id']);
+        $user = \Auth::user();
         if($user->can('update.profile')){
             (new UpdatePassword($user, $validated))->run();
-            $resource = new UserResource(User::find($validated['id']));
+            $resource = new UserResource($user);
             return $resource->response()->setStatusCode(200);
         }
 
+    }
+
+    public function processResetPassword(ResetPasswordRequest $request)
+    {
+        $validated = $request->validated();
+        $user= User::findOrFail(decrypt($validated['token']));
+        (new UpdatePassword($user, $validated))->run();
+         return response()->json(array(
+            'code' =>  200,
+           ),200); 
     }
 
 }
