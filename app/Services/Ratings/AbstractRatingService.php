@@ -47,7 +47,7 @@ abstract class AbstractRatingService implements BaseServiceInterface
             return $query->get();
         });
 
-        return $this->formatResponse($query_res);
+        return collect($this->formatResponse($query_res));
     }
 
     /**

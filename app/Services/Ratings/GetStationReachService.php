@@ -20,8 +20,10 @@ class GetStationReachService extends AbstractRatingService
         $main_query = DB::query()->fromSub($query, "tbl")
                             ->addSelect($columns)
                             ->groupBy("station_key")
-                            ->orderBy("station_type", "DESC")
-                            ->orderBy("total_audience", "DESC");
+                            ->orderBy("total_audience", "DESC")
+                            ->orderBy("station_name")
+                            ->orderBy("station_state")
+                            ->orderBy("station_type");
         return $main_query;
     }
     

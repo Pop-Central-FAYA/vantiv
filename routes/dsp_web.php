@@ -246,7 +246,7 @@
          */
         Route::group(['namespace' => 'Dsp'], function() {
             Route::group(['prefix' => 'api'], function() {
-                Route::get('/reach', 'ReachController@getReach')->name('reach.get');
+                Route::get('/reach/{plan_id}', 'ReachController@getReach')->name('reach.get');
                 Route::get('/reach/{station_key}/timebelts', 'ReachController@getStationTimebeltReach')->name('reach.get-timebelts');
             });
         });

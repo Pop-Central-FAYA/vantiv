@@ -1,0 +1,6148 @@
+---
+-
+    ext_profile_id: 90717109
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 16:00:00
+    end_time: 16:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90717109
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 16:15:00
+    end_time: 16:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90717109
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 16:30:00
+    end_time: 16:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90717109
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 16:45:00
+    end_time: 17:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90717109
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 08:00:00
+    end_time: 08:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 9a2addb2610752c29ab0cf48af53cf64
+    broadcast_type: Regional
+-
+    ext_profile_id: 90717109
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 08:15:00
+    end_time: 08:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 9a2addb2610752c29ab0cf48af53cf64
+    broadcast_type: Regional
+-
+    ext_profile_id: 90717109
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 08:30:00
+    end_time: 08:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 9a2addb2610752c29ab0cf48af53cf64
+    broadcast_type: Regional
+-
+    ext_profile_id: 90717109
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 08:45:00
+    end_time: 09:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 9a2addb2610752c29ab0cf48af53cf64
+    broadcast_type: Regional
+-
+    ext_profile_id: 90717109
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 19:00:00
+    end_time: 19:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: c276d0fc1405bb547030f5730e3f796f
+    broadcast_type: Regional
+-
+    ext_profile_id: 90717109
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 19:15:00
+    end_time: 19:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: c276d0fc1405bb547030f5730e3f796f
+    broadcast_type: Regional
+-
+    ext_profile_id: 90717109
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 19:30:00
+    end_time: 19:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: c276d0fc1405bb547030f5730e3f796f
+    broadcast_type: Regional
+-
+    ext_profile_id: 90717109
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 19:45:00
+    end_time: 20:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: c276d0fc1405bb547030f5730e3f796f
+    broadcast_type: Regional
+-
+    ext_profile_id: 90717109
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 16:00:00
+    end_time: 16:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 095f139dea2f1b05de7c454d420156f9
+    broadcast_type: Regional
+-
+    ext_profile_id: 90717109
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 16:15:00
+    end_time: 16:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 095f139dea2f1b05de7c454d420156f9
+    broadcast_type: Regional
+-
+    ext_profile_id: 90717109
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 16:30:00
+    end_time: 16:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 095f139dea2f1b05de7c454d420156f9
+    broadcast_type: Regional
+-
+    ext_profile_id: 90717109
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 16:45:00
+    end_time: 17:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 095f139dea2f1b05de7c454d420156f9
+    broadcast_type: Regional
+-
+    ext_profile_id: 90717109
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 09:00:00
+    end_time: 09:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 9a2addb2610752c29ab0cf48af53cf64
+    broadcast_type: Regional
+-
+    ext_profile_id: 90717109
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 09:15:00
+    end_time: 09:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 9a2addb2610752c29ab0cf48af53cf64
+    broadcast_type: Regional
+-
+    ext_profile_id: 90717109
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 09:30:00
+    end_time: 09:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 9a2addb2610752c29ab0cf48af53cf64
+    broadcast_type: Regional
+-
+    ext_profile_id: 90717109
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 09:45:00
+    end_time: 10:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 9a2addb2610752c29ab0cf48af53cf64
+    broadcast_type: Regional
+-
+    ext_profile_id: 90717109
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 22:00:00
+    end_time: 22:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 9a2addb2610752c29ab0cf48af53cf64
+    broadcast_type: Regional
+-
+    ext_profile_id: 90717109
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 22:15:00
+    end_time: 22:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 9a2addb2610752c29ab0cf48af53cf64
+    broadcast_type: Regional
+-
+    ext_profile_id: 90717109
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 22:30:00
+    end_time: 22:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 9a2addb2610752c29ab0cf48af53cf64
+    broadcast_type: Regional
+-
+    ext_profile_id: 90717109
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 22:45:00
+    end_time: 23:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 9a2addb2610752c29ab0cf48af53cf64
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 19:00:00
+    end_time: 19:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 19:15:00
+    end_time: 19:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 12:00:00
+    end_time: 12:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 12:15:00
+    end_time: 12:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 12:30:00
+    end_time: 12:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 12:45:00
+    end_time: 13:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 18:00:00
+    end_time: 18:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 18:15:00
+    end_time: 18:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 22:00:00
+    end_time: 22:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 22:15:00
+    end_time: 22:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 22:30:00
+    end_time: 22:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 22:45:00
+    end_time: 23:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 19:00:00
+    end_time: 19:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 19:15:00
+    end_time: 19:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 19:30:00
+    end_time: 19:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 19:45:00
+    end_time: 20:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 07:00:00
+    end_time: 07:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 07:15:00
+    end_time: 07:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 07:30:00
+    end_time: 07:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 07:45:00
+    end_time: 08:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 12:00:00
+    end_time: 12:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 12:15:00
+    end_time: 12:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 12:30:00
+    end_time: 12:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 12:45:00
+    end_time: 13:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 13:00:00
+    end_time: 13:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 18:00:00
+    end_time: 18:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 18:15:00
+    end_time: 18:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 22:00:00
+    end_time: 22:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 22:15:00
+    end_time: 22:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 22:30:00
+    end_time: 22:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 22:45:00
+    end_time: 23:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 19:00:00
+    end_time: 19:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 19:15:00
+    end_time: 19:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 20:00:00
+    end_time: 20:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 20:15:00
+    end_time: 20:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 20:30:00
+    end_time: 20:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 20:45:00
+    end_time: 21:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 21:00:00
+    end_time: 21:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 21:15:00
+    end_time: 21:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 12:00:00
+    end_time: 12:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 12:15:00
+    end_time: 12:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 12:30:00
+    end_time: 12:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 12:45:00
+    end_time: 13:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 13:00:00
+    end_time: 13:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 18:00:00
+    end_time: 18:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 18:15:00
+    end_time: 18:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 06:30:00
+    end_time: 06:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 06:45:00
+    end_time: 07:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 07:00:00
+    end_time: 07:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 07:15:00
+    end_time: 07:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 07:30:00
+    end_time: 07:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 20:00:00
+    end_time: 20:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 20:15:00
+    end_time: 20:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 20:30:00
+    end_time: 20:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 20:45:00
+    end_time: 21:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 18:00:00
+    end_time: 18:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 18:15:00
+    end_time: 18:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 22:00:00
+    end_time: 22:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 22:15:00
+    end_time: 22:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 22:30:00
+    end_time: 22:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 22:45:00
+    end_time: 23:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 20:00:00
+    end_time: 20:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 20:15:00
+    end_time: 20:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 20:30:00
+    end_time: 20:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 20:45:00
+    end_time: 21:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 12:00:00
+    end_time: 12:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 12:15:00
+    end_time: 12:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 12:30:00
+    end_time: 12:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 12:45:00
+    end_time: 13:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 22:00:00
+    end_time: 22:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 22:15:00
+    end_time: 22:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 22:30:00
+    end_time: 22:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 22:45:00
+    end_time: 23:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 06:00:00
+    end_time: 06:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 06:15:00
+    end_time: 06:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 12:30:00
+    end_time: 12:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 12:45:00
+    end_time: 13:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 13:00:00
+    end_time: 13:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 13:15:00
+    end_time: 13:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 13:30:00
+    end_time: 13:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 13:45:00
+    end_time: 14:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 19:30:00
+    end_time: 19:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 19:45:00
+    end_time: 20:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 20:00:00
+    end_time: 20:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 20:15:00
+    end_time: 20:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 20:30:00
+    end_time: 20:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 20:45:00
+    end_time: 21:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 17:00:00
+    end_time: 17:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 0d534d9fd76ea8ff604675a482ccdd22
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 17:15:00
+    end_time: 17:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 0d534d9fd76ea8ff604675a482ccdd22
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 19:00:00
+    end_time: 19:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 19:15:00
+    end_time: 19:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 12:00:00
+    end_time: 12:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 12:15:00
+    end_time: 12:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 12:30:00
+    end_time: 12:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 12:45:00
+    end_time: 13:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 18:00:00
+    end_time: 18:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 18:15:00
+    end_time: 18:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 22:00:00
+    end_time: 22:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 22:15:00
+    end_time: 22:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 22:30:00
+    end_time: 22:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 22:45:00
+    end_time: 23:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 19:00:00
+    end_time: 19:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 19:15:00
+    end_time: 19:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 19:30:00
+    end_time: 19:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 19:45:00
+    end_time: 20:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 07:00:00
+    end_time: 07:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 07:15:00
+    end_time: 07:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 07:30:00
+    end_time: 07:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 07:45:00
+    end_time: 08:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 12:00:00
+    end_time: 12:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 12:15:00
+    end_time: 12:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 12:30:00
+    end_time: 12:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 12:45:00
+    end_time: 13:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 13:00:00
+    end_time: 13:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 18:00:00
+    end_time: 18:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 18:15:00
+    end_time: 18:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 22:00:00
+    end_time: 22:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 22:15:00
+    end_time: 22:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 22:30:00
+    end_time: 22:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 22:45:00
+    end_time: 23:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 21:00:00
+    end_time: 21:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 0deed05c94247f321f3807fe9c439e1e
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 21:15:00
+    end_time: 21:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 0deed05c94247f321f3807fe9c439e1e
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 19:00:00
+    end_time: 19:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 19:15:00
+    end_time: 19:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 20:00:00
+    end_time: 20:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 20:15:00
+    end_time: 20:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 20:30:00
+    end_time: 20:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 20:45:00
+    end_time: 21:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 12:00:00
+    end_time: 12:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 12:15:00
+    end_time: 12:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 12:30:00
+    end_time: 12:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 12:45:00
+    end_time: 13:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 13:00:00
+    end_time: 13:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 18:00:00
+    end_time: 18:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 18:15:00
+    end_time: 18:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 13:30:00
+    end_time: 13:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 0d534d9fd76ea8ff604675a482ccdd22
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 13:45:00
+    end_time: 14:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 0d534d9fd76ea8ff604675a482ccdd22
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 19:00:00
+    end_time: 19:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 0d534d9fd76ea8ff604675a482ccdd22
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 19:15:00
+    end_time: 19:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 0d534d9fd76ea8ff604675a482ccdd22
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 06:30:00
+    end_time: 06:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 06:45:00
+    end_time: 07:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 07:00:00
+    end_time: 07:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 07:15:00
+    end_time: 07:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 07:30:00
+    end_time: 07:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 20:00:00
+    end_time: 20:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 20:15:00
+    end_time: 20:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 20:30:00
+    end_time: 20:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 20:45:00
+    end_time: 21:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 18:00:00
+    end_time: 18:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 18:15:00
+    end_time: 18:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 22:00:00
+    end_time: 22:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 22:15:00
+    end_time: 22:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 22:30:00
+    end_time: 22:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 22:45:00
+    end_time: 23:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 18:00:00
+    end_time: 18:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 0d534d9fd76ea8ff604675a482ccdd22
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 18:15:00
+    end_time: 18:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 0d534d9fd76ea8ff604675a482ccdd22
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 19:00:00
+    end_time: 19:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 0d534d9fd76ea8ff604675a482ccdd22
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 19:15:00
+    end_time: 19:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 0d534d9fd76ea8ff604675a482ccdd22
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 20:00:00
+    end_time: 20:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 20:15:00
+    end_time: 20:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 20:30:00
+    end_time: 20:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 20:45:00
+    end_time: 21:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 12:00:00
+    end_time: 12:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 12:15:00
+    end_time: 12:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 12:30:00
+    end_time: 12:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 12:45:00
+    end_time: 13:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 22:00:00
+    end_time: 22:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 22:15:00
+    end_time: 22:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 22:30:00
+    end_time: 22:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 22:45:00
+    end_time: 23:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 06:00:00
+    end_time: 06:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 06:15:00
+    end_time: 06:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 12:30:00
+    end_time: 12:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 12:45:00
+    end_time: 13:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 13:00:00
+    end_time: 13:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 13:15:00
+    end_time: 13:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 13:30:00
+    end_time: 13:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 13:45:00
+    end_time: 14:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 19:30:00
+    end_time: 19:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 19:45:00
+    end_time: 20:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 20:00:00
+    end_time: 20:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 20:15:00
+    end_time: 20:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 20:30:00
+    end_time: 20:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 20:45:00
+    end_time: 21:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90719124
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 18:00:00
+    end_time: 18:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 55ccc5469e5d22441421d240f08dfd09
+    broadcast_type: Network
+-
+    ext_profile_id: 90719124
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 18:15:00
+    end_time: 18:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 55ccc5469e5d22441421d240f08dfd09
+    broadcast_type: Network
+-
+    ext_profile_id: 90719124
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 21:00:00
+    end_time: 21:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 55ccc5469e5d22441421d240f08dfd09
+    broadcast_type: Network
+-
+    ext_profile_id: 90719124
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 21:15:00
+    end_time: 21:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 55ccc5469e5d22441421d240f08dfd09
+    broadcast_type: Network
+-
+    ext_profile_id: 90719124
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 21:30:00
+    end_time: 21:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 55ccc5469e5d22441421d240f08dfd09
+    broadcast_type: Network
+-
+    ext_profile_id: 90719124
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 21:45:00
+    end_time: 22:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 55ccc5469e5d22441421d240f08dfd09
+    broadcast_type: Network
+-
+    ext_profile_id: 90719124
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 21:00:00
+    end_time: 21:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90719124
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 21:15:00
+    end_time: 21:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90719124
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 21:30:00
+    end_time: 21:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90719124
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 21:45:00
+    end_time: 22:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90719124
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 21:00:00
+    end_time: 21:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90719124
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 21:15:00
+    end_time: 21:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90719124
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 21:30:00
+    end_time: 21:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90719124
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 21:45:00
+    end_time: 22:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90719124
+    wave: "2019-07-01"
+    day: Sat
+    start_time: 21:00:00
+    end_time: 21:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 55ccc5469e5d22441421d240f08dfd09
+    broadcast_type: Network
+-
+    ext_profile_id: 90719124
+    wave: "2019-07-01"
+    day: Sat
+    start_time: 21:15:00
+    end_time: 21:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 55ccc5469e5d22441421d240f08dfd09
+    broadcast_type: Network
+-
+    ext_profile_id: 90719124
+    wave: "2019-07-01"
+    day: Sat
+    start_time: 21:30:00
+    end_time: 21:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 55ccc5469e5d22441421d240f08dfd09
+    broadcast_type: Network
+-
+    ext_profile_id: 90719124
+    wave: "2019-07-01"
+    day: Sat
+    start_time: 21:45:00
+    end_time: 22:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 55ccc5469e5d22441421d240f08dfd09
+    broadcast_type: Network
+-
+    ext_profile_id: 90719124
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 20:00:00
+    end_time: 20:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 55ccc5469e5d22441421d240f08dfd09
+    broadcast_type: Network
+-
+    ext_profile_id: 90719124
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 20:15:00
+    end_time: 20:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 55ccc5469e5d22441421d240f08dfd09
+    broadcast_type: Network
+-
+    ext_profile_id: 90719124
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 20:30:00
+    end_time: 20:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 55ccc5469e5d22441421d240f08dfd09
+    broadcast_type: Network
+-
+    ext_profile_id: 90719124
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 20:45:00
+    end_time: 21:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 55ccc5469e5d22441421d240f08dfd09
+    broadcast_type: Network
+-
+    ext_profile_id: 90719124
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 21:00:00
+    end_time: 21:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 55ccc5469e5d22441421d240f08dfd09
+    broadcast_type: Network
+-
+    ext_profile_id: 90719124
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 21:15:00
+    end_time: 21:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 55ccc5469e5d22441421d240f08dfd09
+    broadcast_type: Network
+-
+    ext_profile_id: 90719124
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 18:00:00
+    end_time: 18:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b4e237827802d62674cc3d411062649d
+    broadcast_type: Regional
+-
+    ext_profile_id: 90719124
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 18:15:00
+    end_time: 18:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b4e237827802d62674cc3d411062649d
+    broadcast_type: Regional
+-
+    ext_profile_id: 90719124
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 21:00:00
+    end_time: 21:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b4e237827802d62674cc3d411062649d
+    broadcast_type: Regional
+-
+    ext_profile_id: 90719124
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 21:15:00
+    end_time: 21:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b4e237827802d62674cc3d411062649d
+    broadcast_type: Regional
+-
+    ext_profile_id: 90719124
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 21:30:00
+    end_time: 21:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b4e237827802d62674cc3d411062649d
+    broadcast_type: Regional
+-
+    ext_profile_id: 90719124
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 21:45:00
+    end_time: 22:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b4e237827802d62674cc3d411062649d
+    broadcast_type: Regional
+-
+    ext_profile_id: 90719124
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 21:00:00
+    end_time: 21:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ce4926d67588131e86e103b3557df1ee
+    broadcast_type: Regional
+-
+    ext_profile_id: 90719124
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 21:15:00
+    end_time: 21:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ce4926d67588131e86e103b3557df1ee
+    broadcast_type: Regional
+-
+    ext_profile_id: 90719124
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 21:30:00
+    end_time: 21:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ce4926d67588131e86e103b3557df1ee
+    broadcast_type: Regional
+-
+    ext_profile_id: 90719124
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 21:45:00
+    end_time: 22:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ce4926d67588131e86e103b3557df1ee
+    broadcast_type: Regional
+-
+    ext_profile_id: 90719124
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 21:00:00
+    end_time: 21:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ce4926d67588131e86e103b3557df1ee
+    broadcast_type: Regional
+-
+    ext_profile_id: 90719124
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 21:15:00
+    end_time: 21:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ce4926d67588131e86e103b3557df1ee
+    broadcast_type: Regional
+-
+    ext_profile_id: 90719124
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 21:30:00
+    end_time: 21:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ce4926d67588131e86e103b3557df1ee
+    broadcast_type: Regional
+-
+    ext_profile_id: 90719124
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 21:45:00
+    end_time: 22:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ce4926d67588131e86e103b3557df1ee
+    broadcast_type: Regional
+-
+    ext_profile_id: 90719124
+    wave: "2019-07-01"
+    day: Sat
+    start_time: 21:00:00
+    end_time: 21:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b4e237827802d62674cc3d411062649d
+    broadcast_type: Regional
+-
+    ext_profile_id: 90719124
+    wave: "2019-07-01"
+    day: Sat
+    start_time: 21:15:00
+    end_time: 21:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b4e237827802d62674cc3d411062649d
+    broadcast_type: Regional
+-
+    ext_profile_id: 90719124
+    wave: "2019-07-01"
+    day: Sat
+    start_time: 21:30:00
+    end_time: 21:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b4e237827802d62674cc3d411062649d
+    broadcast_type: Regional
+-
+    ext_profile_id: 90719124
+    wave: "2019-07-01"
+    day: Sat
+    start_time: 21:45:00
+    end_time: 22:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b4e237827802d62674cc3d411062649d
+    broadcast_type: Regional
+-
+    ext_profile_id: 90719124
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 20:00:00
+    end_time: 20:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b4e237827802d62674cc3d411062649d
+    broadcast_type: Regional
+-
+    ext_profile_id: 90719124
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 20:15:00
+    end_time: 20:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b4e237827802d62674cc3d411062649d
+    broadcast_type: Regional
+-
+    ext_profile_id: 90719124
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 20:30:00
+    end_time: 20:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b4e237827802d62674cc3d411062649d
+    broadcast_type: Regional
+-
+    ext_profile_id: 90719124
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 20:45:00
+    end_time: 21:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b4e237827802d62674cc3d411062649d
+    broadcast_type: Regional
+-
+    ext_profile_id: 90719124
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 21:00:00
+    end_time: 21:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b4e237827802d62674cc3d411062649d
+    broadcast_type: Regional
+-
+    ext_profile_id: 90719124
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 21:15:00
+    end_time: 21:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b4e237827802d62674cc3d411062649d
+    broadcast_type: Regional
+-
+    ext_profile_id: 90733137
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 14:30:00
+    end_time: 14:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 6c948657f91d415c210d9f9317dc122f
+    broadcast_type: International
+-
+    ext_profile_id: 90733137
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 14:45:00
+    end_time: 15:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 6c948657f91d415c210d9f9317dc122f
+    broadcast_type: International
+-
+    ext_profile_id: 90733137
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 15:00:00
+    end_time: 15:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 6c948657f91d415c210d9f9317dc122f
+    broadcast_type: International
+-
+    ext_profile_id: 90733137
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 15:15:00
+    end_time: 15:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 6c948657f91d415c210d9f9317dc122f
+    broadcast_type: International
+-
+    ext_profile_id: 90733137
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 15:30:00
+    end_time: 15:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 6c948657f91d415c210d9f9317dc122f
+    broadcast_type: International
+-
+    ext_profile_id: 90733137
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 15:45:00
+    end_time: 16:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 6c948657f91d415c210d9f9317dc122f
+    broadcast_type: International
+-
+    ext_profile_id: 90733137
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 16:00:00
+    end_time: 16:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 6c948657f91d415c210d9f9317dc122f
+    broadcast_type: International
+-
+    ext_profile_id: 90733137
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 16:15:00
+    end_time: 16:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 6c948657f91d415c210d9f9317dc122f
+    broadcast_type: International
+-
+    ext_profile_id: 90733137
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 16:30:00
+    end_time: 16:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 6c948657f91d415c210d9f9317dc122f
+    broadcast_type: International
+-
+    ext_profile_id: 90733137
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 16:00:00
+    end_time: 16:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 6c948657f91d415c210d9f9317dc122f
+    broadcast_type: International
+-
+    ext_profile_id: 90733137
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 16:15:00
+    end_time: 16:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 6c948657f91d415c210d9f9317dc122f
+    broadcast_type: International
+-
+    ext_profile_id: 90733137
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 16:30:00
+    end_time: 16:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 6c948657f91d415c210d9f9317dc122f
+    broadcast_type: International
+-
+    ext_profile_id: 90733137
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 16:45:00
+    end_time: 17:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 6c948657f91d415c210d9f9317dc122f
+    broadcast_type: International
+-
+    ext_profile_id: 90733137
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 17:00:00
+    end_time: 17:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 6c948657f91d415c210d9f9317dc122f
+    broadcast_type: International
+-
+    ext_profile_id: 90733137
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 17:15:00
+    end_time: 17:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 6c948657f91d415c210d9f9317dc122f
+    broadcast_type: International
+-
+    ext_profile_id: 90733137
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 17:30:00
+    end_time: 17:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 6c948657f91d415c210d9f9317dc122f
+    broadcast_type: International
+-
+    ext_profile_id: 90733137
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 17:45:00
+    end_time: 18:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 6c948657f91d415c210d9f9317dc122f
+    broadcast_type: International
+-
+    ext_profile_id: 90733137
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 18:00:00
+    end_time: 18:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 6c948657f91d415c210d9f9317dc122f
+    broadcast_type: International
+-
+    ext_profile_id: 90733137
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 18:15:00
+    end_time: 18:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 6c948657f91d415c210d9f9317dc122f
+    broadcast_type: International
+-
+    ext_profile_id: 90733137
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 18:30:00
+    end_time: 18:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 6c948657f91d415c210d9f9317dc122f
+    broadcast_type: International
+-
+    ext_profile_id: 90733137
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 18:45:00
+    end_time: 19:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 6c948657f91d415c210d9f9317dc122f
+    broadcast_type: International
+-
+    ext_profile_id: 90733137
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 19:00:00
+    end_time: 19:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 6c948657f91d415c210d9f9317dc122f
+    broadcast_type: International
+-
+    ext_profile_id: 90733137
+    wave: "2019-07-01"
+    day: Sat
+    start_time: 21:00:00
+    end_time: 21:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90733137
+    wave: "2019-07-01"
+    day: Sat
+    start_time: 21:15:00
+    end_time: 21:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90733137
+    wave: "2019-07-01"
+    day: Sat
+    start_time: 21:30:00
+    end_time: 21:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90733137
+    wave: "2019-07-01"
+    day: Sat
+    start_time: 21:45:00
+    end_time: 22:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90733137
+    wave: "2019-07-01"
+    day: Sat
+    start_time: 21:00:00
+    end_time: 21:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: a5e0b675ea2a7d521a67bcddc4e7a5df
+    broadcast_type: Regional
+-
+    ext_profile_id: 90733137
+    wave: "2019-07-01"
+    day: Sat
+    start_time: 21:15:00
+    end_time: 21:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: a5e0b675ea2a7d521a67bcddc4e7a5df
+    broadcast_type: Regional
+-
+    ext_profile_id: 90733137
+    wave: "2019-07-01"
+    day: Sat
+    start_time: 21:30:00
+    end_time: 21:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: a5e0b675ea2a7d521a67bcddc4e7a5df
+    broadcast_type: Regional
+-
+    ext_profile_id: 90733137
+    wave: "2019-07-01"
+    day: Sat
+    start_time: 21:45:00
+    end_time: 22:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: a5e0b675ea2a7d521a67bcddc4e7a5df
+    broadcast_type: Regional
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 15:00:00
+    end_time: 15:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 15:15:00
+    end_time: 15:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 10:00:00
+    end_time: 10:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 10:15:00
+    end_time: 10:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 10:30:00
+    end_time: 10:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 10:45:00
+    end_time: 11:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 19:00:00
+    end_time: 19:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 19:15:00
+    end_time: 19:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 11:00:00
+    end_time: 11:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 11:15:00
+    end_time: 11:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 11:30:00
+    end_time: 11:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 11:45:00
+    end_time: 12:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 15:00:00
+    end_time: 15:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 15:15:00
+    end_time: 15:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 06:00:00
+    end_time: 06:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 06:15:00
+    end_time: 06:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 06:30:00
+    end_time: 06:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 08:45:00
+    end_time: 09:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 09:00:00
+    end_time: 09:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 21:00:00
+    end_time: 21:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 21:15:00
+    end_time: 21:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 21:30:00
+    end_time: 21:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 21:45:00
+    end_time: 22:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 10:00:00
+    end_time: 10:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 10:15:00
+    end_time: 10:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 15:00:00
+    end_time: 15:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 15:15:00
+    end_time: 15:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Sat
+    start_time: 06:45:00
+    end_time: 07:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Sat
+    start_time: 07:00:00
+    end_time: 07:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Sat
+    start_time: 07:15:00
+    end_time: 07:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Sat
+    start_time: 07:30:00
+    end_time: 07:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Sat
+    start_time: 07:45:00
+    end_time: 08:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 22:00:00
+    end_time: 22:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 22:15:00
+    end_time: 22:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 22:30:00
+    end_time: 22:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 22:45:00
+    end_time: 23:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 09:30:00
+    end_time: 09:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 09:45:00
+    end_time: 10:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 15:00:00
+    end_time: 15:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 047ff8a6f475e059af556bb309761e5f
+    broadcast_type: Regional
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 15:15:00
+    end_time: 15:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 047ff8a6f475e059af556bb309761e5f
+    broadcast_type: Regional
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 10:00:00
+    end_time: 10:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 047ff8a6f475e059af556bb309761e5f
+    broadcast_type: Regional
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 10:15:00
+    end_time: 10:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 047ff8a6f475e059af556bb309761e5f
+    broadcast_type: Regional
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 10:30:00
+    end_time: 10:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 047ff8a6f475e059af556bb309761e5f
+    broadcast_type: Regional
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 10:45:00
+    end_time: 11:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 047ff8a6f475e059af556bb309761e5f
+    broadcast_type: Regional
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 19:00:00
+    end_time: 19:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 047ff8a6f475e059af556bb309761e5f
+    broadcast_type: Regional
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 19:15:00
+    end_time: 19:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 047ff8a6f475e059af556bb309761e5f
+    broadcast_type: Regional
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 11:00:00
+    end_time: 11:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 047ff8a6f475e059af556bb309761e5f
+    broadcast_type: Regional
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 11:15:00
+    end_time: 11:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 047ff8a6f475e059af556bb309761e5f
+    broadcast_type: Regional
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 11:30:00
+    end_time: 11:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 047ff8a6f475e059af556bb309761e5f
+    broadcast_type: Regional
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 11:45:00
+    end_time: 12:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 047ff8a6f475e059af556bb309761e5f
+    broadcast_type: Regional
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 15:00:00
+    end_time: 15:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 047ff8a6f475e059af556bb309761e5f
+    broadcast_type: Regional
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 15:15:00
+    end_time: 15:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 047ff8a6f475e059af556bb309761e5f
+    broadcast_type: Regional
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 06:00:00
+    end_time: 06:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 047ff8a6f475e059af556bb309761e5f
+    broadcast_type: Regional
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 06:15:00
+    end_time: 06:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 047ff8a6f475e059af556bb309761e5f
+    broadcast_type: Regional
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 06:30:00
+    end_time: 06:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 047ff8a6f475e059af556bb309761e5f
+    broadcast_type: Regional
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 08:45:00
+    end_time: 09:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 047ff8a6f475e059af556bb309761e5f
+    broadcast_type: Regional
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 09:00:00
+    end_time: 09:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 047ff8a6f475e059af556bb309761e5f
+    broadcast_type: Regional
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 21:00:00
+    end_time: 21:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 047ff8a6f475e059af556bb309761e5f
+    broadcast_type: Regional
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 21:15:00
+    end_time: 21:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 047ff8a6f475e059af556bb309761e5f
+    broadcast_type: Regional
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 21:30:00
+    end_time: 21:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 047ff8a6f475e059af556bb309761e5f
+    broadcast_type: Regional
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 21:45:00
+    end_time: 22:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 047ff8a6f475e059af556bb309761e5f
+    broadcast_type: Regional
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 10:00:00
+    end_time: 10:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 047ff8a6f475e059af556bb309761e5f
+    broadcast_type: Regional
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 10:15:00
+    end_time: 10:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 047ff8a6f475e059af556bb309761e5f
+    broadcast_type: Regional
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 15:00:00
+    end_time: 15:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 047ff8a6f475e059af556bb309761e5f
+    broadcast_type: Regional
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 15:15:00
+    end_time: 15:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 047ff8a6f475e059af556bb309761e5f
+    broadcast_type: Regional
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Sat
+    start_time: 06:45:00
+    end_time: 07:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 96a08d99139dd1775621f8bf24472f24
+    broadcast_type: Regional
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Sat
+    start_time: 07:00:00
+    end_time: 07:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 96a08d99139dd1775621f8bf24472f24
+    broadcast_type: Regional
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Sat
+    start_time: 07:15:00
+    end_time: 07:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 96a08d99139dd1775621f8bf24472f24
+    broadcast_type: Regional
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Sat
+    start_time: 07:30:00
+    end_time: 07:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 96a08d99139dd1775621f8bf24472f24
+    broadcast_type: Regional
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Sat
+    start_time: 07:45:00
+    end_time: 08:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 96a08d99139dd1775621f8bf24472f24
+    broadcast_type: Regional
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 15:00:00
+    end_time: 15:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: e66c3f762c110ed00aba297499325d22
+    broadcast_type: Regional
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 15:15:00
+    end_time: 15:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: e66c3f762c110ed00aba297499325d22
+    broadcast_type: Regional
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 18:00:00
+    end_time: 18:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: e66c3f762c110ed00aba297499325d22
+    broadcast_type: Regional
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 18:15:00
+    end_time: 18:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: e66c3f762c110ed00aba297499325d22
+    broadcast_type: Regional
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 18:30:00
+    end_time: 18:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: e66c3f762c110ed00aba297499325d22
+    broadcast_type: Regional
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 18:45:00
+    end_time: 19:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: e66c3f762c110ed00aba297499325d22
+    broadcast_type: Regional
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 09:30:00
+    end_time: 09:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 96a08d99139dd1775621f8bf24472f24
+    broadcast_type: Regional
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 09:45:00
+    end_time: 10:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 96a08d99139dd1775621f8bf24472f24
+    broadcast_type: Regional
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 22:00:00
+    end_time: 22:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 047ff8a6f475e059af556bb309761e5f
+    broadcast_type: Regional
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 22:15:00
+    end_time: 22:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 047ff8a6f475e059af556bb309761e5f
+    broadcast_type: Regional
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 22:30:00
+    end_time: 22:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 047ff8a6f475e059af556bb309761e5f
+    broadcast_type: Regional
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 22:45:00
+    end_time: 23:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 047ff8a6f475e059af556bb309761e5f
+    broadcast_type: Regional
+-
+    ext_profile_id: 90782673
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 08:30:00
+    end_time: 08:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: fdb9d63fe3c164fcd6eab95ed1310f94
+    broadcast_type: International
+-
+    ext_profile_id: 90782673
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 08:45:00
+    end_time: 09:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: fdb9d63fe3c164fcd6eab95ed1310f94
+    broadcast_type: International
+-
+    ext_profile_id: 90782673
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 17:00:00
+    end_time: 17:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: fdb9d63fe3c164fcd6eab95ed1310f94
+    broadcast_type: International
+-
+    ext_profile_id: 90782673
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 17:15:00
+    end_time: 17:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: fdb9d63fe3c164fcd6eab95ed1310f94
+    broadcast_type: International
+-
+    ext_profile_id: 90782673
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 20:00:00
+    end_time: 20:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 4d19a34cde0862453489aeafd2ebdd09
+    broadcast_type: International
+-
+    ext_profile_id: 90782673
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 20:15:00
+    end_time: 20:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 4d19a34cde0862453489aeafd2ebdd09
+    broadcast_type: International
+-
+    ext_profile_id: 90782673
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 18:45:00
+    end_time: 19:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b51870663535af22d0b74fc3d94f4568
+    broadcast_type: International
+-
+    ext_profile_id: 90782673
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 19:00:00
+    end_time: 19:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b51870663535af22d0b74fc3d94f4568
+    broadcast_type: International
+-
+    ext_profile_id: 90782673
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 21:00:00
+    end_time: 21:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90782673
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 21:15:00
+    end_time: 21:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90782673
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 18:15:00
+    end_time: 18:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 2d2b63fb46bf7bee94be51be42c74aa3
+    broadcast_type: Regional
+-
+    ext_profile_id: 90782673
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 18:30:00
+    end_time: 18:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 2d2b63fb46bf7bee94be51be42c74aa3
+    broadcast_type: Regional
+-
+    ext_profile_id: 90782673
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 21:00:00
+    end_time: 21:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 56564a1d4f1e30bfb5f1b38cce135e97
+    broadcast_type: Regional
+-
+    ext_profile_id: 90782673
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 21:15:00
+    end_time: 21:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 56564a1d4f1e30bfb5f1b38cce135e97
+    broadcast_type: Regional
+-
+    ext_profile_id: 90782673
+    wave: "2019-07-01"
+    day: Sat
+    start_time: 13:00:00
+    end_time: 13:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 2d2b63fb46bf7bee94be51be42c74aa3
+    broadcast_type: Regional
+-
+    ext_profile_id: 90782673
+    wave: "2019-07-01"
+    day: Sat
+    start_time: 13:15:00
+    end_time: 13:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 2d2b63fb46bf7bee94be51be42c74aa3
+    broadcast_type: Regional
+-
+    ext_profile_id: 90782673
+    wave: "2019-07-01"
+    day: Sat
+    start_time: 19:45:00
+    end_time: 20:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 2d2b63fb46bf7bee94be51be42c74aa3
+    broadcast_type: Regional
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Sat
+    start_time: 09:15:00
+    end_time: 09:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: e1e9453b27232018b7c9a85993f816df
+    broadcast_type: International
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Sat
+    start_time: 09:30:00
+    end_time: 09:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: e1e9453b27232018b7c9a85993f816df
+    broadcast_type: International
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Sat
+    start_time: 09:45:00
+    end_time: 10:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: e1e9453b27232018b7c9a85993f816df
+    broadcast_type: International
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Sat
+    start_time: 10:00:00
+    end_time: 10:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: e1e9453b27232018b7c9a85993f816df
+    broadcast_type: International
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 06:00:00
+    end_time: 06:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 06:15:00
+    end_time: 06:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 06:30:00
+    end_time: 06:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 06:45:00
+    end_time: 07:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 20:00:00
+    end_time: 20:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 20:15:00
+    end_time: 20:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 08:00:00
+    end_time: 08:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 08:15:00
+    end_time: 08:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 08:30:00
+    end_time: 08:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 08:45:00
+    end_time: 09:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 06:00:00
+    end_time: 06:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 06:15:00
+    end_time: 06:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 06:30:00
+    end_time: 06:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 06:45:00
+    end_time: 07:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 07:00:00
+    end_time: 07:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 07:15:00
+    end_time: 07:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Sat
+    start_time: 08:00:00
+    end_time: 08:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Sat
+    start_time: 08:15:00
+    end_time: 08:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Sat
+    start_time: 08:30:00
+    end_time: 08:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Sat
+    start_time: 08:45:00
+    end_time: 09:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 06:30:00
+    end_time: 06:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 06:45:00
+    end_time: 07:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 07:00:00
+    end_time: 07:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 07:15:00
+    end_time: 07:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 07:30:00
+    end_time: 07:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 07:45:00
+    end_time: 08:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 5213314f77a5ac013f5f52bbf73e3b1d
+    broadcast_type: Network
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 06:00:00
+    end_time: 06:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 57862b9746faa9a1bf325ef7f12a33b3
+    broadcast_type: Regional
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 06:15:00
+    end_time: 06:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 57862b9746faa9a1bf325ef7f12a33b3
+    broadcast_type: Regional
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 06:30:00
+    end_time: 06:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 57862b9746faa9a1bf325ef7f12a33b3
+    broadcast_type: Regional
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 06:45:00
+    end_time: 07:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 57862b9746faa9a1bf325ef7f12a33b3
+    broadcast_type: Regional
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 20:00:00
+    end_time: 20:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 57862b9746faa9a1bf325ef7f12a33b3
+    broadcast_type: Regional
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 20:15:00
+    end_time: 20:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 57862b9746faa9a1bf325ef7f12a33b3
+    broadcast_type: Regional
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 08:00:00
+    end_time: 08:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 57862b9746faa9a1bf325ef7f12a33b3
+    broadcast_type: Regional
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 08:15:00
+    end_time: 08:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 57862b9746faa9a1bf325ef7f12a33b3
+    broadcast_type: Regional
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 08:30:00
+    end_time: 08:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 57862b9746faa9a1bf325ef7f12a33b3
+    broadcast_type: Regional
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 08:45:00
+    end_time: 09:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 57862b9746faa9a1bf325ef7f12a33b3
+    broadcast_type: Regional
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 06:00:00
+    end_time: 06:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 57862b9746faa9a1bf325ef7f12a33b3
+    broadcast_type: Regional
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 06:15:00
+    end_time: 06:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 57862b9746faa9a1bf325ef7f12a33b3
+    broadcast_type: Regional
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 06:30:00
+    end_time: 06:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 57862b9746faa9a1bf325ef7f12a33b3
+    broadcast_type: Regional
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 06:45:00
+    end_time: 07:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 57862b9746faa9a1bf325ef7f12a33b3
+    broadcast_type: Regional
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 07:00:00
+    end_time: 07:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 57862b9746faa9a1bf325ef7f12a33b3
+    broadcast_type: Regional
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 07:15:00
+    end_time: 07:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 57862b9746faa9a1bf325ef7f12a33b3
+    broadcast_type: Regional
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Sat
+    start_time: 08:00:00
+    end_time: 08:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 57862b9746faa9a1bf325ef7f12a33b3
+    broadcast_type: Regional
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Sat
+    start_time: 08:15:00
+    end_time: 08:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 57862b9746faa9a1bf325ef7f12a33b3
+    broadcast_type: Regional
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Sat
+    start_time: 08:30:00
+    end_time: 08:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 57862b9746faa9a1bf325ef7f12a33b3
+    broadcast_type: Regional
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Sat
+    start_time: 08:45:00
+    end_time: 09:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 57862b9746faa9a1bf325ef7f12a33b3
+    broadcast_type: Regional
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 06:30:00
+    end_time: 06:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 57862b9746faa9a1bf325ef7f12a33b3
+    broadcast_type: Regional
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 06:45:00
+    end_time: 07:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 57862b9746faa9a1bf325ef7f12a33b3
+    broadcast_type: Regional
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 07:00:00
+    end_time: 07:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 57862b9746faa9a1bf325ef7f12a33b3
+    broadcast_type: Regional
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 07:15:00
+    end_time: 07:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 57862b9746faa9a1bf325ef7f12a33b3
+    broadcast_type: Regional
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 07:30:00
+    end_time: 07:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 57862b9746faa9a1bf325ef7f12a33b3
+    broadcast_type: Regional
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 07:45:00
+    end_time: 08:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 57862b9746faa9a1bf325ef7f12a33b3
+    broadcast_type: Regional
+-
+    ext_profile_id: 90787236
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 15:00:00
+    end_time: 15:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90787236
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 15:15:00
+    end_time: 15:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90787236
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 16:45:00
+    end_time: 17:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90787236
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 17:00:00
+    end_time: 17:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90787236
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 15:00:00
+    end_time: 15:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: a4429431b26560d398b3e71eeaaa1d38
+    broadcast_type: Regional
+-
+    ext_profile_id: 90787236
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 15:15:00
+    end_time: 15:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: a4429431b26560d398b3e71eeaaa1d38
+    broadcast_type: Regional
+-
+    ext_profile_id: 90787236
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 07:45:00
+    end_time: 08:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 110e1d3eefb8146d14682011022a60f1
+    broadcast_type: Regional
+-
+    ext_profile_id: 90787236
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 08:00:00
+    end_time: 08:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 110e1d3eefb8146d14682011022a60f1
+    broadcast_type: Regional
+-
+    ext_profile_id: 90787236
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 16:45:00
+    end_time: 17:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: a4429431b26560d398b3e71eeaaa1d38
+    broadcast_type: Regional
+-
+    ext_profile_id: 90787236
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 17:00:00
+    end_time: 17:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: a4429431b26560d398b3e71eeaaa1d38
+    broadcast_type: Regional
+-
+    ext_profile_id: 90787236
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 10:00:00
+    end_time: 10:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 110e1d3eefb8146d14682011022a60f1
+    broadcast_type: Regional
+-
+    ext_profile_id: 90787236
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 10:15:00
+    end_time: 10:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 110e1d3eefb8146d14682011022a60f1
+    broadcast_type: Regional
+-
+    ext_profile_id: 90787236
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 10:30:00
+    end_time: 10:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 110e1d3eefb8146d14682011022a60f1
+    broadcast_type: Regional
+-
+    ext_profile_id: 90787236
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 10:45:00
+    end_time: 11:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 110e1d3eefb8146d14682011022a60f1
+    broadcast_type: Regional
+-
+    ext_profile_id: 90787236
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 19:00:00
+    end_time: 19:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 110e1d3eefb8146d14682011022a60f1
+    broadcast_type: Regional
+-
+    ext_profile_id: 90787236
+    wave: "2019-07-01"
+    day: Sun
+    start_time: 19:15:00
+    end_time: 19:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 110e1d3eefb8146d14682011022a60f1
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789150
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 07:30:00
+    end_time: 07:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 4d19a34cde0862453489aeafd2ebdd09
+    broadcast_type: International
+-
+    ext_profile_id: 90789150
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 07:45:00
+    end_time: 08:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 4d19a34cde0862453489aeafd2ebdd09
+    broadcast_type: International
+-
+    ext_profile_id: 90789150
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 08:00:00
+    end_time: 08:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 4d19a34cde0862453489aeafd2ebdd09
+    broadcast_type: International
+-
+    ext_profile_id: 90789150
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 08:15:00
+    end_time: 08:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 4d19a34cde0862453489aeafd2ebdd09
+    broadcast_type: International
+-
+    ext_profile_id: 90789150
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 08:30:00
+    end_time: 08:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 4d19a34cde0862453489aeafd2ebdd09
+    broadcast_type: International
+-
+    ext_profile_id: 90789150
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 21:00:00
+    end_time: 21:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 4d19a34cde0862453489aeafd2ebdd09
+    broadcast_type: International
+-
+    ext_profile_id: 90789150
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 00:00:00
+    end_time: 00:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 4d19a34cde0862453489aeafd2ebdd09
+    broadcast_type: International
+-
+    ext_profile_id: 90789150
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 21:00:00
+    end_time: 21:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 4d19a34cde0862453489aeafd2ebdd09
+    broadcast_type: International
+-
+    ext_profile_id: 90789150
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 21:15:00
+    end_time: 21:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 4d19a34cde0862453489aeafd2ebdd09
+    broadcast_type: International
+-
+    ext_profile_id: 90789150
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 21:45:00
+    end_time: 22:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 4d19a34cde0862453489aeafd2ebdd09
+    broadcast_type: International
+-
+    ext_profile_id: 90789150
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 22:00:00
+    end_time: 22:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 4d19a34cde0862453489aeafd2ebdd09
+    broadcast_type: International
+-
+    ext_profile_id: 90789150
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 22:15:00
+    end_time: 22:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 4d19a34cde0862453489aeafd2ebdd09
+    broadcast_type: International
+-
+    ext_profile_id: 90789150
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 00:00:00
+    end_time: 00:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 4d19a34cde0862453489aeafd2ebdd09
+    broadcast_type: International
+-
+    ext_profile_id: 90789150
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 20:00:00
+    end_time: 20:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 4d19a34cde0862453489aeafd2ebdd09
+    broadcast_type: International
+-
+    ext_profile_id: 90789150
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 20:15:00
+    end_time: 20:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 4d19a34cde0862453489aeafd2ebdd09
+    broadcast_type: International
+-
+    ext_profile_id: 90789150
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 20:30:00
+    end_time: 20:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 4d19a34cde0862453489aeafd2ebdd09
+    broadcast_type: International
+-
+    ext_profile_id: 90789150
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 20:45:00
+    end_time: 21:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 4d19a34cde0862453489aeafd2ebdd09
+    broadcast_type: International
+-
+    ext_profile_id: 90789150
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 21:00:00
+    end_time: 21:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 4d19a34cde0862453489aeafd2ebdd09
+    broadcast_type: International
+-
+    ext_profile_id: 90789150
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 21:30:00
+    end_time: 21:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 4d19a34cde0862453489aeafd2ebdd09
+    broadcast_type: International
+-
+    ext_profile_id: 90789150
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 21:45:00
+    end_time: 22:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 4d19a34cde0862453489aeafd2ebdd09
+    broadcast_type: International
+-
+    ext_profile_id: 90789150
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 00:00:00
+    end_time: 00:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 2da1604c8d38154aedac91a44097a909
+    broadcast_type: International
+-
+    ext_profile_id: 90789150
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 21:00:00
+    end_time: 21:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 2da1604c8d38154aedac91a44097a909
+    broadcast_type: International
+-
+    ext_profile_id: 90789150
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 21:15:00
+    end_time: 21:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 2da1604c8d38154aedac91a44097a909
+    broadcast_type: International
+-
+    ext_profile_id: 90789150
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 21:30:00
+    end_time: 21:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 2da1604c8d38154aedac91a44097a909
+    broadcast_type: International
+-
+    ext_profile_id: 90789150
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 21:45:00
+    end_time: 22:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 2da1604c8d38154aedac91a44097a909
+    broadcast_type: International
+-
+    ext_profile_id: 90789150
+    wave: "2019-07-01"
+    day: Sat
+    start_time: 00:00:00
+    end_time: 00:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 2da1604c8d38154aedac91a44097a909
+    broadcast_type: International
+-
+    ext_profile_id: 90789150
+    wave: "2019-07-01"
+    day: Sat
+    start_time: 21:00:00
+    end_time: 21:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 2da1604c8d38154aedac91a44097a909
+    broadcast_type: International
+-
+    ext_profile_id: 90789150
+    wave: "2019-07-01"
+    day: Sat
+    start_time: 21:15:00
+    end_time: 21:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 2da1604c8d38154aedac91a44097a909
+    broadcast_type: International
+-
+    ext_profile_id: 90789150
+    wave: "2019-07-01"
+    day: Sat
+    start_time: 21:30:00
+    end_time: 21:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 2da1604c8d38154aedac91a44097a909
+    broadcast_type: International
+-
+    ext_profile_id: 90789150
+    wave: "2019-07-01"
+    day: Sat
+    start_time: 21:45:00
+    end_time: 22:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 2da1604c8d38154aedac91a44097a909
+    broadcast_type: International
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 17:00:00
+    end_time: 17:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 3a03ffaeecb41caafbb6a3c422cba947
+    broadcast_type: International
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 17:15:00
+    end_time: 17:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 3a03ffaeecb41caafbb6a3c422cba947
+    broadcast_type: International
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 17:30:00
+    end_time: 17:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 3a03ffaeecb41caafbb6a3c422cba947
+    broadcast_type: International
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 17:45:00
+    end_time: 18:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 3a03ffaeecb41caafbb6a3c422cba947
+    broadcast_type: International
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 17:00:00
+    end_time: 17:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 3a03ffaeecb41caafbb6a3c422cba947
+    broadcast_type: International
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 17:15:00
+    end_time: 17:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 3a03ffaeecb41caafbb6a3c422cba947
+    broadcast_type: International
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 17:30:00
+    end_time: 17:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 3a03ffaeecb41caafbb6a3c422cba947
+    broadcast_type: International
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 17:45:00
+    end_time: 18:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 3a03ffaeecb41caafbb6a3c422cba947
+    broadcast_type: International
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 21:00:00
+    end_time: 21:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 3a03ffaeecb41caafbb6a3c422cba947
+    broadcast_type: International
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 21:15:00
+    end_time: 21:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 3a03ffaeecb41caafbb6a3c422cba947
+    broadcast_type: International
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 21:30:00
+    end_time: 21:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 3a03ffaeecb41caafbb6a3c422cba947
+    broadcast_type: International
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 21:45:00
+    end_time: 22:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 3a03ffaeecb41caafbb6a3c422cba947
+    broadcast_type: International
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 06:30:00
+    end_time: 06:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 3a03ffaeecb41caafbb6a3c422cba947
+    broadcast_type: International
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 06:45:00
+    end_time: 07:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 3a03ffaeecb41caafbb6a3c422cba947
+    broadcast_type: International
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 07:00:00
+    end_time: 07:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 3a03ffaeecb41caafbb6a3c422cba947
+    broadcast_type: International
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 07:15:00
+    end_time: 07:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 3a03ffaeecb41caafbb6a3c422cba947
+    broadcast_type: International
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 07:30:00
+    end_time: 07:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 3a03ffaeecb41caafbb6a3c422cba947
+    broadcast_type: International
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 07:45:00
+    end_time: 08:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 3a03ffaeecb41caafbb6a3c422cba947
+    broadcast_type: International
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 18:00:00
+    end_time: 18:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 3a03ffaeecb41caafbb6a3c422cba947
+    broadcast_type: International
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 18:15:00
+    end_time: 18:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 3a03ffaeecb41caafbb6a3c422cba947
+    broadcast_type: International
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 18:30:00
+    end_time: 18:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 3a03ffaeecb41caafbb6a3c422cba947
+    broadcast_type: International
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 18:45:00
+    end_time: 19:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 3a03ffaeecb41caafbb6a3c422cba947
+    broadcast_type: International
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 18:00:00
+    end_time: 18:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 3a03ffaeecb41caafbb6a3c422cba947
+    broadcast_type: International
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 18:15:00
+    end_time: 18:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 3a03ffaeecb41caafbb6a3c422cba947
+    broadcast_type: International
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 18:30:00
+    end_time: 18:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 3a03ffaeecb41caafbb6a3c422cba947
+    broadcast_type: International
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 18:45:00
+    end_time: 19:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 3a03ffaeecb41caafbb6a3c422cba947
+    broadcast_type: International
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 21:00:00
+    end_time: 21:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 3a03ffaeecb41caafbb6a3c422cba947
+    broadcast_type: International
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 21:15:00
+    end_time: 21:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 3a03ffaeecb41caafbb6a3c422cba947
+    broadcast_type: International
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 21:30:00
+    end_time: 21:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 3a03ffaeecb41caafbb6a3c422cba947
+    broadcast_type: International
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 21:45:00
+    end_time: 22:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 3a03ffaeecb41caafbb6a3c422cba947
+    broadcast_type: International
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 19:00:00
+    end_time: 19:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 19:15:00
+    end_time: 19:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 20:00:00
+    end_time: 20:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 20:15:00
+    end_time: 20:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 20:30:00
+    end_time: 20:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 20:45:00
+    end_time: 21:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 21:30:00
+    end_time: 21:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 21:45:00
+    end_time: 22:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 12:00:00
+    end_time: 12:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 12:15:00
+    end_time: 12:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 12:30:00
+    end_time: 12:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 12:45:00
+    end_time: 13:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 13:00:00
+    end_time: 13:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 13:15:00
+    end_time: 13:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 13:30:00
+    end_time: 13:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 22:00:00
+    end_time: 22:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 22:15:00
+    end_time: 22:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 22:30:00
+    end_time: 22:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 22:45:00
+    end_time: 23:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 19:00:00
+    end_time: 19:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 19:15:00
+    end_time: 19:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 20:00:00
+    end_time: 20:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 20:15:00
+    end_time: 20:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 20:30:00
+    end_time: 20:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 20:45:00
+    end_time: 21:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 12:00:00
+    end_time: 12:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 12:15:00
+    end_time: 12:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 12:30:00
+    end_time: 12:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 12:45:00
+    end_time: 13:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 13:00:00
+    end_time: 13:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 13:15:00
+    end_time: 13:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 18:00:00
+    end_time: 18:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 18:15:00
+    end_time: 18:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 19:00:00
+    end_time: 19:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 19:15:00
+    end_time: 19:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 20:00:00
+    end_time: 20:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 20:15:00
+    end_time: 20:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 20:30:00
+    end_time: 20:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 20:45:00
+    end_time: 21:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 07:00:00
+    end_time: 07:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 07:15:00
+    end_time: 07:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 07:30:00
+    end_time: 07:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 07:45:00
+    end_time: 08:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 08:00:00
+    end_time: 08:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 12:00:00
+    end_time: 12:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 12:15:00
+    end_time: 12:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 12:30:00
+    end_time: 12:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 12:45:00
+    end_time: 13:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 13:00:00
+    end_time: 13:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 13:15:00
+    end_time: 13:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 18:00:00
+    end_time: 18:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 18:15:00
+    end_time: 18:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 20:00:00
+    end_time: 20:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 20:15:00
+    end_time: 20:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 20:30:00
+    end_time: 20:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 20:45:00
+    end_time: 21:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 21:00:00
+    end_time: 21:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 21:15:00
+    end_time: 21:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 21:30:00
+    end_time: 21:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 21:45:00
+    end_time: 22:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 22:00:00
+    end_time: 22:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 22:15:00
+    end_time: 22:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 22:30:00
+    end_time: 22:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 22:45:00
+    end_time: 23:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 12:00:00
+    end_time: 12:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 12:15:00
+    end_time: 12:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 12:30:00
+    end_time: 12:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 12:45:00
+    end_time: 13:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 13:00:00
+    end_time: 13:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 13:15:00
+    end_time: 13:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 13:30:00
+    end_time: 13:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 20:00:00
+    end_time: 20:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 20:15:00
+    end_time: 20:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 20:30:00
+    end_time: 20:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 20:45:00
+    end_time: 21:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: ba041ea4acf277b105a0b8db9764c8a1
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 12:00:00
+    end_time: 12:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 12:15:00
+    end_time: 12:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 12:30:00
+    end_time: 12:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 12:45:00
+    end_time: 13:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 13:00:00
+    end_time: 13:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 13:15:00
+    end_time: 13:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 8067465358bda7958002ee0f61c3608d
+    broadcast_type: Network
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 19:00:00
+    end_time: 19:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 19:15:00
+    end_time: 19:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 20:00:00
+    end_time: 20:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 20:15:00
+    end_time: 20:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 20:30:00
+    end_time: 20:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 20:45:00
+    end_time: 21:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 21:30:00
+    end_time: 21:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 21:45:00
+    end_time: 22:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 12:00:00
+    end_time: 12:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 12:15:00
+    end_time: 12:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 12:30:00
+    end_time: 12:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 12:45:00
+    end_time: 13:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 13:00:00
+    end_time: 13:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 13:15:00
+    end_time: 13:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 13:30:00
+    end_time: 13:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 22:00:00
+    end_time: 22:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 22:15:00
+    end_time: 22:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 22:30:00
+    end_time: 22:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Mon
+    start_time: 22:45:00
+    end_time: 23:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 19:00:00
+    end_time: 19:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 19:15:00
+    end_time: 19:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 20:00:00
+    end_time: 20:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 20:15:00
+    end_time: 20:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 20:30:00
+    end_time: 20:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 20:45:00
+    end_time: 21:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 12:00:00
+    end_time: 12:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 12:15:00
+    end_time: 12:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 12:30:00
+    end_time: 12:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 12:45:00
+    end_time: 13:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 13:00:00
+    end_time: 13:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 13:15:00
+    end_time: 13:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 18:00:00
+    end_time: 18:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Tue
+    start_time: 18:15:00
+    end_time: 18:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 19:00:00
+    end_time: 19:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 19:15:00
+    end_time: 19:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 20:00:00
+    end_time: 20:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 20:15:00
+    end_time: 20:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 20:30:00
+    end_time: 20:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 20:45:00
+    end_time: 21:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 07:00:00
+    end_time: 07:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 07:15:00
+    end_time: 07:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 07:30:00
+    end_time: 07:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 07:45:00
+    end_time: 08:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 08:00:00
+    end_time: 08:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 12:00:00
+    end_time: 12:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 12:15:00
+    end_time: 12:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 12:30:00
+    end_time: 12:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 12:45:00
+    end_time: 13:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 13:00:00
+    end_time: 13:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 13:15:00
+    end_time: 13:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 18:00:00
+    end_time: 18:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Wed
+    start_time: 18:15:00
+    end_time: 18:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 19:00:00
+    end_time: 19:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 0d534d9fd76ea8ff604675a482ccdd22
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 19:15:00
+    end_time: 19:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 0d534d9fd76ea8ff604675a482ccdd22
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 20:00:00
+    end_time: 20:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 20:15:00
+    end_time: 20:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 20:30:00
+    end_time: 20:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 20:45:00
+    end_time: 21:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 21:00:00
+    end_time: 21:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 21:15:00
+    end_time: 21:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 21:30:00
+    end_time: 21:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 21:45:00
+    end_time: 22:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 22:00:00
+    end_time: 22:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 22:15:00
+    end_time: 22:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 22:30:00
+    end_time: 22:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 22:45:00
+    end_time: 23:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 12:00:00
+    end_time: 12:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 12:15:00
+    end_time: 12:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 12:30:00
+    end_time: 12:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 12:45:00
+    end_time: 13:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 13:00:00
+    end_time: 13:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 13:15:00
+    end_time: 13:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Thu
+    start_time: 13:30:00
+    end_time: 13:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 19:00:00
+    end_time: 19:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 0d534d9fd76ea8ff604675a482ccdd22
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 19:15:00
+    end_time: 19:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: 0d534d9fd76ea8ff604675a482ccdd22
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 20:00:00
+    end_time: 20:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 20:15:00
+    end_time: 20:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 20:30:00
+    end_time: 20:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 20:45:00
+    end_time: 21:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: b8bfc1b3d299e052db5327cbf529389a
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 12:00:00
+    end_time: 12:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 12:15:00
+    end_time: 12:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 12:30:00
+    end_time: 12:45:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 12:45:00
+    end_time: 13:00:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 13:00:00
+    end_time: 13:15:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    day: Fri
+    start_time: 13:15:00
+    end_time: 13:30:00
+    created_at: "2019-10-05 21:48:07"
+    tv_station_key: d39b1d9cb81387b042c74423d0b73794
+    broadcast_type: Regional
