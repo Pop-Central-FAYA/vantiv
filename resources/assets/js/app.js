@@ -55,7 +55,6 @@ window.Event = new Vue();
  */
 
 // MEDIA PLANNING
-Vue.component('media-plan-suggestion-table', () => import('./components/media_plan/customise/SuggestionTable.vue'));
 Vue.component('media-plan-suggestion-graph', () => import('./components/media_plan/customise/SuggestionGraph.vue'));
 Vue.component('media-plan-suggestion-selected', () => import('./components/media_plan/customise/SelectedSuggestions.vue'));
 Vue.component('media-plan-suggestion-filter', () => import('./components/media_plan/customise/FilterSuggestions.vue'));
@@ -268,13 +267,13 @@ Vue.mixin({
         },
         /**
          * @todo This assumes if input is not array it is object, this is an assumption that could cause issues
-         * @param  testInput 
+         * @param  testInput
          */
         isNotEmpty(testInput){
             if (testInput == null) {
                 return false;
             }
-            
+
             if (Array.isArray(testInput)) {
                 return testInput.length > 0;
             }

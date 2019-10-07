@@ -23,7 +23,7 @@ class TvStationTimeBeltRatingResource extends JsonResource
             "end_time" => $this['end_time'],
             "total_audience" => $this['total_audience'],
             "rating" => $this['rating'],
-            "station_key" => $request->station_key,
+            "station_key" => $this['station_key'],
             "tv_station_key" => $this['station_key'],
             "media_type" => $this['media_type'],
             "station_id" => $this['station_id'],

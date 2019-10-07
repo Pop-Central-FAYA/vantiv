@@ -36,7 +36,7 @@
   export default {
     props: {
       station: Object,
-      selectedTimeBelts: Array,
+      selectedTimeBelts: Array
     },
     data () {
       return {
@@ -125,8 +125,9 @@
             var msg = `Getting timebelts for ${this.station.name}`;
             this.sweet_alert(msg, 'info', 60000);
             axios({
-                method: 'post',
+                method: 'get',
                 url: this.station.links.timebelt_ratings,
+                params: {}
             }).then((res) => {
                 this.sweet_alert('Ratings retrieved', 'success');
                 this.renderTimeBelts(res.data.data);

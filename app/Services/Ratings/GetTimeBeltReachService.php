@@ -29,19 +29,23 @@ class GetTimeBeltReachService extends AbstractRatingService
         $main_query = DB::query()->fromSub($query, "tbl")
                             ->addSelect($columns)
                             ->groupBy("station_key", "day", "start_time")
-                            ->orderBy("total_audience", "DESC");
+                            ->orderBy("station_name")
+                            ->orderBy("station_state")
+                            ->orderBy("station_type")
+                            ->orderBy("total_audience", "DESC")
+                            ->orderBy("day")
+                            ->orderBy("start_time");
         return $main_query;
     }
     
     protected function formatResponse($data) 
     {
         $data->transform(function($timebelt) {
-            $total_audience = (double) $timebelt->total_audience;
+            $total_audience = round((double) $timebelt->total_audience);
             $rating = 0;
             if ($this->media_plan->population > 0) {
                 $rating = ($total_audience / $this->media_plan->population) * 100;
             }
-            
             
             return [
                 "key" => TimeBelt::getTimebeltKey((array) $timebelt),
