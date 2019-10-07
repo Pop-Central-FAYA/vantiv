@@ -167,6 +167,12 @@ Vue.component('edit-user', () => import('./components/user/EditUser.vue'));
 Vue.component('reinvite-user', () => import('./components/user/ReInviteUser.vue'));
 Vue.component('delete-user', () => import('./components/user/DeleteUser.vue'));
 
+//PROFILE MANAGEMENT
+Vue.component('profile-details', () => import('./components/profile/ProfileDetails.vue'));
+Vue.component('edit-profile', () => import('./components/profile/EditProfile.vue'));
+Vue.component('change-password', () => import('./components/profile/ChangePassword.vue'));
+Vue.component('profile-change-password', () => import('./components/profile/ProfileChangePassword.vue'));
+
 Vue.mixin({
     methods: {
         format_audience(number) {

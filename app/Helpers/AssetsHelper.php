@@ -2,6 +2,7 @@
 
 
 namespace Vanguard\Helpers;
+use \Illuminate\Support\Facades\URL;
 
 
 class AssetsHelper 
@@ -97,4 +98,16 @@ class AssetsHelper
         }
     }
 
+    static function resetPasswordRoute($token)
+    {
+        $product = env('PRODUCT');
+        switch ($product) {
+            case 'ssp':
+                return  URL::to('proceed/password-change/' . $token) ;
+            break;
+            default:
+                return route('password.reset', ['token' => $token]);
+            break;
+        }
+    }
 }

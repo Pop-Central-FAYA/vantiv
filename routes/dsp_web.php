@@ -259,5 +259,27 @@
             });
          });
 
+          /*
+        * new user management route
+        */
+        Route::group(['namespace' => 'Dsp'], function () {
+            Route::get('/profile', 'ProfileController@index')->name('profile.index');
+            
+            Route::group(['prefix' => 'api'], function () {
+                Route::get('/profile', 'ProfileController@get')->name('profile.get');
+                Route::patch('/profile/{id}', 'ProfileController@update')->name('profile.update'); 
+                Route::post('/profile/password', 'ProfileController@updatePassword')->name('password.update'); 
+             });
+         });
+
+        
+
     });
+
+     Route::group(['namespace' => 'Dsp'], function () {
+        Route::get('/password/{token}', 'ProfileController@resetPassword')->name('password.reset');
+        Route::group(['prefix' => 'api'], function () {
+            Route::post('/password', 'ProfileController@processResetPassword')->name('process.password.reset'); 
+         });
+     });
 

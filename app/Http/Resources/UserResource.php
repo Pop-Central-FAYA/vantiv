@@ -33,6 +33,7 @@ class UserResource extends JsonResource
                 'reinvite' => route('users.reinvite', ['id' => $this->id], false),
                 'delete' => route('users.delete', ['id' => $this->id], false),
                 'index' => route('users.index'),
+                'profile_update' => route('profile.update', ['id' => $this->id], false),
             ],
         ];
     }
