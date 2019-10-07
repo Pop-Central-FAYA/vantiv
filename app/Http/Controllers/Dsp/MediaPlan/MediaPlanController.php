@@ -70,8 +70,8 @@ class MediaPlanController extends Controller
             'back_action' => route('agency.media_plans', [], false),
             'next_action' => route('agency.media_plan.create', ['id' => $media_plan->id], false),
             'save_action' => route('agency.media_plan.select_suggestions', ['id' => $media_plan->id], false),
-            'new_ratings_action' => route('agency.media_plan.create-ratings', ['id' => $media_plan->id], false),
-            'timebelt_graph_action' => route('agency.media_plan.create-timebelt-graph', ['id' => $media_plan->id], false)
+            'new_ratings_action' => route('reach.get', ['id' => $media_plan->id], false),
+            'timebelt_ratings' => route('reach.get-timebelts', ['plan_id' => $media_plan->id], false)
         ];
         $selected = new MediaPlanSuggestionCollection($media_plan->suggestions->where('status', 1));
 
@@ -186,17 +186,17 @@ class MediaPlanController extends Controller
     //     return new TvStationTimeBeltRatingCollection($data);
     // }
 
-    public function createTimeBeltRatingsGraph(Request $request, $id)
-    {
-        $media_plan = MediaPlan::findOrFail($id);
+    // public function createTimeBeltRatingsGraph(Request $request, $id)
+    // {
+    //     $media_plan = MediaPlan::findOrFail($id);
 
-        //get the day and put that in the filters
-        $filter = ["day" => TimeBelt::shortenDay($request->day)];
-        $timebelts_service = new GetStationTimeBeltRatingService($filter, $media_plan);
-        $data = $timebelts_service->run();
+    //     //get the day and put that in the filters
+    //     $filter = ["day" => TimeBelt::shortenDay($request->day)];
+    //     $timebelts_service = new GetStationTimeBeltRatingService($filter, $media_plan);
+    //     $data = $timebelts_service->run();
 
-        return new TvStationTimeBeltRatingGraphResource($data);
-    }
+    //     return new TvStationTimeBeltRatingGraphResource($data);
+    // }
 
     /**
      * Choose suggestions based on information from the frontend
@@ -279,10 +279,10 @@ class MediaPlanController extends Controller
         $media_plan_summary_result = (new SummarizePlan(new MediaPlanResource($media_plan)))->run();
 
         /*
-        * This way of get users that have a particular permission is not the most efficient way to do this, 
+        * This way of get users that have a particular permission is not the most efficient way to do this,
         * moving forward we will have to review this.
         */
-        $users = User::where('status', 'Active')->permission(['approve.media_plan', 'decline.media_plan'])->get(); 
+        $users = User::where('status', 'Active')->permission(['approve.media_plan', 'decline.media_plan'])->get();
         $company_id =$this->companyId();
         $filtered_users = $users->filter(function ($item) use ($company_id){
             if($item->companies->first()->id == $company_id){
@@ -487,7 +487,7 @@ class MediaPlanController extends Controller
             return response()->json(['status'=>'error', 'message'=> "The current operation failed."]);
         }
         return response()->json([
-            'message'=>"Media plan updated", 
+            'message'=>"Media plan updated",
             "status" => "success",
             "media_plan" => MediaPlan::find($request->plan_id)->toArray() //this is a stop gap, we need to use resources
         ]);

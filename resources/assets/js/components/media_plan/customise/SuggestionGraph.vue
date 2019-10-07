@@ -122,6 +122,7 @@
                 });
                 return newArray;
             },
+            //@todo no need to keep performing this work, cache it after running through once
             seriesByDay(day, key) {
                 key = parseInt(key);
                 if (key != 0) {
@@ -164,16 +165,27 @@
                     this.seriesByDay(day, key);
                 }
             },
+            convertListToGraph(timebeltList) {
+                let data = {}
+                timebeltList.forEach(function(timebelt) {
+                    const stationName = timebelt.station_name;
+                    let stationTimebelts = data[stationName] || [];
+                    stationTimebelts.push(timebelt);
+                    data[stationName] = stationTimebelts;
+                });
+                return data;
+            },
             createNewTimeBeltRatings(day, key) {
+                const params = {...this.filters, day: this.shortDay(day)};
                 var msg = "Loading graph data";
                 this.sweet_alert(msg, 'info', 60000);
                 axios({
-                    method: 'post',
-                    url: this.routes.timebelt_graph_action,
-                    data: {'day': day}
+                    method: 'get',
+                    url: this.routes.timebelt_ratings,
+                    params: params
                 }).then((res) => {
                     this.sweet_alert('Graph data retrieved', 'success');
-                    this.graphDetails[day] = res.data.data;
+                    this.graphDetails[day] = this.convertListToGraph(res.data.data);
                     this.seriesByDay(day, key);
                 }).catch((error) => {
                     if (error.response && (error.response.status == 422)) {

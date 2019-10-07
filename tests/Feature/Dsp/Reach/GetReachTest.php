@@ -4,7 +4,7 @@ namespace Tests\Feature\Dsp\Reach;
 
 class GetReachTest extends ReachTestCase
 {
-    protected $route_name = 'agency.media_plan.create-ratings';
+    protected $route_name = 'reach.get';
 
     public function test_unauthenticated_user_cannot_access_reach_get_route()
     {
@@ -103,14 +103,14 @@ class GetReachTest extends ReachTestCase
         $response = $this->getResponse($user, $params);
 
         $response->assertStatus(200);
-        
+
         //assert the json response
         $actual = $response->json()["data"];
         $this->assertEquals(count($expected), count($actual));
         foreach ($expected as $index => $value) {
             $this->assertArraySubset($value, $actual[$index]);
         }
-        
+
     }
 
     public function validGetReachDataProvider()

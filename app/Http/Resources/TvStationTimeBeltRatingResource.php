@@ -15,6 +15,11 @@ class TvStationTimeBeltRatingResource extends JsonResource
      */
     public function toArray($request)
     {
+        $full_name = $this['station'];
+        $state = $this['state'];
+        if ($state != '') {
+            $full_name = "{$full_name} ({$state})";
+        }
         return [
             'key' => $this['key'],
             "program" => Arr::get($this, "program", "Unknown Program"),
@@ -28,8 +33,9 @@ class TvStationTimeBeltRatingResource extends JsonResource
             "media_type" => $this['media_type'],
             "station_id" => $this['station_id'],
             "station" => $this['station'],
-            "state" => $this['state'],
-            "station_type" => $this['station_type']
+            "state" => $state,
+            "station_type" => $this['station_type'],
+            "station_name" => $full_name,
         ];
     }
 }
