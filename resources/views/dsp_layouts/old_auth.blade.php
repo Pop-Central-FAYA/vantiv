@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('page-title') | {{ settings('app_name') }}</title>
+    <title>Vantage | @yield('page-title') </title>
 
     {!! HTML::style("assets/css/bootstrap.min.css") !!}
     {!! HTML::style("assets/css/font-awesome.min.css") !!}
