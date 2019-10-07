@@ -2,41 +2,9 @@
 
 namespace Tests\Feature\Dsp\Reach;
 
-use Tests\TestCase;
-
-class GetReachTest extends TestCase
+class GetReachTest extends ReachTestCase
 {
-    protected $route_name = 'reach.get';
-
-    public function setUp()
-    {
-        parent::setUp();
-        $this->seed('CriteriasTableSeeder');
-        $this->seed('PublisherTableSeeder');
-        $this->seed('TvStationTableSeeder');
-        $this->seed('MpsTestDataSeeder');
-    }
-
-    protected function setupUserWithPermissions()
-    {
-        $user = $this->setupAuthUser(null, ['view.media_plan']);
-        return $user;
-    }
-
-    protected function getResponse($user, $params)
-    {
-        return $this->actingAs($user)->getJson(route($this->route_name, $params));
-    }
-
-
-    protected function setupMediaPlan($user, $override_params=[])
-    {
-        $override_params['company_id'] = $user->companies->first()->id;
-        $override_params['planner_id'] = $user->id;
-
-        $media_plan = factory(\Vanguard\Models\MediaPlan::class)->create($override_params);
-        return $media_plan->refresh();
-    }
+    protected $route_name = 'agency.media_plan.create-ratings';
 
     public function test_unauthenticated_user_cannot_access_reach_get_route()
     {

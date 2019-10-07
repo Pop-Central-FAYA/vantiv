@@ -23,8 +23,8 @@ class TvStationRatingResource extends JsonResource
             "total_audience" => $this['total_audience'],
             "links" => [
                 'timebelt_ratings' => route(
-                    'agency.media_plan.create-timebelt-ratings', 
-                    ['station_key' => $this['station_key'], 'id' => $request->id],
+                    'reach.get-timebelts', 
+                    ['station_key' => $this['station_key'], 'plan_id' => $request->id],
                     false
                 )
             ]

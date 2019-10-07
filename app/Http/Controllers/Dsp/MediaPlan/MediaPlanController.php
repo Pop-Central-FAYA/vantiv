@@ -159,32 +159,32 @@ class MediaPlanController extends Controller
     /*
      * *************************** API METHODS *****************************
      */
-    public function createStationRatings(CreateStationRatingRequest $request, $id)
-    {
-        $validated = $request->validated();
-        $media_plan = MediaPlan::findOrFail($id);
+    // public function createStationRatings(CreateStationRatingRequest $request, $id)
+    // {
+    //     $validated = $request->validated();
+    //     $media_plan = MediaPlan::findOrFail($id);
 
-        $rating_service = new GetStationRatingService($validated, $media_plan);
-        $data = $rating_service->run();
+    //     $rating_service = new GetStationRatingService($validated, $media_plan);
+    //     $data = $rating_service->run();
 
-        if (count($data) > 0) {
-            $media_plan->filters = json_encode($validated);
-            $media_plan->save();
-        }
-        return new TvStationRatingCollection($data);
-    }
+    //     if (count($data) > 0) {
+    //         $media_plan->filters = json_encode($validated);
+    //         $media_plan->save();
+    //     }
+    //     return new TvStationRatingCollection($data);
+    // }
 
-    public function createStationTimeBeltRatings($id, $station_key)
-    {
-        $media_plan = MediaPlan::findOrFail($id);
+    // public function createStationTimeBeltRatings($id, $station_key)
+    // {
+    //     $media_plan = MediaPlan::findOrFail($id);
 
-        //run the request to generate the new ratings and return the value to the frontend
-        $filter = ["tv_station_key" => $station_key];
-        $timebelts_service = new GetStationTimeBeltRatingService($filter, $media_plan);
-        $data = $timebelts_service->run();
+    //     //run the request to generate the new ratings and return the value to the frontend
+    //     $filter = ["tv_station_key" => $station_key];
+    //     $timebelts_service = new GetStationTimeBeltRatingService($filter, $media_plan);
+    //     $data = $timebelts_service->run();
 
-        return new TvStationTimeBeltRatingCollection($data);
-    }
+    //     return new TvStationTimeBeltRatingCollection($data);
+    // }
 
     public function createTimeBeltRatingsGraph(Request $request, $id)
     {

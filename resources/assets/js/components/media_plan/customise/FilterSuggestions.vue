@@ -58,9 +58,9 @@
             createNewRatings() {
                 this.sweet_alert('Getting station list based on filters', 'info', 60000);
                 axios({
-                    method: 'post',
+                    method: 'get',
                     url: this.routes.new_ratings_action,
-                    data: this.selectedFilters
+                    params: this.selectedFilters
                 }).then((res) => {
                     if (this.isNotEmpty(res.data.data)) {
                         this.sweet_alert('Ratings retrieved', 'success');

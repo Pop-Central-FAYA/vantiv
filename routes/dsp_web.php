@@ -102,8 +102,8 @@
          */
         Route::group(['namespace' => 'Dsp\MediaPlan', 'prefix' => 'media-plan'], function () {
             /*** New Routes ****/
-            Route::post('/{id}/ratings', 'MediaPlanController@createStationRatings')->name('agency.media_plan.create-ratings');
-            Route::post('/{id}/ratings/{station_key}/timebelts', 'MediaPlanController@createStationTimeBeltRatings')->name('agency.media_plan.create-timebelt-ratings');
+            // Route::post('/{id}/ratings', 'MediaPlanController@createStationRatings')->name('agency.media_plan.create-ratings');
+            // Route::post('/{id}/ratings/{station_key}/timebelts', 'MediaPlanController@createStationTimeBeltRatings')->name('agency.media_plan.create-timebelt-ratings');
             Route::post('/{id}/graph-ratings', 'MediaPlanController@createTimeBeltRatingsGraph')->name('agency.media_plan.create-timebelt-graph');
             Route::post('/{id}/suggestions', 'MediaPlanController@storeSuggestions')->name('agency.media_plan.select_suggestions');
 
@@ -246,8 +246,12 @@
          */
         Route::group(['namespace' => 'Dsp'], function() {
             Route::group(['prefix' => 'api'], function() {
-                Route::get('/reach/{plan_id}', 'ReachController@getReach')->name('reach.get');
-                Route::get('/reach/{station_key}/timebelts', 'ReachController@getStationTimebeltReach')->name('reach.get-timebelts');
+                /**
+                 * @todo, after merging this branch with Kunle's breaking changes, switch the name of the route
+                 */
+                // Route::get('/reach/{plan_id}', 'ReachController@getReach')->name('reach.get');
+                Route::get('/reach/{plan_id}', 'ReachController@getReach')->name('agency.media_plan.create-ratings');
+                Route::get('/reach/{plan_id}/timebelts', 'ReachController@getStationTimebeltReach')->name('reach.get-timebelts');
             });
         });
 

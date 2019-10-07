@@ -33,6 +33,12 @@ class MediaPlanPolicy
 
     public function get(User $user, MediaPlan $media_plan)
     {
+        // if ($this->belongsToUserCompany($user, $media_plan) == false) {
+        //     var_dump($media_plan->planner_id);
+        //     var_dump($user->id);
+        //     var_dump($media_plan->company_id);
+        //     dd($user->companyIdList());
+        // }
         return $this->belongsToUserCompany($user, $media_plan);
     }
 
