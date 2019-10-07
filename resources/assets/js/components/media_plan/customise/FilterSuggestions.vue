@@ -47,8 +47,17 @@
     export default {
         props: {
             filterValues: Object,
-            selectedFilters: Object,
             routes: Object
+        },
+        data() {
+            return {
+                selectedFilters: {
+                    'station_type': 'Network',
+                    'day': 'all',
+                    'state': 'all',
+                    'day_part': 'all'
+                }
+            };
         },
         mounted() {
             console.log('Filter Suggestions Component mounted.');

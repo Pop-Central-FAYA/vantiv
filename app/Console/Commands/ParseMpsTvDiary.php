@@ -40,12 +40,8 @@ class ParseMpsTvDiary extends Command
     public function handle()
     {
         try{
-            //example: s3://faya-global-tools/mps-data/january-tv-diary.tar.gz
-            // $bucket = $this->ask('What bucket is the file located?');
-            // $key = $this->ask('What is the key of the file in s3?');
-
-            $bucket = 'faya-global-tools';
-            $key = 'mps-data/diary.tar.gz';
+            $bucket = $this->anticipate('What bucket is the file located?', ['faya-global-tools']);
+            $key = $this->anticipate('What is the key of the file in s3?', ['mps-data/diary.tar.gz']);
 
             $start = microtime(true);
 

@@ -8,7 +8,7 @@
                             <h4 class="mt-4 weight_medium">AVAILABLE STATION & TIMES</h4>
                         </v-flex>
                         <v-flex md8>
-                            <media-plan-suggestion-filter :routes="redirectUrls" :selected-filters="selectedFilters" :filter-values="filterValues"></media-plan-suggestion-filter>
+                            <media-plan-suggestion-filter :routes="redirectUrls" :filter-values="filterValues"></media-plan-suggestion-filter>
                         </v-flex>
                     </v-layout>
                 </v-card-title>

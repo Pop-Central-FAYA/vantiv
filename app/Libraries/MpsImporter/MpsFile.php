@@ -22,17 +22,14 @@ class MpsFile
 
     public function download()
     {
+        $this->tmp_compressed_loc = $this->downloadFromS3();
+        $this->csv_location = $this->uncompress($this->tmp_compressed_loc);
         return $this;
-        // $this->tmp_compressed_loc = $this->downloadFromS3();
-        // $this->csv_location = $this->uncompress($this->tmp_compressed_loc);
-        // return $this;
     }
 
     public function getCsvFileName()
     {
-        $csv_file = "/var/www/diary.csv";
-        return $csv_file;
-        // return $this->csv_location;
+        return $this->csv_location;
     }
 
     public function cleanup()
