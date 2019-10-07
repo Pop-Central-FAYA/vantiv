@@ -29,7 +29,7 @@ class TimeBelt
 
     public static function getTimebeltKey($item) {
         $day = static::shortenDay($item['day']);
-        return md5("{$item['station_id']}-{$day}-{$item['start_time']}");
+        return md5("{$item['station_key']}-{$day}-{$item['start_time']}");
     }
 
     public static function shortenDay($day) {

@@ -77,8 +77,8 @@ class GetReachTest extends ReachTestCase
             [[]], //empty filters
             [["day_part" => "Supper Time", "state" => "Lagos", "day" => "All", "station_type" => "All"]], //invalid day part
             [["day_part" => "All", "state" => "Invalid State", "day" => "All", "station_type" => "All"]], //invalid state
-            [["day_part" => "All", "state" => "Invalid State", "day" => "", "station_type" => "All"]], //invalid day
-            [["day_part" => "All", "state" => "Invalid State", "day" => "", "station_type" => ""]] //invalid station type
+            [["day_part" => "All", "state" => "All", "day" => "", "station_type" => "All"]], //invalid day
+            [["day_part" => "All", "state" => "All", "day" => "All", "station_type" => ""]] //invalid station type
         ];
     }
 

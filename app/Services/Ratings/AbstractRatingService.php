@@ -17,7 +17,8 @@ abstract class AbstractRatingService implements BaseServiceInterface
 {
 
     protected $filters = [];
-
+    protected $media_plan = null;
+    
     // $filters = ["state" => ["Abuja"], "social_class" => ["A", "B", "C"], "gender" => ["Male", "Female"]];
     /**
      * Demographics in this case should be an associative array of criteria such as:
@@ -28,9 +29,10 @@ abstract class AbstractRatingService implements BaseServiceInterface
      *  "gender": ["Male", "Female"]
      * }
      */
-    public function __construct(array $filters) 
+    public function __construct(array $filters, $media_plan) 
     {
         $this->filters = $filters;
+        $this->media_plan = $media_plan;
     }
 
     public function run() {

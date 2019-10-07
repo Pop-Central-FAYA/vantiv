@@ -3,7 +3,7 @@
 namespace Vanguard\Services\Ratings;
 
 use DB;
-
+use Vanguard\Libraries\TimeBelt;
 // use Vanguard\Services\Ratings\GetTimeBeltReachService; $filters = ["state" => ["Abuja"], "social_class" => ["A", "B", "C"], "gender" => ["Male", "Female"], "station_key" => "ba041ea4acf277b105a0b8db9764c8a1"];$service = new GetTimeBeltReachService($filters); $service->run()
 
 class GetTimeBeltReachService extends AbstractRatingService
@@ -37,9 +37,15 @@ class GetTimeBeltReachService extends AbstractRatingService
     {
         $data->transform(function($timebelt) {
             $total_audience = (double) $timebelt->total_audience;
-            // $rating = ($total_audience / $universe_size) * 100;
-
+            $rating = 0;
+            if ($this->media_plan->population > 0) {
+                $rating = ($total_audience / $this->media_plan->population) * 100;
+            }
+            
+            
             return [
+                "key" => TimeBelt::getTimebeltKey((array) $timebelt),
+                "rating" => round($rating, 2),
                 "day" => $timebelt->day,
                 "start_time" => $timebelt->start_time,
                 "end_time" => $timebelt->end_time,
