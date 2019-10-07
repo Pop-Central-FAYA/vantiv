@@ -118,7 +118,6 @@
               <v-spacer></v-spacer>
               <v-btn color="red" dark @click="closeDialog()">Close</v-btn>
               <v-btn color class="default-vue-btn" dark @click="editUser()">Save</v-btn>
-              <v-btn color class="default-vue-btn" dark @click="showEditPassword()">Update Password</v-btn>
             </v-card-actions>
           </v-container>
         </v-card-text>
