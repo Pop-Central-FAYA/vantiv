@@ -3,29 +3,29 @@
         <div class="the_frame clearfix mb border_top_color load_stuff">
             <div class="margin_center col_10 clearfix create_fields">
                 <div class="clearfix mb4 mt2" style="position: relative; margin-bottom: 4rem;">
-                    <comment :model-id="summaryDetail.id" :routes="summaryDetail.routes.comments"></comment>
+                    <comment :model-id="planDetails.id" :routes="planDetails.routes.comments"></comment>
                 </div>
                 <div class="the_stats the_frame clearfix mb4 mt4">
                     <table class="display dashboard_campaigns">
                         <tbody>
                            <tr>
-                            <td><span class="mr-2"><b>Client Name:</b></span>  {{ summaryDetail.client.name }}</td>
+                            <td><span class="mr-2"><b>Client Name:</b></span>  {{ planDetails.client.name }}</td>
                            </tr>
                            <tr>
-                            <td><span class="mr-2"><b>Product Name:</b></span>  {{ summaryDetail.product_name }}</td>
+                            <td><span class="mr-2"><b>Product Name:</b></span>  {{ planDetails.product_name }}</td>
                            </tr>
                            <tr>
-                            <td><span class="mr-2"><b>Flight Date:</b></span> {{  dateToHumanReadable(summaryDetail.start_date) }} to {{ dateToHumanReadable(summaryDetail.end_date) }} </td>
+                            <td><span class="mr-2"><b>Flight Date:</b></span> {{  dateToHumanReadable(planDetails.start_date) }} to {{ dateToHumanReadable(planDetails.end_date) }} </td>
                            </tr>
                            <tr>
-                            <td><span class="mr-2"><b>Status:</b></span>  {{ summaryDetail.status }}</td>
+                            <td><span class="mr-2"><b>Status:</b></span>  {{ planDetails.status }}</td>
                            </tr>
                         </tbody>
                     </table>
                 </div>
 
                  <div class="the_frame client_dets mb4">
-                    <media-plan-summary-sections :plan="summaryDetails" :summary-data="summaryData" :full-station-data="fullStationData"></media-plan-summary-sections>
+                    <media-plan-summary-sections :formatted-plan-data="formattedPlanData"></media-plan-summary-sections>
                 </div>
             </div>
         </div>
@@ -33,29 +33,29 @@
         <div class="container-fluid my-5">
             <div class="row">
                 <div class="col-md-4 p-0">
-                    <button id="back_btn" @click="buttonAction(summaryDetail.routes.summary.back)"  class="btn small_btn"><i class="media-plan material-icons">navigate_before</i> Back</button>
+                    <button id="back_btn" @click="buttonAction(planDetails.routes.summary.back)"  class="btn small_btn"><i class="media-plan material-icons">navigate_before</i> Back</button>
                 </div>
                 <div class="col-md-8 p-0 text-right">
-                    <span v-if="summaryDetail.status == 'In Review'">
+                    <span v-if="planDetails.status == 'In Review'">
                         <button v-if="hasPermission(permissionList,'approve.media_plan')"  @click="changeStatus('Approved')" class="media-plan btn block_disp uppercased mr-1 btn-sm"><i class="media-plan material-icons">check</i>Approve Plan</button>
                     
                         <button v-if="hasPermission(permissionList,'decline.media_plan')"  @click="changeStatus('Declined')"  class="media-plan btn block_disp uppercased bg_red mr-1  btn-sm"><i class="media-plan material-icons">clear</i>Decline Plan</button>
                     </span>
-                    <span v-if="summaryDetail.status === 'Suggested' || summaryDetail.status === 'Selected' || summaryDetail.status === 'Pending'" >
+                    <span v-if="planDetails.status === 'Suggested' || planDetails.status === 'Selected' || planDetails.status === 'Pending'" >
                         <media-plan-request-approval  
                         :users="userList"  
-                        :media-plan="summaryDetail.id" 
-                        :action-link="summaryDetail.routes.summary.approval"
+                        :media-plan="planDetails.id" 
+                        :action-link="planDetails.routes.summary.approval"
                         :permissionList="permissionList">
                         </media-plan-request-approval>
                     </span>
                      <span>
-                        <button v-if="hasPermission(permissionList,'export.media_plan')"  @click="buttonAction(summaryDetail.routes.summary.export, 'export.media_plan')"  class="btn block_disp uppercased"><i class="media-plan material-icons">file_download</i>Export Plan</button>
+                        <button v-if="hasPermission(permissionList,'export.media_plan')"  @click="buttonAction(planDetails.routes.summary.export, 'export.media_plan')"  class="btn block_disp uppercased"><i class="media-plan material-icons">file_download</i>Export Plan</button>
                           </span>
-                    <span v-if="summaryDetail.status == 'Approved'" >
+                    <span v-if="planDetails.status == 'Approved'" >
                         <media-plan-create-campaign 
                         v-if="hasPermission(permissionList,'convert.media_plan')" 
-                        :id="summaryDetail.id"
+                        :id="planDetails.id"
                         :permissionList="permissionList"
                         ></media-plan-create-campaign>
                     </span>
@@ -72,45 +72,34 @@
 </style>
 
 <script>
+    import SummarySections from "./SummarySections.vue";
+    import RequestApproval from "./RequestApproval.vue";
+
     export default {
         props: {
-            fullStationData: Object,
-            summaryDetails: Object,
-            summaryData: Array,
+            formattedPlanData: Object,
             permissionList:Array,
             userList:Array,
         },
+        components: {
+            'media-plan-summary-sections': SummarySections,
+            'media-plan-request-approval': RequestApproval,
+        },
         data() {
             return {
-                totalSpots: 0,
-                totalGrossValue: 0,
-                totalNetValue: 0,
-                totalSavings: 0,
-                summaryDetail:  this.summaryDetails
+                planDetails:  this.formattedPlanData.plan
             };
         },
         mounted() {
-              this.getSums();
-             console.log("Summary component mounted");
-           
+            console.log("Summary component mounted");
         },  
         created() {    
             var self = this;
             Event.$on('updated-media-plan', function (mediaPlan) {
-                self.summaryDetail = mediaPlan;
-
+                self.planDetails = mediaPlan;
             });
           }, 
          methods: {
-            getSums(){
-                let self = this;
-                this.summaryData.forEach(function (item, key) {
-                    self.totalSpots += item['total_spots']
-                    self.totalGrossValue += item['gross_value']
-                    self.totalNetValue += item['net_value']
-                    self.totalSavings += item['savings']
-                });
-            },
             buttonAction(destination, permission) {
                 if(permission != null && !this.hasPermissionAction(this.permissionList, permission)){
                     return
@@ -122,9 +111,9 @@
                 if(this.hasPermissionAction(this.permissionList, ['create.media_plan', 'update.media_plan'])){                    
                     axios({
                         method: 'post',
-                        url: this.summaryDetail.routes.summary.change_status,
+                        url: this.planDetails.routes.summary.change_status,
                         data: {
-                            media_plan_id: this.summaryDetail.id,
+                            media_plan_id: this.planDetails.id,
                             action: action
                         }
                     }).then((res) => {

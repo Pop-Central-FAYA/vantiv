@@ -17,37 +17,28 @@ use PhpOffice\PhpSpreadsheet\Style\Alignment;
 
 class MediaPlanMediaLengthExport implements FromView, ShouldAutoSize, WithTitle, WithEvents
 {
-	protected $summary;
     protected $media_type;
-    protected $material_length;
-    protected $station_programs;
-    protected $monthly_weeks;
-    protected $media_plan_data;
-    protected $media_plan_period;
-    
-    public function __construct($media_type, $material_length, $station_programs, $monthly_weeks, $summary, $media_plan_data, $media_plan_period)
+    protected $duration;
+    protected $stations_programs;
+    protected $formated_plan;
+
+    public function __construct($media_type, $duration, $stations_programs, $formated_plan)
     {
-        $this->summary = $summary;
         $this->media_type = $media_type;
-        $this->material_length = $material_length;
-        $this->station_programs = $station_programs;
-        $this->monthly_weeks = $monthly_weeks;
-        $this->media_plan_data = $media_plan_data;
-        $this->media_plan_period = $media_plan_period;
+        $this->duration = $duration;
+        $this->stations_programs = $stations_programs;
+        $this->formated_plan = $formated_plan;
     }
 
     public function view(): View
     {
         return view('agency.mediaPlan.export.mediaDuration', [
-            'data' => collect($this->station_programs),
-            'national_stations' => $this->groupByStationType($this->station_programs, ['network', 'Network']),
-            'cable_stations' => $this->groupByStationType($this->station_programs, ['cable', 'satellite', 'Satellite']),
-            'regional_stations' => $this->groupByRegions($this->station_programs),
-            'monthly_weeks' => json_decode($this->monthly_weeks),
-            'media_plan_data' => $this->media_plan_data,
+            'station_type_data' => collect($this->stations_programs),
+            'monthly_weeks' => $this->formated_plan['table_header_monthly_weeks'],
+            'media_plan_data' => $this->formated_plan['plan'],
             'media_type' => $this->media_type,
-            'material_length' => $this->material_length,
-            'media_plan_period' => $this->media_plan_period,
+            'material_length' => $this->duration,
+            'media_plan_period' => $this->formated_plan['period'],
             'brand_color' => $this->getBrandColor()
         ]);
     }
@@ -56,24 +47,12 @@ class MediaPlanMediaLengthExport implements FromView, ShouldAutoSize, WithTitle,
         return 'b31b1b';
     }
 
-    public function groupByStationType($suggestions, $station_type)
-    {
-        $suggestions = $suggestions->whereIn('station_type', $station_type);
-        return $suggestions->groupBy('station');
-    }
-
-    public function groupByRegions($suggestions)
-    {
-        $suggestions = $suggestions->whereIn('station_type', ['terrestrial', 'regional', 'Regional']);
-        return $suggestions->groupBy(['station_region', 'station']);
-    }
-
     /**
      * @return string
      */
     public function title(): string
     {
-        return $this->media_type.' '.$this->material_length.'"';
+        return strtoupper($this->media_type.' '.$this->duration.'"');
     }
 
     public function registerEvents(): array

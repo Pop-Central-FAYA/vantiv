@@ -14,7 +14,6 @@ use Vanguard\Services\MediaPlan\GetSuggestionListWithProgramRating;
 use Vanguard\Services\MediaPlan\StoreMediaPlanVolumeDiscount;
 use Vanguard\Services\MediaPlan\GetMediaPlans;
 use Vanguard\Services\MediaPlan\SummarizePlan;
-use Vanguard\Services\MediaPlan\ExportPlan;
 use Maatwebsite\Excel\Facades\Excel;
 use Vanguard\Exports\MediaPlanExport;
 use Vanguard\Services\Traits\DefaultMaterialLength;
@@ -269,49 +268,17 @@ class MediaPlanController extends Controller
 
     public function summary($media_plan_id)
     {
-        $mediaPlan = MediaPlan::with(['client', 'brand', 'company'])->findorfail($media_plan_id);
-        $selectedSuggestions = $mediaPlan->suggestions->where('status', 1)->where('material_length', '!=', null);
+        $media_plan = MediaPlan::with(['client', 'brand', 'company'])->findorfail($media_plan_id);
+        $selected_suggestions = $media_plan->suggestions->where('status', 1)->where('material_length', '!=', null);
 
-        if (count($selectedSuggestions) === 0) {
+        if (count($selected_suggestions) === 0) {
             // redirect to review suggestions page for user to select suggestions
-            return redirect()->route('agency.media_plan.create', ['id'=> $mediaPlan->id]);
+            return redirect()->route('agency.media_plan.create', ['id'=> $media_plan->id]);
         }
 
-        $plan_start_date = $mediaPlan->start_date;
-        $plan_end_date = $mediaPlan->end_date;
+        $media_plan_summary_result = (new SummarizePlan(new MediaPlanResource($media_plan)))->run();
 
-        $summary_service = new SummarizePlan($mediaPlan);
-        $media_plan_summary =  $summary_service->run();
-
-        $media_plan_start_date = Carbon::parse($mediaPlan->start_date);
-        $media_plan_end_date = Carbon::parse($mediaPlan->end_date);
-        $media_plan_period = $media_plan_start_date->diffInWeeks($media_plan_end_date);
-
-        $export_service = new ExportPlan($mediaPlan);
-        $media_plan_grouped_data = $export_service->run();
-
-        $monthly_weeks_table_header = json_encode($export_service->monthly_weeks_campaign_duration($plan_start_date, $plan_end_date));
-
-        $station_data = [];
-        foreach ($media_plan_grouped_data as $media_type => $all_timebelts) {
-            $station_data[$media_type.' summary'] = $this->computeSummaryByMediaType($all_timebelts, $media_plan_period);
-            foreach ($all_timebelts as $duration => $timebelts) {
-                $station_data[$media_type.' '.$duration.'"'] = [
-                    'national_stations' => $this->filterByStationType($timebelts, ['network', 'Network'])->groupBy('station'),
-                    'cable_stations' => $this->filterByStationType($timebelts, ['cable', 'satellite', 'Satellite'])->groupBy('station'),
-                    'regional_stations' => $this->filterByStationType($timebelts, ['terrestrial', 'regional', 'Regional'])->groupBy('station'),
-                    'monthly_weeks' => json_decode($monthly_weeks_table_header),
-                    'duration' => $duration
-                ];
-            }
-        }
-
-        $full_plan_details = [
-            'station_data' => $station_data,
-            'plan_period' => $media_plan_period,
-            'monthly_weeks_table_header' => $monthly_weeks_table_header
-        ];
-          /*
+        /*
         * This way of get users that have a particular permission is not the most efficient way to do this, 
         * moving forward we will have to review this.
         */
@@ -324,79 +291,8 @@ class MediaPlanController extends Controller
         })->values();
         $users = new UserCollection($filtered_users);
 
-        return view('agency.mediaPlan.summary')->with('summary', $media_plan_summary)
-                ->with('full_plan_details', $full_plan_details)
-                ->with('media_plan', new MediaPlanResource($mediaPlan))->with('users', $users);
-    }
-
-    public function filterByStationType($suggestions, $station_type)
-    {
-        $suggestions = $suggestions->whereIn('station_type', $station_type);
-        return $suggestions;
-    }
-
-    // public function groupByRegions($suggestions)
-    // {
-    //     $suggestions = $suggestions->whereIn('station_type', ['terrestrial', 'regional', 'Regional']);
-    //     return $suggestions->groupBy(['station_region', 'station']);
-    // }
-
-    public function computeSummaryByMediaType($material_lengths, $media_plan_period)
-    {
-        $durations = [];
-        $station_types = [];
-
-        foreach ($material_lengths as $length => $timebelts) {
-            $durations['data'][] = collect([
-                'length' => $length,
-                'total_spots' => $timebelts->sum('total_spots'),
-                'gross_total' => $timebelts->sum('gross_value'),
-                'net_total' => $timebelts->sum('net_value'),
-                'duration' => $media_plan_period
-            ]);
-        }
-
-        $durations['totals'] = [
-            'total_spots' => collect($durations['data'])->sum('total_spots'),
-            'gross_total' => collect($durations['data'])->sum('gross_total'),
-            'net_total' => collect($durations['data'])->sum('net_total'),
-            'vat' => collect($durations['data'])->sum('net_total') * 0.05
-        ]; 
-
-        foreach ($material_lengths as $length => $timebelts) {
-            $national_stations = $this->filterByStationType($timebelts, ['network', 'Network']);
-            $cable_stations = $this->filterByStationType($timebelts, ['cable', 'satellite', 'Satellite']);
-            $regional_stations = $this->filterByStationType($timebelts, ['terrestrial', 'regional', 'Regional']);
-
-            if ($national_stations->sum('total_spots') > 0) {
-                $station_types['data'][] = [
-                    'duration' => $length, 'station_type' => 'National', 
-                    'total_spots' => $national_stations->sum('total_spots'),
-                    'net_total' => $national_stations->sum('net_value'),
-                ];
-            }
-            if ($cable_stations->sum('total_spots') > 0) {
-                $station_types['data'][] = [
-                    'duration' => $length, 'station_type' => 'Cable', 
-                    'total_spots' => $cable_stations->sum('total_spots'),
-                    'net_total' => $cable_stations->sum('net_value'),
-                ];
-            }
-            if ($regional_stations->sum('total_spots') > 0) {
-                $station_types['data'][] = [
-                    'duration' => $length, 'station_type' => 'National', 
-                    'total_spots' => $regional_stations->sum('total_spots'),
-                    'net_total' => $regional_stations->sum('net_value'),
-                ];
-            }
-        }
-
-        $station_types['totals'] = [
-            'total_spots' => collect($station_types['data'])->sum('total_spots'),
-            'net_total' => collect($station_types['data'])->sum('net_total')
-        ]; 
-
-        return ['durations' => $durations, 'station_types' => $station_types];
+        return view('agency.mediaPlan.summary')->with('formatted_plan', $media_plan_summary_result)
+                ->with('users', $users);
     }
 
     public function exportPlan($media_plan_id)
@@ -409,24 +305,10 @@ class MediaPlanController extends Controller
             return redirect()->route('agency.media_plan.create', ['id'=> $mediaPlan->id]);
         }
 
-        $plan_start_date = $mediaPlan->start_date;
-        $plan_end_date = $mediaPlan->end_date;
+        $export_name = str_slug($mediaPlan->campaign_name).'.xlsx';
+        $formated_media_plan = (new SummarizePlan($mediaPlan))->run();
 
-        $summary_service = new SummarizePlan($mediaPlan);
-        $media_plan_summary =  $summary_service->run();
-
-        $media_plan_start_date = Carbon::parse($mediaPlan->start_date);
-        $media_plan_end_date = Carbon::parse($mediaPlan->end_date);
-        $media_plan_period = $media_plan_start_date->diffInWeeks($media_plan_end_date);
-
-        $export_service = new ExportPlan($mediaPlan);
-        $media_plan_grouped_data = $export_service->run();
-
-        $monthly_weeks_table_header = json_encode($export_service->monthly_weeks_campaign_duration($plan_start_date, $plan_end_date));
-
-        $file_name = str_slug($mediaPlan->campaign_name).'.xlsx';
-
-        return Excel::download(new MediaPlanExport($media_plan_summary, $media_plan_grouped_data, $monthly_weeks_table_header, $mediaPlan, $media_plan_period), $file_name);
+        return Excel::download(new MediaPlanExport($formated_media_plan), $export_name);
     }
 
     public function changeMediaPlanStatus(Request $request)

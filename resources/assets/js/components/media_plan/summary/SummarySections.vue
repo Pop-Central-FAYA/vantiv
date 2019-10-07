@@ -3,11 +3,14 @@
     <v-tabs>
       <v-tabs-slider></v-tabs-slider>
       <v-tab href="#summary-tab">Plan Summary</v-tab>
-      <v-tab v-for="(durations, durationKey) in fullStationData.station_data" :key="durationKey+'-header'" :href="`#${durationKey}-summary-tab`">
-        {{ durationKey }}
-      </v-tab>
+      <template v-for="(medium, mediumKey) in formattedPlanData.summary_by_medium">
+        <template v-for="(data, dataKey) in medium">
+          <v-tab v-if="dataKey == 'summary'" :href="`#${mediumKey}${dataKey}-summary-tab`" :key="dataKey">{{ mediumKey }} {{ dataKey }}</v-tab>
+          <v-tab v-else :href="`#${mediumKey}${dataKey}-summary-tab`" :key="dataKey">{{ mediumKey }} {{ dataKey }}"</v-tab>
+        </template>
+      </template>
       <v-tab-item value="summary-tab">
-        <media-plan-deliverables :media-plan="plan"></media-plan-deliverables>
+        <media-plan-deliverables :media-plan="formattedPlanData.plan"></media-plan-deliverables>
         <table class="display dashboard_campaigns">
             <thead>
             <tr>
@@ -20,13 +23,13 @@
             </tr>
             </thead>
             <tbody>
-                <tr v-for="(summaryData,key) in summaryData" v-bind:key="key">
-                    <td>{{ summaryData.medium }}</td>
+                <tr v-for="(summaryData,key) in formattedPlanData.summary" v-bind:key="key">
+                    <td>{{ (summaryData.medium).toUpperCase() }}</td>
                     <td> <span v-for="(list, index) in summaryData.material_durations" v-bind:key="index"> <span>{{list}}</span><span v-if="index+1 < summaryData.material_durations.length">, </span>  </span> </td>
                     <td> {{ summaryData.total_spots }} </td>
-                    <td>{{ numberFormat(summaryData.gross_value) }}  </td>
-                    <td> {{ numberFormat(summaryData.net_value) }}</td>
-                    <td> {{ numberFormat(summaryData.savings) }}</td>
+                    <td> {{ numberFormat(summaryData.gross_value) }}  </td>
+                    <td> {{ numberFormat(summaryData.net_value) }} </td>
+                    <td> {{ numberFormat(summaryData.savings) }} </td>
                 </tr>
                 
                 <tr>
@@ -40,16 +43,19 @@
             </tbody>
         </table>
       </v-tab-item>
-      <v-tab-item v-for="(durations, durationKey) in fullStationData.station_data" :key="durationKey+'-body'"  :value="`${durationKey}-summary-tab`">
-        <div v-if="durationKey.includes('summary')">
+
+      <template v-for="(medium, mediumKey) in formattedPlanData.summary_by_medium">
+        <v-tab-item v-for="(data, dataKey) in medium" :key="dataKey+'-body'"  :value="`${mediumKey}${dataKey}-summary-tab`">
+          <template v-if="dataKey == 'summary'">
             <!-- render media type summary component -->
-            <media-plan-media-type-summary :media-type-summary-data="durations"></media-plan-media-type-summary>
-        </div>
-        <div v-else>
+            <media-plan-media-type-summary :media-type-summary-data="data"></media-plan-media-type-summary>
+          </template>
+          <template v-else>
             <!-- render media type summary component -->
-            <media-plan-media-type-duration-summary :data="durations"></media-plan-media-type-duration-summary>
-        </div>
-      </v-tab-item>
+            <media-plan-media-type-duration-summary :duration="dataKey" :monthly-weeks="formattedPlanData.table_header_monthly_weeks" :data="data"></media-plan-media-type-duration-summary>
+          </template>
+        </v-tab-item>
+      </template>
     </v-tabs>
   </div>
 </template>
@@ -76,11 +82,16 @@
 
 
 <script>
+  import MediaTypeSummary from "./MediaTypeSummary.vue";
+  import MediaTypeDuration from "./MediaTypeDuration.vue";
+
   export default {
     props: {
-        summaryData: Array,
-        fullStationData: Object,
-        plan: Object,
+        formattedPlanData: Object,
+    },
+    components: {
+        'media-plan-media-type-summary': MediaTypeSummary,
+        'media-plan-media-type-duration-summary': MediaTypeDuration,
     },
     data () {
       return {
@@ -97,7 +108,7 @@
     methods: {
         getSums(){
             let self = this;
-            this.summaryData.forEach(function (item, key) {
+            this.formattedPlanData.summary.forEach(function (item, key) {
                 self.totalSpots += item['total_spots']
                 self.totalGrossValue += item['gross_value']
                 self.totalNetValue += item['net_value']
