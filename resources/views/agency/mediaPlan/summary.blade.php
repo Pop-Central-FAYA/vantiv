@@ -20,9 +20,7 @@
         </div>
 
         <media-plan-summary
-        :full-station-data="{{ json_encode($full_plan_details) }}"
-        :summary-data="{{ json_encode($summary) }}" 
-        :summary-details="{{ json_encode($media_plan) }}" 
+        :formatted-plan-data="{{ json_encode($formatted_plan) }}"
         :permission-list="{{ json_encode(Auth::user()->getAllPermissions()->pluck('name')) }}"    
         :user-list="{{ json_encode($users) }}"></media-plan-summary>
         <br><br><br><br><br><br><br>

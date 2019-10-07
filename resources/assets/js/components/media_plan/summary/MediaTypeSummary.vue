@@ -11,27 +11,27 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-for="(summary, key) in mediaTypeSummaryData.durations.data" :key="key">
+            <tr v-for="(summary, key) in mediaTypeSummaryData.summary_by_duration.data" :key="key">
                 <td class="td-border-left-thick" style="height: 21;">{{ summary['length'] }} Seconds</td>
-                <td style="height: 21;">{{ summary['duration'] }} Weeks</td>
-                <td style="height: 21; text-align: right;">{{ summary['total_spots'] }}</td>
-                <td style="height: 21; text-align: right;">{{ numberFormat(summary['gross_total']) }}</td>
-                <td class="td-border-right-thick" style="height: 21; text-align: right;">{{ numberFormat(summary['net_total']) }}</td>
+                <td style="height: 21;">{{ summary['duration'] }} {{ (summary['duration'] == 1) ? "Week":"Weeks" }}</td>
+                <td style="height: 21;">{{ summary['total_spots'] }}</td>
+                <td style="height: 21;">{{ numberFormat(summary['gross_total']) }}</td>
+                <td class="td-border-right-thick" style="height: 21;">{{ numberFormat(summary['net_total']) }}</td>
             </tr>
 
             <tr>
                 <td class="td-border-left-thick"></td>
                 <td></td>
-                <td style="height: 21; font-weight: bold; text-align: right;">{{ mediaTypeSummaryData.durations.totals.total_spots }}</td>
-                <td style="height: 21; font-weight: bold; text-align: right;">{{ numberFormat(mediaTypeSummaryData.durations.totals.gross_total, 2) }}</td>
-                <td class="td-border-right-thick" style="height: 21; font-weight: bold; text-align: right;">{{ numberFormat(mediaTypeSummaryData.durations.totals.net_total, 2) }}</td>
+                <td style="height: 21; font-weight: bold;">{{ mediaTypeSummaryData.summary_by_duration.totals.total_spots }}</td>
+                <td style="height: 21; font-weight: bold;">{{ numberFormat(mediaTypeSummaryData.summary_by_duration.totals.gross_total, 2) }}</td>
+                <td class="td-border-right-thick" style="height: 21; font-weight: bold;">{{ numberFormat(mediaTypeSummaryData.summary_by_duration.totals.net_total, 2) }}</td>
             </tr>
             <tr>
                 <td class="td-border-top-thick td-border-left-thick td-border-bottom-thick" style="font-size: 16;">VAT on Media Cost (5%)</td>
                 <td class="td-border-top-thick td-border-bottom-thick"></td>
                 <td class="td-border-top-thick td-border-bottom-thick"></td>
                 <td class="td-border-top-thick td-border-bottom-thick"></td>
-                <td class="td-border-top-thick td-border-right-thick td-border-bottom-thick" style="text-align: right; font-weight: bold">{{ numberFormat(mediaTypeSummaryData.durations.totals.vat, 2) }}</td>
+                <td class="td-border-top-thick td-border-right-thick td-border-bottom-thick" style="font-weight: bold">{{ numberFormat(mediaTypeSummaryData.summary_by_duration.totals.vat, 2) }}</td>
             </tr>
         </tbody>
     </table>
@@ -46,17 +46,17 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-for="(summary, key) in mediaTypeSummaryData.station_types.data" :key="key">
-                <td class="td-border-left-thick" style="height: 21; font-weight: bold">{{ summary.duration }} Seconds</td>
-                <td style="height: 21; font-weight: bold">{{ summary.station_type }}</td>
-                <td style="height: 21; font-weight: bold; text-align: left;">{{ summary.total_spots }}</td>
-                <td class="td-border-right-thick" style="height: 21; font-weight: bold; text-align: left;">{{ numberFormat(summary.net_total, 2) }}</td>
+            <tr v-for="(summary, key) in mediaTypeSummaryData.summary_by_station_type.data" :key="key">
+                <td class="td-border-left-thick" style="height: 21;">{{ summary.duration }} Seconds</td>
+                <td style="height: 21;">{{ (summary.station_type).toUpperCase() }}</td>
+                <td style="height: 21; text-align: left;">{{ summary.total_spots }}</td>
+                <td class="td-border-right-thick" style="height: 21; text-align: left;">{{ numberFormat(summary.net_total, 2) }}</td>
             </tr>
             <tr>
                 <td class="td-border-top-thick td-border-left-thick td-border-bottom-thick" style="height: 21; font-weight: bold">Total</td>
                 <td class="td-border-top-thick td-border-bottom-thick"></td>
-                <td class="td-border-top-thick td-border-bottom-thick" style="height: 21; font-weight: bold; text-align: left;">{{ mediaTypeSummaryData.station_types.totals.total_spots }}</td>
-                <td class="td-border-top-thick td-border-right-thick td-border-bottom-thick" style="height: 21; font-weight: bold; text-align: left;">{{ numberFormat(mediaTypeSummaryData.station_types.totals.net_total, 2) }}</td>
+                <td class="td-border-top-thick td-border-bottom-thick" style="height: 21; font-weight: bold; text-align: left;">{{ mediaTypeSummaryData.summary_by_station_type.totals.total_spots }}</td>
+                <td class="td-border-top-thick td-border-right-thick td-border-bottom-thick" style="height: 21; font-weight: bold; text-align: left;">{{ numberFormat(mediaTypeSummaryData.summary_by_station_type.totals.net_total, 2) }}</td>
             </tr>
         </tbody>
     </table>
@@ -95,7 +95,7 @@
       }
     },
     mounted() {
-        console.log(this.mediaTypeSummaryData);
+        console.log("Mounted  media type summary component");
     },
     methods: {
     }

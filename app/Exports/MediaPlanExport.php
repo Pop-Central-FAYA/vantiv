@@ -9,19 +9,11 @@ use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 
 class MediaPlanExport implements WithMultipleSheets
 {
-	protected $summary;
-	protected $station_data;
-	protected $monthly_weeks;
-    protected $media_plan_data;
-    protected $media_plan_period;
+    protected $formated_plan;
 
-    public function __construct($summary, $station_data, $monthly_weeks, $media_plan_data, $media_plan_period)
+    public function __construct($formated_plan)
     {
-        $this->summary = $summary;
-        $this->station_data = $station_data;
-        $this->monthly_weeks = $monthly_weeks;
-        $this->media_plan_data = $media_plan_data;
-        $this->media_plan_period = $media_plan_period;
+        $this->formated_plan = $formated_plan;
     }
 
     /**
@@ -31,15 +23,17 @@ class MediaPlanExport implements WithMultipleSheets
     {
         $sheets = [];
 
-        $sheets[] = new MediaPlanSummaryExport($this->summary, $this->media_plan_data);
+        $sheets[] = new MediaPlanSummaryExport($this->formated_plan['summary'], $this->formated_plan['plan']);
 
-        foreach ($this->station_data as $media_type => $material_lengths) {
-            foreach ($material_lengths as $material_length => $station_programs) {
-                $sheets[] = new MediaPlanMediaLengthExport($media_type, $material_length, $station_programs, $this->monthly_weeks, $this->summary, $this->media_plan_data, $this->media_plan_period);
+        foreach ($this->formated_plan['summary_by_medium'] as $medium => $durations) {
+            foreach ($durations as $duration => $data) {
+                if ($duration == "summary") {
+                    $sheets[] = new MediaPlanMediaTypeSummaryExport($medium, $data);
+                } else {
+                    $sheets[] = new MediaPlanMediaLengthExport($medium, $duration, $data, $this->formated_plan);
+                }
             }
-            $sheets[] = new MediaPlanMediaTypeSummaryExport($media_type, $material_lengths, $this->media_plan_period);
         }
-
         return $sheets;
     }
 }

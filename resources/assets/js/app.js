@@ -69,10 +69,6 @@ Vue.component('media-plan-program-details', () => import('./components/media_pla
 Vue.component('media-plan-summary', () => import('./components/media_plan/summary/Summary.vue'));
 Vue.component('media-plan-criteria-form', () => import('./components/media_plan/CriteriaForm.vue'));
 Vue.component('media-plan-list', () => import('./components/media_plan/AllMediaPlans.vue'));
-Vue.component('media-plan-request-approval', () => import('./components/media_plan/summary/RequestApproval'));
-Vue.component('media-plan-summary-sections', () => import('./components/media_plan/summary/SummarySections.vue'));
-Vue.component('media-plan-media-type-summary', () => import('./components/media_plan/summary/MediaTypeSummary.vue'));
-Vue.component('media-plan-media-type-duration-summary', () => import('./components/media_plan/summary/MediaTypeDuration.vue'));
 Vue.component('media-plan-deliverables', () => import('./components/media_plan/Deliverables'));
 
 // CAMPAIGN
