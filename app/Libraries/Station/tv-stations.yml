@@ -131,7 +131,7 @@
 - name: DMS TV
   state: Lagos
   city: Lagos
-  region: South West
+  region: Lagos
   type: Regional
   broadcast: Terrestrial
   publisher: DMS TV
@@ -139,7 +139,7 @@
 - name: Lagos TV
   state: Lagos
   city: Lagos
-  region: South West
+  region: Lagos
   type: Regional
   broadcast: Terrestrial
   publisher: Lagos TV
@@ -147,7 +147,7 @@
 - name: ONTV
   state: Lagos
   city: Lagos
-  region: South West
+  region: Lagos
   type: Regional
   broadcast: Terrestrial
   publisher: ONTV
@@ -155,7 +155,7 @@
 - name: Super Screen TV
   state: Lagos
   city: Lagos
-  region: South West
+  region: Lagos
   type: Regional
   broadcast: Terrestrial
   publisher: Super Screen TV
@@ -163,7 +163,7 @@
 - name: TVC
   state: Lagos
   city: Lagos
-  region: South West
+  region: Lagos
   type: Regional
   broadcast: Terrestrial
   publisher: TVC
@@ -269,7 +269,7 @@
 - name: MITV
   state: Lagos
   city: Lagos
-  region: South West
+  region: Lagos
   type: Regional
   broadcast: Terrestrial
   publisher: MITV
@@ -815,7 +815,7 @@
 - name: Wazobia Max
   state: Lagos
   city: Lagos
-  region: North Central
+  region: Lagos
   type: Regional
   broadcast: Terrestial
   publisher: Wazobia
@@ -902,7 +902,7 @@
 - name: AIT
   state: Lagos
   city: Lagos
-  region: South West
+  region: Lagos
   type: Regional
   broadcast: Terrestial
   publisher: AIT
@@ -970,7 +970,7 @@
 - name: Silverbird Television
   state: Lagos
   city: Lagos
-  region: South West
+  region: Lagos
   type: Regional
   broadcast: Terrestial
   publisher: Silverbird TV
@@ -1022,7 +1022,7 @@
 - name: Channels Television
   state: Lagos
   city: Lagos
-  region: South West
+  region: Lagos
   type: Regional
   broadcast: Terrestial
   publisher: Channels TV
@@ -1174,7 +1174,7 @@
 - name: NTA 2
   state: Lagos
   city: Lagos
-  region: South West
+  region: Lagos
   type: Regional
   broadcast: Terrestial
   publisher: NTA
@@ -1182,7 +1182,7 @@
 - name: NTA
   state: Lagos
   city: Lagos
-  region: South West
+  region: Lagos
   type: Regional
   broadcast: Terrestial
   publisher: NTA
@@ -1322,7 +1322,7 @@
 - name: Galaxy TV
   state: Lagos
   city: Lagos
-  region: South West
+  region: Lagos
   type: Regional
   broadcast: Terrestial
   publisher: Galaxy TV

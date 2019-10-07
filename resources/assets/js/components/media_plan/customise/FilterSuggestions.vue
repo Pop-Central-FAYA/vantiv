@@ -64,7 +64,8 @@
                 }).then((res) => {
                     if (this.isNotEmpty(res.data.data)) {
                         this.sweet_alert('Ratings retrieved', 'success');
-                        Event.$emit('ratings-created', res.data.data);
+                        const eventData = {"data": res.data.data, "filters": this.selectedFilters};
+                        Event.$emit('ratings-created', eventData);
                     } else {
                         this.sweet_alert('No results found, please try another filter', 'error');
                     }

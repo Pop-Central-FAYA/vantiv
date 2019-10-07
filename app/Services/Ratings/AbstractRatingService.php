@@ -40,7 +40,7 @@ abstract class AbstractRatingService implements BaseServiceInterface
         $query = $this->modifyQuery($query);
         $raw_sql = Query::getSql($query);
 
-        // Log::debug($raw_sql);
+        Log::debug($raw_sql);
 
         $hash_key = $this->generateHash($raw_sql);
         $expire_at = now()->addDays(7);

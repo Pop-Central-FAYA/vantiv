@@ -16,7 +16,7 @@
             <highcharts :options="chartOptions" :highcharts="hcInstance"></highcharts>
         </v-flex>
     </v-layout>
-   
+
 </template>
 
 <style>
@@ -54,6 +54,7 @@
         },
         data() {
             return {
+                filters: {},
                 graphDetails: {},
                 suggestions: {},
                 activateFirstButton: 'v-btn--active',
@@ -108,6 +109,7 @@
             var self = this;
             //Render the table whenever suggestions is updated
             Event.$on('ratings-created', function (data) {
+                self.filters = data.filters;
                 self.graphDetails = {};
                 self.chartOptions.series = [];
             });
