@@ -1,6 +1,6 @@
 @extends('dsp_layouts.old_auth')
 
-@section('page-title', trans('app.login'))
+@section('page-title', 'Reset Password')
 
 @section('content')
 
