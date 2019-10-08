@@ -15,6 +15,7 @@ use Vanguard\Http\Requests\AdVendor\ListRequest;
 use Vanguard\Http\Requests\AdVendor\StoreRequest;
 use Vanguard\Http\Requests\AdVendor\UpdateRequest;
 use Vanguard\Models\CampaignMpo;
+use Vanguard\Http\Resources\CampaignMpoResource;
 
 class AdVendorController extends Controller
 {
@@ -43,7 +44,7 @@ class AdVendorController extends Controller
     }
 
      /**
-     *View showing a single ad vendor
+     *View showing a single ad vendor    vendor.contacts
      */
     public function details($id)
     {
@@ -52,7 +53,7 @@ class AdVendorController extends Controller
         $mpos = CampaignMpo::with(['campaign:id,name'])->where('ad_vendor_id', $id)->get();
         return view('agency.ad_vendor.ad_vendor')
                 ->with('ad_vendor', new AdVendorResource($vendor))
-                ->with('mpos', $mpos);
+                ->with('mpos', CampaignMpoResource::collection($mpos));
     }
 
 
