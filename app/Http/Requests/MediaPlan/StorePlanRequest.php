@@ -33,6 +33,9 @@ class StorePlanRequest extends FormRequest
             'agency_commission' => 'nullable|numeric',
             'media_type' => 'required|string',
             'campaign_name' => 'required|string',
+            'product' => 'required|string',
+            'client' => 'required|string',
+            'brand' => 'required|string',
         ];
     }
 }

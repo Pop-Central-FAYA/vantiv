@@ -235,9 +235,11 @@ class MediaPlanController extends Controller
             $new_criterias[$criteria->name]['criterias'] = $sub_criterias;
             $new_criterias[$criteria->name]['all'] = 'All';
         }
+        $clients = Client::with('brands')->filter(['company_id' => $this->companyId()])->get();
         // return criterias array with the frontend view, in order to populate criteria inputs
         return view('agency.mediaPlan.create_plan')->with('criterias', $new_criterias)
-                                                    ->with('redirect_urls', ['submit_form' => route('agency.media_plan.submit.criterias')]);
+                                                ->with('clients', $clients)
+                                                ->with('redirect_urls', ['submit_form' => route('agency.media_plan.submit.criterias')]);
     }
 
     public function groupSuggestions($query)
