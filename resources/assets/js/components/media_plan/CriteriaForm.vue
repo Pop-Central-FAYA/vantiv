@@ -134,6 +134,40 @@
                 </span>
             </v-flex>
         </v-layout>
+        <v-layout row wrap class="pt-2 pb-3 white-bg">
+            <v-flex xs12 sm4 md4>
+                <span>Client:</span>
+                <v-select
+                    v-model="selectedValues.client"
+                    :items="clients"
+                    item-text="name"
+                    item-value="id"
+                    v-validate="'required'"
+                    name="client"
+                    @change="getBrands"
+                    placeholder="Please select client"
+                ></v-select>
+                <span class="text-danger" v-show="errors.has('client')">{{ errors.first('client') }}</span>
+            </v-flex>
+            <v-flex xs12 sm4 md4>
+                <span>Brand:</span>
+                <v-select
+                    v-model="selectedValues.brand"
+                    :items="filteredBrands"
+                    item-text="name"
+                    item-value="id"
+                    v-validate="'required'"
+                    name="brand"
+                    placeholder="Please select brand"
+                ></v-select>
+                <span class="text-danger" v-show="errors.has('brand')">{{ errors.first('brand') }}</span>
+            </v-flex>
+            <v-flex xs12 sm4 md4>
+                <span>Product Name:</span>
+                <v-text-field name="product" placeholder="Product name" v-model="selectedValues.product" v-validate="'required'"></v-text-field>
+                <span class="text-danger" v-show="errors.has('product')">{{ errors.first('product') }}</span>
+            </v-flex>
+        </v-layout>
         <v-layout wrap>
             <v-flex align-end class="text-md-right">
                 <v-btn large class="default-vue-btn" :disabled="isRunRatings" dark @click="runRatings()">Run Ratings</v-btn>
@@ -174,6 +208,7 @@
     props : {
       criterias: Object,
       redirectUrls: Object,
+      clients: Array,
     },
     data() {
       return {
@@ -194,7 +229,10 @@
               age_groups_max: [],
               age_groups: [],
               agency_commission: '',
-              campaign_name: ''
+              campaign_name: '',
+              client: '',
+              brand: '',
+              product: '',
           },
           dateFormatted: this.formatDate(new Date().toISOString().substr(0, 10)),
           today: this.formatDate(new Date().toISOString().substr(0, 10)),
@@ -204,6 +242,7 @@
           socialClasses: [],
           states: [],
           regions: [],
+          filteredBrands: [],
       }
     },
     mounted() {
@@ -289,7 +328,14 @@
             });
           }
         });
-      }
+      },
+      getBrands() {
+            var client = this.selectedValues.client;
+            var filtered = this.clients.filter(function(clients) {
+                    return clients.id === client;
+                });
+            this.filteredBrands = filtered[0].brands;
+      },
     }
   }
 </script>

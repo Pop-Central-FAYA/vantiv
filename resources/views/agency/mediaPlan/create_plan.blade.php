@@ -24,7 +24,11 @@
             <div class="margin_center col_8 clearfix create_fields">
                 <v-app>
                     <v-content>
-                        <media-plan-criteria-form :criterias="{{ json_encode($criterias) }}" :redirect-urls="{{ json_encode($redirect_urls) }}"></media-plan-criteria-form>
+                        <media-plan-criteria-form 
+                            :criterias="{{ json_encode($criterias) }}" 
+                            :redirect-urls="{{ json_encode($redirect_urls) }}"
+                            :clients="{{ json_encode($clients) }}"
+                        ></media-plan-criteria-form>
                     </v-content>
                 </v-app>
             </div>

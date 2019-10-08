@@ -55,6 +55,9 @@ class StoreMediaPlanService implements BaseServiceInterface
             $media_plan->end_date = $this->data['end_date'];
             $media_plan->media_type = $this->data['media_type'];
             $media_plan->campaign_name = $this->data['campaign_name'];
+            $media_plan->product_name = $this->data['product'];
+            $media_plan->client_id = $this->data['client'];
+            $media_plan->brand_id = $this->data['brand'];
 
             $media_plan->planner_id = $this->user_id;
             $media_plan->company_id = $this->company_id;

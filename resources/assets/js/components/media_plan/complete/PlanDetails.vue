@@ -100,40 +100,6 @@
                 </v-expansion-panel>
             </v-flex>
         </v-layout>
-        <v-layout row wrap class="px-4 pb-3 white-bg">
-            <v-flex xs12 sm4 md4>
-                <span>Client:</span>
-                <v-select
-                    v-model="client"
-                    :items="clients"
-                    item-text="name"
-                    item-value="id"
-                    v-validate="'required'"
-                    name="client"
-                    @change="getBrands"
-                    placeholder="Please select client"
-                ></v-select>
-                <span class="text-danger" v-show="errors.has('client')">{{ errors.first('client') }}</span>
-            </v-flex>
-            <v-flex xs12 sm4 md4>
-                <span>Brand:</span>
-                <v-select
-                    v-model="brand"
-                    :items="filteredBrands"
-                    item-text="name"
-                    item-value="id"
-                    v-validate="'required'"
-                    name="brand"
-                    placeholder="Please select brand"
-                ></v-select>
-                <span class="text-danger" v-show="errors.has('brand')">{{ errors.first('brand') }}</span>
-            </v-flex>
-            <v-flex xs12 sm4 md4>
-                <span>Product Name:</span>
-                <v-text-field name="product" placeholder="Product name" v-model="product" v-validate="'required'"></v-text-field>
-                <span class="text-danger" v-show="errors.has('product')">{{ errors.first('product') }}</span>
-            </v-flex>
-        </v-layout>
         <v-layout row wrap class="px-0 py-5">
             <v-flex xs12 sm12 md4 class="px-0">
                 <v-btn @click="buttonRedirect(plan.routes.insertions.back_action)" color="vue-back-btn" large><v-icon left>navigate_before</v-icon>Back</v-btn>
@@ -186,14 +152,9 @@
             durations: Array,
             timeBelts: Object,
             plan: Object,
-            clients: Array,
         },
         data() {
             return {
-                client: this.plan.client_id,
-                brand: this.plan.brand_id,
-                product: this.plan.product_name,
-                filteredBrands: [],
                 fayaDurations: this.durations,
                 fayaTimebelts: this.timeBelts,
                 volumeDiscounts: [],
@@ -213,16 +174,8 @@
         },
         mounted() {
             console.log('Media Plan Details Component mounted.');
-            this.getBrands();
         },
         methods: {
-            getBrands() {
-               var client = this.client;
-               var filtered = this.clients.filter(function(clients) {
-                      return clients.id === client;
-                    });
-                this.filteredBrands = filtered[0].brands;
-            },
             getUnitRate(time_belt, duration) {
                 if (time_belt.duration_lists != '[null]' && time_belt.rate_lists != '[null]') {
                     if (typeof(time_belt.duration_lists) === 'string') {
@@ -361,9 +314,6 @@
                                 new_programs: this.newPrograms,
                                 new_volume_discounts: this.volumeDiscounts,
                                 programs_stations: this.fayaTimebelts.programs_stations,
-                                client_id: this.client,
-                                brand_id: this.brand,
-                                product_name: this.product,
                                 plan_id: this.plan.id
                             }
                         }).then((res) => {

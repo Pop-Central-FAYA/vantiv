@@ -26,7 +26,6 @@
                     :durations="{{ json_encode($default_material_length) }}"
                     :time-belts="{{ json_encode($fayaFound) }}"
                     :plan="{{ json_encode($media_plan) }}"
-                    :clients="{{ json_encode($clients) }}"
                 >
                 </media-plan-details>
             </v-content>
