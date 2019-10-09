@@ -104,7 +104,7 @@ class DashboardController extends Controller
 
     public function countMediaPlanByStatus($plans, $status)
     {
-        return $plans->whereIn('str_status', $status)->count();
+        return $plans->whereIn('status', $status)->count();
     }
 
     public function agencyMediaChannel($channel)
