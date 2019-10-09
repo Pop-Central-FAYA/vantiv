@@ -1,9 +1,7 @@
 <?php
 
 namespace Vanguard\Http\Resources;
-
 use Illuminate\Http\Resources\Json\JsonResource;
-use Vanguard\Services\MediaPlan\FormatMediaPlan;
 
 class MediaPlanResource extends JsonResource
 {
@@ -15,19 +13,14 @@ class MediaPlanResource extends JsonResource
      */
     public function toArray($request)
     {
-        $format = new FormatMediaPlan();
         return [
             'id' => $this->id,
-            'plan_id' => $this->id,
             'campaign_name' => $this->campaign_name,
-            'campaign_duration' => date('M j, Y', strtotime($this->start_date)).' - '.date('M j, Y', strtotime($this->end_date)),
-            'date_created' => date('M j, Y', strtotime($this->created_at)),
-            'start_date' => date('M j, Y', strtotime($this->start_date)),
-            'end_date' => date('M j, Y', strtotime($this->end_date)),
+            'date_created' => date('Y-m-d h:i:s', strtotime($this->created_at)),
+            'start_date' => $this->start_date,
+            'end_date' => $this->end_date,
             'media_type' => $this->media_type,
-            'redirect_url' => $format->generateRedirectUrl($this),
             'status' => $this->status,
-            'str_status' => $format->getStatusHtml($this),
             'client' => $this->client,
             'client_id' => $this->client_id,
             'brand_id' => $this->brand_id,
@@ -43,17 +36,20 @@ class MediaPlanResource extends JsonResource
             'cpp' => $this->cpp,
             'routes' => [
                 'summary' => [
+                    'index' => route('agency.media_plan.summary', ['id' => $this->id], false),
                     'back' => route('agency.media_plan.create', ['id'=>$this->id], false),
                     'change_status' => route('agency.media_plan.change_status'),
                     'export' => route('agency.media_plan.export', ['id'=>$this->id], false),
                     'approval' => route('agency.media_plan.get_approval')
                 ],
                 'insertions' => [
+                    'index' => route('agency.media_plan.create', ['id' => $this->id], false),
                     'back_action' => route('agency.media_plan.customize', ['id'=>$this->id], false),
                     'next_action' => route('agency.media_plan.summary', ['id'=>$this->id], false),
                     'save_action' => route('agency.media_plan.submit.finish_plan')
                 ],
                 'suggestions' => [
+                    'index' => route('agency.media_plan.customize', ['id' => $this->id], false),
                     'back_action' => route('agency.media_plans', [], false),
                     'next_action' => route('agency.media_plan.create', ['id' => $this->id], false),
                     'save_action' => route('agency.media_plan.select_suggestions', ['id' => $this->id], false),

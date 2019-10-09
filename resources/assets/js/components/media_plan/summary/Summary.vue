@@ -18,7 +18,7 @@
                             <td><span class="mr-2"><b>Flight Date:</b></span> {{  dateToHumanReadable(planDetails.start_date) }} to {{ dateToHumanReadable(planDetails.end_date) }} </td>
                            </tr>
                            <tr>
-                            <td><span class="mr-2"><b>Status:</b></span>  {{ planDetails.status }}</td>
+                            <td><span class="mr-2"><b>Status:</b></span>  {{ (planDetails.status).toUpperCase() }}</td>
                            </tr>
                         </tbody>
                     </table>
@@ -36,29 +36,29 @@
                     <button id="back_btn" @click="buttonAction(planDetails.routes.summary.back)"  class="btn small_btn"><i class="media-plan material-icons">navigate_before</i> Back</button>
                 </div>
                 <div class="col-md-8 p-0 text-right">
-                    <span v-if="planDetails.status == 'In Review'">
-                        <button v-if="hasPermission(permissionList,'approve.media_plan')"  @click="changeStatus('Approved')" class="media-plan btn block_disp uppercased mr-1 btn-sm"><i class="media-plan material-icons">check</i>Approve Plan</button>
-                    
-                        <button v-if="hasPermission(permissionList,'decline.media_plan')"  @click="changeStatus('Declined')"  class="media-plan btn block_disp uppercased bg_red mr-1  btn-sm"><i class="media-plan material-icons">clear</i>Decline Plan</button>
-                    </span>
-                    <span v-if="planDetails.status === 'Suggested' || planDetails.status === 'Selected' || planDetails.status === 'Pending'" >
-                        <media-plan-request-approval  
-                        :users="userList"  
-                        :media-plan="planDetails.id" 
-                        :action-link="planDetails.routes.summary.approval"
-                        :permissionList="permissionList">
-                        </media-plan-request-approval>
-                    </span>
-                     <span>
+                    <template v-if="planDetails.status == 'pending'">
+                        <media-plan-request-review
+                            :users="userList"  
+                            :media-plan="planDetails.id" 
+                            :action-link="planDetails.routes.summary.change_status"
+                            :permissionList="permissionList">
+                        </media-plan-request-review>
+                    </template>
+                    <!-- change permission to finalize.media_plan -->
+                    <template v-if="planDetails.status == 'in review' && hasPermission(permissionList,'approve.media_plan')">
+                        <button  @click="changeStatus('pending')" class="media-plan btn block_disp uppercased bg_red mr-1 btn-sm">Needs Work</button>
+                        <button  @click="changeStatus('finalized')" class="media-plan btn block_disp uppercased mr-1 btn-sm">Finalize Plan</button>
+                    </template>
+                    <template v-if="planDetails.status == 'finalized' && hasPermission(permissionList,'approve.media_plan')">
+                        <button @click="changeStatus('approved')" class="media-plan btn block_disp uppercased mr-1 btn-sm">Approve Plan</button>
+                        <button @click="changeStatus('rejected')"  class="media-plan btn block_disp uppercased bg_red mr-1  btn-sm">Reject Plan</button>
+                    </template>
+                    <template v-if="planDetails.status == 'approved' && hasPermission(permissionList,'convert.media_plan')">
+                        <media-plan-create-campaign :id="planDetails.id" :permissionList="permissionList"></media-plan-create-campaign>
+                    </template>
+                    <template>
                         <button v-if="hasPermission(permissionList,'export.media_plan')"  @click="buttonAction(planDetails.routes.summary.export, 'export.media_plan')"  class="btn block_disp uppercased"><i class="media-plan material-icons">file_download</i>Export Plan</button>
-                          </span>
-                    <span v-if="planDetails.status == 'Approved'" >
-                        <media-plan-create-campaign 
-                        v-if="hasPermission(permissionList,'convert.media_plan')" 
-                        :id="planDetails.id"
-                        :permissionList="permissionList"
-                        ></media-plan-create-campaign>
-                    </span>
+                    </template>
                 </div>
             </div>
         </div>
@@ -73,7 +73,7 @@
 
 <script>
     import SummarySections from "./SummarySections.vue";
-    import RequestApproval from "./RequestApproval.vue";
+    import RequestPlanReview from "./RequestPlanReview.vue";
 
     export default {
         props: {
@@ -83,7 +83,7 @@
         },
         components: {
             'media-plan-summary-sections': SummarySections,
-            'media-plan-request-approval': RequestApproval,
+            'media-plan-request-review': RequestPlanReview,
         },
         data() {
             return {
@@ -107,7 +107,7 @@
                     window.location = destination;
                 }
             },  
-             changeStatus(action) {
+            changeStatus(action) {
                 if(this.hasPermissionAction(this.permissionList, ['create.media_plan', 'update.media_plan'])){                    
                     axios({
                         method: 'post',
@@ -119,7 +119,7 @@
                     }).then((res) => {
                     if (res.data.status === 'success') {
                         Event.$emit('updated-media-plan', res.data.data);
-                        this.sweet_alert('Media Plan was '+ action.toLowerCase()+' successfully', 'success');
+                        this.sweet_alert('Media Plan is '+ action.toLowerCase()+' successfully', 'success');
                     } else {
                         this.sweet_alert('Something went wrong, Try again!', 'error');
                     }

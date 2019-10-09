@@ -8,15 +8,15 @@
     </v-card-title>
     <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="plans" :search="search" :no-data-text="noDataText" :pagination.sync="pagination">
       <template v-slot:items="props">
-        <tr @click="goToPlanActivities(props.item.redirect_url)">
+        <tr @click="redirectPlan(props.item)">
           <td class="text-xs-left"><a :href="props.item.redirect_url" class="default-vue-link">{{ props.item.campaign_name }}</a></td>
           <td class="text-xs-left">{{ (props.item.product_name) ? props.item.product_name:'NA' }}</td>
           <td class="text-xs-left">{{ (props.item.brand) ? props.item.brand.name:'NA' }}</td>
           <td class="text-xs-left">{{ props.item.media_type }}</td>
-          <td class="text-xs-left">{{ props.item.start_date+" - "+props.item.end_date }}</td>
-          <td class="text-xs-left">{{ formatAmount(props.item.net_media_cost) }}</td>
-          <td class="text-xs-left" v-html="props.item.status"></td>
-          <td class="text-xs-left">{{ props.item.date_created }}</td>
+          <td class="text-xs-left">{{ dateToHumanReadable(props.item.start_date)+" - "+dateToHumanReadable(props.item.end_date) }}</td>
+          <td class="text-xs-left">{{ formatNumber(props.item.net_media_cost) }}</td>
+          <td class="text-xs-left" :style="{ 'color' : getStatusColor(props.item.status)}">{{ capitalizeFirstletter(props.item.status) }}</td>
+          <td class="text-xs-left">{{ dateToHumanReadable(props.item.date_created) }}</td>
         </tr>
       </template>
       <template v-slot:no-results>
@@ -71,6 +71,25 @@
     methods: {
       goToPlanActivities(url) {
         window.location = url;
+      },
+      redirectPlan(plan) {
+        if (this.isMediaPlanPastReviewStage(plan.status)) {
+          window.location = plan.routes.summary.index;
+        } else {
+          window.location = plan.routes.suggestions.index;
+        }
+      },
+      getStatusColor(status) {
+        var status = status.toLowerCase();
+        if (status == 'pending' || status == 'in review' || status == 'finalized') {
+          return 'orange';
+        } else if (status == 'converted' || status == 'approved') {
+          return 'green';
+        } else if (status == 'rejected') {
+          return 'red';
+        } else {
+          return 'grey';
+        }
       }
     }
   }

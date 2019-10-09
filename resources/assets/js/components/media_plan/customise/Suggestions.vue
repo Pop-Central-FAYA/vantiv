@@ -50,7 +50,7 @@
                 <v-btn @click="buttonRedirect(redirectUrls.back_action)" color="vue-back-btn" large><v-icon left>navigate_before</v-icon>Back</v-btn>
             </v-flex>
             <v-flex xs12 s12 md8 class="px-0 text-right">
-                <v-btn :disabled="isRunRatings || planStatus =='Approved' ||  planStatus =='Declined'" @click="save(false)" color="default-vue-btn" large><v-icon left>save</v-icon>Save</v-btn>
+                <v-btn :disabled="isRunRatings || isMediaPlanPastReviewStage(planStatus)" @click="save(false)" color="default-vue-btn" large><v-icon left>save</v-icon>Save</v-btn>
                 <v-btn @click="goToCompletePlan()" color="default-vue-btn" large>Next<v-icon right>navigate_next</v-icon></v-btn>
             </v-flex>
         </v-layout>

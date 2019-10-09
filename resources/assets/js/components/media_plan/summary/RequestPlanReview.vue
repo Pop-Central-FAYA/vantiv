@@ -1,7 +1,7 @@
 <template>
         <v-dialog v-model="dialog" persistent max-width="600px" data-app>
         <template v-slot:activator="{ on }">
-               <button v-on="on" class="btn block_disp uppercased">Request Approval</button>
+               <button v-on="on" class="btn block_disp uppercased">Send For Review</button>
         </template>
         <v-card>
             <v-card-text class="px-2 pt-2 pb-0">
@@ -9,7 +9,7 @@
                      <v-card-text>
                             <v-layout row wrap>
                                 <v-flex xs12 sm12 md12 text-left>
-                                    <span>Choose the user to request approval from: </span>
+                                    <span>Choose the user to review plan: </span>
                                     <v-select
                                         placeholder="Select user"
                                         v-model="user"
@@ -86,6 +86,7 @@
                         data: {
                             user_id: this.user,
                             media_plan_id: this.mediaPlan,
+                            action: 'in review'
                         }
                     }).then((res) => {
                     if (res.data.status === 'success') {

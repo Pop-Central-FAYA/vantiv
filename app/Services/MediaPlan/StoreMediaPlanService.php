@@ -61,7 +61,7 @@ class StoreMediaPlanService implements BaseServiceInterface
 
             $media_plan->planner_id = $this->user_id;
             $media_plan->company_id = $this->company_id;
-            $media_plan->status = MediaPlanStatus::SUGGESTED;
+            $media_plan->status = MediaPlanStatus::PENDING;
             $media_plan->filters = json_encode(static::DEFAULT_FILTERS);
             $media_plan->state_list = json_encode([]);
 

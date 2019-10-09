@@ -69,9 +69,9 @@ class DashboardController extends Controller
         //Get all media plans
         $media_plan_service = new GetMediaPlans('', $this->companyId());
         $media_plans = collect($media_plan_service->run());
-        $count_pending_media_plans = $this->countMediaPlanByStatus($media_plans, [MediaPlanStatus::PENDING,MediaPlanStatus::SUGGESTED,MediaPlanStatus::SELECTED,MediaPlanStatus::IN_REVIEW]);
+        $count_pending_media_plans = $this->countMediaPlanByStatus($media_plans, [MediaPlanStatus::PENDING, MediaPlanStatus::FINALIZED, MediaPlanStatus::IN_REVIEW]);
         $count_approved_media_plans = $this->countMediaPlanByStatus($media_plans, [MediaPlanStatus::APPROVED]);
-        $count_declined_media_plans = $this->countMediaPlanByStatus($media_plans, [MediaPlanStatus::DECLINED]);
+        $count_declined_media_plans = $this->countMediaPlanByStatus($media_plans, [MediaPlanStatus::REJECTED]);
         $media_plan_summary = [
             'count_pending_media_plans' => $count_pending_media_plans,
             'count_approved_media_plans' => $count_approved_media_plans,
