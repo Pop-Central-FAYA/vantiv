@@ -471,13 +471,6 @@ class MediaPlanController extends Controller
                     }
                 }
 
-                // update media plan client, brand and product name
-                MediaPlan::where('id', $request->plan_id)->update([
-                    'client_id' => $request->client_id,
-                    'brand_id' => $request->brand_id,
-                    'product_name' => $request->product_name
-                ]);
-
                 //store the media plan deliverables
                 //@todo need to make this much better than it is currently
                 $media_plan = MediaPlan::findOrFail($request->plan_id);
