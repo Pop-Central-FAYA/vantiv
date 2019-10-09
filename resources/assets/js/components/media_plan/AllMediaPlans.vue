@@ -14,7 +14,7 @@
           <td class="text-xs-left">{{ (props.item.brand) ? props.item.brand.name:'NA' }}</td>
           <td class="text-xs-left">{{ props.item.media_type }}</td>
           <td class="text-xs-left">{{ props.item.start_date+" - "+props.item.end_date }}</td>
-          <td class="text-xs-left">{{ numberFormat(props.item.net_media_cost) }}</td>
+          <td class="text-xs-left">{{ formatAmount(props.item.net_media_cost) }}</td>
           <td class="text-xs-left" v-html="props.item.status"></td>
           <td class="text-xs-left">{{ props.item.date_created }}</td>
         </tr>
