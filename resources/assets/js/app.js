@@ -282,7 +282,18 @@ Vue.mixin({
         },
         isEmpty(testInput){
             return this.isNotEmpty(testInput) === false;
-        }
+        },
+        isMediaPlanPastReviewStage(status) {
+            status = status.toLowerCase();
+            if (status =='approved' ||  status =='rejected' || status =='converted' ||  status =='finalized') {
+                return true;
+            } else {
+                return false
+            }
+        },
+        capitalizeFirstletter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1); 
+        },
     }
 })
 

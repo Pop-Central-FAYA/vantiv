@@ -51,8 +51,8 @@
                                                     </td>
                                                     <td>{{ formatNumber(getUnitRate(timebelt, duration)) }}</td>
                                                     <td>
-                                                        <input v-if="timebelt.volume_discount" min="0" max="100" :value="timebelt.volume_discount" type="number" @blur="storeVolumeDiscount(timebelt.station,$event)">
-                                                        <input v-else min="0" max="100" :value="0" type="number" @blur="storeVolumeDiscount(timebelt.station,$event)">
+                                                        <input v-if="timebelt.volume_discount" :disabled="isMediaPlanPastReviewStage(plan.status)" min="0" max="100" :value="timebelt.volume_discount" type="number" @blur="storeVolumeDiscount(timebelt.station,$event)">
+                                                        <input v-else :disabled="isMediaPlanPastReviewStage(plan.status)" min="0" max="100" :value="0" type="number" @blur="storeVolumeDiscount(timebelt.station,$event)">
                                                     </td>
                                                     <td>{{ formatAmount(getNetTotalByTimeBelt(timebelt, timeBeltkey, duration)) }}</td>
                                                     <td>{{ getTotalExposureByTimebelt(timeBeltkey, duration) }}</td>
@@ -86,7 +86,7 @@
                                             <tbody>
                                                 <tr v-for="(timebelt, programKey) in fayaTimebelts['programs_stations']" :key="programKey">
                                                     <td v-for="(timebeltDate, timebeltDatekey) in fayaTimebelts['dates']" :key="timebeltDatekey">
-                                                        <input type="number" v-if="fayaTimebelts['days'][timebeltDatekey] == timebelt.day" v-model="fayaTimebelts['programs_stations'][programKey]['exposures'][duration]['dates'][timebeltDate]" @change="countExposureByTimeBelt(programKey, duration)">
+                                                        <input :disabled="plan.status != 'Pending' || plan.status != 'In Review'" type="number" v-if="fayaTimebelts['days'][timebeltDatekey] == timebelt.day" v-model="fayaTimebelts['programs_stations'][programKey]['exposures'][duration]['dates'][timebeltDate]" @change="countExposureByTimeBelt(programKey, duration)">
                                                         <input type="number" class="disabled_input" disabled v-else>
                                                     </td>
                                                 </tr>
@@ -105,7 +105,7 @@
                 <v-btn @click="buttonRedirect(plan.routes.insertions.back_action)" color="vue-back-btn" large><v-icon left>navigate_before</v-icon>Back</v-btn>
             </v-flex>
             <v-flex xs12 s12 md8 class="px-0 text-right">
-                <v-btn :disabled="isRunRatings || plan.status =='Approved' ||  plan.status =='Declined'" @click="save(false)" color="default-vue-btn" large><v-icon left>save</v-icon>Save</v-btn>
+                <v-btn :disabled="isRunRatings || isMediaPlanPastReviewStage(plan.status)" @click="save(false)" color="default-vue-btn" large><v-icon left>save</v-icon>Save</v-btn>
                 <v-btn @click="goToSummary()" color="default-vue-btn" large>Summary<v-icon right>navigate_next</v-icon></v-btn>
             </v-flex>
         </v-layout>
@@ -269,7 +269,7 @@
             },
             goToSummary() {
                 var net_total_all_durations = this.getNetTotalAllDurations();
-                if (this.plan.status == "Approved" || this.plan.status == "Declined") {
+                if (this.isMediaPlanPastReviewStage(this.plan.status)) {
                     window.location = this.plan.routes.insertions.next_action;
                 } else if (net_total_all_durations <= 0 && this.isNewInsertion == false) {
                     this.sweet_alert("Please add at least one insertion", 'error');

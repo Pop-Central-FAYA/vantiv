@@ -49,6 +49,7 @@ use Vanguard\User;
 use Vanguard\Services\Ratings\StoreMediaPlanDeliverables;
 use Vanguard\Http\Resources\UserCollection;
 use Vanguard\Http\Resources\MediaPlanResource;
+use Vanguard\Http\Resources\MediaPlanCollection;
 
 class MediaPlanController extends Controller
 {
@@ -220,7 +221,7 @@ class MediaPlanController extends Controller
         $company_id = $this->companyId();
         $media_plan_service = new GetMediaPlans($request->status, $company_id);
         $plans = $media_plan_service->run();
-        return view('agency.mediaPlan.index')->with('plans', $plans);
+        return view('agency.mediaPlan.index')->with('plans', new MediaPlanCollection($plans));
     }
 
     public function criteriaForm(Request $request)
@@ -325,7 +326,7 @@ class MediaPlanController extends Controller
         $selectedSuggestions = $mediaPlan->suggestions->where('status', 1)->where('material_length', '!=', null);
         return response()->json([
             'status' => 'success',
-            'data' =>  $mediaPlan
+            'data' =>  new MediaPlanResource($mediaPlan)
             ]);
     }
 
@@ -652,6 +653,8 @@ class MediaPlanController extends Controller
                 $mpo = $store_mpo_service->run();
 
                 // update media plan field to "is_converted_to_mpo"
+                $media_plan->status = MediaPlanStatus::CONVERTED;
+                $media_plan->save();
             });
         } catch (Exception $ex) {
             return response()->json([
@@ -718,14 +721,14 @@ class MediaPlanController extends Controller
 
     public function postRequestApproval(Request $request)
     {
-      $mediaPlan = MediaPlan::with(['client'])->findorfail($request->media_plan_id);
-      $mediaPlan->status = 'In Review';
-      $mediaPlan->save();
-      $lo= $this->requestApproval($request->media_plan_id, $request->user_id);
-       $mediaPlanData = MediaPlan::with(['client'])->findorfail($request->media_plan_id);
-       return response()->json([
-        'status' => 'success',
-        'data' =>  $mediaPlanData
+        $mediaPlan = MediaPlan::with(['client'])->findorfail($request->media_plan_id);
+        $mediaPlan->status = MediaPlanStatus::IN_REVIEW;
+        $mediaPlan->save();
+        $lo= $this->requestApproval($request->media_plan_id, $request->user_id);
+        $mediaPlanData = MediaPlan::with(['client'])->findorfail($request->media_plan_id);
+        return response()->json([
+            'status' => 'success',
+            'data' =>  new MediaPlanResource($mediaPlanData)
         ]);
     }
 }

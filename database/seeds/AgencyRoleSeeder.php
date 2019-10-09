@@ -30,6 +30,7 @@ class AgencyRoleSeeder extends Seeder
             'export.media_plan' => ['dsp.compliance', 'dsp.finance', 'dsp.admin', 'dsp.media_planner', 'dsp.media_buyer', 'dsp.head_media_planner', 'dsp.head_media_buyer'],
             'convert.media_plan' => ['dsp.admin', 'dsp.media_planner', 'dsp.media_buyer'],
             'delete.media_plan' => ['dsp.admin', 'dsp.media_planner'],
+            'finalize.media_plan' => ['dsp.finance', 'dsp.admin', 'dsp.head_media_planner'],
 
             'view.invoice' => ['dsp.finance', 'dsp.admin', 'dsp.media_buyer', 'dsp.head_media_planner', 'dsp.head_media_buyer'],
 

@@ -4,10 +4,10 @@ namespace Vanguard\Libraries\Enum;
 
 class MediaPlanStatus
 {
-    const APPROVED = 'Approved';
-    const PENDING = 'Pending';
-    const DECLINED = 'Declined';
-    const SUGGESTED = 'Suggested';
-    const SELECTED = 'Selected';
-    const IN_REVIEW = 'In Review';
+    const APPROVED = 'approved';
+    const PENDING = 'pending';
+    const REJECTED = 'rejected';
+    const CONVERTED = 'converted';
+    const FINALIZED = 'finalized';
+    const IN_REVIEW = 'in review';
 }
