@@ -15,13 +15,13 @@
                 </v-card-title>
                 <v-card-text>
                     <div class="card">
-                        <p>{{ shareLink.url }}</p>
+                        <p>{{ shareLink.short_url }}</p>
                     </div>
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn color="red" class="default-vue-btn" dark @click="dialog = false">Close</v-btn>
-                    <v-btn color="green" class="default-vue-btn" dark @click="copyToClipboard(shareLink.url)"> Copy to clipboard</v-btn>
+                    <v-btn color="green" class="default-vue-btn" dark @click="copyToClipboard(shareLink.short_url)"> Copy to clipboard</v-btn>
                 </v-card-actions>
             </v-card>
             

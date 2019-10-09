@@ -29,6 +29,7 @@ class StoreMpoShareLink
         $share_link->mpo_id = $this->mpo_id;
         $share_link->url = URL::signedRoute('guest.mpo_share_link', ['id' => $id]);
         $share_link->expired_at = Carbon::parse($this->campaign_stop_date)->addDays(90);
+        $share_link->code = uniqid();
         $share_link->save();
         return $share_link;
     }

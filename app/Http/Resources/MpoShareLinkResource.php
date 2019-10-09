@@ -17,6 +17,7 @@ class MpoShareLinkResource extends JsonResource
         return [
             'id' => $this->id,
             'url' => $this->url,
+            'short_url' => route('guest.mpos.short_links', ['code' => $this->code]),
             'is_expired' => $this->isExpired()
         ];
     }
