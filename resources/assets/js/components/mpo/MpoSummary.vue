@@ -25,8 +25,8 @@
                         <td>{{ item.total_spot }}</td>
                         <td> {{ item.volume_percent }} </td>
                         <td> 15 </td>
-                        <td>{{ numberFormat(item.agency_commission) }}</td>
-                        <td>{{ numberFormat(item.total) }}</td>
+                        <td>{{ formatAmount(item.agency_commission) }}</td>
+                        <td>{{ formatAmount(item.total) }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -36,7 +36,7 @@
                 <v-card-text class="text-right">
                     <div class="outer">
                         <div class="left-item"><h4>Total Budget : </h4></div>
-                        <div class="right-item" ><h4> {{ numberFormat(totalBudget) }}</h4></div>
+                        <div class="right-item" ><h4> {{ formatAmount(totalBudget) }}</h4></div>
                     </div>
                     <div class="outer">
                         <div class="left-item"><h4>VAT : </h4></div>
@@ -44,7 +44,7 @@
                     </div>
                     <div class="outer">
                         <div class="left-item"><h4>Net Total : </h4></div>
-                        <div class="right-item" ><h4> {{ numberFormat(netTotal) }}</h4></div>
+                        <div class="right-item" ><h4> {{ formatAmount(netTotal) }}</h4></div>
                     </div>
                 </v-card-text>
             </v-flex>

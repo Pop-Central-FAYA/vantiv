@@ -12,7 +12,7 @@
         <tr>
             <td @click="showClientDetails(props.item.id)" class="text-xs-left" >{{ props.item.name }}</td>
             <td @click="showClientDetails(props.item.id)" class="text-xs-left">{{ props.item.number_brands }}</td>
-            <td @click="showClientDetails(props.item.id)" class="text-xs-left">{{ numberFormat(props.item.client_spendings)}}</td>
+            <td @click="showClientDetails(props.item.id)" class="text-xs-left">{{ formatAmount(props.item.client_spendings)}}</td>
             <td @click="showClientDetails(props.item.id)" class="text-xs-left">{{ props.item.sum_active_campaign }}</td>
             <td @click="showClientDetails(props.item.id)" class="text-xs-left">{{ dateToHumanReadable(props.item.created_at.date) }}</td>
             <td class="justify-center layout px-0">

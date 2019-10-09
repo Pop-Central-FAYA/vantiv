@@ -24,7 +24,7 @@
             <td class="text-xs-left clickable"><b-img thumbnail fluid :src="props.item.image_url" class="v-icon notranslate v-icon--left mdi mdi-laptop theme--light" style="width: 30px; height: 30px"  id="brand_logo" alt="Image 1"></b-img> <span class="text1"> {{ props.item.name }}</span>
             </td>
             <td class="text-xs-left clickable"> {{props.item.campaigns_count}} </td>
-             <td class="text-xs-left clickable"> {{numberFormat(props.item.campaigns_spendings)}} </td>
+             <td class="text-xs-left clickable"> {{formatAmount(props.item.campaigns_spendings)}} </td>
            <td class="text-xs-left clickable">{{ dateToHumanReadable(props.item.created_at.date) }}</td>
            <td class="justify-center layout px-0">
             <v-icon color="#44C1C9" @click="showEditBrand(props.item)"  v-b-tooltip.hover title="Edit client" dark right>edit</v-icon> </td>

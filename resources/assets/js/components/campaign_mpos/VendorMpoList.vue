@@ -12,7 +12,7 @@
           <td class="text-xs-left clickable">{{ props.item.campaign.name }}</td>
           <td class="text-xs-left clickable">{{ props.item.adslots }}</td>
           <td class="text-xs-left clickable">{{ props.item.insertions }}</td>
-          <td class="text-xs-left clickable">{{ numberFormat(props.item.net_total) }}</td>
+          <td class="text-xs-left clickable">{{ formatAmount(props.item.net_total) }}</td>
           <td class="text-xs-left clickable">{{ dateToHumanReadable(props.item.created_at) }}</td>
         </tr>
       </template>

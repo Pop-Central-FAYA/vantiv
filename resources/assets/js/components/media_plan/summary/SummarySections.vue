@@ -27,18 +27,18 @@
                     <td>{{ (summaryData.medium).toUpperCase() }}</td>
                     <td> <span v-for="(list, index) in summaryData.material_durations" v-bind:key="index"> <span>{{list}}</span><span v-if="index+1 < summaryData.material_durations.length">, </span>  </span> </td>
                     <td> {{ summaryData.total_spots }} </td>
-                    <td> {{ numberFormat(summaryData.gross_value) }}  </td>
-                    <td> {{ numberFormat(summaryData.net_value) }} </td>
-                    <td> {{ numberFormat(summaryData.savings) }} </td>
+                    <td> {{ formatAmount(summaryData.gross_value) }}  </td>
+                    <td> {{ formatAmount(summaryData.net_value) }} </td>
+                    <td> {{ formatAmount(summaryData.savings) }} </td>
                 </tr>
                 
                 <tr>
                     <td>Total</td>
                     <td></td>
                     <td>{{ totalSpots }}</td>
-                    <td>{{ numberFormat(totalGrossValue) }}</td>
-                    <td>{{ numberFormat( totalNetValue) }}</td>
-                    <td>{{ numberFormat(totalSavings) }}</td>
+                    <td>{{ formatAmount(totalGrossValue) }}</td>
+                    <td>{{ formatAmount( totalNetValue) }}</td>
+                    <td>{{ formatAmount(totalSavings) }}</td>
                 </tr>
             </tbody>
         </table>

@@ -224,7 +224,10 @@ Vue.mixin({
             return str.substring(0, 3);
         },
         formatAmount(number) {
-            return number.toLocaleString();
+            return new Intl.NumberFormat('en-NG').format(number);
+        },
+        formatNumber(number) {
+            return new Intl.NumberFormat('en-NG').format(number);
         },
         dateToHumanReadable(date) {
             return moment(date).format('MMM DD, YYYY');
@@ -237,9 +240,6 @@ Vue.mixin({
         },
         dayName (date) {
             return moment(date).format('dddd')
-        },
-        numberFormat(n) {
-            return new Intl.NumberFormat('en-NG').format(n);
         },
         hasPermission(permissionList,search_permission){
             if(typeof search_permission === 'string'){

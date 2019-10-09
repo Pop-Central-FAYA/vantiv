@@ -127,17 +127,17 @@
                     rowHtml += `<td></td>`;
                 }
             });
-            rowHtml += `<td class="td-width-140">${ this.numberFormat(timebelt['gross_unit_rate'], 2)}</td>`;
-            rowHtml += `<td class="td-width-140">${ this.numberFormat(timebelt['volume_discount'], 1)}%</td>`;
-            rowHtml += `<td class="td-width-140">${ this.numberFormat(timebelt['value_less'], 2)}</td>`;
-            rowHtml += `<td class="td-width-140">${ this.numberFormat(timebelt['agency_commission'], 1)}%</td>`;
-            rowHtml += `<td class="td-width-140">${ this.numberFormat(timebelt['net_unit_rate'], 2)}</td>`;
+            rowHtml += `<td class="td-width-140">${ this.formatAmount(timebelt['gross_unit_rate'], 2)}</td>`;
+            rowHtml += `<td class="td-width-140">${ this.formatAmount(timebelt['volume_discount'], 1)}%</td>`;
+            rowHtml += `<td class="td-width-140">${ this.formatAmount(timebelt['value_less'], 2)}</td>`;
+            rowHtml += `<td class="td-width-140">${ this.formatAmount(timebelt['agency_commission'], 1)}%</td>`;
+            rowHtml += `<td class="td-width-140">${ this.formatAmount(timebelt['net_unit_rate'], 2)}</td>`;
             rowHtml += `<td class="td-width-140">${ timebelt['total_spots'] }</td>`;
             rowHtml += `<td class="td-width-140">${ timebelt['bonus_spots'] }</td>`;
-            rowHtml += `<td class="td-width-140">${ this.numberFormat(timebelt['cost_bonus_spots'], 2)}</td>`;
-            rowHtml += `<td class="td-width-140">${ this.numberFormat(timebelt['gross_value'], 2)}</td>`;
-            rowHtml += `<td class="td-width-140">${ this.numberFormat(timebelt['net_value'], 2)}</td>`;
-            rowHtml += `<td class="td-width-140">${ this.numberFormat(timebelt['net_value_after_bonus_spots'], 2)}</td>`;
+            rowHtml += `<td class="td-width-140">${ this.formatAmount(timebelt['cost_bonus_spots'], 2)}</td>`;
+            rowHtml += `<td class="td-width-140">${ this.formatAmount(timebelt['gross_value'], 2)}</td>`;
+            rowHtml += `<td class="td-width-140">${ this.formatAmount(timebelt['net_value'], 2)}</td>`;
+            rowHtml += `<td class="td-width-140">${ this.formatAmount(timebelt['net_value_after_bonus_spots'], 2)}</td>`;
 
             Object.keys(timebelt['month_weeks']).forEach((month) => {
                 let weeks = timebelt['month_weeks'][month];
@@ -177,10 +177,10 @@
             rowHtml += `<td class="td-width-140"></td>`;
             rowHtml += `<td class="td-width-140">${ total_spots }</td>`;
             rowHtml += `<td class="td-width-140">${ bonus_spots }</td>`;
-            rowHtml += `<td class="td-width-140">${ this.numberFormat(cost_bonus_spots, 2)}</td>`;
+            rowHtml += `<td class="td-width-140">${ this.formatAmount(cost_bonus_spots, 2)}</td>`;
             rowHtml += `<td class="td-width-140"></td>`;
-            rowHtml += `<td class="td-width-140">${ this.numberFormat(net_value, 2)}</td>`;
-            rowHtml += `<td class="td-width-140">${ this.numberFormat(net_value_after_bonus_spots, 2)}</td>`;
+            rowHtml += `<td class="td-width-140">${ this.formatAmount(net_value, 2)}</td>`;
+            rowHtml += `<td class="td-width-140">${ this.formatAmount(net_value_after_bonus_spots, 2)}</td>`;
 
             this.monthlyWeeksHeader.forEach(element => {
                 rowHtml += `<td class="td-width-65"></td>`;
@@ -212,10 +212,10 @@
             rowHtml += `<td class="td-width-140"></td>`;
             rowHtml += `<td class="td-width-140">${ total_spots }</td>`;
             rowHtml += `<td class="td-width-140">${ bonus_spots }</td>`;
-            rowHtml += `<td class="td-width-140">${ this.numberFormat(cost_bonus_spots, 2)}</td>`;
+            rowHtml += `<td class="td-width-140">${ this.formatAmount(cost_bonus_spots, 2)}</td>`;
             rowHtml += `<td class="td-width-140"></td>`;
-            rowHtml += `<td class="td-width-140">${ this.numberFormat(net_value, 2)}</td>`;
-            rowHtml += `<td class="td-width-140">${ this.numberFormat(net_value_after_bonus_spots, 2)}</td>`;
+            rowHtml += `<td class="td-width-140">${ this.formatAmount(net_value, 2)}</td>`;
+            rowHtml += `<td class="td-width-140">${ this.formatAmount(net_value_after_bonus_spots, 2)}</td>`;
             this.monthlyWeeksHeader.forEach(element => {
                 rowHtml += `<td class="td-width-65"></td>`;
             });

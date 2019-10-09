@@ -6,11 +6,11 @@
                     <td>{{ formatAmount(props.item.total_insertions) }}</td>
                     <td>{{ formatAmount(props.item.gross_impressions) }}</td>
                     <td>{{ formatAmount(props.item.total_grp) }}</td>
-                    <td>{{ formatAmount(props.item.net_reach) }}</td>
+                    <td>{{ formatNumber(props.item.net_reach) }}</td>
                     <td>{{ formatAmount(props.item.avg_frequency) }}</td>
-                    <td>{{ numberFormat(props.item.net_media_cost) }}</td>
-                    <td>{{ numberFormat(props.item.cpm) }}</td>
-                    <td>{{ numberFormat(props.item.cpp) }}</td>
+                    <td>{{ formatAmount(props.item.net_media_cost) }}</td>
+                    <td>{{ formatAmount(props.item.cpm) }}</td>
+                    <td>{{ formatAmount(props.item.cpp) }}</td>
                 </tr>
             </template>
         </v-data-table>

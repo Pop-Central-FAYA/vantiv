@@ -49,7 +49,7 @@
                                                     <td>
                                                         {{ calculateGrp(timebelt.rating, getTotalExposureByTimebelt(timeBeltkey, duration)) }}
                                                     </td>
-                                                    <td>{{ formatAmount(getUnitRate(timebelt, duration)) }}</td>
+                                                    <td>{{ formatNumber(getUnitRate(timebelt, duration)) }}</td>
                                                     <td>
                                                         <input v-if="timebelt.volume_discount" min="0" max="100" :value="timebelt.volume_discount" type="number" @blur="storeVolumeDiscount(timebelt.station,$event)">
                                                         <input v-else min="0" max="100" :value="0" type="number" @blur="storeVolumeDiscount(timebelt.station,$event)">
