@@ -2,10 +2,11 @@
     /**
      * Public accessed share link
      */
-    Route::group(['prefix' => 'public', 'namespace' => 'Guest'], function() {
+    Route::group(['prefix' => 'guest', 'namespace' => 'Guest'], function() {
         Route::get('/mpos/index/{id}', 'MpoController@index')->name('guest.mpo_share_link');
         Route::get('/mpos/{id}/temporary-url', 'MpoController@getTemporaryUrl')->name('public.mpo.export.temporary_url');
         Route::get('/mpos/{id}/export', 'MpoController@export')->name('public.mpo.export');
+        Route::get('/{code}', 'MpoController@redirectToIndex')->name('guest.mpos.short_links');
 
         Route::group(['prefix' => 'api'], function() {
             Route::post('/mpos/{mpo_id}', 'MpoController@acceptMpo')->name('mpos.accept');

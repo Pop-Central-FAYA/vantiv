@@ -90,7 +90,7 @@ export default {
             }).then((res) => {
                 if (res.data.status === 'success') {
                     Event.$emit('share-link', res.data.data)
-                    this.submit(res.data.data.url)
+                    this.submit(res.data.data.short_url)
                 } else {
                     this.sweet_alert(res.data.message, 'error');
                 }

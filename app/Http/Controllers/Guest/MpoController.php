@@ -16,6 +16,15 @@ use Vanguard\Services\Mpo\MpoDetailsService;
 
 class MpoController extends Controller
 {
+    public function redirectToIndex($code)
+    {
+        $mpo = MpoShareLink::where('code', $code)->first();
+        if($mpo){
+            return redirect()->to($mpo->url);
+        }
+        return view('errors.404');
+    }
+
     public function index(Request $request, $id)
     {
         if(!$request->hasValidSignature()){
