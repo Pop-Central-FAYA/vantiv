@@ -16,7 +16,7 @@
           <td class="text-xs-left">{{ dateToHumanReadable(props.item.end_date) }}</td>
           <td class="text-xs-left">{{ formatAmount(props.item.budget) }}</td>
           <td class="text-xs-left">{{ props.item.adslots }}</td>
-          <td class="text-xs-left" v-html="props.item.styled_status"></td>
+          <td class="text-xs-left" :style="{ 'color' : statusColor(props.item.status)}">{{ props.item.status }}</td>
           <td class="text-xs-left">{{ dateToHumanReadable(props.item.date_created) }}</td>
         </tr>
       </template>
@@ -77,7 +77,20 @@
           { text: 'Created On', value: 'date_created' }
         ];
         return header
-      }
+      },
+      statusColor : function(status) {
+          var status = status.toLowerCase()
+          switch (status) {
+              case 'active':
+                  return 'green'
+                  break;
+              case 'pending':
+                  return 'orange'
+                  break;
+              default :
+                  return 'grey'
+          }
+      },
     }
   }
 </script>

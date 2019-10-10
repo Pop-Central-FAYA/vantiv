@@ -6,7 +6,8 @@
         <v-spacer></v-spacer>
         <v-text-field v-model="search" append-icon="search" label="Enter Keyword" single-line hide-details></v-text-field>
         </v-card-title>
-        <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="mposData" :search="search" :pagination.sync="pagination" item-key="station" expand :show-expand="true">
+        <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="mposData" :search="search" 
+            :pagination.sync="pagination" item-key="station" expand :show-expand="true">
         <template v-slot:items="props">
             <tr>
                 <td @click="getMpo(props.item.links.details)">
@@ -27,17 +28,21 @@
                                 <v-layout>
                                     <v-tooltip top>
                                         <template v-slot:activator="{ on }">
-                                            <v-icon color="#01c4ca" v-on="on" dark left @click="getMpo(props.item.links.details)">fa-file-excel</v-icon>
+                                            <div v-on="on" class="d-inline-block position-icon">
+                                                <v-icon color="#01c4ca" v-on="on" dark left @click="getMpo(props.item.links.details)">
+                                                    fa-file-excel
+                                                </v-icon>
+                                            </div>
                                         </template>
                                         <span>Preview Mpo</span>
                                     </v-tooltip>
                                 </v-layout>
                             </v-flex>
                             <v-flex xs12 sm6 md3>
-                                <share-link-modal :mpo="props.item"></share-link-modal>
+                                <share-link-modal :mpo="props.item" :campaign="campaign"></share-link-modal>
                             </v-flex>
                             <v-flex xs12 sm6 md2>
-                                 <submit-mpo-modal :mpo="props.item"></submit-mpo-modal>
+                                 <submit-mpo-modal :mpo="props.item" :campaign="campaign"></submit-mpo-modal>
                             </v-flex>
                         </v-layout>
                     </v-container>
@@ -133,6 +138,9 @@
     }
     .transform {
         text-transform: capitalize
+    }
+    .position-icon {
+        padding-top: 12px;
     }
 </style>
 

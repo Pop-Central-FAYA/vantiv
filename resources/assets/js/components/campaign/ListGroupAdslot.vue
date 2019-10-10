@@ -43,7 +43,7 @@
                             <v-layout wrap>
                                 <v-flex xs12 sm6 md3>
                                     <edit-volume-campaign-price 
-                                    :campaign-id="campaignId"
+                                    :campaign="campaign"
                                     :selected-adslots="props.item.time_belts"
                                     :ad-vendors="props.item.time_belts[0].publisher.ad_vendors"
                                     :volume-discount="props.item.time_belts[0].volume_discount"
@@ -55,7 +55,7 @@
                                     <mpo-file-manager 
                                         :client="client" 
                                         :brand="brand"
-                                        :campaign-id="campaignId"
+                                        :campaign="campaign"
                                         :assets="assets"
                                         :selected-adslots="props.item.time_belts"
                                         :group="group_adslot"
@@ -64,9 +64,12 @@
                                 <v-flex xs12 sm6 md3 v-if="group_adslot === 'ad_vendor_id' && props.item.time_belts[0].vendor != null">
                                     <v-tooltip top>
                                         <template v-slot:activator="{ on }">
-                                            <v-icon color="#01c4ca" dark left v-on="on" @click="generateMpo(props.item)">save</v-icon>
+                                            <div v-on="on" class="d-inline-block position-icon">
+                                                <v-icon color="#01c4ca" dark left v-on="on" :disabled="!isCampaignOpen(campaign.status)" @click="generateMpo(props.item)">save</v-icon>
+                                            </div>
                                         </template>
-                                        <span>Generate MPO</span>
+                                        <span v-if="isCampaignOpen(campaign.status)">Generate MPO</span>
+                                        <span v-else>Action is disabled while campaign is {{ campaign.status.toLowerCase() }}</span>
                                     </v-tooltip>
                                 </v-flex>
                             </v-layout>
@@ -80,7 +83,7 @@
                     :campaign-time-belts="props.item.time_belts"
                     :time-belt-range="timeBeltRange"
                     :ad-vendors="getVendor(props.item.time_belts)"
-                    :campaign-id="campaignId"
+                    :campaign="campaign"
                     :client="client"
                     :brand="brand"
                     :group="group_adslot"
@@ -109,7 +112,7 @@
             groupedCampaignTimeBelts : Array,
             timeBeltRange : Array,
             adVendors: Array,
-            campaignId: String,
+            campaign: Object,
             client: String,
             brand: String,
         },
@@ -131,6 +134,7 @@
             }
         },
         created() {
+            console.log(this.campaign)
             this.group_adslot
             var self = this;
             Event.$on('updated-group-adslots', function (adslot) {
@@ -158,7 +162,7 @@
                 this.sweet_alert('Filtering...', 'info');
                 axios({
                     method: 'get',
-                    url: `/campaigns/${this.campaignId}/groups/${this.group_adslot}`
+                    url: `/campaigns/${this.campaign.id}/groups/${this.group_adslot}`
                 }).then((res) => {
                     this.campaignGroupTimeBeltsData = res.data.grouped_time_belts;
                     this.sweet_alert('Time belts filtered successfully', 'success');
@@ -178,7 +182,7 @@
                 }
                 axios({
                     method: 'POST',
-                    url: `/campaigns/${this.campaignId}/mpos`,
+                    url: this.campaign.links.store_campaign_mpo,
                     data : {
                         ad_vendor_id : group_time_belt.time_belts[0].ad_vendor_id,
                         insertions : group_time_belt.insertions,
@@ -217,6 +221,12 @@
     }
     tbody:hover {
     background-color: rgba(0, 0, 0, 0.12);
+    }
+    .theme--dark.v-icon.v-icon--disabled {
+        color: grey !important;
+    }
+    .position-icon {
+        padding-top: 12px;
     }
 </style>
 

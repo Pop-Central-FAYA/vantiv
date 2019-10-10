@@ -39,11 +39,11 @@
             
             #api
             Route::get('/{campaign_id}/groups/{group_param}', 'CampaignsController@groupCampaignTimeBelts');
-            Route::post('/{campaign_id}/adslots', 'CampaignsController@storeAdslot');
-            Route::patch('/{campaign_id}', 'CampaignsController@updateMultipleAdslots');
+            Route::post('/{campaign_id}/adslots', 'CampaignsController@storeAdslot')->name('campaigns.adslot.store');
+            Route::patch('/{campaign_id}', 'CampaignsController@updateMultipleAdslots')->name('campaigns.adslots.update');
             Route::patch('/{campaign_id}/adslots/{adslot_id}', 'CampaignsController@updateAdslot')->name('update.campaign_mpo');
             Route::delete('/{campaign_id}/adslots/{adslot_id}', 'CampaignsController@deleteAdslot');
-            Route::post('/{campaign_id}/associate-assets', 'CampaignsController@associateAssetsToAdslot');
+            Route::post('/{campaign_id}/associate-assets', 'CampaignsController@associateAssetsToAdslot')->name('campaigns.assets.associate');
 
             Route::get('/{campaign_id}/mpos', 'MpoController@list')->name('mpos.list');
             Route::post('/{campaign_id}/mpos', 'MpoController@generateMpo')->name('mpos.store');

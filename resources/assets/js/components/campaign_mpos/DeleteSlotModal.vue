@@ -2,9 +2,17 @@
     <v-layout>
         <v-dialog v-model="dialog" persistent max-width="400px">
             <template v-slot:activator="{ on }">
-                <v-icon color="red" dark v-on="on" right
-                :disabled="selectedAdslots.length > 0"
-                >delete</v-icon>
+                <v-tooltip top>
+                    <template v-slot:activator="{ on }">
+                        <div v-on="on" class="d-inline-block position-icon">
+                            <v-icon color="red" dark v-on="on" @click="dialog = true" right
+                                :disabled="selectedAdslots.length > 0 || !isCampaignOpen(campaign.status)"
+                            >delete</v-icon>
+                        </div>
+                    </template>
+                    <span v-if="isCampaignOpen(campaign.status)">Delete adslot</span>
+                    <span v-else>You cant perform this action while campaign is {{ campaign.status.toLowerCase() }}</span>
+                </v-tooltip>
             </template>
             <v-card>
                 <v-card-title>
@@ -42,7 +50,8 @@ export default {
         },
         group : String,
         index : Number,
-        selectedAdslots : Array
+        selectedAdslots : Array,
+        campaign : Object
     },
     methods : {
         deleteSlots : function(){
@@ -85,6 +94,12 @@ export default {
 
     .modal-open {
     overflow: auto;
+    }
+    .theme--dark.v-icon.v-icon--disabled {
+        color: grey !important;
+    }
+    .position-icon {
+        padding-top: 12px;
     }
 </style>
 

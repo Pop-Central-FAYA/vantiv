@@ -27,7 +27,6 @@
                         :campaign="{{json_encode($campaign_details)}}"
                         :time-belts="{{json_encode($time_belt_range)}}"
                         :ad-vendors="{{ json_encode($ad_vendors) }}"
-                        :campaign-id="{{ json_encode($campaign_details->id) }}"
                     ></campaign-display>
                 </v-content>
             </v-app>

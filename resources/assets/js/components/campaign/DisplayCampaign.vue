@@ -20,7 +20,7 @@
         <list-group-adslot :assets="assets" :grouped-campaign-time-belts="groupedCampaignTimeBelts"
         :time-belt-range="timeBelts" :ad-vendors="adVendors"
         :client="client" :brand="brand"
-        :campaign-id="campaignId"></list-group-adslot>
+        :campaign="campaign"></list-group-adslot>
       </v-tab-item>
 
       <v-tab-item value="adslots">
@@ -29,7 +29,7 @@
             :campaign-time-belts="campaignTimeBelts"
             :time-belt-range="timeBelts"
             :ad-vendors="adVendors"
-            :campaign-id="campaignId"
+            :campaign="campaign"
             :client="client"
             :brand="brand"
         ></list-campaign-adslot>
@@ -77,7 +77,6 @@
         adVendors : Array,
         campaignTimeBelts : Array,
         groupedCampaignTimeBelts : Array,
-        campaignId : String,
     },
     data () {
       return {

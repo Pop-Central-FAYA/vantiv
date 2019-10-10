@@ -1,9 +1,17 @@
 <template>
     <v-dialog v-model="dialog" persistent max-width="500px">
         <template v-slot:activator="{ on }">
-            <v-icon color="#01c4ca" dark v-on="on" @click="dialog = true" 
-            :disabled="selectedAdslots.length > 0"
-            right>edit</v-icon>
+            <v-tooltip top>
+                <template v-slot:activator="{ on }">
+                    <div v-on="on" class="d-inline-block position-icon">
+                        <v-icon color="#01c4ca" dark v-on="on" @click="dialog = true" 
+                        :disabled="selectedAdslots.length > 0 || !isCampaignOpen(campaign.status)"
+                        right>edit</v-icon>
+                    </div>
+                </template>
+                <span v-if="isCampaignOpen(campaign.status)">Edit adslot</span>
+                <span v-else>You cant perform this action while campaign is {{ campaign.status.toLowerCase() }}</span>
+            </v-tooltip>
         </template>
         <v-card>
             <v-card-title>
@@ -189,7 +197,8 @@ export default {
         adVendor : Object,
         group : String,
         index : Number,
-        selectedAdslots : Array
+        selectedAdslots : Array,
+        campaign : Object
     },
     data () {
         return {
@@ -299,6 +308,12 @@ export default {
     }
     .theme--dark.v-btn.v-btn--disabled:not(.v-btn--icon):not(.v-btn--flat):not(.v-btn--outline) {
         background-color: hsl(184, 55%, 53%)!important;
+    }
+    .theme--dark.v-icon.v-icon--disabled {
+        color: grey !important;
+    }
+    .position-icon {
+        padding-top: 12px;
     }
 </style>
 

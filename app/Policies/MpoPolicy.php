@@ -4,6 +4,7 @@ namespace Vanguard\Policies;
 
 use Vanguard\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Vanguard\Libraries\Enum\Dsp\CampaignStatus;
 use Vanguard\Models\CampaignMpo;
 
 class MpoPolicy
@@ -34,5 +35,14 @@ class MpoPolicy
     public function details(User $user, CampaignMpo $campaignMpo)
     {
         return $this->belongsToUserCompany($user, $campaignMpo);
+    }
+
+    /**
+     * This is a shitty way of implementing this, will revisit it with the proper implementation
+     */
+    public function campaignStatus(User $user, CampaignMpo $campaignMpo)
+    {
+        $status_list = [CampaignStatus::ACTIVE, CampaignStatus::PENDING];
+        return \in_array($campaignMpo->campaign->status, $status_list);
     }
 }

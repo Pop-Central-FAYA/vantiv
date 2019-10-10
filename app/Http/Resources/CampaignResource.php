@@ -3,7 +3,6 @@
 namespace Vanguard\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use Vanguard\Services\Campaign\FormatCampaign;
 
 class CampaignResource extends JsonResource
 {
@@ -15,7 +14,6 @@ class CampaignResource extends JsonResource
      */
     public function toArray($request)
     {
-        $format = new FormatCampaign();
         return [
             'id' =>  $this->id,
             'campaign_id' =>  $this->id,
@@ -28,8 +26,7 @@ class CampaignResource extends JsonResource
             'end_date' => date('Y-m-d', strtotime($this->stop_date)),
             'adslots' => $this->ad_slots,
             'budget' => $this->budget,
-            'styled_status' => $format->getCampaignStatusHtml($this),
-            'redirect_url' => $format->generateRedirectUrl($this),
+            'redirect_url' => route('agency.campaign.details', ['id' => $this->id], true),
             'media_type' => $this->media_type,
             'flight_date' => $this->flight_date,
             'created_at' => $this->created_at,
@@ -45,7 +42,11 @@ class CampaignResource extends JsonResource
             'creator' => $this->creator,
             'station' => '',
             'links' => [
-                'mpos' => route('mpos.list', ['campaign_id' => $this->id])
+                'mpos' => route('mpos.list', ['campaign_id' => $this->id], false),
+                'update_adslots' => route('campaigns.adslots.update', ['campaign_id' => $this->id], false),
+                'store_adslot' => route('campaigns.adslot.store', ['campaign_id' => $this->id]),
+                'associate_assets' => route('campaigns.assets.associate', ['campaign_id' => $this->id], false),
+                'store_campaign_mpo' => route('mpos.store', ['campaign_id' => $this->id], true)
             ]
         ];
     }
