@@ -4,6 +4,7 @@ namespace Vanguard\Policies;
 
 use Vanguard\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Vanguard\Libraries\Enum\Dsp\CampaignStatus;
 use Vanguard\Models\Campaign;
 
 class CampaignPolicy
@@ -49,5 +50,14 @@ class CampaignPolicy
     public function store(User $user, Campaign $campaign)
     {
         return $this->belongsToUserCompany($user, $campaign);
+    }
+
+    /**
+     * This is a shitty way of implementing this, will revisit it with the proper implementation
+     */
+    public function status(User $user, Campaign $campaign)
+    {
+        $status_list = [CampaignStatus::ACTIVE, CampaignStatus::PENDING];
+        return \in_array($campaign->status, $status_list);
     }
 }

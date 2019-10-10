@@ -9,6 +9,7 @@ use Vanguard\Libraries\Utilities;
 use Vanguard\Models\Campaign;
 use Vanguard\Services\Campaign\CampaignDetails;
 use Illuminate\Support\Facades\DB;
+use Vanguard\Events\Dsp\Campaign\UpdateStatus;
 use Vanguard\Services\MediaAsset\GetMediaAssetByClient;
 use Vanguard\Services\Traits\SplitTimeRange;
 use Vanguard\Http\Requests\UpdateMpoTimeBeltRequest;
@@ -20,7 +21,6 @@ use Vanguard\Events\Dsp\CampaignMpoTimeBeltUpdated;
 use Vanguard\Http\Requests\AssociateFileToAdslotRequest;
 use Vanguard\Http\Resources\CampaignResource;
 use Vanguard\Models\AdVendor;
-use Vanguard\Models\CampaignMpo;
 use Vanguard\Models\CampaignTimeBelt;
 use Vanguard\Services\Mpo\StoreTimeBeltService;
 
@@ -58,6 +58,7 @@ class CampaignsController extends Controller
         $time_belt_range = $this->splitTimeRangeByBase('00:00:00', '23:59:59', '15');
         $ad_vendors = AdVendor::with('publishers')->where('company_id', $company_id)->get();
         $campaign_details = new CampaignResource($campaign_details);
+        event(new UpdateStatus($id));
         return view('agency.campaigns.new_campaign_details', 
         compact('campaign_details', 'client_media_assets', 'campaign_files', 'time_belt_range', 'ad_vendors'));
     }
@@ -78,6 +79,7 @@ class CampaignsController extends Controller
     public function associateAssetsToAdslot(AssociateFileToAdslotRequest $request, $campaign_id)
     {
         $campaign = Campaign::findOrFail($campaign_id);
+        $this->authorize('status', $campaign);
         $this->authorize('update', $campaign);
         $validated = $request->validated();
         \DB::transaction(function () use ($campaign_id, $validated, $request) {
@@ -102,6 +104,7 @@ class CampaignsController extends Controller
     {
         $campaign_mpo_time_belt = CampaignTimeBelt::findOrFail($adslot_id);
         $campaign = $campaign_mpo_time_belt->campaign;
+        $this->authorize('status', $campaign);
         $this->authorize('delete', $campaign);
         
         DB::transaction(function() use ($campaign_mpo_time_belt, $campaign) {
@@ -120,6 +123,7 @@ class CampaignsController extends Controller
     {
         $campaign_time_belt = CampaignTimeBelt::findOrFail($adslot_id);
         $campaign = $campaign_time_belt->campaign;
+        $this->authorize('status', $campaign);
         $this->authorize('update', $campaign);
 
         $validated = $request->validated();
@@ -139,6 +143,7 @@ class CampaignsController extends Controller
     public function updateMultipleAdslots(UpdateMpoTimeBeltRequest $request, $campaign_id)
     {
         $campaign = Campaign::findOrFail($campaign_id);
+        $this->authorize('status', $campaign);
         $this->authorize('update', $campaign);
 
         $validated = $request->validated();
@@ -158,6 +163,7 @@ class CampaignsController extends Controller
     public function storeAdslot(StoreCampaignMpoAdslotRequest $request, $campaign_id)
     {
         $campaign = Campaign::findOrFail($campaign_id);
+        $this->authorize('status', $campaign);
         $this->authorize('store', $campaign);
 
         $validated = $request->validated();

@@ -7,13 +7,13 @@
                     <add-adslot-modal v-if="!group"
                         :assets="assets"
                         :time-belt-range="timeBeltRange"
-                        :campaign-id="campaignTimeBelts[0].campaign_id"
+                        :campaign="campaign"
                         :ad-vendors="adVendors"
                     ></add-adslot-modal>
                     </v-flex>
                     <v-flex xs1>
                     <edit-volume-campaign-price v-if="selectedAdslots.length > 0"
-                        :campaign-id="campaignId"
+                        :campaign="campaign"
                         :selected-adslots="selectedAdslots"
                         :ad-vendors="adVendors"
                         :group="group"
@@ -24,7 +24,7 @@
                     <mpo-file-manager v-if="selectedAdslots.length > 0"
                         :client="client" 
                         :brand="brand"
-                        :campaign-id="campaignId"
+                        :campaign="campaign"
                         :assets="assets"
                         :selected-adslots="selectedAdslots"
                         :group="group"
@@ -111,6 +111,7 @@
                             :publisher="props.item.publisher"
                             :index="index"
                             :selected-adslots="selectedAdslots"
+                            :campaign="campaign"
                         ></edit-slots-modal>
 
                         <delete-slots-modal
@@ -118,6 +119,7 @@
                         :group="group"
                         :index="index"
                         :selected-adslots="selectedAdslots"
+                        :campaign="campaign"
                         ></delete-slots-modal>
                     </td>
                 </tr>
@@ -145,7 +147,7 @@
             campaignTimeBelts : Array,
             timeBeltRange : Array,
             adVendors: Array,
-            campaignId: String,
+            campaign: Object,
             client: String,
             brand: String,
             group : String,

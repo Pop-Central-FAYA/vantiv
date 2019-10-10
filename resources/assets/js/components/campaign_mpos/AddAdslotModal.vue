@@ -1,7 +1,15 @@
 <template>
     <v-dialog v-model="dialog" persistent max-width="500px">
         <template v-slot:activator="{ on }">
-            <v-icon color="#01c4ca" dark v-on="on" @click="dialog = true" left>add</v-icon>
+            <v-tooltip top>
+            <template v-slot:activator="{ on }">
+                <div v-on="on" class="d-inline-block position-icon">
+                    <v-icon color="#01c4ca" dark v-on="on" @click="dialog = true" :disabled="!isCampaignOpen(campaign.status)" left>add</v-icon>
+                </div>
+            </template>
+            <span v-if="isCampaignOpen(campaign.status)">Add new adslot</span>
+            <span v-else>Action is disabled while campaign is {{ campaign.status.toLowerCase() }}</span>
+          </v-tooltip>
         </template>
         <v-card>
             <v-card-text>
@@ -184,7 +192,7 @@ export default {
             type : Array
         },
         adVendors : Array,
-        campaignId : String,
+        campaign : Object,
         group : String
     },
     data () {
@@ -228,7 +236,6 @@ export default {
                     return true;
                 }
             });
-
             if (!isValid) {
                 return false;
             }
@@ -236,7 +243,7 @@ export default {
             this.sweet_alert(msg, 'info');
             axios({
                 method: 'POST',
-                url: `/campaigns/${this.campaignId}/adslots`,
+                url: this.campaign.links.store_adslot,
                 data: {
                     publisher : this.publisher,
                     ad_vendor : this.ad_vendor.id,
@@ -298,6 +305,12 @@ export default {
     }
     .theme--dark.v-btn.v-btn--disabled:not(.v-btn--icon):not(.v-btn--flat):not(.v-btn--outline) {
         background-color: hsl(184, 55%, 53%)!important;
+    }
+    .theme--dark.v-icon.v-icon--disabled {
+        color: grey !important;
+    }
+    .position-icon {
+        padding-top: 12px;
     }
 </style>
 

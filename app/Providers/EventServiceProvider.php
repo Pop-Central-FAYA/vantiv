@@ -6,7 +6,10 @@ use Vanguard\Events\User\Registered;
 use Vanguard\Listeners\UserEventsSubscriber;
 use Vanguard\Listeners\UserWasRegisteredListener;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Vanguard\Events\Dsp\Campaign\UpdateStatus;
 use Vanguard\Events\Dsp\CampaignMpoTimeBeltUpdated;
+use Vanguard\Listeners\Dsp\Campaign\ActiveStatus;
+use Vanguard\Listeners\Dsp\Campaign\CompleteStatus;
 use Vanguard\Listeners\Dsp\CampaignBudgetUpdated;
 use Vanguard\Listeners\Dsp\CampaignMpoUpdated;
 
@@ -22,6 +25,10 @@ class EventServiceProvider extends ServiceProvider
         CampaignMpoTimeBeltUpdated::class => [
             //CampaignMpoUpdated::class,
             CampaignBudgetUpdated::class
+        ],
+        UpdateStatus::class => [
+            ActiveStatus::class,
+            CompleteStatus::class
         ]
     ];
 

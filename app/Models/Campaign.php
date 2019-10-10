@@ -12,7 +12,7 @@ class Campaign extends Base
     protected $table = 'campaigns';
 
     protected $dates = [
-        'time_created', 'time_modified'
+        'time_created', 'time_modified', 'start_date', 'end_date'
     ];
 
     protected $fillable = [

@@ -12,6 +12,8 @@ class StoreMpoService implements BaseServiceInterface
     protected $data;
     protected $campaign_id;
 
+    protected $status = [MpoStatus::ACCEPTED, MpoStatus::SUBMITTED];
+
     public function __construct($data, $campaign_id)
     {
         $this->data = $data;
@@ -20,6 +22,7 @@ class StoreMpoService implements BaseServiceInterface
 
     public function run()
     {
+        $this->updatePreviousMpo();
         $campaign_mpo = new CampaignMpo();
         $campaign_mpo->campaign_id = $this->campaign_id;
         $campaign_mpo->ad_vendor_id = $this->data['ad_vendor_id'];
@@ -30,5 +33,14 @@ class StoreMpoService implements BaseServiceInterface
         $campaign_mpo->status = MpoStatus::PENDING;
         $campaign_mpo->save();
         return $campaign_mpo;
+    }
+
+    private function updatePreviousMpo()
+    {
+        CampaignMpo::where([
+                ['campaign_id', $this->campaign_id],
+                ['ad_vendor_id', $this->data['ad_vendor_id']]
+            ])->whereIn('status', $this->status)
+            ->update(['status' => MpoStatus::CLOSED]);
     }
 }

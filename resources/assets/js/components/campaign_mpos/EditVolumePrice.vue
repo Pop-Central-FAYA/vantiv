@@ -4,10 +4,12 @@
             <template v-slot:activator="{ on }">
                 <v-tooltip top>
                     <template v-slot:activator="{ on }">
-                        <v-icon color="#01c4ca" dark left v-on="on" @click="dialog = true">edit</v-icon>
+                        <div v-on="on" class="d-inline-block position-icon">
+                            <v-icon color="#01c4ca" dark left v-on="on" :disabled="!isCampaignOpen(campaign.status)" @click="dialog = true">edit</v-icon>
+                        </div>
                     </template>
-                    <span v-if="group === 'publisher_id'">Edit adslots</span>
-                    <span v-else>Edit campaign volume prices</span>
+                    <span v-if="group === 'publisher_id' && isCampaignOpen(campaign.status)">Edit Adslots</span>
+                    <span v-else>Action is disabled while campaign is {{ campaign.status.toLowerCase() }}</span>
                 </v-tooltip>
             </template>
             <v-card>
@@ -60,7 +62,7 @@
 <script>
 export default {
     props : {
-        campaignId : String,
+        campaign : Object,
         selectedAdslots : Array,
         adVendors : Array,
         group : String,
@@ -89,7 +91,7 @@ export default {
             this.sweet_alert('Processing request, please wait...', 'info');
             axios({
                 method: 'patch',
-                url: `/campaigns/${this.campaignId}`,
+                url: this.campaign.links.update_adslots,
                 data: {
                     id : _.map(this.selectedAdslots, 'id'),
                     volume_discount : this.volume_discount,
@@ -132,6 +134,12 @@ export default {
 
     .modal-open {
     overflow: auto;
+    }
+    .theme--dark.v-icon.v-icon--disabled {
+        color: grey !important;
+    }
+    .position-icon {
+        padding-top: 12px;
     }
 </style>
 

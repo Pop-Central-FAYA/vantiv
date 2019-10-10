@@ -40,6 +40,7 @@ class MpoController extends Controller
     {
         $campaign = Campaign::findOrFail($campaign_id);
         $this->authorize('update', $campaign);
+        $this->authorize('status', $campaign);
         $validated = $request->validated();
 
         //generate mpo
@@ -79,6 +80,8 @@ class MpoController extends Controller
     {
         try {
             $campaign = $mpo->getCampaign($mpo_id);
+            $this->authorize('status', $campaign);
+            
             $share_link = (new StoreMpoShareLink($mpo_id, $campaign->stop_date))->run();
             return response()->json([
                 'status' => 'success',
@@ -97,6 +100,8 @@ class MpoController extends Controller
     {
         $validated = $request->validated();
         $campaign_mpo = CampaignMpo::findOrFail($mpo_id);
+        $this->authorize('campaignStatus', $campaign_mpo);
+
         $campaign_name = $campaign_mpo->campaign->name;
         try {
             $this->sendVendorMail($validated['url'], $validated['email'], $campaign_name);

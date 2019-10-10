@@ -4,10 +4,13 @@
       <template v-slot:activator="{ on }">
           <v-tooltip top>
               <template v-slot:activator="{ on }">
-                  <v-icon color="#01c4ca" dark left v-on="on" @click="prepareData()">attach_files</v-icon>
+                <div v-on="on" class="d-inline-block position-icon">
+                  <v-icon color="#01c4ca" dark left v-on="on" :disabled="!isCampaignOpen(campaign.status)" @click="prepareData()">attach_files</v-icon>
+                </div>
               </template>
-              <span v-if="group === 'publisher_id'">Attach assets</span>
-              <span v-else>Attach Files to MPO</span>
+              <span v-if="group === 'publisher_id' && isCampaignOpen(campaign.status)">Attach assets</span>
+              <span v-else-if="isCampaignOpen(campaign.status)">Attach Files to MPO</span>
+              <span v-else>Action is disabled while campaign is {{ campaign.status.toLowerCase() }}</span>
           </v-tooltip>
       </template>
       <v-card>
@@ -48,7 +51,7 @@
 <script>
   export default {
     props : {
-      campaignId : String,
+      campaign : Object,
       assets: Array,
       client: String,
       brand: String,
@@ -95,7 +98,7 @@
             this.sweet_alert(msg, 'info');
             axios({
                 method: 'post',
-                url: `/campaigns/${this.campaignId}/associate-assets`,
+                url: this.campaign.links.associate_assets,
                 data: {
                   id : _.map(this.selectedAdslots, 'id'),
                   durations: this.filtered_durations,
@@ -122,3 +125,11 @@
     }
   }
 </script>
+<style>
+  .theme--dark.v-icon.v-icon--disabled {
+      color: grey !important;
+  }
+  .position-icon {
+      padding-top: 12px;
+  }
+</style>

@@ -4,9 +4,12 @@
             <template v-slot:activator="{ on }">
                 <v-tooltip top>
                     <template v-slot:activator="{ on }">
-                        <v-icon color="#01c4ca" dark left v-on="on" @click="dialog = true">fa-clipboard-list</v-icon>
+                        <div v-on="on" class="d-inline-block position-icon">
+                            <v-icon color="#01c4ca" dark left v-on="on" :disabled="!isCampaignOpen(campaign.status)" @click="dialog = true">fa-clipboard-list</v-icon>
+                        </div>
                     </template>
-                    <span>Submit to vendor</span>
+                    <span v-if="isCampaignOpen(campaign.status)">Submit to vendor</span>
+                    <span v-else>Action is disabled while campaign is {{ campaign.status.toLowerCase() }}</span>
                 </v-tooltip>
             </template>
             <v-card>
@@ -43,7 +46,8 @@ export default {
         mpo: {
             required : true,
             type : Object
-        }
+        },
+        campaign : Object
     },
     data() {
         return {
@@ -124,6 +128,9 @@ export default {
 
     .modal-open {
     overflow: auto;
+    }
+    .position-icon {
+        padding-top: 12px;
     }
 </style>
 
