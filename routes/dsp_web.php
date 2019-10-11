@@ -38,6 +38,9 @@
             Route::get('/details/{id}/{group?}', 'CampaignsController@getDetails')->name('agency.campaign.details');
             
             #api
+            Route::group(['prefix' => 'api'], function() {
+                Route::get('/{campaign_id}/vendors/{ad_vendor_id}/mpos', 'MpoController@vendorMpoList')->name('campaign.vendors.mpos.lists');
+            });
             Route::get('/{campaign_id}/groups/{group_param}', 'CampaignsController@groupCampaignTimeBelts');
             Route::post('/{campaign_id}/adslots', 'CampaignsController@storeAdslot')->name('campaigns.adslot.store');
             Route::patch('/{campaign_id}', 'CampaignsController@updateMultipleAdslots')->name('campaigns.adslots.update');

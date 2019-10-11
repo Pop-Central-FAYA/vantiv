@@ -30,7 +30,7 @@
                         :group="group"
                     ></mpo-file-manager>
                     </v-flex>
-                    <v-flex xs3>
+                    <v-flex xs4 style="padding-right : 4px;">
                         <v-select
                             v-model="selected"
                             :items="filterParameters"
@@ -40,9 +40,7 @@
                             @change="processFilter()"
                         ></v-select>
                     </v-flex>
-                    <v-flex xs2>
-                    </v-flex>
-                    <v-flex xs4>
+                    <v-flex xs5>
                         <v-text-field v-model="search" append-icon="search" label="Enter Keyword" single-line hide-details></v-text-field>
                     </v-flex>
                 </v-layout>
