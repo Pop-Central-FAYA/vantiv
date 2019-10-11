@@ -59,7 +59,8 @@ class MediaPlanResource extends JsonResource
                 'comments' => [
                     "all" => route('agency.media_plan.comment.all', ['id'=>$this->id], false),
                     "store" => route('agency.media_plan.comment.store', ['id'=>$this->id], false),
-                ]
+                ],
+                'delete' => route('media_plan.delete', ['id'=>$this->id], false),
             ]
         ];
     }
