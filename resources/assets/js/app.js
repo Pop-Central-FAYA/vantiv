@@ -286,7 +286,18 @@ Vue.mixin({
         isCampaignOpen(status){
             var status_list = ['pending', 'active']
             return status_list.includes(status.toLowerCase())
-        }
+        },
+        isMediaPlanPastReviewStage(status) {
+            status = status.toLowerCase();
+            if (status =='approved' ||  status =='rejected' || status =='converted' ||  status =='finalized') {
+                return true;
+            } else {
+                return false
+            }
+        },
+        capitalizeFirstletter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1); 
+        },
     }
 })
 
