@@ -31,8 +31,18 @@ class MpoController extends Controller
     {
         $mpos = CampaignMpo::with('vendor.contacts')->where('campaign_id', $campaign_id)
                             ->where('ad_vendor_id', '<>', '')
-                            ->latest()->get()
-                            ->unique('ad_vendor_id');
+                            ->orderBy('created_at', 'desc')
+                            ->get();
+        return CampaignMpoResource::collection($mpos);
+    }
+
+    public function vendorMpoList($campaign_id, $ad_vendor_id)
+    {
+        $mpos = CampaignMpo::with('vendor.contacts')
+                            ->where('campaign_id', $campaign_id)
+                            ->where('ad_vendor_id', $ad_vendor_id)
+                            ->orderBy('created_at', 'desc')
+                            ->get();
         return CampaignMpoResource::collection($mpos);
     }
 

@@ -3,7 +3,7 @@
         <v-card-title>
         <v-spacer></v-spacer>
         <v-spacer></v-spacer>
-        <v-form>
+        <v-form> 
             <v-layout wrap>
                 <v-flex xs12 sm12 md12>
                     <v-select

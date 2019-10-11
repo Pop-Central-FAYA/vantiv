@@ -31,10 +31,20 @@ class StoreMpoService implements BaseServiceInterface
         $campaign_mpo->adslots = json_encode($this->data['adslots']);
         $campaign_mpo->reference_number = Utilities::generateReference();
         $campaign_mpo->status = MpoStatus::PENDING;
+        $campaign_mpo->version = $this->getLatestVersion();
         $campaign_mpo->save();
         return $campaign_mpo;
     }
 
+    private function getLatestVersion()
+    {
+        $last_mpo = CampaignMpo::where('campaign_id', $this->campaign_id)
+                                ->where('ad_vendor_id', $this->data['ad_vendor_id'])
+                                ->orderBy('created_at', 'DESC')
+                                ->first();
+        return $last_mpo ? $last_mpo->version + 1 : 1;
+    }
+    
     private function updatePreviousMpo()
     {
         CampaignMpo::where([
