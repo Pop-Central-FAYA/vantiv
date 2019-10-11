@@ -40,4 +40,9 @@ class MediaPlanPolicy
     {
         return $this->belongsToUserCompany($user, $media_plan);
     }
+
+    public function delete(User $user, MediaPlan $media_plan)
+    {
+       return $this->belongsToUserCompany($user, $media_plan);
+    }
 }

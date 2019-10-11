@@ -6,7 +6,7 @@
       <v-spacer></v-spacer>
       <v-text-field v-model="search" append-icon="search" label="Enter Keyword" single-line hide-details></v-text-field>
     </v-card-title>
-    <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="plans" :search="search" :no-data-text="noDataText" :pagination.sync="pagination">
+    <v-data-table class="custom-vue-table elevation-1" :headers="headers" :items="allPlans" :search="search" :no-data-text="noDataText" :pagination.sync="pagination">
       <template v-slot:items="props">
         <tr @click="redirectPlan(props.item)">
           <td class="text-xs-left"><a :href="props.item.redirect_url" class="default-vue-link">{{ props.item.campaign_name }}</a></td>
@@ -17,6 +17,11 @@
           <td class="text-xs-left">{{ formatNumber(props.item.net_media_cost) }}</td>
           <td class="text-xs-left" :style="{ 'color' : getStatusColor(props.item.status)}">{{ capitalizeFirstletter(props.item.status) }}</td>
           <td class="text-xs-left">{{ dateToHumanReadable(props.item.date_created) }}</td>
+          <td class="justify-center layout px-0">
+            <media-plan-delete 
+              :plan="props.item"
+            ></media-plan-delete>
+          </td>
         </tr>
       </template>
       <template v-slot:no-results>
@@ -39,22 +44,28 @@
 </style>
 
 <script>
+  import DeletePlan from "./DeletePlan.vue";
   export default {
     props: {
       plans: Array
     },
+    components: {
+        'media-plan-delete': DeletePlan,
+    },
     data () {
       return {
         search: '',
+        allPlans: this.plans,
         headers: [
           { text: 'Name', align: 'left', value: 'campaign_name' },
           { text: 'Product', align: 'left', value: 'product_name' },
           { text: 'Brand', align: 'left', value: 'brand' },
           { text: 'Media Type', value: 'media_type' },
           { text: 'Flight Date', value: 'start_date' },
-          { text: 'Net Media Cost', value: 'start_date' },
+          { text: 'Net Media Cost (₦)', value: 'start_date' },
           { text: 'Status', value: 'status' },
-          { text: 'Created On', value: 'date_created' }
+          { text: 'Created On', value: 'date_created' },
+          { text: 'Actions', value: 'campaign_name', sortable: false }
         ],
         pagination: {
             rowsPerPage: 10,
@@ -64,9 +75,17 @@
         noDataText: 'No media plan was found'
       }
     },
+    created() {
+        var self = this;
+        Event.$on('media-plan-deleted', function (plan_id) {
+            self.allPlans = self.allPlans.filter(function( plan ) {
+              return plan.id !== plan_id;
+            });
+        });
+    },
     mounted() {
         console.log('Display All media plans Component mounted.');
-        console.log(this.plans);
+        console.log(this.allPlans);
     },
     methods: {
       goToPlanActivities(url) {

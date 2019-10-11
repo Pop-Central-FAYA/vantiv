@@ -5,10 +5,11 @@ use Illuminate\Database\Eloquent\Model;
 use Vanguard\Models\MediaPlanSuggestion;
 use Actuallymab\LaravelComment\Contracts\Commentable;
 use Actuallymab\LaravelComment\HasComments;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class MediaPlan extends Base implements Commentable
 {
-    use HasComments;
+    use HasComments, SoftDeletes;
 
     protected $fillable = [
         'budget', 'criteria_gender', 'criteria_lsm', 'criteria_social_class', 'criteria_region', 'criteria_state', 

@@ -131,6 +131,7 @@
             Route::group(['prefix' => 'api'], function() {
                 Route::post('/{id}/comments', 'MediaPlanCommentController@createComment')->name('agency.media_plan.comment.store');
                 Route::get('/{id}/comments', 'MediaPlanCommentController@getComments')->name('agency.media_plan.comment.all');
+                Route::delete('/{id}/delete', 'MediaPlanController@deletePlan')->name('media_plan.delete');
             });
         });
 

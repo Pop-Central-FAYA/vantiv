@@ -50,6 +50,7 @@ use Vanguard\Services\Ratings\StoreMediaPlanDeliverables;
 use Vanguard\Http\Resources\UserCollection;
 use Vanguard\Http\Resources\MediaPlanResource;
 use Vanguard\Http\Resources\MediaPlanCollection;
+use Vanguard\Services\MediaPlan\DeleteMediaPlanService;
 
 class MediaPlanController extends Controller
 {
@@ -730,5 +731,16 @@ class MediaPlanController extends Controller
             'status' => 'success',
             'data' =>  new MediaPlanResource($mediaPlanData)
         ]);
+    }
+
+    public function deletePlan($id)
+    {
+        $media_plan = MediaPlan::findorfail($id);
+        if ($media_plan->status == MediaPlanStatus::PENDING || $media_plan->status == MediaPlanStatus::IN_REVIEW) {
+            $this->authorize('delete', $media_plan);
+            $delete_plan = (new DeleteMediaPlanService($media_plan))->run();
+            return response()->json(array('code' =>  204), 204); 
+        }
+        return response()->json(array('code' =>  400), 400); 
     }
 }
