@@ -1,114 +1,120 @@
 <template>
     <v-container grid-list-md class="pt-0 pb-3 px-0">
-        <v-layout row wrap class="px-4 pb-3 white-bg">
-            <v-flex xs12 style="min-height: 70px">
-                <comment :model-id="plan.id" :routes="plan.routes.comments"></comment>
-            </v-flex>
-            <v-flex xs12>
-                <media-plan-deliverables :media-plan="mediaPlan"></media-plan-deliverables>
-            </v-flex>
-        </v-layout>
-        <v-layout row wrap class="white-bg">
-            <v-flex xs12 sm12 md12 lg12 mb-2>
-                <v-expansion-panel popout>
-                    <v-expansion-panel-content v-for="(duration, durationkey) in fayaDurations" :key="durationkey" class="py-2">
-                        <template v-slot:header>
-                            <div>{{ duration }} Seconds</div>
-                        </template>
-                        <v-card>
-                            <v-card-text>
-                                <v-layout wrap style="border-bottom: 1px solid #e8e8e8;">
-                                    <v-flex md12 px-0 style="overflow-x:auto;">
-                                        <table>
-                                            <thead>
-                                                <tr>
-                                                    <th class="fixed-side">Station</th>
-                                                    <th class="fixed-side">Day</th>
-                                                    <th class="fixed-side">Time Belt</th>
-                                                    <th class="fixed-side">Program</th>
-                                                    <th class="fixed-side">Rating</th>
-                                                    <th class="fixed-side">Grp</th>
-                                                    <th class="fixed-side">Unit Rate</th>
-                                                    <th class="fixed-side">Discount</th>
-                                                    <th class="fixed-side">Net Total</th>
-                                                    <th class="fixed-side">Total Exposure</th>
-                                                    <th v-for="(date, labelDateKey) in timeBelts['labeldates']" :key="labelDateKey" class="fixed-side">{{date}}</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr v-for="(timebelt, timeBeltkey) in fayaTimebelts['programs_stations']" :key="timeBeltkey">
-                                                    <td>{{ timebelt.station}}</td>
-                                                    <td>{{ shortDay(timebelt.day) }}</td>
-                                                    <td>{{ format_time(timebelt.start_time) }} {{ format_time(timebelt.end_time)}}</td>
-                                                    <td>
-                                                        <media-plan-program-details :time-belt="timebelt"></media-plan-program-details>
-                                                    </td>
-                                                    <td>
-                                                        {{ timebelt.rating }}
-                                                    </td>
-                                                    <td>
-                                                        {{ calculateGrp(timebelt.rating, getTotalExposureByTimebelt(timeBeltkey, duration)) }}
-                                                    </td>
-                                                    <td>{{ formatNumber(getUnitRate(timebelt, duration)) }}</td>
-                                                    <td>
-                                                        <input v-if="timebelt.volume_discount" :disabled="isMediaPlanPastReviewStage(plan.status)" min="0" max="100" :value="timebelt.volume_discount" type="number" @blur="storeVolumeDiscount(timebelt.station,$event)">
-                                                        <input v-else :disabled="isMediaPlanPastReviewStage(plan.status)" min="0" max="100" :value="0" type="number" @blur="storeVolumeDiscount(timebelt.station,$event)">
-                                                    </td>
-                                                    <td>{{ formatAmount(getNetTotalByTimeBelt(timebelt, timeBeltkey, duration)) }}</td>
-                                                    <td>{{ getTotalExposureByTimebelt(timeBeltkey, duration) }}</td>
-                                                    <td v-for="(timebeltDate, timebeltDatekey) in fayaTimebelts['dates']" :key="timebeltDatekey" class="exposure-td">
-                                                        <input type="number" v-if="fayaTimebelts['days'][timebeltDatekey] == timebelt.day" v-model="fayaTimebelts['programs_stations'][timeBeltkey]['exposures'][duration]['dates'][timebeltDate]" @change="countExposureByTimeBelt(timeBeltkey, duration, timebeltDate)">
-                                                        <input type="number" class="disabled_input" disabled v-else>
-                                                    </td>
-                                                </tr>
-                                                <tr class="subtotal">
-                                                    <td>Subtotal</td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td>{{ formatAmount(getNetTotalByDuration(duration)) }}</td>
-                                                    <td></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </v-flex>
-                                    <!-- <v-flex md3 style="overflow-x:auto;">
-                                        <table class="dates">
-                                            <thead>
-                                                <tr>
-                                                    <th v-for="(date, labelDateKey) in timeBelts['labeldates']" :key="labelDateKey" class="fixed-side">{{date}}</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr v-for="(timebelt, programKey) in fayaTimebelts['programs_stations']" :key="programKey">
-                                                    <td v-for="(timebeltDate, timebeltDatekey) in fayaTimebelts['dates']" :key="timebeltDatekey">
-                                                        <input :disabled="plan.status != 'Pending' || plan.status != 'In Review'" type="number" v-if="fayaTimebelts['days'][timebeltDatekey] == timebelt.day" v-model="fayaTimebelts['programs_stations'][programKey]['exposures'][duration]['dates'][timebeltDate]" @change="countExposureByTimeBelt(programKey, duration)">
-                                                        <input type="number" class="disabled_input" disabled v-else>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </v-flex> -->
-                                </v-layout>
-                            </v-card-text>
-                        </v-card>
-                    </v-expansion-panel-content>
-                </v-expansion-panel>
-            </v-flex>
-        </v-layout>
-        <v-layout row wrap class="px-0 py-5">
-            <v-flex xs12 sm12 md4 class="px-0">
-                <v-btn @click="buttonRedirect(plan.routes.insertions.back_action)" color="vue-back-btn" large><v-icon left>navigate_before</v-icon>Back</v-btn>
-            </v-flex>
-            <v-flex xs12 s12 md8 class="px-0 text-right">
-                <v-btn :disabled="isRunRatings || isMediaPlanPastReviewStage(plan.status)" @click="save(false)" color="default-vue-btn" large><v-icon left>save</v-icon>Save</v-btn>
-                <v-btn @click="goToSummary()" color="default-vue-btn" large>Summary<v-icon right>navigate_next</v-icon></v-btn>
-            </v-flex>
-        </v-layout>
+        <template>
+            <v-container grid-list-md class="py-0 px-0 media-plan-body">
+                <v-layout row wrap class="px-4 pb-3 white-bg">
+                    <v-flex xs12 style="min-height: 70px">
+                        <comment :model-id="plan.id" :routes="plan.routes.comments"></comment>
+                    </v-flex>
+                    <v-flex xs12>
+                        <media-plan-deliverables :media-plan="mediaPlan"></media-plan-deliverables>
+                    </v-flex>
+                </v-layout>
+                <v-layout row wrap class="white-bg">
+                    <v-flex xs12 sm12 md12 lg12 mb-2>
+                        <v-expansion-panel popout>
+                            <v-expansion-panel-content v-for="(duration, durationkey) in fayaDurations" :key="durationkey" class="py-2">
+                                <template v-slot:header>
+                                    <div>{{ duration }} Seconds</div>
+                                </template>
+                                <v-card>
+                                    <v-card-text>
+                                        <v-layout wrap style="border-bottom: 1px solid #e8e8e8;">
+                                            <v-flex md12 px-0 style="overflow-x:auto;">
+                                                <table>
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="fixed-side">Station</th>
+                                                            <th class="fixed-side">Day</th>
+                                                            <th class="fixed-side">Time Belt</th>
+                                                            <th class="fixed-side">Program</th>
+                                                            <th class="fixed-side">Rating</th>
+                                                            <th class="fixed-side">Grp</th>
+                                                            <th class="fixed-side">Unit Rate</th>
+                                                            <th class="fixed-side">Discount</th>
+                                                            <th class="fixed-side">Net Total</th>
+                                                            <th class="fixed-side">Total Exposure</th>
+                                                            <th v-for="(date, labelDateKey) in timeBelts['labeldates']" :key="labelDateKey" class="fixed-side">{{date}}</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr v-for="(timebelt, timeBeltkey) in fayaTimebelts['programs_stations']" :key="timeBeltkey">
+                                                            <td>{{ timebelt.station}}</td>
+                                                            <td>{{ shortDay(timebelt.day) }}</td>
+                                                            <td>{{ format_time(timebelt.start_time) }} {{ format_time(timebelt.end_time)}}</td>
+                                                            <td>
+                                                                <media-plan-program-details :time-belt="timebelt"></media-plan-program-details>
+                                                            </td>
+                                                            <td>
+                                                                {{ timebelt.rating }}
+                                                            </td>
+                                                            <td>
+                                                                {{ calculateGrp(timebelt.rating, getTotalExposureByTimebelt(timeBeltkey, duration)) }}
+                                                            </td>
+                                                            <td>{{ formatNumber(getUnitRate(timebelt, duration)) }}</td>
+                                                            <td>
+                                                                <input v-if="timebelt.volume_discount" :disabled="isMediaPlanPastReviewStage(plan.status)" min="0" max="100" :value="timebelt.volume_discount" type="number" @blur="storeVolumeDiscount(timebelt.station,$event)">
+                                                                <input v-else :disabled="isMediaPlanPastReviewStage(plan.status)" min="0" max="100" :value="0" type="number" @blur="storeVolumeDiscount(timebelt.station,$event)">
+                                                            </td>
+                                                            <td>{{ formatAmount(getNetTotalByTimeBelt(timebelt, timeBeltkey, duration)) }}</td>
+                                                            <td>{{ getTotalExposureByTimebelt(timeBeltkey, duration) }}</td>
+                                                            <td v-for="(timebeltDate, timebeltDatekey) in fayaTimebelts['dates']" :key="timebeltDatekey" class="exposure-td">
+                                                                <input type="number" v-if="fayaTimebelts['days'][timebeltDatekey] == timebelt.day" v-model="fayaTimebelts['programs_stations'][timeBeltkey]['exposures'][duration]['dates'][timebeltDate]" @change="countExposureByTimeBelt(timeBeltkey, duration, timebeltDate)">
+                                                                <input type="number" class="disabled_input" disabled v-else>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="subtotal">
+                                                            <td>Subtotal</td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td>{{ formatAmount(getNetTotalByDuration(duration)) }}</td>
+                                                            <td></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </v-flex>
+                                            <!-- <v-flex md3 style="overflow-x:auto;">
+                                                <table class="dates">
+                                                    <thead>
+                                                        <tr>
+                                                            <th v-for="(date, labelDateKey) in timeBelts['labeldates']" :key="labelDateKey" class="fixed-side">{{date}}</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr v-for="(timebelt, programKey) in fayaTimebelts['programs_stations']" :key="programKey">
+                                                            <td v-for="(timebeltDate, timebeltDatekey) in fayaTimebelts['dates']" :key="timebeltDatekey">
+                                                                <input :disabled="plan.status != 'Pending' || plan.status != 'In Review'" type="number" v-if="fayaTimebelts['days'][timebeltDatekey] == timebelt.day" v-model="fayaTimebelts['programs_stations'][programKey]['exposures'][duration]['dates'][timebeltDate]" @change="countExposureByTimeBelt(programKey, duration)">
+                                                                <input type="number" class="disabled_input" disabled v-else>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </v-flex> -->
+                                        </v-layout>
+                                    </v-card-text>
+                                </v-card>
+                            </v-expansion-panel-content>
+                        </v-expansion-panel>
+                    </v-flex>
+                </v-layout>
+            </v-container>
+            <v-container grid-list-md class="px-0">
+                <v-layout row wrap class="px-0">
+                    <v-flex xs12 sm12 md4 class="px-0">
+                        <v-btn @click="buttonRedirect(plan.routes.insertions.back_action)" color="vue-back-btn" large><v-icon left>navigate_before</v-icon>Back</v-btn>
+                    </v-flex>
+                    <v-flex xs12 s12 md8 class="px-0 text-right">
+                        <v-btn :disabled="isRunRatings || isMediaPlanPastReviewStage(plan.status)" @click="save(false)" color="default-vue-btn" large><v-icon left>save</v-icon>Save</v-btn>
+                        <v-btn @click="goToSummary()" color="default-vue-btn" large>Summary<v-icon right>navigate_next</v-icon></v-btn>
+                    </v-flex>
+                </v-layout>
+            </v-container>
+        </template>
     </v-container>
 </template>
 
