@@ -47,8 +47,17 @@
     export default {
         props: {
             filterValues: Object,
-            selectedFilters: Object,
             routes: Object
+        },
+        data() {
+            return {
+                selectedFilters: {
+                    'station_type': 'Network',
+                    'day': 'all',
+                    'state': 'all',
+                    'day_part': 'all'
+                }
+            };
         },
         mounted() {
             console.log('Filter Suggestions Component mounted.');
@@ -58,13 +67,14 @@
             createNewRatings() {
                 this.sweet_alert('Getting station list based on filters', 'info', 60000);
                 axios({
-                    method: 'post',
+                    method: 'get',
                     url: this.routes.new_ratings_action,
-                    data: this.selectedFilters
+                    params: this.selectedFilters
                 }).then((res) => {
                     if (this.isNotEmpty(res.data.data)) {
                         this.sweet_alert('Ratings retrieved', 'success');
-                        Event.$emit('ratings-created', res.data.data);
+                        const eventData = {"data": res.data.data, "filters": this.selectedFilters};
+                        Event.$emit('ratings-created', eventData);
                     } else {
                         this.sweet_alert('No results found, please try another filter', 'error');
                     }

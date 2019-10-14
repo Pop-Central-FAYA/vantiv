@@ -1,0 +1,376 @@
+- raw_name: "(A-C)_AIT International"
+  name: AIT International
+  broadcast_type: International
+- raw_name: "(A-C)_AMC Movies"
+  name: AMC Movies
+  broadcast_type: International
+- raw_name: "(A-C)_AMC Music"
+  name: AMC Music
+  broadcast_type: International
+- raw_name: "(A-C)_AMC Series"
+  name: AMC Series
+  broadcast_type: International
+- raw_name: "(A-C)_AMC"
+  name: AMC
+  broadcast_type: International
+- raw_name: "(A-C)_Activate"
+  name: Activate
+  broadcast_type: International
+- raw_name: "(A-C)_Africa Magic (Hausa)"
+  name: Africa Magic Hausa
+  broadcast_type: International
+- raw_name: "(A-C)_Africa Magic (Yoruba)"
+  name: Africa Magic Yoruba
+  broadcast_type: International
+- raw_name: "(A-C)_Africa Magic Epic"
+  name: Africa Magic Epic
+  broadcast_type: International
+- raw_name: "(A-C)_Africa Magic Family"
+  name: Africa Magic Family
+  broadcast_type: International
+- raw_name: "(A-C)_Africa Magic Igbo"
+  name: Africa Magic Igbo
+  broadcast_type: International
+- raw_name: "(A-C)_Africa Magic Showcase"
+  name: Africa Magic Showcase
+  broadcast_type: International
+- raw_name: "(A-C)_Africa Magic Urban"
+  name: Africa Magic Urban
+  broadcast_type: International
+- raw_name: "(A-C)_Alpha TV Channel 113 Nnobi"
+  name: Alpha TV Channel 113
+  broadcast_type: International
+- raw_name: "(A-C)_Arewa 24"
+  name: Arewa 24
+  broadcast_type: International
+- raw_name: "(A-C)_BBC Lifestyle"
+  name: BBC Lifestyle
+  broadcast_type: International
+- raw_name: "(A-C)_BBC News"
+  name: BBC World News
+  broadcast_type: International
+- raw_name: "(A-C)_BET"
+  name: BET
+  broadcast_type: International
+- raw_name: "(A-C)_Big Brother Naija"
+  name: Big Brother Naija
+  broadcast_type: International
+- raw_name: "(A-C)_Bollywood"
+  name: Bollywood
+  broadcast_type: International
+- raw_name: "(A-C)_CCTV 4"
+  name: CCTV 4
+  broadcast_type: International
+- raw_name: "(A-C)_CNN"
+  name: CNN International
+  broadcast_type: International
+- raw_name: "(A-C)_Cartoon Network"
+  name: Cartoon Network
+  broadcast_type: International
+- raw_name: "(A-C)_Channels TV"
+  name: Channels Television
+  broadcast_type: International
+- raw_name: "(A-C)_Comedy Central"
+  name: Comedy Central
+  broadcast_type: International
+- raw_name: "(D-L)_Discovery Channel"
+  name: Discovery Channel
+  broadcast_type: International
+- raw_name: "(D-L)_Discovery Family"
+  name: Discovery Family
+  broadcast_type: International
+- raw_name: "(D-L)_Discovery Idx"
+  name: Investigation Discovery
+  broadcast_type: International
+- raw_name: "(D-L)_Discovery Science"
+  name: Discovery Science
+  broadcast_type: International
+- raw_name: "(D-L)_E! Entertainment"
+  name: E! Entertainment Television
+  broadcast_type: International
+- raw_name: "(D-L)_FOX Int (GOtv)"
+  name: FOX Int (GOtv)
+  broadcast_type: International
+- raw_name: "(D-L)_Fox Business"
+  name: Fox Business
+  broadcast_type: International
+- raw_name: "(D-L)_Fox Crime"
+  name: Fox Crime
+  broadcast_type: International
+- raw_name: "(D-L)_Fox Entertainment"
+  name: Fox Entertainment
+  broadcast_type: International
+- raw_name: "(D-L)_Fox Movie"
+  name: Fox Movie
+  broadcast_type: International
+- raw_name: "(D-L)_Fox News"
+  name: Fox News
+  broadcast_type: International
+- raw_name: "(D-L)_Fox Sports"
+  name: Fox Sports
+  broadcast_type: International
+- raw_name: "(D-L)_Iroko 1"
+  name: Iroko 1
+  broadcast_type: International
+- raw_name: "(D-L)_Iroko 2"
+  name: Iroko 2
+  broadcast_type: International
+- raw_name: "(D-L)_Kwese Free Sports Nigeria ch. 290"
+  name: Kwese Free Sports Nigeria ch. 290
+  broadcast_type: International
+- raw_name: "(D-L)_Kwese Free Sports"
+  name: Kwese Free Sports
+  broadcast_type: International
+- raw_name: "(D-L)_Kwese Sports 1 ch. 301"
+  name: Kwese Sports 1
+  broadcast_type: International
+- raw_name: "(D-L)_Kwese Sports 2 ch. 302"
+  name: Kwese Sports 2
+  broadcast_type: International
+- raw_name: "(D-L)_LTV"
+  name: Lagos TV
+  broadcast_type: International
+- raw_name: "(M)_M-Net Movies Action"
+  name: M-Net Movies Action
+  broadcast_type: International
+- raw_name: "(M)_M-Net Movies City"
+  name: M-Net Movies City
+  broadcast_type: International
+- raw_name: "(M)_M-Net Movies Premiere"
+  name: M-Net Movies Premiere
+  broadcast_type: International
+- raw_name: "(M)_M-Net Movies Showcase"
+  name: M-Net Movies Showcase
+  broadcast_type: International
+- raw_name: "(M)_M-Net Movies Star"
+  name: M-Net Movies Star
+  broadcast_type: International
+- raw_name: "(M)_M-Net Movies Zone"
+  name: M-Net Movies Zone
+  broadcast_type: International
+- raw_name: "(M)_M-Net Smile"
+  name: M-Net Smile
+  broadcast_type: International
+- raw_name: "(M)_M-Net West"
+  name: M-Net West
+  broadcast_type: International
+- raw_name: "(M)_MBC 1"
+  name: MBC 1
+  broadcast_type: International
+- raw_name: "(M)_MBC 3"
+  name: MBC 3
+  broadcast_type: International
+- raw_name: "(M)_MBC 4"
+  name: MBC 4
+  broadcast_type: International
+- raw_name: "(M)_MBC Action"
+  name: MBC Action
+  broadcast_type: International
+- raw_name: "(M)_MBC Max"
+  name: MBC Max
+  broadcast_type: International
+- raw_name: "(M)_MTV Base"
+  name: MTV Base
+  broadcast_type: International
+- raw_name: "(M)_MTV"
+  name: MTV
+  broadcast_type: International
+- raw_name: "(M)_My TV Hausa"
+  name: My TV Hausa
+  broadcast_type: International
+- raw_name: "(M)_My TV Yoruba"
+  name: My TV Yoruba
+  broadcast_type: International
+- raw_name: "(N-R)_NTA Entertainment"
+  name: NTA Entertainment
+  broadcast_type: International
+- raw_name: "(N-R)_NTA Hausa"
+  name: NTA Hausa
+  broadcast_type: International
+- raw_name: "(N-R)_NTA Igbo"
+  name: NTA Igbo
+  broadcast_type: International
+- raw_name: "(N-R)_NTA Knowledge"
+  name: NTA Knowledge
+  broadcast_type: International
+- raw_name: "(N-R)_NTA Lagos"
+  name: NTA Lagos
+  broadcast_type: International
+- raw_name: "(N-R)_NTA News 24"
+  name: NTA News 24
+  broadcast_type: International
+- raw_name: "(N-R)_NTA Parliamentary"
+  name: NTA Parliamentary
+  broadcast_type: International
+- raw_name: "(N-R)_NTA Sports"
+  name: NTA Sports
+  broadcast_type: International
+- raw_name: "(N-R)_NTA Yoruba"
+  name: NTA Yoruba
+  broadcast_type: International
+- raw_name: "(N-R)_National Geographic Wild"
+  name: National Geographic Wild
+  broadcast_type: International
+- raw_name: "(N-R)_National Geographic"
+  name: National Geographic
+  broadcast_type: International
+- raw_name: "(N-R)_Nick Jr"
+  name: Nick Jr
+  broadcast_type: International
+- raw_name: "(N-R)_Nick Toons"
+  name: Nick Toons
+  broadcast_type: International
+- raw_name: "(N-R)_Nickelodeon"
+  name: Nickelodeon
+  broadcast_type: International
+- raw_name: "(N-R)_PIUS TV Africa"
+  name: PLUS TV Africa
+  broadcast_type: International
+- raw_name: "(N-R)_RFI (France) Hausa Service"
+  name: RFI (France) Hausa Service
+  broadcast_type: International
+- raw_name: "(N-R)_RFI (France) World Service"
+  name: RFI (France) World Service
+  broadcast_type: International
+- raw_name: "(N-R)_ROK 2"
+  name: ROK 2
+  broadcast_type: International
+- raw_name: "(N-R)_ROK 3"
+  name: ROK 3
+  broadcast_type: International
+- raw_name: "(S-Z)_SS 1 Africa (DStv)"
+  name: SuperSport 1
+  broadcast_type: International
+- raw_name: "(S-Z)_SS 10 Nigeria (DStv)"
+  name: SuperSport 10
+  broadcast_type: International
+- raw_name: "(S-Z)_SS 11 Nigeria (DStv)"
+  name: SuperSport 11
+  broadcast_type: International
+- raw_name: "(S-Z)_SS 12 Nigeria (DStv)"
+  name: SuperSport 12
+  broadcast_type: International
+- raw_name: "(S-Z)_SS 2 Nigeria (DStv)"
+  name: SuperSport 2
+  broadcast_type: International
+- raw_name: "(S-Z)_SS 2 Africa (DStv)"
+  name: SuperSport 2
+  broadcast_type: International
+- raw_name: "(S-Z)_SS 3 Nigeria (DStv)"
+  name: SuperSport 3
+  broadcast_type: International
+- raw_name: "(S-Z)_SS 4 Nigeria (DStv)"
+  name: SuperSport 4
+  broadcast_type: International
+- raw_name: "(S-Z)_SS 4 Africa (DStv)"
+  name: SuperSport 4
+  broadcast_type: International
+- raw_name: "(S-Z)_SS 5 Nigeria (DStv)"
+  name: SuperSport 5
+  broadcast_type: International
+- raw_name: "(S-Z)_SS 6 Nigeria (DStv)"
+  name: SuperSport 6
+  broadcast_type: International
+- raw_name: "(S-Z)_SS 6 Africa (DStv)"
+  name: SuperSport 6
+  broadcast_type: International
+- raw_name: "(S-Z)_SS 7 Nigeria (DStv)"
+  name: SuperSport 7
+  broadcast_type: International
+- raw_name: "(S-Z)_SS 8 Nigeria (DStv)"
+  name: SuperSport 8
+  broadcast_type: International
+- raw_name: "(S-Z)_SS 9 Nigeria (DStv)"
+  name: SuperSport 9
+  broadcast_type: International
+- raw_name: "(S-Z)_SS 9 Africa (DStv)"
+  name: SuperSport 9
+  broadcast_type: International
+- raw_name: "(S-Z)_SS Blitz (DStv)"
+  name: SuperSport Blitz
+  broadcast_type: International
+- raw_name: "(S-Z)_SS Select 4 Africa (GOtv)"
+  name: SuperSport Select 4
+  broadcast_type: International
+- raw_name: "(S-Z)_Silverbird International (STV)"
+  name: Silverbird International
+  broadcast_type: International
+- raw_name: "(S-Z)_Silverbird"
+  name: Silverbird International
+  broadcast_type: International
+- raw_name: "(S-Z)_Sky News"
+  name: Sky News
+  broadcast_type: International
+- raw_name: "(S-Z)_Sound City"
+  name: Sound City
+  broadcast_type: International
+- raw_name: "(S-Z)_Star World"
+  name: Star World
+  broadcast_type: International
+- raw_name: "(S-Z)_Star life"
+  name: Star Life
+  broadcast_type: International
+- raw_name: "(S-Z)_Startimes Bollywood Africa"
+  name: Startimes Bollywood Africa
+  broadcast_type: International
+- raw_name: "(S-Z)_Startimes Bollywood"
+  name: Startimes Bollywood
+  broadcast_type: International
+- raw_name: "(S-Z)_Startimes Orisun"
+  name: Startimes Orisun
+  broadcast_type: International
+- raw_name: "(S-Z)_Startimes Yoruba"
+  name: Startimes Yoruba
+  broadcast_type: International
+- raw_name: "(S-Z)_Studio Universal"
+  name: Studio Universal
+  broadcast_type: International
+- raw_name: "(S-Z)_SuperSport 2 (GOtv)"
+  name: SuperSport 2
+  broadcast_type: International
+- raw_name: "(S-Z)_SuperSport 3 (GOtv)"
+  name: SuperSport 3
+  broadcast_type: International
+- raw_name: "(S-Z)_SuperSport Blitz (GOtv)"
+  name: SuperSport Blitz
+  broadcast_type: International
+- raw_name: "(S-Z)_SuperSport Select 1 (GOtv)"
+  name: SuperSport Select 1
+  broadcast_type: International
+- raw_name: "(S-Z)_Telemundo"
+  name: Telemundo
+  broadcast_type: International
+- raw_name: "(S-Z)_Trace Naija"
+  name: Trace Naija
+  broadcast_type: International
+- raw_name: "(S-Z)_V.O.A. (Voice Of America)"
+  name: V.O.A. (Voice Of America)
+  broadcast_type: International
+- raw_name: "(S-Z)_V.O.N. (Voice Of Nigeria), Lagos"
+  name: V.O.N. (Voice Of Nigeria), Lagos
+  broadcast_type: International
+- raw_name: "(S-Z)_Vuzu Amp"
+  name: Vuzu Amp
+  broadcast_type: International
+- raw_name: "(S-Z)_WAP TV"
+  name: WAP TV
+  broadcast_type: International
+- raw_name: "(S-Z)_Wazobia TV"
+  name: Wazobia TV
+  broadcast_type: International
+- raw_name: "(S-Z)_Zee World"
+  name: Zee World
+  broadcast_type: International
+- raw_name: "(M)_My TV Africa"
+  name: My TV Africa
+  broadcast_type: International
+- raw_name: "(M)_My TV Series"
+  name: My TV Series
+  broadcast_type: International
+- raw_name: "(N-R)_SS Select 4 Africa (GOtv)"
+  name: SuperSport Select 4
+  broadcast_type: International
+
+
+
+

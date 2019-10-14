@@ -10,7 +10,7 @@
                                     <h4 class="mt-4 weight_medium">AVAILABLE STATION & TIMES</h4>
                                 </v-flex>
                                 <v-flex md8>
-                                    <media-plan-suggestion-filter :routes="redirectUrls" :selected-filters="selectedFilters" :filter-values="filterValues"></media-plan-suggestion-filter>
+                                    <media-plan-suggestion-filter :routes="redirectUrls" :filter-values="filterValues"></media-plan-suggestion-filter>
                                 </v-flex>
                             </v-layout>
                         </v-card-title>
@@ -19,7 +19,6 @@
                                 <v-tabs-slider></v-tabs-slider>
                                 <v-tab :href="`#table-view`"><v-icon class="mr-2">view_list</v-icon> Table</v-tab>
                                 <v-tab :href="`#graph-view`"><v-icon class="mr-2">multiline_chart</v-icon> Graph</v-tab>
-
                                 <v-tab-item :value="'table-view'">
                                     <v-card flat tile>
                                         <v-card-text class="px-1 pb-0">

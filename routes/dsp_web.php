@@ -36,7 +36,7 @@
         Route::group(['namespace' => 'Dsp', 'prefix' => 'campaigns'], function () {
             Route::get('/{status?}', 'CampaignsController@index')->name('agency.campaign.all');
             Route::get('/details/{id}/{group?}', 'CampaignsController@getDetails')->name('agency.campaign.details');
-            
+
             #api
             Route::group(['prefix' => 'api'], function() {
                 Route::get('/{campaign_id}/vendors/{ad_vendor_id}/mpos', 'MpoController@vendorMpoList')->name('campaign.vendors.mpos.lists');
@@ -106,10 +106,6 @@
          */
         Route::group(['namespace' => 'Dsp\MediaPlan', 'prefix' => 'media-plan'], function () {
             /*** New Routes ****/
-            // Route::post('/{id}/ratings', 'MediaPlanController@createStationRatings')->name('agency.media_plan.create-ratings');
-            Route::post('/{id}/ratings', 'MediaPlanController@createStationRatings')->name('agency.media_plan.create-ratings');
-            Route::post('/{id}/ratings/{station_key}/timebelts', 'MediaPlanController@createStationTimeBeltRatings')->name('agency.media_plan.create-timebelt-ratings');
-            Route::post('/{id}/graph-ratings', 'MediaPlanController@createTimeBeltRatingsGraph')->name('agency.media_plan.create-timebelt-graph');
             Route::post('/{id}/suggestions', 'MediaPlanController@storeSuggestions')->name('agency.media_plan.select_suggestions');
 
             /*** Old Routes ***/
@@ -218,7 +214,7 @@
             Route::get('/company/index', 'CompanyController@index')->name('company.index');
             Route::patch('/company/{id}', 'CompanyController@update')->name('company.update');
         });
-        
+
         Route::group(['namespace' => 'Dsp'], function() {
             Route::get('/ad-vendors', 'AdVendorController@index')->name('ad-vendor.index');
             Route::get('/ad-vendors/{id}/details', 'AdVendorController@details')->name('ad-vendor.details');
@@ -251,7 +247,18 @@
             Route::patch('/brands/{id}', 'BrandController@update')->name('brand.update');
         });
 
-        Route::post('/presigned-url', 'S3Controller@getPresignedUrl')->name('presigned.url');
+        /**
+         * Generation of REACH routes
+         */
+        Route::group(['namespace' => 'Dsp'], function() {
+            Route::group(['prefix' => 'api'], function() {
+                /**
+                 * @todo, after merging this branch with Kunle's breaking changes, switch the name of the route
+                 */
+                Route::get('/reach/{plan_id}', 'ReachController@getReach')->name('reach.get');
+                Route::get('/reach/{plan_id}/timebelts', 'ReachController@getStationTimebeltReach')->name('reach.get-timebelts');
+            });
+        });
 
         /*
         * new user management route
@@ -261,10 +268,10 @@
 
             Route::group(['prefix' => 'api'], function () {
                 Route::get('/users', 'UserController@list')->name('users.list');
-                Route::post('/users', 'UserController@create')->name('users.invite');  
-                Route::patch('/users/{id}', 'UserController@update')->name('users.update'); 
-                Route::post('/users/{id}/resend-invitaion', 'UserController@resend')->name('users.reinvite'); 
-                Route::delete('/users/{id}', 'UserController@delete')->name('users.delete'); 
+                Route::post('/users', 'UserController@create')->name('users.invite');
+                Route::patch('/users/{id}', 'UserController@update')->name('users.update');
+                Route::post('/users/{id}/resend-invitaion', 'UserController@resend')->name('users.reinvite');
+                Route::delete('/users/{id}', 'UserController@delete')->name('users.delete');
             });
          });
 
@@ -273,22 +280,21 @@
         */
         Route::group(['namespace' => 'Dsp'], function () {
             Route::get('/profile', 'ProfileController@index')->name('profile.index');
-            
+
             Route::group(['prefix' => 'api'], function () {
                 Route::get('/profile', 'ProfileController@get')->name('profile.get');
-                Route::patch('/profile/{id}', 'ProfileController@update')->name('profile.update'); 
-                Route::post('/profile/password', 'ProfileController@updatePassword')->name('password.update'); 
+                Route::patch('/profile/{id}', 'ProfileController@update')->name('profile.update');
+                Route::post('/profile/password', 'ProfileController@updatePassword')->name('password.update');
              });
          });
 
-        
-
-    });
 
      Route::group(['namespace' => 'Dsp'], function () {
         Route::get('/password/{token}', 'ProfileController@resetPassword')->name('password.reset');
         Route::group(['prefix' => 'api'], function () {
-            Route::post('/password', 'ProfileController@processResetPassword')->name('process.password.reset'); 
+            Route::post('/password', 'ProfileController@processResetPassword')->name('process.password.reset');
          });
      });
 
+    Route::post('/presigned-url', 'S3Controller@getPresignedUrl')->name('presigned.url');
+});

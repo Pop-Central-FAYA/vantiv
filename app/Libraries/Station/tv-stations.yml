@@ -1,0 +1,1346 @@
+# Regional TV Stations Here
+- name: BCA
+  state: Abia
+  city: Umuahia
+  region: South East
+  type: Regional
+  broadcast: Terrestrial
+  publisher: BCA
+  publisher_full: Broadcasting Corporation of Abia State
+
+- name: MST
+  state: Anambra
+  city: Obosi
+  region: South East
+  type: Regional
+  broadcast: Terrestrial
+  publisher: MST
+  publisher_full: Minaj Systems Television
+
+- name: BATV
+  state: Bauchi
+  city: Bauchi
+  region: North East
+  type: Regional
+  broadcast: Terrestrial
+  publisher: BATV
+  publisher_full: Bauchi State Television Authority
+
+- name: BRTV
+  state: Borno
+  city: Maiduguri
+  region: North East
+  type: Regional
+  broadcast: Terrestrial
+  publisher: BRTV
+  publisher_full: Borno Radio Television
+
+- name: EBS
+  state: Edo
+  city: Benin
+  region: South South
+  type: Regional
+  broadcast: Terrestrial
+  publisher: EBS
+  publisher_full: Edo Broadcasting Service
+
+- name: Ekiti TV
+  state: Ekiti
+  city: Ado-Ekiti
+  region: South West
+  type: Regional
+  broadcast: Terrestrial
+  publisher: Ekiti TV
+  publisher_full: Ekiti State Television
+
+- name: ETV
+  state: Enugu
+  city: Enugu
+  region: South East
+  type: Regional
+  broadcast: Terrestrial
+  publisher: ETV
+  publisher_full: ETV
+
+- name: KTV
+  state: Kwara
+  city: Ilorin
+  region: North Central
+  type: Regional
+  broadcast: Terrestrial
+  publisher: KTV
+  publisher_full: Kwara State Television Authority
+- name: KTV
+  type: Network
+  broadcast: Terrestrial
+  publisher: KTV
+  publisher_full: Kwara State Television Authority
+
+- name: Capital TV
+  state: Kaduna
+  city: Kaduna
+  region: North West
+  type: Regional
+  broadcast: Terrestrial
+  publisher: Capital TV
+  publisher_full: Capital TV
+- name: DITV
+  state: Kaduna
+  city: Kaduna
+  region: North West
+  type: Regional
+  broadcast: Terrestrial
+  publisher: DITV
+  publisher_full: Desmims Independent Television
+- name: KSTV
+  state: Kaduna
+  city: Kaduna
+  region: North West
+  type: Regional
+  broadcast: Terrestrial
+  publisher: KSTV
+  publisher_full: Kaduna State Media Corporation TV
+- name: KSTV
+  type: Network
+  broadcast: Terrestrial
+  publisher: KSTV
+  publisher_full: Kaduna State Media Corporation TV
+- name: Liberty TV
+  state: Kaduna
+  city: Kaduna
+  region: North West
+  type: Regional
+  broadcast: Terrestrial
+  publisher: Liberty TV
+  publisher_full: Liberty TV
+
+- name: CTV
+  state: Kano
+  city: Kano
+  region: North West
+  type: Regional
+  broadcast: Terrestrial
+  publisher: CTV
+  publisher_full: CTV
+- name: CTV
+  type: Network
+  broadcast: Terrestrial
+  publisher: CTV
+  publisher_full: CTV
+
+- name: DMS TV
+  state: Lagos
+  city: Lagos
+  region: Lagos
+  type: Regional
+  broadcast: Terrestrial
+  publisher: DMS TV
+  publisher_full: DMS TV
+- name: Lagos TV
+  state: Lagos
+  city: Lagos
+  region: Lagos
+  type: Regional
+  broadcast: Terrestrial
+  publisher: Lagos TV
+  publisher_full: Lagos Television
+- name: ONTV
+  state: Lagos
+  city: Lagos
+  region: Lagos
+  type: Regional
+  broadcast: Terrestrial
+  publisher: ONTV
+  publisher_full: ONTV Nigeria
+- name: Super Screen TV
+  state: Lagos
+  city: Lagos
+  region: Lagos
+  type: Regional
+  broadcast: Terrestrial
+  publisher: Super Screen TV
+  publisher_full: Super Screen TV
+- name: TVC
+  state: Lagos
+  city: Lagos
+  region: Lagos
+  type: Regional
+  broadcast: Terrestrial
+  publisher: TVC
+  publisher_full: TVC
+
+- name: BCOS
+  state: Oyo
+  city: Ibadan
+  region: South West
+  type: Regional
+  broadcast: Terrestrial
+  publisher: BCOS
+  publisher_full: Broadcasting Corporation of Oyo State
+
+- name: PRTV
+  state: Plateau
+  city: Jos
+  region: North Central
+  type: Regional
+  broadcast: Terrestrial
+  publisher: PRTV
+  publisher_full: Plateau Radio Television Corporation
+
+- name: RSTV
+  state: Rivers
+  city: Port Harcourt
+  region: South South
+  type: Regional
+  broadcast: Terrestrial
+  publisher: RSTV
+  publisher_full: Rivers State Television
+
+- name: Sokoto State Television
+  state: Sokoto
+  city: Sokoto
+  region: North West
+  type: Regional
+  broadcast: Terrestrial
+  publisher: Sokoto State Television
+  publisher_full: Sokoto State Television
+
+- name: ABS TV
+  state: Anambra
+  city: Awka
+  region: South East
+  type: Regional
+  broadcast: Terrestrial
+  publisher: ABS TV
+  publisher_full: ABS TV
+- name: ABS TV
+  state: Anambra
+  city: Onitsha
+  region: South East
+  type: Regional
+  broadcast: Terrestrial
+  publisher: ABS TV
+  publisher_full: Anambra Broadcasting Service
+- name: ABS TV
+  type: Network
+  broadcast: Terrestrial
+  publisher: ABS TV
+  publisher_full: Anambra Broadcasting Service
+
+- name: CRTV
+  state: Cross River
+  city: Calabar
+  region: South South
+  type: Regional
+  broadcast: Terrestrial
+  publisher: CRTV
+  publisher_full: CRTV
+- name: CRTV
+  state: Cross River
+  city: Ikom
+  region: South South
+  type: Regional
+  broadcast: Terrestrial
+  publisher: CRTV
+  publisher_full: CRTV
+- name: CRTV
+  type: Network
+  broadcast: Terrestrial
+  publisher: CRTV
+  publisher_full: CRTV
+
+- name: ITV
+  state: Edo
+  city: Benin
+  region: South South
+  type: Regional
+  broadcast: Terrestrial
+  publisher: ITV
+  publisher_full: Independent Television and Radio
+- name: ITV
+  state: Abuja
+  city: Abuja
+  region: North Central
+  type: Regional
+  broadcast: Terrestrial
+  publisher: ITV
+  publisher_full: Independent Television and Radio
+
+- name: MITV
+  state: Lagos
+  city: Lagos
+  region: Lagos
+  type: Regional
+  broadcast: Terrestrial
+  publisher: MITV
+  publisher_full: Muri International Television
+- name: MITV
+  state: Oyo
+  city: Ibadan
+  region: South West
+  type: Regional
+  broadcast: Terrestrial
+  publisher: MITV
+  publisher_full: Muri International Television
+
+- name: AMC Movies
+  type: International
+  broadcast: Satellite
+  vendor: [Startimes]
+  publisher: African Movie Channel
+  publisher_full: African Movie Channel
+- name: AMC Series
+  type: International
+  broadcast: Satellite
+  vendor: [Startimes]
+  publisher: African Movie Channel
+  publisher_full: African Movie Channel
+- name: AMC
+  type: International
+  broadcast: Satellite
+  vendor: [Startimes]
+  publisher: African Movie Channel
+  publisher_full: African Movie Channel
+
+- name: Africa Magic Hausa
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv, Gotv]
+  publisher: Africa Magic
+  publisher_full: Africa Magic
+- name: Africa Magic Yoruba
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv, Gotv]
+  publisher: Africa Magic
+  publisher_full: Africa Magic
+- name: Africa Magic Epic
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv, Gotv]
+  publisher: Africa Magic
+  publisher_full: Africa Magic
+- name: Africa Magic Family
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv, Gotv]
+  publisher: Africa Magic
+  publisher_full: Africa Magic
+- name: Africa Magic Igbo
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv, Gotv]
+  publisher: Africa Magic
+  publisher_full: Africa Magic
+- name: Africa Magic Showcase
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv]
+  publisher: Africa Magic
+  publisher_full: Africa Magic
+- name: Africa Magic Urban
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv]
+  publisher: Africa Magic
+  publisher_full: Africa Magic
+
+- name: Arewa 24
+  type: International
+  broadcast: Satellite
+  vendor: [Startimes]
+  publisher: Arewa 24
+  publisher_full: Arewa 24
+
+- name: BBC Lifestyle
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv]
+  publisher: BBC
+  publisher_full: British Broadcasting Corporation
+- name: BBC World News
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv, Gotv, Startimes]
+  publisher: BBC
+  publisher_full: British Broadcasting Corporation
+
+- name: BET
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv, Gotv]
+  publisher: BET
+  publisher_full: Black Entertainment Television
+  
+- name: Big Brother Naija
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv, Gotv]
+  publisher: Big Brother Naija
+  publisher_full: Big Brother Naija
+
+- name: CCTV 4
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv]
+  publisher: CCTV 4
+  publisher_full: China Central Television
+
+#@todo change this to cnn international
+- name: CNN International
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv, Gotv]
+  publisher: CNN
+  publisher_full: CNN
+
+- name: Cartoon Network
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv]
+  publisher: Cartoon Network
+  publisher_full: Cartoon Network
+
+- name: Comedy Central
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv]
+  publisher: Comedy Central
+  publisher_full: Comedy Central
+
+- name: Discovery Channel
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv]
+  publisher: Discovery
+  publisher_full: Discovery
+- name: Discovery Family
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv, Gotv]
+  publisher: Discovery
+  publisher_full: Discovery
+- name: Discovery Science
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv, Gotv, Startimes]
+  publisher: Discovery
+  publisher_full: Discovery
+- name: Investigation Discovery
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv]
+  publisher: Discovery
+  publisher_full: Discovery
+
+- name: E! Entertainment Television
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv, Gotv, Startimes]
+  publisher: E! Entertainment
+  publisher_full: E! Entertainment
+
+- name: Lagos TV
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv]
+  publisher: Lagos TV
+  publisher_full: Lagos TV
+
+- name: M-Net Movies Action
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv]
+  publisher: M-Net
+  publisher_full: M-Net
+- name: M-Net Movies City
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv]
+  publisher: M-Net
+  publisher_full: M-Net
+- name: M-Net Movies Premiere
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv]
+  publisher: M-Net
+  publisher_full: M-Net
+- name: M-Net Movies Showcase
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv]
+  publisher: M-Net
+  publisher_full: M-Net
+- name: M-Net Movies Star
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv]
+  publisher: M-Net
+  publisher_full: M-Net
+- name: M-Net Movies Zone
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv, Gotv]
+  publisher: M-Net
+  publisher_full: M-Net
+- name: M-Net Smile
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv, Gotv]
+  publisher: M-Net
+  publisher_full: M-Net
+- name: M-Net West
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv]
+  publisher: M-Net
+  publisher_full: M-Net
+
+- name: MBC 1
+  type: International
+  broadcast: Satellite
+  vendor: [Tstv]
+  publisher: MBC
+  publisher_full: MBC
+- name: MBC 3
+  type: International
+  broadcast: Satellite
+  vendor: [Tstv]
+  publisher: MBC
+  publisher_full: MBC
+- name: MBC 4
+  type: International
+  broadcast: Satellite
+  vendor: [Tstv]
+  publisher: MBC
+  publisher_full: MBC
+- name: MBC Action
+  type: International
+  broadcast: Satellite
+  vendor: [Tstv]
+  publisher: MBC
+  publisher_full: MBC
+- name: MBC Max
+  type: International
+  broadcast: Satellite
+  vendor: [Tstv]
+  publisher: MBC
+  publisher_full: MBC
+
+
+- name: MTV Base
+  type: International
+  broadcast: Satellite
+  vendor: [Startimes, Gotv, Dstv]
+  publisher: MTV
+  publisher_full: MTV
+- name: MTV
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv]
+  publisher: MTV
+  publisher_full: MTV
+
+- name: My TV Hausa
+  type: International
+  broadcast: Satellite
+  vendor: [MyTv]
+  publisher: My TV
+  publisher_full: My TV
+- name: My TV Yoruba
+  type: International
+  broadcast: Satellite
+  vendor: [MyTv]
+  publisher: My TV
+  publisher_full: My TV
+- name: My TV Africa
+  type: International
+  broadcast: Satellite
+  vendor: [MyTv]
+  publisher: My TV
+  publisher_full: My TV
+- name: My TV Series
+  type: International
+  broadcast: Satellite
+  vendor: [MyTv]
+  publisher: My TV
+  publisher_full: My TV
+
+- name: National Geographic Wild
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv, Gotv]
+  publisher: National Geographic
+  publisher_full: National Geographic
+- name: National Geographic
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv]
+  publisher: National Geographic
+  publisher_full: National Geographic
+
+- name: Nick Jr
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv]
+  publisher: Nickelodeon
+  publisher_full: Nickelodeon
+- name: Nick Toons
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv]
+  publisher: Nickelodeon
+  publisher_full: Nickelodeon
+- name: Nickelodeon
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv, Startimes, Gotv]
+  publisher: Nickelodeon
+  publisher_full: Nickelodeon
+
+- name: PLUS TV Africa
+  type: International
+  broadcast: Satellite
+  vendor: [Startimes]
+  publisher: PLUS TV Africa
+  publisher_full: PLUS TV Africa
+
+- name: ROK 2
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv, Gotv]
+  publisher: Rok Studios 
+  publisher_full: Rok Studios 
+- name: ROK 3
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv, Gotv]
+  publisher: Rok Studios 
+  publisher_full: Rok Studios 
+
+- name: SuperSport 1
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv]
+  publisher: SuperSport 
+  publisher_full: SuperSport 
+- name: SuperSport 10
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv]
+  publisher: SuperSport 
+  publisher_full: SuperSport 
+- name: SuperSport 11
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv]
+  publisher: SuperSport 
+  publisher_full: SuperSport 
+- name: SuperSport 12
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv]
+  publisher: SuperSport 
+  publisher_full: SuperSport 
+- name: SuperSport 2
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv]
+  publisher: SuperSport 
+  publisher_full: SuperSport 
+- name: SuperSport 3
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv]
+  publisher: SuperSport 
+  publisher_full: SuperSport 
+- name: SuperSport 4
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv]
+  publisher: SuperSport 
+  publisher_full: SuperSport 
+- name: SuperSport 5
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv]
+  publisher: SuperSport 
+  publisher_full: SuperSport 
+- name: SuperSport 6
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv]
+  publisher: SuperSport 
+  publisher_full: SuperSport 
+- name: SuperSport 7
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv]
+  publisher: SuperSport 
+  publisher_full: SuperSport 
+- name: SuperSport 8
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv]
+  publisher: SuperSport 
+  publisher_full: SuperSport 
+- name: SuperSport 9
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv]
+  publisher: SuperSport 
+  publisher_full: SuperSport 
+- name: SuperSport Blitz
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv, Gotv]
+  publisher: SuperSport 
+  publisher_full: SuperSport 
+- name: SuperSport Select 1
+  type: International
+  broadcast: Satellite
+  vendor: [Gotv]
+  publisher: SuperSport 
+  publisher_full: SuperSport 
+- name: SuperSport Select 4
+  type: International
+  broadcast: Satellite
+  vendor: [Gotv]
+  publisher: SuperSport 
+  publisher_full: SuperSport 
+
+- name: Sky News
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv]
+  publisher: Sky
+  publisher_full: Sky
+
+- name: Sound City
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv, Gotv]
+  publisher: Sound City
+  publisher_full: Sound City
+
+- name: Star Life
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv, Gotv, Startimes]
+  publisher: Star Life
+  publisher_full: Star Life
+
+- name: Startimes Bollywood Africa
+  type: International
+  broadcast: Satellite
+  vendor: [Startimes]
+  publisher: Startimes
+  publisher_full: Startimes
+- name: Startimes Bollywood
+  type: International
+  broadcast: Satellite
+  vendor: [Startimes]
+  publisher: Startimes
+  publisher_full: Startimes
+- name: Startimes Orisun
+  type: International
+  broadcast: Satellite
+  vendor: [Startimes]
+  publisher: Startimes
+  publisher_full: Startimes
+- name: Startimes Yoruba
+  type: International
+  broadcast: Satellite
+  vendor: [Startimes]
+  publisher: Startimes
+  publisher_full: Startimes
+
+- name: Studio Universal
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv]
+  publisher: Studio Universal
+  publisher_full: Studio Universal
+
+- name: Telemundo
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv, Gotv]
+  publisher: Telemundo
+  publisher_full: Telemundo
+
+- name: Trace Naija
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv]
+  publisher: Trace Naija
+  publisher_full: Trace Naija
+
+- name: Vuzu Amp
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv]
+  publisher: Vuzu
+  publisher_full: Vuzu
+
+- name: WAP TV
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv, Gotv, Startimes, Tstv]
+  publisher: WAP TV
+  publisher_full: WAP TV
+
+- name: Zee World
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv, Gotv]
+  publisher: Zee World
+  publisher_full: Zee World
+
+#### WAZOBIA STATIONS
+- name: Wazobia TV
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv, Gotv, Startimes, Tstv]
+  publisher: Wazobia
+  publisher_full: Wazobia
+- name: Wazobia Max
+  state: Abuja
+  city: Abuja
+  region: North Central
+  type: Regional
+  broadcast: Terrestial
+  publisher: Wazobia
+  publisher_full: Wazobia
+- name: Wazobia Max
+  state: Lagos
+  city: Lagos
+  region: Lagos
+  type: Regional
+  broadcast: Terrestial
+  publisher: Wazobia
+  publisher_full: Wazobia
+- name: Wazobia Max
+  state: Rivers
+  city: Port Harcourt
+  region: North Central
+  type: Regional
+  broadcast: Terrestial
+  publisher: Wazobia
+  publisher_full: Wazobia
+- name: Wazobia Max
+  type: Network
+  broadcast: Terrestial
+  publisher: Wazobia
+  publisher_full: Wazobia
+
+#### AIT STATIONS
+- name: AIT
+  state: Abuja
+  city: Abuja
+  region: North Central
+  type: Regional
+  broadcast: Terrestial
+  publisher: AIT
+  publisher_full: Africa Independent Television
+- name: AIT
+  state: Bauchi
+  city: Bauchi
+  region: North East
+  type: Regional
+  broadcast: Terrestial
+  publisher: AIT
+  publisher_full: Africa Independent Television
+- name: AIT
+  state: Borno
+  city: Borno
+  region: North East
+  type: Regional
+  broadcast: Terrestial
+  publisher: AIT
+  publisher_full: Africa Independent Television
+- name: AIT
+  state: Edo
+  city: Benin
+  region: South South
+  type: Regional
+  broadcast: Terrestial
+  publisher: AIT
+  publisher_full: Africa Independent Television
+- name: AIT
+  state: Enugu
+  city: Enugu
+  region: South East
+  type: Regional
+  broadcast: Terrestial
+  publisher: AIT
+  publisher_full: Africa Independent Television
+- name: AIT
+  state: Kwara
+  city: Ilorin
+  region: North Central
+  type: Regional
+  broadcast: Terrestial
+  publisher: AIT
+  publisher_full: Africa Independent Television
+- name: AIT
+  state: Kaduna
+  city: Kaduna
+  region: North West
+  type: Regional
+  broadcast: Terrestial
+  publisher: AIT
+  publisher_full: Africa Independent Television
+- name: AIT
+  state: Kano
+  city: Kano
+  region: North West
+  type: Regional
+  broadcast: Terrestial
+  publisher: AIT
+  publisher_full: Africa Independent Television
+- name: AIT
+  state: Lagos
+  city: Lagos
+  region: Lagos
+  type: Regional
+  broadcast: Terrestial
+  publisher: AIT
+  publisher_full: Africa Independent Television
+- name: AIT
+  state: Oyo
+  city: Ibadan
+  region: South West
+  type: Regional
+  broadcast: Terrestial
+  publisher: AIT
+  publisher_full: Africa Independent Television
+- name: AIT
+  state: Plateau
+  city: Jos
+  region: North Central
+  type: Regional
+  broadcast: Terrestial
+  publisher: AIT
+  publisher_full: Africa Independent Television
+- name: AIT
+  state: Rivers
+  city: Port Harcourt
+  region: South South
+  type: Regional
+  broadcast: Terrestial
+  publisher: AIT
+  publisher_full: Africa Independent Television
+- name: AIT International
+  type: International
+  broadcast: Satellite
+  publisher: AIT
+  publisher_full: Africa Independent Television
+- name: AIT
+  type: Network
+  broadcast: Terrestial
+  publisher: AIT
+  publisher_full: Africa Independent Television
+
+### SILVERBIRD STATIONS
+- name: Silverbird Television
+  state: Abuja
+  city: Abuja
+  region: North Central
+  type: Regional
+  broadcast: Terrestial
+  publisher: Silverbird TV
+  publisher_full: Silverbird TV
+- name: Silverbird Television
+  state: Anambra
+  city: Awka
+  region: South East
+  type: Regional
+  broadcast: Terrestial
+  publisher: Silverbird TV
+  publisher_full: Silverbird TV
+- name: Silverbird Television
+  state: Edo
+  city: Benin
+  region: South South
+  type: Regional
+  broadcast: Terrestial
+  publisher: Silverbird TV
+  publisher_full: Silverbird TV
+- name: Silverbird Television
+  state: Lagos
+  city: Lagos
+  region: Lagos
+  type: Regional
+  broadcast: Terrestial
+  publisher: Silverbird TV
+  publisher_full: Silverbird TV
+- name: Silverbird Television
+  state: Plateau
+  city: Jos
+  region: North Central
+  type: Regional
+  broadcast: Terrestial
+  publisher: Silverbird TV
+  publisher_full: Silverbird TV
+- name: Silverbird Television
+  state: Rivers
+  city: Port Harcourt
+  region: South South
+  type: Regional
+  broadcast: Terrestial
+  publisher: Silverbird TV
+  publisher_full: Silverbird TV
+- name: Silverbird International
+  type: International
+  broadcast: Satellite
+  publisher: Silverbird TV
+  publisher_full: Silverbird TV
+- name: Silverbird Television
+  type: Network
+  broadcast: Terrestial
+  publisher: Silverbird TV
+  publisher_full: Silverbird TV
+
+### CHANNELS STATIONS
+- name: Channels Television
+  state: Abuja
+  city: Abuja
+  region: North Central
+  type: Regional
+  broadcast: Terrestial
+  publisher: Channels TV
+  publisher_full: Channels TV
+- name: Channels Television
+  state: Edo
+  city: Benin
+  region: South South
+  type: Regional
+  broadcast: Terrestial
+  publisher: Channels TV
+  publisher_full: Channels TV
+- name: Channels Television
+  state: Lagos
+  city: Lagos
+  region: Lagos
+  type: Regional
+  broadcast: Terrestial
+  publisher: Channels TV
+  publisher_full: Channels TV
+- name: Channels Television
+  type: International
+  broadcast: Satellite
+  vendor: [Dstv, Gotv, Startimes]
+  publisher: Channels TV
+  publisher_full: Channels TV
+
+### NTA STATIONS
+- name: NTA
+  state: Abia
+  city: Aba
+  region: South East
+  type: Regional
+  broadcast: Terrestial
+  publisher: NTA
+  publisher_full: Nigerian Television Authority
+- name: NTA
+  state: Abia
+  city: Umuahia
+  region: South East
+  type: Regional
+  broadcast: Terrestial
+  publisher: NTA
+  publisher_full: Nigerian Television Authority
+- name: NTA
+  state: Abuja
+  city: Abuja
+  region: North Central
+  type: Regional
+  broadcast: Terrestial
+  publisher: NTA
+  publisher_full: Nigerian Television Authority
+- name: NTA
+  state: Anambra
+  city: Awka
+  region: South East
+  type: Regional
+  broadcast: Terrestial
+  publisher: NTA
+  publisher_full: Nigerian Television Authority
+- name: NTA
+  state: Anambra
+  city: Onitsha
+  region: South East
+  type: Regional
+  broadcast: Terrestial
+  publisher: NTA
+  publisher_full: Nigerian Television Authority
+- name: NTA
+  state: Bauchi
+  city: Bauchi
+  region: North East
+  type: Regional
+  broadcast: Terrestial
+  publisher: NTA
+  publisher_full: Nigerian Television Authority
+- name: NTA
+  state: Borno
+  city: Maiduguri
+  region: North East
+  type: Regional
+  broadcast: Terrestial
+  publisher: NTA
+  publisher_full: Nigerian Television Authority
+- name: NTA
+  state: Cross River
+  city: Calabar
+  region: South South
+  type: Regional
+  broadcast: Terrestial
+  publisher: NTA
+  publisher_full: Nigerian Television Authority
+- name: NTA
+  state: Edo
+  city: Benin
+  region: South South
+  type: Regional
+  broadcast: Terrestial
+  publisher: NTA
+  publisher_full: Nigerian Television Authority
+- name: NTA
+  state: Ekiti
+  city: Ado-Ekiti
+  region: South West
+  type: Regional
+  broadcast: Terrestial
+  publisher: NTA
+  publisher_full: Nigerian Television Authority
+- name: NTA
+  state: Enugu
+  city: Enugu
+  region: South East
+  type: Regional
+  broadcast: Terrestial
+  publisher: NTA
+  publisher_full: Nigerian Television Authority
+- name: NTA
+  state: Kwara
+  city: Ilorin
+  region: North Central
+  type: Regional
+  broadcast: Terrestial
+  publisher: NTA
+  publisher_full: Nigerian Television Authority
+- name: NTA
+  state: Kaduna
+  city: Birnin-Gwari
+  region: North West
+  type: Regional
+  broadcast: Terrestial
+  publisher: NTA
+  publisher_full: Nigerian Television Authority
+- name: NTA
+  state: Kaduna
+  city: Kaduna
+  region: North West
+  type: Regional
+  broadcast: Terrestial
+  publisher: NTA
+  publisher_full: Nigerian Television Authority
+- name: NTA
+  state: Kaduna
+  city: Kafanchan
+  region: North West
+  type: Regional
+  broadcast: Terrestial
+  publisher: NTA
+  publisher_full: Nigerian Television Authority
+- name: NTA
+  state: Kaduna
+  city: Zaria
+  region: North West
+  type: Regional
+  broadcast: Terrestial
+  publisher: NTA
+  publisher_full: Nigerian Television Authority
+- name: NTA
+  state: Kano
+  city: Kano
+  region: North West
+  type: Regional
+  broadcast: Terrestial
+  publisher: NTA
+  publisher_full: Nigerian Television Authority
+- name: NTA 2
+  state: Lagos
+  city: Lagos
+  region: Lagos
+  type: Regional
+  broadcast: Terrestial
+  publisher: NTA
+  publisher_full: Nigerian Television Authority
+- name: NTA
+  state: Lagos
+  city: Lagos
+  region: Lagos
+  type: Regional
+  broadcast: Terrestial
+  publisher: NTA
+  publisher_full: Nigerian Television Authority
+- name: NSTV
+  state: Niger
+  city: Minna
+  region: North Central
+  type: Regional
+  broadcast: Terrestial
+  publisher: NTA
+  publisher_full: Nigerian Television Authority
+- name: NTA
+  state: Niger
+  city: Minna
+  region: North Central
+  type: Regional
+  broadcast: Terrestial
+  publisher: NTA
+  publisher_full: Nigerian Television Authority
+- name: NTA 45 & 7
+  state: Oyo
+  city: Ibadan
+  region: South West
+  type: Regional
+  broadcast: Terrestial
+  publisher: NTA
+  publisher_full: Nigerian Television Authority
+- name: NTA
+  state: Oyo
+  city: Ibadan
+  region: South West
+  type: Regional
+  broadcast: Terrestial
+  publisher: NTA
+  publisher_full: Nigerian Television Authority
+- name: NTA
+  state: Plateau
+  city: Jos
+  region: North Central
+  type: Regional
+  broadcast: Terrestial
+  publisher: NTA
+  publisher_full: Nigerian Television Authority
+- name: NTA
+  state: Rivers
+  city: Port Harcourt
+  region: South South
+  type: Regional
+  broadcast: Terrestial
+  publisher: NTA
+  publisher_full: Nigerian Television Authority
+- name: NTA
+  state: Sokoto
+  city: Gusau
+  region: North West
+  type: Regional
+  broadcast: Terrestial
+  publisher: NTA
+  publisher_full: Nigerian Television Authority
+- name: NTA
+  state: Sokoto
+  city: Sokoto
+  region: North West
+  type: Regional
+  broadcast: Terrestial
+  publisher: NTA
+  publisher_full: Nigerian Television Authority
+- name: NTA Entertainment
+  type: International
+  broadcast: Satellite
+  vendor: [Startimes]
+  publisher: NTA
+  publisher_full: Nigerian Television Authority
+- name: NTA Hausa
+  type: International
+  broadcast: Satellite
+  vendor: [Startimes]
+  publisher: NTA
+  publisher_full: Nigerian Television Authority
+- name: NTA Igbo
+  type: International
+  broadcast: Satellite
+  vendor: [Startimes]
+  publisher: NTA
+  publisher_full: Nigerian Television Authority
+- name: NTA Knowledge
+  type: International
+  broadcast: Satellite
+  vendor: [Startimes]
+  publisher: NTA
+  publisher_full: Nigerian Television Authority
+- name: NTA Lagos
+  type: International
+  broadcast: Satellite
+  vendor: [Startimes]
+  publisher: NTA
+  publisher_full: Nigerian Television Authority
+- name: NTA News 24
+  type: International
+  broadcast: Satellite
+  vendor: [Startimes, Gotv, Dstv]
+  publisher: NTA
+  publisher_full: Nigerian Television Authority
+- name: NTA Parliamentary
+  type: International
+  broadcast: Satellite
+  vendor: [Startimes, Gotv, Dstv]
+  publisher: NTA
+  publisher_full: Nigerian Television Authority
+- name: NTA Sports
+  type: International
+  broadcast: Satellite
+  vendor: [Startimes]
+  publisher: NTA
+  publisher_full: Nigerian Television Authority
+- name: NTA Yoruba
+  type: International
+  broadcast: Satellite
+  vendor: [Startimes]
+  publisher: NTA
+  publisher_full: Nigerian Television Authority
+
+# This is in the national setup as regional but the name is international
+- name: NTA International
+  type: International
+  broadcast: Satellite
+  publisher: NTA
+  publisher_full: Nigerian Television Authority
+- name: NTA
+  type: Network
+  broadcast: Terrestial
+  publisher: NTA
+  publisher_full: Nigerian Television Authority
+
+#### GALAXY TV STATIONS
+- name: Galaxy TV
+  state: Lagos
+  city: Lagos
+  region: Lagos
+  type: Regional
+  broadcast: Terrestial
+  publisher: Galaxy TV
+  publisher_full: Galaxy TV
+- name: Galaxy TV
+  state: Oyo
+  city: Ibadan
+  region: South West
+  type: Regional
+  broadcast: Terrestial
+  publisher: Galaxy TV
+  publisher_full: Galaxy TV
+
+- name: OSBC
+  state: Osun
+  city: Osogbo
+  region: South West
+  type: Regional
+  broadcast: Terrestial
+  publisher: OSBC
+  publisher_full: Osun State Broadcasting Corporation

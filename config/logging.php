@@ -37,7 +37,7 @@ return [
     'channels' => [
         'testing' => [
             'driver' => 'stack',
-            'channels' => ['stderr', 'single']
+            'channels' => ['test_file']
         ],
         'local' => [
             'driver' => 'stack',
@@ -57,7 +57,11 @@ return [
             'path' => storage_path('logs/laravel.log'),
             'level' => 'debug',
         ],
-
+        'test_file' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/test-laravel.log'),
+            'level' => 'debug',
+        ],
         'daily' => [
             'driver' => 'daily',
             'path' => storage_path('logs/laravel.log'),

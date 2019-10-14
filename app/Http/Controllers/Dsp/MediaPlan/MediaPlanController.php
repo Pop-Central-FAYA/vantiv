@@ -36,12 +36,7 @@ use Vanguard\Mail\ApprovalNotification;
 use Vanguard\Http\Requests\MediaPlan\StorePlanRequest;
 use Vanguard\Http\Requests\MediaPlan\StorePlanSuggestionsRequest;
 use Vanguard\Http\Resources\MediaPlanSuggestionCollection;
-use Vanguard\Http\Resources\TvStationRatingCollection;
-use Vanguard\Http\Resources\TvStationTimeBeltRatingCollection;
-use Vanguard\Http\Resources\TvStationTimeBeltRatingGraphResource;
 use Vanguard\Libraries\TimeBelt;
-use Vanguard\Services\MediaPlan\GetStationRatingService;
-use Vanguard\Services\MediaPlan\GetStationTimeBeltRatingService;
 use Vanguard\Services\MediaPlan\StoreMediaPlanService;
 use Vanguard\Services\MediaPlan\StoreMediaPlanSuggestionService;
 use Vanguard\Models\Client;
@@ -74,46 +69,19 @@ class MediaPlanController extends Controller
             'back_action' => route('agency.media_plans', [], false),
             'next_action' => route('agency.media_plan.create', ['id' => $media_plan->id], false),
             'save_action' => route('agency.media_plan.select_suggestions', ['id' => $media_plan->id], false),
-            'new_ratings_action' => route('agency.media_plan.create-ratings', ['id' => $media_plan->id], false),
-            'timebelt_graph_action' => route('agency.media_plan.create-timebelt-graph', ['id' => $media_plan->id], false)
+            'new_ratings_action' => route('reach.get', ['id' => $media_plan->id], false),
+            'timebelt_ratings' => route('reach.get-timebelts', ['plan_id' => $media_plan->id], false)
         ];
         $selected = new MediaPlanSuggestionCollection($media_plan->suggestions->where('status', 1));
 
         return view('agency.mediaPlan.display_suggestions')
             ->with('routes', $routes)
             ->with('filter_values', $this->getTimebeltFilters($media_plan))
-            ->with('selected_filters', $this->getSavedTimebeltFilters($media_plan))
             ->with('media_plan', $media_plan)
             ->with('selected', $selected)
             ->with('stations', [])
             ->with('total_graph', [])
             ->with('days', ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]);
-    }
-
-    protected function getSavedTimebeltFilters($media_plan) {
-        $saved_filters = json_decode($media_plan->filters, true);
-        if (!$saved_filters) {
-            $saved_filters = array();
-        }
-        //set the default values
-        $fields = ['day_part', 'state', 'day'];
-        foreach ($fields as $key) {
-            if (!Arr::has($saved_filters, $key)) {
-                $saved_filters[$key] = 'all';
-            }
-        }
-        if (!Arr::has($saved_filters, 'station_type')) {
-            $saved_filters['station_type'] = 'network';
-        }
-        //for backwards compatibility, make sure to lower case station_type
-        $saved_filters['station_type'] = strtolower($saved_filters['station_type']);
-        if ($saved_filters['day_part'] == 'All') {
-            $saved_filters['day_part'] = 'all';
-        }
-        if ($saved_filters['day'] == 'All') {
-            $saved_filters['day'] = 'all';
-        }
-        return $saved_filters;
     }
 
     /**
@@ -152,10 +120,10 @@ class MediaPlanController extends Controller
                 ["text" => "Sunday", "value" => "Sun"]
             ],
             "station_type" => [
-                ["text" => "All", "value" => "all"],
-                ["text" => "Network", "value" => "network"],
-                ["text" => "Regional", "value" => "regional"],
-                ["text" => "Satellite", "value" => "satellite"]
+                // ["text" => "All", "value" => "all"],
+                ["text" => "Network", "value" => "Network"],
+                ["text" => "Regional", "value" => "Regional"],
+                ["text" => "Satellite", "value" => "International"]
             ]
         ];
     }
@@ -163,45 +131,6 @@ class MediaPlanController extends Controller
     /*
      * *************************** API METHODS *****************************
      */
-    public function createStationRatings(CreateStationRatingRequest $request, $id)
-    {
-        $validated = $request->validated();
-        $media_plan = MediaPlan::findOrFail($id);
-
-        $rating_service = new GetStationRatingService($validated, $media_plan);
-        $data = $rating_service->run();
-
-        if (count($data) > 0) {
-            $media_plan->filters = json_encode($validated);
-            $media_plan->save();
-        }
-        return new TvStationRatingCollection($data);
-    }
-
-    public function createStationTimeBeltRatings($id, $station_key)
-    {
-        $media_plan = MediaPlan::findOrFail($id);
-
-        //run the request to generate the new ratings and return the value to the frontend
-        $filter = ["tv_station_key" => $station_key];
-        $timebelts_service = new GetStationTimeBeltRatingService($filter, $media_plan);
-        $data = $timebelts_service->run();
-
-        return new TvStationTimeBeltRatingCollection($data);
-    }
-
-    public function createTimeBeltRatingsGraph(Request $request, $id)
-    {
-        $media_plan = MediaPlan::findOrFail($id);
-
-        //get the day and put that in the filters
-        $filter = ["day" => TimeBelt::shortenDay($request->day)];
-        $timebelts_service = new GetStationTimeBeltRatingService($filter, $media_plan);
-        $data = $timebelts_service->run();
-
-        return new TvStationTimeBeltRatingGraphResource($data);
-    }
-
     /**
      * Choose suggestions based on information from the frontend
      */
@@ -287,10 +216,10 @@ class MediaPlanController extends Controller
         $media_plan_summary_result = (new SummarizePlan(new MediaPlanResource($media_plan)))->run();
 
         /*
-        * This way of get users that have a particular permission is not the most efficient way to do this, 
+        * This way of get users that have a particular permission is not the most efficient way to do this,
         * moving forward we will have to review this.
         */
-        $users = User::where('status', 'Active')->permission(['approve.media_plan', 'decline.media_plan'])->get(); 
+        $users = User::where('status', 'Active')->permission(['approve.media_plan', 'decline.media_plan'])->get();
         $company_id =$this->companyId();
         $filtered_users = $users->filter(function ($item) use ($company_id){
             if($item->companies->first()->id == $company_id){
@@ -488,7 +417,7 @@ class MediaPlanController extends Controller
             return response()->json(['status'=>'error', 'message'=> "The current operation failed."]);
         }
         return response()->json([
-            'message'=>"Media plan updated", 
+            'message'=>"Media plan updated",
             "status" => "success",
             "media_plan" => MediaPlan::find($request->plan_id)->toArray() //this is a stop gap, we need to use resources
         ]);

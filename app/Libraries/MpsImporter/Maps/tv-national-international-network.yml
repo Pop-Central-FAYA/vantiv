@@ -1,0 +1,30 @@
+- raw_name: "AIT Nett"
+  name: AIT
+- raw_name: "Channels TV Nett"
+  name: Channels Television
+- raw_name: "Galaxy TV Nett"
+  name: Galaxy TV
+- raw_name: "ITV Nett"
+  name: ITV
+- raw_name: "Kwese Nett"
+  name: Kwese
+- raw_name: "LTV Nett"
+  name: LTV
+- raw_name: "Liberty TV Nett"
+  name: Liberty TV
+- raw_name: "MITV Nett"
+  name: MITV
+- raw_name: "NTA Nett"
+  name: NTA
+
+- raw_name: "PRTV Nett"
+  name: PRTV
+  state: Plateau
+  city: Jos
+
+- raw_name: "Silverbird (STV) Nett"
+  name: Silverbird Television
+- raw_name: "TVC Nett"
+  name: TVC
+- raw_name: "Wazobia Max Nett"
+  name: Wazobia Max

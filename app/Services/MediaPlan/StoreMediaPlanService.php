@@ -6,8 +6,8 @@ use Illuminate\Support\Arr;
 use DB;
 use Vanguard\Libraries\Enum\MediaPlanStatus;
 use Vanguard\Models\MediaPlan;
-use Vanguard\Services\Ratings\TvRatingsCount;
 use Vanguard\Services\BaseServiceInterface;
+use Vanguard\Services\Ratings\GetUniverseService;
 
 /**
  * This service is to create a Media Plan (This is only created if there is a rating available).
@@ -28,21 +28,27 @@ class StoreMediaPlanService implements BaseServiceInterface
     }
 
     /**
-     * Run a query to verify that the media plan will have results before creating the plan
+     * Grab the target population number and the universe before creating the plan
+     * If the results of the target population count is 0, then do not create the media plan 
      */
     public function run()
     {
-        $ratings_service = new TvRatingsCount($this->data);
-        $num_timebelts = $ratings_service->run();
-        if ($num_timebelts > 0) {
-            return $this->storeMediaPlan();
+        $universe = $this->getUniverse();
+        if ($universe["target_population"] > 0) {
+            return $this->storeMediaPlan($universe);
         }
         return null;
     }
 
-    protected function storeMediaPlan()
+    protected function getUniverse()
     {
-        return DB::transaction(function () {
+        $service = new GetUniverseService($this->data, null);
+        return $service->run();
+    }
+
+    protected function storeMediaPlan($universe)
+    {
+        return DB::transaction(function() use ($universe) {
             $media_plan = new MediaPlan();
             $media_plan->gender = json_encode(Arr::get($this->data, 'gender', []));
             $media_plan->criteria_social_class = json_encode(Arr::get($this->data, 'social_class', []));
@@ -58,6 +64,9 @@ class StoreMediaPlanService implements BaseServiceInterface
             $media_plan->product_name = $this->data['product'];
             $media_plan->client_id = $this->data['client'];
             $media_plan->brand_id = $this->data['brand'];
+
+            $media_plan->target_population = $universe["target_population"];
+            $media_plan->population = $universe["population"];
 
             $media_plan->planner_id = $this->user_id;
             $media_plan->company_id = $this->company_id;

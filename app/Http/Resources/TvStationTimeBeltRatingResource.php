@@ -3,7 +3,7 @@
 namespace Vanguard\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use Vanguard\Models\TvStation;
+use Illuminate\Support\Arr;
 
 class TvStationTimeBeltRatingResource extends JsonResource
 {
@@ -15,22 +15,27 @@ class TvStationTimeBeltRatingResource extends JsonResource
      */
     public function toArray($request)
     {
-        $tv_station = TvStation::where('key', $this['tv_station_key']);
+        $full_name = $this['station'];
+        $state = $this['state'];
+        if ($state != '') {
+            $full_name = "{$full_name} ({$state})";
+        }
         return [
             'key' => $this['key'],
-            "program" => $this['program'],
+            "program" => Arr::get($this, "program", "Unknown Program"),
             "day" => $this['day'],
             "start_time" => $this['start_time'],
             "end_time" => $this['end_time'],
             "total_audience" => $this['total_audience'],
             "rating" => $this['rating'],
-            "station_key" => $request->station_key,
-            "tv_station_key" => $this['tv_station_key'],
+            "station_key" => $this['station_key'],
+            "tv_station_key" => $this['station_key'],
             "media_type" => $this['media_type'],
             "station_id" => $this['station_id'],
             "station" => $this['station'],
-            "state" => $this['state'],
-            "station_type" => $this['station_type']
+            "state" => $state,
+            "station_type" => $this['station_type'],
+            "station_name" => $full_name,
         ];
     }
 }

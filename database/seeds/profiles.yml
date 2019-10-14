@@ -1,0 +1,101 @@
+---
+-
+    ext_profile_id: 90718102
+    wave: "2019-07-01"
+    age: 44
+    gender: Male
+    region: South South
+    state: Rivers
+    social_class: D
+    pop_weight: 2853.05
+    created_at: "2019-10-05 21:48:07"
+-
+    ext_profile_id: 90782673
+    wave: "2019-07-01"
+    age: 23
+    gender: Male
+    region: North West
+    state: Sokoto
+    social_class: B
+    pop_weight: 2381.59
+    created_at: "2019-10-05 21:48:07"
+-
+    ext_profile_id: 90733137
+    wave: "2019-07-01"
+    age: 21
+    gender: Female
+    region: South East
+    state: Anambra
+    social_class: C
+    pop_weight: 2701.66
+    created_at: "2019-10-05 21:48:07"
+-
+    ext_profile_id: 90787236
+    wave: "2019-07-01"
+    age: 17
+    gender: Male
+    region: South East
+    state: Enugu
+    social_class: E
+    pop_weight: 1765.14
+    created_at: "2019-10-05 21:48:07"
+-
+    ext_profile_id: 90737221
+    wave: "2019-07-01"
+    age: 28
+    gender: Male
+    region: North West
+    state: Kaduna
+    social_class: D
+    pop_weight: 3836.11
+    created_at: "2019-10-05 21:48:07"
+-
+    ext_profile_id: 90719124
+    wave: "2019-07-01"
+    age: 14
+    gender: Male
+    region: South South
+    state: Cross River
+    social_class: A
+    pop_weight: 1861.05
+    created_at: "2019-10-05 21:48:07"
+-
+    ext_profile_id: 90717109
+    wave: "2019-07-01"
+    age: 17
+    gender: Male
+    region: South West
+    state: Oyo
+    social_class: C
+    pop_weight: 3602.08
+    created_at: "2019-10-05 21:48:07"
+-
+    ext_profile_id: 90789258
+    wave: "2019-07-01"
+    age: 45
+    gender: Male
+    region: South South
+    state: Rivers
+    social_class: C
+    pop_weight: 2853.05
+    created_at: "2019-10-05 21:48:07"
+-
+    ext_profile_id: 90783649
+    wave: "2019-07-01"
+    age: 39
+    gender: Female
+    region: North Central
+    state: Niger
+    social_class: E
+    pop_weight: 2550.53
+    created_at: "2019-10-05 21:48:07"
+-
+    ext_profile_id: 90789150
+    wave: "2019-07-01"
+    age: 32
+    gender: Male
+    region: Lagos
+    state: Lagos
+    social_class: C
+    pop_weight: 3370.61
+    created_at: "2019-10-05 21:48:07"

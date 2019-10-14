@@ -20,7 +20,6 @@
                 :plan-status="{{ json_encode($media_plan->status) }}" 
                 :redirect-urls="{{ json_encode($routes) }}" 
                 :plan-id="{{ json_encode($media_plan->id) }}" 
-                :selected-filters="{{ json_encode($selected_filters) }}" 
                 :filter-values="{{ json_encode($filter_values) }}" 
                 :graph-days="{{ json_encode($days) }}" 
                 :permission-list="{{ json_encode(Auth::user()->getAllPermissions()->pluck('name')) }}" 

@@ -53,8 +53,8 @@ class MediaPlanResource extends JsonResource
                     'back_action' => route('agency.media_plans', [], false),
                     'next_action' => route('agency.media_plan.create', ['id' => $this->id], false),
                     'save_action' => route('agency.media_plan.select_suggestions', ['id' => $this->id], false),
-                    'new_ratings_action' => route('agency.media_plan.create-ratings', ['id' => $this->id], false),
-                    'timebelt_graph_action' => route('agency.media_plan.create-timebelt-graph', ['id' => $this->id], false)
+                    'new_ratings_action' => route('reach.get', ['plan_id' => $this->id], false),
+                    'timebelt_ratings' => route('reach.get-timebelts', ['plan_id' => $this->id], false)
                 ],
                 'comments' => [
                     "all" => route('agency.media_plan.comment.all', ['id'=>$this->id], false),

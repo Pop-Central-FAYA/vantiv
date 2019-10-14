@@ -37,6 +37,7 @@
     props: {
       station: Object,
       selectedTimeBelts: Array,
+      filters: Object
     },
     data () {
       return {
@@ -124,9 +125,11 @@
         createNewTimeBeltRatings() {
             var msg = `Getting timebelts for ${this.station.name}`;
             this.sweet_alert(msg, 'info', 60000);
+            const params = {...this.filters, station_key: [this.station.key]};
             axios({
-                method: 'post',
+                method: 'get',
                 url: this.station.links.timebelt_ratings,
+                params: params
             }).then((res) => {
                 this.sweet_alert('Ratings retrieved', 'success');
                 this.renderTimeBelts(res.data.data);

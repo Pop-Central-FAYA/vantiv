@@ -26,7 +26,7 @@
                                 <v-card-text>
                                     <v-layout wrap>
                                         <v-flex md12 px-0 style="overflow-x:auto;  height: 40vh;">
-                                            <media-plan-timebelt :station="item" :selected-time-belts="selectedTimeBelts"></media-plan-timebelt>
+                                            <media-plan-timebelt :station="item" :selected-time-belts="selectedTimeBelts" :filters="filters"></media-plan-timebelt>
                                         </v-flex>
                                     </v-layout>
                                 </v-card-text>
@@ -62,6 +62,7 @@
         },
         data() {
             return {
+                filters: {},
                 stationsList: [],
                 stationsToggle: [],
                 expand: false,
@@ -78,7 +79,8 @@
             var self = this;
             //Render the table whenever suggestions is updated
             Event.$on('ratings-created', function(data) {
-                self.resetStationsList(data);
+                self.filters = data.filters
+                self.resetStationsList(data.data);
             });
         },
         mounted() {
