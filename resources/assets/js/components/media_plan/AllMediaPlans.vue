@@ -21,6 +21,10 @@
             <media-plan-delete 
               :plan="props.item"
             ></media-plan-delete>
+            <clone-media-plan 
+              :plan="props.item"
+              :clients="clients"
+            ></clone-media-plan>
           </td>
         </tr>
       </template>
@@ -44,12 +48,15 @@
 </style>
 
 <script>
+  import ClonePlan from "./ClonePlan.vue";
   import DeletePlan from "./DeletePlan.vue";
   export default {
     props: {
-      plans: Array
+      plans: Array,
+      clients: Array,
     },
     components: {
+        'clone-media-plan': ClonePlan,
         'media-plan-delete': DeletePlan,
     },
     data () {
@@ -77,10 +84,14 @@
     },
     created() {
         var self = this;
+        Event.$on('media-plan-added', function (new_plan) {
+            self.allPlans.push(new_plan);
+        });
+
         Event.$on('media-plan-deleted', function (plan_id) {
-            self.allPlans = self.allPlans.filter(function( plan ) {
-              return plan.id !== plan_id;
-            });
+          self.allPlans = self.allPlans.filter(function( plan ) {
+            return plan.id !== plan_id;
+          });
         });
     },
     mounted() {
