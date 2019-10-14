@@ -1,5 +1,5 @@
 <template>
-<v-flex>
+<v-flex v-if="ready">
   <v-card>
     <p></p>
      <v-layout wrap>
@@ -128,21 +128,43 @@
 <script>
   export default {
         props: {
-         adVendorData: Object,
-         mpos:Array
+         routes:Object,
         },
     data () {
       return {
         search: '',
+        mpos:[],
+        adVendorData:{},
+        ready: false
+
       }
     },
+    created() {
+       this.getVendor();
+        },
     mounted() {
         console.log('Display vendor details Component mounted.');
+        
     },
     methods: {
         goBack(id){
              window.location = this.adVendorData.links.index;
-        }
+        },
+         getVendor() {
+          console.log(this.routes);
+          axios({
+              method: 'get',
+              url: this.routes.details
+          }).then((res) => {
+            this.adVendorData = res.data.ad_vendor;
+             this.mpos = res.data.mpos
+             this.ready =  true
+              console.log(res.data);
+          }).catch((error) => {
+              this.vendors = [];
+              this.sweet_alert('An unknown error has occurred, vendors cannot be retrieved. Please try again', 'error');
+          }).finally(() => this.loading = false);
+        },
         
     }
   }

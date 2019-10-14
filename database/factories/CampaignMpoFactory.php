@@ -7,9 +7,8 @@ use Vanguard\Models\CampaignMpo;
 $factory->define(CampaignMpo::class, function (Faker $faker) {
     return [
         'campaign_id' => factory(Campaign::class)->create()->id,
-        'station' => 'jrhfhjsd',
-        'ad_slots' => 5,
+        'adslots' => json_encode($faker->words),
         'status' => 'active',
-        'budget' => 19000
+        'ad_vendor_id' => uniqid(),
     ];
 });
