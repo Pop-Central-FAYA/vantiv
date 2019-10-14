@@ -225,6 +225,7 @@
                 Route::get('/ad-vendors/{id}', 'AdVendorController@get')->name('ad-vendor.get');
                 Route::post('/ad-vendors', 'AdVendorController@create')->name('ad-vendor.create');
                 Route::patch('/ad-vendors/{id}', 'AdVendorController@update')->name('ad-vendor.update');
+                Route::get('/ad-vendors/{id}/details', 'AdVendorController@getDetails')->name('ad-vendor.get_details');
             });
         });
 

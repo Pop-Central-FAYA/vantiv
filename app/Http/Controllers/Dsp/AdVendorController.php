@@ -23,7 +23,7 @@ class AdVendorController extends Controller
 
     public function __construct()
     {
-        $this->middleware('permission:view.ad_vendor')->only(['list', 'get', 'index']);
+        $this->middleware('permission:view.ad_vendor')->only(['list', 'get', 'index','getDetails']);
         $this->middleware('permission:create.ad_vendor')->only(['create']);
         $this->middleware('permission:update.ad_vendor')->only(['update']);
     }
@@ -48,12 +48,11 @@ class AdVendorController extends Controller
      */
     public function details($id)
     {
-        $vendor = AdVendor::findOrFail($id);
-        $this->authorize('get', $vendor);
-        $mpos = CampaignMpo::with(['campaign:id,name'])->where('ad_vendor_id', $id)->get();
-        return view('agency.ad_vendor.ad_vendor')
-                ->with('ad_vendor', new AdVendorResource($vendor))
-                ->with('mpos', CampaignMpoResource::collection($mpos));
+        $routes = [
+            'details' => route('ad-vendor.get_details',  ['id' => $id], false)
+        ];
+        return view('agency.ad_vendor.details')
+                     ->with('routes', $routes);
     }
 
 
@@ -112,5 +111,15 @@ class AdVendorController extends Controller
         $validated = $request->validated();
         (new UpdateService($validated, $vendor, $user->id))->run();
         return new AdVendorResource(AdVendor::find($id));
+    }
+    public function getDetails($id)
+    {
+        $vendor = AdVendor::findOrFail($id);
+        $this->authorize('get', $vendor);
+        $mpos = CampaignMpo::with(['campaign:id,name'])->where('ad_vendor_id', $id)->get();
+        return [
+            'ad_vendor'=> new AdVendorResource($vendor),
+            'mpos'=> CampaignMpoResource::collection($mpos)
+        ];
     }
 }
