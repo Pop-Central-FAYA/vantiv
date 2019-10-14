@@ -61,6 +61,7 @@ class MediaPlanResource extends JsonResource
                     "store" => route('agency.media_plan.comment.store', ['id'=>$this->id], false),
                 ],
                 'delete' => route('media_plan.delete', ['id'=>$this->id], false),
+                'clone' => route('media_plan.clone', ['id'=>$this->id], false),
             ]
         ];
     }

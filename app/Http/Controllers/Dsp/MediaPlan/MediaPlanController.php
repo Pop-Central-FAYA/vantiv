@@ -49,6 +49,8 @@ use Vanguard\User;
 use Vanguard\Services\Ratings\StoreMediaPlanDeliverables;
 use Vanguard\Http\Resources\UserCollection;
 use Vanguard\Http\Resources\MediaPlanResource;
+use Vanguard\Http\Requests\MediaPlan\ClonePlanRequest;
+use Vanguard\Services\MediaPlan\CloneMediaPlanService;
 use Vanguard\Http\Resources\MediaPlanCollection;
 use Vanguard\Services\MediaPlan\DeleteMediaPlanService;
 
@@ -222,7 +224,9 @@ class MediaPlanController extends Controller
         $company_id = $this->companyId();
         $media_plan_service = new GetMediaPlans($request->status, $company_id);
         $plans = $media_plan_service->run();
-        return view('agency.mediaPlan.index')->with('plans', new MediaPlanCollection($plans));
+        $clients = Client::with('brands')->filter(['company_id' => $this->companyId()])->get();
+        return view('agency.mediaPlan.index')->with('plans', new MediaPlanCollection($plans))
+                                ->with('clients', $clients);
     }
 
     public function criteriaForm(Request $request)
@@ -742,5 +746,15 @@ class MediaPlanController extends Controller
             return response()->json(array('code' =>  204), 204); 
         }
         return response()->json(array('code' =>  400), 400); 
+    }
+
+    public function clonePlan(ClonePlanRequest $request, $media_plan_id)
+    {
+        $media_plan = MediaPlan::findorfail($media_plan_id);
+        $validated = $request->validated();
+        $user = auth()->user();
+        $company_id = $this->companyId();
+        $cloned_plan = (new CloneMediaPlanService($media_plan, $validated, $company_id, $user->id))->run();
+        return new MediaPlanResource($cloned_plan);
     }
 }

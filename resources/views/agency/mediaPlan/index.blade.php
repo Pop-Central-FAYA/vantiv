@@ -19,7 +19,7 @@
             <!-- media plans table -->
             <v-app>
                 <v-content>
-                    <media-plan-list :plans="{{ json_encode($plans) }}"></media-plan-list>
+                    <media-plan-list :plans="{{ json_encode($plans) }}" :clients="{{ json_encode($clients) }}"></media-plan-list>
                 </v-content>
             </v-app>
             <!-- end -->
