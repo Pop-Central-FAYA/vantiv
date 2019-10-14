@@ -5,29 +5,49 @@
                 <h4 class="text-center"><b>Schedule</b></h4>
             </v-flex>
         </v-layout>
-        <v-layout>
+        <v-layout v-for="item in timeBelts" :key="item.id">
             <table class="belts">
+                <h6 class="text-center">PLEASE TRANSMIT ({{ item.duration }}SEC) SPOTS AS SCHEDULED BELOW</h6>
                 <thead>
-                    <tr>
-                        <th class="text-left">Station</th>
-                        <th class="text-left">Programs</th>
-                        <th class="text-left position">Positions</th>
-                        <th class="text-left">Month</th>
-                        <th class="text-left" v-for="(item, index) in dayNumbers" :key="index">
-                            {{ item }}
+                    <tr class="rule">
+                        <th class="text-left rule">Months
+                        </th>
+                        <th class="text-center rule" colspan="31">Insertion Schedule</th>
+                        <th class="text-center rule" rowspan="2">Monthly Total</th>
+                        <th class="text-center rule" rowspan="2">Descriptions</th>  
+                    </tr>
+                    <tr class="rule">
+                        <th class="text-left rule"> Dates</th>
+                        <th class="text-center rule" v-for="(day, index) in dayNumbers" :key="index">
+                            {{ day }}
                         </th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="rule" v-for="item in timeBelts" :key="item.id">
-                        <td class="rule">{{ item.station }}</td>
-                        <td class="rule">{{ item.program }}</td>
-                        <td class="rule" width="30%">{{ item.day_range }}  <br> {{ item.time_slot[0] }} - {{ item.time_slot[1] }} </td>
+                    <tr class="rule" v-for="(adslot, index) in item.slots" :key="index">
                         <td class="rule">{{ item.month }}</td>
                         <td class="rule" v-for="(day, index) in dayNumbers" :key="index">
-                            {{ getDayInsertion(item, day) }}
+                            {{ getDayInsertion(adslot, day) }}
                         </td>
-                        <td class="rule">{{ item.total_slot }}</td>
+                        <td class="rule">
+                            {{ adslot.total_spots }}
+                        </td>
+                        <td class="rule">
+                            Station : {{ item.station }} <br>
+                            Program : {{ item.program }} <br>
+                            <!-- Program Time : <br>  -->
+                            Daypart : {{ item.daypart }} <br>
+                            Media Asset : {{ adslot.asset }} <br>
+                        </td>
+                    </tr>
+                    <tr class="rule">
+                        <td class="rule" colspan="32">
+                            <h5>Total Number of Insertions</h5> 
+                        </td>
+                        <td class="rule">
+                            <h5>{{ item.total_insertions }}</h5>
+                        </td>
+                        <td class="rule"></td>
                     </tr>
                 </tbody>
             </table>
@@ -64,6 +84,11 @@ export default {
     tr.rule {
         border-top : solid 1px;
         border-bottom : solid 1px;
+    }
+    th.rule {
+        border-top : solid 1px;
+        border-bottom : solid 1px;
+        border-right: solid 1px;
     }
     table.belts {
         display: block;

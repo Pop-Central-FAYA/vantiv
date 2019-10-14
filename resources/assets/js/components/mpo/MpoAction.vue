@@ -38,9 +38,9 @@ export default {
     },
     methods : {
         exportMpo : function() {
-            var msg = "Generating Excel Document, Please wait";
+            var msg = "Export to PDF Functionality in progress, please check back later";
             this.sweet_alert(msg, 'info');
-            window.location = this.mpo.links.export
+            //window.location = this.mpo.links.export
         },
         back : function() {
             window.location = this.mpo.links.campaign_details
