@@ -26,6 +26,7 @@ class CampaignMpoResource extends JsonResource
             'reference' => $this->reference_number,
             'version' => $this->version,
             'is_recent' => $this->isRecentMpo(),
+            'campaign' => $this->campaign,
             'created_date' => date('Y-m-d', strtotime($this->created_at)),
             'links' => [
                 'export' => route('mpos.export', ['mpo_id' => $this->id], true),
