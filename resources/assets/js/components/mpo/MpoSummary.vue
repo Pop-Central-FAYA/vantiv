@@ -3,51 +3,68 @@
         <v-layout>
             <table>
                 <thead>
-                    <tr>
-                        <th class="text-left">Year</th>
-                        <th class="text-left">Media</th>
-                        <th class="text-left">Specifications</th>
-                        <th class="text-left" >Title of Material</th>
-                        <th class="text-left">Spots</th>
-                        <th class="text-left">Vol %</th>
-                        <th class="text-left">Ag %</th>
-                        <th class="text-left">Ag Value</th>
-                        <th class="text-left">Total</th>
+                    <tr class="rule">
+                        <th class="text-center rule" colspan="34"> COSTING </th>
+                    </tr>
+                    <tr class="rule">
+                        <th class="text-left rule">Inserts</th>
+                        <th class="text-left rule" colspan="29">Description</th>
+                        <th class="text-left rule" colspan="2">Rate (&#8358;)</th>
+                        <th class="text-left rule" colspan="2">Total Amount (&#8358;)</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="item in timeBeltSummary" :key="item.id">
-                        <td>{{ item.year }}</td>
-                        <td>{{ item.publisher_name }}</td>
-                        <td v-if="item.material_title">{{ item.material_title }}</td>
-                        <td v-else></td>
-                        <td>{{ item.duration }} Seconds <br> {{ item.day_parts }} </td>
-                        <td>{{ item.total_spot }}</td>
-                        <td> {{ item.volume_percent }} </td>
-                        <td> 15 </td>
-                        <td>{{ formatAmount(item.agency_commission) }}</td>
-                        <td>{{ formatAmount(item.total) }}</td>
+                    <tr v-for="item in timeBeltSummary" :key="item.id" class="rule">
+                        <td class="rule">{{ item.total_spot }}</td>
+                        <td colspan="29" class="rule">Publisher Name : {{ item.publisher_name }} <br>
+                                                      Program : {{ item.program }} <br>
+                                                      Duration : {{ item.duration }} Seconds
+                        </td>
+                        <td colspan="2" class="text-right rule">{{ formatAmount(item.rate) }}</td>
+                        <td colspan="2" class="text-right rule">{{ formatAmount(item.gross_total) }}</td>
+                    </tr>
+                    <tr class="rule">
+                        <td class="rule"></td>
+                        <td colspan="29" class="text-right rule">Sub Total</td>
+                        <td colspan="2" class="text-right rule"></td>
+                        <td colspan="2" class="text-right rule">{{ formatAmount(grossTotal) }}</td>
+                    </tr>
+                    <tr class="rule">
+                        <td class="rule"></td>
+                        <td colspan="29" class="text-right rule">Volume Discount</td>
+                        <td colspan="2" class="text-right rule">{{ formatAmount(volumeDiscount) }}%</td>
+                        <td colspan="2" class="text-right rule">{{ formatAmount(volumeDiscountValue) }}</td>
+                    </tr>
+                    <tr class="rule">
+                        <td class="rule"></td>
+                        <td colspan="29" class="text-right rule"></td>
+                        <td colspan="2" class="text-right rule"></td>
+                        <td colspan="2" class="text-right rule">{{ formatAmount(netTotalLessVolumeDiscount) }}</td>
+                    </tr>
+                    <tr class="rule">
+                        <td class="rule"></td>
+                        <td colspan="29" class="text-right rule">Agency Commission</td>
+                        <td colspan="2" class="text-right rule">15%</td>
+                        <td colspan="2" class="text-right rule">{{ formatAmount(agencyCommission) }}</td>
+                    </tr>
+                    <tr class="rule">
+                        <td class="rule"></td>
+                        <td colspan="29" class="text-right rule"></td>
+                        <td colspan="2" class="text-right rule"></td>
+                        <td colspan="2" class="text-right rule">{{ formatAmount(netTotalLessAgencyCommission) }}</td>
+                    </tr>
+                    <tr class="rule">
+                        <td class="rule"></td>
+                        <td colspan="29" class="text-right rule">VAT</td>
+                        <td colspan="2" class="text-right rule">5%</td>
+                        <td colspan="2" class="text-right rule">{{ formatAmount(vat) }}</td>
+                    </tr>
+                    <tr class="rule last-record">
+                        <td colspan="32" class="text-center rule">Total Amount Payable</td>
+                        <td colspan="2" class="text-right rule">{{ formatAmount(totalPayable) }}</td>
                     </tr>
                 </tbody>
             </table>
-        </v-layout>
-        <v-layout>
-            <v-flex>
-                <v-card-text class="text-right">
-                    <div class="outer">
-                        <div class="left-item"><h4>Total Budget : </h4></div>
-                        <div class="right-item" ><h4> {{ formatAmount(totalBudget) }}</h4></div>
-                    </div>
-                    <div class="outer">
-                        <div class="left-item"><h4>VAT : </h4></div>
-                        <div class="right-item" ><h4> 5%</h4></div>
-                    </div>
-                    <div class="outer">
-                        <div class="left-item"><h4>Net Total : </h4></div>
-                        <div class="right-item" ><h4> {{ formatAmount(netTotal) }}</h4></div>
-                    </div>
-                </v-card-text>
-            </v-flex>
         </v-layout>
     </v-card>
 </template>
@@ -59,6 +76,57 @@ export default {
         netTotal : Number,
         mpoDetails : Object
     },
+    data() {
+        return {
+            grossTotal : 0,
+            volumeDiscountValue : 0,
+            volumeDiscount : 0,
+            netTotalLessVolumeDiscount : 0,
+            agencyCommission : 0,
+            netTotalLessAgencyCommission : 0,
+            vat : 0,
+            totalPayable : 0
+        }
+    },
+    mounted () {
+        this.sumGross()
+        this.sumVolumeValue()
+        this.sumVolumePercent()
+        this.sumNetLessVolumeDiscount()
+        this.agencyCommissionValue()
+        this.sumNetLessAgencyCommission()
+        this.calculateVatValue()
+        this.totalAmountPayable()
+    },
+    methods : {
+        sumGross : function() {
+            this.grossTotal = this.timeBeltSummary.reduce((prev,next) => prev + next.gross_total, 0);
+        },
+        sumVolumeValue : function () {
+            this.volumeDiscountValue = this.timeBeltSummary.reduce((prev,next) => prev + next.volume_value, 0);
+        },
+        sumVolumePercent : function() {
+            this.volumeDiscount = this.timeBeltSummary.reduce((prev,next) => prev + next.volume_percent, 0);
+        },
+        sumNetLessVolumeDiscount : function() {
+            this.netTotalLessVolumeDiscount = this.timeBeltSummary.reduce((prev,next) => prev + next.net_less_volume_disc, 0);
+        },
+        agencyCommissionValue : function() {
+            this.agencyCommission = (15 / 100) * this.netTotalLessVolumeDiscount
+        },
+        sumNetLessAgencyCommission : function() {
+            this.netTotalLessAgencyCommission = this.netTotalLessVolumeDiscount - this.agencyCommission
+        },
+        calculateVatValue : function() {
+            this.vat = (5/100) * this.netTotalLessAgencyCommission
+        },
+        totalAmountPayable : function () {
+            this.totalPayable = this.netTotalLessAgencyCommission - this.vat
+        },
+        firstAndLastMonth : function() {
+            first
+        }
+    }
 }
 </script>
 <style >
@@ -77,5 +145,23 @@ export default {
     }
     .outer {
         display: block
+    }
+    td.rule {
+        border-right: solid 1px;
+        border-bottom: 0 !important;
+        padding: 1px 24px !important;
+        font-size: 13px !important;
+    }
+    tr.rule {
+        border-top : solid 1px;
+        border-bottom : solid 1px;
+    }
+    tr.last-record {
+        border-bottom: solid !important;
+    }
+    th.rule {
+        border-top : solid 1px;
+        border-bottom : solid 1px;
+        border-right: solid 1px;
     }
 </style>

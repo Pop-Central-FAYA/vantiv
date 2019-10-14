@@ -1,11 +1,11 @@
 <template>
     <v-card>
         <v-card-text>
-            <v-layout>
+            <!-- <v-layout>
                 <v-flex xs8>
                     <p class="net_word">{{ netTotalWord }}</p><hr>
                 </v-flex>
-            </v-layout>
+            </v-layout> -->
             <v-layout>
                 <v-flex xs1 class="justify-left">
                     <b>Terms: </b>

@@ -2,7 +2,6 @@
 
 namespace Vanguard\Services\Mpo;
 
-use Illuminate\Support\Arr;
 use Vanguard\Services\BaseServiceInterface;
 use Vanguard\Models\CampaignMpo;
 use Vanguard\Libraries\DayPartList;
@@ -74,23 +73,26 @@ class MpoDetailsService implements BaseServiceInterface
 
     protected function getMpoSumary($campaign_mpo_time_belts)
     {
-        $time_belt_group = $campaign_mpo_time_belts->groupBy(['publisher_name', 'duration']);
+        $time_belt_group = $campaign_mpo_time_belts->groupBy(['publisher_name', 'program', 'duration']);
         $summary_data = [];
-        foreach($time_belt_group as $publisher => $campaign_mpo){
-            foreach($campaign_mpo as $duration => $mpo){
-                $net = $mpo->sum('net_total');
-                $summary_data[] = [
-                    'publisher_name' => $publisher,
-                    'duration' => $duration,
-                    'day_part' => $this->getDayPart($mpo[0]['time_belt_start_time'])['name'],
-                    'total_spot' => $mpo->sum('ad_slots'),
-                    'agency_percentage' => 15,
-                    'agency_commission' => $commission = $this->agencyCommission($net),
-                    'volume_percent' => $mpo[0]['volume_discount'],
-                    'material_title' => $mpo[0]['media_asset'] ? $mpo[0]['media_asset']['file_name'] : '',
-                    'total' => $net - $commission,
-                    'year' => date('Y', strtotime($mpo[0]['playout_date']))
-                ];
+        foreach($time_belt_group as $publisher => $mpo_publisher){
+            foreach($mpo_publisher as $program => $mpo_program){
+                foreach($mpo_program as $duration => $mpo) {
+                    $net = $mpo->sum('net_total');
+                    $summary_data[] = [
+                        'publisher_name' => $publisher,
+                        'duration' => $duration,
+                        'program' => $program,
+                        'total_spot' => $total_spot = $mpo->sum('ad_slots'),
+                        'rate' => $mpo[0]['unit_rate'],
+                        'gross_total' => $gross = $mpo[0]['unit_rate'] * $total_spot,
+                        'net_less_volume_disc' => $net,
+                        'day_part' => $this->getDayPart($mpo[0]['time_belt_start_time'])['name'],
+                        'volume_percent' => $mpo[0]['volume_discount'],
+                        'volume_value' => $gross - $net,
+                        'year' => date('Y', strtotime($mpo[0]['playout_date'])),
+                    ];
+                }
             }
         }
         return $summary_data;
@@ -126,7 +128,8 @@ class MpoDetailsService implements BaseServiceInterface
                 'ad_vendor_id' => $time_belt['ad_vendor_id'],
                 'month' => date('Y-m', strtotime($time_belt['playout_date'])),
                 'day_number' => date('j', strtotime($time_belt['playout_date'])),
-                'media_asset' => $time_belt['media_asset']
+                'media_asset' => $time_belt['media_asset'],
+                'media_asset_title' => $time_belt['media_asset']['file_name']
             ];
         }
         return $campaign_time_belts_data;
@@ -147,31 +150,43 @@ class MpoDetailsService implements BaseServiceInterface
 
     protected function getMpoTimeBelts($campaign_mpo_time_belts)
     {
-        $mpos = [];
+        $time_belts = [];
         $time_belt_group = $campaign_mpo_time_belts->groupBy(['publisher_name', 'program', 'duration']);
         foreach($this->groupByDayPart($time_belt_group) as $station => $station_time_belts){
-            foreach($station_time_belts as $program => $time_belts){
-                foreach($time_belts as $duration => $slots){
-                    foreach($slots as $day_part => $ads){
-                        foreach($ads as $month => $ad){
-                            $mpos[] = [
+            foreach($station_time_belts as $program => $program_time_belts){
+                foreach($program_time_belts as $duration => $duration_time_belts){
+                    foreach($duration_time_belts as $day_part => $day_part_time_belts){
+                        foreach($day_part_time_belts as $month => $month_time_belts){
+                            $time_belts[] = [
                                 'duration' => $duration,
                                 'station' => $station,
                                 'program' => $program,
                                 'daypart' => $day_part,
                                 'time_slot' => DayPartList::DAYPARTS[$day_part],
-                                'day_range' => $this->daysRange($ad),
                                 'month' => date('M y', strtotime($month)),
-                                'slots' => $ad,
-                                'exposures' => $this->pluckExposure($ad),
-                                'total_slot' => $this->getTotalSlot($ad)
+                                'slots' => $slots = $this->groupByAsset($month_time_belts),
+                                'total_insertions' => collect($slots)->sum('total_spots')
                             ];
                         }
                     }
                 }
             }
         }
-        return $mpos;
+        return $time_belts;
+    }
+
+    private function groupByAsset($month_time_belts)
+    {
+        $asset_time_belts = [];
+        foreach($month_time_belts as $asset => $time_belt) {
+            $asset_time_belts[] = [
+                'day_range' => $this->daysRange($time_belt),
+                'asset' => $asset,
+                'exposures' => $this->pluckExposure($time_belt),
+                'total_spots' => $this->getTotalSlot($time_belt)
+            ];
+        }
+        return $asset_time_belts;
     }
 
     public function groupByDayPart($time_belt_group)
@@ -181,7 +196,7 @@ class MpoDetailsService implements BaseServiceInterface
                 return $item->map(function($ads) {
                     return $ads->map(function($ad) {
                         return collect($ad)->put('day_part', $this->getDayPart($ad['time_belt_start_time'])['name']);
-                    })->groupBy(['day_part', 'month', 'playout_date']);  
+                    })->groupBy(['day_part', 'month', 'media_asset_title', 'playout_date']);  
                 });
             });
         });
