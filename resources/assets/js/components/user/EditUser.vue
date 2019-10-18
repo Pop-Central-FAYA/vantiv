@@ -40,6 +40,11 @@
                                   </multiselect>
                                 </v-flex>
                             </v-layout>
+                             <v-layout row wrap>
+                                 <v-flex xs12 sm6 md6 text-left>
+                                    <v-switch v-model="status_switch" flat :label="`User status:  ${user.status}`"></v-switch>
+                                </v-flex>
+                            </v-layout>
                         </v-form>
                         <v-card-actions>
                     <v-spacer></v-spacer>
@@ -67,6 +72,8 @@
                 role:'',
                 dialog: false,
                 user: {},
+                status_switch: true,
+                status:  ''
 
             };
         },
@@ -75,6 +82,7 @@
             Event.$on('edit-user', function(user) {
                self.openDialog(user);
             }); 
+
         },
         mounted() {
             console.log('edit user Component mounted.');
@@ -83,6 +91,11 @@
             openDialog: function(item) {
                 this.user = item;
                 this.dialog = true;
+                if(this.user.status =='Active'){
+                    this.status_switch = true 
+                }else{
+                     this.status_switch = false 
+                }
             },
             updateUser: async function(event) {
                if(this.hasPermissionAction(this.permissionList, ['update.user'])){
@@ -98,9 +111,13 @@
                     if (!isValid) {
                         return false;
                     } 
-                    console.log(this.user.links.index);
-                    
-                     this.sweet_alert('Updating User Information', 'info');
+                    if(this.status_switch){
+                        this.status ='Active'
+                    }else{
+                        this.status ='Inactive'
+                    }
+                    this.user.status =  this.status
+                    this.sweet_alert('Updating User Information', 'info');
                     axios({
                         method: 'patch',
                         url: this.user.links.update,
@@ -115,6 +132,7 @@
                             this.sweet_alert('An unknown error has occurred. Please try again', 'error');
                         }
                     });
+                    
                 }
             },
              closeDialog: function() {

@@ -4,7 +4,7 @@
       <v-spacer></v-spacer>
     <edit-user :roles="roles" :permissionList="permissionList"></edit-user>
     <reinvite-user :roles="roles" :permissionList="permissionList"></reinvite-user>
-    <delete-user :roles="roles" :permissionList="permissionList"></delete-user>
+     <delete-user :roles="roles" :permissionList="permissionList"></delete-user>
       <v-spacer></v-spacer>
       <v-spacer></v-spacer>
       <v-text-field v-model="search" append-icon="search" label="Enter Keyword" single-line hide-details></v-text-field>
@@ -36,7 +36,6 @@
                      </template>
                     <span>Edit the user information</span>
                 </v-tooltip>
-
              </td>
         </tr>
       </template>
@@ -89,8 +88,8 @@
         ],
         pagination: {
             rowsPerPage: 10,
-            sortBy: 'created_at',
-            descending: true,
+            sortBy: 'status',
+            descending: false,
         },
         noDataText: 'No user to display'
       }
@@ -129,6 +128,11 @@
         },
          showDeleteUser(idx, item) {
           Event.$emit('delete-user', idx, item);
+        },
+         showDeactivateUser(idx, item, action) {
+          Event.$emit('deactivate-user', idx, item);
+          Event.$emit('deactivate-user-action', action);
+       
         },
         
     }

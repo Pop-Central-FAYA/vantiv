@@ -23,6 +23,7 @@ class UpdateUserRequest extends Request
     {
         return [
             'role_name' => 'required|array',
+            'status' => 'required|String|in:Active,Inactive'
         ];
     }
 }

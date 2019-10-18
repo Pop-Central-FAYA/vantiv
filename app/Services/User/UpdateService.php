@@ -34,6 +34,8 @@ class UpdateService implements BaseServiceInterface
         \DB::transaction(function () use ($user, $roles) {
         $user->syncRoles($roles, $this->guard);
         });
+        $user->status = $this->validated['status'];
+        $user->save();
         return $user;
     }
 
