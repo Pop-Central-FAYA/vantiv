@@ -40,7 +40,7 @@
                                   </multiselect>
                                 </v-flex>
                             </v-layout>
-                             <v-layout row wrap>
+                              <v-layout v-if="user.status != 'Unconfirmed'" row wrap>
                                  <v-flex xs12 sm6 md6 text-left>
                                     <v-switch v-model="status_switch" flat :label="`User status:  ${user.status}`"></v-switch>
                                 </v-flex>
@@ -116,7 +116,9 @@
                     }else{
                         this.status ='Inactive'
                     }
-                    this.user.status =  this.status
+                    if(this.user.status != 'Unconfirmed'){
+                       this.user.status =  this.status
+                    }
                     this.sweet_alert('Updating User Information', 'info');
                     axios({
                         method: 'patch',
