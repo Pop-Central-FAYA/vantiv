@@ -276,7 +276,7 @@
          });
 
           /*
-        * new user management route
+        * new user management route 
         */
         Route::group(['namespace' => 'Dsp'], function () {
             Route::get('/profile', 'ProfileController@index')->name('profile.index');
