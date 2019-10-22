@@ -19,10 +19,12 @@ use Vanguard\Services\Mpo\GetCampaignTimeBelt;
 use Vanguard\Services\Mpo\UpdateTimeBeltService;
 use Vanguard\Events\Dsp\CampaignMpoTimeBeltUpdated;
 use Vanguard\Http\Requests\AssociateFileToAdslotRequest;
+use Vanguard\Http\Requests\CampaignFollowRequest;
 use Vanguard\Http\Resources\CampaignResource;
 use Vanguard\Models\AdVendor;
 use Vanguard\Models\CampaignTimeBelt;
 use Vanguard\Services\Mpo\StoreTimeBeltService;
+use Vanguard\User;
 
 class CampaignsController extends Controller
 {
@@ -178,6 +180,16 @@ class CampaignsController extends Controller
             'message' => 'Adslot updated successfully',
             'data' => (new CampaignDetails($campaign->id))->run()
         ]);
+    }
+
+    public function assignFollower(CampaignFollowRequest $request, $campaign_id)
+    {
+        $campaign = Campaign::findOrFail($campaign_id);
+        $this->authorize('assignFollower', $campaign);
+
+        $validated = $request->validated();
+        $users = User::whereIn('id', $validated['user_id'])->get();
+        $campaign->addManyFollowers($users);
     }
     
 }
