@@ -6,7 +6,7 @@ use Illuminate\Support\Arr;
 use DB;
 use Vanguard\Models\MediaPlanSuggestion;
 use Vanguard\Services\BaseServiceInterface;
-
+use Vanguard\Libraries\TimeBelt;
 /**
  * This service is to create a Media Plan (This is only created if there is a rating available).
  */
@@ -51,7 +51,7 @@ class StoreMediaPlanSuggestionService implements BaseServiceInterface
             'media_plan_id' => $this->media_plan->id,
             'media_type' => $item['media_type'],
             'program' => $item['program'],
-            'day' => $item['day'],
+            'day' => TimeBelt::lengthenDay($item['day']),
             'start_time' => $item['start_time'],
             'end_time' => $item['end_time'],
             'total_audience' => $item['total_audience'],
