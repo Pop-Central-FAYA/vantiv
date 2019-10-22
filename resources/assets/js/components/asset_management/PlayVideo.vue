@@ -10,7 +10,7 @@
                 <v-container grid-list-md class="pa-0">
                     <v-layout wrap>
                         <v-flex xs12 sm12 md12>
-                            <video ref="video" class="video" :src="asset.asset_url" controls></video>
+                            <video ref="video" class="video" :src="asset.expiry_url" controls></video>
                         </v-flex>
                     </v-layout>
                 </v-container>
