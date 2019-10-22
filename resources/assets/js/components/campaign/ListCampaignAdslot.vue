@@ -104,6 +104,7 @@
                             :adslot="props.item"
                             :assets="assets"
                             :time-belt-range="timeBeltRange"
+                            :ad-vendor-list="adVendors"
                             :ad-vendor="props.item.vendor"
                             :group="group"
                             :publisher="props.item.publisher"

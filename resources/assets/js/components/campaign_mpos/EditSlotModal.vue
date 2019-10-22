@@ -31,7 +31,7 @@
                                 </span>
                                 <v-select
                                     v-model="adslot.ad_vendor_id"
-                                    :items="vendorData"
+                                    :items="adVendorList"
                                     item-text="name"
                                     item-value="id"
                                     v-validate="'required'"
@@ -198,7 +198,8 @@ export default {
         group : String,
         index : Number,
         selectedAdslots : Array,
-        campaign : Object
+        campaign : Object,
+        adVendorList: Array
     },
     data () {
         return {
