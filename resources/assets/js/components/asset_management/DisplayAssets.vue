@@ -62,6 +62,7 @@
     mounted() {
         console.log('Display Assets Component mounted.');
         this.get_assets();
+        console.log(this.assets)
     },
     methods: {
         get_assets() {
