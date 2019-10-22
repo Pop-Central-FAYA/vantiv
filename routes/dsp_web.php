@@ -40,6 +40,7 @@
             #api
             Route::group(['prefix' => 'api'], function() {
                 Route::get('/{campaign_id}/vendors/{ad_vendor_id}/mpos', 'MpoController@vendorMpoList')->name('campaign.vendors.mpos.lists');
+                Route::post('/{campaign_id}/assign-follower', 'CampaignsController@assignFollower')->name('campaign.assign_follower');
             });
             Route::get('/{campaign_id}/groups/{group_param}', 'CampaignsController@groupCampaignTimeBelts');
             Route::post('/{campaign_id}/adslots', 'CampaignsController@storeAdslot')->name('campaigns.adslot.store');

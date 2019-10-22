@@ -18,14 +18,16 @@ use Laracasts\Presenter\PresentableTrait;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Models\Role;
 use Actuallymab\LaravelComment\CanComment;
+use Hypefactors\Laravel\Follow\Contracts\CanFollowContract;
+use Hypefactors\Laravel\Follow\Traits\CanFollow;
 
-class User extends Authenticatable implements TwoFactorAuthenticatableContract
+class User extends Authenticatable implements TwoFactorAuthenticatableContract, CanFollowContract
 {
     protected $primaryKey = 'id';
     protected $keyType = 'string';
     public $incrementing = false;
 
-    use TwoFactorAuthenticatable, CanResetPassword, PresentableTrait, Notifiable, HasRoles, CanComment;
+    use TwoFactorAuthenticatable, CanResetPassword, PresentableTrait, Notifiable, HasRoles, CanComment, CanFollow;
 
     protected $presenter = UserPresenter::class;
 

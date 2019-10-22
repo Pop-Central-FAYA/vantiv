@@ -5,10 +5,12 @@ namespace Vanguard\Models;
 use Illuminate\Database\Eloquent\Model;
 
 use EloquentFilter\Filterable;
+use Hypefactors\Laravel\Follow\Contracts\CanBeFollowedContract;
+use Hypefactors\Laravel\Follow\Traits\CanBeFollowed;
 
-class Campaign extends Base
+class Campaign extends Base implements CanBeFollowedContract
 {
-    use Filterable;
+    use Filterable, CanBeFollowed;
     protected $table = 'campaigns';
 
     protected $dates = [

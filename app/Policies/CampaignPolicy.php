@@ -52,6 +52,11 @@ class CampaignPolicy
         return $this->belongsToUserCompany($user, $campaign);
     }
 
+    public function assignFollower(User $user, Campaign $campaign)
+    {
+        return $this->belongsToUserCompany($user, $campaign);
+    }    
+
     /**
      * This is a shitty way of implementing this, will revisit it with the proper implementation
      */

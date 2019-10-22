@@ -51,7 +51,8 @@
         "phpmetrics/phpmetrics": "^2.4",
         "phpmd/phpmd": "^2.7",
         "drfraker/snipe-migrations": "^1.3",
-        "mpociot/laravel-test-factory-helper": "^1.2"
+        "mpociot/laravel-test-factory-helper": "^1.2",
+        "hypefactors/laravel-follow" : "~3.0.0"
     },
     "autoload": {
         "classmap": [
