@@ -141,21 +141,25 @@ class StoreMediaPlanDeliverables implements BaseServiceInterface
      * @todo This replicates rating query generation, so find a way to keep them all together
      */
     protected function getNetReach() {
+        // $targeting_filters = $this->getTargetingFilters();
+        // $sub_query = MpsProfile::filter($targeting_filters)
+        //     ->select("mps_profiles.ext_profile_id", "mps_profiles.pop_weight")
+        //     ->join('mps_profile_activities as mpa', 'mpa.ext_profile_id', '=', 'mps_profiles.ext_profile_id')
+        //     ->groupBy('mps_profiles.ext_profile_id')
+        //     ->where(function($query) {
+        //         foreach ($this->suggestions as $item) {
+        //             $query->orWhere(function($sub) use ($item) {
+        //                 $sub->where('mpa.tv_station_id', $item['station_id'])
+        //                     ->where('mpa.day', TimeBelt::shortenDay($item['day']))
+        //                     ->where('mpa.start_time', $item['start_time']);
+        //             });
+        //         }
+        //     });
         $targeting_filters = $this->getTargetingFilters();
         $sub_query = MpsProfile::filter($targeting_filters)
             ->select("mps_profiles.ext_profile_id", "mps_profiles.pop_weight")
             ->join('mps_profile_activities as mpa', 'mpa.ext_profile_id', '=', 'mps_profiles.ext_profile_id')
-            ->groupBy('mps_profiles.ext_profile_id')
-            ->where(function($query) {
-                foreach ($this->suggestions as $item) {
-                    $query->orWhere(function($sub) use ($item) {
-                        $sub->where('mpa.tv_station_id', $item['station_id'])
-                            ->where('mpa.day', TimeBelt::shortenDay($item['day']))
-                            ->where('mpa.start_time', $item['start_time']);
-                    });
-                }
-            });
-        
+            ->groupBy('mps_profiles.ext_profile_id');
         return round(DB::query()->fromSub($sub_query, 'tbl')->sum('pop_weight'));
     }
 
