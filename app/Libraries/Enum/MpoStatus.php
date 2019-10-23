@@ -8,4 +8,6 @@ class MpoStatus
     const SUBMITTED = 'submitted';
     const ACCEPTED = 'accepted';
     const CLOSED = 'closed';
+    const IN_REVIEW = 'in review';
+    const APPROVED = 'approved';
 }

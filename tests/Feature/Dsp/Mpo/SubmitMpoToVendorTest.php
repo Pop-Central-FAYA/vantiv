@@ -1,10 +1,10 @@
 <?php
 
-namespace Tests\Feature\Feature\Dsp\MpoShareLink;
+namespace Tests\Feature\Feature\Dsp\Mpo;
 
-use Tests\TestCase;
+use Tests\Feature\Dsp\Mpo\MpoTestCase;
 
-class SubmitToVendor extends TestCase
+class SubmitMpoToVendorTest extends MpoTestCase
 {
     protected $route_name = 'mpo_share_link.submit';
 

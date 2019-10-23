@@ -64,7 +64,10 @@ class AgencyRoleSeeder extends Seeder
             'update.ad_vendor' => ['dsp.admin', 'dsp.head_media_planner', 'dsp.head_media_buyer'],
             'create.ad_vendor' => ['dsp.admin', 'dsp.head_media_planner', 'dsp.head_media_buyer'],
 
-            'update.company' => ['dsp.admin']
+            'update.company' => ['dsp.admin'],
+
+            'approve.mpo' => ['dsp.admin'],
+            'decline.mpo' => ['dsp.admin']
         ];
         
         //Create the different roles if they do not exist

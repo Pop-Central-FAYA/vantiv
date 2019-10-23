@@ -235,7 +235,11 @@
 
             #api
             Route::group(['prefix' => 'api'], function() {
-                Route::get('/mpos/{id}/share-links', 'MpoController@getActiveLink');
+                Route::get('/mpos/{id}/permitted-users', 'MpoController@permittedUserList')->name('mpos.permitted_users');
+                Route::post('/mpos/{id}/request-approval', 'MpoController@requestApproval')->name('mpos.request_approval');
+                Route::post('/mpos/{id}/approve', 'MpoController@approveMpo')->name('mpos.approve_mpo');
+                Route::post('/mpos/{id}/decline', 'MpoController@declineMpo')->name('mpos.decline_mpo');
+                Route::get('/mpos/{id}/share-links', 'MpoController@getActiveLink')->name('mpos.active_link');
                 Route::post('/mpos/{id}/share-links', 'MpoController@storeLink')->name('mpo_share_link.store');
                 Route::post('/mpos/{id}/submit', 'MpoController@submitToVendor')->name('mpo_share_link.submit');
             });

@@ -2,6 +2,7 @@
 
 namespace Vanguard\Services\Mpo;
 
+use Auth;
 use Vanguard\Services\BaseServiceInterface;
 use Vanguard\Models\CampaignMpo;
 use Vanguard\Libraries\DayPartList;
@@ -45,11 +46,14 @@ class MpoDetailsService implements BaseServiceInterface
             'time_belt_summary' => $mpo_time_belt_summary,
             'company' => $company,
             'net_total_word' => $this->formatNetTotalToWord($net_total),
+            'permissions' => Auth::user()->getAllPermissions()->pluck('name'),
             'links' => [
                 'export' => route('mpos.export', ['mpo_id' => $this->mpo_id], true),
                 'details' => route('mpos.details', ['mpo_id' => $this->mpo_id], true),
                 'accept' => route('mpos.accept', ['mpo_id' => $this->mpo_id], true),
-                'campaign_details' => route('agency.campaign.details', ['campaign_id' => $campaign->id])
+                'campaign_details' => route('agency.campaign.details', ['campaign_id' => $campaign->id]),
+                'approve_mpo' => route('mpos.approve_mpo', ['mpo_id' => $this->mpo_id], false),
+                'decline_mpo' => route('mpos.decline_mpo', ['mpo_id' => $this->mpo_id], false)
             ]
         ];
     }

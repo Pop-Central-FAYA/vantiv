@@ -17,7 +17,7 @@ $factory->define(Vanguard\Models\Client::class, function (Faker $faker) {
     return [
         'id' => uniqid(),
         'name' => $faker->company,
-        'brand' => uniqid(),
+        //'brand' => uniqid(),
         'image_url' => $faker->url,
         'created_by' => uniqid(),
         'company_id' => uniqid(),

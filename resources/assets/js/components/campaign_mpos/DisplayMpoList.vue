@@ -57,6 +57,9 @@
                             <v-flex xs12 sm6 md2>
                                 <submit-mpo-modal :mpo="props.item" :campaign="campaign"></submit-mpo-modal>
                             </v-flex>
+                            <v-flex xs12 sm6 md2>
+                                <approve-mpo :mpo="props.item" :campaign="campaign"></approve-mpo>
+                            </v-flex>
                         </v-layout>
                     </v-container>
                 </td>
@@ -87,9 +90,9 @@
                     { text: 'Version', value : 'version', width: '5%'},
                     { text: 'Reference Number', value : 'reference', width: '15%'},
                     { text: 'Net Total (₦)', value: 'net_total',  width: '20%' },
-                    { text: 'Exposures', value: 'insertions', width: '10%' },
+                    { text: 'Exposures', value: 'insertions', width: '5%' },
                     { text: 'Created Date', value : 'created_at', width: '10'},
-                    { text: 'Status', value: 'status', width : '5%'},
+                    { text: 'Status', value: 'status', width : '10%'},
                     { text: 'Actions', value: 'name', sortable: false , width: '20%'}
                 ],
                 pagination: {
@@ -110,6 +113,9 @@
             Event.$on('update-campaign-mpo', function(mpo) {
                 self.mposData = mpo
             })
+            Event.$on('mpo-updated', function (mpo) {
+                self.fetchMpo()
+            });
         },
         methods : {
             statusColor : function(status) {

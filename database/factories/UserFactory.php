@@ -1,6 +1,7 @@
 <?php
 
 use Faker\Generator as Faker;
+use Vanguard\Support\Enum\UserStatus;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,5 +22,6 @@ $factory->define(Vanguard\User::class, function (Faker $faker) {
         'email' => $faker->unique()->safeEmail,
         'password' => 'testUserPassword', // secret
         'remember_token' => str_random(10),
+        'status' => UserStatus::ACTIVE
     ];
 });

@@ -4,7 +4,8 @@ use Faker\Generator as Faker;
 use Vanguard\Models\Campaign;
 use Vanguard\Libraries\Utilities;
 use Vanguard\Models\Brand;
-use Vanguard\Models\WalkIns;
+use Vanguard\Models\Client;
+use Vanguard\User;
 
 $factory->define(Campaign::class, function (Faker $faker) {
     return [
@@ -26,8 +27,8 @@ $factory->define(Campaign::class, function (Faker $faker) {
         'social_class' => json_encode(["A","B","C","D","E"]),
         'states' => json_encode(["Abia","Abuja"]),
         'brand_id' => factory(Brand::class)->create()->id,
-        'walkin_id' => factory(WalkIns::class)->create()->id,
-        'created_by' => uniqid(),
+        'walkin_id' => factory(Client::class)->create()->id,
+        'created_by' => factory(User::class)->create()->id,
         'belongs_to' => uniqid()
     ];
 });

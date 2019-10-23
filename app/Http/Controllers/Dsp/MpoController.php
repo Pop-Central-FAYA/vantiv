@@ -5,6 +5,7 @@ namespace Vanguard\Http\Controllers\Dsp;
 use Vanguard\Http\Controllers\Controller;
 use Auth;
 use Carbon\Carbon;
+use DB;
 use Mail;
 use Vanguard\Http\Requests\StoreMpoShareLinkRequest;
 use Vanguard\Models\CampaignMpo;
@@ -13,18 +14,29 @@ use Vanguard\Http\Resources\MpoShareLinkResource;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Vanguard\Exports\MpoExport;
+use Vanguard\Http\Controllers\Traits\CompanyIdTrait;
 use Vanguard\Models\Campaign;
 use Vanguard\Services\Mpo\MpoDetailsService;
 use Vanguard\Http\Requests\GenerateCampaignMpoRequest;
 use Vanguard\Http\Resources\CampaignMpoResource;
+use Vanguard\Http\Resources\UserResource;
 use Vanguard\Libraries\Enum\MpoStatus;
+use Vanguard\Mail\MpoActionNotification;
+use Vanguard\Mail\MpoReviewNotification;
 use Vanguard\Services\Mpo\StoreMpoService;
+use Vanguard\Services\User\PermittedUser;
+use Vanguard\User;
 
 class MpoController extends Controller
 {
+    use CompanyIdTrait;
+
+    protected $mpo_permissions = ['approve.mpo', 'decline.mpo'];
+
     public function __construct()
     {
         $this->middleware('permission:create.campaign')->only(['getActiveLink', 'store', 'submitToVendor']);
+        $this->middleware(['permission:approve.mpo', 'permission:decline.mpo'])->only(['approveMpo', 'declineMpo']);
     }
 
     public function list($campaign_id)
@@ -34,6 +46,91 @@ class MpoController extends Controller
                             ->orderBy('created_at', 'desc')
                             ->get();
         return CampaignMpoResource::collection($mpos);
+    }
+
+    public function permittedUserList($id)
+    {
+        $mpo = CampaignMpo::findOrFail($id);
+        $this->authorize('listUsers', $mpo);
+
+        $company_id = $this->companyId();
+        $users = (new PermittedUser($company_id, $this->mpo_permissions))->run();
+
+        return UserResource::collection($users);
+    } 
+
+    public function requestApproval(Request $request, $mpo_id)
+    {
+        $company_id = $this->companyId();
+        $mpo = CampaignMpo::findOrFail($mpo_id);
+        $this->authorize('approve', $mpo);
+
+        $reviewer = User::findOrFail($request->user_id);
+        $permitted_users = (new PermittedUser($company_id, $this->mpo_permissions))->run()->pluck('id')->toArray();
+        $sender = Auth::user();
+
+        if(\in_array($reviewer->id, $permitted_users) && $mpo->status === MpoStatus::PENDING){
+            DB::transaction(function() use($mpo, $reviewer, $sender) {
+                $mpo->status = MpoStatus::IN_REVIEW;
+                $mpo->requested_by = Auth::user()->id;
+                $mpo->requested_at = Carbon::now();
+                $mpo->save();
+
+                Mail::to($reviewer->email)->send(new MpoReviewNotification($this->reviewInformation($mpo, $reviewer, $sender)));
+            });
+            return new CampaignMpoResource($mpo);
+        }
+    }
+
+    public function approveMpo(Request $request, $mpo_id)
+    {
+        $mpo = CampaignMpo::findOrFail($mpo_id);
+        $this->authorize('approve', $mpo);
+
+        if($mpo->status === MpoStatus::IN_REVIEW) { //This is not the best way to do this, coming backwith a better way 
+            $reciever = User::findOrFail($mpo->requested_by);
+            $reviewer = Auth::user();
+            DB::transaction(function() use ($mpo, $reciever, $reviewer) {
+                $mpo->status = MpoStatus::APPROVED;
+                $mpo->approved_by = $reviewer->id;
+                $mpo->approved_at = Carbon::now();
+                $mpo->save();
+
+                Mail::to($reciever->email)
+                    ->send(new MpoActionNotification($this->reviewInformation($mpo, $reciever, $reviewer, 'approved')));
+            });
+            return (new MpoDetailsService($mpo_id))->run();
+        }
+    }
+
+    public function declineMpo(Request $request, $mpo_id)
+    {
+        $mpo = CampaignMpo::findOrFail($mpo_id);
+        $this->authorize('approve', $mpo);
+        if($mpo->status === MpoStatus::IN_REVIEW) { //This is not the best way to do this, coming backwith a better way
+            $reciever = User::findOrFail($mpo->requested_by);
+            $reviewer = Auth::user();
+            DB::transaction(function() use ($mpo, $reciever, $reviewer) {
+                $mpo->status = MpoStatus::PENDING;
+                $mpo->save();
+
+                Mail::to($reciever->email)
+                    ->send(new MpoActionNotification($this->reviewInformation($mpo, $reciever, $reviewer, 'declined')));
+            });
+            return (new MpoDetailsService($mpo_id))->run();
+        }
+    }
+
+    private function reviewInformation($mpo, $reviewer, $sender, $action = null)
+    {
+        return [
+            'link' => route('mpos.details', ['id' => $mpo->id]),
+            'reviewer' => $reviewer->full_name,
+            'sender' => $sender->full_name,
+            'client' => $mpo->campaign->client->name,
+            'campaign' => $mpo->campaign->name,
+            'action' => $action
+        ];
     }
 
     public function vendorMpoList($campaign_id, $ad_vendor_id)
@@ -86,24 +183,13 @@ class MpoController extends Controller
         }
     }
 
-    public function storeLink(Request $request, CampaignMpo $mpo, $mpo_id)
+    public function storeLink(Request $request, $mpo_id)
     {
-        try {
-            $campaign = $mpo->getCampaign($mpo_id);
-            $this->authorize('status', $campaign);
-            
-            $share_link = (new StoreMpoShareLink($mpo_id, $campaign->stop_date))->run();
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Mpo link generated',
-                'data' => new MpoShareLinkResource($share_link)
-            ], 201);
-        }catch (\Exception $exception) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'An error occured while performing your request'
-            ], 500);
-        }
+        $mpo = CampaignMpo::findOrFail($mpo_id);
+        $this->authorize('share', $mpo);
+        
+        $share_link = (new StoreMpoShareLink($mpo_id, $mpo->campaign->stop_date))->run();
+        return new MpoShareLinkResource($share_link); 
     }
 
     public function submitToVendor(StoreMpoShareLinkRequest $request, $mpo_id)
@@ -112,19 +198,21 @@ class MpoController extends Controller
         $campaign_mpo = CampaignMpo::findOrFail($mpo_id);
         $this->authorize('campaignStatus', $campaign_mpo);
 
-        $campaign_name = $campaign_mpo->campaign->name;
-        try {
-            $this->sendVendorMail($validated['url'], $validated['email'], $campaign_name);
-            $this->updateMpo($campaign_mpo);
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Link submitted to vendor',
-            ], 200);
-        }catch(\Exception $exception) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'An error occured while performing your request'
-            ], 500);
+        if($campaign_mpo->status === MpoStatus::APPROVED){
+            $campaign_name = $campaign_mpo->campaign->name;
+            try {
+                $this->sendVendorMail($validated['url'], $validated['email'], $campaign_name);
+                $this->updateMpo($campaign_mpo);
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Link submitted to vendor',
+                ], 200);
+            }catch(\Exception $exception) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'An error occured while performing your request'
+                ], 500);
+            }
         }
     }
     
