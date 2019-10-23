@@ -29,11 +29,14 @@ class CampaignMpoResource extends JsonResource
             'campaign' => $this->campaign,
             'created_date' => date('Y-m-d', strtotime($this->created_at)),
             'links' => [
-                'export' => route('mpos.export', ['mpo_id' => $this->id], true),
-                'details' => route('mpos.details', ['mpo_id' => $this->id], true),
-                'accept' => route('mpos.accept', ['mpo_id' => $this->id], true),
-                'older_versions' => route('campaign.vendors.mpos.lists', ['campaign_id' => $this->campaign_id, 
-                                                                        'ad_vendor_id' => $this->ad_vendor_id]) 
+                'export' => route('mpos.export', ['mpo_id' => $this->id], false),
+                'details' => route('mpos.details', ['mpo_id' => $this->id], false),
+                'accept' => route('mpos.accept', ['mpo_id' => $this->id], false),
+                'user_list' => route('mpos.permitted_users', ['mpo_id' => $this->id], false),
+                'request_approval' => route('mpos.request_approval', ['mpo_id' => $this->id], true),
+                'store_share_links' => route('mpo_share_link.store', ['mpo_id' => $this->id], false),
+                'submit_to_vendor' => route('mpo_share_link.submit', ['mpo_id' => $this->id], false),
+                'active_share_link' => route('mpos.active_link', ['mpo_id' => $this->id], false)
             ]
         ];
     }

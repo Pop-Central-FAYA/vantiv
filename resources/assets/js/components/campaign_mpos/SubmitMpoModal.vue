@@ -5,7 +5,8 @@
                 <v-tooltip top>
                     <template v-slot:activator="{ on }">
                         <div v-on="on" class="d-inline-block position-icon">
-                            <v-icon color="#01c4ca" dark left v-on="on" :disabled="!isCampaignOpen(campaign.status)" @click="dialog = true">fa-clipboard-list</v-icon>
+                            <v-icon color="#01c4ca" dark left v-on="on" :disabled="!isCampaignOpen(campaign.status) || !isMpoOpen()" 
+                            @click="dialog = true">fa-clipboard-list</v-icon>
                         </div>
                     </template>
                     <span v-if="isCampaignOpen(campaign.status)">Submit to vendor</span>
@@ -67,7 +68,7 @@ export default {
         getShareLink : function() {
             axios({
                 method: 'get',
-                url: `/api/mpos/${this.mpo.id}/share-links`
+                url: this.mpo.links.active_share_link
             }).then((res) => {
                 let result = res.data.data;
                 if (result != null) {
@@ -89,15 +90,11 @@ export default {
         addShareLink : function () {
             axios({
                 method: 'POST',
-                url: `/api/mpos/${this.mpo.id}/share-links`,
+                url: this.mpo.links.store_share_links,
                 data: {}
             }).then((res) => {
-                if (res.data.status === 'success') {
-                    Event.$emit('share-link', res.data.data)
-                    this.submit(res.data.data.short_url)
-                } else {
-                    this.sweet_alert(res.data.message, 'error');
-                }
+                Event.$emit('share-link', res.data.data)
+                this.submit(res.data.data.short_url)
             }).catch((error) => {
                 this.sweet_alert(error.response.data.message, 'error');
             });
@@ -105,18 +102,17 @@ export default {
         submit : function(url) {
             axios({
                 method: 'POST',
-                url: `/api/mpos/${this.mpo.id}/submit`,
+                url: this.mpo.links.submit_to_vendor,
                 data: {url : url, email : this.mpo.email}
             }).then((res) => {
-                if (res.data.status === 'success') {
-                    this.sweet_alert(res.data.message, 'success');
-                    this.dialog = false
-                } else {
-                    this.sweet_alert(res.data.message, 'error');
-                }
+                this.sweet_alert('Mpo Submitted to vendor successfully', 'success');
+                this.dialog = false
             }).catch((error) => {
                 this.sweet_alert(error.response.data.message, 'error');
             });
+        },
+        isMpoOpen : function() {
+            return this.mpo.status.toLowerCase() === 'approved'
         }
     }
 }

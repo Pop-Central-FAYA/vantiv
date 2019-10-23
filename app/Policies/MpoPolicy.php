@@ -45,4 +45,19 @@ class MpoPolicy
         $status_list = [CampaignStatus::ACTIVE, CampaignStatus::PENDING];
         return \in_array($campaignMpo->campaign->status, $status_list);
     }
+
+    public function listUsers(User $user, CampaignMpo $campaignMpo)
+    {
+        return $this->belongsToUserCompany($user, $campaignMpo);
+    }
+
+    public function approve(User $user, CampaignMpo $campaignMpo)
+    {
+        return $this->belongsToUserCompany($user, $campaignMpo);
+    }
+
+    public function share(User $user, CampaignMpo $campaignMpo)
+    {
+        return $this->belongsToUserCompany($user, $campaignMpo);
+    }
 }

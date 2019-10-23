@@ -101,6 +101,7 @@ Vue.component('edit-volume-campaign-price', () => import('./components/campaign_
 Vue.component('list-campaign-adslot', () => import('./components/campaign/ListCampaignAdslot.vue'));
 Vue.component('list-group-adslot', () => import('./components/campaign/ListGroupAdslot.vue'));
 Vue.component('ad-vendor-mpo-list', () => import('./components/campaign_mpos/VendorMpoList.vue'));
+Vue.component('approve-mpo', () => import('./components/campaign_mpos/RequestApproval.vue'));
 
 //Preview Mpo
 Vue.component('mpo-details', () => import('./components/mpo/MpoDetails.vue'));
