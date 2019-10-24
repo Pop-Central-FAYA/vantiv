@@ -1,15 +1,16 @@
 <?php
 namespace Vanguard\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Vanguard\Models\MediaPlanSuggestion;
 use Actuallymab\LaravelComment\Contracts\Commentable;
 use Actuallymab\LaravelComment\HasComments;
+use Hypefactors\Laravel\Follow\Contracts\CanBeFollowedContract;
+use Hypefactors\Laravel\Follow\Traits\CanBeFollowed;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class MediaPlan extends Base implements Commentable
+class MediaPlan extends Base implements Commentable, CanBeFollowedContract
 {
-    use HasComments, SoftDeletes;
+    use HasComments, SoftDeletes, CanBeFollowed;
 
     protected $fillable = [
         'budget', 'criteria_gender', 'criteria_lsm', 'criteria_social_class', 'criteria_region', 'criteria_state', 

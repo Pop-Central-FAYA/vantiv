@@ -51,4 +51,9 @@ class MediaPlanPolicy
     {
        return $this->belongsToUserCompany($user, $media_plan);
     }
+
+    public function assignFollower(User $user, MediaPlan $media_plan)
+    {
+        return $this->belongsToUserCompany($user, $media_plan);
+    }
 }

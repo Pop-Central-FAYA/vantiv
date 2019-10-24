@@ -1,14 +1,14 @@
 <?php
 
-namespace Tests\Feature\Dsp\Campaign;
+namespace Tests\Feature\Dsp\MediaPlan;
 
 use Vanguard\Models\Company;
 use Vanguard\Models\ParentCompany;
 
-class AssignFollowerTest extends CampaignTestCase
+class AssignFollowerTest extends MediaPlanTestCase
 {
 
-    protected $route_name = 'campaign.assign_follower';
+    protected $route_name = 'media_plan.assign_followers';
 
     protected function setUpUserWithSameCompany()
     {
@@ -18,23 +18,23 @@ class AssignFollowerTest extends CampaignTestCase
         return $this->setupAuthUser($company);
     }
 
-    protected function getResponse($user, $campaign_id, $data)
+    protected function getResponse($user, $plan_id, $data)
     {
-        return $this->actingAs($user)->postJson(route($this->route_name, ['campaign_id' => $campaign_id]), $data);
+        return $this->actingAs($user)->postJson(route($this->route_name, ['id' => $plan_id]), $data);
     }
 
     public function test_unauthenticated_user_cannot_access_assign_follower_route()
     {
-        $campaign_id = uniqid();
-        $response = $this->postJson(route($this->route_name, ['campaign_id' => $campaign_id]), []);
+        $plan_id = uniqid();
+        $response = $this->postJson(route($this->route_name, ['id' => $plan_id]), []);
         $response->assertStatus(401);
     }
 
     public function test_it_validate_user_id_is_required()
     {
         $user = $this->setupAuthUser();
-        $campaign_id = uniqid();
-        $response = $this->getResponse($user, $campaign_id, [
+        $plan_id = uniqid();
+        $response = $this->getResponse($user, $plan_id, [
             'user_id' => ''
         ]);
         $response->assertStatus(422);
@@ -44,19 +44,19 @@ class AssignFollowerTest extends CampaignTestCase
     public function test_it_validate_user_id_is_an_array()
     {
         $user = $this->setupAuthUser();
-        $campaign_id = uniqid();
-        $response = $this->getResponse($user, $campaign_id, [
+        $plan_id = uniqid();
+        $response = $this->getResponse($user, $plan_id, [
             'user_id' => 'jhdfcsjh'
         ]);
         $response->assertStatus(422);
         $response->assertJsonValidationErrors(['user_id']);
     }
 
-    public function test_it_returns_404_when_trying_to_assign_follower_to_campaign_that_doesnt_exist()
+    public function test_it_returns_404_when_trying_to_assign_follower_to_media_plan_that_doesnt_exist()
     {
         $user = $this->setupAuthUser();
-        $campaign_id = uniqid();
-        $response = $this->getResponse($user, $campaign_id, $this->requestData());
+        $plan_id = uniqid();
+        $response = $this->getResponse($user, $plan_id, $this->requestData());
         $response->assertStatus(404);
     }
 
@@ -64,24 +64,24 @@ class AssignFollowerTest extends CampaignTestCase
     {
         $user = $this->setUpUserWithSameCompany();
         $another_user = $this->setUpUserWithSameCompany();
-        $campaign = $this->setUpCampaign($another_user);
-        $response = $this->getResponse($user, $campaign->id, $this->requestData());
+        $mediaPlan = $this->setupMediaPlan($another_user);
+        $response = $this->getResponse($user, $mediaPlan->id, $this->requestData());
         $response->assertStatus(403);
     }
 
-    public function test_it_can_assign_assign_follower_to_a_campaign()
+    public function test_it_can_assign_assign_follower_to_a_media_plan()
     {
         $user = $this->setUpUserWithSameCompany();
-        $campaign = $this->setUpCampaign($user);
-        $response = $this->getResponse($user, $campaign->id, $this->requestData());
+        $mediaPlan = $this->setupMediaPlan($user);
+        $response = $this->getResponse($user, $mediaPlan->id, $this->requestData());
         $response->assertStatus(200);
     }
 
-    public function test_the_creator_of_the_campaign_is_also_a_follower()
+    public function test_the_creator_of_the_media_plan_is_also_a_follower()
     {
         $user = $this->setUpUserWithSameCompany();
-        $campaign = $this->setUpCampaign($user);
-        $response = $this->getResponse($user, $campaign->id, $this->requestData());
+        $mediaPlan = $this->setupMediaPlan($user);
+        $response = $this->getResponse($user, $mediaPlan->id, $this->requestData());
         $response->assertStatus(200);
 
         $this->assertDatabaseHas('followers', [
@@ -92,8 +92,8 @@ class AssignFollowerTest extends CampaignTestCase
     public function test_it_persist_the_followers_into_the_database()
     {
         $user = $this->setUpUserWithSameCompany();
-        $campaign = $this->setUpCampaign($user);
-        $this->getResponse($user, $campaign->id, $this->requestData());
+        $mediaPlan = $this->setupMediaPlan($user);
+        $this->getResponse($user, $mediaPlan->id, $this->requestData());
         $this->assertDatabaseHas('followers', [
             'follower_id' => $this->requestData()['user_id'][0]
         ]);

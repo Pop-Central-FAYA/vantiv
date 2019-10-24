@@ -135,6 +135,8 @@
                 Route::post('/{id}/clone', 'MediaPlanController@clonePlan')->name('media_plan.clone');
                 
                 Route::delete('/{id}/delete', 'MediaPlanController@deletePlan')->name('media_plan.delete');
+
+                Route::post('/{id}/assign-follower', 'MediaPlanController@assignFollower')->name('media_plan.assign_followers');
             });
         });
 
