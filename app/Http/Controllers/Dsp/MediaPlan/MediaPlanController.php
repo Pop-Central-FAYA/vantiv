@@ -24,6 +24,7 @@ use Vanguard\Services\MediaPlan\StoreCampaign;
 use Vanguard\Services\MediaPlan\StoreMpo;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
+use Vanguard\Http\Requests\AssignFollowerRequest;
 use Vanguard\Http\Requests\MediaPlan\CreateStationRatingRequest;
 use Vanguard\Services\MediaPlan\GetSuggestionListByDuration;
 use Vanguard\Libraries\Enum\MediaPlanStatus;
@@ -685,5 +686,16 @@ class MediaPlanController extends Controller
         $company_id = $this->companyId();
         $cloned_plan = (new CloneMediaPlanService($media_plan, $validated, $company_id, $user->id))->run();
         return new MediaPlanResource($cloned_plan);
+    }
+
+    public function assignFollower(AssignFollowerRequest $request, $id)
+    {
+        $mediaPlan = MediaPlan::findOrFail($id);
+        $this->authorize('assignFollower', $mediaPlan);
+
+        $validated = $request->validated();
+        array_push($validated['user_id'], $request->user()->id);
+        $users = User::whereIn('id', $validated['user_id'])->get();
+        $mediaPlan->addManyFollowers($users);
     }
 }

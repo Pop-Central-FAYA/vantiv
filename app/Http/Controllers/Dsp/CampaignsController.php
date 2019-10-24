@@ -18,8 +18,8 @@ use Vanguard\Http\Requests\StoreCampaignMpoAdslotRequest;
 use Vanguard\Services\Mpo\GetCampaignTimeBelt;
 use Vanguard\Services\Mpo\UpdateTimeBeltService;
 use Vanguard\Events\Dsp\CampaignMpoTimeBeltUpdated;
+use Vanguard\Http\Requests\AssignFollowerRequest;
 use Vanguard\Http\Requests\AssociateFileToAdslotRequest;
-use Vanguard\Http\Requests\CampaignFollowRequest;
 use Vanguard\Http\Resources\CampaignResource;
 use Vanguard\Models\AdVendor;
 use Vanguard\Models\CampaignTimeBelt;
@@ -182,7 +182,7 @@ class CampaignsController extends Controller
         ]);
     }
 
-    public function assignFollower(CampaignFollowRequest $request, $campaign_id)
+    public function assignFollower(AssignFollowerRequest $request, $campaign_id)
     {
         $campaign = Campaign::findOrFail($campaign_id);
         $this->authorize('assignFollower', $campaign);
