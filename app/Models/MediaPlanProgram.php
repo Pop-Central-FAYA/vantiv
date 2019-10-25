@@ -10,4 +10,9 @@ class MediaPlanProgram extends Base
     {
         return $this->hasMany(MediaPlanProgramRating::class);
     }
+
+    public function station()
+    {
+        return $this->belongsTo(TvStation::class);
+    }
 }
